@@ -8,9 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 . ./include.ctest.sh
-set -u
 
-label="grib2_version"
+
+label="grib2_version_test"
 if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
     echo "Test $0 disabled. No definitions directory"
     exit 0

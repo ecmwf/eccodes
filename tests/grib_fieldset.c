@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 {
     int err = 0;
     long step;
-    char** filenames;
+    const char** filenames = NULL;
     size_t nkeys, nfiles, i=0;
     const char* keys[] = { "step:i", "date", "paramId", "levelType" };
     grib_fieldset* set = NULL;
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     order_by = argv[1];
 
     nfiles    = argc - 2;
-    filenames = (char**)malloc(sizeof(char*) * nfiles);
+    filenames = (const char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
         filenames[i] = (char*)strdup(argv[i + 2]);
 
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     grib_fieldset_delete(set);
     grib_handle_delete(h);
     for (i = 0; i < nfiles; i++)
-        free(filenames[i]);
+        free((char*)filenames[i]);
     free(filenames);
 
     return 0;

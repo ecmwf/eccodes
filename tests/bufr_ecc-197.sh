@@ -15,7 +15,7 @@
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
-label="bufr_ecc-197-test"
+label="bufr_ecc-197_test"
 
 input=${data_dir}/bufr/vos308014_v3_26.bufr
 TEMP=${label}.temp

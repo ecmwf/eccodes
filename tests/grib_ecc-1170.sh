@@ -9,12 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1170
 # grib_filter: Fail if key of type double (e.g. values) is assigned to a string
 # ---------------------------------------------------------
-label="grib_ecc-1170-test"
+label="grib_ecc-1170_test"
 
 tempErr=temp.${label}.err
 tempFilt=temp.${label}.filt

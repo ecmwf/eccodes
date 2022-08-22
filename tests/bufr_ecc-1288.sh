@@ -15,7 +15,7 @@
 # It tests decoding a BUFR file which cannot be done unless
 # we extend the definitions to include extra files
 # ---------------------------------------------------------
-label="bufr_ecc-1288-test"
+label="bufr_ecc-1288_test"
 
 TEMP=${label}.temp
 LOG=${label}.log

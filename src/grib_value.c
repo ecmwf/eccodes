@@ -39,7 +39,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
     fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
-        fprintf(stderr, "%g", val[i]);
+        fprintf(stderr, "%.10g", val[i]);
     }
     if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
@@ -47,7 +47,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
         if (val[i] < minVal) minVal = val[i];
         if (val[i] > maxVal) maxVal = val[i];
     }
-    fprintf(stderr, "min=%g, max=%g\n",minVal,maxVal);
+    fprintf(stderr, "min=%.10g, max=%.10g\n",minVal,maxVal);
 }
 
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
@@ -147,7 +147,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%g\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%.10g\n", name, val);
 
     if (a) {
         ret = grib_pack_double(a, &val, &l);
@@ -348,9 +348,9 @@ int grib_set_double(grib_handle* h, const char* name, double val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g (a->name=%s)\n", name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%g\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g\n", name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -391,45 +391,75 @@ int grib_set_string_internal(grib_handle* h, const char* name,
     return GRIB_NOT_FOUND;
 }
 
+/* Return 1 if we dealt with specific packing type changes and nothing more needs doing.
+ * Return 0 if further action is needed
+ */
+static int process_packingType_change(grib_handle* h, const char* keyname, const char* keyval)
+{
+    int err = 0;
+    char input_packing_type[100] = {0,};
+    size_t len = sizeof(input_packing_type);
+
+    if (grib_inline_strcmp(keyname, "packingType") == 0) {
+        /* Second order doesn't have a proper representation for constant fields.
+           So best not to do the change of packing type.
+           Use strncmp to catch all flavours of 2nd order packing e.g. grid_second_order_boustrophedonic */
+        if (strncmp(keyval, "grid_second_order", 17) == 0) {
+            long bitsPerValue   = 0;
+            size_t numCodedVals = 0;
+            err = grib_get_long(h, "bitsPerValue", &bitsPerValue);
+            if (!err && bitsPerValue == 0) {
+                /* ECC-1219: packingType conversion from grid_ieee to grid_second_order.
+                 * Normally having a bitsPerValue of 0 means a constant field but this is 
+                 * not so for IEEE packing which can be non-constant but always has bitsPerValue==0! */
+                len = sizeof(input_packing_type);
+                grib_get_string(h, "packingType", input_packing_type, &len);
+                if (strcmp(input_packing_type, "grid_ieee") != 0) {
+                    /* Not IEEE, so bitsPerValue==0 really means constant field */
+                    if (h->context->debug) {
+                        fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: "
+                                "Constant field cannot be encoded in second order. Packing not changed\n");
+                    }
+                    return 1; /* Dealt with - no further action needed */
+                }
+            }
+            /* GRIB-883: check if there are enough coded values */
+            err = grib_get_size(h, "codedValues", &numCodedVals);
+            if (!err && numCodedVals < 3) {
+                if (h->context->debug) {
+                    fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: "
+                            "Not enough coded values for second order. Packing not changed\n");
+                }
+                return 1; /* Dealt with - no further action needed */
+            }
+        }
+
+        /* ECC-1407: Are we changing from IEEE to CCSDS or Simple? */
+        if (strcmp(keyval, "grid_simple")==0 || strcmp(keyval, "grid_ccsds")==0) {
+            grib_get_string(h, "packingType", input_packing_type, &len);
+            if (strcmp(input_packing_type, "grid_ieee") == 0) {
+                const long max_bpv = 32; /* Cannot do any higher */
+                grib_set_long(h, "bitsPerValue", max_bpv);
+                /*
+                long accuracy = 0;
+                err = grib_get_long(h, "accuracy", &accuracy);
+                if (!err) {
+                    grib_set_long(h, "bitsPerValue", accuracy);
+                } */
+            }
+        }
+    }
+    return 0;  /* Further action is needed */
+}
+
 int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* length)
 {
     int ret          = 0;
     grib_accessor* a = NULL;
 
-    /* Second order doesn't have a proper representation for constant fields.
-       So best not to do the change of packing type.
-       Use strncmp to catch all flavours of second order packing e.g. grid_second_order_boustrophedonic
-     */
-    if (!grib_inline_strcmp(name, "packingType") && !strncmp(val, "grid_second_order", 17)) {
-        long bitsPerValue   = 0;
-        size_t numCodedVals = 0;
-        grib_get_long(h, "bitsPerValue", &bitsPerValue);
-        if (bitsPerValue == 0) {
-            /* ECC-1219: packingType conversion from grid_ieee to grid_second_order */
-            /* Normally having a bitsPerValue of 0 means a constant field but this is 
-             * not so for IEEE packing which can be non-constant but always has bitsPerValue==0!
-             */
-            char input_packing_type[100] = {0,};
-            size_t len = sizeof(input_packing_type);
-            grib_get_string(h, "packingType", input_packing_type, &len);
-            if (strcmp(input_packing_type, "grid_ieee") != 0) {
-                /* If it's not IEEE, then bitsPerValue==0 means constant field */
-                if (h->context->debug) {
-                    fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: Constant field cannot be encoded in second order. Packing not changed\n");
-                }
-                return 0;
-            }
-        }
-
-        /* GRIB-883: check if there are enough coded values */
-        ret = grib_get_size(h, "codedValues", &numCodedVals);
-        if (ret == GRIB_SUCCESS && numCodedVals < 3) {
-            if (h->context->debug) {
-                fprintf(stderr, "ECCODES DEBUG grib_set_string packingType: not enough coded values for second order. Packing not changed\n");
-            }
-            return 0;
-        }
-    }
+    int processed = process_packingType_change(h, name, val);
+    if (processed)
+        return GRIB_SUCCESS;  /* Dealt with - no further action needed */
 
     a = grib_find_accessor(h, name);
 
@@ -604,7 +634,7 @@ int grib_is_missing_double(grib_accessor* a, double x)
     return ret;
 }
 
-int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len)
+int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len)
 {
     /* For a string value to be missing, every character has to be */
     /* all 1's (i.e. 0xFF) */
@@ -1021,6 +1051,28 @@ int grib_get_double_element(const grib_handle* h, const char* name, int i, doubl
 
     if (act) {
         return grib_unpack_double_element(act, i, val);
+    }
+    return GRIB_NOT_FOUND;
+}
+
+int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
+{
+    int ret = grib_get_double_element_set(h, name, index_array, len, val_array);
+
+    if (ret != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to get %s as double element set (%s)",
+                         name, grib_get_error_message(ret));
+
+    return ret;
+}
+
+int grib_get_double_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
+{
+    grib_accessor* acc = grib_find_accessor(h, name);
+
+    if (acc) {
+        return grib_unpack_double_element_set(acc, index_array, len, val_array);
     }
     return GRIB_NOT_FOUND;
 }

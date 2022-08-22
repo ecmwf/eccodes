@@ -14,7 +14,7 @@ set -u
 # This is the test for the JIRA issue ECC-966.
 # Crash: setting shapeOfTheEarth=1 but scale factor missing
 # ---------------------------------------------------------
-label="grib_ecc-966-test"
+label="grib_ecc-966_test"
 tempGrib=temp.${label}.grib
 tempErrs=temp.${label}.errs
 

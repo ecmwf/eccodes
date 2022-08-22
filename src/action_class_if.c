@@ -43,52 +43,51 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void dump(grib_action* d, FILE*, int);
-static void xref(grib_action* d, FILE* f, const char* path);
-static void destroy(grib_context*, grib_action*);
-static int create_accessor(grib_section*, grib_action*, grib_loader*);
-static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit);
-static int execute(grib_action* a, grib_handle* h);
+static void init_class      (grib_action_class*);
+static void dump            (grib_action* d, FILE*,int);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static void destroy         (grib_context*,grib_action*);
+static int create_accessor(grib_section*,grib_action*,grib_loader*);
+static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
+static int execute(grib_action* a,grib_handle* h);
 
 
-typedef struct grib_action_if
-{
-    grib_action act;
+typedef struct grib_action_if {
+    grib_action          act;  
     /* Members defined in section */
     /* Members defined in if */
-    grib_expression* expression;
-    grib_action* block_true;
-    grib_action* block_false;
+    grib_expression *expression;
+    grib_action     *block_true;
+    grib_action     *block_false;
     int transient;
 } grib_action_if;
 
 extern grib_action_class* grib_action_class_section;
 
 static grib_action_class _grib_action_class_if = {
-    &grib_action_class_section, /* super                     */
-    "action_class_if",          /* name                      */
-    sizeof(grib_action_if),     /* size                      */
-    0,                          /* inited */
-    &init_class,                /* init_class */
-    0,                          /* init                      */
-    &destroy,                   /* destroy */
+    &grib_action_class_section,                              /* super                     */
+    "action_class_if",                              /* name                      */
+    sizeof(grib_action_if),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    &dump, /* dump                      */
-    &xref, /* xref                      */
+    &dump,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    &create_accessor, /* create_accessor*/
+    &create_accessor,             /* create_accessor*/
 
-    0,        /* notify_change */
-    &reparse, /* reparse */
-    &execute, /* execute */
+    0,                            /* notify_change */
+    &reparse,                            /* reparse */
+    &execute,                            /* execute */
 };
 
 grib_action_class* grib_action_class_if = &_grib_action_class_if;
 
 static void init_class(grib_action_class* c)
 {
-    c->notify_change = (*(c->super))->notify_change;
+    c->notify_change    =    (*(c->super))->notify_change;
 }
 /* END_CLASS_IMP */
 

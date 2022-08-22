@@ -10,8 +10,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-
 
 #include "grib_api_internal.h"
 
@@ -23,6 +21,7 @@
 
 void test_bits(double x, unsigned long mode)
 {
+    int err = 0;
     double y = 0, z = 0, w = 0, t = 0;
     double dy = 0, dz = 0, dw = 0, dt = 0;
     unsigned long i = 0, j = 0, k = 0, l = 0;
@@ -39,7 +38,8 @@ void test_bits(double x, unsigned long mode)
     dw = w - x;
 
     if (!(mode & NO_NEAREST_SMALLER_IBM_FLOAT)) {
-        t  = grib_nearest_smaller_ibm_float(x);
+        err  = grib_nearest_smaller_ibm_float(x, &t);
+        Assert(!err);
         l  = grib_ibm_to_long(y);
         dt = t - x;
     }
@@ -94,19 +94,14 @@ void print_machine_parameters()
 
 int main(int argc, char* argv[])
 {
-    double x, y, z, w, d, eps, epst, epsh;
-    double dt = 0;
-    unsigned long i, j, n, nc, c, m;
-    unsigned long seed = 123;
-    unsigned char ibm[4];
-    float xf = 0;
-    int r;
+    double x, y, z, d, eps, epst, epsh;
+    unsigned long i, j, nc, c;
+    /*unsigned char ibm[4];*/
     unsigned long iminp = 0x00100000, imaxp = 0x7fffffff;
     unsigned long iminn = 0x80100000, imaxn = 0xffffffff;
     double dminp = 0, dmaxp = 0, dminn = 0, dmaxn = 0;
     double dminpn = 0, dmaxpp = 0, dminnn = 0, dmaxnp = 0;
     unsigned long A;
-    long e;
     int k, cc;
 
     dminp  = grib_long_to_ibm(iminp);
@@ -124,7 +119,7 @@ int main(int argc, char* argv[])
     printf("grib_ibm_to_long(%.20e)=0x%lX grib_long_to_ibm(0x%lX)=%.20e grib_ibm_nearest_smaller_to_long(%.20e)=0x%lX\n",
            x, i, i, grib_long_to_ibm(i), x, j);
     printf("grib_long_to_ibm(grib_ibm_nearest_smaller_to_long(%.20e))=%.20e\n", x, grib_long_to_ibm(j));
-    exit(0);
+    /* exit(0); */
 
     /*
   if (argc > 1 ) {
@@ -242,9 +237,9 @@ int main(int argc, char* argv[])
         }
 
         A   = (i & 0x7f000000) >> 24;
-        e   = A - 70;
+        /*e   = A - 70;*/
         eps = 1;
-        m   = (i & 0xffffff);
+        /*m   = (i & 0xffffff);*/
         /* printf("---m=0x%lX\n",m); */
 
         eps = grib_ibm_table_e(A);

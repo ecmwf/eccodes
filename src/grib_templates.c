@@ -49,6 +49,7 @@ grib_handle* grib_internal_sample(grib_context* c,const char* name)
 #define ECC_PATH_DELIMITER_CHAR ':'
 #endif
 
+/* if product_kind is PRODUCT_ANY, the type of sample file is determined at runtime */
 static grib_handle* try_product_template(grib_context* c, ProductKind product_kind, const char* dir, const char* name)
 {
     char path[1024];
@@ -70,14 +71,37 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
             grib_context_log(c, GRIB_LOG_PERROR, "cannot open %s", path);
             return NULL;
         }
+        if (product_kind == PRODUCT_ANY)
+        {
+            /* Determine the product kind from sample file */
+            char* mesg   = NULL;
+            size_t size  = 0;
+            off_t offset = 0;
+            mesg = (char*)wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err);
+            if (mesg && !err) {
+                Assert(size > 4);
+                if (strncmp(mesg, "GRIB", 4) == 0 || strncmp(mesg, "DIAG", 4) == 0 || strncmp(mesg, "BUDG", 4) == 0) {
+                    product_kind = PRODUCT_GRIB;
+                } else if (strncmp(mesg, "BUFR", 4) == 0) {
+                    product_kind = PRODUCT_BUFR;
+                } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "Could not determine product kind");
+                }
+                grib_context_free(c, mesg);
+                rewind(f);
+            } else {
+                grib_context_log(c, GRIB_LOG_ERROR, "Could not determine product kind");
+            }
+        }
         if (product_kind == PRODUCT_BUFR) {
             g = codes_bufr_handle_new_from_file(c, f, &err);
         } else {
             /* Note: Pseudo GRIBs like DIAG and BUDG also come here */
+            DebugAssert(product_kind == PRODUCT_GRIB);
             g = grib_handle_new_from_file(c, f, &err);
         }
         if (!g) {
-            grib_context_log(c, GRIB_LOG_ERROR, "cannot create handle from %s", path);
+            grib_context_log(c, GRIB_LOG_ERROR, "Cannot create handle from %s", path);
         }
         fclose(f);
     }
@@ -100,7 +124,7 @@ static char* try_template_path(grib_context* c, const char* dir, const char* nam
     return NULL;
 }
 
-grib_handle* grib_external_template(grib_context* c, const char* name)
+grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name)
 {
     const char* base = c->grib_samples_path;
     char buffer[1024];
@@ -113,7 +137,7 @@ grib_handle* grib_external_template(grib_context* c, const char* name)
     while (*base) {
         if (*base == ECC_PATH_DELIMITER_CHAR) {
             *p = 0;
-            g  = try_product_template(c, PRODUCT_GRIB, buffer, name);
+            g  = try_product_template(c, product_kind, buffer, name);
             if (g)
                 return g;
             p = buffer;
@@ -123,33 +147,7 @@ grib_handle* grib_external_template(grib_context* c, const char* name)
     }
 
     *p       = 0;
-    return g = try_product_template(c, PRODUCT_GRIB, buffer, name);
-}
-
-grib_handle* bufr_external_template(grib_context* c, const char* name)
-{
-    const char* base = c->grib_samples_path;
-    char buffer[1024];
-    char* p        = buffer;
-    grib_handle* g = NULL;
-
-    if (!base)
-        return NULL;
-
-    while (*base) {
-        if (*base == ECC_PATH_DELIMITER_CHAR) {
-            *p = 0;
-            g  = try_product_template(c, PRODUCT_BUFR, buffer, name);
-            if (g)
-                return g;
-            p = buffer;
-            base++; /*advance past delimiter*/
-        }
-        *p++ = *base++;
-    }
-
-    *p = 0;
-    g  = try_product_template(c, PRODUCT_BUFR, buffer, name);
+    g = try_product_template(c, product_kind, buffer, name);
     return g;
 }
 

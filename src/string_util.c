@@ -27,7 +27,7 @@ int strcmp_nocase(const char* s1, const char* s2)
 }
 
 /* Strip whitespace from the end of a string */
-void rtrim(char* s)
+void string_rtrim(char* s)
 {
     size_t len = 0;
     if (!s)
@@ -38,7 +38,7 @@ void rtrim(char* s)
     s[len] = '\0';
 }
 
-void lrtrim(char** x, int do_left, int do_right)
+void string_lrtrim(char** x, int do_left, int do_right)
 {
     DebugAssert(do_left || do_right);
     if (do_left) {
@@ -161,7 +161,7 @@ int string_ends_with(const char* s, const char* suffix)
     return 0;
 }
 
-int count_char_in_string(const char* str, char c)
+int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
     DebugAssert(str);
@@ -207,4 +207,31 @@ const char* grib_get_type_name(int type)
             return "section";
     }
     return "unknown";
+}
+
+/* Replace all occurrences of character in string.
+*  Returns pointer to the NUL byte at the end of 's'
+*/
+char *string_replace_char(char *s, char oldc, char newc)
+{
+    for (; *s; ++s)
+        if (*s == oldc)
+            *s = newc;
+    return s;
+}
+
+/* Remove all instances of character 'c' from 'str' */
+void string_remove_char(char * str, char c)
+{
+    size_t i, j;
+    size_t len = strlen(str);
+    for(i=0; i<len; i++) {
+        if(str[i] == c) {
+            for(j=i; j<len; j++) {
+                str[j] = str[j+1];
+            }
+            len--;
+            i--;
+        }
+    }
 }

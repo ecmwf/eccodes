@@ -2,10 +2,10 @@
 set -eu
 
 # Usage:
-#  create_legacy_def.sh $paramId
+#  create_legacy_def.sh $paramId $paramId...
 #
 # This script will insert the local ECMWF GRIB2 representation
-# for that paramId into the files:
+# for each paramId into the files:
 #   definitions/grib2/localConcepts/ecmf/paramId.legacy.def
 #   definitions/grib2/localConcepts/ecmf/shortName.legacy.def
 #   etc
@@ -22,7 +22,13 @@ set -eu
 #  The parameterNumber = $paramId - parameterCategory*1000
 #
 
-pid=$1
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 pid1 pid2 ..." 2>&1
+    exit 1
+fi
+
+# Input list of paramId values
+pids="$@"
 
 sample2=samples/GRIB2.tmpl
 temp=$TMPDIR/temp.create_legacy_def.grib
@@ -49,23 +55,38 @@ output_def()
     fi
 }
 
-grib_set -s paramId=$pid $sample2 $temp
-name=$(grib_get -p name $temp)
-shortName=$(grib_get -p shortName $temp)
-units=$(grib_get -p units $temp)
-cfName=$(grib_get -p cfName $temp)
-cfVarName=$(grib_get -p cfVarName $temp)
+count=0
+for pid in $pids; do
+    echo "Doing $pid..."
+    set +e
+    grib_set -s paramId=$pid $sample2 $temp 2>/dev/null
+    status=$?
+    set -e
+    if [ $status -ne 0 ]; then
+        grib_set -s stepType=accum,paramId=$pid $sample2 $temp
+    fi
+    name=$(grib_get -p name $temp)
+    shortName=$(grib_get -p shortName $temp)
+    units=$(grib_get -p units $temp)
+    cfName=$(grib_get -p cfName $temp)
+    cfVarName=$(grib_get -p cfVarName $temp)
+    count=$((count+1))
 
-dis=192
-cat=$((pid/1000))
-num=$((pid - cat*1000))
+    dis=192
+    cat=$((pid/1000))
+    num=$((pid - cat*1000))
 
-output_def "$name" "$pid"       $dis $cat $num >> $defs/paramId.legacy.def
-output_def "$name" "$name"      $dis $cat $num >> $defs/name.legacy.def
-output_def "$name" "$shortName" $dis $cat $num >> $defs/shortName.legacy.def
-output_def "$name" "$units"     $dis $cat $num >> $defs/units.legacy.def
-output_def "$name" "$cfVarName" $dis $cat $num >> $defs/cfVarName.legacy.def
-output_def "$name" "$cfName"    $dis $cat $num >> $defs/cfName.legacy.def
+    output_def "$name" "$pid"       $dis $cat $num >> $defs/paramId.legacy.def
+    output_def "$name" "$name"      $dis $cat $num >> $defs/name.legacy.def
+    output_def "$name" "$shortName" $dis $cat $num >> $defs/shortName.legacy.def
+    output_def "$name" "$units"     $dis $cat $num >> $defs/units.legacy.def
+    output_def "$name" "$cfVarName" $dis $cat $num >> $defs/cfVarName.legacy.def
+    output_def "$name" "$cfName"    $dis $cat $num >> $defs/cfName.legacy.def
 
-echo "Files updated. Check directory $defs"
+done
+
+echo "Number of legacy parameters added: $count"
+if [ $count -gt 0 ]; then
+    echo "Files updated. Check directory $defs"
+fi
 rm -f $temp

@@ -57,5 +57,13 @@ cat $fTmp
 grep -q "Passed array is too small" $fTmp
 
 
+# ------------------------
+# Test setting header key
+# ------------------------
+${tools_dir}/bufr_ls -s satelliteID=313 -p satelliteID aaen_55.bufr > $fTmp
+grep -q "313" $fTmp
+
+
+# Clean up
 rm -f $fLog $res_ls 
 rm -f $fTmp

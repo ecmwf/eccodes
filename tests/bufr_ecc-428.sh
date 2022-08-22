@@ -17,7 +17,7 @@
 # rather than a single value
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_428_test"
+label="bufr_ecc-428_test"
 
 tempRules=temp.${label}.filter
 tempText=temp.${label}.text

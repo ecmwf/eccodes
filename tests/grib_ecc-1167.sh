@@ -9,12 +9,12 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1167
 # GRIB: Allow setting byte array as string
 # ---------------------------------------------------------
-label="grib_ecc-1167-test"
+label="grib_ecc-1167_test"
 temp1=temp.${label}.1.grib
 temp2=temp.${label}.2.grib
 errlog=temp.${label}.err

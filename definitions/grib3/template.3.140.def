@@ -33,7 +33,7 @@ signed[4] centralLongitudeInMicrodegrees  : dump;
 alias centralLongitude=centralLongitudeInMicrodegrees;
 
 #  Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/3.3.table' : dump ;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/4.1.table' : dump ;
 
 #  Dx - X-direction grid length in millimetres
 unsigned[4] xDirectionGridLengthInMillimetres  : dump ;

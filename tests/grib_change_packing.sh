@@ -76,15 +76,24 @@ rm -f $temp
 
 # IEEE to Simple Packing
 # -----------------------
-input=${data_dir}/grid_ieee.grib
-${tools_dir}/grib_set -r -s packingType=grid_simple $input $temp
-grib_check_key_equals $input accuracy 32
-grib_check_key_equals $temp packingType 'grid_simple'
-grib_check_key_equals $temp accuracy 24
-stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
-stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
-[ "$stats1" = "$stats2" ]
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    input=${data_dir}/grid_ieee.grib
+    ${tools_dir}/grib_set -r -s packingType=grid_simple $input $temp
+    grib_check_key_equals $input accuracy 32
+    grib_check_key_equals $temp packingType 'grid_simple'
+    grib_check_key_equals $temp accuracy,bitsPerValue '32 32'
+    stats1=`${tools_dir}/grib_get -F%.2f -p skew,kurt $input`
+    stats2=`${tools_dir}/grib_get -F%.2f -p skew,kurt $temp`
+    [ "$stats1" = "$stats2" ]
 
+    # 64bit IEEE - We can only do max. 32 with CCSDS
+    input=${data_dir}/reduced_gaussian_model_level.grib2
+    ${tools_dir}/grib_set -r -s packingType=grid_ieee,precision=2  $input $temp
+    grib_check_key_equals $temp packingType,accuracy 'grid_ieee 64'
+    ${tools_dir}/grib_set -r -s packingType=grid_simple $temp $temp.simple
+    grib_check_key_equals $temp.simple packingType,accuracy 'grid_simple 32'
+    rm -f $temp.simple
+fi
 
 # Test 'accuracy' key
 # -----------------------
@@ -126,6 +135,28 @@ if [ $HAVE_AEC -eq 0 ]; then
     [ $status -ne 0 ]
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
+
+# Large constant fields
+# -----------------------
+input=${data_dir}/sample.grib2
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=0 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+ECCODES_GRIB_LARGE_CONSTANT_FIELDS=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=0 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 0 5'
+
+${tools_dir}/grib_set -s produceLargeConstantFields=1 -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section7Length '1 16 997'
+
+# GRIB1: when GRIBEX mode is enabled, we also get a large constant field
+input=${data_dir}/simple.grib
+${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 0 12'
+ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -d1 $input $temp
+grib_check_key_equals $temp const,bitsPerValue,section4Length '1 12 8966'
 
 
 rm -f $temp $temp_err

@@ -21,8 +21,8 @@
    MEMBERS    = int  lats_count
    MEMBERS    = double* lons
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Nj
    MEMBERS    = const char* pl
    MEMBERS    = const char* lonFirst
@@ -42,26 +42,25 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_nearest_class*);
+static void init_class              (grib_nearest_class*);
 
-static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-static int destroy(grib_nearest* nearest);
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
 
-typedef struct grib_nearest_latlon_reduced
-{
-    grib_nearest nearest;
+typedef struct grib_nearest_latlon_reduced{
+  grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
     /* Members defined in latlon_reduced */
     double* lats;
-    int lats_count;
+    int  lats_count;
     double* lons;
     double* distances;
-    int* k;
-    int* j;
+    size_t* k;
+    size_t* j;
     const char* Nj;
     const char* pl;
     const char* lonFirst;
@@ -71,14 +70,14 @@ typedef struct grib_nearest_latlon_reduced
 extern grib_nearest_class* grib_nearest_class_gen;
 
 static grib_nearest_class _grib_nearest_class_latlon_reduced = {
-    &grib_nearest_class_gen,             /* super                     */
-    "latlon_reduced",                    /* name                      */
-    sizeof(grib_nearest_latlon_reduced), /* size of instance          */
-    0,                                   /* inited */
-    &init_class,                         /* init_class */
-    &init,                               /* constructor               */
-    &destroy,                            /* destructor                */
-    &find,                               /* find nearest              */
+    &grib_nearest_class_gen,                         /* super */
+    "latlon_reduced",                         /* name */
+    sizeof(grib_nearest_latlon_reduced),      /* size of instance */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_latlon_reduced = &_grib_nearest_class_latlon_reduced;
@@ -96,10 +95,10 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->pl                          = grib_arguments_get_name(h, args, self->cargs++);
     self->lonFirst                    = grib_arguments_get_name(h, args, self->cargs++);
     self->lonLast                     = grib_arguments_get_name(h, args, self->cargs++);
-    self->j                           = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->j                           = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
+    self->k = (size_t*)grib_context_malloc(nearest->context, 4 * sizeof(size_t));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
 

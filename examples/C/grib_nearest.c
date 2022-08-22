@@ -48,15 +48,15 @@ int main(int argc, char** argv)
     double lat = -40, lon = 15;
     int mode = 0;
     int count;
-    char** filenames;
+    const char** filenames = NULL;
     codes_nearest* nearest = NULL;
 
     if (argc < 2) usage(argv[0]);
 
     nfiles    = argc - 1;
-    filenames = (char**)malloc(sizeof(char*) * nfiles);
+    filenames = (const char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
-        filenames[i] = (char*)strdup(argv[i + 1]);
+        filenames[i] = strdup(argv[i + 1]);
 
     set = codes_fieldset_new_from_files(0, filenames, nfiles, 0, 0, 0, order_by, &err);
     CODES_CHECK(err, 0);
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     if (set) codes_fieldset_delete(set);
 
     for (i = 0; i < nfiles; i++)
-        free(filenames[i]);
+        free((char*)filenames[i]);
     free(filenames);
 
     return 0;

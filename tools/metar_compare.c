@@ -258,7 +258,7 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("r")) {
-        char* filename[1];
+        const char* filename[1];
         filename[0]      = options->infile_extra->name;
         options->random  = 1;
         options->orderby = strdup(orderby);

@@ -235,7 +235,7 @@ typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 typedef struct bufr_descriptors_map_list bufr_descriptors_map_list;
 
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
@@ -1398,11 +1398,6 @@ struct grib_points
     size_t n;
     size_t size;
 };
-
-/* These box functions are deprecated and will later be removed */
-grib_box* grib_box_new(grib_handle* h, int* error);
-grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 
 
 /* --------------------------------------- */

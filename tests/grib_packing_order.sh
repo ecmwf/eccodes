@@ -9,9 +9,9 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 REDIRECT=/dev/null
-label="grib_packing_order"
+label="grib_packing_order_test"
 temp=${label}".grib.tmp"
 temp_simple1=${label}".simple1.tmp"
 temp_simple2=${label}".simple2.tmp"

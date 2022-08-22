@@ -14,7 +14,7 @@
 # This is the test for the JIRA issue ECC-680:
 # BUFR operator 203YYY: implement encoding
 # ---------------------------------------------------------
-label="bufr_ecc-680-test"
+label="bufr_ecc-680_test"
 
 tempBufr=temp.$label.bufr
 tempFilt=temp.${label}.filter

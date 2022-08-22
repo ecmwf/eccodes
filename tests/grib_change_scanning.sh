@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-label="grib_change_scanning"
+label="grib_change_scanning_test"
 
 editions="1 2"
 gridTypes="regular_ll rotated_ll" 

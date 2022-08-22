@@ -43,21 +43,20 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
-typedef struct grib_dumper_keys
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_keys {
+    grib_dumper          dumper;  
     /* Members defined in keys */
     long section_offset;
     long begin;
@@ -66,24 +65,24 @@ typedef struct grib_dumper_keys
 
 
 static grib_dumper_class _grib_dumper_class_keys = {
-    0,                        /* super                     */
-    "keys",                   /* name                      */
-    sizeof(grib_dumper_keys), /* size                      */
-    0,                        /* inited */
-    &init_class,              /* init_class */
-    &init,                    /* init                      */
-    &destroy,                 /* free mem                       */
-    &dump_long,               /* dump long         */
-    &dump_double,             /* dump double    */
-    &dump_string,             /* dump string    */
+    0,                              /* super                     */
+    "keys",                              /* name                      */
+    sizeof(grib_dumper_keys),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
     0,                        /* dump string array   */
-    &dump_label,              /* dump labels  */
-    &dump_bytes,              /* dump bytes  */
-    &dump_bits,               /* dump bits   */
-    &dump_section,            /* dump section      */
-    &dump_values,             /* dump values   */
-    0,                        /* header   */
-    0,                        /* footer   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    0,                             /* header   */
+    0,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_keys = &_grib_dumper_class_keys;

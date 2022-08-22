@@ -18,6 +18,15 @@ if( EC_OS_NAME MATCHES "windows" )
   list( APPEND ecc_tools_sources wingetopt.c )
 endif()
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    foreach( _src ${ecc_tools_sources} )
+        get_filename_component( _ext ${_src} EXT )
+        if( _ext STREQUAL ".c" )
+            set_source_files_properties(${_src} PROPERTIES LANGUAGE CXX)
+        endif()
+    endforeach()
+endif()
+
 # tools library
 ecbuild_add_library( TARGET    ecc_tools
                      TYPE      STATIC
@@ -48,6 +57,9 @@ list( APPEND ecc_tools_binaries_extra
 # Install generic tools
 foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
+    if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+        set_source_files_properties(${tool}.c PROPERTIES LANGUAGE CXX)
+    endif()
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
                             LIBS       ecc_tools )

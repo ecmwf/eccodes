@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 set -u
 
-label="bufr_ecc-1195-test"
+label="bufr_ecc-1195_test"
 temp1=temp.$label.bufr
 temp2=temp.$label.txt
 sample_bufr3=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl

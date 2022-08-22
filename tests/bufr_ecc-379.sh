@@ -15,7 +15,7 @@
 # BUFR encoding failing when value out of range
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_379_test"
+label="bufr_ecc-379_test"
 
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.bufr

@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_lam_bf"
+label="grib_lam_bf_test"
 temp=temp.$label.txt
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then

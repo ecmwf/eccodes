@@ -63,4 +63,15 @@ test_stream_and_type()
 test_stream_and_type 'oper'
 test_stream_and_type 'test'
 
+# ECC-1428
+# ----------
+${tools_dir}/grib_set -s marsType=oi $tempSample $temp1
+grib_check_key_equals $temp1 'mars.type' 'oi'
+set +e
+${tools_dir}/grib_set -s marsType=xx $tempSample $temp1
+status=$?
+set -e
+[ $status -ne 0 ]
+
+# Clean up
 rm -f $temp1 $temp2 $tempSample

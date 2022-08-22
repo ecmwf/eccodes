@@ -248,6 +248,29 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
     return gl;
 }
 
+grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
+{
+    grib_handle* g = 0;
+    if (c == NULL)
+        c = grib_context_get_default();
+    grib_context_set_handle_file_count(c, 0);
+    grib_context_set_handle_total_count(c, 0);
+
+    if (c->debug) {
+        fprintf(stderr, "ECCODES DEBUG codes_handle_new_from_samples '%s'\n", name);
+    }
+
+    g = codes_external_template(c, PRODUCT_ANY, name);
+    if (!g)
+        grib_context_log(c, GRIB_LOG_ERROR,
+                         "Unable to load sample file '%s.tmpl'\n"
+                         "                   from %s\n"
+                         "                   (ecCodes Version=%s)",
+                         name, c->grib_samples_path, ECCODES_VERSION_STR);
+
+    return g;
+}
+
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
 {
     grib_handle* g = 0;
@@ -264,7 +287,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
-    g = grib_external_template(c, name);
+    g = codes_external_template(c, PRODUCT_GRIB, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load GRIB sample file '%s.tmpl'\n"
@@ -283,15 +306,11 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
     grib_context_set_handle_file_count(c, 0);
     grib_context_set_handle_total_count(c, 0);
 
-    /*
-     *  g = grib_internal_sample(c,name);
-     *  if(g) return g;
-     */
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG bufr_handle_new_from_samples '%s'\n", name);
     }
 
-    g = bufr_external_template(c, name);
+    g = codes_external_template(c, PRODUCT_BUFR, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"

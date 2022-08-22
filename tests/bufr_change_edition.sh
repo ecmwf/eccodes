@@ -13,7 +13,7 @@
 cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
-label="bufr_change_edition"
+label="bufr_change_edition_test"
 
 fBufrTmp=${label}".bufr.tmp"
 

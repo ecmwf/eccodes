@@ -124,6 +124,7 @@ int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len);
 int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_t len);
 int grib_unpack_double(grib_accessor* a, double* v, size_t* len);
 int grib_unpack_double_element(grib_accessor* a, size_t i, double* v);
+int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array);
 int grib_unpack_string(grib_accessor* a, char* v, size_t* len);
 int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len);
 int grib_accessors_list_unpack_long(grib_accessors_list* al, long* val, size_t* buffer_len);
@@ -985,7 +986,7 @@ long grib_date_to_julian(long ddate);
 
 /* grib_fieldset.c */
 int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type);
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 void grib_fieldset_delete_order_by(grib_context* c, grib_order_by* order_by);
@@ -1025,6 +1026,7 @@ void grib_empty_section(grib_context* c, grib_section* b);
 void grib_section_delete(grib_context* c, grib_section* b);
 int grib_handle_delete(grib_handle* h);
 grib_handle* grib_new_handle(grib_context* c);
+grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name);
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name);
 grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* name);
 int grib_write_message(const grib_handle* h, const char* file, const char* mode);
@@ -1074,7 +1076,7 @@ void grib_math_delete(grib_context* c, grib_math* m);
 grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
 
 /* grib_hash_keys.c */
-const struct grib_keys_hash* grib_keys_hash_get(const char* str, unsigned int len);
+const struct grib_keys_hash* grib_keys_hash_get(register const char *str, register size_t len);
 grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
 void grib_hash_keys_delete(grib_itrie* t);
 int grib_hash_keys_get_id(grib_itrie* t, const char* key);
@@ -1186,9 +1188,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
 long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);
 
 /* grib_templates.c */
-/*grib_handle *grib_internal_sample(grib_context *c, const char *name);*/
-grib_handle* grib_external_template(grib_context* c, const char* name);
-grib_handle* bufr_external_template(grib_context* c, const char* name);
+grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
 char* get_external_template_path(grib_context* c, const char* name);
 
 /* grib_dependency.c */
@@ -1219,7 +1219,7 @@ int grib_set_missing_internal(grib_handle* h, const char* name);
 int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
-int grib_is_missing_string(grib_accessor* a, unsigned char* x, size_t len);
+int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -1237,6 +1237,8 @@ int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i, double* val);
 int grib_get_double_element(const grib_handle* h, const char* name, int i, double* val);
+int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array);
+int grib_get_double_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array);
 int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);
@@ -1324,10 +1326,7 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
 
 /* grib_box.c */
-grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
 int grib_box_init(grib_box* box, grib_handle* h, grib_arguments* args);
-int grib_box_delete(grib_box* box);
-grib_points* grib_points_new(grib_context* c, size_t size);
 void grib_points_delete(grib_points* points);
 
 /* grib_box_class.c */
@@ -1340,7 +1339,7 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);
 int grib_nearest_delete(grib_nearest* i);
 int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
-void grib_binary_search(double xx[], const unsigned long n, double x, int* ju, int* jl);
+void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
     const char*  values_keyname, const char* Ni_keyname, const char* Nj_keyname,
@@ -1419,6 +1418,7 @@ const char* grib_arguments_get_string(grib_handle* h, grib_arguments* args, int 
 long grib_arguments_get_long(grib_handle* h, grib_arguments* args, int n);
 double grib_arguments_get_double(grib_handle* h, grib_arguments* args, int n);
 grib_expression* grib_arguments_get_expression(grib_handle* h, grib_arguments* args, int n);
+int grib_arguments_get_count(grib_arguments* args);
 
 /* codes_util.c */
 double normalise_longitude_in_degrees(double lon);
@@ -1446,6 +1446,8 @@ int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
 int grib_is_earth_oblate(grib_handle* h);
+int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val);
+int grib_producing_large_constant_fields(grib_handle* h, int edition);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.c */
@@ -1458,16 +1460,17 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 
 /* string_util.c */
 int strcmp_nocase(const char* s1, const char* s2);
-void rtrim(char* s);
-void lrtrim(char** x, int do_left, int do_right);
+void string_rtrim(char* s);
+void string_lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
 int string_to_long(const char* input, long* output);
 int string_ends_with(const char* str1, const char* str2);
-int count_char_in_string(const char* str, char c);
+int string_count_char(const char* str, char c);
 const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
-
+char* string_replace_char(char *str, char oldc, char newc);
+void string_remove_char(char * str, char c);
 
 /* functions.c */
 long grib_op_eq(long a, long b);

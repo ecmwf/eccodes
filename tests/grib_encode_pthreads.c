@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <assert.h>
-#include "grib_api.h"
+
+#include "grib_api_internal.h"
 
 #define NUM_THREADS 8
 #define FILES_PER_ITERATION 10
@@ -57,8 +57,8 @@ static int encode_file(char* input_file, char* output_file)
 
     FILE* in  = fopen(input_file, "rb");
     FILE* out = fopen(output_file, "wb");
-    assert(in);
-    assert(out);
+    Assert(in);
+    Assert(out);
 
     while ((source_handle = grib_handle_new_from_file(0, in, &err)) != NULL) {
         size_t size = 0, values_len = 0;
@@ -68,7 +68,7 @@ static int encode_file(char* input_file, char* output_file)
         double d, e;
 
         grib_handle* clone_handle = grib_handle_clone(source_handle);
-        assert(clone_handle);
+        Assert(clone_handle);
 
         GRIB_CHECK(grib_get_size(clone_handle, "values", &values_len), 0);
         values = (double*)malloc(values_len * sizeof(double));

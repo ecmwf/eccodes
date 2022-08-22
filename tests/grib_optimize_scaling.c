@@ -12,7 +12,7 @@
 
 /*
  * Test the use of optimizeScaleFactor; on the following field, the packing error
- * is reduced by almost a factor of 2; 
+ * is reduced by almost a factor of 2;
  * Test that second order packing gives the same result as simple packing with optimizeScaleFactor=1
  * philippe.marguinaud@meteo.fr, 2016/02
  */
@@ -2718,6 +2718,7 @@ static void encode_decode(double* zval, const char* packingType, const int bitsP
     size_t len, slen;
     grib_handle* h;
 
+    /*printf("encode_decode: packingType=%s bitsPerValue=%d opt=%d\n", packingType, bitsPerValue, ioptimizeScaleFactor);*/
     GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "regular_ll_pl_grib2")) == NULL), 0);
     GRIB_CHECK(grib_set_long(h, "Ni", NLON), 0);
     GRIB_CHECK(grib_set_long(h, "Nj", NLAT), 0);
@@ -2749,8 +2750,7 @@ int main(int argc, char* argv[])
     int bitsPerValue[11] = { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
     int ipackingType, ibitsPerValue, ioptimizeScaleFactor;
 
-
-    for (ibitsPerValue = 0; ibitsPerValue < 11; ibitsPerValue++)
+    for (ibitsPerValue = 0; ibitsPerValue < 11; ibitsPerValue++) {
         for (ipackingType = 0; ipackingType < 2; ipackingType++) {
             double zval_simple[NLAT * NLON];
             double zval_second[NLAT * NLON];
@@ -2766,7 +2766,7 @@ int main(int argc, char* argv[])
                 return 1;
             }
         }
-
+    }
     printf(" %30s %30s %30s  %s\n", "bitsPerValue", "error(optimizeScaleFactor=0)", "error(optimizeScaleFactor=1)", "ratio");
     for (ibitsPerValue = 0; ibitsPerValue < 11; ibitsPerValue++) {
         double zerr[2];

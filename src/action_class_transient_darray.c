@@ -36,52 +36,51 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void dump(grib_action* d, FILE*, int);
-static void xref(grib_action* d, FILE* f, const char* path);
-static void destroy(grib_context*, grib_action*);
-static int execute(grib_action* a, grib_handle* h);
+static void init_class      (grib_action_class*);
+static void dump            (grib_action* d, FILE*,int);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static void destroy         (grib_context*,grib_action*);
+static int execute(grib_action* a,grib_handle* h);
 
 
-typedef struct grib_action_transient_darray
-{
-    grib_action act;
+typedef struct grib_action_transient_darray {
+    grib_action          act;  
     /* Members defined in gen */
-    long len;
+    long            len;
     grib_arguments* params;
     /* Members defined in transient_darray */
-    grib_darray* darray;
-    char* name;
+    grib_darray *darray;
+    char *name;
 } grib_action_transient_darray;
 
 extern grib_action_class* grib_action_class_gen;
 
 static grib_action_class _grib_action_class_transient_darray = {
-    &grib_action_class_gen,               /* super                     */
-    "action_class_transient_darray",      /* name                      */
-    sizeof(grib_action_transient_darray), /* size                      */
-    0,                                    /* inited */
-    &init_class,                          /* init_class */
-    0,                                    /* init                      */
-    &destroy,                             /* destroy */
+    &grib_action_class_gen,                              /* super                     */
+    "action_class_transient_darray",                              /* name                      */
+    sizeof(grib_action_transient_darray),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    &dump, /* dump                      */
-    &xref, /* xref                      */
+    &dump,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    0, /* create_accessor*/
+    0,             /* create_accessor*/
 
-    0,        /* notify_change */
-    0,        /* reparse */
-    &execute, /* execute */
+    0,                            /* notify_change */
+    0,                            /* reparse */
+    &execute,                            /* execute */
 };
 
 grib_action_class* grib_action_class_transient_darray = &_grib_action_class_transient_darray;
 
 static void init_class(grib_action_class* c)
 {
-    c->create_accessor = (*(c->super))->create_accessor;
-    c->notify_change   = (*(c->super))->notify_change;
-    c->reparse         = (*(c->super))->reparse;
+    c->create_accessor    =    (*(c->super))->create_accessor;
+    c->notify_change    =    (*(c->super))->notify_change;
+    c->reparse    =    (*(c->super))->reparse;
 }
 /* END_CLASS_IMP */
 

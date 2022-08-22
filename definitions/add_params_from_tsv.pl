@@ -126,6 +126,9 @@ if ($SANITY_CHECK) {
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
 
+        die "Error: Name '$name': ends in space" if ($name =~ / $/);
+        die "Error: Name '$name': starts with space" if ($name =~ /^ /);
+
         # Will die if it fails
         get_db_units_code($units);
 
@@ -268,6 +271,7 @@ while (<>) {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
         }
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($is_srcsink ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,65,1,0)  if ($is_srcsink eq "1");
 
         # format is only GRIB2 hence grib1 entry=0 and grib2=1
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);

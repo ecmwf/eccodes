@@ -1037,7 +1037,7 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
     char fname[1024];
     int ret=GRIB_SUCCESS;
     char* iobuf=NULL;
-    /*TODO Proper context passed as external parameter */
+    char* trimmed = NULL; /* filename trimmed */
     grib_context* context=grib_context_get_default();
 
     cast_char(oper,op,lop);
@@ -1046,10 +1046,12 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
 
     while (*p != '\0') { *p=tolower(*p);p++;}
 
-    f = fopen(cast_char(fname,name,lname),oper);
+    trimmed = cast_char_no_cut(fname,name,lname); /* ECC-1392 */
+    string_rtrim( trimmed );
+    f = fopen(trimmed, oper);
     if(!f) {
         ioerr=errno;
-        grib_context_log(context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s: %s",strerror(ioerr),cast_char(fname,name,lname));
+        grib_context_log(context,(GRIB_LOG_ERROR)|(GRIB_LOG_PERROR),"IO ERROR: %s: '%s'",strerror(ioerr),trimmed);
         *fid = -1;
         ret=GRIB_IO_PROBLEM;
     } else {
@@ -2889,7 +2891,7 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
 
     /* ECC-1316 */
     cast_char_no_cut(bufval,val,vallen);
-    rtrim( bufval );
+    string_rtrim( bufval );
 
     return grib_index_select_string(h, cast_char(buf,key,len), bufval);
 }
@@ -3255,7 +3257,7 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
     for (i=0;i<lsize;i++) {
         cval[i]=(char*)grib_context_malloc_clear(c,sizeof(char)* (*slen+1));
         cast_char_no_cut(cval[i],p,*slen);
-        rtrim( cval[i] ); /* trim spaces at end of string */
+        string_rtrim( cval[i] ); /* trim spaces at end of string */
         p+= *slen;
     }
     err = grib_set_string_array(h, cast_char(buf,key,len), (const char **)cval, lsize);
@@ -3325,7 +3327,7 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
     /* So do not use cast_char. cast_char_no_cut does not stop at first space */
     val_str = cast_char_no_cut(buf2,val,len2);
     if (val_str && !is_all_spaces(val_str)) {
-        rtrim( val_str ); /* trim spaces at end of string */
+        string_rtrim( val_str ); /* trim spaces at end of string */
     }
 
     return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);
@@ -3439,7 +3441,9 @@ void grib_f_check_(int* err,char* call,char* str,int lencall,int lenstr){
     grib_context* c=grib_context_get_default();
     if ( *err == GRIB_SUCCESS || *err == GRIB_END_OF_FILE ) return;
     cast_char(bufcall,call,lencall);
-    cast_char(bufstr,str,lenstr);
+    /* ECC-1392 */
+    cast_char_no_cut(bufstr,str,lenstr);
+
     grib_context_log(c,GRIB_LOG_ERROR,"%s: %s %s",
             bufcall,bufstr,grib_get_error_message(*err));
     exit(*err);

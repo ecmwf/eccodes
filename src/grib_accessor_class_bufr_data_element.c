@@ -89,46 +89,47 @@ typedef struct grib_accessor_bufr_data_element
 extern grib_accessor_class* grib_accessor_class_gen;
 
 static grib_accessor_class _grib_accessor_class_bufr_data_element = {
-    &grib_accessor_class_gen,                      /* super                     */
-    "bufr_data_element",                      /* name                      */
-    sizeof(grib_accessor_bufr_data_element),  /* size                      */
+    &grib_accessor_class_gen,                      /* super */
+    "bufr_data_element",                      /* name */
+    sizeof(grib_accessor_bufr_data_element),  /* size */
     0,                           /* inited */
     &init_class,                 /* init_class */
-    &init,                       /* init                      */
-    0,                  /* post_init                      */
-    &destroy,                    /* free mem                       */
-    &dump,                       /* describes himself         */
-    0,                /* get length of section     */
-    0,              /* get length of string      */
-    &value_count,                /* get number of values      */
-    0,                 /* get number of bytes      */
-    0,                /* get offset to bytes           */
-    &get_native_type,            /* get native type               */
-    0,                /* get sub_section                */
-    &pack_missing,               /* grib_pack procedures long      */
-    &is_missing,                 /* grib_pack procedures long      */
-    &pack_long,                  /* grib_pack procedures long      */
-    &unpack_long,                /* grib_unpack procedures long    */
-    &pack_double,                /* grib_pack procedures double    */
-    &unpack_double,              /* grib_unpack procedures double  */
-    &pack_string,                /* grib_pack procedures string    */
-    &unpack_string,              /* grib_unpack procedures string  */
-    &pack_string_array,          /* grib_pack array procedures string    */
-    &unpack_string_array,        /* grib_unpack array procedures string  */
-    0,                 /* grib_pack procedures bytes     */
-    0,               /* grib_unpack procedures bytes   */
+    &init,                       /* init */
+    0,                  /* post_init */
+    &destroy,                    /* free mem */
+    &dump,                       /* describes himself */
+    0,                /* get length of section */
+    0,              /* get length of string */
+    &value_count,                /* get number of values */
+    0,                 /* get number of bytes */
+    0,                /* get offset to bytes */
+    &get_native_type,            /* get native type */
+    0,                /* get sub_section */
+    &pack_missing,               /* grib_pack procedures long */
+    &is_missing,                 /* grib_pack procedures long */
+    &pack_long,                  /* grib_pack procedures long */
+    &unpack_long,                /* grib_unpack procedures long */
+    &pack_double,                /* grib_pack procedures double */
+    &unpack_double,              /* grib_unpack procedures double */
+    &pack_string,                /* grib_pack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
+    &pack_string_array,          /* grib_pack array procedures string */
+    &unpack_string_array,        /* grib_unpack array procedures string */
+    0,                 /* grib_pack procedures bytes */
+    0,               /* grib_unpack procedures bytes */
     0,            /* pack_expression */
-    0,              /* notify_change   */
-    0,                /* update_size   */
-    0,             /* preferred_size   */
-    0,                     /* resize   */
+    0,              /* notify_change */
+    0,                /* update_size */
+    0,             /* preferred_size */
+    0,                     /* resize */
     0,      /* nearest_smaller_value */
-    0,                       /* next accessor    */
-    0,                    /* compare vs. another accessor   */
-    &unpack_double_element,      /* unpack only ith value          */
-    0,     /* unpack a subarray         */
-    0,                      /* clear          */
-    &make_clone,                 /* clone accessor          */
+    0,                       /* next accessor */
+    0,                    /* compare vs. another accessor */
+    &unpack_double_element,      /* unpack only ith value */
+    0,  /* unpack a given set of elements */
+    0,     /* unpack a subarray */
+    0,                      /* clear */
+    &make_clone,                 /* clone accessor */
 };
 
 
@@ -152,6 +153,7 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
 }
@@ -167,10 +169,10 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
     char* copied_name = NULL;
     int i;
     grib_action creator = {0,};
-    creator.op         = "bufr_data_element";
-    creator.name_space = "";
+    creator.op         = (char*)"bufr_data_element";
+    creator.name_space = (char*)"";
     creator.set        = 0;
-    creator.name       = "unknown";
+    creator.name       = (char*)"unknown";
     if (strcmp(a->cclass->name, "bufr_data_element")) {
         grib_context_log(a->context, GRIB_LOG_FATAL, "wrong accessor type: '%s' should be '%s'", a->cclass->name, "bufr_data_element");
     }

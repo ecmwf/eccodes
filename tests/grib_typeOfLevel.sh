@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 label="grib_typeOfLevel_test"
 temp=temp.$label.txt
 

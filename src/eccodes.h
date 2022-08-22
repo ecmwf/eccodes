@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_box codes_box;
 typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
@@ -181,7 +180,7 @@ typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec codes_util_grid_spec;
 
 
-codes_fieldset* codes_fieldset_new_from_files(codes_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+codes_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 
 void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
@@ -476,6 +475,17 @@ codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* s
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_samples(codes_context* c, const char* sample_name);
+
+/**
+ *  Create a handle from a file contained in a samples directory.
+ *  The samples file can be GRIB, BUFR etc. Its type will be determined at runtime.
+ *  The message is copied at the creation of the handle
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param sample_name : the name of the sample file
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample_name);
 
 
 /**
@@ -1231,9 +1241,6 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
-codes_box* codes_box_new(codes_handle* h, int* error) ECCODES_DEPRECATED;
-codes_points* codes_box_get_points(codes_box* box, double north, double west, double south, double east, int* err) ECCODES_DEPRECATED;
-int codes_points_get_values(codes_handle* h, codes_points* points, double* val) ECCODES_DEPRECATED;
 
 /* --------------------------------------- */
 

@@ -11,7 +11,7 @@
 . ./include.ctest.sh
 pwd
 # Define a common label for all the tmp files
-label="codes_split_file"
+label="codes_split_file_test"
 temp=$label.temp.grib
 
 # Do all the work in a temporary directory

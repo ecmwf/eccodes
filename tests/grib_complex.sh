@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_complex"
+label="grib_complex_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"

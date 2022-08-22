@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 set -u
-label="grib_levtype"
+label="grib_levtype_test"
 
 if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
     echo "Test $0 disabled. No definitions directory"

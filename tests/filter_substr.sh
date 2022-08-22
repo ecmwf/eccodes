@@ -9,7 +9,6 @@
 #
 
 . ./include.ctest.sh
-set -u
 
 label="filter_substr_test"
 temp=temp.$label.txt

@@ -21,7 +21,7 @@ unsigned[4] longitudeOfTangencyPoint  : dump ;
 
 alias Lo1  = longitudeOfTangencyPoint;
 #  Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/3.3.table' : dump ;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/4.1.table' : dump ;
 
 #  Dx - X-direction grid length in units of 10 -3 m as measured at the point of the axis
 unsigned[4] Dx  : dump ;

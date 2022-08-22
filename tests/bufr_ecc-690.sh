@@ -15,7 +15,7 @@
 # Decoding NOAA GOES message percent confidence values
 # which do not have a bitmap.
 # ---------------------------------------------------------
-label="bufr_ecc-690-test"
+label="bufr_ecc-690_test"
 tempRules=temp.${label}.filter
 tempOut=temp.${label}.txt
 tempBufr=temp.${label}.bufr

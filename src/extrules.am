@@ -36,9 +36,9 @@ grib_yacc.h grib_yacc.c : griby.y
 	rm -f y.tab.c y.tab.h
 
 hash_keys:
-	./make_hash_keys.ksh
+	./make_hash_keys.sh
 
 grib_accessor_classes_hash.c:
-	./make_accessor_class_hash.ksh
+	./make_accessor_class_hash.sh
 
 SUFFIXES= .conf .grib .req .txt

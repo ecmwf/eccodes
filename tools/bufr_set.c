@@ -10,7 +10,6 @@
 
 /*
  * C Implementation: bufr_set
- *
  */
 #include "grib_tools.h"
 
@@ -98,47 +97,17 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    int i   = 0;
     int err = 0;
 
     if (!options->skip) {
-        double* v   = NULL;
-        size_t size = 0;
-        if (options->repack) {
-            GRIB_CHECK_NOLINE(grib_get_size(h, "values", &size), 0);
-
-            v = (double*)calloc(size, sizeof(double));
-            if (!v) {
-                fprintf(stderr, "failed to allocate %d bytes\n", (int)(size * sizeof(double)));
-                exit(1);
-            }
-
-            GRIB_CHECK_NOLINE(grib_get_double_array(h, "values", v, &size), 0);
-        }
-
         if (options->set_values_count != 0)
             err = grib_set_values(h, options->set_values, options->set_values_count);
-
-        if (options->repack) {
-            if (grib_options_on("d:")) {
-                for (i = 0; i < size; i++)
-                    v[i] = options->constant;
-            }
-#if 0
-            if (grib_options_on("n:")) {
-                for(i = 0; i< size; i++)
-                    v[i] =  options->constant;
-            }
-#endif
-
-            GRIB_CHECK_NOLINE(grib_set_double_array(h, "values", v, size), 0);
-            free(v);
-        }
 
         if (err != GRIB_SUCCESS && options->fail)
             exit(err);

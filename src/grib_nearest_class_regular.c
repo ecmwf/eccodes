@@ -23,9 +23,9 @@
    MEMBERS    = double* lons
    MEMBERS    = int  lons_count
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* i
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* i
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Ni
    MEMBERS    = const char* Nj
    END_CLASS_DEF
@@ -43,28 +43,27 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_nearest_class*);
+static void init_class              (grib_nearest_class*);
 
-static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-static int destroy(grib_nearest* nearest);
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
 
-typedef struct grib_nearest_regular
-{
-    grib_nearest nearest;
+typedef struct grib_nearest_regular{
+  grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
     /* Members defined in regular */
     double* lats;
-    int lats_count;
+    int  lats_count;
     double* lons;
-    int lons_count;
+    int  lons_count;
     double* distances;
-    int* k;
-    int* i;
-    int* j;
+    size_t* k;
+    size_t* i;
+    size_t* j;
     const char* Ni;
     const char* Nj;
 } grib_nearest_regular;
@@ -72,14 +71,14 @@ typedef struct grib_nearest_regular
 extern grib_nearest_class* grib_nearest_class_gen;
 
 static grib_nearest_class _grib_nearest_class_regular = {
-    &grib_nearest_class_gen,      /* super                     */
-    "regular",                    /* name                      */
-    sizeof(grib_nearest_regular), /* size of instance          */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    &init,                        /* constructor               */
-    &destroy,                     /* destructor                */
-    &find,                        /* find nearest              */
+    &grib_nearest_class_gen,                         /* super */
+    "regular",                         /* name */
+    sizeof(grib_nearest_regular),      /* size of instance */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_regular = &_grib_nearest_class_regular;
@@ -90,13 +89,16 @@ static void init_class(grib_nearest_class* c)
 }
 /* END_CLASS_IMP */
 
+
+#define NUM_NEIGHBOURS 4
+
 static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 {
     grib_nearest_regular* self = (grib_nearest_regular*)nearest;
     self->Ni                   = grib_arguments_get_name(h, args, self->cargs++);
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
-    self->i                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
-    self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->i                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
+    self->j                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     return 0;
 }
 
@@ -182,9 +184,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
         grib_binary_search(self->lons,self->lons_count-1,inlon,
                 &(self->i[0]),&(self->i[1]));
         if (!self->distances)
-            self->distances=(double*)grib_context_malloc( nearest->context,4*sizeof(double));
+            self->distances=(double*)grib_context_malloc( nearest->context,NUM_NEIGHBOURS*sizeof(double));
         if (!self->k)
-            self->k=(int*)grib_context_malloc( nearest->context,4*sizeof(int));
+            self->k=(int*)grib_context_malloc( nearest->context,NUM_NEIGHBOURS*sizeof(int));
         kk=0;
         for (ii=0;ii<2;ii++) {
             for (jj=0;jj<2;jj++) {
@@ -320,8 +322,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
             return ret;
         }
         while (grib_iterator_next(iter, &lat, &lon, &dummy)) {
-            if (olat != lat) {
-                Assert(ilat < self->lats_count);
+            if (ilat < self->lats_count && olat != lat) {
+                /* Assert(ilat < self->lats_count); */
                 self->lats[ilat++] = lat;
                 olat               = lat;
             }
@@ -397,9 +399,9 @@ static int find(grib_nearest* nearest, grib_handle* h,
                                &(self->i[0]), &(self->i[1]));
 
         if (!self->distances)
-            self->distances = (double*)grib_context_malloc(nearest->context, 4 * sizeof(double));
+            self->distances = (double*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(double));
         if (!self->k)
-            self->k = (int*)grib_context_malloc(nearest->context, 4 * sizeof(int));
+            self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
         kk = 0;
         for (jj = 0; jj < 2; jj++) {
             for (ii = 0; ii < 2; ii++) {
@@ -425,6 +427,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
      *   if (ret) return ret;
      */
 
+    if (values) {
+        /* See ECC-1403 and ECC-499 */
+        /* Performance: Decode the field once and get all 4 values */
+        if ((ret = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values)) != GRIB_SUCCESS)
+            return ret;
+    }
+
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
             distances[kk] = self->distances[kk];
@@ -437,9 +446,11 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 outlats[kk] = new_lat;
                 outlons[kk] = new_lon;
             }
-            if (values) { /* ECC-499 */
-                grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
-            }
+            /* See ECC-1403 and ECC-499
+             * if (values) {
+             *   grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
+             *}
+             */
             /* Using the brute force approach described above */
             /* Assert(self->k[kk] < nvalues); */
             /* values[kk]=nearest->values[self->k[kk]]; */

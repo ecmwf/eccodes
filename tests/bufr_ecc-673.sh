@@ -15,7 +15,7 @@
 # bufr_filter script and paths with spaces
 # ---------------------------------------------------------
 cd ${data_dir}/bufr
-label="bufr_ecc_673_test"
+label="bufr_ecc-673_test"
 
 tempBufr=temp.${label}.bufr
 tempRules=temp.${label}.filter

@@ -40,45 +40,44 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class(grib_expression_class*);
+static void init_class              (grib_expression_class*);
 
 
-static void print(grib_context*, grib_expression*, grib_handle*);
-static void add_dependency(grib_expression* e, grib_accessor* observer);
+static void        print(grib_context*,grib_expression*,grib_handle*);
+static void        add_dependency(grib_expression* e, grib_accessor* observer);
 static string get_name(grib_expression* e);
 
-static int native_type(grib_expression*, grib_handle*);
+static int        native_type(grib_expression*,grib_handle*);
 
-static int evaluate_long(grib_expression*, grib_handle*, long*);
-static int evaluate_double(grib_expression*, grib_handle*, double*);
-static string evaluate_string(grib_expression*, grib_handle*, char*, size_t*, int*);
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
+static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
 
-typedef struct grib_expression_is_in_dict
-{
-    grib_expression base;
+typedef struct grib_expression_is_in_dict{
+  grib_expression base;
     /* Members defined in is_in_dict */
-    const char* key;
-    const char* dictionary;
+    const char *key;
+    const char *dictionary;
 } grib_expression_is_in_dict;
 
 
 static grib_expression_class _grib_expression_class_is_in_dict = {
-    0,                                  /* super                     */
-    "is_in_dict",                       /* name                      */
-    sizeof(grib_expression_is_in_dict), /* size of instance          */
-    0,                                  /* inited */
-    &init_class,                        /* init_class */
-    0,                                  /* constructor               */
-    0,                                  /* destructor                */
-    &print,
-    &add_dependency,
+    0,                    /* super                     */
+    "is_in_dict",                    /* name                      */
+    sizeof(grib_expression_is_in_dict),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    0,                     /* constructor               */
+    0,                  /* destructor                */
+    &print,                 
+    &add_dependency,       
 
-    &native_type,
-    &get_name,
+	&native_type,
+	&get_name,
 
-    &evaluate_long,
-    &evaluate_double,
-    &evaluate_string,
+	&evaluate_long,
+	&evaluate_double,
+	&evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_is_in_dict = &_grib_expression_class_is_in_dict;

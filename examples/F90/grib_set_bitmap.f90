@@ -42,7 +42,7 @@ program set_bitmap
    ! at a point in the grid.
    ! It should be chosen so that it cannot be confused
    ! with a valid field value
-   missingValue = 9999
+   missingValue = 1.0e36
    call codes_set(igrib, 'missingValue', missingValue)
    write (*, *) 'missingValue=', missingValue
 

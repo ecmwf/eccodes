@@ -45,25 +45,24 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
-static int next(grib_iterator* i, double* lat, double* lon, double* val);
-static int previous(grib_iterator* ei, double* lat, double* lon, double* val);
-static int destroy(grib_iterator* i);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+static int previous           (grib_iterator* ei, double *lat, double *lon, double *val);
+static int destroy            (grib_iterator* i);
 
 
-typedef struct grib_iterator_regular
-{
-    grib_iterator it;
+typedef struct grib_iterator_regular{
+  grib_iterator it;
     /* Members defined in gen */
     long carg;
     const char* missingValue;
     /* Members defined in regular */
-    double* las;
-    double* los;
-    long Ni;
-    long Nj;
+    double   *las;
+    double   *los;
+    long      Ni;
+    long      Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -76,17 +75,17 @@ typedef struct grib_iterator_regular
 extern grib_iterator_class* grib_iterator_class_gen;
 
 static grib_iterator_class _grib_iterator_class_regular = {
-    &grib_iterator_class_gen,      /* super                     */
-    "regular",                     /* name                      */
-    sizeof(grib_iterator_regular), /* size of instance          */
-    0,                             /* inited */
-    &init_class,                   /* init_class */
-    &init,                         /* constructor               */
-    &destroy,                      /* destructor                */
-    &next,                         /* Next Value                */
-    &previous,                     /*  Previous Value           */
-    0,                             /* Reset the counter         */
-    0,                             /* has next values           */
+    &grib_iterator_class_gen,                    /* super                     */
+    "regular",                    /* name                      */
+    sizeof(grib_iterator_regular),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &next,                     /* Next Value                */
+    &previous,                 /*  Previous Value           */
+    0,                    /* Reset the counter         */
+    0,                 /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_regular = &_grib_iterator_class_regular;
@@ -94,8 +93,8 @@ grib_iterator_class* grib_iterator_class_regular = &_grib_iterator_class_regular
 
 static void init_class(grib_iterator_class* c)
 {
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
@@ -220,6 +219,10 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         self->los[loi] = lon1;
         lon1 += idir;
     }
+    /* ECC-1406: Due to rounding, errors can accumulate.
+     * So we ensure the last longitude is longitudeOfLastGridPointInDegrees
+    */
+    self->los[Ni-1] = lon2;
 
     return ret;
 }

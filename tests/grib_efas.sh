@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_efas"
+label="grib_efas_test"
 sample=temp.sample.$label.grib
 temp1=temp1.$label.grib
 temp2=temp2.$label.grib

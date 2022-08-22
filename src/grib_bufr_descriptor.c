@@ -58,6 +58,8 @@ int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr
     if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION || v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR) {
         v->code = code;
         v->F    = code / 100000;
+        if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION) Assert(v->F == 1);
+        if (v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR)    Assert(v->F == 2);
         v->X    = (code - v->F * 100000) / 1000;
         v->Y    = (code - v->F * 100000) % 1000;
     }

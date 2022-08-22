@@ -13,14 +13,14 @@ typedef struct grib_nearest_NAME{
 extern grib_nearest_class* SUPER;
 
 static grib_nearest_class _grib_nearest_class_NAME = {
-    &SUPER,                         /* super                     */
-    "NAME",                         /* name                      */
-    sizeof(grib_nearest_NAME),      /* size of instance          */
+    &SUPER,                         /* super */
+    "NAME",                         /* name */
+    sizeof(grib_nearest_NAME),      /* size of instance */
     0,                              /* inited */
     &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    &destroy,                       /* destructor                */
-    &find,                          /* find nearest              */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_NAME = &_grib_nearest_class_NAME;

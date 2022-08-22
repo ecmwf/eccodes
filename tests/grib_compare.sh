@@ -9,7 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
+
 label="grib_compare_test"
 REDIRECT=/dev/null
 
@@ -69,6 +69,9 @@ temp1=grib_compare_temp1.grib
 temp2=grib_compare_temp2.grib
 ${tools_dir}/grib_copy -w count=25 ${data_dir}/lfpw.grib1 $temp1
 ${tools_dir}/grib_copy -w count=30 ${data_dir}/lfpw.grib1 $temp2
+
+# Compare only message headers
+${tools_dir}/grib_compare -H -b level,totalLength $temp1 $temp2
 
 # This should fail but not crash! so check exit code is not 134
 set +e
@@ -148,7 +151,33 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+
+# ----------------------------------------
+# Test -R overriding "referenceValueError"
+# ----------------------------------------
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
+echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
+# Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical
+${tools_dir}/grib_compare $temp1 $temp2
+
+# Use relative error of 0 for all keys. Now comparison detects the difference
+set +e
+${tools_dir}/grib_compare -Rall=0 $temp1 $temp2 2>$outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+
+# Now use relative error of 0 for the referenceValue only
+set +e
+${tools_dir}/grib_compare -R referenceValue=0 $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+
+
 # Clean up
-# --------------
+# ---------
 rm -f $temp1 $temp2
 rm -f $outfile
