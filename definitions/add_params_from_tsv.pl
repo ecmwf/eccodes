@@ -393,9 +393,10 @@ sub is_integer {
 sub usage {
    print <<USAGE;
 
-Usage: $0 [-s] [-f] [-p] file.tsv
-       Input has to be a tab-separated values (TSV) file
+Usage: $0 [-c ID] [-s] [-f] [-p] file.tsv
+       Input has to be a tab-separated-values (TSV) file
 
+       -c  The Contact ID (JIRA issue)
        -s  Perform sanity checks and exit
        -f  Write out def files (paramId.def, name.def etc)
        -p  Write to Parameter Database (Be careful!)
