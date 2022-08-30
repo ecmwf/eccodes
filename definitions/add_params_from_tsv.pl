@@ -27,15 +27,17 @@ use Getopt::Long;
 my $SANITY_CHECK     = 0;
 my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
+my $contactId;   # JIRA issue ID
 
 # Process arguments. Must be at least one file
 if (scalar @ARGV < 1) {
   &usage;
 }
 my $result = GetOptions (
-  "s" => \$SANITY_CHECK,
-  "f" => \$WRITE_TO_FILES,
-  "p" => \$WRITE_TO_PARAMDB
+  "s"   => \$SANITY_CHECK,
+  "f"   => \$WRITE_TO_FILES,
+  "p"   => \$WRITE_TO_PARAMDB,
+  "c:s" => \$contactId
   );
 
 $ARGV[0] or &usage;
