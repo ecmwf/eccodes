@@ -47,3 +47,4 @@ echo
 echo "Compilation for C ..."
 echo "$CCMP myprog.c $LIBS $INCL"
 echo
+echo
