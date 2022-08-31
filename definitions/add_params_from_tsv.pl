@@ -27,15 +27,17 @@ use Getopt::Long;
 my $SANITY_CHECK     = 0;
 my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
+my $contactId;   # JIRA issue ID
 
 # Process arguments. Must be at least one file
 if (scalar @ARGV < 1) {
   &usage;
 }
 my $result = GetOptions (
-  "s" => \$SANITY_CHECK,
-  "f" => \$WRITE_TO_FILES,
-  "p" => \$WRITE_TO_PARAMDB
+  "s"   => \$SANITY_CHECK,
+  "f"   => \$WRITE_TO_FILES,
+  "p"   => \$WRITE_TO_PARAMDB,
+  "c:s" => \$contactId
   );
 
 $ARGV[0] or &usage;
@@ -391,9 +393,10 @@ sub is_integer {
 sub usage {
    print <<USAGE;
 
-Usage: $0 [-s] [-f] [-p] file.tsv
-       Input has to be a tab-separated values (TSV) file
+Usage: $0 [-c ID] [-s] [-f] [-p] file.tsv
+       Input has to be a tab-separated-values (TSV) file
 
+       -c  The Contact ID (JIRA issue)
        -s  Perform sanity checks and exit
        -f  Write out def files (paramId.def, name.def etc)
        -p  Write to Parameter Database (Be careful!)

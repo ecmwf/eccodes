@@ -210,6 +210,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1001
         grib_ecc-1030
         grib_ecc-1397
+        grib_ecc-1425
         grib_set_bytes
         grib_set_force
         bufr_ecc-556

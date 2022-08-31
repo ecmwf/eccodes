@@ -1,4 +1,4 @@
-#!/usr/bin/ksh
+#!/bin/sh
 set -ex
 cat > accessor_class_list.gperf <<EOF
 %{
@@ -13,6 +13,9 @@ EOF
 cat grib_accessor_factory_hash_list | sed 's/\/\*/#/g' >> accessor_class_list.gperf
 
 # editing grib_accessor_classes_hash.c
+
+gperf --version
+echo
 
 gperf -C -W classes -t -G -H grib_accessor_classes_get_id -N grib_accessor_classes_hash -m 1 -j 1 accessor_class_list.gperf |\
     sed s/__inline//g | sed s/inline//g > grib_accessor_classes_hash.c

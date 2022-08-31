@@ -137,7 +137,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 #ifdef ACCESSOR_FACTORY_USE_TRIE
     c = get_class(p->h->context, creator->op);
 #else
-    /* Use the hash table built with gperf (See make_accessor_class_hash.ksh) */
+    /* Use the hash table built with gperf (See make_accessor_class_hash.sh) */
     c = *((grib_accessor_classes_hash(creator->op, strlen(creator->op)))->cclass);
 #endif
 

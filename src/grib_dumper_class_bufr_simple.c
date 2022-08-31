@@ -658,7 +658,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     while (*p) {
         if (!isprint(*p))
-            *p = '.';
+            *p = '?';
         if (*p == '"')
             *p = '\''; /* ECC-1401 */
         p++;

@@ -354,13 +354,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t slen = 0;
     double dval = 0;
     size_t dlen = 1;
-
-    int ret         = 0, idx;
+    int idx = 0, err = 0;
     grib_context* c = a->context;
 
     if (self->type != BUFR_DESCRIPTOR_TYPE_STRING) {
         char sval[32] = {0,};
-        unpack_double(a, &dval, &dlen);
+        err = unpack_double(a, &dval, &dlen);
+        if (err) return err;
         sprintf(sval, "%g", dval);
         slen = strlen(sval);
         if (*len < slen)
@@ -389,9 +389,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         grib_context_free(c, str);
         *len = 0;
         *val = 0;
-        return ret;
+        return GRIB_SUCCESS;
     }
 
+    /* Start from the end of the string and remove spaces */
     p = str;
     while (*p != 0)
         p++;
@@ -411,7 +412,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_context_free(c, str);
     *len = slen;
 
-    return ret;
+    return GRIB_SUCCESS;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
