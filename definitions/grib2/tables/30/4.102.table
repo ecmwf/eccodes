@@ -1,0 +1,4 @@
+# Code table 4.102 - Type of significance test
+0 0 Reserved
+1 1 Wilcoxon-Mann-Whitney
+255 255 Missing

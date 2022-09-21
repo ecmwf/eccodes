@@ -1,0 +1,5 @@
+# Code table 4.101 - Type of relation to reference dataset
+0 0 Reserved
+1 1 Anomaly
+2 2 Significance
+255 255 Missing
