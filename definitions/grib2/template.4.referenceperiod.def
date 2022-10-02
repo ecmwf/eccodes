@@ -9,11 +9,11 @@ codetable[1] typeOfRelationToReferenceDataset ('4.101.table',masterDir,localDir)
 #  Year of start of reference period
 unsigned[2] yearOfStartOfReferencePeriod = missing() : edition_specific,can_be_missing;
 
-#  Day of start of reference period
-unsigned[1] dayOfStartOfReferencePeriod =missing() : edition_specific,can_be_missing;
-
 #  Month of start of reference period
 unsigned[1] monthOfStartOfReferencePeriod = missing() : edition_specific,can_be_missing;
+
+#  Day of start of reference period
+unsigned[1] dayOfStartOfReferencePeriod =missing() : edition_specific,can_be_missing;
 
 #  Hour of start of reference period
 unsigned[1] hourOfStartOfReferencePeriod = missing() : edition_specific,can_be_missing;
@@ -28,6 +28,9 @@ meta startDateOfReferencePeriod g2date(yearOfStartOfReferencePeriod,monthOfStart
 
 ## End of reference period (defined as startDateOfReferencePeriod +  referencePeriodTimeIncrement * referencePeriodIndicatorOfUnitForTimeIncrement)
 
+# sampleSizeOfReferencePeriod
+unsigned[4] sampleSizeOfReferencePeriod=0;
+
 #  n - number of time range specifications describing the time intervals used to calculate the statistically-processed field
 unsigned[1]  numberOfReferencePeriodTimeRange = 1 : edition_specific;
 alias nref = numberOfReferencePeriodTimeRange;
@@ -36,23 +39,24 @@ referencePeriodList list(numberOfReferencePeriodTimeRange)
 {
 
 #  Type of statistical processing of reference period
-codetable[1] typeOfStatisticalProcessingOfReferenceDataset ('4.103.table',masterDir,localDir) = 255 : dump,edition_specific;
-
-# set to missing to repeat inner loop periodically, set to value to define each period in outer loop over referencePeriodIndicatorOfUnitForTimeIncrement
-unsigned[2] referencePeriodOffset = missing() : can_be_missing ;
+codetable[1] typeOfStatisticalProcessingOfReferenceDataset ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
 
 #  Indicator of unit of time for the increment between the successive fields used
 codetable[1]  referencePeriodIndicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
 
 # length of reference period, in units defined by the previous octet [referencePeriodIndicatorOfUnitForTimeIncrement]
 unsigned[4] lengthOfReferencePeriod=0 ;
-
-# temporal resolution of data on which reference period is based [referencePeriodIndicatorOfUnitForTimeIncrement]
-unsigned[4] referencePeriodTemporalResolution=0 ;
-
 }
 
+# number of additional parameters
+unsigned[1] numberOfAdditionalParameterForReferencePeriod=1 ;
+signed[4] additionalParameterForReferencePeriod[numberOfAdditionalParameterForReferencePeriod] : dump;
+
+
+## remove the significance parameters, add them to additional parameter list
+## How to add a code table entry, possible ?
 # significance between forecast and climatology
-codetable[1] typeOfSignificanceTest ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
-signed[4] scaledValueOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
-signed[1] scaleFactorOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
+#codetable[1] typeOfSignificanceTest ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
+#signed[4] scaledValueOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
+#signed[1] scaleFactorOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
+
