@@ -4,6 +4,14 @@ codetable[1] typeOfReferenceDataset ('4.100.table',masterDir,localDir) = 255 : d
 #  Type of relation to reference dataset
 codetable[1] typeOfRelationToReferenceDataset ('4.101.table',masterDir,localDir) = 255 : dump,edition_specific;
 
+# number of additional parameters
+unsigned[1] numberOfAdditionalParameterForReferencePeriod=0 ;
+additionalParameter list(numberOfAdditionalParameterForReferencePeriod)
+{
+signed[1] scaleFactorOfAdditionalParameterForReferencePeriod;
+signed[4] scaledValueOfAdditionalParameterForReferencePeriod;
+}
+
 ## Start of reference period
 
 #  Year of start of reference period
@@ -48,15 +56,4 @@ codetable[1]  referencePeriodIndicatorOfUnitForTimeIncrement ('4.4.table',master
 unsigned[4] lengthOfReferencePeriod=0 ;
 }
 
-# number of additional parameters
-unsigned[1] numberOfAdditionalParameterForReferencePeriod=1 ;
-signed[4] additionalParameterForReferencePeriod[numberOfAdditionalParameterForReferencePeriod] : dump;
-
-
-## remove the significance parameters, add them to additional parameter list
-## How to add a code table entry, possible ?
-# significance between forecast and climatology
-#codetable[1] typeOfSignificanceTest ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
-#signed[4] scaledValueOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
-#signed[1] scaleFactorOfConfidenceInterval = missing() : can_be_missing,dump,edition_specific;
 
