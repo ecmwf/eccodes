@@ -47,13 +47,13 @@ referencePeriodList list(numberOfReferencePeriodTimeRange)
 {
 
 #  Type of statistical processing of reference period
-codetable[1] typeOfStatisticalProcessingOfReferenceDataset ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
+codetable[1] typeOfStatisticalProcessingForTimeRangeForReferencePeriod ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
 
 #  Indicator of unit of time for the increment between the successive fields used
-codetable[1]  referencePeriodIndicatorOfUnitForTimeIncrement ('4.4.table',masterDir,localDir)=255 ;
+codetable[1]  indicatorOfUnitForTimeRangeForReferencePeriod ('4.4.table',masterDir,localDir)=255 ;
 
 # length of reference period, in units defined by the previous octet [referencePeriodIndicatorOfUnitForTimeIncrement]
-unsigned[4] lengthOfReferencePeriod=0 ;
+unsigned[4] lengthOfTimeRangeForReferencePeriod=0 ;
 }
 
 
