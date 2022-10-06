@@ -5,11 +5,11 @@ codetable[1] typeOfReferenceDataset ('4.100.table',masterDir,localDir) = 255 : d
 codetable[1] typeOfRelationToReferenceDataset ('4.101.table',masterDir,localDir) = 255 : dump,edition_specific;
 
 # number of additional parameters
-unsigned[1] numberOfAdditionalParameterForReferencePeriod=0 ;
-additionalParameter list(numberOfAdditionalParameterForReferencePeriod)
+unsigned[1] numberOfAdditionalParametersForReferencePeriod=0 ;
+additionalParameter list(numberOfAdditionalParametersForReferencePeriod)
 {
-signed[1] scaleFactorOfAdditionalParameterForReferencePeriod;
-signed[4] scaledValueOfAdditionalParameterForReferencePeriod;
+  signed[1] scaleFactorOfAdditionalParameterForReferencePeriod;
+  signed[4] scaledValueOfAdditionalParameterForReferencePeriod;
 }
 
 ## Start of reference period
@@ -40,20 +40,18 @@ meta startDateOfReferencePeriod g2date(yearOfStartOfReferencePeriod,monthOfStart
 unsigned[4] sampleSizeOfReferencePeriod=0;
 
 #  n - number of time range specifications describing the time intervals used to calculate the statistically-processed field
-unsigned[1]  numberOfReferencePeriodTimeRange = 1 : edition_specific;
-alias nref = numberOfReferencePeriodTimeRange;
+unsigned[1]  numberOfReferencePeriodTimeRanges = 1 : edition_specific;
+alias nref = numberOfReferencePeriodTimeRanges;
 
-referencePeriodList list(numberOfReferencePeriodTimeRange)
+referencePeriodList list(numberOfReferencePeriodTimeRanges)
 {
 
-#  Type of statistical processing of reference period
-codetable[1] typeOfStatisticalProcessingForTimeRangeForReferencePeriod ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
+  #  Type of statistical processing of reference period
+  codetable[1] typeOfStatisticalProcessingForTimeRangeForReferencePeriod ('4.102.table',masterDir,localDir) = 255 : dump,edition_specific;
 
-#  Indicator of unit of time for the increment between the successive fields used
-codetable[1]  indicatorOfUnitForTimeRangeForReferencePeriod ('4.4.table',masterDir,localDir)=255 ;
+  #  Indicator of unit of time for the increment between the successive fields used
+  codetable[1]  indicatorOfUnitForTimeRangeForReferencePeriod ('4.4.table',masterDir,localDir)=255 ;
 
-# length of reference period, in units defined by the previous octet [referencePeriodIndicatorOfUnitForTimeIncrement]
-unsigned[4] lengthOfTimeRangeForReferencePeriod=0 ;
+  # length of reference period, in units defined by the previous octet [referencePeriodIndicatorOfUnitForTimeIncrement]
+  unsigned[4] lengthOfTimeRangeForReferencePeriod=0 ;
 }
-
-
