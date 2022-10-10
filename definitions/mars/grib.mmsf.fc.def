@@ -5,7 +5,10 @@ if (class is "en") { alias mars.system = systemNumber; }
 if (class is "c3") { alias mars.system = systemNumber; }
 alias mars.number = perturbationNumber;
 alias mars.method = methodNumber;
-alias mars.origin = centre;
+
+if (!(class is "gw")) { # ECC-1448
+    alias mars.origin = centre;
+}
 
 # See ECC-624
 if (centre == 80 && subCentre == 98 && class is "c3") {
