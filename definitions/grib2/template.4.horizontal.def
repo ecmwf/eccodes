@@ -82,9 +82,21 @@ if (extraDim) {
     }
 }
 
-# See ECC-854
-if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
-    alias mars.levelist = bottomLevel;
+# See ECC-854, ECC-1435, ECC-1451
+if( (typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) ||
+    (typeOfFirstFixedSurface == 152 && typeOfSecondFixedSurface == 152) ||
+    (typeOfFirstFixedSurface == 114 && typeOfSecondFixedSurface == 114) ) {
+    #
+    # Temporary hack to deal with wrongly encoded data.
+    # If scaleFactorOfSecondFixedSurface != 0 (wrong), then leave the aliases
+    # to point to topLevel
+    #
+    if (scaleFactorOfSecondFixedSurface == 0) {
+        # Correctly encoded data
+        alias mars.levelist = bottomLevel;
+        alias ls.level = bottomLevel;
+        alias vertical.level = bottomLevel;
+    }
 }
 
 alias ls.typeOfLevel=typeOfLevel;
