@@ -62,7 +62,7 @@
 60 60 Snow depth water equivalent (kg m-2)
 61 61 Snow density (kg m-3)
 62 62 Snow evaporation (kg m-2)
-63 63 Reserved 
+63 63 Reserved
 64 64 Total column integrated water vapour (kg m-2)
 65 65 Rain precipitation rate (kg m-2 s-1)
 66 66 Snow precipitation rate (kg m-2 s-1)
@@ -149,6 +149,21 @@
 147 147 Character of precipitation (Code table 4.249)
 148 148 Snow evaporation rate (kg m-2 s-1)
 149 149 Cloud water mixing ratio (kg kg-1)
-# 150-191 Reserved
+150 150 Column integrated eastward water vapour mass flux (kg m-1 s-1)
+151 151 Column integrated northward water vapour mass flux (kg m-1 s-1)
+152 152 Column integrated eastward cloud liquid water mass flux (kg m-1 s-1)
+153 153 Column integrated northward cloud liquid water mass flux (kg m-1 s-1)
+154 154 Column integrated eastward cloud ice mass flux (kg m-1 s-1)
+155 155 Column integrated northward cloud ice mass flux (kg m-1 s-1)
+156 156 Column integrated eastward rain mass flux (kg m-1 s-1)
+157 157 Column integrated northward rain mass flux (kg m-1 s-1)
+158 158 Column integrated eastward snow mass flux (kg m-1 s-1)
+159 159 Column integrated northward snow mass flux (kg m-1 s-1)
+160 160 Column integrated divergence of water vapour mass flux (kg m-2 s-1)
+161 161 Column integrated divergence of cloud liquid water mass flux (kg m-2 s-1)
+162 162 Column integrated divergence of cloud ice mass flux (kg m-2 s-1)
+163 163 Column integrated divergence of rain mass flux (kg m-2 s-1)
+164 164 Column integrated divergence of snow mass flux (kg m-2 s-1)
+# 165-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing
