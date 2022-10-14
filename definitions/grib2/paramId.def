@@ -2202,37 +2202,37 @@
 #Urban cover
 '229001' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 0 ;
 	}
 #Road Cover
 '229002' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 1 ;
 	}
 #Building cover
 '229003' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 2 ;
 	}
 #Building height
 '229004' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 3 ;
 	}
 #Vertical-to-horizontal area ratio
 '229005' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 4 ;
 	}
 #Standard deviation of building height
 '229006' = {
 	 discipline = 2 ;
-	 parameterCategory = 1 ;
+	 parameterCategory = 6 ;
 	 parameterNumber = 5 ;
 	}
 #Wetland cover
