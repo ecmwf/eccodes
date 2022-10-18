@@ -55,7 +55,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\t  1 (the value at the nearest point is printed)"
       "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n" },
     { "n:", "namespace",
-      "\n\t\tAll the keys belonging to namespace are printed.\n" },
+      "\n\t\tAll the keys belonging to the given namespace are printed.\n" },
     { "m", 0, "Mars keys are printed.\n" },
     { "o:", "output_file",
       "\n\t\tOutput is written to output_file."
