@@ -90,7 +90,7 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j);
+static void binary_search(const double xx[], const unsigned long n, double x, long* j);
 
 static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 {
@@ -104,7 +104,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     long jScansPositively = 0;
     int size;
     double start;
-    unsigned long istart = 0;
+    long istart = 0;
     int ret              = GRIB_SUCCESS;
 
     const char* latofirst          = grib_arguments_get_name(h, args, self->carg++);
@@ -134,20 +134,21 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         return ret;
     }
     /*
-  for(loi=(trunc*2)-1;loi>=0;loi--)
-    if(fabs(lats[loi] - lal) < glatPrecision) break;
-  for(j=(trunc*2)-1;j>0;j--) {
-    if(fabs(lats[j] - laf) < glatPrecision) break;
-  }
+     for(loi=(trunc*2)-1;loi>=0;loi--)
+       if(fabs(lats[loi] - lal) < glatPrecision) break;
+     for(j=(trunc*2)-1;j>0;j--) {
+       if(fabs(lats[j] - laf) < glatPrecision) break;
+     }
      */
 
-    binary_search(lats, size - 1, start, &istart);
+    binary_search(lats, size-1, start, &istart);
     Assert(istart < size);
 
     if (jScansPositively) {
         for (lai = 0; lai < self->Nj; lai++) {
+            DebugAssert(istart >= 0);
             self->las[lai] = lats[istart--];
-            /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
+            if (istart<0) istart=size-1;
         }
     }
     else {
@@ -162,8 +163,8 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 
     return ret;
 }
-
-static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
+/* Note: the argument 'n' is not the size of the 'xx' array but its LAST index i.e. size - 1 */
+static void binary_search(const double xx[], const unsigned long n, double x, long* j)
 {
     /*This routine works only on descending ordered arrays*/
 #define EPSILON 1e-3
@@ -171,6 +172,15 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
     unsigned long ju, jm, jl;
     jl = 0;
     ju = n;
+    if (fabs(x - xx[0]) < EPSILON) {
+        *j = 0;
+        return;
+    }
+    if (fabs(x - xx[n]) < EPSILON) {
+        *j = n;
+        return;
+    }
+
     while (ju - jl > 1) {
         jm = (ju + jl) >> 1;
         if (fabs(x - xx[jm]) < EPSILON) {
