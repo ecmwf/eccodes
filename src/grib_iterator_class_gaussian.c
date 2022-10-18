@@ -163,7 +163,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 
     return ret;
 }
-/* Note: the argument 'n' is not the size of the 'xx' array but its LAST index i.e. size - 1 */
+/* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 static void binary_search(const double xx[], const unsigned long n, double x, long* j)
 {
     /*This routine works only on descending ordered arrays*/
