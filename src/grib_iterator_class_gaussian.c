@@ -90,7 +90,7 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static void binary_search(const double xx[], const unsigned long n, double x, long* j);
+static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
 static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 {
@@ -100,12 +100,12 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-    long lai;
+    long lai = 0;
     long jScansPositively = 0;
-    int size;
+    int size = 0;
     double start;
     long istart = 0;
-    int ret              = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
 
     const char* latofirst          = grib_arguments_get_name(h, args, self->carg++);
     const char* latoflast          = grib_arguments_get_name(h, args, self->carg++);
@@ -141,7 +141,8 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
      }
      */
 
-    binary_search(lats, size-1, start, &istart);
+    binary_search_gaussian_latitudes(lats, size-1, start, &istart);
+    Assert(istart >= 0);
     Assert(istart < size);
 
     if (jScansPositively) {
@@ -163,12 +164,36 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 
     return ret;
 }
+
+#define EPSILON 1e-3
 /* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
-static void binary_search(const double xx[], const unsigned long n, double x, long* j)
+static void binary_search_gaussian_latitudes(const double array[], const unsigned long n, double x, long* j)
+{
+    unsigned long low = 0;
+    unsigned long high = n;
+    unsigned long mid;
+    const int descending = (array[n] < array[0]);
+    Assert(descending); /* Gaussian latitudes should be in descending order */
+    while (low <= high) {
+        mid = (high + low) / 2;
+
+        if (fabs(x - array[mid]) < EPSILON) {
+            *j = mid;
+            return;
+        }
+
+        if (x < array[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    *j = -1; /* Not found */
+}
+
+#if 0
+static void binary_search_old(const double xx[], const unsigned long n, double x, long* j)
 {
     /*This routine works only on descending ordered arrays*/
-#define EPSILON 1e-3
-
     unsigned long ju, jm, jl;
     jl = 0;
     ju = n;
@@ -195,3 +220,4 @@ static void binary_search(const double xx[], const unsigned long n, double x, lo
     }
     *j = jl;
 }
+#endif
