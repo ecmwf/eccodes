@@ -142,8 +142,10 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
      */
 
     binary_search_gaussian_latitudes(lats, size-1, start, &istart);
-    Assert(istart >= 0);
-    Assert(istart < size);
+    if (istart < 0 || istart >= size) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to find index for latitude=%g", start);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     if (jScansPositively) {
         for (lai = 0; lai < self->Nj; lai++) {
