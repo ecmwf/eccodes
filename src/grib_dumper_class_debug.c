@@ -176,7 +176,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             if (more) {
                 for (i = 0; i < d->depth + 3; i++)
                     fprintf(self->dumper.out, " ");
-                fprintf(self->dumper.out, "... %lu more values\n", more);
+                fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
             }
             for (i = 0; i < d->depth; i++)
                 fprintf(self->dumper.out, " ");
@@ -382,7 +382,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %lu more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
@@ -463,7 +463,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %lu more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)

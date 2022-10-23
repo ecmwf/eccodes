@@ -470,7 +470,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 #if 0
     grib_dumper_default *self = (grib_dumper_default*)d;
     int i,k,err =0;
-    int more = 0;
+    size_t more = 0;
     size_t size = a->length;
     unsigned char* buf = grib_context_malloc(d->context,size);
 
@@ -531,7 +531,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if(more)
     {
         for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-        fprintf(self->dumper.out,"... %d more values\n",more);
+        fprintf(self->dumper.out,"... %lu more values\n", (unsigned long)more);
     }
 
     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
@@ -544,7 +544,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_default* self = (grib_dumper_default*)d;
     int k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -631,7 +631,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     }
     if (more) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     fprintf(self->dumper.out, "  ");
@@ -731,7 +731,7 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, "\n  #");
         }
         if (more) {
-            fprintf(self->dumper.out, "\n  #... %d more values\n", (int)more);
+            fprintf(self->dumper.out, "\n  #... %lu more values\n", (unsigned long)more);
         }
         fprintf(self->dumper.out, "\n");
     }
