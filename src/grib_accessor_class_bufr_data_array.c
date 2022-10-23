@@ -2736,7 +2736,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
             }
         }
     }
-
+    (void)extraElement;
     return err;
 }
 
