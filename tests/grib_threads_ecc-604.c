@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     }
 
     {
-        pthread_t* workers = malloc(NUM_THREADS * sizeof(pthread_t));
+        pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
             data->number   = i;
@@ -175,7 +175,7 @@ void* runner(void* ptr)
 void do_stuff(void* ptr)
 {
     /* Cast argument to struct v pointer */
-    struct v* data = ptr;
+    struct v* data = (struct v*)ptr;
     size_t i;
     char output_file[50];
     time_t ltime;

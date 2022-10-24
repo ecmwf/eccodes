@@ -11,6 +11,7 @@
 #include "grib_api_internal.h"
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 int assertion_caught = 0;
 
@@ -1553,9 +1554,36 @@ static void test_gribex_mode()
     Assert( grib_get_gribex_mode(c) == 0 );
 }
 
+static void test_grib_binary_search()
+{
+    double array_asc[] = {-0.1, 33.4, 56.1, 101.8};
+    double array_desc[] = {88, 78, 0, -88};
+    const size_t idx_asc_max = NUMBER(array_asc) - 1;
+    const size_t idx_desc_max = NUMBER(array_desc) - 1;
+    size_t idx_upper=0, idx_lower = 0;
+
+    printf("Testing: test_grib_binary_search...\n");
+
+    grib_binary_search(array_asc, idx_asc_max, 56.0, &idx_upper, &idx_lower);
+    Assert(idx_lower == 1 && idx_upper == 2);
+    grib_binary_search(array_asc, idx_asc_max, 56.1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 2 && idx_upper == 3);
+    grib_binary_search(array_asc, idx_asc_max, -0.1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 0 && idx_upper == 1);
+
+    grib_binary_search(array_desc, idx_desc_max, 88, &idx_upper, &idx_lower);
+    Assert(idx_lower == 0 && idx_upper == 1);
+    grib_binary_search(array_desc, idx_desc_max, -88, &idx_upper, &idx_lower);
+    Assert(idx_lower == 2 && idx_upper == 3);
+    grib_binary_search(array_desc, idx_desc_max, 1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 1 && idx_upper == 2);
+}
+
 int main(int argc, char** argv)
 {
     /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+
+    test_grib_binary_search();
     
     test_trimming();
     test_string_ends_with();

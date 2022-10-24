@@ -189,7 +189,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 #if 0
   grib_dumper_keys *self = (grib_dumper_keys*)d;
   int i,k,err =0;
-  int more = 0;
+  size_t more = 0;
   size_t size = a->length;
   unsigned char* buf = grib_context_malloc(d->handle->context,size);
 
@@ -250,7 +250,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
   if(more)
   {
     for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-    fprintf(self->dumper.out,"... %d more values\n",more);
+    fprintf(self->dumper.out,"... %lu more values\n", (unsigned long)more);
   }
 
   for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
