@@ -1,7 +1,0 @@
-# Code table 4.103 - Statistical processing of reference period
-0 0 Reserved
-1 1 Mean
-2 2 Median
-193 193 M-climate (outer)
-194 194 M-climate (inner)
-255 255 Missing
