@@ -41,7 +41,7 @@ grib_option grib_options[] = {
 
     /*{"S",0,0,1,0,0},*/
     { "O", 0, "Octet mode. WMO documentation style dump.\n", 0, 1, 0 },
-    { "p", 0, "Plain dump (key=value format).\n", 0, 1, 0 },
+    { "p", 0, "Plain/Flat dump (key=value format).\n", 0, 1, 0 },
     /* {"D",0,0,0,1,0},  */ /* See ECC-215 */
     { "d", 0, "Dump the expanded descriptors.\n", 0, 1, 0 },
     /*{"u",0,"Print only some values.\n",0,1,0},*/

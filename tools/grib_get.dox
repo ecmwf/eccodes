@@ -31,7 +31,7 @@
 		For each key a string (key:s), a double (key:d) or an integer (key:i)
 		type can be specified. Default type is string.
  \n \n -n namespace \n 
-		All the keys belonging to namespace are printed.
+		All the keys belonging to the given namespace are printed.
  \n \n -s key[:{s/d/i}]=value,key[:{s/d/i}]=value,... \n 
 		Key/values to set.
 		For each key a string (key:s), a double (key:d) or an integer (key:i)

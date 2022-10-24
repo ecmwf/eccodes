@@ -2199,6 +2199,72 @@
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Urban cover
+'Urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	}
+#Road Cover
+'Road Cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	}
+#Building cover
+'Building cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	}
+#Building height
+'Building height' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Vertical-to-horizontal area ratio
+'Vertical-to-horizontal area ratio' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#Standard deviation of building height
+'Standard deviation of building height' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
+#Wetland cover
+'Wetland cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 45 ;
+	}
+#Wetland type
+'Wetland type' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	}
+#Irrigation cover
+'Irrigation cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	}
+#C4 crop cover
+'C4 crop cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	}
+#C4 grass cover
+'C4 grass cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;

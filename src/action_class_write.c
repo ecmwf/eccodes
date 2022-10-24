@@ -161,11 +161,12 @@ static int execute(grib_action* act, grib_handle* h)
     }
 
     if (a->padtomultiple) {
-        char* zeros;
+        char* zeros = NULL;
         size_t padding = a->padtomultiple - size % a->padtomultiple;
         /* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
         zeros = (char*)calloc(padding, 1);
-        Assert(zeros);
+        if (!zeros)
+            return GRIB_OUT_OF_MEMORY;
         if (fwrite(zeros, 1, padding, of->handle) != padding) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing to %s", filename);

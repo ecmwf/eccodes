@@ -127,9 +127,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     long value              = 0;
     size_t size             = 0;
+    size_t more             = 0;
     long* values            = NULL; /* array of long */
     long count              = 0;
-    int err = 0, i = 0, more = 0;
+    int err = 0, i = 0;
 
     if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
@@ -175,7 +176,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             if (more) {
                 for (i = 0; i < d->depth + 3; i++)
                     fprintf(self->dumper.out, " ");
-                fprintf(self->dumper.out, "... %d more values\n", more);
+                fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
             }
             for (i = 0; i < d->depth; i++)
                 fprintf(self->dumper.out, " ");
@@ -326,7 +327,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     int i, k, err = 0;
-    int more           = 0;
+    size_t more        = 0;
     size_t size        = a->length;
     unsigned char* buf = (unsigned char*)grib_context_malloc(d->context, size);
 
@@ -381,7 +382,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
@@ -394,7 +395,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     int i, k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -462,7 +463,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
