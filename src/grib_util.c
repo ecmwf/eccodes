@@ -13,6 +13,10 @@
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
+#if defined(ECCODES_ON_WINDOWS)
+#define strtok_r strtok_s
+#endif
+
 typedef enum
 {
     eROUND_ANGLE_UP,

@@ -10,6 +10,10 @@
 
 #include "grib_api_internal.h"
 
+#if defined(ECCODES_ON_WINDOWS)
+#define strtok_r strtok_s
+#endif
+
 /* Compare two strings ignoring case.
  * strcasecmp is not in the C standard. However, it's defined by
  * 4.4BSD, POSIX.1-2001. So we use our own
