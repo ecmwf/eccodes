@@ -176,6 +176,7 @@ static char* break_line(grib_context* c, const char* input)
 {
     /* Break a long line using Fortran continuation characters */
     char* a_token    = NULL;
+    char* lasts      = NULL;
     int first        = 1;
     const size_t len = strlen(input);
     /* Add a bit more for inserted newlines and continuation characters */
@@ -191,7 +192,7 @@ static char* break_line(grib_context* c, const char* input)
     /* 'hello &
      * &world'  is the same as 'hello world'
      */
-    a_token = strtok((char*)input, "->");
+    a_token = strtok_r((char*)input, "->", &lasts);
     while (a_token) {
         if (first) {
             first = 0;
@@ -202,7 +203,7 @@ static char* break_line(grib_context* c, const char* input)
             sprintf(tmp, "->&\n    &%s", a_token);
             strcat(result, tmp);
         }
-        a_token = strtok(NULL, "->");
+        a_token = strtok_r(NULL, "->", &lasts);
     }
 
     return result;

@@ -1951,17 +1951,18 @@ int parse_keyval_string(const char* grib_tool,
                         grib_values values[], int* count)
 {
     char* p = NULL;
-    int i   = 0;
+    char* lasts = NULL;
+    int i = 0;
     if (arg == NULL) {
         *count = 0;
         return GRIB_SUCCESS;
     }
-    p = strtok(arg, ",");
+    p = strtok_r(arg, ",", &lasts);
     while (p != NULL) {
         values[i].name = (char*)calloc(1, strlen(p) + 1);
         Assert(values[i].name);
         strcpy((char*)values[i].name, p);
-        p = strtok(NULL, ",");
+        p = strtok_r(NULL, ",", &lasts);
         i++;
         if (i >= *count) {
             fprintf(stderr, "Input string contains too many entries (max=%d)\n", *count);
