@@ -16,7 +16,6 @@
 #include <unistd.h>
 #else
 #include <fcntl.h> /* Windows: for _O_BINARY */
-#define strtok_r strtok_s
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS

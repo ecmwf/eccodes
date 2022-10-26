@@ -11,10 +11,6 @@
 #include "grib_api_internal.h"
 #include <ctype.h>
 
-#if defined(ECCODES_ON_WINDOWS)
-#define strtok_r strtok_s
-#endif
-
 /*
    This is used by make_class.pl
 
