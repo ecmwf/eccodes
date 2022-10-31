@@ -3052,43 +3052,43 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
-#Forest fire weather index
+#Forest fire weather index (as defined by the Canadian Forest Service)
 '260540' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 5 ;
 	}
-#Fine fuel moisture code
+#Fine fuel moisture code (as defined by the Canadian Forest Service)
 '260541' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;
 	}
-#Duff moisture code
+#Duff moisture code (as defined by the Canadian Forest Service)
 '260542' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	}
-#Drought code
+#Drought code (as defined by the Canadian Forest Service)
 '260543' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
 	}
-#Initial fire spread index
+#Initial fire spread index (as defined by the Canadian Forest Service)
 '260544' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	}
-#Fire buildup index
+#Fire buildup index (as defined by the Canadian Forest Service)
 '260545' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
 	}
-#Fire daily severity rating
+#Fire daily severity rating (as defined by the Canadian Forest Service)
 '260546' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
