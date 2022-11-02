@@ -35,12 +35,13 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
 
 static void usage(const char* prog)
 {
-    printf("Usage: %s [-f] [-v] grib_file grib_file ...\n\n", prog);
+    printf("Usage: %s [-f] [-v] [-V] grib_file grib_file ...\n\n", prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
     printf("(The grid is assumed to be GLOBAL)\n\n");
     printf("Options:\n");
     printf("  -f  Do not exit on first error\n");
     printf("  -v  Verbose\n");
+    printf("  -V  Print the ecCodes version\n");
     printf("\n");
     exit(1);
 }
@@ -262,6 +263,12 @@ int main(int argc, char** argv)
                 return 1;
             }
             exit_on_error = 0;
+        }
+        else if (STR_EQUAL(arg, "-V")) {
+            printf("\necCodes Version ");
+            grib_print_api_version(stdout);
+            printf("\n\n");
+            return 0;
         }
         else if (STR_EQUAL(arg, "-v")) {
             if (argc < 3) {
