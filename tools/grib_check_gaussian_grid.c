@@ -96,7 +96,7 @@ static int process_file(const char* filename)
         printf("Checking file %s\n", filename);
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
-        int is_reduced = 0, is_regular = 0, grid_ok = 0;
+        int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
@@ -109,21 +109,22 @@ static int process_file(const char* filename)
             GRIB_CHECK(err, 0);
         ++msg_num;
         GRIB_CHECK(grib_get_long(h, "edition", &edition), 0);
-        if (verbose)
-            printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         len = 32;
         GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
-        is_regular = STR_EQUAL(gridType, "regular_gg");
-        is_reduced = STR_EQUAL(gridType, "reduced_gg");
-        grid_ok    = is_regular || is_reduced;
+        is_regular_gaussian = STR_EQUAL(gridType, "regular_gg");
+        is_reduced_gaussian = STR_EQUAL(gridType, "reduced_gg");
+        grid_ok    = is_regular_gaussian || is_reduced_gaussian;
         if (!grid_ok) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
-                printf(" WARNING: gridType=%s. It should be Reduced or Regular Gaussian Grid! Ignoring\n", gridType);
+                printf(" Note: gridType=%s. Not Gaussian so ignoring\n", gridType);
             grib_handle_delete(h);
             continue;
         }
+
+        if (verbose)
+            printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         GRIB_CHECK(grib_get_long(h, "N", &N), 0);
         GRIB_CHECK(grib_get_long(h, "Nj", &Nj), 0);
@@ -165,7 +166,7 @@ static int process_file(const char* filename)
             error(filename, msg_num, "latitudeOfLastGridPointInDegrees=%f but should be %f\n", lat2, lats[Nj - 1]);
         }
 
-        if (is_reduced) {
+        if (is_reduced_gaussian) {
             int pl_sum = 0, max_pl = 0, is_missing_Ni = 0, is_missing_Di = 0;
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
