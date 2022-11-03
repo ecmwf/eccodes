@@ -2221,13 +2221,22 @@ static void grib_convert_to_attribute(grib_accessor* a)
     }
 }
 
+/* subsetList can be NULL in which case subsetListSize will be 0 */
 static grib_iarray* set_subset_list(
         grib_context* c, grib_accessor_bufr_data_array* self,
         long onlySubset, long startSubset, long endSubset, const long* subsetList, size_t subsetListSize)
 {
     grib_iarray* list = grib_iarray_new(c, self->numberOfSubsets, 10);
-    long s;
+    long s = 0;
 
+#ifdef DEBUG
+    if (subsetList == NULL) {
+        Assert(subsetListSize == 0);
+    }
+    if (subsetListSize == 0) {
+        Assert(subsetList == NULL);
+    }
+#endif
     if (startSubset > 0) {
         s = startSubset;
         while (s <= endSubset) {
@@ -2736,7 +2745,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
             }
         }
     }
-
+    (void)extraElement;
     return err;
 }
 
@@ -2899,11 +2908,11 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                 return err;
             if (subsetList)
                 grib_context_free(c, subsetList);
-            subsetList = (long*)grib_context_malloc_clear(c, subsetListSize * sizeof(long));
-            err        = grib_get_long_array(grib_handle_of_accessor(a), "extractSubsetList", subsetList, &subsetListSize);
-            if (err)
-                return err;
-
+            if (subsetListSize) {
+                subsetList = (long*)grib_context_malloc_clear(c, subsetListSize * sizeof(long));
+                err        = grib_get_long_array(grib_handle_of_accessor(a), "extractSubsetList", subsetList, &subsetListSize);
+                if (err) return err;
+            }
             codec_replication = &encode_replication;
             break;
         default:

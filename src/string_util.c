@@ -85,6 +85,7 @@ char** string_split(char* inputString, const char* delimiter)
     char* p             = inputString;
     char* lastDelimiter = NULL;
     char* aToken        = NULL;
+    char* lasts         = NULL;
     size_t numTokens    = 0;
     size_t strLength    = 0;
     size_t index        = 0;
@@ -111,11 +112,11 @@ char** string_split(char* inputString, const char* delimiter)
     Assert(result);
 
     /* Start tokenizing */
-    aToken = strtok(inputString, delimiter);
+    aToken = strtok_r(inputString, delimiter, &lasts);
     while (aToken) {
         Assert(index < numTokens);
         *(result + index++) = strdup(aToken);
-        aToken              = strtok(NULL, delimiter);
+        aToken              = strtok_r(NULL, delimiter, &lasts);
     }
     Assert(index == numTokens - 1);
     *(result + index) = NULL;

@@ -958,7 +958,7 @@ int grib_f_read_any_headers_only_from_file(int* fid, char* buffer, size_t* nbyte
 }
 
 /*****************************************************************************/
-int grib_f_read_any_from_file_(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_any_from_file_(int* fid, void* buffer, size_t* nbytes) {
     grib_context* c;
     int err=0;
     FILE* f=get_file(*fid);
@@ -971,15 +971,15 @@ int grib_f_read_any_from_file_(int* fid, char* buffer, size_t* nbytes) {
         return GRIB_INVALID_FILE;
     }
 }
-int grib_f_read_any_from_file__(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_any_from_file__(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
-int grib_f_read_any_from_file(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_any_from_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
 
 /*****************************************************************************/
-int grib_f_write_file_(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_write_file_(int* fid, void* buffer, size_t* nbytes) {
     grib_context* c;
     FILE* f=get_file(*fid);
 
@@ -996,15 +996,15 @@ int grib_f_write_file_(int* fid, char* buffer, size_t* nbytes) {
         return GRIB_INVALID_FILE;
     }
 }
-int grib_f_write_file__(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_write_file__(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_write_file_(fid,buffer,nbytes);
 }
-int grib_f_write_file(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_write_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_write_file_(fid,buffer,nbytes);
 }
 
 /*****************************************************************************/
-int grib_f_read_file_(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_file_(int* fid, void* buffer, size_t* nbytes) {
     grib_context* c;
     FILE* f=get_file(*fid);
 
@@ -1021,10 +1021,10 @@ int grib_f_read_file_(int* fid, char* buffer, size_t* nbytes) {
         return GRIB_INVALID_FILE;
     }
 }
-int grib_f_read_file__(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_file__(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_file_(fid,buffer,nbytes);
 }
-int grib_f_read_file(int* fid, char* buffer, size_t* nbytes) {
+int grib_f_read_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_file_(fid,buffer,nbytes);
 }
 

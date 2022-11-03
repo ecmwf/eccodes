@@ -607,6 +607,7 @@ static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr)
     char *t1 = 0, *t2 = 0, *p = 0;
     int id  = 0;
     char *z = 0, *zs       = 0;
+    char* lasts = NULL;
     int mode, mode_default = GRIB_ORDER_BY_ASC;
     grib_order_by *ob, *sob;
 
@@ -628,7 +629,7 @@ static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr)
     ob->mode  = 0;
     ob->next  = 0;
 
-    t1 = strtok(z, ",");
+    t1 = strtok_r(z, ",", &lasts);
 
     while (t1) {
         grib_trim(&t1);
@@ -651,7 +652,7 @@ static grib_order_by* grib_db_new_order_by(grib_context* c, char* obstr)
         }
         grib_trim(&t2);
         id = -1;
-        t1 = strtok(NULL, ",");
+        t1 = strtok_r(NULL, ",", &lasts);
 
         if (ob->key) {
             ob->next = (grib_order_by*)grib_context_malloc(c, sizeof(grib_order_by));

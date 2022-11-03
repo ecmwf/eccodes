@@ -1940,28 +1940,32 @@ static void set_value(grib_values* value, char* str, int equal)
 
 /*
  'grib_tool'        Optional tool name which is printed on error. Can be NULL
- 'arg'              The string to be parsed e.g. key1=value1,key2!=value2 etc
+ 'arg'              The string to be parsed e.g. key1=value1,key2!=value2 etc (cannot be const)
  'values_required'  If true then each key must have a value after it
  'default_type'     The default type e.g. GRIB_TYPE_UNDEFINED or GRIB_TYPE_DOUBLE
  'values'           The array we populate and return (output)
- 'count'            The number of elements (output)
+ 'count'            Number of elements (output). Must be initialised to the size of the values array
  */
 int parse_keyval_string(const char* grib_tool,
                         char* arg, int values_required, int default_type,
                         grib_values values[], int* count)
 {
     char* p = NULL;
-    int i   = 0;
+    char* lasts = NULL;
+    int i = 0;
     if (arg == NULL) {
         *count = 0;
         return GRIB_SUCCESS;
     }
-    p = strtok(arg, ",");
+    /* Note: strtok modifies its input argument 'arg'
+     * so it cannot be 'const'
+     */
+    p = strtok_r(arg, ",", &lasts);
     while (p != NULL) {
         values[i].name = (char*)calloc(1, strlen(p) + 1);
         Assert(values[i].name);
         strcpy((char*)values[i].name, p);
-        p = strtok(NULL, ",");
+        p = strtok_r(NULL, ",", &lasts);
         i++;
         if (i >= *count) {
             fprintf(stderr, "Input string contains too many entries (max=%d)\n", *count);

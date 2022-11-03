@@ -11,6 +11,7 @@
 #include "grib_api_internal.h"
 
 #define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 int assertion_caught = 0;
 
@@ -1553,9 +1554,83 @@ static void test_gribex_mode()
     Assert( grib_get_gribex_mode(c) == 0 );
 }
 
+static void test_grib_binary_search()
+{
+    double array_asc[] = {-0.1, 33.4, 56.1, 101.8};
+    double array_desc[] = {88, 78, 0, -88};
+    const size_t idx_asc_max = NUMBER(array_asc) - 1;
+    const size_t idx_desc_max = NUMBER(array_desc) - 1;
+    size_t idx_upper=0, idx_lower = 0;
+
+    printf("Testing: test_grib_binary_search...\n");
+
+    grib_binary_search(array_asc, idx_asc_max, 56.0, &idx_upper, &idx_lower);
+    Assert(idx_lower == 1 && idx_upper == 2);
+    grib_binary_search(array_asc, idx_asc_max, 56.1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 2 && idx_upper == 3);
+    grib_binary_search(array_asc, idx_asc_max, -0.1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 0 && idx_upper == 1);
+
+    grib_binary_search(array_desc, idx_desc_max, 88, &idx_upper, &idx_lower);
+    Assert(idx_lower == 0 && idx_upper == 1);
+    grib_binary_search(array_desc, idx_desc_max, -88, &idx_upper, &idx_lower);
+    Assert(idx_lower == 2 && idx_upper == 3);
+    grib_binary_search(array_desc, idx_desc_max, 1, &idx_upper, &idx_lower);
+    Assert(idx_lower == 1 && idx_upper == 2);
+}
+
+static void test_parse_keyval_string()
+{
+    int err = 0;
+    int values_required = 1;
+    int count = 0;
+    grib_values values[128] = {0,};
+    const int max_count = 128;
+    char input1[] = "key1=value1,key2!=value2";
+    char input2[] = "x=14";
+    char input3[] = "mars.level=0.978";
+
+    printf("Testing: parse_keyval_string...\n");
+
+    count = max_count;
+    err = parse_keyval_string(NULL, input1,
+                              values_required, GRIB_TYPE_UNDEFINED, values, &count);
+    Assert( !err );
+    Assert( count == 2 );
+    Assert( strcmp(values[0].name, "key1")==0 );
+    Assert( strcmp(values[0].string_value, "value1")==0 );
+    Assert( values[0].equal == 1 );
+    Assert( strcmp(values[1].name, "key2")==0 );
+    Assert( strcmp(values[1].string_value, "value2")==0 );
+    Assert( values[1].equal == 0 );
+    /* Note how the input is modified by the tokenizer (thanks to strtok_r) */
+    Assert( strcmp(input1, "key1=value1")==0 );
+
+    count = max_count;
+    err = parse_keyval_string(NULL, input2,
+                              values_required, GRIB_TYPE_LONG, values, &count);
+    Assert( !err );
+    Assert( count == 1 );
+    Assert( strcmp(values[0].name, "x")==0 );
+    Assert( values[0].long_value == 14 );
+    Assert( values[0].equal == 1 );
+    Assert( strcmp(values[1].name, "key2")==0 );
+
+    count = max_count;
+    err = parse_keyval_string(NULL, input3,
+                              values_required, GRIB_TYPE_DOUBLE, values, &count);
+    Assert( !err );
+    Assert( count == 1 );
+    Assert( strcmp(values[0].name, "mars.level")==0 );
+
+}
+
 int main(int argc, char** argv)
 {
-    /*printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());*/
+    printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_grib_binary_search();
+    test_parse_keyval_string();
     
     test_trimming();
     test_string_ends_with();

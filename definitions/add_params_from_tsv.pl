@@ -80,7 +80,6 @@ my $dbh  = 0;
 my $centre_wmo   = -3; # WMO centre ID
 my $centre_ecmwf = 98; # ECMWF centre ID
 my $edition = 2; # GRIB edition 2
-my $contactId;   # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";

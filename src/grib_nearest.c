@@ -128,6 +128,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm)
     return GRIB_SUCCESS;
 }
 
+/* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
 void grib_binary_search(const double xx[], size_t n, double x, size_t* ju, size_t* jl)
 {
     size_t jm     = 0;

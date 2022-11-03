@@ -2199,6 +2199,72 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Urban cover
+'cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	}
+#Road Cover
+'cro' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	}
+#Building cover
+'cbu' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	}
+#Building height
+'bldh' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Vertical-to-horizontal area ratio
+'hwr' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#Standard deviation of building height
+'bhstd' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
+#Wetland cover
+'cwe' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 45 ;
+	}
+#Wetland type
+'twe' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	}
+#Irrigation cover
+'cirr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	}
+#C4 crop cover
+'c4cr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	}
+#C4 grass cover
+'c4gr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'mttswr' = {
 	 discipline = 0 ;
@@ -2986,43 +3052,43 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
-#Forest fire weather index
+#Forest fire weather index (as defined by the Canadian Forest Service)
 'fwinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 5 ;
 	}
-#Fine fuel moisture code
+#Fine fuel moisture code (as defined by the Canadian Forest Service)
 'ffmcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;
 	}
-#Duff moisture code
+#Duff moisture code (as defined by the Canadian Forest Service)
 'dufmcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	}
-#Drought code
+#Drought code (as defined by the Canadian Forest Service)
 'drtcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
 	}
-#Initial fire spread index
+#Initial fire spread index (as defined by the Canadian Forest Service)
 'infsinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	}
-#Fire buildup index
+#Fire buildup index (as defined by the Canadian Forest Service)
 'fbupinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
 	}
-#Fire daily severity rating
+#Fire daily severity rating (as defined by the Canadian Forest Service)
 'fdsrte' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;

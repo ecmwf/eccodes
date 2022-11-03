@@ -49,7 +49,7 @@ inline
 #endif
 #endif
 static unsigned int
-hash_keys (register const char *str, register size_t len)
+hash_keys (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -9396,7 +9396,7 @@ static const struct grib_keys_hash wordlist[] =
   };
 
 const struct grib_keys_hash *
-grib_keys_hash_get (register const char *str, register size_t len)
+grib_keys_hash_get (const char *str, size_t len)
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {

@@ -38,7 +38,7 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_viarray*)grib_context_malloc_clear(c, sizeof(grib_viarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_new unable to allocate %ld bytes\n", sizeof(grib_viarray));
+                         "grib_viarray_new unable to allocate %lu bytes\n", sizeof(grib_viarray));
         return NULL;
     }
     v->size    = size;
@@ -48,7 +48,7 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_new unable to allocate %ld bytes\n", sizeof(grib_iarray*) * size);
+                         "grib_viarray_new unable to allocate %lu bytes\n", sizeof(grib_iarray*) * size);
         return NULL;
     }
     return v;
@@ -65,7 +65,7 @@ static grib_viarray* grib_viarray_resize(grib_viarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_resize unable to allocate %ld bytes\n", sizeof(grib_iarray*) * newsize);
+                         "grib_viarray_resize unable to allocate %lu bytes\n", sizeof(grib_iarray*) * newsize);
         return NULL;
     }
     return v;

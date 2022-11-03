@@ -628,6 +628,7 @@ static int init_definition_files_dir(grib_context* c)
     int err = 0;
     char path[ECC_PATH_MAXLEN];
     char* p                = NULL;
+    char* lasts            = NULL;
     grib_string_list* next = NULL;
 
     if (!c)
@@ -638,7 +639,7 @@ static int init_definition_files_dir(grib_context* c)
     if (!c->grib_definition_files_path)
         return GRIB_NO_DEFINITIONS;
 
-    /* Note: strtok modifies its first argument so we copy */
+    /* Note: strtok_r modifies its first argument so we copy */
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
@@ -657,7 +658,7 @@ static int init_definition_files_dir(grib_context* c)
     else {
         /* Definitions path contains multiple directories */
         char* dir = NULL;
-        dir       = strtok(path, ECC_PATH_DELIMITER_STR);
+        dir       = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
 
         while (dir != NULL) {
             if (next) {
@@ -669,7 +670,7 @@ static int init_definition_files_dir(grib_context* c)
                 next                         = c->grib_definition_files_dir;
             }
             next->value = codes_resolve_path(c, dir);
-            dir         = strtok(NULL, ECC_PATH_DELIMITER_STR);
+            dir         = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
         }
     }
 
