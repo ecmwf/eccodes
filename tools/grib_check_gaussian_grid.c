@@ -183,12 +183,6 @@ static int process_file(const char* filename)
                 error(filename, msg_num, "For a reduced grid, iDirectionIncrement should be missing\n");
             }
 
-            GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
-            if (interpretationOfNumberOfPoints != 1) {
-                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
-                                         "(See Code Table 3.11)\n");
-            }
-
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
             assert(pl_len > 0);
             if (pl_len != 2 * N) {
@@ -225,6 +219,12 @@ static int process_file(const char* filename)
                 expected_lon2 = 360.0 - 360.0 / max_pl;
             }
             free(pl);
+
+            GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
+            if (interpretationOfNumberOfPoints != 1) {
+                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
+                                         "(See Code Table 3.11)\n");
+            }
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
