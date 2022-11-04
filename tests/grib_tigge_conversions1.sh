@@ -16,7 +16,7 @@
 
 REDIRECT=/dev/null
 
-label="grib_tigge_conv1"
+label="grib_tigge_conv1_test"
 dir="${data_dir}/tigge"
 temp1="temp.${label}.grib1_"
 temp2="temp.${label}.grib2_"

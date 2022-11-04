@@ -37,22 +37,21 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
 
 
-typedef struct grib_iterator_gaussian
-{
-    grib_iterator it;
+typedef struct grib_iterator_gaussian{
+  grib_iterator it;
     /* Members defined in gen */
     long carg;
     const char* missingValue;
     /* Members defined in regular */
-    double* las;
-    double* los;
-    long Ni;
-    long Nj;
+    double   *las;
+    double   *los;
+    long      Ni;
+    long      Nj;
     long iScansNegatively;
     long isRotated;
     double angleOfRotation;
@@ -66,17 +65,17 @@ typedef struct grib_iterator_gaussian
 extern grib_iterator_class* grib_iterator_class_regular;
 
 static grib_iterator_class _grib_iterator_class_gaussian = {
-    &grib_iterator_class_regular,   /* super                     */
-    "gaussian",                     /* name                      */
-    sizeof(grib_iterator_gaussian), /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    &init,                          /* constructor               */
-    0,                              /* destructor                */
-    0,                              /* Next Value                */
-    0,                              /*  Previous Value           */
-    0,                              /* Reset the counter         */
-    0,                              /* has next values           */
+    &grib_iterator_class_regular,                    /* super                     */
+    "gaussian",                    /* name                      */
+    sizeof(grib_iterator_gaussian),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    0,                  /* destructor                */
+    0,                     /* Next Value                */
+    0,                 /*  Previous Value           */
+    0,                    /* Reset the counter         */
+    0,                 /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussian;
@@ -84,14 +83,14 @@ grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussi
 
 static void init_class(grib_iterator_class* c)
 {
-    c->next     = (*(c->super))->next;
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->next    =    (*(c->super))->next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
-static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j);
+static void binary_search_gaussian_latitudes(const double xx[], const unsigned long n, double x, long* j);
 
 static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 {
@@ -101,12 +100,12 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     double laf; /* latitude of first point in degrees */
     double lal; /* latitude of last point in degrees */
     long trunc; /* number of parallels between a pole and the equator */
-    long lai;
+    long lai = 0;
     long jScansPositively = 0;
-    int size;
+    int size = 0;
     double start;
-    unsigned long istart = 0;
-    int ret              = GRIB_SUCCESS;
+    long istart = 0;
+    int ret = GRIB_SUCCESS;
 
     const char* latofirst          = grib_arguments_get_name(h, args, self->carg++);
     const char* latoflast          = grib_arguments_get_name(h, args, self->carg++);
@@ -135,20 +134,24 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         return ret;
     }
     /*
-  for(loi=(trunc*2)-1;loi>=0;loi--)
-    if(fabs(lats[loi] - lal) < glatPrecision) break;
-  for(j=(trunc*2)-1;j>0;j--) {
-    if(fabs(lats[j] - laf) < glatPrecision) break;
-  }
+     for(loi=(trunc*2)-1;loi>=0;loi--)
+       if(fabs(lats[loi] - lal) < glatPrecision) break;
+     for(j=(trunc*2)-1;j>0;j--) {
+       if(fabs(lats[j] - laf) < glatPrecision) break;
+     }
      */
 
-    binary_search(lats, size - 1, start, &istart);
-    Assert(istart < size);
+    binary_search_gaussian_latitudes(lats, size-1, start, &istart);
+    if (istart < 0 || istart >= size) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to find index for latitude=%g", start);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     if (jScansPositively) {
         for (lai = 0; lai < self->Nj; lai++) {
+            DebugAssert(istart >= 0);
             self->las[lai] = lats[istart--];
-            /*if (istart<0) istart=size-1;  this condition is always FALSE -- 'istart' is unsigned long */
+            if (istart<0) istart=size-1;
         }
     }
     else {
@@ -164,14 +167,47 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     return ret;
 }
 
-static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
+#define EPSILON 1e-3
+/* Note: the argument 'n' is NOT the size of the 'xx' array but its LAST index i.e. size of xx - 1 */
+static void binary_search_gaussian_latitudes(const double array[], const unsigned long n, double x, long* j)
+{
+    unsigned long low = 0;
+    unsigned long high = n;
+    unsigned long mid;
+    const int descending = (array[n] < array[0]);
+    Assert(descending); /* Gaussian latitudes should be in descending order */
+    while (low <= high) {
+        mid = (high + low) / 2;
+
+        if (fabs(x - array[mid]) < EPSILON) {
+            *j = mid;
+            return;
+        }
+
+        if (x < array[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    *j = -1; /* Not found */
+}
+
+#if 0
+static void binary_search_old(const double xx[], const unsigned long n, double x, long* j)
 {
     /*This routine works only on descending ordered arrays*/
-#define EPSILON 1e-3
-
     unsigned long ju, jm, jl;
     jl = 0;
     ju = n;
+    if (fabs(x - xx[0]) < EPSILON) {
+        *j = 0;
+        return;
+    }
+    if (fabs(x - xx[n]) < EPSILON) {
+        *j = n;
+        return;
+    }
+
     while (ju - jl > 1) {
         jm = (ju + jl) >> 1;
         if (fabs(x - xx[jm]) < EPSILON) {
@@ -186,3 +222,4 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
     }
     *j = jl;
 }
+#endif

@@ -43,22 +43,21 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
-typedef struct grib_dumper_wmo
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_wmo {
+    grib_dumper          dumper;  
     /* Members defined in wmo */
     long section_offset;
     long begin;
@@ -67,24 +66,24 @@ typedef struct grib_dumper_wmo
 
 
 static grib_dumper_class _grib_dumper_class_wmo = {
-    0,                       /* super                     */
-    "wmo",                   /* name                      */
-    sizeof(grib_dumper_wmo), /* size                      */
-    0,                       /* inited */
-    &init_class,             /* init_class */
-    &init,                   /* init                      */
-    &destroy,                /* free mem                       */
-    &dump_long,              /* dump long         */
-    &dump_double,            /* dump double    */
-    &dump_string,            /* dump string    */
-    &dump_string_array,      /* dump string array   */
-    &dump_label,             /* dump labels  */
-    &dump_bytes,             /* dump bytes  */
-    &dump_bits,              /* dump bits   */
-    &dump_section,           /* dump section      */
-    &dump_values,            /* dump values   */
-    0,                       /* header   */
-    0,                       /* footer   */
+    0,                              /* super                     */
+    "wmo",                              /* name                      */
+    sizeof(grib_dumper_wmo),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    0,                             /* header   */
+    0,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_wmo = &_grib_dumper_class_wmo;
@@ -345,7 +344,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_wmo* self = (grib_dumper_wmo*)d;
     int i, k, err = 0;
-    int more           = 0;
+    size_t more        = 0;
     size_t size        = a->length;
     unsigned char* buf = (unsigned char*)grib_context_malloc(d->context, size);
 
@@ -405,7 +404,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
@@ -418,7 +417,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_wmo* self = (grib_dumper_wmo*)d;
     int k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -510,7 +509,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     }
     if (more) {
         /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/

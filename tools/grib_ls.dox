@@ -39,7 +39,7 @@
  \n \n -i index \n 
 		Data value corresponding to the given index is printed.
  \n \n -n namespace \n 
-		All the keys belonging to namespace are printed.
+		All the keys belonging to the given namespace are printed.
  \n \n -m  \n Mars keys are printed.
  \n \n -V  \n Version.
  \n \n -W width \n 

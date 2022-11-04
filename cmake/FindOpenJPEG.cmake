@@ -6,7 +6,8 @@
 # granted to it by virtue of its status as an intergovernmental organisation nor
 # does it submit to any jurisdiction.
 
-# - Try to find the OpenJPEG includes and library (version 1.5.x, 2.1.x, 2.2.x, 2.3.x, 2.4.x)
+# - Try to find the OpenJPEG includes and library
+# (versions 1.5.x, 2.1.x, 2.2.x, 2.3.x, 2.4.x 2.5.x)
 # This module defines
 #
 #  OPENJPEG_FOUND         - System has OpenJPEG
@@ -20,11 +21,11 @@
 
 # Note: OpenJPEG has a version-specific subdirectory in the include
 # e.g. include/openjpeg-2.0 or include/openjpeg-2.1.
-# Only version 1.5.x and 2.[1234].x are supported.
+# Only version 1.5.x and 2.[12345].x are supported.
 # The library name is different for 1.x (libopenjpeg) and 2.x (libopenjp2).
 
 set( _suff include include/openjpeg include/openjpeg-1.5 include/openjpeg-2.1
-                   include/openjpeg-2.2 include/openjpeg-2.3 include/openjpeg-2.4 )
+                   include/openjpeg-2.2 include/openjpeg-2.3 include/openjpeg-2.4 include/openjpeg-2.5 )
 find_path( OPENJPEG_INCLUDE_DIR openjpeg.h
            PATHS ${OPENJPEG_PATH} ENV OPENJPEG_PATH
                  ${OPENJPEG_DIR}  ENV OPENJPEG_DIR

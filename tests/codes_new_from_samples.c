@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
 #include "grib_api_internal.h"
 
 typedef struct sample_t {
@@ -48,11 +47,11 @@ int main(int argc, char** argv)
 
         printf("Testing codes_handle_new_from_samples on %s\n", name);
         h = codes_handle_new_from_samples(0, name);
-        assert(h);
-        assert(samples[i].expected_kind == h->product_kind);
+        Assert(h);
+        Assert(samples[i].expected_kind == h->product_kind);
 
         GRIB_CHECK(grib_get_string(h, "identifier", identifier, &len), 0);
-        assert( strcmp(samples[i].expected_ID, identifier) == 0 );
+        Assert( strcmp(samples[i].expected_ID, identifier) == 0 );
         grib_handle_delete(h);
     }
 

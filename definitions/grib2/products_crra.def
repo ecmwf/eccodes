@@ -45,7 +45,7 @@ if (section2Used == 1) {
 }
 
 # See GRIB-911 re typeOfProcessedData values in UERRA
-concept marsType {
+concept marsType(unknown) {
 
    fc = {
      typeOfProcessedData = 1;
@@ -73,20 +73,15 @@ concept marsType {
      typeOfGeneratingProcess = 0;
      generatingProcessIdentifier = 50;
    }
-
-   "default" = {
-     dummyc = 0;
-   }
 }
 
 # See GRIB-205 re no_copy
 # Cannot use typeOfProcessedData for stream. See GRIB-911
-concept marsStream {
+concept marsStream(unknown) {
 
     oper = {
       productDefinitionTemplateNumber = 8;
     }
-
     oper = {
       productDefinitionTemplateNumber = 0;
     }
@@ -94,13 +89,8 @@ concept marsStream {
     enda = {
       productDefinitionTemplateNumber = 11;
     }
-
     enda = {
       productDefinitionTemplateNumber = 1;
-    }
-
-    "default" = {
-      dummyc = 0;
     }
 } : no_copy;
 

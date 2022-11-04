@@ -38,21 +38,20 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
-typedef struct grib_dumper_debug
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_debug {
+    grib_dumper          dumper;  
     /* Members defined in debug */
     long section_offset;
     long begin;
@@ -61,24 +60,24 @@ typedef struct grib_dumper_debug
 
 
 static grib_dumper_class _grib_dumper_class_debug = {
-    0,                         /* super                     */
-    "debug",                   /* name                      */
-    sizeof(grib_dumper_debug), /* size                      */
-    0,                         /* inited */
-    &init_class,               /* init_class */
-    &init,                     /* init                      */
-    &destroy,                  /* free mem                       */
-    &dump_long,                /* dump long         */
-    &dump_double,              /* dump double    */
-    &dump_string,              /* dump string    */
-    0,                         /* dump string array   */
-    &dump_label,               /* dump labels  */
-    &dump_bytes,               /* dump bytes  */
-    &dump_bits,                /* dump bits   */
-    &dump_section,             /* dump section      */
-    &dump_values,              /* dump values   */
-    0,                         /* header   */
-    0,                         /* footer   */
+    0,                              /* super                     */
+    "debug",                              /* name                      */
+    sizeof(grib_dumper_debug),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
+    0,                        /* dump string array   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    0,                             /* header   */
+    0,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_debug = &_grib_dumper_class_debug;
@@ -128,9 +127,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     long value              = 0;
     size_t size             = 0;
+    size_t more             = 0;
     long* values            = NULL; /* array of long */
     long count              = 0;
-    int err = 0, i = 0, more = 0;
+    int err = 0, i = 0;
 
     if (a->length == 0 && (d->option_flags & GRIB_DUMP_FLAG_CODED) != 0)
         return;
@@ -176,7 +176,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             if (more) {
                 for (i = 0; i < d->depth + 3; i++)
                     fprintf(self->dumper.out, " ");
-                fprintf(self->dumper.out, "... %d more values\n", more);
+                fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
             }
             for (i = 0; i < d->depth; i++)
                 fprintf(self->dumper.out, " ");
@@ -327,7 +327,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     int i, k, err = 0;
-    int more           = 0;
+    size_t more        = 0;
     size_t size        = a->length;
     unsigned char* buf = (unsigned char*)grib_context_malloc(d->context, size);
 
@@ -382,7 +382,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
@@ -395,7 +395,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_debug* self = (grib_dumper_debug*)d;
     int i, k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -463,7 +463,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)

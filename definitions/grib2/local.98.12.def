@@ -15,4 +15,7 @@ meta indexingTimeHHMM sprintf("%.2d%.2d",indexingTimeHH,indexingTimeMM);
 alias mars.date = indexingDate;
 alias mars.time = indexingTimeHHMM;
 
+# ECC-1425
+meta marsForecastMonth g1forecastmonth(dataDate, forecastTime): read_only;
+
 pad padding_loc12_1(50);

@@ -9,22 +9,74 @@
 #
 
 . ./include.ctest.sh
-set -u
-label="grib_mars_keys"
+
+label="grib_mars_keys_test"
+tempOut=temp.${label}.out
+tempGrib=temp.${label}.grib
+tempRef=temp.${label}.ref
+
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-temp=temp.${label}.out
+grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 types_table=$ECCODES_DEFINITION_PATH/mars/type.table
 classes_table=$ECCODES_DEFINITION_PATH/mars/class.table
 streams_table=$ECCODES_DEFINITION_PATH/mars/stream.table
+
+# Check basic mars namespace keys
+# --------------------------------
+${tools_dir}/grib_ls -jm $grib2_sample > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "an",
+    "stream": "oper",
+    "step": 0,
+    "levelist": 1000,
+    "levtype": "pl",
+    "param": 130
+  }
+]}
+EOF
+diff $tempRef $tempOut
+
+# Ensemble case
+${tools_dir}/grib_set -s \
+    paramId=240018,stream=enfo,type=pf,productDefinitionTemplateNumber=1,perturbationNumber=5 \
+    $grib2_sample $tempGrib
+${tools_dir}/grib_ls -jm $tempGrib > $tempOut
+cat > $tempRef << EOF
+{ "messages" : [ 
+  {
+    "domain": "g",
+    "date": 20100912,
+    "time": 1200,
+    "expver": "0001",
+    "class": "od",
+    "type": "pf",
+    "stream": "enfo",
+    "step": 0,
+    "levelist": 1000,
+    "levtype": "pl",
+    "number": 5,
+    "param": 240018
+  }
+]}
+EOF
+diff $tempRef $tempOut
+
 
 # Check numeric codes are unique
 # -------------------------------
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
     echo "Testing numeric codes in $table ..."
-    awk '{print $1}' < $table > $temp
-    count1=`sort -u $temp | wc -l`
-    count2=`wc -l $temp | awk '{print $1}'`
+    awk '{print $1}' < $table > $tempOut
+    count1=`sort -u $tempOut | wc -l`
+    count2=`wc -l $tempOut | awk '{print $1}'`
     [ $count1 = $count2 ]
 done
 
@@ -33,9 +85,9 @@ done
 tables="$types_table $classes_table $streams_table"
 for table in $tables; do
     echo "Testing abbreviations in $table ..."
-    awk '{print $2}' < $table > $temp
-    count1=`sort -u $temp | wc -l`
-    count2=`wc -l $temp | awk '{print $1}'`
+    awk '{print $2}' < $table > $tempOut
+    count1=`sort -u $tempOut | wc -l`
+    count2=`wc -l $tempOut | awk '{print $1}'`
     [ $count1 = $count2 ]
 done
 
@@ -47,9 +99,9 @@ mars_types=`awk '$1 !~ /34/ {print $1}' < $types_table`
 
 for t in $mars_types; do
     #echo "Doing MARS type |$t|"
-    ${tools_dir}/grib_set -s marsType=$t,edition=2 $grib1_sample $temp
-    grib_check_key_equals $temp "mars.type:i" $t
+    ${tools_dir}/grib_set -s marsType=$t,edition=2 $grib1_sample $tempGrib
+    grib_check_key_equals $tempGrib "mars.type:i" $t
 done
 
 
-rm -f $temp
+rm -f $tempGrib $tempOut $tempRef

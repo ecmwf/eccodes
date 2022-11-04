@@ -36,17 +36,16 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
-static int destroy(grib_iterator* i);
-static int reset(grib_iterator* i);
-static long has_next(grib_iterator* i);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int destroy            (grib_iterator* i);
+static int reset              (grib_iterator* i);
+static long has_next          (grib_iterator* i);
 
 
-typedef struct grib_iterator_gen
-{
-    grib_iterator it;
+typedef struct grib_iterator_gen{
+  grib_iterator it;
     /* Members defined in gen */
     long carg;
     const char* missingValue;
@@ -54,15 +53,15 @@ typedef struct grib_iterator_gen
 
 
 static grib_iterator_class _grib_iterator_class_gen = {
-    0,                         /* super                     */
-    "gen",                     /* name                      */
-    sizeof(grib_iterator_gen), /* size of instance          */
-    0,                         /* inited */
-    &init_class,               /* init_class */
+    0,                    /* super                     */
+    "gen",                    /* name                      */
+    sizeof(grib_iterator_gen),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
     &init,                     /* constructor               */
     &destroy,                  /* destructor                */
-    0,                         /* Next Value                */
-    0,                         /*  Previous Value           */
+    0,                     /* Next Value                */
+    0,                 /*  Previous Value           */
     &reset,                    /* Reset the counter         */
     &has_next,                 /* has next values           */
 };
@@ -229,5 +228,7 @@ static long has_next(grib_iterator* iter)
 {
     if (iter->data == NULL)
         return 0;
-    return iter->nv - iter->e;
+    if (iter->e >= (long)(iter->nv - 1))
+        return 0;
+    return 1;
 }

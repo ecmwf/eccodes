@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_box codes_box;
 typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
@@ -181,7 +180,7 @@ typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec codes_util_grid_spec;
 
 
-codes_fieldset* codes_fieldset_new_from_files(codes_context* c, char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+codes_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 
 void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);

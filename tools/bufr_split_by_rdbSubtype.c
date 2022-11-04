@@ -31,7 +31,7 @@ static void usage(const char* prog)
 
 /* If rdbSubtype can be extracted, return GRIB_SUCCESS otherwise error code. */
 /* If BUFR message does not have an ECMWF local section, set rdbSubtype to -1 */
-static int decode_rdbSubtype(const void* message, long* rdbSubtype)
+static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 {
     int err                         = GRIB_SUCCESS;
     long edition                    = 0;
@@ -49,6 +49,7 @@ static int decode_rdbSubtype(const void* message, long* rdbSubtype)
 
     long pos_section1Length      = 8 * 8;
     int ecmwfLocalSectionPresent = 0;
+    const unsigned char* message = (const unsigned char*)msg;
 
     Assert(message);
     *rdbSubtype = -1; /* default */

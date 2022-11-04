@@ -3,7 +3,6 @@
  */
 #include <time.h>
 #include <pthread.h>
-#include <assert.h>
 #include <unistd.h>
 
 #include "eccodes.h"
@@ -26,13 +25,13 @@ static int encode_file(char* template_file, char* output_file)
     int err                     = 0;
     long numSubsets             = 0;
 
-    assert(template_file);
+    Assert(template_file);
     in = fopen(template_file, "rb");
-    assert(in);
+    Assert(in);
     if (opt_write) {
-        assert(output_file);
+        Assert(output_file);
         out = fopen(output_file, "wb");
-        assert(out);
+        Assert(out);
     }
 
     /* loop over the messages in the source BUFR and clone them */
@@ -41,7 +40,7 @@ static int encode_file(char* template_file, char* output_file)
 
         if (opt_clone) {
             h = codes_handle_clone(source_handle);
-            assert(h);
+            Assert(h);
         }
 
         CODES_CHECK(codes_get_long(h, "numberOfSubsets", &numSubsets), 0);
@@ -129,7 +128,7 @@ int main(int argc, char** argv)
     }
 
     {
-        pthread_t* workers = malloc(NUM_THREADS * sizeof(pthread_t));
+        pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
             data->number   = i;
@@ -167,7 +166,7 @@ void* runner(void* ptr)
 void do_stuff(void* ptr)
 {
     /* Cast argument to struct v pointer */
-    struct v* data = ptr;
+    struct v* data = (struct v*)ptr;
     size_t i;
     char output_file[50];
     time_t ltime;

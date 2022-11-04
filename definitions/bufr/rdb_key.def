@@ -1,3 +1,4 @@
+# RDB stands for REPORT DATA BASE
 unsigned[1]   rdbType : dump; 
 unsigned[1]   oldSubtype: dump;
 
@@ -94,5 +95,5 @@ alias rdb.rdbSubtype=rdbSubtype;
 
 alias mars.obstype = rdbSubtype;
 
-#Data assimilation loop for purpose of Continous DA
+# Data assimilation loop for purpose of Continuous DA
 unsigned[1] daLoop;

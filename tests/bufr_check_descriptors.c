@@ -8,7 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
 #include "grib_api_internal.h"
 
 static const size_t MIN_NUM_COLUMNS = 8;

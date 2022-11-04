@@ -2199,6 +2199,72 @@
 	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Urban cover
+'Urban cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	}
+#Road Cover
+'Road Cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	}
+#Building cover
+'Building cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	}
+#Building height
+'Building height' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Vertical-to-horizontal area ratio
+'Vertical-to-horizontal area ratio' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#Standard deviation of building height
+'Standard deviation of building height' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
+#Wetland cover
+'Wetland cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 45 ;
+	}
+#Wetland type
+'Wetland type' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	}
+#Irrigation cover
+'Irrigation cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	}
+#C4 crop cover
+'C4 crop cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	}
+#C4 grass cover
+'C4 grass cover' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -2986,44 +3052,44 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
-#Forest fire weather index
-'Forest fire weather index' = {
+#Forest fire weather index (as defined by the Canadian Forest Service)
+'Forest fire weather index (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 5 ;
 	}
-#Fine fuel moisture code
-'Fine fuel moisture code' = {
+#Fine fuel moisture code (as defined by the Canadian Forest Service)
+'Fine fuel moisture code (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;
 	}
-#Duff moisture code
-'Duff moisture code' = {
+#Duff moisture code (as defined by the Canadian Forest Service)
+'Duff moisture code (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	}
-#Drought code
-'Drought code' = {
+#Drought code (as defined by the Canadian Forest Service)
+'Drought code (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
 	}
-#Initial fire spread index
-'Initial fire spread index' = {
+#Initial fire spread index (as defined by the Canadian Forest Service)
+'Initial fire spread index (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	}
-#Fire buildup index
-'Fire buildup index' = {
+#Fire buildup index (as defined by the Canadian Forest Service)
+'Fire buildup index (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
 	}
-#Fire daily severity rating
-'Fire daily severity rating' = {
+#Fire daily severity rating (as defined by the Canadian Forest Service)
+'Fire daily severity rating (as defined by the Canadian Forest Service)' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
@@ -3287,6 +3353,12 @@
 'Saturation water vapour pressure' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
+	 parameterNumber = 32 ;
+	}
+#Wet-bulb potential temperature
+'Wet-bulb potential temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
 	 parameterNumber = 32 ;
 	}
 #Sea ice thickness
@@ -4330,6 +4402,238 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
+	}
+#Mass density
+'Mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	}
+#Total column vertically-integrated mass density
+'Total column vertically-integrated mass density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	}
+#Mass mixing ratio
+'Mass mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	}
+#Emission mass flux
+'Emission mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	}
+#Dry deposition velocity
+'Dry deposition velocity' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	}
+#Wet deposition mass flux
+'Wet deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	}
+#Dry deposition mass flux
+'Dry deposition mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	}
+#Sedimentation mass flux
+'Sedimentation mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	}
+#Volume mixing ratio
+'Volume mixing ratio' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	}
+#Wet deposition mass flux by large-scale precipitation
+'Wet deposition mass flux by large-scale precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	}
+#Wet deposition mass flux by convective precipitation
+'Wet deposition mass flux by convective precipitation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	}
+#Emission mass flux from natural sources
+'Emission mass flux from natural sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
+#Emission mass flux from anthropogenic sources
+'Emission mass flux from anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Emission mass flux from elevated anthropogenic sources
+'Emission mass flux from elevated anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
+#Emission mass flux from surface anthropogenic sources
+'Emission mass flux from surface anthropogenic sources' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Emission from aviation
+'Emission from aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Emission mass flux from agriculture livestock
+'Emission mass flux from agriculture livestock' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
+#Emission mass flux from agriculture soils
+'Emission mass flux from agriculture soils' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Emission mass flux from agricultural waste burning
+'Emission mass flux from agricultural waste burning' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
+#Emission mass flux from residential, commercial and other combustion
+'Emission mass flux from residential, commercial and other combustion' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Emission mass flux from power generation
+'Emission mass flux from power generation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
+#Emission mass flux from fugitives
+'Emission mass flux from fugitives' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Emission mass flux from industrial process
+'Emission mass flux from industrial process' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
+#Emission mass flux from solvents
+'Emission mass flux from solvents' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Emission mass flux from ships
+'Emission mass flux from ships' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
+#Emission mass flux from wastes (solid and water)
+'Emission mass flux from wastes (solid and water)' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Emission mass flux from off-road transportation
+'Emission mass flux from off-road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
+#Emission mass flux from road transportation
+'Emission mass flux from road transportation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Emission mass flux from super power stations
+'Emission mass flux from super power stations' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Emission mass flux from volcanoes
+'Emission mass flux from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Emission mass flux from wetlands
+'Emission mass flux from wetlands' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Aerosol number density
+'Aerosol number density' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
 	}
 #Virtual potential temperature
 'Virtual potential temperature' = {

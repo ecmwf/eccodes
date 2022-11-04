@@ -10,8 +10,7 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-label="grib_png"
+label="grib_png_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
@@ -23,7 +22,7 @@ files="
 "
 
 if [ $HAVE_JPEG -eq 1 ]; then
- files="multi.grib2 v.grib2"$files
+ files="v.grib2"$files
 fi
 
 # TODO: For the following the PNG packing fails with an assert!
@@ -43,7 +42,20 @@ for file in $files; do
   rm -f $temp $temp1 $temp2
 done
 
+
+# Nearest neighbour
+# ----------------------
+infile=${data_dir}/reduced_gaussian_model_level.grib2
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
+${tools_dir}/grib_get -F%.6g -l 48.835,327.600,1 $temp > $temp1
+grep -q "224.455" $temp1
+
+${tools_dir}/grib_ls -F%.6g -l 48.835,327.600 $temp > $temp1
+grep -q "Grid Point chosen #4 index=936 " $temp1
+
+
 # Conversion from IEEE to PNG
+# ----------------------------
 infile=${data_dir}/grid_ieee.grib
 ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
 # TODO: check results
@@ -51,4 +63,5 @@ grib_check_key_equals $temp packingType grid_png
 grib_check_key_equals $temp accuracy 0
 
 
+# Clean up
 rm -f $temp

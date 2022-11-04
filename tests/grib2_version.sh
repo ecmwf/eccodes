@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 
 
-label="grib2_version"
+label="grib2_version_test"
 if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
     echo "Test $0 disabled. No definitions directory"
     exit 0

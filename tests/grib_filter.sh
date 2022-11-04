@@ -14,6 +14,8 @@ REDIRECT=/dev/null
 label="grib_filter_test"
 tempFilt="temp.$label.filt"
 tempGrib="temp.$label.grib"
+tempOut="temp.$label.txt"
+tempRef="temp.$label.ref"
 
 if [ -f ${data_dir}/geavg.t12z.pgrbaf108 ]; then
    tmpdata=grib_api.$$.grib
@@ -217,6 +219,44 @@ grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface MISSING
 grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface MISSING
 
 
+echo "Test from_scale_factor_scaled_value"
+# -----------------------------------------
+input="${samp_dir}/reduced_gg_pl_32_grib2.tmpl"
+cat >$tempFilt <<EOF
+  meta pl_scaled  from_scale_factor_scaled_value(one, pl);
+  print "pl_scaled=[pl_scaled%.2f]";
+EOF
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
+
+cat >$tempRef <<EOF
+pl_scaled=2.00 2.70 3.60 4.00 4.50 5.00 6.00 6.40 
+7.20 7.50 8.00 9.00 9.00 9.60 10.00 10.80 
+10.80 12.00 12.00 12.00 12.80 12.80 12.80 12.80 
+12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80 
+12.80 12.80 12.80 12.80 12.80 12.80 12.80 12.80 
+12.80 12.80 12.80 12.80 12.00 12.00 12.00 10.80 
+10.80 10.00 9.60 9.00 9.00 8.00 7.50 7.20 
+6.40 6.00 5.00 4.50 4.00 3.60 2.70 2.00
+
+EOF
+diff $tempRef $tempOut
+
+
+echo "Test IEEE float overflow"
+# -----------------------------------------
+input="${samp_dir}/GRIB2.tmpl"
+cat >$tempFilt <<EOF
+  set values={ 5.4e100 };
+  write;
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $input 2> $tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ECCODES ERROR.*Number is too large" $tempOut
+
+
 # Clean up
-rm -f $tempGrib $tempFilt
+rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

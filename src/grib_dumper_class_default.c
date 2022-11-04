@@ -43,22 +43,21 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
-typedef struct grib_dumper_default
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_default {
+    grib_dumper          dumper;  
     /* Members defined in default */
     long section_offset;
     long begin;
@@ -67,24 +66,24 @@ typedef struct grib_dumper_default
 
 
 static grib_dumper_class _grib_dumper_class_default = {
-    0,                           /* super                     */
-    "default",                   /* name                      */
-    sizeof(grib_dumper_default), /* size                      */
-    0,                           /* inited */
-    &init_class,                 /* init_class */
-    &init,                       /* init                      */
-    &destroy,                    /* free mem                       */
-    &dump_long,                  /* dump long         */
-    &dump_double,                /* dump double    */
-    &dump_string,                /* dump string    */
-    &dump_string_array,          /* dump string array   */
-    &dump_label,                 /* dump labels  */
-    &dump_bytes,                 /* dump bytes  */
-    &dump_bits,                  /* dump bits   */
-    &dump_section,               /* dump section      */
-    &dump_values,                /* dump values   */
-    0,                           /* header   */
-    0,                           /* footer   */
+    0,                              /* super                     */
+    "default",                              /* name                      */
+    sizeof(grib_dumper_default),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    0,                             /* header   */
+    0,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_default = &_grib_dumper_class_default;
@@ -471,7 +470,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 #if 0
     grib_dumper_default *self = (grib_dumper_default*)d;
     int i,k,err =0;
-    int more = 0;
+    size_t more = 0;
     size_t size = a->length;
     unsigned char* buf = grib_context_malloc(d->context,size);
 
@@ -532,7 +531,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if(more)
     {
         for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-        fprintf(self->dumper.out,"... %d more values\n",more);
+        fprintf(self->dumper.out,"... %lu more values\n", (unsigned long)more);
     }
 
     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
@@ -545,7 +544,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_default* self = (grib_dumper_default*)d;
     int k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -632,7 +631,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     }
     if (more) {
         fprintf(self->dumper.out, "  ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     fprintf(self->dumper.out, "  ");
@@ -732,7 +731,7 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, "\n  #");
         }
         if (more) {
-            fprintf(self->dumper.out, "\n  #... %d more values\n", (int)more);
+            fprintf(self->dumper.out, "\n  #... %lu more values\n", (unsigned long)more);
         }
         fprintf(self->dumper.out, "\n");
     }

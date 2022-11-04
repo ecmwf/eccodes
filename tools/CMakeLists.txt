@@ -68,6 +68,9 @@ endforeach()
 # Install extra tools
 # User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON
 foreach( tool ${ecc_tools_binaries_extra} )
+    if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+        set_source_files_properties(${tool}.c PROPERTIES LANGUAGE CXX)
+    endif()
     ecbuild_add_executable( TARGET     ${tool}
                             SOURCES    ${tool}.c
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
@@ -97,6 +100,9 @@ ecbuild_add_executable( TARGET     grib_list_keys
                         CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                         LIBS       ecc_tools )
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    set_source_files_properties(bufr_filter.c PROPERTIES LANGUAGE CXX)
+endif()
 ecbuild_add_executable( TARGET     codes_bufr_filter
                         SOURCES    bufr_filter.c
                         LIBS       ecc_tools )

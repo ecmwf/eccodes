@@ -9,6 +9,7 @@
  */
 
 #include "eccodes.h"
+#undef NDEBUG
 #include <assert.h>
 
 #define MAX_KEYS 100

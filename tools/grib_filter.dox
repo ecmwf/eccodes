@@ -71,6 +71,7 @@ Running the same command again we obtain a different list of files.\n
   - print "string to print also with key values like in the file name"
   - transient keyname1 = keyname2;
   - comments beginning with #
+  - defined(keyname) to check if a key is defined in a message
   .
 A complex example of grib_filter rules is the following to change temperature in a grib edition 1 file.
 \verbatim

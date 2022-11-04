@@ -43,24 +43,23 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_nearest_class*);
+static void init_class              (grib_nearest_class*);
 
-static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-static int destroy(grib_nearest* nearest);
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
 
-typedef struct grib_nearest_space_view
-{
-    grib_nearest nearest;
+typedef struct grib_nearest_space_view{
+  grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
     /* Members defined in space_view */
     double* lats;
-    int lats_count;
+    int  lats_count;
     double* lons;
-    int lons_count;
+    int  lons_count;
     double* distances;
     int* k;
     int* i;
@@ -72,14 +71,14 @@ typedef struct grib_nearest_space_view
 extern grib_nearest_class* grib_nearest_class_gen;
 
 static grib_nearest_class _grib_nearest_class_space_view = {
-    &grib_nearest_class_gen,                /* super                     */
-    "space_view",                    /* name                      */
-    sizeof(grib_nearest_space_view), /* size of instance          */
-    0,                                      /* inited */
-    &init_class,                            /* init_class */
-    &init,                                  /* constructor               */
-    &destroy,                               /* destructor                */
-    &find,                                  /* find nearest              */
+    &grib_nearest_class_gen,                         /* super */
+    "space_view",                         /* name */
+    sizeof(grib_nearest_space_view),      /* size of instance */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_space_view = &_grib_nearest_class_space_view;

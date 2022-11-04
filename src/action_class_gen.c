@@ -39,40 +39,39 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void dump(grib_action* d, FILE*, int);
-static void xref(grib_action* d, FILE* f, const char* path);
-static void destroy(grib_context*, grib_action*);
-static int create_accessor(grib_section*, grib_action*, grib_loader*);
-static int notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
+static void init_class      (grib_action_class*);
+static void dump            (grib_action* d, FILE*,int);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static void destroy         (grib_context*,grib_action*);
+static int create_accessor(grib_section*,grib_action*,grib_loader*);
+static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
 
 
-typedef struct grib_action_gen
-{
-    grib_action act;
+typedef struct grib_action_gen {
+    grib_action          act;  
     /* Members defined in gen */
-    long len;
+    long            len;
     grib_arguments* params;
 } grib_action_gen;
 
 
 static grib_action_class _grib_action_class_gen = {
-    0,                       /* super                     */
-    "action_class_gen",      /* name                      */
-    sizeof(grib_action_gen), /* size                      */
-    0,                       /* inited */
-    &init_class,             /* init_class */
-    0,                       /* init                      */
-    &destroy,                /* destroy */
+    0,                              /* super                     */
+    "action_class_gen",                              /* name                      */
+    sizeof(grib_action_gen),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    &dump, /* dump                      */
-    &xref, /* xref                      */
+    &dump,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    &create_accessor, /* create_accessor*/
+    &create_accessor,             /* create_accessor*/
 
-    &notify_change, /* notify_change */
-    0,              /* reparse */
-    0,              /* execute */
+    &notify_change,                            /* notify_change */
+    0,                            /* reparse */
+    0,                            /* execute */
 };
 
 grib_action_class* grib_action_class_gen = &_grib_action_class_gen;

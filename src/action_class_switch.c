@@ -39,51 +39,50 @@ or edit "action.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_action_class*);
-static void xref(grib_action* d, FILE* f, const char* path);
-static void destroy(grib_context*, grib_action*);
-static int execute(grib_action* a, grib_handle* h);
+static void init_class      (grib_action_class*);
+static void xref            (grib_action* d, FILE* f,const char* path);
+static void destroy         (grib_context*,grib_action*);
+static int execute(grib_action* a,grib_handle* h);
 
 
-typedef struct grib_action_switch
-{
-    grib_action act;
+typedef struct grib_action_switch {
+    grib_action          act;  
     /* Members defined in section */
     /* Members defined in switch */
     grib_arguments* args;
-    grib_case* Case;
-    grib_action* Default;
+    grib_case *Case;
+    grib_action *Default;
 } grib_action_switch;
 
 extern grib_action_class* grib_action_class_section;
 
 static grib_action_class _grib_action_class_switch = {
-    &grib_action_class_section, /* super                     */
-    "action_class_switch",      /* name                      */
-    sizeof(grib_action_switch), /* size                      */
-    0,                          /* inited */
-    &init_class,                /* init_class */
-    0,                          /* init                      */
-    &destroy,                   /* destroy */
+    &grib_action_class_section,                              /* super                     */
+    "action_class_switch",                              /* name                      */
+    sizeof(grib_action_switch),            /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    0,                               /* init                      */
+    &destroy,                            /* destroy */
 
-    0,     /* dump                      */
-    &xref, /* xref                      */
+    0,                               /* dump                      */
+    &xref,                               /* xref                      */
 
-    0, /* create_accessor*/
+    0,             /* create_accessor*/
 
-    0,        /* notify_change */
-    0,        /* reparse */
-    &execute, /* execute */
+    0,                            /* notify_change */
+    0,                            /* reparse */
+    &execute,                            /* execute */
 };
 
 grib_action_class* grib_action_class_switch = &_grib_action_class_switch;
 
 static void init_class(grib_action_class* c)
 {
-    c->dump            = (*(c->super))->dump;
-    c->create_accessor = (*(c->super))->create_accessor;
-    c->notify_change   = (*(c->super))->notify_change;
-    c->reparse         = (*(c->super))->reparse;
+    c->dump    =    (*(c->super))->dump;
+    c->create_accessor    =    (*(c->super))->create_accessor;
+    c->notify_change    =    (*(c->super))->notify_change;
+    c->reparse    =    (*(c->super))->reparse;
 }
 /* END_CLASS_IMP */
 

@@ -1657,6 +1657,7 @@ static void cube_indexes(
         }
         indexes[i] = j;
     }
+    (void)index;
 }
 
 /*********************************/

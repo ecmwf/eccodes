@@ -18,10 +18,10 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.27.0 LANGUAGES C )
+project( eccodes VERSION 2.28.0 LANGUAGES C )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -70,6 +70,9 @@ ecbuild_add_option( FEATURE EXPERIMENTAL_BUILD_WITH_CXX
     DEFAULT OFF )
 if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
     enable_language( CXX )
+    if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Cray" )
+        set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
+    endif()
 endif()
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB

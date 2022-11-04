@@ -13,8 +13,7 @@
  *                setting the wrong number of bpv should result in an error
  */
 
-#include <assert.h>
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 static double compare_double_absolute(double a, double b, double tolerance)
 {
@@ -55,9 +54,9 @@ int main(int argc, char** argv)
 
     for (i = 0; i < 255; i++) {
         FILE* in = fopen(filename, "rb");
-        assert(in);
+        Assert(in);
         h = grib_handle_new_from_file(0, in, &err);
-        assert(h);
+        Assert(h);
 
         /* get the size of the values array*/
         GRIB_CHECK(grib_get_size(h, "values", &values_len), 0);

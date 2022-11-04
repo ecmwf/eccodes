@@ -88,46 +88,47 @@ typedef struct grib_accessor_bufr_elements_table
 extern grib_accessor_class* grib_accessor_class_gen;
 
 static grib_accessor_class _grib_accessor_class_bufr_elements_table = {
-    &grib_accessor_class_gen,                  /* super                     */
-    "bufr_elements_table",                     /* name                      */
-    sizeof(grib_accessor_bufr_elements_table), /* size                      */
-    0,                                         /* inited */
-    &init_class,                               /* init_class */
-    &init,                                     /* init                      */
-    0,                                         /* post_init                      */
-    0,                                         /* free mem                       */
-    0,                                         /* describes himself         */
-    0,                                         /* get length of section     */
-    0,                                         /* get length of string      */
-    &value_count,                              /* get number of values      */
-    0,                                         /* get number of bytes      */
-    0,                                         /* get offset to bytes           */
-    &get_native_type,                          /* get native type               */
-    0,                                         /* get sub_section                */
-    0,                                         /* grib_pack procedures long      */
-    0,                                         /* grib_pack procedures long      */
-    0,                                         /* grib_pack procedures long      */
-    &unpack_long,                              /* grib_unpack procedures long    */
-    0,                                         /* grib_pack procedures double    */
-    &unpack_double,                            /* grib_unpack procedures double  */
-    0,                                         /* grib_pack procedures string    */
-    &unpack_string,                            /* grib_unpack procedures string  */
-    0,                                         /* grib_pack array procedures string    */
-    0,                                         /* grib_unpack array procedures string  */
-    0,                                         /* grib_pack procedures bytes     */
-    0,                                         /* grib_unpack procedures bytes   */
-    0,                                         /* pack_expression */
-    0,                                         /* notify_change   */
-    0,                                         /* update_size   */
-    0,                                         /* preferred_size   */
-    0,                                         /* resize   */
-    0,                                         /* nearest_smaller_value */
-    0,                                         /* next accessor    */
-    0,                                         /* compare vs. another accessor   */
-    0,                                         /* unpack only ith value          */
-    0,                                         /* unpack a subarray         */
-    0,                                         /* clear          */
-    0,                                         /* clone accessor          */
+    &grib_accessor_class_gen,                      /* super */
+    "bufr_elements_table",                      /* name */
+    sizeof(grib_accessor_bufr_elements_table),  /* size */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                       /* init */
+    0,                  /* post_init */
+    0,                    /* free mem */
+    0,                       /* describes himself */
+    0,                /* get length of section */
+    0,              /* get length of string */
+    &value_count,                /* get number of values */
+    0,                 /* get number of bytes */
+    0,                /* get offset to bytes */
+    &get_native_type,            /* get native type */
+    0,                /* get sub_section */
+    0,               /* grib_pack procedures long */
+    0,                 /* grib_pack procedures long */
+    0,                  /* grib_pack procedures long */
+    &unpack_long,                /* grib_unpack procedures long */
+    0,                /* grib_pack procedures double */
+    &unpack_double,              /* grib_unpack procedures double */
+    0,                /* grib_pack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
+    0,          /* grib_pack array procedures string */
+    0,        /* grib_unpack array procedures string */
+    0,                 /* grib_pack procedures bytes */
+    0,               /* grib_unpack procedures bytes */
+    0,            /* pack_expression */
+    0,              /* notify_change */
+    0,                /* update_size */
+    0,             /* preferred_size */
+    0,                     /* resize */
+    0,      /* nearest_smaller_value */
+    0,                       /* next accessor */
+    0,                    /* compare vs. another accessor */
+    0,      /* unpack only ith value */
+    0,  /* unpack a given set of elements */
+    0,     /* unpack a subarray */
+    0,                      /* clear */
+    0,                 /* clone accessor */
 };
 
 
@@ -136,33 +137,34 @@ grib_accessor_class* grib_accessor_class_bufr_elements_table = &_grib_accessor_c
 
 static void init_class(grib_accessor_class* c)
 {
-    c->dump                   = (*(c->super))->dump;
-    c->next_offset            = (*(c->super))->next_offset;
-    c->string_length          = (*(c->super))->string_length;
-    c->byte_count             = (*(c->super))->byte_count;
-    c->byte_offset            = (*(c->super))->byte_offset;
-    c->sub_section            = (*(c->super))->sub_section;
-    c->pack_missing           = (*(c->super))->pack_missing;
-    c->is_missing             = (*(c->super))->is_missing;
-    c->pack_long              = (*(c->super))->pack_long;
-    c->pack_double            = (*(c->super))->pack_double;
-    c->pack_string            = (*(c->super))->pack_string;
-    c->pack_string_array      = (*(c->super))->pack_string_array;
-    c->unpack_string_array    = (*(c->super))->unpack_string_array;
-    c->pack_bytes             = (*(c->super))->pack_bytes;
-    c->unpack_bytes           = (*(c->super))->unpack_bytes;
-    c->pack_expression        = (*(c->super))->pack_expression;
-    c->notify_change          = (*(c->super))->notify_change;
-    c->update_size            = (*(c->super))->update_size;
-    c->preferred_size         = (*(c->super))->preferred_size;
-    c->resize                 = (*(c->super))->resize;
-    c->nearest_smaller_value  = (*(c->super))->nearest_smaller_value;
-    c->next                   = (*(c->super))->next;
-    c->compare                = (*(c->super))->compare;
-    c->unpack_double_element  = (*(c->super))->unpack_double_element;
-    c->unpack_double_subarray = (*(c->super))->unpack_double_subarray;
-    c->clear                  = (*(c->super))->clear;
-    c->make_clone             = (*(c->super))->make_clone;
+    c->dump    =    (*(c->super))->dump;
+    c->next_offset    =    (*(c->super))->next_offset;
+    c->string_length    =    (*(c->super))->string_length;
+    c->byte_count    =    (*(c->super))->byte_count;
+    c->byte_offset    =    (*(c->super))->byte_offset;
+    c->sub_section    =    (*(c->super))->sub_section;
+    c->pack_missing    =    (*(c->super))->pack_missing;
+    c->is_missing    =    (*(c->super))->is_missing;
+    c->pack_long    =    (*(c->super))->pack_long;
+    c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_string    =    (*(c->super))->pack_string;
+    c->pack_string_array    =    (*(c->super))->pack_string_array;
+    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
+    c->pack_bytes    =    (*(c->super))->pack_bytes;
+    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
+    c->pack_expression    =    (*(c->super))->pack_expression;
+    c->notify_change    =    (*(c->super))->notify_change;
+    c->update_size    =    (*(c->super))->update_size;
+    c->preferred_size    =    (*(c->super))->preferred_size;
+    c->resize    =    (*(c->super))->resize;
+    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
+    c->next    =    (*(c->super))->next;
+    c->compare    =    (*(c->super))->compare;
+    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
+    c->clear    =    (*(c->super))->clear;
+    c->make_clone    =    (*(c->super))->make_clone;
 }
 
 /* END_CLASS_IMP */
@@ -189,6 +191,8 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char dictName[1024] = {0,};
+    char masterRecomposed[1024] = {0,}; /*e.g. bufr/tables/0/wmo/36/element.table */
+    char localRecomposed[1024]  = {0,}; /*e.g. bufr/tables/0/local/0/98/0/element.table */
     char* localFilename   = 0;
     char** list           = 0;
     char** cached_list    = 0;
@@ -212,17 +216,15 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (*masterDir != 0) {
         char name[4096] = {0,};
-        char recomposed[4096] = {0,};
         sprintf(name, "%s/%s", masterDir, self->dictionary);
-        grib_recompose_name(h, NULL, name, recomposed, 0);
-        filename = grib_context_full_defs_path(c, recomposed);
+        grib_recompose_name(h, NULL, name, masterRecomposed, 0);
+        filename = grib_context_full_defs_path(c, masterRecomposed);
     }
     else {
         filename = grib_context_full_defs_path(c, self->dictionary);
     }
 
     if (*localDir != 0) {
-        char localRecomposed[1024] = {0,};
         char localName[2048] = {0,};
         sprintf(localName, "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
@@ -234,8 +236,10 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", self->dictionary);
-        *err       = GRIB_FILE_NOT_FOUND;
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to find definition file %s", self->dictionary);
+        if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG,"master path=%s", masterRecomposed);
+        if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
+        *err = GRIB_FILE_NOT_FOUND;
         dictionary = NULL;
         goto the_end;
     }

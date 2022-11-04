@@ -107,4 +107,14 @@ for file in $tigge_bad_validity; do
    grep -q "invalid validity Date/Time" $TEMP
 done
 
+
+# ECC-1428
+# ----------
+set +e
+${tools_dir}/grib_set -s productionStatusOfProcessedData=5,marsType=xx $sample_g2 $TEMP
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
 rm -f $TEMP

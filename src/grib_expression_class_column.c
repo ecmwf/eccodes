@@ -43,43 +43,42 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class(grib_expression_class*);
+static void init_class              (grib_expression_class*);
 
-static void destroy(grib_context*, grib_expression* e);
+static void        destroy(grib_context*,grib_expression* e);
 
 static string get_name(grib_expression* e);
 
-static int native_type(grib_expression*, grib_handle*);
+static int        native_type(grib_expression*,grib_handle*);
 
-static int evaluate_long(grib_expression*, grib_handle*, long*);
-static int evaluate_double(grib_expression*, grib_handle*, double*);
-static string evaluate_string(grib_expression*, grib_handle*, char*, size_t*, int*);
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
+static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
 
-typedef struct grib_expression_column
-{
-    grib_expression base;
+typedef struct grib_expression_column{
+  grib_expression base;
     /* Members defined in column */
     grib_column* column;
 } grib_expression_column;
 
 
 static grib_expression_class _grib_expression_class_column = {
-    0,                              /* super                     */
-    "column",                       /* name                      */
-    sizeof(grib_expression_column), /* size of instance          */
-    0,                              /* inited */
-    &init_class,                    /* init_class */
-    0,                              /* constructor               */
-    &destroy,                       /* destructor                */
-    0,
-    0,
+    0,                    /* super                     */
+    "column",                    /* name                      */
+    sizeof(grib_expression_column),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    0,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    0,                 
+    0,       
 
-    &native_type,
-    &get_name,
+	&native_type,
+	&get_name,
 
-    &evaluate_long,
-    &evaluate_double,
-    &evaluate_string,
+	&evaluate_long,
+	&evaluate_double,
+	&evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_column = &_grib_expression_class_column;

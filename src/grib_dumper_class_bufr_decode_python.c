@@ -42,24 +42,23 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
-static void header(grib_dumper*, grib_handle*);
-static void footer(grib_dumper*, grib_handle*);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
+static void header         (grib_dumper*,grib_handle*);
+static void footer         (grib_dumper*,grib_handle*);
 
-typedef struct grib_dumper_bufr_decode_python
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_bufr_decode_python {
+    grib_dumper          dumper;  
     /* Members defined in bufr_decode_python */
     long section_offset;
     long empty;
@@ -71,24 +70,24 @@ typedef struct grib_dumper_bufr_decode_python
 
 
 static grib_dumper_class _grib_dumper_class_bufr_decode_python = {
-    0,                                      /* super                     */
-    "bufr_decode_python",                   /* name                      */
-    sizeof(grib_dumper_bufr_decode_python), /* size                      */
-    0,                                      /* inited */
-    &init_class,                            /* init_class */
-    &init,                                  /* init                      */
-    &destroy,                               /* free mem                       */
-    &dump_long,                             /* dump long         */
-    &dump_double,                           /* dump double    */
-    &dump_string,                           /* dump string    */
-    &dump_string_array,                     /* dump string array   */
-    &dump_label,                            /* dump labels  */
-    &dump_bytes,                            /* dump bytes  */
-    &dump_bits,                             /* dump bits   */
-    &dump_section,                          /* dump section      */
-    &dump_values,                           /* dump values   */
-    &header,                                /* header   */
-    &footer,                                /* footer   */
+    0,                              /* super                     */
+    "bufr_decode_python",                              /* name                      */
+    sizeof(grib_dumper_bufr_decode_python),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    &header,                             /* header   */
+    &footer,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_bufr_decode_python = &_grib_dumper_class_bufr_decode_python;

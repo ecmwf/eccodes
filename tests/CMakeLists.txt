@@ -8,7 +8,7 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 
 # Build the executables used by test scripts
 ################################################
-list(APPEND test_bins
+list(APPEND test_c_bins
     list_codetable_flagtable_keys
     grib_bpv_limit
     grib_double_cmp
@@ -21,6 +21,7 @@ list(APPEND test_bins
     unit_tests
     bufr_keys_iter
     grib_keys_iter
+    grib_geo_iter
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
@@ -38,6 +39,7 @@ list(APPEND test_bins
     extract_offsets
     bufr_check_descriptors
     codes_new_from_samples
+    codes_set_samples_path
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -47,7 +49,7 @@ list(APPEND test_bins
     grib_lam_bf
     grib_lam_gp)
 
-foreach( tool ${test_bins} )
+foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
                             NOINSTALL
@@ -55,12 +57,28 @@ foreach( tool ${test_bins} )
                             LIBS      eccodes )
 endforeach()
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+        list(APPEND test_cpp_bins grib_ecc-1431)
+    endif()
+
+    foreach( tool ${test_cpp_bins} )
+        # here we use the fact that each tool has only one C file that matches its name
+        ecbuild_add_executable( TARGET    ${tool}
+            NOINSTALL
+            SOURCES   ${tool}.cpp
+            LIBS      eccodes )
+    endforeach()
+endif()
+
+
 # Now add each test (shell scripts)
 #################################################
 if( HAVE_BUILD_TOOLS )
 
     # These tests do not require any data downloads
-    list(APPEND tests_no_data_reqd
+    # and are generally quick
+    list(APPEND tests_basic
         unit_tests
         julian
         grib_dump_samples
@@ -74,6 +92,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_s2s
         grib_fire
         grib_element
         grib_suppressed
@@ -109,12 +128,9 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
-        bufr_templates
         grib_efas
         grib_sh_imag
         grib_sh_spectral_complex
-        pseudo_diag
-        wrap
         grib_levtype
         grib_typeOfLevel
         grib_grid_unstructured
@@ -124,14 +140,16 @@ if( HAVE_BUILD_TOOLS )
         grib_g1day_of_the_year_date
         grib_g1fcperiod)
 
-    # These tests do require data downloads
-    list(APPEND tests_data_reqd
+    # These tests require data downloads
+    # and/or take much longer
+    list(APPEND tests_extra
         grib_data_quality_checks
         grib_bpv_limit
         grib_complex
         grib_double_cmp
         grib_change_packing
         grib_grid_space_view
+        bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
         bufr_dump_subset
@@ -156,6 +174,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_change_edition
         bufr_keys_iter
         grib_keys_iter
+        grib_geo_iter
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
@@ -190,6 +209,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1001
         grib_ecc-1030
         grib_ecc-1397
+        grib_ecc-1425
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
@@ -197,6 +217,8 @@ if( HAVE_BUILD_TOOLS )
         gts_ls
         gts_count
         gts_compare
+        wrap
+        pseudo_diag
         metar_ls
         metar_get
         metar_dump
@@ -250,6 +272,7 @@ if( HAVE_BUILD_TOOLS )
         grib_tigge_check
         read_any
         codes_new_from_samples
+        codes_set_samples_path
         grib_dump
         grib_dump_debug
         grib_dump_json
@@ -259,23 +282,26 @@ if( HAVE_BUILD_TOOLS )
         codes_split_file
         grib_mars_keys)
 
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS AND HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+        list(APPEND tests_extra grib_ecc-1431)
+    endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_data_reqd bufr_dump_encode_fortran)
-        list(APPEND tests_data_reqd bufr_dump_decode_fortran)
+        list(APPEND tests_extra bufr_dump_encode_fortran)
+        list(APPEND tests_extra bufr_dump_decode_fortran)
     endif()
     if( ENABLE_EXTRA_TESTS )
-        list(APPEND tests_data_reqd grib_util_set_spec)
-        list(APPEND tests_data_reqd grib_padding)
-        list(APPEND tests_data_reqd grib_tigge_conversions1)
-        list(APPEND tests_data_reqd grib_tigge_conversions2)
-        list(APPEND tests_data_reqd bufr_dump_encode_C)
-        list(APPEND tests_data_reqd bufr_dump_decode_C)
-        list(APPEND tests_no_data_reqd list_codetable_flagtable_keys)
-        list(APPEND tests_no_data_reqd grib_grid_healpix)
+        list(APPEND tests_extra grib_util_set_spec)
+        list(APPEND tests_extra grib_padding)
+        list(APPEND tests_extra grib_tigge_conversions1)
+        list(APPEND tests_extra grib_tigge_conversions2)
+        list(APPEND tests_extra bufr_dump_encode_C)
+        list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra list_codetable_flagtable_keys)
+        list(APPEND tests_extra grib_grid_healpix)
     endif()
 
     # These tests do not require any data downloads
-    foreach( test ${tests_no_data_reqd} )
+    foreach( test ${tests_basic} )
         ecbuild_add_test( TARGET  eccodes_t_${test}
                           TYPE    SCRIPT
                           LABELS  "sanity"
@@ -290,7 +316,7 @@ if( HAVE_BUILD_TOOLS )
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
     #       rather than when you do "ctest". Use TEST_DEPENDS instead
-    foreach( test ${tests_data_reqd} )
+    foreach( test ${tests_extra} )
         ecbuild_add_test( TARGET eccodes_t_${test}
                       TYPE SCRIPT
                       CONDITION ENABLE_EXTRA_TESTS

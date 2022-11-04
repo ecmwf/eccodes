@@ -40,45 +40,44 @@ or edit "expression.class" and rerun ./make_class.pl
 typedef const char* string; /* to keep make_class.pl happy */
 
 
-static void init_class(grib_expression_class*);
+static void init_class              (grib_expression_class*);
 
-static void destroy(grib_context*, grib_expression* e);
+static void        destroy(grib_context*,grib_expression* e);
 
-static void print(grib_context*, grib_expression*, grib_handle*);
-static void add_dependency(grib_expression* e, grib_accessor* observer);
+static void        print(grib_context*,grib_expression*,grib_handle*);
+static void        add_dependency(grib_expression* e, grib_accessor* observer);
 
-static int native_type(grib_expression*, grib_handle*);
+static int        native_type(grib_expression*,grib_handle*);
 
-static int evaluate_long(grib_expression*, grib_handle*, long*);
-static int evaluate_double(grib_expression*, grib_handle*, double*);
+static int        evaluate_long(grib_expression*,grib_handle*,long*);
+static int      evaluate_double(grib_expression*,grib_handle*,double*);
 
-typedef struct grib_expression_unop
-{
-    grib_expression base;
+typedef struct grib_expression_unop{
+  grib_expression base;
     /* Members defined in unop */
-    grib_expression* exp;
-    grib_unop_long_proc long_func;
-    grib_unop_double_proc double_func;
+    grib_expression *exp;
+    grib_unop_long_proc  long_func;
+    grib_unop_double_proc  double_func;
 } grib_expression_unop;
 
 
 static grib_expression_class _grib_expression_class_unop = {
-    0,                            /* super                     */
-    "unop",                       /* name                      */
-    sizeof(grib_expression_unop), /* size of instance          */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    0,                            /* constructor               */
-    &destroy,                     /* destructor                */
-    &print,
-    &add_dependency,
+    0,                    /* super                     */
+    "unop",                    /* name                      */
+    sizeof(grib_expression_unop),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    0,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &print,                 
+    &add_dependency,       
 
-    &native_type,
-    0,
+	&native_type,
+	0,
 
-    &evaluate_long,
-    &evaluate_double,
-    0,
+	&evaluate_long,
+	&evaluate_double,
+	0,
 };
 
 grib_expression_class* grib_expression_class_unop = &_grib_expression_class_unop;

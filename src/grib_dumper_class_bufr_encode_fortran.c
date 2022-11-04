@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include <ctype.h>
+
 /*
    This is used by make_class.pl
 
@@ -42,24 +43,23 @@ or edit "dumper.class" and rerun ./make_class.pl
 
 */
 
-static void init_class(grib_dumper_class*);
-static int init(grib_dumper* d);
-static int destroy(grib_dumper*);
-static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_values(grib_dumper* d, grib_accessor* a);
-static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment);
-static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block);
-static void header(grib_dumper*, grib_handle*);
-static void footer(grib_dumper*, grib_handle*);
+static void init_class      (grib_dumper_class*);
+static int init            (grib_dumper* d);
+static int destroy         (grib_dumper*);
+static void dump_long       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bits       (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_double     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_string_array     (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_bytes      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_values     (grib_dumper* d, grib_accessor* a);
+static void dump_label      (grib_dumper* d, grib_accessor* a,const char* comment);
+static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
+static void header         (grib_dumper*,grib_handle*);
+static void footer         (grib_dumper*,grib_handle*);
 
-typedef struct grib_dumper_bufr_encode_fortran
-{
-    grib_dumper dumper;
+typedef struct grib_dumper_bufr_encode_fortran {
+    grib_dumper          dumper;  
     /* Members defined in bufr_encode_fortran */
     long section_offset;
     long empty;
@@ -71,24 +71,24 @@ typedef struct grib_dumper_bufr_encode_fortran
 
 
 static grib_dumper_class _grib_dumper_class_bufr_encode_fortran = {
-    0,                                       /* super                     */
-    "bufr_encode_fortran",                   /* name                      */
-    sizeof(grib_dumper_bufr_encode_fortran), /* size                      */
-    0,                                       /* inited */
-    &init_class,                             /* init_class */
-    &init,                                   /* init                      */
-    &destroy,                                /* free mem                       */
-    &dump_long,                              /* dump long         */
-    &dump_double,                            /* dump double    */
-    &dump_string,                            /* dump string    */
-    &dump_string_array,                      /* dump string array   */
-    &dump_label,                             /* dump labels  */
-    &dump_bytes,                             /* dump bytes  */
-    &dump_bits,                              /* dump bits   */
-    &dump_section,                           /* dump section      */
-    &dump_values,                            /* dump values   */
-    &header,                                 /* header   */
-    &footer,                                 /* footer   */
+    0,                              /* super                     */
+    "bufr_encode_fortran",                              /* name                      */
+    sizeof(grib_dumper_bufr_encode_fortran),     /* size                      */
+    0,                                   /* inited */
+    &init_class,                         /* init_class */
+    &init,                               /* init                      */
+    &destroy,                            /* free mem                       */
+    &dump_long,                          /* dump long         */
+    &dump_double,                        /* dump double    */
+    &dump_string,                        /* dump string    */
+    &dump_string_array,                        /* dump string array   */
+    &dump_label,                         /* dump labels  */
+    &dump_bytes,                         /* dump bytes  */
+    &dump_bits,                          /* dump bits   */
+    &dump_section,                       /* dump section      */
+    &dump_values,                        /* dump values   */
+    &header,                             /* header   */
+    &footer,                             /* footer   */
 };
 
 grib_dumper_class* grib_dumper_class_bufr_encode_fortran = &_grib_dumper_class_bufr_encode_fortran;
@@ -177,6 +177,7 @@ static char* break_line(grib_context* c, const char* input)
 {
     /* Break a long line using Fortran continuation characters */
     char* a_token    = NULL;
+    char* lasts      = NULL;
     int first        = 1;
     const size_t len = strlen(input);
     /* Add a bit more for inserted newlines and continuation characters */
@@ -192,7 +193,7 @@ static char* break_line(grib_context* c, const char* input)
     /* 'hello &
      * &world'  is the same as 'hello world'
      */
-    a_token = strtok((char*)input, "->");
+    a_token = strtok_r((char*)input, "->", &lasts);
     while (a_token) {
         if (first) {
             first = 0;
@@ -203,7 +204,7 @@ static char* break_line(grib_context* c, const char* input)
             sprintf(tmp, "->&\n    &%s", a_token);
             strcat(result, tmp);
         }
-        a_token = strtok(NULL, "->");
+        a_token = strtok_r(NULL, "->", &lasts);
     }
 
     return result;
@@ -758,7 +759,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     while (*p) {
         if (!isprint(*p))
-            *p = '.';
+            *p = '?';
         p++;
     }
 

@@ -10,7 +10,7 @@
 . ./include.ctest.sh
 set -u
 
-label="grib2_templates"
+label="grib2_templates_test"
 
 temp1=temp1.$label.grib2
 temp2=temp2.$label.grib2

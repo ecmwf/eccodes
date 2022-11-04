@@ -2199,6 +2199,72 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Urban cover
+'cur' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 0 ;
+	}
+#Road Cover
+'cro' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 1 ;
+	}
+#Building cover
+'cbu' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 2 ;
+	}
+#Building height
+'bldh' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 3 ;
+	}
+#Vertical-to-horizontal area ratio
+'hwr' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 4 ;
+	}
+#Standard deviation of building height
+'bhstd' = {
+	 discipline = 2 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 5 ;
+	}
+#Wetland cover
+'cwe' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 45 ;
+	}
+#Wetland type
+'twe' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 46 ;
+	}
+#Irrigation cover
+'cirr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	}
+#C4 crop cover
+'c4cr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	}
+#C4 grass cover
+'c4gr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'mttswr' = {
 	 discipline = 0 ;
@@ -2986,43 +3052,43 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
 	}
-#Forest fire weather index
+#Forest fire weather index (as defined by the Canadian Forest Service)
 'fwinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 5 ;
 	}
-#Fine fuel moisture code
+#Fine fuel moisture code (as defined by the Canadian Forest Service)
 'ffmcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 6 ;
 	}
-#Duff moisture code
+#Duff moisture code (as defined by the Canadian Forest Service)
 'dufmcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	}
-#Drought code
+#Drought code (as defined by the Canadian Forest Service)
 'drtcode' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 8 ;
 	}
-#Initial fire spread index
+#Initial fire spread index (as defined by the Canadian Forest Service)
 'infsinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	}
-#Fire buildup index
+#Fire buildup index (as defined by the Canadian Forest Service)
 'fbupinx' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 10 ;
 	}
-#Fire daily severity rating
+#Fire daily severity rating (as defined by the Canadian Forest Service)
 'fdsrte' = {
 	 discipline = 2 ;
 	 parameterCategory = 4 ;
@@ -3287,6 +3353,12 @@
 'swvp' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
+	 parameterNumber = 32 ;
+	}
+#Wet-bulb potential temperature
+'wbpt' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
 	 parameterNumber = 32 ;
 	}
 #Sea ice thickness
@@ -4330,6 +4402,238 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
+	}
+#Mass density
+'mdens' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	}
+#Total column vertically-integrated mass density
+'tc_mdens' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	}
+#Mass mixing ratio
+'mass_mixrat' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	}
+#Emission mass flux
+'emi_mflx' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	}
+#Dry deposition velocity
+'drydep_vel' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	}
+#Wet deposition mass flux
+'wetdep_mflx' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	}
+#Dry deposition mass flux 
+'drydep_mflx' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	}
+#Sedimentation mass flux 
+'sed_mflx' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 11 ;
+	}
+#Volume mixing ratio 
+'vol_mixrat' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 52 ;
+	}
+#Wet deposition mass flux by large-scale precipitation
+'wetdep_mflx_lsp' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 9 ;
+	}
+#Wet deposition mass flux by convective precipitation
+'wetdep_mflx_cp' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 10 ;
+	}
+#Emission mass flux from natural sources
+'emi_mflx_natsrc' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 6 ;
+	}
+#Emission mass flux from anthropogenic sources
+'emi_mflx_antsrc' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 4 ;
+	}
+#Emission mass flux from elevated anthropogenic sources
+'emi_mflx_elevantsrc' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 12 ;
+	}
+#Emission mass flux from surface anthropogenic sources
+'emi_mflx_sfcantsrc' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 13 ;
+	}
+#Emission from aviation
+'emi_mflx_aviation' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 1 ;
+	}
+#Emission mass flux from agriculture livestock
+'emi_mflx_agriliv' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 14 ;
+	}
+#Emission mass flux from agriculture soils
+'emi_mflx_agrisol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 15 ;
+	}
+#Emission mass flux from agricultural waste burning
+'emi_mflx_agriwasburn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 16 ;
+	}
+#Emission mass flux from residential, commercial and other combustion 
+'emi_mflx_rescomb' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 18 ;
+	}
+#Emission mass flux from power generation
+'emi_mflx_powgen' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 19 ;
+	}
+#Emission mass flux from fugitives
+'emi_mflx_fug' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 21 ;
+	}
+#Emission mass flux from industrial process
+'emi_mflx_indproc' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 22 ;
+	}
+#Emission mass flux from solvents
+'emi_mflx_solv' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 23 ;
+	}
+#Emission mass flux from ships
+'emi_mflx_shp' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 24 ;
+	}
+#Emission mass flux from wastes (solid and water)
+'emi_mflx_wastes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 25 ;
+	}
+#Emission mass flux from off-road transportation
+'emi_mflx_offrdtrans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 27 ;
+	}
+#Emission mass flux from road transportation
+'emi_mflx_rdtrans' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 26 ;
+	}
+#Emission mass flux from super power stations
+'emi_mflx_suppowstn' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 20 ;
+	}
+#Emission mass flux from volcanoes
+'emi_mflx_vol' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Emission mass flux from wetlands
+'emi_mflx_wetl' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Aerosol number density
+'aer_ndens' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 59 ;
 	}
 #Virtual potential temperature
 'vptmp' = {

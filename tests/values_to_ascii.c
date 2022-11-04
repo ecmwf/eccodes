@@ -8,40 +8,32 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include <assert.h>
 #include <stdio.h>
 
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
 #endif
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {
-    int err        = 0;
-    double* values = NULL;
-    char format[1024];
-    size_t values_len = 0;
-
-    size_t i = 0;
-
-    long ni;
-    double a;
-    long d;
-    FILE* in = NULL;
-
+    int err = 0, is_missing = 0;
+    double* values    = NULL;
+    char format[1024] = {0,};
+    size_t values_len = 0, i = 0;
+    long Ni        = 0;
+    FILE* in       = NULL;
     grib_handle* h = NULL;
-
 
     if (argc > 1)
         in = fopen(argv[1], "rb");
     else {
-        printf("usage : gribvals filename [format]\n");
+        printf("Usage : %s filename [format]\n", argv[0]);
         exit(1);
     }
     if (!in) {
-        printf("error file not found");
+        fprintf(stderr, "ERROR: Could not open file %s\n", argv[1]);
         return 1;
     }
 
@@ -50,33 +42,39 @@ int main(int argc, char** argv)
     else
         strcpy(format, "%g ");
 
-
-    h = grib_handle_new_from_file(0, in);
+    h = grib_handle_new_from_file(0, in, &err);
     while (h) {
-        if ((err = grib_get_long(h, "ni", &ni)) != GRIB_SUCCESS)
-            printf("error %d : %s", err, grib_get_error_message(err));
+        if ((err = grib_get_long(h, "Ni", &Ni)) != GRIB_SUCCESS) {
+            fprintf(stderr, "ERROR: %s", grib_get_error_message(err));
+            return 1;
+        }
+        is_missing = grib_is_missing(h, "Ni", &err);
+        if (is_missing) {
+            fprintf(stderr, "ERROR: Key Ni is missing\n");
+            return 1;
+        }
 
         if ((err = grib_get_size(h, "values", &values_len)) != GRIB_SUCCESS) {
-            printf("error %d : %s", err, grib_get_error_message(err));
+            fprintf(stderr, "ERROR: %s", grib_get_error_message(err));
             return 1;
         }
 
         values = malloc(values_len * sizeof(double));
 
         if ((err = grib_get_double_array(h, "values", values, &values_len)) != GRIB_SUCCESS)
-            printf("error %d : %s", err, grib_get_error_message(err));
+            fprintf(stderr, "ERROR: %s", grib_get_error_message(err));
 
         for (i = 0; i < values_len; i++) {
-            if (i != 0 && (i % ni == 0)) printf("\n");
+            if (i != 0 && (i % Ni == 0)) printf("\n");
             printf(format, values[i]);
         }
-        printf("\n");
-        fprintf(stderr, "%d values\n", i);
+        printf("\n\n");
+        printf("%lu values\n", i);
         free(values);
 
         grib_handle_delete(h);
 
-        h = grib_handle_new_from_file(0, in);
+        h = grib_handle_new_from_file(0, in, &err);
 
         if (h)
             printf("************************************************************\n");

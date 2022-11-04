@@ -55,7 +55,7 @@ static grib_options_help grib_options_help_list[] = {
       "\n\t\t  1 (the value at the nearest point is printed)"
       "\n\t\tfile (file is used as mask. The closer point with mask value>=0.5 is printed)\n" },
     { "n:", "namespace",
-      "\n\t\tAll the keys belonging to namespace are printed.\n" },
+      "\n\t\tAll the keys belonging to the given namespace are printed.\n" },
     { "m", 0, "Mars keys are printed.\n" },
     { "o:", "output_file",
       "\n\t\tOutput is written to output_file."
@@ -105,7 +105,7 @@ static grib_options_help grib_options_help_list[] = {
     { "T:", "T | B | M | A", "Message type. T->GTS, B->BUFR, M->METAR (Experimental), A->Any (Experimental).\n\t\t\t\tThe input file is interpreted according to the message type.\n" },
     { "V", 0, "Version.\n" },
     { "W:", "width", "\n\t\tMinimum width of each column in output. Default is 10.\n" },
-    { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from \"offset\".\n" },
+    { "X:", "offset", "\n\t\tInput file offset in bytes. Processing of the input file will start from the given offset.\n" },
     { "x", 0, "Fast parsing option, only headers are loaded.\n" },
     { "k:", "key1,key2,...",
       "\n\t\tSpecify a list of keys to index on. By default the input files are indexed on the MARS keys."
@@ -402,7 +402,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     return GRIB_SUCCESS;
 }
 
-char* grib_options_get_help(char* id)
+const char* grib_options_get_help(const char* id)
 {
     int i      = 0;
     char msg[] = "ERROR: help not found for option ";
@@ -424,7 +424,7 @@ char* grib_options_get_help(char* id)
     return err;
 }
 
-char* grib_options_get_args(char* id)
+const char* grib_options_get_args(const char* id)
 {
     int i        = 0;
     char empty[] = "";

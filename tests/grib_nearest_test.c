@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+
 #include "eccodes.h"
 
 static void usage(const char* prog)
@@ -50,12 +50,12 @@ int main(int argc, char** argv)
     double lat = -40, lon = 15;
     int mode = 0;
     int count;
-    char** filenames;
+    const char** filenames = NULL;
     codes_nearest* nearest = NULL;
 
     if (argc < 2) usage(argv[0]);
 
-    filenames = (char**)malloc(sizeof(char*) * max_numfiles);
+    filenames = (const char**)malloc(sizeof(char*) * max_numfiles);
 
     for (i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "-n") == 0) {
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
         else {
             if (j >= max_numfiles)
                 break;
-            filenames[j++] = (char*)strdup(argv[i]);
+            filenames[j++] = strdup(argv[i]);
         }
     }
     nfiles = j;
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
     if (set) codes_fieldset_delete(set);
 
     for (i = 0; i < nfiles; ++i) {
-        free(filenames[i]);
+        free((char*)filenames[i]);
     }
     free(filenames);
 

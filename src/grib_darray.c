@@ -48,7 +48,7 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_darray*)grib_context_malloc_clear(c, sizeof(grib_darray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %ld bytes\n", sizeof(grib_darray));
+                         "grib_darray_new unable to allocate %lu bytes\n", sizeof(grib_darray));
         return NULL;
     }
     v->size    = size;
@@ -58,7 +58,7 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %ld bytes\n", sizeof(double) * size);
+                         "grib_darray_new unable to allocate %lu bytes\n", sizeof(double) * size);
         return NULL;
     }
     return v;
@@ -75,7 +75,7 @@ static grib_darray* grib_darray_resize(grib_darray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_resize unable to allocate %ld bytes\n", sizeof(double) * newsize);
+                         "grib_darray_resize unable to allocate %lu bytes\n", sizeof(double) * newsize);
         return NULL;
     }
     return v;

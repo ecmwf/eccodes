@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
-#include <assert.h>
+#include "grib_api_internal.h"
 
 /*
  * Check that first coefficient have an imaginary part equal to zero.
@@ -30,7 +29,7 @@ int main(int argc, char* argv[])
     int m, n, k;
     const char* outfile;
 
-    assert(argc == 2);
+    Assert(argc == 2);
     outfile = argv[1];
 
     GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "sh_ml_grib2")) == NULL), 0);

@@ -66,7 +66,7 @@ print("MEMFS: Starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
-EXCLUDED = ["grib3", "codetables", "taf", "stations", "grib1_mlgrib2_ieee32"]
+EXCLUDED = ["grib3", "codetables", "taf", "metar", "stations", "grib1_mlgrib2_ieee32"]
 
 EXCLUDE = {
     None: [],

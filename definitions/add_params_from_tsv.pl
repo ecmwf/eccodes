@@ -27,15 +27,17 @@ use Getopt::Long;
 my $SANITY_CHECK     = 0;
 my $WRITE_TO_FILES   = 0;
 my $WRITE_TO_PARAMDB = 0; # Be careful. Fill in $contactId before proceeding
+my $contactId;   # JIRA issue ID
 
 # Process arguments. Must be at least one file
 if (scalar @ARGV < 1) {
   &usage;
 }
 my $result = GetOptions (
-  "s" => \$SANITY_CHECK,
-  "f" => \$WRITE_TO_FILES,
-  "p" => \$WRITE_TO_PARAMDB
+  "s"   => \$SANITY_CHECK,
+  "f"   => \$WRITE_TO_FILES,
+  "p"   => \$WRITE_TO_PARAMDB,
+  "c:s" => \$contactId
   );
 
 $ARGV[0] or &usage;
@@ -78,7 +80,6 @@ my $dbh  = 0;
 my $centre_wmo   = -3; # WMO centre ID
 my $centre_ecmwf = 98; # ECMWF centre ID
 my $edition = 2; # GRIB edition 2
-my $contactId;   # JIRA issue ID
 
 my $PARAMID_FILENAME   = "paramId.def";
 my $SHORTNAME_FILENAME = "shortName.def";
@@ -125,6 +126,9 @@ if ($SANITY_CHECK) {
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
+
+        die "Error: Name '$name': ends in space" if ($name =~ / $/);
+        die "Error: Name '$name': starts with space" if ($name =~ /^ /);
 
         # Will die if it fails
         get_db_units_code($units);
@@ -268,6 +272,7 @@ while (<>) {
             $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,61,$scaledValueWL2,0);
         }
         $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,64,$sourceSink,0)  if ($is_srcsink ne "");
+        $dbh->do("insert into grib values (?,?,?,?,?,?)",undef, $paramId,$edition,$centre,65,1,0)  if ($is_srcsink eq "1");
 
         # format is only GRIB2 hence grib1 entry=0 and grib2=1
         $dbh->do("insert into param_format(param_id,grib1,grib2) values (?,?,?)",undef,$paramId,0,1);
@@ -387,9 +392,10 @@ sub is_integer {
 sub usage {
    print <<USAGE;
 
-Usage: $0 [-s] [-f] [-p] file.tsv
-       Input has to be a tab-separated values (TSV) file
+Usage: $0 [-c ID] [-s] [-f] [-p] file.tsv
+       Input has to be a tab-separated-values (TSV) file
 
+       -c  The Contact ID (JIRA issue)
        -s  Perform sanity checks and exit
        -f  Write out def files (paramId.def, name.def etc)
        -p  Write to Parameter Database (Be careful!)

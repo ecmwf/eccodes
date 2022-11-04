@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 5.51, Spherical harmonics data - complex packing
+# TEMPLATE 5.50000, Spherical harmonics data - complex packing ( IEEE )
 
 include "grib2/template.5.packing.def";
 

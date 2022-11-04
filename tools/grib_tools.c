@@ -215,7 +215,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
     grib_failed *failed = NULL, *p = NULL;
     grib_handle* h          = NULL;
     grib_tools_file* infile = options->infile;
-    char** filenames;
+    const char** filenames = NULL;
     int files_count    = 0;
     grib_fieldset* set = NULL;
     int i              = 0;
@@ -230,7 +230,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         infile = infile->next;
     }
 
-    filenames = (char**)grib_context_malloc_clear(c, files_count * sizeof(char*));
+    filenames = (const char**)grib_context_malloc_clear(c, files_count * sizeof(char*));
 
     infile = options->infile;
     for (i = 0; i < files_count; i++) {

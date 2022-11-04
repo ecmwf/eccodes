@@ -13,7 +13,6 @@
  */
 
 #include "grib_api_internal.h"
-#include <assert.h>
 
 
 static void usage(const char* prog)
@@ -52,7 +51,7 @@ int main(int argc, char* argv[])
     else
         usage(argv[0]);
 
-    assert(filename);
+    Assert(filename);
     f = fopen(filename, "rb");
     if (!f) {
         perror(filename);

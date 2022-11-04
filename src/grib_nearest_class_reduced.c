@@ -21,8 +21,8 @@
    MEMBERS    = int  lats_count
    MEMBERS    = double* lons
    MEMBERS    = double* distances
-   MEMBERS    = int* k
-   MEMBERS    = int* j
+   MEMBERS    = size_t* k
+   MEMBERS    = size_t* j
    MEMBERS    = const char* Nj
    MEMBERS    = const char* pl
    MEMBERS    = long global
@@ -44,45 +44,44 @@ or edit "nearest.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_nearest_class*);
+static void init_class              (grib_nearest_class*);
 
-static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args);
-static int find(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
-static int destroy(grib_nearest* nearest);
+static int init               (grib_nearest* nearest,grib_handle* h,grib_arguments* args);
+static int find(grib_nearest* nearest, grib_handle* h,double inlat, double inlon, unsigned long flags, double* outlats,double* outlons, double *values,double *distances, int *indexes,size_t *len);
+static int destroy            (grib_nearest* nearest);
 
-typedef struct grib_nearest_reduced
-{
-    grib_nearest nearest;
+typedef struct grib_nearest_reduced{
+  grib_nearest nearest;
     /* Members defined in gen */
     const char* values_key;
     const char* radius;
     int cargs;
     /* Members defined in reduced */
     double* lats;
-    int lats_count;
+    int  lats_count;
     double* lons;
     double* distances;
-    int* k;
-    int* j;
+    size_t* k;
+    size_t* j;
     const char* Nj;
     const char* pl;
     long global;
     double lon_first;
     double lon_last;
-    int legacy; /* -1, 0 or 1 */
+    int legacy;
 } grib_nearest_reduced;
 
 extern grib_nearest_class* grib_nearest_class_gen;
 
 static grib_nearest_class _grib_nearest_class_reduced = {
-    &grib_nearest_class_gen,      /* super                     */
-    "reduced",                    /* name                      */
-    sizeof(grib_nearest_reduced), /* size of instance          */
-    0,                            /* inited */
-    &init_class,                  /* init_class */
-    &init,                        /* constructor               */
-    &destroy,                     /* destructor                */
-    &find,                        /* find nearest              */
+    &grib_nearest_class_gen,                         /* super */
+    "reduced",                         /* name */
+    sizeof(grib_nearest_reduced),      /* size of instance */
+    0,                              /* inited */
+    &init_class,                    /* init_class */
+    &init,                          /* constructor */
+    &destroy,                       /* destructor */
+    &find,                          /* find nearest */
 };
 
 grib_nearest_class* grib_nearest_class_reduced = &_grib_nearest_class_reduced;
@@ -100,11 +99,11 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
     self->Nj                   = grib_arguments_get_name(h, args, self->cargs++);
     self->pl                   = grib_arguments_get_name(h, args, self->cargs++);
-    self->j                    = (int*)grib_context_malloc(h->context, 2 * sizeof(int));
+    self->j                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     self->legacy               = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
-    self->k = (int*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(int));
+    self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
     if (!self->k)
         return GRIB_OUT_OF_MEMORY;
     grib_get_long(h, "global", &self->global);
@@ -131,14 +130,57 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
 
 typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last, long* npoints, long* ilon_first, long* ilon_last);
 
+static int find_global(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len);
+
 static int is_legacy(grib_handle* h)
 {
     long is_legacy = 0;
     return (grib_get_long(h, "legacyGaussSubarea", &is_legacy) == GRIB_SUCCESS && is_legacy == 1);
 }
 
-/* Old implementation in src/deprecated/grib_nearest_class_reduced.old */
+
 static int find(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len)
+{
+    int err = 0;
+    grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
+
+    if (self->global) {
+        err = find_global(nearest, h,
+                inlat, inlon, flags,
+                outlats, outlons, values,
+                distances, indexes, len);
+    }
+    else
+    {
+        /* ECC-762, ECC-1432: Use brute force generic algorithm
+         * for reduced grid subareas. Review in the future
+        */
+        int lons_count = 0; /*dummy*/
+
+        err = grib_nearest_find_generic(
+            nearest, h, inlat, inlon, flags,
+            self->values_key,
+            "Ni",
+            self->Nj,
+            &(self->lats),
+            &(self->lats_count),
+            &(self->lons),
+            &(lons_count),
+            &(self->distances),
+            outlats, outlons,
+            values, distances, indexes, len);
+    }
+    return err;
+}
+
+/* Old implementation in src/deprecated/grib_nearest_class_reduced.old */
+static int find_global(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon, unsigned long flags,
                 double* outlats, double* outlons, double* values,
                 double* distances, int* indexes, size_t* len)
@@ -429,7 +471,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
     if (values) {
         /* See ECC-1403 and ECC-499 */
         /* Performance: Decode the field once and get all 4 values */
-        grib_get_double_elements(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        ret = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        if (ret != GRIB_SUCCESS) return ret;
     }
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {
