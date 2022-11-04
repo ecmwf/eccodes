@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
     fin = codes_fopen(full_path, "r");
     if (!fin) {
         fprintf(stderr, "Failed to open resource '%s'\n", full_path);
+        fclose(fout);
         return 1;
     }
     /* write resource bytes to fout */
