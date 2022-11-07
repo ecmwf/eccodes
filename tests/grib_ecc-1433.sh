@@ -13,6 +13,13 @@
 label="grib_ecc-1433_test"
 temp=temp.$label
 
+# Reminder to remove the temporary hack for https://jira.ecmwf.int/browse/ECC-1455
+# See file
+#   definitions/grib2/template.4.horizontal.def
+#
+echo "Undo the change for ECC-1455!!!!"
+exit 1
+
 $EXEC $test_dir/grib_ecc-1433
 
 rm -f $temp
