@@ -453,6 +453,10 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     //printf("DBG:: self_clear self->numericValues =>\n");
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
+
+    grib_vdarray_delete_content(c, self->tempDoubleValues);
+    grib_vdarray_delete(c, self->tempDoubleValues);
+
     if (self->stringValues) {
         /*printf("dbg self_clear: clear %p\n", (void*)(self->stringValues));*/
         grib_vsarray_delete_content(c, self->stringValues);
@@ -2949,6 +2953,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         grib_vsarray_delete(c, self->stringValues);
         self->stringValues = NULL;
     }
+    if (do_clean == 1 && self->tempDoubleValues) {
+        grib_vdarray_delete_content(c, self->tempDoubleValues);
+        grib_vdarray_delete(c, self->tempDoubleValues);
+    }
 
     if (flag != PROCESS_ENCODE) {
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
@@ -2957,6 +2965,9 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         if (self->elementsDescriptorsIndex)
             grib_viarray_delete(c, self->elementsDescriptorsIndex);
         self->elementsDescriptorsIndex = grib_viarray_new(c, 100, 100);
+    }
+    if (flag == PROCESS_NEW_DATA) {
+        self->tempDoubleValues = grib_vdarray_new(c, 1000, 1000);
     }
 
     if (flag != PROCESS_DECODE) { /* Operator 203YYY: key OVERRIDDEN_REFERENCE_VALUES_KEY */
