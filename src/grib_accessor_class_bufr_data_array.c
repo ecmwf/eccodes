@@ -2944,10 +2944,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         grib_vsarray_delete(c, self->stringValues);
         self->stringValues = NULL;
     }
-    // if (do_clean == 1 && self->tempDoubleValues) {
-    //     grib_vdarray_delete_content(c, self->tempDoubleValues);
-    //     grib_vdarray_delete(c, self->tempDoubleValues);
-    // }
 
     if (flag != PROCESS_ENCODE) {
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
@@ -3003,7 +2999,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             elementsDescriptorsIndex = grib_iarray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             if (!self->compressedData) {
                 dval = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
-                //printf("DBG:: NEWED dval=%p\n", (void*)dval);
             }
         }
         else {
