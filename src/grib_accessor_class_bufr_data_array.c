@@ -454,9 +454,6 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
 
-    grib_vdarray_delete_content(c, self->tempDoubleValues);
-    grib_vdarray_delete(c, self->tempDoubleValues);
-
     if (self->stringValues) {
         /*printf("dbg self_clear: clear %p\n", (void*)(self->stringValues));*/
         grib_vsarray_delete_content(c, self->stringValues);
@@ -2502,12 +2499,6 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     }
     self->tempStrings = self->numberOfSubsets? grib_sarray_new(c, self->numberOfSubsets, 500) : NULL;
 
-    //if(self->tempDouble){
-        //printf("DBG:: create_keys delete %p\n", (void*)self->tempDouble);
-        //grib_darray_delete(c, self->tempDouble);
-        //self->tempDouble = NULL;
-    //}
-
     end         = self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber = 1;
 
@@ -2953,10 +2944,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         grib_vsarray_delete(c, self->stringValues);
         self->stringValues = NULL;
     }
-    if (do_clean == 1 && self->tempDoubleValues) {
-        grib_vdarray_delete_content(c, self->tempDoubleValues);
-        grib_vdarray_delete(c, self->tempDoubleValues);
-    }
+    // if (do_clean == 1 && self->tempDoubleValues) {
+    //     grib_vdarray_delete_content(c, self->tempDoubleValues);
+    //     grib_vdarray_delete(c, self->tempDoubleValues);
+    // }
 
     if (flag != PROCESS_ENCODE) {
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
@@ -3012,7 +3003,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             elementsDescriptorsIndex = grib_iarray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             if (!self->compressedData) {
                 dval = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
-                printf("DBG:: NEWED dval=%p\n", (void*)dval);
+                //printf("DBG:: NEWED dval=%p\n", (void*)dval);
             }
         }
         else {
@@ -3378,7 +3369,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         }
         if (flag == PROCESS_NEW_DATA && !self->compressedData) {
             grib_vdarray_push(c, self->tempDoubleValues, dval);
-            //self->tempDouble = dval;
         }
     } /* for all subsets */
 
@@ -3503,8 +3493,6 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete(c, self->tempStrings);
     }
     if (self->tempDoubleValues) {
-        //printf("DBG:: destroy %p\n", (void*)self->tempDouble);
-        //grib_darray_delete(c, self->tempDouble);
         grib_vdarray_delete_content(c, self->tempDoubleValues);
         grib_vdarray_delete(c, self->tempDoubleValues);
         self->tempDoubleValues = NULL;
