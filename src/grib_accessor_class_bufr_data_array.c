@@ -2949,8 +2949,10 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
         self->stringValues  = grib_vsarray_new(c, 10, 10);
 
-        if (self->elementsDescriptorsIndex)
+        if (self->elementsDescriptorsIndex) {
+            grib_viarray_delete_content(c, self->elementsDescriptorsIndex);
             grib_viarray_delete(c, self->elementsDescriptorsIndex);
+        }
         self->elementsDescriptorsIndex = grib_viarray_new(c, 100, 100);
     }
     if (flag == PROCESS_NEW_DATA) {
