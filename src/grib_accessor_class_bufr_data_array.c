@@ -144,6 +144,7 @@ typedef struct grib_accessor_bufr_data_array
     grib_iarray* iss_list;
     grib_trie_with_rank* dataAccessorsTrie;
     grib_sarray* tempStrings;
+    grib_darray* tempDouble;
     int change_ref_value_operand;
     size_t refValListSize;
     long* refValList;
@@ -448,6 +449,7 @@ static int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bu
 static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
 {
     grib_context_free(c, self->canBeMissing);
+    //printf("DBG:: self_clear self->numericValues =>\n");
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
     if (self->stringValues) {
@@ -2495,6 +2497,12 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     }
     self->tempStrings = self->numberOfSubsets? grib_sarray_new(c, self->numberOfSubsets, 500) : NULL;
 
+    if(self->tempDouble){
+        //printf("DBG:: create_keys delete %p\n", (void*)self->tempDouble);
+        //grib_darray_delete(c, self->tempDouble);
+        //self->tempDouble = NULL;
+    }
+
     end         = self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber = 1;
 
@@ -2867,6 +2875,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         case PROCESS_DECODE:
             if (!self->do_decode)
                 return 0;
+            //printf("DBG::=====PROCESS_DECODE======\n");
             self->do_decode = 0;
             buffer          = h->buffer;
             decoding        = 1;
@@ -2879,6 +2888,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             codec_replication = &decode_replication;
             break;
         case PROCESS_NEW_DATA:
+            //printf("DBG::=====PROCESS_NEW_DATA======\n");
             buffer                               = grib_create_growable_buffer(c);
             decoding                             = 0;
             do_clean                             = 1;
@@ -2893,6 +2903,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
 
             break;
         case PROCESS_ENCODE:
+            //printf("DBG::=====PROCESS_ENCODE======\n");
             buffer                               = grib_create_growable_buffer(c);
             decoding                             = 0;
             do_clean                             = 0;
@@ -2989,6 +3000,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             elementsDescriptorsIndex = grib_iarray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
             if (!self->compressedData) {
                 dval = grib_darray_new(c, DYN_ARRAY_SIZE_INIT, DYN_ARRAY_SIZE_INCR);
+                printf("DBG:: NEWED dval=%p\n", (void*)dval);
             }
         }
         else {
@@ -3348,8 +3360,12 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             /*grib_iarray_print("DBG process_elements::elementsDescriptorsIndex", elementsDescriptorsIndex);*/
         }
         if (decoding && !self->compressedData) {
+            //printf("DBG:: pushing dval into self->numericValues  %p\n", (void*)dval);
             grib_vdarray_push(c, self->numericValues, dval);
             /*grib_darray_print("DBG process_elements::dval", dval);*/
+        }
+        if (flag == PROCESS_NEW_DATA && !self->compressedData) {
+            self->tempDouble = dval;
         }
     } /* for all subsets */
 
@@ -3473,5 +3489,11 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);
     }
+    if (self->tempDouble) {
+        printf("DBG:: destroy %p\n", (void*)self->tempDouble);
+        grib_darray_delete(c, self->tempDouble);
+    }
+
+
     grib_iarray_delete(self->iss_list);
 }
