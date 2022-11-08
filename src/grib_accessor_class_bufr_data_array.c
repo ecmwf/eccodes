@@ -144,7 +144,7 @@ typedef struct grib_accessor_bufr_data_array
     grib_iarray* iss_list;
     grib_trie_with_rank* dataAccessorsTrie;
     grib_sarray* tempStrings;
-    grib_darray* tempDouble;
+    grib_vdarray* tempDoubleValues;
     int change_ref_value_operand;
     size_t refValListSize;
     long* refValList;
@@ -400,6 +400,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* params)
     self->do_decode                = 1;
     self->elementsDescriptorsIndex = 0;
     self->numericValues            = 0;
+    self->tempDoubleValues         = 0;
     self->stringValues             = 0;
     cancel_bitmap(self);
     self->expanded                       = 0;
@@ -2497,11 +2498,11 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     }
     self->tempStrings = self->numberOfSubsets? grib_sarray_new(c, self->numberOfSubsets, 500) : NULL;
 
-    if(self->tempDouble){
+    //if(self->tempDouble){
         //printf("DBG:: create_keys delete %p\n", (void*)self->tempDouble);
         //grib_darray_delete(c, self->tempDouble);
         //self->tempDouble = NULL;
-    }
+    //}
 
     end         = self->compressedData ? 1 : self->numberOfSubsets;
     groupNumber = 1;
@@ -3365,7 +3366,8 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             /*grib_darray_print("DBG process_elements::dval", dval);*/
         }
         if (flag == PROCESS_NEW_DATA && !self->compressedData) {
-            self->tempDouble = dval;
+            grib_vdarray_push(c, self->tempDoubleValues, dval);
+            //self->tempDouble = dval;
         }
     } /* for all subsets */
 
@@ -3489,11 +3491,13 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);
     }
-    if (self->tempDouble) {
-        printf("DBG:: destroy %p\n", (void*)self->tempDouble);
-        grib_darray_delete(c, self->tempDouble);
+    if (self->tempDoubleValues) {
+        //printf("DBG:: destroy %p\n", (void*)self->tempDouble);
+        //grib_darray_delete(c, self->tempDouble);
+        grib_vdarray_delete_content(c, self->tempDoubleValues);
+        grib_vdarray_delete(c, self->tempDoubleValues);
+        self->tempDoubleValues = NULL;
     }
-
 
     grib_iarray_delete(self->iss_list);
 }
