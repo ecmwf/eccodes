@@ -28,9 +28,12 @@ fBufrTmp=temp.${label}".bufr"
 fRules=temp.${label}.filter
 
 set +u
-use_valgrind=1
-if test "x$ECCODES_TEST_WITH_VALGRIND" = "x"; then
-    use_valgrind=0
+use_valgrind=0
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+    use_valgrind=1
+    # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
+    # tools_dir so we reset it to its original
+    tools_dir=$build_dir/bin
 fi
 set -u
 
