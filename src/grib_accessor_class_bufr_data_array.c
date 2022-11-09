@@ -450,7 +450,6 @@ static int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bu
 static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
 {
     grib_context_free(c, self->canBeMissing);
-    //printf("DBG:: self_clear self->numericValues =>\n");
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
 
@@ -2871,7 +2870,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         case PROCESS_DECODE:
             if (!self->do_decode)
                 return 0;
-            //printf("DBG::=====PROCESS_DECODE======\n");
             self->do_decode = 0;
             buffer          = h->buffer;
             decoding        = 1;
@@ -2884,7 +2882,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             codec_replication = &decode_replication;
             break;
         case PROCESS_NEW_DATA:
-            //printf("DBG::=====PROCESS_NEW_DATA======\n");
             buffer                               = grib_create_growable_buffer(c);
             decoding                             = 0;
             do_clean                             = 1;
@@ -2899,7 +2896,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
 
             break;
         case PROCESS_ENCODE:
-            //printf("DBG::=====PROCESS_ENCODE======\n");
             buffer                               = grib_create_growable_buffer(c);
             decoding                             = 0;
             do_clean                             = 0;
@@ -3360,7 +3356,6 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             /*grib_iarray_print("DBG process_elements::elementsDescriptorsIndex", elementsDescriptorsIndex);*/
         }
         if (decoding && !self->compressedData) {
-            //printf("DBG:: pushing dval into self->numericValues  %p\n", (void*)dval);
             grib_vdarray_push(c, self->numericValues, dval);
             /*grib_darray_print("DBG process_elements::dval", dval);*/
         }

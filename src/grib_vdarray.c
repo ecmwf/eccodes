@@ -105,7 +105,6 @@ void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
     if (!c)
         c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
-        //printf("DBG:: grib_vdarray_delete_content %p\n", (void*)v->v[i]);
         grib_darray_delete(c, v->v[i]);
         v->v[i] = 0;
     }
