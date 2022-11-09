@@ -3360,7 +3360,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             /*grib_darray_print("DBG process_elements::dval", dval);*/
         }
         if (flag == PROCESS_NEW_DATA && !self->compressedData) {
-            grib_vdarray_push(c, self->tempDoubleValues, dval);
+            grib_vdarray_push(c, self->tempDoubleValues, dval); /* ECC-1172 */
         }
     } /* for all subsets */
 
@@ -3485,6 +3485,7 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete(c, self->tempStrings);
     }
     if (self->tempDoubleValues) {
+        /* ECC-1172: Clean up to avoid memory leaks */
         grib_vdarray_delete_content(c, self->tempDoubleValues);
         grib_vdarray_delete(c, self->tempDoubleValues);
         self->tempDoubleValues = NULL;
