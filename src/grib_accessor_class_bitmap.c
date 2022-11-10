@@ -209,7 +209,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
     grib_value_count(a, &len);
 
-    sprintf(label, "Bitmap of %ld values", len);
+    snprintf(label, 1024, "Bitmap of %ld values", len);
     grib_dump_bytes(dumper, a, label);
 }
 

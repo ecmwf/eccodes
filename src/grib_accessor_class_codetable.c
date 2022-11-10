@@ -322,7 +322,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
 
     if (*masterDir != 0) {
         char name[2048] = {0,};
-        sprintf(name, "%s/%s", masterDir, self->tablename);
+        snprintf(name, sizeof(name), "%s/%s", masterDir, self->tablename);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
@@ -333,7 +333,7 @@ static grib_codetable* load_table(grib_accessor_codetable* self)
 
     if (*localDir != 0) {
         char localName[2048] = {0,};
-        sprintf(localName, "%s/%s", localDir, self->tablename);
+        snprintf(localName, sizeof(localName), "%s/%s", localDir, self->tablename);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
@@ -581,7 +581,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
             if (b == value)
                 strcpy(comment, table->entries[value].title);
             else
-                sprintf(comment, "%s", table->entries[value].title);
+                snprintf(comment, sizeof(comment), "%s", table->entries[value].title);
 
             if (table->entries[value].units != NULL && grib_inline_strcmp(table->entries[value].units, "unknown")) {
                 strcat(comment, " (");
@@ -635,7 +635,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     }
     else {
 #if 1
-        sprintf(tmp, "%d", (int)value);
+        snprintf(tmp, sizeof(tmp), "%d", (int)value);
 #else
         return GRIB_DECODING_ERROR;
 #endif

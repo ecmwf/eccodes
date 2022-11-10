@@ -145,13 +145,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     long start = 0, theEnd = 0;
     char tmp[1024];
+    const size_t tmpLen = sizeof(tmp);
     int err  = grib_g1_step_get_steps(a, &start, &theEnd);
     size_t l = 0;
 
     if (err)
         return err;
 
-    sprintf(tmp, "%ld-%ld", start / 24, theEnd / 24);
+    snprintf(tmp, tmpLen, "%ld-%ld", start / 24, theEnd / 24);
     /*printf("---- FCPERIOD %s [start:%g, end:%g]",tmp,start,end);*/
 
     l = strlen(tmp) + 1;

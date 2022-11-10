@@ -205,7 +205,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 #endif
 
     /*if (table==200) table=128;*/
-    sprintf(val, "%ld.%ld", param, table);
+    snprintf(val, 32, "%ld.%ld", param, table);
     *len = strlen(val) + 1;
 
     return GRIB_SUCCESS;

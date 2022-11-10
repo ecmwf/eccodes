@@ -81,7 +81,6 @@ grib_action* grib_action_create_set_iarray(grib_context* context,
                                            grib_iarray* iarray)
 {
     char buf[1024];
-
     grib_action_set_iarray* a;
     grib_action_class* c = grib_action_class_set_iarray;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -94,8 +93,7 @@ grib_action* grib_action_create_set_iarray(grib_context* context,
     a->iarray = iarray;
     a->name   = grib_context_strdup_persistent(context, name);
 
-
-    sprintf(buf, "set_iarray%p", (void*)iarray);
+    snprintf(buf, 1024, "set_iarray%p", (void*)iarray);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

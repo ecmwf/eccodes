@@ -163,9 +163,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return ret;
 
     if (!strcmp(stepType, "instant"))
-        sprintf(buf, "%s", val);
+        snprintf(buf, sizeof(buf), "%s", val);
     else
-        sprintf(buf, "0-%s", val);
+        snprintf(buf, sizeof(buf), "0-%s", val);
 
     return grib_pack_string(stepRangeAcc, buf, len);
 }
@@ -212,7 +212,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     char buff[100] = {0,};
     size_t bufflen = 100;
 
-    sprintf(buff, "%ld", *val);
+    snprintf(buff, sizeof(buff), "%ld", *val);
 
     return pack_string(a, buff, &bufflen);
 }

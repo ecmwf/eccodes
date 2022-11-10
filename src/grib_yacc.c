@@ -2069,7 +2069,7 @@ grib_yysyntax_error (YYPTRDIFF_T *grib_yymsg_alloc, char **grib_yymsg,
       return 1;
     }
 
-  /* Avoid sprintf, as that infringes on the user's name space.
+  /* Avoid snprintf, as that infringes on the user's name space.
      Don't have undefined behavior even if the translation
      produced a string with the wrong number of "%s"s.  */
   {
@@ -3520,14 +3520,14 @@ grib_yyreduce:
   case 206:
 #line 752 "griby.y"
                                                                          {
-					char buf[80]; sprintf(buf,"%ld",(long)(grib_yyvsp[-4].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
+					char buf[80]; snprintf(buf,sizeof(buf),"%ld",(long)(grib_yyvsp[-4].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
 #line 3525 "y.tab.c"
     break;
 
   case 207:
 #line 754 "griby.y"
                                                                        {
-					char buf[80]; sprintf(buf,"%g",(double)(grib_yyvsp[-4].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
+					char buf[80]; snprintf(buf,sizeof(buf),"%g",(double)(grib_yyvsp[-4].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
 #line 3532 "y.tab.c"
     break;
 

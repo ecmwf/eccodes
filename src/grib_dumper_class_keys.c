@@ -297,7 +297,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         }
         *q = '\0';
 
-        /*sprintf(tmp,"%s ",upper,(long)s->length,(long)s->padding);*/
+        /*snprintf(tmp,1024,"%s ",upper,(long)s->length,(long)s->padding);*/
 
         fprintf(self->dumper.out, "====> %s <==== \n", upper);
 

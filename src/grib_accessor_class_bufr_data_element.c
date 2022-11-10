@@ -361,7 +361,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         char sval[32] = {0,};
         err = unpack_double(a, &dval, &dlen);
         if (err) return err;
-        sprintf(sval, "%g", dval);
+        snprintf(sval, sizeof(sval), "%g", dval);
         slen = strlen(sval);
         if (*len < slen)
             return GRIB_ARRAY_TOO_SMALL;

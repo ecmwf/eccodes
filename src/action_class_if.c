@@ -97,6 +97,7 @@ grib_action* grib_action_create_if(grib_context* context,
                                    int lineno, char* file_being_parsed)
 {
     char name[1024];
+    const size_t nameLen = sizeof(name);
     grib_action_if* a;
     grib_action_class* c = grib_action_class_if;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -112,9 +113,9 @@ grib_action* grib_action_create_if(grib_context* context,
     a->transient   = transient;
 
     if (transient)
-        sprintf(name, "__if%p", (void*)a);
+        snprintf(name, nameLen, "__if%p", (void*)a);
     else
-        sprintf(name, "_if%p", (void*)a);
+        snprintf(name, nameLen, "_if%p", (void*)a);
 
     act->name       = grib_context_strdup_persistent(context, name);
     act->debug_info = NULL;
@@ -122,7 +123,8 @@ grib_action* grib_action_create_if(grib_context* context,
         /* Construct debug information showing definition file and line */
         /* number of IF statement */
         char debug_info[1024];
-        sprintf(debug_info, "File=%s line=%d", file_being_parsed, lineno);
+        const size_t infoLen = sizeof(debug_info);
+        snprintf(debug_info, infoLen, "File=%s line=%d", file_being_parsed, lineno);
         act->debug_info = grib_context_strdup_persistent(context, debug_info);
     }
 

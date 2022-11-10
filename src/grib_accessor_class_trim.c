@@ -164,7 +164,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if (err) return err;
 
     string_lrtrim(&pInput, self->trim_left, self->trim_right);
-    sprintf(val, "%s", pInput); 
+    snprintf(val, 1024, "%s", pInput); 
     size = strlen(val);
     *len = size + 1;
     return GRIB_SUCCESS;
@@ -189,7 +189,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     if ((err = grib_get_string(h, self->input, input, &inputLen)) != GRIB_SUCCESS)
         return err;
 
-    sprintf(buf, "%s", val);
+    snprintf(buf, sizeof(buf), "%s", val);
     pBuf = buf;
     string_lrtrim(&pBuf, self->trim_left, self->trim_right);
 

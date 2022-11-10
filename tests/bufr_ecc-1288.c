@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     codes_handle_delete(h);
 
     printf("Wipe the cache and extend the definitions path...\n");
-    sprintf(buf, "%s:%s", DEFS_PATH_LOCAL, codes_definition_path(NULL));
+    snprintf(buf, 1024, "%s:%s", DEFS_PATH_LOCAL, codes_definition_path(NULL));
     codes_context_delete(NULL);
     codes_context_set_definitions_path(NULL, buf);
     printf("ECCODES_DEFINITION_PATH is now = |%s|\n", buf);

@@ -34,6 +34,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     void* mesg = NULL;
     FILE* out;
     size_t size = 0, read_size = 0, insize = 0, chunk_size, msg_size = 0, num_msg = 0;
+    size_t ofilenameMaxLen = 0;
     off_t offset = 0;
     int err      = GRIB_SUCCESS;
     int i;
@@ -44,7 +45,8 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
         return 1;
 
     /* name of output file */
-    ofilename = (char*)calloc(1, strlen(filename) + 10);
+    ofilenameMaxLen = strlen(filename) + 10;
+    ofilename = (char*)calloc(1, ofilenameMaxLen);
 
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
@@ -58,7 +60,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     }
 
     i = 1;
-    sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
+    snprintf(ofilename, ofilenameMaxLen, OUTPUT_FILENAME_FORMAT, filename, i);
     out = fopen(ofilename, "w");
     if (!out) {
         perror(ofilename);
@@ -87,7 +89,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
                 i++;
                 /* Start writing to the next file */
                 /*printf("=2=%d\t%d\n",*count,msg_size);*/
-                sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
+                snprintf(ofilename, ofilenameMaxLen, OUTPUT_FILENAME_FORMAT, filename, i);
                 out = fopen(ofilename, "w");
                 if (!out) {
                     perror(ofilename);

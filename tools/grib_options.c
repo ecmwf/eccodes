@@ -407,7 +407,7 @@ const char* grib_options_get_help(const char* id)
     int i      = 0;
     char msg[] = "ERROR: help not found for option ";
     char* err  = (char*)calloc(1, sizeof(msg) + 3);
-    sprintf(err, "%s%c\n", msg, *id);
+    snprintf(err, 1024, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].help != NULL)
@@ -433,7 +433,7 @@ const char* grib_options_get_args(const char* id)
     if (id[1] != ':')
         return strdup(empty);
     err = (char*)calloc(1, sizeof(msg) + 3);
-    sprintf(err, "%s%c\n", msg, *id);
+    snprintf(err, 1024, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].args != NULL) {

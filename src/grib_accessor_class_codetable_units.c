@@ -182,7 +182,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         strcpy(tmp, table->entries[value].units);
     }
     else {
-        sprintf(tmp, "%d", (int)value);
+        snprintf(tmp, sizeof(tmp), "%d", (int)value);
     }
 
     l = strlen(tmp) + 1;

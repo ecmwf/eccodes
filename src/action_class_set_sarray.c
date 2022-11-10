@@ -94,8 +94,7 @@ grib_action* grib_action_create_set_sarray(grib_context* context,
     a->sarray = sarray;
     a->name   = grib_context_strdup_persistent(context, name);
 
-
-    sprintf(buf, "set_sarray%p", (void*)sarray);
+    snprintf(buf, 1024, "set_sarray%p", (void*)sarray);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

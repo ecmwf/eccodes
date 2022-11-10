@@ -112,12 +112,12 @@ static void index_add_conditions(grib_concept_index* index, grib_concept_conditi
         switch (type) {
             case GRIB_TYPE_LONG:
                 grib_expression_evaluate_long(0, c->expression, &lres);
-                sprintf(s, "%ld", lres);
+                snprintf(s, sizeof(s), "%ld", lres);
                 break;
 
             case GRIB_TYPE_DOUBLE:
                 grib_expression_evaluate_double(0, c->expression, &dres);
-                sprintf(s, "%g", dres);
+                snprintf(s, sizeof(s), "%g", dres);
                 break;
 
             case GRIB_TYPE_STRING:

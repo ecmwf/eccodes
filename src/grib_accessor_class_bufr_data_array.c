@@ -2032,7 +2032,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                 return NULL;
             grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-            sprintf(code, "%06ld", self->expanded->v[idx]->code);
+            snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
             temp_str  = grib_context_strdup(a->context, code);
             attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, temp_str, 0, 0, flags);
             if (!attribute)
@@ -2092,7 +2092,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                     return NULL;
                 grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-                sprintf(code, "%06ld", self->expanded->v[idx]->code);
+                snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
                 attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, code, 0, 0, flags);
                 if (!attribute)
                     return NULL;
@@ -2118,7 +2118,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                 return NULL;
             grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-            sprintf(code, "%06ld", self->expanded->v[idx]->code);
+            snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
             attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, code, 0, 0, flags);
             if (!attribute)
                 return NULL;

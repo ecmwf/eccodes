@@ -160,7 +160,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)
             return GRIB_ARRAY_TOO_SMALL;
-        sprintf(val, "missing");
+        snprintf(val, 1024, "missing");
         return GRIB_SUCCESS;
     }
     if (*len < h->gts_header_len)

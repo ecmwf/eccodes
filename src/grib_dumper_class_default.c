@@ -674,7 +674,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         }
         *q = '\0';
 
-        sprintf(tmp, "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
+        snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
         /* fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp); */
         free(upper);
         self->section_offset = a->offset;

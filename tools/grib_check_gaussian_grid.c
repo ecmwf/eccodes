@@ -53,9 +53,9 @@ static void error(const char* filename, int msg_num, const char* fmt, ...)
     va_list list;
     va_start(list, fmt);
     if (verbose)
-        sprintf(buf, " Error: %s", fmt); /* indent a bit */
+        snprintf(buf, sizeof(buf), " Error: %s", fmt); /* indent a bit */
     else
-        sprintf(buf, "Error: %s #%d: %s", filename, msg_num, fmt);
+        snprintf(buf, sizeof(buf), "Error: %s #%d: %s", filename, msg_num, fmt);
     vfprintf(stderr, buf, list);
     va_end(list);
 

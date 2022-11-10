@@ -713,7 +713,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
         dir = c->grib_definition_files_dir;
 
         while (dir) {
-            sprintf(full, "%s/%s", dir->value, basename);
+            snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
             if (!codes_access(full, F_OK)) {
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 Assert(fullpath);
@@ -1054,7 +1054,7 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
         const int errsv = errno;
 
         va_start(list, fmt);
-        vsprintf(msg, fmt, list);
+        vsnprintf(msg, sizeof(msg), fmt, list);
         va_end(list);
 
         if (level & GRIB_LOG_PERROR) {
@@ -1085,7 +1085,7 @@ void grib_context_print(const grib_context* c, void* descriptor, const char* fmt
     char msg[1024];
     va_list list;
     va_start(list, fmt);
-    vsprintf(msg, fmt, list);
+    vsnprintf(msg, sizeof(msg), fmt, list);
     va_end(list);
     c->print(c, descriptor, msg);
 }
@@ -1241,7 +1241,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
     else {
         char buffer[10240];
-        sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
+        snprintf(buffer, sizeof(buffer), "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }
 }

@@ -143,20 +143,22 @@ static int destroy(grib_dumper* d)
 
 static char* lval_to_string(grib_context* c, long v)
 {
-    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
+    const size_t svalMaxLen = 40;
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_LONG)
-        sprintf(sval, "CODES_MISSING_LONG");
+        snprintf(sval, svalMaxLen, "CODES_MISSING_LONG");
     else
-        sprintf(sval, "%ld", v);
+        snprintf(sval, svalMaxLen, "%ld", v);
     return sval;
 }
 static char* dval_to_string(grib_context* c, double v)
 {
-    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
+    const size_t svalMaxLen = 40;
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_DOUBLE)
-        sprintf(sval, "CODES_MISSING_DOUBLE");
+        snprintf(sval, svalMaxLen, "CODES_MISSING_DOUBLE");
     else
-        sprintf(sval, "%.18e", v);
+        snprintf(sval, svalMaxLen, "%.18e", v);
     return sval;
 }
 
@@ -239,9 +241,10 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -322,10 +325,9 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     }
 
     if (self->isLeaf == 0) {
-        char* prefix1;
-
-        prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        const size_t prefix1MaxLen =  strlen(a->name) + strlen(prefix) + 5;
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -374,9 +376,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
             r = compute_bufr_key_rank(h, self->keys, a->name);
             if (r != 0) {
-                prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+                const size_t prefixMaxLen = strlen(a->name) + 10;
+                prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
                 dofree = 1;
-                sprintf(prefix, "#%d#%s", r, a->name);
+                snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
             }
             else
                 prefix = (char*)a->name;
@@ -462,9 +465,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -540,10 +544,9 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
 
     if (self->isLeaf == 0) {
-        char* prefix1;
-
-        prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        const size_t prefix1MaxLen = strlen(a->name) + strlen(prefix) + 5;
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -587,9 +590,10 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -652,9 +656,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -726,9 +731,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(acc_name) + 10));
+            const size_t prefixMaxLen = strlen(acc_name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, acc_name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, acc_name);
         }
         else
             prefix = (char*)acc_name;
@@ -863,12 +869,12 @@ static void header(grib_dumper* d, grib_handle* h)
     if (localSectionPresent && bufrHeaderCentre == 98) {
         grib_get_long(h, "isSatellite", &isSatellite);
         if (isSatellite)
-            sprintf(sampleName, "BUFR%ld_local_satellite", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
         else
-            sprintf(sampleName, "BUFR%ld_local", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
     }
     else {
-        sprintf(sampleName, "BUFR%ld", edition);
+        snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
     }
 
     if (d->count < 2) {

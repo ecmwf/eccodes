@@ -82,7 +82,6 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_write(grib_context* context, const char* name, int append, int padtomultiple)
 {
     char buf[1024];
-
     grib_action_write* a = NULL;
     grib_action_class* c = grib_action_class_write;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -94,7 +93,7 @@ grib_action* grib_action_create_write(grib_context* context, const char* name, i
 
     a->name = grib_context_strdup_persistent(context, name);
 
-    sprintf(buf, "write%p", (void*)a->name);
+    snprintf(buf, 1024, "write%p", (void*)a->name);
 
     act->name        = grib_context_strdup_persistent(context, buf);
     a->append        = append;

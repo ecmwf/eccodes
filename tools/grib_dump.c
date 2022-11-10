@@ -132,7 +132,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     Assert(file);
     exit_if_input_is_directory(tool_name, file->name);
 
-    sprintf(tmp, "FILE: %s ", options->current_infile->name);
+    snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout, "***** %s\n", tmp);
 
@@ -211,7 +211,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         char tmp[1024];
         char identifier[100];
         size_t idlen = 100;
-        sprintf(tmp, "MESSAGE %d ( length=%ld )", options->handle_count, length);
+        snprintf(tmp, sizeof(tmp), "MESSAGE %d ( length=%ld )", options->handle_count, length);
         if (!grib_options_on("C"))
             fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
         if (!strcmp(options->dump_mode, "default")) {

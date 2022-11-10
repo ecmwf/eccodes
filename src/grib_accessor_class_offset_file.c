@@ -159,7 +159,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (err)
         return err;
 
-    sprintf(repres, "%.0f", val);
+    snprintf(repres, sizeof(repres), "%.0f", val);
 
     l = strlen(repres) + 1;
     if (l > *len) {

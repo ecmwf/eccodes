@@ -89,7 +89,7 @@ grib_action* grib_action_create_set_missing(grib_context* context,
 
     a->name = grib_context_strdup_persistent(context, name);
 
-    sprintf(buf, "set_missing_%s", name);
+    snprintf(buf, sizeof(buf), "set_missing_%s", name);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

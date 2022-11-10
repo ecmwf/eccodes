@@ -73,7 +73,6 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_close(grib_context* context, char* filename)
 {
     char buf[1024];
-
     grib_action_close* a;
     grib_action_class* c = grib_action_class_close;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -85,7 +84,7 @@ grib_action* grib_action_create_close(grib_context* context, char* filename)
 
     a->filename = grib_context_strdup_persistent(context, filename);
 
-    sprintf(buf, "close_%p", (void*)a->filename);
+    snprintf(buf, 1024, "close_%p", (void*)a->filename);
 
     act->name = grib_context_strdup_persistent(context, buf);
 
