@@ -4315,7 +4315,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     stat          = nc_create(options->outfile->name, creation_mode, &ncid);
     if (stat != NC_NOERR) {
         char msg[1024];
-        ecc_snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
+        snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
         check_err(msg, stat, __LINE__);
     }
 
@@ -4341,7 +4341,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     for (i = 0; i < count; ++i) {
         if (subsets[i].fset) {
             char dataset[100];
-            ecc_snprintf(dataset, sizeof(dataset), subsets[i].att.name, i + 1);
+            snprintf(dataset, sizeof(dataset), subsets[i].att.name, i + 1);
             put_data(dims, ncid, dataset, &subsets[i]);
         }
         else {
