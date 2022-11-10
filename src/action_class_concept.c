@@ -354,8 +354,9 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
                  ((cval = grib_expression_evaluate_string(h, c->expression, tmp, &size, &err)) != NULL) &&
                  (err == 0) && (strcmp(buf, cval) == 0);
-            if (ok)
-                snprintf(exprVal, 1024, "%s", cval);
+            if (ok) {
+                snprintf(exprVal, size, "%s", cval);
+            }
             break;
         }
 
