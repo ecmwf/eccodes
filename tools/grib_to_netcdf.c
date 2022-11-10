@@ -9,7 +9,6 @@
  */
 
 #include "grib_api_internal.h"
-#define HAVE_NETCDF
 
 #ifdef HAVE_NETCDF
 
