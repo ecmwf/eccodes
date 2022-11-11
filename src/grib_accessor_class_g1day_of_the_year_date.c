@@ -176,7 +176,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     fullyear         = ((century - 1) * 100 + year);
     fake_day_of_year = ((month - 1) * 30) + day;
-    sprintf(tmp, "%04ld-%03ld", fullyear, fake_day_of_year);
+    snprintf(tmp, sizeof(tmp), "%04ld-%03ld", fullyear, fake_day_of_year);
 
     l = strlen(tmp) + 1;
     if (*len < l) {

@@ -155,7 +155,7 @@ static void write_message(grib_handle* h, const char* str)
     FILE* fh;
 
     grib_get_message(h, &m, &s);
-    sprintf(fname, "%s_%d.bufr", str, write_count);
+    snprintf(fname, sizeof(fname), "%s_%d.bufr", str, write_count);
 
     fh = fopen(fname, "w");
     if (!fh) {
@@ -381,7 +381,7 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s%c%s",
+                snprintf(bufr, sizeof(bufr), "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
                         extract_filename(options->infile_extra->name));
@@ -636,9 +636,9 @@ static char* double_as_string(grib_context* c, double v)
 {
     char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
     if (v == GRIB_MISSING_DOUBLE)
-        sprintf(sval, "MISSING");
+        snprintf(sval, 32, "MISSING");
     else
-        sprintf(sval, "%.20e", v);
+        snprintf(sval, 32, "%.20e", v);
     return sval;
 }
 
@@ -1238,8 +1238,9 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 {
     int ret         = 0;
     grib_context* c = handle1->context;
-    char* fullname  = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-    sprintf(fullname, "%s->%s", prefix, a->name);
+    const size_t fullnameMaxLen = strlen(a->name) + strlen(prefix) + 5;
+    char* fullname  = (char*)grib_context_malloc_clear(c, sizeof(char) * fullnameMaxLen);
+    snprintf(fullname, fullnameMaxLen, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         (*err)++;
         write_messages(handle1, handle2);
@@ -1304,9 +1305,10 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
         rank = compute_bufr_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
-            prefix = (char*)grib_context_malloc_clear(context, sizeof(char) * (strlen(xa->name) + 10));
+            const size_t prefixMaxLen = strlen(xa->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(context, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", rank, xa->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", rank, xa->name);
         }
         else {
             prefix = (char*)xa->name;

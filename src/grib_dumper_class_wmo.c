@@ -548,7 +548,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
             p++;
         }
         *q = '\0';
-        sprintf(tmp, "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
+        snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
         fprintf(self->dumper.out, "======================   %-35s   ======================\n", tmp);
         free(upper);
         self->section_offset = a->offset;
@@ -584,7 +584,7 @@ static void print_offset(FILE* out, long begin, long theEnd)
     if (begin == theEnd)
         fprintf(out, "%-10ld", begin);
     else {
-        sprintf(tmp, "%ld-%ld", begin, theEnd);
+        snprintf(tmp, sizeof(tmp), "%ld-%ld", begin, theEnd);
         fprintf(out, "%-10s", tmp);
     }
 }

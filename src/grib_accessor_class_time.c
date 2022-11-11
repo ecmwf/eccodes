@@ -228,13 +228,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     unpack_long(a, &v, &lsize);
 
     if (*len < 5) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_time : unpack_string : Buffer too small for %s ", a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_time : unpack_string : Buffer too small for %s", a->name);
 
         *len = 5;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    sprintf(val, "%04ld", v);
+    snprintf(val, 64, "%04ld", v);
 
     len[0] = 5;
     return GRIB_SUCCESS;

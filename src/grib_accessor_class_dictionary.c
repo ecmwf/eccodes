@@ -186,7 +186,7 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
     if (*masterDir != 0) {
         char name[2048] = {0,};
         char recomposed[2048] = {0,};
-        sprintf(name, "%s/%s", masterDir, self->dictionary);
+        snprintf(name, sizeof(name), "%s/%s", masterDir, self->dictionary);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
@@ -197,13 +197,13 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
     if (*localDir != 0) {
         char localName[2048] = {0,};
         char localRecomposed[1024] = {0,};
-        sprintf(localName, "%s/%s", localDir, self->dictionary);
+        snprintf(localName, sizeof(localName), "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
-        sprintf(dictName, "%s:%s", localFilename, filename);
+        snprintf(dictName, sizeof(dictName), "%s:%s", localFilename, filename);
     }
     else {
-        sprintf(dictName, "%s", filename);
+        snprintf(dictName, sizeof(dictName), "%s", filename);
     }
 
     if (!filename) {

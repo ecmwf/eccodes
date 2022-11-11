@@ -344,13 +344,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     switch (get_native_type(a)) {
         case GRIB_TYPE_LONG:
             ret = unpack_long(a, &lval, &llen);
-            sprintf(v, "%ld", lval);
+            snprintf(v, 64, "%ld", lval);
             *len = strlen(v);
             break;
 
         case GRIB_TYPE_DOUBLE:
             ret = unpack_double(a, &dval, &llen);
-            sprintf(v, "%g", dval);
+            snprintf(v, 64, "%g", dval);
             *len = strlen(v);
             break;
 

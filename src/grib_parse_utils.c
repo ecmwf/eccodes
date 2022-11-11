@@ -105,7 +105,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
                 a         = grib_find_accessor(h, loc);
                 if (!a) {
                     if (!fail) {
-                        sprintf(val, "undef");
+                        snprintf(val, sizeof(val), "undef");
                     }
                     else {
                         grib_context_log(h->context, GRIB_LOG_WARNING, "grib_recompose_name: Problem to recompose filename with : %s ( %s no accessor found)", uname, loc);
@@ -121,12 +121,12 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
                         case GRIB_TYPE_DOUBLE:
                             replen = 1;
                             ret    = grib_unpack_double(a, &dval, &replen);
-                            sprintf(val, "%.12g", dval);
+                            snprintf(val, sizeof(val), "%.12g", dval);
                             break;
                         case GRIB_TYPE_LONG:
                             replen = 1;
                             ret    = grib_unpack_long(a, &lval, &replen);
-                            sprintf(val, "%d", (int)lval);
+                            snprintf(val, sizeof(val), "%d", (int)lval);
                             break;
                         default:
                             grib_context_log(h->context, GRIB_LOG_WARNING, "grib_recompose_name: Problem to recompose filename with : %s, invalid type %d", loc, type);
@@ -679,7 +679,7 @@ void grib_parser_include(const char* included_fname)
     if (f == NULL) {
         char buffer[1024];
         grib_context_log(grib_parser_context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "grib_parser_include: cannot open: '%s'", parse_file);
-        sprintf(buffer, "Cannot include file: '%s'", parse_file);
+        snprintf(buffer, sizeof(buffer), "Cannot include file: '%s'", parse_file);
         grib_yyerror(buffer);
     }
     else {

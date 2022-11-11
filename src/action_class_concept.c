@@ -230,6 +230,8 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     char key[4096]      = {0,};
     char* full = 0;
     int id;
+    const size_t bufLen = sizeof(buf);
+    const size_t keyLen = sizeof(key);
 
     grib_context* context = ((grib_action*)self)->context;
     grib_concept_value* c = NULL;
@@ -240,7 +242,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     Assert(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
 
-    sprintf(buf, "%s/%s", masterDir, self->basename);
+    snprintf(buf, bufLen, "%s/%s", masterDir, self->basename);
 
     grib_recompose_name(h, NULL, buf, master, 1);
 
@@ -248,11 +250,11 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
         char localDir[1024] = {0,};
         size_t lenLocalDir = 1024;
         grib_get_string(h, self->localDir, localDir, &lenLocalDir);
-        sprintf(buf, "%s/%s", localDir, self->basename);
+        snprintf(buf, bufLen, "%s/%s", localDir, self->basename);
         grib_recompose_name(h, NULL, buf, local, 1);
     }
 
-    sprintf(key, "%s%s", master, local);
+    snprintf(key, keyLen, "%s%s", master, local);
 
     id = grib_itrie_get_id(h->context->concepts_index, key);
     if ((c = h->context->concepts[id]) != NULL)
@@ -328,7 +330,7 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             ok = (grib_get_long(h, c->name, &lval) == GRIB_SUCCESS) &&
                  (lval == lres);
             if (ok)
-                sprintf(exprVal, "%ld", lres);
+                snprintf(exprVal, 64, "%ld", lres);
             break;
 
         case GRIB_TYPE_DOUBLE: {
@@ -338,22 +340,23 @@ static int concept_condition_expression_true(grib_handle* h, grib_concept_condit
             ok = (grib_get_double(h, c->name, &dval) == GRIB_SUCCESS) &&
                  (dval == dres);
             if (ok)
-                sprintf(exprVal, "%g", dres);
+                snprintf(exprVal, 64, "%g", dres);
             break;
         }
 
         case GRIB_TYPE_STRING: {
             const char* cval;
-            char buf[80];
-            char tmp[80];
+            char buf[256];
+            char tmp[256];
             size_t len  = sizeof(buf);
             size_t size = sizeof(tmp);
 
             ok = (grib_get_string(h, c->name, buf, &len) == GRIB_SUCCESS) &&
                  ((cval = grib_expression_evaluate_string(h, c->expression, tmp, &size, &err)) != NULL) &&
                  (err == 0) && (strcmp(buf, cval) == 0);
-            if (ok)
-                sprintf(exprVal, "%s", cval);
+            if (ok) {
+                snprintf(exprVal, size, "%s", cval);
+            }
             break;
         }
 
@@ -399,7 +402,7 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
                 const char* condition_name  = concept_condition->name;
                 Assert(expression);
                 if (concept_condition_expression_true(h, concept_condition, exprVal) && strcmp(condition_name, "one") != 0) {
-                    length += sprintf(result + length, "%s%s=%s",
+                    length += snprintf(result + length, 2048, "%s%s=%s",
                                       (length == 0 ? "" : ","), condition_name, exprVal);
                 }
                 concept_condition = concept_condition->next;

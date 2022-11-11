@@ -484,7 +484,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     err = grib_unpack_string(a, value, &size);
     if (err) {
-        sprintf(value, " *** ERR=%d (%s) [dump_string on '%s']",
+        snprintf(value, sizeof(value), " *** ERR=%d (%s) [dump_string on '%s']",
                 err, grib_get_error_message(err), a->name);
     } else {
         Assert(size < MAX_STRING_SIZE);

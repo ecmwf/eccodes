@@ -185,9 +185,9 @@ static int get_earth_shape(grib_handle* h, char* result)
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
     if (major == minor)
-        sprintf(result, "+R=%lf", major); /* spherical */
+        snprintf(result, 128, "+R=%lf", major); /* spherical */
     else
-        sprintf(result, "+a=%lf +b=%lf", major, minor); /*oblate*/
+        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); /*oblate*/
     return err;
 }
 #if 0
@@ -197,7 +197,7 @@ static int proj_regular_latlon(grib_handle* h, char* result)
     char shape[64] = {0,};
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=latlong %s", shape);
+    snprintf(result, 128, "+proj=latlong %s", shape);
     return err;
 }
 #endif
@@ -216,11 +216,11 @@ static int proj_space_view(grib_handle* h, char* result)
     if ((err = grib_get_double_internal(h, "longitudeOfSubSatellitePointInDegrees", &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
         return err;
 
-    sprintf(result, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
+    snprintf(result, 526, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
     return err;
 
     /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
-    sprintf(result, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
+    snprintf(result, 526, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
     return err;
 #endif
 }
@@ -253,7 +253,7 @@ static int proj_lambert_conformal(grib_handle* h, char* result)
         return err;
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
+    snprintf(result, 1024, "+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
             LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
     return err;
 }
@@ -270,7 +270,7 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
         return err;
     if ((err = grib_get_double_internal(h, "centralLongitudeInDegrees", &centralLongitude)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=laea +lon_0=%lf +lat_0=%lf %s",
+    snprintf(result, 1024, "+proj=laea +lon_0=%lf +lat_0=%lf %s",
             centralLongitude, standardParallel, shape);
     return err;
 }
@@ -292,7 +292,7 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     if ((err = grib_get_long_internal(h, "projectionCentreFlag", &projectionCentreFlag)) != GRIB_SUCCESS)
         return err;
     has_northPole = ((projectionCentreFlag & 128) == 0);
-    sprintf(result, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 %s",
+    snprintf(result, 1024, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 %s",
             centralLatitude, has_northPole ? "90" : "-90", centralLongitude, shape);
     return err;
 }
@@ -307,7 +307,7 @@ static int proj_mercator(grib_handle* h, char* result)
         return err;
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
-    sprintf(result, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 %s",
+    snprintf(result, 1024, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 %s",
             LaDInDegrees, shape);
     return err;
 }
@@ -347,7 +347,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         if (strcmp(grid_type, pm.gridType) == 0) {
             found = 1;
             if (self->endpoint == ENDPOINT_SOURCE) {
-                sprintf(v, "EPSG:4326");
+                snprintf(v, 64, "EPSG:4326");
             }
             else {
                 /* Invoke the appropriate function to get the target proj string */

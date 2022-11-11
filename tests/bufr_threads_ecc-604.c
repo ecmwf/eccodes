@@ -184,7 +184,7 @@ void do_stuff(void* ptr)
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         if (opt_write) {
-            sprintf(output_file, "output/output_file_%ld-%ld.bufr", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%ld-%ld.bufr", data->number, i);
             encode_file(INPUT_FILE, output_file);
         }
         else {

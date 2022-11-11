@@ -344,7 +344,7 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s%c%s",
+                snprintf(bufr, sizeof(bufr), "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
                         extract_filename(options->infile_extra->name));

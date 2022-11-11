@@ -90,12 +90,13 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block)
 {
     char name[1024];
+    const size_t nameLen = sizeof(name);
 
     grib_action_trigger* a = 0;
     grib_action_class* c   = grib_action_class_trigger;
     grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
 
-    sprintf(name, "_trigger%p", (void*)act);
+    snprintf(name, nameLen, "_trigger%p", (void*)act);
 
     act->name    = grib_context_strdup_persistent(context, name);
     act->op      = grib_context_strdup_persistent(context, "section");

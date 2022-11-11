@@ -74,12 +74,12 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
             h = hto;
         }
 
-        sprintf(section_length_str, "section%dLength", i);
+        snprintf(section_length_str, sizeof(section_length_str), "section%dLength", i);
         if (grib_get_long(h, section_length_str, &length))
             continue;
         section_length[i] = length;
 
-        sprintf(section_offset_str, "offsetSection%d", i);
+        snprintf(section_offset_str, sizeof(section_offset_str), "offsetSection%d", i);
         if (grib_get_long(h, section_offset_str, &offset))
             continue;
         section_offset[i] = offset;
@@ -506,7 +506,7 @@ static int angle_can_be_encoded(grib_handle* h, const double angle)
         return ret;
     Assert(angle_subdivisions > 0);
 
-    sprintf(sample_name, "GRIB%ld", edition);
+    snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
     h2 = grib_handle_new_from_samples(0, sample_name);
     if ((ret = grib_set_double(h2, "latitudeOfFirstGridPointInDegrees", angle)) != 0)
         return ret;
@@ -1158,10 +1158,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
             case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
                 /* Choose a sample with the right Gaussian number and edition */
-                sprintf(sample_name, "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
+                snprintf(sample_name, sizeof(sample_name), "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
                 if (spec->pl && spec->pl_size) {
                     /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
-                    sprintf(sample_name, "%s_pl_grib%ld", grid_type, editionNumber);
+                    snprintf(sample_name, sizeof(sample_name), "%s_pl_grib%ld", grid_type, editionNumber);
                 }
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
@@ -1173,13 +1173,13 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                                     grid_type);
                     convertEditionEarlier = 1;
                 }
-                sprintf(sample_name, "GRIB%ld", editionNumber);
+                snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
-                sprintf(sample_name, "GRIB%ld", editionNumber);
+                snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
                 break;
             default:
-                sprintf(sample_name, "%s_pl_grib%ld", grid_type, editionNumber);
+                snprintf(sample_name, sizeof(sample_name), "%s_pl_grib%ld", grid_type, editionNumber);
         }
 
         if (spec->pl && spec->grid_name) {
@@ -1188,7 +1188,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             goto cleanup;
         }
         if (spec->grid_name) {
-            sprintf(sample_name, "%s_grib%ld", spec->grid_name, editionNumber);
+            snprintf(sample_name,sizeof(sample_name), "%s_grib%ld", spec->grid_name, editionNumber);
         }
     }
 

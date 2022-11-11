@@ -146,7 +146,7 @@ void do_encode(void* ptr)
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         grib_handle* h = grib_handle_clone(hs);
         if (opt_write) {
-            sprintf(output_file, "output/output_file_%ld-%ld.grib", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%ld-%ld.grib", data->number, i);
             encode_values(h, output_file);
         }
         else {

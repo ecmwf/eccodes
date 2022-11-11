@@ -87,7 +87,7 @@ static void verify(grib_handle *h,const char* full,const char* base)
     else
         level = get(h,"level");
 
-    sprintf(wmo_name,"z_tigge_c_%s_%08ld%04ld00_%s_%s_%s_%s_%04ld_%03ld_%04ld_%s.grib",
+    snprintf(wmo_name, sizeof(wmo_name), "z_tigge_c_%s_%08ld%04ld00_%s_%s_%s_%s_%04ld_%03ld_%04ld_%s.grib",
             sget(h,"origin",origin,sizeof(origin)),
             compare_mode?0:get(h,"date"),
             compare_mode?0:get(h,"time"),

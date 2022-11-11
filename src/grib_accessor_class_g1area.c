@@ -240,7 +240,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    sprintf(val, "N:%3.5f W:%3.5f S:%3.5f E:%3.5f", ((float)laf), ((float)lof), ((float)lal), ((float)lol));
+    snprintf(val, 1024, "N:%3.5f W:%3.5f S:%3.5f E:%3.5f", ((float)laf), ((float)lof), ((float)lal), ((float)lol));
 
     len[0] = strlen(val);
     return GRIB_SUCCESS;

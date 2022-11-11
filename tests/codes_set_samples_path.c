@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     h = grib_handle_new_from_samples(c, sample_name);
     Assert(!h);
 
-    sprintf(full_path, "%s%c%s", new_dir, ECC_PATH_DELIMITER_CHAR, grib_samples_path(c));
+    snprintf(full_path, 2048, "%s%c%s", new_dir, ECC_PATH_DELIMITER_CHAR, grib_samples_path(c));
     printf("Change samples_path to: %s\n", full_path);
     grib_context_set_samples_path(c, full_path);
 

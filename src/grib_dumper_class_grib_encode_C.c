@@ -325,10 +325,10 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     type = grib_accessor_get_native_type(a);
     switch (type) {
         case GRIB_TYPE_LONG:
-            sprintf(stype, "%s", "long");
+            snprintf(stype, sizeof(stype), "%s", "long");
             break;
         case GRIB_TYPE_DOUBLE:
-            sprintf(stype, "%s", "double");
+            snprintf(stype, sizeof(stype), "%s", "double");
             break;
         default:
             return;

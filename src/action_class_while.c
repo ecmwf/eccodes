@@ -138,6 +138,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
 {
     char name[80];
+    const size_t nameLen = sizeof(name);
     grib_action_while* a;
     grib_action_class* c = grib_action_class_while;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -147,7 +148,7 @@ grib_action* grib_action_create_while(grib_context* context, grib_expression* ex
     act->next            = NULL;
 
 
-    sprintf(name, "_while%p", (void*)a);
+    snprintf(name, nameLen, "_while%p", (void*)a);
     act->name     = grib_context_strdup_persistent(context, name);
     act->op       = grib_context_strdup_persistent(context, "section");
     a->expression = expression;

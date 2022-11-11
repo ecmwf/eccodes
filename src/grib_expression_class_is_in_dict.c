@@ -211,7 +211,7 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     else
         result = 0;
 
-    sprintf(buf, "%ld", result);
+    snprintf(buf, 32, "%ld", result);
     *size = strlen(buf);
     return buf;
 }

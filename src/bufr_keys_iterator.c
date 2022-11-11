@@ -128,9 +128,10 @@ static int next_attribute(bufr_keys_iterator* kiter)
 
     if (kiter->attributes[kiter->i_curr_attribute]) {
         if (!kiter->prefix) {
-            kiter->prefix = (char*)grib_context_malloc_clear(kiter->current->context, strlen(kiter->current->name) + 10);
+            const size_t prefixLenMax = strlen(kiter->current->name) + 10;
+            kiter->prefix = (char*)grib_context_malloc_clear(kiter->current->context, prefixLenMax);
             r             = (int*)grib_trie_get(kiter->seen, kiter->current->name);
-            sprintf(kiter->prefix, "#%d#%s", *r, kiter->current->name);
+            snprintf(kiter->prefix, prefixLenMax, "#%d#%s", *r, kiter->current->name);
         }
         kiter->i_curr_attribute++;
         return 1;
@@ -210,11 +211,12 @@ char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
         strcat(ret, kiter->attributes[iattribute]->name);
     }
     else {
-        ret = (char*)grib_context_malloc_clear(c, strlen(kiter->current->name) + 10);
+        const size_t retMaxLen = strlen(kiter->current->name) + 10;
+        ret = (char*)grib_context_malloc_clear(c, retMaxLen);
 
         if (kiter->current->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) {
             r = (int*)grib_trie_get(kiter->seen, kiter->current->name);
-            sprintf(ret, "#%d#%s", *r, kiter->current->name);
+            snprintf(ret, retMaxLen, "#%d#%s", *r, kiter->current->name);
         }
         else {
             strcpy(ret, kiter->current->name);

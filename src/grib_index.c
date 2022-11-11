@@ -1012,21 +1012,21 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
             case GRIB_TYPE_STRING:
                 err = grib_get_string(h, keys->name, buf, &buflen);
                 if (err == GRIB_NOT_FOUND)
-                    sprintf(buf, GRIB_KEY_UNDEF);
+                    snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                 break;
             case GRIB_TYPE_LONG:
                 err = grib_get_long(h, keys->name, &lval);
                 if (err == GRIB_NOT_FOUND)
-                    sprintf(buf, GRIB_KEY_UNDEF);
+                    snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                 else
-                    sprintf(buf, "%ld", lval);
+                    snprintf(buf, sizeof(buf), "%ld", lval);
                 break;
             case GRIB_TYPE_DOUBLE:
                 err = grib_get_double(h, keys->name, &dval);
                 if (err == GRIB_NOT_FOUND)
-                    sprintf(buf, GRIB_KEY_UNDEF);
+                    snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                 else
-                    sprintf(buf, "%g", dval);
+                    snprintf(buf, sizeof(buf), "%g", dval);
                 break;
             default:
                 err = GRIB_WRONG_TYPE;
@@ -1038,7 +1038,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
                              keys->name, grib_get_error_message(err));
             return err;
         }
-        sprintf(keys->value, "%s", buf);
+        snprintf(keys->value, sizeof(buf), "%s", buf);
         keys = keys->next;
     }
     grib_index_rewind(index);
@@ -1166,21 +1166,21 @@ int _codes_index_add_file(grib_index* index, const char* filename, int message_t
                 case GRIB_TYPE_STRING:
                     err = grib_get_string(h, index_key->name, buf, &svallen);
                     if (err == GRIB_NOT_FOUND)
-                        sprintf(buf, GRIB_KEY_UNDEF);
+                        snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                     break;
                 case GRIB_TYPE_LONG:
                     err = grib_get_long(h, index_key->name, &lval);
                     if (err == GRIB_NOT_FOUND)
-                        sprintf(buf, GRIB_KEY_UNDEF);
+                        snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                     else
-                        sprintf(buf, "%ld", lval);
+                        snprintf(buf, sizeof(buf), "%ld", lval);
                     break;
                 case GRIB_TYPE_DOUBLE:
                     err = grib_get_double(h, index_key->name, &dval);
                     if (err == GRIB_NOT_FOUND)
-                        sprintf(buf, GRIB_KEY_UNDEF);
+                        snprintf(buf, sizeof(buf), GRIB_KEY_UNDEF);
                     else
-                        sprintf(buf, "%g", dval);
+                        snprintf(buf, sizeof(buf), "%g", dval);
                     break;
                 default:
                     err = GRIB_WRONG_TYPE;
@@ -1344,17 +1344,17 @@ int grib_index_add_file(grib_index* index, const char* filename)
             switch (index_key->type) {
             case GRIB_TYPE_STRING:
                 err=grib_get_string(h,index_key->name,buf,&svallen);
-                if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
+                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
                 break;
             case GRIB_TYPE_LONG:
                 err=grib_get_long(h,index_key->name,&lval);
-                if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
-                else sprintf(buf,"%ld",lval);
+                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
+                else snprintf(buf,1024,"%ld",lval);
                 break;
             case GRIB_TYPE_DOUBLE:
                 err=grib_get_double(h,index_key->name,&dval);
-                if (err==GRIB_NOT_FOUND) sprintf(buf,GRIB_KEY_UNDEF);
-                else sprintf(buf,"%g",dval);
+                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
+                else snprintf(buf,1024,"%g",dval);
                 break;
             default :
                 err=GRIB_WRONG_TYPE;
@@ -1573,7 +1573,7 @@ int grib_index_select_long(grib_index* index, const char* skey, long value)
         return err;
     }
     Assert(key);
-    sprintf(key->value, "%ld", value);
+    snprintf(key->value, sizeof(key->value), "%ld", value);
     grib_index_rewind(index);
     return 0;
 }
@@ -1605,7 +1605,7 @@ int grib_index_select_double(grib_index* index, const char* skey, double value)
         return err;
     }
     Assert(key);
-    sprintf(key->value, "%g", value);
+    snprintf(key->value, sizeof(key->value), "%g", value);
     grib_index_rewind(index);
     return 0;
 }
@@ -1637,7 +1637,7 @@ int grib_index_select_string(grib_index* index, const char* skey, const char* va
         return err;
     }
     Assert(key);
-    sprintf(key->value, "%s", value);
+    snprintf(key->value, sizeof(key->value), "%s", value);
     grib_index_rewind(index);
     return 0;
 }
@@ -1961,7 +1961,7 @@ int grib_index_search(grib_index* index, grib_index_key* keys)
             ki = search_key(ki, ks);
         }
         if (ki)
-            sprintf(ki->value, "%s", ks->value);
+            snprintf(ki->value, 1024, "%s", ks->value);
         ks = ks->next;
     }
 

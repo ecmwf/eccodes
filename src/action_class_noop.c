@@ -85,7 +85,7 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
     a            = (grib_action_noop*)act;
     act->context = context;
 
-    sprintf(buf, "_noop%p", (void*)a);
+    snprintf(buf, 1024, "_noop%p", (void*)a);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

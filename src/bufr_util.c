@@ -48,8 +48,9 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
         /*   This is the first and only instance of the key */
         /* So we check if there is a second one of this key, */
         /* If not, then rank is zero i.e. this is the only instance */
-        char* s = (char*)grib_context_malloc_clear(c, strlen(key) + 5);
-        sprintf(s, "#2#%s", key);
+        size_t slen = strlen(key) + 5;
+        char* s = (char*)grib_context_malloc_clear(c, slen);
+        snprintf(s, slen, "#2#%s", key);
         if (grib_get_size(h, s, &size) == GRIB_NOT_FOUND)
             theRank = 0;
         grib_context_free(c, s);
@@ -791,8 +792,8 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
     FILE *f = NULL;
     const char* defs_path = grib_definition_path(NULL);
 
-    if      (edition == 3) sprintf(full_path, "%s/common/c-1.table", defs_path);
-    else if (edition == 4) sprintf(full_path, "%s/common/c-11.table", defs_path);
+    if      (edition == 3) snprintf(full_path, 2014, "%s/common/c-1.table", defs_path);
+    else if (edition == 4) snprintf(full_path, 2014, "%s/common/c-11.table", defs_path);
     else return NULL;
 
     f = codes_fopen(full_path, "r");
@@ -853,73 +854,73 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     Assert(!(bh->ecmwfLocalSectionPresent && !bh->localSectionPresent));
 
     if (strcmp(key, "message_offset") == 0)
-        *len = sprintf(val, "%lu", bh->message_offset);
+        *len = snprintf(val, 32, "%lu", bh->message_offset);
     else if (strcmp(key, "offset") == 0)
-        *len = sprintf(val, "%lu", bh->message_offset);
+        *len = snprintf(val, 32, "%lu", bh->message_offset);
     else if (strcmp(key, "message_size") == 0)
-        *len = sprintf(val, "%lu", bh->message_size);
+        *len = snprintf(val, 32, "%lu", bh->message_size);
     else if (strcmp(key, "totalLength") == 0)
-        *len = sprintf(val, "%lu", bh->message_size);
+        *len = snprintf(val, 32, "%lu", bh->message_size);
     else if (strcmp(key, "edition") == 0)
-        *len = sprintf(val, "%ld", bh->edition);
+        *len = snprintf(val, 32, "%ld", bh->edition);
     else if (strcmp(key, "masterTableNumber") == 0)
-        *len = sprintf(val, "%ld", bh->masterTableNumber);
+        *len = snprintf(val, 32, "%ld", bh->masterTableNumber);
     else if (strcmp(key, "bufrHeaderSubCentre") == 0)
-        *len = sprintf(val, "%ld", bh->bufrHeaderSubCentre);
+        *len = snprintf(val, 32, "%ld", bh->bufrHeaderSubCentre);
     else if (strcmp(key, "bufrHeaderCentre") == 0)
-        *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
+        *len = snprintf(val, 32, "%ld", bh->bufrHeaderCentre);
 
     else if (strcmp(key, "centre") == 0) {
         const char* centre_str = codes_bufr_header_get_centre_name(bh->edition, bh->bufrHeaderCentre);
         if (centre_str)
-            *len = sprintf(val, "%s", centre_str);
+            *len = snprintf(val, 32, "%s", centre_str);
         else
-            *len = sprintf(val, "%ld", bh->bufrHeaderCentre);
+            *len = snprintf(val, 32, "%ld", bh->bufrHeaderCentre);
     }
 
     else if (strcmp(key, "updateSequenceNumber") == 0)
-        *len = sprintf(val, "%ld", bh->updateSequenceNumber);
+        *len = snprintf(val, 32, "%ld", bh->updateSequenceNumber);
     else if (strcmp(key, "dataCategory") == 0)
-        *len = sprintf(val, "%ld", bh->dataCategory);
+        *len = snprintf(val, 32, "%ld", bh->dataCategory);
     else if (strcmp(key, "dataSubCategory") == 0)
-        *len = sprintf(val, "%ld", bh->dataSubCategory);
+        *len = snprintf(val, 32, "%ld", bh->dataSubCategory);
     else if (strcmp(key, "masterTablesVersionNumber") == 0)
-        *len = sprintf(val, "%ld", bh->masterTablesVersionNumber);
+        *len = snprintf(val, 32, "%ld", bh->masterTablesVersionNumber);
     else if (strcmp(key, "localTablesVersionNumber") == 0)
-        *len = sprintf(val, "%ld", bh->localTablesVersionNumber);
+        *len = snprintf(val, 32, "%ld", bh->localTablesVersionNumber);
     else if (strcmp(key, "typicalYear") == 0)
-        *len = sprintf(val, "%ld", bh->typicalYear);
+        *len = snprintf(val, 32, "%ld", bh->typicalYear);
     else if (strcmp(key, "typicalMonth") == 0)
-        *len = sprintf(val, "%ld", bh->typicalMonth);
+        *len = snprintf(val, 32, "%ld", bh->typicalMonth);
     else if (strcmp(key, "typicalDay") == 0)
-        *len = sprintf(val, "%ld", bh->typicalDay);
+        *len = snprintf(val, 32, "%ld", bh->typicalDay);
     else if (strcmp(key, "typicalHour") == 0)
-        *len = sprintf(val, "%ld", bh->typicalHour);
+        *len = snprintf(val, 32, "%ld", bh->typicalHour);
     else if (strcmp(key, "typicalMinute") == 0)
-        *len = sprintf(val, "%ld", bh->typicalMinute);
+        *len = snprintf(val, 32, "%ld", bh->typicalMinute);
     else if (strcmp(key, "typicalSecond") == 0)
-        *len = sprintf(val, "%ld", bh->typicalSecond);
+        *len = snprintf(val, 32, "%ld", bh->typicalSecond);
     else if (strcmp(key, "typicalDate") == 0)
-        *len = sprintf(val, "%06ld", bh->typicalDate);
+        *len = snprintf(val, 32, "%06ld", bh->typicalDate);
     else if (strcmp(key, "typicalTime") == 0)
-        *len = sprintf(val, "%06ld", bh->typicalTime);
+        *len = snprintf(val, 32, "%06ld", bh->typicalTime);
     else if (strcmp(key, "internationalDataSubCategory") == 0)
-        *len = sprintf(val, "%ld", bh->internationalDataSubCategory);
+        *len = snprintf(val, 32, "%ld", bh->internationalDataSubCategory);
     else if (strcmp(key, "localSectionPresent") == 0)
-        *len = sprintf(val, "%ld", bh->localSectionPresent);
+        *len = snprintf(val, 32, "%ld", bh->localSectionPresent);
     else if (strcmp(key, "ecmwfLocalSectionPresent") == 0)
-        *len = sprintf(val, "%ld", bh->ecmwfLocalSectionPresent);
+        *len = snprintf(val, 32, "%ld", bh->ecmwfLocalSectionPresent);
 
     /* Local ECMWF keys. Can be absent so must return NOT_FOUND */
     else if (strcmp(key, "rdbType") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbType);
+            *len = snprintf(val, 32, "%ld", bh->rdbType);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "oldSubtype") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->oldSubtype);
+            *len = snprintf(val, 32, "%ld", bh->oldSubtype);
         else
             strcpy(val, NOT_FOUND);
     }
@@ -927,183 +928,183 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
         if (!isEcmwfLocal || strlen(bh->ident) == 0)
             strcpy(val, NOT_FOUND);
         else
-            *len = sprintf(val, "%s", bh->ident);
+            *len = snprintf(val, 32, "%s", bh->ident);
     }
     else if (strcmp(key, "localYear") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localYear);
+            *len = snprintf(val, 32, "%ld", bh->localYear);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localMonth") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localMonth);
+            *len = snprintf(val, 32, "%ld", bh->localMonth);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localDay") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localDay);
+            *len = snprintf(val, 32, "%ld", bh->localDay);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localHour") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localHour);
+            *len = snprintf(val, 32, "%ld", bh->localHour);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localMinute") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localMinute);
+            *len = snprintf(val, 32, "%ld", bh->localMinute);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localSecond") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localSecond);
+            *len = snprintf(val, 32, "%ld", bh->localSecond);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rdbtimeDay") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbtimeDay);
+            *len = snprintf(val, 32, "%ld", bh->rdbtimeDay);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rdbtimeHour") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbtimeHour);
+            *len = snprintf(val, 32, "%ld", bh->rdbtimeHour);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rdbtimeMinute") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbtimeMinute);
+            *len = snprintf(val, 32, "%ld", bh->rdbtimeMinute);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rdbtimeSecond") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbtimeSecond);
+            *len = snprintf(val, 32, "%ld", bh->rdbtimeSecond);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rectimeDay") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rectimeDay);
+            *len = snprintf(val, 32, "%ld", bh->rectimeDay);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rectimeHour") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rectimeHour);
+            *len = snprintf(val, 32, "%ld", bh->rectimeHour);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rectimeMinute") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rectimeMinute);
+            *len = snprintf(val, 32, "%ld", bh->rectimeMinute);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rectimeSecond") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rectimeSecond);
+            *len = snprintf(val, 32, "%ld", bh->rectimeSecond);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "restricted") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->restricted);
+            *len = snprintf(val, 32, "%ld", bh->restricted);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "isSatellite") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->isSatellite);
+            *len = snprintf(val, 32, "%ld", bh->isSatellite);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLongitude1") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLongitude1);
+            *len = snprintf(val, 32, "%g", bh->localLongitude1);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLatitude1") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLatitude1);
+            *len = snprintf(val, 32, "%g", bh->localLatitude1);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLongitude2") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLongitude2);
+            *len = snprintf(val, 32, "%g", bh->localLongitude2);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLatitude2") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLatitude2);
+            *len = snprintf(val, 32, "%g", bh->localLatitude2);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLatitude") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLatitude);
+            *len = snprintf(val, 32, "%g", bh->localLatitude);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localLongitude") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%g", bh->localLongitude);
+            *len = snprintf(val, 32, "%g", bh->localLongitude);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "qualityControl") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->qualityControl);
+            *len = snprintf(val, 32, "%ld", bh->qualityControl);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "newSubtype") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->newSubtype);
+            *len = snprintf(val, 32, "%ld", bh->newSubtype);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "rdbSubtype") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->rdbSubtype);
+            *len = snprintf(val, 32, "%ld", bh->rdbSubtype);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "daLoop") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->daLoop);
+            *len = snprintf(val, 32, "%ld", bh->daLoop);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "localNumberOfObservations") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->localNumberOfObservations);
+            *len = snprintf(val, 32, "%ld", bh->localNumberOfObservations);
         else
             strcpy(val, NOT_FOUND);
     }
     else if (strcmp(key, "satelliteID") == 0) {
         if (isEcmwfLocal)
-            *len = sprintf(val, "%ld", bh->satelliteID);
+            *len = snprintf(val, 32, "%ld", bh->satelliteID);
         else
             strcpy(val, NOT_FOUND);
     }
 
     else if (strcmp(key, "numberOfSubsets") == 0)
-        *len = sprintf(val, "%lu", bh->numberOfSubsets);
+        *len = snprintf(val, 32, "%lu", bh->numberOfSubsets);
     else if (strcmp(key, "observedData") == 0)
-        *len = sprintf(val, "%ld", bh->observedData);
+        *len = snprintf(val, 32, "%ld", bh->observedData);
     else if (strcmp(key, "compressedData") == 0)
-        *len = sprintf(val, "%ld", bh->compressedData);
+        *len = snprintf(val, 32, "%ld", bh->compressedData);
     else
         return GRIB_NOT_FOUND;
 

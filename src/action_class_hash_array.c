@@ -242,7 +242,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     Assert(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
 
-    sprintf(buf, "%s/%s", masterDir, self->basename);
+    snprintf(buf, 4096, "%s/%s", masterDir, self->basename);
 
     err = grib_recompose_name(h, NULL, buf, master, 1);
     if (err) {
@@ -253,17 +253,17 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
 
     if (self->localDir) {
         grib_get_string(h, self->localDir, localDir, &lenLocalDir);
-        sprintf(buf, "%s/%s", localDir, self->basename);
+        snprintf(buf, 4096, "%s/%s", localDir, self->basename);
         grib_recompose_name(h, NULL, buf, local, 1);
     }
 
     if (self->ecmfDir) {
         grib_get_string(h, self->ecmfDir, ecmfDir, &lenEcmfDir);
-        sprintf(buf, "%s/%s", ecmfDir, self->basename);
+        snprintf(buf, 4096, "%s/%s", ecmfDir, self->basename);
         grib_recompose_name(h, NULL, buf, ecmf, 1);
     }
 
-    sprintf(key, "%s%s%s", master, local, ecmf);
+    snprintf(key, 4096, "%s%s%s", master, local, ecmf);
 
     id = grib_itrie_get_id(h->context->hash_array_index, key);
     if ((c = h->context->hash_array[id]) != NULL)

@@ -57,9 +57,9 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
     int err        = 0;
 
     if (string_ends_with(name, ".tmpl"))
-        sprintf(path, "%s/%s", dir, name);
+        snprintf(path, sizeof(path), "%s/%s", dir, name);
     else
-        sprintf(path, "%s/%s.tmpl", dir, name);
+        snprintf(path, sizeof(path), "%s/%s.tmpl", dir, name);
 
     if (c->debug) {
         fprintf(stderr, "ECCODES DEBUG try_product_template product=%s, path='%s'\n", codes_get_product_name(product_kind), path);
@@ -113,9 +113,9 @@ static char* try_template_path(grib_context* c, const char* dir, const char* nam
 {
     char path[2048];
     if (string_ends_with(name, ".tmpl"))
-        sprintf(path, "%s/%s", dir, name);
+        snprintf(path, sizeof(path), "%s/%s", dir, name);
     else
-        sprintf(path, "%s/%s.tmpl", dir, name);
+        snprintf(path, sizeof(path), "%s/%s.tmpl", dir, name);
 
     if (codes_access(path, F_OK) == 0) {
         return grib_context_strdup(c, path);

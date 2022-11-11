@@ -82,7 +82,6 @@ grib_action* grib_action_create_set(grib_context* context,
                                     const char* name, grib_expression* expression, int nofail)
 {
     char buf[1024];
-
     grib_action_set* a;
     grib_action_class* c = grib_action_class_set;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -96,8 +95,7 @@ grib_action* grib_action_create_set(grib_context* context,
     a->name       = grib_context_strdup_persistent(context, name);
     a->nofail     = nofail;
 
-
-    sprintf(buf, "set%p", (void*)expression);
+    snprintf(buf, 1024, "set%p", (void*)expression);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

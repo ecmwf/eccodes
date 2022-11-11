@@ -132,7 +132,7 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     if ((*err = grib_get_string_internal(h, e->name, mybuf, size)) != GRIB_SUCCESS)
         return NULL;
 
-    sprintf(buf, "%ld", (long)strlen(mybuf));
+    snprintf(buf, 32, "%ld", (long)strlen(mybuf));
     return buf;
 }
 

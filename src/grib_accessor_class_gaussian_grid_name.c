@@ -176,15 +176,15 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         if ((ret = grib_get_long_internal(a->parent->h, self->isOctahedral, &isOctahedral)) != GRIB_SUCCESS)
             return ret;
         if (isOctahedral == 1) {
-            sprintf(tmp, "O%ld", N);
+            snprintf(tmp, sizeof(tmp), "O%ld", N);
         }
         else {
-            sprintf(tmp, "N%ld", N); /* Classic */
+            snprintf(tmp, sizeof(tmp), "N%ld", N); /* Classic */
         }
     }
     else {
         /* Regular gaussian grid */
-        sprintf(tmp, "F%ld", N);
+        snprintf(tmp, sizeof(tmp), "F%ld", N);
     }
     length = strlen(tmp) + 1;
 

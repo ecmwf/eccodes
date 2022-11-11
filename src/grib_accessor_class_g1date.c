@@ -288,12 +288,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         strcpy(tmp, months[month - 1]);
     }
     else if (year == 255 && month >= 1 && month <= 12) {
-        sprintf(tmp, "%s-%02ld", months[month - 1], day);
-        /* sprintf(tmp,"%02ld-%02ld",month,day); */
+        snprintf(tmp, sizeof(tmp), "%s-%02ld", months[month - 1], day);
+        /* snprintf(tmp,sizeof(tmp),"%02ld-%02ld",month,day); */
     }
     else {
         long x = ((century - 1) * 100 + year) * 10000 + month * 100 + day;
-        sprintf(tmp, "%ld", x);
+        snprintf(tmp, sizeof(tmp), "%ld", x);
     }
 
     l = strlen(tmp) + 1;

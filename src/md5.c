@@ -281,7 +281,7 @@ void grib_md5_end(grib_md5_state* s, char* digest)
 
 #define U(x) ((unsigned int)(x))
 
-    sprintf(digest, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+    snprintf(digest, 1024, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
             U(s->h0 & 0xff), U((s->h0 >> 8) & 0xff), U((s->h0 >> 16) & 0xff), U((s->h0 >> 24) & 0xff),
             U(s->h1 & 0xff), U((s->h1 >> 8) & 0xff), U((s->h1 >> 16) & 0xff), U((s->h1 >> 24) & 0xff),
             U(s->h2 & 0xff), U((s->h2 >> 8) & 0xff), U((s->h2 >> 16) & 0xff), U((s->h2 >> 24) & 0xff),

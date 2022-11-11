@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_long(h, "blockNumber", &blockNumber), 0);
         CODES_CHECK(codes_get_long(h, "stationNumber", &stationNumber), 0);
         if (blockNumber < 99 && stationNumber < 1000)
-            sprintf(statid, "%ld%ld", blockNumber, stationNumber);
+            snprintf(statid, sizeof(statid), "%ld%ld", blockNumber, stationNumber);
         CODES_CHECK(codes_get_long(h, "year", &year), 0);
         CODES_CHECK(codes_get_long(h, "month", &month), 0);
         CODES_CHECK(codes_get_long(h, "day", &day), 0);

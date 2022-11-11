@@ -343,7 +343,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         double val = 0.0;
         size_t l   = 1;
         grib_unpack_double(a, &val, &l);
-        sprintf(v, "%g", val);
+        snprintf(v, 64, "%g", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
         return GRIB_SUCCESS;
@@ -353,7 +353,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
-        sprintf(v, "%ld", val);
+        snprintf(v, 64, "%ld", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string  \n", a->name);
         return GRIB_SUCCESS;

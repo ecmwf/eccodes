@@ -590,7 +590,7 @@ static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
     while ((s = readdir(d)) && (err == 0)) {
         if (strcmp(s->d_name, ".") != 0 && strcmp(s->d_name, "..") != 0) {
             char buf[1024];
-            sprintf(buf, "%s/%s", dir, s->d_name);
+            snprintf(buf, sizeof(buf), "%s/%s", dir, s->d_name);
             process(c, options, buf);
         }
     }
@@ -603,12 +603,12 @@ static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
     struct _finddata_t fileinfo;
     intptr_t handle;
     char buffer[1024];
-    sprintf(buffer, "%s/*", dir);
+    snprintf(buffer, sizeof(buffer), "%s/*", dir);
     if ((handle = _findfirst(buffer, &fileinfo)) != -1) {
         do {
             if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0) {
                 char buf[1024];
-                sprintf(buf, "%s/%s", dir, fileinfo.name);
+                snprintf(buf, sizeof(buf), "%s/%s", dir, fileinfo.name);
                 process(c, options, buf);
             }
         } while (!_findnext(handle, &fileinfo));
@@ -946,7 +946,7 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
                 free(sval);
                 return err;
             }
-            sprintf(value, "%s", sval);
+            snprintf(value, len, "%s", sval);
             free(sval);
             break;
         case GRIB_TYPE_LONG:
@@ -955,7 +955,7 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
                 return GRIB_OUT_OF_MEMORY;
             if ((err = grib_get_long_array(h, keyName, lval, &len)) != GRIB_SUCCESS)
                 return err;
-            sprintf(value, "%ld...", lval[0]);
+            snprintf(value, 32, "%ld...", lval[0]);
             free(lval);
             break;
         case GRIB_TYPE_DOUBLE:
@@ -964,7 +964,7 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
                 return GRIB_OUT_OF_MEMORY;
             if ((err = grib_get_double_array(h, keyName, dval, &len)) != GRIB_SUCCESS)
                 return err;
-            sprintf(value, "%g...", dval[0]);
+            snprintf(value, 32, "%g...", dval[0]);
             free(dval);
             break;
         case GRIB_TYPE_BYTES:
@@ -973,11 +973,11 @@ static int get_initial_element_of_array(grib_handle* h, const char* keyName, siz
                 return GRIB_OUT_OF_MEMORY;
             if ((err = grib_get_bytes(h, keyName, uval, &len)) != GRIB_SUCCESS)
                 return err;
-            sprintf(value, "%d...", (short)uval[0]);
+            snprintf(value, 32, "%d...", (short)uval[0]);
             free(uval);
             break;
         default:
-            sprintf(value, "%s...", "");
+            snprintf(value, 32, "%s...", "");
     }
     return GRIB_SUCCESS;
 }
@@ -991,11 +991,11 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     size_t len    = MAX_STRING_LEN;
 
     if (grib_is_missing(h, key_name, &ret) && ret == GRIB_SUCCESS) {
-        sprintf(value_str, "MISSING");
+        snprintf(value_str, 32, "MISSING");
         return;
     }
     if (ret == GRIB_NOT_FOUND) {
-        sprintf(value_str, "not_found");
+        snprintf(value_str, 32, "not_found");
         return;
     }
 
@@ -1022,11 +1022,11 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     }
     else if (type == GRIB_TYPE_DOUBLE) {
         ret = grib_get_double(h, key_name, &dvalue);
-        sprintf(value_str, format, dvalue);
+        snprintf(value_str, 32, format, dvalue);
     }
     else if (type == GRIB_TYPE_LONG) {
         ret = grib_get_long(h, key_name, &lvalue);
-        sprintf(value_str, "%ld", lvalue);
+        snprintf(value_str, 32, "%ld", lvalue);
     }
     else if (type == GRIB_TYPE_BYTES) {
         ret = grib_get_string(h, key_name, value_str, &len);
@@ -1038,7 +1038,7 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
 
     if (ret != GRIB_SUCCESS) {
         if (ret == GRIB_NOT_FOUND) {
-            sprintf(value_str, "not_found");
+            snprintf(value_str, 32, "not_found");
         } else {
             fprintf(dump_file, "ERROR: Failed to get value for key %s\n", key_name);
             exit(1);
@@ -1123,15 +1123,15 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         acc = grib_find_accessor(h, options->print_keys[i].name);
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
                         if (grib_is_missing_string(acc, (unsigned char*)value, len))
-                            sprintf(value, "MISSING");
+                            snprintf(value, 32, "MISSING");
                         break;
                     case GRIB_TYPE_DOUBLE:
                         if (num_vals > 1) {
                             ret = GRIB_ARRAY_TOO_SMALL;
                         } else {
                             ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
-                            if (dvalue == GRIB_MISSING_DOUBLE) sprintf(value, "MISSING");
-                            else                               sprintf(value, options->format, dvalue);
+                            if (dvalue == GRIB_MISSING_DOUBLE) snprintf(value, 32, "MISSING");
+                            else                               snprintf(value, 32, options->format, dvalue);
                         }
                         break;
                     case GRIB_TYPE_LONG:
@@ -1139,8 +1139,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                             ret = GRIB_ARRAY_TOO_SMALL;
                         } else {
                             ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                            if (lvalue == GRIB_MISSING_LONG) sprintf(value, "MISSING");
-                            else                             sprintf(value, "%ld", lvalue);
+                            if (lvalue == GRIB_MISSING_LONG) snprintf(value, 32, "MISSING");
+                            else                             snprintf(value, 32, "%ld", lvalue);
                         }
                         break;
                     case GRIB_TYPE_BYTES:
@@ -1155,7 +1155,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         else {
             /* Other products e.g. GRIB */
             if (grib_is_missing(h, options->print_keys[i].name, &ret) && ret == GRIB_SUCCESS) {
-                sprintf(value, "MISSING");
+                snprintf(value, 32, "MISSING");
             }
             else if (ret == GRIB_SUCCESS) {
                 const char* pName = NULL;
@@ -1180,11 +1180,11 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         break;
                     case GRIB_TYPE_DOUBLE:
                         ret = grib_get_double(h, options->print_keys[i].name, &dvalue);
-                        sprintf(value, options->format, dvalue);
+                        snprintf(value, 32, options->format, dvalue);
                         break;
                     case GRIB_TYPE_LONG:
                         ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                        sprintf(value, "%ld", lvalue);
+                        snprintf(value, 32, "%ld", lvalue);
                         break;
                     case GRIB_TYPE_BYTES:
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);
@@ -1231,7 +1231,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             written_to_dump = 1;
         }
         else if (options->latlon_mode == 1) {
-            sprintf(value, options->format, options->values[options->latlon_idx]);
+            snprintf(value, sizeof(value), options->format, options->values[options->latlon_idx]);
             strlenvalue = (int)strlen(value);
             width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
             fprintf(dump_file, "%-*s", (int)width, value);
@@ -1248,7 +1248,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
 
             err = grib_get_size(h, "values", &size);
             if (err) {
-                sprintf(value, "unknown");
+                snprintf(value, 32, "unknown");
                 if (!options->fail)
                     exit(err);
                 return;
@@ -1266,7 +1266,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             grib_context_free(h->context, values);
         }
 
-        sprintf(value, options->format, v);
+        snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
         width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
         fprintf(dump_file, "%-*s", (int)width, value);

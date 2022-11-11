@@ -142,7 +142,7 @@ static void split(grib_handle *h)
     else
         level = get(h,"level");
 
-    sprintf(wmo_name,"z_tigge_c_%s_%08ld%04ld00_%s_%s_%s_%s_%04ld_%03ld_%04ld_%s.grib",
+    snprintf(wmo_name, 1024, "z_tigge_c_%s_%08ld%04ld00_%s_%s_%s_%s_%04ld_%03ld_%04ld_%s.grib",
             sget(h,"origin",origin,sizeof(origin)),
             get(h,"date"),
             get(h,"time"),

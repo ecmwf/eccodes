@@ -311,7 +311,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         p = self->cval;
     }
     else {
-        sprintf(p, "%g", self->dval);
+        snprintf(p, 64, "%g", self->dval);
     }
 
     slen = strlen(p) + 1;
@@ -369,7 +369,7 @@ static long byte_count(grib_accessor* a) {
     if(self->type == GRIB_TYPE_STRING) {
         return strlen(self->cval) +1;
     } else {
-        sprintf(buf,"%g",self->dval);
+        snprintf(buf,64,"%g",self->dval);
         printf("========> \"%s\"\n",buf);
         return strlen(buf)+1;
     }

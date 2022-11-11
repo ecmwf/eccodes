@@ -229,7 +229,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
             strcpy(tmp, table->entries[code[i]].column[self->index]);
         }
         else {
-            sprintf(tmp, "%d", (int)code[i]);
+            snprintf(tmp, sizeof(tmp), "%d", (int)code[i]);
         }
 
         buffer[i] = grib_context_strdup(a->context, tmp);

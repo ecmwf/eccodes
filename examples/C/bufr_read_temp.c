@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
         /* we find out the number of temperature significant levels by
          * counting how many pressure values we have on these levels.*/
 
-        sprintf(key_name, "/verticalSoundingSignificance=4/pressure");
+        snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/pressure");
         CODES_CHECK(codes_get_size(h, key_name, &sigt_len), 0);
 
         printf("Number of T significant levels: %lu\n", (unsigned long)sigt_len);
@@ -94,12 +94,12 @@ int main(int argc, char* argv[])
         sigt_td   = (double*)malloc(sigt_len * sizeof(double));
 
         /* get pressure */
-        sprintf(key_name, "/verticalSoundingSignificance=4/pressure");
+        snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/pressure");
         len = sigt_len;
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_pres, &len), 0);
 
         /* get geopotential */
-        sprintf(key_name, "/verticalSoundingSignificance=4/nonCoordinateGeopotential");
+        snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/nonCoordinateGeopotential");
 
         /* check the size */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
         }
 
         /* get the values */
-        sprintf(key_name, "/verticalSoundingSignificance=4/airTemperature");
+        snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/airTemperature");
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_t, &len), 0);
 
         /* get dew point */
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
         }
 
         /* get the values */
-        sprintf(key_name, "/verticalSoundingSignificance=4/dewpointTemperature");
+        snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/dewpointTemperature");
         CODES_CHECK(codes_get_double_array(h, key_name, sigt_td, &len), 0);
 
         /* print the values */

@@ -232,7 +232,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     }
     else {
         char tmp[1024];
-        sprintf(tmp, "FILE: %s ", options->current_infile->name);
+        snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);
         if (!grib_options_on("p"))
             fprintf(stdout, "***** %s\n", tmp);
     }
@@ -532,7 +532,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
     else if (grib_options_on("O")) {
         char tmp[1024];
-        sprintf(tmp, "MESSAGE %d ( length=%ld )", options->handle_count, length);
+        snprintf(tmp, sizeof(tmp), "MESSAGE %d ( length=%ld )", options->handle_count, length);
         if (!grib_options_on("C"))
             fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
         grib_dump_content(h, stdout, options->dump_mode, options->dump_flags, 0);
