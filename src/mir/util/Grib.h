@@ -51,7 +51,7 @@ struct grib_info {
     codes_util_packing_spec packing;
 
 private:
-    grib_info(const grib_info&) = delete;
+    grib_info(const grib_info&)      = delete;
     void operator=(const grib_info&) = delete;
 
     std::vector<std::string> strings_;
@@ -64,7 +64,7 @@ class HandleDeleter {
 
 public:
     HandleDeleter(grib_handle* h) : h_(h) { ASSERT(h); }
-    HandleDeleter(const HandleDeleter&) = delete;
+    HandleDeleter(const HandleDeleter&)  = delete;
     void operator=(const HandleDeleter&) = delete;
     ~HandleDeleter() { codes_handle_delete(h_); }
 };
@@ -76,7 +76,7 @@ class GKeyIteratorDeleter {
 public:
     GKeyIteratorDeleter(codes_keys_iterator* h) : h_(h) {}
     GKeyIteratorDeleter(const GKeyIteratorDeleter&) = delete;
-    void operator=(const GKeyIteratorDeleter&) = delete;
+    void operator=(const GKeyIteratorDeleter&)      = delete;
     ~GKeyIteratorDeleter() { codes_keys_iterator_delete(h_); }
 };
 
@@ -87,7 +87,7 @@ class BKeyIteratorDeleter {
 public:
     BKeyIteratorDeleter(codes_bufr_keys_iterator* h) : h_(h) {}
     BKeyIteratorDeleter(const BKeyIteratorDeleter&) = delete;
-    void operator=(const BKeyIteratorDeleter&) = delete;
+    void operator=(const BKeyIteratorDeleter&)      = delete;
     ~BKeyIteratorDeleter() { codes_bufr_keys_iterator_delete(h_); }
 };
 
