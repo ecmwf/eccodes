@@ -74,7 +74,7 @@ int main(int argc, char** argv)
             return 1;
         }
         if (strlen(str_code) != NUM_DESCRIPTOR_DIGITS) {
-            fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not %lu digits.\n",
+            fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not %zu digits.\n",
                     line_number, str_code, NUM_DESCRIPTOR_DIGITS);
             return 1;
         }
@@ -90,13 +90,13 @@ int main(int argc, char** argv)
             return 1;
         }
         if (strlen(str_key) >= maxlen_keyName) {
-            fprintf(stderr, "Error on line %zu: descriptor key name '%s' (column 2) exceeds %lu characters.\n",
+            fprintf(stderr, "Error on line %zu: descriptor key name '%s' (column 2) exceeds %zu characters.\n",
                     line_number, str_key, maxlen_keyName);
             return 1;
         }
         str_units = list[4];
         if (strlen(str_units) >= maxlen_units) {
-            fprintf(stderr, "Error on line %lu: descriptor units '%s' (column 5) exceeds %lu characters.\n",
+            fprintf(stderr, "Error on line %zu: descriptor units '%s' (column 5) exceeds %zu characters.\n",
                     line_number, str_units, maxlen_units);
             return 1;
         }
