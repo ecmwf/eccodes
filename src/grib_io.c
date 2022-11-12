@@ -111,7 +111,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
         /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%lu, Already read=%d)\n",
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%zu, Already read=%d)\n",
                     message_length, already_read);
         return err;
     }
@@ -123,7 +123,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
          buffer[message_length - 1] != '7'))
     {
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%lu)\n", message_length);
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%zu)\n", message_length);
         return GRIB_WRONG_LENGTH;
     }
 
