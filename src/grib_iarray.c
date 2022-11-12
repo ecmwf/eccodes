@@ -152,7 +152,7 @@ grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
 {
     size_t start_size    = 100;
     size_t start_incsize = 100;
-    int i;
+    size_t i;
     if (!v)
         v = grib_iarray_new(0, start_size, start_incsize);
 
