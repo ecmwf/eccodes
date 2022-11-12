@@ -169,7 +169,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (!a->dirty)
         return GRIB_SUCCESS;
 
-    if (*len != self->number_of_elements)
+    if (*len != (size_t)self->number_of_elements)
         return GRIB_ARRAY_TOO_SMALL;
 
     if ((ret = grib_get_string(grib_handle_of_accessor(a), self->verifyingMonth, verifyingMonth, &slen)) != GRIB_SUCCESS)

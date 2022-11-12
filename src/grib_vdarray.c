@@ -19,7 +19,7 @@
 /* For debugging purposes */
 void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
 {
-    size_t i;
+    size_t i = 0;
     char text[100] = {0,};
     Assert(vdarray);
     printf("%s: vdarray.n=%lu\n", title, (unsigned long)vdarray->n);
@@ -99,7 +99,7 @@ void grib_vdarray_delete(grib_context* c, grib_vdarray* v)
 
 void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
 {
-    int i;
+    size_t i = 0;
     if (!v || !v->v)
         return;
     if (!c)
@@ -114,7 +114,7 @@ void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
 grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v)
 {
     grib_darray** ret;
-    int i;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * v->n);

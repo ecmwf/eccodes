@@ -185,8 +185,8 @@ void grib_bufr_descriptors_array_delete(bufr_descriptors_array* v)
 
 void grib_bufr_descriptors_array_delete_array(bufr_descriptors_array* v)
 {
-    grib_context* c;
-    int i;
+    grib_context* c = NULL;
+    size_t i = 0;
     bufr_descriptor** vv = NULL;
 
     if (!v)

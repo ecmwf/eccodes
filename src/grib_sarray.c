@@ -78,7 +78,7 @@ void grib_sarray_delete(grib_context* c, grib_sarray* v)
 
 void grib_sarray_delete_content(grib_context* c, grib_sarray* v)
 {
-    int i;
+    size_t i = 0;
     if (!v || !v->v)
         return;
     if (!c)
@@ -93,8 +93,8 @@ void grib_sarray_delete_content(grib_context* c, grib_sarray* v)
 
 char** grib_sarray_get_array(grib_context* c, grib_sarray* v)
 {
-    char** ret;
-    int i;
+    char** ret = NULL;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (char**)grib_context_malloc_clear(c, sizeof(char*) * v->n);
