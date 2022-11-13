@@ -205,7 +205,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
 	}
-#Surface solar radiation downwards
+#Surface short-wave radiation downwards
 '169' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -213,7 +213,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface thermal radiation downwards
+#Surface long-wave radiation downwards
 '175' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -221,7 +221,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net solar radiation
+#Top net short-wave radiation
 '178' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -247,7 +247,7 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation, clear sky
+#Surface net short-wave radiation, clear sky
 '210' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -255,7 +255,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation, clear sky
+#Surface net long-wave radiation, clear sky
 '211' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -5090,7 +5090,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation
+#Surface net short-wave radiation
 '176' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -5098,7 +5098,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation
+#Surface net long-wave radiation
 '177' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -5106,7 +5106,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net thermal radiation
+#Top net long-wave radiation
 '179' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;

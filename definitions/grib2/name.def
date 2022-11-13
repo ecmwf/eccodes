@@ -205,24 +205,24 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
 	}
-#Surface solar radiation downwards
-'Surface solar radiation downwards' = {
+#Surface short-wave radiation downwards
+'Surface short-wave radiation downwards' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface thermal radiation downwards
-'Surface thermal radiation downwards' = {
+#Surface long-wave radiation downwards
+'Surface long-wave radiation downwards' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net solar radiation
-'Top net solar radiation' = {
+#Top net short-wave radiation
+'Top net short-wave radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 1 ;
@@ -247,16 +247,16 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation, clear sky
-'Surface net solar radiation, clear sky' = {
+#Surface net short-wave radiation, clear sky
+'Surface net short-wave radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation, clear sky
-'Surface net thermal radiation, clear sky' = {
+#Surface net long-wave radiation, clear sky
+'Surface net long-wave radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -5090,24 +5090,24 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation
-'Surface net solar radiation' = {
+#Surface net short-wave radiation
+'Surface net short-wave radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation
-'Surface net thermal radiation' = {
+#Surface net long-wave radiation
+'Surface net long-wave radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net thermal radiation
-'Top net thermal radiation' = {
+#Top net long-wave radiation
+'Top net long-wave radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
