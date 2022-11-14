@@ -13665,6 +13665,15 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 130 ;
 	}
+#Accumulated freezing rain
+'Accumulated freezing rain' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 194 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface short wave-effective total cloudiness
 'Surface short wave-effective total cloudiness' = {
 	 discipline = 192 ;
