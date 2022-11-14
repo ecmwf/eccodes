@@ -25,9 +25,12 @@
 	}
 #Surface runoff
 '8' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 8 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Sub-surface runoff
 '9' = {
@@ -211,9 +214,12 @@
 	}
 #Snow evaporation
 '44' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 44 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 197 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Snowmelt
 '45' = {
@@ -232,12 +238,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 48 ;
-	}
-#Large-scale precipitation fraction
-'50' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 50 ;
 	}
 #Maximum temperature at 2 metres in the last 24 hours
 '51' = {
@@ -674,9 +674,12 @@
 	}
 #Large-scale precipitation
 '142' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 142 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
 '143' = {
@@ -687,9 +690,12 @@
 	}
 #Snowfall
 '144' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 144 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Charnock
 '148' = {
@@ -766,9 +772,12 @@
 	}
 #Total cloud cover
 '164' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 164 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Soil temperature level 2
 '170' = {
@@ -854,18 +863,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 193 ;
 	}
-#Eastward gravity wave surface stress
-'195' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 195 ;
-	}
-#Northward gravity wave surface stress
-'196' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 196 ;
-	}
 #Gravity wave dissipation
 '197' = {
 	 discipline = 192 ;
@@ -909,24 +906,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 206 ;
-	}
-#Top net solar radiation, clear sky
-'208' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'209' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 209 ;
-	}
-#TOA incident solar radiation
-'212' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 212 ;
 	}
 #Vertically integrated moisture divergence
 '213' = {
@@ -1027,30 +1006,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Instantaneous eastward turbulent surface stress
-'229' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 229 ;
-	}
-#Instantaneous northward turbulent surface stress
-'230' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 230 ;
-	}
-#Instantaneous surface sensible heat flux
-'231' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 231 ;
-	}
-#Instantaneous moisture flux
-'232' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 232 ;
 	}
 #Apparent surface humidity
 '233' = {
@@ -13541,18 +13496,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 196 ;
 	}
-#Total column rain water
-'228089' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 89 ;
-	}
-#Total column snow water
-'228090' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 90 ;
-	}
 #Canopy cover fraction
 '228091' = {
 	 discipline = 192 ;
@@ -17508,18 +17451,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 70 ;
-	}
-#Vertical integral of eastward water vapour flux
-'162071' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 71 ;
-	}
-#Vertical integral of northward water vapour flux
-'162072' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 72 ;
 	}
 #Vertical integral of eastward geopotential flux
 '162073' = {
@@ -21858,12 +21789,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
-	}
-#Friction velocity
-'228003' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 3 ;
 	}
 #Mean temperature at 2 metres
 '228004' = {
