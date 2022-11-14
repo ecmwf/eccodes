@@ -180,7 +180,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                              grib_get_error_message(err));
             exit(1);
         }
-        if (size != numberOfPoints) {
+        if (size != (size_t)numberOfPoints) {
             if (!grib_options_on("q"))
                 fprintf(stderr, "ERROR: Wrong number of points %d\n", (int)numberOfPoints);
             if (grib_options_on("f"))

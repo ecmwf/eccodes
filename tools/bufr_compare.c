@@ -950,7 +950,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int ii;
+                size_t ii;
                 countdiff = 0;
                 for (ii = 0; ii < len1; ii++)
                     if (lval1[ii] != lval2[ii])
