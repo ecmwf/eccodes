@@ -1005,7 +1005,7 @@ void grib_dump_action_tree(grib_context* c, FILE* f);
  */
 /*! @{ */
 /**
-* Grib free procedure, format of a procedure referenced in the context that is used to free memory
+* free procedure, format of a procedure referenced in the context that is used to free memory
 *
 * @param c           : the context where the memory freeing will apply
 * @param data        : pointer to the data to be freed
@@ -1014,7 +1014,7 @@ void grib_dump_action_tree(grib_context* c, FILE* f);
 typedef void (*grib_free_proc)(const grib_context* c, void* data);
 
 /**
-* Grib malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+* malloc procedure, format of a procedure referenced in the context that is used to allocate memory
 * @param c             : the context where the memory allocation will apply
 * @param length        : length to be allocated in number of bytes
 * @return              a pointer to the allocated memory, NULL if no memory can be allocated
@@ -1023,7 +1023,7 @@ typedef void (*grib_free_proc)(const grib_context* c, void* data);
 typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
 
 /**
-* Grib realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+* realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
 * @param c             : the context where the memory allocation will apply
 * @param data          : pointer to the data to be reallocated
 * @param length        : length to be allocated in number of bytes
@@ -1032,7 +1032,7 @@ typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
 typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t length);
 
 /**
-* Grib loc proc, format of a procedure referenced in the context that is used to log internal messages
+* log procedure, format of a procedure referenced in the context that is used to log internal messages
 *
 * @param c             : the context where the logging will apply
 * @param level         : the log level, as defined in log modes
@@ -1041,7 +1041,7 @@ typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t len
 typedef void (*grib_log_proc)(const grib_context* c, int level, const char* mesg);
 
 /**
-* Grib print proc, format of a procedure referenced in the context that is used to print external messages
+* print procedure, format of a procedure referenced in the context that is used to print external messages
 *
 * @param c             : the context where the logging will apply
 * @param descriptor    : the structure to be printed on, must match the implementation
@@ -1051,29 +1051,29 @@ typedef void (*grib_print_proc)(const grib_context* c, void* descriptor, const c
 
 
 /**
-* Grib data read proc, format of a procedure referenced in the context that is used to read from a stream in a resource
+* data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
 *
-* @param c             : the context where the read will apply
+* @param c            : the context where the read will apply
 * @param ptr          : the resource
-* @param size          : size to read
+* @param size         : size to read
 * @param stream       : the stream
 * @return              size read
 */
 typedef size_t (*grib_data_read_proc)(const grib_context* c, void* ptr, size_t size, void* stream);
 
 /**
-* Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
+* data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
 *
-* @param c             : the context where the write will apply
+* @param c            : the context where the write will apply
 * @param ptr          : the resource
-* @param size          : size to read
+* @param size         : size to read
 * @param stream       : the stream
 * @return              size written
 */
 typedef size_t (*grib_data_write_proc)(const grib_context* c, const void* ptr, size_t size, void* stream);
 
 /**
-* Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
+* data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
 *
 * @param c             : the context where the tell will apply
 * @param stream       : the stream
@@ -1082,20 +1082,19 @@ typedef size_t (*grib_data_write_proc)(const grib_context* c, const void* ptr, s
 typedef off_t (*grib_data_tell_proc)(const grib_context* c, void* stream);
 
 /**
-* Grib data seek, format of a procedure referenced in the context that is used to seek the current position in a stream
+* data seek procedure, format of a procedure referenced in the context that is used to seek the current position in a stream
 *
-* @param c             : the context where the tell will apply
-* @param offset        : the offset to seek to
-* @param whence        : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
-                         the offset  is  relative  to  the start of the file,
-             the current position indicator, or end-of-file, respectively.
-* @param stream       : the stream
-* @return            0 if OK, integer value on error
+* @param c        : the context where the tell will apply
+* @param offset   : the offset to seek to
+* @param whence   : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
+                    the offset is relative to the start of the file, the current position indicator, or end-of-file, respectively.
+* @param stream   : the stream
+* @return         0 if OK, integer value on error
 */
 typedef off_t (*grib_data_seek_proc)(const grib_context* c, off_t offset, int whence, void* stream);
 
 /**
-* Grib data eof, format of a procedure referenced in the context that is used to test end of file
+* data eof procedure, format of a procedure referenced in the context that is used to test end of file
 *
 * @param c             : the context where the tell will apply
 * @param stream       : the stream
