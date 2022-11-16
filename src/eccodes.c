@@ -532,3 +532,24 @@ void codes_context_set_samples_path(grib_context* c, const char* path)
 {
     grib_context_set_samples_path(c, path);
 }
+
+void codes_context_set_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
+{
+    grib_context_set_memory_proc(c, p_malloc, p_free, p_realloc);
+}
+void codes_context_set_persistent_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free)
+{
+    grib_context_set_persistent_memory_proc(c, p_malloc, p_free);
+}
+void codes_context_set_buffer_memory_proc(grib_context* c, grib_malloc_proc p_malloc, grib_free_proc p_free, grib_realloc_proc p_realloc)
+{
+    grib_context_set_buffer_memory_proc(c, p_malloc, p_free, p_realloc);
+}
+void codes_context_set_print_proc(grib_context* c, grib_print_proc p_print)
+{
+    grib_context_set_print_proc(c, p_print);
+}
+void codes_context_set_logging_proc(grib_context* c, grib_log_proc p_log)
+{
+    grib_context_set_logging_proc(c, p_log);
+}

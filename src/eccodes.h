@@ -990,22 +990,107 @@ void codes_dump_action_tree(codes_context* c, FILE* f);
  */
 /*! @{ */
 
-/* TODO: function pointers
- grib_malloc_proc
- grib_realloc_proc
- grib_log_proc
- grib_print_proc
- grib_data_read_proc
- grib_data_write_proc
- grib_data_tell_proc
- grib_data_seek_proc
- grib_data_eof_proc
+/**
+* ecCodes free procedure, format of a procedure referenced in the context that is used to free memory
+*
+* @param c     : the context where the memory freeing will apply
+* @param data  : pointer to the data to be freed
+* must match @see codes_malloc_proc
 */
+typedef void (*codes_free_proc)(const codes_context* c, void* data);
+
+/**
+* ecCodes malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+* @param c             : the context where the memory allocation will apply
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory, NULL if no memory can be allocated
+* must match @see codes_free_proc
+*/
+typedef void* (*codes_malloc_proc)(const codes_context* c, size_t length);
+
+/**
+* ecCodes realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+* @param c             : the context where the memory allocation will apply
+* @param data          : pointer to the data to be reallocated
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory
+*/
+typedef void* (*codes_realloc_proc)(const codes_context* c, void* data, size_t length);
+
+/**
+* ecCodes log procedure, format of a procedure referenced in the context that is used to log internal messages
+*
+* @param c             : the context where the logging will apply
+* @param level         : the log level, as defined in log modes
+* @param mesg          : the message to be logged
+*/
+typedef void (*codes_log_proc)(const codes_context* c, int level, const char* mesg);
+
+/**
+* ecCodes print procedure, format of a procedure referenced in the context that is used to print external messages
+*
+* @param c             : the context where the logging will apply
+* @param descriptor    : the structure to be printed on, must match the implementation
+* @param mesg          : the message to be printed
+*/
+typedef void (*codes_print_proc)(const codes_context* c, void* descriptor, const char* mesg);
+
+/**
+* ecCodes data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
+*
+* @param c            : the context where the read will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size read
+*/
+typedef size_t (*codes_data_read_proc)(const codes_context* c, void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
+*
+* @param c            : the context where the write will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size written
+*/
+typedef size_t (*codes_data_write_proc)(const codes_context* c, const void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
+*
+* @param c           : the context where the tell will apply
+* @param stream      : the stream
+* @return            the position in the stream
+*/
+typedef off_t (*codes_data_tell_proc)(const codes_context* c, void* stream);
+
+/**
+* ecCodes data seek procedure, format of a procedure referenced in the context that is used to seek the current position in a stream
+*
+* @param c         : the context where the tell will apply
+* @param offset    : the offset to seek to
+* @param whence    : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
+                     the offset is relative to the start of the file, the current position indicator, or end-of-file, respectively.
+* @param stream    : the stream
+* @return          0 if OK, integer value on error
+*/
+typedef off_t (*codes_data_seek_proc)(const codes_context* c, off_t offset, int whence, void* stream);
+
+/**
+* ecCodes data eof procedure, format of a procedure referenced in the context that is used to test end of file
+*
+* @param c        : the context where the tell will apply
+* @param stream   : the stream
+* @return         the position in the stream
+*/
+typedef int (*codes_data_eof_proc)(const codes_context* c, void* stream);
 
 /**
 *  Get the static default context
 *
-* @return            the default context, NULL it the context is not available
+* @return         the default context, NULL it the context is not available
 */
 codes_context* codes_context_get_default(void);
 
@@ -1075,6 +1160,54 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
  * @param path   : the search path for sample files
  */
 void codes_context_set_samples_path(codes_context* c, const char* path);
+
+/**
+*  Sets memory procedures of the context
+*
+* @param c         : the context to be modified
+* @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free    : the memory freeing procedure to be set @see codes_free_proc
+* @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                   codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets memory procedures of the context for persistent data
+*
+* @param c           : the context to be modified
+* @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
+* @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
+*/
+void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
+                                              codes_free_proc p_free);
+
+/**
+*  Sets memory procedures of the context for large buffers
+*
+* @param c        : the context to be modified
+* @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free   : the memory freeing procedure to be set @see codes_free_proc
+* @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_buffer_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                          codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets the context printing procedure used for user interaction
+*
+* @param c        : the context to be modified
+* @param p_print  : the printing procedure to be set @see codes_print_proc
+*/
+void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
+
+/**
+*  Sets the context logging procedure used for system (warning, errors, infos ...) messages
+*
+* @param c       : the context to be modified
+* @param p_log   : the logging procedure to be set @see codes_log_proc
+*/
+void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
 
 /**
 *  Turn on support for multi-fields in single GRIB messages
@@ -1303,7 +1436,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus
