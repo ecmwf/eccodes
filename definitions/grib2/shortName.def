@@ -136,6 +136,7 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow density
 'rsn' = {
@@ -212,6 +213,15 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Boundary layer dissipation
+'bld' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Surface short-wave radiation downwards
 'ssrd' = {
@@ -242,12 +252,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Northward turbulent surface stress
 'nsss' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Eastward gravity wave surface stress
 'lgws' = {
@@ -5131,12 +5145,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	}
-#Boundary layer dissipation
-'bld' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 20 ;
-	}
 #Surface sensible heat flux
 'sshf' = {
 	 discipline = 0 ;
@@ -5562,6 +5570,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate water equivalent
 'tsrwe' = {
@@ -5586,6 +5595,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 'tsrate' = {
