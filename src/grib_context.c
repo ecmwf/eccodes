@@ -242,20 +242,22 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
 
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
-    c        = c ? c : grib_context_get_default();
-    c->print = p;
+    c = c ? c : grib_context_get_default();
+    /* Set logging back to the default if p is NULL */
+    c->print = (p ? p : &default_print);
 }
 
 void grib_context_set_debug(grib_context* c, int mode)
 {
-    c        = c ? c : grib_context_get_default();
+    c = c ? c : grib_context_get_default();
     c->debug = mode;
 }
 
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 {
-    c             = c ? c : grib_context_get_default();
-    c->output_log = p;
+    c = c ? c : grib_context_get_default();
+    /* Set logging back to the default if p is NULL */
+    c->output_log = (p ? p : &default_log);
 }
 
 long grib_get_api_version()
