@@ -37,12 +37,9 @@ concept_nofail chemName (defaultChemName,"chemName.def",conceptsDir2,conceptsDir
 concept_nofail chemShortName (defaultChemShortName,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
 concept_nofail chemFormula (defaultChemFormula,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
 
-# Do not add 'chem' to the mars namespace indiscriminately!
-# Check whether it is a chemical or aerosol
-if (is_aerosol || is_chemical) {
-    alias mars.chem = chemId;
-    #alias ls.chemShortName = chemShortName;
-}
+alias mars.chem = chemId;
+alias ls.chemShortName = chemShortName;
+
 # modelName: Contribution from Daniel Lee @ DWD
 concept modelName (defaultName,"modelName.def",conceptsDir2,conceptsDir1): no_copy,dump,read_only;
 
