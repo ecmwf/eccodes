@@ -194,6 +194,30 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
 static const int used[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
+static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
+{
+    int err = 0;
+    long count_of_missing = 0;
+    size_t vsize = 0, ii = 0;
+    double* values = NULL;
+    double mv      = 0;
+    if ((err = grib_get_double(h, "missingValue", &mv)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_size(h, "values", &vsize)) != GRIB_SUCCESS)
+        return err;
+    values = (double*)grib_context_malloc(h->context, vsize * sizeof(double));
+    if (!values)
+        return GRIB_OUT_OF_MEMORY;
+    if ((err = grib_get_double_array(h, "values", values, &vsize)) != GRIB_SUCCESS)
+        return err;
+    for (ii = 0; ii < vsize; ii++) {
+        if (values[ii] == mv) ++count_of_missing;
+    }
+    grib_context_free(h->context, values);
+    *p_count_of_missing = count_of_missing;
+
+    return GRIB_SUCCESS;
+}
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
@@ -213,19 +237,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         if (self->missingValueManagementUsed &&
             grib_get_long(h, self->missingValueManagementUsed, &mvmu) == GRIB_SUCCESS && mvmu != 0)
         {
+            /* ECC-523: No bitmap. Missing values are encoded in the Data Section.
+             * So we must decode all the data values and count how many are missing
+            */
             long count_of_missing = 0;
-            size_t vsize = 0, ii=0;
-            double* values = NULL;
-            double mv = 0;
-            grib_get_double(h, "missingValue", &mv);
-            grib_get_size(h, "values", &vsize);
-            values = (double*)grib_context_malloc(h->context, vsize * sizeof(double));
-            grib_get_double_array(h, "values", values, &vsize);
-            for (ii = 0; ii < vsize; ii++) {
-                if (values[ii] == mv) ++count_of_missing;
+            if (get_count_of_missing_values(h, &count_of_missing) == GRIB_SUCCESS) {
+                *val = count_of_missing;
             }
-            grib_context_free(h->context, values);
-            *val = count_of_missing;
         }
         return GRIB_SUCCESS;
     }
