@@ -2784,12 +2784,6 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 22 ;
 	}
-#Evaporation rate
-'Evaporation rate' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
-	}
 #Evaporation
 'Evaporation' = {
 	 discipline = 0 ;
@@ -5771,12 +5765,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
-	}
-#Planetary boundary layer height
-'Planetary boundary layer height' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 18 ;
 	}
 #5-wave geopotential height anomaly
 '5-wave geopotential height anomaly' = {

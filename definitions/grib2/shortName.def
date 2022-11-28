@@ -2784,12 +2784,6 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 22 ;
 	}
-#Evaporation rate
-'evarate' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
-	}
 #Evaporation
 'eva' = {
 	 discipline = 0 ;
@@ -5771,12 +5765,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
-	}
-#Planetary boundary layer height
-'hpbl' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 18 ;
 	}
 #5-wave geopotential height anomaly
 '5wava' = {

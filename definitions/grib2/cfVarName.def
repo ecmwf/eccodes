@@ -2784,12 +2784,6 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 22 ;
 	}
-#Evaporation rate
-'evarate' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
-	}
 #Evaporation
 'eva' = {
 	 discipline = 0 ;
@@ -4575,19 +4569,19 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 7 ;
 	}
-#Dry deposition mass flux 
+#Dry deposition mass flux
 'drydep_mflx' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 6 ;
 	}
-#Sedimentation mass flux 
+#Sedimentation mass flux
 'sed_mflx' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 11 ;
 	}
-#Volume mixing ratio 
+#Volume mixing ratio
 'vol_mixrat' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -4669,7 +4663,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 16 ;
 	}
-#Emission mass flux from residential, commercial and other combustion 
+#Emission mass flux from residential, commercial and other combustion
 'emi_mflx_rescomb' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -5771,12 +5765,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
-	}
-#Planetary boundary layer height
-'hpbl' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 18 ;
 	}
 #5-wave geopotential height anomaly
 'p260084' = {
