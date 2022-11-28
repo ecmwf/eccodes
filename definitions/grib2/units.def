@@ -2215,6 +2215,13 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
 	}
+#Instantaneous large-scale surface precipitation fraction
+'(0 - 1)' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Convective rain rate
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
