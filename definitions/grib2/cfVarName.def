@@ -5302,12 +5302,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
 	}
-#Sensible heat net flux
-'shtfl' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 11 ;
-	}
 #Heat index
 'heatx' = {
 	 discipline = 0 ;
