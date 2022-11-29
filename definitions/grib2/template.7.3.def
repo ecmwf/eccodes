@@ -43,7 +43,8 @@ alias data.packedValues=codedValues;
 
 template statistics "common/statistics_grid.def";
 if(missingValueManagementUsed) {
-    remove numberOfMissing;
+    #remove numberOfMissingValues;
+    #remove numberOfMissing;
     meta numberOfMissing count_missing(bitmap,unusedBitsInBitmap,numberOfDataPoints,missingValueManagementUsed) : dump;
     alias numberOfMissingValues=numberOfMissing;
 }
