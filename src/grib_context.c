@@ -716,7 +716,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
 
         while (dir) {
             snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
-            if (!codes_access(full, F_OK)) {
+            if (codes_access(full, F_OK) == 0) { /* 0 means file exists */
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
@@ -725,6 +725,8 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
                 GRIB_MUTEX_UNLOCK(&mutex_c);
                 return fullpath->value;
+            } else {
+                grib_context_log(c, GRIB_LOG_DEBUG, "Nonexistent def file %s", full);
             }
             dir = dir->next;
         }
