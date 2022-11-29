@@ -22,7 +22,7 @@
 
 static int ecc_jasper_initialise()
 {
-#if JASPER_VERSION_MAJOR == 3
+#if JASPER_VERSION_MAJOR >= 3
     int jaserr = 0;
     jas_conf_clear();
     jas_conf_set_max_mem_usage(jas_get_total_mem_size());
@@ -36,7 +36,7 @@ static int ecc_jasper_initialise()
 
 static jas_image_t* ecc_jasper_decode(jas_stream_t *in)
 {
-#if JASPER_VERSION_MAJOR == 3
+#if JASPER_VERSION_MAJOR >= 3
     /* Second argument (=fmt) < 0 means "If possible, try to determine the format of the input data" */
     return jas_image_decode(in, -1, 0);
 #else
@@ -46,7 +46,7 @@ static jas_image_t* ecc_jasper_decode(jas_stream_t *in)
 
 static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, char *optstr)
 {
-#if JASPER_VERSION_MAJOR == 3
+#if JASPER_VERSION_MAJOR >= 3
     const int fmt = jas_image_strtofmt("jpc");
     return jas_image_encode(image, jpcstream, fmt, optstr);
 #else
@@ -56,7 +56,7 @@ static int ecc_jasper_encode(jas_image_t *image, jas_stream_t *jpcstream, char *
 
 static void ecc_jasper_cleanup()
 {
-#if JASPER_VERSION_MAJOR == 3
+#if JASPER_VERSION_MAJOR >= 3
     jas_cleanup_thread();
     jas_cleanup_library();
 #endif

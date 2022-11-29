@@ -58,7 +58,7 @@ int grib_tool_init(grib_runtime_options* options)
 {
     int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D");
 
-    options->dump_mode = "default";
+    options->dump_mode = (char*)"default";
 
 
     if (opt > 1) {
@@ -67,12 +67,12 @@ int grib_tool_init(grib_runtime_options* options)
     }
 
     if (grib_options_on("O")) {
-        options->dump_mode  = "wmo";
+        options->dump_mode  = (char*)"wmo";
         options->dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
     if (grib_options_on("D")) {
-        options->dump_mode  = "debug";
+        options->dump_mode  = (char*)"debug";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 

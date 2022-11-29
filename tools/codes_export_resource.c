@@ -27,7 +27,7 @@ static void usage(const char* prog)
 int main(int argc, char* argv[])
 {
     char* resource_path        = NULL;
-    char* resource_name        = NULL;
+    const char* resource_name  = NULL;
     ResourceType resource_type = UNKNOWN;
     char* full_path            = NULL;
     char* out_file             = NULL;

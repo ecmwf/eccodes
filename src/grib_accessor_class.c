@@ -300,7 +300,9 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
 
         if (offset != a->offset) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "Offset mismatch %s A->offset %ld offset %ld\n", a->name, (long)a->offset, (long)offset);
+                             "Offset mismatch accessor=%s: accessor's offset=%ld, but actual offset=%ld",
+                             a->name, (long)a->offset, (long)offset);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Check section lengths are in sync with their contents");
             a->offset = offset;
             return GRIB_DECODING_ERROR;
         }

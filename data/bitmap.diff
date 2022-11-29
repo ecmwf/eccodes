@@ -15,12 +15,9 @@ GRIB {
   # Unknown code table entry (grib1/0.ecmf.table)  
   subCentre = 0;
   paramId = 130;
-  #-READ ONLY- cfNameECMF = air_temperature;
   #-READ ONLY- cfName = air_temperature;
-  #-READ ONLY- cfVarNameECMF = t;
   #-READ ONLY- cfVarName = t;
   #-READ ONLY- units = K;
-  #-READ ONLY- nameECMF = Temperature;
   #-READ ONLY- name = Temperature;
   decimalScaleFactor = 0;
   dataDate = 20080206;

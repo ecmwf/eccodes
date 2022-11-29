@@ -21,6 +21,7 @@
    MEMBERS    = const char* bitmap
    MEMBERS    = const char* unusedBitsInBitmap
    MEMBERS    = const char* numberOfDataPoints
+   MEMBERS    = const char* missingValueManagementUsed
    END_CLASS_DEF
 
  */
@@ -49,6 +50,7 @@ typedef struct grib_accessor_count_missing
     const char* bitmap;
     const char* unusedBitsInBitmap;
     const char* numberOfDataPoints;
+    const char* missingValueManagementUsed;
 } grib_accessor_count_missing;
 
 extern grib_accessor_class* grib_accessor_class_long;
@@ -181,15 +183,41 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     int n                             = 0;
     grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
     a->length                         = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    self->bitmap             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->unusedBitsInBitmap = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->numberOfDataPoints = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
+    self->bitmap             = grib_arguments_get_name(h, arg, n++);
+    self->unusedBitsInBitmap = grib_arguments_get_name(h, arg, n++);
+    self->numberOfDataPoints = grib_arguments_get_name(h, arg, n++);
+    self->missingValueManagementUsed = grib_arguments_get_name(h, arg, n++); /* Can be NULL */
 }
 
 static const int used[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
+static int get_count_of_missing_values(grib_handle* h, long* p_count_of_missing)
+{
+    int err = 0;
+    long count_of_missing = 0;
+    size_t vsize = 0, ii = 0;
+    double* values = NULL;
+    double mv      = 0;
+    if ((err = grib_get_double(h, "missingValue", &mv)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_size(h, "values", &vsize)) != GRIB_SUCCESS)
+        return err;
+    values = (double*)grib_context_malloc(h->context, vsize * sizeof(double));
+    if (!values)
+        return GRIB_OUT_OF_MEMORY;
+    if ((err = grib_get_double_array(h, "values", values, &vsize)) != GRIB_SUCCESS)
+        return err;
+    for (ii = 0; ii < vsize; ii++) {
+        if (values[ii] == mv) ++count_of_missing;
+    }
+    grib_context_free(h->context, values);
+    *p_count_of_missing = count_of_missing;
+
+    return GRIB_SUCCESS;
+}
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_count_missing* self = (grib_accessor_count_missing*)a;
@@ -202,10 +230,23 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     grib_handle* h          = grib_handle_of_accessor(a);
     grib_accessor* bitmap   = grib_find_accessor(h, self->bitmap);
 
-    *val = 0;
+    *val = 0; /* By default assume none are missing */
     *len = 1;
-    if (!bitmap)
+    if (!bitmap) {
+        long mvmu = 0;
+        if (self->missingValueManagementUsed &&
+            grib_get_long(h, self->missingValueManagementUsed, &mvmu) == GRIB_SUCCESS && mvmu != 0)
+        {
+            /* ECC-523: No bitmap. Missing values are encoded in the Data Section.
+             * So we must decode all the data values and count how many are missing
+            */
+            long count_of_missing = 0;
+            if (get_count_of_missing_values(h, &count_of_missing) == GRIB_SUCCESS) {
+                *val = count_of_missing;
+            }
+        }
         return GRIB_SUCCESS;
+    }
 
     size   = grib_byte_count(bitmap);
     offset = grib_byte_offset(bitmap);
