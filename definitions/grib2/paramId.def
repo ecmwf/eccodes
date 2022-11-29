@@ -174,6 +174,22 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Downward UV radiation at the surface
+'57' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Photosynthetically active radiation at the surface
+'58' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Specific rain water content
 '75' = {
 	 discipline = 0 ;
@@ -222,6 +238,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Boundary layer height
+'159' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	}
 #Surface short-wave (solar) radiation downwards
 '169' = {
@@ -277,6 +299,13 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Gravity wave dissipation
+'197' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Ozone mass mixing ratio
@@ -2167,6 +2196,12 @@
 	 parameterNumber = 46 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Ice temperature
+'228094' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
 	}
 #Soil temperature top 20 cm
 '228095' = {

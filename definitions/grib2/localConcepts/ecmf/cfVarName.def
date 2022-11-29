@@ -160,9 +160,11 @@
 	}
 #Snow albedo
 'asn' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 32 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Ice temperature layer 1
 'istl1' = {
@@ -223,9 +225,12 @@
 	}
 #Snowmelt
 'smlt' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 45 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 203 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Solar duration
 'sdur' = {
@@ -280,18 +285,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 56 ;
-	}
-#Downward UV radiation at the surface
-'uvb' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 57 ;
-	}
-#Photosynthetically active radiation at the surface
-'par' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 58 ;
 	}
 #Observation count
 'obct' = {
@@ -740,12 +733,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 158 ;
 	}
-#Boundary layer height
-'blh' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 159 ;
-	}
 #Standard deviation of orography
 'sdor' = {
 	 discipline = 192 ;
@@ -799,9 +786,12 @@
 	}
 #Evaporation
 'e' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 182 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Soil temperature level 3
 'stl3' = {
@@ -823,21 +813,24 @@
 	}
 #Low cloud cover
 'lcc' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 186 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 193 ;
 	}
 #Medium cloud cover
 'mcc' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 187 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 194 ;
 	}
 #High cloud cover
 'hcc' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 188 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 195 ;
 	}
 #East-West component of sub-gridscale orographic variance
 'ewov' = {
@@ -862,12 +855,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 193 ;
-	}
-#Gravity wave dissipation
-'gwd' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 197 ;
 	}
 #Skin reservoir content
 'src' = {
@@ -13940,12 +13927,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 93 ;
 	}
-#Ice temperature
-'ist' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 94 ;
-	}
 #Evaporation from the top of canopy
 'evatc' = {
 	 discipline = 192 ;
@@ -14057,9 +14038,12 @@
 	}
 #Potential evaporation
 'pev' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 251 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 200 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Irrigation
 'irr' = {
@@ -14133,7 +14117,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 192 ;
 	}
-#Emission mass flux from biomass burning 
+#Emission mass flux from biomass burning
 'emi_mflx_biomburn' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
