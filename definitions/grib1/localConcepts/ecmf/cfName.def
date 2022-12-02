@@ -449,12 +449,12 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 164 ;
 	}
-#Surface short-wave radiation downwards
+#Surface short-wave (solar) radiation downwards
 'surface_downwelling_shortwave_flux_in_air' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 169 ;
 	}
-#Surface short-wave radiation downwards
+#Surface short-wave (solar) radiation downwards
 'surface_downwelling_shortwave_flux_in_air' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 169 ;
@@ -519,72 +519,72 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Surface net short-wave radiation
+#Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface net short-wave radiation
+#Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface net short-wave radiation
+#Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface net short-wave radiation
+#Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 176 ;
 	}
-#Surface net long-wave radiation
+#Surface net long-wave (thermal) radiation
 'surface_net_upward_longwave_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Surface net long-wave radiation
+#Surface net long-wave (thermal) radiation
 'surface_net_upward_longwave_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Surface net long-wave radiation
+#Surface net long-wave (thermal) radiation
 'surface_net_upward_longwave_flux' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Surface net long-wave radiation
+#Surface net long-wave (thermal) radiation
 'surface_net_upward_longwave_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 177 ;
 	}
-#Top net short-wave radiation
+#Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top net short-wave radiation
+#Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top net short-wave radiation
+#Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 178 ;
 	}
-#Top net long-wave radiation
+#Top net long-wave (thermal) radiation
 'toa_outgoing_longwave_flux' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Top net long-wave radiation
+#Top net long-wave (thermal) radiation
 'toa_outgoing_longwave_flux' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Top net long-wave radiation
+#Top net long-wave (thermal) radiation
 'toa_outgoing_longwave_flux' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
@@ -664,12 +664,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 206 ;
 	}
-#Surface net short-wave radiation, clear sky
+#Surface net short-wave (solar) radiation, clear sky
 'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 210 ;
 	}
-#Surface net long-wave radiation, clear sky
+#Surface net long-wave (thermal) radiation, clear sky
 'surface_net_downward_longwave_flux_assuming_clear_sky' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 211 ;

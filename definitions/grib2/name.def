@@ -136,6 +136,7 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Snow density
 'Snow density' = {
@@ -163,6 +164,30 @@
 	 parameterNumber = 54 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Large-scale precipitation fraction
+'Large-scale precipitation fraction' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Downward UV radiation at the surface
+'Downward UV radiation at the surface' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Photosynthetically active radiation at the surface
+'Photosynthetically active radiation at the surface' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Specific rain water content
@@ -204,25 +229,40 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
-#Surface short-wave radiation downwards
-'Surface short-wave radiation downwards' = {
+#Boundary layer dissipation
+'Boundary layer dissipation' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Boundary layer height
+'Boundary layer height' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	}
+#Surface short-wave (solar) radiation downwards
+'Surface short-wave (solar) radiation downwards' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface long-wave radiation downwards
-'Surface long-wave radiation downwards' = {
+#Surface long-wave (thermal) radiation downwards
+'Surface long-wave (thermal) radiation downwards' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net short-wave radiation
-'Top net short-wave radiation' = {
+#Top net short-wave (solar) radiation
+'Top net short-wave (solar) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 1 ;
@@ -234,12 +274,39 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Northward turbulent surface stress
 'Northward turbulent surface stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Eastward gravity wave surface stress
+'Eastward gravity wave surface stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Northward gravity wave surface stress
+'Northward gravity wave surface stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Gravity wave dissipation
+'Gravity wave dissipation' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Ozone mass mixing ratio
 'Ozone mass mixing ratio' = {
@@ -247,21 +314,73 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net short-wave radiation, clear sky
-'Surface net short-wave radiation, clear sky' = {
+#Top net solar radiation, clear sky
+'Top net solar radiation, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Top net thermal radiation, clear sky
+'Top net thermal radiation, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface net short-wave (solar) radiation, clear sky
+'Surface net short-wave (solar) radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net long-wave radiation, clear sky
-'Surface net long-wave radiation, clear sky' = {
+#Surface net long-wave (thermal) radiation, clear sky
+'Surface net long-wave (thermal) radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#TOA incident solar radiation
+'TOA incident solar radiation' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Instantaneous eastward turbulent surface stress
+'Instantaneous eastward turbulent surface stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous northward turbulent surface stress
+'Instantaneous northward turbulent surface stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous surface sensible heat flux
+'Instantaneous surface sensible heat flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Instantaneous moisture flux
+'Instantaneous moisture flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 79 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Temperature of snow layer
 'Temperature of snow layer' = {
@@ -1875,12 +1994,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 19 ;
 	}
-#Fraction of stratiform precipitation cover
-'Fraction of stratiform precipitation cover' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 36 ;
-	}
 #Fraction of convective precipitation cover
 'Fraction of convective precipitation cover' = {
 	 discipline = 0 ;
@@ -2062,6 +2175,28 @@
 	 scaledValueOfSecondFixedSurface = 10 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
+#Total column rain water
+'Total column rain water' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 45 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column snow water
+'Total column snow water' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 46 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Ice temperature
+'Ice temperature' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
+	}
 #Soil temperature top 20 cm
 'Soil temperature top 20 cm' = {
 	 discipline = 2 ;
@@ -2108,6 +2243,13 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 33 ;
+	}
+#Instantaneous large-scale surface precipitation fraction
+'Instantaneous large-scale surface precipitation fraction' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Convective rain rate
 'Convective rain rate' = {
@@ -2287,6 +2429,37 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 49 ;
+	}
+#Accumulated freezing rain water equivalent
+'Accumulated freezing rain water equivalent' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 67 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Runoff water equivalent
+'Runoff water equivalent' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Snow evaporation water equivalent
+'Snow evaporation water equivalent' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 148 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Total snowfall water equivalent
+'Total snowfall water equivalent' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
@@ -2670,12 +2843,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 22 ;
-	}
-#Evaporation rate
-'Evaporation rate' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
 	}
 #Evaporation
 'Evaporation' = {
@@ -4720,6 +4887,22 @@
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 160 ;
 	}
+#Vertical integral of eastward water vapour flux
+'Vertical integral of eastward water vapour flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 150 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertical integral of northward water vapour flux
+'Vertical integral of northward water vapour flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 151 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Surface runoff
 'Surface runoff' = {
 	 discipline = 2 ;
@@ -4793,6 +4976,12 @@
 	 constituentType = 0 ;
 	 typeOfGeneratingProcess = 20 ;
 	 is_chemical = 1 ;
+	}
+#Friction velocity
+'Friction velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
 	}
 #Lake total depth
 'Lake total depth' = {
@@ -5017,12 +5206,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	}
-#Boundary layer dissipation
-'Boundary layer dissipation' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 20 ;
-	}
 #Surface sensible heat flux
 'Surface sensible heat flux' = {
 	 discipline = 0 ;
@@ -5113,24 +5296,24 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net short-wave radiation
-'Surface net short-wave radiation' = {
+#Surface net short-wave (solar) radiation
+'Surface net short-wave (solar) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 9 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net long-wave radiation
-'Surface net long-wave radiation' = {
+#Surface net long-wave (thermal) radiation
+'Surface net long-wave (thermal) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net long-wave radiation
-'Top net long-wave radiation' = {
+#Top net long-wave (thermal) radiation
+'Top net long-wave (thermal) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 5 ;
@@ -5172,12 +5355,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 10 ;
-	}
-#Sensible heat net flux
-'Sensible heat net flux' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 11 ;
 	}
 #Heat index
 'Heat index' = {
@@ -5448,6 +5625,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate water equivalent
 'Total snowfall rate water equivalent' = {
@@ -5472,6 +5650,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 'Total snowfall rate' = {
@@ -5646,12 +5825,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 17 ;
-	}
-#Planetary boundary layer height
-'Planetary boundary layer height' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 18 ;
 	}
 #5-wave geopotential height anomaly
 '5-wave geopotential height anomaly' = {

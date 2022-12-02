@@ -112,3 +112,27 @@
  parameterCategory = 128 ;
  parameterNumber = 137 ;
 }
+#Large-scale precipitation
+'lwe_thickness_of_stratiform_precipitation_amount' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 142 ;
+}
+#Snowfall
+'lwe_thickness_of_snowfall_amount' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 144 ;
+}
+#Total cloud cover
+'cloud_area_fraction' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 164 ;
+}
+#Evaporation
+'lwe_thickness_of_water_evaporation_amount' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 182 ;
+}

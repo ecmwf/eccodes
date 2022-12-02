@@ -400,3 +400,195 @@
  parameterCategory = 228 ;
  parameterNumber = 60 ;
 }
+#Eastward gravity wave surface stress
+'195' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 195 ;
+}
+#Friction velocity
+'228003' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 3 ;
+}
+#Instantaneous eastward turbulent surface stress
+'229' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 229 ;
+}
+#Instantaneous northward turbulent surface stress
+'230' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 230 ;
+}
+#Instantaneous surface sensible heat flux
+'231' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 231 ;
+}
+#Instantaneous moisture flux
+'232' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 232 ;
+}
+#Large-scale precipitation
+'142' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 142 ;
+}
+#Large-scale precipitation fraction
+'50' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 50 ;
+}
+#Northward gravity wave surface stress
+'196' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 196 ;
+}
+#Snow evaporation
+'44' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 44 ;
+}
+#Snowfall
+'144' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 144 ;
+}
+#Surface runoff
+'8' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 8 ;
+}
+#TOA incident solar radiation
+'212' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 212 ;
+}
+#Top net thermal radiation, clear sky
+'209' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 209 ;
+}
+#Top net solar radiation, clear sky
+'208' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 208 ;
+}
+#Total cloud cover
+'164' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 164 ;
+}
+#Total column rain water
+'228089' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 89 ;
+}
+#Total column snow water
+'228090' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 90 ;
+}
+#Vertical integral of eastward water vapour flux
+'162071' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 71 ;
+}
+#Vertical integral of northward water vapour flux
+'162072' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 72 ;
+}
+#Snow albedo
+'32' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 32 ;
+}
+#Ice temperature
+'228094' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 94 ;
+}
+#Snowmelt
+'45' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 45 ;
+}
+#Downward UV radiation at the surface
+'57' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 57 ;
+}
+#Photosynthetically active radiation at the surface
+'58' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 58 ;
+}
+#Boundary layer height
+'159' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 159 ;
+}
+#Evaporation
+'182' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 182 ;
+}
+#Low cloud cover
+'186' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 186 ;
+}
+#Medium cloud cover
+'187' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 187 ;
+}
+#High cloud cover
+'188' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 188 ;
+}
+#Gravity wave dissipation
+'197' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 197 ;
+}
+#Potential evaporation
+'228251' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 251 ;
+}
