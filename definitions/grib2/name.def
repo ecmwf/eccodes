@@ -1994,12 +1994,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 19 ;
 	}
-#Fraction of stratiform precipitation cover
-'Fraction of stratiform precipitation cover' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 36 ;
-	}
 #Fraction of convective precipitation cover
 'Fraction of convective precipitation cover' = {
 	 discipline = 0 ;

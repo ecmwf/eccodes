@@ -443,48 +443,48 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 25 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
-	 typeOfFirstFixedSurface = 1 ;
+	 probabilityType = 3 ;
 	}
 #Total precipitation of at least 50 mm
 'tpg50' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
-	 probabilityType = 3 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 scaledValueOfLowerLimit = 50 ;
+	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #10 metre wind gust of at least 10 m/s
 'fgg1010' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
-	 scaleFactorOfLowerLimit = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 2 ;
 	 scaledValueOfLowerLimit = 10 ;
-	 typeOfFirstFixedSurface = 103 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Probability of temperature standardized anomaly greater than 1 standard deviation
 'ptsa_gt_1stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 1 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
 	}
 #Probability of temperature standardized anomaly greater than 1.5 standard deviation
@@ -492,11 +492,11 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 15 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 1 ;
-	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 3 ;
 	}
 #Probability of temperature standardized anomaly greater than 2 standard deviation
 'ptsa_gt_2stdev' = {
@@ -506,18 +506,18 @@
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = 2 ;
-	 probabilityType = 3 ;
 	 scaleFactorOfLowerLimit = 0 ;
+	 probabilityType = 3 ;
 	}
 #Probability of temperature standardized anomaly less than -1 standard deviation
 'ptsa_lt_1stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 scaleFactorOfLowerLimit = 0 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -1 ;
+	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
 	}
 #Probability of temperature standardized anomaly less than -1.5 standard deviation
@@ -525,22 +525,22 @@
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
-	 probabilityType = 0 ;
-	 scaleFactorOfLowerLimit = 1 ;
 	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -15 ;
+	 scaleFactorOfLowerLimit = 1 ;
+	 probabilityType = 0 ;
 	}
 #Probability of temperature standardized anomaly less than -2 standard deviation
 'ptsa_lt_2stdev' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
+	 productDefinitionTemplateNumber = 9 ;
 	 typeOfStatisticalProcessing = 10 ;
 	 scaledValueOfLowerLimit = -2 ;
-	 probabilityType = 0 ;
 	 scaleFactorOfLowerLimit = 0 ;
-	 productDefinitionTemplateNumber = 9 ;
+	 probabilityType = 0 ;
 	}
 #Mean sea water temperature in the upper 300 m
 'mswt300m' = {
@@ -549,8 +549,8 @@
 	 parameterNumber = 15 ;
 	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 160 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
@@ -625,12 +625,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
-	 is_aerosol_optical = 1 ;
-	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfFirstWavelength = 8 ;
-	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 62004 ;
+	 scaledValueOfFirstWavelength = 55 ;
+	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
 	}
 #Ammonium aerosol optical depth at 550 nm
 'amaod550' = {
@@ -638,11 +638,11 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 102 ;
 	 scaleFactorOfFirstWavelength = 8 ;
-	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfSizeInterval = 255 ;
 	 aerosolType = 62003 ;
-	 is_aerosol_optical = 1 ;
+	 scaledValueOfFirstWavelength = 55 ;
 	 typeOfWavelengthInterval = 11 ;
+	 is_aerosol_optical = 1 ;
 	}
 #Biogenic secondary organic aerosol mass mixing ratio
 'aermr19' = {
@@ -675,8 +675,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
-	 typeOfGeneratingProcess = 20 ;
 	 aerosolType = 62003 ;
+	 typeOfGeneratingProcess = 20 ;
 	 is_aerosol = 1 ;
 	}
 #Biogenic secondary organic aerosol mass mixing ratio increment
@@ -685,17 +685,17 @@
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
 	 aerosolType = 62032 ;
-	 is_aerosol = 1 ;
 	 typeOfGeneratingProcess = 20 ;
+	 is_aerosol = 1 ;
 	}
 #Anthropogenic secondary organic aerosol mass mixing ratio increment
 'aermr20diff' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 2 ;
-	 is_aerosol = 1 ;
-	 typeOfGeneratingProcess = 20 ;
 	 aerosolType = 62033 ;
+	 typeOfGeneratingProcess = 20 ;
+	 is_aerosol = 1 ;
 	}
 #Dry deposition of ammonium aerosol
 'aerddpam' = {
@@ -726,26 +726,26 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of ammonium aerosol
 'aermssam' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 is_aerosol = 1 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 aerosolType = 62003 ;
+	 is_aerosol = 1 ;
 	}
 #Dry deposition of biogenic secondary organic aerosol
 'aerddpsoab' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 12 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
 	}
 #Sedimentation of biogenic secondary organic aerosol
 'aersdmsoab' = {
@@ -776,8 +776,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 62032 ;
+	 is_aerosol = 1 ;
 	}
 #Dry deposition of anthropogenic secondary organic aerosol
 'aerddpsoaa' = {
@@ -808,8 +808,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 10 ;
-	 is_aerosol = 1 ;
 	 aerosolType = 62033 ;
+	 is_aerosol = 1 ;
 	}
 #Vertically integrated mass of anthropogenic secondary organic aerosol
 'aermsssoaa' = {
@@ -1961,10 +1961,10 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
-	 typeOfStatisticalProcessing = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
 	}
 #Instantaneous 10 metre wind gust
@@ -1994,12 +1994,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 19 ;
 	}
-#Fraction of stratiform precipitation cover
-'fspc' = {
-	 discipline = 0 ;
-	 parameterCategory = 6 ;
-	 parameterNumber = 36 ;
-	}
 #Fraction of convective precipitation cover
 'fcpc' = {
 	 discipline = 0 ;
@@ -2011,21 +2005,21 @@
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 6 ;
-	 typeOfStatisticalProcessing = 2 ;
-	 typeOfSecondFixedSurface = 8 ;
-	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Maximum CAPES in the last 6 hours
 'mxcapes6' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 19 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 2 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 6 ;
 	}
 #2 metre relative humidity with respect to water
@@ -2034,8 +2028,8 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 93 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Liquid water content in snow pack
 'lwcs' = {
@@ -2070,9 +2064,9 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 1 ;
 	}
@@ -2081,8 +2075,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 typeOfSecondFixedSurface = 8 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last hour
 'licga1' = {
@@ -2091,9 +2085,9 @@
 	 parameterNumber = 2 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Unbalanced component of specific humidity
 'ucq' = {
@@ -2120,31 +2114,31 @@
 	 parameterNumber = 4 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 3 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Averaged total lightning flash density in the last 6 hours
 'litota6' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 4 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 3 hours
 'licga3' = {
 	 discipline = 0 ;
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
-	 typeOfStatisticalProcessing = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 lengthOfTimeRange = 3 ;
 	 typeOfSecondFixedSurface = 8 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 3 ;
 	}
 #Averaged cloud-to-ground lightning flash density in the last 6 hours
 'licga6' = {
@@ -2152,34 +2146,34 @@
 	 parameterCategory = 17 ;
 	 parameterNumber = 2 ;
 	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
 	 typeOfSecondFixedSurface = 8 ;
-	 lengthOfTimeRange = 6 ;
 	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	 lengthOfTimeRange = 6 ;
 	}
 #Soil moisture top 20 cm
 'sm20' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
 	}
 #Soil moisture top 100 cm
 'sm100' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 106 ;
+	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 typeOfSecondFixedSurface = 106 ;
 	}
 #Total column rain water
 'tcrw' = {
@@ -2208,24 +2202,24 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
+	 typeOfFirstFixedSurface = 106 ;
 	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 2 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
-	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Soil temperature top 100 cm
 'st100' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	 scaleFactorOfSecondFixedSurface = 1 ;
 	 typeOfFirstFixedSurface = 106 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
 	 typeOfSecondFixedSurface = 106 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 10 ;
+	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
 #Atmosphere emission mass flux of Methane from Wetlands
 'e_WLCH4' = {
@@ -2339,9 +2333,9 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfFirstFixedSurface = 200 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #200 metre V wind component
 'v200' = {
@@ -2349,8 +2343,8 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #200 metre wind speed
 'si200' = {
@@ -2358,16 +2352,16 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 200 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #100 metre wind speed
 'si100' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
-	 scaledValueOfFirstFixedSurface = 100 ;
 	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 100 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Urban cover
@@ -2690,18 +2684,18 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Mean discharge in the last 24 hours
 'dis24' = {
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	 lengthOfTimeRange = 24 ;
 	}
@@ -2855,8 +2849,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
-	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #10 metre wind direction
 'wdir10' = {
@@ -2864,8 +2858,8 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 103 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #Direct short wave radiation flux
 'dirswrf' = {
@@ -2884,8 +2878,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 13 ;
-	 typeOfStatisticalProcessing = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Evaporation in the last 6 hours
 'eva06' = {
@@ -2893,17 +2887,17 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 6 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	}
 #Evaporation in the last 24 hours
 'eva24' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
-	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
