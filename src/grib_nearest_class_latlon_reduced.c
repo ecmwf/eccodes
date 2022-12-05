@@ -125,7 +125,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
         grib_get_double(h, "latitudeFirstInDegrees", &lat1) == GRIB_SUCCESS &&
         grib_get_double(h, "latitudeLastInDegrees", &lat2) == GRIB_SUCCESS)
     {
-        if (fabs(lat1) != 90 || fabs(lat2) != 90 || lon1 != 0 || lon2 < 359) {
+        const double difflat = fabs(lat1-lat2);
+        if (difflat < 180 || lon1 != 0 || lon2 < 359) {
             is_global = 0; /* subarea */
         }
     }
