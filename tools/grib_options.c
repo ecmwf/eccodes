@@ -125,10 +125,11 @@ void usage(void)
     printf("USAGE \n\t%s %s\n\n", tool_name, tool_usage);
     printf("OPTIONS\n");
     for (i = 0; i < grib_options_count; i++) {
-        if (grib_options[i].command_line)
+        if (grib_options[i].command_line) {
             printf("\t-%c %s\t%s", grib_options[i].id[0],
                    grib_options_get_args(grib_options[i].id),
                    grib_options_get_help(grib_options[i].id));
+        }
     }
     printf("\n\n");
     exit(1);
@@ -406,8 +407,9 @@ const char* grib_options_get_help(const char* id)
 {
     int i      = 0;
     char msg[] = "ERROR: help not found for option ";
-    char* err  = (char*)calloc(1, sizeof(msg) + 3);
-    snprintf(err, 1024, "%s%c\n", msg, *id);
+    const size_t msize = sizeof(msg) + 3;
+    char* err  = (char*)calloc(1, msize);
+    snprintf(err, msize, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].help != NULL)
@@ -418,7 +420,7 @@ const char* grib_options_get_help(const char* id)
     }
     for (i = 0; i < grib_options_help_count; i++) {
         if (!strcmp(id, grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].help != NULL ? (char*)grib_options_help_list[i].help : err;
+            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
         }
     }
     return err;
@@ -429,11 +431,12 @@ const char* grib_options_get_args(const char* id)
     int i        = 0;
     char empty[] = "";
     char msg[]   = "ERROR: help not found for option -";
+    const size_t msize = sizeof(msg) + 3;
     char* err    = NULL;
     if (id[1] != ':')
         return strdup(empty);
-    err = (char*)calloc(1, sizeof(msg) + 3);
-    snprintf(err, 1024, "%s%c\n", msg, *id);
+    err = (char*)calloc(1, msize);
+    snprintf(err, msize, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].args != NULL) {
@@ -445,11 +448,12 @@ const char* grib_options_get_args(const char* id)
             }
         }
     }
+
     for (i = 0; i < grib_options_help_count; i++) {
         if (!strcmp(id, grib_options_help_list[i].id)) {
             if (grib_options_help_list[i].args != NULL) {
                 free(err);
-                return (char*)grib_options_help_list[i].args;
+                return grib_options_help_list[i].args;
             }
             else {
                 return err;

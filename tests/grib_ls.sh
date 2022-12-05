@@ -16,6 +16,13 @@ rm -f $tempLog
 cd ${data_dir}
 infile=regular_gaussian_model_level.grib1
 
+# Basic test of man page
+set +e
+${tools_dir}/grib_ls > /dev/null
+status=$?
+set -e
+[ $status -eq 1 ]
+
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
 ${tools_dir}/grib_ls $infile                >> $tempLog
