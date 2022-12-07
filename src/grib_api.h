@@ -96,9 +96,6 @@ Log mode for information for processing information
 #define GRIB_MISSING_LONG 2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
-/*set spec flags*/
-#define GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING (1 << 0)
-
 /* Dump option flags*/
 #define GRIB_DUMP_FLAG_READ_ONLY (1 << 0)
 #define GRIB_DUMP_FLAG_DUMP_OK (1 << 1)

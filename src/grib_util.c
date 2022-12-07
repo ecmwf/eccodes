@@ -997,6 +997,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }*/
 
+/* ECC-1269 */
+#if 0
     if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
         if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
             strcmp(input_packing_type, "grid_simple_matrix")) {
@@ -1143,6 +1145,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         return h;
     } /* flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING */
+#endif
 
     grid_type = get_grid_type_name(spec->grid_type);
     if (!grid_type) {

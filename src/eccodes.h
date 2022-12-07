@@ -56,9 +56,6 @@ Log mode for information for processing information
 #define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
 
-/*set spec flags*/
-#define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
-
 /* Dump option flags*/
 #define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY
 #define CODES_DUMP_FLAG_DUMP_OK        GRIB_DUMP_FLAG_DUMP_OK
