@@ -51,7 +51,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_debug {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in debug */
     long section_offset;
     long begin;

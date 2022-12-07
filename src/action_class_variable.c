@@ -39,7 +39,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_variable {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

@@ -679,7 +679,7 @@ static int is_missing(grib_accessor* a)
         } else {
             result = grib_is_missing_long(a, value);
         }
-    } 
+    }
     else if (ktype == GRIB_TYPE_DOUBLE) {
         double value           = 0;
         double* values         = NULL;

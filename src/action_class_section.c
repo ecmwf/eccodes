@@ -44,7 +44,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
 
 
 typedef struct grib_action_section {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
 } grib_action_section;
 

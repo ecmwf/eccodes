@@ -410,7 +410,7 @@ static int process_packingType_change(grib_handle* h, const char* keyname, const
             err = grib_get_long(h, "bitsPerValue", &bitsPerValue);
             if (!err && bitsPerValue == 0) {
                 /* ECC-1219: packingType conversion from grid_ieee to grid_second_order.
-                 * Normally having a bitsPerValue of 0 means a constant field but this is 
+                 * Normally having a bitsPerValue of 0 means a constant field but this is
                  * not so for IEEE packing which can be non-constant but always has bitsPerValue==0! */
                 len = sizeof(input_packing_type);
                 grib_get_string(h, "packingType", input_packing_type, &len);
@@ -1750,7 +1750,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
                     break;
             }
             /*if (args[i].error != GRIB_SUCCESS)
-         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set %s (%s)", 
+         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set %s (%s)",
                           args[i].name,grib_get_error_message(args[i].error)); */
         }
     }

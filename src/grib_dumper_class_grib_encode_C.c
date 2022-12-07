@@ -52,7 +52,7 @@ static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_grib_encode_C {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in grib_encode_C */
     int cr;
 } grib_dumper_grib_encode_C;

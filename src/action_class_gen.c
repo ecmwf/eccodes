@@ -48,7 +48,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
 
 typedef struct grib_action_gen {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

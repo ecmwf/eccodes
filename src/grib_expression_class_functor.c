@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -65,8 +65,8 @@ static grib_expression_class _grib_expression_class_functor = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    &print,
+    &add_dependency,
 
 	&native_type,
 	0,

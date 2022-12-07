@@ -49,7 +49,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
 
 
 typedef struct grib_action_template {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
     /* Members defined in template */
     int nofail;

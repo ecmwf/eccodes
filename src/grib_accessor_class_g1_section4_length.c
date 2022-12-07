@@ -148,9 +148,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 #if 0
     grib_accessor_class* super = *(a->cclass->super);
 
-    /* Here we assume that the totalLength will be coded AFTER the section4 length, and 
+    /* Here we assume that the totalLength will be coded AFTER the section4 length, and
     the section4 length will be overwritten by the totalLength accessor for large GRIBs */
-    
+
     /*printf("UPDATING sec4len %ld\n",*val);*/
 
     return super->pack_long(a,val,len);

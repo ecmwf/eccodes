@@ -58,7 +58,7 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 static void header         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_encode_filter {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in bufr_encode_filter */
     long section_offset;
     long begin;

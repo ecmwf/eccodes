@@ -24,7 +24,7 @@
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = unpack_string_array;pack_string_array
    IMPLEMENTS = unpack_bytes;pack_bytes
-   IMPLEMENTS = unpack_double_subarray 
+   IMPLEMENTS = unpack_double_subarray
    IMPLEMENTS = init;dump;destroy;string_length
    IMPLEMENTS = get_native_type;sub_section
    IMPLEMENTS = next_offset;value_count;byte_offset;byte_count

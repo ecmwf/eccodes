@@ -41,7 +41,7 @@ static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
 
 typedef struct grib_action_while {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
     /* Members defined in while */
     grib_expression *expression;

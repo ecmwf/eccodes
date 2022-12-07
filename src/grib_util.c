@@ -650,7 +650,7 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
     long angleSubdivisions = 0;
     double angular_precision = 1.0/1000.0; /* millidegree by default */
     double tolerance = 0;
-    
+
     if (edition == 2) {
         return GRIB_SUCCESS;  /* For now only do checks on edition 1 */
     }
@@ -2078,7 +2078,7 @@ int grib2_is_PDTN_Aerosol(long pdtn)
     /* Notes: PDT 44 is deprecated and replaced by 48 */
     /*        PDT 47 is deprecated and replaced by 85 */
     return (
-        pdtn == 44 || 
+        pdtn == 44 ||
         pdtn == 48 ||
         pdtn == 49 ||
         pdtn == 45 ||
