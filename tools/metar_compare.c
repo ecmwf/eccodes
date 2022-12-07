@@ -598,7 +598,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     printInfo(h1);
     printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
         name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH; 
+    return GRIB_TYPE_MISMATCH;
   }
      */
 

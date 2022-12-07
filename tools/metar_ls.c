@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 
 /*
 This is executed before processing the options with i
-getopt and therfore it is the right place for hacking 
+getopt and therfore it is the right place for hacking
 the arguments if needed
  */
 int grib_tool_before_getopt(grib_runtime_options* options)
@@ -72,8 +72,8 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 }
 
 /*
-The options have been parsed and the structure 
-grib_runtime_options* options has been loaded. 
+The options have been parsed and the structure
+grib_runtime_options* options has been loaded.
 Initialization and startup can be done here
  */
 int grib_tool_init(grib_runtime_options* options)

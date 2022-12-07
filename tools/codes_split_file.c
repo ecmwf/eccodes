@@ -12,7 +12,7 @@
  * Description:
  * Split an input file (GRIB, BUFR etc) into chunks of roughly the same size.
  * The output files are named input_01, input_02 etc. This is much faster than grib_copy/bufr_copy
- * 
+ *
  * 2019-07-26 W.Qu  Allow an input file to be split into each individual message (if nchunk=-1)
  *
  */
