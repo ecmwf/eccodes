@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
@@ -154,6 +153,8 @@ int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
 int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed)
 {
     grib_action_class* c = a->cclass;
+
+    /* See ECC-604 for why we removed the mutexes/locks in this function */
 
     /*GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);*/
     /*GRIB_MUTEX_LOCK(&mutex1);*/

@@ -13,15 +13,15 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+ #include <unistd.h>
 #else
-#include <fcntl.h> /* Windows: for _O_BINARY */
+ #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#define _GNU_SOURCE
-#include <fenv.h>
-int feenableexcept(int excepts);
+ #define _GNU_SOURCE
+ #include <fenv.h>
+ int feenableexcept(int excepts);
 #endif
 
 grib_string_list grib_file_not_found;
@@ -29,11 +29,11 @@ grib_string_list grib_file_not_found;
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
-#define ECC_PATH_DELIMITER_CHAR ';'
-#define ECC_PATH_DELIMITER_STR ";"
+ #define ECC_PATH_DELIMITER_CHAR ';'
+ #define ECC_PATH_DELIMITER_STR ";"
 #else
-#define ECC_PATH_DELIMITER_CHAR ':'
-#define ECC_PATH_DELIMITER_STR ":"
+ #define ECC_PATH_DELIMITER_CHAR ':'
+ #define ECC_PATH_DELIMITER_STR ":"
 #endif
 
 #if GRIB_PTHREADS
