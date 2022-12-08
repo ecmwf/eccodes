@@ -308,6 +308,11 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
         ASSERT(pl[j] > 0);
         const auto inc = eckit::Fraction(360, pl[j]);
 
+        // latitude edges
+        const auto s = std::min(bbox_.north().value(), latEdges[j]);
+        const auto n = std::max(bbox_.south().value(), latEdges[j + 1]);
+        ASSERT(s >= n);
+
         // longitude edges
         const auto west = bbox_.west().fraction();
         auto Nw         = (west / inc).integralPart();
@@ -327,9 +332,9 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
         Longitude lon1 = lon0;
 
         for (size_t i = 0; i < N; ++i) {
-            auto l = lon1;
+            auto l = std::max(bbox_.west().value(), lon1.value());
             lon1 += inc;
-            r.emplace_back(latEdges[j], l.value(), latEdges[j + 1], lon1.value());
+            r.emplace_back(n, l, s, std::min(bbox_.east().value(), lon1.value()));
         }
 
         ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
