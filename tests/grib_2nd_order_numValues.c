@@ -2753,7 +2753,8 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
 
         if (numberOfValues + numberOfMissing != numberOfDataPoints) {
-            printf(" numberOfValues = %ld, numberOfDataPoints = %ld, numberOfMissing = %d\n", numberOfValues, numberOfDataPoints, numberOfMissing);
+            printf("%s: numberOfValues = %ld, numberOfDataPoints = %ld, numberOfMissing = %d\n",
+                        packingType[ipackingType], numberOfValues, numberOfDataPoints, numberOfMissing);
             printf(" numberOfValues appears to be incorrect\n");
             return 1;
         }
