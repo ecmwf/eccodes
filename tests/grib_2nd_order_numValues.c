@@ -2715,7 +2715,7 @@ int main(int argc, char* argv[])
 {
     size_t len, slen;
     grib_handle* h = NULL;
-    const char* packingType[] = { "grid_second_order", "grid_complex_spatial_differencing", "grid_complex", "grid_ccsds" };
+    const char* packingType[] = { "grid_second_order", "grid_complex_spatial_differencing", "grid_complex" };
     const size_t numTypes = sizeof(packingType)/sizeof(packingType[0]);
     int ipackingType = 0;
     const double zmiss = 9999999999.;
