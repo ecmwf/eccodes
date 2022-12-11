@@ -2714,14 +2714,15 @@ static double values[] = {
 int main(int argc, char* argv[])
 {
     size_t len, slen;
-    grib_handle* h;
-    const char* packingType[2] = { "grid_second_order", "grid_complex_spatial_differencing" };
-    int ipackingType;
+    grib_handle* h = NULL;
+    const char* packingType[] = { "grid_second_order", "grid_complex_spatial_differencing", "grid_complex", "grid_ccsds" };
+    const size_t numTypes = sizeof(packingType)/sizeof(packingType[0]);
+    int ipackingType = 0;
     const double zmiss = 9999999999.;
     long numberOfValues, numberOfDataPoints;
     int i, numberOfMissing;
 
-    for (ipackingType = 0; ipackingType < 2; ipackingType++) {
+    for (ipackingType = 0; ipackingType < numTypes; ipackingType++) {
         GRIB_CHECK(((h = grib_handle_new_from_samples(NULL, "regular_ll_pl_grib2")) == NULL), 0);
         GRIB_CHECK(grib_set_long(h, "Ni", NLON), 0);
         GRIB_CHECK(grib_set_long(h, "Nj", NLAT), 0);
@@ -2737,6 +2738,7 @@ int main(int argc, char* argv[])
 
         GRIB_CHECK(grib_set_long(h, "bitsPerValue", 16), 0);
         slen = strlen(packingType[ipackingType]);
+        printf("Doing packingType=%s\n", packingType[ipackingType]);
         GRIB_CHECK(grib_set_string(h, "packingType", packingType[ipackingType], &slen), 0);
 
         GRIB_CHECK(grib_set_long(h, "bitmapPresent", 1), 0);
@@ -2753,9 +2755,9 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints), 0);
 
         if (numberOfValues + numberOfMissing != numberOfDataPoints) {
-            printf("%s: numberOfValues = %ld, numberOfDataPoints = %ld, numberOfMissing = %d\n",
-                        packingType[ipackingType], numberOfValues, numberOfDataPoints, numberOfMissing);
-            printf(" numberOfValues appears to be incorrect\n");
+            printf("ERROR: numberOfValues = %ld, numberOfDataPoints = %ld, numberOfMissing = %d\n",
+                        numberOfValues, numberOfDataPoints, numberOfMissing);
+            printf("ERROR: numberOfValues appears to be incorrect\n");
             return 1;
         }
 
