@@ -183,8 +183,12 @@ const Representation* SphericalHarmonics::truncate(size_t truncation, const MIRV
 
 
 void SphericalHarmonics::validate(const MIRValuesVector& values) const {
-    ASSERT_VALUES_SIZE_EQ_NUMBER_OF_COEFFS("SphericalHarmonics", values.size(),
-                                           number_of_complex_coefficients(truncation_) * 2);
+    ASSERT_VALUES_SIZE_EQ_NUMBER_OF_COEFFS("SphericalHarmonics", values.size(), numberOfValues());
+}
+
+
+size_t SphericalHarmonics::numberOfValues() const {
+    return number_of_complex_coefficients(truncation_) * 2;
 }
 
 
