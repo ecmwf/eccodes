@@ -742,7 +742,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
-        printf("%s is set to missing in %s field is not missing in %s field\n", name, first_str, second_str);
+        printf("%s is set to missing in %s field but is not missing in %s field\n", name, first_str, second_str);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
@@ -752,7 +752,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
-        printf("%s is set to missing in %s field is not missing in %s field\n", name, second_str, first_str);
+        printf("%s is set to missing in %s field but is not missing in %s field\n", name, second_str, first_str);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
