@@ -98,24 +98,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 20 ;
 	}
-#Unbalanced component of temperature
-'uctp' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 21 ;
-	}
-#Unbalanced component of logarithm of surface pressure
-'ucln' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 22 ;
-	}
-#Unbalanced component of divergence
-'ucdv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 23 ;
-	}
 #Reserved for future unbalanced components
 'p24.128' = {
 	 discipline = 192 ;
@@ -13807,12 +13789,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;
-	}
-#10 metre wind gust in the last 3 hours
-'fg310' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 28 ;
 	}
 #Soil wetness index in layer 1
 'swi1' = {

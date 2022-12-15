@@ -592,3 +592,27 @@
  parameterCategory = 228 ;
  parameterNumber = 251 ;
 }
+#Unbalanced component of temperature
+'uctp' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 21 ;
+}
+#Unbalanced component of logarithm of surface pressure
+'ucln' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 22 ;
+}
+#Unbalanced component of divergence
+'ucdv' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 23 ;
+}
+#10 metre wind gust in the last 3 hours
+'10fg3' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 28 ;
+}

@@ -98,24 +98,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 20 ;
 	}
-#Unbalanced component of temperature
-'Unbalanced component of temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 21 ;
-	}
-#Unbalanced component of logarithm of surface pressure
-'Unbalanced component of logarithm of surface pressure' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 22 ;
-	}
-#Unbalanced component of divergence
-'Unbalanced component of divergence' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 23 ;
-	}
 #Reserved for future unbalanced components
 'Reserved for future unbalanced components' = {
 	 discipline = 192 ;
@@ -13807,12 +13789,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 3 ;
-	}
-#10 metre wind gust in the last 3 hours
-'10 metre wind gust in the last 3 hours' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 28 ;
 	}
 #Soil wetness index in layer 1
 'Soil wetness index in layer 1' = {
