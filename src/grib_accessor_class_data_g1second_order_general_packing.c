@@ -260,6 +260,9 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
+    if (*len < (size_t)numberOfSecondOrderPackedValues)
+        return GRIB_ARRAY_TOO_SMALL;
+
     groupWidths     = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfGroups);
     groupWidthsSize = numberOfGroups;
     if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->groupWidths, groupWidths, &groupWidthsSize)) != GRIB_SUCCESS)
