@@ -204,6 +204,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         }
     }
 
+    if (options->current_infile && options->current_infile->name) {
+        size = strlen(options->current_infile->name);
+        grib_set_string(h, "file", options->current_infile->name, &size);
+    }
+
     return 0;
 }
 
