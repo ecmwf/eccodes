@@ -88,6 +88,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             exit(err);
     }
 
+    if (options->current_infile && options->current_infile->name) {
+        size_t size = strlen(options->current_infile->name);
+        grib_set_string(h, "file", options->current_infile->name, &size);
+    }
+
     return 0;
 }
 
