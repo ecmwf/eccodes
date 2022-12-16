@@ -1296,16 +1296,14 @@ void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* 
     if (!failed)
         return;
     /*
-	   fprintf(dump_file,"Following bad messages found in %s\n",
-	   file->name);
-	   fprintf(dump_file,"N      Error\n");
-	   while (failed){
-	   fprintf(dump_file,"%-*d    %s\n",
-	   7,failed->count,
-	   grib_get_error_message(failed->error));
-	   failed=failed->next;
-	   }
-	   fprintf(dump_file,"\n");
+       fprintf(dump_file,"Following bad messages found in %s\n", file->name);
+       fprintf(dump_file,"N      Error\n");
+       while (failed){
+           fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
+           grib_get_error_message(failed->error));
+           failed=failed->next;
+       }
+       fprintf(dump_file,"\n");
      */
 }
 
