@@ -557,7 +557,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int value_count(grib_accessor* a, long* count)
 {
-    int ret                               = 0, size, type, idx;
+    int ret     = 0, type = 0, idx = 0;
+    size_t size = 0;
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
     if (!self->compressedData) {
