@@ -311,7 +311,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     grib_dumper_serialize* self = (grib_dumper_serialize*)d;
     int k, err = 0;
     double* buf          = NULL;
-    int last             = 0;
+    size_t last          = 0;
     int columns          = 4;
     char* values_format  = NULL;
     char* default_format = (char*)"%.16e";
