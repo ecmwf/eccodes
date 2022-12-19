@@ -253,7 +253,6 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     size_t size                     = a->length;
     unsigned char* buf;
 
-
     if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
         return;
 
@@ -263,10 +262,9 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     buf = (unsigned char*)grib_context_malloc(d->context, size);
 
     if (!buf) {
-        fprintf(self->dumper.out, "/* %s: cannot malloc(%ld) */\n", a->name, (long)size);
+        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name, size);
         return;
     }
-
 
     err = grib_unpack_bytes(a, buf, &size);
     if (err) {
@@ -336,7 +334,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     buf = (double*)grib_context_malloc(d->context, size * sizeof(double));
     if (!buf) {
-        fprintf(self->dumper.out, "/* %s: cannot malloc(%ld) */\n", a->name, (long)size);
+        fprintf(self->dumper.out, "/* %s: cannot malloc(%zu) */\n", a->name, size);
         return;
     }
 
@@ -348,7 +346,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         return;
     }
 
-    fprintf(self->dumper.out, "    size = %ld;\n", (long)size);
+    fprintf(self->dumper.out, "    size = %zu;\n", size);
     fprintf(self->dumper.out, "    v%s    = (%s*)calloc(size,sizeof(%s));\n", stype, stype, stype);
     fprintf(self->dumper.out, "    if(!v%s) {\n", stype);
     fprintf(self->dumper.out, "        fprintf(stderr,\"failed to allocate %%d bytes\\n\",size*sizeof(%s));\n", stype);

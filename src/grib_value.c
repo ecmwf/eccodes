@@ -36,7 +36,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
 
     if (length <= N)
         N = length;
-    fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
+    fprintf(stderr, "ECCODES DEBUG %s key=%s %zu values (", func, name, length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
         fprintf(stderr, "%.10g", val[i]);
@@ -93,7 +93,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n", name, (long)val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n", name, val);
 
     if (a) {
         ret = grib_pack_long(a, &val, &l);
@@ -121,9 +121,9 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, (long)val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, (long)val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -491,7 +491,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     a = grib_find_accessor(h, name);
 
     if (h->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %ld values\n", name, (long)length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %zu values\n", name, length);
     }
 
     if (a) {
@@ -899,7 +899,7 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
         size_t N = 5;
         if (length <= N)
             N = length;
-        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values (", name, (long)length);
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %zu values (", name, length);
         for (i = 0; i < N; ++i)
             fprintf(stderr, " %ld,", val[i]);
         if (N >= length)

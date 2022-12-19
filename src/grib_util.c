@@ -389,7 +389,7 @@ static void print_values(grib_context* c,
     for (i = 0; i < count; i++) {
         switch (keyval_pairs[i].type) {
             case GRIB_TYPE_LONG:
-                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, (long)keyval_pairs[i].long_value);
+                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, keyval_pairs[i].long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
                 fprintf(stderr, "ECCODES DEBUG grib_util: => %s = %.16e;\n", keyval_pairs[i].name, keyval_pairs[i].double_value);
@@ -629,8 +629,8 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
             strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
-                        msg, (long)data_values_count, (long)sum);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%zu!=%zu)\n",
+                        msg, data_values_count, sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -1301,7 +1301,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 setSecondOrder = 1;
                 break;
             default:
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", (long)packing_spec->packing_type);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -1364,7 +1364,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
 
         default:
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", (long)packing_spec->accuracy);
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", packing_spec->accuracy);
             grib_handle_delete(h_sample);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
@@ -1423,8 +1423,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
                 fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid reduced gaussian grid: "
-                        "specified as global, data_values_count=%ld but sum of pl array=%ld\n",
-                        (long)data_values_count, (long)sum);
+                        "specified as global, data_values_count=%zu but sum of pl array=%zu\n",
+                        data_values_count, sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
@@ -1469,7 +1469,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         ferror = fopen("error.data", "w");
         lcount = 0;
-        fprintf(ferror, "# data_values_count=%ld\n", (long)data_values_count);
+        fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
         fprintf(ferror, "set values={ ");
         for (ii = 0; ii < data_values_count - 1; ii++) {
             fprintf(ferror, "%g, ", data_values[ii]);

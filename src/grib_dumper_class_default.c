@@ -585,7 +585,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     else
         fprintf(self->dumper.out, "  ");
 
-    fprintf(self->dumper.out, "%s(%ld) = ", a->name, (long)size);
+    fprintf(self->dumper.out, "%s(%zu) = ", a->name, size);
     aliases(d, a);
     fprintf(self->dumper.out, " {");
 
@@ -593,7 +593,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 

@@ -558,8 +558,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     /*
-    printf("n_vals = %ld, bits8 = %ld\n", (long)n_vals, (long)bits8);
-    printf("in %ld out => %ld\n", (long)bits8/8*n_vals,(long) buflen);
+    printf("n_vals = %ld, bits8 = %ld\n", n_vals, bits8);
+    printf("in %ld out => %zu\n", bits8/8*n_vals, buflen);
     */
     buflen = strm.total_out;
     grib_buffer_replace(a, buf, buflen, 1, 1);

@@ -262,7 +262,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
@@ -371,13 +371,13 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     buf = (double*)grib_context_malloc(d->context, size * sizeof(double));
 
-    fprintf(self->dumper.out, "%s (%ld) {", a->name, (long)size);
+    fprintf(self->dumper.out, "%s (%zu) {", a->name, size);
 
     if (!buf) {
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
