@@ -16,6 +16,23 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_vsarray_print(const char* title, const grib_vsarray* vsarray)
+{
+    size_t i = 0;
+    char text[64] = {0,};
+    if(!vsarray) {
+        printf("%s: vsarray=NULL\n", title);
+        return;
+    }
+    printf("%s: vsarray.n=%zu\n", title, vsarray->n);
+    for (i = 0; i < vsarray->n; i++) {
+        snprintf(text, sizeof(text), " vsarray->v[%zu]", i);
+        grib_sarray_print(text, vsarray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_vsarray* v = NULL;

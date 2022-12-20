@@ -207,6 +207,7 @@ int grib_darray_is_constant(grib_darray* v, double epsilon);
 size_t grib_darray_used_size(grib_darray* v);
 
 /* grib_sarray.c */
+void grib_sarray_print(const char* title, const grib_sarray* sarray);
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize);
 grib_sarray* grib_sarray_push(grib_context* c, grib_sarray* v, char* val);
 void grib_sarray_delete(grib_context* c, grib_sarray* v);
@@ -245,6 +246,7 @@ grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v);
 size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.c */
+void grib_vsarray_print(const char* title, const grib_vsarray* vdarray);
 grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
 grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
 void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
