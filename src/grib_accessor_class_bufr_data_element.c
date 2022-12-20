@@ -429,6 +429,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     else {
         idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
     }
+    grib_sarray_delete_content(c, self->stringValues->v[idx]); /* ECC-1172 */
     grib_sarray_delete(c, self->stringValues->v[idx]);
     self->stringValues->v[idx] = grib_sarray_new(c, 1, 1);
     s                          = grib_context_strdup(c, val);
