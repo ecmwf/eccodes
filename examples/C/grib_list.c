@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
     /* get as a long*/
     CODES_CHECK(codes_get_size(h, "scaledValueOfCentralWaveNumber", &count), 0);
-    printf("count=%ld\n", (long)count);
+    printf("count=%zu\n", count);
 
     assert(count < sizeof(values) / sizeof(values[0]));
 
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     assert(size == count);
 
     for (i = 0; i < count; i++) {
-        printf("scaledValueOfCentralWaveNumber %lu = %ld\n", (unsigned long)i, values[i]);
+        printf("scaledValueOfCentralWaveNumber %zu = %ld\n", i, values[i]);
         if (i == 0) assert(values[i] == 26870);
         if (i == 1) assert(values[i] == 9272);
     }
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_long_array(h, "scaledValueOfCentralWaveNumber", new_values, &size), 0);
     assert(size == count);
     for (i = 0; i < count; i++) {
-        printf("Now scaledValueOfCentralWaveNumber %lu = %ld\n", (unsigned long)i, new_values[i]);
+        printf("Now scaledValueOfCentralWaveNumber %zu = %ld\n", i, new_values[i]);
         assert(new_values[i] == (i + 1000));
     }
 

@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
         snprintf(key_name, sizeof(key_name), "/verticalSoundingSignificance=4/pressure");
         CODES_CHECK(codes_get_size(h, key_name, &sigt_len), 0);
 
-        printf("Number of T significant levels: %lu\n", (unsigned long)sigt_len);
+        printf("Number of T significant levels: %zu\n", sigt_len);
 
         /* allocate memory for the values to be read. Each
          * parameter must have the same number of values. */

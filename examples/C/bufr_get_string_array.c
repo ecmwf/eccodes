@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < size; ++i) {
             printf("%s\n", strArray[i]);
         }
-        printf("stationOrSiteName string array size = %lu\n", (unsigned long)size);
+        printf("stationOrSiteName string array size = %zu\n", size);
 
         /* free allocated arrays */
         for (i = 0; i < size; ++i)
