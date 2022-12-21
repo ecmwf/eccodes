@@ -467,7 +467,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     /* ECC-710: It is MUCH slower determining the string length here
      * than using a maximum size (and no need for malloc).
      * Specially for BUFR elements */
-    /*err = _grib_get_string_length(a,&size);
+    /*err = ecc__grib_get_string_length(a,&size);
     if (size==0) return;
     value=(char*)grib_context_malloc_clear(a->context,size);
     if (!value) {

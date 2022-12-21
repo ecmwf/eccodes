@@ -203,7 +203,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = _grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
+    err = ecc__grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -261,7 +261,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return GRIB_NOT_FOUND;
     }
 
-    err = _grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
+    err = ecc__grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {

@@ -735,7 +735,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h       = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     if (size == 0)
         return;
 

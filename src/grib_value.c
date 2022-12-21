@@ -714,7 +714,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                 *encoded_length += len;
                 if (err == GRIB_SUCCESS) {
                     /* See ECC-778 */
-                    return _grib_dependency_notify_change(h, a);
+                    return ecc__grib_dependency_notify_change(h, a);
                 }
             }
             else {
@@ -752,7 +752,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
         err = GRIB_ARRAY_TOO_SMALL;
 
     if (err == GRIB_SUCCESS)
-        return _grib_dependency_notify_change(h, a); /* See ECC-778 */
+        return ecc__grib_dependency_notify_change(h, a); /* See ECC-778 */
 
     return err;
 }
@@ -1106,7 +1106,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     if (!act)
         return GRIB_NOT_FOUND;
 
-    err = _grib_get_size(h, act, &size);
+    err = ecc__grib_get_size(h, act, &size);
 
     if (err != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_double_elements: cannot get size of %s\n", name);
@@ -1289,7 +1289,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
     }
 }
 
-int _grib_get_string_length(grib_accessor* a, size_t* size)
+int ecc__grib_get_string_length(grib_accessor* a, size_t* size)
 {
     size_t s = 0;
 
@@ -1315,7 +1315,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         al = grib_find_accessors_list(h, name);
         if (!al)
             return GRIB_NOT_FOUND;
-        ret = _grib_get_string_length(al->accessor, size);
+        ret = ecc__grib_get_string_length(al->accessor, size);
         grib_context_free(h->context, al);
         return ret;
     }
@@ -1323,11 +1323,11 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         a = grib_find_accessor(h, name);
         if (!a)
             return GRIB_NOT_FOUND;
-        return _grib_get_string_length(a, size);
+        return ecc__grib_get_string_length(a, size);
     }
 }
 
-int _grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size)
+int ecc__grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size)
 {
     long count = 0;
     int err    = 0;
@@ -1375,7 +1375,7 @@ int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
             return ret;
         }
         else
-            return _grib_get_size(h, a, size);
+            return ecc__grib_get_size(h, a, size);
     }
 }
 
@@ -1409,10 +1409,10 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
     return GRIB_NOT_FOUND;
 }
 
-int _grib_get_string_array_internal(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
+int ecc__grib_get_string_array_internal(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = _grib_get_string_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = ecc__grib_get_string_array_internal(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1451,7 +1451,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
         }
         else {
             *length = 0;
-            return _grib_get_string_array_internal(h, a, val, len, length);
+            return ecc__grib_get_string_array_internal(h, a, val, len, length);
         }
     }
 }

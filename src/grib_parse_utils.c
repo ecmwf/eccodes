@@ -209,7 +209,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
                 size = count;
             }
             else {
-                ret = _grib_get_size(h, a, &size);
+                ret = ecc__grib_get_size(h, a, &size);
             }
             if (ret) return ret;
             dval = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
@@ -219,7 +219,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
             }
             else {
                 replen = 0;
-                ret    = _grib_get_double_array_internal(h, a, dval, size, &replen);
+                ret    = ecc__grib_get_double_array_internal(h, a, dval, size, &replen);
             }
             if (replen == 1)
                 fprintf(out, myformat, dval[0]);
@@ -250,7 +250,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
                 size = count;
             }
             else {
-                ret = _grib_get_size(h, a, &size);
+                ret = ecc__grib_get_size(h, a, &size);
             }
             if (ret) return ret;
             lval = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
@@ -260,7 +260,7 @@ int grib_accessor_print(grib_accessor* a, const char* name, int type, const char
             }
             else {
                 replen = 0;
-                ret    = _grib_get_long_array_internal(h, a, lval, size, &replen);
+                ret    = ecc__grib_get_long_array_internal(h, a, lval, size, &replen);
             }
             if (replen == 1)
                 fprintf(out, myformat, lval[0]);

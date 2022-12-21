@@ -622,7 +622,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
