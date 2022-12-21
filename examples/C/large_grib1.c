@@ -26,7 +26,7 @@ int main()
     numbytes = ni * nj * sizeof(double);
     values = (double*)malloc(numbytes);
     if (!values) {
-        printf("Malloc failed - requested %lu bytes\n", (unsigned long)numbytes);
+        fprintf(stderr, "Malloc failed - requested %zu bytes\n", numbytes);
         return 1;
     }
 
