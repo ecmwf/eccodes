@@ -384,7 +384,7 @@ static void print_values(grib_context* c,
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
-    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %lu key/value pairs\n", (unsigned long)count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
 
     for (i = 0; i < count; i++) {
         switch (keyval_pairs[i].type) {
@@ -400,7 +400,7 @@ static void print_values(grib_context* c,
         }
     }
 
-    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%zu;\n", data_values_count);
     for (i = 0; i < data_values_count; i++) {
         if (i == 0)
             v = data_values[i];

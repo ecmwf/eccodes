@@ -840,7 +840,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(h1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -865,7 +865,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("\n");
                     }
                     else {
-                        printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("long [%s] %d out of %zu different\n", name, countdiff, len1);
                     }
                 }
             }
@@ -962,7 +962,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(h1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -1012,7 +1012,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                     printInfo(h1);
                     save_error(c, name);
                     if (len1 > 1) {
-                        printf("double [%s]: %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("double [%s]: %d out of %zu different\n", name, countdiff, len1);
                         if (compareAbsolute)
                             printf(" max");
                         printf(" absolute diff. = %.16e,", fabs(dval1[imaxdiff] - dval2[imaxdiff]));

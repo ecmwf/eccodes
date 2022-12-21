@@ -84,7 +84,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             msg_size += size;
             if (read_size > chunk_size && msg_size < insize) {
                 if (verbose)
-                    printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg);
+                    printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg);
                 fclose(out);
                 i++;
                 /* Start writing to the next file */
@@ -103,7 +103,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
         }
     }
     if (verbose)
-        printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg - 1);
+        printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg - 1);
     fclose(out);
     free(ofilename);
 

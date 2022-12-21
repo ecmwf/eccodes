@@ -559,8 +559,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((global_handle = codes_bufr_handle_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        grib_handle_delete(global_handle);
     }
 
     error += morein1 + morein2;
@@ -889,7 +888,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
                 if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                     printInfo(handle1);
-                    printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                    printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                     err1 = GRIB_INTERNAL_ERROR;
                     save_error(c, name);
                 }
@@ -907,7 +906,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         if (len1 == 1)
                             printf("string [%s]: [%s] != [%s]\n", name, *svals1, *svals2);
                         else
-                            printf("string [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                            printf("string [%s] %d out of %zu different\n", name, countdiff, len1);
                     }
                 }
                 for (ii = 0; ii < len1; ++ii) grib_context_free(c, svals1[ii]);
@@ -945,7 +944,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(handle1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 err1 = GRIB_INTERNAL_ERROR;
                 save_error(c, name);
             }
@@ -963,7 +962,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     if (len1 == 1)
                         printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
                     else
-                        printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("long [%s] %d out of %zu different\n", name, countdiff, len1);
                 }
             }
 
@@ -1030,7 +1029,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(handle1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -1074,7 +1073,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     printInfo(handle1);
                     save_error(c, name);
                     if (len1 > 1) {
-                        printf("double [%s]: %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("double [%s]: %d out of %zu different\n", name, countdiff, len1);
                         if (dval1[imaxdiff] != GRIB_MISSING_DOUBLE && dval2[imaxdiff] != GRIB_MISSING_DOUBLE) {
                             if (compareAbsolute)
                                 printf(" max");

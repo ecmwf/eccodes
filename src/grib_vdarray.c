@@ -22,9 +22,9 @@ void grib_vdarray_print(const char* title, const grib_vdarray* vdarray)
     size_t i = 0;
     char text[100] = {0,};
     Assert(vdarray);
-    printf("%s: vdarray.n=%lu\n", title, (unsigned long)vdarray->n);
+    printf("%s: vdarray.n=%zu\n", title, vdarray->n);
     for (i = 0; i < vdarray->n; i++) {
-        snprintf(text, sizeof(text), " vdarray->v[%lu]", (unsigned long)i);
+        snprintf(text, sizeof(text), " vdarray->v[%zu]", i);
         grib_darray_print(text, vdarray->v[i]);
     }
     printf("\n");

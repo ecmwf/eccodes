@@ -321,8 +321,9 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-    int ret         = 0, i, idx;
-    char* s         = NULL;
+    int ret = GRIB_SUCCESS, idx = 0;
+    size_t i = 0;
+    char* s  = NULL;
     grib_context* c = a->context;
 
     if (self->compressedData) {
@@ -420,7 +421,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-    int ret         = 0, idx;
+    int ret         = GRIB_SUCCESS, idx = 0;
     char* s         = NULL;
     grib_context* c = a->context;
 
@@ -442,8 +443,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = 0, i;
-    long count                            = 0;
+    int ret    = GRIB_SUCCESS;
+    long count = 0, i = 0;
 
     value_count(a, &count);
 
@@ -471,8 +472,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = 0, i;
-    long count                            = 0;
+    int ret = GRIB_SUCCESS;
+    long count = 0, i = 0;
 
     value_count(a, &count);
 
@@ -500,9 +501,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = 0, i;
-    long count                            = 1;
-    grib_context* c                       = a->context;
+    int ret = GRIB_SUCCESS;
+    long count = 1, i = 0;
+    grib_context* c = a->context;
 
     if (self->compressedData) {
         count = *len;
