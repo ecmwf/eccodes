@@ -14,7 +14,7 @@
  * Description: read and print radiosonde data from TEMP BUFR messages.
  * If available this version also lists the position information from the WMO list
  * (now OSCAR/Surface) appended to the reports by ECMWF
- * 
+ *
  * Author: Bruce Ingleby
  */
 
