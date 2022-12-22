@@ -389,7 +389,7 @@ static void add_value(request* r, const char* parname, const char* fmt, ...)
     va_list list;
 
     va_start(list, fmt);
-    vsprintf(buffer, fmt, list);
+    vsnprintf(buffer, sizeof(buffer), fmt, list);
     va_end(list);
 
     put_value(r, parname, buffer, TRUE, FALSE, FALSE);
@@ -536,7 +536,7 @@ static void set_value(request* r, const char* parname, const char* fmt, ...)
     va_list list;
 
     va_start(list, fmt);
-    vsprintf(buffer, fmt, list);
+    vsnprintf(buffer, sizeof(buffer), fmt, list);
     va_end(list);
 
     put_value(r, parname, buffer, FALSE, FALSE, FALSE);
@@ -2982,25 +2982,25 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         }
 
         if (strcmp(axis, "date") == 0) {
-            sprintf(u, "days since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+            snprintf(u, sizeof(u), "days since %ld-%02ld-%02ld 00:00:0.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
             units    = u;
             longname = "Base_date";
             if (setup.climatology) {
-                sprintf(u, "months");
+                snprintf(u, sizeof(u), "months");
                 units = u;
             }
         }
 
         if (strcmp(axis, "time") == 0) {
             boolean onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
-            sprintf(u, "hours since 0000-00-00 00:00:00.0");
+            snprintf(u, sizeof(u), "hours since 0000-00-00 00:00:00.0");
             longname = "reference_time";
             if (setup.usevalidtime || onedtime) {
-                sprintf(u, "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
+                snprintf(u, sizeof(u), "hours since %ld-%02ld-%02ld 00:00:00.0", setup.refdate / 10000, (setup.refdate % 10000) / 100, (setup.refdate % 100));
                 longname = "time";
             }
             if (setup.climatology) {
-                sprintf(u, "hours");
+                snprintf(u, sizeof(u), "hours");
             }
             units = u;
             /* nctype = NC_FLOAT; */
@@ -3015,7 +3015,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 long date     = d ? atol(d) : 0;
                 long hour     = t ? atol(t) : 0;
                 long min      = t ? 60 * (atof(t) - hour) : 0;
-                sprintf(u, "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
+                snprintf(u, sizeof(u), "hours since %ld-%02ld-%02ld %02ld:%02ld:00.0", date / 10000, (date % 10000) / 100, (date % 100), hour, min);
                 units = u;
             }
         }
@@ -3034,9 +3034,9 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 strcat(ymd, "01");
             }
             else {
-                sprintf(ymd, "00-00-00");
+                snprintf(ymd, sizeof(ymd), "00-00-00");
             }
-            sprintf(u, "months since %s 00:00:00.0", ymd);
+            snprintf(u, sizeof(u), "months since %s 00:00:00.0", ymd);
             units    = u;
             longname = "time";
         }
@@ -3157,11 +3157,11 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             if (p->name[0] != '_') {
                 char par[1024];
                 char val[1024000] = "";
-                sprintf(par, "%s", (p->name));
+                snprintf(par, sizeof(par), "%s", (p->name));
 #if 0
                 value2string(p->values,val);
 #else
-                sprintf(val, "%s", (p->values->name));
+                snprintf(val, sizeof(val), "%s", (p->values->name));
 #endif
                 stat = nc_put_att_text(ncid, var_id, par, strlen(val), (val));
                 if (stat != NC_NOERR) {
@@ -3188,7 +3188,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
         /* Use history provided or Timestamp */
         if (setup.history) {
-            sprintf(history, "%s", setup.history);
+            snprintf(history, sizeof(history), "%s", setup.history);
         }
         else {
             int major    = ECCODES_MAJOR_VERSION;
@@ -3197,7 +3197,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
 
             time(&now);
             strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S GMT", gmtime(&now));
-            sprintf(history, "%s by grib_to_netcdf-%d.%d.%d: %s", timestamp, major, minor, revision, argvString);
+            snprintf(history, sizeof(history), "%s by grib_to_netcdf-%d.%d.%d: %s", timestamp, major, minor, revision, argvString);
         }
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err("nc_put_att_text", stat, __LINE__);
@@ -3462,7 +3462,7 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
                             if (!metadata_dir)
                                 metadata_dir = getenv("METADATA_DIR");
 
-                            sprintf(metapath, "%s/%s", metadata_dir ? metadata_dir : ".", metafile);
+                            snprintf(metapath, sizeof(metapath), "%s/%s", metadata_dir ? metadata_dir : ".", metafile);
                             att->metadata = 0; /* read_request_file(metapath); */
                         }
 
@@ -3496,7 +3496,7 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
     if (!isalpha(att->name[0])) {
         char buf[1048];
         const char* val = get_value(subset_r, "param", 0);
-        sprintf(buf, "%s_%s", (val ? val : "p"), att->name);
+        snprintf(buf, sizeof(buf), "%s_%s", (val ? val : "p"), att->name);
         strcpy(att->name, buf);
     }
 }
@@ -4315,7 +4315,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     stat          = nc_create(options->outfile->name, creation_mode, &ncid);
     if (stat != NC_NOERR) {
         char msg[1024];
-        ecc_snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
+        snprintf(msg, sizeof(msg), "nc_create: '%s'", options->outfile->name);
         check_err(msg, stat, __LINE__);
     }
 
@@ -4341,7 +4341,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     for (i = 0; i < count; ++i) {
         if (subsets[i].fset) {
             char dataset[100];
-            ecc_snprintf(dataset, sizeof(dataset), subsets[i].att.name, i + 1);
+            snprintf(dataset, sizeof(dataset), subsets[i].att.name, i + 1);
             put_data(dims, ncid, dataset, &subsets[i]);
         }
         else {

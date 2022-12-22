@@ -58,30 +58,30 @@ int main(int argc, char** argv)
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
         if (!list) {
-            fprintf(stderr, "Error on line %lu: string_split failed!\n", line_number);
+            fprintf(stderr, "Error on line %zu: string_split failed!\n", line_number);
             return 1;
         }
         for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
         if (i < MIN_NUM_COLUMNS) {
-            fprintf(stderr, "Error on line %lu: Number of columns (=%lu) < required miniumum (=%lu)!\n",
+            fprintf(stderr, "Error on line %zu: Number of columns (=%zu) < required miniumum (=%zu)!\n",
                     line_number, i, MIN_NUM_COLUMNS);
             return 1;
         }
         str_code = list[0];
         if (string_to_long(str_code, &lValue) != GRIB_SUCCESS) {
-            fprintf(stderr, "Error on line %lu: descriptor code '%s' (column 1) is not numeric.\n",
+            fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not numeric.\n",
                     line_number, str_code);
             return 1;
         }
         if (strlen(str_code) != NUM_DESCRIPTOR_DIGITS) {
-            fprintf(stderr, "Error on line %lu: descriptor code '%s' (column 1) is not %lu digits.\n",
+            fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not %zu digits.\n",
                     line_number, str_code, NUM_DESCRIPTOR_DIGITS);
             return 1;
         }
         str_key  = list[1];
         str_type = list[2];
         if (check_descriptor_type(str_type) != GRIB_SUCCESS) {
-            fprintf(stderr, "Error on line %lu: descriptor key type '%s' (column 3) is not valid.\n",
+            fprintf(stderr, "Error on line %zu: descriptor key type '%s' (column 3) is not valid.\n",
                     line_number, str_type);
             fprintf(stderr, "Please choose one of:\n");
             for (i = 0; i < NUMBER(allowed_types); ++i) {
@@ -90,13 +90,13 @@ int main(int argc, char** argv)
             return 1;
         }
         if (strlen(str_key) >= maxlen_keyName) {
-            fprintf(stderr, "Error on line %lu: descriptor key name '%s' (column 2) exceeds %lu characters.\n",
+            fprintf(stderr, "Error on line %zu: descriptor key name '%s' (column 2) exceeds %zu characters.\n",
                     line_number, str_key, maxlen_keyName);
             return 1;
         }
         str_units = list[4];
         if (strlen(str_units) >= maxlen_units) {
-            fprintf(stderr, "Error on line %lu: descriptor units '%s' (column 5) exceeds %lu characters.\n",
+            fprintf(stderr, "Error on line %zu: descriptor units '%s' (column 5) exceeds %zu characters.\n",
                     line_number, str_units, maxlen_units);
             return 1;
         }
@@ -104,17 +104,17 @@ int main(int argc, char** argv)
         str_ref   = list[6];
         str_width = list[7];
         if (string_to_long(str_scale, &lValue) != GRIB_SUCCESS) {
-            fprintf(stderr, "Error on line %lu: descriptor scale '%s' (column 6) is not numeric.\n",
+            fprintf(stderr, "Error on line %zu: descriptor scale '%s' (column 6) is not numeric.\n",
                     line_number, str_scale);
             return 1;
         }
         if (string_to_long(str_ref, &lValue) != GRIB_SUCCESS) {
-            fprintf(stderr, "Error on line %lu: descriptor reference '%s' (column 7) is not numeric.\n",
+            fprintf(stderr, "Error on line %zu: descriptor reference '%s' (column 7) is not numeric.\n",
                     line_number, str_ref);
             return 1;
         }
         if (string_to_long(str_width, &lValue) != GRIB_SUCCESS) {
-            fprintf(stderr, "Error on line %lu: descriptor width '%s' (column 8) is not numeric.\n",
+            fprintf(stderr, "Error on line %zu: descriptor width '%s' (column 8) is not numeric.\n",
                     line_number, str_width);
             return 1;
         }

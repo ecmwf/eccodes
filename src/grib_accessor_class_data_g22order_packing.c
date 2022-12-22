@@ -501,6 +501,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (err)
         return err;
 
+    if (*len < (size_t)n_vals)
+        return GRIB_ARRAY_TOO_SMALL;
+
     if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)

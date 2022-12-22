@@ -73,8 +73,8 @@ static grib_expression_class _grib_expression_class_is_integer = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    &print,
+    &add_dependency,
 
 	&native_type,
 	&get_name,
@@ -145,11 +145,11 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     switch (grib_expression_native_type(h, g)) {
         case GRIB_TYPE_LONG:
             *err = evaluate_long(g, h, &lresult);
-            sprintf(buf, "%ld", lresult);
+            snprintf(buf, 32, "%ld", lresult);
             break;
         case GRIB_TYPE_DOUBLE:
             *err = evaluate_double(g, h, &dresult);
-            sprintf(buf, "%g", dresult);
+            snprintf(buf, 32, "%g", dresult);
             break;
     }
     return buf;

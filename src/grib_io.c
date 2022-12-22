@@ -111,7 +111,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
         /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%lu, Already read=%d)\n",
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%zu, Already read=%d)\n",
                     message_length, already_read);
         return err;
     }
@@ -123,7 +123,7 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
          buffer[message_length - 1] != '7'))
     {
         if (c->debug)
-            fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%lu)\n", message_length);
+            fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%zu)\n", message_length);
         return GRIB_WRONG_LENGTH;
     }
 
@@ -437,6 +437,8 @@ static int read_PSEUDO(reader* r, const char* type)
         i++;
     }
 
+    r->offset = r->tell(r->read_data) - 4;
+
     for (j = 0; j < 3; j++) {
         if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
             return err;
@@ -499,7 +501,7 @@ static int read_HDF5_offset(reader* r, int length, unsigned long* v, unsigned ch
 
 static int read_HDF5(reader* r)
 {
-    /* 
+    /*
      * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
      */
     unsigned char tmp[49]; /* Should be enough */

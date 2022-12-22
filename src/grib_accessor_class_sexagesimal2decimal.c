@@ -256,7 +256,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
     dd *= dd_sign;
 
-    sprintf(buff, "%.2f", dd);
+    snprintf(buff, sizeof(buff), "%.2f", dd);
     length = strlen(buff);
 
     if (len[0] < length + 1) {

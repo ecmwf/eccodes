@@ -181,12 +181,12 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
       p  = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
 
       for (i = 0; i < length; i++)  {
-        sprintf (s,"%02x", *(p++));
+        snprintf (s,64,"%02x", *(p++));
         s+=2;
       }
       *len=length;
     */
-    sprintf(v, "%ld_%ld", grib_byte_offset(a), grib_byte_count(a));
+    snprintf(v, 64, "%ld_%ld", grib_byte_offset(a), grib_byte_count(a));
     return GRIB_SUCCESS;
 }
 

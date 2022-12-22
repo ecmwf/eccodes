@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *  Enrico Fucile                                                                         *
+ *  Enrico Fucile                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -43,7 +43,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_set_sarray {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in set_sarray */
     grib_sarray *sarray;
     char *name;
@@ -94,8 +94,7 @@ grib_action* grib_action_create_set_sarray(grib_context* context,
     a->sarray = sarray;
     a->name   = grib_context_strdup_persistent(context, name);
 
-
-    sprintf(buf, "set_sarray%p", (void*)sarray);
+    snprintf(buf, 1024, "set_sarray%p", (void*)sarray);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

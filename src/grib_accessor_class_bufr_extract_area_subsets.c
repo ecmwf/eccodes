@@ -219,11 +219,11 @@ static int select_area(grib_accessor* a)
         ret = grib_get_long(h, self->extractAreaLongitudeRank, &lonRank);
         if (ret)
             return ret;
-        sprintf(lonstr, "#%ld#longitude", lonRank);
+        snprintf(lonstr, sizeof(lonstr), "#%ld#longitude", lonRank);
         ret = grib_get_long(h, self->extractAreaLatitudeRank, &latRank);
         if (ret)
             return ret;
-        sprintf(latstr, "#%ld#latitude", latRank);
+        snprintf(latstr, sizeof(latstr), "#%ld#latitude", latRank);
     }
 
     /* Latitudes */
@@ -244,7 +244,7 @@ static int select_area(grib_accessor* a)
     else {
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
-            sprintf(latstr, "#%ld#latitude", i + 1);
+            snprintf(latstr, sizeof(latstr), "#%ld#latitude", i + 1);
             ret = grib_get_size(h, latstr, &values_len);
             if (ret)
                 return ret;
@@ -274,7 +274,7 @@ static int select_area(grib_accessor* a)
     else {
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
-            sprintf(lonstr, "#%ld#longitude", i + 1);
+            snprintf(lonstr, sizeof(lonstr), "#%ld#longitude", i + 1);
             ret = grib_get_size(h, lonstr, &values_len);
             if (ret)
                 return ret;

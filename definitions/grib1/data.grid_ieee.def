@@ -43,3 +43,4 @@ if( bitmapPresent || !GDSPresent ) {
 meta numberOfCodedValues number_of_values_data_raw_packing(values,precision);
 
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

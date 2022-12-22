@@ -409,6 +409,9 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     if (ret)
         return ret;
 
+    if (*len < (size_t)numberOfValues)
+        return GRIB_ARRAY_TOO_SMALL;
+
     if ((ret = grib_get_long_internal(handle, self->numberOfGroups, &numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 

@@ -144,6 +144,7 @@ typedef struct grib_accessor_bufr_data_array
     grib_iarray* iss_list;
     grib_trie_with_rank* dataAccessorsTrie;
     grib_sarray* tempStrings;
+    grib_vdarray* tempDoubleValues;
     int change_ref_value_operand;
     size_t refValListSize;
     long* refValList;
@@ -399,6 +400,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* params)
     self->do_decode                = 1;
     self->elementsDescriptorsIndex = 0;
     self->numericValues            = 0;
+    self->tempDoubleValues         = 0;
     self->stringValues             = 0;
     cancel_bitmap(self);
     self->expanded                       = 0;
@@ -450,6 +452,7 @@ static void self_clear(grib_context* c, grib_accessor_bufr_data_array* self)
     grib_context_free(c, self->canBeMissing);
     grib_vdarray_delete_content(c, self->numericValues);
     grib_vdarray_delete(c, self->numericValues);
+
     if (self->stringValues) {
         /*printf("dbg self_clear: clear %p\n", (void*)(self->stringValues));*/
         grib_vsarray_delete_content(c, self->stringValues);
@@ -2032,7 +2035,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                 return NULL;
             grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-            sprintf(code, "%06ld", self->expanded->v[idx]->code);
+            snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
             temp_str  = grib_context_strdup(a->context, code);
             attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, temp_str, 0, 0, flags);
             if (!attribute)
@@ -2092,7 +2095,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                     return NULL;
                 grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-                sprintf(code, "%06ld", self->expanded->v[idx]->code);
+                snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
                 attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, code, 0, 0, flags);
                 if (!attribute)
                     return NULL;
@@ -2118,7 +2121,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
                 return NULL;
             grib_accessor_add_attribute(elementAccessor, attribute, 0);
 
-            sprintf(code, "%06ld", self->expanded->v[idx]->code);
+            snprintf(code, sizeof(code), "%06ld", self->expanded->v[idx]->code);
             attribute = create_attribute_variable("code", section, GRIB_TYPE_STRING, code, 0, 0, flags);
             if (!attribute)
                 return NULL;
@@ -2942,9 +2945,14 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         self->numericValues = grib_vdarray_new(c, 1000, 1000);
         self->stringValues  = grib_vsarray_new(c, 10, 10);
 
-        if (self->elementsDescriptorsIndex)
+        if (self->elementsDescriptorsIndex) {
+            grib_viarray_delete_content(c, self->elementsDescriptorsIndex);
             grib_viarray_delete(c, self->elementsDescriptorsIndex);
+        }
         self->elementsDescriptorsIndex = grib_viarray_new(c, 100, 100);
+    }
+    if (flag == PROCESS_NEW_DATA) {
+        self->tempDoubleValues = grib_vdarray_new(c, 1000, 1000);
     }
 
     if (flag != PROCESS_DECODE) { /* Operator 203YYY: key OVERRIDDEN_REFERENCE_VALUES_KEY */
@@ -3351,6 +3359,9 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             grib_vdarray_push(c, self->numericValues, dval);
             /*grib_darray_print("DBG process_elements::dval", dval);*/
         }
+        if (flag == PROCESS_NEW_DATA && !self->compressedData) {
+            grib_vdarray_push(c, self->tempDoubleValues, dval); /* ECC-1172 */
+        }
     } /* for all subsets */
 
     /*grib_vdarray_print("DBG process_elements: self->numericValues",            self->numericValues);*/
@@ -3473,5 +3484,12 @@ static void destroy(grib_context* c, grib_accessor* a)
         grib_sarray_delete_content(c, self->tempStrings);
         grib_sarray_delete(c, self->tempStrings);
     }
+    if (self->tempDoubleValues) {
+        /* ECC-1172: Clean up to avoid memory leaks */
+        grib_vdarray_delete_content(c, self->tempDoubleValues);
+        grib_vdarray_delete(c, self->tempDoubleValues);
+        self->tempDoubleValues = NULL;
+    }
+
     grib_iarray_delete(self->iss_list);
 }

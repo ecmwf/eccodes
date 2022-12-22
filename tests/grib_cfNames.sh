@@ -18,17 +18,22 @@ sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s discipline=192,parameterCategory=128,parameterNumber=137 $sample2 $temp
 grib_check_key_equals $temp cfName lwe_thickness_of_atmosphere_mass_content_of_water_vapor
 
-${tools_dir}/grib_set -s discipline=0,parameterNumber=20,parameterCategory=2 $sample2 $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,discipline=0,parameterNumber=20,parameterCategory=2,typeOfStatisticalProcessing=1 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
-${tools_dir}/grib_set -s paramId=145 $sample2 $temp
+${tools_dir}/grib_set -s stepType=accum,discipline=0,parameterNumber=20,parameterCategory=2 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,paramId=145 $sample2 $temp
+grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
+${tools_dir}/grib_set -s stepType=accum,paramId=145 $sample2 $temp
+grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
+
 ${tools_dir}/grib_set -s paramId=137 $sample2 $temp
 grib_check_key_equals $temp cfName lwe_thickness_of_atmosphere_mass_content_of_water_vapor
 
 ${tools_dir}/grib_set -s indicatorOfParameter=137,table2Version=128 $sample1 $temp
 grib_check_key_equals $temp cfName lwe_thickness_of_atmosphere_mass_content_of_water_vapor
 
-${tools_dir}/grib_set -s paramId=145 $sample2 $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,paramId=145 $sample2 $temp
 grib_check_key_equals $temp cfName kinetic_energy_dissipation_in_atmosphere_boundary_layer
 
 ${tools_dir}/grib_set -s indicatorOfParameter=122,table2Version=1 $sample1 $temp

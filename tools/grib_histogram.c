@@ -56,7 +56,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    int i, j, err = 0;
+    size_t i, j, err = 0;
     size_t last_size = 0;
     long missingValuesPresent;
     double delta;
@@ -64,12 +64,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     double* values = NULL;
     size_t size;
     double min, max;
-    long count = 10;
+    size_t count = 10;
     long intervals[10];
     const char* names[1024];
-    int name_count = 0;
+    size_t name_count = 0;
 
-    for (i = 0; i < options->requested_print_keys_count; i++) {
+    for (i = 0; i < (size_t)options->requested_print_keys_count; i++) {
         names[name_count++] = options->requested_print_keys[i].name;
     }
 
@@ -91,7 +91,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         values = (double*)malloc(size * sizeof(double));
         /*last_size = size;*/
         if (!values) {
-            fprintf(stderr, "Failed to allocate memory for values (%lu bytes)\n", size * sizeof(double));
+            fprintf(stderr, "Failed to allocate memory for values (%zu bytes)\n", size * sizeof(double));
             exit(1);
         }
     }
@@ -121,7 +121,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         for (j = 0; j < size; j++) {
             if (values[j] != missing) {
                 int x = (values[j] - min) / delta * count;
-                if (x == count)
+                if (x == (int)count)
                     x = x - 1; /*handle the absolute  maximum */
                 intervals[x]++;
             }
@@ -142,7 +142,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         for (j = 0; j < size; j++) {
             int x = (values[j] - min) / delta * count;
-            if (x == count)
+            if (x == (int)count)
                 x = x - 1; /*handle the absolute  maximum */
             intervals[x]++;
         }

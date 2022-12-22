@@ -279,7 +279,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     double dummyLon = 0, dummyVal = 0;
     int ret = 0;
     int i;
-    long jScansPositively = 0; /*default: north to south*/
+    long jScansPositively = 0; /* default: north to south */
     size_t size           = *len;
     grib_context* c       = a->context;
     grib_iterator* iter   = grib_iterator_new(grib_handle_of_accessor(a), 0, &ret);
@@ -291,8 +291,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     }
     v = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "Error allocating %ld bytes", (long)size * sizeof(double));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     *val = v;
@@ -313,18 +312,18 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
 
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v1) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %ld bytes", (long)size * sizeof(double));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
-    /*Construct a unique set of lats by filtering out duplicates*/
+    /* Construct a unique set of lats by filtering out duplicates */
     prev  = v[0];
     v1[0] = prev;
     count = 1;
     for (i = 1; i < *len; i++) {
         if (v[i] != prev) {
             prev      = v[i];
-            v1[count] = prev; /*Value different from previous so store it*/
+            v1[count] = prev; /* Value different from previous so store it */
             count++;
         }
     }

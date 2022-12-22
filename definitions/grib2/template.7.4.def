@@ -20,3 +20,4 @@ meta values data_apply_bitmap(codedValues,
 alias data.packedValues = codedValues;
 
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

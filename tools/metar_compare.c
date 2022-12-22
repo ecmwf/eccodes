@@ -116,7 +116,7 @@ static void write_message(grib_handle* h, const char* str)
     FILE* fh;
 
     grib_get_message(h, &m, &s);
-    sprintf(fname, "%s_%d.metar", str, write_count);
+    snprintf(fname, 1024, "%s_%d.metar", str, write_count);
 
     fh = fopen(fname, "w");
     if (!fh) {
@@ -323,7 +323,7 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s%c%s",
+                snprintf(bufr, 2048, "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
                         extract_filename(options->infile_extra->name));
@@ -598,7 +598,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     printInfo(h1);
     printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
         name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH; 
+    return GRIB_TYPE_MISMATCH;
   }
      */
 
@@ -656,7 +656,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in 1st field\n");
         printInfo(h1);
-        printf("%s is set to missing in 1st field is not missing in 2nd field\n", name);
+        printf("%s is set to missing in 1st field but is not missing in 2nd field\n", name);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
@@ -666,7 +666,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in 1st field\n");
         printInfo(h1);
-        printf("%s is set to missing in 2nd field is not missing in 1st field\n", name);
+        printf("%s is set to missing in 2nd field but is not missing in 1st field\n", name);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;

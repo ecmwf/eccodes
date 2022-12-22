@@ -102,8 +102,8 @@ void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
 
 void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 {
-    void** ret;
-    int i;
+    void** ret = NULL;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (void**)grib_context_malloc_clear(c, sizeof(char*) * v->n);
@@ -114,7 +114,8 @@ void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 
 void* grib_oarray_get(grib_oarray* v, int i)
 {
-    if (v == NULL || i > v->n - 1)
+    DebugAssert(i >= 0);
+    if (v == NULL || (size_t)i > v->n - 1)
         return NULL;
     return v->v[i];
 }

@@ -435,7 +435,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     char buf[80];
     size_t s;
-    sprintf(buf, "%ld", *val);
+    snprintf(buf, sizeof(buf), "%ld", *val);
 #if 0
     if(*len > 1)
         return GRIB_NOT_IMPLEMENTED;

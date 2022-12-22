@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -45,7 +44,7 @@ static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
 
 typedef struct grib_action_rename {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in rename */
     char* the_old;
     char* the_new;

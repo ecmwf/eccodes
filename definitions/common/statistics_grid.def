@@ -8,14 +8,10 @@ meta computeStatistics statistics(missingValue,values);
 meta maximum vector(computeStatistics,0) : dump;
 meta minimum vector(computeStatistics,1) : dump;
 meta average vector(computeStatistics,2) : dump;
-#meta numberOfMissing vector(computeStatistics,3) : dump;
-meta numberOfMissing count_missing(bitmap,unusedBitsInBitmap,numberOfDataPoints) : dump;
 meta standardDeviation vector(computeStatistics,4) : dump;
 meta skewness   vector(computeStatistics,5) : dump;
 meta kurtosis   vector(computeStatistics,6) : dump;
 meta isConstant vector(computeStatistics,7) : dump;
-
-alias numberOfMissingValues=numberOfMissing;
 
 alias statistics.avg = average;
 alias statistics.max = maximum;

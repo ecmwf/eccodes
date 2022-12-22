@@ -221,7 +221,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     unpack_long(a, v, &size);
 
     for (i = 0; i < size; i++) {
-        sprintf(buf, "%06ld", v[i]);
+        snprintf(buf, sizeof(buf), "%06ld", v[i]);
         buffer[i] = grib_context_strdup(c, buf);
     }
     *len = l;

@@ -53,9 +53,9 @@ static void error(const char* filename, int msg_num, const char* fmt, ...)
     va_list list;
     va_start(list, fmt);
     if (verbose)
-        sprintf(buf, " Error: %s", fmt); /* indent a bit */
+        snprintf(buf, sizeof(buf), " Error: %s", fmt); /* indent a bit */
     else
-        sprintf(buf, "Error: %s #%d: %s", filename, msg_num, fmt);
+        snprintf(buf, sizeof(buf), "Error: %s #%d: %s", filename, msg_num, fmt);
     vfprintf(stderr, buf, list);
     va_end(list);
 
@@ -185,7 +185,7 @@ static int process_file(const char* filename)
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
             assert(pl_len > 0);
-            if (pl_len != 2 * N) {
+            if (pl_len != (size_t)(2 * N)) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
@@ -232,7 +232,7 @@ static int process_file(const char* filename)
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);
-        if (sizeOfValuesArray != numberOfDataPoints) {
+        if (sizeOfValuesArray != (size_t)numberOfDataPoints) {
             error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }

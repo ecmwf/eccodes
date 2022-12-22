@@ -9,9 +9,8 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *   Enrico Fucile
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
+ *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -44,7 +43,7 @@ static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
 
 
 typedef struct grib_action_section {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
 } grib_action_section;
 
@@ -108,7 +107,7 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     if (h->context->debug > 0) {
         char debug_str[1024] = {0,};
         if (act->debug_info) {
-            sprintf(debug_str, " (%s)", act->debug_info);
+            snprintf(debug_str, 1024, " (%s)", act->debug_info);
         }
         grib_context_log(h->context,
                          GRIB_LOG_DEBUG, "------------- SECTION action %s (%s) is triggered by [%s]%s",

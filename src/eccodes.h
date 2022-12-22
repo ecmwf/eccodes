@@ -56,9 +56,6 @@ Log mode for information for processing information
 #define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
 
-/*set spec flags*/
-#define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
-
 /* Dump option flags*/
 #define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY
 #define CODES_DUMP_FLAG_DUMP_OK        GRIB_DUMP_FLAG_DUMP_OK
@@ -244,7 +241,7 @@ codes_index* codes_index_read(codes_context* c, const char* filename, int* err);
  *  Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the number of values is computed
  * @param size        : number of distinct values of the key in the index
  * @return            0 if OK, integer value on error
@@ -255,7 +252,7 @@ int codes_index_get_size(const codes_index* index, const char* key, size_t* size
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -267,7 +264,7 @@ int codes_index_get_long(const codes_index* index, const char* key, long* values
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -279,7 +276,7 @@ int codes_index_get_double(const codes_index* index, const char* key, double* va
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -292,7 +289,7 @@ int codes_index_get_string(const codes_index* index, const char* key, char** val
  *  Select the message subset with key==value. The value is a long. The key must have been created with long type or have long as native type if the type was not explicitly defined in the index creation.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key to be selected
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
@@ -314,7 +311,7 @@ int codes_index_select_double(codes_index* index, const char* key, double value)
  * Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key to be selected
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
@@ -328,7 +325,7 @@ int codes_index_select_string(codes_index* index, const char* key, const char* v
  *
  * @param index       : an index created from a file.
  * @param err         : 0 if OK, integer value on error. CODES_END_OF_INDEX when no more handles are contained in the index.
- * @return            GRIB handle.
+ * @return            message handle.
  */
 codes_handle* codes_handle_new_from_index(codes_index* index, int* err);
 
@@ -434,7 +431,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
-*  This function works also with multi-field messages.
+*  This function works also with GRIB multi-field messages.
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
@@ -508,7 +505,7 @@ int codes_handle_delete(codes_handle* h);
 /**
  *  Create an empty multi-field GRIB handle.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
@@ -519,7 +516,7 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
  *  Append the sections starting with start_section of the message pointed by h at
  *  the end of the multi-field GRIB handle mh.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
@@ -541,7 +538,7 @@ int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 /**
  *  Write a multi-field GRIB handle in a file.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param mh          : The multi-field GRIB handle to be written.
@@ -591,8 +588,8 @@ int codes_get_message_copy(const codes_handle* h, void* message, size_t* message
 codes_iterator* codes_grib_iterator_new(const codes_handle* h, unsigned long flags, int* error);
 
 /**
-* Get latitude/longitude and data values.
-* The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+* Get latitude/longitude and data values for a GRIB message.
+* The latitudes, longitudes and values arrays must be properly allocated by the caller.
 * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
 *
 * @param h           : handle from which geography and data values are taken
@@ -684,7 +681,7 @@ int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, doubl
                             double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees an nearest from memory
+*  Frees a nearest object from memory
 *
 * @param nearest           : the nearest
 * @return            0 if OK, integer value on error
@@ -861,7 +858,7 @@ int codes_get_double_array(const codes_handle* h, const char* key, double* vals,
 int codes_get_long_array(const codes_handle* h, const char* key, long* vals, size_t* length);
 
 
-/*   setting      data         */
+/*   setting data         */
 /**
 *  Copy the keys belonging to a given namespace from a source handle to a destination handle
 *
@@ -990,22 +987,107 @@ void codes_dump_action_tree(codes_context* c, FILE* f);
  */
 /*! @{ */
 
-/* TODO: function pointers
- grib_malloc_proc
- grib_realloc_proc
- grib_log_proc
- grib_print_proc
- grib_data_read_proc
- grib_data_write_proc
- grib_data_tell_proc
- grib_data_seek_proc
- grib_data_eof_proc
+/**
+* ecCodes free procedure, format of a procedure referenced in the context that is used to free memory
+*
+* @param c     : the context where the memory freeing will apply
+* @param data  : pointer to the data to be freed
+* must match @see codes_malloc_proc
 */
+typedef void (*codes_free_proc)(const codes_context* c, void* data);
+
+/**
+* ecCodes malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+* @param c             : the context where the memory allocation will apply
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory, NULL if no memory can be allocated
+* must match @see codes_free_proc
+*/
+typedef void* (*codes_malloc_proc)(const codes_context* c, size_t length);
+
+/**
+* ecCodes realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+* @param c             : the context where the memory allocation will apply
+* @param data          : pointer to the data to be reallocated
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory
+*/
+typedef void* (*codes_realloc_proc)(const codes_context* c, void* data, size_t length);
+
+/**
+* ecCodes log procedure, format of a procedure referenced in the context that is used to log internal messages
+*
+* @param c             : the context where the logging will apply
+* @param level         : the log level, as defined in log modes
+* @param mesg          : the message to be logged
+*/
+typedef void (*codes_log_proc)(const codes_context* c, int level, const char* mesg);
+
+/**
+* ecCodes print procedure, format of a procedure referenced in the context that is used to print external messages
+*
+* @param c             : the context where the logging will apply
+* @param descriptor    : the structure to be printed on, must match the implementation
+* @param mesg          : the message to be printed
+*/
+typedef void (*codes_print_proc)(const codes_context* c, void* descriptor, const char* mesg);
+
+/**
+* ecCodes data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
+*
+* @param c            : the context where the read will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size read
+*/
+typedef size_t (*codes_data_read_proc)(const codes_context* c, void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
+*
+* @param c            : the context where the write will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size written
+*/
+typedef size_t (*codes_data_write_proc)(const codes_context* c, const void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
+*
+* @param c           : the context where the tell will apply
+* @param stream      : the stream
+* @return            the position in the stream
+*/
+typedef off_t (*codes_data_tell_proc)(const codes_context* c, void* stream);
+
+/**
+* ecCodes data seek procedure, format of a procedure referenced in the context that is used to seek the current position in a stream
+*
+* @param c         : the context where the tell will apply
+* @param offset    : the offset to seek to
+* @param whence    : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
+                     the offset is relative to the start of the file, the current position indicator, or end-of-file, respectively.
+* @param stream    : the stream
+* @return          0 if OK, integer value on error
+*/
+typedef off_t (*codes_data_seek_proc)(const codes_context* c, off_t offset, int whence, void* stream);
+
+/**
+* ecCodes data eof procedure, format of a procedure referenced in the context that is used to test end of file
+*
+* @param c        : the context where the tell will apply
+* @param stream   : the stream
+* @return         the position in the stream
+*/
+typedef int (*codes_data_eof_proc)(const codes_context* c, void* stream);
 
 /**
 *  Get the static default context
 *
-* @return            the default context, NULL it the context is not available
+* @return         the default context, NULL it the context is not available
 */
 codes_context* codes_context_get_default(void);
 
@@ -1075,6 +1157,54 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
  * @param path   : the search path for sample files
  */
 void codes_context_set_samples_path(codes_context* c, const char* path);
+
+/**
+*  Sets memory procedures of the context
+*
+* @param c         : the context to be modified
+* @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free    : the memory freeing procedure to be set @see codes_free_proc
+* @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                   codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets memory procedures of the context for persistent data
+*
+* @param c           : the context to be modified
+* @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
+* @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
+*/
+void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
+                                              codes_free_proc p_free);
+
+/**
+*  Sets memory procedures of the context for large buffers
+*
+* @param c        : the context to be modified
+* @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free   : the memory freeing procedure to be set @see codes_free_proc
+* @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_buffer_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                          codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets the context printing procedure used for user interaction
+*
+* @param c        : the context to be modified
+* @param p_print  : the printing procedure to be set @see codes_print_proc
+*/
+void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
+
+/**
+*  Sets the context logging procedure used for system (warning, errors, infos ...) messages
+*
+* @param c       : the context to be modified
+* @param p_log   : the logging procedure to be set @see codes_log_proc
+*/
+void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
 
 /**
 *  Turn on support for multi-fields in single GRIB messages
@@ -1303,7 +1433,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

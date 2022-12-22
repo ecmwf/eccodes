@@ -170,7 +170,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     ret = unpack_double(a, &value, &replen);
 
-    sprintf(result, "%.3f", value);
+    snprintf(result, sizeof(result), "%.3f", value);
 
     replen = strlen(result) + 1;
 
@@ -181,7 +181,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     *len = replen;
 
-    sprintf(val, "%s", result);
+    snprintf(val, 1024, "%s", result);
 
     return ret;
 }

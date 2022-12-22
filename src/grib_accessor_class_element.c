@@ -167,7 +167,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %ld bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -206,7 +206,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %ld bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 

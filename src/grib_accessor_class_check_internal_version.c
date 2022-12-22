@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF

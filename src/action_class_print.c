@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -43,7 +42,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_print {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in print */
     char *name;
     char *outname;
@@ -79,7 +78,6 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_print(grib_context* context, const char* name, char* outname)
 {
     char buf[1024];
-
     grib_action_print* a;
     grib_action_class* c = grib_action_class_print;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -105,7 +103,7 @@ grib_action* grib_action_create_print(grib_context* context, const char* name, c
             fclose(out);
     }
 
-    sprintf(buf, "print%p", (void*)a->name);
+    snprintf(buf, 1024, "print%p", (void*)a->name);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

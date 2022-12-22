@@ -15,12 +15,9 @@ GRIB {
   # Unknown code table entry (grib1/0.ecmf.table)  
   subCentre = 0;
   paramId = 130;
-  #-READ ONLY- cfNameECMF = air_temperature;
   #-READ ONLY- cfName = air_temperature;
-  #-READ ONLY- cfVarNameECMF = t;
   #-READ ONLY- cfVarName = t;
   #-READ ONLY- units = K;
-  #-READ ONLY- nameECMF = Temperature;
   #-READ ONLY- name = Temperature;
   decimalScaleFactor = 0;
   dataDate = 20080206;
@@ -140,11 +137,11 @@ GRIB {
   #-READ ONLY- maximum = 224.455;
   #-READ ONLY- minimum = 160.252;
   #-READ ONLY- average = 194.458;
-  #-READ ONLY- numberOfMissing = 0;
   #-READ ONLY- standardDeviation = 12.8976;
   #-READ ONLY- skewness = -0.807543;
   #-READ ONLY- kurtosis = 0.45733;
   #-READ ONLY- isConstant = 0;
+  #-READ ONLY- numberOfMissing = 0;
   gridType = reduced_gg;
   #-READ ONLY- getNumberOfValues = 6114;
 }

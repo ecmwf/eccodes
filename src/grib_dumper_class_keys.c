@@ -56,7 +56,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_keys {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in keys */
     long section_offset;
     long begin;
@@ -297,7 +297,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         }
         *q = '\0';
 
-        /*sprintf(tmp,"%s ",upper,(long)s->length,(long)s->padding);*/
+        /*snprintf(tmp,1024,"%s ",upper,(long)s->length,(long)s->padding);*/
 
         fprintf(self->dumper.out, "====> %s <==== \n", upper);
 

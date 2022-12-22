@@ -1,3 +1,12 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -915,7 +924,7 @@ int main(int argc, char* argv[])
             FILE* fp;
             size_t size;
             const void* buffer = NULL;
-            sprintf(f, "lam_gp_%s.grib", grids[igrid]);
+            snprintf(f, 128, "lam_gp_%s.grib", grids[igrid]);
             fp = fopen(f, "wb");
             GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
             if (fwrite(buffer, 1, size, fp) != size) {
@@ -938,7 +947,7 @@ int main(int argc, char* argv[])
             long int Nux, Nuy, Ncx, Ncy;
             char geometry[128];
 
-            sprintf(f, "lam_gp_%s.grib", grids[igrid]);
+            snprintf(f, 128, "lam_gp_%s.grib", grids[igrid]);
             fp         = fopen(f, "rb");
             h          = grib_handle_new_from_file(0, fp, &err);
             vals       = (double*)malloc(sizeof(double) * 4096);

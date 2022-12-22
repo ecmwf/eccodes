@@ -15,9 +15,9 @@ void grib_darray_print(const char* title, const grib_darray* darray)
 {
     size_t i;
     Assert(darray);
-    printf("%s: darray.n=%lu  \t", title, (unsigned long)darray->n);
+    printf("%s: darray.n=%zu  \t", title, darray->n);
     for (i = 0; i < darray->n; i++) {
-        printf("darray[%lu]=%g\t", (unsigned long)i, darray->v[i]);
+        printf("darray[%zu]=%g\t", i, darray->v[i]);
     }
     printf("\n");
 }
@@ -108,8 +108,8 @@ void grib_darray_delete(grib_context* c, grib_darray* v)
 
 double* grib_darray_get_array(grib_context* c, grib_darray* v)
 {
-    double* ret;
-    int i;
+    double* ret = NULL;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (double*)grib_context_malloc_clear(c, sizeof(double) * v->n);
@@ -120,8 +120,8 @@ double* grib_darray_get_array(grib_context* c, grib_darray* v)
 
 int grib_darray_is_constant(grib_darray* v, double epsilon)
 {
-    int i;
-    double val;
+    size_t i = 0;
+    double val = 0;
     if (v->n == 1)
         return 1;
 

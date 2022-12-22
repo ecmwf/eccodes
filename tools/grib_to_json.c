@@ -135,6 +135,8 @@ header_keys header[] = {
 
     {
         NULL,
+        NULL,
+        NULL,
     }
 };
 
@@ -150,7 +152,7 @@ int main(int argc, char* argv[])
 
     printf("[");
 
-    for (i = 1; i < argc; i++) {
+    for (i = 1; i < (size_t)argc; i++) {
         f = fopen(argv[i], "r");
         if (!f) {
             perror(argv[i]);

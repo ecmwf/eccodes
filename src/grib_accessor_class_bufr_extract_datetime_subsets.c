@@ -212,7 +212,7 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
-            sprintf(keystr, "#%ld#%s", i + 1, key);
+            snprintf(keystr, sizeof(keystr), "#%ld#%s", i + 1, key);
             err = grib_get_size(h, keystr, &values_len);
             if (err)
                 return err;
@@ -271,32 +271,32 @@ static int select_datetime(grib_accessor* a)
         ret = grib_get_long(h, "extractDateTimeYearRank", &yearRank);
         if (ret)
             return ret;
-        sprintf(yearstr, "#%ld#year", yearRank);
+        snprintf(yearstr, sizeof(yearstr), "#%ld#year", yearRank);
 
         ret = grib_get_long(h, "extractDateTimeMonthRank", &monthRank);
         if (ret)
             return ret;
-        sprintf(monthstr, "#%ld#month", monthRank);
+        snprintf(monthstr, sizeof(monthstr), "#%ld#month", monthRank);
 
         ret = grib_get_long(h, "extractDateTimeDayRank", &dayRank);
         if (ret)
             return ret;
-        sprintf(daystr, "#%ld#day", dayRank);
+        snprintf(daystr, sizeof(daystr), "#%ld#day", dayRank);
 
         ret = grib_get_long(h, "extractDateTimeHourRank", &hourRank);
         if (ret)
             return ret;
-        sprintf(hourstr, "#%ld#hour", hourRank);
+        snprintf(hourstr, sizeof(hourstr), "#%ld#hour", hourRank);
 
         ret = grib_get_long(h, "extractDateTimeMinuteRank", &minuteRank);
         if (ret)
             return ret;
-        sprintf(minutestr, "#%ld#minute", minuteRank);
+        snprintf(minutestr, sizeof(minutestr), "#%ld#minute", minuteRank);
 
         ret = grib_get_long(h, "extractDateTimeSecondRank", &secondRank);
         if (ret)
             return ret;
-        sprintf(secondstr, "#%ld#second", secondRank);
+        snprintf(secondstr, sizeof(secondstr), "#%ld#second", secondRank);
     }
 
     /* YEAR */
@@ -348,7 +348,7 @@ static int select_datetime(grib_accessor* a)
         /* uncompressed */
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
-            sprintf(secondstr, "#%ld#second", i + 1);
+            snprintf(secondstr, sizeof(secondstr), "#%ld#second", i + 1);
             ret = grib_get_size(h, secondstr, &values_len);
             if (ret) {
                 /* no 'second' key */
@@ -383,7 +383,8 @@ static int select_datetime(grib_accessor* a)
     ret = grib_get_long(h, "extractDateTimeSecondStart", &secondStart);
     if (ret)
         secondStart = 0;
-    sprintf(start_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld", yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
+    snprintf(start_str, sizeof(start_str), "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",
+             yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
     if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: start   =%s\n", start_str);
     julianStart = date_to_julian(yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
     if (julianStart == -1) {
@@ -409,7 +410,8 @@ static int select_datetime(grib_accessor* a)
     ret = grib_get_long(h, "extractDateTimeSecondEnd", &secondEnd);
     if (ret)
         secondEnd = 0;
-    sprintf(end_str, "%04ld/%02ld/%02ld %02ld:%02ld:%02ld", yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
+    snprintf(end_str, sizeof(end_str), "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",
+            yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: end     =%s\n", end_str);
     julianEnd = date_to_julian(yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (julianEnd == -1) {
@@ -427,7 +429,8 @@ static int select_datetime(grib_accessor* a)
             fprintf(stderr, "ECCODES WARNING: bufr_extract_datetime_subsets: Key '%s' is missing! Using zero instead\n", secondstr);
             second[i] = 0;
         }
-        sprintf(datetime_str, "%04ld/%02ld/%02ld %02ld:%02ld:%.3f", year[i], month[i], day[i], hour[i], minute[i], second[i]);
+        snprintf(datetime_str, sizeof(datetime_str), "%04ld/%02ld/%02ld %02ld:%02ld:%.3f",
+                 year[i], month[i], day[i], hour[i], minute[i], second[i]);
         if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: datetime=%s\n", datetime_str);
         julianDT = date_to_julian(year[i], month[i], day[i], hour[i], minute[i], second[i]);
         if (julianDT == -1) {

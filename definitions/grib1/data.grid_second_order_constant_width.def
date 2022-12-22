@@ -148,3 +148,4 @@ transient numberOfCodedValues = numberOfSecondOrderPackedValues;
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
 
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

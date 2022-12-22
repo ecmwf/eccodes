@@ -163,7 +163,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t uname_len     = 0;
 
     uname = grib_arguments_get_string(grib_handle_of_accessor(a), self->args, carg++);
-    sprintf(result, "%s", "");
+    snprintf(result, sizeof(result), "%s", "");
     uname_len = strlen(uname);
 
     for (i = 0; i < uname_len; i++) {
@@ -189,17 +189,17 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
                     if (ret != GRIB_SUCCESS)
                         return ret;
                     if (is_missing) {
-                        sprintf(tempBuffer, "%sMISSING", result);
+                        snprintf(tempBuffer, sizeof(tempBuffer), "%sMISSING", result);
                         strcpy(result, tempBuffer);
                     }
                     else {
                         /* Not missing so print it */
                         if (precision != 999) {
-                            sprintf(tempBuffer, "%s%.*ld", result, precision, ires);
+                            snprintf(tempBuffer, sizeof(tempBuffer), "%s%.*ld", result, precision, ires);
                             strcpy(result, tempBuffer);
                         }
                         else {
-                            sprintf(tempBuffer, "%s%ld", result, ires);
+                            snprintf(tempBuffer, sizeof(tempBuffer), "%s%ld", result, ires);
                             strcpy(result, tempBuffer);
                         }
                     }
@@ -209,7 +209,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
                     tempname = grib_arguments_get_name(grib_handle_of_accessor(a), self->args, carg++);
                     if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), tempname, &dres)) != GRIB_SUCCESS)
                         return ret;
-                    sprintf(tempBuffer, "%s%g", result, dres);
+                    snprintf(tempBuffer, sizeof(tempBuffer), "%s%g", result, dres);
                     strcpy(result, tempBuffer);
 
                     break;
@@ -218,13 +218,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
                     tempname = grib_arguments_get_name(grib_handle_of_accessor(a), self->args, carg++);
                     if ((ret = grib_get_string_internal(grib_handle_of_accessor(a), tempname, sres, &replen)) != GRIB_SUCCESS)
                         return ret;
-                    sprintf(tempBuffer, "%s%s", result, sres);
+                    snprintf(tempBuffer, sizeof(tempBuffer), "%s%s", result, sres);
                     strcpy(result, tempBuffer);
                     replen = 1024;
             }
         }
         else {
-            sprintf(tempBuffer, "%s%c", result, uname[i]);
+            snprintf(tempBuffer, sizeof(tempBuffer), "%s%c", result, uname[i]);
             strcpy(result, tempBuffer);
         }
     }
@@ -237,7 +237,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
     *len = replen;
 
-    sprintf(val, "%s", result);
+    snprintf(val, 1024, "%s", result);
 
     return GRIB_SUCCESS;
 }

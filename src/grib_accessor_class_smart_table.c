@@ -249,7 +249,7 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
 
     if (*masterDir != 0) {
         char name[2048] = {0,};
-        sprintf(name, "%s/%s", masterDir, self->tablename);
+        snprintf(name, sizeof(name), "%s/%s", masterDir, self->tablename);
         grib_recompose_name(h, NULL, name, recomposed, 0);
         filename = grib_context_full_defs_path(c, recomposed);
     }
@@ -260,14 +260,14 @@ static grib_smart_table* load_table(grib_accessor_smart_table* self)
 
     if (*localDir != 0) {
         char localName[2048] = {0,};
-        sprintf(localName, "%s/%s", localDir, self->tablename);
+        snprintf(localName, sizeof(localName), "%s/%s", localDir, self->tablename);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
     }
 
     if (*extraDir != 0) {
         char extraTable[2048] = {0,};
-        sprintf(extraTable, "%s/%s", extraDir, self->extraTable);
+        snprintf(extraTable, sizeof(extraTable), "%s/%s", extraDir, self->extraTable);
         grib_recompose_name(h, NULL, extraTable, extraRecomposed, 0);
         extraFilename = grib_context_full_defs_path(c, extraRecomposed);
     }
@@ -453,7 +453,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         strcpy(tmp, table->entries[value].abbreviation);
     }
     else {
-        sprintf(tmp, "%d", (int)value);
+        snprintf(tmp, sizeof(tmp), "%d", (int)value);
     }
 
     l = strlen(tmp) + 1;

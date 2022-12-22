@@ -181,7 +181,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
     msg[llen] = 0;
 
-    sprintf(buf, "%s %lu %ld-%ld", msg, v, (long)a->offset + self->loffset, (long)self->llength);
+    snprintf(buf, sizeof(buf), "%s %lu %ld-%ld", msg, v, (long)a->offset + self->loffset, (long)self->llength);
 
     grib_dump_long(dumper, a, buf);
 }
@@ -209,7 +209,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         int err       = unpack_long(a, &lval, &length);
         if (!err) {
             char str[5];
-            int conv = sprintf(str, "%ld", lval);
+            int conv = snprintf(str, sizeof(str), "%ld", lval);
             if (conv == 1) {
                 v[0] = str[0];
             }

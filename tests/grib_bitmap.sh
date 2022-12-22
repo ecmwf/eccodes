@@ -127,10 +127,10 @@ stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplex`
 rm -f $tempComplex
 
 # Simple to grid_complex_spatial_differencing
-# TODO: numberOfMissing not yet calculated correctly
 tempComplexSD=temp.grib_bitmap.complexSD.grib
 ${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD
-grib_check_key_equals $tempComplexSD packingType,bitmapPresent,numberOfValues,numberOfPoints "grid_complex_spatial_differencing 1 481339 1038240"
+grib_check_key_equals $tempComplexSD packingType "grid_complex_spatial_differencing"
+grib_check_key_equals $tempComplexSD bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplexSD`
 [ "$stats" = "2.81 0.00 0.30" ]
 rm -f $tempComplexSD

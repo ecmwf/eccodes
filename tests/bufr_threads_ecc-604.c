@@ -1,4 +1,13 @@
 /*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+/*
  * Test for ECC-604: Each thread creates a new BUFR handle, optionaly clone it and/or write it out
  */
 #include <time.h>
@@ -175,7 +184,7 @@ void do_stuff(void* ptr)
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         if (opt_write) {
-            sprintf(output_file, "output/output_file_%ld-%ld.bufr", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%ld-%ld.bufr", data->number, i);
             encode_file(INPUT_FILE, output_file);
         }
         else {

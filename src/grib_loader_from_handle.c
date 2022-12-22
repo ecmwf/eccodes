@@ -165,7 +165,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     switch (grib_accessor_get_native_type(ga)) {
         case GRIB_TYPE_STRING:
 
-            /*_grib_get_string_length(ga,&len);  See ECC-490 */
+            /*ecc__grib_get_string_length(ga,&len);  See ECC-490 */
             grib_get_string_length(h, name, &len);
             sval = (char*)grib_context_malloc(h->context, len);
             ret  = grib_get_string_internal(h, name, sval, &len);

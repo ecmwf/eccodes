@@ -22,7 +22,7 @@
    IMPLEMENTS = value_count
    IMPLEMENTS = dump;get_native_type
    MEMBERS=const char*  values
-   MEMBERS=const char*  numberOfRows 
+   MEMBERS=const char*  numberOfRows
    MEMBERS=const char*  numberOfColumns
    MEMBERS=const char*  numberOfPoints
    MEMBERS=const char*  pl

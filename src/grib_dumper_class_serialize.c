@@ -53,7 +53,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_serialize {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in serialize */
     char* format;
 } grib_dumper_serialize;
@@ -262,7 +262,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
@@ -311,7 +311,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     grib_dumper_serialize* self = (grib_dumper_serialize*)d;
     int k, err = 0;
     double* buf          = NULL;
-    int last             = 0;
+    size_t last          = 0;
     int columns          = 4;
     char* values_format  = NULL;
     char* default_format = (char*)"%.16e";
@@ -371,13 +371,13 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     buf = (double*)grib_context_malloc(d->context, size * sizeof(double));
 
-    fprintf(self->dumper.out, "%s (%ld) {", a->name, (long)size);
+    fprintf(self->dumper.out, "%s (%zu) {", a->name, size);
 
     if (!buf) {
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 

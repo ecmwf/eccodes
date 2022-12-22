@@ -175,14 +175,14 @@ int main(int argc, char** argv)
             Assert(num_all_vals == numberOfDataPoints); /*Sanity check*/
             GRIB_CHECK(grib_set_long(h, "bitmapPresent", 1), 0);
             GRIB_CHECK(grib_set_double(h, "missingValue", missing), 0);
-            printf("Fully specified: %ld values\n", num_all_vals);
+            printf("Fully specified: %zu values\n", num_all_vals);
             GRIB_CHECK(grib_set_double_array(h, "values", values, num_all_vals), 0);
         }
         else {
             const size_t num_coded_vals = sizeof(codedValues) / sizeof(codedValues[0]);
             Assert(strcmp(mode, "coded_values") == 0);
             Assert(num_coded_vals < numberOfDataPoints); /*Sanity check*/
-            printf("Partially specified: %ld values\n", num_coded_vals);
+            printf("Partially specified: %zu values\n", num_coded_vals);
             GRIB_CHECK(grib_set_force_double_array(h, "codedValues", codedValues, num_coded_vals), 0);
         }
 
