@@ -354,7 +354,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long nbits_numberOfSubsets = 2 * 8;
     long pos_numberOfSubsets   = 0; /*depends on offset_section3*/
 
-    long section3Flags;
+    unsigned long section3Flags;
     long nbits_section3Flags = 1 * 8;
     long pos_section3Flags   = 0; /*depends on offset_section3*/
 
@@ -404,7 +404,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
     pos_section3Flags   = (offset_section3 + 6) * 8;
-    section3Flags       = (long)grib_decode_unsigned_long(pMessage, &pos_section3Flags, nbits_section3Flags);
+    section3Flags       = grib_decode_unsigned_long(pMessage, &pos_section3Flags, nbits_section3Flags);
     hdr->observedData   = (section3Flags & 1 << 7) ? 1 : 0;
     hdr->compressedData = (section3Flags & 1 << 6) ? 1 : 0;
 
@@ -478,13 +478,13 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_typicalSecond = 1 * 8;
     long pos_typicalSecond   = 29 * 8;
 
-    long section2Length        = 0;
+    unsigned long section2Length = 0;
     long offset_section2       = 0;
     long offset_section3       = 0;
     long nbits_numberOfSubsets = 2 * 8;
     long pos_numberOfSubsets   = 0; /*depends on offset_section3*/
 
-    long section3Flags;
+    unsigned long section3Flags;
     long nbits_section3Flags = 1 * 8;
     long pos_section3Flags   = 0; /*depends on offset_section3*/
 
@@ -535,7 +535,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
     pos_section3Flags   = (offset_section3 + 6) * 8;
-    section3Flags       = (long)grib_decode_unsigned_long(pMessage, &pos_section3Flags, nbits_section3Flags);
+    section3Flags       = grib_decode_unsigned_long(pMessage, &pos_section3Flags, nbits_section3Flags);
     hdr->observedData   = (section3Flags & 1 << 7) ? 1 : 0;
     hdr->compressedData = (section3Flags & 1 << 6) ? 1 : 0;
 
