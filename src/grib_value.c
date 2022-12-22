@@ -36,7 +36,7 @@ static void print_debug_info__set_double_array(grib_handle* h, const char* func,
 
     if (length <= N)
         N = length;
-    fprintf(stderr, "ECCODES DEBUG %s key=%s %lu values (", func, name, (unsigned long)length);
+    fprintf(stderr, "ECCODES DEBUG %s key=%s %zu values (", func, name, length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
         fprintf(stderr, "%.10g", val[i]);
@@ -93,7 +93,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n", name, (long)val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n", name, val);
 
     if (a) {
         ret = grib_pack_long(a, &val, &l);
@@ -121,9 +121,9 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, (long)val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, (long)val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -410,7 +410,7 @@ static int process_packingType_change(grib_handle* h, const char* keyname, const
             err = grib_get_long(h, "bitsPerValue", &bitsPerValue);
             if (!err && bitsPerValue == 0) {
                 /* ECC-1219: packingType conversion from grid_ieee to grid_second_order.
-                 * Normally having a bitsPerValue of 0 means a constant field but this is 
+                 * Normally having a bitsPerValue of 0 means a constant field but this is
                  * not so for IEEE packing which can be non-constant but always has bitsPerValue==0! */
                 len = sizeof(input_packing_type);
                 grib_get_string(h, "packingType", input_packing_type, &len);
@@ -491,7 +491,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     a = grib_find_accessor(h, name);
 
     if (h->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %ld values\n", name, (long)length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %zu values\n", name, length);
     }
 
     if (a) {
@@ -714,7 +714,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                 *encoded_length += len;
                 if (err == GRIB_SUCCESS) {
                     /* See ECC-778 */
-                    return _grib_dependency_notify_change(h, a);
+                    return ecc__grib_dependency_notify_change(h, a);
                 }
             }
             else {
@@ -752,7 +752,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
         err = GRIB_ARRAY_TOO_SMALL;
 
     if (err == GRIB_SUCCESS)
-        return _grib_dependency_notify_change(h, a); /* See ECC-778 */
+        return ecc__grib_dependency_notify_change(h, a); /* See ECC-778 */
 
     return err;
 }
@@ -899,7 +899,7 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
         size_t N = 5;
         if (length <= N)
             N = length;
-        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %ld values (", name, (long)length);
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %zu values (", name, length);
         for (i = 0; i < N; ++i)
             fprintf(stderr, " %ld,", val[i]);
         if (N >= length)
@@ -1106,7 +1106,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     if (!act)
         return GRIB_NOT_FOUND;
 
-    err = _grib_get_size(h, act, &size);
+    err = ecc__grib_get_size(h, act, &size);
 
     if (err != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_double_elements: cannot get size of %s\n", name);
@@ -1289,7 +1289,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
     }
 }
 
-int _grib_get_string_length(grib_accessor* a, size_t* size)
+int ecc__grib_get_string_length(grib_accessor* a, size_t* size)
 {
     size_t s = 0;
 
@@ -1315,7 +1315,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         al = grib_find_accessors_list(h, name);
         if (!al)
             return GRIB_NOT_FOUND;
-        ret = _grib_get_string_length(al->accessor, size);
+        ret = ecc__grib_get_string_length(al->accessor, size);
         grib_context_free(h->context, al);
         return ret;
     }
@@ -1323,11 +1323,11 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         a = grib_find_accessor(h, name);
         if (!a)
             return GRIB_NOT_FOUND;
-        return _grib_get_string_length(a, size);
+        return ecc__grib_get_string_length(a, size);
     }
 }
 
-int _grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size)
+int ecc__grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size)
 {
     long count = 0;
     int err    = 0;
@@ -1375,7 +1375,7 @@ int grib_get_size(const grib_handle* ch, const char* name, size_t* size)
             return ret;
         }
         else
-            return _grib_get_size(h, a, size);
+            return ecc__grib_get_size(h, a, size);
     }
 }
 
@@ -1409,10 +1409,10 @@ int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
     return GRIB_NOT_FOUND;
 }
 
-int _grib_get_string_array_internal(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
+int ecc__grib_get_string_array_internal(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = _grib_get_string_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = ecc__grib_get_string_array_internal(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1451,7 +1451,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
         }
         else {
             *length = 0;
-            return _grib_get_string_array_internal(h, a, val, len, length);
+            return ecc__grib_get_string_array_internal(h, a, val, len, length);
         }
     }
 }
@@ -1750,7 +1750,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
                     break;
             }
             /*if (args[i].error != GRIB_SUCCESS)
-         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set %s (%s)", 
+         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set %s (%s)",
                           args[i].name,grib_get_error_message(args[i].error)); */
         }
     }

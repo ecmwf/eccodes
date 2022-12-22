@@ -216,7 +216,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (*masterDir != 0) {
         char name[4096] = {0,};
-        sprintf(name, "%s/%s", masterDir, self->dictionary);
+        snprintf(name, 4096, "%s/%s", masterDir, self->dictionary);
         grib_recompose_name(h, NULL, name, masterRecomposed, 0);
         filename = grib_context_full_defs_path(c, masterRecomposed);
     }
@@ -226,13 +226,13 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
 
     if (*localDir != 0) {
         char localName[2048] = {0,};
-        sprintf(localName, "%s/%s", localDir, self->dictionary);
+        snprintf(localName, 2048, "%s/%s", localDir, self->dictionary);
         grib_recompose_name(h, NULL, localName, localRecomposed, 0);
         localFilename = grib_context_full_defs_path(c, localRecomposed);
-        sprintf(dictName, "%s:%s", localFilename, filename);
+        snprintf(dictName, 1024, "%s:%s", localFilename, filename);
     }
     else {
-        sprintf(dictName, "%s", filename);
+        snprintf(dictName, 1024, "%s", filename);
     }
 
     if (!filename) {
@@ -344,12 +344,13 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
     int ret      = 0;
     char** list  = 0;
     char code[7] = { 0 };
+    const size_t codeLen = sizeof(code);
 
     grib_trie* table = load_bufr_elements_table(a, &ret);
     if (ret)
         return ret;
 
-    sprintf(code, "%06ld", v->code);
+    snprintf(code, codeLen, "%06ld", v->code);
 
     list = (char**)grib_trie_get(table, code);
     if (!list)

@@ -411,6 +411,9 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     for (i = 0; i < numberOfGroups; i++)
         n += numbersPerRow[i];
 
+    if (*len < (size_t)n)
+        return GRIB_ARRAY_TOO_SMALL;
+
     X = (long*)grib_context_malloc_clear(a->context, sizeof(long) * n);
     n = 0;
     k = 0;

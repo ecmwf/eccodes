@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- * Enrico Fucile                                                                         *
+ * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -47,7 +47,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
 
 typedef struct grib_action_when {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in when */
     grib_expression *expression;
     grib_action     *block_true;
@@ -92,6 +92,7 @@ grib_action* grib_action_create_when(grib_context* context,
                                      grib_action* block_true, grib_action* block_false)
 {
     char name[1024];
+    const size_t nameLen = sizeof(name);
 
     grib_action_when* a;
     grib_action_class* c = grib_action_class_when;
@@ -106,7 +107,7 @@ grib_action* grib_action_create_when(grib_context* context,
     a->block_true  = block_true;
     a->block_false = block_false;
 
-    sprintf(name, "_when%p", (void*)expression);
+    snprintf(name, nameLen, "_when%p", (void*)expression);
 
     act->name = grib_context_strdup_persistent(context, name);
 

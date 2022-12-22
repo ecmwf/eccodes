@@ -69,8 +69,8 @@ static grib_expression_class _grib_expression_class_is_in_dict = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     0,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    &print,
+    &add_dependency,
 
 	&native_type,
 	&get_name,
@@ -211,7 +211,7 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
     else
         result = 0;
 
-    sprintf(buf, "%ld", result);
+    snprintf(buf, 32, "%ld", result);
     *size = strlen(buf);
     return buf;
 }

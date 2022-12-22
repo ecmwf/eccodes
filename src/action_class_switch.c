@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Enrico Fucile
- *                                                                         *
+ *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -46,7 +45,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_switch {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
     /* Members defined in switch */
     grib_arguments* args;
@@ -92,6 +91,7 @@ grib_action* grib_action_create_switch(grib_context* context,
                                        grib_action* Default)
 {
     char name[1024];
+    const size_t nameLen = sizeof(name);
     grib_action_switch* a;
     grib_action_class* c = grib_action_class_switch;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -105,7 +105,7 @@ grib_action* grib_action_create_switch(grib_context* context,
     a->Case    = Case;
     a->Default = Default;
 
-    sprintf(name, "_switch%p", (void*)a);
+    snprintf(name, nameLen, "_switch%p", (void*)a);
 
     act->name = grib_context_strdup_persistent(context, name);
 

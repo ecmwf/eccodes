@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -155,12 +155,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_accessor_gts_header* self = (grib_accessor_gts_header*)a;
     grib_handle* h                 = grib_handle_of_accessor(a);
     int offset                     = 0;
-    int length                     = 0;
+    size_t length                  = 0;
 
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)
             return GRIB_ARRAY_TOO_SMALL;
-        sprintf(val, "missing");
+        snprintf(val, 1024, "missing");
         return GRIB_SUCCESS;
     }
     if (*len < h->gts_header_len)

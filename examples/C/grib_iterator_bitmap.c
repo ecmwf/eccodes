@@ -55,7 +55,7 @@ int main(int argc, char** argv)
             CODES_CHECK(codes_get_size(h, "bitmap", &bmp_len), 0);
             bitmap = (long*)malloc(bmp_len * sizeof(long));
             CODES_CHECK(codes_get_long_array(h, "bitmap", bitmap, &bmp_len), 0);
-            printf("Bitmap is present. Num = %lu\n", (unsigned long)bmp_len);
+            printf("Bitmap is present. Num = %zu\n", bmp_len);
         }
         /* sanity check. Number of values must match number in bitmap */
         CODES_CHECK(codes_get_size(h, "values", &values_len), 0);

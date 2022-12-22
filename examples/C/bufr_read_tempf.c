@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_long(h, "blockNumber", &blockNumber), 0);
         CODES_CHECK(codes_get_long(h, "stationNumber", &stationNumber), 0);
         if (blockNumber < 99 && stationNumber < 1000)
-            sprintf(statid, "%ld%ld", blockNumber, stationNumber);
+            snprintf(statid, sizeof(statid), "%ld%ld", blockNumber, stationNumber);
         CODES_CHECK(codes_get_long(h, "year", &year), 0);
         CODES_CHECK(codes_get_long(h, "month", &month), 0);
         CODES_CHECK(codes_get_long(h, "day", &day), 0);
@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
                 realloc_and_fill(&tdVal, sizews, -999999999.0);
             }
             /* Print the values */
-            printf("Ob: %7d %s %ld %ld %7.3f %7.3f %7.1f %7.1f %4ld %5lu\n",
+            printf("Ob: %7d %s %ld %ld %7.3f %7.3f %7.1f %7.1f %4ld %5zu\n",
                    count, statid, ymd, hms, lat[0], lon[0], htg, htp, sondeType, sizews);
             if (status_rsno == CODES_SUCCESS) {
                 printf("RS number/software/balloonwt: %s %s %7.3f\n", rsnumber, rssoftware, balloonwt);
@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
             for (i = 0; i < sizews; ++i) {
                 long iflag = vssVal[i];
                 if (!llstdonly || BTEST(iflag, 16)) {
-                    printf("%5lu %6ld %7.3f %7.3f %9.1f %8.1f %8.2f %8.2f %8.2f %8.2f %8ld\n",
+                    printf("%5zu %6ld %7.3f %7.3f %9.1f %8.1f %8.2f %8.2f %8.2f %8.2f %8ld\n",
                            i + 1, timeVal[i],
                            dlatVal[i], dlonVal[i],
                            presVal[i], zVal[i], tVal[i], tdVal[i],

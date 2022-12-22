@@ -279,7 +279,7 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd)
             return err;
     }
     else
-        sprintf(stepType, "unknown");
+        snprintf(stepType, sizeof(stepType), "unknown");
 
     *start  = p1;
     *theEnd = p2;
@@ -345,7 +345,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         if (self->step_unit != NULL)
             grib_get_string(hand, self->step_unit, step_unit_string, &step_unit_string_len);
         else
-            sprintf(step_unit_string, "h");
+            snprintf(step_unit_string, sizeof(step_unit_string), "h");
 
         if (self->error_on_units) {
             grib_get_long_internal(hand, self->unit, &unit);
@@ -370,7 +370,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             return err;
     }
     else
-        sprintf(stepType, "unknown");
+        snprintf(stepType, sizeof(stepType), "unknown");
 
     /* Patch for old forecast probabilities */
     if (self->patch_fp_precip) {
@@ -378,13 +378,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     if (strcmp(stepType, "instant") == 0) {
-        sprintf(buf, "%ld", start);
+        snprintf(buf, sizeof(buf), "%ld", start);
     }
     else if ((strcmp(stepType, "avgfc") == 0) ||
              (strcmp(stepType, "avgua") == 0) ||
              (strcmp(stepType, "avgia") == 0) ||
              (strcmp(stepType, "varins") == 0)) {
-        sprintf(buf, "%ld", start);
+        snprintf(buf, sizeof(buf), "%ld", start);
     }
     else if (
         (strcmp(stepType, "accum") == 0) ||
@@ -399,10 +399,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         (strcmp(stepType, "varas") == 0) ||
         (strcmp(stepType, "varad") == 0)) {
         if (start == theEnd) {
-            sprintf(buf, "%ld", theEnd);
+            snprintf(buf, sizeof(buf), "%ld", theEnd);
         }
         else {
-            sprintf(buf, "%ld-%ld", start, theEnd);
+            snprintf(buf, sizeof(buf), "%ld-%ld", start, theEnd);
         }
     }
     else {
@@ -496,7 +496,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             return ret;
     }
     else
-        sprintf(stepType, "unknown");
+        snprintf(stepType, sizeof(stepType), "unknown");
 
     if ((ret = grib_set_long_internal(h, "timeRangeIndicatorFromStepRange", -1)))
         return ret;
@@ -673,7 +673,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             return err;
     }
     else
-        sprintf(stepType, "unknown");
+        snprintf(stepType, sizeof(stepType), "unknown");
 
     if (self->step_unit != NULL && (err = grib_get_long_internal(grib_handle_of_accessor(a), self->step_unit, &step_unit)))
         return err;
@@ -681,7 +681,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     switch (self->pack_index) {
         case -1:
             self->pack_index = -1;
-            sprintf(buff, "%ld", *val);
+            snprintf(buff, sizeof(buff), "%ld", *val);
             return pack_string(a, buff, &bufflen);
         case 0:
             self->pack_index     = -1;
@@ -691,14 +691,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             while (*p != '-' && *p != '\0')
                 p++;
             if (*p == '-') {
-                sprintf(buff, "%ld-%s", *val, ++p);
+                snprintf(buff, sizeof(buff), "%ld-%s", *val, ++p);
             }
             else {
                 if (strcmp(stepType, "instant") && strcmp(stepType, "avgd")) {
-                    sprintf(buff, "%ld-%s", *val, sval);
+                    snprintf(buff, sizeof(buff), "%ld-%s", *val, sval);
                 }
                 else {
-                    sprintf(buff, "%ld", *val);
+                    snprintf(buff, sizeof(buff), "%ld", *val);
                 }
             }
             return pack_string(a, buff, &bufflen);
@@ -711,14 +711,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                 p++;
             if (*p == '-') {
                 *p = '\0';
-                sprintf(buff, "%s-%ld", sval, *val);
+                snprintf(buff, sizeof(buff), "%s-%ld", sval, *val);
             }
             else {
                 if (strcmp(stepType, "instant") && strcmp(stepType, "avgd")) {
-                    sprintf(buff, "%s-%ld", sval, *val);
+                    snprintf(buff, sizeof(buff), "%s-%ld", sval, *val);
                 }
                 else {
-                    sprintf(buff, "%ld", *val);
+                    snprintf(buff, sizeof(buff), "%ld", *val);
                 }
             }
             return pack_string(a, buff, &bufflen);

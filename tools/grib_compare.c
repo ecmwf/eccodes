@@ -344,7 +344,7 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s%c%s",
+                snprintf(bufr, sizeof(bufr), "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
                         extract_filename(options->infile_extra->name));
@@ -684,7 +684,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
        printInfo(h1);
        printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
             name,grib_get_type_name(type1),grib_get_type_name(type2));
-       return GRIB_TYPE_MISMATCH; 
+       return GRIB_TYPE_MISMATCH;
      }
      */
 
@@ -742,7 +742,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
-        printf("%s is set to missing in %s field is not missing in %s field\n", name, first_str, second_str);
+        printf("%s is set to missing in %s field but is not missing in %s field\n", name, first_str, second_str);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
@@ -752,7 +752,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in %s field\n", first_str);
         printInfo(h1);
-        printf("%s is set to missing in %s field is not missing in %s field\n", name, second_str, first_str);
+        printf("%s is set to missing in %s field but is not missing in %s field\n", name, second_str, first_str);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
@@ -840,7 +840,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(h1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -865,7 +865,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("\n");
                     }
                     else {
-                        printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("long [%s] %d out of %zu different\n", name, countdiff, len1);
                     }
                 }
             }
@@ -962,7 +962,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(h1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -1012,7 +1012,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                     printInfo(h1);
                     save_error(c, name);
                     if (len1 > 1) {
-                        printf("double [%s]: %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("double [%s]: %d out of %zu different\n", name, countdiff, len1);
                         if (compareAbsolute)
                             printf(" max");
                         printf(" absolute diff. = %.16e,", fabs(dval1[imaxdiff] - dval2[imaxdiff]));

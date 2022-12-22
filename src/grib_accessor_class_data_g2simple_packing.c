@@ -18,7 +18,7 @@
    SUPER      = grib_accessor_class_data_simple_packing
    IMPLEMENTS = init
    IMPLEMENTS = pack_double
-   IMPLEMENTS = pack_bytes 
+   IMPLEMENTS = pack_bytes
    IMPLEMENTS = value_count
    END_CLASS_DEF
 

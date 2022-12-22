@@ -750,9 +750,9 @@ concept_value:  STRING '=' '{' concept_conditions '}' {
   				| IDENT '=' '{' concept_conditions '}' {
 	  				$$ = grib_concept_value_new(grib_parser_context,$1,$4); free($1);}
 				| INTEGER '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
 				| FLOAT '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%g",(double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%g", (double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
         ;
 
 concept_conditions: concept_condition

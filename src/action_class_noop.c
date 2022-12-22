@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -41,7 +40,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_noop {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in noop */
 } grib_action_noop;
 
@@ -85,7 +84,7 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
     a            = (grib_action_noop*)act;
     act->context = context;
 
-    sprintf(buf, "_noop%p", (void*)a);
+    snprintf(buf, 1024, "_noop%p", (void*)a);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

@@ -57,7 +57,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_default {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in default */
     long section_offset;
     long begin;
@@ -411,7 +411,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
@@ -585,7 +585,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     else
         fprintf(self->dumper.out, "  ");
 
-    fprintf(self->dumper.out, "%s(%ld) = ", a->name, (long)size);
+    fprintf(self->dumper.out, "%s(%zu) = ", a->name, size);
     aliases(d, a);
     fprintf(self->dumper.out, " {");
 
@@ -593,7 +593,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
@@ -674,7 +674,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         }
         *q = '\0';
 
-        sprintf(tmp, "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
+        snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
         /* fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp); */
         free(upper);
         self->section_offset = a->offset;

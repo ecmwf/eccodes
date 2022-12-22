@@ -27,6 +27,16 @@ fBufrTmp=temp.${label}".bufr"
 # Define filter rules file
 fRules=temp.${label}.filter
 
+set +u
+use_valgrind=0
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+    use_valgrind=1
+    # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
+    # tools_dir so we reset it to its original
+    tools_dir=$build_dir/bin
+fi
+set -u
+
 #-----------------------------------------------------------
 # NOTE: not all of our BUFR files pass this test. bufr_filter is limited
 # in what it can do compared to Python or Fortran!
@@ -59,7 +69,12 @@ do
 
     ${tools_dir}/bufr_dump -Efilter $f > $fRules
 
-    ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
+    if [ $use_valgrind -eq 1 ]; then
+        PREFIX="valgrind --error-exitcode=1 --leak-check=full "
+    else
+        PREFIX=""
+    fi
+    $PREFIX ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
 
     ${tools_dir}/bufr_compare $fBufrTmp $f
 

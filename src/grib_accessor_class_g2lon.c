@@ -21,7 +21,7 @@
    SUPER      = grib_accessor_class_double
    IMPLEMENTS = unpack_double;pack_double
    IMPLEMENTS = init
-   MEMBERS=const char* longitude 
+   MEMBERS=const char* longitude
    END_CLASS_DEF
 
  */

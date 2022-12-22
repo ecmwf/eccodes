@@ -634,7 +634,7 @@ static void long_to_string(grib_context* c, long* v, size_t len, char** val)
     size_t i;
     char tmp[1024] = {0,};
     for (i = 0; i < len; i++) {
-        sprintf(tmp, "%ld", v[i]);
+        snprintf(tmp, sizeof(tmp), "%ld", v[i]);
         val[i] = grib_context_strdup(c, tmp);
     }
 }
@@ -644,7 +644,7 @@ static void double_to_string(grib_context* c, double* v, size_t len, char** val)
     size_t i;
     char tmp[1024] = {0,};
     for (i = 0; i < len; i++) {
-        sprintf(tmp, "%g", v[i]);
+        snprintf(tmp, sizeof(tmp), "%g", v[i]);
         val[i] = grib_context_strdup(c, tmp);
     }
 }

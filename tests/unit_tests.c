@@ -14,6 +14,7 @@
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 int assertion_caught = 0;
+int logging_caught = 0;
 
 typedef enum
 {
@@ -1468,6 +1469,28 @@ static void test_assertion_catching()
     free(list);
 }
 
+
+static void my_logging_proc(const grib_context* c, int level, const char* mesg)
+{
+    logging_caught = 1;
+}
+static void test_logging_proc()
+{
+    grib_context* context = grib_context_get_default();
+    Assert(logging_caught == 0);
+
+    /* Override default behaviour */
+    grib_context_set_logging_proc(context, my_logging_proc);
+    grib_context_log(context, GRIB_LOG_ERROR, "This error will be handled by me");
+    Assert(logging_caught == 1);
+
+    /* Restore the logging proc */
+    logging_caught = 0;
+    grib_context_set_logging_proc(context, NULL);
+    grib_context_log(context, GRIB_LOG_ERROR, "This will come out as normal");
+    Assert(logging_caught == 0);
+}
+
 static void test_concept_condition_strings()
 {
     int err           = 0;
@@ -1584,7 +1607,9 @@ static void test_parse_keyval_string()
     int err = 0;
     int values_required = 1;
     int count = 0;
-    grib_values values[128] = {0,};
+    grib_values values1[128] = {0,};
+    grib_values values2[128] = {0,};
+    grib_values values3[128] = {0,};
     const int max_count = 128;
     char input1[] = "key1=value1,key2!=value2";
     char input2[] = "x=14";
@@ -1594,41 +1619,47 @@ static void test_parse_keyval_string()
 
     count = max_count;
     err = parse_keyval_string(NULL, input1,
-                              values_required, GRIB_TYPE_UNDEFINED, values, &count);
+                              values_required, GRIB_TYPE_UNDEFINED, values1, &count);
     Assert( !err );
     Assert( count == 2 );
-    Assert( strcmp(values[0].name, "key1")==0 );
-    Assert( strcmp(values[0].string_value, "value1")==0 );
-    Assert( values[0].equal == 1 );
-    Assert( strcmp(values[1].name, "key2")==0 );
-    Assert( strcmp(values[1].string_value, "value2")==0 );
-    Assert( values[1].equal == 0 );
+    Assert( strcmp(values1[0].name, "key1")==0 );
+    Assert( strcmp(values1[0].string_value, "value1")==0 );
+    Assert( values1[0].equal == 1 );
+    Assert( strcmp(values1[1].name, "key2")==0 );
+    Assert( strcmp(values1[1].string_value, "value2")==0 );
+    Assert( values1[1].equal == 0 );
     /* Note how the input is modified by the tokenizer (thanks to strtok_r) */
     Assert( strcmp(input1, "key1=value1")==0 );
+    free( (void*)values1[0].name );
+    free( (void*)values1[1].name );
+    free( (void*)values1[0].string_value );
+    free( (void*)values1[1].string_value );
 
     count = max_count;
     err = parse_keyval_string(NULL, input2,
-                              values_required, GRIB_TYPE_LONG, values, &count);
+                              values_required, GRIB_TYPE_LONG, values2, &count);
     Assert( !err );
     Assert( count == 1 );
-    Assert( strcmp(values[0].name, "x")==0 );
-    Assert( values[0].long_value == 14 );
-    Assert( values[0].equal == 1 );
-    Assert( strcmp(values[1].name, "key2")==0 );
+    Assert( strcmp(values2[0].name, "x")==0 );
+    Assert( values2[0].long_value == 14 );
+    Assert( values2[0].equal == 1 );
+    free( (void*)values2[0].name );
 
     count = max_count;
     err = parse_keyval_string(NULL, input3,
-                              values_required, GRIB_TYPE_DOUBLE, values, &count);
+                              values_required, GRIB_TYPE_DOUBLE, values3, &count);
     Assert( !err );
     Assert( count == 1 );
-    Assert( strcmp(values[0].name, "mars.level")==0 );
-
+    Assert( strcmp(values3[0].name, "mars.level")==0 );
+    free( (void*)values3[0].name );
 }
+
 
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
 
+    test_logging_proc();
     test_grib_binary_search();
     test_parse_keyval_string();
     

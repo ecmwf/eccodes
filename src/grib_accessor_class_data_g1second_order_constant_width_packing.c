@@ -19,6 +19,7 @@
    IMPLEMENTS = init
    IMPLEMENTS = pack_double
    IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
    MEMBERS=const char* half_byte
    MEMBERS=const char* packingType
@@ -56,6 +57,8 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
+static int unpack_double_element(grib_accessor*, size_t i, double* val);
+static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
 typedef struct grib_accessor_data_g1second_order_constant_width_packing
 {
@@ -136,8 +139,8 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_constant_wid
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value */
+    &unpack_double_element_set,  /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -174,8 +177,6 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -237,41 +238,45 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     long decimal_scale_factor;
     double s, d;
     long* secondaryBitmap;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     buf += grib_byte_offset(a);
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfGroups, &numberOfGroups)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->numberOfGroups, &numberOfGroups)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->jPointsAreConsecutive, &jPointsAreConsecutive)) != GRIB_SUCCESS)
         return ret;
 
     if (jPointsAreConsecutive) {
-        if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->Ni, &numberPerRow)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, self->Ni, &numberPerRow)) != GRIB_SUCCESS)
             return ret;
     }
     else {
-        if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->Nj, &numberPerRow)) != GRIB_SUCCESS)
+        if ((ret = grib_get_long_internal(hand, self->Nj, &numberPerRow)) != GRIB_SUCCESS)
             return ret;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->widthOfFirstOrderValues, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->widthOfFirstOrderValues, &widthOfFirstOrderValues)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &reference_value)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfSecondOrderPackedValues,
+    if ((ret = grib_get_long_internal(hand, self->numberOfSecondOrderPackedValues,
                                       &numberOfSecondOrderPackedValues)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->groupWidth, &groupWidth)) != GRIB_SUCCESS)
+    if (*len < numberOfSecondOrderPackedValues)
+        return GRIB_ARRAY_TOO_SMALL;
+
+    if ((ret = grib_get_long_internal(hand, self->groupWidth, &groupWidth)) != GRIB_SUCCESS)
         return ret;
 
     secondaryBitmap = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfSecondOrderPackedValues);
@@ -327,4 +332,59 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "constant width packing not implemented");
     return GRIB_NOT_IMPLEMENTED;
+}
+
+static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
+    grib_handle* hand = grib_handle_of_accessor(a);
+    size_t size = 0;
+    double* values = NULL;
+    int err = 0;
+
+    /* TODO: This should be 'codedValues' not 'values'
+       but GRIB1 version of this packing does not have that key!! */
+    err = grib_get_size(hand, "values", &size);
+    if (err)
+        return err;
+    if (idx > size)
+        return GRIB_INVALID_ARGUMENT;
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(hand, "values", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    *val = values[idx];
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
+}
+
+static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    grib_handle* hand = grib_handle_of_accessor(a);
+    size_t size = 0, i = 0;
+    double* values = NULL;
+    int err = 0;
+
+    /* TODO: This should be 'codedValues' not 'values'
+       but GRIB1 version of this packing does not have that key!! */
+    err = grib_get_size(hand, "values", &size);
+    if (err) return err;
+
+    for (i = 0; i < len; i++) {
+        if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
+    }
+
+    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    err    = grib_get_double_array(hand, "values", values, &size);
+    if (err) {
+        grib_context_free(a->context, values);
+        return err;
+    }
+    for (i = 0; i < len; i++) {
+        val_array[i] = values[index_array[i]];
+    }
+    grib_context_free(a->context, values);
+    return GRIB_SUCCESS;
 }

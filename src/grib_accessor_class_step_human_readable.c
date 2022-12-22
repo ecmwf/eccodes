@@ -171,10 +171,10 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
 
     if (second) {
-        sprintf(result, "%ldh %ldm %lds", hour, minute, second);
+        snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
     } else {
-        if (minute) sprintf(result, "%ldh %ldm", hour, minute);
-        else sprintf(result, "%ldh", hour);
+        if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
+        else snprintf(result, 1024, "%ldh", hour);
     }
 
     *length = strlen(result);

@@ -206,16 +206,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    long rlen       = 0;
-    int err         = 0;
-    unsigned long i = 0;
-    long bitp       = a->offset * 8;
+    long rlen = 0;
+    int err   = 0;
+    long i    = 0;
+    long bitp = a->offset * 8;
 
     err = grib_value_count(a, &rlen);
     if (err)
         return err;
 
-    if (*len < rlen) {
+    if (*len < (size_t)rlen) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %ld values", *len, a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;

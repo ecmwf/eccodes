@@ -88,7 +88,7 @@ int main(int argc, char** argv)
             /* do nothing  */
         }
         else {
-            sprintf(error_msg, "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
+            snprintf(error_msg, sizeof(error_msg), "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
             perror(error_msg);
             exit(1);
         }
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
             /* do nothing  */
         }
         else {
-            sprintf(error_msg, "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
+            snprintf(error_msg, sizeof(error_msg), "Error decoding when bpv=%d. Error message:%s", i, grib_get_error_message(err));
             perror(error_msg);
             exit(1);
         }

@@ -271,6 +271,6 @@ static void destroy(grib_context* c, grib_accessor* a)
 
 static int value_count(grib_accessor* a, long* count)
 {
-    *count = 16;
+    *count = 1; /* ECC-1475 */
     return 0;
 }

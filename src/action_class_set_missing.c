@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *  Enrico Fucile                                                                         *
+ *  Enrico Fucile                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -41,7 +41,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_set_missing {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in set_missing */
     char *name;
 } grib_action_set_missing;
@@ -89,7 +89,7 @@ grib_action* grib_action_create_set_missing(grib_context* context,
 
     a->name = grib_context_strdup_persistent(context, name);
 
-    sprintf(buf, "set_missing_%s", name);
+    snprintf(buf, sizeof(buf), "set_missing_%s", name);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

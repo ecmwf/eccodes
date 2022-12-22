@@ -170,7 +170,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     l = strlen(self->value);
     if (*len < l)
         return GRIB_ARRAY_TOO_SMALL;
-    sprintf(val, "%s", self->value);
+    snprintf(val, 1024, "%s", self->value);
     *len = strlen(self->value);
 
     return GRIB_SUCCESS;

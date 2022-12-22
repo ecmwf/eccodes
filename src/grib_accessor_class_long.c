@@ -156,9 +156,9 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     (void)err;
 
     if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
-        sprintf(repres, "MISSING");
+        snprintf(repres, sizeof(repres), "MISSING");
     else
-        sprintf(repres, "%ld", val);
+        snprintf(repres, sizeof(repres), "%ld", val);
 
     l = strlen(repres) + 1;
 

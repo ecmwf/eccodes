@@ -24848,7 +24848,7 @@ int main(int argc, char** argv)
         for (i = 0; i < values_len; i++) {
             const double diff = fabs(values[i] - vals[i]);
             if (diff > EPSILON) {
-                fprintf(stderr, "Unpacked value different at i=%lu: original=%.7f decoded=%.7f\n",
+                fprintf(stderr, "Unpacked value different at i=%zu: original=%.7f decoded=%.7f\n",
                         i, values[i], vals[i]);
                 return 1;
             }

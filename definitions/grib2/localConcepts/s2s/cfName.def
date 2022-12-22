@@ -4,6 +4,7 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Sea surface practical salinity
 'sea_surface_salinity' = {

@@ -22,7 +22,7 @@ const char* grib_get_error_message(int code)
     code = -code;
     if (code < 0 || code >= NUMBER(errors)) {
         static char mess[64];
-        sprintf(mess,"Unknown error %d",code);
+        snprintf(mess, sizeof(mess), "Unknown error %d", code);
         return mess;
     }
     return errors[code];

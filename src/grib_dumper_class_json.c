@@ -55,7 +55,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_json {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in json */
     long section_offset;
     long begin;
@@ -467,7 +467,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     /* ECC-710: It is MUCH slower determining the string length here
      * than using a maximum size (and no need for malloc).
      * Specially for BUFR elements */
-    /*err = _grib_get_string_length(a,&size);
+    /*err = ecc__grib_get_string_length(a,&size);
     if (size==0) return;
     value=(char*)grib_context_malloc_clear(a->context,size);
     if (!value) {
@@ -484,7 +484,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     err = grib_unpack_string(a, value, &size);
     if (err) {
-        sprintf(value, " *** ERR=%d (%s) [dump_string on '%s']",
+        snprintf(value, sizeof(value), " *** ERR=%d (%s) [dump_string on '%s']",
                 err, grib_get_error_message(err), a->name);
     } else {
         Assert(size < MAX_STRING_SIZE);

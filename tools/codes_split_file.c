@@ -12,7 +12,7 @@
  * Description:
  * Split an input file (GRIB, BUFR etc) into chunks of roughly the same size.
  * The output files are named input_01, input_02 etc. This is much faster than grib_copy/bufr_copy
- * 
+ *
  * 2019-07-26 W.Qu  Allow an input file to be split into each individual message (if nchunk=-1)
  *
  */
@@ -34,6 +34,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     void* mesg = NULL;
     FILE* out;
     size_t size = 0, read_size = 0, insize = 0, chunk_size, msg_size = 0, num_msg = 0;
+    size_t ofilenameMaxLen = 0;
     off_t offset = 0;
     int err      = GRIB_SUCCESS;
     int i;
@@ -44,7 +45,8 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
         return 1;
 
     /* name of output file */
-    ofilename = (char*)calloc(1, strlen(filename) + 10);
+    ofilenameMaxLen = strlen(filename) + 10;
+    ofilename = (char*)calloc(1, ofilenameMaxLen);
 
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
@@ -58,7 +60,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     }
 
     i = 1;
-    sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
+    snprintf(ofilename, ofilenameMaxLen, OUTPUT_FILENAME_FORMAT, filename, i);
     out = fopen(ofilename, "w");
     if (!out) {
         perror(ofilename);
@@ -82,12 +84,12 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             msg_size += size;
             if (read_size > chunk_size && msg_size < insize) {
                 if (verbose)
-                    printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg);
+                    printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg);
                 fclose(out);
                 i++;
                 /* Start writing to the next file */
                 /*printf("=2=%d\t%d\n",*count,msg_size);*/
-                sprintf(ofilename, OUTPUT_FILENAME_FORMAT, filename, i);
+                snprintf(ofilename, ofilenameMaxLen, OUTPUT_FILENAME_FORMAT, filename, i);
                 out = fopen(ofilename, "w");
                 if (!out) {
                     perror(ofilename);
@@ -101,7 +103,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
         }
     }
     if (verbose)
-        printf("Wrote output file %s (%lu msgs)\n", ofilename, (unsigned long)num_msg - 1);
+        printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg - 1);
     fclose(out);
     free(ofilename);
 

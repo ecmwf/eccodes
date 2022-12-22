@@ -168,7 +168,7 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: Legacy sub-area num points=%ld\n", (long)np);
+        fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: Legacy sub-area num points=%zu\n", np);
     }
 
     /*find starting latitude */
@@ -222,7 +222,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
 
     if (h->context->debug) {
         const size_t np = count_subarea_points(h, get_reduced_row, pl, plsize, lon_first, lon_last);
-        fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%ld\n", (long)np);
+        fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: sub-area num points=%zu\n", np);
     }
 
     /* Find starting latitude */
@@ -381,7 +381,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         iter->e = 0;
         if (h->context->debug) {
             const size_t np = count_global_points(pl, plsize);
-            fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: global num points=%ld\n", (long)np);
+            fprintf(stderr, "ECCODES DEBUG grib_iterator_class_gaussian_reduced: global num points=%zu\n", np);
         }
 
         for (j = 0; j < plsize; j++) {
