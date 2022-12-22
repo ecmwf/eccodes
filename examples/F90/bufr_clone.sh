@@ -9,31 +9,30 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_clone_test_f"
 
-#Prepare tmp file
 fBufrTmp=${label}.clone.bufr
 rm -f $fBufrTmp
 
-#We clone a bufr file with multiple messages.
+# We clone a bufr file with multiple messages
 f=${data_dir}/bufr/syno_multi.bufr
 
 REDIRECT=/dev/null
 
-#The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example!!! 
+# The input ($f) and output ($fBufrTmp) are hardcoded in the f90 example
 ${examples_dir}/eccodes_f_bufr_clone >$REDIRECT 2> $REDIRECT
 
-#Compare clone to the original
+# Compare clone to the original. Should be different
 set +e
 ${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
 
-#Check if clone is different
+# Check if clone is different
 if [ $? -eq 0 ]; then
-  echo "cloning produced identical files " >&2
+  echo "Error: cloning produced identical files " >&2
   exit 1
 fi
 set -e
 
-#Clean up
+# Clean up
 rm -f ${fBufrTmp}

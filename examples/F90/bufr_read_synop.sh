@@ -11,24 +11,17 @@
 . ./include.ctest.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_read_synop_test_f"
 
-#Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
+# We check "syno_multi.bufr". The path is hard coded in the example
+${examples_dir}/eccodes_f_bufr_read_synop > $fTmp
 
-REDIRECT=/dev/null
+# Check the output
+grep -q 'cloudType .low.:' $fTmp
+grep -q 'cloudType .high.:' $fTmp
 
-#Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_read_synop #2> $REDIRECT > $fTmp
-
-#TODO: check the output
-
-#cat  $fTmp
-
-#Clean up
 rm -f $fTmp
