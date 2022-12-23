@@ -503,8 +503,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     if (width * height != *len) {
-        fprintf(stderr, "width=%ld height=%ld len=%ld\n", (long)width, (long)height, (long)(*len));
-        Assert(width * height == *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "grib_accessor_class_data_png_packing pack_double: width=%ld height=%ld len=%ld."
+                         " width*height should equal len!",
+                         (long)width, (long)height, (long)*len);
+        /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
+         * but has not yet submitted the new data values. So len will be out of sync!
+         * So issue a warning but proceed.
+        */
+        return GRIB_SUCCESS;
     }
 
     d = grib_power(decimal_scale_factor, 10);
