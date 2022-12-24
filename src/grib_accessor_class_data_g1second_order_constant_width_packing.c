@@ -187,23 +187,24 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_g1second_order_constant_width_packing* self = (grib_accessor_data_g1second_order_constant_width_packing*)a;
+    grib_handle* hand                    = grib_handle_of_accessor(a);
 
-    self->half_byte                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->packingType                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->ieee_packing                    = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->precision                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->widthOfFirstOrderValues         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->N1                              = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->N2                              = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->numberOfGroups                  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->numberOfSecondOrderPackedValues = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->extraValues                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->Ni                              = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->Nj                              = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->pl                              = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->jPointsAreConsecutive           = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->bitmap                          = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->groupWidth                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->half_byte                       = grib_arguments_get_name(hand, args, self->carg++);
+    self->packingType                     = grib_arguments_get_name(hand, args, self->carg++);
+    self->ieee_packing                    = grib_arguments_get_name(hand, args, self->carg++);
+    self->precision                       = grib_arguments_get_name(hand, args, self->carg++);
+    self->widthOfFirstOrderValues         = grib_arguments_get_name(hand, args, self->carg++);
+    self->N1                              = grib_arguments_get_name(hand, args, self->carg++);
+    self->N2                              = grib_arguments_get_name(hand, args, self->carg++);
+    self->numberOfGroups                  = grib_arguments_get_name(hand, args, self->carg++);
+    self->numberOfSecondOrderPackedValues = grib_arguments_get_name(hand, args, self->carg++);
+    self->extraValues                     = grib_arguments_get_name(hand, args, self->carg++);
+    self->Ni                              = grib_arguments_get_name(hand, args, self->carg++);
+    self->Nj                              = grib_arguments_get_name(hand, args, self->carg++);
+    self->pl                              = grib_arguments_get_name(hand, args, self->carg++);
+    self->jPointsAreConsecutive           = grib_arguments_get_name(hand, args, self->carg++);
+    self->bitmap                          = grib_arguments_get_name(hand, args, self->carg++);
+    self->groupWidth                      = grib_arguments_get_name(hand, args, self->carg++);
     self->edition                         = 1;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
