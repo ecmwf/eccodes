@@ -212,8 +212,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 
     code = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
     if (!code) {
-        grib_context_log(a->context, GRIB_LOG_FATAL,
-                         "unable to allocate %ld bytes", (long)size);
+        grib_context_log(a->context, GRIB_LOG_FATAL, "%s: Memory allocation error: %zu bytes", a->name, size);
         return GRIB_OUT_OF_MEMORY;
     }
 

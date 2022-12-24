@@ -336,12 +336,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     grib_dumper_default* self = (grib_dumper_default*)d;
     char** values;
     size_t size = 0, i = 0;
-    grib_context* c = NULL;
+    grib_context* c = a->context;
     int err         = 0;
     int tab         = 0;
     long count      = 0;
-
-    c = a->context;
 
     grib_value_count(a, &count);
     size = count;
@@ -352,7 +350,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -379,8 +377,9 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         fprintf(self->dumper.out, "#-READ ONLY- ");
         tab = 13;
     }
-    else
+    else {
         fprintf(self->dumper.out, "  ");
+    }
 
     tab++;
     fprintf(self->dumper.out, "%s = {\n", a->name);
@@ -417,7 +416,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     value = (char*)grib_context_malloc_clear(c, size);
     if (!value) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -650,10 +649,9 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_default* self = (grib_dumper_default*)d;
-    grib_section* s           = a->sub_section;
+
     int is_default_section    = 0;
     char* upper               = NULL;
-    char tmp[512];
     char *p = NULL, *q = NULL;
     if (!strncmp(a->name, "section", 7))
         is_default_section = 1;
@@ -663,6 +661,8 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     if (is_default_section) {
+        /* char tmp[512]; */
+        /* grib_section* s = a->sub_section; */
         upper = (char*)malloc(strlen(a->name) + 1);
         Assert(upper);
         p = (char*)a->name;
@@ -674,7 +674,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         }
         *q = '\0';
 
-        snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
+        /* snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding); */
         /* fprintf(self->dumper.out,"#==============   %-38s   ==============\n",tmp); */
         free(upper);
         self->section_offset = a->offset;
@@ -684,7 +684,6 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     d->depth += 3;
     grib_dump_accessors_block(d, block);
     d->depth -= 3;
-
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);*/
 }

@@ -410,7 +410,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -467,13 +467,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     /* ECC-710: It is MUCH slower determining the string length here
      * than using a maximum size (and no need for malloc).
      * Specially for BUFR elements */
-    /*err = ecc__grib_get_string_length(a,&size);
-    if (size==0) return;
-    value=(char*)grib_context_malloc_clear(a->context,size);
-    if (!value) {
-        grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
-        return;
-    }*/
+    /* err = ecc__grib_get_string_length(a,&size);
+     * if (size==0) return;
+     * value=(char*)grib_context_malloc_clear(a->context,size);
+     * if (!value) {
+     *   grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+     *   return;
+     * }
+    */
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
         fprintf(self->dumper.out, ",");
@@ -523,7 +524,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "\n%-*s}", depth, " ");
     }
 
-    /*grib_context_free(a->context,value);*/
+    /* grib_context_free(a->context,value); */
     (void)err; /* TODO */
 }
 
