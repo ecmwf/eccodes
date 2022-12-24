@@ -484,6 +484,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
          * So issue a warning but proceed.
         */
         /*return GRIB_INTERNAL_ERROR;*/
+        grib_context_free(a->context, buf);
         return GRIB_SUCCESS;
     }
 
