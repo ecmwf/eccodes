@@ -869,7 +869,6 @@ static void header(grib_dumper* d, grib_handle* h)
         fprintf(self->dumper.out, "#  Using ecCodes version: ");
         grib_print_api_version(self->dumper.out);
         fprintf(self->dumper.out, "\n\n");
-        fprintf(self->dumper.out, "from __future__ import print_function\n\n");
         fprintf(self->dumper.out, "import sys\n");
         fprintf(self->dumper.out, "import traceback\n\n");
         fprintf(self->dumper.out, "from eccodes import *\n\n\n");
