@@ -96,6 +96,8 @@ extern "C" {
  #define mkdir(dirname, mode) _mkdir(dirname)
 
  #ifdef _MSC_VER
+  #define _CRT_SECURE_NO_WARNINGS
+  #define _CRT_NONSTDC_NO_DEPRECATE
   #define access(path, mode) _access(path, mode)
   #define chmod(path, mode) _chmod(path, mode)
   #define strdup(str) _strdup(str)
