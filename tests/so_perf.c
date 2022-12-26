@@ -320,8 +320,7 @@ int main(int argc, char* argv[]) {
   GRIB_CHECK(grib_read_any_from_file(c,fin,buffer,&length),0);
   fclose(fin);
 
-
-  if (append) 
+  if (append)
 	  fout = fopen(ofilename,"ab");
   else
 	  fout = fopen(ofilename,"wb");
@@ -386,8 +385,7 @@ int main(int argc, char* argv[]) {
 	 sprintf(grid,"%g/%g",Di,Dj);
   }
 
-
-  if (!append) 
+  if (!append)
     fprintf(fout,
 	"shortName gridType numberOfValues bitsPerValue grid sizeSimple sizeso encodeso encodeSimple decodeso decodeSimple\n");
 
@@ -397,7 +395,7 @@ int main(int argc, char* argv[]) {
   if (strcmp(packingType,grid_simple))
     grib_set_string(h,"packingType",grid_simple,&grid_simple_l);
   grib_timer_start(tds);
-  for (count=0;count<repeatsimple;count++) 
+  for (count=0;count<repeatsimple;count++)
     GRIB_CHECK(grib_get_double_array(h,"values",values,&nvalues),0);
   grib_timer_stop(tds,0);
 
@@ -408,7 +406,7 @@ int main(int argc, char* argv[]) {
 
   /* encode values grid_simple*/
   grib_timer_start(tes);
-  for (count=0;count<repeatsimple;count++) 
+  for (count=0;count<repeatsimple;count++)
     GRIB_CHECK(grib_set_double_array(h,"values",values,nvalues),0);
   grib_timer_stop(tes,0);
 
@@ -417,7 +415,7 @@ int main(int argc, char* argv[]) {
   gribex_msg_len=BUFF_SIZE;
   sec4len=nvalues+100000;
   gribex_check(cgribex(  miss, ksec0,ksec1,ksec2,rsec2,ksec3,rsec3,
-                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D")); 
+                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D"));
 
   /* encode values second order with gribex*/
   ksec4[1] = bitsPerValue;
@@ -427,11 +425,11 @@ int main(int argc, char* argv[]) {
   /* to indicate extended flags are present. */
   ksec4[5] = 16;
 
-  ksec4[9] = 16; 
-  ksec4[11] = 8; 
-  ksec4[12] = 4; 
-  ksec4[13] = 0; 
-  ksec4[14] = -1; 
+  ksec4[9] = 16;
+  ksec4[11] = 8;
+  ksec4[12] = 4;
+  ksec4[13] = 0;
+  ksec4[14] = -1;
 
   gribex_msg_len=BUFF_SIZE;
   grib_timer_start(teso);
@@ -448,7 +446,7 @@ int main(int argc, char* argv[]) {
   filesize_so=grib_handle_write(hso,outfilename);
   printf("file size so   = %ld\n",(long)filesize_so);
 
-  perc=(double)filesize_simple/(double)filesize_so; 
+  perc=(double)filesize_simple/(double)filesize_so;
 
   printf("compression ratio = %g \n",perc);
   printf("space savings = %g \n",(1.0-1.0/perc)*100);
@@ -461,7 +459,7 @@ int main(int argc, char* argv[]) {
   sec4len=nvalues+100000;
   grib_timer_start(tdso);
   gribex_check(cgribex(  miss, ksec0,ksec1,ksec2,rsec2,ksec3,rsec3,
-                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D")); 
+                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D"));
   grib_timer_stop(tdso,0);
 
   for (i=0;i<nvalues;i++) {

@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 
     printf("Encode values...\n");
     GRIB_CHECK(grib_set_double_array(h, "values", values, ILCHAM), 0);
-    
+
     /* Write to a temporary GRIB file */
     printf("Save to GRIB %s...\n",TEMPFILE);
     fout = fopen(TEMPFILE, "wb");
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
         Assert(!"Failed to write data");
     }
     fclose(fout);
-    
+
     printf("Decode values and compare...\n");
     len = ILCHAM;
     GRIB_CHECK(grib_get_double_array(h, "values", zval, &len), 0);
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
     }
 
     GRIB_CHECK(grib_handle_delete(h), 0);
-    
+
     /* Read in the saved GRIB file */
     printf("Load values from saved file and compare....\n");
     fin = fopen(TEMPFILE, "rb"); Assert(fin);

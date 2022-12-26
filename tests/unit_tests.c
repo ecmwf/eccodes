@@ -1452,7 +1452,7 @@ static void test_assertion_catching()
     int i        = 0;
     Assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
-    
+
     printf("Testing: test_assertion_catching...\n");
 
     /* Do something illegal */
@@ -1662,7 +1662,7 @@ int main(int argc, char** argv)
     test_logging_proc();
     test_grib_binary_search();
     test_parse_keyval_string();
-    
+
     test_trimming();
     test_string_ends_with();
 

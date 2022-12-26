@@ -295,10 +295,10 @@ int statistics(grib_context* c, double err_threshold,double* values,
     }
     if (gribex_grib_errmax > err_threshold) {
       printf("         gribex_grib_errmax=%.5e  gribex_grib_ierrmax=%d\n",gribex_grib_errmax,gribex_grib_ierrmax);
-	  if (values[gribex_grib_ierrmax]!=0) 
+	  if (values[gribex_grib_ierrmax]!=0)
 	   error=(gribex_values[gribex_grib_ierrmax]-values[gribex_grib_ierrmax])/values[gribex_grib_ierrmax];
       printf("v[%d]=%.15e err=%.15e  (gribex)\n",gribex_grib_ierrmax,gribex_values[gribex_grib_ierrmax],error);
-	  if (values[gribex_grib_ierrmax]!=0) 
+	  if (values[gribex_grib_ierrmax]!=0)
 	   error=(grib_values[gribex_grib_ierrmax]-values[gribex_grib_ierrmax])/values[gribex_grib_ierrmax];
       printf("v[%d]=%.15e err=%.15e  (grib_api)\n",gribex_grib_ierrmax,grib_values[gribex_grib_ierrmax],error);
       printf("v[%d]=%.15e \n",gribex_grib_ierrmax,values[gribex_grib_ierrmax]);
@@ -450,7 +450,7 @@ int main(int argc, char* argv[]) {
 
 	/* calculate P factor */
 	lval=-32767;
-	if (calculateP) 
+	if (calculateP)
 	  GRIB_CHECK(grib_set_long(h,"P",lval),0);
 
     /* encode/decode with grib_api */
