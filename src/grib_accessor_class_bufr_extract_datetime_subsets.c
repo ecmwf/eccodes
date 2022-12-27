@@ -240,11 +240,10 @@ static int select_datetime(grib_accessor* a)
     long yearRank, monthRank, dayRank, hourRank, minuteRank, secondRank;
     long yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart;
     long yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd;
-    long *year, *month, *day, *hour, *minute;
-    double* second;
+    long *year = NULL, *month = NULL, *day = NULL, *hour = NULL, *minute = NULL;
+    double* second = NULL;
     long numberOfSubsets, i;
-    grib_iarray* subsets;
-    long* subsets_ar   = 0;
+    grib_iarray* subsets = NULL;
     size_t nsubsets    = 0;
     char yearstr[32]   = "year";
     char monthstr[32]  = "month";
@@ -389,7 +388,8 @@ static int select_datetime(grib_accessor* a)
     julianStart = date_to_julian(yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart);
     if (julianStart == -1) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid start date/time: %s", start_str);
-        return GRIB_INTERNAL_ERROR;
+        ret = GRIB_INTERNAL_ERROR;
+        goto cleanup;
     }
 
     ret = grib_get_long(h, "extractDateTimeYearEnd", &yearEnd);
@@ -416,12 +416,14 @@ static int select_datetime(grib_accessor* a)
     julianEnd = date_to_julian(yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (julianEnd == -1) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid end date/time: %s", end_str);
-        return GRIB_INTERNAL_ERROR;
+        ret = GRIB_INTERNAL_ERROR;
+        goto cleanup;
     }
 
     if (julianEnd <= julianStart) {
         grib_context_log(c, GRIB_LOG_ERROR, "Wrong definition of time interval: end (%s) is not after start (%s)", end_str, start_str);
-        return GRIB_INTERNAL_ERROR;
+        ret = GRIB_INTERNAL_ERROR;
+        goto cleanup;
     }
 
     for (i = 0; i < numberOfSubsets; i++) {
@@ -435,7 +437,8 @@ static int select_datetime(grib_accessor* a)
         julianDT = date_to_julian(year[i], month[i], day[i], hour[i], minute[i], second[i]);
         if (julianDT == -1) {
             grib_context_log(c, GRIB_LOG_ERROR, "Invalid date/time: %s", datetime_str);
-            return GRIB_INTERNAL_ERROR;
+            ret = GRIB_INTERNAL_ERROR;
+            goto cleanup;
         }
 
         /*printf("SN: datetime_str=%s j=%.15f\t", datetime_str, julianDT);*/
@@ -454,8 +457,8 @@ static int select_datetime(grib_accessor* a)
         return ret;
 
     if (nsubsets != 0) {
-        subsets_ar = grib_iarray_get_array(subsets);
-        ret        = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+        long* subsets_ar = grib_iarray_get_array(subsets);
+        ret = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret)
             return ret;
@@ -465,6 +468,7 @@ static int select_datetime(grib_accessor* a)
             return ret;
     }
 
+cleanup:
     grib_context_free(c, year);
     grib_context_free(c, month);
     grib_context_free(c, day);
@@ -472,7 +476,7 @@ static int select_datetime(grib_accessor* a)
     grib_context_free(c, minute);
     grib_context_free(c, second);
     grib_iarray_delete(subsets);
-    subsets = 0;
+    subsets = NULL;
 
     return ret;
 }
