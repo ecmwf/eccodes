@@ -92,19 +92,6 @@ grib_dumper_class* grib_dumper_class_json = &_grib_dumper_class_json;
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a);
 
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
-
 static int depth = 0;
 
 static void init_class(grib_dumper_class* c) {}
@@ -539,9 +526,9 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_json* self = (grib_dumper_json*)d;
-    if (!grib_inline_strcmp(a->name, "BUFR") ||
-        !grib_inline_strcmp(a->name, "GRIB") ||
-        !grib_inline_strcmp(a->name, "META")) {
+    if (strcmp(a->name, "BUFR")==0 ||
+        strcmp(a->name, "GRIB")==0 ||
+        strcmp(a->name, "META")==0) {
         depth = 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
         fprintf(self->dumper.out, "[\n");
@@ -552,7 +539,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         depth -= 2;
         fprintf(self->dumper.out, "\n]\n");
     }
-    else if (!grib_inline_strcmp(a->name, "groupNumber")) {
+    else if (strcmp(a->name, "groupNumber")==0) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         if (!self->empty)

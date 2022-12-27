@@ -95,19 +95,6 @@ grib_dumper_class* grib_dumper_class_bufr_decode_fortran = &_grib_dumper_class_b
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix);
 
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
-
 static int depth = 0;
 
 static void init_class(grib_dumper_class* c) {}
@@ -563,9 +550,9 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key)
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_bufr_decode_fortran* self = (grib_dumper_bufr_decode_fortran*)d;
-    if (!grib_inline_strcmp(a->name, "BUFR") ||
-        !grib_inline_strcmp(a->name, "GRIB") ||
-        !grib_inline_strcmp(a->name, "META")) {
+    if (strcmp(a->name, "BUFR")==0 ||
+        strcmp(a->name, "GRIB")==0 ||
+        strcmp(a->name, "META")==0) {
         grib_handle* h = grib_handle_of_accessor(a);
         depth          = 2;
         self->empty    = 1;
@@ -579,7 +566,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         grib_dump_accessors_block(d, block);
         depth -= 2;
     }
-    else if (!grib_inline_strcmp(a->name, "groupNumber")) {
+    else if (strcmp(a->name, "groupNumber")==0) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         self->empty = 1;
