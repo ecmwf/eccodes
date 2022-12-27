@@ -260,6 +260,9 @@ int grib_tool_init(grib_runtime_options* options)
         const char* filename[1];
         filename[0]      = options->infile_extra->name; /* First file */
         options->random  = 1;
+        /* Setting 'orderby' will cause the second file to also be read as a sorted fieldset
+         * See file: grib_tool.c function: grib_tool
+        */
         options->orderby = strdup(orderby);
         options->idx     = grib_fieldset_new_from_files(context, filename,
                                                     nfiles, 0, 0, 0, orderby, &ret);
@@ -1133,6 +1136,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     int i                    = 0;
     const char* name         = NULL;
     grib_keys_iterator* iter = NULL;
+    grib_context* context    = handle1->context;
 
     /* mask only if no -c option or headerMode (-H)*/
     if (blocklist && (!listFromCommandLine || headerMode)) {
@@ -1144,6 +1148,14 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             nextb=nextb->next;
         } */
     }
+
+#if 0
+    {
+        long of1,of2; /* Debugging: print offset of each handle */
+        grib_get_long(h1, "offset", &of1); grib_get_long(h2, "offset", &of2);
+        printf("of1=%lu   of2=%lu\n",of1,of2);
+    }
+#endif
 
     if (headerMode) {
         const void *msg1 = NULL, *msg2 = NULL;
@@ -1161,7 +1173,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 
         if (!iter) {
-            printf("ERROR: unable to get keys iterator\n");
+            grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);
         }
 

@@ -1279,9 +1279,8 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         }
     }
     iter = grib_keys_iterator_new(handle1, 0, NULL);
-
     if (!iter) {
-        grib_context_log(context, GRIB_LOG_ERROR, "unable to create keys iterator");
+        grib_context_log(context, GRIB_LOG_ERROR, "unable to create the BUFR keys iterator");
         exit(1);
     }
 
