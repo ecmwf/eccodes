@@ -253,75 +253,61 @@ static int select_datetime(grib_accessor* a)
     char secondstr[32] = "second";
 
     ret = grib_get_long(h, "compressedData", &compressed);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     ret = grib_get_long(h, self->numberOfSubsets, &numberOfSubsets);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     subsets = grib_iarray_new(c, numberOfSubsets, 10);
 
     ret = grib_set_long(h, "unpack", 1);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     if (compressed) {
         ret = grib_get_long(h, "extractDateTimeYearRank", &yearRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(yearstr, sizeof(yearstr), "#%ld#year", yearRank);
 
         ret = grib_get_long(h, "extractDateTimeMonthRank", &monthRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(monthstr, sizeof(monthstr), "#%ld#month", monthRank);
 
         ret = grib_get_long(h, "extractDateTimeDayRank", &dayRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(daystr, sizeof(daystr), "#%ld#day", dayRank);
 
         ret = grib_get_long(h, "extractDateTimeHourRank", &hourRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(hourstr, sizeof(hourstr), "#%ld#hour", hourRank);
 
         ret = grib_get_long(h, "extractDateTimeMinuteRank", &minuteRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(minutestr, sizeof(minutestr), "#%ld#minute", minuteRank);
 
         ret = grib_get_long(h, "extractDateTimeSecondRank", &secondRank);
-        if (ret)
-            return ret;
+        if (ret) return ret;
         snprintf(secondstr, sizeof(secondstr), "#%ld#second", secondRank);
     }
 
     /* YEAR */
     ret = build_long_array(c, h, compressed, &year, yearstr, numberOfSubsets, 0);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /* MONTH */
     ret = build_long_array(c, h, compressed, &month, monthstr, numberOfSubsets, 0);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /* DAY */
     ret = build_long_array(c, h, compressed, &day, daystr, numberOfSubsets, 0);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /* HOUR */
     ret = build_long_array(c, h, compressed, &hour, hourstr, numberOfSubsets, 0);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /* MINUTE: Special treatment if error => set all entries to zero */
     ret = build_long_array(c, h, compressed, &minute, minutestr, numberOfSubsets, 1);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     /* SECOND: Double array */
     n      = numberOfSubsets;
@@ -365,17 +351,13 @@ static int select_datetime(grib_accessor* a)
     }
 
     ret = grib_get_long(h, "extractDateTimeYearStart", &yearStart);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeMonthStart", &monthStart);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeDayStart", &dayStart);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeHourStart", &hourStart);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeMinuteStart", &minuteStart);
     if (ret)
         minuteStart = 0;
@@ -393,17 +375,13 @@ static int select_datetime(grib_accessor* a)
     }
 
     ret = grib_get_long(h, "extractDateTimeYearEnd", &yearEnd);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeMonthEnd", &monthEnd);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeDayEnd", &dayEnd);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeHourEnd", &hourEnd);
-    if (ret)
-        return ret;
+    if (ret) return ret;
     ret = grib_get_long(h, "extractDateTimeMinuteEnd", &minuteEnd);
     if (ret)
         minuteEnd = 0;
@@ -453,19 +431,16 @@ static int select_datetime(grib_accessor* a)
 
     nsubsets = grib_iarray_used_size(subsets);
     ret      = grib_set_long(h, "extractedDateTimeNumberOfSubsets", nsubsets);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
         ret = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
-        if (ret)
-            return ret;
+        if (ret) return ret;
 
         ret = grib_set_long(h, self->doExtractSubsets, 1);
-        if (ret)
-            return ret;
+        if (ret) return ret;
     }
 
 cleanup:
