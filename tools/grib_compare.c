@@ -1136,6 +1136,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     int i                    = 0;
     const char* name         = NULL;
     grib_keys_iterator* iter = NULL;
+    grib_context* context    = handle1->context;
 
     /* mask only if no -c option or headerMode (-H)*/
     if (blocklist && (!listFromCommandLine || headerMode)) {
@@ -1172,7 +1173,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 
         if (!iter) {
-            printf("ERROR: unable to get keys iterator\n");
+            grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
             exit(1);
         }
 
