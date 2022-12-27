@@ -3380,6 +3380,9 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
         }
     }
 
+    if (subsetList)
+        grib_context_free(c, subsetList);/* ECC-1498 */
+
     return err;
 }
 
