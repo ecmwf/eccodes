@@ -64,6 +64,7 @@
    MEMBERS    = grib_iarray* iss_list
    MEMBERS    = grib_trie_with_rank* dataAccessorsTrie
    MEMBERS    = grib_sarray* tempStrings
+   MEMBERS    = grib_vdarray* tempDoubleValues
    MEMBERS    = int change_ref_value_operand
    MEMBERS    = size_t refValListSize
    MEMBERS    = long* refValList
