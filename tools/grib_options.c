@@ -48,8 +48,8 @@ static grib_options_help grib_options_help_list[] = {
     { "i:", "index",
       "\n\t\tData value corresponding to the given index is printed.\n" },
     { "j", 0, "JSON mode (JavaScript Object Notation).\n" },
-    { "l:", "Latitude,Longitude[,MODE,file]",
-      "\n\t\tValue close to the point of a Latitude,Longitude."
+    { "l:", "latitude,longitude[,MODE,file]",
+      "\n\t\tValue close to the point of a latitude,longitude (nearest neighbour)."
       "\n\t\tAllowed values for MODE are:"
       "\n\t\t  4 (4 values in the nearest points are printed) Default"
       "\n\t\t  1 (the value at the nearest point is printed)"
