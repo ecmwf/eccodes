@@ -55,7 +55,7 @@ extern "C" {
  #endif
 #endif
 
-#ifdef ECCODES_ON_WINDOWS
+#if defined(_WIN32) && defined(_MSC_VER)
   #define _CRT_SECURE_NO_WARNINGS
   #define _CRT_NONSTDC_NO_DEPRECATE
 #endif
