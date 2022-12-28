@@ -110,7 +110,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     &pack_string_array,          /* grib_pack array procedures string */
@@ -143,6 +145,8 @@ static void init_class(grib_accessor_class* c)
     c->byte_count    =    (*(c->super))->byte_count;
     c->byte_offset    =    (*(c->super))->byte_offset;
     c->sub_section    =    (*(c->super))->sub_section;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
     c->unpack_bytes    =    (*(c->super))->unpack_bytes;
     c->pack_expression    =    (*(c->super))->pack_expression;

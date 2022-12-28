@@ -81,7 +81,9 @@ static grib_accessor_class _grib_accessor_class_g2latlon = {
     0,                  /* grib_pack procedures long */
     0,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -119,6 +121,8 @@ static void init_class(grib_accessor_class* c)
     c->sub_section    =    (*(c->super))->sub_section;
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;

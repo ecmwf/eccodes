@@ -79,7 +79,9 @@ static grib_accessor_class _grib_accessor_class_mars_step = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -115,7 +117,9 @@ static void init_class(grib_accessor_class* c)
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
     c->pack_bytes    =    (*(c->super))->pack_bytes;

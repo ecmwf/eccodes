@@ -313,6 +313,7 @@ typedef void (*accessor_destroy_proc)(grib_context*, grib_accessor*);
 
 typedef int (*accessor_unpack_long_proc)(grib_accessor*, long*, size_t* len);
 typedef int (*accessor_unpack_double_proc)(grib_accessor*, double*, size_t* len);
+typedef int (*accessor_unpack_float_proc)(grib_accessor*, float*, size_t* len);
 
 typedef int (*accessor_unpack_double_element_proc)(grib_accessor*, size_t, double*);
 typedef int (*accessor_unpack_double_element_set_proc)(grib_accessor*, const size_t*, size_t, double*);
@@ -335,6 +336,7 @@ typedef int (*accessor_pack_missing_proc)(grib_accessor*);
 typedef int (*accessor_pack_is_missing_proc)(grib_accessor*);
 typedef int (*accessor_pack_long_proc)(grib_accessor*, const long*, size_t* len);
 typedef int (*accessor_pack_double_proc)(grib_accessor*, const double*, size_t* len);
+typedef int (*accessor_pack_float_proc)(grib_accessor*, const float*, size_t* len);
 typedef int (*accessor_pack_string_proc)(grib_accessor*, const char*, size_t* len);
 typedef int (*accessor_pack_string_array_proc)(grib_accessor*, const char**, size_t* len);
 typedef int (*accessor_pack_bytes_proc)(grib_accessor*, const unsigned char*, size_t* len);
@@ -957,7 +959,9 @@ struct grib_accessor_class
     accessor_unpack_long_proc unpack_long;
 
     accessor_pack_double_proc pack_double;
+    accessor_pack_float_proc pack_float;
     accessor_unpack_double_proc unpack_double;
+    accessor_unpack_float_proc unpack_float;
 
     accessor_pack_string_proc pack_string;
     accessor_unpack_string_proc unpack_string;
