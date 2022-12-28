@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     size_t stepSize, levelSize, shortNameSize, numberSize;
     long ostep, olevel, onumber;
     char oshortName[200];
-    size_t lenshortName = 200;
+    size_t lenshortName = sizeof(oshortName);
     int ret = 0, count = 0;
 
     if (argc != 2) usage(argv[0]);
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
                             fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
                             exit(ret);
                         }
-                        lenshortName = 200;
+                        lenshortName = sizeof(oshortName);
                         codes_get_string(h, "shortName", oshortName, &lenshortName);
                         codes_get_long(h, "level", &olevel);
                         codes_get_long(h, "number", &onumber);

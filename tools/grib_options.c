@@ -91,7 +91,7 @@ static grib_options_help grib_options_help_list[] = {
     { "C", 0, "C code mode. A C code program generating the message is dumped.\n" },
     { "D", 0, "Debug mode.\n" },
     { "H", 0, "Print octet content in hexadecimal format.\n" },
-    { "M", 0, "Multi-field support off. Turn off support for multiple fields in single GRIB message.\n" },
+    { "M", 0, "Multi-field support off. Turn off support for multiple fields in a single GRIB message.\n" },
     { "O", 0, "Octet mode. WMO documentation style dump.\n" },
     { "P:", "key[:{s|d|i}],key[:{s|d|i}],...",
       "\n\t\tAs -p adding the declared keys to the default list.\n" },
