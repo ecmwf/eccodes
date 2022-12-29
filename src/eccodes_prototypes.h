@@ -1540,6 +1540,7 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb);
 /* grib_bits_any_endian_simple.c */
 int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue, size_t n_vals, long* val);
 int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, double* val);
+int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValue, double reference_value, double s, double d, size_t n_vals, float* val);
 int grib_decode_double_array_complex(const unsigned char* p, long* bitp, long nbits, double reference_value, double s, double* d, size_t size, double* val);
 int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, unsigned char* p, long* off);
 int grib_encode_double_array(size_t n_vals, const double* val, long bits_per_value, double reference_value, double d, double divisor, unsigned char* p, long* off);

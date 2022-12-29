@@ -343,8 +343,10 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
 
 static int unpack_float(grib_accessor* a, float* v, size_t* len)
 {
-    int type = GRIB_TYPE_UNDEFINED;
-    printf("====%s\n",a->name);
+    /* int type = GRIB_TYPE_UNDEFINED;
+    printf("grib_accessor_class_gen.c unpack_float a->name        =%s\n",a->name);
+    printf("grib_accessor_class_gen.c unpack_float a->cclass->name=%s\n",a->cclass->name);
+    printf("grib_accessor_class_gen.c unpack_float alen=%zu\n",*len);
     printf("DEBUG unpack_float::  a->cclass->unpack_double=%p\n", (void*)a->cclass->unpack_double);
     printf("DEBUG unpack_float::            &unpack_double=%p\n", (void*)&unpack_double);
     if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
@@ -359,7 +361,7 @@ static int unpack_float(grib_accessor* a, float* v, size_t* len)
     grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as float", a->name);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
-    }
+    } */
 
     return GRIB_NOT_IMPLEMENTED;
 }

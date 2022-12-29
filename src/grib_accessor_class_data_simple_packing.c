@@ -23,7 +23,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_values
    IMPLEMENTS = init
-   IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_double;unpack_float
    IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = unpack_double_subarray
    IMPLEMENTS = pack_double
@@ -54,6 +54,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
@@ -110,7 +111,7 @@ static grib_accessor_class _grib_accessor_class_data_simple_packing = {
     &pack_double,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -150,7 +151,6 @@ static void init_class(grib_accessor_class* c)
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
     c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -317,6 +317,158 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
+// unpack an array of double or single precision real numbers. As doubles if dval!= NULL or floats if fval!=NULL
+static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len, unsigned char* buf, long pos, size_t n_vals)
+{
+    grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
+    grib_handle* gh                         = grib_handle_of_accessor(a);
+
+    size_t i = 0;
+    int err  = 0;
+
+    double reference_value;
+    long binary_scale_factor;
+    long bits_per_value;
+    long decimal_scale_factor;
+    long offsetBeforeData;
+    double s            = 0;
+    double d            = 0;
+    double units_factor = 1.0;
+    double units_bias   = 0.0;
+    Assert( ! (fval && dval) );
+printf("DBG:: SIMPLE PACK   unpack real.....\n");
+    if (*len < n_vals) {
+        *len = (long)n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+
+    /*
+     * check we don't decode bpv > max(ulong) as it is
+     * not currently supported by the algorithm
+     */
+    if (bits_per_value > (sizeof(long) * 8)) {
+        return GRIB_INVALID_BPV;
+    }
+
+    if (self->units_factor &&
+        (grib_get_double_internal(gh, self->units_factor, &units_factor) == GRIB_SUCCESS)) {
+        grib_set_double_internal(gh, self->units_factor, 1.0);
+    }
+
+    if (self->units_bias &&
+        (grib_get_double_internal(gh, self->units_bias, &units_bias) == GRIB_SUCCESS)) {
+        grib_set_double_internal(gh, self->units_bias, 0.0);
+    }
+
+    if (n_vals == 0) {
+        *len = 0;
+        return GRIB_SUCCESS;
+    }
+
+    self->dirty = 0;
+
+    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case */
+
+    if (bits_per_value == 0) {
+        if (dval) {
+            for (i = 0; i < n_vals; i++)
+                dval[i] = reference_value;
+        } else if (fval) {
+            for (i = 0; i < n_vals; i++)
+                fval[i] = reference_value;
+        }
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
+    s = grib_power(binary_scale_factor, 2);
+    d = grib_power(-decimal_scale_factor, 10);
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "grib_accessor_data_simple_packing: unpack_double : creating %s, %d values",
+                     a->name, n_vals);
+
+    offsetBeforeData = grib_byte_offset(a);
+    buf += offsetBeforeData;
+
+    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+
+    /* ECC-941 */
+    if (!a->context->ieee_packing) {
+        /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
+        long offsetAfterData = 0;
+        err                  = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData > offsetBeforeData) {
+            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            if (offsetBeforeData + valuesSize > offsetAfterData) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "Data section size mismatch: offset before data=%ld, offset after data=%ld (num values=%ld, bits per value=%ld)",
+                                 offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+#if 0
+        if (offsetBeforeData == offsetAfterData) {
+            /* Crazy case: Constant field with bitsPerValue > 0 */
+            for (i = 0; i < n_vals; i++)
+                val[i] = reference_value;
+            *len = n_vals;
+            return GRIB_SUCCESS;
+        }
+#endif
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
+                     bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+    if(dval)
+        grib_decode_double_array(buf, &pos, bits_per_value, reference_value, s, d, n_vals, dval);
+    if(fval)
+        grib_decode_float_array(buf, &pos, bits_per_value, reference_value, s, d, n_vals, fval);
+
+    *len = (long)n_vals;
+
+    if(dval) {
+        if (units_factor != 1.0) {
+            if (units_bias != 0.0)
+                for (i = 0; i < n_vals; i++)
+                    dval[i] = dval[i] * units_factor + units_bias;
+            else
+                for (i = 0; i < n_vals; i++)
+                    dval[i] *= units_factor;
+        }
+        else if (units_bias != 0.0)
+            for (i = 0; i < n_vals; i++)
+                dval[i] += units_bias;
+    }
+    if(fval) {
+        if (units_factor != 1.0) {
+            if (units_bias != 0.0)
+                for (i = 0; i < n_vals; i++)
+                    fval[i] = fval[i] * units_factor + units_bias;
+            else
+                for (i = 0; i < n_vals; i++)
+                    fval[i] *= units_factor;
+        }
+        else if (units_bias != 0.0)
+            for (i = 0; i < n_vals; i++)
+                fval[i] += units_bias;
+    }
+    return err;
+}
+
 static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
 {
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
@@ -464,7 +616,7 @@ static int unpack_double_subarray(grib_accessor* a, double* val, size_t start, s
     return _unpack_double(a, val, plen, buf, pos, nvals);
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+static int unpack_double(grib_accessor* a, double* dval, size_t* len)
 {
     unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
     size_t nvals       = 0;
@@ -476,8 +628,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (err)
         return err;
     nvals = count;
+printf("SIMPLE unpak double.....\n");
+    return _unpack_real(a, dval, NULL, len, buf, pos, nvals);
+}
 
-    return _unpack_double(a, val, len, buf, pos, nvals);
+static int unpack_float(grib_accessor* a, float* fval, size_t* len)
+{
+    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    size_t nvals       = 0;
+    long pos           = 0;
+    int err            = 0;
+    long count         = 0;
+
+    err = grib_value_count(a, &count);
+    if (err)
+        return err;
+    nvals = count;
+    printf("SIMPLE unpack float.....\n");
+    return _unpack_real(a, NULL, fval, len, buf, pos, nvals);
 }
 
 #if GRIB_IBMPOWER67_OPT
