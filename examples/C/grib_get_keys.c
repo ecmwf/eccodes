@@ -1,3 +1,19 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+/*
+ * C Implementation: grib_get_keys
+ *
+ * Description: how to get values using keys from GRIB messages
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -6,16 +22,28 @@
 int main(int argc, char** argv)
 {
     int err           = 0;
-    float* fvalues    = NULL;
-    double* dvalues    = NULL;
+    float* fvalues    = NULL; /* data values as floats */
+    double* dvalues   = NULL; /* data values as doubles */
     size_t values_len = 0;
-    size_t i = 0;
+    size_t i = 0, len = 0;
+
+    double latitudeOfFirstGridPointInDegrees;
+    double longitudeOfFirstGridPointInDegrees;
+    double latitudeOfLastGridPointInDegrees;
+    double longitudeOfLastGridPointInDegrees;
+
+    double jDirectionIncrementInDegrees;
+    double iDirectionIncrementInDegrees;
+
+    long numberOfPointsAlongAParallel;
+    long numberOfPointsAlongAMeridian;
 
     double daverage    = 0;
     float  faverage    = 0;
+    char* packingType = NULL;
 
     FILE* in             = NULL;
-    const char* filename = "../../data/sample.grib2";
+    const char* filename = "../../data/regular_latlon_surface.grib1";
     codes_handle* h      = NULL;
 
     in = fopen(filename, "rb");
@@ -32,6 +60,49 @@ int main(int argc, char** argv)
     }
     fclose(in);
 
+    /* store the filename in the key "file" for this handle */
+    len = strlen(filename);
+    CODES_CHECK(codes_set_string(h, "file", filename, &len), 0);
+
+    /* get as a long*/
+    CODES_CHECK(codes_get_long(h, "Ni", &numberOfPointsAlongAParallel), 0);
+    printf("numberOfPointsAlongAParallel=%ld\n", numberOfPointsAlongAParallel);
+
+    /* get as a long*/
+    CODES_CHECK(codes_get_long(h, "Nj", &numberOfPointsAlongAMeridian), 0);
+    printf("numberOfPointsAlongAMeridian=%ld\n", numberOfPointsAlongAMeridian);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "latitudeOfFirstGridPointInDegrees", &latitudeOfFirstGridPointInDegrees), 0);
+    printf("latitudeOfFirstGridPointInDegrees=%g\n", latitudeOfFirstGridPointInDegrees);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "longitudeOfFirstGridPointInDegrees", &longitudeOfFirstGridPointInDegrees), 0);
+    printf("longitudeOfFirstGridPointInDegrees=%g\n", longitudeOfFirstGridPointInDegrees);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "latitudeOfLastGridPointInDegrees", &latitudeOfLastGridPointInDegrees), 0);
+    printf("latitudeOfLastGridPointInDegrees=%g\n", latitudeOfLastGridPointInDegrees);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "longitudeOfLastGridPointInDegrees", &longitudeOfLastGridPointInDegrees), 0);
+    printf("longitudeOfLastGridPointInDegrees=%g\n", longitudeOfLastGridPointInDegrees);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "jDirectionIncrementInDegrees", &jDirectionIncrementInDegrees), 0);
+    printf("jDirectionIncrementInDegrees=%g\n", jDirectionIncrementInDegrees);
+
+    /* get as a double*/
+    CODES_CHECK(codes_get_double(h, "iDirectionIncrementInDegrees", &iDirectionIncrementInDegrees), 0);
+    printf("iDirectionIncrementInDegrees=%g\n", iDirectionIncrementInDegrees);
+
+    /* get as string */
+    CODES_CHECK(codes_get_length(h, "packingType", &len), 0);
+    packingType = (char*)malloc(len * sizeof(char));
+    codes_get_string(h, "packingType", packingType, &len);
+    printf("packingType=%s\n", packingType);
+    free(packingType);
+
     /* get the size of the values array*/
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
@@ -42,21 +113,42 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
     CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
 
-    daverage = 0;
     faverage = 0;
-    for (i = 0; i < values_len; i++){
-        //printf("%f\n",values[i]);
+    daverage = 0;
+    for (i = 0; i < values_len; i++) {
         faverage += fvalues[i];
         daverage += dvalues[i];
     }
 
+    faverage /= (float)values_len;
     daverage /= (double)values_len;
-    faverage /= (double)values_len;
 
-    free(dvalues);
     free(fvalues);
-    printf("There are %d values, double average is %g\n", (int)values_len, daverage);
-    printf("There are %d values, float average is  %f\n", (int)values_len, faverage);
+    free(dvalues);
+    printf("There are %zu values, double average is %g\n", values_len, daverage);
+    printf("There are %zu values, float average is  %f\n", values_len, faverage);
+
+    {
+        int eq = 0;
+        /* now retrieve the value of the key "file" */
+        char file[256] = {0,};
+        CODES_CHECK(codes_get_length(h, "file", &len), 0);
+        assert(len == 1 + strlen(filename));
+        codes_get_string(h, "file", file, &len);
+        eq = strcmp(file, filename);
+        if (eq != 0) assert(!"file and filename not equal");
+    }
+
+    {
+        /* example of getting bytes */
+        const char* name        = "reservedNeedNotBePresent";
+        unsigned char* byte_val = NULL;
+        size_t keySize          = 0;
+        CODES_CHECK(codes_get_size(h, name, &keySize), 0);
+        byte_val = (unsigned char*)malloc(keySize * sizeof(unsigned char));
+        GRIB_CHECK(codes_get_bytes(h, name, byte_val, &keySize), name);
+        free(byte_val);
+    }
 
     codes_handle_delete(h);
 
