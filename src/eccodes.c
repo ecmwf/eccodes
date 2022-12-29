@@ -361,6 +361,10 @@ int codes_get_double_array(const grib_handle* h, const char* key, double* vals, 
 {
     return grib_get_double_array(h, key, vals, length);
 }
+int codes_get_float_array(const grib_handle* h, const char* key, float* vals, size_t* length)
+{
+    return grib_get_float_array(h, key, vals, length);
+}
 int codes_get_long_array(const grib_handle* h, const char* key, long* vals, size_t* length)
 {
     return grib_get_long_array(h, key, vals, length);

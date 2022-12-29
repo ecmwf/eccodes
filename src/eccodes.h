@@ -844,6 +844,7 @@ int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes
 * @return         0 if OK, integer value on error
 */
 int codes_get_double_array(const codes_handle* h, const char* key, double* vals, size_t* length);
+int codes_get_float_array(const codes_handle* h, const char* key, float* vals, size_t* length);
 
 /**
 *  Get long array values from a key. If several keys of the same name are present, the last one is returned

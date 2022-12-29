@@ -1248,6 +1248,24 @@ int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, doub
     }
 }
 
+int _grib_get_float_array_internal(const grib_handle* h, grib_accessor* a, float* val, size_t buffer_len, size_t* decoded_length)
+{
+    if (a) {
+        int err = _grib_get_float_array_internal(h, a->same, val, buffer_len, decoded_length);
+
+        if (err == GRIB_SUCCESS) {
+            size_t len = buffer_len - *decoded_length;
+            err        = grib_unpack_float(a, val + *decoded_length, &len);
+            *decoded_length += len;
+        }
+
+        return err;
+    }
+    else {
+        return GRIB_SUCCESS;
+    }
+}
+
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length)
 {
     int ret = grib_get_double_array(h, name, val, length);
@@ -1255,6 +1273,17 @@ int grib_get_double_array_internal(const grib_handle* h, const char* name, doubl
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "unable to get %s as double array (%s)",
+                         name, grib_get_error_message(ret));
+
+    return ret;
+}
+int grib_get_float_array_internal(const grib_handle* h, const char* name, float* val, size_t* length)
+{
+    int ret = grib_get_float_array(h, name, val, length);
+
+    if (ret != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to get %s as float array (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1287,6 +1316,19 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
             return _grib_get_double_array_internal(h, a, val, len, length);
         }
     }
+}
+
+int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
+{
+    size_t len = *length;
+    grib_accessor* a = grib_find_accessor(h, name);
+    if(!a) return GRIB_NOT_FOUND;
+
+    /* TODO: For now only GRIB supported... no BUFR keys */
+    Assert(name[0]!='/');
+    Assert(name[0]!='#');
+    *length = 0;
+    return _grib_get_float_array_internal(h,a,val,len,length);
 }
 
 int ecc__grib_get_string_length(grib_accessor* a, size_t* size)

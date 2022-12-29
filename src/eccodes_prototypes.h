@@ -115,6 +115,7 @@ int grib_pack_missing(grib_accessor* a);
 int grib_pack_zero(grib_accessor* a);
 int grib_is_missing_internal(grib_accessor* a);
 int grib_pack_double(grib_accessor* a, const double* v, size_t* len);
+int grib_pack_float(grib_accessor* a, const float* v, size_t* len);
 int grib_pack_expression(grib_accessor* a, grib_expression* e);
 int grib_pack_string(grib_accessor* a, const char* v, size_t* len);
 int grib_pack_string_array(grib_accessor* a, const char** v, size_t* len);
@@ -123,8 +124,11 @@ int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t* len);
 int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len);
 int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_t len);
 int grib_unpack_double(grib_accessor* a, double* v, size_t* len);
+int grib_unpack_float(grib_accessor* a, float* v, size_t* len);
 int grib_unpack_double_element(grib_accessor* a, size_t i, double* v);
 int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array);
+int grib_unpack_float_element(grib_accessor* a, size_t i, float* v);
+int grib_unpack_float_element_set(grib_accessor* a, const size_t* index_array, size_t len, float* val_array);
 int grib_unpack_string(grib_accessor* a, char* v, size_t* len);
 int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len);
 int grib_accessors_list_unpack_long(grib_accessors_list* al, long* val, size_t* buffer_len);
@@ -1250,8 +1254,12 @@ int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, s
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
 const char* grib_get_accessor_class_name(grib_handle* h, const char* name);
 int ecc__grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length);
+
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length);
 int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length);
+int grib_get_float_array_internal(const grib_handle* h, const char* name, float* val, size_t* length);
+int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t* length);
+
 int ecc__grib_get_string_length(grib_accessor* a, size_t* size);
 int grib_get_string_length(const grib_handle* h, const char* name, size_t* size);
 int ecc__grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size);
