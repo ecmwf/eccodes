@@ -336,7 +336,7 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
     double units_factor = 1.0;
     double units_bias   = 0.0;
     Assert( ! (fval && dval) );
-printf("DBG:: SIMPLE PACK   unpack real.....\n");
+
     if (*len < n_vals) {
         *len = (long)n_vals;
         return GRIB_ARRAY_TOO_SMALL;
@@ -628,7 +628,7 @@ static int unpack_double(grib_accessor* a, double* dval, size_t* len)
     if (err)
         return err;
     nvals = count;
-printf("SIMPLE unpak double.....\n");
+
     return _unpack_real(a, dval, NULL, len, buf, pos, nvals);
 }
 
@@ -644,7 +644,7 @@ static int unpack_float(grib_accessor* a, float* fval, size_t* len)
     if (err)
         return err;
     nvals = count;
-    printf("SIMPLE unpack float.....\n");
+
     return _unpack_real(a, NULL, fval, len, buf, pos, nvals);
 }
 
