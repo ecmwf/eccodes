@@ -164,19 +164,9 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
     return 0;
 }
 
-/*
- * TODO: First lame attempt at decoding a float array. This and the grib_decode_double_array function
- * should be merged and refactored! Most probably using C++ templates
- */
-/**
- * decode an array of n_vals values from an octet-bitstream to float-representation
- *
- * @param p input bitstream, for technical reasons put into octets
- * @param bitp current position in the bitstream
- * @param bitsPerValue number of bits needed to build a number (e.g. 8=byte, 16=short, 32=int, but also other sizes allowed)
- * @param n_vals number of values to decode
- * @param val output, values encoded as 32/64bit numbers
- */
+//TODO: ECC-1467: Copied the 'double' version and reused by copy/paste!
+// This and the grib_decode_double_array function
+// should be merged and refactored! Most probably using C++ templates
 int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValue,
                              double reference_value, double s, double d,
                              size_t n_vals, float* val)
@@ -184,7 +174,6 @@ int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValu
     long i               = 0;
     unsigned long lvalue = 0;
     double x;
-    printf("grib_decode_float_array\n");
 
 #if 0
     /* slow reference code */
