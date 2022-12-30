@@ -128,7 +128,9 @@ static grib_accessor_class _grib_accessor_class_gen = {
     &next,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     &unpack_double_element_set,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     &unpack_double_subarray,     /* unpack a subarray */
     &clear,                      /* clear */
     &make_clone,                 /* clone accessor */

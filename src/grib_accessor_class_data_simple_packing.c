@@ -127,7 +127,9 @@ static grib_accessor_class _grib_accessor_class_data_simple_packing = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     &unpack_double_element_set,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     &unpack_double_subarray,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -165,6 +167,8 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
 }

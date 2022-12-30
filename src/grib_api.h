@@ -800,6 +800,7 @@ int grib_get_double(const grib_handle* h, const char* key, double* value);
 * @return            0 if OK, integer value on error
 */
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
+int grib_get_float_element(const grib_handle* h, const char* key, int i, float* value);
 
 /**
 *  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
@@ -812,6 +813,7 @@ int grib_get_double_element(const grib_handle* h, const char* key, int i, double
 * @return            0 if OK, integer value on error
 */
 int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
+int grib_get_float_elements(const grib_handle* h, const char* key, const int* index_array, long size, float* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned

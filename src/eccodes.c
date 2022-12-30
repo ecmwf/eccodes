@@ -337,6 +337,7 @@ int codes_get_double(const grib_handle* h, const char* key, double* value)
 {
     return grib_get_double(h, key, value);
 }
+
 int codes_get_double_element(const grib_handle* h, const char* key, int i, double* value)
 {
     return grib_get_double_element(h, key, i, value);
@@ -345,6 +346,15 @@ int codes_get_double_elements(const grib_handle* h, const char* key, const int* 
 {
     return grib_get_double_elements(h, key, index_array, size, value);
 }
+int codes_get_float_element(const grib_handle* h, const char* key, int i, float* value)
+{
+    return grib_get_float_element(h, key, i, value);
+}
+int codes_get_float_elements(const grib_handle* h, const char* key, const int* index_array, long size, float* value)
+{
+    return grib_get_float_elements(h, key, index_array, size, value);
+}
+
 int codes_get_string(const grib_handle* h, const char* key, char* mesg, size_t* length)
 {
     return grib_get_string(h, key, mesg, length);

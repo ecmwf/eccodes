@@ -1054,6 +1054,15 @@ int grib_get_double_element(const grib_handle* h, const char* name, int i, doubl
     }
     return GRIB_NOT_FOUND;
 }
+int grib_get_float_element(const grib_handle* h, const char* name, int i, float* val)
+{
+    grib_accessor* act = grib_find_accessor(h, name);
+
+    if (act) {
+        return grib_unpack_float_element(act, i, val);
+    }
+    return GRIB_NOT_FOUND;
+}
 
 int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
 {
@@ -1066,6 +1075,17 @@ int grib_get_double_element_set_internal(grib_handle* h, const char* name, const
 
     return ret;
 }
+int grib_get_float_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array)
+{
+    int ret = grib_get_float_element_set(h, name, index_array, len, val_array);
+
+    if (ret != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to get %s as float element set (%s)",
+                         name, grib_get_error_message(ret));
+
+    return ret;
+}
 
 int grib_get_double_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
 {
@@ -1073,6 +1093,15 @@ int grib_get_double_element_set(const grib_handle* h, const char* name, const si
 
     if (acc) {
         return grib_unpack_double_element_set(acc, index_array, len, val_array);
+    }
+    return GRIB_NOT_FOUND;
+}
+int grib_get_float_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array)
+{
+    grib_accessor* acc = grib_find_accessor(h, name);
+
+    if (acc) {
+        return grib_unpack_float_element_set(acc, index_array, len, val_array);
     }
     return GRIB_NOT_FOUND;
 }
@@ -1140,6 +1169,10 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     grib_context_free(h->context, values);
 
     return err;
+}
+int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length)
