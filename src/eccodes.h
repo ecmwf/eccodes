@@ -1316,6 +1316,7 @@ int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 int codes_keys_iterator_set_flags(codes_keys_iterator* kiter, unsigned long flags);
 int codes_keys_iterator_get_long(const codes_keys_iterator* kiter, long* v, size_t* len);
 int codes_keys_iterator_get_double(const codes_keys_iterator* kiter, double* v, size_t* len);
+int codes_keys_iterator_get_float(const codes_keys_iterator* kiter, float* v, size_t* len);
 int codes_keys_iterator_get_string(const codes_keys_iterator* kiter, char* v, size_t* len);
 int codes_keys_iterator_get_bytes(const codes_keys_iterator* kiter, unsigned char* v, size_t* len);
 

@@ -1319,6 +1319,7 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* kiter, unsigned long flags)
 
 int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len);
 int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len);
+int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len);
 int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len);
 int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter, unsigned char* v, size_t* len);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);

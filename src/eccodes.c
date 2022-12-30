@@ -472,10 +472,16 @@ int codes_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_
 {
     return grib_keys_iterator_get_long(kiter, v, len);
 }
+
 int codes_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len)
 {
     return grib_keys_iterator_get_double(kiter, v, len);
 }
+int codes_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
+{
+    return grib_keys_iterator_get_float(kiter, v, len);
+}
+
 int codes_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
 {
     return grib_keys_iterator_get_string(kiter, v, len);
