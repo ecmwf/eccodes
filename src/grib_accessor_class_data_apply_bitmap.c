@@ -265,8 +265,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return err;
 }
 
-// TODO: Not ideal!! First attempt at unpacking floats...
-//       Should be merged with unpack_double and refactored! Most probably using C++ templates
+//TODO: ECC-1467: Copied the 'double' version and reused by copy/paste!
+//      Should be merged with unpack_double and refactored! Most probably using C++ templates
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
     grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;

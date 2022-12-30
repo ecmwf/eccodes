@@ -317,7 +317,9 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
-// unpack an array of double or single precision real numbers. As doubles if dval!= NULL or floats if fval!=NULL
+// unpack an array of double-precision (double) or single-precision (float) real numbers.
+// As doubles if dval!=NULL
+// As floats  if fval!=NULL
 static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len, unsigned char* buf, long pos, size_t n_vals)
 {
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
@@ -335,6 +337,8 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
     double d            = 0;
     double units_factor = 1.0;
     double units_bias   = 0.0;
+
+    // Either decode as double or float: cannot have both!
     Assert( ! (fval && dval) );
 
     if (*len < n_vals) {
