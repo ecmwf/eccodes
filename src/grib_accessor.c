@@ -351,6 +351,23 @@ int grib_accessors_list_unpack_double(grib_accessors_list* al, double* val, size
     return err;
 }
 
+int grib_accessors_list_unpack_float(grib_accessors_list* al, float* val, size_t* buffer_len)
+{
+    int err             = GRIB_SUCCESS;
+    size_t unpacked_len = 0;
+    size_t len          = 0;
+
+    while (al && err == GRIB_SUCCESS) {
+        len = *buffer_len - unpacked_len;
+        err = grib_unpack_float(al->accessor, val + unpacked_len, &len);
+        unpacked_len += len;
+        al = al->next;
+    }
+
+    *buffer_len = unpacked_len;
+    return err;
+}
+
 int grib_accessors_list_unpack_string(grib_accessors_list* al, char** val, size_t* buffer_len)
 {
     int err             = GRIB_SUCCESS;

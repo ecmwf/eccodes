@@ -133,6 +133,7 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len);
 int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len);
 int grib_accessors_list_unpack_long(grib_accessors_list* al, long* val, size_t* buffer_len);
 int grib_accessors_list_unpack_double(grib_accessors_list* al, double* val, size_t* buffer_len);
+int grib_accessors_list_unpack_float(grib_accessors_list* al, float* val, size_t* buffer_len);
 int grib_accessors_list_unpack_string(grib_accessors_list* al, char** val, size_t* buffer_len);
 int grib_unpack_long(grib_accessor* a, long* v, size_t* len);
 long grib_accessor_get_native_type(grib_accessor* a);
