@@ -32,10 +32,11 @@ int main(int argc, char** argv)
 
     if (argc!=3) {fprintf(stderr,"usage: %s mode file\n",argv[0]); return 1;}
     if (strcmp(argv[1], "double")==0) mode=2;
-    if (strcmp(argv[1], "float")==0) mode=1;
+    else if (strcmp(argv[1], "float")==0) mode=1;
+    else { fprintf(stderr,"Invalid mode: Use float or double\n");return 1; }
     filename = argv[2];
 
-    printf("Opening %s, mode=%d\n",filename, mode);
+    printf( "Opening %s, mode=%s\n",filename, (mode==1?"float":"double") );
     in = fopen(filename, "rb");
     assert(in);
 

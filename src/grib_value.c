@@ -1323,9 +1323,13 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 {
     size_t len = *length;
     grib_accessor* a = grib_find_accessor(h, name);
-    if(!a) return GRIB_NOT_FOUND;
+    if (!a) return GRIB_NOT_FOUND;
 
     /* TODO: For now only GRIB supported... no BUFR keys */
+    if (h->product_kind != PRODUCT_GRIB) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        return GRIB_NOT_IMPLEMENTED;
+    }
     Assert(name[0]!='/');
     Assert(name[0]!='#');
     *length = 0;
