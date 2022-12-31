@@ -399,6 +399,7 @@ int codes_set_bytes(grib_handle* h, const char* key, const unsigned char* bytes,
 {
     return grib_set_bytes(h, key, bytes, length);
 }
+
 int codes_set_double_array(grib_handle* h, const char* key, const double* vals, size_t length)
 {
     return grib_set_double_array(h, key, vals, length);
@@ -407,6 +408,15 @@ int codes_set_force_double_array(grib_handle* h, const char* key, const double* 
 {
     return grib_set_force_double_array(h, key, vals, length);
 }
+int codes_set_float_array(grib_handle* h, const char* key, const float* vals, size_t length)
+{
+    return grib_set_float_array(h, key, vals, length);
+}
+int codes_set_force_float_array(grib_handle* h, const char* key, const float* vals, size_t length)
+{
+    return grib_set_force_float_array(h, key, vals, length);
+}
+
 int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size_t length)
 {
     return grib_set_long_array(h, key, vals, length);

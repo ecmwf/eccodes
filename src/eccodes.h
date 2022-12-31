@@ -930,12 +930,14 @@ int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes
 * @return            0 if OK, integer value on error
 */
 int codes_set_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 /**
 * Same as codes_set_double_array but allows setting of READ-ONLY keys like codedValues.
 * Use with great caution!!
 */
 int codes_set_force_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_force_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 
 /**
