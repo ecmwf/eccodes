@@ -164,7 +164,7 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
     return 0;
 }
 
-// TODO(masn): ECC-1467: Copied the 'double' version and reused by copy/paste!
+// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
 // This and the grib_decode_double_array function
 // should be merged and refactored! Most probably using C++ templates
 int grib_decode_float_array(const unsigned char* p, long* bitp, long bitsPerValue,

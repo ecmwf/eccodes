@@ -334,7 +334,7 @@ cleanup:
     return err;
 }
 
-// TODO(masn): ECC-1467: Copied the 'double' version and reused by copy/paste!
+// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
 // Should be merged with unpack_double and refactored! Most probably using C++ templates
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {

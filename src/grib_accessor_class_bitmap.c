@@ -272,7 +272,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-// TODO(masn): ECC-1467: Copied the 'double' version and reused by copy/paste!
+// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
     long pos = a->offset * 8;

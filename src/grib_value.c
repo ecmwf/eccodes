@@ -1367,7 +1367,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
     }
 }
 
-// TODO(masn): ECC-1467: Copied the 'double' version and reused by copy/paste!
+// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
 int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
 {
     size_t len = *length;

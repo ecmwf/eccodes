@@ -343,7 +343,7 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-// TODO(masn): ECC-1467: Copied the 'double' version and reused by copy/paste!
+// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
 static int unpack_float(grib_accessor* a, float* v, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;

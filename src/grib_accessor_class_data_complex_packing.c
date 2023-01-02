@@ -449,7 +449,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     return ret;
 }
-// TODO(masn): ECC-1467
+// TODO(maee): ECC-1467
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
