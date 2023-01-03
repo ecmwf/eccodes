@@ -2453,14 +2453,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Total snowfall water equivalent
-'kg m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 53 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
 #Mean temperature tendency due to short-wave radiation
 'K s**-1' = {
 	 discipline = 0 ;
