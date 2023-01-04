@@ -2453,14 +2453,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Total snowfall water equivalent
-'asnowwe' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 53 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
 #Mean temperature tendency due to short-wave radiation
 'mttswr' = {
 	 discipline = 0 ;
@@ -4873,6 +4865,18 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Significant height of wind waves
+'shww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	}
+#Mean period of wind waves
+'mpww' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	}
 #Eastward sea water velocity
 'ocu' = {
 	 discipline = 10 ;
@@ -5778,12 +5782,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
 	}
-#Geometric height
-'dist' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
-	}
 #Altimeter setting
 'alts' = {
 	 discipline = 0 ;
@@ -6389,12 +6387,6 @@
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
-	}
-#Land cover (1=land, 0=sea)
-'land' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
 	}
 #Vegetation
 'veg' = {
@@ -7019,18 +7011,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 16 ;
-	}
-#Significant height of wind waves
-'shww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
-	}
-#Mean period of wind waves
-'mpww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 6 ;
 	}
 #Direction of swell waves
 'swdir' = {

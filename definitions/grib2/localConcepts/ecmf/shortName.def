@@ -16650,23 +16650,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
 	}
-#Significant height of wind waves
-'shww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
-	}
 #Mean direction of wind waves
 'mdww' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 235 ;
-	}
-#Mean period of wind waves
-'mpww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 6 ;
 	}
 #Significant height of total swell
 'shts' = {
