@@ -34,6 +34,7 @@ const char* tool_description =
     "\n\tIt is similar to metar_ls, but fails returning an error code "
     "\n\twhen an error occurs (e.g. key not found).";
 const char* tool_name  = "metar_get";
+const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);

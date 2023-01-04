@@ -33,6 +33,7 @@ const char* tool_description =
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* tool_name        = "grib_to_netcdf";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
 const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 

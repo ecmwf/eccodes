@@ -44,6 +44,7 @@ const char* tool_description =
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* tool_name = "metar_compare";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] "
     "file file";

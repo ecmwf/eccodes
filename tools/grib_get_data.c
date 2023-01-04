@@ -39,6 +39,7 @@ const char* tool_description =
     "Print a latitude, longitude, data values list.\n"
     "\tNote: Rotated grids are first unrotated";
 const char* tool_name  = "grib_get_data";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_get_data";
 const char* tool_usage = "[options] grib_file grib_file ...";
 
 extern FILE* dump_file;

@@ -131,7 +131,10 @@ void usage(void)
                    grib_options_get_help(grib_options[i].id));
         }
     }
-    printf("\n\n");
+    printf("\n");
+    if (tool_online_doc)
+        printf("SEE ALSO\n\t%s\n\n", tool_online_doc);
+    printf("\n");
     exit(1);
 }
 

@@ -41,6 +41,7 @@ grib_option grib_options[] = {
 
 const char* tool_description = "Dump the content of a GRIB file in different formats.";
 const char* tool_name        = "grib_dump";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_dump";
 const char* tool_usage       = "[options] grib_file grib_file ...";
 static int json              = 0;
 static int first_handle      = 1;
