@@ -103,19 +103,25 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
     char* s = str;
 
     Assert(numberOfCharacters < 512);
-    Assert(string);
 
-    slen = strlen(string);
-    memcpy(s, string, slen);
-
+    /* There is a case where string == NULL:
+     * bufr_dump -Efortran data/bufr/btem_109.bufr
+     * This writes:
+     *    call codes_set(ibufr,'shipOrMobileLandStationIdentifier','')
+     * For some odd reason this gets passed in as a NULL string here!
+     * To be further investigated
+    */
+    if (string) {
+        slen = strlen(string);
+        if (slen > numberOfCharacters) {
+            return GRIB_ENCODING_ERROR;
+        }
+        memcpy(s, string, slen);
+    }
     /* if (remainder) byteOffset++; */
 
     if (numberOfCharacters == 0)
         return err;
-
-    if (slen > numberOfCharacters) {
-        return GRIB_ENCODING_ERROR;
-    }
 
     p = (unsigned char*)bitStream + byteOffset;
 
