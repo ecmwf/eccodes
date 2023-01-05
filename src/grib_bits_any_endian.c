@@ -91,7 +91,7 @@ int grib_is_all_bits_one(int64_t val, long nbits)
 
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
-    size_t i;
+    size_t i = 0, slen = 0;
     int err         = 0;
     long byteOffset = *bitOffset / 8;
     int remainder   = *bitOffset % 8;
@@ -103,14 +103,19 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
     char* s = str;
 
     Assert(numberOfCharacters < 512);
+    Assert(string);
 
-    if (string)
-        memcpy(s, string, strlen(string));
+    slen = strlen(string);
+    memcpy(s, string, slen);
 
     /* if (remainder) byteOffset++; */
 
     if (numberOfCharacters == 0)
         return err;
+
+    if (slen > numberOfCharacters) {
+        return GRIB_ENCODING_ERROR;
+    }
 
     p = (unsigned char*)bitStream + byteOffset;
 

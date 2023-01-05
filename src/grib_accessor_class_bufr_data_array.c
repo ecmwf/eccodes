@@ -743,7 +743,12 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
     modifiedWidth = bd->width;
 
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + modifiedWidth);
-    grib_encode_string(buff->data, pos, modifiedWidth / 8, stringValues->v[ival]);
+    err = grib_encode_string(buff->data, pos, modifiedWidth / 8, stringValues->v[ival]);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: %s. Failed to encode '%s'",
+                         bd->shortName, stringValues->v[ival]);
+        return err;
+    }
     width = n > 1 ? modifiedWidth : 0;
 
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
@@ -752,7 +757,12 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + width * n);
         for (j = 0; j < n; j++) {
             k = self->iss_list->v[j];
-            grib_encode_string(buff->data, pos, width / 8, stringValues->v[k]);
+            err = grib_encode_string(buff->data, pos, width / 8, stringValues->v[k]);
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: %s. Failed to encode '%s'",
+                                 bd->shortName, stringValues->v[k]);
+                return err;
+            }
         }
     }
     return err;
@@ -1057,8 +1067,10 @@ static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bu
 
     len = bd->width / 8;
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + bd->width);
-
-    grib_encode_string(buff->data, pos, len, sval);
+    err = grib_encode_string(buff->data, pos, len, sval);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_value: %s. Failed to encode '%s'", bd->shortName, sval);
+    }
 
     return err;
 }
