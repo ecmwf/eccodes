@@ -437,6 +437,8 @@ static int read_PSEUDO(reader* r, const char* type)
         i++;
     }
 
+    r->offset = r->tell(r->read_data) - 4;
+
     for (j = 0; j < 3; j++) {
         if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
             return err;
