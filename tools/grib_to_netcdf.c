@@ -33,6 +33,7 @@ const char* tool_description =
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* tool_name        = "grib_to_netcdf";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
 const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
@@ -1841,7 +1842,7 @@ typedef struct ncatt
     nc_type nctype;
 } ncatt_t;
 
-typedef struct filter
+typedef struct filter_type
 {
     fieldset* fset;
     hypercube* filter;
@@ -2944,10 +2945,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     for (i = 0; i < naxis; ++i) {
         int nctype       = NC_INT;
         const char* axis = get_axis(h, i);
-        char* units      = NULL;
+        const char* units      = NULL;
         char u[10240];
         const char* lowaxis = (axis);
-        char* longname      = (char*)lowaxis;
+        const char* longname = (char*)lowaxis;
         n                   = count_values(cube, axis);
 
         if (count_values(data_r, "levtype") > 1) {
@@ -3048,7 +3049,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 const char* cal = "gregorian";
 
                 if (setup.mmeans) {
-                    char* period = "0000-01-00 00:00:00";
+                    const char* period = "0000-01-00 00:00:00";
                     stat         = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
                     check_err("nc_put_att_text", stat, __LINE__);
                 }
@@ -3178,7 +3179,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         char timestamp[80];
         time_t now;
         /* char *convention = "MARS;CF"; */
-        char* convention = "CF-1.6";
+        const char* convention = "CF-1.6";
         char history[10240];
         /* char *institution = "ECMWF Meteorological Archival and Retrieval System"; */
 
@@ -3935,7 +3936,7 @@ static int deflate_option = 0;
 /* Table of formats for legal -k values. Inspired by nccopy */
 struct KindValue
 {
-    char* name;
+    const char* name;
     int kind;
 } legalkinds[] = {
     { "1", NC_FORMAT_CLASSIC },

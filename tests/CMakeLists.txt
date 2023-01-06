@@ -50,6 +50,14 @@ list(APPEND test_c_bins
     grib_lam_bf
     grib_lam_gp)
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    foreach( _bin ${test_c_bins} )
+        SET( _src ${_bin}.c )
+        set_source_files_properties( ${_src} PROPERTIES LANGUAGE CXX )
+    endforeach()
+endif()
+
+
 foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}

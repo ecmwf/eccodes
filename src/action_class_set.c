@@ -110,7 +110,7 @@ static int execute(grib_action* a, grib_handle* h)
     if (self->nofail)
         return 0;
     if (ret != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error while setting key %s (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error while setting key '%s' (%s)",
                          self->name, grib_get_error_message(ret));
     }
     return ret;

@@ -40,6 +40,7 @@ const char* tool_description =
     "\n\tIt is similar to grib_ls, but fails returning an error code "
     "\n\twhen an error occurs (e.g. key not found).";
 const char* tool_name  = "grib_get";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_get";
 const char* tool_usage = "[options] grib_file grib_file ...";
 
 int grib_options_count       = sizeof(grib_options) / sizeof(grib_option);

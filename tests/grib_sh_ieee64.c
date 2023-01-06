@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 /*
  * Check that encoding of sub-truncation using IEEE64 works.

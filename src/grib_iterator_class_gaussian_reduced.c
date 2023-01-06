@@ -52,7 +52,7 @@ static int destroy            (grib_iterator* i);
 typedef struct grib_iterator_gaussian_reduced{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
     /* Members defined in gaussian_reduced */
     double *las;

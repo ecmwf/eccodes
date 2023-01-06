@@ -44,6 +44,7 @@ const char* tool_description =
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* tool_name  = "grib_compare";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_compare";
 const char* tool_usage = "[options] grib_file1 grib_file2";
 
 typedef double (*compare_double_proc)(const double*, const double*, double);

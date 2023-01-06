@@ -31,6 +31,7 @@ const char* tool_description =
     "message\n\tin the GTS files provided as arguments.\n\t"
     "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
 const char* tool_name = "gts_filter";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] rules_file "
     "file file ...";

@@ -45,8 +45,9 @@ const char* tool_description =
     "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -A -R)."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-const char* tool_name  = "bufr_compare";
-const char* tool_usage = "[options] bufr_file1 bufr_file2";
+const char* tool_name       = "bufr_compare";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_compare";
+const char* tool_usage      = "[options] bufr_file1 bufr_file2";
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {

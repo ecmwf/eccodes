@@ -186,7 +186,8 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                 double* distances, int* indexes, size_t* len)
 {
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
-    int ret = 0, kk = 0, ii = 0, jj = 0;
+    int ret = 0, kk = 0, ii = 0;
+    size_t jj = 0;
     long* pla           = NULL;
     long* pl            = NULL;
     size_t nvalues      = 0;

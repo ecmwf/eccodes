@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 /*
  * Check that optimizeScaleFactor=1 reduces the error on spherical harmonics encoding. Check that sub-truncation is preserved in IEEE-32 precision.
