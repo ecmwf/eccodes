@@ -334,18 +334,6 @@ if( HAVE_BUILD_TOOLS )
     endif()
 
 
-    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
-        list( APPEND ptests bufr_dump_decode_python )
-        # list( APPEND ptests bufr_dump_encode_python )
-        foreach( test ${ptests} )
-            ecbuild_add_test( TARGET eccodes_t_${test}
-                              TYPE SCRIPT
-                              COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                              ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
-                              TEST_DEPENDS eccodes_download_bufrs )
-        endforeach()
-    endif()
-
     ###########################################
     # Note: the reference file is in the tests dir not data dir!
     ecbuild_add_test( TARGET eccodes_t_grib_grid_lamb_az_eq_area

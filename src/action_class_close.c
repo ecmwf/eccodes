@@ -38,7 +38,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_close {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in close */
     char *filename;
 } grib_action_close;

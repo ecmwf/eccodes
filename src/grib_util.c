@@ -384,12 +384,12 @@ static void print_values(grib_context* c,
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
-    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %lu key/value pairs\n", (unsigned long)count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
 
     for (i = 0; i < count; i++) {
         switch (keyval_pairs[i].type) {
             case GRIB_TYPE_LONG:
-                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, (long)keyval_pairs[i].long_value);
+                fprintf(stderr, "ECCODES DEBUG grib_util: => %s =  %ld;\n", keyval_pairs[i].name, keyval_pairs[i].long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
                 fprintf(stderr, "ECCODES DEBUG grib_util: => %s = %.16e;\n", keyval_pairs[i].name, keyval_pairs[i].double_value);
@@ -400,7 +400,7 @@ static void print_values(grib_context* c,
         }
     }
 
-    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%lu;\n", (unsigned long)data_values_count);
+    fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%zu;\n", data_values_count);
     for (i = 0; i < data_values_count; i++) {
         if (i == 0)
             v = data_values[i];
@@ -629,8 +629,8 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
             strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%ld!=%ld)\n",
-                        msg, (long)data_values_count, (long)sum);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%zu!=%zu)\n",
+                        msg, data_values_count, sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -650,7 +650,7 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
     long angleSubdivisions = 0;
     double angular_precision = 1.0/1000.0; /* millidegree by default */
     double tolerance = 0;
-    
+
     if (edition == 2) {
         return GRIB_SUCCESS;  /* For now only do checks on edition 1 */
     }
@@ -997,152 +997,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }*/
 
-    if (flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING) {
-        if (packing_spec->packing == GRIB_UTIL_PACKING_USE_PROVIDED &&
-            strcmp(input_packing_type, "grid_simple_matrix")) {
-            switch (packing_spec->packing_type) {
-                case GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX:
-                    if (strcmp(input_packing_type, "spectral_complex") && !strcmp(input_packing_type, "spectral_simple"))
-                        SET_STRING_VALUE("packingType", "spectral_complex");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE:
-                    if (strcmp(input_packing_type, "spectral_simple") && !strcmp(input_packing_type, "spectral_complex"))
-                        SET_STRING_VALUE("packingType", "spectral_simple");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE:
-                    if (strcmp(input_packing_type, "grid_simple") && !strcmp(input_packing_type, "grid_complex"))
-                        SET_STRING_VALUE("packingType", "grid_simple");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX:
-                    SET_STRING_VALUE("packingType", "grid_simple_matrix");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX:
-                    if (strcmp(input_packing_type, "grid_complex") && !strcmp(input_packing_type, "grid_simple"))
-                        SET_STRING_VALUE("packingType", "grid_complex");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_JPEG:
-                    if (strcmp(input_packing_type, "grid_jpeg") && !strcmp(input_packing_type, "grid_simple"))
-                        SET_STRING_VALUE("packingType", "grid_jpeg");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_CCSDS:
-                    if (strcmp(input_packing_type, "grid_ccsds") && !strcmp(input_packing_type, "grid_simple"))
-                        SET_STRING_VALUE("packingType", "grid_ccsds");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_IEEE:
-                    if (strcmp(input_packing_type, "grid_ieee") && !strcmp(input_packing_type, "grid_simple"))
-                        SET_STRING_VALUE("packingType", "grid_ieee");
-                    break;
-                case GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER:
-                    /* we delay the set of grid_second_order because we don't want
-                       to do it on a field with bitsPerValue=0 */
-                    setSecondOrder = 1;
-                    break;
-                default:
-                    fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec->packing_type (%ld)\n",
-                            (long)packing_spec->packing_type);
-                    *err = GRIB_INTERNAL_ERROR;
-                    goto cleanup;
-                    break;
-            }
-        }
-        switch (packing_spec->accuracy) {
-            case GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT:
-                break;
-
-            case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-                if (input_bits_per_value != packing_spec->bitsPerValue)
-                    SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
-                break;
-
-            case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT:
-                break;
-
-            case GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR:
-                if (input_decimal_scale_factor != packing_spec->decimalScaleFactor)
-                    SET_LONG_VALUE("decimalScaleFactor", packing_spec->decimalScaleFactor);
-                break;
-
-            default:
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec->accuracy (%ld)\n", (long)packing_spec->accuracy);
-                *err = GRIB_INTERNAL_ERROR;
-                goto cleanup;
-                break;
-        }
-
-        /*nothing to be changed*/
-        if (count == 0) {
-            *err = -1;
-            return h;
-        }
-
-        if (h->context->debug == -1) {
-            print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
-        }
-
-        if ((*err = grib_set_values(h, values, count)) != 0) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set values: %s\n", grib_get_error_message(*err));
-            for (i = 0; i < count; i++)
-                if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
-            goto cleanup;
-        }
-        if (h->context->debug == -1) {
-            int j = 0;
-            fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_double_array\n");
-            for (j = 0; j < 20; j++)
-                fprintf(stderr, "ECCODES DEBUG grib_util %g\n", data_values[j]);
-            fprintf(stderr, "ECCODES DEBUG grib_util: data_values_count=%d \n", (int)data_values_count);
-        }
-
-        if ((*err = grib_set_double_array(h, "values", data_values, data_values_count)) != 0) {
-            goto cleanup;
-        }
-        if (h->context->debug == -1)
-            fprintf(stderr, "ECCODES DEBUG grib_util: done grib_set_double_array \n");
-
-        /* convert to second_order if not constant field */
-        if (setSecondOrder) {
-            int constant        = 0;
-            double missingValue = 0;
-            grib_get_double(h, "missingValue", &missingValue);
-            constant = is_constant_field(missingValue, data_values, data_values_count);
-
-            if (!constant) {
-                size_t packTypeLen;
-                if (editionNumber == 1) {
-                    long numberOfGroups;
-                    grib_handle* htmp = grib_handle_clone(h);
-
-                    packTypeLen = 17;
-                    grib_set_string(htmp, "packingType", "grid_second_order", &packTypeLen);
-                    grib_get_long(htmp, "numberOfGroups", &numberOfGroups);
-                    /* GRIBEX is not able to decode overflown numberOfGroups with SPD */
-                    if (numberOfGroups > 65534 && h->context->no_spd) {
-                        packTypeLen = 24;
-                        grib_set_string(h, "packingType", "grid_second_order_no_SPD", &packTypeLen);
-                        grib_handle_delete(htmp);
-                    }
-                    else {
-                        grib_handle_delete(h);
-                        h = htmp;
-                    }
-                }
-                else {
-                    packTypeLen = 17;
-                    grib_set_string(h, "packingType", "grid_second_order", &packTypeLen);
-                    grib_set_double_array(h, "values", data_values, data_values_count);
-                }
-            }
-            else {
-                if (h->context->gribex_mode_on) {
-                    h->context->gribex_mode_on = 0;
-                    grib_set_double_array(h, "values", data_values, data_values_count);
-                    h->context->gribex_mode_on = 1;
-                }
-            }
-        }
-
-        return h;
-    } /* flags & GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING */
+    /* ECC-1269:
+     *  Code that was here was moved to "deprecated" directory
+     *  See grib_util.GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING.c
+     *  Dealing with obsolete option GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
+    */
 
     grid_type = get_grid_type_name(spec->grid_type);
     if (!grid_type) {
@@ -1442,7 +1301,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 setSecondOrder = 1;
                 break;
             default:
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", (long)packing_spec->packing_type);
+                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -1505,7 +1364,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             break;
 
         default:
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", (long)packing_spec->accuracy);
+            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", packing_spec->accuracy);
             grib_handle_delete(h_sample);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
@@ -1564,8 +1423,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
                 fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid reduced gaussian grid: "
-                        "specified as global, data_values_count=%ld but sum of pl array=%ld\n",
-                        (long)data_values_count, (long)sum);
+                        "specified as global, data_values_count=%zu but sum of pl array=%zu\n",
+                        data_values_count, sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
@@ -1610,7 +1469,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
         ferror = fopen("error.data", "w");
         lcount = 0;
-        fprintf(ferror, "# data_values_count=%ld\n", (long)data_values_count);
+        fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
         fprintf(ferror, "set values={ ");
         for (ii = 0; ii < data_values_count - 1; ii++) {
             fprintf(ferror, "%g, ", data_values[ii]);
@@ -2075,7 +1934,7 @@ int grib2_is_PDTN_Aerosol(long pdtn)
     /* Notes: PDT 44 is deprecated and replaced by 48 */
     /*        PDT 47 is deprecated and replaced by 85 */
     return (
-        pdtn == 44 || 
+        pdtn == 44 ||
         pdtn == 48 ||
         pdtn == 49 ||
         pdtn == 45 ||

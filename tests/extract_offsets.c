@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     filename = argv[1];
     err = codes_extract_offsets_malloc(c, filename, PRODUCT_ANY, &offsets, &num_messages, strict_mode);
     if (err) return err;
-    
+
     for (i = 0; i < num_messages; ++i) {
         printf("%lu\n", (unsigned long)offsets[i]);
     }

@@ -130,6 +130,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #2 metre relative humidity
 '2r' = {

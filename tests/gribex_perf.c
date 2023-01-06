@@ -312,7 +312,7 @@ int main(int argc, char* argv[]) {
   fclose(fin);
 
 
-  if (append) 
+  if (append)
 	  fout = fopen(ofilename,"ab");
   else
 	  fout = fopen(ofilename,"wb");
@@ -376,7 +376,7 @@ int main(int argc, char* argv[]) {
 	 sprintf(grid,"T%ld",J);
   }
 
-  if (!append) 
+  if (!append)
     fprintf(fout,
 	"shortName gridType numberOfValues bitsPerValue grid encodeso encodeSimple decodeso decodeSimple\n");
 
@@ -384,7 +384,7 @@ int main(int argc, char* argv[]) {
 
   /* decode values grib_api */
   grib_timer_start(tdga);
-  for (count=0;count<repeatsimple;count++) 
+  for (count=0;count<repeatsimple;count++)
     GRIB_CHECK(grib_get_double_array(h,"values",values,&nvalues),0);
   grib_timer_stop(tdga,0);
 
@@ -393,7 +393,7 @@ int main(int argc, char* argv[]) {
 
   /* encode values grib_api*/
   grib_timer_start(tega);
-  for (count=0;count<repeatsimple;count++) 
+  for (count=0;count<repeatsimple;count++)
     GRIB_CHECK(grib_set_double_array(h,"values",values,nvalues),0);
   grib_timer_stop(tega,0);
 
@@ -403,7 +403,7 @@ int main(int argc, char* argv[]) {
   sec4len=nvalues+100000;
   grib_timer_start(tdgx);
   gribex_check(cgribex(  miss, ksec0,ksec1,ksec2,rsec2,ksec3,rsec3,
-                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D")); 
+                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D"));
   grib_timer_stop(tdgx,0);
 
   /* encode values with gribex*/

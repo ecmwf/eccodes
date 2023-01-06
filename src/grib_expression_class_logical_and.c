@@ -68,8 +68,8 @@ static grib_expression_class _grib_expression_class_logical_and = {
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
+    &print,
+    &add_dependency,
 
 	&native_type,
 	0,

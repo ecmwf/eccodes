@@ -48,8 +48,8 @@ static grib_options_help grib_options_help_list[] = {
     { "i:", "index",
       "\n\t\tData value corresponding to the given index is printed.\n" },
     { "j", 0, "JSON mode (JavaScript Object Notation).\n" },
-    { "l:", "Latitude,Longitude[,MODE,file]",
-      "\n\t\tValue close to the point of a Latitude,Longitude."
+    { "l:", "latitude,longitude[,MODE,file]",
+      "\n\t\tValue close to the point of a latitude,longitude (nearest neighbour)."
       "\n\t\tAllowed values for MODE are:"
       "\n\t\t  4 (4 values in the nearest points are printed) Default"
       "\n\t\t  1 (the value at the nearest point is printed)"
@@ -91,7 +91,7 @@ static grib_options_help grib_options_help_list[] = {
     { "C", 0, "C code mode. A C code program generating the message is dumped.\n" },
     { "D", 0, "Debug mode.\n" },
     { "H", 0, "Print octet content in hexadecimal format.\n" },
-    { "M", 0, "Multi-field support off. Turn off support for multiple fields in single GRIB message.\n" },
+    { "M", 0, "Multi-field support off. Turn off support for multiple fields in a single GRIB message.\n" },
     { "O", 0, "Octet mode. WMO documentation style dump.\n" },
     { "P:", "key[:{s|d|i}],key[:{s|d|i}],...",
       "\n\t\tAs -p adding the declared keys to the default list.\n" },
@@ -125,12 +125,16 @@ void usage(void)
     printf("USAGE \n\t%s %s\n\n", tool_name, tool_usage);
     printf("OPTIONS\n");
     for (i = 0; i < grib_options_count; i++) {
-        if (grib_options[i].command_line)
+        if (grib_options[i].command_line) {
             printf("\t-%c %s\t%s", grib_options[i].id[0],
                    grib_options_get_args(grib_options[i].id),
                    grib_options_get_help(grib_options[i].id));
+        }
     }
-    printf("\n\n");
+    printf("\n");
+    if (tool_online_doc)
+        printf("SEE ALSO\n\t%s\n\n", tool_online_doc);
+    printf("\n");
     exit(1);
 }
 
@@ -406,8 +410,9 @@ const char* grib_options_get_help(const char* id)
 {
     int i      = 0;
     char msg[] = "ERROR: help not found for option ";
-    char* err  = (char*)calloc(1, sizeof(msg) + 3);
-    snprintf(err, 1024, "%s%c\n", msg, *id);
+    const size_t msize = sizeof(msg) + 3;
+    char* err  = (char*)calloc(1, msize);
+    snprintf(err, msize, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].help != NULL)
@@ -418,7 +423,7 @@ const char* grib_options_get_help(const char* id)
     }
     for (i = 0; i < grib_options_help_count; i++) {
         if (!strcmp(id, grib_options_help_list[i].id)) {
-            return grib_options_help_list[i].help != NULL ? (char*)grib_options_help_list[i].help : err;
+            return grib_options_help_list[i].help != NULL ? grib_options_help_list[i].help : err;
         }
     }
     return err;
@@ -429,11 +434,12 @@ const char* grib_options_get_args(const char* id)
     int i        = 0;
     char empty[] = "";
     char msg[]   = "ERROR: help not found for option -";
+    const size_t msize = sizeof(msg) + 3;
     char* err    = NULL;
     if (id[1] != ':')
         return strdup(empty);
-    err = (char*)calloc(1, sizeof(msg) + 3);
-    snprintf(err, 1024, "%s%c\n", msg, *id);
+    err = (char*)calloc(1, msize);
+    snprintf(err, msize, "%s%c\n", msg, *id);
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id)) {
             if (grib_options[i].args != NULL) {
@@ -445,11 +451,12 @@ const char* grib_options_get_args(const char* id)
             }
         }
     }
+
     for (i = 0; i < grib_options_help_count; i++) {
         if (!strcmp(id, grib_options_help_list[i].id)) {
             if (grib_options_help_list[i].args != NULL) {
                 free(err);
-                return (char*)grib_options_help_list[i].args;
+                return grib_options_help_list[i].args;
             }
             else {
                 return err;

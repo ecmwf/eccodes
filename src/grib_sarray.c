@@ -10,6 +10,18 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_sarray_print(const char* title, const grib_sarray* sarray)
+{
+    size_t i;
+    Assert(sarray);
+    printf("%s: sarray.n=%zu  \t", title, sarray->n);
+    for (i = 0; i < sarray->n; i++) {
+        printf("sarray[%zu]=%s\t", i, sarray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_sarray* v = NULL;
@@ -84,8 +96,10 @@ void grib_sarray_delete_content(grib_context* c, grib_sarray* v)
     if (!c)
         c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
-        if (v->v[i])
+        if (v->v[i]) {
+            /*printf("grib_sarray_delete_content: %s %p\n", v->v[i], (void*)v->v[i]);*/
             grib_context_free(c, v->v[i]);
+        }
         v->v[i] = 0;
     }
     v->n = 0;

@@ -236,8 +236,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * size);
     if (!values) {
-        grib_context_log(a->context, GRIB_LOG_FATAL, "%s unable to allocate %ld bytes",
-                         a->name, (long)size);
+        grib_context_log(a->context, GRIB_LOG_FATAL, "%s: Memory allocation error: %zu bytes", a->name, size);
         return GRIB_OUT_OF_MEMORY;
     }
     if ((ret = grib_get_double_array_internal(grib_handle_of_accessor(a), self->values, values, &size)) != GRIB_SUCCESS)

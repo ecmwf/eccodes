@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -43,7 +42,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_print {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in print */
     char *name;
     char *outname;

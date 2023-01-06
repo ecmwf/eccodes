@@ -6,8 +6,6 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!
-!
 ! Description: How to read the header of BUFR messages.
 !
 !
@@ -34,16 +32,16 @@ program bufr_read_header
       ! Get and print some keys from the BUFR header
       write (*, *) 'message: ', count
 
-      call codes_get(ibufr, 'dataCategory', dataCategory); 
+      call codes_get(ibufr, 'dataCategory', dataCategory);
       write (*, *) '  dataCategory:', dataCategory
 
-      call codes_get(ibufr, 'dataSubCategory', dataSubCategory); 
+      call codes_get(ibufr, 'dataSubCategory', dataSubCategory);
       write (*, *) '  dataSubCategory:', dataSubCategory
 
-      call codes_get(ibufr, 'typicalDate', typicalDate); 
+      call codes_get(ibufr, 'typicalDate', typicalDate);
       write (*, *) '  typicalDate:', typicalDate
 
-      call codes_get(ibufr, 'bufrHeaderCentre', centre); 
+      call codes_get(ibufr, 'bufrHeaderCentre', centre);
       write (*, *) '  bufrHeaderCentre:', centre
 
       call codes_get(ibufr, 'bufrHeaderSubCentre', subcentre)

@@ -259,7 +259,7 @@ int main(int argc, char* argv[]) {
   gribex_msg_len=length;
   sec4len=nvalues+100000;
   gribex_check(cgribex(  miss, ksec0,ksec1,ksec2,rsec2,ksec3,rsec3,
-                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D")); 
+                      ksec4,gvalues,sec4len, (char*)msg,&gribex_msg_len,"D"));
 
   /* encode values with gribex*/
   gribex_msg_len=BUFF_SIZE;

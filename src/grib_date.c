@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- * 
+ *
  * The Julian date of any instant is the Julian day number plus the fraction of a day
  * since the preceding noon in Universal Time.
  * Julian dates are expressed as a Julian day number with a decimal fraction added.

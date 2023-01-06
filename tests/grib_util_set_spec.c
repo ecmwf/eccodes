@@ -284,8 +284,7 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
     CODES_CHECK(codes_get_double_array(handle, "values", values,&inlen), 0);
-    
-    
+
     CODES_CHECK(codes_get_double(handle, "max",    &theMax),0);
     CODES_CHECK(codes_get_double(handle, "min",    &theMin),0);
     CODES_CHECK(codes_get_double(handle, "average",&theAverage),0);

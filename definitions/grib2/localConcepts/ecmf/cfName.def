@@ -20,9 +20,12 @@
 	}
 #Large-scale precipitation
 'lwe_thickness_of_stratiform_precipitation_amount' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 142 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
 'lwe_thickness_of_convective_precipitation_amount' = {
@@ -33,9 +36,12 @@
 	}
 #Snowfall
 'lwe_thickness_of_snowfall_amount' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 144 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Tendency of surface pressure
 'tendency_of_surface_air_pressure' = {
@@ -45,9 +51,12 @@
 	}
 #Total cloud cover
 'cloud_area_fraction' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 164 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Albedo
 'surface_albedo' = {
@@ -57,9 +66,12 @@
 	}
 #Evaporation
 'lwe_thickness_of_water_evaporation_amount' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 182 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective cloud cover
 'convective_cloud_area_fraction' = {

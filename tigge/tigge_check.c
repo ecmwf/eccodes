@@ -294,24 +294,24 @@ static void gaussian_grid(grib_handle* h)
     if(get(h,"PLPresent")) {
         size_t count, i, nPl;
         int err_code = grib_get_size(h,"pl",&count);
-        double *pl;
+        long *pl = NULL;
         double expected_lon2 = 0;
         long total, max_pl = 0;
         long numberOfValues = get(h,"numberOfValues");
         long numberOfDataPoints = get(h,"numberOfDataPoints");
 
         if(err_code) {
-            printf("%s, field %d [%s]: cannot number of pl: %s\n",file,field,param,grib_get_error_message(err_code));
+            printf("%s, field %d [%s]: cannot get size of pl: %s\n",file,field,param,grib_get_error_message(err_code));
             error++;
             return;
         }
 
-        pl = (double*)malloc(sizeof(double)*(count));
+        pl = (long*)malloc(sizeof(long)*count);
         CHECK(pl != NULL);
         if (!pl) return;
 
         nPl = count;
-        if((err_code =  grib_get_double_array(h,"pl",pl,&count)))
+        if((err_code =  grib_get_long_array(h, "pl", pl, &count)))
         {
             printf("%s, field %d [%s]: cannot get pl: %s\n",file,field,param,grib_get_error_message(err_code));
             free(pl);

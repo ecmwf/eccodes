@@ -64,6 +64,7 @@
    MEMBERS    = grib_iarray* iss_list
    MEMBERS    = grib_trie_with_rank* dataAccessorsTrie
    MEMBERS    = grib_sarray* tempStrings
+   MEMBERS    = grib_vdarray* tempDoubleValues
    MEMBERS    = int change_ref_value_operand
    MEMBERS    = size_t refValListSize
    MEMBERS    = long* refValList
@@ -3379,6 +3380,9 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             grib_set_long(h, self->numberOfSubsetsName, grib_iarray_used_size(self->iss_list));
         }
     }
+
+    if (subsetList)
+        grib_context_free(c, subsetList);/* ECC-1498 */
 
     return err;
 }

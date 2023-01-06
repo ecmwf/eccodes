@@ -13,15 +13,15 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+ #include <unistd.h>
 #else
-#include <fcntl.h> /* Windows: for _O_BINARY */
+ #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#define _GNU_SOURCE
-#include <fenv.h>
-int feenableexcept(int excepts);
+ #define _GNU_SOURCE
+ #include <fenv.h>
+ int feenableexcept(int excepts);
 #endif
 
 grib_string_list grib_file_not_found;
@@ -29,11 +29,11 @@ grib_string_list grib_file_not_found;
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
-#define ECC_PATH_DELIMITER_CHAR ';'
-#define ECC_PATH_DELIMITER_STR ";"
+ #define ECC_PATH_DELIMITER_CHAR ';'
+ #define ECC_PATH_DELIMITER_STR ";"
 #else
-#define ECC_PATH_DELIMITER_CHAR ':'
-#define ECC_PATH_DELIMITER_STR ":"
+ #define ECC_PATH_DELIMITER_CHAR ':'
+ #define ECC_PATH_DELIMITER_STR ":"
 #endif
 
 #if GRIB_PTHREADS
@@ -84,7 +84,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -100,7 +100,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -111,7 +111,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -127,7 +127,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -138,7 +138,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -716,7 +716,7 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
 
         while (dir) {
             snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
-            if (!codes_access(full, F_OK)) {
+            if (codes_access(full, F_OK) == 0) { /* 0 means file exists */
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
@@ -725,6 +725,8 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
                 GRIB_MUTEX_UNLOCK(&mutex_c);
                 return fullpath->value;
+            } else {
+                grib_context_log(c, GRIB_LOG_DEBUG, "Nonexistent def file %s", full);
             }
             dir = dir->next;
         }
@@ -903,7 +905,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
     void* p = c->alloc_persistent_mem(c, size);
     if (!p) {
         grib_context_log(c, GRIB_LOG_FATAL,
-                         "grib_context_malloc_persistent: error allocating %lu bytes", (unsigned long)size);
+                         "grib_context_malloc_persistent: error allocating %zu bytes", size);
         Assert(0);
     }
     return p;
@@ -935,7 +937,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return p;
@@ -948,7 +950,7 @@ void* grib_context_realloc(const grib_context* c, void* p, size_t size)
         c = grib_context_get_default();
     q = c->realloc_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %zu bytes", size);
         return NULL;
     }
     return q;
@@ -983,7 +985,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_buffer_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %zu bytes", size);
         return NULL;
     }
     return p;
@@ -1001,7 +1003,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* q = c->realloc_buffer_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %zu bytes", size);
         return NULL;
     }
     return q;

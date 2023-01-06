@@ -23,9 +23,9 @@ void grib_viarray_print(const char* title, const grib_viarray* viarray)
     char text[100] = {0,};
     const size_t textLen = sizeof(text);
     Assert(viarray);
-    printf("%s: viarray.n=%lu\n", title, (unsigned long)viarray->n);
+    printf("%s: viarray.n=%zu\n", title, viarray->n);
     for (i = 0; i < viarray->n; i++) {
-        snprintf(text, textLen, " viarray->v[%lu]", (unsigned long)i);
+        snprintf(text, textLen, " viarray->v[%zu]", i);
         grib_iarray_print(text, viarray->v[i]);
     }
     printf("\n");

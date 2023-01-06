@@ -68,3 +68,4 @@ meta numberOfCodedValues number_of_coded_values(bitsPerValue,offsetBeforeData,of
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
 meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

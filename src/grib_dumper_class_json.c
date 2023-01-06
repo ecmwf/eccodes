@@ -55,7 +55,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_json {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in json */
     long section_offset;
     long begin;
@@ -91,19 +91,6 @@ grib_dumper_class* grib_dumper_class_json = &_grib_dumper_class_json;
 
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a);
-
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
 
 static int depth = 0;
 
@@ -410,7 +397,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -467,13 +454,14 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     /* ECC-710: It is MUCH slower determining the string length here
      * than using a maximum size (and no need for malloc).
      * Specially for BUFR elements */
-    /*err = _grib_get_string_length(a,&size);
-    if (size==0) return;
-    value=(char*)grib_context_malloc_clear(a->context,size);
-    if (!value) {
-        grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
-        return;
-    }*/
+    /* err = ecc__grib_get_string_length(a,&size);
+     * if (size==0) return;
+     * value=(char*)grib_context_malloc_clear(a->context,size);
+     * if (!value) {
+     *   grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+     *   return;
+     * }
+    */
 
     if (self->begin == 0 && self->empty == 0 && self->isAttribute == 0)
         fprintf(self->dumper.out, ",");
@@ -523,7 +511,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "\n%-*s}", depth, " ");
     }
 
-    /*grib_context_free(a->context,value);*/
+    /* grib_context_free(a->context,value); */
     (void)err; /* TODO */
 }
 
@@ -538,9 +526,9 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_json* self = (grib_dumper_json*)d;
-    if (!grib_inline_strcmp(a->name, "BUFR") ||
-        !grib_inline_strcmp(a->name, "GRIB") ||
-        !grib_inline_strcmp(a->name, "META")) {
+    if (strcmp(a->name, "BUFR")==0 ||
+        strcmp(a->name, "GRIB")==0 ||
+        strcmp(a->name, "META")==0) {
         depth = 2;
         fprintf(self->dumper.out, "%-*s", depth, " ");
         fprintf(self->dumper.out, "[\n");
@@ -551,7 +539,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         depth -= 2;
         fprintf(self->dumper.out, "\n]\n");
     }
-    else if (!grib_inline_strcmp(a->name, "groupNumber")) {
+    else if (strcmp(a->name, "groupNumber")==0) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         if (!self->empty)

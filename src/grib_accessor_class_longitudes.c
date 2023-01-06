@@ -270,8 +270,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     }
     v = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "Error allocating %ld bytes", (long)size * sizeof(double));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     *val = v;
@@ -284,8 +283,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
 
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));
     if (!v1) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "Error allocating %ld bytes", (long)size * sizeof(double));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 

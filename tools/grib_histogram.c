@@ -21,6 +21,7 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 const char* tool_description = "Histogram of GRIB files";
 const char* tool_name        = "grib_histogram";
+const char* tool_online_doc  = NULL;
 const char* tool_usage       = "[options] grib_file grib_file ...";
 
 int main(int argc, char* argv[])

@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- * Enrico Fucile                                                                         *
+ * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -47,7 +47,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
 
 typedef struct grib_action_when {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in when */
     grib_expression *expression;
     grib_action     *block_true;

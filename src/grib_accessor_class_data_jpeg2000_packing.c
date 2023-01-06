@@ -479,7 +479,13 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
                          "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%ld."
                          " width*height should equal len!",
                          (long)width, (long)height, (long)*len);
-        return GRIB_INTERNAL_ERROR;
+        /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
+         * but has not yet submitted the new data values. So len will be out of sync!
+         * So issue a warning but proceed.
+        */
+        /*return GRIB_INTERNAL_ERROR;*/
+        grib_context_free(a->context, buf);
+        return GRIB_SUCCESS;
     }
 
     switch (type_of_compression_used) {

@@ -649,7 +649,7 @@ static int expand(grib_accessor* a)
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unexpanded size is zero!", a->name);
         return GRIB_DECODING_ERROR;
     }
-    
+
     u = (long*)grib_context_malloc_clear(c, sizeof(long) * unexpandedSize);
     if (!u) {
         err = GRIB_OUT_OF_MEMORY;

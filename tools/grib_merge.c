@@ -36,6 +36,7 @@ static const char* md5Key = "md5Product";
 
 const char* tool_description = "Merge two fields with identical parameters and different geographical area";
 const char* tool_name        = "grib_merge";
+const char* tool_online_doc  = NULL;
 const char* tool_usage       = "[options] file file ... output_file";
 
 grib_option grib_options[] = {

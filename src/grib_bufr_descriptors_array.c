@@ -137,7 +137,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
 
 bufr_descriptors_array* grib_bufr_descriptors_array_push_front(bufr_descriptors_array* v, bufr_descriptor* val)
 {
-    int i;
+    size_t i = 0;
     if (!v) {
         size_t start_size    = DYN_ARRAY_SIZE_INIT;
         size_t start_incsize = DYN_ARRAY_SIZE_INCR;

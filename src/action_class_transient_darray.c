@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *  Enrico Fucile                                                                         *
+ *  Enrico Fucile                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -44,7 +44,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_transient_darray {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

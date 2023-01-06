@@ -24804,7 +24804,7 @@ int main(int argc, char** argv)
     int check = 1;
 
     if (argc != 4) usage(argv[0]);
-    
+
     packing_type = argv[1];
     if (strcmp(argv[2], "packing_type_before_values")==0)
         packing_stage = PACKING_TYPE_BEFORE_VALUES;
@@ -24818,7 +24818,7 @@ int main(int argc, char** argv)
     fprintf(stderr,"Using sample_filename = %s\n", sample_filename);
     h = grib_handle_new_from_samples(0, sample_filename);
     Assert(h);
-    
+
     if (strcmp(packing_type, "grid_second_order")==0 && packing_stage == VALUES_BEFORE_PACKING_TYPE) {
         check = 0; /* TDOD */
     }
@@ -24828,15 +24828,15 @@ int main(int argc, char** argv)
         fprintf(stderr,"Set packingType to %s\n", packing_type);
         GRIB_CHECK(grib_set_string(h, "packingType", packing_type, &str_len), 0);
     }
-    
+
     fprintf(stderr,"Set values. values_len=%lu\n", (unsigned long)values_len);
     GRIB_CHECK(grib_set_double_array(h, "values", values, values_len), 0);
-    
+
     if (packing_stage == VALUES_BEFORE_PACKING_TYPE) {
         fprintf(stderr, "Set packingType to %s\n", packing_type);
         GRIB_CHECK(grib_set_string(h, "packingType", packing_type, &str_len), 0);
     }
-    
+
     GRIB_CHECK(grib_write_message(h, outfile_name, "w"), 0);
 
     fprintf(stderr, "%s checks on decoded values '%s' (%s) ...\n",

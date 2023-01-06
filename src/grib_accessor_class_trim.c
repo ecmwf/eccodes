@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -164,7 +164,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if (err) return err;
 
     string_lrtrim(&pInput, self->trim_left, self->trim_right);
-    snprintf(val, 1024, "%s", pInput); 
+    snprintf(val, 1024, "%s", pInput);
     size = strlen(val);
     *len = size + 1;
     return GRIB_SUCCESS;

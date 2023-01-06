@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Enrico Fucile
- *                                                                         *
+ *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -46,7 +45,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_switch {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in section */
     /* Members defined in switch */
     grib_arguments* args;

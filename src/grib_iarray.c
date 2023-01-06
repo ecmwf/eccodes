@@ -9,9 +9,7 @@
  */
 
 /***************************************************************************
- *
  *   Enrico Fucile
- *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
@@ -21,9 +19,9 @@ void grib_iarray_print(const char* title, const grib_iarray* iarray)
 {
     size_t i;
     Assert(iarray);
-    printf("%s: iarray.n=%lu  \t", title, (unsigned long)iarray->n);
+    printf("%s: iarray.n=%zu  \t", title, iarray->n);
     for (i = 0; i < iarray->n; i++) {
-        printf("iarray[%lu]=%ld\t", (unsigned long)i, iarray->v[i]);
+        printf("iarray[%zu]=%ld\t", i, iarray->v[i]);
     }
     printf("\n");
 }

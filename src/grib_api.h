@@ -91,30 +91,27 @@ Log mode for information for processing information
 #define GRIB_TYPE_MISSING 7
 
 /* Missing values */
-/* #define GRIB_MISSING_LONG   0x80000001*/
+/* #define GRIB_MISSING_LONG 0x80000001 */
 /* #define GRIB_MISSING_LONG 0xffffffff */
 #define GRIB_MISSING_LONG 2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
-/*set spec flags*/
-#define GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING (1 << 0)
-
 /* Dump option flags*/
-#define GRIB_DUMP_FLAG_READ_ONLY (1 << 0)
-#define GRIB_DUMP_FLAG_DUMP_OK (1 << 1)
-#define GRIB_DUMP_FLAG_VALUES (1 << 2)
-#define GRIB_DUMP_FLAG_CODED (1 << 3)
-#define GRIB_DUMP_FLAG_OCTET (1 << 4)
-#define GRIB_DUMP_FLAG_ALIASES (1 << 5)
-#define GRIB_DUMP_FLAG_TYPE (1 << 6)
-#define GRIB_DUMP_FLAG_HEXADECIMAL (1 << 7)
-#define GRIB_DUMP_FLAG_NO_DATA (1 << 8)
-#define GRIB_DUMP_FLAG_ALL_DATA (1 << 9)
+#define GRIB_DUMP_FLAG_READ_ONLY      (1 << 0)
+#define GRIB_DUMP_FLAG_DUMP_OK        (1 << 1)
+#define GRIB_DUMP_FLAG_VALUES         (1 << 2)
+#define GRIB_DUMP_FLAG_CODED          (1 << 3)
+#define GRIB_DUMP_FLAG_OCTET          (1 << 4)
+#define GRIB_DUMP_FLAG_ALIASES        (1 << 5)
+#define GRIB_DUMP_FLAG_TYPE           (1 << 6)
+#define GRIB_DUMP_FLAG_HEXADECIMAL    (1 << 7)
+#define GRIB_DUMP_FLAG_NO_DATA        (1 << 8)
+#define GRIB_DUMP_FLAG_ALL_DATA       (1 << 9)
 #define GRIB_DUMP_FLAG_ALL_ATTRIBUTES (1 << 10)
 
 /* grib_nearest flags */
-#define GRIB_NEAREST_SAME_GRID (1 << 0)
-#define GRIB_NEAREST_SAME_DATA (1 << 1)
+#define GRIB_NEAREST_SAME_GRID  (1 << 0)
+#define GRIB_NEAREST_SAME_DATA  (1 << 1)
 #define GRIB_NEAREST_SAME_POINT (1 << 2)
 
 /*! Iteration is carried out on all the keys available in the message

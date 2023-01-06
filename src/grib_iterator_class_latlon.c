@@ -32,11 +32,9 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class              (grib_iterator_class*);
-
-static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next               (grib_iterator* i, double *lat, double *lon, double *val);
-
+static void init_class  (grib_iterator_class*);
+static int init         (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next         (grib_iterator* i, double *lat, double *lon, double *val);
 
 typedef struct grib_iterator_latlon{
   grib_iterator it;
@@ -79,9 +77,9 @@ grib_iterator_class* grib_iterator_class_latlon = &_grib_iterator_class_latlon;
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
+    c->previous  = (*(c->super))->previous;
+    c->reset     = (*(c->super))->reset;
+    c->has_next  = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
@@ -137,14 +135,14 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long jScansPositively;
     long lai;
 
-    const char* s_lat1       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jdir       = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jScansPos  = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_jPtsConsec = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_isRotatedGrid  = grib_arguments_get_name(h, args, self->carg++);
-    const char* s_angleOfRotation= grib_arguments_get_name(h, args, self->carg++);
-    const char* s_latSouthernPole= grib_arguments_get_name(h, args, self->carg++);
-    const char* s_lonSouthernPole= grib_arguments_get_name(h, args, self->carg++);
+    const char* s_lat1            = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_jdir            = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_jScansPos       = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_jPtsConsec      = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_isRotatedGrid   = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_angleOfRotation = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_latSouthernPole = grib_arguments_get_name(h, args, self->carg++);
+    const char* s_lonSouthernPole = grib_arguments_get_name(h, args, self->carg++);
 
     self->angleOfRotation  = 0;
     self->isRotated        = 0;

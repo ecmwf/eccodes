@@ -9,33 +9,28 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_expanded_test_f"
 
-#Prepare tmp file
 fTmp=${label}.tmp.txt
 rm -f $fTmp
 
 #-----------------------------------------------------
 # Test reading the expanded values
 #----------------------------------------------------
-  
 #f=${data_dir}/bufr/syno_1.bufr
 REDIRECT=/dev/null
 
-#We check "syno_1.bufr". The path is
-#hardcoded in the example
+# We check "syno_1.bufr". The path is hard coded in the example
 
-#Write the values into a file
+# Write the values into a file
 ${examples_dir}/eccodes_f_bufr_expanded > $fTmp 2> $REDIRECT
 
-#TODO: add a better check. It could be compared against the bufrdc
-# references.
+#TODO: add a better check. It could be compared against the bufrdc references
 
-#Check if there is any output
+# Check if there is any output
 [ -s ${fTmp} ]
 
-#cat $fTmp 
+# cat $fTmp
 
-#Clean up
 rm -f ${fTmp}

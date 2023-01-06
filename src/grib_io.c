@@ -437,6 +437,8 @@ static int read_PSEUDO(reader* r, const char* type)
         i++;
     }
 
+    r->offset = r->tell(r->read_data) - 4;
+
     for (j = 0; j < 3; j++) {
         if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
             return err;
@@ -499,7 +501,7 @@ static int read_HDF5_offset(reader* r, int length, unsigned long* v, unsigned ch
 
 static int read_HDF5(reader* r)
 {
-    /* 
+    /*
      * See: http://www.hdfgroup.org/HDF5/doc/H5.format.html#Superblock
      */
     unsigned char tmp[49]; /* Should be enough */

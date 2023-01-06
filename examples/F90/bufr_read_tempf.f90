@@ -59,7 +59,7 @@ program bufr_read_tempf
 
     ! we need to instruct ecCodes to expand all the descriptors
     ! i.e. unpack the data values
-    call codes_set(ibufr, "unpack", 1); 
+    call codes_set(ibufr, "unpack", 1);
     ! In our BUFR message verticalSoundingSignificance is always followed by
     !      geopotential, airTemperature, dewpointTemperature,
     !      windDirection, windSpeed and pressure.

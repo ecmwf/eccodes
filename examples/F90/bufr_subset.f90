@@ -35,7 +35,7 @@ program bufr_subset
 
       ! We need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
-      call codes_set(ibufr, 'unpack', 1); 
+      call codes_set(ibufr, 'unpack', 1);
       ! Find out the number of subsets
       call codes_get(ibufr, 'numberOfSubsets', numberOfSubsets)
       write (*, *) '  numberOfSubsets:', numberOfSubsets
@@ -50,11 +50,11 @@ program bufr_subset
          write (*, *) ' subsetNumber:', i
          ! read and print some data values
 
-         call codes_get(ibufr, key, blockNumber); 
+         call codes_get(ibufr, key, blockNumber);
          write (*, *) '  blockNumber:', blockNumber
 
          write (key, *) '/subsetNumber=', I, '/stationNumber'
-         call codes_get(ibufr, 'stationNumber', stationNumber); 
+         call codes_get(ibufr, 'stationNumber', stationNumber);
          write (*, *) '  stationNumber:', stationNumber
 
       end do

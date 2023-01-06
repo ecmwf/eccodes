@@ -41,6 +41,7 @@ const char* tool_description =
     "\n\tDefault behaviour: bit-by-bit compare, same order in files.";
 
 const char* tool_name = "gts_compare";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] "
     "file file";
@@ -332,8 +333,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if (!global_handle || err != GRIB_SUCCESS) {
             morein1++;
-            if (global_handle)
-                grib_handle_delete(global_handle);
+            grib_handle_delete(global_handle);
             return 0;
         }
 
@@ -521,7 +521,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     printInfo(h1);
     printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
         name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH; 
+    return GRIB_TYPE_MISMATCH;
   }
      */
 
@@ -579,7 +579,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in 1st field\n");
         printInfo(h1);
-        printf("%s is set to missing in 1st field is not missing in 2nd field\n", name);
+        printf("%s is set to missing in 1st field but is not missing in 2nd field\n", name);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;
@@ -589,7 +589,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         if (verbose)
             printf(" is set to missing in 1st field\n");
         printInfo(h1);
-        printf("%s is set to missing in 2nd field is not missing in 1st field\n", name);
+        printf("%s is set to missing in 2nd field but is not missing in 1st field\n", name);
         err1 = GRIB_VALUE_MISMATCH;
         save_error(c, name);
         return GRIB_VALUE_MISMATCH;

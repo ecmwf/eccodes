@@ -141,7 +141,7 @@ int grib_dependency_notify_change(grib_accessor* observed)
 
 /* This version takes in the handle so does not need to work it out from the 'observed' */
 /* See ECC-778 */
-int _grib_dependency_notify_change(grib_handle* h, grib_accessor* observed)
+int ecc__grib_dependency_notify_change(grib_handle* h, grib_accessor* observed)
 {
     grib_dependency* d = h->dependencies;
     int ret            = GRIB_SUCCESS;

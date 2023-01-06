@@ -304,7 +304,7 @@ static void set_bitmap_number(long* descriptors, int* useDefinedBitmap, size_t* 
 static void computeDelayedReplication(
         grib_accessor_apply_operators* self,
         long* delayedReplication,
-        const long* delayedReplicationIndex, long delayedReplicationCount, long index)
+        const long* delayedReplicationIndex, long delayedReplicationCount)
 {
     long i = 0;
     for (i = 0; i < delayedReplicationCount; i++) {
@@ -424,21 +424,21 @@ static int apply_operators(grib_accessor* a)
             switch (X) {
                 case 1:
                     extraWidth = Y ? Y - 128 : 0;
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 2:
                     extraScale = Y ? Y - 128 : 0;
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 4:
                     /* associated field*/
                     associatedFieldWidth = Y;
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 6:
                     /*signify data width*/
                     localDescriptorWidth = Y;
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 7:
                     if (Y) {
@@ -451,14 +451,14 @@ static int apply_operators(grib_accessor* a)
                         extraScale           = 0;
                         referenceValueFactor = 1;
                     }
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 22:
                     /*quality information follows*/
                     iq = 1;
                     set_bitmap_number(descriptors, &useDefinedBitmap, &i, &bitmapNumber);
                     iassociatedInfoNumber = bitmapNumber;
-                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount, i);
+                    computeDelayedReplication(self, delayedReplication, delayedReplicationIndex, delayedReplicationCount);
                     break;
                 case 23:
                     /*substituted values*/
@@ -503,7 +503,7 @@ static int apply_operators(grib_accessor* a)
                             j++;
                             break;
                         default:
-                            grib_context_log(c, GRIB_LOG_FATAL, "operator %d not implemented", (int)descriptors[i]);
+                            grib_context_log(c, GRIB_LOG_FATAL, "BUFR operator %ld not implemented", descriptors[i]);
                     }
                     break;
                 case 25:

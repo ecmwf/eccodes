@@ -11,7 +11,6 @@
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  *   Enrico  Fucile                                                        *
- *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -47,7 +46,7 @@ static void destroy         (grib_context*,grib_action*);
 
 
 typedef struct grib_action_concept {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

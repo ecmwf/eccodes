@@ -13,8 +13,18 @@
 tempLog=temp.ls.log
 rm -f $tempLog
 
+sample_g1="$ECCODES_SAMPLES_PATH/GRIB1.tmpl"
+sample_g2="$ECCODES_SAMPLES_PATH/GRIB2.tmpl"
+
 cd ${data_dir}
 infile=regular_gaussian_model_level.grib1
+
+# Basic test of man page
+set +e
+${tools_dir}/grib_ls > /dev/null
+status=$?
+set -e
+[ $status -eq 1 ]
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
@@ -89,11 +99,11 @@ grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
 
 # ECC-278: grib_ls -n namespace
 ${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
-${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_ls -n data      $sample_g1
 
 # Angle subdivisions
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
+grib_check_key_equals $sample_g1 angleSubdivisions 1000
+grib_check_key_equals $sample_g2 angleSubdivisions 1000000
 
 # Print 'offset' key as string and integer
 temp1=temp.grib_ls.1.txt
@@ -101,6 +111,10 @@ temp2=temp.grib_ls.2.txt
 ${tools_dir}/grib_ls -p offset:s tigge_cf_ecmwf.grib2 > $temp1
 ${tools_dir}/grib_ls -p offset:i tigge_cf_ecmwf.grib2 > $temp2
 diff $temp1 $temp2
+
+# Section pointers
+grib_check_key_equals $sample_g2 'section0Pointer,section1Pointer,section3Pointer,section4Pointer' '0_16 16_21 37_72 109_34'
+
 
 rm -f $temp1 $temp2
 rm -f $temp_ls
