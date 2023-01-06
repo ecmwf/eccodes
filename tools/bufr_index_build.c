@@ -22,8 +22,8 @@ const char* tool_name       = "bufr_index_build";
 const char* tool_online_doc = NULL;
 const char* tool_usage      = "[options] file file ... ";
 grib_index* idx        = NULL;
-char* keys;
-char* default_keys = "mars";
+const char* keys;
+const char* default_keys = "mars";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */
