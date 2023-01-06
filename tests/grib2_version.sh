@@ -31,7 +31,7 @@ if [ "$latest" != "$highest_num" ]; then
     exit 1
 fi
 
-
+cd $test_dir
 # Check table 1.0
 # Check it has the latest with description matching "Version implemented on DD MM YYYY"
 tempText=temp.$label.txt
