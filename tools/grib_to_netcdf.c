@@ -1842,7 +1842,7 @@ typedef struct ncatt
     nc_type nctype;
 } ncatt_t;
 
-typedef struct filter
+typedef struct filter_type
 {
     fieldset* fset;
     hypercube* filter;
