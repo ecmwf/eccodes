@@ -21,10 +21,13 @@ infile=regular_gaussian_model_level.grib1
 
 # Basic test of man page
 set +e
-${tools_dir}/grib_ls > /dev/null
+${tools_dir}/grib_ls > $tempLog
 status=$?
 set -e
 [ $status -eq 1 ]
+grep -q "Full documentation and examples at" $tempLog
+grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog

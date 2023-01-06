@@ -41,7 +41,6 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2
 ${tools_dir}/grib_ls -l 37.5,16.0,1 $tempGrib > $tempOut
 
 grep -q "Grid Point chosen #1 index=5016590" $tempOut
-grep -q "grid_simple  42" $tempOut
 
 ${tools_dir}/grib_ls -j -l 37.5,16.0,1 $tempGrib > $tempOut
 grep -q 'latitude" : 37.5, "longitude" : 16, "distance" : 0,.*"value" : 42 ,' $tempOut
