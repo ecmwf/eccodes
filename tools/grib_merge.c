@@ -9,8 +9,6 @@
  */
 
 /*
- * C Implementation: grib_merge
- *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
  * Description:
  * In Observations team we need a tool to merge the GRIB messages coming from GTS.

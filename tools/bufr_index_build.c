@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_index_build
- *
- */
-
 #include "grib_tools.h"
 
 const char* tool_description =
