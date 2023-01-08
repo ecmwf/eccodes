@@ -78,8 +78,8 @@ typedef struct grib_options_help
 
 typedef struct grib_option
 {
-    char* id;
-    char* args;
+    const char* id;
+    const char* args;
     char* help;
     int on;
     int command_line;
