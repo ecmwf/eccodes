@@ -80,7 +80,7 @@ typedef struct grib_option
 {
     const char* id;
     const char* args;
-    char* help;
+    const char* help;
     int on;
     int command_line;
     char* value;
