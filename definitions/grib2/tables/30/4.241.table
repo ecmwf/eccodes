@@ -4,6 +4,10 @@
 2 2 Snow covered 
 3 3 Flooded 
 4 4 Ice covered 
-# 5-191 Reserved 
+5 5 Snow covered and flooded
+6 6 Snow covered and ice covered
+7 7 Flooded and ice covered
+8 8 Snow covered and ice covered and flooded
+# 9-191 Reserved 
 # 192-254 Reserved for local use 
 255 255 Missing value 
