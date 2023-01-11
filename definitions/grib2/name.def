@@ -3025,6 +3025,12 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	}
+#Soil moisture
+'Soil moisture' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	}
 #Accumulated surface downward short-wave radiation flux, clear sky
 'Accumulated surface downward short-wave radiation flux, clear sky' = {
 	 discipline = 0 ;
