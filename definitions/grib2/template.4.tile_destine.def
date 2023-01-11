@@ -1,0 +1,21 @@
+# (C) Copyright 2005- ECMWF.
+
+# Tile specifications
+codetable[2] tileClass ('4.251.table',masterDir,localDir) : dump;
+codetable[1] attributeOfTile ('4.241.table',masterDir,localDir) : dump;
+unsigned[1]  numberOfUsedTileAttributes=1 : dump; # Number of tile attributes for a given tile in the gridbox
+unsigned[1]  numberOfUsedSpatialTiles=1 : dump; # Number of tiles in gridbox
+unsigned[1]  totalNumberOfTileAttributePairs=1 : dump; # Sum over all tile-attribute pairs over whole gridbox. >= 1
+unsigned[1]  tileIndex=1 : dump; # Local index of tile
+alias NT=totalNumberOfTileAttributePairs;
+alias NUT=numberOfUsedSpatialTiles;
+alias ITN=tileIndex;
+alias NAT=numberOfUsedTileAttributes;
+alias ls.tileClass=tileClass;
+alias ls.attributeOfTile=attributeOfTile;
+alias tile.tileIndex=tileIndex;
+alias tile.tileClass=tileClass;
+alias tile.attributeOfTile=attributeOfTile;
+alias tile.numberOfUsedSpatialTiles=numberOfUsedSpatialTiles;
+alias tile.totalNumberOfTileAttributePairs=totalNumberOfTileAttributePairs;
+alias tile.numberOfUsedTileAttributes=numberOfUsedTileAttributes;
