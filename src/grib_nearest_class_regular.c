@@ -318,7 +318,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
         iter = grib_iterator_new(h, 0, &ret);
         if (ret != GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to create lat/lon iterator");
+            grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to create lat/lon iterator");
             return ret;
         }
         while (grib_iterator_next(iter, &lat, &lon, &dummy)) {
@@ -455,7 +455,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
             /* Assert(self->k[kk] < nvalues); */
             /* values[kk]=nearest->values[self->k[kk]]; */
 
-            indexes[kk] = self->k[kk];
+            if (self->k[kk] >= INT_MAX) {
+                /* Current interface uses an 'int' for 'indexes' which is 32bits! We should change this to a 64bit type */
+                grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to compute index. Value too large");
+                return GRIB_OUT_OF_RANGE;
+            } else {
+                indexes[kk] = self->k[kk];
+            }
             kk++;
         }
     }
