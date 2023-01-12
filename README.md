@@ -1,8 +1,8 @@
 ecCodes
 =======
 
-[![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
-[![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
+[![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
 
 [![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
 [![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
