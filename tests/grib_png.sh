@@ -18,11 +18,18 @@ temp2=${label}".2.tmp"
 files="
  reduced_gaussian_model_level.grib2
  reduced_gaussian_sub_area.grib2
+ regular_gaussian_model_level.grib2
  regular_latlon_surface_constant.grib2
+ test_file.grib2
+ constant_field.grib2
 "
 
+if [ $HAVE_AEC -eq 1 ]; then
+ files="ccsds.grib2 "$files
+fi
+
 if [ $HAVE_JPEG -eq 1 ]; then
- files="v.grib2"$files
+ files="jpeg.grib2 reduced_gaussian_surface_jpeg.grib2 "$files
 fi
 
 # TODO: For the following the PNG packing fails with an assert!
