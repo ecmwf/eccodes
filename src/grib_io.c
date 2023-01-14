@@ -848,7 +848,7 @@ static int read_BUFR(reader* r)
     return err;
 }
 
-static int _read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+static int ecc_read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     unsigned char c;
     int err             = 0;
@@ -924,7 +924,7 @@ static int read_any(reader* r, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_o
     GRIB_MUTEX_LOCK(&mutex1);
 #endif
 
-    result = _read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
+    result = ecc_read_any(r, grib_ok, bufr_ok, hdf5_ok, wrap_ok);
 
 #ifndef ECCODES_EACH_THREAD_OWN_FILE
     GRIB_MUTEX_UNLOCK(&mutex1);
@@ -1154,7 +1154,7 @@ static void* user_provider_buffer(void* data, size_t* length, int* err)
     return u->user_buffer;
 }
 
-static int _wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
+static int ecc_wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok)
 {
     int err;
     user_buffer_t u;
@@ -1181,17 +1181,17 @@ static int _wmo_read_any_from_file(FILE* f, void* buffer, size_t* len, int grib_
 
 int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len)
 {
-    return _wmo_read_any_from_file(f, buffer, len, 1, 1, 1, 1);
+    return ecc_wmo_read_any_from_file(f, buffer, len, 1, 1, 1, 1);
 }
 
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len)
 {
-    return _wmo_read_any_from_file(f, buffer, len, 1, 0, 0, 0);
+    return ecc_wmo_read_any_from_file(f, buffer, len, 1, 0, 0, 0);
 }
 
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
 {
-    return _wmo_read_any_from_file(f, buffer, len, 0, 1, 0, 0);
+    return ecc_wmo_read_any_from_file(f, buffer, len, 0, 1, 0, 0);
 }
 
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
@@ -1458,7 +1458,7 @@ void* wmo_read_metar_from_file_malloc(FILE* f, int headers_only, size_t* size, o
 }
 
 /* This function allocates memory for the result so the user is responsible for freeing it */
-static void* _wmo_read_any_from_file_malloc(FILE* f, int* err, size_t* size, off_t* offset,
+static void* ecc_wmo_read_any_from_file_malloc(FILE* f, int* err, size_t* size, off_t* offset,
                                             int grib_ok, int bufr_ok, int hdf5_ok, int wrap_ok, int headers_only)
 {
     alloc_buffer u;
@@ -1489,17 +1489,17 @@ static void* _wmo_read_any_from_file_malloc(FILE* f, int* err, size_t* size, off
 /* This function allocates memory for the result so the user is responsible for freeing it */
 void* wmo_read_any_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err)
 {
-    return _wmo_read_any_from_file_malloc(f, err, size, offset, 1, 1, 1, 1, headers_only);
+    return ecc_wmo_read_any_from_file_malloc(f, err, size, offset, 1, 1, 1, 1, headers_only);
 }
 /* This function allocates memory for the result so the user is responsible for freeing it */
 void* wmo_read_grib_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err)
 {
-    return _wmo_read_any_from_file_malloc(f, err, size, offset, 1, 0, 0, 0, headers_only);
+    return ecc_wmo_read_any_from_file_malloc(f, err, size, offset, 1, 0, 0, 0, headers_only);
 }
 /* This function allocates memory for the result so the user is responsible for freeing it */
 void* wmo_read_bufr_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err)
 {
-    return _wmo_read_any_from_file_malloc(f, err, size, offset, 0, 1, 0, 0, headers_only);
+    return ecc_wmo_read_any_from_file_malloc(f, err, size, offset, 0, 1, 0, 0, headers_only);
 }
 
 /* ======================================= */
