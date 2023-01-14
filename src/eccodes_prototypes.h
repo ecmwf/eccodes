@@ -504,9 +504,6 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 /* grib_accessor_class_nearest.c */
 grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 
-/* grib_accessor_class_box.c */
-grib_box* grib_box_new(grib_handle* h, int* error);
-
 /* grib_accessor_class_ksec1expver.c */
 
 /* grib_accessor_class_laplacian.c */
