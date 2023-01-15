@@ -929,7 +929,9 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 packingError2   = 0;
                 err1            = grib_get_double(h1, "referenceValueError", &packingError1);
                 err2            = grib_get_double(h2, "referenceValueError", &packingError2);
-                value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                if (!err1 && !err2) {
+                    value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                }
             }
 
             if (!compareAbsolute) {
@@ -1088,7 +1090,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 const size_t len_min = MINIMUM(len1, len2);
                 if (memcmp(uval1, uval2, len_min) != 0) {
-                    for (i = 0; i < len_min; i++)
+                    for (i = 0; i < len_min; i++) {
                         if (uval1[i] != uval2[i]) {
                             printInfo(h1);
                             save_error(c, name);
@@ -1102,6 +1104,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                             err1 = GRIB_VALUE_MISMATCH;
                             break;
                         }
+                    }
                     err1 = GRIB_VALUE_MISMATCH;
                 }
             }
