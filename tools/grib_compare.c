@@ -921,7 +921,8 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 packingError1   = 0.0005;
                 packingError2   = 0.0005;
                 isangle         = 1;
-                value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                /* value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2; */
+                value_tolerance = packingError1;
             }
             else if (!grib_inline_strcmp(name, "referenceValue")) {
                 packingError1   = 0;
