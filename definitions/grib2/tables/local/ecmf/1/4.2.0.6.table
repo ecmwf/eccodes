@@ -1,0 +1,4 @@
+# Code table 4.2 - discipline=0 category=6 for ECMWF
+193 193 Low cloud cover (0-1)
+194 194 Medium cloud cover (0-1)
+195 195 High cloud cover (0-1)
