@@ -51,7 +51,7 @@ typedef struct grib_action_concept {
     long            len;
     grib_arguments* params;
     /* Members defined in concept */
-    grib_concept_value* concept;
+    grib_concept_value* concept_value;
     char* basename;
     char* masterDir;
     char* localDir;
@@ -134,7 +134,7 @@ int action_concept_get_nofail(grib_accessor* a)
 
 grib_action* grib_action_create_concept(grib_context* context,
                                         const char* name,
-                                        grib_concept_value* concept,
+                                        grib_concept_value* concept_value,
                                         const char* basename, const char* name_space, const char* defaultkey,
                                         const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail)
 {
@@ -169,9 +169,9 @@ grib_action* grib_action_create_concept(grib_context* context,
     if (defaultkey)
         act->defaultkey = grib_context_strdup_persistent(context, defaultkey);
 
-    a->concept = concept;
-    if (concept) {
-        grib_concept_value* conc_val = concept;
+    a->concept_value = concept_value;
+    if (concept_value) {
+        grib_concept_value* conc_val = concept_value;
         grib_trie* index             = grib_trie_new(context);
         while (conc_val) {
             conc_val->index = index;
@@ -205,7 +205,7 @@ static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_concept* self = (grib_action_concept*)act;
 
-    grib_concept_value* v = self->concept;
+    grib_concept_value* v = self->concept_value;
     if (v) {
         grib_trie_delete_container(v->index);
     }
@@ -235,8 +235,8 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
     grib_context* context = ((grib_action*)self)->context;
     grib_concept_value* c = NULL;
 
-    if (self->concept != NULL)
-        return self->concept;
+    if (self->concept_value != NULL)
+        return self->concept_value;
 
     Assert(self->masterDir);
     grib_get_string(h, self->masterDir, masterDir, &lenMasterDir);
