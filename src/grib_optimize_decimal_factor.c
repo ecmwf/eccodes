@@ -16,7 +16,7 @@
 
 static double epsilon()
 {
-    volatile double e = 1.;
+    double e = 1.;
     while (1. != (1. + e)) {
         e /= 2;
     }
