@@ -7,10 +7,12 @@ unsigned[1]  numberOfUsedTileAttributes=1 : dump; # Number of tile attributes fo
 unsigned[1]  numberOfUsedSpatialTiles=1 : dump; # Number of tiles in gridbox
 unsigned[1]  totalNumberOfTileAttributePairs=1 : dump; # Sum over all tile-attribute pairs over whole gridbox. >= 1
 unsigned[1]  tileIndex=1 : dump; # Local index of tile
+byte[16] uuidOfDataGroup : dump; # UUID of data group
 alias NT=totalNumberOfTileAttributePairs;
 alias NUT=numberOfUsedSpatialTiles;
 alias ITN=tileIndex;
 alias NAT=numberOfUsedTileAttributes;
+alias uuid=uuidOfDataGroup;
 alias ls.tileClass=tileClass;
 alias ls.attributeOfTile=attributeOfTile;
 alias tile.tileIndex=tileIndex;
@@ -19,3 +21,4 @@ alias tile.attributeOfTile=attributeOfTile;
 alias tile.numberOfUsedSpatialTiles=numberOfUsedSpatialTiles;
 alias tile.totalNumberOfTileAttributePairs=totalNumberOfTileAttributePairs;
 alias tile.numberOfUsedTileAttributes=numberOfUsedTileAttributes;
+alias tile.uuidOfDataGroup=uuidOfDataGroup;
