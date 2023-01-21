@@ -210,7 +210,13 @@ static void png_read_callback(png_structp png, png_bytep data, png_size_t length
 static void png_write_callback(png_structp png, png_bytep data, png_size_t length)
 {
     png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
-    Assert(p->offset + length <= p->length);
+    /* printf("p.offset=%zu  len=%zu p.len=%zu\n", p->offset, length, p->length); */
+    /* Assert(p->offset + length <= p->length); */
+    if (p->offset + length > p->length) {
+        /* Errors handled through png_error() are fatal, meaning that png_error() should never return to its caller.
+           Currently, this is handled via setjmp() and longjmp() */
+        png_error(png,"Failed to write PNG data");
+    }
     memcpy(p->buffer + p->offset, data, length);
     p->offset += length;
 }
@@ -611,7 +617,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     callback_data.offset = 0;
     callback_data.length = buflen;
 
-    /* printf("buflen=%d\n",buflen); */
     png_set_write_fn(png, &callback_data, png_write_callback, png_flush_callback);
 
     depth = bits8;
@@ -654,7 +659,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 cleanup:
     if (png)
         png_destroy_write_struct(&png, info ? &info : NULL);
-
 
     grib_context_buffer_free(a->context, buf);
     grib_context_buffer_free(a->context, encoded);
