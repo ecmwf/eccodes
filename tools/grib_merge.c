@@ -139,6 +139,7 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
     /* Can we do it? */
     len2 = sizeof(s2) / sizeof(*s2);
     err  = grib_get_string(h2, "gridType", s2, &len2);
+    if (err) return NULL;
     if (strcmp(s2, "regular_ll")) {
         grib_context_log(h1->context, GRIB_LOG_ERROR, "gridType=%s not supported", s2);
         return NULL;
@@ -146,6 +147,7 @@ static grib_handle* merge(grib_handle* h1, grib_handle* h2)
 
     len1 = sizeof(s1) / sizeof(*s1);
     err  = grib_get_string(h1, "gridType", s1, &len1);
+    if (err) return NULL;
     if (strcmp(s1, "regular_ll")) {
         grib_context_log(h1->context, GRIB_LOG_ERROR, "gridType=%s not supported", s1);
         return NULL;
