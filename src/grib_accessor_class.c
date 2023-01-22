@@ -289,7 +289,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
     int force_update = update > 1;
 
     while (a) {
-        register long l;
+        long l;
         /* grib_section_adjust_sizes(grib_get_sub_section(a),update,depth+1); */
         err = grib_section_adjust_sizes(a->sub_section, update, depth + 1);
         if (err)

@@ -9,4 +9,6 @@
 199 199 Rec coefficient from Biogenic Flux Adjustment System
 200 200 Surface roughness length for heat (m)
 201 201 Water runoff (m)
+202 202 Surface runoff (m)
+203 203 Snow melt (m of water equivalent)
 255 255 Missing

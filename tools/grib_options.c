@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_options
- *
- */
 #include "grib_tools.h"
 
 extern char* optarg;

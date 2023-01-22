@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_filter
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {

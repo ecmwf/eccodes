@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_dump
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -466,7 +461,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!first_handle && options->handle_count > 1) {
             fprintf(stdout, ",\n");
         }
-        if (json && first_handle) {
+        if (first_handle) {
             fprintf(stdout, "{ \"messages\" : [ \n");
             first_handle = 0;
         }
