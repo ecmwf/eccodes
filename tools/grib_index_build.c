@@ -112,9 +112,11 @@ int grib_tool_finalise_action(grib_runtime_options* options)
     grib_index_key* the_keys;
     grib_string_list* values;
     int first;
+    int err = 0;
 
     if (compress_index) {
-        grib_index_compress(idx);
+        err = grib_index_compress(idx);
+        if (err) return err;
     }
     printf("--- %s: keys included in the index file %s:\n",
            tool_name, options->outfile->name);

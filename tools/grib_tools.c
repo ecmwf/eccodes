@@ -594,7 +594,7 @@ static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
         }
     }
     closedir(d);
-    return 0;
+    return err;
 }
 #else
 static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
@@ -627,6 +627,7 @@ static int process(grib_context* c, grib_runtime_options* options, const char* p
 {
     struct stat s;
     int stat_val = 0;
+    int err = 0;
 
 #ifndef ECCODES_ON_WINDOWS
     stat_val = lstat(path, &s);
@@ -640,28 +641,29 @@ static int process(grib_context* c, grib_runtime_options* options, const char* p
     }
 
     if (S_ISDIR(s.st_mode) && !S_ISLNK(s.st_mode)) {
-        scan(c, options, path);
+        err = scan(c, options, path);
     }
     else {
-        grib_tool_new_filename_action(options, path);
+        err = grib_tool_new_filename_action(options, path);
     }
-    return 0;
+    return err;
 }
 
 static int grib_tool_onlyfiles(grib_runtime_options* options)
 {
     grib_context* c         = grib_context_get_default();
     grib_tools_file* infile = options->infile;
+    int err = 0;
 
     while (infile != NULL && infile->name != NULL) {
-        process(c, options, infile->name);
-
+        err = process(c, options, infile->name);
+        if (err) return err;
         infile = infile->next;
     }
 
-    grib_tool_finalise_action(options);
+    err = grib_tool_finalise_action(options);
 
-    return 0;
+    return err;
 }
 
 static void grib_print_header(grib_runtime_options* options, grib_handle* h)

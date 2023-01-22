@@ -218,10 +218,10 @@ int grib_index_compress(grib_index* index)
         return 0;
 
     err = grib_index_keys_compress(c, index, compress);
-    if (err)
-        return err;
+    if (err) return err;
 
-    grib_index_fields_compress(c, index->fields, 0, 0, compress);
+    err = grib_index_fields_compress(c, index->fields, 0, 0, compress);
+    if (err) return err;
 
     if (!index->fields->next) {
         grib_field_tree* next_level = index->fields->next_level;
