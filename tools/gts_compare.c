@@ -401,8 +401,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((global_handle = gts_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        grib_handle_delete(global_handle);
     }
 
     error += morein1 + morein2;

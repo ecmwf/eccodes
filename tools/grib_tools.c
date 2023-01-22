@@ -566,8 +566,7 @@ static int grib_tool_index(grib_runtime_options* options)
 
     navigate(options->index2->fields, options);
 
-    if (options->index2)
-        grib_context_free(c, options->index2->current);
+    grib_context_free(c, options->index2->current);
 
     grib_tool_finalise_action(options);
 
@@ -591,7 +590,7 @@ static int scan(grib_context* c, grib_runtime_options* options, const char* dir)
         if (strcmp(s->d_name, ".") != 0 && strcmp(s->d_name, "..") != 0) {
             char buf[1024];
             snprintf(buf, sizeof(buf), "%s/%s", dir, s->d_name);
-            process(c, options, buf);
+            err = process(c, options, buf);
         }
     }
     closedir(d);
