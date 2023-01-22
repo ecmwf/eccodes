@@ -26,6 +26,7 @@ label="grib_to_netcdf_test"
 tempGrib=temp.${label}.grib
 tempNetcdf=temp.${label}.nc
 tempText=temp.${label}.txt
+tempDir=temp.${label}.dir
 
 have_netcdf4=0
 
@@ -123,6 +124,16 @@ set -e
 grep -q "GRIB message 2 has different resolution" $tempText
 
 rm -f $tempGrib2
+
+echo "Test directory traversal ..."
+# ------------------------------------
+rm -f $tempNetcdf
+mkdir -p $tempDir/subdir
+cp ${data_dir}/regular_latlon_surface.grib2 $tempDir/subdir
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempDir > $tempText
+[ -f "$tempNetcdf" ]
+grep -q "Processing input file .*/subdir/regular_latlon_surface.grib2" $tempText
+rm -rf $tempDir
 
 # Clean up
 rm -f $tempNetcdf $tempGrib $tempText
