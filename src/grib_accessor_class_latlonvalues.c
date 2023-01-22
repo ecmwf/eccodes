@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -160,27 +155,24 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_context* c = a->context;
-    int ret         = 0;
+    int err         = 0;
     double* v       = val;
     double lat, lon, value;
     size_t size         = 0;
     long count          = 0;
-    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), 0, &ret);
-    if (ret != GRIB_SUCCESS) {
-        if (iter)
-            grib_iterator_delete(iter);
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to create iterator");
-        return ret;
+    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), 0, &err);
+    if (err) {
+        if (iter) grib_iterator_delete(iter);
+        grib_context_log(c, GRIB_LOG_ERROR, "latlonvalues: Unable to create iterator");
+        return err;
     }
 
-    ret  = value_count(a, &count);
-    if (ret)
-        return ret;
+    err  = value_count(a, &count);
+    if (err) return err;
     size = count;
 
     if (*len < size) {
-        if (iter)
-            grib_iterator_delete(iter);
+        if (iter) grib_iterator_delete(iter);
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -204,7 +196,7 @@ static int value_count(grib_accessor* a, long* count)
     int ret = GRIB_SUCCESS;
     size_t size;
     if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to get size of %s", self->values);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "latlonvalues: Unable to get size of %s", self->values);
         return ret;
     }
 

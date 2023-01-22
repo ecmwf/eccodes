@@ -206,6 +206,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     mdata = grib_handle_of_accessor(a)->buffer->data;
     mdata += grib_byte_offset(owner);
 
+    /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
+    if (a->context->debug) {
+        /* Print bit positions from 1 (MSB) */
+        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - ac->bit_index, owner->name, (*val > 0) );
+    }
     grib_set_bit(mdata, 7 - ac->bit_index, *val > 0);
 
     *len = 1;

@@ -240,8 +240,8 @@ static void minmax_val(const double* restrict data, long datasize, double* fmin,
         long i, j;
         long residual = datasize % __UNROLL_DEPTH_1;
         long ofs = datasize - residual;
-        double register dmin[__UNROLL_DEPTH_1];
-        double register dmax[__UNROLL_DEPTH_1];
+        double dmin[__UNROLL_DEPTH_1];
+        double dmax[__UNROLL_DEPTH_1];
 
         for (j = 0; j < __UNROLL_DEPTH_1; j++) {
             dmin[j] = data[0];

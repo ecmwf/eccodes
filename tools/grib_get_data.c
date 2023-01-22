@@ -82,9 +82,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int i                   = 0;
     grib_values* values     = NULL;
     grib_iterator* iter     = NULL;
-    char* format_values     = NULL;
+    char format_values[32]  = {0,};
     char format_latlons[32] = {0,};
-    char* default_format_values  = "%.10e";
+    const char* default_format_values  = "%.10e";
     const char* default_format_latlons = "%9.3f%9.3f";
     int print_keys               = grib_options_on("p:");
     long numberOfPoints          = 0;
@@ -127,10 +127,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (grib_options_on("F:")) {
-        format_values = grib_options_get_option("F:");
+        const char* str = grib_options_get_option("F:");
+        snprintf(format_values, sizeof(format_values), "%s", str);
     }
     else {
-        format_values = default_format_values;
+        snprintf(format_values, sizeof(format_values), "%s", default_format_values);
     }
 
     if (grib_options_on("L:")) {

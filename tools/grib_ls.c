@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_ls
- *
- */
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -155,7 +151,6 @@ int grib_tool_init(grib_runtime_options* options)
         nearest = NULL;
         grib_handle_delete(hh);
 
-        options->latlon_idx = -1;
         max                 = options->distances[0];
         for (i = 0; i < LATLON_SIZE; i++)
             if (max < options->distances[i]) {

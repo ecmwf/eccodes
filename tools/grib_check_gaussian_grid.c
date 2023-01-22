@@ -104,7 +104,6 @@ static int process_file(const char* filename)
         long* pl           = NULL;
         char gridType[128] = {0,};
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
-        double iDirectionIncrementInDegrees;
 
         if (err != GRIB_SUCCESS)
             GRIB_CHECK(err, 0);
@@ -134,7 +133,6 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
-        GRIB_CHECK(grib_get_double(h, "iDirectionIncrementInDegrees", &iDirectionIncrementInDegrees), 0);
 
         angular_tolerance = get_precision(edition);
 
@@ -172,10 +170,16 @@ static int process_file(const char* filename)
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
             long interpretationOfNumberOfPoints = 0;
+            long iDirectionIncrementGiven = 0;
+
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
             assert(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
             assert(err == GRIB_SUCCESS);
+            GRIB_CHECK(grib_get_long(h, "iDirectionIncrementGiven", &iDirectionIncrementGiven), 0);
+            if (iDirectionIncrementGiven) {
+                error(filename, msg_num, "For a reduced grid, iDirectionIncrementGiven should be 0\n");
+            }
             if (!is_missing_Ni) {
                 error(filename, msg_num, "For a reduced grid, Ni should be missing\n");
             }

@@ -112,14 +112,14 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
         /*TODO longitudeOfFirstGridPointInDegrees from the def file*/
         if ((ret = grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &self->lon_first)) != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_nearest_reduced.find(): unable to get longitudeOfFirstGridPointInDegrees %s\n",
+                             "grib_nearest_reduced: Unable to get longitudeOfFirstGridPointInDegrees %s\n",
                              grib_get_error_message(ret));
             return ret;
         }
         /*TODO longitudeOfLastGridPointInDegrees from the def file*/
         if ((ret = grib_get_double(h, "longitudeOfLastGridPointInDegrees", &self->lon_last)) != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_nearest_reduced.find(): unable to get longitudeOfLastGridPointInDegrees %s\n",
+                             "grib_nearest_reduced: Unable to get longitudeOfLastGridPointInDegrees %s\n",
                              grib_get_error_message(ret));
             return ret;
         }
@@ -246,7 +246,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
 
         iter = grib_iterator_new(h, 0, &ret);
         if (ret != GRIB_SUCCESS) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to create lat/lon iterator");
+            grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_reduced: Unable to create lat/lon iterator");
             return ret;
         }
         while (grib_iterator_next(iter, &lat, &lon, &dummy)) {
@@ -484,7 +484,13 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
              *    grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
              *}
              */
-            indexes[kk] = self->k[kk];
+            if (self->k[kk] >= INT_MAX) {
+                /* Current interface uses an 'int' for 'indexes' which is 32bits! We should change this to a 64bit type */
+                grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_reduced: Unable to compute index. Value too large");
+                return GRIB_OUT_OF_RANGE;
+            } else {
+                indexes[kk] = self->k[kk];
+            }
             kk++;
         }
     }

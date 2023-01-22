@@ -3025,6 +3025,12 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
 	}
+#Soil moisture
+'260368' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	}
 #Accumulated surface downward short-wave radiation flux, clear sky
 '260423' = {
 	 discipline = 0 ;
@@ -4994,6 +5000,8 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Lake mix-layer temperature
 '228008' = {
@@ -5026,6 +5034,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Lake shape factor
 '228012' = {
@@ -5048,6 +5058,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #100 metre U wind component
 '228246' = {

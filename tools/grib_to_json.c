@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
             count = size;
             GRIB_CHECK(grib_get_double_array(h, "values", values, &count), 0);
             if (count != size) {
-                printf("%s: wrong values count %lu %lu\n", argv[0], count, size);
+                fprintf(stderr, "%s: wrong values count %zu %zu\n", argv[0], count, size);
                 exit(1);
             }
             printf("\"data\":[\n");
