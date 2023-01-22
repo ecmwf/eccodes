@@ -3953,7 +3953,7 @@ static int get_precomputed_latitudes_N640(double* lats)
 /* 'trunc' is the Gaussian number (or order) */
 /* i.e. Number of parallels between a pole and the equator. */
 /* The provided 'lats' array should have allocated 2*trunc elements */
-static int _grib_get_gaussian_latitudes(long trunc, double* lats)
+static int ecc_grib_get_gaussian_latitudes(long trunc, double* lats)
 {
     long jlat, iter, legi;
     double rad2deg, convval, root, legfonc = 0;
@@ -4015,7 +4015,7 @@ int grib_get_gaussian_latitudes(long trunc, double* lats)
     if (trunc == 640)
         return get_precomputed_latitudes_N640(lats);
     else
-        return _grib_get_gaussian_latitudes(trunc, lats);
+        return ecc_grib_get_gaussian_latitudes(trunc, lats);
 }
 
 /* Boolean return type: 1 if the reduced gaussian field is global, 0 for sub area */

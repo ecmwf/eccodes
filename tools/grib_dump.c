@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_dump
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -156,6 +151,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         /* Since there are no GRIB messages, we have to stop tool exiting in case there
          * are more index files */
         options->fail = 0;
+        options->skip_all = 1; /* ECC-1516 */
     }
 
     return 0;

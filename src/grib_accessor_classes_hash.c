@@ -52,7 +52,7 @@ struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
 #endif
 #endif
 static unsigned int
-grib_accessor_classes_get_id (register const char *str, register size_t len)
+grib_accessor_classes_get_id (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -83,7 +83,7 @@ grib_accessor_classes_get_id (register const char *str, register size_t len)
       832, 832, 832, 832, 832, 832, 832, 832, 832, 832,
       832, 832, 832, 832, 832, 832
     };
-  register unsigned int hval = len;
+  unsigned int hval = len;
 
   switch (hval)
     {
@@ -705,13 +705,13 @@ static const struct accessor_class_hash classes[] =
   };
 
 static const struct accessor_class_hash *
-grib_accessor_classes_hash (register const char *str, register size_t len)
+grib_accessor_classes_hash (const char *str, size_t len)
 {
-    register unsigned int key = grib_accessor_classes_get_id (str, len);
+    unsigned int key = grib_accessor_classes_get_id (str, len);
 
 #ifdef DEBUG
     {
-        register const char *s;
+        const char *s;
         Assert( len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH );
         Assert( key <= MAX_HASH_VALUE );
         s = classes[key].name;

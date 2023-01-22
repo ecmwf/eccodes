@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 /*
  * Test encoding of grid-point LAM fields

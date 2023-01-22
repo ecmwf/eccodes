@@ -146,7 +146,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 192 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Ice temperature layer 1
 'istl1' = {

@@ -39,7 +39,7 @@ static int next         (grib_iterator* i, double *lat, double *lon, double *val
 typedef struct grib_iterator_latlon{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
     /* Members defined in regular */
     double   *las;

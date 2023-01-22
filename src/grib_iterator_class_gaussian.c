@@ -42,7 +42,7 @@ static int init        (grib_iterator* i,grib_handle*,grib_arguments*);
 typedef struct grib_iterator_gaussian{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
     /* Members defined in regular */
     double   *las;

@@ -168,7 +168,7 @@ int grib_nearest_find_multiple(
     int ret    = 0;
     long i     = 0;
     size_t len = 4;
-    int flags  = GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA;
+    const unsigned long flags  = GRIB_NEAREST_SAME_GRID | GRIB_NEAREST_SAME_DATA;
 
     if (values)
         rvalues = qvalues;
@@ -306,8 +306,8 @@ int grib_nearest_find_generic(
     double* outlats, double* outlons,
     double* values, double* distances, int* indexes, size_t* len)
 {
-    int ret = 0, i = 0;
-    size_t nvalues = 0, nneighbours = 0;
+    int ret = 0;
+    size_t i = 0, nvalues = 0, nneighbours = 0;
     double radiusInKm;
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
@@ -399,7 +399,7 @@ int grib_nearest_find_generic(
                 /*printf("Candidate: lat=%.5f lon=%.5f dist=%f Idx=%ld Val=%f\n",lat,lon,dist,the_index,the_value);*/
                 /* store this candidate point */
                 neighbours[i].m_dist  = dist;
-                neighbours[i].m_index = the_index;
+                neighbours[i].m_index = (int)the_index;
                 neighbours[i].m_lat   = lat;
                 neighbours[i].m_lon   = lon;
                 neighbours[i].m_value = the_value;
