@@ -10,6 +10,18 @@
 
 #include "grib_api_internal.h"
 
+/* For debugging purposes */
+void grib_sarray_print(const char* title, const grib_sarray* sarray)
+{
+    size_t i;
+    Assert(sarray);
+    printf("%s: sarray.n=%zu  \t", title, sarray->n);
+    for (i = 0; i < sarray->n; i++) {
+        printf("sarray[%zu]=%s\t", i, sarray->v[i]);
+    }
+    printf("\n");
+}
+
 grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
 {
     grib_sarray* v = NULL;
@@ -18,7 +30,7 @@ grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_sarray*)grib_context_malloc_clear(c, sizeof(grib_sarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_new unable to allocate %ld bytes\n", sizeof(grib_sarray));
+                         "grib_sarray_new unable to allocate %lu bytes\n", sizeof(grib_sarray));
         return NULL;
     }
     v->size    = size;
@@ -28,7 +40,7 @@ grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (char**)grib_context_malloc_clear(c, sizeof(char*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_new unable to allocate %ld bytes\n", sizeof(char*) * size);
+                         "grib_sarray_new unable to allocate %lu bytes\n", sizeof(char*) * size);
         return NULL;
     }
     return v;
@@ -45,7 +57,7 @@ static grib_sarray* grib_sarray_resize(grib_sarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_resize unable to allocate %ld bytes\n", sizeof(char*) * newsize);
+                         "grib_sarray_resize unable to allocate %lu bytes\n", sizeof(char*) * newsize);
         return NULL;
     }
     return v;
@@ -78,14 +90,16 @@ void grib_sarray_delete(grib_context* c, grib_sarray* v)
 
 void grib_sarray_delete_content(grib_context* c, grib_sarray* v)
 {
-    int i;
+    size_t i = 0;
     if (!v || !v->v)
         return;
     if (!c)
         c = grib_context_get_default();
     for (i = 0; i < v->n; i++) {
-        if (v->v[i])
+        if (v->v[i]) {
+            /*printf("grib_sarray_delete_content: %s %p\n", v->v[i], (void*)v->v[i]);*/
             grib_context_free(c, v->v[i]);
+        }
         v->v[i] = 0;
     }
     v->n = 0;
@@ -93,8 +107,8 @@ void grib_sarray_delete_content(grib_context* c, grib_sarray* v)
 
 char** grib_sarray_get_array(grib_context* c, grib_sarray* v)
 {
-    char** ret;
-    int i;
+    char** ret = NULL;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (char**)grib_context_malloc_clear(c, sizeof(char*) * v->n);

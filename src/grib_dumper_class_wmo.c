@@ -57,7 +57,7 @@ static void dump_label      (grib_dumper* d, grib_accessor* a,const char* commen
 static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_accessors* block);
 
 typedef struct grib_dumper_wmo {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in wmo */
     long section_offset;
     long begin;
@@ -305,7 +305,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     value = (char*)grib_context_malloc_clear(a->context, size);
     if (!value) {
         grib_context_log(a->context, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
@@ -344,7 +344,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_wmo* self = (grib_dumper_wmo*)d;
     int i, k, err = 0;
-    int more           = 0;
+    size_t more        = 0;
     size_t size        = a->length;
     unsigned char* buf = (unsigned char*)grib_context_malloc(d->context, size);
 
@@ -367,7 +367,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
@@ -404,7 +404,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     for (i = 0; i < d->depth; i++)
@@ -417,7 +417,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_wmo* self = (grib_dumper_wmo*)d;
     int k, err = 0;
-    int more    = 0;
+    size_t more = 0;
     double* buf = NULL;
     size_t size = 0;
     long count  = 0;
@@ -465,7 +465,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         if (size == 0)
             fprintf(self->dumper.out, "}\n");
         else
-            fprintf(self->dumper.out, " *** ERR cannot malloc(%ld) }\n", (long)size);
+            fprintf(self->dumper.out, " *** ERR cannot malloc(%zu) }\n", size);
         return;
     }
 
@@ -509,7 +509,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     }
     if (more) {
         /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
-        fprintf(self->dumper.out, "... %d more values\n", more);
+        fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
@@ -548,7 +548,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
             p++;
         }
         *q = '\0';
-        sprintf(tmp, "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
+        snprintf(tmp, sizeof(tmp), "%s ( length=%ld, padding=%ld )", upper, (long)s->length, (long)s->padding);
         fprintf(self->dumper.out, "======================   %-35s   ======================\n", tmp);
         free(upper);
         self->section_offset = a->offset;
@@ -584,7 +584,7 @@ static void print_offset(FILE* out, long begin, long theEnd)
     if (begin == theEnd)
         fprintf(out, "%-10ld", begin);
     else {
-        sprintf(tmp, "%ld-%ld", begin, theEnd);
+        snprintf(tmp, sizeof(tmp), "%ld-%ld", begin, theEnd);
         fprintf(out, "%-10s", tmp);
     }
 }

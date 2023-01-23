@@ -36,6 +36,7 @@ const char* tool_description =
     "List content of GTS files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
 const char* tool_name  = "gts_ls";
+const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
 
 /*
 This is executed before processing the options with i
-getopt and therfore it is the right place for hacking 
+getopt and therfore it is the right place for hacking
 the arguments if needed
  */
 int grib_tool_before_getopt(grib_runtime_options* options)

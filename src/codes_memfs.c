@@ -32,6 +32,7 @@ FILE* codes_fopen(const char* name, const char* mode)
     return fopen(name, mode);
 }
 
+/* Returns 0 upon success */
 int codes_access(const char* name, int mode)
 {
     /* F_OK tests for the existence of the file  */
@@ -53,6 +54,7 @@ FILE* codes_fopen(const char* name, const char* mode)
     return fopen(name, mode);
 }
 
+/* Returns 0 upon success */
 int codes_access(const char* name, int mode)
 {
     return access(name, mode);

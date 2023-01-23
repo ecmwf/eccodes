@@ -8,21 +8,17 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_index_build
- *
- */
-
 #include "grib_tools.h"
 
 const char* tool_description =
     "Build an index file for a set of input BUFR files.\n"
     "\tWarning: THIS TOOL IS STILL EXPERIMENTAL";
-const char* tool_name  = "bufr_index_build";
-const char* tool_usage = "[options] file file ... ";
+const char* tool_name       = "bufr_index_build";
+const char* tool_online_doc = NULL;
+const char* tool_usage      = "[options] file file ... ";
 grib_index* idx        = NULL;
-char* keys;
-char* default_keys = "mars";
+const char* keys;
+const char* default_keys = "mars";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */

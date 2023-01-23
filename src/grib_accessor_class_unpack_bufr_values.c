@@ -198,6 +198,16 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
+#if 0
+static const char* mode_to_str(int p)
+{
+    if (p==CODES_BUFR_UNPACK_STRUCTURE) return "CODES_BUFR_UNPACK_STRUCTURE";
+    if (p==CODES_BUFR_UNPACK_FLAT)      return "CODES_BUFR_UNPACK_FLAT";
+    if (p==CODES_BUFR_NEW_DATA)         return "CODES_BUFR_NEW_DATA";
+    return "unknown proc flag";
+}
+#endif
+
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     int unpackMode                         = CODES_BUFR_UNPACK_STRUCTURE;

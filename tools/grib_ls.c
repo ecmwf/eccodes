@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_ls
- *
- */
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -45,8 +41,9 @@ grib_option grib_options[] = {
 const char* tool_description =
     "List content of GRIB files printing values of "
     "some keys.\n\tIt does not fail when a key is not found.";
-const char* tool_name   = "grib_ls";
-const char* tool_usage  = "[options] grib_file grib_file ...";
+const char* tool_name       = "grib_ls";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_ls";
+const char* tool_usage      = "[options] grib_file grib_file ...";
 static const char* new_handle = "";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);

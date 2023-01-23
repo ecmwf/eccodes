@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-/* 
+/*
    This is used by make_class.pl
 
    START_CLASS_DEF
@@ -138,7 +138,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     int minor    = ECCODES_MINOR_VERSION;
     int revision = ECCODES_REVISION_VERSION;
 
-    sprintf(result, "%d.%d.%d", major, minor, revision);
+    snprintf(result,  sizeof(result), "%d.%d.%d", major, minor, revision);
     size = sizeof(result);
 
     if (*len < size)

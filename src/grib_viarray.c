@@ -21,10 +21,11 @@ void grib_viarray_print(const char* title, const grib_viarray* viarray)
 {
     size_t i;
     char text[100] = {0,};
+    const size_t textLen = sizeof(text);
     Assert(viarray);
-    printf("%s: viarray.n=%lu\n", title, (unsigned long)viarray->n);
+    printf("%s: viarray.n=%zu\n", title, viarray->n);
     for (i = 0; i < viarray->n; i++) {
-        sprintf(text, " viarray->v[%lu]", (unsigned long)i);
+        snprintf(text, textLen, " viarray->v[%zu]", i);
         grib_iarray_print(text, viarray->v[i]);
     }
     printf("\n");
@@ -38,7 +39,7 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_viarray*)grib_context_malloc_clear(c, sizeof(grib_viarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_new unable to allocate %ld bytes\n", sizeof(grib_viarray));
+                         "grib_viarray_new unable to allocate %lu bytes\n", sizeof(grib_viarray));
         return NULL;
     }
     v->size    = size;
@@ -48,7 +49,7 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_new unable to allocate %ld bytes\n", sizeof(grib_iarray*) * size);
+                         "grib_viarray_new unable to allocate %lu bytes\n", sizeof(grib_iarray*) * size);
         return NULL;
     }
     return v;
@@ -65,7 +66,7 @@ static grib_viarray* grib_viarray_resize(grib_viarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_viarray_resize unable to allocate %ld bytes\n", sizeof(grib_iarray*) * newsize);
+                         "grib_viarray_resize unable to allocate %lu bytes\n", sizeof(grib_iarray*) * newsize);
         return NULL;
     }
     return v;
@@ -98,7 +99,7 @@ void grib_viarray_delete(grib_context* c, grib_viarray* v)
 
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
 {
-    int i;
+    size_t i=0;
     if (!v || !v->v)
         return;
 
@@ -112,7 +113,7 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
 grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v)
 {
     grib_iarray** ret;
-    int i;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * v->n);

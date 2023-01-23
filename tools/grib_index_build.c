@@ -8,15 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_index_build
- *
- */
-
 #include "grib_tools.h"
 
 const char* tool_description = "Build an index file for a set of input GRIB files.";
 const char* tool_name        = "grib_index_build";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_index_build";
 const char* tool_usage       = "[options] grib_file grib_file ... ";
 static grib_index* idx       = NULL;
 static const char* keys;

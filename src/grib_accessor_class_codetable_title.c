@@ -184,7 +184,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     }
     else {
 #if 1
-        sprintf(tmp, "%d", (int)value);
+        snprintf(tmp, sizeof(tmp), "%d", (int)value);
 #else
         return GRIB_DECODING_ERROR;
 #endif

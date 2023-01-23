@@ -353,13 +353,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     if (sep[1] != 0 && sep[2] != 0 && sep[3] != 0 && sep[4] != 0) {
-        sprintf(val, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld", year, sep[0], month, sep[1], day, sep[2], hour, sep[3], minute, sep[4], second);
+        snprintf(val, 1024, "%04ld%c%02ld%c%02ld%c%02ld%c%02ld%c%02ld", year, sep[0], month, sep[1], day, sep[2], hour, sep[3], minute, sep[4], second);
     }
     else if (sep[0] != 0) {
-        sprintf(val, "%04ld%02ld%02ld%c%02ld%02ld%02ld", year, month, day, sep[0], hour, minute, second);
+        snprintf(val, 1024, "%04ld%02ld%02ld%c%02ld%02ld%02ld", year, month, day, sep[0], hour, minute, second);
     }
     else {
-        sprintf(val, "%04ld%02ld%02ld%02ld%02ld%02ld", year, month, day, hour, minute, second);
+        snprintf(val, 1024, "%04ld%02ld%02ld%02ld%02ld%02ld", year, month, day, hour, minute, second);
     }
     return ret;
 }

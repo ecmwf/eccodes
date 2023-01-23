@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
-#include <assert.h>
+#include "grib_api_internal.h"
 
 #define CMAP_MAX 20480
 
@@ -186,7 +185,7 @@ int main(int argc, char* argv[])
                 for (jj = 0; jj < height; jj++) {
                     for (i = 0; i < width; i++) {
                         int m = (i + width / 2) % width + jj * width;
-                        assert(k < count);
+                        Assert(k < count);
                         indices[k++] = m;
                     }
                 }

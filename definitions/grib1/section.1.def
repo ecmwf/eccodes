@@ -160,16 +160,16 @@ concept paramIdECMF (defaultParameter,"paramId.def",conceptsMasterDir,conceptsLo
 concept paramId (paramIdECMF,"paramId.def",conceptsDir2,conceptsDir1): long_type,dump;
 # transient pid = paramId : hidden;
 
-concept cfNameECMF(defaultName,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
+concept cfNameECMF(defaultName,"cfName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept cfName(cfNameECMF,"cfName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
-concept cfVarNameECMF(defaultName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
+concept cfVarNameECMF(defaultName,"cfVarName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept cfVarName(cfVarNameECMF,"cfVarName.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 concept unitsECMF(defaultName,"units.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept units(unitsECMF,"units.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
-concept nameECMF(defaultName,"name.def",conceptsMasterDir,conceptsLocalDirECMF) : dump,no_copy,read_only;
+concept nameECMF(defaultName,"name.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy,read_only;
 concept name(nameECMF,"name.def",conceptsDir2,conceptsDir1) : dump,no_copy,read_only;
 
 signed[2] decimalScaleFactor :dump;

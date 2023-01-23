@@ -649,7 +649,7 @@ static int expand(grib_accessor* a)
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unexpanded size is zero!", a->name);
         return GRIB_DECODING_ERROR;
     }
-    
+
     u = (long*)grib_context_malloc_clear(c, sizeof(long) * unexpandedSize);
     if (!u) {
         err = GRIB_OUT_OF_MEMORY;
@@ -672,7 +672,7 @@ static int expand(grib_accessor* a)
     if (err)
         return err;
 
-    sprintf(key, "%ld_%ld_%ld_%ld_%ld", centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber, u[0]);
+    snprintf(key, sizeof(key), "%ld_%ld_%ld_%ld_%ld", centre, masterTablesVersionNumber, localTablesVersionNumber, masterTablesNumber, u[0]);
     expanded = grib_context_expanded_descriptors_list_get(c, key, u, unexpandedSize);
     if (expanded) {
         self->expanded = expanded;

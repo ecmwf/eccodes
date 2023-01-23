@@ -43,7 +43,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_write {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in write */
     char *name;
     int append;
@@ -82,7 +82,6 @@ static void init_class(grib_action_class* c)
 grib_action* grib_action_create_write(grib_context* context, const char* name, int append, int padtomultiple)
 {
     char buf[1024];
-
     grib_action_write* a = NULL;
     grib_action_class* c = grib_action_class_write;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
@@ -94,7 +93,7 @@ grib_action* grib_action_create_write(grib_context* context, const char* name, i
 
     a->name = grib_context_strdup_persistent(context, name);
 
-    sprintf(buf, "write%p", (void*)a->name);
+    snprintf(buf, 1024, "write%p", (void*)a->name);
 
     act->name        = grib_context_strdup_persistent(context, buf);
     a->append        = append;
@@ -161,11 +160,12 @@ static int execute(grib_action* act, grib_handle* h)
     }
 
     if (a->padtomultiple) {
-        char* zeros;
+        char* zeros = NULL;
         size_t padding = a->padtomultiple - size % a->padtomultiple;
         /* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
         zeros = (char*)calloc(padding, 1);
-        Assert(zeros);
+        if (!zeros)
+            return GRIB_OUT_OF_MEMORY;
         if (fwrite(zeros, 1, padding, of->handle) != padding) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing to %s", filename);

@@ -105,7 +105,57 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     return 0;
 }
 
+static int find_global(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len);
+
 static int find(grib_nearest* nearest, grib_handle* h,
+                double inlat, double inlon, unsigned long flags,
+                double* outlats, double* outlons, double* values,
+                double* distances, int* indexes, size_t* len)
+{
+    int err = 0;
+    grib_nearest_latlon_reduced* self = (grib_nearest_latlon_reduced*)nearest;
+    double lat1, lat2, lon1, lon2;
+    int is_global = 1;
+
+    if (grib_get_double(h, "longitudeFirstInDegrees", &lon1) == GRIB_SUCCESS &&
+        grib_get_double(h, "longitudeLastInDegrees", &lon2) == GRIB_SUCCESS &&
+        grib_get_double(h, "latitudeFirstInDegrees", &lat1) == GRIB_SUCCESS &&
+        grib_get_double(h, "latitudeLastInDegrees", &lat2) == GRIB_SUCCESS)
+    {
+        const double difflat = fabs(lat1-lat2);
+        if (difflat < 180 || lon1 != 0 || lon2 < 359) {
+            is_global = 0; /* subarea */
+        }
+    }
+
+    if (is_global) {
+        err = find_global(nearest, h, inlat, inlon, flags,
+                outlats, outlons, values,
+                distances, indexes, len);
+    }
+    else
+    {
+        int lons_count = 0;  /*dummy*/
+        err = grib_nearest_find_generic(
+            nearest, h, inlat, inlon, flags,
+            self->values_key,
+            "Ni",
+            self->Nj,
+            &(self->lats),
+            &(self->lats_count),
+            &(self->lons),
+            &(lons_count),
+            &(self->distances),
+            outlats, outlons,
+            values, distances, indexes, len);
+    }
+    return err;
+}
+
+static int find_global(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon, unsigned long flags,
                 double* outlats, double* outlons, double* values,
                 double* distances, int* indexes, size_t* len)

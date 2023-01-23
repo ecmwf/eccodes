@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_dump
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -41,7 +36,7 @@ grib_option grib_options[] = {
 
     /*{"S",0,0,1,0,0},*/
     { "O", 0, "Octet mode. WMO documentation style dump.\n", 0, 1, 0 },
-    { "p", 0, "Plain dump (key=value format).\n", 0, 1, 0 },
+    { "p", 0, "Plain/Flat dump (key=value format).\n", 0, 1, 0 },
     /* {"D",0,0,0,1,0},  */ /* See ECC-215 */
     { "d", 0, "Dump the expanded descriptors.\n", 0, 1, 0 },
     /*{"u",0,"Print only some values.\n",0,1,0},*/
@@ -64,6 +59,7 @@ grib_option grib_options[] = {
 
 const char* tool_description = "Dump the content of a BUFR file in different formats.";
 const char* tool_name        = "bufr_dump";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/bufr_dump";
 const char* tool_usage       = "[options] bufr_file bufr_file ...";
 static int json              = 0;
 static int dump_descriptors  = 0;
@@ -232,7 +228,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     }
     else {
         char tmp[1024];
-        sprintf(tmp, "FILE: %s ", options->current_infile->name);
+        snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);
         if (!grib_options_on("p"))
             fprintf(stdout, "***** %s\n", tmp);
     }
@@ -532,7 +528,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
     else if (grib_options_on("O")) {
         char tmp[1024];
-        sprintf(tmp, "MESSAGE %d ( length=%ld )", options->handle_count, length);
+        snprintf(tmp, sizeof(tmp), "MESSAGE %d ( length=%ld )", options->handle_count, length);
         if (!grib_options_on("C"))
             fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
         grib_dump_content(h, stdout, options->dump_mode, options->dump_flags, 0);

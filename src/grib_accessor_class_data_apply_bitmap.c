@@ -356,7 +356,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 
     cidx_array = (size_t*)grib_context_malloc(a->context, count_1s * sizeof(size_t));
     cval_array = (double*)grib_context_malloc(a->context, count_1s * sizeof(double));
-    
+
     ci = 0;
     for (i = 0; i < len; i++) {
         if (val_array[i] == 1) {

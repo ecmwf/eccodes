@@ -171,7 +171,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
     if (self->endStep == NULL) {
-        sprintf(buf, "%ld", start);
+        snprintf(buf, sizeof(buf), "%ld", start);
     }
     else {
         ret = grib_get_long_internal(h, self->endStep, &theEnd);
@@ -179,10 +179,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             return ret;
 
         if (start == theEnd) {
-            sprintf(buf, "%ld", theEnd);
+            snprintf(buf, sizeof(buf), "%ld", theEnd);
         }
         else {
-            sprintf(buf, "%ld-%ld", start, theEnd);
+            snprintf(buf, sizeof(buf), "%ld-%ld", start, theEnd);
         }
     }
 
@@ -241,7 +241,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     char buff[100];
     size_t bufflen = 100;
 
-    sprintf(buff, "%ld", *val);
+    snprintf(buff, sizeof(buff), "%ld", *val);
     return pack_string(a, buff, &bufflen);
 }
 

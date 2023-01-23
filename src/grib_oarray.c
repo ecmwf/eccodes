@@ -24,7 +24,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_oarray*)grib_context_malloc_clear(c, sizeof(grib_oarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %ld bytes\n", sizeof(grib_oarray));
+                         "grib_oarray_new unable to allocate %lu bytes\n", sizeof(grib_oarray));
         return NULL;
     }
     v->size    = size;
@@ -34,7 +34,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v->context = c;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %ld bytes\n", sizeof(char*) * size);
+                         "grib_oarray_new unable to allocate %lu bytes\n", sizeof(char*) * size);
         return NULL;
     }
     return v;
@@ -51,7 +51,7 @@ static grib_oarray* grib_oarray_resize(grib_oarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_resize unable to allocate %ld bytes\n", sizeof(char*) * newsize);
+                         "grib_oarray_resize unable to allocate %lu bytes\n", sizeof(char*) * newsize);
         return NULL;
     }
     return v;
@@ -102,8 +102,8 @@ void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
 
 void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 {
-    void** ret;
-    int i;
+    void** ret = NULL;
+    size_t i = 0;
     if (!v)
         return NULL;
     ret = (void**)grib_context_malloc_clear(c, sizeof(char*) * v->n);
@@ -114,7 +114,8 @@ void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 
 void* grib_oarray_get(grib_oarray* v, int i)
 {
-    if (v == NULL || i > v->n - 1)
+    DebugAssert(i >= 0);
+    if (v == NULL || (size_t)i > v->n - 1)
         return NULL;
     return v->v[i];
 }

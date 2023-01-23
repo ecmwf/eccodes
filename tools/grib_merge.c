@@ -9,8 +9,6 @@
  */
 
 /*
- * C Implementation: grib_merge
- *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
  * Description:
  * In Observations team we need a tool to merge the GRIB messages coming from GTS.
@@ -36,6 +34,7 @@ static const char* md5Key = "md5Product";
 
 const char* tool_description = "Merge two fields with identical parameters and different geographical area";
 const char* tool_name        = "grib_merge";
+const char* tool_online_doc  = NULL;
 const char* tool_usage       = "[options] file file ... output_file";
 
 grib_option grib_options[] = {
@@ -337,7 +336,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 md5Key, grib_get_error_message(err));
         exit(err);
     }
-    sprintf(fname, "_%s.orig.grib", md5);
+    snprintf(fname, sizeof(fname), "_%s.orig.grib", md5);
     err = grib_write_message(h, fname, "a");
 
     if ((hm = merge(h, hh)) == NULL) {
@@ -349,7 +348,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                     md5Key, grib_get_error_message(err));
             exit(err);
         }
-        sprintf(fname, "_%s.merge.grib", md5);
+        snprintf(fname, sizeof(fname), "_%s.merge.grib", md5);
         grib_write_message(hh, fname, "a");
     }
     grib_handle_delete(hh);

@@ -37,7 +37,7 @@ void scan(const char* name)
         while( (e = readdir(dir)) != NULL)
         {
             if(e->d_name[0] == '.') continue;
-            sprintf(tmp,"%s/%s",name,e->d_name);
+            snprintf(tmp, 1024, "%s/%s",name,e->d_name);
             scan(tmp);
         }
 
@@ -53,12 +53,12 @@ void scan(const char* name)
     struct _finddata_t fileinfo;
     intptr_t handle;
     char tmp[1024];
-    sprintf(tmp, "%s/*", name);
+    snprintf(tmp, 1024, "%s/*", name);
     if((handle = _findfirst(tmp, &fileinfo)) != -1)
     {
         do {
             if(fileinfo.name[0] != '.') {
-                sprintf(tmp, "%s/%s", name, fileinfo.name);
+                snprintf(tmp, 1024, "%s/%s", name, fileinfo.name);
                 scan(tmp);
             }
         } while(!_findnext(handle, &fileinfo));

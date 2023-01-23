@@ -58,7 +58,7 @@ static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_encode_C {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in bufr_encode_C */
     long section_offset;
     long empty;
@@ -95,19 +95,6 @@ grib_dumper_class* grib_dumper_class_bufr_encode_C = &_grib_dumper_class_bufr_en
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix);
 
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
-
 static int depth = 0;
 
 static void init_class(grib_dumper_class* c) {}
@@ -143,20 +130,22 @@ static int destroy(grib_dumper* d)
 
 static char* lval_to_string(grib_context* c, long v)
 {
-    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
+    const size_t svalMaxLen = 40;
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_LONG)
-        sprintf(sval, "CODES_MISSING_LONG");
+        snprintf(sval, svalMaxLen, "CODES_MISSING_LONG");
     else
-        sprintf(sval, "%ld", v);
+        snprintf(sval, svalMaxLen, "%ld", v);
     return sval;
 }
 static char* dval_to_string(grib_context* c, double v)
 {
-    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
+    const size_t svalMaxLen = 40;
+    char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * svalMaxLen);
     if (v == GRIB_MISSING_DOUBLE)
-        sprintf(sval, "CODES_MISSING_DOUBLE");
+        snprintf(sval, svalMaxLen, "CODES_MISSING_DOUBLE");
     else
-        sprintf(sval, "%.18e", v);
+        snprintf(sval, svalMaxLen, "%.18e", v);
     return sval;
 }
 
@@ -239,9 +228,10 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -322,10 +312,9 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
     }
 
     if (self->isLeaf == 0) {
-        char* prefix1;
-
-        prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        const size_t prefix1MaxLen =  strlen(a->name) + strlen(prefix) + 5;
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -374,9 +363,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
             r = compute_bufr_key_rank(h, self->keys, a->name);
             if (r != 0) {
-                prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+                const size_t prefixMaxLen = strlen(a->name) + 10;
+                prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
                 dofree = 1;
-                sprintf(prefix, "#%d#%s", r, a->name);
+                snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
             }
             else
                 prefix = (char*)a->name;
@@ -462,9 +452,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -540,10 +531,9 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
 
     if (self->isLeaf == 0) {
-        char* prefix1;
-
-        prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        const size_t prefix1MaxLen = strlen(a->name) + strlen(prefix) + 5;
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * prefix1MaxLen);
+        snprintf(prefix1, prefix1MaxLen, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -587,9 +577,10 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -630,7 +621,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     self->empty = 0;
     values      = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -652,9 +643,10 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
+            const size_t prefixMaxLen = strlen(a->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -681,7 +673,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
@@ -690,7 +682,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     value = (char*)grib_context_malloc_clear(c, size);
     if (!value) {
-        grib_context_log(c, GRIB_LOG_FATAL, "unable to allocate %d bytes", (int)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -726,9 +718,10 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         int dofree = 0;
 
         if (r != 0) {
-            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(acc_name) + 10));
+            const size_t prefixMaxLen = strlen(acc_name) + 10;
+            prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, acc_name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", r, acc_name);
         }
         else
             prefix = (char*)acc_name;
@@ -789,9 +782,9 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_bufr_encode_C* self = (grib_dumper_bufr_encode_C*)d;
-    if (!grib_inline_strcmp(a->name, "BUFR") ||
-        !grib_inline_strcmp(a->name, "GRIB") ||
-        !grib_inline_strcmp(a->name, "META")) {
+    if (strcmp(a->name, "BUFR")==0 ||
+        strcmp(a->name, "GRIB")==0 ||
+        strcmp(a->name, "META")==0) {
         grib_handle* h = grib_handle_of_accessor(a);
         depth          = 2;
         self->empty    = 1;
@@ -804,7 +797,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         grib_dump_accessors_block(d, block);
         depth -= 2;
     }
-    else if (!grib_inline_strcmp(a->name, "groupNumber")) {
+    else if (strcmp(a->name, "groupNumber")==0) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         self->empty = 1;
@@ -863,12 +856,12 @@ static void header(grib_dumper* d, grib_handle* h)
     if (localSectionPresent && bufrHeaderCentre == 98) {
         grib_get_long(h, "isSatellite", &isSatellite);
         if (isSatellite)
-            sprintf(sampleName, "BUFR%ld_local_satellite", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
         else
-            sprintf(sampleName, "BUFR%ld_local", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
     }
     else {
-        sprintf(sampleName, "BUFR%ld", edition);
+        snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
     }
 
     if (d->count < 2) {

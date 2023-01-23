@@ -35,12 +35,13 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
 
 static void usage(const char* prog)
 {
-    printf("Usage: %s [-f] [-v] grib_file grib_file ...\n\n", prog);
+    printf("Usage: %s [-f] [-v] [-V] grib_file grib_file ...\n\n", prog);
     printf("Check geometry of GRIB fields with a Gaussian Grid.\n");
     printf("(The grid is assumed to be GLOBAL)\n\n");
     printf("Options:\n");
     printf("  -f  Do not exit on first error\n");
     printf("  -v  Verbose\n");
+    printf("  -V  Print the ecCodes version\n");
     printf("\n");
     exit(1);
 }
@@ -52,9 +53,9 @@ static void error(const char* filename, int msg_num, const char* fmt, ...)
     va_list list;
     va_start(list, fmt);
     if (verbose)
-        sprintf(buf, " Error: %s", fmt); /* indent a bit */
+        snprintf(buf, sizeof(buf), " Error: %s", fmt); /* indent a bit */
     else
-        sprintf(buf, "Error: %s #%d: %s", filename, msg_num, fmt);
+        snprintf(buf, sizeof(buf), "Error: %s #%d: %s", filename, msg_num, fmt);
     vfprintf(stderr, buf, list);
     va_end(list);
 
@@ -96,34 +97,34 @@ static int process_file(const char* filename)
         printf("Checking file %s\n", filename);
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
-        int is_reduced = 0, is_regular = 0, grid_ok = 0;
+        int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
         long edition = 0, N = 0, Nj = 0, numberOfDataPoints;
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
         long* pl           = NULL;
         char gridType[128] = {0,};
         double angular_tolerance, lat1, lon1, lat2, lon2, expected_lon2;
-        double iDirectionIncrementInDegrees;
 
         if (err != GRIB_SUCCESS)
             GRIB_CHECK(err, 0);
         ++msg_num;
         GRIB_CHECK(grib_get_long(h, "edition", &edition), 0);
-        if (verbose)
-            printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         len = 32;
         GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
-        is_regular = STR_EQUAL(gridType, "regular_gg");
-        is_reduced = STR_EQUAL(gridType, "reduced_gg");
-        grid_ok    = is_regular || is_reduced;
+        is_regular_gaussian = STR_EQUAL(gridType, "regular_gg");
+        is_reduced_gaussian = STR_EQUAL(gridType, "reduced_gg");
+        grid_ok    = is_regular_gaussian || is_reduced_gaussian;
         if (!grid_ok) {
             /*error("ERROR: gridType should be Reduced or Regular Gaussian Grid!\n");*/
             if (verbose)
-                printf(" WARNING: gridType=%s. It should be Reduced or Regular Gaussian Grid! Ignoring\n", gridType);
+                printf(" Note: gridType=%s. Not Gaussian so ignoring\n", gridType);
             grib_handle_delete(h);
             continue;
         }
+
+        if (verbose)
+            printf(" Processing GRIB message #%d (edition=%ld)\n", msg_num, edition);
 
         GRIB_CHECK(grib_get_long(h, "N", &N), 0);
         GRIB_CHECK(grib_get_long(h, "Nj", &Nj), 0);
@@ -132,7 +133,6 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &lon1), 0);
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
-        GRIB_CHECK(grib_get_double(h, "iDirectionIncrementInDegrees", &iDirectionIncrementInDegrees), 0);
 
         angular_tolerance = get_precision(edition);
 
@@ -165,15 +165,21 @@ static int process_file(const char* filename)
             error(filename, msg_num, "latitudeOfLastGridPointInDegrees=%f but should be %f\n", lat2, lats[Nj - 1]);
         }
 
-        if (is_reduced) {
+        if (is_reduced_gaussian) {
             int pl_sum = 0, max_pl = 0, is_missing_Ni = 0, is_missing_Di = 0;
             size_t i = 0, pl_len = 0;
             long is_octahedral = 0;
             long interpretationOfNumberOfPoints = 0;
+            long iDirectionIncrementGiven = 0;
+
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
             assert(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
             assert(err == GRIB_SUCCESS);
+            GRIB_CHECK(grib_get_long(h, "iDirectionIncrementGiven", &iDirectionIncrementGiven), 0);
+            if (iDirectionIncrementGiven) {
+                error(filename, msg_num, "For a reduced grid, iDirectionIncrementGiven should be 0\n");
+            }
             if (!is_missing_Ni) {
                 error(filename, msg_num, "For a reduced grid, Ni should be missing\n");
             }
@@ -181,15 +187,9 @@ static int process_file(const char* filename)
                 error(filename, msg_num, "For a reduced grid, iDirectionIncrement should be missing\n");
             }
 
-            GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
-            if (interpretationOfNumberOfPoints != 1) {
-                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
-                                         "(See Code Table 3.11)\n");
-            }
-
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
             assert(pl_len > 0);
-            if (pl_len != 2 * N) {
+            if (pl_len != (size_t)(2 * N)) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
@@ -223,6 +223,12 @@ static int process_file(const char* filename)
                 expected_lon2 = 360.0 - 360.0 / max_pl;
             }
             free(pl);
+
+            GRIB_CHECK(grib_get_long(h, "interpretationOfNumberOfPoints", &interpretationOfNumberOfPoints), 0);
+            if (interpretationOfNumberOfPoints != 1) {
+                error(filename, msg_num, "For a reduced grid, interpretationOfNumberOfPoints should be 1 "
+                                         "(See Code Table 3.11)\n");
+            }
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
@@ -230,7 +236,7 @@ static int process_file(const char* filename)
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);
-        if (sizeOfValuesArray != numberOfDataPoints) {
+        if (sizeOfValuesArray != (size_t)numberOfDataPoints) {
             error(filename, msg_num, "Number of data points %d different from size of values array %d\n",
                   numberOfDataPoints, sizeOfValuesArray);
         }
@@ -261,6 +267,12 @@ int main(int argc, char** argv)
                 return 1;
             }
             exit_on_error = 0;
+        }
+        else if (STR_EQUAL(arg, "-V")) {
+            printf("\necCodes Version ");
+            grib_print_api_version(stdout);
+            printf("\n\n");
+            return 0;
         }
         else if (STR_EQUAL(arg, "-v")) {
             if (argc < 3) {

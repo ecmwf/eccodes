@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -48,7 +47,7 @@ static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* 
 
 
 typedef struct grib_action_gen {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;
@@ -109,10 +108,8 @@ grib_action* grib_action_create_gen(grib_context* context, const char* name, con
         }
     }
 #endif
-    a            = (grib_action_gen*)act;
-
+    a = (grib_action_gen*)act;
     a->len = len;
-
     a->params = params;
     if (set)
         act->set = grib_context_strdup_persistent(context, set);

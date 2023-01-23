@@ -14,7 +14,7 @@
  * Description: How to decode GRIB2 multi-field messages.
  *              Try to turn the multi support on and off to
  *              see the difference. Default is OFF.
- *              For all the tools default is multi support ON.
+ *              For all the tools (e.g., grib_ls etc) multi support is ON.
  */
 #include <stdio.h>
 #include <assert.h>

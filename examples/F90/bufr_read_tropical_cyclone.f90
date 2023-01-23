@@ -50,12 +50,12 @@ program bufr_read_tropical_cyclone
     write (*, '(A,I3,A)') '**************** MESSAGE: ', count, '  *****************'
 
     ! We need to instruct ecCodes to unpack the data values
-    call codes_set(ibufr, "unpack", 1); 
-    call codes_get(ibufr, 'year', year); 
-    call codes_get(ibufr, 'month', month); 
-    call codes_get(ibufr, 'day', day); 
-    call codes_get(ibufr, 'hour', hour); 
-    call codes_get(ibufr, 'minute', minute); 
+    call codes_set(ibufr, "unpack", 1);
+    call codes_get(ibufr, 'year', year);
+    call codes_get(ibufr, 'month', month);
+    call codes_get(ibufr, 'day', day);
+    call codes_get(ibufr, 'hour', hour);
+    call codes_get(ibufr, 'minute', minute);
     write (*, '(A,I0,A,I0,A,I0,A,I0,A,I0,A,I0)') 'Date and time: ', day, '.', month, '.', year, '  ', hour, ':', minute
 
     call codes_get(ibufr, 'stormIdentifier', stormIdentifier)
@@ -86,9 +86,9 @@ program bufr_read_tropical_cyclone
     period(1) = 0
 
     ! Observed Storm Centre
-    call codes_get(ibufr, '#1#meteorologicalAttributeSignificance', significance); 
-    call codes_get(ibufr, '#1#latitude', latitudeCentre); 
-    call codes_get(ibufr, '#1#longitude', longitudeCentre); 
+    call codes_get(ibufr, '#1#meteorologicalAttributeSignificance', significance);
+    call codes_get(ibufr, '#1#latitude', latitudeCentre);
+    call codes_get(ibufr, '#1#longitude', longitudeCentre);
     if (significance /= 1) then
       print *, 'ERROR: unexpected #1#meteorologicalAttributeSignificance'
       stop 1
@@ -100,10 +100,10 @@ program bufr_read_tropical_cyclone
     end if
 
     ! Location of storm in perturbed analysis
-    call codes_get(ibufr, '#2#meteorologicalAttributeSignificance', significance); 
-    call codes_get(ibufr, '#2#latitude', latitudeAnalysis); 
-    call codes_get(ibufr, '#2#longitude', longitudeAnalysis); 
-    call codes_get(ibufr, '#1#pressureReducedToMeanSeaLevel', pressureAnalysis); 
+    call codes_get(ibufr, '#2#meteorologicalAttributeSignificance', significance);
+    call codes_get(ibufr, '#2#latitude', latitudeAnalysis);
+    call codes_get(ibufr, '#2#longitude', longitudeAnalysis);
+    call codes_get(ibufr, '#1#pressureReducedToMeanSeaLevel', pressureAnalysis);
     if (significance /= 4) then
       print *, 'ERROR: unexpected #2#meteorologicalAttributeSignificance'
       stop 1
@@ -119,14 +119,14 @@ program bufr_read_tropical_cyclone
     end if
 
     ! Location of Maximum Wind
-    call codes_get(ibufr, '#3#meteorologicalAttributeSignificance', significance); 
-    call codes_get(ibufr, '#3#latitude', latitudeMaxWind0); 
-    call codes_get(ibufr, '#3#longitude', longitudeMaxWind0); 
+    call codes_get(ibufr, '#3#meteorologicalAttributeSignificance', significance);
+    call codes_get(ibufr, '#3#latitude', latitudeMaxWind0);
+    call codes_get(ibufr, '#3#longitude', longitudeMaxWind0);
     if (significance /= 3) then
       print *, 'ERROR: unexpected #3#meteorologicalAttributeSignificance=', significance
       stop 1
     end if
-    call codes_get(ibufr, '#1#windSpeedAt10M', windMaxWind0); 
+    call codes_get(ibufr, '#1#windSpeedAt10M', windMaxWind0);
     if (size(latitudeMaxWind0) == size(memberNumber)) then
       latitudeWind(:, 1) = latitudeMaxWind0
       longitudeWind(:, 1) = longitudeMaxWind0
@@ -148,7 +148,7 @@ program bufr_read_tropical_cyclone
 
       rankPeriod = rankPeriod + 1
       write (rankPeriodStr, '(I0)') rankPeriod
-      call codes_get(ibufr, '#'//trim(rankPeriodStr)//'#timePeriod', ivalues); 
+      call codes_get(ibufr, '#'//trim(rankPeriodStr)//'#timePeriod', ivalues);
       do k = 1, size(ivalues)
         if (ivalues(k) /= CODES_MISSING_LONG) then
           period(i) = ivalues(k)
@@ -160,7 +160,7 @@ program bufr_read_tropical_cyclone
       ! Location of the storm
       rankSignificance = rankSignificance + 1
       write (rankSignificanceStr, '(I0)') rankSignificance
-      call codes_get(ibufr, '#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance', ivalues); 
+      call codes_get(ibufr, '#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance', ivalues);
       do k = 1, size(ivalues)
         if (ivalues(k) /= CODES_MISSING_LONG) then
           significance = ivalues(k)
@@ -171,15 +171,15 @@ program bufr_read_tropical_cyclone
 
       rankPosition = rankPosition + 1
       write (rankPositionStr, '(I0)') rankPosition
-      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#latitude', values); 
+      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#latitude', values);
       latitude(:, i) = values
-      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#longitude', values); 
+      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#longitude', values);
       longitude(:, i) = values
 
       if (significance == 1) then
         rankPressure = rankPressure + 1
         write (rankPressureStr, '(I0)') rankPressure
-        call codes_get(ibufr, '#'//trim(rankPressureStr)//'#pressureReducedToMeanSeaLevel', values); 
+        call codes_get(ibufr, '#'//trim(rankPressureStr)//'#pressureReducedToMeanSeaLevel', values);
         pressure(:, i) = values
       else
         print *, 'ERROR: unexpected meteorologicalAttributeSignificance=', significance
@@ -189,7 +189,7 @@ program bufr_read_tropical_cyclone
       ! Location of maximum wind
       rankSignificance = rankSignificance + 1
       write (rankSignificanceStr, '(I0)') rankSignificance
-      call codes_get(ibufr, '#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance', ivalues); 
+      call codes_get(ibufr, '#'//trim(rankSignificanceStr)//'#meteorologicalAttributeSignificance', ivalues);
       do k = 1, size(ivalues)
         if (ivalues(k) /= CODES_MISSING_LONG) then
           significance = ivalues(k)
@@ -200,15 +200,15 @@ program bufr_read_tropical_cyclone
 
       rankPosition = rankPosition + 1
       write (rankPositionStr, '(I0)') rankPosition
-      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#latitude', values); 
+      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#latitude', values);
       latitudeWind(:, i) = values
-      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#longitude', values); 
+      call codes_get(ibufr, '#'//trim(rankPositionStr)//'#longitude', values);
       longitudeWind(:, i) = values
 
       if (significance == 3) then
         rankWind = rankWind + 1
         write (rankWindStr, '(I0)') rankWind
-        call codes_get(ibufr, '#'//trim(rankWindStr)//'#windSpeedAt10M', values); 
+        call codes_get(ibufr, '#'//trim(rankWindStr)//'#windSpeedAt10M', values);
         wind(:, i) = values
       else
         print *, 'ERROR: unexpected meteorologicalAttributeSignificance=,', significance

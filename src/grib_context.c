@@ -13,15 +13,15 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #ifndef ECCODES_ON_WINDOWS
-#include <unistd.h>
+ #include <unistd.h>
 #else
-#include <fcntl.h> /* Windows: for _O_BINARY */
+ #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#define _GNU_SOURCE
-#include <fenv.h>
-int feenableexcept(int excepts);
+ #define _GNU_SOURCE
+ #include <fenv.h>
+ int feenableexcept(int excepts);
 #endif
 
 grib_string_list grib_file_not_found;
@@ -29,11 +29,11 @@ grib_string_list grib_file_not_found;
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
 #ifdef ECCODES_ON_WINDOWS
-#define ECC_PATH_DELIMITER_CHAR ';'
-#define ECC_PATH_DELIMITER_STR ";"
+ #define ECC_PATH_DELIMITER_CHAR ';'
+ #define ECC_PATH_DELIMITER_STR ";"
 #else
-#define ECC_PATH_DELIMITER_CHAR ':'
-#define ECC_PATH_DELIMITER_STR ":"
+ #define ECC_PATH_DELIMITER_CHAR ':'
+ #define ECC_PATH_DELIMITER_STR ":"
 #endif
 
 #if GRIB_PTHREADS
@@ -84,7 +84,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -100,7 +100,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -111,7 +111,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -127,7 +127,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -138,7 +138,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return ret;
@@ -242,20 +242,22 @@ static void default_print(const grib_context* c, void* descriptor, const char* m
 
 void grib_context_set_print_proc(grib_context* c, grib_print_proc p)
 {
-    c        = c ? c : grib_context_get_default();
-    c->print = p;
+    c = c ? c : grib_context_get_default();
+    /* Set logging back to the default if p is NULL */
+    c->print = (p ? p : &default_print);
 }
 
 void grib_context_set_debug(grib_context* c, int mode)
 {
-    c        = c ? c : grib_context_get_default();
+    c = c ? c : grib_context_get_default();
     c->debug = mode;
 }
 
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc p)
 {
-    c             = c ? c : grib_context_get_default();
-    c->output_log = p;
+    c = c ? c : grib_context_get_default();
+    /* Set logging back to the default if p is NULL */
+    c->output_log = (p ? p : &default_log);
 }
 
 long grib_get_api_version()
@@ -494,7 +496,7 @@ grib_context* grib_context_get_default()
             const char* defs_extra = getenv("ECCODES_EXTRA_DEFINITION_PATH");
             if (defs_extra) {
                 char buffer[ECC_PATH_MAXLEN]= {0,};
-                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
+                snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", defs_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_definition_files_path);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
             }
@@ -504,7 +506,7 @@ grib_context* grib_context_get_default()
             /* ECC-1088 */
             if (strstr(default_grib_context.grib_definition_files_path, ECCODES_DEFINITION_PATH) == NULL) {
                 char buffer[ECC_PATH_MAXLEN]= {0,};
-                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
+                snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_definition_files_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_DEFINITION_PATH);
                 free(default_grib_context.grib_definition_files_path);
                 default_grib_context.grib_definition_files_path = strdup(buffer);
@@ -517,7 +519,7 @@ grib_context* grib_context_get_default()
             const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
             if (samples_extra) {
                 char buffer[ECC_PATH_MAXLEN];
-                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
+                snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
@@ -525,7 +527,7 @@ grib_context* grib_context_get_default()
         {
             if (strstr(default_grib_context.grib_samples_path, ECCODES_SAMPLES_PATH) == NULL) {
                 char buffer[ECC_PATH_MAXLEN];
-                ecc_snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
+                snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
@@ -628,6 +630,7 @@ static int init_definition_files_dir(grib_context* c)
     int err = 0;
     char path[ECC_PATH_MAXLEN];
     char* p                = NULL;
+    char* lasts            = NULL;
     grib_string_list* next = NULL;
 
     if (!c)
@@ -638,7 +641,7 @@ static int init_definition_files_dir(grib_context* c)
     if (!c->grib_definition_files_path)
         return GRIB_NO_DEFINITIONS;
 
-    /* Note: strtok modifies its first argument so we copy */
+    /* Note: strtok_r modifies its first argument so we copy */
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
@@ -657,7 +660,7 @@ static int init_definition_files_dir(grib_context* c)
     else {
         /* Definitions path contains multiple directories */
         char* dir = NULL;
-        dir       = strtok(path, ECC_PATH_DELIMITER_STR);
+        dir       = strtok_r(path, ECC_PATH_DELIMITER_STR, &lasts);
 
         while (dir != NULL) {
             if (next) {
@@ -669,7 +672,7 @@ static int init_definition_files_dir(grib_context* c)
                 next                         = c->grib_definition_files_dir;
             }
             next->value = codes_resolve_path(c, dir);
-            dir         = strtok(NULL, ECC_PATH_DELIMITER_STR);
+            dir         = strtok_r(NULL, ECC_PATH_DELIMITER_STR, &lasts);
         }
     }
 
@@ -712,8 +715,8 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
         dir = c->grib_definition_files_dir;
 
         while (dir) {
-            sprintf(full, "%s/%s", dir->value, basename);
-            if (!codes_access(full, F_OK)) {
+            snprintf(full, sizeof(full), "%s/%s", dir->value, basename);
+            if (codes_access(full, F_OK) == 0) { /* 0 means file exists */
                 fullpath = (grib_string_list*)grib_context_malloc_clear_persistent(c, sizeof(grib_string_list));
                 Assert(fullpath);
                 fullpath->value = grib_context_strdup(c, full);
@@ -722,6 +725,8 @@ char* grib_context_full_defs_path(grib_context* c, const char* basename)
                 grib_context_log(c, GRIB_LOG_DEBUG, "Found def file %s", full);
                 GRIB_MUTEX_UNLOCK(&mutex_c);
                 return fullpath->value;
+            } else {
+                grib_context_log(c, GRIB_LOG_DEBUG, "Nonexistent def file %s", full);
             }
             dir = dir->next;
         }
@@ -900,7 +905,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
     void* p = c->alloc_persistent_mem(c, size);
     if (!p) {
         grib_context_log(c, GRIB_LOG_FATAL,
-                         "grib_context_malloc_persistent: error allocating %lu bytes", (unsigned long)size);
+                         "grib_context_malloc_persistent: error allocating %zu bytes", size);
         Assert(0);
     }
     return p;
@@ -932,7 +937,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %zu bytes", size);
         Assert(0);
     }
     return p;
@@ -945,7 +950,7 @@ void* grib_context_realloc(const grib_context* c, void* p, size_t size)
         c = grib_context_get_default();
     q = c->realloc_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %zu bytes", size);
         return NULL;
     }
     return q;
@@ -980,7 +985,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_buffer_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %zu bytes", size);
         return NULL;
     }
     return p;
@@ -998,7 +1003,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* q = c->realloc_buffer_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %lu bytes", (unsigned long)size);
+        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %zu bytes", size);
         return NULL;
     }
     return q;
@@ -1053,7 +1058,7 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
         const int errsv = errno;
 
         va_start(list, fmt);
-        vsprintf(msg, fmt, list);
+        vsnprintf(msg, sizeof(msg), fmt, list);
         va_end(list);
 
         if (level & GRIB_LOG_PERROR) {
@@ -1084,7 +1089,7 @@ void grib_context_print(const grib_context* c, void* descriptor, const char* fmt
     char msg[1024];
     va_list list;
     va_start(list, fmt);
-    vsprintf(msg, fmt, list);
+    vsnprintf(msg, sizeof(msg), fmt, list);
     va_end(list);
     c->print(c, descriptor, msg);
 }
@@ -1240,7 +1245,7 @@ void codes_assertion_failed(const char* message, const char* file, int line)
     }
     else {
         char buffer[10240];
-        sprintf(buffer, "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
+        snprintf(buffer, sizeof(buffer), "ecCodes assertion failed: `%s' in %s:%d", message, file, line);
         assertion(buffer);
     }
 }

@@ -39,6 +39,7 @@ const char* tool_description =
     "Print a latitude, longitude, data values list.\n"
     "\tNote: Rotated grids are first unrotated";
 const char* tool_name  = "grib_get_data";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_get_data";
 const char* tool_usage = "[options] grib_file grib_file ...";
 
 extern FILE* dump_file;
@@ -81,9 +82,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int i                   = 0;
     grib_values* values     = NULL;
     grib_iterator* iter     = NULL;
-    char* format_values     = NULL;
+    char format_values[32]  = {0,};
     char format_latlons[32] = {0,};
-    char* default_format_values  = "%.10e";
+    const char* default_format_values  = "%.10e";
     const char* default_format_latlons = "%9.3f%9.3f";
     int print_keys               = grib_options_on("p:");
     long numberOfPoints          = 0;
@@ -126,10 +127,11 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     }
 
     if (grib_options_on("F:")) {
-        format_values = grib_options_get_option("F:");
+        const char* str = grib_options_get_option("F:");
+        snprintf(format_values, sizeof(format_values), "%s", str);
     }
     else {
-        format_values = default_format_values;
+        snprintf(format_values, sizeof(format_values), "%s", default_format_values);
     }
 
     if (grib_options_on("L:")) {
@@ -142,10 +144,10 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                     str, default_format_latlons);
             exit(1);
         }
-        sprintf(format_latlons, "%s ", str); /* Add a final space to separate from data values */
+        snprintf(format_latlons, sizeof(format_latlons), "%s ", str); /* Add a final space to separate from data values */
     }
     else {
-        sprintf(format_latlons, "%s ", default_format_latlons);
+        snprintf(format_latlons, sizeof(format_latlons), "%s ", default_format_latlons);
     }
 
     if ((err = grib_get_long(h, "numberOfPoints", &numberOfPoints)) != GRIB_SUCCESS) {
@@ -158,8 +160,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     num_bytes   = (numberOfPoints + 1) * sizeof(double);
     data_values = (double*)calloc(numberOfPoints + 1, sizeof(double));
     if (!data_values) {
-        fprintf(stderr, "ERROR: Failed to allocate %ld bytes for data values (number of points=%ld)\n",
-                (long)num_bytes, numberOfPoints);
+        fprintf(stderr, "ERROR: Failed to allocate %zu bytes for data values (number of points=%ld)\n",
+                num_bytes, numberOfPoints);
         exit(GRIB_OUT_OF_MEMORY);
     }
 
@@ -180,9 +182,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                              grib_get_error_message(err));
             exit(1);
         }
-        if (size != numberOfPoints) {
+        if (size != (size_t)numberOfPoints) {
             if (!grib_options_on("q"))
-                fprintf(stderr, "ERROR: Wrong number of points %d\n", (int)numberOfPoints);
+                fprintf(stderr, "ERROR: Wrong number of points %ld\n", numberOfPoints);
             if (grib_options_on("f"))
                 exit(1);
         }
@@ -315,7 +317,7 @@ static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h
 
         if (grib_is_missing(h, options->print_keys[i].name, &ret) && ret == GRIB_SUCCESS) {
             options->print_keys[i].type = GRIB_TYPE_MISSING;
-            sprintf(value, "MISSING");
+            snprintf(value, sizeof(value), "MISSING");
         }
         else if (ret != GRIB_NOT_FOUND) {
             if (options->print_keys[i].type == GRIB_TYPE_UNDEFINED) {
@@ -329,12 +331,12 @@ static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h
                 case GRIB_TYPE_DOUBLE:
                     ret = grib_get_double(h, options->print_keys[i].name,
                                           &(options->print_keys[i].double_value));
-                    sprintf(value, "%g", options->print_keys[i].double_value);
+                    snprintf(value, sizeof(value), "%g", options->print_keys[i].double_value);
                     break;
                 case GRIB_TYPE_LONG:
                     ret = grib_get_long(h, options->print_keys[i].name,
                                         &(options->print_keys[i].long_value));
-                    sprintf(value, "%ld", (long)options->print_keys[i].long_value);
+                    snprintf(value, sizeof(value), "%ld", (long)options->print_keys[i].long_value);
                     break;
                 default:
                     fprintf(dump_file, "invalid type for %s\n", options->print_keys[i].name);

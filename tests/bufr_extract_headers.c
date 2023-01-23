@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     filename = argv[1];
     err = codes_extract_offsets_malloc(c, filename, PRODUCT_GRIB, &offsets, &num_messages, strict_mode);
     assert(!err);
-    
+
     for (i = 0; i < num_messages; ++i) {
         printf("Message #%d: %lu\n", i, offsets[i]);
     }

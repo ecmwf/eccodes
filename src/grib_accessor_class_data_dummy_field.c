@@ -17,8 +17,8 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_data_g1simple_packing
    IMPLEMENTS = init
-   IMPLEMENTS = unpack_double 
-   IMPLEMENTS = value_count 
+   IMPLEMENTS = unpack_double
+   IMPLEMENTS = value_count
    IMPLEMENTS = pack_double
    MEMBERS=const char*  missing_value
    MEMBERS=const char*  numberOfPoints

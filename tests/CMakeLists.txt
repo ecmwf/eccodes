@@ -49,6 +49,14 @@ list(APPEND test_c_bins
     grib_lam_bf
     grib_lam_gp)
 
+if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    foreach( _bin ${test_c_bins} )
+        SET( _src ${_bin}.c )
+        set_source_files_properties( ${_src} PROPERTIES LANGUAGE CXX )
+    endforeach()
+endif()
+
+
 foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
@@ -197,6 +205,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-887
         bufr_ecc-1187
         bufr_ecc-1305
+        bufr_ecc-1476
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -332,18 +341,6 @@ if( HAVE_BUILD_TOOLS )
         set_tests_properties( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500 )
     endif()
 
-
-    if( HAVE_PYTHON2 AND ENABLE_EXTRA_TESTS )
-        list( APPEND ptests bufr_dump_decode_python )
-        # list( APPEND ptests bufr_dump_encode_python )
-        foreach( test ${ptests} )
-            ecbuild_add_test( TARGET eccodes_t_${test}
-                              TYPE SCRIPT
-                              COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                              ENVIRONMENT PYTHON=${PYTHON_EXECUTABLE} PYTHONPATH=${PROJECT_BINARY_DIR}/python
-                              TEST_DEPENDS eccodes_download_bufrs )
-        endforeach()
-    endif()
 
     ###########################################
     # Note: the reference file is in the tests dir not data dir!

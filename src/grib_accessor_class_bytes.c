@@ -171,7 +171,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     p = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);
 
     for (i = 0; i < length; i++) {
-        sprintf(s, "%02x", *(p++));
+        snprintf(s, INT_MAX, "%02x", *(p++));
         s += 2;
     }
 

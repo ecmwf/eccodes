@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_copy
- *
- */
-
 #include "grib_tools.h"
 
 const char* tool_description =
@@ -20,6 +15,7 @@ const char* tool_description =
     " values of some keys."
     "\n\tIf the name of the output_grib_file contains a key enclosed in square brackets, its value will be used.";
 const char* tool_name  = "grib_copy";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_copy";
 const char* tool_usage = "[options] grib_file grib_file ... output_grib_file";
 
 grib_option grib_options[] = {

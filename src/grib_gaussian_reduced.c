@@ -314,7 +314,7 @@ void grib_get_reduced_row_wrapper(grib_handle* h, long pl, double lon_first, dou
 {
     grib_get_reduced_row(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
 
-    /* Legacy 
+    /* Legacy
      * grib_get_reduced_row1(pl, lon_first, lon_last, npoints, ilon_first, ilon_last);
      */
 }

@@ -45,8 +45,9 @@ const char* tool_description =
     "\n\tFloating-point values are compared exactly by default, different tolerances can be defined (see -A -R)."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
-const char* tool_name  = "bufr_compare";
-const char* tool_usage = "[options] bufr_file1 bufr_file2";
+const char* tool_name       = "bufr_compare";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_compare";
+const char* tool_usage      = "[options] bufr_file1 bufr_file2";
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 {
@@ -155,7 +156,7 @@ static void write_message(grib_handle* h, const char* str)
     FILE* fh;
 
     grib_get_message(h, &m, &s);
-    sprintf(fname, "%s_%d.bufr", str, write_count);
+    snprintf(fname, sizeof(fname), "%s_%d.bufr", str, write_count);
 
     fh = fopen(fname, "w");
     if (!fh) {
@@ -381,7 +382,7 @@ int grib_tool_init(grib_runtime_options* options)
                 /* Take the filename of the 1st file and append to dir */
                 char bufr[2048] = {0,};
                 /* options->infile_extra->name is the 1st file */
-                sprintf(bufr, "%s%c%s",
+                snprintf(bufr, sizeof(bufr), "%s%c%s",
                         infile->name,
                         get_dir_separator_char(),
                         extract_filename(options->infile_extra->name));
@@ -559,8 +560,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((global_handle = codes_bufr_handle_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        grib_handle_delete(global_handle);
     }
 
     error += morein1 + morein2;
@@ -636,9 +636,9 @@ static char* double_as_string(grib_context* c, double v)
 {
     char* sval = (char*)grib_context_malloc_clear(c, sizeof(char) * 40);
     if (v == GRIB_MISSING_DOUBLE)
-        sprintf(sval, "MISSING");
+        snprintf(sval, 32, "MISSING");
     else
-        sprintf(sval, "%.20e", v);
+        snprintf(sval, 32, "%.20e", v);
     return sval;
 }
 
@@ -889,7 +889,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
                 if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                     printInfo(handle1);
-                    printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                    printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                     err1 = GRIB_INTERNAL_ERROR;
                     save_error(c, name);
                 }
@@ -907,7 +907,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                         if (len1 == 1)
                             printf("string [%s]: [%s] != [%s]\n", name, *svals1, *svals2);
                         else
-                            printf("string [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                            printf("string [%s] %d out of %zu different\n", name, countdiff, len1);
                     }
                 }
                 for (ii = 0; ii < len1; ++ii) grib_context_free(c, svals1[ii]);
@@ -945,12 +945,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(handle1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 err1 = GRIB_INTERNAL_ERROR;
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int ii;
+                size_t ii;
                 countdiff = 0;
                 for (ii = 0; ii < len1; ii++)
                     if (lval1[ii] != lval2[ii])
@@ -963,7 +963,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     if (len1 == 1)
                         printf("long [%s]: [%ld] != [%ld]\n", name, *lval1, *lval2);
                     else
-                        printf("long [%s] %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("long [%s] %d out of %zu different\n", name, countdiff, len1);
                 }
             }
 
@@ -1030,7 +1030,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 != len2) {
                 printInfo(handle1);
-                printf("Different size for \"%s\"  [%ld]  [%ld]\n", name, (long)len1, (long)len2);
+                printf("Different size for \"%s\"  [%zu]  [%zu]\n", name, len1, len2);
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
@@ -1074,7 +1074,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                     printInfo(handle1);
                     save_error(c, name);
                     if (len1 > 1) {
-                        printf("double [%s]: %d out of %ld different\n", name, countdiff, (long)len1);
+                        printf("double [%s]: %d out of %zu different\n", name, countdiff, len1);
                         if (dval1[imaxdiff] != GRIB_MISSING_DOUBLE && dval2[imaxdiff] != GRIB_MISSING_DOUBLE) {
                             if (compareAbsolute)
                                 printf(" max");
@@ -1238,8 +1238,9 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 {
     int ret         = 0;
     grib_context* c = handle1->context;
-    char* fullname  = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-    sprintf(fullname, "%s->%s", prefix, a->name);
+    const size_t fullnameMaxLen = strlen(a->name) + strlen(prefix) + 5;
+    char* fullname  = (char*)grib_context_malloc_clear(c, sizeof(char) * fullnameMaxLen);
+    snprintf(fullname, fullnameMaxLen, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         (*err)++;
         write_messages(handle1, handle2);
@@ -1279,9 +1280,8 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         }
     }
     iter = grib_keys_iterator_new(handle1, 0, NULL);
-
     if (!iter) {
-        grib_context_log(context, GRIB_LOG_ERROR, "unable to create keys iterator");
+        grib_context_log(context, GRIB_LOG_ERROR, "unable to create the BUFR keys iterator");
         exit(1);
     }
 
@@ -1304,9 +1304,10 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         /* Get full name of key, e.g. '#2#windSpeed' or 'blockNumber' */
         rank = compute_bufr_key_rank(handle1, keys_list, xa->name);
         if (rank != 0) {
-            prefix = (char*)grib_context_malloc_clear(context, sizeof(char) * (strlen(xa->name) + 10));
+            const size_t prefixMaxLen = strlen(xa->name) + 10;
+            prefix = (char*)grib_context_malloc_clear(context, sizeof(char) * prefixMaxLen);
             dofree = 1;
-            sprintf(prefix, "#%d#%s", rank, xa->name);
+            snprintf(prefix, prefixMaxLen, "#%d#%s", rank, xa->name);
         }
         else {
             prefix = (char*)xa->name;

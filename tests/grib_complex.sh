@@ -29,3 +29,11 @@ for file in $files; do
 
   rm -f $temp $temp1 $temp2
 done
+
+# ECC-523
+infile=${data_dir}/gfs.complex.mvmu.grib2
+grib_check_key_equals $infile 'missingValueManagementUsed,bitmapPresent' '1 0'
+grib_check_key_equals $infile 'numberOfMissing,numberOfMissingValues' '556901 556901'
+infile=${data_dir}/gfs.c255.grib2
+grib_check_key_equals $infile 'missingValueManagementUsed,bitmapPresent' '0 1'
+grib_check_key_equals $infile 'numberOfMissing,numberOfMissingValues' '7665 7665'

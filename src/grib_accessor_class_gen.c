@@ -24,7 +24,7 @@
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = unpack_string_array;pack_string_array
    IMPLEMENTS = unpack_bytes;pack_bytes
-   IMPLEMENTS = unpack_double_subarray 
+   IMPLEMENTS = unpack_double_subarray
    IMPLEMENTS = init;dump;destroy;string_length
    IMPLEMENTS = get_native_type;sub_section
    IMPLEMENTS = next_offset;value_count;byte_offset;byte_count
@@ -343,7 +343,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         double val = 0.0;
         size_t l   = 1;
         grib_unpack_double(a, &val, &l);
-        sprintf(v, "%g", val);
+        snprintf(v, 64, "%g", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
         return GRIB_SUCCESS;
@@ -353,7 +353,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
-        sprintf(v, "%ld", val);
+        snprintf(v, 64, "%ld", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string  \n", a->name);
         return GRIB_SUCCESS;
@@ -367,7 +367,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
     int err       = 0;
     size_t length = 0;
 
-    err = _grib_get_string_length(a, &length);
+    err = ecc__grib_get_string_length(a, &length);
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);

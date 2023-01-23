@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_dump
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -41,6 +36,7 @@ grib_option grib_options[] = {
 
 const char* tool_description = "Dump the content of a GRIB file in different formats.";
 const char* tool_name        = "grib_dump";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_dump";
 const char* tool_usage       = "[options] grib_file grib_file ...";
 static int json              = 0;
 static int first_handle      = 1;
@@ -132,7 +128,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     Assert(file);
     exit_if_input_is_directory(tool_name, file->name);
 
-    sprintf(tmp, "FILE: %s ", options->current_infile->name);
+    snprintf(tmp, sizeof(tmp), "FILE: %s ", options->current_infile->name);
     if (!grib_options_on("C"))
         fprintf(stdout, "***** %s\n", tmp);
 
@@ -211,7 +207,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         char tmp[1024];
         char identifier[100];
         size_t idlen = 100;
-        sprintf(tmp, "MESSAGE %d ( length=%ld )", options->handle_count, length);
+        snprintf(tmp, sizeof(tmp), "MESSAGE %d ( length=%ld )", options->handle_count, length);
         if (!grib_options_on("C"))
             fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
         if (!strcmp(options->dump_mode, "default")) {

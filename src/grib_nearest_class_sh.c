@@ -100,7 +100,8 @@ static int find(grib_nearest* nearest, grib_handle* h,
     grib_nearest_sh* self = (grib_nearest_sh*)nearest;
     long J, K, M;
     double* values;
-    int size, i, ret;
+    int i, ret;
+    size_t size = 0;
     size_t vsize = 0;
     double val;
 
@@ -116,8 +117,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
     values = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
     if (!values) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "nearest_sh: Error allocating %ld bytes",
-                         sizeof(double) * size);
+                         "nearest_sh: Error allocating %zu bytes", sizeof(double) * size);
         return GRIB_OUT_OF_MEMORY;
     }
 

@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     double *lat1, *lat2, *lat, *glat;
     size_t size1, size2, size, gsize;
     double err1, err2, err;
-    int i, j;
+    size_t i, j;
     grib_context* c;
     grib_iterator *iter1, *iter2;
 

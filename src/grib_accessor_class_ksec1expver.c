@@ -212,6 +212,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     char sval[5] = {0,};
     size_t slen = 4;
-    sprintf(sval, "%04d", (int)(*val));
+    snprintf(sval, sizeof(sval), "%04d", (int)(*val));
     return pack_string(a, sval, &slen);
 }

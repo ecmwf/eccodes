@@ -18,7 +18,7 @@ program copy_namespace
 
    call codes_open_file(file1, '../../data/reduced_latlon_surface.grib2', 'r')
    call codes_open_file(file2, '../../data/regular_latlon_surface.grib1', 'r')
-   call codes_open_file(file3, 'out.grib_copy_namespace.grib', 'w')
+   call codes_open_file(file3, 'temp.grib_copy_namespace_test_f.grib', 'w')
 
    call codes_grib_new_from_file(file1, igrib1)
    call codes_grib_new_from_file(file2, igrib2)

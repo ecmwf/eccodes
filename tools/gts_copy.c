@@ -14,6 +14,7 @@ const char* tool_description =
     "Copies the content of GTS files printing"
     " values of some keys.";
 const char* tool_name  = "gts_copy";
+const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ... output_file";
 
 grib_option grib_options[] = {

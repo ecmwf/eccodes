@@ -9,7 +9,7 @@
  */
 
 /***************************************************************************
- *  Enrico Fucile                                                                         *
+ *  Enrico Fucile                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -45,7 +45,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_assert {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in assert */
     grib_expression *expression;
 } grib_action_assert;

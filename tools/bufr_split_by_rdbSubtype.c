@@ -31,7 +31,7 @@ static void usage(const char* prog)
 
 /* If rdbSubtype can be extracted, return GRIB_SUCCESS otherwise error code. */
 /* If BUFR message does not have an ECMWF local section, set rdbSubtype to -1 */
-static int decode_rdbSubtype(const void* message, long* rdbSubtype)
+static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 {
     int err                         = GRIB_SUCCESS;
     long edition                    = 0;
@@ -49,6 +49,7 @@ static int decode_rdbSubtype(const void* message, long* rdbSubtype)
 
     long pos_section1Length      = 8 * 8;
     int ecmwfLocalSectionPresent = 0;
+    const unsigned char* message = (const unsigned char*)msg;
 
     Assert(message);
     *rdbSubtype = -1; /* default */
@@ -111,7 +112,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
 
     if (!in)
         return 1;
-    sprintf(ofilename, "%s", OUTPUT_FILENAME_DEFAULT); /*default name*/
+    snprintf(ofilename, 2048, "%s", OUTPUT_FILENAME_DEFAULT); /*default name*/
 
     while (err != GRIB_END_OF_FILE) {
         mesg = wmo_read_bufr_from_file_malloc(in, 0, &size, &offset, &err);
@@ -124,9 +125,9 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
                 return status;
             }
 
-            sprintf(ofilename, "%s", OUTPUT_FILENAME_DEFAULT);
+            snprintf(ofilename, 2048, "%s", OUTPUT_FILENAME_DEFAULT);
             if (rdbSubtype != -1)
-                sprintf(ofilename, OUTPUT_FILENAME_SUBTYPE, rdbSubtype);
+                snprintf(ofilename, 2048, OUTPUT_FILENAME_SUBTYPE, rdbSubtype);
 
             if (verbose) {
                 if (!path_is_regular_file(ofilename))

@@ -58,6 +58,8 @@
 71 fx Flux forcing
 72 fu Fill-up
 73 sfo Simulations with forcing
+74 tpa Time processed analysis
+75 if Interim forecast
 80 fcmean Forecast mean
 81 fcmax Forecast maximum
 82 fcmin Forecast minimum

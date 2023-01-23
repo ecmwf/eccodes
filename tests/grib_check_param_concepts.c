@@ -86,15 +86,15 @@ static int grib_check_param_concepts(const char* key, const char* filename)
             /* condition_name is discipline, parameterCategory etc. */
             if (strcmp(expression->cclass->name, "long") == 0) {
                 grib_expression_long* el = (grib_expression_long*)expression;
-                sprintf(condition_value, "%ld", el->value);
+                snprintf(condition_value, sizeof(condition_value), "%ld", el->value);
             }
             else if (strcmp(expression->cclass->name, "functor") == 0) {
                 grib_expression_functor* ef = (grib_expression_functor*)expression;
-                sprintf(condition_value, "%s", ef->name);
+                snprintf(condition_value, sizeof(condition_value), "%s", ef->name);
             }
             else if (strcmp(expression->cclass->name, "string") == 0) {
                 grib_expression_string* es = (grib_expression_string*)expression;
-                sprintf(condition_value, "%s", es->value);
+                snprintf(condition_value, sizeof(condition_value), "%s", es->value);
             }
             else {
                 fprintf(stderr, "%s %s: Unknown class name: '%s'\n",

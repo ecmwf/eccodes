@@ -33,7 +33,7 @@ static const struct table_entry table[] = {
 
 grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args)
 {
-    int i;
+    size_t i   = 0;
     int ret    = GRIB_SUCCESS;
     char* type = (char*)grib_arguments_get_name(h, args, 0);
 

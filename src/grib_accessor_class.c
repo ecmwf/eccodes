@@ -228,7 +228,7 @@ static void link_same_attributes(grib_accessor* a, grib_accessor* b)
     if (!grib_accessor_has_attributes(b))
         return;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-        bAttribute = _grib_accessor_get_attribute(b, a->attributes[i]->name, &idx);
+        bAttribute = ecc__grib_accessor_get_attribute(b, a->attributes[i]->name, &idx);
         if (bAttribute)
             a->attributes[i]->same = bAttribute;
         i++;
@@ -289,7 +289,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
     int force_update = update > 1;
 
     while (a) {
-        register long l;
+        long l;
         /* grib_section_adjust_sizes(grib_get_sub_section(a),update,depth+1); */
         err = grib_section_adjust_sizes(a->sub_section, update, depth + 1);
         if (err)
@@ -300,7 +300,9 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
 
         if (offset != a->offset) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "Offset mismatch %s A->offset %ld offset %ld\n", a->name, (long)a->offset, (long)offset);
+                             "Offset mismatch accessor=%s: accessor's offset=%ld, but actual offset=%ld",
+                             a->name, (long)a->offset, (long)offset);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Check section lengths are in sync with their contents");
             a->offset = offset;
             return GRIB_DECODING_ERROR;
         }

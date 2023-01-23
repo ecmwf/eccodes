@@ -161,12 +161,6 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 195 ;
 	}
-#Planetary boundary layer height
-'Planetary boundary layer height' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 196 ;
-	}
 #5-wave geopotential height anomaly
 '5-wave geopotential height anomaly' = {
 	 discipline = 0 ;

@@ -1,4 +1,13 @@
 /*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+/*
  * Test for ECC-604: GRIB decoding/encoding sequentially and parallel with POSIX threads
  */
 #include <time.h>
@@ -87,7 +96,7 @@ int main(int argc, char** argv)
     }
 
     {
-        pthread_t* workers = malloc(NUM_THREADS * sizeof(pthread_t));
+        pthread_t* workers = (pthread_t*)malloc(NUM_THREADS * sizeof(pthread_t));
         for (i = 0; i < NUM_THREADS; i++) {
             struct v* data = (struct v*)malloc(sizeof(struct v));
             data->number   = i;
@@ -124,7 +133,7 @@ void* runner(void* ptr)
 void do_encode(void* ptr)
 {
     /* Cast argument to struct v pointer */
-    struct v* data = ptr;
+    struct v* data = (struct v*)ptr;
     size_t i;
     char output_file[50];
     time_t ltime;
@@ -137,7 +146,7 @@ void do_encode(void* ptr)
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         grib_handle* h = grib_handle_clone(hs);
         if (opt_write) {
-            sprintf(output_file, "output/output_file_%ld-%ld.grib", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%ld-%ld.grib", data->number, i);
             encode_values(h, output_file);
         }
         else {

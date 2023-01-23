@@ -58,7 +58,7 @@ static void dump_section    (grib_dumper* d, grib_accessor* a,grib_block_of_acce
 static void header         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_bufr_encode_filter {
-    grib_dumper          dumper;  
+    grib_dumper          dumper;
     /* Members defined in bufr_encode_filter */
     long section_offset;
     long begin;
@@ -95,19 +95,6 @@ grib_dumper_class* grib_dumper_class_bufr_encode_filter = &_grib_dumper_class_bu
 
 /* END_CLASS_IMP */
 static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix);
-
-/* Note: A fast cut-down version of strcmp which does NOT return -1 */
-/* 0 means input strings are equal and 1 means not equal */
-GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
-{
-    if (*a != *b)
-        return 1;
-    while ((*a != 0 && *b != 0) && *(a) == *(b)) {
-        a++;
-        b++;
-    }
-    return (*a == 0 && *b == 0) ? 0 : 1;
-}
 
 static int depth = 0;
 
@@ -218,7 +205,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, 1024, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -292,7 +279,7 @@ static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* 
         char* prefix1;
 
         prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        snprintf(prefix1, 1024, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -331,7 +318,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             if (r != 0) {
                 prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
                 dofree = 1;
-                sprintf(prefix, "#%d#%s", r, a->name);
+                snprintf(prefix, 1024, "#%d#%s", r, a->name);
             }
             else
                 prefix = (char*)a->name;
@@ -401,7 +388,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, 1024, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -474,7 +461,7 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         char* prefix1;
 
         prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
-        sprintf(prefix1, "%s->%s", prefix, a->name);
+        snprintf(prefix1, 1024, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);
 
@@ -521,7 +508,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, 1024, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -594,7 +581,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, 1024, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -622,7 +609,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    _grib_get_string_length(a, &size);
+    ecc__grib_get_string_length(a, &size);
     if (size == 0)
         return;
 
@@ -667,7 +654,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         if (r != 0) {
             prefix = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + 10));
             dofree = 1;
-            sprintf(prefix, "#%d#%s", r, a->name);
+            snprintf(prefix, 1024, "#%d#%s", r, a->name);
         }
         else
             prefix = (char*)a->name;
@@ -723,9 +710,9 @@ static void _dump_long_array(grib_handle* h, FILE* f, const char* key, const cha
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
     grib_dumper_bufr_encode_filter* self = (grib_dumper_bufr_encode_filter*)d;
-    if (!grib_inline_strcmp(a->name, "BUFR") ||
-        !grib_inline_strcmp(a->name, "GRIB") ||
-        !grib_inline_strcmp(a->name, "META")) {
+    if (strcmp(a->name, "BUFR")==0 ||
+        strcmp(a->name, "GRIB")==0 ||
+        strcmp(a->name, "META")==0) {
         grib_handle* h = grib_handle_of_accessor(a);
         depth          = 2;
         self->begin    = 1;
@@ -739,7 +726,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
         grib_dump_accessors_block(d, block);
         depth -= 2;
     }
-    else if (!grib_inline_strcmp(a->name, "groupNumber")) {
+    else if (strcmp(a->name, "groupNumber")==0) {
         if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
             return;
         self->begin = 1;
@@ -802,12 +789,12 @@ static void header(grib_dumper* d, grib_handle* h)
     if (localSectionPresent && bufrHeaderCentre == 98) {
         grib_get_long(h, "isSatellite", &isSatellite);
         if (isSatellite)
-            sprintf(sampleName, "BUFR%ld_local_satellite", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local_satellite", edition);
         else
-            sprintf(sampleName, "BUFR%ld_local", edition);
+            snprintf(sampleName, sizeof(sampleName), "BUFR%ld_local", edition);
     }
     else {
-        sprintf(sampleName, "BUFR%ld", edition);
+        snprintf(sampleName, sizeof(sampleName), "BUFR%ld", edition);
     }
 
     fprintf(self->dumper.out, "# BUFR sample file: %s.tmpl\n", sampleName);

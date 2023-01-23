@@ -168,9 +168,9 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_statistics* self = (grib_accessor_statistics*)a;
-    int ret = 0, i = 0;
-    double* values;
-    size_t size = 0, real_size = 0;
+    int ret = 0;
+    double* values = NULL;
+    size_t i = 0, size = 0, real_size = 0;
     double max, min, avg, sd, value, skew, kurt, m2 = 0, m3 = 0, m4 = 0;
     double missing            = 0;
     long missingValuesPresent = 0;

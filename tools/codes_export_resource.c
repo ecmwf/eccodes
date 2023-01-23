@@ -27,7 +27,7 @@ static void usage(const char* prog)
 int main(int argc, char* argv[])
 {
     char* resource_path        = NULL;
-    char* resource_name        = NULL;
+    const char* resource_name  = NULL;
     ResourceType resource_type = UNKNOWN;
     char* full_path            = NULL;
     char* out_file             = NULL;
@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
     fin = codes_fopen(full_path, "r");
     if (!fin) {
         fprintf(stderr, "Failed to open resource '%s'\n", full_path);
+        fclose(fout);
         return 1;
     }
     /* write resource bytes to fout */
