@@ -222,6 +222,13 @@ size_t Representation::numberOfPoints() const {
 }
 
 
+size_t Representation::numberOfValues() const {
+    std::ostringstream os;
+    os << "Representation::numberOfValues() not implemented for " << *this;
+    throw exception::SeriousBug(os.str());
+}
+
+
 bool Representation::getLongestElementDiagonal(double& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::getLongestElementDiagonal() not implemented for " << *this;
