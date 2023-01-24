@@ -209,7 +209,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
     double level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
     double* levels            = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
-    levels[0]                 = GRIB_MISSING_DOUBLE;
+    levels[0]                 = 0;
     for (i = 0; i < number_of_level_values; i++) {
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
