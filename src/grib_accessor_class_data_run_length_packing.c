@@ -174,6 +174,16 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_handle* gh                             = grib_handle_of_accessor(a);
     int err                                     = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
+    long* level_values = NULL;
+    size_t level_values_size = 0;
+    int i = 0;
+    long number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
+    long v, n, factor, k, j;
+    long* compressed_values = NULL;
+    double level_scale_factor = 0;
+    double* levels = NULL;
+    unsigned char* buf = NULL;
+
     if ((err = grib_get_long_internal(gh, self->seclen, &seclen)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(gh, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
@@ -186,20 +196,21 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
-    long* level_values       = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_level_values);
-    size_t level_values_size = number_of_level_values;
+
+    level_values       = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_level_values);
+    level_values_size = number_of_level_values;
     if ((err = grib_get_long_array_internal(gh, self->level_values, level_values, &level_values_size)) != GRIB_SUCCESS)
         return err;
-    *len                             = number_of_values;
-    int i                            = 0;
-    long number_of_compressed_values = ((seclen - 5) * 8) / bits_per_value;
+    *len = number_of_values;
+    i = 0;
+    number_of_compressed_values = ((seclen - 5) * 8) / bits_per_value;
     if (number_of_compressed_values == 0 || max_level_value == 0) {
         for (i = 0; i < number_of_values; i++) {
             val[i] = GRIB_MISSING_DOUBLE;
         }
         return GRIB_SUCCESS;
     }
-    long range = (1 << bits_per_value) - 1 - max_level_value;
+    range = (1 << bits_per_value) - 1 - max_level_value;
     if ((max_level_value <= 0) || (number_of_level_values <= 0) || (max_level_value > number_of_level_values) || (range <= 0)) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)", max_level_value, number_of_level_values, range);
         return GRIB_DECODING_ERROR;
@@ -207,21 +218,20 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (decimal_scale_factor > 127) {
         decimal_scale_factor = -(decimal_scale_factor - 128);
     }
-    double level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
-    double* levels            = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
+    level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
+    levels            = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
     levels[0]                 = 0;
     for (i = 0; i < number_of_level_values; i++) {
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
-    long* compressed_values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_compressed_values);
-    unsigned char* buf      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    long offsetBeforeData   = grib_byte_offset(a);
+    compressed_values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_compressed_values);
+    buf      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    offsetBeforeData   = grib_byte_offset(a);
     buf += offsetBeforeData;
-    long pos = 0;
+    pos = 0;
     grib_decode_long_array(buf, &pos, bits_per_value, number_of_compressed_values, compressed_values);
-    long v, n, factor, k;
-    long j = 0;
-    i      = 0;
+    j = 0;
+    i = 0;
     while (i < number_of_compressed_values) {
         if (compressed_values[i] > max_level_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "numberOfValues mismatch: i=%ld, compressed_values[i]=%ld, max_level_value=%ld", i, compressed_values[i], max_level_value);
