@@ -46,7 +46,7 @@ static int destroy            (grib_iterator* i);
 typedef struct grib_iterator_space_view{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
     /* Members defined in space_view */
     double *lats;

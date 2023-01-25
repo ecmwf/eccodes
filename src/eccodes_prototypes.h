@@ -69,7 +69,7 @@ grib_action* grib_action_create_when(grib_context* context, grib_expression* exp
 /* action_class_concept.c */
 grib_concept_value* action_concept_get_concept(grib_accessor* a);
 int action_concept_get_nofail(grib_accessor* a);
-grib_action* grib_action_create_concept(grib_context* context, const char* name, grib_concept_value* concept, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
+grib_action* grib_action_create_concept(grib_context* context, const char* name, grib_concept_value* concept_value, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
 int get_concept_condition_string(grib_handle* h, const char* key, const char* value, char* result);
 
 /* action_class_hash_array.c */
@@ -503,9 +503,6 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 
 /* grib_accessor_class_nearest.c */
 grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
-
-/* grib_accessor_class_box.c */
-grib_box* grib_box_new(grib_handle* h, int* error);
 
 /* grib_accessor_class_ksec1expver.c */
 
@@ -1270,7 +1267,7 @@ int grib_get_key_value_list(grib_handle* h, grib_key_value_list* list);
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
-void grib_print_values(grib_values* values, int count);
+void grib_print_values(const char* title, grib_values* values);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);

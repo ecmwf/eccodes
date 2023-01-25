@@ -41,6 +41,7 @@ const char* tool_description =
     "\n\tDefault behaviour: bit-by-bit compare, same order in files.";
 
 const char* tool_name = "gts_compare";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] "
     "file file";
@@ -400,8 +401,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((global_handle = gts_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        grib_handle_delete(global_handle);
     }
 
     error += morein1 + morein2;

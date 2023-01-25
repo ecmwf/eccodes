@@ -14,19 +14,26 @@ label="grib_png_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
+tempErr=${label}.err
 
 files="
  reduced_gaussian_model_level.grib2
  reduced_gaussian_sub_area.grib2
+ regular_gaussian_model_level.grib2
  regular_latlon_surface_constant.grib2
+ test_file.grib2
+ constant_field.grib2
 "
 
-if [ $HAVE_JPEG -eq 1 ]; then
- files="v.grib2"$files
+if [ $HAVE_AEC -eq 1 ]; then
+ files="ccsds.grib2 "$files
 fi
 
-# TODO: For the following the PNG packing fails with an assert!
-#       grib_accessor_class_data_png_packing.c: Assert(p->offset + length <= p->length)
+if [ $HAVE_JPEG -eq 1 ]; then
+ files="jpeg.grib2 reduced_gaussian_surface_jpeg.grib2 "$files
+fi
+
+# TODO: For the following the PNG packing fails!
 #  data/sample.grib2
 #  data/missing.grib2
 #  data/tigge_af_ecmwf.grib2
@@ -42,6 +49,11 @@ for file in $files; do
   rm -f $temp $temp1 $temp2
 done
 
+infile=${data_dir}/sample.grib2
+set +e
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp > $tempErr 2>&1
+set -e
+grep -q "unable to set double array codedValues" $tempErr
 
 # Nearest neighbour
 # ----------------------
@@ -64,4 +76,4 @@ grib_check_key_equals $temp accuracy 0
 
 
 # Clean up
-rm -f $temp
+rm -f $temp $temp1 $temp2 $tempErr

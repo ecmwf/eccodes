@@ -9,7 +9,6 @@
 # nor does it submit to any jurisdiction.
 #
 
-from __future__ import print_function
 
 import sys
 import traceback

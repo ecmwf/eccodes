@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_get
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -39,8 +34,9 @@ const char* tool_description =
     "Get values of some header keys from a BUFR file."
     "\n\tIt is similar to bufr_ls, but fails returning an error code "
     "\n\twhen an error occurs (e.g. key not found).";
-const char* tool_name  = "bufr_get";
-const char* tool_usage = "[options] file file ...";
+const char* tool_name       = "bufr_get";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_get";
+const char* tool_usage      = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

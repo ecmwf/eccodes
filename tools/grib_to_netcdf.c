@@ -33,6 +33,7 @@ const char* tool_description =
     "\n\tNote: The GRIB geometry should be a regular lat/lon grid or a regular Gaussian grid"
     "\n\t(the key \"typeOfGrid\" should be \"regular_ll\" or \"regular_gg\")";
 const char* tool_name        = "grib_to_netcdf";
+const char* tool_online_doc  = "https://confluence.ecmwf.int/display/ECC/grib_to_netcdf";
 const char* tool_usage       = "[options] -o output_file grib_file grib_file ... ";
 static char argvString[2048] = {0,};
 
@@ -163,7 +164,7 @@ static parameter* find_parameter(const request* r, const char* parname)
     return NULL;
 }
 
-static void _reqmerge(parameter* pa, const parameter* pb, request* a)
+static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
 {
     const value* vb = pb->values;
 
@@ -200,7 +201,7 @@ static void _reqmerge(parameter* pa, const parameter* pb, request* a)
 }
 
 /* Fast version if a && b same */
-static boolean _reqmerge1(request* a, const request* b)
+static boolean ecc_reqmerge1(request* a, const request* b)
 {
     parameter* pa       = a->params;
     const parameter* pb = b->params;
@@ -209,7 +210,7 @@ static boolean _reqmerge1(request* a, const request* b)
         if (strcmp(pa->name, pb->name) != 0)
             return FALSE;
 
-        _reqmerge(pa, pb, a);
+        ecc_reqmerge(pa, pb, a);
 
         pa = pa->next;
         pb = pb->next;
@@ -395,7 +396,7 @@ static void add_value(request* r, const char* parname, const char* fmt, ...)
     put_value(r, parname, buffer, TRUE, FALSE, FALSE);
 }
 
-static void _reqmerge2(request* a, const request* b)
+static void ecc_reqmerge2(request* a, const request* b)
 {
     const parameter* pb = b->params;
 
@@ -410,7 +411,7 @@ static void _reqmerge2(request* a, const request* b)
             }
         }
         else {
-            _reqmerge(pa, pb, a);
+            ecc_reqmerge(pa, pb, a);
         }
 
         pb = pb->next;
@@ -420,8 +421,8 @@ static void _reqmerge2(request* a, const request* b)
 static void reqmerge(request* a, const request* b)
 {
     if (a && b) {
-        if (!_reqmerge1(a, b))
-            _reqmerge2(a, b);
+        if (!ecc_reqmerge1(a, b))
+            ecc_reqmerge2(a, b);
     }
 }
 
@@ -718,7 +719,7 @@ static const char* get_axis(const hypercube* h, int pos);
 static const char* get_axis(const hypercube* h, int pos);
 static int cube_order(const hypercube* h, const request* r);
 static void free_hypercube(hypercube* h);
-static int _cube_position(const hypercube* h, const request* r, boolean remove_holes);
+static int ecc_cube_position(const hypercube* h, const request* r, boolean remove_holes);
 
 static value* clone_one_value(const value* p)
 {
@@ -1531,12 +1532,12 @@ static int count_hypercube(const request* r)
 
 static int cube_order(const hypercube* h, const request* r)
 {
-    return _cube_position(h, r, TRUE);
+    return ecc_cube_position(h, r, TRUE);
 }
 
 static int cube_position(const hypercube* h, const request* r)
 {
-    return _cube_position(h, r, FALSE);
+    return ecc_cube_position(h, r, FALSE);
 }
 
 static void reserve_index_cache(hypercube* h, int size)
@@ -1552,7 +1553,7 @@ static void reserve_index_cache(hypercube* h, int size)
     h->index_cache_size = size;
 }
 
-static int _cube_position(const hypercube* h, const request* r, boolean remove_holes)
+static int ecc_cube_position(const hypercube* h, const request* r, boolean remove_holes)
 {
     request* cube = h->cube;
     int c         = count_axis(h);
@@ -1584,7 +1585,7 @@ static int _cube_position(const hypercube* h, const request* r, boolean remove_h
                 break;
             }
             else
-                grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: _cube_position, %s, %s != %s [%scompare function available]", axis, w, v, h->compare ? "" : "no ");
+                grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: ecc_cube_position, %s, %s != %s [%scompare function available]", axis, w, v, h->compare ? "" : "no ");
         }
     }
 
@@ -1841,7 +1842,7 @@ typedef struct ncatt
     nc_type nctype;
 } ncatt_t;
 
-typedef struct filter
+typedef struct filter_type
 {
     fieldset* fset;
     hypercube* filter;
@@ -1958,7 +1959,7 @@ static long monthnumber(const char* m)
     return -1;
 }
 
-int check_stepUnits(const char* step_units_str)
+static int check_stepUnits(const char* step_units_str)
 {
     /* Only hours, minutes and seconds supported */
     if (strcmp(step_units_str, "h") == 0 ||
@@ -2018,7 +2019,7 @@ static void validation_time(request* r)
         if (is_number(p))
             date = atol(p);
         else {
-            long julian = 0, second = 0;
+            long second = 0;
             boolean isjul, date_ok;
             date_ok = parsedate(p, &julian, &second, &isjul);
             if (!date_ok)
@@ -2944,10 +2945,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     for (i = 0; i < naxis; ++i) {
         int nctype       = NC_INT;
         const char* axis = get_axis(h, i);
-        char* units      = NULL;
+        const char* units      = NULL;
         char u[10240];
         const char* lowaxis = (axis);
-        char* longname      = (char*)lowaxis;
+        const char* longname = (char*)lowaxis;
         n                   = count_values(cube, axis);
 
         if (count_values(data_r, "levtype") > 1) {
@@ -3048,7 +3049,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
                 const char* cal = "gregorian";
 
                 if (setup.mmeans) {
-                    char* period = "0000-01-00 00:00:00";
+                    const char* period = "0000-01-00 00:00:00";
                     stat         = nc_put_att_text(ncid, var_id, "avg_period", strlen(period), period);
                     check_err("nc_put_att_text", stat, __LINE__);
                 }
@@ -3144,7 +3145,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
     }
 
     /* Dimension-less variable for MARS request */
-    if (0) /* reset when we have proper & fast mars_description */
+    if ((0)) /* reset when we have proper & fast mars_description */
     {
         /* parameter *p = data_r->params; */
         parameter* p = setup.mars_description->params;
@@ -3178,7 +3179,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         char timestamp[80];
         time_t now;
         /* char *convention = "MARS;CF"; */
-        char* convention = "CF-1.6";
+        const char* convention = "CF-1.6";
         char history[10240];
         /* char *institution = "ECMWF Meteorological Archival and Retrieval System"; */
 
@@ -3757,7 +3758,7 @@ static boolean parsedate(const char* name, long* julian, long* second, boolean* 
     if (isalpha(*p)) {
         char month[32];
         int day = 0;
-        int n   = sscanf(p, "%[^-]-%d", month, &day);
+        n = sscanf(p, "%[^-]-%d", month, &day);
         /* Matched two items (month and day) and month is 3 letters */
         if (n == 2 && strlen(month) == 3) {
             y = 1900; /* no year specified */
@@ -3935,7 +3936,7 @@ static int deflate_option = 0;
 /* Table of formats for legal -k values. Inspired by nccopy */
 struct KindValue
 {
-    char* name;
+    const char* name;
     int kind;
 } legalkinds[] = {
     { "1", NC_FORMAT_CLASSIC },

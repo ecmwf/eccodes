@@ -19,8 +19,8 @@
    IMPLEMENTS = has_next
    IMPLEMENTS = init
    IMPLEMENTS = reset
-   MEMBERS     =   long carg
-   MEMBERS     =  const char* missingValue;
+   MEMBERS    = int carg
+   MEMBERS    = const char* missingValue;
    END_CLASS_DEF
 
  */
@@ -47,7 +47,7 @@ static long has_next          (grib_iterator* i);
 typedef struct grib_iterator_gen{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
 } grib_iterator_gen;
 

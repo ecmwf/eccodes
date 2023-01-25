@@ -44,6 +44,7 @@ const char* tool_description =
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* tool_name = "metar_compare";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] "
     "file file";
@@ -473,8 +474,7 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
     while ((global_handle = metar_new_from_file(c, options->infile_extra->file, &err))) {
         morein1++;
-        if (global_handle)
-            grib_handle_delete(global_handle);
+        grib_handle_delete(global_handle);
     }
 
     error += morein1 + morein2;
@@ -784,23 +784,31 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 packingError2 = 0;
                 err1          = grib_get_double(h1, "packingError", &packingError1);
                 err2          = grib_get_double(h2, "packingError", &packingError2);
-                if (packingCompare)
+                if (packingCompare && !err1 && !err2) {
                     value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                    compare_double  = &compare_double_absolute;
+                    compareAbsolute = 1;
+                }
             }
             else if (!grib_inline_strcmp(name, "unpackedValues")) {
                 packingError1 = 0;
                 packingError2 = 0;
                 err1          = grib_get_double(h1, "unpackedError", &packingError1);
                 err2          = grib_get_double(h2, "unpackedError", &packingError2);
-                if (packingCompare)
+                if (packingCompare && !err1 && !err2) {
                     value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                    compare_double  = &compare_double_absolute;
+                    compareAbsolute = 1;
+                }
             }
             else if (!grib_inline_strcmp(name, "referenceValue")) {
                 packingError1   = 0;
                 packingError2   = 0;
                 err1            = grib_get_double(h1, "referenceValueError", &packingError1);
                 err2            = grib_get_double(h2, "referenceValueError", &packingError2);
-                value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                if (!err1 && !err2) {
+                    value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
+                }
             }
 
             if (!compareAbsolute) {

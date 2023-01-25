@@ -28,6 +28,7 @@ const char* tool_description =
     "Apply the rules defined in rules_file to each METAR "
     "message\n\tin the files provided as arguments.";
 const char* tool_name = "metar_filter";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] rules_file "
     "file file ...";

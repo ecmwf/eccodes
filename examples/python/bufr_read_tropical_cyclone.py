@@ -16,8 +16,6 @@
 # understand the structure of the messages.
 #
 
-from __future__ import print_function
-
 import collections
 import sys
 import traceback

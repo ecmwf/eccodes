@@ -30,6 +30,7 @@ const char* tool_description =
     "Apply the rules defined in rules_file to each TAF "
     "message\n\tin the files provided as arguments.";
 const char* tool_name = "taf_filter";
+const char* tool_online_doc = NULL;
 const char* tool_usage =
     "[options] rules_file "
     "file file ...";

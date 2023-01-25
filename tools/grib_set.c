@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_set
- *
- */
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -50,8 +46,9 @@ const char* tool_description =
     "Sets key/value pairs in the input GRIB file and writes"
     "\n\teach message to the output_grib_file."
     "\n\tIt fails when an error occurs (e.g. key not found).";
-const char* tool_name  = "grib_set";
-const char* tool_usage = "[options] grib_file grib_file ... output_grib_file";
+const char* tool_name       = "grib_set";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_set";
+const char* tool_usage      = "[options] grib_file grib_file ... output_grib_file";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

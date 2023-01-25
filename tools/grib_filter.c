@@ -31,9 +31,9 @@ const char* tool_description =
     "message\n\tin the GRIB files provided as arguments.\n\t"
     "If you specify '-' (a single dash) for the rules_file, the rules will be read from standard input.";
 const char* tool_name = "grib_filter";
-const char* tool_usage =
-    "[options] rules_file "
-    "grib_file grib_file ...";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/grib_filter";
+const char* tool_usage = "[options] rules_file "
+                         "grib_file grib_file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
