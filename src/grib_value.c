@@ -1230,7 +1230,7 @@ const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
     return act ? act->cclass->name : NULL;
 }
 
-int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length)
+static int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
         int err = _grib_get_double_array_internal(h, a->same, val, buffer_len, decoded_length);
@@ -1456,7 +1456,7 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
     }
 }
 
-int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
+static int _grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
         int err = _grib_get_long_array_internal(h, a->same, val, buffer_len, decoded_length);
