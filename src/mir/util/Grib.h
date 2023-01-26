@@ -14,6 +14,7 @@
 
 #include <eccodes.h>
 
+#include <iosfwd>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -22,7 +23,7 @@
 
 
 inline bool grib_call(int e, const char* call, bool missingOK = false) {
-    if (e) {
+    if (static_cast<bool>(e)) {
         if (missingOK && (e == CODES_NOT_FOUND)) {
             return false;
         }
@@ -96,3 +97,61 @@ void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, siz
 
 
 void grib_get_unique_missing_value(const std::vector<double>& values, double& missingValue);
+
+
+namespace eckit {
+class Fraction;
+}
+
+
+namespace mir {
+namespace util {
+namespace grib {
+
+
+struct Fraction {
+    using value_type = long;
+
+    explicit Fraction(double);
+    explicit Fraction(const eckit::Fraction&);
+    Fraction(value_type _numerator, value_type _denominator) :
+        num(_numerator), den(_denominator == 0 || _numerator == 0 ? 1 : _denominator) {}
+
+    const value_type num;
+    const value_type den;
+};
+
+
+Fraction::value_type lcm(Fraction::value_type a, Fraction::value_type b);
+
+
+template <typename... Longs>
+Fraction::value_type lcm(Fraction::value_type a, Fraction::value_type b, Longs... cde) {
+    return lcm(a, lcm(b, cde...));
+}
+
+
+long gcd(long a, long b);
+
+
+template <typename... Longs>
+long gcd(long a, long b, Longs... cde) {
+    return gcd(a, gcd(b, cde...));
+}
+
+
+struct BasicAngle : Fraction {
+    using Fraction::Fraction;
+    BasicAngle(Fraction, Fraction, Fraction, Fraction, Fraction, Fraction);
+    explicit BasicAngle(const grib_info&);
+
+    void fillGrib(grib_info&) const;
+    Fraction::value_type numerator(const Fraction&) const;
+
+    static void list(std::ostream&);
+};
+
+
+}  // namespace grib
+}  // namespace util
+}  // namespace mir

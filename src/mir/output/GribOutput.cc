@@ -270,6 +270,27 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         // Packing, accuracy, edition
         pack->fill(repres, info);
 
+        // Basic angle (after representation)
+        std::string basicAngle = "decimal";
+        param.get("basic-angle", basicAngle);
+
+        if (basicAngle == "as-input") {
+            std::vector<long> fraction(2);
+            GRIB_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &fraction[0]));
+            GRIB_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &fraction[1]));
+
+            util::grib::BasicAngle basic(fraction[0], fraction[1]);
+            basic.fillGrib(info);
+        }
+        else if (basicAngle == "fraction") {
+            util::grib::BasicAngle basic(info);
+            basic.fillGrib(info);
+        }
+        else {
+            // codes_grib_util_set_spec does not need anything here (GRIB standard)
+            ASSERT(basicAngle == "decimal");
+        }
+
         // Extra settings (paramId comes from here)
         for (const auto& k : field.metadata(i)) {
             info.extra_set(k.first.c_str(), k.second);
