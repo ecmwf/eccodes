@@ -270,11 +270,13 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         // Packing, accuracy, edition
         pack->fill(repres, info);
 
-        // Basic angle (after representation)
+        // Basic angle (after representation), support only for gridType=regular_ll
         std::string basicAngle = "decimal";
         param.get("basic-angle", basicAngle);
 
         if (basicAngle == "as-input") {
+            ASSERT(info.grid.grid_type == CODES_UTIL_GRID_SPEC_REGULAR_LL);
+
             std::vector<long> fraction(2);
             GRIB_CALL(codes_get_long(h, "basicAngleOfTheInitialProductionDomain", &fraction[0]));
             GRIB_CALL(codes_get_long(h, "subdivisionsOfBasicAngle", &fraction[1]));
@@ -283,6 +285,8 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
             basic.fillGrib(info);
         }
         else if (basicAngle == "fraction") {
+            ASSERT(info.grid.grid_type == CODES_UTIL_GRID_SPEC_REGULAR_LL);
+
             util::grib::BasicAngle basic(info);
             basic.fillGrib(info);
         }
