@@ -138,17 +138,7 @@ ecbuild_add_option( FEATURE AEC
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
 find_package( NumPy )
-ecbuild_add_option( FEATURE PYTHON2
-    DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
-    DEFAULT OFF
-    #CONDITION Python_FOUND AND NumPy_FOUND
-    CONDITION PYTHON_FOUND AND NUMPY_FOUND
-    )
-# For Python2 we build our own bindings (using SWIG) in the build directory
-# but for Python3 one has to add the eccodes from pip3 AFTER the install
-if( PYTHON_VERSION_MAJOR EQUAL 3 )
-    set( HAVE_PYTHON 0 )
-endif()
+set( HAVE_PYTHON 0 )
 
 ## TODO REQUIRED_LANGUAGES Fortran
 ecbuild_add_option( FEATURE FORTRAN
@@ -432,15 +422,6 @@ if( HAVE_BUILD_TOOLS )
 endif()
 add_subdirectory( fortran )
 
-if( PYTHON_VERSION_MAJOR GREATER 2 )
-    # Python3 is no longer built with SWIG but is a separate
-    # package. User should do: pip3 install eccodes
-    #add_subdirectory( python3 )
-    set( ECCODES_PYTHON_DIR "python3" )
-else()
-    add_subdirectory( python )
-    set( ECCODES_PYTHON_DIR "python" )
-endif()
 add_subdirectory( tests )
 add_subdirectory( examples )
 add_subdirectory( data )
@@ -478,7 +459,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_PYTHON2 HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -490,7 +471,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PYTHON2 HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PNG HAVE_AEC
   )
 endif()
 
@@ -512,10 +493,6 @@ ecbuild_info("   +--------------------------+")
 ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
-
-if( HAVE_PYTHON2 )
-  ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
-endif()
 
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("   | Please note:                         |")
