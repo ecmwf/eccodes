@@ -13,8 +13,6 @@
 # Description: how to read values of different type of keys from GTS messages.
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 

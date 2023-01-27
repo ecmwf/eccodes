@@ -1267,7 +1267,7 @@ int grib_get_key_value_list(grib_handle* h, grib_key_value_list* list);
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
-void grib_print_values(grib_values* values, int count);
+void grib_print_values(const char* title, grib_values* values);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);

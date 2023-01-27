@@ -12,8 +12,6 @@
 # Description: how to get values using keys from GRIB messages
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 
