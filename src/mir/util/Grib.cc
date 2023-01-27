@@ -21,6 +21,7 @@
 
 #include "eckit/types/Fraction.h"
 
+#include "mir/util/Angles.h"
 #include "mir/util/Log.h"
 
 
@@ -214,10 +215,11 @@ BasicAngle::BasicAngle(Fraction a, Fraction b, Fraction c, Fraction d, Fraction 
 
 
 BasicAngle::BasicAngle(const grib_info& info) :
-    BasicAngle(
-        Fraction(info.grid.latitudeOfFirstGridPointInDegrees), Fraction(info.grid.longitudeOfFirstGridPointInDegrees),
-        Fraction(info.grid.latitudeOfLastGridPointInDegrees), Fraction(info.grid.longitudeOfLastGridPointInDegrees),
-        Fraction(info.grid.iDirectionIncrementInDegrees), Fraction(info.grid.jDirectionIncrementInDegrees)) {}
+    BasicAngle(Fraction(info.grid.latitudeOfFirstGridPointInDegrees),
+               Fraction(normalise_longitude(info.grid.longitudeOfFirstGridPointInDegrees, 0.)),
+               Fraction(info.grid.latitudeOfLastGridPointInDegrees),
+               Fraction(normalise_longitude(info.grid.longitudeOfLastGridPointInDegrees, 0.)),
+               Fraction(info.grid.iDirectionIncrementInDegrees), Fraction(info.grid.jDirectionIncrementInDegrees)) {}
 
 
 void BasicAngle::fillGrib(grib_info& info) const {
@@ -233,9 +235,9 @@ void BasicAngle::fillGrib(grib_info& info) const {
     info.extra_set("subdivisionsOfBasicAngle", den);
 
     fill("latitudeOfFirstGridPoint", info.grid.latitudeOfFirstGridPointInDegrees);
-    fill("longitudeOfFirstGridPoint", info.grid.longitudeOfFirstGridPointInDegrees);
+    fill("longitudeOfFirstGridPoint", normalise_longitude(info.grid.longitudeOfFirstGridPointInDegrees, 0.));
     fill("latitudeOfLastGridPoint", info.grid.latitudeOfLastGridPointInDegrees);
-    fill("longitudeOfLastGridPoint", info.grid.longitudeOfLastGridPointInDegrees);
+    fill("longitudeOfLastGridPoint", normalise_longitude(info.grid.longitudeOfLastGridPointInDegrees, 0.));
     fill("iDirectionIncrement", info.grid.iDirectionIncrementInDegrees);
     fill("jDirectionIncrement", info.grid.jDirectionIncrementInDegrees);
 }
