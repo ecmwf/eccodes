@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.29.0 LANGUAGES C )
+project( eccodes VERSION 2.29.0 LANGUAGES CXX )
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -65,14 +65,8 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 ###############################################################################
 # some variables/options of this project
 
-ecbuild_add_option( FEATURE EXPERIMENTAL_BUILD_WITH_CXX
-    DESCRIPTION "Build ecCodes with a C++ compiler (Experimental)"
-    DEFAULT OFF )
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    enable_language( CXX )
-    if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Cray" )
-        set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
-    endif()
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Cray" )
+    set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB
@@ -502,9 +496,3 @@ ecbuild_info("   | bindings from PyPI with:             |")
 ecbuild_info("   |   $ pip3 install eccodes             |")
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("")
-
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    ecbuild_warn("Please note:\n"
-                 "The option of building with C++ is currently experimental."
-                 "Do not use in operations.")
-endif()

@@ -139,4 +139,4 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
     return GRIB_SUCCESS;
 }
 
-#include "grib_bits_ibmpow_opt.c"
+#include "grib_bits_ibmpow_opt.cpp"
