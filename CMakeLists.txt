@@ -65,7 +65,11 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 ###############################################################################
 # some variables/options of this project
 
-if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Cray" )
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+    ecbuild_add_cxx_flags("-fpermissive -Wno-write-strings -Wno-deprecated -Werror=return-type")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    ecbuild_add_cxx_flags("-fpermissive -Wno-deprecated -Wno-c++11-compat-deprecated-writable-strings")
+elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 
