@@ -77,7 +77,6 @@ build_script:
                -D ENABLE_AEC=0 ^
                -D IEEE_LE=1 ^
                -D ENABLE_MEMFS=1 ^
-               -D ENABLE_EXPERIMENTAL_BUILD_WITH_CXX=1 ^
                -D ENABLE_EXTRA_TESTS=ON ^
                -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
                ..
