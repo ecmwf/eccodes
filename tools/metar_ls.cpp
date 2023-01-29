@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: grib_ls
+ * Implementation: grib_ls
  *
  * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
  *

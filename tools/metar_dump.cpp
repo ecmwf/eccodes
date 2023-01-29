@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: grib_dump
+ * Implementation: grib_dump
  *
  * Author: Enrico Fucile
  *
