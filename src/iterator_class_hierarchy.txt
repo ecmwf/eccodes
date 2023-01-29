@@ -1,5 +1,5 @@
-
 Iterator Class Hierarchy
+
    |-grib_iterator_class_gen
    |---grib_iterator_class_gaussian_reduced
    |---grib_iterator_class_lambert_azimuthal_equal_area
