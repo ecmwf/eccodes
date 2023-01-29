@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -34,6 +34,10 @@
 /* C LALR(1) parser skeleton written by Richard Stallman, by
    simplifying the original so-called "semantic" parser.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or grib_yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 /* All symbols defined below should begin with grib_yy or YY, to avoid
    infringing on user name space.  This should be done even for local
    variables, as they might otherwise be expanded by user macros.
@@ -41,14 +45,11 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* Identify Bison output, and Bison version.  */
+#define YYBISON 30802
 
-/* Identify Bison output.  */
-#define YYBISON 1
-
-/* Bison version.  */
-#define YYBISON_VERSION "3.5.4"
+/* Bison version string.  */
+#define YYBISON_VERSION "3.8.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -93,7 +94,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 
 
 
-#line 97 "y.tab.c"
+#line 98 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -116,14 +117,6 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 #  endif
 # endif
 
-/* Enabling verbose error messages.  */
-#ifdef YYERROR_VERBOSE
-# undef YYERROR_VERBOSE
-# define YYERROR_VERBOSE 1
-#else
-# define YYERROR_VERBOSE 0
-#endif
-
 /* Use api.header.include to #include this header
    instead of duplicating it here.  */
 #ifndef YY_YY_Y_TAB_H_INCLUDED
@@ -136,138 +129,147 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 extern int grib_yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum grib_yytokentype
   {
-    LOWERCASE = 258,
-    IF = 259,
-    IF_TRANSIENT = 260,
-    ELSE = 261,
-    END = 262,
-    CLOSE = 263,
-    UNSIGNED = 264,
-    TEMPLATE = 265,
-    TEMPLATE_NOFAIL = 266,
-    TRIGGER = 267,
-    ASCII = 268,
-    GROUP = 269,
-    NON_ALPHA = 270,
-    KSEC1EXPVER = 271,
-    LABEL = 272,
-    LIST = 273,
-    IS_IN_LIST = 274,
-    IS_IN_DICT = 275,
-    IS_INTEGER = 276,
-    TO_INTEGER = 277,
-    TO_STRING = 278,
-    SEX2DEC = 279,
-    WHILE = 280,
-    IBMFLOAT = 281,
-    SIGNED = 282,
-    UINT8 = 283,
-    INT8 = 284,
-    UINT16 = 285,
-    INT16 = 286,
-    UINT16_LITTLE_ENDIAN = 287,
-    INT16_LITTLE_ENDIAN = 288,
-    UINT32 = 289,
-    INT32 = 290,
-    UINT32_LITTLE_ENDIAN = 291,
-    INT32_LITTLE_ENDIAN = 292,
-    UINT64 = 293,
-    INT64 = 294,
-    UINT64_LITTLE_ENDIAN = 295,
-    INT64_LITTLE_ENDIAN = 296,
-    BLOB = 297,
-    BYTE = 298,
-    CODETABLE = 299,
-    SMART_TABLE = 300,
-    DICTIONARY = 301,
-    COMPLEX_CODETABLE = 302,
-    LOOKUP = 303,
-    ALIAS = 304,
-    UNALIAS = 305,
-    META = 306,
-    POS = 307,
-    INTCONST = 308,
-    TRANS = 309,
-    FLAGBIT = 310,
-    CONCEPT = 311,
-    GETENV = 312,
-    HASH_ARRAY = 313,
-    CONCEPT_NOFAIL = 314,
-    NIL = 315,
-    DUMMY = 316,
-    MODIFY = 317,
-    READ_ONLY = 318,
-    STRING_TYPE = 319,
-    LONG_TYPE = 320,
-    DOUBLE_TYPE = 321,
-    NO_COPY = 322,
-    DUMP = 323,
-    JSON = 324,
-    XML = 325,
-    NO_FAIL = 326,
-    EDITION_SPECIFIC = 327,
-    OVERRIDE = 328,
-    HIDDEN = 329,
-    CAN_BE_MISSING = 330,
-    MISSING = 331,
-    CONSTRAINT = 332,
-    COPY_OK = 333,
-    WHEN = 334,
-    SET = 335,
-    SET_NOFAIL = 336,
-    WRITE = 337,
-    APPEND = 338,
-    PRINT = 339,
-    EXPORT = 340,
-    REMOVE = 341,
-    RENAME = 342,
-    SKIP = 343,
-    PAD = 344,
-    SECTION_PADDING = 345,
-    MESSAGE = 346,
-    MESSAGE_COPY = 347,
-    PADTO = 348,
-    PADTOEVEN = 349,
-    PADTOMULTIPLE = 350,
-    G1_HALF_BYTE = 351,
-    G1_MESSAGE_LENGTH = 352,
-    G1_SECTION4_LENGTH = 353,
-    SECTION_LENGTH = 354,
-    LENGTH = 355,
-    FLAG = 356,
-    ITERATOR = 357,
-    NEAREST = 358,
-    BOX = 359,
-    KSEC = 360,
-    ASSERT = 361,
-    SUBSTR = 362,
-    CASE = 363,
-    SWITCH = 364,
-    DEFAULT = 365,
-    EQ = 366,
-    NE = 367,
-    GE = 368,
-    LE = 369,
-    LT = 370,
-    GT = 371,
-    BIT = 372,
-    BITOFF = 373,
-    AND = 374,
-    OR = 375,
-    NOT = 376,
-    IS = 377,
-    IDENT = 378,
-    STRING = 379,
-    INTEGER = 380,
-    FLOAT = 381
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    LOWERCASE = 258,               /* LOWERCASE  */
+    IF = 259,                      /* IF  */
+    IF_TRANSIENT = 260,            /* IF_TRANSIENT  */
+    ELSE = 261,                    /* ELSE  */
+    END = 262,                     /* END  */
+    CLOSE = 263,                   /* CLOSE  */
+    UNSIGNED = 264,                /* UNSIGNED  */
+    TEMPLATE = 265,                /* TEMPLATE  */
+    TEMPLATE_NOFAIL = 266,         /* TEMPLATE_NOFAIL  */
+    TRIGGER = 267,                 /* TRIGGER  */
+    ASCII = 268,                   /* ASCII  */
+    GROUP = 269,                   /* GROUP  */
+    NON_ALPHA = 270,               /* NON_ALPHA  */
+    KSEC1EXPVER = 271,             /* KSEC1EXPVER  */
+    LABEL = 272,                   /* LABEL  */
+    LIST = 273,                    /* LIST  */
+    IS_IN_LIST = 274,              /* IS_IN_LIST  */
+    IS_IN_DICT = 275,              /* IS_IN_DICT  */
+    IS_INTEGER = 276,              /* IS_INTEGER  */
+    TO_INTEGER = 277,              /* TO_INTEGER  */
+    TO_STRING = 278,               /* TO_STRING  */
+    SEX2DEC = 279,                 /* SEX2DEC  */
+    WHILE = 280,                   /* WHILE  */
+    IBMFLOAT = 281,                /* IBMFLOAT  */
+    SIGNED = 282,                  /* SIGNED  */
+    UINT8 = 283,                   /* UINT8  */
+    INT8 = 284,                    /* INT8  */
+    UINT16 = 285,                  /* UINT16  */
+    INT16 = 286,                   /* INT16  */
+    UINT16_LITTLE_ENDIAN = 287,    /* UINT16_LITTLE_ENDIAN  */
+    INT16_LITTLE_ENDIAN = 288,     /* INT16_LITTLE_ENDIAN  */
+    UINT32 = 289,                  /* UINT32  */
+    INT32 = 290,                   /* INT32  */
+    UINT32_LITTLE_ENDIAN = 291,    /* UINT32_LITTLE_ENDIAN  */
+    INT32_LITTLE_ENDIAN = 292,     /* INT32_LITTLE_ENDIAN  */
+    UINT64 = 293,                  /* UINT64  */
+    INT64 = 294,                   /* INT64  */
+    UINT64_LITTLE_ENDIAN = 295,    /* UINT64_LITTLE_ENDIAN  */
+    INT64_LITTLE_ENDIAN = 296,     /* INT64_LITTLE_ENDIAN  */
+    BLOB = 297,                    /* BLOB  */
+    BYTE = 298,                    /* BYTE  */
+    CODETABLE = 299,               /* CODETABLE  */
+    SMART_TABLE = 300,             /* SMART_TABLE  */
+    DICTIONARY = 301,              /* DICTIONARY  */
+    COMPLEX_CODETABLE = 302,       /* COMPLEX_CODETABLE  */
+    LOOKUP = 303,                  /* LOOKUP  */
+    ALIAS = 304,                   /* ALIAS  */
+    UNALIAS = 305,                 /* UNALIAS  */
+    META = 306,                    /* META  */
+    POS = 307,                     /* POS  */
+    INTCONST = 308,                /* INTCONST  */
+    TRANS = 309,                   /* TRANS  */
+    FLAGBIT = 310,                 /* FLAGBIT  */
+    CONCEPT = 311,                 /* CONCEPT  */
+    GETENV = 312,                  /* GETENV  */
+    HASH_ARRAY = 313,              /* HASH_ARRAY  */
+    CONCEPT_NOFAIL = 314,          /* CONCEPT_NOFAIL  */
+    NIL = 315,                     /* NIL  */
+    DUMMY = 316,                   /* DUMMY  */
+    MODIFY = 317,                  /* MODIFY  */
+    READ_ONLY = 318,               /* READ_ONLY  */
+    STRING_TYPE = 319,             /* STRING_TYPE  */
+    LONG_TYPE = 320,               /* LONG_TYPE  */
+    DOUBLE_TYPE = 321,             /* DOUBLE_TYPE  */
+    NO_COPY = 322,                 /* NO_COPY  */
+    DUMP = 323,                    /* DUMP  */
+    JSON = 324,                    /* JSON  */
+    XML = 325,                     /* XML  */
+    NO_FAIL = 326,                 /* NO_FAIL  */
+    EDITION_SPECIFIC = 327,        /* EDITION_SPECIFIC  */
+    OVERRIDE = 328,                /* OVERRIDE  */
+    HIDDEN = 329,                  /* HIDDEN  */
+    CAN_BE_MISSING = 330,          /* CAN_BE_MISSING  */
+    MISSING = 331,                 /* MISSING  */
+    CONSTRAINT = 332,              /* CONSTRAINT  */
+    COPY_OK = 333,                 /* COPY_OK  */
+    WHEN = 334,                    /* WHEN  */
+    SET = 335,                     /* SET  */
+    SET_NOFAIL = 336,              /* SET_NOFAIL  */
+    WRITE = 337,                   /* WRITE  */
+    APPEND = 338,                  /* APPEND  */
+    PRINT = 339,                   /* PRINT  */
+    EXPORT = 340,                  /* EXPORT  */
+    REMOVE = 341,                  /* REMOVE  */
+    RENAME = 342,                  /* RENAME  */
+    SKIP = 343,                    /* SKIP  */
+    PAD = 344,                     /* PAD  */
+    SECTION_PADDING = 345,         /* SECTION_PADDING  */
+    MESSAGE = 346,                 /* MESSAGE  */
+    MESSAGE_COPY = 347,            /* MESSAGE_COPY  */
+    PADTO = 348,                   /* PADTO  */
+    PADTOEVEN = 349,               /* PADTOEVEN  */
+    PADTOMULTIPLE = 350,           /* PADTOMULTIPLE  */
+    G1_HALF_BYTE = 351,            /* G1_HALF_BYTE  */
+    G1_MESSAGE_LENGTH = 352,       /* G1_MESSAGE_LENGTH  */
+    G1_SECTION4_LENGTH = 353,      /* G1_SECTION4_LENGTH  */
+    SECTION_LENGTH = 354,          /* SECTION_LENGTH  */
+    LENGTH = 355,                  /* LENGTH  */
+    FLAG = 356,                    /* FLAG  */
+    ITERATOR = 357,                /* ITERATOR  */
+    NEAREST = 358,                 /* NEAREST  */
+    BOX = 359,                     /* BOX  */
+    KSEC = 360,                    /* KSEC  */
+    ASSERT = 361,                  /* ASSERT  */
+    SUBSTR = 362,                  /* SUBSTR  */
+    CASE = 363,                    /* CASE  */
+    SWITCH = 364,                  /* SWITCH  */
+    DEFAULT = 365,                 /* DEFAULT  */
+    EQ = 366,                      /* EQ  */
+    NE = 367,                      /* NE  */
+    GE = 368,                      /* GE  */
+    LE = 369,                      /* LE  */
+    LT = 370,                      /* LT  */
+    GT = 371,                      /* GT  */
+    BIT = 372,                     /* BIT  */
+    BITOFF = 373,                  /* BITOFF  */
+    AND = 374,                     /* AND  */
+    OR = 375,                      /* OR  */
+    NOT = 376,                     /* NOT  */
+    IS = 377,                      /* IS  */
+    IDENT = 378,                   /* IDENT  */
+    STRING = 379,                  /* STRING  */
+    INTEGER = 380,                 /* INTEGER  */
+    FLOAT = 381                    /* FLOAT  */
   };
+  typedef enum grib_yytokentype grib_yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define LOWERCASE 258
 #define IF 259
 #define IF_TRANSIENT 260
@@ -411,11 +413,11 @@ union YYSTYPE
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
     grib_hash_array_value      *hash_array_value;
-	grib_case               *case_value;
+    grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
-#line 419 "y.tab.c"
+#line 421 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -426,9 +428,212 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE grib_yylval;
 
+
 int grib_yyparse (void);
 
+
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+/* Symbol kind.  */
+enum grib_yysymbol_kind_t
+{
+  YYSYMBOL_YYEMPTY = -2,
+  YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
+  YYSYMBOL_YYerror = 1,                    /* error  */
+  YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
+  YYSYMBOL_LOWERCASE = 3,                  /* LOWERCASE  */
+  YYSYMBOL_IF = 4,                         /* IF  */
+  YYSYMBOL_IF_TRANSIENT = 5,               /* IF_TRANSIENT  */
+  YYSYMBOL_ELSE = 6,                       /* ELSE  */
+  YYSYMBOL_END = 7,                        /* END  */
+  YYSYMBOL_CLOSE = 8,                      /* CLOSE  */
+  YYSYMBOL_UNSIGNED = 9,                   /* UNSIGNED  */
+  YYSYMBOL_TEMPLATE = 10,                  /* TEMPLATE  */
+  YYSYMBOL_TEMPLATE_NOFAIL = 11,           /* TEMPLATE_NOFAIL  */
+  YYSYMBOL_TRIGGER = 12,                   /* TRIGGER  */
+  YYSYMBOL_ASCII = 13,                     /* ASCII  */
+  YYSYMBOL_GROUP = 14,                     /* GROUP  */
+  YYSYMBOL_NON_ALPHA = 15,                 /* NON_ALPHA  */
+  YYSYMBOL_KSEC1EXPVER = 16,               /* KSEC1EXPVER  */
+  YYSYMBOL_LABEL = 17,                     /* LABEL  */
+  YYSYMBOL_LIST = 18,                      /* LIST  */
+  YYSYMBOL_IS_IN_LIST = 19,                /* IS_IN_LIST  */
+  YYSYMBOL_IS_IN_DICT = 20,                /* IS_IN_DICT  */
+  YYSYMBOL_IS_INTEGER = 21,                /* IS_INTEGER  */
+  YYSYMBOL_TO_INTEGER = 22,                /* TO_INTEGER  */
+  YYSYMBOL_TO_STRING = 23,                 /* TO_STRING  */
+  YYSYMBOL_SEX2DEC = 24,                   /* SEX2DEC  */
+  YYSYMBOL_WHILE = 25,                     /* WHILE  */
+  YYSYMBOL_IBMFLOAT = 26,                  /* IBMFLOAT  */
+  YYSYMBOL_SIGNED = 27,                    /* SIGNED  */
+  YYSYMBOL_UINT8 = 28,                     /* UINT8  */
+  YYSYMBOL_INT8 = 29,                      /* INT8  */
+  YYSYMBOL_UINT16 = 30,                    /* UINT16  */
+  YYSYMBOL_INT16 = 31,                     /* INT16  */
+  YYSYMBOL_UINT16_LITTLE_ENDIAN = 32,      /* UINT16_LITTLE_ENDIAN  */
+  YYSYMBOL_INT16_LITTLE_ENDIAN = 33,       /* INT16_LITTLE_ENDIAN  */
+  YYSYMBOL_UINT32 = 34,                    /* UINT32  */
+  YYSYMBOL_INT32 = 35,                     /* INT32  */
+  YYSYMBOL_UINT32_LITTLE_ENDIAN = 36,      /* UINT32_LITTLE_ENDIAN  */
+  YYSYMBOL_INT32_LITTLE_ENDIAN = 37,       /* INT32_LITTLE_ENDIAN  */
+  YYSYMBOL_UINT64 = 38,                    /* UINT64  */
+  YYSYMBOL_INT64 = 39,                     /* INT64  */
+  YYSYMBOL_UINT64_LITTLE_ENDIAN = 40,      /* UINT64_LITTLE_ENDIAN  */
+  YYSYMBOL_INT64_LITTLE_ENDIAN = 41,       /* INT64_LITTLE_ENDIAN  */
+  YYSYMBOL_BLOB = 42,                      /* BLOB  */
+  YYSYMBOL_BYTE = 43,                      /* BYTE  */
+  YYSYMBOL_CODETABLE = 44,                 /* CODETABLE  */
+  YYSYMBOL_SMART_TABLE = 45,               /* SMART_TABLE  */
+  YYSYMBOL_DICTIONARY = 46,                /* DICTIONARY  */
+  YYSYMBOL_COMPLEX_CODETABLE = 47,         /* COMPLEX_CODETABLE  */
+  YYSYMBOL_LOOKUP = 48,                    /* LOOKUP  */
+  YYSYMBOL_ALIAS = 49,                     /* ALIAS  */
+  YYSYMBOL_UNALIAS = 50,                   /* UNALIAS  */
+  YYSYMBOL_META = 51,                      /* META  */
+  YYSYMBOL_POS = 52,                       /* POS  */
+  YYSYMBOL_INTCONST = 53,                  /* INTCONST  */
+  YYSYMBOL_TRANS = 54,                     /* TRANS  */
+  YYSYMBOL_FLAGBIT = 55,                   /* FLAGBIT  */
+  YYSYMBOL_CONCEPT = 56,                   /* CONCEPT  */
+  YYSYMBOL_GETENV = 57,                    /* GETENV  */
+  YYSYMBOL_HASH_ARRAY = 58,                /* HASH_ARRAY  */
+  YYSYMBOL_CONCEPT_NOFAIL = 59,            /* CONCEPT_NOFAIL  */
+  YYSYMBOL_NIL = 60,                       /* NIL  */
+  YYSYMBOL_DUMMY = 61,                     /* DUMMY  */
+  YYSYMBOL_MODIFY = 62,                    /* MODIFY  */
+  YYSYMBOL_READ_ONLY = 63,                 /* READ_ONLY  */
+  YYSYMBOL_STRING_TYPE = 64,               /* STRING_TYPE  */
+  YYSYMBOL_LONG_TYPE = 65,                 /* LONG_TYPE  */
+  YYSYMBOL_DOUBLE_TYPE = 66,               /* DOUBLE_TYPE  */
+  YYSYMBOL_NO_COPY = 67,                   /* NO_COPY  */
+  YYSYMBOL_DUMP = 68,                      /* DUMP  */
+  YYSYMBOL_JSON = 69,                      /* JSON  */
+  YYSYMBOL_XML = 70,                       /* XML  */
+  YYSYMBOL_NO_FAIL = 71,                   /* NO_FAIL  */
+  YYSYMBOL_EDITION_SPECIFIC = 72,          /* EDITION_SPECIFIC  */
+  YYSYMBOL_OVERRIDE = 73,                  /* OVERRIDE  */
+  YYSYMBOL_HIDDEN = 74,                    /* HIDDEN  */
+  YYSYMBOL_CAN_BE_MISSING = 75,            /* CAN_BE_MISSING  */
+  YYSYMBOL_MISSING = 76,                   /* MISSING  */
+  YYSYMBOL_CONSTRAINT = 77,                /* CONSTRAINT  */
+  YYSYMBOL_COPY_OK = 78,                   /* COPY_OK  */
+  YYSYMBOL_WHEN = 79,                      /* WHEN  */
+  YYSYMBOL_SET = 80,                       /* SET  */
+  YYSYMBOL_SET_NOFAIL = 81,                /* SET_NOFAIL  */
+  YYSYMBOL_WRITE = 82,                     /* WRITE  */
+  YYSYMBOL_APPEND = 83,                    /* APPEND  */
+  YYSYMBOL_PRINT = 84,                     /* PRINT  */
+  YYSYMBOL_EXPORT = 85,                    /* EXPORT  */
+  YYSYMBOL_REMOVE = 86,                    /* REMOVE  */
+  YYSYMBOL_RENAME = 87,                    /* RENAME  */
+  YYSYMBOL_SKIP = 88,                      /* SKIP  */
+  YYSYMBOL_PAD = 89,                       /* PAD  */
+  YYSYMBOL_SECTION_PADDING = 90,           /* SECTION_PADDING  */
+  YYSYMBOL_MESSAGE = 91,                   /* MESSAGE  */
+  YYSYMBOL_MESSAGE_COPY = 92,              /* MESSAGE_COPY  */
+  YYSYMBOL_PADTO = 93,                     /* PADTO  */
+  YYSYMBOL_PADTOEVEN = 94,                 /* PADTOEVEN  */
+  YYSYMBOL_PADTOMULTIPLE = 95,             /* PADTOMULTIPLE  */
+  YYSYMBOL_G1_HALF_BYTE = 96,              /* G1_HALF_BYTE  */
+  YYSYMBOL_G1_MESSAGE_LENGTH = 97,         /* G1_MESSAGE_LENGTH  */
+  YYSYMBOL_G1_SECTION4_LENGTH = 98,        /* G1_SECTION4_LENGTH  */
+  YYSYMBOL_SECTION_LENGTH = 99,            /* SECTION_LENGTH  */
+  YYSYMBOL_LENGTH = 100,                   /* LENGTH  */
+  YYSYMBOL_FLAG = 101,                     /* FLAG  */
+  YYSYMBOL_ITERATOR = 102,                 /* ITERATOR  */
+  YYSYMBOL_NEAREST = 103,                  /* NEAREST  */
+  YYSYMBOL_BOX = 104,                      /* BOX  */
+  YYSYMBOL_KSEC = 105,                     /* KSEC  */
+  YYSYMBOL_ASSERT = 106,                   /* ASSERT  */
+  YYSYMBOL_SUBSTR = 107,                   /* SUBSTR  */
+  YYSYMBOL_CASE = 108,                     /* CASE  */
+  YYSYMBOL_SWITCH = 109,                   /* SWITCH  */
+  YYSYMBOL_DEFAULT = 110,                  /* DEFAULT  */
+  YYSYMBOL_EQ = 111,                       /* EQ  */
+  YYSYMBOL_NE = 112,                       /* NE  */
+  YYSYMBOL_GE = 113,                       /* GE  */
+  YYSYMBOL_LE = 114,                       /* LE  */
+  YYSYMBOL_LT = 115,                       /* LT  */
+  YYSYMBOL_GT = 116,                       /* GT  */
+  YYSYMBOL_BIT = 117,                      /* BIT  */
+  YYSYMBOL_BITOFF = 118,                   /* BITOFF  */
+  YYSYMBOL_AND = 119,                      /* AND  */
+  YYSYMBOL_OR = 120,                       /* OR  */
+  YYSYMBOL_NOT = 121,                      /* NOT  */
+  YYSYMBOL_IS = 122,                       /* IS  */
+  YYSYMBOL_IDENT = 123,                    /* IDENT  */
+  YYSYMBOL_STRING = 124,                   /* STRING  */
+  YYSYMBOL_INTEGER = 125,                  /* INTEGER  */
+  YYSYMBOL_FLOAT = 126,                    /* FLOAT  */
+  YYSYMBOL_127_ = 127,                     /* ','  */
+  YYSYMBOL_128_ = 128,                     /* ';'  */
+  YYSYMBOL_129_ = 129,                     /* '['  */
+  YYSYMBOL_130_ = 130,                     /* ']'  */
+  YYSYMBOL_131_ = 131,                     /* '('  */
+  YYSYMBOL_132_ = 132,                     /* ')'  */
+  YYSYMBOL_133_ = 133,                     /* '='  */
+  YYSYMBOL_134_ = 134,                     /* '.'  */
+  YYSYMBOL_135_ = 135,                     /* '{'  */
+  YYSYMBOL_136_ = 136,                     /* '}'  */
+  YYSYMBOL_137_ = 137,                     /* ':'  */
+  YYSYMBOL_138_ = 138,                     /* '-'  */
+  YYSYMBOL_139_ = 139,                     /* '^'  */
+  YYSYMBOL_140_ = 140,                     /* '*'  */
+  YYSYMBOL_141_ = 141,                     /* '/'  */
+  YYSYMBOL_142_ = 142,                     /* '%'  */
+  YYSYMBOL_143_ = 143,                     /* '+'  */
+  YYSYMBOL_YYACCEPT = 144,                 /* $accept  */
+  YYSYMBOL_all = 145,                      /* all  */
+  YYSYMBOL_empty = 146,                    /* empty  */
+  YYSYMBOL_dvalues = 147,                  /* dvalues  */
+  YYSYMBOL_svalues = 148,                  /* svalues  */
+  YYSYMBOL_integer_array = 149,            /* integer_array  */
+  YYSYMBOL_instructions = 150,             /* instructions  */
+  YYSYMBOL_instruction = 151,              /* instruction  */
+  YYSYMBOL_semi = 152,                     /* semi  */
+  YYSYMBOL_argument_list = 153,            /* argument_list  */
+  YYSYMBOL_arguments = 154,                /* arguments  */
+  YYSYMBOL_argument = 155,                 /* argument  */
+  YYSYMBOL_simple = 156,                   /* simple  */
+  YYSYMBOL_if_block = 157,                 /* if_block  */
+  YYSYMBOL_when_block = 158,               /* when_block  */
+  YYSYMBOL_set = 159,                      /* set  */
+  YYSYMBOL_set_list = 160,                 /* set_list  */
+  YYSYMBOL_default = 161,                  /* default  */
+  YYSYMBOL_flags = 162,                    /* flags  */
+  YYSYMBOL_flag_list = 163,                /* flag_list  */
+  YYSYMBOL_flag = 164,                     /* flag  */
+  YYSYMBOL_list_block = 165,               /* list_block  */
+  YYSYMBOL_while_block = 166,              /* while_block  */
+  YYSYMBOL_trigger_block = 167,            /* trigger_block  */
+  YYSYMBOL_concept_block = 168,            /* concept_block  */
+  YYSYMBOL_concept_list = 169,             /* concept_list  */
+  YYSYMBOL_hash_array_list = 170,          /* hash_array_list  */
+  YYSYMBOL_hash_array_block = 171,         /* hash_array_block  */
+  YYSYMBOL_case_list = 172,                /* case_list  */
+  YYSYMBOL_case_value = 173,               /* case_value  */
+  YYSYMBOL_switch_block = 174,             /* switch_block  */
+  YYSYMBOL_concept_value = 175,            /* concept_value  */
+  YYSYMBOL_concept_conditions = 176,       /* concept_conditions  */
+  YYSYMBOL_concept_condition = 177,        /* concept_condition  */
+  YYSYMBOL_hash_array_value = 178,         /* hash_array_value  */
+  YYSYMBOL_string_or_ident = 179,          /* string_or_ident  */
+  YYSYMBOL_atom = 180,                     /* atom  */
+  YYSYMBOL_power = 181,                    /* power  */
+  YYSYMBOL_factor = 182,                   /* factor  */
+  YYSYMBOL_term = 183,                     /* term  */
+  YYSYMBOL_condition = 184,                /* condition  */
+  YYSYMBOL_conjunction = 185,              /* conjunction  */
+  YYSYMBOL_disjunction = 186,              /* disjunction  */
+  YYSYMBOL_expression = 187,               /* expression  */
+  YYSYMBOL_rule = 188,                     /* rule  */
+  YYSYMBOL_rule_entry = 189,               /* rule_entry  */
+  YYSYMBOL_rule_entries = 190,             /* rule_entries  */
+  YYSYMBOL_fact = 191,                     /* fact  */
+  YYSYMBOL_conditional_rule = 192,         /* conditional_rule  */
+  YYSYMBOL_rules = 193                     /* rules  */
+};
+typedef enum grib_yysymbol_kind_t grib_yysymbol_kind_t;
+
 
 
 
@@ -467,6 +672,18 @@ typedef __INT_LEAST16_TYPE__ grib_yytype_int16;
 typedef int_least16_t grib_yytype_int16;
 #else
 typedef short grib_yytype_int16;
+#endif
+
+/* Work around bug in HP-UX 11.23, which defines these macros
+   incorrectly for preprocessor constants.  This workaround can likely
+   be removed in 2023, as HPE has promised support for HP-UX 11.23
+   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
+   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
+#ifdef __hpux
+# undef UINT_LEAST8_MAX
+# undef UINT_LEAST16_MAX
+# define UINT_LEAST8_MAX 255
+# define UINT_LEAST16_MAX 65535
 #endif
 
 #if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
@@ -528,6 +745,7 @@ typedef int grib_yytype_uint16;
 
 #define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
 
+
 /* Stored state numbers (used for stacks). */
 typedef grib_yytype_int16 grib_yy_state_t;
 
@@ -545,6 +763,7 @@ typedef int grib_yy_state_fast_t;
 #  define YY_(Msgid) Msgid
 # endif
 #endif
+
 
 #ifndef YY_ATTRIBUTE_PURE
 # if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
@@ -564,17 +783,23 @@ typedef int grib_yy_state_fast_t;
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YYUSE(E) ((void) (E))
+# define YY_USE(E) ((void) (E))
 #else
-# define YYUSE(E) /* empty */
+# define YY_USE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about grib_yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
+# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
+# else
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -603,7 +828,7 @@ typedef int grib_yy_state_fast_t;
 
 #define YY_ASSERT(E) ((void) (0 && (E)))
 
-#if ! defined grib_yyoverflow || YYERROR_VERBOSE
+#if !defined grib_yyoverflow
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
@@ -668,8 +893,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 # endif
-#endif /* ! defined grib_yyoverflow || YYERROR_VERBOSE */
-
+#endif /* !defined grib_yyoverflow */
 
 #if (! defined grib_yyoverflow \
      && (! defined __cplusplus \
@@ -745,14 +969,16 @@ union grib_yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  903
 
-#define YYUNDEFTOK  2
+/* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   381
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by grib_yylex, with out-of-bounds checking.  */
-#define YYTRANSLATE(YYX)                                                \
-  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? grib_yytranslate[YYX] : YYUNDEFTOK)
+#define YYTRANSLATE(YYX)                                \
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK                     \
+   ? YY_CAST (grib_yysymbol_kind_t, grib_yytranslate[YYX])        \
+   : YYSYMBOL_YYUNDEF)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
    as returned by grib_yylex.  */
@@ -800,7 +1026,7 @@ static const grib_yytype_uint8 grib_yytranslate[] =
 };
 
 #if YYDEBUG
-  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
+/* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const grib_yytype_int16 grib_yyrline[] =
 {
        0,   262,   262,   264,   265,   266,   267,   269,   273,   276,
@@ -833,27 +1059,34 @@ static const grib_yytype_int16 grib_yyrline[] =
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 0
+/** Accessing symbol of state STATE.  */
+#define YY_ACCESSING_SYMBOL(State) YY_CAST (grib_yysymbol_kind_t, grib_yystos[State])
+
+#if YYDEBUG || 0
+/* The user-facing name of the symbol whose (internal) number is
+   YYSYMBOL.  No bounds checking.  */
+static const char *grib_yysymbol_name (grib_yysymbol_kind_t grib_yysymbol) YY_ATTRIBUTE_UNUSED;
+
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const grib_yytname[] =
 {
-  "$end", "error", "$undefined", "LOWERCASE", "IF", "IF_TRANSIENT",
-  "ELSE", "END", "CLOSE", "UNSIGNED", "TEMPLATE", "TEMPLATE_NOFAIL",
-  "TRIGGER", "ASCII", "GROUP", "NON_ALPHA", "KSEC1EXPVER", "LABEL", "LIST",
-  "IS_IN_LIST", "IS_IN_DICT", "IS_INTEGER", "TO_INTEGER", "TO_STRING",
-  "SEX2DEC", "WHILE", "IBMFLOAT", "SIGNED", "UINT8", "INT8", "UINT16",
-  "INT16", "UINT16_LITTLE_ENDIAN", "INT16_LITTLE_ENDIAN", "UINT32",
-  "INT32", "UINT32_LITTLE_ENDIAN", "INT32_LITTLE_ENDIAN", "UINT64",
-  "INT64", "UINT64_LITTLE_ENDIAN", "INT64_LITTLE_ENDIAN", "BLOB", "BYTE",
-  "CODETABLE", "SMART_TABLE", "DICTIONARY", "COMPLEX_CODETABLE", "LOOKUP",
-  "ALIAS", "UNALIAS", "META", "POS", "INTCONST", "TRANS", "FLAGBIT",
-  "CONCEPT", "GETENV", "HASH_ARRAY", "CONCEPT_NOFAIL", "NIL", "DUMMY",
-  "MODIFY", "READ_ONLY", "STRING_TYPE", "LONG_TYPE", "DOUBLE_TYPE",
-  "NO_COPY", "DUMP", "JSON", "XML", "NO_FAIL", "EDITION_SPECIFIC",
-  "OVERRIDE", "HIDDEN", "CAN_BE_MISSING", "MISSING", "CONSTRAINT",
-  "COPY_OK", "WHEN", "SET", "SET_NOFAIL", "WRITE", "APPEND", "PRINT",
-  "EXPORT", "REMOVE", "RENAME", "SKIP", "PAD", "SECTION_PADDING",
+  "\"end of file\"", "error", "\"invalid token\"", "LOWERCASE", "IF",
+  "IF_TRANSIENT", "ELSE", "END", "CLOSE", "UNSIGNED", "TEMPLATE",
+  "TEMPLATE_NOFAIL", "TRIGGER", "ASCII", "GROUP", "NON_ALPHA",
+  "KSEC1EXPVER", "LABEL", "LIST", "IS_IN_LIST", "IS_IN_DICT", "IS_INTEGER",
+  "TO_INTEGER", "TO_STRING", "SEX2DEC", "WHILE", "IBMFLOAT", "SIGNED",
+  "UINT8", "INT8", "UINT16", "INT16", "UINT16_LITTLE_ENDIAN",
+  "INT16_LITTLE_ENDIAN", "UINT32", "INT32", "UINT32_LITTLE_ENDIAN",
+  "INT32_LITTLE_ENDIAN", "UINT64", "INT64", "UINT64_LITTLE_ENDIAN",
+  "INT64_LITTLE_ENDIAN", "BLOB", "BYTE", "CODETABLE", "SMART_TABLE",
+  "DICTIONARY", "COMPLEX_CODETABLE", "LOOKUP", "ALIAS", "UNALIAS", "META",
+  "POS", "INTCONST", "TRANS", "FLAGBIT", "CONCEPT", "GETENV", "HASH_ARRAY",
+  "CONCEPT_NOFAIL", "NIL", "DUMMY", "MODIFY", "READ_ONLY", "STRING_TYPE",
+  "LONG_TYPE", "DOUBLE_TYPE", "NO_COPY", "DUMP", "JSON", "XML", "NO_FAIL",
+  "EDITION_SPECIFIC", "OVERRIDE", "HIDDEN", "CAN_BE_MISSING", "MISSING",
+  "CONSTRAINT", "COPY_OK", "WHEN", "SET", "SET_NOFAIL", "WRITE", "APPEND",
+  "PRINT", "EXPORT", "REMOVE", "RENAME", "SKIP", "PAD", "SECTION_PADDING",
   "MESSAGE", "MESSAGE_COPY", "PADTO", "PADTOEVEN", "PADTOMULTIPLE",
   "G1_HALF_BYTE", "G1_MESSAGE_LENGTH", "G1_SECTION4_LENGTH",
   "SECTION_LENGTH", "LENGTH", "FLAG", "ITERATOR", "NEAREST", "BOX", "KSEC",
@@ -872,30 +1105,13 @@ static const char *const grib_yytname[] =
   "condition", "conjunction", "disjunction", "expression", "rule",
   "rule_entry", "rule_entries", "fact", "conditional_rule", "rules", YY_NULLPTR
 };
-#endif
 
-# ifdef YYPRINT
-/* YYTOKNUM[NUM] -- (External) token number corresponding to the
-   (internal) symbol number NUM (which must be that of a token).  */
-static const grib_yytype_int16 grib_yytoknum[] =
+static const char *
+grib_yysymbol_name (grib_yysymbol_kind_t grib_yysymbol)
 {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308,   309,   310,   311,   312,   313,   314,
-     315,   316,   317,   318,   319,   320,   321,   322,   323,   324,
-     325,   326,   327,   328,   329,   330,   331,   332,   333,   334,
-     335,   336,   337,   338,   339,   340,   341,   342,   343,   344,
-     345,   346,   347,   348,   349,   350,   351,   352,   353,   354,
-     355,   356,   357,   358,   359,   360,   361,   362,   363,   364,
-     365,   366,   367,   368,   369,   370,   371,   372,   373,   374,
-     375,   376,   377,   378,   379,   380,   381,    44,    59,    91,
-      93,    40,    41,    61,    46,   123,   125,    58,    45,    94,
-      42,    47,    37,    43
-};
-# endif
+  return grib_yytname[grib_yysymbol];
+}
+#endif
 
 #define YYPACT_NINF (-654)
 
@@ -907,8 +1123,8 @@ static const grib_yytype_int16 grib_yytoknum[] =
 #define grib_yytable_value_is_error(Yyn) \
   0
 
-  /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
-     STATE-NUM.  */
+/* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
+   STATE-NUM.  */
 static const grib_yytype_int16 grib_yypact[] =
 {
     1435,  -654,   -24,   -10,     8,    65,   -67,   115,   162,   147,
@@ -1004,9 +1220,9 @@ static const grib_yytype_int16 grib_yypact[] =
     -654,  -654,  -654
 };
 
-  /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
-     Performed when YYTABLE does not specify something else to do.  Zero
-     means the default is an error.  */
+/* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
+   Performed when YYTABLE does not specify something else to do.  Zero
+   means the default is an error.  */
 static const grib_yytype_int16 grib_yydefact[] =
 {
        0,     7,     0,     0,     0,     0,     0,     0,     0,     0,
@@ -1102,7 +1318,7 @@ static const grib_yytype_int16 grib_yydefact[] =
      178,   180,   188
 };
 
-  /* YYPGOTO[NTERM-NUM].  */
+/* YYPGOTO[NTERM-NUM].  */
 static const grib_yytype_int16 grib_yypgoto[] =
 {
     -654,  -654,     5,   564,  -654,  -351,     0,  -654,  -653,   242,
@@ -1112,19 +1328,19 @@ static const grib_yytype_int16 grib_yypgoto[] =
     -160,   691,  -654,   -96,  -654,    14,   392,  -654,  -654,   913
 };
 
-  /* YYDEFGOTO[NTERM-NUM].  */
+/* YYDEFGOTO[NTERM-NUM].  */
 static const grib_yytype_int16 grib_yydefgoto[] =
 {
-      -1,    80,   290,   545,   567,   503,   615,    83,   669,   176,
+       0,    80,   290,   545,   567,   503,   615,    83,   669,   176,
      177,   178,    84,    85,    86,   666,   667,   243,   291,   441,
      442,    87,    88,    89,    90,    91,    92,    93,   685,   686,
       94,    95,   505,   506,    96,   179,   180,   181,   182,   183,
      184,   185,   186,   187,    97,   616,   617,    99,   100,   101
 };
 
-  /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
-     positive, shift that token.  If negative, reduce the rule whose
-     number is the opposite.  If YYTABLE_NINF, syntax error.  */
+/* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
+   positive, shift that token.  If negative, reduce the rule whose
+   number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const grib_yytype_int16 grib_yytable[] =
 {
       82,   564,   224,   462,   508,    81,   231,   232,   305,   308,
@@ -1513,8 +1729,8 @@ static const grib_yytype_int16 grib_yycheck[] =
       -1,    -1,   126
 };
 
-  /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-     symbol of state STATE-NUM.  */
+/* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
+   state STATE-NUM.  */
 static const grib_yytype_uint8 grib_yystos[] =
 {
        0,     1,     4,     5,     8,     9,    10,    11,    12,    13,
@@ -1610,7 +1826,7 @@ static const grib_yytype_uint8 grib_yystos[] =
      162,   162,   162
 };
 
-  /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
+/* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const grib_yytype_uint8 grib_yyr1[] =
 {
        0,   144,   145,   145,   145,   145,   145,   145,   146,   147,
@@ -1642,7 +1858,7 @@ static const grib_yytype_uint8 grib_yyr1[] =
      189,   189,   190,   190,   191,   192,   193,   193
 };
 
-  /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
+/* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const grib_yytype_int8 grib_yyr2[] =
 {
        0,     2,     1,     1,     1,     1,     1,     1,     0,     1,
@@ -1675,14 +1891,15 @@ static const grib_yytype_int8 grib_yyr2[] =
 };
 
 
+enum { YYENOMEM = -2 };
+
 #define grib_yyerrok         (grib_yyerrstatus = 0)
 #define grib_yyclearin       (grib_yychar = YYEMPTY)
-#define YYEMPTY         (-2)
-#define YYEOF           0
 
 #define YYACCEPT        goto grib_yyacceptlab
 #define YYABORT         goto grib_yyabortlab
 #define YYERROR         goto grib_yyerrorlab
+#define YYNOMEM         goto grib_yyexhaustedlab
 
 
 #define YYRECOVERING()  (!!grib_yyerrstatus)
@@ -1704,10 +1921,9 @@ static const grib_yytype_int8 grib_yyr2[] =
       }                                                           \
   while (0)
 
-/* Error token number */
-#define YYTERROR        1
-#define YYERRCODE       256
-
+/* Backward compatibility with an undocumented macro.
+   Use YYerror or YYUNDEF. */
+#define YYERRCODE YYUNDEF
 
 
 /* Enable debugging if requested.  */
@@ -1724,19 +1940,16 @@ do {                                            \
     YYFPRINTF Args;                             \
 } while (0)
 
-/* This macro is provided for backward compatibility. */
-#ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-#endif
 
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
+
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)                    \
 do {                                                                      \
   if (grib_yydebug)                                                            \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       grib_yy_symbol_print (stderr,                                            \
-                  Type, Value); \
+                  Kind, Value); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -1747,18 +1960,15 @@ do {                                                                      \
 `-----------------------------------*/
 
 static void
-grib_yy_symbol_value_print (FILE *grib_yyo, int grib_yytype, YYSTYPE const * const grib_yyvaluep)
+grib_yy_symbol_value_print (FILE *grib_yyo,
+                       grib_yysymbol_kind_t grib_yykind, YYSTYPE const * const grib_yyvaluep)
 {
   FILE *grib_yyoutput = grib_yyo;
-  YYUSE (grib_yyoutput);
+  YY_USE (grib_yyoutput);
   if (!grib_yyvaluep)
     return;
-# ifdef YYPRINT
-  if (grib_yytype < YYNTOKENS)
-    YYPRINT (grib_yyo, grib_yytoknum[grib_yytype], *grib_yyvaluep);
-# endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (grib_yytype);
+  YY_USE (grib_yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1768,12 +1978,13 @@ grib_yy_symbol_value_print (FILE *grib_yyo, int grib_yytype, YYSTYPE const * con
 `---------------------------*/
 
 static void
-grib_yy_symbol_print (FILE *grib_yyo, int grib_yytype, YYSTYPE const * const grib_yyvaluep)
+grib_yy_symbol_print (FILE *grib_yyo,
+                 grib_yysymbol_kind_t grib_yykind, YYSTYPE const * const grib_yyvaluep)
 {
   YYFPRINTF (grib_yyo, "%s %s (",
-             grib_yytype < YYNTOKENS ? "token" : "nterm", grib_yytname[grib_yytype]);
+             grib_yykind < YYNTOKENS ? "token" : "nterm", grib_yysymbol_name (grib_yykind));
 
-  grib_yy_symbol_value_print (grib_yyo, grib_yytype, grib_yyvaluep);
+  grib_yy_symbol_value_print (grib_yyo, grib_yykind, grib_yyvaluep);
   YYFPRINTF (grib_yyo, ")");
 }
 
@@ -1806,7 +2017,8 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-grib_yy_reduce_print (grib_yy_state_t *grib_yyssp, YYSTYPE *grib_yyvsp, int grib_yyrule)
+grib_yy_reduce_print (grib_yy_state_t *grib_yyssp, YYSTYPE *grib_yyvsp,
+                 int grib_yyrule)
 {
   int grib_yylno = grib_yyrline[grib_yyrule];
   int grib_yynrhs = grib_yyr2[grib_yyrule];
@@ -1818,9 +2030,8 @@ grib_yy_reduce_print (grib_yy_state_t *grib_yyssp, YYSTYPE *grib_yyvsp, int grib
     {
       YYFPRINTF (stderr, "   $%d = ", grib_yyi + 1);
       grib_yy_symbol_print (stderr,
-                       grib_yystos[+grib_yyssp[grib_yyi + 1 - grib_yynrhs]],
-                       &grib_yyvsp[(grib_yyi + 1) - (grib_yynrhs)]
-                                              );
+                       YY_ACCESSING_SYMBOL (+grib_yyssp[grib_yyi + 1 - grib_yynrhs]),
+                       &grib_yyvsp[(grib_yyi + 1) - (grib_yynrhs)]);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -1835,8 +2046,8 @@ do {                                    \
    multiple parsers can coexist.  */
 int grib_yydebug;
 #else /* !YYDEBUG */
-# define YYDPRINTF(Args)
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
+# define YYDPRINTF(Args) ((void) 0)
+# define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
@@ -1859,265 +2070,38 @@ int grib_yydebug;
 #endif
 
 
-#if YYERROR_VERBOSE
 
-# ifndef grib_yystrlen
-#  if defined __GLIBC__ && defined _STRING_H
-#   define grib_yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
-#  else
-/* Return the length of YYSTR.  */
-static YYPTRDIFF_T
-grib_yystrlen (const char *grib_yystr)
-{
-  YYPTRDIFF_T grib_yylen;
-  for (grib_yylen = 0; grib_yystr[grib_yylen]; grib_yylen++)
-    continue;
-  return grib_yylen;
-}
-#  endif
-# endif
 
-# ifndef grib_yystpcpy
-#  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
-#   define grib_yystpcpy stpcpy
-#  else
-/* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
-   YYDEST.  */
-static char *
-grib_yystpcpy (char *grib_yydest, const char *grib_yysrc)
-{
-  char *grib_yyd = grib_yydest;
-  const char *grib_yys = grib_yysrc;
 
-  while ((*grib_yyd++ = *grib_yys++) != '\0')
-    continue;
-
-  return grib_yyd - 1;
-}
-#  endif
-# endif
-
-# ifndef grib_yytnamerr
-/* Copy to YYRES the contents of YYSTR after stripping away unnecessary
-   quotes and backslashes, so that it's suitable for grib_yyerror.  The
-   heuristic is that double-quoting is unnecessary unless the string
-   contains an apostrophe, a comma, or backslash (other than
-   backslash-backslash).  YYSTR is taken from grib_yytname.  If YYRES is
-   null, do not copy; instead, return the length of what the result
-   would have been.  */
-static YYPTRDIFF_T
-grib_yytnamerr (char *grib_yyres, const char *grib_yystr)
-{
-  if (*grib_yystr == '"')
-    {
-      YYPTRDIFF_T grib_yyn = 0;
-      char const *grib_yyp = grib_yystr;
-
-      for (;;)
-        switch (*++grib_yyp)
-          {
-          case '\'':
-          case ',':
-            goto do_not_strip_quotes;
-
-          case '\\':
-            if (*++grib_yyp != '\\')
-              goto do_not_strip_quotes;
-            else
-              goto append;
-
-          append:
-          default:
-            if (grib_yyres)
-              grib_yyres[grib_yyn] = *grib_yyp;
-            grib_yyn++;
-            break;
-
-          case '"':
-            if (grib_yyres)
-              grib_yyres[grib_yyn] = '\0';
-            return grib_yyn;
-          }
-    do_not_strip_quotes: ;
-    }
-
-  if (grib_yyres)
-    return grib_yystpcpy (grib_yyres, grib_yystr) - grib_yyres;
-  else
-    return grib_yystrlen (grib_yystr);
-}
-# endif
-
-/* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
-   about the unexpected token YYTOKEN for the state stack whose top is
-   YYSSP.
-
-   Return 0 if *YYMSG was successfully written.  Return 1 if *YYMSG is
-   not large enough to hold the message.  In that case, also set
-   *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
-   required number of bytes is too large to store.  */
-static int
-grib_yysyntax_error (YYPTRDIFF_T *grib_yymsg_alloc, char **grib_yymsg,
-                grib_yy_state_t *grib_yyssp, int grib_yytoken)
-{
-  enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
-  /* Internationalized format string. */
-  const char *grib_yyformat = YY_NULLPTR;
-  /* Arguments of grib_yyformat: reported tokens (one for the "unexpected",
-     one per "expected"). */
-  char const *grib_yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Actual size of YYARG. */
-  int grib_yycount = 0;
-  /* Cumulated lengths of YYARG.  */
-  YYPTRDIFF_T grib_yysize = 0;
-
-  /* There are many possibilities here to consider:
-     - If this state is a consistent state with a default action, then
-       the only way this function was invoked is if the default action
-       is an error action.  In that case, don't check for expected
-       tokens because there are none.
-     - The only way there can be no lookahead present (in grib_yychar) is if
-       this state is a consistent state with a default action.  Thus,
-       detecting the absence of a lookahead is sufficient to determine
-       that there is no unexpected or expected token to report.  In that
-       case, just report a simple "syntax error".
-     - Don't assume there isn't a lookahead just because this state is a
-       consistent state with a default action.  There might have been a
-       previous inconsistent state, consistent state with a non-default
-       action, or user semantic action that manipulated grib_yychar.
-     - Of course, the expected token list depends on states to have
-       correct lookahead information, and it depends on the parser not
-       to perform extra reductions after fetching a lookahead from the
-       scanner and before detecting a syntax error.  Thus, state merging
-       (from LALR or IELR) and default reductions corrupt the expected
-       token list.  However, the list is correct for canonical LR with
-       one exception: it will still contain any token that will not be
-       accepted due to an error action in a later state.
-  */
-  if (grib_yytoken != YYEMPTY)
-    {
-      int grib_yyn = grib_yypact[+*grib_yyssp];
-      YYPTRDIFF_T grib_yysize0 = grib_yytnamerr (YY_NULLPTR, grib_yytname[grib_yytoken]);
-      grib_yysize = grib_yysize0;
-      grib_yyarg[grib_yycount++] = grib_yytname[grib_yytoken];
-      if (!grib_yypact_value_is_default (grib_yyn))
-        {
-          /* Start YYX at -YYN if negative to avoid negative indexes in
-             YYCHECK.  In other words, skip the first -YYN actions for
-             this state because they are default actions.  */
-          int grib_yyxbegin = grib_yyn < 0 ? -grib_yyn : 0;
-          /* Stay within bounds of both grib_yycheck and grib_yytname.  */
-          int grib_yychecklim = YYLAST - grib_yyn + 1;
-          int grib_yyxend = grib_yychecklim < YYNTOKENS ? grib_yychecklim : YYNTOKENS;
-          int grib_yyx;
-
-          for (grib_yyx = grib_yyxbegin; grib_yyx < grib_yyxend; ++grib_yyx)
-            if (grib_yycheck[grib_yyx + grib_yyn] == grib_yyx && grib_yyx != YYTERROR
-                && !grib_yytable_value_is_error (grib_yytable[grib_yyx + grib_yyn]))
-              {
-                if (grib_yycount == YYERROR_VERBOSE_ARGS_MAXIMUM)
-                  {
-                    grib_yycount = 1;
-                    grib_yysize = grib_yysize0;
-                    break;
-                  }
-                grib_yyarg[grib_yycount++] = grib_yytname[grib_yyx];
-                {
-                  YYPTRDIFF_T grib_yysize1
-                    = grib_yysize + grib_yytnamerr (YY_NULLPTR, grib_yytname[grib_yyx]);
-                  if (grib_yysize <= grib_yysize1 && grib_yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-                    grib_yysize = grib_yysize1;
-                  else
-                    return 2;
-                }
-              }
-        }
-    }
-
-  switch (grib_yycount)
-    {
-# define YYCASE_(N, S)                      \
-      case N:                               \
-        grib_yyformat = S;                       \
-      break
-    default: /* Avoid compiler warnings. */
-      YYCASE_(0, YY_("syntax error"));
-      YYCASE_(1, YY_("syntax error, unexpected %s"));
-      YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
-      YYCASE_(3, YY_("syntax error, unexpected %s, expecting %s or %s"));
-      YYCASE_(4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
-      YYCASE_(5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
-# undef YYCASE_
-    }
-
-  {
-    /* Don't count the "%s"s in the final size, but reserve room for
-       the terminator.  */
-    YYPTRDIFF_T grib_yysize1 = grib_yysize + (grib_yystrlen (grib_yyformat) - 2 * grib_yycount) + 1;
-    if (grib_yysize <= grib_yysize1 && grib_yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-      grib_yysize = grib_yysize1;
-    else
-      return 2;
-  }
-
-  if (*grib_yymsg_alloc < grib_yysize)
-    {
-      *grib_yymsg_alloc = 2 * grib_yysize;
-      if (! (grib_yysize <= *grib_yymsg_alloc
-             && *grib_yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
-        *grib_yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
-      return 1;
-    }
-
-  /* Avoid snprintf, as that infringes on the user's name space.
-     Don't have undefined behavior even if the translation
-     produced a string with the wrong number of "%s"s.  */
-  {
-    char *grib_yyp = *grib_yymsg;
-    int grib_yyi = 0;
-    while ((*grib_yyp = *grib_yyformat) != '\0')
-      if (*grib_yyp == '%' && grib_yyformat[1] == 's' && grib_yyi < grib_yycount)
-        {
-          grib_yyp += grib_yytnamerr (grib_yyp, grib_yyarg[grib_yyi++]);
-          grib_yyformat += 2;
-        }
-      else
-        {
-          ++grib_yyp;
-          ++grib_yyformat;
-        }
-  }
-  return 0;
-}
-#endif /* YYERROR_VERBOSE */
 
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
 static void
-grib_yydestruct (const char *grib_yymsg, int grib_yytype, YYSTYPE *grib_yyvaluep)
+grib_yydestruct (const char *grib_yymsg,
+            grib_yysymbol_kind_t grib_yykind, YYSTYPE *grib_yyvaluep)
 {
-  YYUSE (grib_yyvaluep);
+  YY_USE (grib_yyvaluep);
   if (!grib_yymsg)
     grib_yymsg = "Deleting";
-  YY_SYMBOL_PRINT (grib_yymsg, grib_yytype, grib_yyvaluep, grib_yylocationp);
+  YY_SYMBOL_PRINT (grib_yymsg, grib_yykind, grib_yyvaluep, grib_yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (grib_yytype);
+  YY_USE (grib_yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
-
-
-/* The lookahead symbol.  */
+/* Lookahead token kind.  */
 int grib_yychar;
 
 /* The semantic value of the lookahead symbol.  */
 YYSTYPE grib_yylval;
 /* Number of syntax errors so far.  */
 int grib_yynerrs;
+
+
 
 
 /*----------.
@@ -2127,43 +2111,36 @@ int grib_yynerrs;
 int
 grib_yyparse (void)
 {
-    grib_yy_state_fast_t grib_yystate;
+    grib_yy_state_fast_t grib_yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
-    int grib_yyerrstatus;
+    int grib_yyerrstatus = 0;
 
-    /* The stacks and their tools:
-       'grib_yyss': related to states.
-       'grib_yyvs': related to semantic values.
-
-       Refer to the stacks through separate pointers, to allow grib_yyoverflow
+    /* Refer to the stacks through separate pointers, to allow grib_yyoverflow
        to reallocate them elsewhere.  */
 
-    /* The state stack.  */
+    /* Their size.  */
+    YYPTRDIFF_T grib_yystacksize = YYINITDEPTH;
+
+    /* The state stack: array, bottom, top.  */
     grib_yy_state_t grib_yyssa[YYINITDEPTH];
-    grib_yy_state_t *grib_yyss;
-    grib_yy_state_t *grib_yyssp;
+    grib_yy_state_t *grib_yyss = grib_yyssa;
+    grib_yy_state_t *grib_yyssp = grib_yyss;
 
-    /* The semantic value stack.  */
+    /* The semantic value stack: array, bottom, top.  */
     YYSTYPE grib_yyvsa[YYINITDEPTH];
-    YYSTYPE *grib_yyvs;
-    YYSTYPE *grib_yyvsp;
-
-    YYPTRDIFF_T grib_yystacksize;
+    YYSTYPE *grib_yyvs = grib_yyvsa;
+    YYSTYPE *grib_yyvsp = grib_yyvs;
 
   int grib_yyn;
+  /* The return value of grib_yyparse.  */
   int grib_yyresult;
-  /* Lookahead token as an internal (translated) token number.  */
-  int grib_yytoken = 0;
+  /* Lookahead symbol kind.  */
+  grib_yysymbol_kind_t grib_yytoken = YYSYMBOL_YYEMPTY;
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE grib_yyval;
 
-#if YYERROR_VERBOSE
-  /* Buffer for error messages, and its allocated size.  */
-  char grib_yymsgbuf[128];
-  char *grib_yymsg = grib_yymsgbuf;
-  YYPTRDIFF_T grib_yymsg_alloc = sizeof grib_yymsgbuf;
-#endif
+
 
 #define YYPOPSTACK(N)   (grib_yyvsp -= (N), grib_yyssp -= (N))
 
@@ -2171,16 +2148,10 @@ grib_yyparse (void)
      Keep to zero when no symbol should be popped.  */
   int grib_yylen = 0;
 
-  grib_yyssp = grib_yyss = grib_yyssa;
-  grib_yyvsp = grib_yyvs = grib_yyvsa;
-  grib_yystacksize = YYINITDEPTH;
-
   YYDPRINTF ((stderr, "Starting parse\n"));
 
-  grib_yystate = 0;
-  grib_yyerrstatus = 0;
-  grib_yynerrs = 0;
   grib_yychar = YYEMPTY; /* Cause a token to be read.  */
+
   goto grib_yysetstate;
 
 
@@ -2202,10 +2173,11 @@ grib_yysetstate:
   YY_IGNORE_USELESS_CAST_BEGIN
   *grib_yyssp = YY_CAST (grib_yy_state_t, grib_yystate);
   YY_IGNORE_USELESS_CAST_END
+  YY_STACK_PRINT (grib_yyss, grib_yyssp);
 
   if (grib_yyss + grib_yystacksize - 1 <= grib_yyssp)
 #if !defined grib_yyoverflow && !defined YYSTACK_RELOCATE
-    goto grib_yyexhaustedlab;
+    YYNOMEM;
 #else
     {
       /* Get the current used size of the three stacks, in elements.  */
@@ -2233,7 +2205,7 @@ grib_yysetstate:
 # else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= grib_yystacksize)
-        goto grib_yyexhaustedlab;
+        YYNOMEM;
       grib_yystacksize *= 2;
       if (YYMAXDEPTH < grib_yystacksize)
         grib_yystacksize = YYMAXDEPTH;
@@ -2244,10 +2216,10 @@ grib_yysetstate:
           YY_CAST (union grib_yyalloc *,
                    YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (grib_yystacksize))));
         if (! grib_yyptr)
-          goto grib_yyexhaustedlab;
+          YYNOMEM;
         YYSTACK_RELOCATE (grib_yyss_alloc, grib_yyss);
         YYSTACK_RELOCATE (grib_yyvs_alloc, grib_yyvs);
-# undef YYSTACK_RELOCATE
+#  undef YYSTACK_RELOCATE
         if (grib_yyss1 != grib_yyssa)
           YYSTACK_FREE (grib_yyss1);
       }
@@ -2265,6 +2237,7 @@ grib_yysetstate:
         YYABORT;
     }
 #endif /* !defined grib_yyoverflow && !defined YYSTACK_RELOCATE */
+
 
   if (grib_yystate == YYFINAL)
     YYACCEPT;
@@ -2286,17 +2259,28 @@ grib_yybackup:
 
   /* Not known => get a lookahead token if don't already have one.  */
 
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
+  /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
   if (grib_yychar == YYEMPTY)
     {
-      YYDPRINTF ((stderr, "Reading a token: "));
+      YYDPRINTF ((stderr, "Reading a token\n"));
       grib_yychar = grib_yylex ();
     }
 
   if (grib_yychar <= YYEOF)
     {
-      grib_yychar = grib_yytoken = YYEOF;
+      grib_yychar = YYEOF;
+      grib_yytoken = YYSYMBOL_YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
+    }
+  else if (grib_yychar == YYerror)
+    {
+      /* The scanner already issued an error message, process directly
+         to error recovery.  But do not keep the error token as
+         lookahead, it is too special and may lead us to an endless
+         loop in error recovery. */
+      grib_yychar = YYUNDEF;
+      grib_yytoken = YYSYMBOL_YYerror;
+      goto grib_yyerrlab1;
     }
   else
     {
@@ -2366,249 +2350,249 @@ grib_yyreduce:
   YY_REDUCE_PRINT (grib_yyn);
   switch (grib_yyn)
     {
-  case 2:
+  case 2: /* all: empty  */
 #line 262 "griby.y"
                   { grib_parser_all_actions = 0;grib_parser_concept=0; 
                             grib_parser_hash_array=0;grib_parser_rules=0; }
-#line 2374 "y.tab.c"
+#line 2358 "y.tab.c"
     break;
 
-  case 3:
+  case 3: /* all: concept_list  */
 #line 264 "griby.y"
                           { grib_parser_concept     = reverse_concept((grib_yyvsp[0].concept_value)); }
-#line 2380 "y.tab.c"
+#line 2364 "y.tab.c"
     break;
 
-  case 4:
+  case 4: /* all: hash_array_list  */
 #line 265 "griby.y"
                              { grib_parser_hash_array     = reverse_hash_array((grib_yyvsp[0].hash_array_value)); }
-#line 2386 "y.tab.c"
+#line 2370 "y.tab.c"
     break;
 
-  case 5:
+  case 5: /* all: instructions  */
 #line 266 "griby.y"
                           { grib_parser_all_actions = (grib_yyvsp[0].act); }
-#line 2392 "y.tab.c"
+#line 2376 "y.tab.c"
     break;
 
-  case 6:
+  case 6: /* all: rules  */
 #line 267 "griby.y"
                           { grib_parser_rules       = (grib_yyvsp[0].rules); }
-#line 2398 "y.tab.c"
+#line 2382 "y.tab.c"
     break;
 
-  case 7:
+  case 7: /* all: error  */
 #line 269 "griby.y"
                       { grib_parser_all_actions = 0; grib_parser_concept=0; 
 	                    grib_parser_hash_array=0; grib_parser_rules=0; }
-#line 2405 "y.tab.c"
+#line 2389 "y.tab.c"
     break;
 
-  case 9:
+  case 9: /* dvalues: FLOAT  */
 #line 276 "griby.y"
                  { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].dval));}
-#line 2411 "y.tab.c"
+#line 2395 "y.tab.c"
     break;
 
-  case 10:
+  case 10: /* dvalues: dvalues ',' FLOAT  */
 #line 277 "griby.y"
                          { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].dval));}
-#line 2417 "y.tab.c"
+#line 2401 "y.tab.c"
     break;
 
-  case 11:
+  case 11: /* dvalues: INTEGER  */
 #line 278 "griby.y"
                { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,0,(grib_yyvsp[0].lval));}
-#line 2423 "y.tab.c"
+#line 2407 "y.tab.c"
     break;
 
-  case 12:
+  case 12: /* dvalues: dvalues ',' INTEGER  */
 #line 279 "griby.y"
                            { (grib_yyval.dvalue)=grib_darray_push(grib_parser_context,(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval));}
-#line 2429 "y.tab.c"
+#line 2413 "y.tab.c"
     break;
 
-  case 13:
+  case 13: /* svalues: STRING  */
 #line 282 "griby.y"
                 { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,0,(grib_yyvsp[0].str));}
-#line 2435 "y.tab.c"
+#line 2419 "y.tab.c"
     break;
 
-  case 14:
+  case 14: /* svalues: svalues ',' STRING  */
 #line 283 "griby.y"
                           { (grib_yyval.svalue)=grib_sarray_push(grib_parser_context,(grib_yyvsp[-2].svalue),(grib_yyvsp[0].str));}
-#line 2441 "y.tab.c"
+#line 2425 "y.tab.c"
     break;
 
-  case 15:
+  case 15: /* integer_array: INTEGER  */
 #line 287 "griby.y"
                          { (grib_yyval.ivalue)=grib_iarray_push(0,(grib_yyvsp[0].lval));}
-#line 2447 "y.tab.c"
+#line 2431 "y.tab.c"
     break;
 
-  case 16:
+  case 16: /* integer_array: integer_array ',' INTEGER  */
 #line 288 "griby.y"
                                  { (grib_yyval.ivalue)=grib_iarray_push((grib_yyvsp[-2].ivalue),(grib_yyvsp[0].lval));}
-#line 2453 "y.tab.c"
+#line 2437 "y.tab.c"
     break;
 
-  case 18:
+  case 18: /* instructions: instruction instructions  */
 #line 292 "griby.y"
                                     { (grib_yyvsp[-1].act)->next = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-1].act); }
-#line 2459 "y.tab.c"
+#line 2443 "y.tab.c"
     break;
 
-  case 19:
+  case 19: /* instructions: instruction ';' instructions  */
 #line 293 "griby.y"
                                          { (grib_yyvsp[-2].act)->next = (grib_yyvsp[0].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
-#line 2465 "y.tab.c"
+#line 2449 "y.tab.c"
     break;
 
-  case 20:
+  case 20: /* instructions: instruction ';'  */
 #line 294 "griby.y"
                             {  (grib_yyval.act) = (grib_yyvsp[-1].act);}
-#line 2471 "y.tab.c"
+#line 2455 "y.tab.c"
     break;
 
-  case 32:
+  case 32: /* argument_list: empty  */
 #line 313 "griby.y"
                            { (grib_yyval.explist) = 0; }
-#line 2477 "y.tab.c"
+#line 2461 "y.tab.c"
     break;
 
-  case 35:
+  case 35: /* arguments: argument ',' arguments  */
 #line 318 "griby.y"
                                        { (grib_yyvsp[-2].explist)->next = (grib_yyvsp[0].explist); (grib_yyval.explist) = (grib_yyvsp[-2].explist); }
-#line 2483 "y.tab.c"
+#line 2467 "y.tab.c"
     break;
 
-  case 36:
+  case 36: /* argument: expression  */
 #line 321 "griby.y"
                      { (grib_yyval.explist) = grib_arguments_new(grib_parser_context,(grib_yyvsp[0].exp),NULL); }
-#line 2489 "y.tab.c"
+#line 2473 "y.tab.c"
     break;
 
-  case 37:
+  case 37: /* simple: UNSIGNED '[' INTEGER ']' IDENT default flags  */
 #line 326 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
-#line 2495 "y.tab.c"
+#line 2479 "y.tab.c"
     break;
 
-  case 38:
+  case 38: /* simple: UNSIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
 #line 329 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
-#line 2501 "y.tab.c"
+#line 2485 "y.tab.c"
     break;
 
-  case 39:
+  case 39: /* simple: UNSIGNED '(' INTEGER ')' IDENT default flags  */
 #line 332 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"unsigned_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-2].str));  }
-#line 2507 "y.tab.c"
+#line 2491 "y.tab.c"
     break;
 
-  case 40:
+  case 40: /* simple: UNSIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
 #line 335 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"unsigned_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
-#line 2513 "y.tab.c"
+#line 2497 "y.tab.c"
     break;
 
-  case 41:
+  case 41: /* simple: ASCII '[' INTEGER ']' IDENT default flags  */
 #line 338 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
-#line 2519 "y.tab.c"
+#line 2503 "y.tab.c"
     break;
 
-  case 42:
+  case 42: /* simple: GROUP IDENT default flags  */
 #line 341 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"group",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
-#line 2525 "y.tab.c"
+#line 2509 "y.tab.c"
     break;
 
-  case 43:
+  case 43: /* simple: GROUP IDENT '(' argument_list ')' default flags  */
 #line 344 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"group",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-5].str));  }
-#line 2531 "y.tab.c"
+#line 2515 "y.tab.c"
     break;
 
-  case 44:
+  case 44: /* simple: IDENT '=' TO_INTEGER '(' argument_list ')' flags  */
 #line 347 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_integer",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
-#line 2537 "y.tab.c"
+#line 2521 "y.tab.c"
     break;
 
-  case 45:
+  case 45: /* simple: IDENT '=' SEX2DEC '(' argument_list ')' flags  */
 #line 350 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"sexagesimal2decimal",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
-#line 2543 "y.tab.c"
+#line 2527 "y.tab.c"
     break;
 
-  case 46:
+  case 46: /* simple: IDENT '=' TO_STRING '(' argument_list ')' flags  */
 #line 353 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-6].str),"to_string",0,(grib_yyvsp[-2].explist),0,(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-6].str));  }
-#line 2549 "y.tab.c"
+#line 2533 "y.tab.c"
     break;
 
-  case 47:
+  case 47: /* simple: NON_ALPHA IDENT default flags  */
 #line 356 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"non_alpha",0,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
-#line 2555 "y.tab.c"
+#line 2539 "y.tab.c"
     break;
 
-  case 48:
+  case 48: /* simple: ASCII '[' INTEGER ']' STRING default flags  */
 #line 360 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ascii",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
-#line 2561 "y.tab.c"
+#line 2545 "y.tab.c"
     break;
 
-  case 49:
+  case 49: /* simple: BYTE '[' INTEGER ']' IDENT default flags  */
 #line 363 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"bytes",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
-#line 2567 "y.tab.c"
+#line 2551 "y.tab.c"
     break;
 
-  case 50:
+  case 50: /* simple: BYTE '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
 #line 366 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bytes",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
-#line 2573 "y.tab.c"
+#line 2557 "y.tab.c"
     break;
 
-  case 51:
+  case 51: /* simple: KSEC1EXPVER '[' INTEGER ']' IDENT default flags  */
 #line 369 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ksec1expver",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-2].str));  }
-#line 2579 "y.tab.c"
+#line 2563 "y.tab.c"
     break;
 
-  case 52:
+  case 52: /* simple: SIGNED '[' INTEGER ']' IDENT default flags  */
 #line 372 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
-#line 2585 "y.tab.c"
+#line 2569 "y.tab.c"
     break;
 
-  case 53:
+  case 53: /* simple: SIGNED '[' INTEGER ']' IDENT '[' argument_list ']' default flags  */
 #line 375 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
-#line 2591 "y.tab.c"
+#line 2575 "y.tab.c"
     break;
 
-  case 54:
+  case 54: /* simple: SIGNED '(' INTEGER ')' IDENT default flags  */
 #line 378 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"signed_bits",(grib_yyvsp[-4].lval),NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-2].str));  }
-#line 2597 "y.tab.c"
+#line 2581 "y.tab.c"
     break;
 
-  case 55:
+  case 55: /* simple: SIGNED '(' INTEGER ')' IDENT '[' argument_list ']' default flags  */
 #line 381 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"signed_bits",(grib_yyvsp[-7].lval),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);      free((grib_yyvsp[-5].str));  }
-#line 2603 "y.tab.c"
+#line 2587 "y.tab.c"
     break;
 
-  case 56:
+  case 56: /* simple: CODETABLE '[' INTEGER ']' IDENT argument default flags  */
 #line 384 "griby.y"
     { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
-#line 2609 "y.tab.c"
+#line 2593 "y.tab.c"
     break;
 
-  case 57:
+  case 57: /* simple: CODETABLE '[' IDENT ']' IDENT argument default flags  */
 #line 387 "griby.y"
     {
       /* ECC-485: Set length to 0 and prepend the new argument */
@@ -2619,357 +2603,357 @@ grib_yyreduce:
                                   (grib_yyvsp[-1].explist), (grib_yyvsp[0].lval), NULL, NULL);
       free((grib_yyvsp[-3].str));
     }
-#line 2623 "y.tab.c"
+#line 2607 "y.tab.c"
     break;
 
-  case 58:
+  case 58: /* simple: CODETABLE '[' INTEGER ']' IDENT argument default SET '(' IDENT ')' flags  */
 #line 398 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"codetable",(grib_yyvsp[-9].lval), (grib_yyvsp[-6].explist),(grib_yyvsp[-5].explist),(grib_yyvsp[0].lval),NULL,(grib_yyvsp[-2].str));
            free((grib_yyvsp[-7].str));free((grib_yyvsp[-2].str)); }
-#line 2630 "y.tab.c"
+#line 2614 "y.tab.c"
     break;
 
-  case 59:
+  case 59: /* simple: CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
 #line 402 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
-#line 2636 "y.tab.c"
+#line 2620 "y.tab.c"
     break;
 
-  case 60:
+  case 60: /* simple: SMART_TABLE IDENT '(' argument_list ')' default flags  */
 #line 405 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"smart_table",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
-#line 2642 "y.tab.c"
+#line 2626 "y.tab.c"
     break;
 
-  case 61:
+  case 61: /* simple: IDENT '=' DICTIONARY '(' argument_list ')' default flags  */
 #line 408 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"dictionary",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
-#line 2648 "y.tab.c"
+#line 2632 "y.tab.c"
     break;
 
-  case 62:
+  case 62: /* simple: IDENT '=' GETENV '(' argument_list ')' default flags  */
 #line 411 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-7].str),"getenv",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-7].str)); }
-#line 2654 "y.tab.c"
+#line 2638 "y.tab.c"
     break;
 
-  case 63:
+  case 63: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT argument default flags  */
 #line 414 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"complex_codetable",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-3].str)); }
-#line 2660 "y.tab.c"
+#line 2644 "y.tab.c"
     break;
 
-  case 64:
+  case 64: /* simple: COMPLEX_CODETABLE '[' INTEGER ']' IDENT '(' argument_list ')' default flags  */
 #line 417 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"complex_codetable",(grib_yyvsp[-7].lval), (grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);    free((grib_yyvsp[-5].str)); }
-#line 2666 "y.tab.c"
+#line 2650 "y.tab.c"
     break;
 
-  case 65:
+  case 65: /* simple: FLAG '[' INTEGER ']' IDENT argument default flags  */
 #line 420 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"codeflag",(grib_yyvsp[-5].lval), (grib_yyvsp[-2].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);  free((grib_yyvsp[-3].str)); }
-#line 2672 "y.tab.c"
+#line 2656 "y.tab.c"
     break;
 
-  case 66:
+  case 66: /* simple: LOOKUP '[' INTEGER ']' IDENT '(' argument_list ')' flags  */
 #line 423 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-4].str),"lookup",(grib_yyvsp[-6].lval),(grib_yyvsp[-2].explist),NULL,(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-4].str)); }
-#line 2678 "y.tab.c"
+#line 2662 "y.tab.c"
     break;
 
-  case 67:
+  case 67: /* simple: FLAGBIT IDENT '(' argument_list ')' default flags  */
 #line 426 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"bit",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL); free((grib_yyvsp[-5].str)); }
-#line 2684 "y.tab.c"
+#line 2668 "y.tab.c"
     break;
 
-  case 68:
+  case 68: /* simple: LABEL IDENT  */
 #line 429 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
-#line 2690 "y.tab.c"
+#line 2674 "y.tab.c"
     break;
 
-  case 69:
+  case 69: /* simple: LABEL STRING  */
 #line 432 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"label",0,NULL,NULL,0,NULL,NULL);   free((grib_yyvsp[0].str));  }
-#line 2696 "y.tab.c"
+#line 2680 "y.tab.c"
     break;
 
-  case 70:
+  case 70: /* simple: IBMFLOAT IDENT default flags  */
 #line 435 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2702 "y.tab.c"
+#line 2686 "y.tab.c"
     break;
 
-  case 71:
+  case 71: /* simple: INT8 IDENT default flags  */
 #line 439 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2708 "y.tab.c"
+#line 2692 "y.tab.c"
     break;
 
-  case 72:
+  case 72: /* simple: UINT8 IDENT default flags  */
 #line 442 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint8",1,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2714 "y.tab.c"
+#line 2698 "y.tab.c"
     break;
 
-  case 73:
+  case 73: /* simple: INT16 IDENT default flags  */
 #line 445 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2720 "y.tab.c"
+#line 2704 "y.tab.c"
     break;
 
-  case 74:
+  case 74: /* simple: UINT16 IDENT default flags  */
 #line 448 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2726 "y.tab.c"
+#line 2710 "y.tab.c"
     break;
 
-  case 75:
+  case 75: /* simple: INT16_LITTLE_ENDIAN IDENT default flags  */
 #line 451 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2732 "y.tab.c"
+#line 2716 "y.tab.c"
     break;
 
-  case 76:
+  case 76: /* simple: UINT16_LITTLE_ENDIAN IDENT default flags  */
 #line 454 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint16_little_endian",2,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2738 "y.tab.c"
+#line 2722 "y.tab.c"
     break;
 
-  case 77:
+  case 77: /* simple: INT32 IDENT default flags  */
 #line 457 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2744 "y.tab.c"
+#line 2728 "y.tab.c"
     break;
 
-  case 78:
+  case 78: /* simple: UINT32 IDENT default flags  */
 #line 460 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2750 "y.tab.c"
+#line 2734 "y.tab.c"
     break;
 
-  case 79:
+  case 79: /* simple: INT32_LITTLE_ENDIAN IDENT default flags  */
 #line 463 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2756 "y.tab.c"
+#line 2740 "y.tab.c"
     break;
 
-  case 80:
+  case 80: /* simple: UINT32_LITTLE_ENDIAN IDENT default flags  */
 #line 466 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint32_little_endian",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2762 "y.tab.c"
+#line 2746 "y.tab.c"
     break;
 
-  case 81:
+  case 81: /* simple: INT64 IDENT default flags  */
 #line 469 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2768 "y.tab.c"
+#line 2752 "y.tab.c"
     break;
 
-  case 82:
+  case 82: /* simple: UINT64 IDENT default flags  */
 #line 472 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2774 "y.tab.c"
+#line 2758 "y.tab.c"
     break;
 
-  case 83:
+  case 83: /* simple: INT64_LITTLE_ENDIAN IDENT default flags  */
 #line 475 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"int64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2780 "y.tab.c"
+#line 2764 "y.tab.c"
     break;
 
-  case 84:
+  case 84: /* simple: UINT64_LITTLE_ENDIAN IDENT default flags  */
 #line 478 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"uint64_little_endian",8,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-2].str));  }
-#line 2786 "y.tab.c"
+#line 2770 "y.tab.c"
     break;
 
-  case 85:
+  case 85: /* simple: BLOB IDENT '[' argument_list ']' default flags  */
 #line 481 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"blob",0,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);        free((grib_yyvsp[-5].str));  }
-#line 2792 "y.tab.c"
+#line 2776 "y.tab.c"
     break;
 
-  case 86:
+  case 86: /* simple: IBMFLOAT IDENT '.' IDENT default flags  */
 #line 485 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ibmfloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);free((grib_yyvsp[-2].str)); free((grib_yyvsp[-4].str)); }
-#line 2798 "y.tab.c"
+#line 2782 "y.tab.c"
     break;
 
-  case 87:
+  case 87: /* simple: IBMFLOAT IDENT '[' argument ']' default flags  */
 #line 488 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ibmfloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
-#line 2804 "y.tab.c"
+#line 2788 "y.tab.c"
     break;
 
-  case 88:
+  case 88: /* simple: POS IDENT  */
 #line 491 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"position",0,NULL,NULL,0,NULL,NULL);     free((grib_yyvsp[0].str));  }
-#line 2810 "y.tab.c"
+#line 2794 "y.tab.c"
     break;
 
-  case 89:
+  case 89: /* simple: INTCONST IDENT '=' argument flags  */
 #line 494 "griby.y"
         { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"constant",0,(grib_yyvsp[-1].explist),NULL,(grib_yyvsp[0].lval),NULL);free((grib_yyvsp[-3].str)); }
-#line 2816 "y.tab.c"
+#line 2800 "y.tab.c"
     break;
 
-  case 90:
+  case 90: /* simple: TRANS IDENT '=' argument flags  */
 #line 497 "griby.y"
         { (grib_yyval.act) = grib_action_create_variable(grib_parser_context,(grib_yyvsp[-3].str),"transient",0,(grib_yyvsp[-1].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL);   free((grib_yyvsp[-3].str)); }
-#line 2822 "y.tab.c"
+#line 2806 "y.tab.c"
     break;
 
-  case 91:
+  case 91: /* simple: TRANS IDENT '=' '{' dvalues '}' flags  */
 #line 499 "griby.y"
         { (grib_yyval.act) = grib_action_create_transient_darray(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-2].dvalue),(grib_yyvsp[0].lval)); free((grib_yyvsp[-5].str)); }
-#line 2828 "y.tab.c"
+#line 2812 "y.tab.c"
     break;
 
-  case 92:
+  case 92: /* simple: FLOAT IDENT default flags  */
 #line 502 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-2].str));  }
-#line 2834 "y.tab.c"
+#line 2818 "y.tab.c"
     break;
 
-  case 93:
+  case 93: /* simple: FLOAT IDENT '.' IDENT default flags  */
 #line 505 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-2].str),"ieeefloat",4,NULL,(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-4].str),NULL);  free((grib_yyvsp[-2].str));free((grib_yyvsp[-4].str));}
-#line 2840 "y.tab.c"
+#line 2824 "y.tab.c"
     break;
 
-  case 94:
+  case 94: /* simple: FLOAT IDENT '[' argument ']' default flags  */
 #line 508 "griby.y"
    { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-5].str),"ieeefloat",4,(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL,NULL);free((grib_yyvsp[-5].str));  }
-#line 2846 "y.tab.c"
+#line 2830 "y.tab.c"
     break;
 
-  case 95:
+  case 95: /* simple: G1_HALF_BYTE IDENT  */
 #line 511 "griby.y"
    { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[0].str),"g1_half_byte_codeflag",0,NULL,NULL,0,NULL,NULL);free((grib_yyvsp[0].str));  }
-#line 2852 "y.tab.c"
+#line 2836 "y.tab.c"
     break;
 
-  case 96:
+  case 96: /* simple: SECTION_LENGTH '[' INTEGER ']' IDENT default  */
 #line 514 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_length",(grib_yyvsp[-3].lval),NULL,(grib_yyvsp[0].explist),0,NULL,NULL);free((grib_yyvsp[-1].str));  }
-#line 2858 "y.tab.c"
+#line 2842 "y.tab.c"
     break;
 
-  case 97:
+  case 97: /* simple: G1_MESSAGE_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
 #line 517 "griby.y"
    { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_message_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
-#line 2864 "y.tab.c"
+#line 2848 "y.tab.c"
     break;
 
-  case 98:
+  case 98: /* simple: G1_SECTION4_LENGTH '[' INTEGER ']' IDENT '(' argument_list ')'  */
 #line 520 "griby.y"
   { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"g1_section4_length",(grib_yyvsp[-5].lval),(grib_yyvsp[-1].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-3].str));  }
-#line 2870 "y.tab.c"
+#line 2854 "y.tab.c"
     break;
 
-  case 99:
+  case 99: /* simple: KSEC IDENT argument  */
 #line 523 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"ksec",0,(grib_yyvsp[0].explist),NULL,0,NULL,NULL);free((grib_yyvsp[-1].str)); }
-#line 2876 "y.tab.c"
+#line 2860 "y.tab.c"
     break;
 
-  case 100:
+  case 100: /* simple: PAD IDENT '(' argument_list ')'  */
 #line 526 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"pad",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
-#line 2882 "y.tab.c"
+#line 2866 "y.tab.c"
     break;
 
-  case 101:
+  case 101: /* simple: PADTO IDENT '(' argument_list ')'  */
 #line 529 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padto",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
-#line 2888 "y.tab.c"
+#line 2872 "y.tab.c"
     break;
 
-  case 102:
+  case 102: /* simple: PADTOEVEN IDENT '(' argument_list ')'  */
 #line 532 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtoeven",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
-#line 2894 "y.tab.c"
+#line 2878 "y.tab.c"
     break;
 
-  case 103:
+  case 103: /* simple: PADTOMULTIPLE IDENT '(' argument_list ')'  */
 #line 535 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-3].str),"padtomultiple",0,(grib_yyvsp[-1].explist),0,0,NULL,NULL);   free((grib_yyvsp[-3].str)); }
-#line 2900 "y.tab.c"
+#line 2884 "y.tab.c"
     break;
 
-  case 104:
+  case 104: /* simple: MESSAGE '[' INTEGER ']' IDENT flags  */
 #line 538 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message",(grib_yyvsp[-3].lval),0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
-#line 2906 "y.tab.c"
+#line 2890 "y.tab.c"
     break;
 
-  case 105:
+  case 105: /* simple: MESSAGE_COPY IDENT flags  */
 #line 541 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"message_copy",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
-#line 2912 "y.tab.c"
+#line 2896 "y.tab.c"
     break;
 
-  case 106:
+  case 106: /* simple: SECTION_PADDING IDENT flags  */
 #line 544 "griby.y"
         { (grib_yyval.act) = grib_action_create_gen(grib_parser_context,(grib_yyvsp[-1].str),"section_padding",0,0,0,(grib_yyvsp[0].lval),NULL,NULL);   free((grib_yyvsp[-1].str));  }
-#line 2918 "y.tab.c"
+#line 2902 "y.tab.c"
     break;
 
-  case 107:
+  case 107: /* simple: TEMPLATE IDENT STRING  */
 #line 546 "griby.y"
         { (grib_yyval.act) = grib_action_create_template(grib_parser_context,0,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
-#line 2924 "y.tab.c"
+#line 2908 "y.tab.c"
     break;
 
-  case 108:
+  case 108: /* simple: TEMPLATE_NOFAIL IDENT STRING  */
 #line 548 "griby.y"
     { (grib_yyval.act) = grib_action_create_template(grib_parser_context,1,(grib_yyvsp[-1].str),(grib_yyvsp[0].str)); free((grib_yyvsp[-1].str)); free((grib_yyvsp[0].str));}
-#line 2930 "y.tab.c"
+#line 2914 "y.tab.c"
     break;
 
-  case 109:
+  case 109: /* simple: ALIAS IDENT '=' IDENT flags  */
 #line 551 "griby.y"
         { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str),NULL,(grib_yyvsp[0].lval));  free((grib_yyvsp[-3].str)); free((grib_yyvsp[-1].str)); }
-#line 2936 "y.tab.c"
+#line 2920 "y.tab.c"
     break;
 
-  case 110:
+  case 110: /* simple: UNALIAS IDENT  */
 #line 554 "griby.y"
         { (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,NULL,0);  free((grib_yyvsp[0].str)); }
-#line 2942 "y.tab.c"
+#line 2926 "y.tab.c"
     break;
 
-  case 111:
+  case 111: /* simple: ALIAS IDENT '.' IDENT '=' IDENT flags  */
 #line 557 "griby.y"
         {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str),(grib_yyvsp[-5].str),(grib_yyvsp[0].lval));  free((grib_yyvsp[-5].str)); free((grib_yyvsp[-3].str)); free((grib_yyvsp[-1].str));
     }
-#line 2950 "y.tab.c"
+#line 2934 "y.tab.c"
     break;
 
-  case 112:
+  case 112: /* simple: UNALIAS IDENT '.' IDENT  */
 #line 561 "griby.y"
         {
          (grib_yyval.act) = grib_action_create_alias(grib_parser_context,(grib_yyvsp[0].str),NULL,(grib_yyvsp[-2].str),0);  free((grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); 
     }
-#line 2958 "y.tab.c"
+#line 2942 "y.tab.c"
     break;
 
-  case 113:
+  case 113: /* simple: META IDENT IDENT '(' argument_list ')' default flags  */
 #line 565 "griby.y"
         { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[-6].str),(grib_yyvsp[-5].str),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),NULL); free((grib_yyvsp[-6].str));free((grib_yyvsp[-5].str));}
-#line 2964 "y.tab.c"
+#line 2948 "y.tab.c"
     break;
 
-  case 114:
+  case 114: /* simple: META IDENT '.' IDENT IDENT '(' argument_list ')' default flags  */
 #line 568 "griby.y"
     { (grib_yyval.act) = grib_action_create_meta(grib_parser_context,(grib_yyvsp[-6].str),(grib_yyvsp[-5].str),(grib_yyvsp[-3].explist),(grib_yyvsp[-1].explist),(grib_yyvsp[0].lval),(grib_yyvsp[-8].str)); free((grib_yyvsp[-6].str));free((grib_yyvsp[-5].str));free((grib_yyvsp[-8].str));}
-#line 2970 "y.tab.c"
+#line 2954 "y.tab.c"
     break;
 
-  case 115:
+  case 115: /* simple: ITERATOR IDENT '(' argument_list ')'  */
 #line 571 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
@@ -2982,10 +2966,10 @@ grib_yyreduce:
       "ITERATOR","iterator",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 2986 "y.tab.c"
+#line 2970 "y.tab.c"
     break;
 
-  case 116:
+  case 116: /* simple: NEAREST IDENT '(' argument_list ')'  */
 #line 583 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
@@ -2998,10 +2982,10 @@ grib_yyreduce:
       "NEAREST","nearest",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 3002 "y.tab.c"
+#line 2986 "y.tab.c"
     break;
 
-  case 117:
+  case 117: /* simple: BOX IDENT '(' argument_list ')'  */
 #line 595 "griby.y"
         {
       grib_arguments* a = grib_arguments_new(
@@ -3014,809 +2998,809 @@ grib_yyreduce:
       "BOX","box",a,NULL,
       GRIB_ACCESSOR_FLAG_HIDDEN|GRIB_ACCESSOR_FLAG_READ_ONLY,NULL); free((grib_yyvsp[-3].str));
     }
-#line 3018 "y.tab.c"
+#line 3002 "y.tab.c"
     break;
 
-  case 118:
+  case 118: /* simple: EXPORT IDENT '(' argument_list ')'  */
 #line 607 "griby.y"
        { (grib_yyval.act) = grib_action_create_put(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist));free((grib_yyvsp[-3].str));}
-#line 3024 "y.tab.c"
+#line 3008 "y.tab.c"
     break;
 
-  case 119:
+  case 119: /* simple: REMOVE argument_list  */
 #line 610 "griby.y"
        { (grib_yyval.act) = grib_action_create_remove(grib_parser_context,(grib_yyvsp[0].explist));}
-#line 3030 "y.tab.c"
+#line 3014 "y.tab.c"
     break;
 
-  case 120:
+  case 120: /* simple: RENAME '(' IDENT ',' IDENT ')'  */
 #line 612 "griby.y"
                                      { (grib_yyval.act) = grib_action_create_rename(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str));free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
-#line 3036 "y.tab.c"
+#line 3020 "y.tab.c"
     break;
 
-  case 121:
+  case 121: /* simple: ASSERT '(' expression ')'  */
 #line 615 "griby.y"
        { (grib_yyval.act) = grib_action_create_assert(grib_parser_context,(grib_yyvsp[-1].exp));}
-#line 3042 "y.tab.c"
+#line 3026 "y.tab.c"
     break;
 
-  case 122:
+  case 122: /* simple: MODIFY IDENT flags  */
 #line 618 "griby.y"
        { (grib_yyval.act) = grib_action_create_modify(grib_parser_context,(grib_yyvsp[-1].str),(grib_yyvsp[0].lval)); free((grib_yyvsp[-1].str));}
-#line 3048 "y.tab.c"
+#line 3032 "y.tab.c"
     break;
 
-  case 123:
+  case 123: /* simple: SET IDENT '=' MISSING  */
 #line 620 "griby.y"
                           { (grib_yyval.act) = grib_action_create_set_missing(grib_parser_context,(grib_yyvsp[-2].str)); free((grib_yyvsp[-2].str)); }
-#line 3054 "y.tab.c"
+#line 3038 "y.tab.c"
     break;
 
-  case 124:
+  case 124: /* simple: SET IDENT '=' expression  */
 #line 621 "griby.y"
                              { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
-#line 3060 "y.tab.c"
+#line 3044 "y.tab.c"
     break;
 
-  case 125:
+  case 125: /* simple: SET IDENT '=' '{' dvalues '}'  */
 #line 622 "griby.y"
                                   { (grib_yyval.act) = grib_action_create_set_darray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].dvalue)); free((grib_yyvsp[-4].str)); }
-#line 3066 "y.tab.c"
+#line 3050 "y.tab.c"
     break;
 
-  case 126:
+  case 126: /* simple: SET IDENT '=' '{' svalues '}'  */
 #line 623 "griby.y"
                                   { (grib_yyval.act) = grib_action_create_set_sarray(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].svalue)); free((grib_yyvsp[-4].str)); }
-#line 3072 "y.tab.c"
+#line 3056 "y.tab.c"
     break;
 
-  case 127:
+  case 127: /* simple: SET_NOFAIL IDENT '=' expression  */
 #line 625 "griby.y"
                                     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
-#line 3078 "y.tab.c"
+#line 3062 "y.tab.c"
     break;
 
-  case 128:
+  case 128: /* simple: WRITE STRING  */
 #line 628 "griby.y"
                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str));}
-#line 3084 "y.tab.c"
+#line 3068 "y.tab.c"
     break;
 
-  case 129:
+  case 129: /* simple: WRITE  */
 #line 629 "griby.y"
           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,0); }
-#line 3090 "y.tab.c"
+#line 3074 "y.tab.c"
     break;
 
-  case 130:
+  case 130: /* simple: WRITE '(' INTEGER ')' STRING  */
 #line 630 "griby.y"
                                  { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),0,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
-#line 3096 "y.tab.c"
+#line 3080 "y.tab.c"
     break;
 
-  case 131:
+  case 131: /* simple: WRITE '(' INTEGER ')'  */
 #line 631 "griby.y"
                           { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",0,(grib_yyvsp[-1].lval)); }
-#line 3102 "y.tab.c"
+#line 3086 "y.tab.c"
     break;
 
-  case 132:
+  case 132: /* simple: APPEND STRING  */
 #line 632 "griby.y"
                   { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,0); free((grib_yyvsp[0].str));}
-#line 3108 "y.tab.c"
+#line 3092 "y.tab.c"
     break;
 
-  case 133:
+  case 133: /* simple: APPEND  */
 #line 633 "griby.y"
            { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,0); }
-#line 3114 "y.tab.c"
+#line 3098 "y.tab.c"
     break;
 
-  case 134:
+  case 134: /* simple: APPEND '(' INTEGER ')' STRING  */
 #line 634 "griby.y"
                                   { (grib_yyval.act) = grib_action_create_write(grib_parser_context,(grib_yyvsp[0].str),1,(grib_yyvsp[-2].lval)); free((grib_yyvsp[0].str));}
-#line 3120 "y.tab.c"
+#line 3104 "y.tab.c"
     break;
 
-  case 135:
+  case 135: /* simple: APPEND '(' INTEGER ')'  */
 #line 635 "griby.y"
                            { (grib_yyval.act) = grib_action_create_write(grib_parser_context,"",1,(grib_yyvsp[-1].lval)); }
-#line 3126 "y.tab.c"
+#line 3110 "y.tab.c"
     break;
 
-  case 136:
+  case 136: /* simple: CLOSE '(' IDENT ')'  */
 #line 637 "griby.y"
                         { (grib_yyval.act) = grib_action_create_close(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
-#line 3132 "y.tab.c"
+#line 3116 "y.tab.c"
     break;
 
-  case 137:
+  case 137: /* simple: PRINT STRING  */
 #line 638 "griby.y"
                  { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),0); free((grib_yyvsp[0].str)); }
-#line 3138 "y.tab.c"
+#line 3122 "y.tab.c"
     break;
 
-  case 138:
+  case 138: /* simple: PRINT '(' STRING ')' STRING  */
 #line 639 "griby.y"
                                 { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
-#line 3144 "y.tab.c"
+#line 3128 "y.tab.c"
     break;
 
-  case 139:
+  case 139: /* simple: PRINT '(' IDENT ')' STRING  */
 #line 640 "griby.y"
                                { (grib_yyval.act) = grib_action_create_print(grib_parser_context,(grib_yyvsp[0].str),(grib_yyvsp[-2].str)); free((grib_yyvsp[0].str)); free((grib_yyvsp[-2].str));}
-#line 3150 "y.tab.c"
+#line 3134 "y.tab.c"
     break;
 
-  case 140:
+  case 140: /* simple: PRINT  */
 #line 641 "griby.y"
           { (grib_yyval.act) = grib_action_create_print(grib_parser_context,"",0);  }
-#line 3156 "y.tab.c"
+#line 3140 "y.tab.c"
     break;
 
-  case 141:
+  case 141: /* if_block: IF '(' expression ')' '{' instructions '}'  */
 #line 645 "griby.y"
                                              { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,0,grib_yylineno,file_being_parsed()); }
-#line 3162 "y.tab.c"
+#line 3146 "y.tab.c"
     break;
 
-  case 142:
+  case 142: /* if_block: IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
 #line 646 "griby.y"
                                                                         { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),0,grib_yylineno,file_being_parsed()); }
-#line 3168 "y.tab.c"
+#line 3152 "y.tab.c"
     break;
 
-  case 143:
+  case 143: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}'  */
 #line 647 "griby.y"
                                                        { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),0,1,grib_yylineno,file_being_parsed()); }
-#line 3174 "y.tab.c"
+#line 3158 "y.tab.c"
     break;
 
-  case 144:
+  case 144: /* if_block: IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  */
 #line 648 "griby.y"
                                                                                   { (grib_yyval.act) = grib_action_create_if(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act),1,grib_yylineno,file_being_parsed()); }
-#line 3180 "y.tab.c"
+#line 3164 "y.tab.c"
     break;
 
-  case 145:
+  case 145: /* when_block: WHEN '(' expression ')' set semi  */
 #line 652 "griby.y"
                                      { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-3].exp),(grib_yyvsp[-1].act),NULL); }
-#line 3186 "y.tab.c"
+#line 3170 "y.tab.c"
     break;
 
-  case 146:
+  case 146: /* when_block: WHEN '(' expression ')' '{' set_list '}'  */
 #line 653 "griby.y"
                                                { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act),NULL); }
-#line 3192 "y.tab.c"
+#line 3176 "y.tab.c"
     break;
 
-  case 147:
+  case 147: /* when_block: WHEN '(' expression ')' '{' set_list '}' ELSE '{' set_list '}'  */
 #line 654 "griby.y"
                                                                    { (grib_yyval.act) = grib_action_create_when(grib_parser_context,(grib_yyvsp[-8].exp),(grib_yyvsp[-5].act),(grib_yyvsp[-1].act)); }
-#line 3198 "y.tab.c"
+#line 3182 "y.tab.c"
     break;
 
-  case 148:
+  case 148: /* set: SET IDENT '=' expression  */
 #line 657 "griby.y"
                               { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),0); free((grib_yyvsp[-2].str)); }
-#line 3204 "y.tab.c"
+#line 3188 "y.tab.c"
     break;
 
-  case 149:
+  case 149: /* set: SET_NOFAIL IDENT '=' expression  */
 #line 658 "griby.y"
                                     { (grib_yyval.act) = grib_action_create_set(grib_parser_context,(grib_yyvsp[-2].str),(grib_yyvsp[0].exp),1); free((grib_yyvsp[-2].str)); }
-#line 3210 "y.tab.c"
+#line 3194 "y.tab.c"
     break;
 
-  case 151:
+  case 151: /* set_list: set_list set semi  */
 #line 662 "griby.y"
                              { (grib_yyvsp[-2].act)->next = (grib_yyvsp[-1].act); (grib_yyval.act) = (grib_yyvsp[-2].act); }
-#line 3216 "y.tab.c"
+#line 3200 "y.tab.c"
     break;
 
-  case 152:
+  case 152: /* default: empty  */
 #line 666 "griby.y"
                { (grib_yyval.explist) = NULL ;}
-#line 3222 "y.tab.c"
+#line 3206 "y.tab.c"
     break;
 
-  case 153:
+  case 153: /* default: '=' argument_list  */
 #line 667 "griby.y"
                        { (grib_yyval.explist) = (grib_yyvsp[0].explist) ;}
-#line 3228 "y.tab.c"
+#line 3212 "y.tab.c"
     break;
 
-  case 154:
+  case 154: /* flags: empty  */
 #line 670 "griby.y"
                      { (grib_yyval.lval) = 0 ; }
-#line 3234 "y.tab.c"
+#line 3218 "y.tab.c"
     break;
 
-  case 155:
+  case 155: /* flags: ':' flag_list  */
 #line 671 "griby.y"
                       { (grib_yyval.lval) = (grib_yyvsp[0].lval); }
-#line 3240 "y.tab.c"
+#line 3224 "y.tab.c"
     break;
 
-  case 157:
+  case 157: /* flag_list: flag_list ',' flag  */
 #line 675 "griby.y"
                         { (grib_yyval.lval) = (grib_yyvsp[-2].lval) | (grib_yyvsp[0].lval); }
-#line 3246 "y.tab.c"
+#line 3230 "y.tab.c"
     break;
 
-  case 158:
+  case 158: /* flag: READ_ONLY  */
 #line 678 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_READ_ONLY; }
-#line 3252 "y.tab.c"
+#line 3236 "y.tab.c"
     break;
 
-  case 159:
+  case 159: /* flag: LOWERCASE  */
 #line 679 "griby.y"
                            { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LOWERCASE; }
-#line 3258 "y.tab.c"
+#line 3242 "y.tab.c"
     break;
 
-  case 160:
+  case 160: /* flag: DUMP  */
 #line 680 "griby.y"
                       { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DUMP; }
-#line 3264 "y.tab.c"
+#line 3248 "y.tab.c"
     break;
 
-  case 161:
+  case 161: /* flag: NO_COPY  */
 #line 681 "griby.y"
                          { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_COPY; }
-#line 3270 "y.tab.c"
+#line 3254 "y.tab.c"
     break;
 
-  case 162:
+  case 162: /* flag: NO_FAIL  */
 #line 682 "griby.y"
                                { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_NO_FAIL; }
-#line 3276 "y.tab.c"
+#line 3260 "y.tab.c"
     break;
 
-  case 163:
+  case 163: /* flag: HIDDEN  */
 #line 683 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_HIDDEN; }
-#line 3282 "y.tab.c"
+#line 3266 "y.tab.c"
     break;
 
-  case 164:
+  case 164: /* flag: EDITION_SPECIFIC  */
 #line 684 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC; }
-#line 3288 "y.tab.c"
+#line 3272 "y.tab.c"
     break;
 
-  case 165:
+  case 165: /* flag: CAN_BE_MISSING  */
 #line 685 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CAN_BE_MISSING; }
-#line 3294 "y.tab.c"
+#line 3278 "y.tab.c"
     break;
 
-  case 166:
+  case 166: /* flag: CONSTRAINT  */
 #line 686 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_CONSTRAINT; }
-#line 3300 "y.tab.c"
+#line 3284 "y.tab.c"
     break;
 
-  case 167:
+  case 167: /* flag: COPY_OK  */
 #line 687 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_COPY_OK; }
-#line 3306 "y.tab.c"
+#line 3290 "y.tab.c"
     break;
 
-  case 168:
+  case 168: /* flag: TRANS  */
 #line 688 "griby.y"
                     { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_TRANSIENT; }
-#line 3312 "y.tab.c"
+#line 3296 "y.tab.c"
     break;
 
-  case 169:
+  case 169: /* flag: STRING_TYPE  */
 #line 689 "griby.y"
                           { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_STRING_TYPE; }
-#line 3318 "y.tab.c"
+#line 3302 "y.tab.c"
     break;
 
-  case 170:
+  case 170: /* flag: LONG_TYPE  */
 #line 690 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_LONG_TYPE; }
-#line 3324 "y.tab.c"
+#line 3308 "y.tab.c"
     break;
 
-  case 171:
+  case 171: /* flag: DOUBLE_TYPE  */
 #line 691 "griby.y"
                         { (grib_yyval.lval) = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
-#line 3330 "y.tab.c"
+#line 3314 "y.tab.c"
     break;
 
-  case 172:
+  case 172: /* list_block: IDENT LIST '(' expression ')' '{' instructions '}'  */
 #line 694 "griby.y"
                                                                { (grib_yyval.act) = grib_action_create_list(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act)); free((grib_yyvsp[-7].str)); }
-#line 3336 "y.tab.c"
+#line 3320 "y.tab.c"
     break;
 
-  case 173:
+  case 173: /* while_block: WHILE '(' expression ')' '{' instructions '}'  */
 #line 697 "griby.y"
                                                            { (grib_yyval.act) = grib_action_create_while(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].act));  }
-#line 3342 "y.tab.c"
+#line 3326 "y.tab.c"
     break;
 
-  case 174:
+  case 174: /* trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}'  */
 #line 700 "griby.y"
                                                                   { (grib_yyval.act) = grib_action_create_trigger(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].act));  }
-#line 3348 "y.tab.c"
+#line 3332 "y.tab.c"
     break;
 
-  case 175:
+  case 175: /* concept_block: CONCEPT IDENT '{' concept_list '}' flags  */
 #line 703 "griby.y"
                                                         { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
-#line 3354 "y.tab.c"
+#line 3338 "y.tab.c"
     break;
 
-  case 176:
+  case 176: /* concept_block: CONCEPT IDENT '(' IDENT ')' '{' concept_list '}' flags  */
 #line 704 "griby.y"
                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
-#line 3360 "y.tab.c"
+#line 3344 "y.tab.c"
     break;
 
-  case 177:
+  case 177: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
 #line 705 "griby.y"
                                                                       { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
-#line 3366 "y.tab.c"
+#line 3350 "y.tab.c"
     break;
 
-  case 178:
+  case 178: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ',' IDENT ')' flags  */
 #line 706 "griby.y"
                                                                                 { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-12].str),0,(grib_yyvsp[-8].str),0,(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-12].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
-#line 3372 "y.tab.c"
+#line 3356 "y.tab.c"
     break;
 
-  case 179:
+  case 179: /* concept_block: CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
 #line 707 "griby.y"
                                                             { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
-#line 3378 "y.tab.c"
+#line 3362 "y.tab.c"
     break;
 
-  case 180:
+  case 180: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
 #line 708 "griby.y"
                                                                                 { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str)); free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
-#line 3384 "y.tab.c"
+#line 3368 "y.tab.c"
     break;
 
-  case 181:
+  case 181: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
 #line 709 "griby.y"
                                                                       { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
-#line 3390 "y.tab.c"
+#line 3374 "y.tab.c"
     break;
 
-  case 182:
+  case 182: /* concept_block: CONCEPT IDENT '.' IDENT '{' concept_list '}' flags  */
 #line 710 "griby.y"
                                                         { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
-#line 3396 "y.tab.c"
+#line 3380 "y.tab.c"
     break;
 
-  case 183:
+  case 183: /* concept_block: CONCEPT IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
 #line 711 "griby.y"
                                                                       { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
-#line 3402 "y.tab.c"
+#line 3386 "y.tab.c"
     break;
 
-  case 184:
+  case 184: /* concept_block: CONCEPT_NOFAIL IDENT '{' concept_list '}' flags  */
 #line 712 "griby.y"
                                                      { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-4].str)); }
-#line 3408 "y.tab.c"
+#line 3392 "y.tab.c"
     break;
 
-  case 185:
+  case 185: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ')' '{' concept_list '}' flags  */
 #line 713 "griby.y"
                                                                    { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,0,(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
-#line 3414 "y.tab.c"
+#line 3398 "y.tab.c"
     break;
 
-  case 186:
+  case 186: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
 #line 714 "griby.y"
                                                                              { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
-#line 3420 "y.tab.c"
+#line 3404 "y.tab.c"
     break;
 
-  case 187:
+  case 187: /* concept_block: CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
 #line 715 "griby.y"
                                                                    { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); }
-#line 3426 "y.tab.c"
+#line 3410 "y.tab.c"
     break;
 
-  case 188:
+  case 188: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
 #line 716 "griby.y"
                                                                                        { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),(grib_yyvsp[-12].str),(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-12].str));}
-#line 3432 "y.tab.c"
+#line 3416 "y.tab.c"
     break;
 
-  case 189:
+  case 189: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags  */
 #line 717 "griby.y"
                                                                              { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-8].str),0,(grib_yyvsp[-4].str),(grib_yyvsp[-10].str),(grib_yyvsp[-6].str),(grib_yyvsp[-2].str),0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-2].str)); free((grib_yyvsp[-10].str));}
-#line 3438 "y.tab.c"
+#line 3422 "y.tab.c"
     break;
 
-  case 190:
+  case 190: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '{' concept_list '}' flags  */
 #line 718 "griby.y"
                                                                { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-6].str),0,0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-6].str));free((grib_yyvsp[-4].str)); }
-#line 3444 "y.tab.c"
+#line 3428 "y.tab.c"
     break;
 
-  case 191:
+  case 191: /* concept_block: CONCEPT_NOFAIL IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags  */
 #line 719 "griby.y"
                                                                              { (grib_yyval.act) = grib_action_create_concept(grib_parser_context,(grib_yyvsp[-7].str),(grib_yyvsp[-2].concept_value),0,(grib_yyvsp[-9].str),(grib_yyvsp[-5].str),0,0,0,(grib_yyvsp[0].lval),1);  free((grib_yyvsp[-9].str));free((grib_yyvsp[-7].str));free((grib_yyvsp[-5].str)); }
-#line 3450 "y.tab.c"
+#line 3434 "y.tab.c"
     break;
 
-  case 193:
+  case 193: /* concept_list: concept_list concept_value  */
 #line 724 "griby.y"
                                           { (grib_yyval.concept_value) = (grib_yyvsp[0].concept_value); (grib_yyvsp[0].concept_value)->next = (grib_yyvsp[-1].concept_value);   }
-#line 3456 "y.tab.c"
+#line 3440 "y.tab.c"
     break;
 
-  case 195:
+  case 195: /* hash_array_list: hash_array_list hash_array_value  */
 #line 728 "griby.y"
                                                 { (grib_yyval.hash_array_value) = (grib_yyvsp[0].hash_array_value); (grib_yyvsp[0].hash_array_value)->next = (grib_yyvsp[-1].hash_array_value);   }
-#line 3462 "y.tab.c"
+#line 3446 "y.tab.c"
     break;
 
-  case 196:
+  case 196: /* hash_array_block: HASH_ARRAY IDENT '{' hash_array_list '}' flags  */
 #line 731 "griby.y"
                                                                  { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-2].hash_array_value),0,0,0,0,0,0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-4].str)); }
-#line 3468 "y.tab.c"
+#line 3452 "y.tab.c"
     break;
 
-  case 197:
+  case 197: /* hash_array_block: HASH_ARRAY IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags  */
 #line 732 "griby.y"
                                                                          { (grib_yyval.act) = grib_action_create_hash_array(grib_parser_context,(grib_yyvsp[-10].str),0,(grib_yyvsp[-6].str),0,(grib_yyvsp[-8].str),(grib_yyvsp[-4].str),(grib_yyvsp[-2].str),0,(grib_yyvsp[0].lval),0);  free((grib_yyvsp[-10].str));free((grib_yyvsp[-6].str));free((grib_yyvsp[-8].str));free((grib_yyvsp[-4].str));free((grib_yyvsp[-2].str)); }
-#line 3474 "y.tab.c"
+#line 3458 "y.tab.c"
     break;
 
-  case 199:
+  case 199: /* case_list: case_list case_value  */
 #line 736 "griby.y"
                                     { (grib_yyval.case_value) = (grib_yyvsp[0].case_value); (grib_yyvsp[0].case_value)->next = (grib_yyvsp[-1].case_value);   }
-#line 3480 "y.tab.c"
+#line 3464 "y.tab.c"
     break;
 
-  case 200:
+  case 200: /* case_value: CASE arguments ':' instructions  */
 #line 739 "griby.y"
                                               { (grib_yyval.case_value) = grib_case_new(grib_parser_context,(grib_yyvsp[-2].explist),(grib_yyvsp[0].act));  }
-#line 3486 "y.tab.c"
+#line 3470 "y.tab.c"
     break;
 
-  case 201:
+  case 201: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' instructions '}'  */
 #line 743 "griby.y"
                                                                            { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-7].explist),(grib_yyvsp[-4].case_value),(grib_yyvsp[-1].act)); }
-#line 3492 "y.tab.c"
+#line 3476 "y.tab.c"
     break;
 
-  case 202:
+  case 202: /* switch_block: SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' '}'  */
 #line 744 "griby.y"
                                                                { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-6].explist),(grib_yyvsp[-3].case_value),grib_action_create_noop(grib_parser_context,"continue")); }
-#line 3498 "y.tab.c"
+#line 3482 "y.tab.c"
     break;
 
-  case 203:
+  case 203: /* switch_block: SWITCH '(' argument_list ')' '{' case_list '}'  */
 #line 745 "griby.y"
                                                    { (grib_yyval.act) = grib_action_create_switch(grib_parser_context,(grib_yyvsp[-4].explist),(grib_yyvsp[-1].case_value),0); }
-#line 3504 "y.tab.c"
+#line 3488 "y.tab.c"
     break;
 
-  case 204:
+  case 204: /* concept_value: STRING '=' '{' concept_conditions '}'  */
 #line 748 "griby.y"
                                                       {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].concept_condition)); free((grib_yyvsp[-4].str));}
-#line 3511 "y.tab.c"
+#line 3495 "y.tab.c"
     break;
 
-  case 205:
+  case 205: /* concept_value: IDENT '=' '{' concept_conditions '}'  */
 #line 750 "griby.y"
                                                                        {
 	  				(grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].concept_condition)); free((grib_yyvsp[-4].str));}
-#line 3518 "y.tab.c"
+#line 3502 "y.tab.c"
     break;
 
-  case 206:
+  case 206: /* concept_value: INTEGER '=' '{' concept_conditions '}'  */
 #line 752 "griby.y"
                                                                          {
-					char buf[80]; snprintf(buf,sizeof(buf),"%ld",(long)(grib_yyvsp[-4].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
-#line 3525 "y.tab.c"
+					char buf[80]; snprintf(buf, sizeof(buf), "%ld",(long)(grib_yyvsp[-4].lval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
+#line 3509 "y.tab.c"
     break;
 
-  case 207:
+  case 207: /* concept_value: FLOAT '=' '{' concept_conditions '}'  */
 #line 754 "griby.y"
                                                                        {
-					char buf[80]; snprintf(buf,sizeof(buf),"%g",(double)(grib_yyvsp[-4].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
-#line 3532 "y.tab.c"
+					char buf[80]; snprintf(buf, sizeof(buf), "%g", (double)(grib_yyvsp[-4].dval)); (grib_yyval.concept_value) = grib_concept_value_new(grib_parser_context,buf,(grib_yyvsp[-1].concept_condition));}
+#line 3516 "y.tab.c"
     break;
 
-  case 209:
+  case 209: /* concept_conditions: concept_condition concept_conditions  */
 #line 759 "griby.y"
                                                        { (grib_yyvsp[-1].concept_condition)->next = (grib_yyvsp[0].concept_condition); (grib_yyval.concept_condition) = (grib_yyvsp[-1].concept_condition); }
-#line 3538 "y.tab.c"
+#line 3522 "y.tab.c"
     break;
 
-  case 210:
+  case 210: /* concept_condition: IDENT '=' expression ';'  */
 #line 762 "griby.y"
                                             { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp),0); free((grib_yyvsp[-3].str)); }
-#line 3544 "y.tab.c"
+#line 3528 "y.tab.c"
     break;
 
-  case 211:
+  case 211: /* concept_condition: IDENT '=' '[' integer_array ']' ';'  */
 #line 763 "griby.y"
                                                { (grib_yyval.concept_condition) = grib_concept_condition_new(grib_parser_context,(grib_yyvsp[-5].str),0,(grib_yyvsp[-2].ivalue)); free((grib_yyvsp[-5].str)); }
-#line 3550 "y.tab.c"
+#line 3534 "y.tab.c"
     break;
 
-  case 212:
+  case 212: /* hash_array_value: STRING '=' '[' integer_array ']'  */
 #line 767 "griby.y"
                                                     {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
-#line 3557 "y.tab.c"
+#line 3541 "y.tab.c"
     break;
 
-  case 213:
+  case 213: /* hash_array_value: IDENT '=' '[' integer_array ']'  */
 #line 769 "griby.y"
                                                                   {
 	  				(grib_yyval.hash_array_value) = grib_integer_hash_array_value_new(grib_parser_context,(grib_yyvsp[-4].str),(grib_yyvsp[-1].ivalue)); free((grib_yyvsp[-4].str));}
-#line 3564 "y.tab.c"
+#line 3548 "y.tab.c"
     break;
 
-  case 214:
+  case 214: /* string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')'  */
 #line 773 "griby.y"
                                                               { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
-#line 3570 "y.tab.c"
+#line 3554 "y.tab.c"
     break;
 
-  case 215:
+  case 215: /* string_or_ident: IDENT  */
 #line 774 "griby.y"
                                           { (grib_yyval.exp) = new_accessor_expression(grib_parser_context,(grib_yyvsp[0].str),0,0); free((grib_yyvsp[0].str)); }
-#line 3576 "y.tab.c"
+#line 3560 "y.tab.c"
     break;
 
-  case 216:
+  case 216: /* string_or_ident: SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')'  */
 #line 775 "griby.y"
                                                                 { (grib_yyval.exp) = new_sub_string_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str)); }
-#line 3582 "y.tab.c"
+#line 3566 "y.tab.c"
     break;
 
-  case 217:
+  case 217: /* string_or_ident: STRING  */
 #line 776 "griby.y"
                           { (grib_yyval.exp) = new_string_expression(grib_parser_context,(grib_yyvsp[0].str));  free((grib_yyvsp[0].str)); }
-#line 3588 "y.tab.c"
+#line 3572 "y.tab.c"
     break;
 
-  case 219:
+  case 219: /* atom: INTEGER  */
 #line 780 "griby.y"
                 { (grib_yyval.exp) = new_long_expression(grib_parser_context,(grib_yyvsp[0].lval));  }
-#line 3594 "y.tab.c"
+#line 3578 "y.tab.c"
     break;
 
-  case 220:
+  case 220: /* atom: FLOAT  */
 #line 781 "griby.y"
               { (grib_yyval.exp) = new_double_expression(grib_parser_context,(grib_yyvsp[0].dval));  /* TODO: change to new_float_expression*/}
-#line 3600 "y.tab.c"
+#line 3584 "y.tab.c"
     break;
 
-  case 221:
+  case 221: /* atom: NIL  */
 #line 783 "griby.y"
               { (grib_yyval.exp) = NULL; }
-#line 3606 "y.tab.c"
+#line 3590 "y.tab.c"
     break;
 
-  case 222:
+  case 222: /* atom: DUMMY  */
 #line 784 "griby.y"
                     { (grib_yyval.exp) = new_true_expression(grib_parser_context); }
-#line 3612 "y.tab.c"
+#line 3596 "y.tab.c"
     break;
 
-  case 223:
+  case 223: /* atom: '(' expression ')'  */
 #line 785 "griby.y"
                            { (grib_yyval.exp) = (grib_yyvsp[-1].exp); }
-#line 3618 "y.tab.c"
+#line 3602 "y.tab.c"
     break;
 
-  case 224:
+  case 224: /* atom: '-' atom  */
 #line 786 "griby.y"
                  { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_neg,&grib_op_neg_d,(grib_yyvsp[0].exp)); }
-#line 3624 "y.tab.c"
+#line 3608 "y.tab.c"
     break;
 
-  case 225:
+  case 225: /* atom: IDENT '(' ')'  */
 #line 787 "griby.y"
                     { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-2].str),NULL); free((grib_yyvsp[-2].str));}
-#line 3630 "y.tab.c"
+#line 3614 "y.tab.c"
     break;
 
-  case 226:
+  case 226: /* atom: IDENT '(' argument_list ')'  */
 #line 788 "griby.y"
                                   { (grib_yyval.exp) = new_func_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].explist)); free((grib_yyvsp[-3].str));}
-#line 3636 "y.tab.c"
+#line 3620 "y.tab.c"
     break;
 
-  case 227:
+  case 227: /* power: atom '^' power  */
 #line 792 "griby.y"
                           { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3642 "y.tab.c"
+#line 3626 "y.tab.c"
     break;
 
-  case 229:
+  case 229: /* factor: factor '*' power  */
 #line 796 "griby.y"
                             { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3648 "y.tab.c"
+#line 3632 "y.tab.c"
     break;
 
-  case 230:
+  case 230: /* factor: factor '/' power  */
 #line 797 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3654 "y.tab.c"
+#line 3638 "y.tab.c"
     break;
 
-  case 231:
+  case 231: /* factor: factor '%' power  */
 #line 798 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3660 "y.tab.c"
+#line 3644 "y.tab.c"
     break;
 
-  case 232:
+  case 232: /* factor: factor BIT power  */
 #line 799 "griby.y"
                                   { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3666 "y.tab.c"
+#line 3650 "y.tab.c"
     break;
 
-  case 233:
+  case 233: /* factor: factor BITOFF power  */
 #line 800 "griby.y"
                                   { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_bitoff,NULL,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3672 "y.tab.c"
+#line 3656 "y.tab.c"
     break;
 
-  case 235:
+  case 235: /* factor: LENGTH '(' IDENT ')'  */
 #line 802 "griby.y"
                                    { (grib_yyval.exp) = new_length_expression(grib_parser_context,(grib_yyvsp[-1].str)); free((grib_yyvsp[-1].str));}
-#line 3678 "y.tab.c"
+#line 3662 "y.tab.c"
     break;
 
-  case 236:
+  case 236: /* factor: IS_IN_LIST '(' IDENT ',' STRING ')'  */
 #line 803 "griby.y"
                                                   { (grib_yyval.exp) = new_is_in_list_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
-#line 3684 "y.tab.c"
+#line 3668 "y.tab.c"
     break;
 
-  case 237:
+  case 237: /* factor: IS_IN_DICT '(' IDENT ',' STRING ')'  */
 #line 804 "griby.y"
                                                   { (grib_yyval.exp) = new_is_in_dict_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].str)); free((grib_yyvsp[-3].str));free((grib_yyvsp[-1].str));}
-#line 3690 "y.tab.c"
+#line 3674 "y.tab.c"
     break;
 
-  case 238:
+  case 238: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ')'  */
 #line 805 "griby.y"
                                                    { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].lval),0); free((grib_yyvsp[-3].str));}
-#line 3696 "y.tab.c"
+#line 3680 "y.tab.c"
     break;
 
-  case 239:
+  case 239: /* factor: IS_INTEGER '(' IDENT ',' INTEGER ',' INTEGER ')'  */
 #line 806 "griby.y"
                                                                { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-5].str),(grib_yyvsp[-3].lval),(grib_yyvsp[-1].lval)); free((grib_yyvsp[-5].str));}
-#line 3702 "y.tab.c"
+#line 3686 "y.tab.c"
     break;
 
-  case 240:
+  case 240: /* factor: IS_INTEGER '(' IDENT ')'  */
 #line 807 "griby.y"
                                        { (grib_yyval.exp) = new_is_integer_expression(grib_parser_context,(grib_yyvsp[-1].str),0,0); free((grib_yyvsp[-1].str));}
-#line 3708 "y.tab.c"
+#line 3692 "y.tab.c"
     break;
 
-  case 241:
+  case 241: /* term: term '+' factor  */
 #line 810 "griby.y"
                          { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3714 "y.tab.c"
+#line 3698 "y.tab.c"
     break;
 
-  case 242:
+  case 242: /* term: term '-' factor  */
 #line 811 "griby.y"
                                     { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3720 "y.tab.c"
+#line 3704 "y.tab.c"
     break;
 
-  case 244:
+  case 244: /* condition: condition GT term  */
 #line 815 "griby.y"
                                 { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3726 "y.tab.c"
+#line 3710 "y.tab.c"
     break;
 
-  case 245:
+  case 245: /* condition: condition EQ term  */
 #line 817 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3732 "y.tab.c"
+#line 3716 "y.tab.c"
     break;
 
-  case 246:
+  case 246: /* condition: condition LT term  */
 #line 818 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3738 "y.tab.c"
+#line 3722 "y.tab.c"
     break;
 
-  case 247:
+  case 247: /* condition: condition GE term  */
 #line 819 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ge,&grib_op_ge_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3744 "y.tab.c"
+#line 3728 "y.tab.c"
     break;
 
-  case 248:
+  case 248: /* condition: condition LE term  */
 #line 820 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_le,&grib_op_le_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3750 "y.tab.c"
+#line 3734 "y.tab.c"
     break;
 
-  case 249:
+  case 249: /* condition: condition NE term  */
 #line 821 "griby.y"
                                      { (grib_yyval.exp) = new_binop_expression(grib_parser_context,&grib_op_ne,&grib_op_ne_d,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3756 "y.tab.c"
+#line 3740 "y.tab.c"
     break;
 
-  case 250:
+  case 250: /* condition: string_or_ident IS string_or_ident  */
 #line 822 "griby.y"
                                                   { (grib_yyval.exp) = new_string_compare_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3762 "y.tab.c"
+#line 3746 "y.tab.c"
     break;
 
-  case 251:
+  case 251: /* condition: NOT condition  */
 #line 827 "griby.y"
                                       { (grib_yyval.exp) = new_unop_expression(grib_parser_context,&grib_op_not,NULL,(grib_yyvsp[0].exp)); }
-#line 3768 "y.tab.c"
+#line 3752 "y.tab.c"
     break;
 
-  case 253:
+  case 253: /* conjunction: conjunction AND condition  */
 #line 831 "griby.y"
                                        { (grib_yyval.exp) = new_logical_and_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp)); }
-#line 3774 "y.tab.c"
+#line 3758 "y.tab.c"
     break;
 
-  case 255:
+  case 255: /* disjunction: disjunction OR conjunction  */
 #line 835 "griby.y"
                                         { (grib_yyval.exp) = new_logical_or_expression(grib_parser_context,(grib_yyvsp[-2].exp),(grib_yyvsp[0].exp));}
-#line 3780 "y.tab.c"
+#line 3764 "y.tab.c"
     break;
 
-  case 260:
+  case 260: /* rule_entry: IDENT '=' expression ';'  */
 #line 849 "griby.y"
                                       { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,(grib_yyvsp[-3].str),(grib_yyvsp[-1].exp)); free((grib_yyvsp[-3].str)); }
-#line 3786 "y.tab.c"
+#line 3770 "y.tab.c"
     break;
 
-  case 261:
+  case 261: /* rule_entry: SKIP ';'  */
 #line 850 "griby.y"
                        { (grib_yyval.rule_entry) = grib_new_rule_entry(grib_parser_context,"skip",0);}
-#line 3792 "y.tab.c"
+#line 3776 "y.tab.c"
     break;
 
-  case 263:
+  case 263: /* rule_entries: rule_entry rule_entries  */
 #line 854 "griby.y"
                                        { (grib_yyvsp[-1].rule_entry)->next = (grib_yyvsp[0].rule_entry); (grib_yyval.rule_entry) = (grib_yyvsp[-1].rule_entry); }
-#line 3798 "y.tab.c"
+#line 3782 "y.tab.c"
     break;
 
-  case 264:
+  case 264: /* fact: rule_entry  */
 #line 857 "griby.y"
                   { (grib_yyval.rules) = grib_new_rule(grib_parser_context,NULL,(grib_yyvsp[0].rule_entry)); }
-#line 3804 "y.tab.c"
+#line 3788 "y.tab.c"
     break;
 
-  case 265:
+  case 265: /* conditional_rule: IF '(' expression ')' '{' rule_entries '}'  */
 #line 861 "griby.y"
                                                              { (grib_yyval.rules) = grib_new_rule(grib_parser_context,(grib_yyvsp[-4].exp),(grib_yyvsp[-1].rule_entry)); }
-#line 3810 "y.tab.c"
+#line 3794 "y.tab.c"
     break;
 
-  case 267:
+  case 267: /* rules: rule rules  */
 #line 865 "griby.y"
                    { (grib_yyvsp[-1].rules)->next = (grib_yyvsp[0].rules); (grib_yyval.rules) = (grib_yyvsp[-1].rules); }
-#line 3816 "y.tab.c"
+#line 3800 "y.tab.c"
     break;
 
 
-#line 3820 "y.tab.c"
+#line 3804 "y.tab.c"
 
       default: break;
     }
@@ -3831,11 +3815,10 @@ grib_yyreduce:
      case of YYERROR or YYBACKUP, subsequent parser actions might lead
      to an incorrect destructor call or verbose syntax error message
      before the lookahead is translated.  */
-  YY_SYMBOL_PRINT ("-> $$ =", grib_yyr1[grib_yyn], &grib_yyval, &grib_yyloc);
+  YY_SYMBOL_PRINT ("-> $$ =", YY_CAST (grib_yysymbol_kind_t, grib_yyr1[grib_yyn]), &grib_yyval, &grib_yyloc);
 
   YYPOPSTACK (grib_yylen);
   grib_yylen = 0;
-  YY_STACK_PRINT (grib_yyss, grib_yyssp);
 
   *++grib_yyvsp = grib_yyval;
 
@@ -3859,49 +3842,13 @@ grib_yyreduce:
 grib_yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
-  grib_yytoken = grib_yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (grib_yychar);
-
+  grib_yytoken = grib_yychar == YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (grib_yychar);
   /* If not already recovering from an error, report this error.  */
   if (!grib_yyerrstatus)
     {
       ++grib_yynerrs;
-#if ! YYERROR_VERBOSE
       grib_yyerror (YY_("syntax error"));
-#else
-# define YYSYNTAX_ERROR grib_yysyntax_error (&grib_yymsg_alloc, &grib_yymsg, \
-                                        grib_yyssp, grib_yytoken)
-      {
-        char const *grib_yymsgp = YY_("syntax error");
-        int grib_yysyntax_error_status;
-        grib_yysyntax_error_status = YYSYNTAX_ERROR;
-        if (grib_yysyntax_error_status == 0)
-          grib_yymsgp = grib_yymsg;
-        else if (grib_yysyntax_error_status == 1)
-          {
-            if (grib_yymsg != grib_yymsgbuf)
-              YYSTACK_FREE (grib_yymsg);
-            grib_yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, grib_yymsg_alloc)));
-            if (!grib_yymsg)
-              {
-                grib_yymsg = grib_yymsgbuf;
-                grib_yymsg_alloc = sizeof grib_yymsgbuf;
-                grib_yysyntax_error_status = 2;
-              }
-            else
-              {
-                grib_yysyntax_error_status = YYSYNTAX_ERROR;
-                grib_yymsgp = grib_yymsg;
-              }
-          }
-        grib_yyerror (grib_yymsgp);
-        if (grib_yysyntax_error_status == 2)
-          goto grib_yyexhaustedlab;
-      }
-# undef YYSYNTAX_ERROR
-#endif
     }
-
-
 
   if (grib_yyerrstatus == 3)
     {
@@ -3935,6 +3882,7 @@ grib_yyerrorlab:
      label grib_yyerrorlab therefore never appears in user code.  */
   if (0)
     YYERROR;
+  ++grib_yynerrs;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -3951,13 +3899,14 @@ grib_yyerrorlab:
 grib_yyerrlab1:
   grib_yyerrstatus = 3;      /* Each real token shifted decrements this.  */
 
+  /* Pop stack until we find a state that shifts the error token.  */
   for (;;)
     {
       grib_yyn = grib_yypact[grib_yystate];
       if (!grib_yypact_value_is_default (grib_yyn))
         {
-          grib_yyn += YYTERROR;
-          if (0 <= grib_yyn && grib_yyn <= YYLAST && grib_yycheck[grib_yyn] == YYTERROR)
+          grib_yyn += YYSYMBOL_YYerror;
+          if (0 <= grib_yyn && grib_yyn <= YYLAST && grib_yycheck[grib_yyn] == YYSYMBOL_YYerror)
             {
               grib_yyn = grib_yytable[grib_yyn];
               if (0 < grib_yyn)
@@ -3971,7 +3920,7 @@ grib_yyerrlab1:
 
 
       grib_yydestruct ("Error: popping",
-                  grib_yystos[grib_yystate], grib_yyvsp);
+                  YY_ACCESSING_SYMBOL (grib_yystate), grib_yyvsp);
       YYPOPSTACK (1);
       grib_yystate = *grib_yyssp;
       YY_STACK_PRINT (grib_yyss, grib_yyssp);
@@ -3983,7 +3932,7 @@ grib_yyerrlab1:
 
 
   /* Shift the error token.  */
-  YY_SYMBOL_PRINT ("Shifting", grib_yystos[grib_yyn], grib_yyvsp, grib_yylsp);
+  YY_SYMBOL_PRINT ("Shifting", YY_ACCESSING_SYMBOL (grib_yyn), grib_yyvsp, grib_yylsp);
 
   grib_yystate = grib_yyn;
   goto grib_yynewstate;
@@ -3994,7 +3943,7 @@ grib_yyerrlab1:
 `-------------------------------------*/
 grib_yyacceptlab:
   grib_yyresult = 0;
-  goto grib_yyreturn;
+  goto grib_yyreturnlab;
 
 
 /*-----------------------------------.
@@ -4002,24 +3951,22 @@ grib_yyacceptlab:
 `-----------------------------------*/
 grib_yyabortlab:
   grib_yyresult = 1;
-  goto grib_yyreturn;
+  goto grib_yyreturnlab;
 
 
-#if !defined grib_yyoverflow || YYERROR_VERBOSE
-/*-------------------------------------------------.
-| grib_yyexhaustedlab -- memory exhaustion comes here.  |
-`-------------------------------------------------*/
+/*-----------------------------------------------------------.
+| grib_yyexhaustedlab -- YYNOMEM (memory exhaustion) comes here.  |
+`-----------------------------------------------------------*/
 grib_yyexhaustedlab:
   grib_yyerror (YY_("memory exhausted"));
   grib_yyresult = 2;
-  /* Fall through.  */
-#endif
+  goto grib_yyreturnlab;
 
 
-/*-----------------------------------------------------.
-| grib_yyreturn -- parsing is finished, return the result.  |
-`-----------------------------------------------------*/
-grib_yyreturn:
+/*----------------------------------------------------------.
+| grib_yyreturnlab -- parsing is finished, clean up and return.  |
+`----------------------------------------------------------*/
+grib_yyreturnlab:
   if (grib_yychar != YYEMPTY)
     {
       /* Make sure we have latest lookahead translation.  See comments at
@@ -4035,19 +3982,17 @@ grib_yyreturn:
   while (grib_yyssp != grib_yyss)
     {
       grib_yydestruct ("Cleanup: popping",
-                  grib_yystos[+*grib_yyssp], grib_yyvsp);
+                  YY_ACCESSING_SYMBOL (+*grib_yyssp), grib_yyvsp);
       YYPOPSTACK (1);
     }
 #ifndef grib_yyoverflow
   if (grib_yyss != grib_yyssa)
     YYSTACK_FREE (grib_yyss);
 #endif
-#if YYERROR_VERBOSE
-  if (grib_yymsg != grib_yymsgbuf)
-    YYSTACK_FREE (grib_yymsg);
-#endif
+
   return grib_yyresult;
 }
+
 #line 869 "griby.y"
 
 
