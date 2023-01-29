@@ -5,10 +5,6 @@
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generating_process.def"
 
-alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
-template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
-codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
-alias time.stepUnits=stepUnits;
 # no template.4.forecast_time.def component in this template.
 
 include "grib2/template.4.horizontal.def"
