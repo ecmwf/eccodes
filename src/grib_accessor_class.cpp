@@ -10,7 +10,7 @@
 
 
 #include "grib_api_internal.h"
-#include "grib_accessor_classes_hash.c"
+#include "grib_accessor_classes_hash.cpp"
 /*     grib level     */
 
 

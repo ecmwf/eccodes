@@ -161,8 +161,8 @@ sub write_F90_errors {
 sub write_C_errors {
     my ($public,$internal) = @_;
 
-    open(C,">grib_errors.c.new") or die "grib_errors.c.new: $!";
-    open(IN,"<grib_errors.c.in") or die "grib_errors.c.in: $!";
+    open(C,">grib_errors.cpp.new") or die "grib_errors.cpp.new: $!";
+    open(IN,"<grib_errors.cpp.in") or die "grib_errors.cpp.in: $!";
 
     foreach (<IN>) {
         if (/^!ERRORS/) {
