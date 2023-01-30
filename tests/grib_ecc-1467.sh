@@ -25,13 +25,13 @@ gfiles+="regular_latlon_surface.grib2 " # grid_simple, edition=2
 gfiles+="spherical_pressure_level.grib1 " # spectral_complex, edition=1
 gfiles+="spherical_pressure_level.grib2 " # spectral_complex, edition=2
 
-# Complex
-#gfiles+=" "# grid_complex, edition=1
+# Grid Complex
+#gfiles+=" " # grid_complex, edition=1
 #gfiles+="gfs.complex.mvmu.grib2 " # grid_complex, edition=2, g22order_packing
 
 # Second Order
 #gfiles+="lfpw.grib1 " # grid_second_order, edition=1
-#gfiles+=" "# grid_second_order, edition=2
+#gfiles+=" " # grid_second_order, edition=2
 
 # CCSDS
 if [ $HAVE_AEC -eq 1 ]; then
