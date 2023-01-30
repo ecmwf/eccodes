@@ -20,6 +20,6 @@ cd ../src
 gperf -l -C -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  ../tests/keys |\
   sed -e '/^#line /d' > grib_hash_keys.cc
 
-cat grib_itrie_keys.c >> grib_hash_keys.cc
+cat grib_itrie_keys.cc >> grib_hash_keys.cc
 
 echo ALL DONE
