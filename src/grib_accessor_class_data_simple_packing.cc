@@ -478,7 +478,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 #if GRIB_IBMPOWER67_OPT
 #define restrict
-#include "minmax_val.cpp"
+#include "minmax_val.cc"
 #undef restrict
 #endif
 

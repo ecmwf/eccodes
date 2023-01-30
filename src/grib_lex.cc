@@ -1,6 +1,6 @@
-#line 1 "gribl.cpp"
+#line 1 "gribl.cc"
 
-#line 3 "gribl.cpp"
+#line 3 "gribl.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -1199,8 +1199,8 @@ void _grib_ignore_grib_yyunput_unused_error() { grib_yyunput(0,0); }
  #define GET_INPUT input
 #endif
 
-#line 1202 "gribl.cpp"
-#line 1203 "gribl.cpp"
+#line 1202 "gribl.cc"
+#line 1203 "gribl.cc"
 
 #define INITIAL 0
 
@@ -1421,7 +1421,7 @@ YY_DECL
 
 
 
-#line 1424 "gribl.cpp"
+#line 1424 "gribl.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -2217,7 +2217,7 @@ YY_RULE_SETUP
 #line 284 "gribl.l"
 ECHO;
 	YY_BREAK
-#line 2220 "gribl.cpp"
+#line 2220 "gribl.cc"
 case YY_STATE_EOF(INITIAL):
 	grib_yyterminate();
 
