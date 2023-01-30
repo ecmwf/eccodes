@@ -22,6 +22,9 @@ find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CUR
 
 # Initialise project
 project( eccodes VERSION 2.29.0 LANGUAGES CXX )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
@@ -68,7 +71,7 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
     ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    ecbuild_add_cxx_flags("-Wno-deprecated")
+    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
 elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
