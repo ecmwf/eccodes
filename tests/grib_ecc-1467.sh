@@ -26,8 +26,8 @@ gfiles+="spherical_pressure_level.grib1 " # spectral_complex, edition=1
 gfiles+="spherical_pressure_level.grib2 " # spectral_complex, edition=2
 
 # Grid Complex
-#gfiles+=" " # grid_complex, edition=1
-#gfiles+="gfs.complex.mvmu.grib2 " # grid_complex, edition=2, g22order_packing
+gfiles+=" " # grid_complex, edition=1
+gfiles+="gfs.complex.mvmu.grib2 " # grid_complex, edition=2, g22order_packing
 
 # Second Order
 #gfiles+="lfpw.grib1 " # grid_second_order, edition=1
