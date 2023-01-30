@@ -33,7 +33,7 @@ list(APPEND test_c_bins
     grib_set_force
     grib_ecc-386
     grib_ecc-1467
-    # grib_ecc-1431
+    grib_ecc-1431
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
@@ -273,9 +273,9 @@ if( HAVE_BUILD_TOOLS )
         codes_split_file
         grib_mars_keys)
 
-    #if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-    #    list(APPEND tests_extra grib_ecc-1431)
-    #endif()
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
+        list(APPEND tests_extra grib_ecc-1431)
+    endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
         list(APPEND tests_extra bufr_dump_decode_fortran)

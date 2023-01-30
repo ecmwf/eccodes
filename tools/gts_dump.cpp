@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: gts_dump
+ * Implementation: gts_dump
  *
  *
  */
