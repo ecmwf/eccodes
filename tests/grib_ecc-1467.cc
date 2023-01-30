@@ -9,84 +9,85 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #undef NDEBUG
 #include <assert.h>
 #include "eccodes.h"
+#include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {
-    int err           = 0;
-    float* fvalues    = NULL; /* data values as floats */
-    double* dvalues   = NULL; /* data values as doubles */
-    size_t values_len = 0;  // number of data points
-    size_t cvalues_len = 0; // coded values excluding missing
-    size_t i = 0;
-    int mode = 2; // 1=single-precision, 2=double-precision
+    int err            = 0;
+    float* fvalues     = NULL; /* data values as floats */
+    double* dvalues    = NULL; /* data values as doubles */
+    size_t values_len  = 0;    // number of data points
+    size_t cvalues_len = 0;    // coded values excluding missing
+    size_t i           = 0;
+    int mode           = 2;  // 1=single-precision, 2=double-precision
 
-    double daverage    = 0;
-    float  faverage    = 0;
+    double daverage      = 0;
+    float faverage       = 0;
+    double abs_error     = 0;
+    double max_abs_error = 1e-04;
+    double tolerance     = 1e-04;
+    double dmin;
+    double dmax;
+    float fval;
 
     FILE* in             = NULL;
     const char* filename = 0;
     codes_handle* h      = NULL;
 
-    if (argc!=3) {fprintf(stderr,"usage: %s mode file\n",argv[0]); return 1;}
-    if (strcmp(argv[1], "double")==0) mode=2;
-    else if (strcmp(argv[1], "float")==0) mode=1;
-    else { fprintf(stderr,"Invalid mode: Use float or double\n");return 1; }
-    filename = argv[2];
 
-    printf( "Opening %s, mode=%s\n",filename, (mode==1?"float":"double") );
+    if (argc != 2) {
+        fprintf(stderr, "usage: %s file\n", argv[0]);
+        return 1;
+    }
+    filename = argv[1];
+
+    printf("Opening %s\n", filename);
     in = fopen(filename, "rb");
     assert(in);
 
-    /* create new handle from the first message in the file*/
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     assert(h);
-    fclose(in);
 
-    /* get the size of the values array*/
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
-    if (mode==1)
-        fvalues = (float*)malloc(values_len * sizeof(float));
-    if (mode==2)
-        dvalues = (double*)malloc(values_len * sizeof(double));
+    fvalues = (float*)malloc(values_len * sizeof(float));
+    dvalues = (double*)malloc(values_len * sizeof(double));
+    CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
+    CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
 
-    /* get data values*/
-    if(mode==1)
-        CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
-    if(mode==2)
-        CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
+    for (i = 0; i < values_len; i++) {
+        abs_error = fabs(dvalues[i] - (double)fvalues[i]);
+        if (abs_error > max_abs_error) {
+            fprintf(stderr, "ERROR:\n\tfvalue %e\n\tdvalue %e\n\terror %e\n\tmax_abs_error %e\n", fvalues[i], dvalues[i], abs_error, max_abs_error);
+            Assert(!"Absolute error test failed\n");
+        }
 
-    faverage = 0;
-    daverage = 0;
-    if(mode==1) {
-        for (i = 0; i < values_len; i++) {
-            if (fvalues[i] != 9999) {
-                //if(i<10)printf("%10.15f\n",fvalues[i]);
-                faverage += fvalues[i];
-                cvalues_len++;
-            }
+        dmin = dvalues[i] >= 0 ? dvalues[i] / (1 + tolerance) : dvalues[i] * (1 + tolerance);
+        dmax = dvalues[i] >= 0 ? dvalues[i] * (1 + tolerance) : dvalues[i] / (1 + tolerance);
+        fval = fvalues[i];
+
+        if (!((dmin <= fval) && (fval <= dmax))) {
+            fprintf(stderr, "Error:\n");
+            fprintf(stderr, "dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
+            fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n", 
+                    dmin, fvalues[i], dmax);
+            fprintf(stderr, "\tfvalue - min = %.20e (%s)\n", 
+                    fvalues[i] - dmin, fvalues[i] - dmin >= 0 ? "OK" : "FAILED (should be positive)");
+            fprintf(stderr, "\tmax - fvalue = %.20e (%s)\n", 
+                    dmax - fvalues[i], dmax - fvalues[i] >= 0 ? "OK" : "FAILED (should be positive)");
+
+            Assert(!"Relative tolerance test failed\n");
         }
-        faverage /= (float)cvalues_len;
-        free(fvalues);
-        printf("\tThere are %zu total values, %zu coded, float average =  %10.15f\n", values_len, cvalues_len, faverage);
     }
-    if (mode==2){
-        for (i = 0; i < values_len; i++) {
-            if (dvalues[i] != 9999) {
-                //if(i<10)printf("%10.15f\n",dvalues[i]);
-                daverage += dvalues[i];
-                cvalues_len++;
-            }
-        }
-        daverage /= (double)cvalues_len;
-        free(dvalues);
-        printf("\tThere are %zu total values, %zu coded, double average = %10.15g\n", values_len, cvalues_len, daverage);
-    }
+
+    free(fvalues);
+    free(dvalues);
 
     codes_handle_delete(h);
-
+    fclose(in);
     return 0;
 }
