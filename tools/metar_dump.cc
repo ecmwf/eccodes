@@ -9,7 +9,9 @@
  */
 
 /*
- * C Implementation: gts_dump
+ * Implementation: grib_dump
+ *
+ * Author: Enrico Fucile
  *
  *
  */
@@ -23,28 +25,24 @@ grib_option grib_options[] = {
     { "D", 0, 0, 0, 1, 0 },
     { "d", 0, "Print all data values.\n", 0, 1, 0 },
     { "t", 0, 0, 0, 1, 0 },
+    { "j", 0, 0, 0, 1, 0 },
     { "H", 0, 0, 0, 1, 0 },
     { "a", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "T:", 0, 0, 1, 0, "T" },
+    { "T:", 0, 0, 1, 0, "M" },
     { "7", 0, 0, 0, 1, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "q", 0, 0, 1, 0, 0 },
     { "x", 0, 0, 0, 1, 0 }
 };
 
-const char* tool_description = "Dump the content of a GTS file in different formats.";
-const char* tool_name        = "gts_dump";
+const char* tool_description = "Dump the content of a METAR file in different formats.";
+const char* tool_name        = "metar_dump";
 const char* tool_online_doc = NULL;
 const char* tool_usage       = "[options] file file ...";
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
-/**
-* gts_dump
-* Dump the content of a GTS file
-*
-*/
 int main(int argc, char* argv[])
 {
     return grib_tool(argc, argv);
@@ -61,7 +59,6 @@ int grib_tool_init(grib_runtime_options* options)
 
     options->dump_mode = (char*)"default";
 
-
     if (opt > 1) {
         printf("%s: simultaneous O/D options not allowed\n", tool_name);
         exit(1);
@@ -74,6 +71,16 @@ int grib_tool_init(grib_runtime_options* options)
 
     if (grib_options_on("D")) {
         options->dump_mode  = (char*)"debug";
+        options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+    }
+
+    if (grib_options_on("J")) {
+        options->dump_mode  = (char*)"json";
+        options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+    }
+
+    if (grib_options_on("X")) {
+        options->dump_mode  = (char*)"xml";
         options->dump_flags = GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
     }
 
@@ -103,7 +110,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (!options->current_infile->name)
         return 0;
     snprintf(tmp, 1024, "FILE: %s ", options->current_infile->name);
-    if (!grib_options_on("C"))
+    if (!grib_options_on("C") && !grib_options_on("J") && !grib_options_on("X"))
         fprintf(stdout, "***** %s\n", tmp);
     return 0;
 }
@@ -122,7 +129,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h, options->print_keys[i].name, GRIB_ACCESSOR_FLAG_DUMP);
 
     snprintf(tmp, 1024, "MESSAGE %d ( length=%ld )", options->handle_count, length);
-    if (!grib_options_on("C"))
+    if (!grib_options_on("C") && !grib_options_on("X") && !grib_options_on("J"))
         fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
     if (!strcmp(options->dump_mode, "default")) {
         GRIB_CHECK_NOLINE(grib_get_string(h, "identifier", identifier, &idlen), 0);

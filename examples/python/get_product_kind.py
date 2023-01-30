@@ -14,7 +14,6 @@
 # Description: how to process a file containing a mix of messages
 #              and print the kind of product (e.g. GRIB, BUFR etc)
 
-from __future__ import print_function
 
 import sys
 import traceback

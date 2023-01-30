@@ -32,6 +32,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling_sh
     grib_set_force
     grib_ecc-386
+    grib_ecc-1431
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
@@ -49,35 +50,14 @@ list(APPEND test_c_bins
     grib_lam_bf
     grib_lam_gp)
 
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    foreach( _bin ${test_c_bins} )
-        SET( _src ${_bin}.c )
-        set_source_files_properties( ${_src} PROPERTIES LANGUAGE CXX )
-    endforeach()
-endif()
-
 
 foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
                             NOINSTALL
-                            SOURCES   ${tool}.c
+                            SOURCES   ${tool}.cc
                             LIBS      eccodes )
 endforeach()
-
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-        list(APPEND test_cpp_bins grib_ecc-1431)
-    endif()
-
-    foreach( tool ${test_cpp_bins} )
-        # here we use the fact that each tool has only one C file that matches its name
-        ecbuild_add_executable( TARGET    ${tool}
-            NOINSTALL
-            SOURCES   ${tool}.cpp
-            LIBS      eccodes )
-    endforeach()
-endif()
 
 
 # Now add each test (shell scripts)
@@ -291,7 +271,7 @@ if( HAVE_BUILD_TOOLS )
         codes_split_file
         grib_mars_keys)
 
-    if( HAVE_AEC AND ENABLE_EXTRA_TESTS AND HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
+    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
@@ -374,7 +354,7 @@ if( HAVE_BUILD_TOOLS )
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
-                                SOURCES   grib_encode_pthreads.c
+                                SOURCES   grib_encode_pthreads.cc
                                 LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
                           TYPE SCRIPT
@@ -383,7 +363,7 @@ if( HAVE_BUILD_TOOLS )
         foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
-                                    SOURCES   ${test}.c
+                                    SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604

@@ -12,8 +12,6 @@
 # Description: how to set key values in GRIB messages
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 from collections import OrderedDict

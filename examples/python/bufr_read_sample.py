@@ -13,8 +13,6 @@
 # Description: read key values from a BUFR sample message.
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 

@@ -1294,9 +1294,9 @@ static int stream_seek(void* data, off_t len)
 static size_t stream_read(void* data, void* buffer, size_t len, int* err)
 {
     stream_struct* s = (stream_struct*)data;
-    long n           = len;
+    long n           = 0;
 
-    if (n != len) {
+    if (len > LONG_MAX) {
         /* size_t cannot be coded into long */
         *err = GRIB_INTERNAL_ERROR;
         return -1;
