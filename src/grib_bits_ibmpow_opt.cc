@@ -187,7 +187,7 @@ int grib_encode_long_array(size_t n_vals, const long* val, long bits_per_value, 
 #define Error(x, y) fprintf(stderr, x, y)
 #define restrict
 
-#include "encode_double_array.cpp"
+#include "encode_double_array.cc"
 
 #undef U_BYTEORDER
 #undef IS_BIGENDIAN

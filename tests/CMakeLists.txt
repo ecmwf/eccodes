@@ -56,7 +56,7 @@ foreach( tool ${test_c_bins} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET    ${tool}
                             NOINSTALL
-                            SOURCES   ${tool}.cpp
+                            SOURCES   ${tool}.cc
                             LIBS      eccodes )
 endforeach()
 
@@ -356,7 +356,7 @@ if( HAVE_BUILD_TOOLS )
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
         ecbuild_add_executable( TARGET    grib_encode_pthreads
                                 NOINSTALL
-                                SOURCES   grib_encode_pthreads.cpp
+                                SOURCES   grib_encode_pthreads.cc
                                 LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
                           TYPE SCRIPT
@@ -365,7 +365,7 @@ if( HAVE_BUILD_TOOLS )
         foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
-                                    SOURCES   ${test}.cpp
+                                    SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
         ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604

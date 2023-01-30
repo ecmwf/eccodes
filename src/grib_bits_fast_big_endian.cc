@@ -256,9 +256,9 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nbits)
 
 
 #if VECTOR
-#include "grib_bits_fast_big_endian_vector.cpp" /* Experimental */
+#include "grib_bits_fast_big_endian_vector.cc" /* Experimental */
 #elif OMP
-#include "grib_bits_fast_big_endian_omp.cpp"
+#include "grib_bits_fast_big_endian_omp.cc"
 #else
-#include "grib_bits_fast_big_endian_simple.cpp"
+#include "grib_bits_fast_big_endian_simple.cc"
 #endif

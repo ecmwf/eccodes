@@ -658,7 +658,7 @@ static int unpack_float(grib_accessor* a, float* fval, size_t* len)
 
 #if GRIB_IBMPOWER67_OPT
 #define restrict
-#include "minmax_val.cpp"
+#include "minmax_val.cc"
 #undef restrict
 #endif
 
