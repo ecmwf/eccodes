@@ -22,6 +22,9 @@ find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CUR
 
 # Initialise project
 project( eccodes VERSION 2.30.0 LANGUAGES CXX )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
