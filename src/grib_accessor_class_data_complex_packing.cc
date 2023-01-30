@@ -443,11 +443,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
 
-    for (int i = n_vals-10; i < n_vals; ++i) {
-        printf("d: %f\n", val[i]);
-    }
-
-
     Assert(*len >= i);
     *len = i;
 
@@ -666,10 +661,6 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
         maxv--;
         hcount = 0;
         mmax++;
-    }
-
-    for (int i = n_vals-10; i < n_vals; ++i) {
-        printf("f: %f\n", val[i]);
     }
 
     Assert(*len >= i);
