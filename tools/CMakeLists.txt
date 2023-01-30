@@ -10,12 +10,12 @@
 #
 
 list( APPEND ecc_tools_sources
-             grib_tools.cpp
-             grib_options.cpp
+             grib_tools.cc
+             grib_options.cc
              grib_tools.h )
 
 if( EC_OS_NAME MATCHES "windows" )
-  list( APPEND ecc_tools_sources wingetopt.cpp )
+  list( APPEND ecc_tools_sources wingetopt.cc )
 endif()
 
 # tools library
@@ -49,7 +49,7 @@ list( APPEND ecc_tools_binaries_extra
 foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
     ecbuild_add_executable( TARGET     ${tool}
-                            SOURCES    ${tool}.cpp
+                            SOURCES    ${tool}.cc
                             LIBS       ecc_tools )
 endforeach()
 
@@ -57,7 +57,7 @@ endforeach()
 # User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON
 foreach( tool ${ecc_tools_binaries_extra} )
     ecbuild_add_executable( TARGET     ${tool}
-                            SOURCES    ${tool}.cpp
+                            SOURCES    ${tool}.cc
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       ecc_tools )
 endforeach()
@@ -65,29 +65,29 @@ endforeach()
 
 # grib_count/bufr_count etc. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
-                        SOURCES    codes_count.cpp
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     bufr_count
-                        SOURCES    codes_count.cpp
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     gts_count
-                        SOURCES    codes_count.cpp
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 
 # grib to netcdf is optional
 ecbuild_add_executable( TARGET     grib_to_netcdf
-                        SOURCES    grib_to_netcdf.cpp
+                        SOURCES    grib_to_netcdf.cc
                         CONDITION  HAVE_NETCDF
                         LIBS       ecc_tools NetCDF::NetCDF_C )
 
 
 ecbuild_add_executable( TARGET     grib_list_keys
-                        SOURCES    list_keys.cpp
+                        SOURCES    list_keys.cc
                         CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                         LIBS       ecc_tools )
 
 ecbuild_add_executable( TARGET     codes_bufr_filter
-                        SOURCES    bufr_filter.cpp
+                        SOURCES    bufr_filter.cc
                         LIBS       ecc_tools )
 
 
