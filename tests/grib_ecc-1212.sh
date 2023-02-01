@@ -79,6 +79,11 @@ echo "2       ecmf   20200805 1200 an       regular_ll surface     0     t      
 cat $tempOut
 diff -w $tempRef $tempOut
 
+# Check "time" namespace
+${tools_dir}/grib_get -n time $tempGrib > $tempOut
+echo "h 20200804 0000 36" > $tempRef
+diff -w $tempRef $tempOut
+
 
 # numberOfForecastsUsedInLocalTime > 1
 # ------------------------------------
@@ -110,6 +115,13 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib selectedFcIndex,step '1 4'
 grib_check_key_equals $tempGrib mars.date,mars.time  '20220607 300'
 
+for pdtn in 88 92 93 94 95 96 97 98; do
+  ${tools_dir}/grib_set -s \
+     tablesVersion=30,productDefinitionTemplateNumber=$pdtn,numberOfForecastsUsedInLocalTime=1 \
+  $sample_grib2 $tempGrib
+
+  grib_check_key_equals $tempGrib time.stepUnits:s,time.dataDate,time.dataTime  'h 0 0'
+done
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef

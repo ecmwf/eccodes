@@ -187,11 +187,11 @@ int grib_encode_signed_longb(unsigned char* p, long val, long* bitp, long nb)
 }
 
 #if GRIB_IBMPOWER67_OPT
-#include "grib_bits_ibmpow.c"
+#include "grib_bits_ibmpow.cc"
 #else
 #if FAST_BIG_ENDIAN
-#include "grib_bits_fast_big_endian.c"
+#include "grib_bits_fast_big_endian.cc"
 #else
-#include "grib_bits_any_endian.c"
+#include "grib_bits_any_endian.cc"
 #endif
 #endif

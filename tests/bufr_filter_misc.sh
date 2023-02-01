@@ -564,6 +564,27 @@ set -e
 ${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
 
 
+#-----------------------------------------------------------
+# Test: with invalid string key
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ set unexpandedDescriptors={1015};
+ set stationOrSiteName="Caesar non supra grammaticos"; # Too long
+ set pack=1;
+ write;
+EOF
+
+set +e
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+echo "Test: Invalid string key" >> $fLog
+${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_filter should have failed if string key is invalid" >&2
+   exit 1
+fi
+set -e
+
+
 #----------------------------------------------------
 # Test: format specifier for integer keys
 #----------------------------------------------------

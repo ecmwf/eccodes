@@ -91,7 +91,7 @@ int grib_is_all_bits_one(int64_t val, long nbits)
 
 int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberOfCharacters, const char* string)
 {
-    size_t i;
+    size_t i = 0, slen = 0;
     int err         = 0;
     long byteOffset = *bitOffset / 8;
     int remainder   = *bitOffset % 8;
@@ -104,9 +104,20 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
 
     Assert(numberOfCharacters < 512);
 
-    if (string)
-        memcpy(s, string, strlen(string));
-
+    /* There is a case where string == NULL:
+     * bufr_dump -Efortran data/bufr/btem_109.bufr
+     * This writes:
+     *    call codes_set(ibufr,'shipOrMobileLandStationIdentifier','')
+     * For some odd reason this gets passed in as a NULL string here!
+     * To be further investigated
+    */
+    if (string) {
+        slen = strlen(string);
+        if (slen > numberOfCharacters) {
+            return GRIB_ENCODING_ERROR;
+        }
+        memcpy(s, string, slen);
+    }
     /* if (remainder) byteOffset++; */
 
     if (numberOfCharacters == 0)
@@ -427,9 +438,9 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
 }
 
 #if OMP_PACKING
-#include "grib_bits_any_endian_omp.c"
+#include "grib_bits_any_endian_omp.cc"
 #elif VECTOR
-#include "grib_bits_any_endian_vector.c"  /* Experimental */
+#include "grib_bits_any_endian_vector.cc"  /* Experimental */
 #else
-#include "grib_bits_any_endian_simple.c"
+#include "grib_bits_any_endian_simple.cc"
 #endif

@@ -62,8 +62,8 @@ int main(int argc, char** argv)
     for (i = 0; i < 100; i++) {
         /* get a particular data value */
         GRIB_CHECK(grib_get_double_element(h, "values", i, &element_value), 0);
-
         if (element_value != values[i]) {
+            printf("ERROR: element_value=%g  != values[%d]=%g\n", element_value, i, values[i]);
             exit(1);
         }
     }

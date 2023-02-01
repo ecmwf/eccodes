@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or grib_yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
@@ -44,138 +45,147 @@
 extern int grib_yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum grib_yytokentype
   {
-    LOWERCASE = 258,
-    IF = 259,
-    IF_TRANSIENT = 260,
-    ELSE = 261,
-    END = 262,
-    CLOSE = 263,
-    UNSIGNED = 264,
-    TEMPLATE = 265,
-    TEMPLATE_NOFAIL = 266,
-    TRIGGER = 267,
-    ASCII = 268,
-    GROUP = 269,
-    NON_ALPHA = 270,
-    KSEC1EXPVER = 271,
-    LABEL = 272,
-    LIST = 273,
-    IS_IN_LIST = 274,
-    IS_IN_DICT = 275,
-    IS_INTEGER = 276,
-    TO_INTEGER = 277,
-    TO_STRING = 278,
-    SEX2DEC = 279,
-    WHILE = 280,
-    IBMFLOAT = 281,
-    SIGNED = 282,
-    UINT8 = 283,
-    INT8 = 284,
-    UINT16 = 285,
-    INT16 = 286,
-    UINT16_LITTLE_ENDIAN = 287,
-    INT16_LITTLE_ENDIAN = 288,
-    UINT32 = 289,
-    INT32 = 290,
-    UINT32_LITTLE_ENDIAN = 291,
-    INT32_LITTLE_ENDIAN = 292,
-    UINT64 = 293,
-    INT64 = 294,
-    UINT64_LITTLE_ENDIAN = 295,
-    INT64_LITTLE_ENDIAN = 296,
-    BLOB = 297,
-    BYTE = 298,
-    CODETABLE = 299,
-    SMART_TABLE = 300,
-    DICTIONARY = 301,
-    COMPLEX_CODETABLE = 302,
-    LOOKUP = 303,
-    ALIAS = 304,
-    UNALIAS = 305,
-    META = 306,
-    POS = 307,
-    INTCONST = 308,
-    TRANS = 309,
-    FLAGBIT = 310,
-    CONCEPT = 311,
-    GETENV = 312,
-    HASH_ARRAY = 313,
-    CONCEPT_NOFAIL = 314,
-    NIL = 315,
-    DUMMY = 316,
-    MODIFY = 317,
-    READ_ONLY = 318,
-    STRING_TYPE = 319,
-    LONG_TYPE = 320,
-    DOUBLE_TYPE = 321,
-    NO_COPY = 322,
-    DUMP = 323,
-    JSON = 324,
-    XML = 325,
-    NO_FAIL = 326,
-    EDITION_SPECIFIC = 327,
-    OVERRIDE = 328,
-    HIDDEN = 329,
-    CAN_BE_MISSING = 330,
-    MISSING = 331,
-    CONSTRAINT = 332,
-    COPY_OK = 333,
-    WHEN = 334,
-    SET = 335,
-    SET_NOFAIL = 336,
-    WRITE = 337,
-    APPEND = 338,
-    PRINT = 339,
-    EXPORT = 340,
-    REMOVE = 341,
-    RENAME = 342,
-    SKIP = 343,
-    PAD = 344,
-    SECTION_PADDING = 345,
-    MESSAGE = 346,
-    MESSAGE_COPY = 347,
-    PADTO = 348,
-    PADTOEVEN = 349,
-    PADTOMULTIPLE = 350,
-    G1_HALF_BYTE = 351,
-    G1_MESSAGE_LENGTH = 352,
-    G1_SECTION4_LENGTH = 353,
-    SECTION_LENGTH = 354,
-    LENGTH = 355,
-    FLAG = 356,
-    ITERATOR = 357,
-    NEAREST = 358,
-    BOX = 359,
-    KSEC = 360,
-    ASSERT = 361,
-    SUBSTR = 362,
-    CASE = 363,
-    SWITCH = 364,
-    DEFAULT = 365,
-    EQ = 366,
-    NE = 367,
-    GE = 368,
-    LE = 369,
-    LT = 370,
-    GT = 371,
-    BIT = 372,
-    BITOFF = 373,
-    AND = 374,
-    OR = 375,
-    NOT = 376,
-    IS = 377,
-    IDENT = 378,
-    STRING = 379,
-    INTEGER = 380,
-    FLOAT = 381
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    LOWERCASE = 258,               /* LOWERCASE  */
+    IF = 259,                      /* IF  */
+    IF_TRANSIENT = 260,            /* IF_TRANSIENT  */
+    ELSE = 261,                    /* ELSE  */
+    END = 262,                     /* END  */
+    CLOSE = 263,                   /* CLOSE  */
+    UNSIGNED = 264,                /* UNSIGNED  */
+    TEMPLATE = 265,                /* TEMPLATE  */
+    TEMPLATE_NOFAIL = 266,         /* TEMPLATE_NOFAIL  */
+    TRIGGER = 267,                 /* TRIGGER  */
+    ASCII = 268,                   /* ASCII  */
+    GROUP = 269,                   /* GROUP  */
+    NON_ALPHA = 270,               /* NON_ALPHA  */
+    KSEC1EXPVER = 271,             /* KSEC1EXPVER  */
+    LABEL = 272,                   /* LABEL  */
+    LIST = 273,                    /* LIST  */
+    IS_IN_LIST = 274,              /* IS_IN_LIST  */
+    IS_IN_DICT = 275,              /* IS_IN_DICT  */
+    IS_INTEGER = 276,              /* IS_INTEGER  */
+    TO_INTEGER = 277,              /* TO_INTEGER  */
+    TO_STRING = 278,               /* TO_STRING  */
+    SEX2DEC = 279,                 /* SEX2DEC  */
+    WHILE = 280,                   /* WHILE  */
+    IBMFLOAT = 281,                /* IBMFLOAT  */
+    SIGNED = 282,                  /* SIGNED  */
+    UINT8 = 283,                   /* UINT8  */
+    INT8 = 284,                    /* INT8  */
+    UINT16 = 285,                  /* UINT16  */
+    INT16 = 286,                   /* INT16  */
+    UINT16_LITTLE_ENDIAN = 287,    /* UINT16_LITTLE_ENDIAN  */
+    INT16_LITTLE_ENDIAN = 288,     /* INT16_LITTLE_ENDIAN  */
+    UINT32 = 289,                  /* UINT32  */
+    INT32 = 290,                   /* INT32  */
+    UINT32_LITTLE_ENDIAN = 291,    /* UINT32_LITTLE_ENDIAN  */
+    INT32_LITTLE_ENDIAN = 292,     /* INT32_LITTLE_ENDIAN  */
+    UINT64 = 293,                  /* UINT64  */
+    INT64 = 294,                   /* INT64  */
+    UINT64_LITTLE_ENDIAN = 295,    /* UINT64_LITTLE_ENDIAN  */
+    INT64_LITTLE_ENDIAN = 296,     /* INT64_LITTLE_ENDIAN  */
+    BLOB = 297,                    /* BLOB  */
+    BYTE = 298,                    /* BYTE  */
+    CODETABLE = 299,               /* CODETABLE  */
+    SMART_TABLE = 300,             /* SMART_TABLE  */
+    DICTIONARY = 301,              /* DICTIONARY  */
+    COMPLEX_CODETABLE = 302,       /* COMPLEX_CODETABLE  */
+    LOOKUP = 303,                  /* LOOKUP  */
+    ALIAS = 304,                   /* ALIAS  */
+    UNALIAS = 305,                 /* UNALIAS  */
+    META = 306,                    /* META  */
+    POS = 307,                     /* POS  */
+    INTCONST = 308,                /* INTCONST  */
+    TRANS = 309,                   /* TRANS  */
+    FLAGBIT = 310,                 /* FLAGBIT  */
+    CONCEPT = 311,                 /* CONCEPT  */
+    GETENV = 312,                  /* GETENV  */
+    HASH_ARRAY = 313,              /* HASH_ARRAY  */
+    CONCEPT_NOFAIL = 314,          /* CONCEPT_NOFAIL  */
+    NIL = 315,                     /* NIL  */
+    DUMMY = 316,                   /* DUMMY  */
+    MODIFY = 317,                  /* MODIFY  */
+    READ_ONLY = 318,               /* READ_ONLY  */
+    STRING_TYPE = 319,             /* STRING_TYPE  */
+    LONG_TYPE = 320,               /* LONG_TYPE  */
+    DOUBLE_TYPE = 321,             /* DOUBLE_TYPE  */
+    NO_COPY = 322,                 /* NO_COPY  */
+    DUMP = 323,                    /* DUMP  */
+    JSON = 324,                    /* JSON  */
+    XML = 325,                     /* XML  */
+    NO_FAIL = 326,                 /* NO_FAIL  */
+    EDITION_SPECIFIC = 327,        /* EDITION_SPECIFIC  */
+    OVERRIDE = 328,                /* OVERRIDE  */
+    HIDDEN = 329,                  /* HIDDEN  */
+    CAN_BE_MISSING = 330,          /* CAN_BE_MISSING  */
+    MISSING = 331,                 /* MISSING  */
+    CONSTRAINT = 332,              /* CONSTRAINT  */
+    COPY_OK = 333,                 /* COPY_OK  */
+    WHEN = 334,                    /* WHEN  */
+    SET = 335,                     /* SET  */
+    SET_NOFAIL = 336,              /* SET_NOFAIL  */
+    WRITE = 337,                   /* WRITE  */
+    APPEND = 338,                  /* APPEND  */
+    PRINT = 339,                   /* PRINT  */
+    EXPORT = 340,                  /* EXPORT  */
+    REMOVE = 341,                  /* REMOVE  */
+    RENAME = 342,                  /* RENAME  */
+    SKIP = 343,                    /* SKIP  */
+    PAD = 344,                     /* PAD  */
+    SECTION_PADDING = 345,         /* SECTION_PADDING  */
+    MESSAGE = 346,                 /* MESSAGE  */
+    MESSAGE_COPY = 347,            /* MESSAGE_COPY  */
+    PADTO = 348,                   /* PADTO  */
+    PADTOEVEN = 349,               /* PADTOEVEN  */
+    PADTOMULTIPLE = 350,           /* PADTOMULTIPLE  */
+    G1_HALF_BYTE = 351,            /* G1_HALF_BYTE  */
+    G1_MESSAGE_LENGTH = 352,       /* G1_MESSAGE_LENGTH  */
+    G1_SECTION4_LENGTH = 353,      /* G1_SECTION4_LENGTH  */
+    SECTION_LENGTH = 354,          /* SECTION_LENGTH  */
+    LENGTH = 355,                  /* LENGTH  */
+    FLAG = 356,                    /* FLAG  */
+    ITERATOR = 357,                /* ITERATOR  */
+    NEAREST = 358,                 /* NEAREST  */
+    BOX = 359,                     /* BOX  */
+    KSEC = 360,                    /* KSEC  */
+    ASSERT = 361,                  /* ASSERT  */
+    SUBSTR = 362,                  /* SUBSTR  */
+    CASE = 363,                    /* CASE  */
+    SWITCH = 364,                  /* SWITCH  */
+    DEFAULT = 365,                 /* DEFAULT  */
+    EQ = 366,                      /* EQ  */
+    NE = 367,                      /* NE  */
+    GE = 368,                      /* GE  */
+    LE = 369,                      /* LE  */
+    LT = 370,                      /* LT  */
+    GT = 371,                      /* GT  */
+    BIT = 372,                     /* BIT  */
+    BITOFF = 373,                  /* BITOFF  */
+    AND = 374,                     /* AND  */
+    OR = 375,                      /* OR  */
+    NOT = 376,                     /* NOT  */
+    IS = 377,                      /* IS  */
+    IDENT = 378,                   /* IDENT  */
+    STRING = 379,                  /* STRING  */
+    INTEGER = 380,                 /* INTEGER  */
+    FLOAT = 381                    /* FLOAT  */
   };
+  typedef enum grib_yytokentype grib_yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define LOWERCASE 258
 #define IF 259
 #define IF_TRANSIENT 260
@@ -319,11 +329,11 @@ union YYSTYPE
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
     grib_hash_array_value      *hash_array_value;
-	grib_case               *case_value;
+    grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 
-#line 327 "y.tab.h"
+#line 337 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -334,6 +344,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE grib_yylval;
 
+
 int grib_yyparse (void);
+
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */

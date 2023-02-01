@@ -3,6 +3,11 @@
 remove is_localtime;
 transient is_localtime=1;
 
+alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
+alias time.stepUnits = stepUnits;
+
 # Method used to calculate the field value at the local time specified in section 1
 codetable[1] localTimeMethod ('4.248.table',masterDir,localDir)=255 : dump;
 
@@ -45,7 +50,7 @@ localTimeForecastList list(numberOfForecastsUsedInLocalTime)
   unsigned[4] timeIncrement=0 : dump;
 }
 
-alias ls.time=dataTime;
+alias ls.time = dataTime;
 # See ECC-707
 transient lsdate_bug = 1: hidden;
 transient lstime_bug = 1: hidden;
@@ -78,6 +83,10 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
   alias mars.step = endStep;
 
+  alias time.dataDate = dateOfForecastUsedInLocalTime;
+  alias time.dataTime = timeOfForecastUsedInLocalTime;
+  alias time.endStep = endStep;
+
 }
 if (numberOfForecastsUsedInLocalTime > 1) {
   meta selectedFcIndex closest_date(dataDate, dataTime,
@@ -106,5 +115,10 @@ if (numberOfForecastsUsedInLocalTime > 1) {
     alias mars.date = dateOfForecastUsedInLocalTime : dump;
     alias mars.time = timeOfForecastUsedInLocalTime : dump;
     alias mars.step = endStep;
+
+    alias time.dataDate = dateOfForecastUsedInLocalTime;
+    alias time.dataTime = timeOfForecastUsedInLocalTime;
+    alias time.endStep = endStep;
+
   }
 }

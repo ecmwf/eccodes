@@ -9,7 +9,7 @@
  */
 
 /*
- * C Implementation: big2gribex
+ * Implementation: big2gribex
  *
  * Description:
  *
