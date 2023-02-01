@@ -45,7 +45,7 @@ input=${data_dir}/lfpw.grib1
 temp1=temp1.statistics.grib
 temp2=temp2.statistics.grib
 stats=`${tools_dir}/grib_get -w count=50 -F%.2f -n statistics $input`
-[ "$stats" = "10098 0 1064.19 3066.07 2.57004 4.60965 0" ]
+[ "$stats" = "10098.00 0.00 1064.19 3066.07 2.57 4.61 0.00" ]
 
 # Scaling values in presence of real 9999 values
 ${tools_dir}/grib_set -s scaleValuesBy=0.5                     $input $temp1
