@@ -81,8 +81,7 @@ build_script:
                -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
                ..
   - cmd: nmake
-  - cmd: ctest --output-on-failure -R download
-  - cmd: ctest --output-on-failure -E download -j4
+  - cmd: ctest --output-on-failure
   - cmd: nmake install
 
 #---------------------------------#
