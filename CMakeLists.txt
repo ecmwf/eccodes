@@ -65,6 +65,11 @@ ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
 ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
+# Only support 64 bit operating systems
+if( NOT EC_OS_BITS EQUAL "64" )
+    ecbuild_critical( "Operating system ${CMAKE_SYSTEM} ${EC_OS_BITS} bits -- ecCodes only supports 64 bit OS's" )
+endif()
+
 ###############################################################################
 # some variables/options of this project
 
@@ -313,11 +318,6 @@ endif()
 
 if( IEEE_LE )
     set( IEEE_BE 0 )
-endif()
-
-set( ECCODES_ON_LINUX_32BIT 0 )
-if( EC_OS_NAME MATCHES "linux" AND EC_OS_BITS EQUAL "32" )
-    set( ECCODES_ON_LINUX_32BIT 1 )
 endif()
 
 set( ECCODES_ON_WINDOWS 0 )
