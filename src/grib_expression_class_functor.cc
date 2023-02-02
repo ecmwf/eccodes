@@ -88,9 +88,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
 
-    /*
-    TODO: needs OO code here
-     */
+    // TODO: needs OO code here
     if (strcmp(e->name, "lookup") == 0) {
         return GRIB_SUCCESS;
     }
@@ -113,16 +111,15 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             }
             err = grib_get_long_internal(h, p, &val);
             if (err) return err;
-            /* Note: This does not cope with keys like typeOfSecondFixedSurface
-             * which are codetable entries with values like 255: this value is
-             * not classed as 'missing'!
-             * (See ECC-594)
-             */
+            // Note: This does not cope with keys like typeOfSecondFixedSurface
+            // which are codetable entries with values like 255: this value is
+            // not classed as 'missing'!
+            // (See ECC-594)
             *lres = (val == GRIB_MISSING_LONG);
             return GRIB_SUCCESS;
         }
         else {
-            /* No arguments means return the actual integer missing value */
+            // No arguments means return the actual integer missing value
             *lres = GRIB_MISSING_LONG;
         }
         return GRIB_SUCCESS;
@@ -135,6 +132,26 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             grib_accessor* a = grib_find_accessor(h, p);
             *lres            = a != NULL ? 1 : 0;
             return GRIB_SUCCESS;
+        }
+        *lres = 0;
+        return GRIB_SUCCESS;
+    }
+
+    if (strcmp(e->name, "environment_variable") == 0) {
+        // ECC-1520: This implementation has some limitations:
+        // 1. Cannot distinguish between environment variable NOT SET
+        //    and SET but equal to 0
+        // 2. Cannot deal with string values
+        const char* p = grib_arguments_get_name(h, e->args, 0);
+        if (p) {
+            char* env = getenv(p);
+            if (env) {
+                long lval = 0;
+                if (string_to_long(env, &lval) == GRIB_SUCCESS) {
+                    *lres = lval;
+                    return GRIB_SUCCESS;
+                }
+            }
         }
         *lres = 0;
         return GRIB_SUCCESS;
@@ -157,7 +174,7 @@ static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
     printf("%s(", e->name);
-    /*grib_expression_print(c,e->args,f);*/
+    // grib_expression_print(c,e->args,f);
     printf(")");
 }
 
