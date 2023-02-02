@@ -40,16 +40,17 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
     long scale           = 0;
     const long last      = 127; /* Depends on edition, should be parameter */
     unsigned long maxint = 0;
+    const size_t ulong_size = sizeof(maxint) * 8;
 
     /* See ECC-246
       unsigned long maxint = grib_power(bpval,2) - 1;
       double dmaxint=(double)maxint;
     */
-    const double dmaxint = grib_power(bpval, 2) - 1;
-    if (dmaxint >= ULONG_MAX) {
+    if (bpval >= ulong_size) {
         *ret = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;
     }
+    const double dmaxint = grib_power(bpval, 2) - 1;
     maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
     *ret = 0;
