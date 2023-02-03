@@ -1,8 +1,8 @@
 "O3" = {
-constituentType = 1 ;
+constituentType = 0 ;
 }
 "H2O_c" = {
-constituentType = 2 ;
+constituentType = 1 ;
 }
 "CO2" = {
 constituentType = 3 ;
@@ -144,7 +144,7 @@ constituentType = 10001 ;
 constituentType = 10004 ;
 }
 "CH3OOH" = {
-constituentType = 10005 ;
+constituentType = 10002 ;
 }
 "HCOOH" = {
 constituentType = 10005 ;
@@ -190,9 +190,6 @@ constituentType = 10026 ;
 }
 "MCOOH" = {
 constituentType = 10027 ;
-}
-"ISPD" = {
-constituentType = 10028 ;
 }
 "MACR" = {
 constituentType = 10028 ;
@@ -357,22 +354,22 @@ constituentType = 60027 ;
 constituentType = 60032 ;
 }
 "ISOPBO2" = {
-constituentType = 60056 ;
+constituentType = 10056 ;
 }
 "ISOPDO2" = {
-constituentType = 60057 ;
+constituentType = 10057 ;
 }
 "HPALD1" = {
-constituentType = 60058 ;
+constituentType = 10058 ;
 }
 "HPALD2" = {
-constituentType = 60058 ;
+constituentType = 10059 ;
 }
 "CH3O2NO2" = {
-constituentType = 210182 ;
+constituentType = 10055 ;
 }
 "BIGENE" = {
-constituentType = 600100 ;
+constituentType = 60010 ;
 }
 "aer_seasalt_003_05" = {
 constituentType = 62008 ;

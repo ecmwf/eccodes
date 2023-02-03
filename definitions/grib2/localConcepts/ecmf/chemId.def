@@ -1,5 +1,5 @@
 "231" = {
-constituentType = 1 ;
+constituentType = 0 ;
 localTablesVersion = 1 ;
 }
 "4" = {
@@ -12,5 +12,9 @@ localTablesVersion = 1 ;
 }
 "58" = {
 constituentType = 6 ;
+localTablesVersion = 1 ;
+}
+"50" = {
+constituentType = 65523 ;
 localTablesVersion = 1 ;
 }

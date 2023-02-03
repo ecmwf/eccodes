@@ -1,5 +1,5 @@
 "gO3" = {
-constituentType = 1 ;
+constituentType = 0 ;
 localTablesVersion = 1 ;
 }
 "CH4_c" = {
@@ -12,5 +12,9 @@ localTablesVersion = 1 ;
 }
 "N2O_c" = {
 constituentType = 6 ;
+localTablesVersion = 1 ;
+}
+"ISPD" = {
+constituentType = 65523 ;
 localTablesVersion = 1 ;
 }

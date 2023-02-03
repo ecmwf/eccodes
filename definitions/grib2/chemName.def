@@ -1,8 +1,8 @@
 "Ozone" = {
-constituentType = 1 ;
+constituentType = 0 ;
 }
 "Water vapour (chemistry)" = {
-constituentType = 2 ;
+constituentType = 1 ;
 }
 "Carbon dioxide" = {
 constituentType = 3 ;
@@ -128,7 +128,7 @@ constituentType = 43 ;
 "Hydrogen fluoride" = {
 constituentType = 44 ;
 }
-" Sulphur hexafluoride " = {
+"Sulphur hexafluoride " = {
 constituentType = 45 ;
 }
 "Chlorine" = {
@@ -144,7 +144,7 @@ constituentType = 10001 ;
 constituentType = 10004 ;
 }
 "Methyl peroxide" = {
-constituentType = 10005 ;
+constituentType = 10002 ;
 }
 "Formic acid" = {
 constituentType = 10005 ;
@@ -190,9 +190,6 @@ constituentType = 10026 ;
 }
 "Methacrylic acid" = {
 constituentType = 10027 ;
-}
-"Methacrolein MVK (needs to go local)" = {
-constituentType = 10028 ;
 }
 "Methacrolein" = {
 constituentType = 10028 ;
@@ -357,22 +354,22 @@ constituentType = 60027 ;
 constituentType = 60032 ;
 }
 "Isoprene peroxy type B" = {
-constituentType = 60056 ;
+constituentType = 10056 ;
 }
-"Isoprene peroxy type D mass mixing ratio" = {
-constituentType = 60057 ;
+"Isoprene peroxy type D" = {
+constituentType = 10057 ;
 }
 "Hydroperoxy aldehydes type 1" = {
-constituentType = 60058 ;
+constituentType = 10058 ;
 }
 "Hydroperoxy aldehydes type 2" = {
-constituentType = 60058 ;
+constituentType = 10059 ;
 }
 "Methyl peroxy nitrate" = {
-constituentType = 210182 ;
+constituentType = 10055 ;
 }
 "Lumped alkenes" = {
-constituentType = 600100 ;
+constituentType = 60010 ;
 }
 "Sea salt aerosol (0.03 - 0.5 um)" = {
 constituentType = 62008 ;
