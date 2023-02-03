@@ -67,7 +67,7 @@ ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
 # Only support 64 bit operating systems
 if( NOT EC_OS_BITS EQUAL "64" )
-    ecbuild_critical( "Operating system ${CMAKE_SYSTEM} ${EC_OS_BITS} bits -- ecCodes only supports 64 bit OS's" )
+    ecbuild_critical( "Operating system ${CMAKE_SYSTEM} (${EC_OS_BITS} bits) -- ecCodes only supports 64 bit platforms" )
 endif()
 
 ###############################################################################
