@@ -109,12 +109,12 @@ void SphericalHarmonics::truncate(size_t truncation_from, size_t truncation_to, 
     size_t outsize = number_of_complex_coefficients(truncation_to) * 2;
     out.resize(outsize);
 
-    auto delta = int(truncation_from - truncation_to);
+    auto delta = static_cast<int>(truncation_from) - static_cast<int>(truncation_to);
     size_t i   = 0;
     size_t j   = 0;
 
     if (delta > 0) {
-        auto delta2 = size_t(delta * 2);
+        auto delta2 = static_cast<size_t>(delta * 2);
         size_t t1   = truncation_to + 1;
 
         for (size_t m = 0; m < t1; m++) {
