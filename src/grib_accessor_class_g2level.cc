@@ -292,6 +292,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long value_first        = *val;
     long scale_first        = 0;
     long type_first         = 0;
+    long levelFactor        = 1;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
@@ -324,6 +325,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
+        case 109:
+            //printf("type1 = 109\n");
+            if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
+                // See ECC-1081
+                // printf("    Special case - change scale_first to %ld\n", levelFactor);
+                scale_first = levelFactor;
+            }
 
         default:
             break;
