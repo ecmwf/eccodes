@@ -50,6 +50,9 @@ Idx	lat	lon	dist
 EOF
 diff $tempRef $temp
 
+$EXEC ${test_dir}/grib_nearest_test -n $ECCODES_SAMPLES_PATH/polar_stereographic_pl_grib2.tmpl
+
+
 # ECC-1295: regular lat/lon on ellipsoid
 # ----------------------------------------
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
