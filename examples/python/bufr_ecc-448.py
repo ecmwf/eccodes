@@ -7,19 +7,19 @@
 # granted to it by virtue of its status as an intergovernmental organisation
 # nor does it submit to any jurisdiction.
 
-from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_1.bufr'
+INPUT = "../../data/bufr/syno_1.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -37,7 +37,7 @@ def example():
         the_message = codes_get_message(bufr)
         newbufr = codes_new_from_message(the_message)
 
-        codes_set(newbufr, 'unpack', 1)
+        codes_set(newbufr, "unpack", 1)
 
         # get BUFR key iterator
         iterid = codes_bufr_keys_iterator_new(newbufr)
@@ -67,7 +67,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

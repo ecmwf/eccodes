@@ -12,9 +12,9 @@
 #              for missing values
 #              (rather than compare each value with the missingValue key)
 #
-from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
@@ -22,7 +22,7 @@ VERBOSE = 1  # verbose error reporting
 
 
 def example(INPUT):
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     while 1:
         gid = codes_grib_new_from_file(f)
@@ -31,13 +31,13 @@ def example(INPUT):
 
         iterid = codes_grib_iterator_new(gid, 0)
 
-        bitmapPresent = codes_get(gid, 'bitmapPresent')
+        bitmapPresent = codes_get(gid, "bitmapPresent")
         if bitmapPresent:
             # Get the bitmap array which contains 0s and 1s
-            bitmap = codes_get_array(gid, 'bitmap', int)
+            bitmap = codes_get_array(gid, "bitmap", int)
             # Do some sanity checking
-            assert len(bitmap) == codes_get_size(gid, 'values')
-            assert len(bitmap) == codes_get(gid, 'numberOfDataPoints')
+            assert len(bitmap) == codes_get_size(gid, "values")
+            assert len(bitmap) == codes_get(gid, "numberOfDataPoints")
 
         i = 0
         while 1:
@@ -70,7 +70,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

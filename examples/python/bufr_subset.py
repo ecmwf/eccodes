@@ -14,19 +14,18 @@
 #
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/synop_multi_subset.bufr'
+INPUT = "../../data/bufr/synop_multi_subset.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open BUFR file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -41,25 +40,25 @@ def example():
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # find out the number of subsets
-        key = 'numberOfSubsets'
-        numberOfSubsets = codes_get(bufr, 'numberOfSubsets')
-        print(' %s: %d' % (key, numberOfSubsets))
+        key = "numberOfSubsets"
+        numberOfSubsets = codes_get(bufr, "numberOfSubsets")
+        print(" %s: %d" % (key, numberOfSubsets))
 
         # loop over the subsets
         for i in range(1, numberOfSubsets + 1):
             # read and print some data values
 
-            key = '/subsetNumber=%d/blockNumber' % i
+            key = "/subsetNumber=%d/blockNumber" % i
             print(key)
             val = codes_get_long(bufr, key)
-            print('  %s= %d' % (key, val))
+            print("  %s= %d" % (key, val))
 
-            key = '/subsetNumber=%d/stationNumber' % i
+            key = "/subsetNumber=%d/stationNumber" % i
             val = codes_get_long(bufr, key)
-            print('  %s: %d' % (key, val))
+            print("  %s: %d" % (key, val))
 
         cnt += 1
 
@@ -77,7 +76,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

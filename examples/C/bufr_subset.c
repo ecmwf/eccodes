@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -60,28 +60,28 @@ int main(int argc, char* argv[])
 
         /* loop over the subsets */
         for (i = 1; i <= numberOfSubsets; i++) {
-            sprintf(key, "/subsetNumber=%d/blockNumber", i);
+            snprintf(key, sizeof(key), "/subsetNumber=%d/blockNumber", i);
 
             printf("  subsetNumber=%d", i);
             /* read and print some data values */
             CODES_CHECK(codes_get_long(h, key, &longVal), 0);
             printf("  blockNumber=%ld", longVal);
 
-            sprintf(key, "/subsetNumber=%d/stationNumber", i);
+            snprintf(key, sizeof(key), "/subsetNumber=%d/stationNumber", i);
             CODES_CHECK(codes_get_long(h, key, &longVal), 0);
             printf("  stationNumber=%ld", longVal);
 
-            sprintf(key, "/subsetNumber=%d/stationOrSiteName->units", i);
+            snprintf(key, sizeof(key), "/subsetNumber=%d/stationOrSiteName->units", i);
             CODES_CHECK(codes_get_length(h, key, &stringLen), 0);
             assert(stringLen == 10); /* should be "CCITT IA5" */
 
-            sprintf(key, "/subsetNumber=%d/stationOrSiteName", i);
+            snprintf(key, sizeof(key), "/subsetNumber=%d/stationOrSiteName", i);
             CODES_CHECK(codes_get_length(h, key, &stringLen), 0);
             CODES_CHECK(codes_get_string(h, key, stringVal, &stringLen), 0);
             assert(stringLen > 0 && stringLen < 17);
             printf("  stationOrSiteName=\"%s\"", stringVal);
 
-            sprintf(key, "/subsetNumber=%d/airTemperature", i);
+            snprintf(key, sizeof(key), "/subsetNumber=%d/airTemperature", i);
             CODES_CHECK(codes_get_double(h, key, &doubleVal), 0);
             printf("  airTemperature=%g\n", doubleVal);
             assert(doubleVal > 265 && doubleVal < 278);

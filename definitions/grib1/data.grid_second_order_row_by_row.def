@@ -11,6 +11,7 @@ meta numberOfGroups evaluate(codedNumberOfFirstOrderPackedValues + 65536 * extra
 
 unsigned[1] groupWidths[numberOfGroups] :dump;
 meta bitsPerValue second_order_bits_per_value(values,binaryScaleFactor,decimalScaleFactor);
+alias accuracy = bitsPerValue;
 
 position offsetBeforeData;
 
@@ -93,3 +94,4 @@ transient numberOfCodedValues = numberOfSecondOrderPackedValues;
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
 
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

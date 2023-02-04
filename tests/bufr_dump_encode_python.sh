@@ -8,17 +8,17 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_encode_python_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 mkdir -p $tempDir
 cd $tempDir
 
@@ -27,7 +27,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for file in ${bufr_files}
 do
   inputBufr=${data_dir}/bufr/$file
-  tempSrc=$label.$file.py
+  tempSrc=temp.$label.$file.py
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then
@@ -39,18 +39,21 @@ do
 
   #pylint --disable=E0602,R,C,W $tempSrc
 
-  # The python code always creates an output file called outfile.bufr
-  $PYTHON $tempSrc
 
-  # Check original BUFR file against one we generated from sample
-  ${tools_dir}/bufr_compare $inputBufr $tempBufr
+  if test "x$PYTHON" != "x"; then
+    # The python code always creates an output file called outfile.bufr
+    $PYTHON $tempSrc
 
-  TEMP_OUT1=${label}.$file.dump.out
-  TEMP_OUT2=${label}.$tempBufr.dump.out
-  ${tools_dir}/bufr_dump -p $inputBufr > $TEMP_OUT1
-  ${tools_dir}/bufr_dump -p $tempBufr  > $TEMP_OUT2
-  diff $TEMP_OUT1 $TEMP_OUT2
-  rm -f $TEMP_OUT1 $TEMP_OUT2
+    # Check original BUFR file against one we generated from sample
+    ${tools_dir}/bufr_compare $inputBufr $tempBufr
+
+    TEMP_OUT1=${label}.$file.dump.out
+    TEMP_OUT2=${label}.$tempBufr.dump.out
+    ${tools_dir}/bufr_dump -p $inputBufr > $TEMP_OUT1
+    ${tools_dir}/bufr_dump -p $tempBufr  > $TEMP_OUT2
+    diff $TEMP_OUT1 $TEMP_OUT2
+    rm -f $TEMP_OUT1 $TEMP_OUT2
+  fi
 
   rm -f $tempSrc $tempBufr
 done

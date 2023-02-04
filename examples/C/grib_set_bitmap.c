@@ -17,13 +17,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "eccodes.h"
 
 int main(int argc, char** argv)
 {
-    int err     = 0;
-    size_t size = 0;
+    int err = 0, i = 0, NUM_MISSING = 10;
 
     FILE* in            = NULL;
     const char* infile  = "../../data/regular_latlon_surface.grib1";
@@ -31,10 +31,10 @@ int main(int argc, char** argv)
     const char* outfile = "out.set_bitmap_c.grib";
     codes_handle* h     = NULL;
     const void* buffer  = NULL;
-    size_t values_len;
+    size_t values_len = 0, size = 0;
+    long num_of_data_points = 0, num_of_coded_values = 0, num_of_missing = 0;
     double* values;
-    double missing = 9999;
-    int i          = 0;
+    const double missing  = 1.0e36;
 
     in = fopen(infile, "rb");
     if (!in) {
@@ -52,6 +52,8 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        fclose(out);
+        return 1;
     }
 
     CODES_CHECK(codes_set_double(h, "missingValue", missing), 0);
@@ -64,13 +66,24 @@ int main(int argc, char** argv)
     /* get data values*/
     CODES_CHECK(codes_get_double_array(h, "values", values, &values_len), 0);
 
+    /* enable bitmap */
     CODES_CHECK(codes_set_long(h, "bitmapPresent", 1), 0);
 
-    for (i = 0; i < 10; i++) {
+    /* set some values to be missing */
+    for (i = 0; i < NUM_MISSING; i++) {
         values[i] = missing;
     }
 
+    /* set the values (the bitmap will be automatically built) */
     CODES_CHECK(codes_set_double_array(h, "values", values, values_len), 0);
+
+    /* sanity checks */
+    CODES_CHECK(codes_get_long(h, "numberOfDataPoints", &num_of_data_points), 0);
+    CODES_CHECK(codes_get_long(h, "numberOfCodedValues", &num_of_coded_values), 0);
+    CODES_CHECK(codes_get_long(h, "numberOfMissing", &num_of_missing), 0);
+    assert(num_of_data_points == values_len);
+    assert(num_of_coded_values == num_of_data_points - num_of_missing);
+    assert(num_of_missing == NUM_MISSING);
 
     /* get the coded message in a buffer */
     CODES_CHECK(codes_get_message(h, &buffer, &size), 0);

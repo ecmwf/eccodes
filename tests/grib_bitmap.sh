@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
 
@@ -75,28 +75,68 @@ rm -f $outfile1 $outfile1.dump $outfile $outfile.dump
 
 
 cat > $tempRules<<EOF
-set bitmapPresent=1;
-set missingValue=1111;
-set Ni=6;
-set Nj=2;
-set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
-write ;
+ set bitmapPresent=1;
+ set missingValue=1111;
+ set Ni=6;
+ set Nj=2;
+ set values={1,2,3,4,5,6,7,1111,1111,8,9,10};
+ write ;
 EOF
 
-${tools_dir}/grib_filter -o $temp1 $tempRules $grib1 
+${tools_dir}/grib_filter -o $temp1 $tempRules $grib1
 ${tools_dir}/grib_filter -o $temp2 $tempRules $grib2
 
 ${tools_dir}/grib_get_data -m missing $temp1 > $tempData1
 ${tools_dir}/grib_get_data -m missing $temp2 > $tempData2
 
 diff $tempData1 $tempData2
+rm -f $tempData1 $tempData2
+
+
+# ECC-1233: Allow printing of 'byte' keys e.g., bitmap, section paddings
+# -----------------------------------------------------------------------
+cat > $tempRules<<EOF
+ print " bitmap=[bitmap]";
+ print " padding_local1_1=[padding_local1_1]";
+EOF
+${tools_dir}/grib_filter $tempRules $temp1 > $tempData1
+cat $tempData1
+cat > $tempRef <<EOF
+ bitmap=fe70
+ padding_local1_1=00
+EOF
+diff $tempRef $tempData1
+rm -f  $tempData1 $temp1 $tempRules $tempRef
 
 # ECC-511: grid_complex_spatial_differencing
 # To convert to simple packing, must pass in bitmapPresent=1
-# -------------------------------------------
+# ----------------------------------------------------------
 infile=${data_dir}/gfs.complex.mvmu.grib2
-${tools_dir}/grib_set -r -s bitmapPresent=1,packingType=grid_simple $infile $temp2
-grib_check_key_equals $temp2 bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
+tempSimple=temp.grib_bitmap.simple.grib
+${tools_dir}/grib_set -r -s bitmapPresent=1,packingType=grid_simple $infile $tempSimple
+grib_check_key_equals $tempSimple bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
+[ "$stats" = "2.81 0.00 0.30" ]
+
+# Simple to grid_complex
+tempComplex=temp.grib_bitmap.complex.grib
+${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex
+grib_check_key_equals $tempComplex packingType,bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "grid_complex 1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplex`
+[ "$stats" = "2.81 0.00 0.30" ]
+rm -f $tempComplex
+
+# Simple to grid_complex_spatial_differencing
+tempComplexSD=temp.grib_bitmap.complexSD.grib
+${tools_dir}/grib_set -r -s packingType=grid_complex_spatial_differencing  $tempSimple $tempComplexSD
+grib_check_key_equals $tempComplexSD packingType "grid_complex_spatial_differencing"
+grib_check_key_equals $tempComplexSD bitmapPresent,numberOfMissing,numberOfValues,numberOfPoints "1 556901 481339 1038240"
+stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempComplexSD`
+[ "$stats" = "2.81 0.00 0.30" ]
+rm -f $tempComplexSD
+rm -f $tempSimple
+
+
 
 # Clean up
 rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules

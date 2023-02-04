@@ -46,11 +46,11 @@ int main(int argc, char** argv)
 
     if (argc < 2) usage(argv[0]);
 
-    /* Input lat/lon file should have 3 columns:
+    /* input lat/lon file should have 3 columns:
      *   number   latitude  longitude
      */
     fname = argv[1];
-    fin   = fopen(fname, "r"); /* Open in text mode */
+    fin   = fopen(fname, "r"); /* open in text mode */
     if (!fin) {
         perror(fname);
         exit(1);
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     }
 
     fname = argv[1];
-    fin   = fopen(fname, "r"); /* Open in text mode */
+    fin   = fopen(fname, "r"); /* open in text mode */
     if (!fin) {
         perror(fname);
         exit(1);
@@ -127,9 +127,9 @@ int main(int argc, char** argv)
     }
     fclose(fin);
 
-    /* The first GRIB file on the arguments is treated as the land-sea mask file */
+    /* the first GRIB file on the arguments is treated as the land-sea mask file */
     fname = argv[2];
-    fin   = fopen(fname, "rb"); /* Open GRIB in binary mode */
+    fin   = fopen(fname, "rb"); /* open GRIB in binary mode */
     if (!fin) {
         perror(fname);
         exit(1);

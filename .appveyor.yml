@@ -2,7 +2,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 2.20.0-{build}-{branch}
+version: latest-{build}-{branch}
 
 branches:
   only:
@@ -72,11 +72,11 @@ build_script:
                -D CMAKE_INSTALL_PREFIX=%INSTALL_DIR% ^
                -D CMAKE_BUILD_TYPE=Release ^
                -D ENABLE_FORTRAN=0 ^
-               -D ENABLE_PYTHON=0 ^
                -D ENABLE_NETCDF=1 ^
                -D ENABLE_JPG=1 ^
+               -D ENABLE_AEC=0 ^
                -D IEEE_LE=1 ^
-               -D ENABLE_MEMFS=0 ^
+               -D ENABLE_MEMFS=1 ^
                -D ENABLE_EXTRA_TESTS=ON ^
                -D WINDOWS_TESTING_BASHRC=%WINDOWS_TESTING_BASHRC% ^
                ..
@@ -90,8 +90,9 @@ build_script:
 
 test_script:
   - cmd: codes_info
-  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -s`) DO (ls %%F)
-  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -d`) DO (ls %%F)
+# Note: With ENABLE_MEMFS=1, there will be no installed definition files/samples
+#  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -s`) DO (ls %%F)
+#  - cmd: for /F "tokens=* USEBACKQ" %%F IN (`codes_info -d`) DO (ls %%F)
 
 #---------------------------------#
 #         notifications           #

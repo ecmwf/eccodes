@@ -9,29 +9,29 @@
 # nor does it submit to any jurisdiction.
 #
 
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/tp_ecmwf.grib'
-OUTPUT = 'p_out.grib_samples.grib'
+INPUT = "../../data/tp_ecmwf.grib"
+OUTPUT = "p_out.grib_samples.grib"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     sample_id = codes_grib_new_from_samples("regular_ll_sfc_grib1")
-    fin = open(INPUT, 'rb')
-    fout = open(OUTPUT, 'wb')
+    fin = open(INPUT, "rb")
+    fout = open(OUTPUT, "wb")
 
     keys = {
-        'dataDate': 20080104,
-        'startStep': 0,
-        'endStep': 12,
-        'stepType': 'accum',
-        'table2Version': 2,
-        'indicatorOfParameter': 61,
-        'decimalPrecision': 2,
+        "dataDate": 20080104,
+        "startStep": 0,
+        "endStep": 12,
+        "stepType": "accum",
+        "table2Version": 2,
+        "indicatorOfParameter": 61,
+        "decimalPrecision": 2,
     }
 
     prev_vals = None
@@ -54,8 +54,8 @@ def example():
                     result[i] -= prev_vals[i]
 
             prev_vals = curr_vals
-            keys['startStep'] += 12
-            keys['endStep'] += 12
+            keys["startStep"] += 12
+            keys["endStep"] += 12
 
         clone_id = codes_clone(sample_id)
 
@@ -79,7 +79,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

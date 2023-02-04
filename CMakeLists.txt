@@ -18,30 +18,35 @@
 
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 
-find_package( ecbuild 3.4 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
+find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.20.0 LANGUAGES C )
+project( eccodes VERSION 2.30.0 LANGUAGES CXX )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 
 ###############################################################################
 # system checks needed for eccodes_config.h and some options like MEMFS
 
-check_type_size( int            ECCODES_SIZEOF_INT )
-check_type_size( long           ECCODES_SIZEOF_LONG )
-check_type_size( size_t         ECCODES_SIZEOF_SIZE_T )
+check_type_size( int     ECCODES_SIZEOF_INT )
+check_type_size( long    ECCODES_SIZEOF_LONG )
+check_type_size( size_t  ECCODES_SIZEOF_SIZE_T )
 
-check_include_files( assert.h         ECCODES_HAVE_ASSERT_H )
-check_include_files( string.h         ECCODES_HAVE_STRING_H )
-check_include_files( sys/types.h      ECCODES_HAVE_SYS_TYPES_H )
-check_include_files( sys/stat.h       ECCODES_HAVE_SYS_STAT_H )
-check_include_files( fcntl.h          ECCODES_HAVE_FCNTL_H )
-check_include_files( unistd.h         ECCODES_HAVE_UNISTD_H )
+check_include_files( assert.h      ECCODES_HAVE_ASSERT_H )
+check_include_files( string.h      ECCODES_HAVE_STRING_H )
+check_include_files( sys/types.h   ECCODES_HAVE_SYS_TYPES_H )
+check_include_files( sys/stat.h    ECCODES_HAVE_SYS_STAT_H )
+check_include_files( fcntl.h       ECCODES_HAVE_FCNTL_H )
+check_include_files( unistd.h      ECCODES_HAVE_UNISTD_H )
 
-check_symbol_exists( fseeko           "stdio.h"    ECCODES_HAVE_FSEEKO )
-check_symbol_exists( posix_memalign   "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
-check_symbol_exists( fmemopen         "stdio.h"    ECCODES_HAVE_FMEMOPEN )
-check_symbol_exists( funopen          "stdio.h"    ECCODES_HAVE_FUNOPEN )
-check_symbol_exists( realpath         "stdlib.h"   ECCODES_HAVE_REALPATH )
+check_symbol_exists( fseeko          "stdio.h"    ECCODES_HAVE_FSEEKO )
+check_symbol_exists( posix_memalign  "stdlib.h"   ECCODES_HAVE_POSIX_MEMALIGN )
+check_symbol_exists( fmemopen        "stdio.h"    ECCODES_HAVE_FMEMOPEN )
+check_symbol_exists( funopen         "stdio.h"    ECCODES_HAVE_FUNOPEN )
+check_symbol_exists( realpath        "stdlib.h"   ECCODES_HAVE_REALPATH )
+check_symbol_exists( fsync           "unistd.h"   ECCODES_HAVE_FSYNC)
+check_symbol_exists( fdatasync       "unistd.h"   ECCODES_HAVE_FDATASYNC)
 
 check_c_source_compiles(
       " typedef int foo_t;
@@ -60,8 +65,21 @@ ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
 ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
 
+# Only support 64 bit operating systems
+if( NOT EC_OS_BITS EQUAL "64" )
+    ecbuild_critical( "Operating system ${CMAKE_SYSTEM} (${EC_OS_BITS} bits) -- ecCodes only supports 64 bit platforms" )
+endif()
+
 ###############################################################################
 # some variables/options of this project
+
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
+elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
+    set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
+endif()
 
 ecbuild_add_option( FEATURE PRODUCT_GRIB
     DESCRIPTION "Support for the product GRIB"
@@ -113,24 +131,20 @@ ecbuild_add_option( FEATURE NETCDF
     NO_TPL )
 
 find_package( AEC )
+if(NOT DEFINED ENABLE_AEC AND NOT AEC_FOUND)
+  ecbuild_critical("AEC library was not found.\n"
+                   "AEC (Adaptive Entropy Coding) provides the WMO GRIB CCSDS compression and decompression of data. "
+                   "This is highly recommended from ecCodes >= 2.25.0"
+                   "\nTo force the build without it, use -DENABLE_AEC=OFF")
+endif()
 ecbuild_add_option( FEATURE AEC
     DESCRIPTION "Support for Adaptive Entropy Coding"
-    DEFAULT OFF
+    DEFAULT ON
     CONDITION AEC_FOUND )
 
 ecbuild_find_python( VERSION 2.6 NO_LIBS )
 find_package( NumPy )
-ecbuild_add_option( FEATURE PYTHON2
-    DESCRIPTION "Build the ecCodes Python2 interface (deprecated)"
-    DEFAULT OFF
-    #CONDITION Python_FOUND AND NumPy_FOUND
-    CONDITION PYTHON_FOUND AND NUMPY_FOUND
-    )
-# For Python2 we build our own bindings (using SWIG) in the build directory
-# but for Python3 one has to add the eccodes from pip3 AFTER the install
-if( PYTHON_VERSION_MAJOR EQUAL 3 )
-    set( HAVE_PYTHON 0 )
-endif()
+set( HAVE_PYTHON 0 )
 
 ## TODO REQUIRED_LANGUAGES Fortran
 ecbuild_add_option( FEATURE FORTRAN
@@ -181,9 +195,9 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE GRIB_TIMER          DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################
@@ -240,10 +254,10 @@ endif()
 ###############################################################################
 # other options
 
-if( HAVE_GRIB_TIMER )
-    set( GRIB_TIMER 1 )
+if( HAVE_TIMER )
+    set( ECCODES_TIMER 1 )
 else()
-    set( GRIB_TIMER 0 )
+    set( ECCODES_TIMER 0 )
 endif()
 
 set( IS_BIG_ENDIAN 0 )
@@ -274,6 +288,7 @@ if( HAVE_ECCODES_THREADS )
         ecbuild_critical("Pthreads is not supported on your system: thread library found=[${CMAKE_THREAD_LIBS_INIT}]")
     endif()
     set( GRIB_PTHREADS 1 )
+    set( ECCODES_PTHREADS_LIBRARIES Threads::Threads ) # ECC-1268
     if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" )
         set( GRIB_LINUX_PTHREADS 1 )
     endif()
@@ -284,11 +299,11 @@ endif()
 
 # Cannot have both options
 if( HAVE_ECCODES_THREADS AND HAVE_ECCODES_OMP_THREADS )
-    ecbuild_critical("Cannot enable both POSIX threads and OMP! Please specify just one option")
+    ecbuild_critical("Cannot enable both POSIX threads and OpenMP! Please specify just one option")
 endif()
 
-ecbuild_info(" GRIB_PTHREADS=${GRIB_PTHREADS}")
-ecbuild_info(" GRIB_OMP_THREADS=${GRIB_OMP_THREADS}")
+ecbuild_info(" POSIX THREADS = ${GRIB_PTHREADS}")
+ecbuild_info(" OpenMP THREADS= ${GRIB_OMP_THREADS}")
 
 set( GRIB_MEM_ALIGN 0 )
 if( ENABLE_ALIGN_MEMORY )
@@ -408,15 +423,6 @@ if( HAVE_BUILD_TOOLS )
 endif()
 add_subdirectory( fortran )
 
-if( PYTHON_VERSION_MAJOR GREATER 2 )
-    # Python3 is no longer built with SWIG but is a separate
-    # package. User should do: pip3 install eccodes
-    #add_subdirectory( python3 )
-    set( ECCODES_PYTHON_DIR "python3" )
-else()
-    add_subdirectory( python )
-    set( ECCODES_PYTHON_DIR "python" )
-endif()
 add_subdirectory( tests )
 add_subdirectory( examples )
 add_subdirectory( data )
@@ -425,8 +431,8 @@ add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
 ecbuild_dont_pack( DIRS
-     experimental doxygen confluence tests/tests.ecmwf
-     config m4 rpms examples/F77
+     experimental deprecated doxygen confluence tests/tests.ecmwf
+     config m4 examples/F77 src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
      examples/examples.dev examples/extra examples/deprecated bamboo
      fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
@@ -454,7 +460,7 @@ ecbuild_pkgconfig(
   IGNORE_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
   VARIABLES      HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                  HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                 HAVE_NETCDF HAVE_PYTHON2 HAVE_FORTRAN HAVE_PNG HAVE_AEC
+                 HAVE_NETCDF HAVE_FORTRAN HAVE_PNG HAVE_AEC
 )
 if( HAVE_FORTRAN )
   ecbuild_pkgconfig(
@@ -466,7 +472,7 @@ if( HAVE_FORTRAN )
                         ${PYTHON_INCLUDE_DIRS} ${NUMPY_INCLUDE_DIRS} ${NETCDF_INCLUDE_DIRS}
     VARIABLES           HAVE_MEMFS HAVE_JPEG HAVE_LIBJASPER HAVE_LIBOPENJPEG
                         HAVE_ECCODES_THREADS HAVE_ECCODES_OMP_THREADS
-                        HAVE_NETCDF HAVE_PYTHON2 HAVE_PNG HAVE_AEC
+                        HAVE_NETCDF HAVE_PNG HAVE_AEC
   )
 endif()
 
@@ -488,10 +494,6 @@ ecbuild_info("   +--------------------------+")
 ecbuild_info("   |  ecCodes version ${eccodes_VERSION}  |")
 ecbuild_info("   +--------------------------+")
 ecbuild_info("")
-
-if( HAVE_PYTHON2 )
-  ecbuild_deprecate("Python2 support is deprecated and will be discontinued")
-endif()
 
 ecbuild_info("   +--------------------------------------+")
 ecbuild_info("   | Please note:                         |")

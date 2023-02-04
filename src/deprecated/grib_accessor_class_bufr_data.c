@@ -395,7 +395,7 @@ static int get_descriptors(grib_accessor* a)
     }
 
     if (self->numberOfDescriptors) self_clear(c,self);
-    err=_grib_get_size(grib_handle_of_accessor(a),expandedDescriptors,&(self->numberOfDescriptors));
+    err=ecc__grib_get_size(grib_handle_of_accessor(a),expandedDescriptors,&(self->numberOfDescriptors));
     if (err) return err;
 
     self->expandedDescriptors=(long*)grib_context_malloc_clear(a->context,sizeof(long)*self->numberOfDescriptors);

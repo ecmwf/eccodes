@@ -35,8 +35,8 @@ unsigned[1] typicalHour : dump;
 unsigned[1] typicalMinute : dump;
 unsigned[1] typicalSecond : dump;
 
-meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear2,typicalMonth,typicalDay) : dump,no_copy,read_only;
-meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy,read_only;
+meta ls.typicalDate sprintf("%.4d%.2d%.2d",typicalYear2,typicalMonth,typicalDay) : dump,no_copy;
+meta ls.typicalTime sprintf("%.2d%.2d%.2d",typicalHour,typicalMinute,typicalSecond) :dump,no_copy;
 
 meta typicalDateTime julian_date(typicalYear2,typicalMonth,typicalDay,typicalHour,typicalMinute,typicalSecond) ;
 

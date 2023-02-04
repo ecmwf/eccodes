@@ -6,20 +6,21 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
-INPUT = '../../data/regular_latlon_surface.grib1'
-OUTPUT = 'out.set_bitmap_p.grib'
-MISSING = 9999
+INPUT = "../../data/regular_latlon_surface.grib1"
+OUTPUT = "out.set_bitmap_p.grib"
+MISSING = 1.0e36
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    fin = open(INPUT, 'rb')
-    fout = open(OUTPUT, 'wb')
+    fin = open(INPUT, "rb")
+    fout = open(OUTPUT, "wb")
     gid = codes_grib_new_from_file(fin)
 
     # The missingValue is not coded in the message.
@@ -27,12 +28,12 @@ def example():
     # at a point in the grid.
     # It should be chosen so that it cannot be confused
     # with a valid field value
-    codes_set(gid, 'missingValue', MISSING)
+    codes_set(gid, "missingValue", MISSING)
 
     values = codes_get_values(gid)
 
     # Enable bitmap
-    codes_set(gid, 'bitmapPresent', 1)
+    codes_set(gid, "bitmapPresent", 1)
 
     # Change some data values to be missing
     num_missing = 0
@@ -44,10 +45,10 @@ def example():
     codes_set_values(gid, values)
 
     # Check counts of missing and non-missing values
-    num_data = codes_get(gid, 'numberOfDataPoints', int)
+    num_data = codes_get(gid, "numberOfDataPoints", int)
     assert num_data == len(values)
-    assert codes_get(gid, 'numberOfCodedValues', int) == num_data - num_missing
-    assert codes_get(gid, 'numberOfMissing', int) == num_missing
+    assert codes_get(gid, "numberOfCodedValues", int) == num_data - num_missing
+    assert codes_get(gid, "numberOfMissing", int) == num_missing
 
     codes_write(gid, fout)
     codes_release(gid)

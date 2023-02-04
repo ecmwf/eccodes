@@ -8,6 +8,6 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 exec ${examples_dir}/eccodes_f_grib_ecc-671

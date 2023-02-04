@@ -8,9 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-label="grib_dump_json"
+label="grib_dump_json_test"
 temp=${label}".temp.json"
 
 REDIRECT=/dev/null

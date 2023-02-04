@@ -8,9 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 temp1=temp1.calendar.$$
 temp2=temp2.calendar.$$

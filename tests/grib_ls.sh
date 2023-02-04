@@ -8,13 +8,26 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 tempLog=temp.ls.log
 rm -f $tempLog
 
+sample_g1="$ECCODES_SAMPLES_PATH/GRIB1.tmpl"
+sample_g2="$ECCODES_SAMPLES_PATH/GRIB2.tmpl"
+
 cd ${data_dir}
 infile=regular_gaussian_model_level.grib1
+
+# Basic test of man page
+set +e
+${tools_dir}/grib_ls > $tempLog
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Full documentation and examples at" $tempLog
+grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
@@ -79,7 +92,7 @@ type=`${tools_dir}/grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 [ "$type" = "generalVertical" ]
 
 # GRIB-213 nearest with land-sea mask
-temp_ls=test.grib-213.temp
+temp_ls=temp.grib_ls.grib-213.txt
 ${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
 grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
 
@@ -89,10 +102,52 @@ grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
 
 # ECC-278: grib_ls -n namespace
 ${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
-${tools_dir}/grib_ls -n data      $ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_ls -n data      $sample_g1
 
 # Angle subdivisions
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB1.tmpl angleSubdivisions 1000
-grib_check_key_equals $ECCODES_SAMPLES_PATH/GRIB2.tmpl angleSubdivisions 1000000
+grib_check_key_equals $sample_g1 angleSubdivisions 1000
+grib_check_key_equals $sample_g2 angleSubdivisions 1000000
 
+# Print 'offset' key as string and integer
+temp1=temp.grib_ls.1.txt
+temp2=temp.grib_ls.2.txt
+${tools_dir}/grib_ls -p offset:s tigge_cf_ecmwf.grib2 > $temp1
+${tools_dir}/grib_ls -p offset:i tigge_cf_ecmwf.grib2 > $temp2
+diff $temp1 $temp2
+
+# Section pointers
+grib_check_key_equals $sample_g2 'section0Pointer,section1Pointer,section3Pointer,section4Pointer' '0_16 16_21 37_72 109_34'
+
+# constraints: -w option
+file=tigge_pf_ecmwf.grib2 # Has 38 messages
+${tools_dir}/grib_ls -w count!=1 $file > $temp_ls
+grep -q "37 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w count=1/2/38 $file > $temp_ls
+grep -q "3 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u $file > $temp_ls
+grep -q "3 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v $file > $temp_ls
+grep -q "5 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName!=u/v $file > $temp_ls
+grep -q "33 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v,level=925 $file > $temp_ls
+grep -q "2 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v/10u/10v,level=925/10 $file > $temp_ls
+grep -q "4 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w packingType!=grid_simple $file > $temp_ls
+grep -q "0 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w units!=K $file > $temp_ls
+grep -q "30 of 38 messages" $temp_ls
+
+
+# Clean up
+rm -f $temp1 $temp2
 rm -f $temp_ls

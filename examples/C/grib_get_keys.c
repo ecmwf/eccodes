@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     }
     fclose(in);
 
-    /* Store the filename in the key "file" for this handle */
+    /* store the filename in the key "file" for this handle */
     len = strlen(filename);
     CODES_CHECK(codes_set_string(h, "file", filename, &len), 0);
 
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 
     {
         int eq = 0;
-        /* Now retrieve the value of the key "file" */
+        /* now retrieve the value of the key "file" */
         char file[256] = {0,};
         CODES_CHECK(codes_get_length(h, "file", &len), 0);
         assert(len == 1 + strlen(filename));
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
     }
 
     {
-        /* Example of getting bytes */
+        /* example of getting bytes */
         const char* name        = "reservedNeedNotBePresent";
         unsigned char* byte_val = NULL;
         size_t keySize          = 0;

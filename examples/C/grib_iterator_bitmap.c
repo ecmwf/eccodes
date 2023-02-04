@@ -55,9 +55,9 @@ int main(int argc, char** argv)
             CODES_CHECK(codes_get_size(h, "bitmap", &bmp_len), 0);
             bitmap = (long*)malloc(bmp_len * sizeof(long));
             CODES_CHECK(codes_get_long_array(h, "bitmap", bitmap, &bmp_len), 0);
-            printf("Bitmap is present. Num = %lu\n", bmp_len);
+            printf("Bitmap is present. Num = %zu\n", bmp_len);
         }
-        /* Sanity check. Number of values must match number in bitmap */
+        /* sanity check. Number of values must match number in bitmap */
         CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
         values = (double*)malloc(values_len * sizeof(double));
         CODES_CHECK(codes_get_double_array(h, "values", values, &values_len), 0);
@@ -65,21 +65,21 @@ int main(int argc, char** argv)
             assert(values_len == bmp_len);
         }
 
-        /* A new iterator on lat/lon/values is created from the message handle h */
+        /* a new iterator on lat/lon/values is created from the message handle h */
         iter = codes_grib_iterator_new(h, 0, &err);
         if (err != CODES_SUCCESS) CODES_CHECK(err, 0);
 
         n = 0;
-        /* Loop on all the lat/lon/values. Only print non-missing values */
+        /* loop on all the lat/lon/values. Only print non-missing values */
         while (codes_grib_iterator_next(iter, &lat, &lon, &value)) {
-            /* Consult bitmap to see if the n'th value is missing */
+            /* consult bitmap to see if the n'th value is missing */
             int is_missing_val = (bitmapPresent && bitmap[n] == 0);
             if (!is_missing_val) {
                 printf("- %d - lat=%f lon=%f value=%f\n", n, lat, lon, value);
             }
             n++;
         }
-        /* Check number of elements in iterator matches value count */
+        /* check number of elements in iterator matches value count */
         assert(n == values_len);
 
         codes_grib_iterator_delete(iter);

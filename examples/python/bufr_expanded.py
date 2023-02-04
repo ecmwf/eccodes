@@ -14,19 +14,19 @@
 #
 
 from __future__ import absolute_import
-from __future__ import print_function
-import traceback
+
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_1.bufr'
+INPUT = "../../data/bufr/syno_1.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -41,16 +41,16 @@ def example():
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # ----------------------------------
         # get all the expanded data values
         # ----------------------------------
-        key = 'numericValues'
+        key = "numericValues"
 
         # get size
         num = codes_get_size(bufr, key)
-        print('  size of %s is: %s' % (key, num))
+        print("  size of %s is: %s" % (key, num))
 
         # get values
         values = codes_get_array(bufr, key)
@@ -73,7 +73,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

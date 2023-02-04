@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-750.
 # Encoding values which exceed the maximum allowed
 # ---------------------------------------------------------
-label="bufr_ecc-750-test"
+label="bufr_ecc-750_test"
 tempRules=temp.${label}.filter
 tempBufr=temp.${label}.bufr
 

@@ -27,10 +27,11 @@ meta countOfGroupLengths sum(groupLengths);
 transient numberOfCodedValues=countOfGroupLengths+orderOfSPD;
 #transient numberOfCodedValues=countOfGroupLengths;
 meta bitsPerValue second_order_bits_per_value(codedValues,binaryScaleFactor,decimalScaleFactor);
+alias accuracy = bitsPerValue;
 
 
 position offsetBeforeData;
-if(bitmapPresent)   {
+if(bitmapPresent) {
    meta codedValues data_g1second_order_general_extended_packing(
 	#simple_packing args
      section4Length,
@@ -89,8 +90,8 @@ if(bitmapPresent)   {
    }
 } else {
    if (boustrophedonicOrdering) {
-
-	   meta codedValues data_g1second_order_general_extended_packing(
+     # See ECC-1402
+     meta numericValues data_g1second_order_general_extended_packing(
 		#simple_packing args
 		 section4Length,
 		 offsetBeforeData,
@@ -125,10 +126,9 @@ if(bitmapPresent)   {
 		 SPD,
 		 widthOfSPD,
 		 orderOfSPD,
-		 numberOfPoints
-
-		 ) : read_only;
-		 meta values data_apply_boustrophedonic(codedValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
+		 numberOfPoints) : read_only;
+		 meta values data_apply_boustrophedonic(numericValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
+         alias data.codedValues = values;
 	} else {
 	   meta values data_g1second_order_general_extended_packing(
 		#simple_packing args
@@ -165,14 +165,13 @@ if(bitmapPresent)   {
 		 SPD,
 		 widthOfSPD,
 		 orderOfSPD,
-		 numberOfPoints
-
-		 ) : dump;
+		 numberOfPoints) : dump;
 		 alias codedValues=values;
 	}
-   alias data.packedValues = values;
+    alias data.packedValues = values;
 }
 
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
 
 template statistics "common/statistics_grid.def";
+template missing_values "common/missing_values_grid.def";

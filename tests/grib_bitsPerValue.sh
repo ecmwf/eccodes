@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 files="
 constant_width_bitmap.grib
@@ -93,17 +93,17 @@ for file in $files; do
 done
 
 
-files="regular_latlon_surface.grib2 \
-       regular_latlon_surface.grib1"
+files="regular_latlon_surface.grib2
+       regular_latlon_surface.grib1
+       lfpw.grib1"
 
-for file in `echo $files`; do
-
+for file in $files; do
   infile=${data_dir}/$file
   outfile1=${infile}_bitsPerValue_1
   outfile2=${infile}_bitsPerValue_2
-
+  
+  # Setting with setBitsPerValue key should be identical to using the repack option
   ${tools_dir}/grib_set -r -s bitsPerValue=10 $infile $outfile1
-
   ${tools_dir}/grib_set -s setBitsPerValue=10 $infile $outfile2
 
   ${tools_dir}/grib_compare $outfile1 $outfile2
@@ -132,3 +132,12 @@ for bpv in `seq 17 $MAX_BPV`; do
     [ "$stats1" = "$stats2" ]
     rm -f $temp
 done
+
+# Cater for case of constant field with bitsPerValue > 0
+# TODO: This is a crazy case - still not sure if we should cater for it
+#sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+#${tools_dir}/grib_set -s bitsPerValue=16 $sample2 $temp
+#minmax=`${tools_dir}/grib_get -p min,max $temp`
+#[ "$minmax" = "1 1" ]
+
+rm -f $temp

@@ -1,0 +1,33 @@
+name: ci
+
+# Controls when the workflow will run
+on:
+
+  # Trigger the workflow on all pushes, except on tag creation
+  push:
+    branches:
+    - '**'
+    tags-ignore:
+    - '**'
+
+  # Trigger the workflow on all pull requests
+  pull_request: ~
+
+  # Allow workflow to be dispatched on demand
+  workflow_dispatch: ~
+
+jobs:
+
+  # Calls a reusable CI workflow to build & test the current repository.
+  #   It will pull in all needed dependencies and produce a code coverage report on success.
+  ci:
+    name: ci
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/ci.yml@v1
+    with:
+      codecov_upload: true
+      build_package_inputs: |
+        self_coverage: true
+        dependencies: |
+          ecmwf/ecbuild
+          MathisRosenhauer/libaec@master
+        dependency_branch: develop

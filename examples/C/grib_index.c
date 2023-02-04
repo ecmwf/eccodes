@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     size_t stepSize, levelSize, shortNameSize, numberSize;
     long ostep, olevel, onumber;
     char oshortName[200];
-    size_t lenshortName = 200;
+    size_t lenshortName = sizeof(oshortName);
     int ret = 0, count = 0;
 
     if (argc != 2) usage(argv[0]);
@@ -42,14 +42,14 @@ int main(int argc, char* argv[])
 
     printf("indexing...\n");
 
-    /* Create an index given set of keys*/
+    /* create an index given set of keys*/
     index = codes_index_new(0, "shortName,level,number,step", &ret);
     if (ret) {
         fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
         exit(ret);
     }
 
-    /* Indexes a file */
+    /* indexes a file */
     ret = codes_index_add_file(index, infile);
     if (ret) {
         fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     /* get the list of distinct steps from the index */
     /* the list is in ascending order */
     CODES_CHECK(codes_index_get_long(index, "step", steps, &stepSize), 0);
-    printf("stepSize=%ld\n", (long)stepSize);
+    printf("stepSize=%zu\n", stepSize);
     for (i = 0; i < stepSize; i++)
         printf("%ld ", steps[i]);
     printf("\n");
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     if (!levels) exit(1);
     /*same as for "step"*/
     CODES_CHECK(codes_index_get_long(index, "level", levels, &levelSize), 0);
-    printf("levelSize=%ld\n", (long)levelSize);
+    printf("levelSize=%zu\n", levelSize);
     for (i = 0; i < levelSize; i++)
         printf("%ld ", levels[i]);
     printf("\n");
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
     if (!numbers) exit(1);
     /*same as for "step"*/
     CODES_CHECK(codes_index_get_long(index, "number", numbers, &numberSize), 0);
-    printf("numberSize=%ld\n", (long)numberSize);
+    printf("numberSize=%zu\n", numberSize);
     for (i = 0; i < numberSize; i++)
         printf("%ld ", numbers[i]);
     printf("\n");
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     if (!shortName) exit(1);
     /*same as for "step"*/
     CODES_CHECK(codes_index_get_string(index, "shortName", shortName, &shortNameSize), 0);
-    printf("shortNameSize=%ld\n", (long)shortNameSize);
+    printf("shortNameSize=%zu\n", shortNameSize);
     for (i = 0; i < shortNameSize; i++)
         printf("%s ", shortName[i]);
     printf("\n");
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
                             fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
                             exit(ret);
                         }
-                        lenshortName = 200;
+                        lenshortName = sizeof(oshortName);
                         codes_get_string(h, "shortName", oshortName, &lenshortName);
                         codes_get_long(h, "level", &olevel);
                         codes_get_long(h, "number", &onumber);

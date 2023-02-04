@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -62,8 +62,14 @@ int main(int argc, char* argv[])
         }
 
         is_missing = codes_is_missing(h, "relativeHumidity", &err);
-        assert(!err);
-        assert(is_missing == 1);
+        if (err || !is_missing) {
+            fprintf(stderr, "Error: relativeHumidity should be 'missing'\n");
+            return 1;
+        }
+
+        /* Set some other keys to be missing */
+        CODES_CHECK(codes_set_missing(h, "blockNumber"), 0);
+        CODES_CHECK(codes_set_missing(h, "#1#heightOfBaseOfCloud"), 0);
 
         /* delete handle */
         codes_handle_delete(h);

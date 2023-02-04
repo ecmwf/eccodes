@@ -19,19 +19,18 @@
 # understand the structure of these messages.
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/asca_139.bufr'
+INPUT = "../../data/bufr/asca_139.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -46,7 +45,7 @@ def example():
 
         # We need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # The BUFR file contains a single message with 2016 subsets in a
         # compressed form. It means each subset has exactly the same structure:
@@ -59,7 +58,7 @@ def example():
         # Get the total number of subsets.
         numObs = codes_get(bufr, "numberOfSubsets")
 
-        print('  Number of values: %ld' % numObs)
+        print("  Number of values: %ld" % numObs)
 
         # Get latitude (for all the subsets)
         lat = codes_get_array(bufr, "latitude")
@@ -73,7 +72,7 @@ def example():
 
         # Check that all arrays are same size
         if len(lat) != numObs or len(lon) != numObs or len(bscat) != numObs:
-            print('inconsistent array dimension')
+            print("inconsistent array dimension")
             return 1
 
         # Print the values
@@ -99,7 +98,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

@@ -7,6 +7,9 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+#ifndef GRIB_TOOLS_H
+#define GRIB_TOOLS_H
+
 
 #ifdef __gnu_hurd__
 #define _FILE_OFFSET_BITS 64 /* 64-bit offsets off_t not the default on Hurd/i386 */
@@ -17,9 +20,6 @@
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
 #endif
-
-#ifndef GRIB_TOOLS_H
-#define GRIB_TOOLS_H
 
 #ifndef S_IFMT
 #define S_IFMT 0170000 /*  type of file */
@@ -44,6 +44,10 @@
 #define MODE_METAR 3
 #define MODE_TAF 5
 #define MODE_ANY 6
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef union grib_typed_value
 {
@@ -74,9 +78,9 @@ typedef struct grib_options_help
 
 typedef struct grib_option
 {
-    char* id;
-    char* args;
-    char* help;
+    const char* id;
+    const char* args;
+    const char* help;
     int on;
     int command_line;
     char* value;
@@ -177,6 +181,7 @@ extern int grib_options_count;
 extern const char* tool_name;
 extern const char* tool_description;
 extern const char* tool_usage;
+extern const char* tool_online_doc; /* Can be NULL */
 
 extern FILE* dump_file;
 
@@ -185,8 +190,8 @@ int grib_options_on(const char* id);
 int grib_options_get(int argc, char** argv);
 int grib_options_get_values(int argc, char** argv, int values_required, int default_type, grib_values values[], int* n, int* optind);
 int grib_tool(int argc, char** argv);
-char* grib_options_get_help(char* id);
-char* grib_options_get_args(char* id);
+const char* grib_options_get_help(const char* id);
+const char* grib_options_get_args(const char* id);
 int grib_options_command_line(const char* id);
 void usage(void);
 void usage_doxygen(void);
@@ -208,4 +213,8 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 int grib_no_handle_action(grib_runtime_options* options, int err);
 int exit_if_input_is_directory(const char* toolname, const char* filename);
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* GRIB_TOOLS_H */

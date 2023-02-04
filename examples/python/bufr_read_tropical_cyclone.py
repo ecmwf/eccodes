@@ -16,14 +16,13 @@
 # understand the structure of the messages.
 #
 
-from __future__ import print_function
-import traceback
-import sys
 import collections
+import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/tropical_cyclone.bufr'
+INPUT = "../../data/bufr/tropical_cyclone.bufr"
 VERBOSE = 1  # verbose error reporting
 
 data = collections.defaultdict(dict)
@@ -31,7 +30,7 @@ data = collections.defaultdict(dict)
 
 def example():
     # open BUFR file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -42,11 +41,11 @@ def example():
         if bufr is None:
             break
 
-        print('**************** MESSAGE: ', cnt + 1, '  *****************')
+        print("**************** MESSAGE: ", cnt + 1, "  *****************")
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         numObs = codes_get(bufr, "numberOfSubsets")
         year = codes_get(bufr, "year")
@@ -55,10 +54,10 @@ def example():
         hour = codes_get(bufr, "hour")
         minute = codes_get(bufr, "minute")
 
-        print('Date and time: ', day, '.', month, '.', year, '  ', hour, ':', minute)
+        print("Date and time: ", day, ".", month, ".", year, "  ", hour, ":", minute)
 
         stormIdentifier = codes_get(bufr, "stormIdentifier")
-        print('Storm identifier: ', stormIdentifier)
+        print("Storm identifier: ", stormIdentifier)
 
         # How many different timePeriod in the data structure?
         numberOfPeriods = 0
@@ -75,50 +74,74 @@ def example():
         memberNumberLen = len(memberNumber)
 
         # Observed Storm Centre
-        significance = codes_get(bufr, '#1#meteorologicalAttributeSignificance')
-        latitudeCentre = codes_get(bufr, '#1#latitude')
-        longitudeCentre = codes_get(bufr, '#1#longitude')
+        significance = codes_get(bufr, "#1#meteorologicalAttributeSignificance")
+        latitudeCentre = codes_get(bufr, "#1#latitude")
+        longitudeCentre = codes_get(bufr, "#1#longitude")
 
         if significance != 1:
-            print('ERROR: unexpected #1#meteorologicalAttributeSignificance')
+            print("ERROR: unexpected #1#meteorologicalAttributeSignificance")
             return 1
 
-        if (latitudeCentre == CODES_MISSING_DOUBLE) and (longitudeCentre == CODES_MISSING_DOUBLE):
-            print('Observed storm centre position missing')
+        if (latitudeCentre == CODES_MISSING_DOUBLE) and (
+            longitudeCentre == CODES_MISSING_DOUBLE
+        ):
+            print("Observed storm centre position missing")
         else:
-            print('Observed storm centre: latitude=', latitudeCentre, ' longitude=', longitudeCentre)
+            print(
+                "Observed storm centre: latitude=",
+                latitudeCentre,
+                " longitude=",
+                longitudeCentre,
+            )
 
         # Location of storm in perturbed analysis
-        significance = codes_get(bufr, '#2#meteorologicalAttributeSignificance')
+        significance = codes_get(bufr, "#2#meteorologicalAttributeSignificance")
 
         if significance != 4:
-            print('ERROR: unexpected #2#meteorologicalAttributeSignificance')
+            print("ERROR: unexpected #2#meteorologicalAttributeSignificance")
             return 1
 
-        latitudeAnalysis = codes_get_array(bufr, '#2#latitude')
-        longitudeAnalysis = codes_get_array(bufr, '#2#longitude')
-        pressureAnalysis = codes_get_array(bufr, '#1#pressureReducedToMeanSeaLevel')
+        latitudeAnalysis = codes_get_array(bufr, "#2#latitude")
+        longitudeAnalysis = codes_get_array(bufr, "#2#longitude")
+        pressureAnalysis = codes_get_array(bufr, "#1#pressureReducedToMeanSeaLevel")
 
         # Location of Maximum Wind
-        significance = codes_get(bufr, '#3#meteorologicalAttributeSignificance')
+        significance = codes_get(bufr, "#3#meteorologicalAttributeSignificance")
 
         if significance != 3:
-            print('ERROR: unexpected #3#meteorologicalAttributeSignificance=', significance)
+            print(
+                "ERROR: unexpected #3#meteorologicalAttributeSignificance=",
+                significance,
+            )
             return 1
 
-        latitudeMaxWind0 = codes_get_array(bufr, '#3#latitude')
-        longitudeMaxWind0 = codes_get_array(bufr, '#3#longitude')
-        windMaxWind0 = codes_get_array(bufr, '#1#windSpeedAt10M')
+        latitudeMaxWind0 = codes_get_array(bufr, "#3#latitude")
+        longitudeMaxWind0 = codes_get_array(bufr, "#3#longitude")
+        windMaxWind0 = codes_get_array(bufr, "#1#windSpeedAt10M")
 
-        if len(latitudeAnalysis) == len(memberNumber) and len(latitudeMaxWind0) == len(memberNumber):
+        if len(latitudeAnalysis) == len(memberNumber) and len(latitudeMaxWind0) == len(
+            memberNumber
+        ):
             for k in range(len(memberNumber)):
-                data[k][0] = [latitudeAnalysis[k], longitudeAnalysis[k], pressureAnalysis[k], latitudeMaxWind0[k],
-                              longitudeMaxWind0[k], windMaxWind0[k]]
+                data[k][0] = [
+                    latitudeAnalysis[k],
+                    longitudeAnalysis[k],
+                    pressureAnalysis[k],
+                    latitudeMaxWind0[k],
+                    longitudeMaxWind0[k],
+                    windMaxWind0[k],
+                ]
 
         else:
             for k in range(len(memberNumber)):
-                data[k][0] = [latitudeAnalysis[0], longitudeAnalysis[0], pressureAnalysis[k], latitudeMaxWind0[0],
-                              longitudeMaxWind0[0], windMaxWind0[k]]
+                data[k][0] = [
+                    latitudeAnalysis[0],
+                    longitudeAnalysis[0],
+                    pressureAnalysis[k],
+                    latitudeMaxWind0[0],
+                    longitudeMaxWind0[0],
+                    windMaxWind0[k],
+                ]
 
         timePeriod = [0 for x in range(numberOfPeriods)]
         for i in range(1, numberOfPeriods):
@@ -136,7 +159,9 @@ def example():
                         break
 
             # Location of the storm
-            values = codes_get_array(bufr, "#%d#meteorologicalAttributeSignificance" % rank1)
+            values = codes_get_array(
+                bufr, "#%d#meteorologicalAttributeSignificance" % rank1
+            )
             if len(values) == 1:
                 significance = values[0]
             else:
@@ -148,12 +173,19 @@ def example():
             if significance == 1:
                 lat = codes_get_array(bufr, "#%d#latitude" % rank1)
                 lon = codes_get_array(bufr, "#%d#longitude" % rank1)
-                press = codes_get_array(bufr, "#%d#pressureReducedToMeanSeaLevel" % (i + 1))
+                press = codes_get_array(
+                    bufr, "#%d#pressureReducedToMeanSeaLevel" % (i + 1)
+                )
             else:
-                print('ERROR: unexpected meteorologicalAttributeSignificance=', significance)
+                print(
+                    "ERROR: unexpected meteorologicalAttributeSignificance=",
+                    significance,
+                )
 
             # Location of maximum wind
-            values = codes_get_array(bufr, "#%d#meteorologicalAttributeSignificance" % rank3)
+            values = codes_get_array(
+                bufr, "#%d#meteorologicalAttributeSignificance" % rank3
+            )
             if len(values) == 1:
                 significanceWind = values[0]
             else:
@@ -167,22 +199,47 @@ def example():
                 lonWind = codes_get_array(bufr, "#%d#longitude" % rank3)
                 wind10m = codes_get_array(bufr, "#%d#windSpeedAt10M" % (i + 1))
             else:
-                print('ERROR: unexpected meteorologicalAttributeSignificance=', significanceWind)
+                print(
+                    "ERROR: unexpected meteorologicalAttributeSignificance=",
+                    significanceWind,
+                )
 
             for k in range(len(memberNumber)):
-                data[k][i] = [lat[k], lon[k], press[k], latWind[k], lonWind[k], wind10m[k]]
+                data[k][i] = [
+                    lat[k],
+                    lon[k],
+                    press[k],
+                    latWind[k],
+                    lonWind[k],
+                    wind10m[k],
+                ]
 
-
-            # ---------------------------------------- Print the values -------------
-
+        # ---------------------------------------- Print the values -------------
         for m in range(len(memberNumber)):
             print("== Member  %d" % memberNumber[m])
             print("step  latitude  longitude   pressure  latitude   longitude    wind")
             for s in range(len(timePeriod)):
-                if data[m][s][0] != CODES_MISSING_DOUBLE and data[m][s][1] != CODES_MISSING_DOUBLE:
-                    print(" {0:>3d}{1}{2:>6.1f}{3}{4:>6.1f}{5}{6:>8.1f}{7}{8:>6.1f}{9}{10:>6.1f}{11}{12:>6.1f}".format(
-                        timePeriod[s], '  ', data[m][s][0], '     ', data[m][s][1], '     ', data[m][s][2], '  ',
-                        data[m][s][3], '     ', data[m][s][4], '     ', data[m][s][5]))
+                if (
+                    data[m][s][0] != CODES_MISSING_DOUBLE
+                    and data[m][s][1] != CODES_MISSING_DOUBLE
+                ):
+                    print(
+                        " {0:>3d}{1}{2:>6.1f}{3}{4:>6.1f}{5}{6:>8.1f}{7}{8:>6.1f}{9}{10:>6.1f}{11}{12:>6.1f}".format(
+                            timePeriod[s],
+                            "  ",
+                            data[m][s][0],
+                            "     ",
+                            data[m][s][1],
+                            "     ",
+                            data[m][s][2],
+                            "  ",
+                            data[m][s][3],
+                            "     ",
+                            data[m][s][4],
+                            "     ",
+                            data[m][s][5],
+                        )
+                    )
 
                 # -----------------------------------------------------------------------
         cnt += 1
@@ -201,7 +258,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

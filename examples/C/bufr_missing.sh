@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 
 #Define a common label for all the tmp files
@@ -16,19 +16,17 @@ label="bufr_missing_test_c"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 #We check "syno_1.bufr". The path is
 #hardcoded in the example
 
-REDIRECT=/dev/null
-
 #Write the key values into a file
-${examples_dir}/c_bufr_missing #2> $REDIRECT > $fTmp
+${examples_dir}/c_bufr_missing
 
 #TODO: check the results
 
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

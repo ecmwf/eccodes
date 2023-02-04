@@ -110,7 +110,7 @@ if (-f "cfVarName.def") {
    my %cfVar_map     = process("cfVarName.def");
    is_deeply(\%name_map, \%cfVar_map, 'Check name and cfVarName are the same');
 } else {
-   print "\n\tWARNING: Did not find a cfVarName.def file!!!\n\n";
+   print "\n\tINFO: Did not find a cfVarName.def file!!!\n\n";
 }
 
 done_testing();

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_descriptors_test"
@@ -30,10 +30,8 @@ fi
 # Test downloaded data files
 #==============================================
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
-REDIRECT=/dev/null
 
-for file in ${bufr_files}
-do
+for file in ${bufr_files}; do
   ${tools_dir}/bufr_dump -d ${data_dir}/bufr/$file >/dev/null
 done
 

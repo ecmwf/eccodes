@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1000
 # Nearest neighbour using grib_get/grib_ls on severa files
 # ---------------------------------------------------------
-label="grib_ecc-1000-test"
+label="grib_ecc-1000_test"
 tempOut=temp.${label}.out
 tempRef=temp.${label}.ref
 

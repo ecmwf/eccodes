@@ -15,9 +15,8 @@
 #
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
@@ -26,18 +25,18 @@ VERBOSE = 1  # verbose error reporting
 
 def example(INPUT):
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     # define the keys to be printed
     keys = [
-        'dataCategory',
-        'dataSubCategory',
-        'typicalDate',
-        'bufrHeaderCentre',
-        'bufrHeaderSubCentre',
-        'masterTablesVersionNumber',
-        'localTablesVersionNumber',
-        'numberOfSubsets',
+        "dataCategory",
+        "dataSubCategory",
+        "typicalDate",
+        "bufrHeaderCentre",
+        "bufrHeaderSubCentre",
+        "masterTablesVersionNumber",
+        "localTablesVersionNumber",
+        "numberOfSubsets",
     ]
 
     cnt = 0
@@ -54,7 +53,7 @@ def example(INPUT):
         # print the values for the selected keys from the message
         for key in keys:
             try:
-                print('  %s: %s' % (key, codes_get(bufr, key)))
+                print("  %s: %s" % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -74,7 +73,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

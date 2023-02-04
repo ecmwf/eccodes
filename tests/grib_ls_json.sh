@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 tempLog=temp.grib_ls_json.log
 tempOut=temp.grib_ls_json.txt
@@ -102,6 +102,13 @@ for file in ${grib_files}; do
     json_xs -t none < $tempLog
   fi
 done
+
+# ECC-1243: listing the geography namespace
+# -----------------------------------------
+${tools_dir}/grib_ls -j -n geography ${data_dir}/reduced_latlon_surface.grib2 > $tempLog
+if test "x$JSON_CHECK" != "x"; then
+  json_xs -t none < $tempLog
+fi
 
 
 # Clean up

@@ -17,7 +17,7 @@ echo "-# When a key is not used all the bits of its value should be set to 1 to 
 \\verbatim
 >grib_set -s scaleFactorOfFirstFixedSurface=missing,scaledValueOfFirstFixedSurface=MISSING ../data/regular_latlon_surface.grib2 out.grib2
 \\endverbatim\\n
-Since some values can not be set to missing you can get an error for those keys.\\n"
+Since some values cannot be set to missing you can get an error for those keys.\\n"
 
 echo "-# To set scaleFactorOfSecondFixedSurface to missing only for the fields for which scaleFactorOfSecondFixedSurface is not missing: \\n
 \\verbatim 
@@ -29,7 +29,7 @@ However it is important that you carefully inspect the output and check the info
 \\verbatim 
 grib_set -s edition=2 ../data/reduced_gaussian_pressure_level.grib1 out.grib2
 \\endverbatim\\n
-For more details please see: https://software.ecmwf.int/wiki/display/ECC/GRIB%3A+Converting+edition+1+to+2\\n"
+For more details please see: https://confluence.ecmwf.int/display/UDOC/Converting+edition+1+to+2+-+ecCodes+GRIB+FAQ\\n"
 
 echo "-# With grib edition 2 is possible to compress data using the jpeg algorithm. 
 To change packing algorithm from grid_simple (simple packing) to grid_jpeg (jpeg2000 packing):\\n

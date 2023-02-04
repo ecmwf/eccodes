@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-887
 # BUFR: Search by condition does not work for floating point value
 # ---------------------------------------------------------
-label="bufr_ecc-887-test"
+label="bufr_ecc-887_test"
 tempOut=temp.${label}.out
 tempRules=temp.${label}.filter
 

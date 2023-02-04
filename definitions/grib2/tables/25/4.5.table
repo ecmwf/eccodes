@@ -6,7 +6,7 @@
 4 4 Level of 0 degree C isotherm (-)
 5 5 Level of adiabatic condensation lifted from the surface (-)
 6 6 Maximum wind level (-)
-7 7 Tropopause (-)
+7 sfc Tropopause (-)
 8 sfc Nominal top of the atmosphere (-)
 9 9 Sea bottom (-)
 10 10 Entire atmosphere (-)
@@ -58,17 +58,17 @@
 # 153-159 Reserved
 160 160 Depth below sea level (m)
 161 161 Depth below water surface (m)
-162 162 Lake or river bottom (-)
+162 sfc Lake or river bottom (-)
 163 163 Bottom of sediment layer (-)
 164 164 Bottom of thermally active sediment layer (-)
 165 165 Bottom of sediment layer penetrated by thermal wave (-)
-166 166 Mixing layer (-)
+166 sfc Mixing layer (-)
 167 167 Bottom of root zone (-)
 168 168 Ocean model level (Numeric)
 169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
 170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
 # 171-173 Reserved 
-174 174 Top surface of ice on sea, lake or river
+174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
 176 176 Bottom surface (underside) ice on sea, lake or river
 177 sfc Deep soil (of indefinite depth)

@@ -7,9 +7,9 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
-label="grib_check_gaussian_grids"
+label="grib_check_gaussian_grids_test"
 temp=temp.$label.grib
 
 

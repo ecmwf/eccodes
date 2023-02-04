@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* Loop over the messages in the bufr file */
+    /* Loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         printf("Number of values: %ld\n", numObs);
 
         /* Get latitude */
-        sprintf(key_name, "latitude");
+        snprintf(key_name, sizeof(key_name), "latitude");
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_double_array(h, key_name, lat, &len), 0);
 
         /* Get longitude */
-        sprintf(key_name, "longitude");
+        snprintf(key_name, sizeof(key_name), "longitude");
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(codes_get_double_array(h, key_name, lon, &len), 0);
 
         /* Get backScatter for beam two. We use an access by condition for this key. */
-        sprintf(key_name, "/beamIdentifier=2/backscatter");
+        snprintf(key_name, sizeof(key_name), "/beamIdentifier=2/backscatter");
 
         /* Check the size (including all the subsets) */
         CODES_CHECK(codes_get_size(h, key_name, &len), 0);

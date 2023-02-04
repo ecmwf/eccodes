@@ -1,42 +1,90 @@
 #!/usr/bin/env python
+
+#
+# (C) Copyright 2005- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
 from __future__ import print_function
+
+import argparse
+import binascii
 import os
 import re
 import sys
-import binascii
 import time
 
-assert len(sys.argv) > 2
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-n",
+    "--count",
+    type=int,
+    default=10,
+    help="Number of files to generate",
+)
+
+parser.add_argument(
+    "-C",
+    "--chunk",
+    type=int,
+    default=16,
+    help="Chunk size (MB)",
+)
+
+parser.add_argument(
+    "-o",
+    "--output",
+    type=str,
+    default="memfs_gen",
+    help="Name of C file to generate",
+)
+
+parser.add_argument(
+    "-e",
+    "--exclude",
+    help="Exclude packages",
+)
+
+parser.add_argument(
+    "dirs",
+    type=str,
+    nargs="+",
+    help="The list of directories to process",
+)
+
+args = parser.parse_args()
+
 
 start = time.time()
-print("MEMFS: starting")
+print("MEMFS: Starting")
 
 # Exclude experimental features e.g. GRIB3 and TAF
 # The BUFR codetables is not used in the engine
-EXCLUDED = ["grib3", "codetables", "taf", "stations"]
-EXPECTED_FCOUNT = 6
+EXCLUDED = ["grib3", "codetables", "taf", "metar", "stations", "grib1_mlgrib2_ieee32"]
 
-pos = 1
-if sys.argv[1] == "-exclude":
-    product = sys.argv[2]
-    if product == "bufr":
-        EXCLUDED.append(product)
-        EXPECTED_FCOUNT = 4
-    elif product == "grib":
-        EXCLUDED.extend(["grib1", "grib2"])
-        EXPECTED_FCOUNT = 2
-    else:
-        assert False, "Invalid product %s" % product
-    pos = 3
+EXCLUDE = {
+    None: [],
+    "bufr": ["bufr"],
+    "grib": ["grib1", "grib2"],
+}
 
-dirs = [os.path.realpath(x) for x in sys.argv[pos:-1]]
-print("Directories: ", dirs)
-print("Excluding: ", EXCLUDED)
+EXCLUDED.extend(EXCLUDE[args.exclude])
+
+
+dirs = [os.path.realpath(x) for x in args.dirs]
+print("MEMFS: Directories: ", dirs)
+print("MEMFS: Excluding: ", EXCLUDED)
 
 FILES = {}
 SIZES = {}
 NAMES = []
-CHUNK = 16 * 1024 * 1024  # chunk size in bytes
+CHUNK = args.chunk * 1024 * 1024  # chunk size in bytes
 
 # Binary to ASCII function. Different in Python 2 and 3
 try:
@@ -51,10 +99,11 @@ def get_outfile_name(base, count):
 
 
 # The last argument is the base name of the generated C file(s)
-output_file_base = sys.argv[-1]
+output_file_base = args.output
 
 buffer = None
-fcount = -1
+fcount = 0
+MAX_FCOUNT = args.count
 
 for directory in dirs:
 
@@ -69,8 +118,8 @@ for directory in dirs:
         for name in files:
 
             if buffer is None:
-                fcount += 1
                 opath = get_outfile_name(output_file_base, fcount)
+                fcount += 1
                 print("MEMFS: Generating output:", opath)
                 buffer = open(opath, "w")
 
@@ -119,9 +168,19 @@ for directory in dirs:
 if buffer is not None:
     buffer.close()
 
+assert fcount <= MAX_FCOUNT, fcount
+
+while fcount < MAX_FCOUNT:
+    opath = get_outfile_name(output_file_base, fcount)
+    print("MEMFS: Generating output:", opath, "(empty)")
+    with open(opath, "w") as f:
+        # ISO compilers issue a warning for an empty translation unit
+        # so add a dummy declaration to suppress this
+        print("struct eccodes_suppress_iso_warning;/* empty */", file=f)
+    fcount += 1
+
 # The number of generated C files is hard coded.
 # See memfs/CMakeLists.txt
-assert fcount == EXPECTED_FCOUNT, fcount
 opath = output_file_base + "_final.c"
 print("MEMFS: Generating output:", opath)
 g = open(opath, "w")
@@ -153,6 +212,5 @@ for line in f.readlines():
         print(line, file=g)
 
 
-print("Finished")
-
-print("MEMFS: done", time.time() - start)
+elapsed = time.time() - start
+print("MEMFS: Done in %.2f seconds" % elapsed)

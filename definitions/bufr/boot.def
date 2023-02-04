@@ -12,8 +12,8 @@ transient missingValue=999999 : hidden;
 transient setToMissingIfOutOfRange=0 : hidden;
 
 # This gets updated twice a year by WMO.
-# See http://www.wmo.int/pages/prog/www/WMOCodes/WMO306_vI2/LatestVERSION/LatestVERSION.html
-constant masterTablesVersionNumberLatest = 35;
+# See https://community.wmo.int/activity-areas/wmo-codes/manual-codes/latest-version
+constant masterTablesVersionNumberLatest = 39;
 
 #negative value=not used
 transient inputDelayedDescriptorReplicationFactor={-1} : hidden;

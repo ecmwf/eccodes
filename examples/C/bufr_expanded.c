@@ -40,14 +40,14 @@ int main(int argc, char* argv[])
 
     filename = argv[1];
 
-    /* open bufr file */
+    /* open BUFR file */
     in = fopen(filename, "rb");
     if (!in) {
         fprintf(stderr, "Error: unable to open file %s\n", filename);
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
         /* get the size of the values array*/
         CODES_CHECK(codes_get_size(h, "numericValues", &values_len), 0);
-        printf("  number of expanded values: %lu\n", values_len);
+        printf("  number of expanded values: %zu\n", values_len);
 
         /* allocate array for data values */
         values = (double*)malloc(values_len * sizeof(double));

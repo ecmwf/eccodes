@@ -1,10 +1,11 @@
 ecCodes
 =======
 
-[![Linux & macOS: master](https://img.shields.io/travis/ecmwf/eccodes/master.svg?label=Linux-and-macOS-master)](https://travis-ci.org/ecmwf/eccodes/branches)
-[![Linux & macOS: develop](https://img.shields.io/travis/ecmwf/eccodes/develop.svg?label=Linux-and-macOS-dev)](https://travis-ci.org/ecmwf/eccodes/branches)
-[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows-master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
-[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows-dev)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
+[![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
+
+[![Windows: master](https://img.shields.io/appveyor/ci/ecmwf/eccodes/master.svg?label=Windows%3A%20master)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/master)
+[![Windows: develop](https://img.shields.io/appveyor/ci/ecmwf/eccodes/develop.svg?label=Windows%3A%20develop)](https://ci.appveyor.com/project/ecmwf/eccodes/branch/develop)
 
 ecCodes is a package developed by ECMWF which provides an application programming interface
 and a set of tools for decoding and encoding messages in the following formats:
@@ -21,12 +22,12 @@ It is designed to provide the user with a simple set of functions to access data
 several formats with a key/value approach.
 
 Documentation can be found here:
-   https://software.ecmwf.int/wiki/display/ECC/ecCodes+Home
+   https://confluence.ecmwf.int/display/ECC/ecCodes+Home
 
 INSTALLATION
 ------------
 
-1. Download ecCodes from https://software.ecmwf.int/wiki/display/ECC/Releases
+1. Download ecCodes from https://confluence.ecmwf.int/display/ECC/Releases
 
 2. Unpack distribution:
    ```
@@ -64,7 +65,7 @@ To add the Python3 bindings, use pip3 install from PyPI as follows:
 
 
 For more details, please see:
-https://software.ecmwf.int/wiki/display/ECC/ecCodes+installation
+https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 
 If you encounter any problems please send an e-mail with your problem to:
 

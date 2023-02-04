@@ -1,21 +1,28 @@
 set -xe
 
-# We use flex and bison
-
 export LEX=flex
-export LEX_OUT=gribl.c
-$LEX -o gribl.c gribl.l
-sed 's/yy/grib_yy/g' < $LEX_OUT | sed 's/static void grib_yyunput/void grib_yyunput/' > grib_lex1.c
-sed 's/fgetc/getc/g' < grib_lex1.c > grib_lex.c
-rm -f grib_lex1.c
+export LEX_OUT=gribl.cc
+$LEX -o gribl.cc gribl.l
+sed 's/yy/grib_yy/g' < $LEX_OUT | sed 's/static void grib_yyunput/void grib_yyunput/' > grib_lex1.cc
+sed 's/fgetc/getc/g' < grib_lex1.cc > grib_lex.cc
+rm -f grib_lex1.cc
 rm -f $LEX_OUT
 
 # This invokes bison
 yacc -v -d griby.y
-sed 's/yy/grib_yy/g' < y.tab.c > grib_yacc1.c
-sed 's/fgetc/getc/g' < grib_yacc1.c > grib_yacc.c
-rm -f grib_yacc1.c
+# This creates y.tab.h and y.tab.c
+sed 's/yy/grib_yy/g' < y.tab.c > grib_yacc1.cc
+sed 's/fgetc/getc/g' < grib_yacc1.cc > grib_yacc.cc
+rm -f grib_yacc1.cc
 sed 's/yy/grib_yy/g' < y.tab.h > grib_yacc.h
 rm -f y.tab.c y.tab.h
+
+set +x
+echo "---------------------------------------------"
+# We use flex and bison
+echo "Did you use the latest YACC and FLEX modules?"
+echo "  module avail bison"
+echo "  module avail flex"
+
 echo
 echo ALL OK

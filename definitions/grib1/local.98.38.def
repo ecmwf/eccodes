@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# 4D variational increments for long window 4Dvar system
 
 constant GRIBEXSection1Problem = 56 - section1Length ;
 

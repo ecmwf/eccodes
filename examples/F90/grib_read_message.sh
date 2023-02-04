@@ -7,16 +7,15 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 in=../../data/index.grib
 out=out.readmsg.grib
 
-rm -f $out | true
+rm -f $out
 
 ${examples_dir}/eccodes_f_grib_read_message > /dev/null
 
 ${tools_dir}/grib_compare $in $out
 
 rm -f $out
-

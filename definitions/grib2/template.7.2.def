@@ -1,8 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.2, Grid point data - complex packing
-# Octets 6-xx : NG  group reference values
-# (XI in the decoding formula)
 
 position offsetBeforeData;
 
@@ -47,3 +45,5 @@ meta values data_apply_bitmap(codedValues,
 alias data.packedValues = codedValues; 
 
 template statistics "common/statistics_grid.def";
+meta numberOfMissing count_missing(bitmap,unusedBitsInBitmap,numberOfDataPoints,missingValueManagementUsed) : dump;
+alias numberOfMissingValues=numberOfMissing;

@@ -7,11 +7,11 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
 
-label="grib2to3"
+label="grib2to3_test"
 temp=temp.$label.grib3
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s editionNumber=3 $sample_g2 $temp

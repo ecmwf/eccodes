@@ -17,12 +17,12 @@ alias originatingCentre=centre;
 unsigned[2] subCentre  : dump;
 
 _if (subCentre==98 ) {
-alias centreForLocal=subCentre;
+  alias centreForLocal=subCentre;
 } else {
-alias centreForLocal=centre;
+  alias centreForLocal=centre;
 }
 
-codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatest : edition_specific;
+codetable[1] tablesVersion 'grib2/tables/1.0.table' = tablesVersionLatestOfficial : edition_specific;
 alias gribMasterTablesVersionNumber=tablesVersion;
 
 transient masterDir="grib2/tables/[tablesVersion]";
@@ -46,32 +46,21 @@ if (localTablesVersion != 0 and localTablesVersion != 255) {
 # Significance of Reference Time
 codetable[1] significanceOfReferenceTime ('1.2.table',masterDir,localDir) = 1 : dump;
 
-# Year
-# (4 digits)
-unsigned[2] year ;
+# Year (4 digits)
+unsigned[2] year;
+unsigned[1] month;
+unsigned[1] day;
+unsigned[1] hour;
+unsigned[1] minute;
+unsigned[1] second;
 
-# Month
-unsigned[1] month ;
-
-# Day
-unsigned[1] day ;
-
-# Hour
-unsigned[1] hour ;
-
-# Minute
-unsigned[1] minute ;
-
-# Second
-unsigned[1] second ;
-
-meta    dataDate    g2date(year,month,day) : dump;
+meta  dataDate  g2date(year,month,day) : dump;
 alias mars.date = dataDate;
 alias ls.date = dataDate;
 
 meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
 
-meta      dataTime    time(hour,minute,second) : dump;
+meta  dataTime  time(hour,minute,second) : dump;
 alias mars.time = dataTime;
 
 # Production status of processed data in this GRIB message
@@ -104,12 +93,16 @@ concept stepType {
     "ratio"   = {selectStepTemplateInterval=1; stepTypeInternal="ratio";}
     "stdanom" = {selectStepTemplateInterval=1; stepTypeInternal="stdanom";}
     "sum"     = {selectStepTemplateInterval=1; stepTypeInternal="sum";}
+    "severity" = {selectStepTemplateInterval=1; stepTypeInternal="severity";}
+    "mode"    = {selectStepTemplateInterval=1; stepTypeInternal="mode";}
 }
 
 # 0=atmospheric chemical constituents
 # 1=atmospheric chemical constituents based on a distribution function
+# 2=atmospheric chemical constituents with source or sink
 meta is_chemical         g2_chemical(productDefinitionTemplateNumber, stepType, 0);
 meta is_chemical_distfn  g2_chemical(productDefinitionTemplateNumber, stepType, 1);
+meta is_chemical_srcsink g2_chemical(productDefinitionTemplateNumber, stepType, 2);
 
 # 0=aerosol
 # 1=optical properties of aerosol
@@ -123,14 +116,6 @@ if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   alias calendarIdPresent = present;
   codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;
   template calendarIdentification "grib2/template.1.[calendarIdentificationTemplateNumber:l].def";
-}
-
-concept is_uerra(zero) {
-   '1' = {productionStatusOfProcessedData=10;}
-   '1' = {productionStatusOfProcessedData=11;}
-   '1' = {productionStatusOfProcessedData=9;}
-   '1' = {productionStatusOfProcessedData=8;}
-   '0' = {dummy=1;}
 }
 
 constant conceptsMasterDir="grib2" : hidden;

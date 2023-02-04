@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    /* loop over the messages in the bufr file */
+    /* loop over the messages in the BUFR file */
     while ((h = codes_handle_new_from_file(NULL, in, PRODUCT_BUFR, &err)) != NULL || err != CODES_SUCCESS) {
         if (h == NULL) {
             fprintf(stderr, "Error: unable to create handle for message %d\n", cnt);
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < size; ++i) {
             printf("%s\n", strArray[i]);
         }
-        printf("stationOrSiteName string array size = %lu\n", (unsigned long)size);
+        printf("stationOrSiteName string array size = %zu\n", size);
 
         /* free allocated arrays */
         for (i = 0; i < size; ++i)

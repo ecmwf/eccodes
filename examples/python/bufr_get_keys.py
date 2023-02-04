@@ -14,19 +14,18 @@
 #
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_multi.bufr'
+INPUT = "../../data/bufr/syno_multi.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -41,54 +40,54 @@ def example():
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # ---------------------------------------------
         # get values for keys holding a single value
         # ---------------------------------------------
         # Native type integer
-        key = 'blockNumber'
+        key = "blockNumber"
 
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
         # Native type integer
-        key = 'stationNumber'
+        key = "stationNumber"
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
         assert codes_is_missing(bufr, key) == 0
 
         # Native type float
-        key = 'airTemperatureAt2M'
+        key = "airTemperatureAt2M"
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
         assert codes_is_missing(bufr, key) == 0
 
         # Native type string
-        key = 'typicalDate'
+        key = "typicalDate"
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
-        assert codes_is_missing(bufr, 'relativeHumidity') == 1
-        assert codes_is_missing(bufr, '#5#cloudAmount') == 1
+        assert codes_is_missing(bufr, "relativeHumidity") == 1
+        assert codes_is_missing(bufr, "#5#cloudAmount") == 1
 
         # --------------------------------
         # get values for an array
         # --------------------------------
         # Native type integer
-        key = 'bufrdcExpandedDescriptors'
+        key = "bufrdcExpandedDescriptors"
 
         # get size
         num = codes_get_size(bufr, key)
-        print('  size of %s is: %s' % (key, num))
+        print("  size of %s is: %s" % (key, num))
 
         # get values
         values = codes_get_array(bufr, key)
@@ -96,11 +95,11 @@ def example():
             print("   %d %06d" % (i + 1, values[i]))
 
         # Native type float
-        key = 'numericValues'
+        key = "numericValues"
 
         # get size
         num = codes_get_size(bufr, key)
-        print('  size of %s is: %s' % (key, num))
+        print("  size of %s is: %s" % (key, num))
 
         # get values
         values = codes_get_array(bufr, key)
@@ -123,7 +122,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

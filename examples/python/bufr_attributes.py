@@ -14,29 +14,23 @@
 #
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
+
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_multi.bufr'
+INPUT = "../../data/bufr/syno_multi.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open bufr file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
     # define the attributes to be printed (see BUFR code table B)
-    attrs = [
-        'code',
-        'units',
-        'scale',
-        'reference',
-        'width'
-    ]
+    attrs = ["code", "units", "scale", "reference", "width"]
 
     # loop for the messages in the file
     while 1:
@@ -49,16 +43,16 @@ def example():
 
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data values
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         # --------------------------------------------------------------
         # We will read the value and all the attributes available for
         # the 2m temperature.
         # --------------------------------------------------------------
         # get the value
-        key = 'airTemperatureAt2M'
+        key = "airTemperatureAt2M"
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -66,9 +60,9 @@ def example():
         # are keys as well. Their name is constructed like:
         # keyname->attributename
         for attr in attrs:
-            key = 'airTemperatureAt2M' + "->" + attr
+            key = "airTemperatureAt2M" + "->" + attr
             try:
-                print('  %s: %s' % (key, codes_get(bufr, key)))
+                print("  %s: %s" % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -79,17 +73,17 @@ def example():
         # ------------------------------------------------------------------
 
         # get the value
-        key = 'airTemperatureAt2M->percentConfidence'
+        key = "airTemperatureAt2M->percentConfidence"
         try:
-            print('  %s: %s' % (key, codes_get(bufr, key)))
+            print("  %s: %s" % (key, codes_get(bufr, key)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
         # print the values of the attributes of the key.
         for attr in attrs:
-            key = 'airTemperatureAt2M->percentConfidence' + "->" + attr
+            key = "airTemperatureAt2M->percentConfidence" + "->" + attr
             try:
-                print('  %s: %s' % (key, codes_get(bufr, key)))
+                print("  %s: %s" % (key, codes_get(bufr, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -109,7 +103,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

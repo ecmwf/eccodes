@@ -13,41 +13,41 @@
 # Description: read key values from a BUFR sample message.
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
 
+
 def get_key_value(msgid, key):
     v = codes_get(msgid, key)
     if v == CODES_MISSING_DOUBLE or v == CODES_MISSING_LONG:
-        v = 'MISSING'
+        v = "MISSING"
     return v
 
 
 def example(INPUT):
     # open BUFR file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     # These keys should be in the sample files
     keys = [
-        'editionNumber',
-        'unexpandedDescriptors',
-        'blockNumber',
-        'stationNumber',
-        'verticalSignificanceSurfaceObservations',
-        'latitude',
-        'longitude',
-        '24HourPressureChange',
-        'horizontalVisibility',
-        '#1#cloudAmount',  # cloud amount (low and mid level)
-        '#1#heightOfBaseOfCloud',
-        '#1#cloudType',  # cloud type (low clouds)
-        '#2#cloudType',  # cloud type (middle clouds)
-        '#3#cloudType'  # cloud type (highclouds)
+        "editionNumber",
+        "unexpandedDescriptors",
+        "blockNumber",
+        "stationNumber",
+        "verticalSignificanceSurfaceObservations",
+        "latitude",
+        "longitude",
+        "24HourPressureChange",
+        "horizontalVisibility",
+        "#1#cloudAmount",  # cloud amount (low and mid level)
+        "#1#heightOfBaseOfCloud",
+        "#1#cloudType",  # cloud type (low clouds)
+        "#2#cloudType",  # cloud type (middle clouds)
+        "#3#cloudType",  # cloud type (highclouds)
     ]
 
     cnt = 0
@@ -60,10 +60,10 @@ def example(INPUT):
 
         print("message: %s" % cnt)
 
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
 
         for key in keys:
-            print('  %s=%s' % (key, get_key_value(bufr, key)))
+            print("  %s=%s" % (key, get_key_value(bufr, key)))
 
         cnt += 1
 
@@ -79,7 +79,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

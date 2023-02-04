@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 
 #Define a common label for all the tmp files
@@ -16,7 +16,7 @@ label="bufr_read_temp_c"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 #We check "temp_101.bufr". The path is
 #hardcoded in the example
@@ -31,4 +31,4 @@ ${examples_dir}/c_bufr_read_temp #2> $REDIRECT > $fTmp
 #cat  $fTmp
 
 #Clean up
-rm -f $fTmp | true
+rm -f $fTmp

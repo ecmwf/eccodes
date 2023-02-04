@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 files="
   mercator.grib2
@@ -39,7 +39,3 @@ for f in `echo $files`; do
             $PROJ_TOOL $ps
     fi
 done
-
-# Reminder
-keysfile=${proj_dir}/tests/keys
-grep -q projTargetString $keysfile

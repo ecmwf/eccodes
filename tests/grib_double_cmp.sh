@@ -12,14 +12,24 @@
 # ---   check if retrieving data through grib_get_double_array and
 # ---   grib_get_double_element provides the same result
 
-. ./include.sh
+. ./include.ctest.sh
 
-infile=${data_dir}/grid_ieee.grib
+infiles="
+    grid_ieee.grib
+    regular_latlon_surface_constant.grib2
+    gfs.complex.mvmu.grib2
+    constant_field.grib2
+    missing.grib2"
 
-# if [ ! -f ${infile} ]
-# then
-#   echo no data to test
-#   exit 1
-# fi
+if [ $HAVE_JPEG -eq 1 ]; then
+    infiles="jpeg.grib2 "$infiles
+fi
 
-$EXEC ${test_dir}/grib_double_cmp ${infile}
+if [ $HAVE_AEC -eq 1 ]; then
+    infiles="ccsds.grib2 "$infiles
+fi
+
+for f in $infiles; do
+    infile=$data_dir/$f
+    $EXEC ${test_dir}/grib_double_cmp ${infile}
+done

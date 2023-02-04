@@ -9,7 +9,7 @@
 #
 
 set -x
-. ./include.sh
+. ./include.ctest.sh
 
 cd ${data_dir}/bufr
 
@@ -17,15 +17,25 @@ cd ${data_dir}/bufr
 label="bufr_dump_encode_filter_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
 # Define tmp bufr file
-fBufrTmp=${label}".bufr.tmp"
+fBufrTmp=temp.${label}".bufr"
 
 # Define filter rules file
-fRules=${label}.filter
+fRules=temp.${label}.filter
+
+set +u
+use_valgrind=0
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+    use_valgrind=1
+    # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
+    # tools_dir so we reset it to its original
+    tools_dir=$build_dir/bin
+fi
+set -u
 
 #-----------------------------------------------------------
 # NOTE: not all of our BUFR files pass this test. bufr_filter is limited
@@ -59,7 +69,12 @@ do
 
     ${tools_dir}/bufr_dump -Efilter $f > $fRules
 
-    ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
+    if [ $use_valgrind -eq 1 ]; then
+        PREFIX="valgrind --error-exitcode=1 --leak-check=full "
+    else
+        PREFIX=""
+    fi
+    $PREFIX ${tools_dir}/codes_bufr_filter -o $fBufrTmp $fRules $f
 
     ${tools_dir}/bufr_compare $fBufrTmp $f
 

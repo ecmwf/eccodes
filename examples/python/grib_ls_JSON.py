@@ -11,22 +11,22 @@
 # Description: how to read data of the ECMWF EPS tropical cyclone tracks encoded in BUFR format.
 #
 
-from __future__ import print_function
-import traceback
-import sys
-import os
 import getopt
+import os
+import sys
+import traceback
+
 from eccodes import *
 
 VERBOSE = 1  # verbose error reporting
-default_namespace = 'ls'
+default_namespace = "ls"
 
 
 def do_print(namespace, INPUT):
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
     first_time = True
 
-    print('{')
+    print("{")
     print('   "messages" : [')
     while 1:
         gid = codes_grib_new_from_file(f)
@@ -34,9 +34,9 @@ def do_print(namespace, INPUT):
             break
 
         if not first_time:
-            print('      ,{')
+            print("      ,{")
         else:
-            print('      {')
+            print("      {")
             first_time = False
 
         iterid = codes_keys_iterator_new(gid, namespace)
@@ -46,30 +46,30 @@ def do_print(namespace, INPUT):
             keyname = codes_keys_iterator_get_name(iterid)
             keyval = codes_get_string(gid, keyname)
             if not f1:
-                print(',')
+                print(",")
             else:
-                print('')
+                print("")
                 f1 = False
-            print("         \"%s\" : \"%s\"" % (keyname, keyval), end=' ')
+            print('         "%s" : "%s"' % (keyname, keyval), end=" ")
 
-        print('')
-        print('      }')
+        print("")
+        print("      }")
         codes_keys_iterator_delete(iterid)
         codes_release(gid)
 
-    print('   ]')
-    print('}')
+    print("   ]")
+    print("}")
     f.close()
 
 
 def usage():
     progname = os.path.basename(sys.argv[0])
     print("Usage: ", progname, "[options] grib_file1 grib_file2 ...")
-    print('Options:')
-    print('\t-n namespace')
-    print('\t\tAll the keys belonging to namespace are printed.')
-    print('\t-m Mars keys are printed.')
-    print('')
+    print("Options:")
+    print("\t-n namespace")
+    print("\t\tAll the keys belonging to namespace are printed.")
+    print("\t-m Mars keys are printed.")
+    print("")
 
 
 def main():
@@ -81,12 +81,12 @@ def main():
         namespace = default_namespace
         opts, args = getopt.getopt(sys.argv[1:], options)
         for o, a in opts:
-            if o == '-m':
-                namespace = 'mars'
-            elif o == '-n':
+            if o == "-m":
+                namespace = "mars"
+            elif o == "-n":
                 namespace = a or default_namespace
             else:
-                assert False, 'Invalid option'
+                assert False, "Invalid option"
 
         # Check we have some GRIB files to process
         if not args:
@@ -95,10 +95,10 @@ def main():
         for arg in args:
             do_print(namespace, arg)
     except getopt.GetoptError as err:
-        print('Error: ', err)
+        print("Error: ", err)
         usage()
         return 1
-    except GribInternalError as err:
+    except CodesInternalError as err:
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:

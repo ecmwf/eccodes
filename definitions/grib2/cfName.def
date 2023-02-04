@@ -4,8 +4,24 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
-#Surface solar radiation downwards
+#Total column vertically-integrated water vapour
+'lwe_thickness_of_atmosphere_mass_content_of_water_vapor' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Boundary layer dissipation
+'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface short-wave (solar) radiation downwards
 'surface_downwelling_shortwave_flux_in_air' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -13,7 +29,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net solar radiation
+#Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -26,12 +42,16 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Northward turbulent surface stress
 'surface_downward_northward_stress' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Ozone mass mixing ratio
 'mass_fraction_of_ozone_in_air' = {
@@ -39,7 +59,7 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation, clear sky
+#Surface net short-wave (solar) radiation, clear sky
 'surface_net_downward_shortwave_flux_assuming_clear_sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -47,7 +67,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation, clear sky
+#Surface net long-wave (thermal) radiation, clear sky
 'surface_net_downward_longwave_flux_assuming_clear_sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -67,7 +87,62 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	}
-#Sea surface practical salinity
+#Particulate matter d <= 1 um
+'mass_concentration_of_pm1_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 1 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 2.5 um
+'mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 25 ;
+	 scaleFactorOfFirstSize = 7 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Particulate matter d <= 10 um
+'mass_concentration_of_pm10_ambient_aerosol_particles_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 0 ;
+	 scaleFactorOfSecondSize = missing() ;
+	 scaledValueOfFirstSize = 10 ;
+	 scaleFactorOfFirstSize = 6 ;
+	 typeOfSizeInterval = 5 ;
+	 aerosolType = 62026 ;
+	 scaledValueOfSecondSize = missing() ;
+	 is_aerosol = 1 ;
+	}
+#Ammonia mass mixing ratio
+'mass_fraction_of_ammonia_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 9 ;
+	 is_chemical = 1 ;
+	}
+#Nitrogen monoxide mass mixing ratio
+'mass_fraction_of_nitrogen_monoxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 11 ;
+	 is_chemical = 1 ;
+	}
+#Sea surface salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -76,8 +151,22 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Ocean mixed layer thickness defined by sigma theta 0.01 kg/m3
+#Depth of 20 C isotherm
+'depth_of_isosurface_of_sea_water_potential_temperature' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 20 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 29315 ;
+	 scaleFactorOfFirstFixedSurface = 2 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Ocean mixed layer depth defined by sigma theta 0.01 kg m-3
 'ocean_mixed_layer_thickness_defined_by_sigma_theta' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -86,6 +175,20 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 1 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea surface height
+'sea_surface_height_above_geoid' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Eastward sea water velocity
 'eastward_sea_water_velocity' = {
@@ -101,35 +204,37 @@
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 160 ;
 	}
-#Sea surface height
-'sea_surface_height_above_geoid' = {
-	 discipline = 10 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
+#Nitrogen dioxide mass mixing ratio
+'mass_fraction_of_nitrogen_dioxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 5 ;
+	 is_chemical = 1 ;
 	}
-#Depth of 20C isotherm
-'depth_of_isosurface_of_sea_water_potential_temperature' = {
-	 discipline = 10 ;
-	 parameterCategory = 4 ;
-	 parameterNumber = 14 ;
-	 typeOfFirstFixedSurface = 20 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 29315 ;
-	 scaleFactorOfFirstFixedSurface = 2 ;
+#Sulphur dioxide mass mixing ratio
+'mass_fraction_of_sulfur_dioxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 8 ;
+	 is_chemical = 1 ;
 	}
-#Sea-ice thickness
-'sea_ice_thickness' = {
-	 discipline = 10 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 1 ;
-	 typeOfFirstFixedSurface = 160 ;
-	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 0 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
+#Carbon monoxide mass mixing ratio
+'mass_fraction_of_carbon_monoxide_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 4 ;
+	 is_chemical = 1 ;
+	}
+#Ozone mass mixing ratio (full chemistry scheme)
+'mass_fraction_of_ozone_in_air' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 constituentType = 0 ;
+	 is_chemical = 1 ;
 	}
 #Geopotential
 'geopotential' = {
@@ -180,12 +285,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 12 ;
 	}
-#Boundary layer dissipation
-'kinetic_energy_dissipation_in_atmosphere_boundary_layer' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 20 ;
-	}
 #Surface sensible heat flux
 'surface_upward_sensible_heat_flux' = {
 	 discipline = 0 ;
@@ -215,7 +314,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 13 ;
 	}
-#Geopotential Height
+#Geopotential height
 'geopotential_height' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -240,7 +339,7 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
 	}
-#Surface net solar radiation
+#Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -248,7 +347,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net thermal radiation
+#Surface net long-wave (thermal) radiation
 'surface_net_upward_longwave_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -256,7 +355,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net thermal radiation
+#Top net long-wave (thermal) radiation
 'toa_outgoing_longwave_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;

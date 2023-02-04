@@ -9,7 +9,7 @@
 #
 
 set -x
-. ./include.sh
+. ./include.ctest.sh
 
 cd ${data_dir}/bufr
 
@@ -26,6 +26,22 @@ fBufrTmp=${label}".bufr.tmp"
 
 # Define filter rules file
 fRules=${label}.filter
+
+set +u
+use_valgrind=0
+if test "x$ECCODES_TEST_WITH_VALGRIND" != "x"; then
+    use_valgrind=1
+    # The presence of ECCODES_TEST_WITH_VALGRIND environment variable redefines
+    # tools_dir so we reset it to its original
+    tools_dir=$build_dir/bin
+fi
+set -u
+
+if [ $use_valgrind -eq 1 ]; then
+    PREFIX="valgrind --error-exitcode=1 --leak-check=full "
+else
+    PREFIX=""
+fi
 
 #-----------------------------------------------------------
 # Test: Area extraction
@@ -53,7 +69,7 @@ rm -f $outputFilt
 echo "Test: Area extraction" >> $fLog
 echo "file: $outputBufr" >> $fLog
 
-${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
+$PREFIX ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr > $outputFilt
 [ -f $outputBufr ]
 
 cat > $fRules <<EOF
@@ -69,7 +85,7 @@ print "===========";
 print "fieldOfViewNumber=[fieldOfViewNumber!15]";
 print "===========";
 EOF
-${tools_dir}/codes_bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
+$PREFIX ${tools_dir}/codes_bufr_filter $fRules $inputBufr $outputBufr  >> $outputFilt
 
 cat > $outputRef <<EOF
 extracted 14 of 128 subsets
@@ -156,7 +172,7 @@ cat > $fRules <<EOF
  assert(3 == extractedAreaNumberOfSubsets);
 EOF
 
-${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+$PREFIX ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 ns=`${tools_dir}/bufr_get -p numberOfSubsets $outputBufr`
 [ $ns -eq 3 ]
 

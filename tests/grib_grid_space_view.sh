@@ -7,17 +7,19 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="grib_space_view_test"
 tempFilter="temp.${label}.filt"
-tempGrib="temp.${label}.grib"
+tempGrib1="temp.${label}.grib1"
+tempGrib2="temp.${label}.grib2"
 tempOut="temp.${label}.out"
 
+# -----------
+# GRIB2
+# -----------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-
-# Create a filter
 cat > $tempFilter <<EOF
  set gridType="space_view";
  set Nx=1900;
@@ -33,16 +35,38 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use filter on input to create a new GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
-if [ ! -f "$tempGrib" ]; then
+${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $input
+if [ ! -f "$tempGrib2" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
 fi
-# Invoke Geoiterator on the newly created GRIB file
-${tools_dir}/grib_get_data $tempGrib > $tempOut
+# Invoke Geoiterator on the newly created GRIB2 file
+${tools_dir}/grib_get_data $tempGrib2 > $tempOut
 
-${tools_dir}/grib_ls -l 50,0 $tempGrib
+${tools_dir}/grib_ls -l 50,0 $tempGrib2
+rm -f $tempGrib2
+
+# -----------
+# GRIB1
+# -----------
+input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+cat > $tempFilter <<EOF
+ set gridType="space_view";
+ set Nx=550;
+ set Ny=550;
+ set dx=54;
+ set dy=54;
+ set XpInGridLengths=2750;
+ set YpInGridLengths=2750;
+ set Nr=6610710;
+ write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib1 $tempFilter $input
+${tools_dir}/grib_get_data $tempGrib1 > $tempOut
+
+${tools_dir}/grib_set -s edition=2 $tempGrib1 $tempGrib2
+${tools_dir}/grib_compare -e -b param $tempGrib1 $tempGrib2
 
 
 # Clean up
-rm -f $tempFilter $tempGrib $tempOut
+rm -f $tempFilter $tempGrib1 $tempGrib2 $tempOut

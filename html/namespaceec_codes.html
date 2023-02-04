@@ -365,16 +365,16 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This package is the <b>Python</b> interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a>. </p>
-<p>It offers almost one to one bindings to the C API functions.</p>
-<p>The Python interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a> uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package as the container of choice for the possible arrays of values that can be encoded/decoded in and from a grib message. Numpy is a package used for scientific computing in Python and an efficient container for generic data.</p>
-<p>The Python interface can be enabled/disabled from CMake by using the following flag:<br/>
+<p>It offers almost one-to-one bindings to the C API functions.</p>
+<p>The Python interface to <a class="el" href="namespaceec_codes.html" title="This package is the Python interface to ecCodes. ">ecCodes</a> uses the <a href="http://numpy.scipy.org/"><b>NumPy</b></a> package as the container of choice for the possible arrays of values that can be encoded/decoded in and from a message. Numpy is a package used for scientific computing in Python and an efficient container for generic data.</p>
+<p>The Python interface can be added via:<br/>
  </p>
-<div class="fragment"><div class="line">    -DENABLE_PYTHON=ON</div>
+<div class="fragment"><div class="line">    pip3 install eccodes</div>
 <div class="line">or</div>
-<div class="line">    -DENABLE_PYTHON=OFF</div>
+<div class="line">    pip3 install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes</div>
 </div><!-- fragment --><p>When this is enabed, then the system Python will be used to build the interface.</p>
 <p><em>Requirements:</em> </p>
-<pre class="fragment">- Python 2.6 or higher
+<pre class="fragment">- Python 3.5 or higher
 - NumPy</pre> </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="af4a4c95465d2026ad549920b07150bab"></a>
 <div class="memitem">
@@ -403,7 +403,7 @@ Functions</h2></td></tr>
 <p>Load in memory a message from a file. </p>
 <p>The message can be accessed through its id and will be available<br/>
  until <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f">codes_release</a> is called.<br/>
- <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
+ <b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileobj</td><td>python file object </td></tr>
@@ -499,7 +499,7 @@ Functions</h2></td></tr>
 <p>Load in memory a BUFR message from a file. </p>
 <p>The message can be accessed through its id and will be available<br/>
  until <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f">codes_release</a> is called.<br/>
- <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/bufr_get_keys" target="_blank">bufr_get_keys.py</a></p>
+ <b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/bufr_get_keys" target="_blank">bufr_get_keys.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileobj</td><td>python file object </td></tr>
@@ -574,7 +574,7 @@ Functions</h2></td></tr>
 
 <p>Create a copy of a message. </p>
 <p>Create a copy of a given message (<em>msgid_src</em>) resulting in a new message in memory (<em>msgid_dest</em>) identical to the original one.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_clone" target="_blank">grib_clone.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_clone" target="_blank">grib_clone.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid_src</td><td>id of message to be cloned </td></tr>
@@ -716,7 +716,7 @@ Functions</h2></td></tr>
 <p>Get the value of a key in a grib message. </p>
 <p>The type of value returned depends on the native type of the requested key. The type of value returned can be forced by using the type argument of the function. The type argument can be int, float or str.</p>
 <p>The <em>msgid</em> references a grib message loaded in memory.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a>, <a href="https://software.ecmwf.int/wiki/display/ECC/grib_print_data" target="_blank">grib_print_data.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a>, <a href="https://confluence.ecmwf.int/display/ECC/grib_print_data" target="_blank">grib_print_data.py</a></p>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="namespaceec_codes.html#a80246f356012448955e2e75572a8d210" title="Load in memory a grib message from a file. ">codes_grib_new_from_file</a>, <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f" title="Free the memory for the message referred as msgid. ">codes_release</a>, <a class="el" href="namespaceec_codes.html#abb5cff8e4911614c8b04032fb014ea07" title="Set the value for a scalar key in a grib message. ">codes_set</a></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1332,7 +1332,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the size of an array key. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a>,count_messages.py</p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a>,count_messages.py</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
@@ -1506,7 +1506,7 @@ Functions</h2></td></tr>
 
 <p>Retrieve the contents of the 'values' key for a GRIB message. </p>
 <p>A NumPy ndarray containing the values in the message is returned.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_print_data" target="_blank">grib_print_data.py</a>, <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_print_data" target="_blank">grib_print_data.py</a>, <a href="https://confluence.ecmwf.int/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gribid</td><td>id of the GRIB loaded in memory </td></tr>
@@ -1571,7 +1571,7 @@ Functions</h2></td></tr>
 
 <p>Find the nearest grid point or the nearest four grid points to a given latitude/longitude. </p>
 <p>The number of nearest points returned can be controled through the npoints function argument.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_nearest" target="_blank">grib_nearest.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_nearest" target="_blank">grib_nearest.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gribid</td><td>id of the grib loaded in memory </td></tr>
@@ -1611,7 +1611,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Delete a geoiterator and free memory. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iterid</td><td>geoiterator id </td></tr>
@@ -1655,7 +1655,7 @@ Functions</h2></td></tr>
 
 <p>Create a new geoiterator for the given message, using its geometry and values. </p>
 <p>The geoiterator can be used to go through all the geopoints in a message and retrieve the values corresponding to those geopoints.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gribid</td><td>id of the grib loaded in memory </td></tr>
@@ -1686,7 +1686,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the next value from a geoiterator. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iterid</td><td>geoiterator id </td></tr>
@@ -1739,7 +1739,7 @@ Functions</h2></td></tr>
 
 <p>Append a single field grib message to a multi field grib message. </p>
 <p>Only the sections with section number greather or equal "startsection" are copied from the input single message to the multi field output grib.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ingribid</td><td>id of the input single grib </td></tr>
@@ -1775,7 +1775,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create a new multi field and return its id. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
 <dl class="section return"><dt>Returns</dt><dd>id of the multi field </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
@@ -1805,7 +1805,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Release a multi field from memory. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gribid</td><td>id of the multi field we want to release the memory for </td></tr>
@@ -1904,7 +1904,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write a multi field message to a file. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_multi_write" target="_blank">grib_multi_write.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">multigribid</td><td>id of the multi field grib loaded in memory </td></tr>
@@ -1953,7 +1953,7 @@ Functions</h2></td></tr>
 <p>The message can be accessed through its gribid and will be available<br/>
  until <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f">codes_release</a> is called.<br/>
  The message can be loaded headers only by using the headers_only argument. Default is to have the headers only option set to off (False). If set to on (True), data values will be skipped. This will result in a significant performance gain if one is only interested in browsing through messages to retrieve metadata. Any attempt to retrieve data values keys when in the headers only mode will result in a key not found error.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileobj</td><td>python file object </td></tr>
@@ -1991,7 +1991,7 @@ Functions</h2></td></tr>
 
 <p>Create a new valid GRIB message from a sample. </p>
 <p>The available samples are picked up from the directory pointed to by the environment variable ECCODES_SAMPLES_PATH. To know where the samples directory is run the codes_info tool.<br/>
- <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+ <b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">samplename</td><td>name of the sample to be used </td></tr>
@@ -2164,7 +2164,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Add a file to an index. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of the index to add the file to </td></tr>
@@ -2217,7 +2217,7 @@ Functions</h2></td></tr>
 
 <p>Get the distinct values of an index key. </p>
 <p>The key must belong to the index.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created on the given key. </td></tr>
@@ -2267,7 +2267,7 @@ Functions</h2></td></tr>
 <p>Get the distinct values of the key in argument contained in the index. </p>
 <p>The key must belong to the index.</p>
 <p>This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2316,7 +2316,7 @@ Functions</h2></td></tr>
 <p>Get the distinct values of the key in argument contained in the index. </p>
 <p>The key must belong to the index.</p>
 <p>This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2364,7 +2364,7 @@ Functions</h2></td></tr>
 
 <p>Get the number of distinct values for the index key. </p>
 <p>The key must belong to the index.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created on the given key. </td></tr>
@@ -2413,7 +2413,7 @@ Functions</h2></td></tr>
 <p>Get the distinct values of the key in argument contained in the index. </p>
 <p>The key must belong to the index.</p>
 <p>This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2460,7 +2460,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create a new index from a file. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>path of the file to index on </td></tr>
@@ -2497,7 +2497,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Loads an index previously saved with <a class="el" href="namespaceec_codes.html#a32c66888832215b2860535729ee616f8">codes_index_write</a> to a file. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>path of file to load the index from </td></tr>
@@ -2533,7 +2533,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Delete an index. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. </td></tr>
@@ -2584,7 +2584,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Select the message subset with key==value. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2639,7 +2639,7 @@ Functions</h2></td></tr>
 <p>Select the message subset with key==value. </p>
 <p>The value is a double.</p>
 <p>The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2694,7 +2694,7 @@ Functions</h2></td></tr>
 <p>Select the message subset with key==value. </p>
 <p>The value is an integer.</p>
 <p>The key must have been created with integer type or have integer as native type if the type was not explicitly defined in the index creation.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2749,7 +2749,7 @@ Functions</h2></td></tr>
 <p>Select the message subset with key==value. </p>
 <p>The value is an integer.</p>
 <p>The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. The index must have been created with the key in argument. </td></tr>
@@ -2797,7 +2797,7 @@ Functions</h2></td></tr>
 
 <p>Write an index to a file for later reuse. </p>
 <p>An index can be loaded back from an index file with <a class="el" href="namespaceec_codes.html#a13866152bfd07b8cd418f6cf8c73d7ab">codes_index_read</a>.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of the index </td></tr>
@@ -2922,7 +2922,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Delete a keys iterator and free memory. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iterid</td><td>keys iterator id created with <a class="el" href="namespaceec_codes.html#a199fb77e1395975be732e46f93b3e337">codes_keys_iterator_new</a> </td></tr>
@@ -2957,7 +2957,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the name of a key from a keys iterator. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iterid</td><td>keys iterator id created with <a class="el" href="namespaceec_codes.html#a199fb77e1395975be732e46f93b3e337">codes_keys_iterator_new</a> </td></tr>
@@ -3004,7 +3004,7 @@ Functions</h2></td></tr>
 
 <p>Create a new iterator on the keys. </p>
 <p>The keys iterator can be navigated to give all the key names which can then be used to get or set the key values with <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b">codes_get</a> or <a class="el" href="namespaceec_codes.html#abb5cff8e4911614c8b04032fb014ea07">codes_set</a>. The set of keys returned can be controlled with the input variable namespace or using the functions <a class="el" href="namespaceec_codes.html#afb6f25e55aab91e1cf273403c4151c70">codes_skip_read_only</a>, <a class="el" href="namespaceec_codes.html#a57f7a5a0f6975e1357e5aa1dc4715e0c">codes_skip_duplicates</a>, <a class="el" href="namespaceec_codes.html#a4b7140ca0dd81372721cffd1d964e4ad">codes_skip_coded</a>,<a class="el" href="namespaceec_codes.html#a587af29aac21a816f8ffd327a1fce779">codes_skip_computed</a>. If namespace is a non empty string only the keys belonging to that namespace are returned. Example namespaces are "ls" (to get the same default keys as the grib_ls) and "mars" to get the keys used by mars.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_iterator" target="_blank">grib_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
@@ -3041,7 +3041,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Advance to the next keys iterator value. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_keys_iterator" target="_blank">grib_keys_iterator.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iterid</td><td>keys iterator id created with <a class="el" href="namespaceec_codes.html#a199fb77e1395975be732e46f93b3e337">codes_keys_iterator_new</a> </td></tr>
@@ -3215,7 +3215,7 @@ Functions</h2></td></tr>
 <p>Create a new handle from an index after having selected the key values. </p>
 <p>All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.</p>
 <p>The message can be accessed through its gribid and will be available until <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f">codes_release</a> is called.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_index" target="_blank">grib_index.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">indexid</td><td>id of an index created from a file. </td></tr>
@@ -3297,7 +3297,7 @@ Functions</h2></td></tr>
 
 <p>Create a new valid message from a sample for a given product. </p>
 <p>The available samples are picked up from the directory pointed to by the environment variable ECCODES_SAMPLES_PATH. To know where the samples directory is run the codes_info tool.<br/>
- <b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+ <b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">samplename</td><td>name of the sample to be used </td></tr>
@@ -3360,7 +3360,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Free the memory for the message referred as msgid. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_get_keys" target="_blank">grib_get_keys.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
@@ -3412,7 +3412,7 @@ Functions</h2></td></tr>
 
 <p>Set the value for a scalar key in a grib message. </p>
 <p>The input value can be a python int, float or str.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_set_keys" target="_blank">grib_set_keys.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_set_keys" target="_blank">grib_set_keys.py</a></p>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="namespaceec_codes.html#a80246f356012448955e2e75572a8d210" title="Load in memory a grib message from a file. ">codes_grib_new_from_file</a>, <a class="el" href="namespaceec_codes.html#a23859e3fb8802982fe865789d61b181f" title="Free the memory for the message referred as msgid. ">codes_release</a>, <a class="el" href="namespaceec_codes.html#a1ba4d3b6473499af0581cf52eb4cad0b" title="Get the value of a key in a grib message. ">codes_get</a></dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -3803,7 +3803,7 @@ Functions</h2></td></tr>
 
 <p>Set as missing the value for a key in a grib message. </p>
 <p>It can be used to set a missing value in the grib header but not in the data values.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_set_missing" target="_blank">grib_set_missing.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_set_missing" target="_blank">grib_set_missing.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>
@@ -3985,7 +3985,7 @@ Functions</h2></td></tr>
 <p>The input array can be a numpy.ndarray or a python sequence like tuple, list, array, ...</p>
 <p>The wrapper will internally try to convert the input to a NumPy array before extracting its data and length. This is possible as NumPy allows the construction of arrays from arbitrary python sequences.</p>
 <p>The elements of the input sequence need to be convertible to a double.</p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_clone" target="_blank">grib_clone.py</a>, <a href="https://software.ecmwf.int/wiki/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_clone" target="_blank">grib_clone.py</a>, <a href="https://confluence.ecmwf.int/display/ECC/grib_samples" target="_blank">grib_samples.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gribid</td><td>id of the grib loaded in memory </td></tr>
@@ -4238,7 +4238,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write a message to a file. </p>
-<p><b>Examples:</b> <a href="https://software.ecmwf.int/wiki/display/ECC/grib_set_keys" target="_blank">grib_set_keys.py</a></p>
+<p><b>Examples:</b> <a href="https://confluence.ecmwf.int/display/ECC/grib_set_keys" target="_blank">grib_set_keys.py</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">msgid</td><td>id of the message loaded in memory </td></tr>

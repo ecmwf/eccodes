@@ -49,7 +49,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
     grib_hash_array_value      *hash_array_value;
-	grib_case               *case_value;
+    grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 };
@@ -121,7 +121,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token CONCEPT_NOFAIL
 %token NIL
 %token DUMMY
-	
+
 %token MODIFY
 
 %token READ_ONLY
@@ -228,8 +228,8 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %type <exp>     factor
 %type <exp>     term
 %type <exp>     power
-%type <exp>     conjonction
-%type <exp>     disjonction
+%type <exp>     conjunction
+%type <exp>     disjunction
 %type <exp>     string_or_ident
 
 %type <lval>     flag
@@ -259,7 +259,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 
 %%
 
-all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0; 
+all: empty        { grib_parser_all_actions = 0;grib_parser_concept=0; 
                             grib_parser_hash_array=0;grib_parser_rules=0; }
            | concept_list { grib_parser_concept     = reverse_concept($1); }
            | hash_array_list { grib_parser_hash_array     = reverse_hash_array($1); }
@@ -273,22 +273,22 @@ all        : empty        { grib_parser_all_actions = 0;grib_parser_concept=0;
 empty:;
 
 
-dvalues :  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
+dvalues:  FLOAT  { $$=grib_darray_push(grib_parser_context,0,$1);}
     |  dvalues ',' FLOAT { $$=grib_darray_push(grib_parser_context,$1,$3);}
     |  INTEGER { $$=grib_darray_push(grib_parser_context,0,$1);}
     |  dvalues ',' INTEGER { $$=grib_darray_push(grib_parser_context,$1,$3);}
    ;
 
-svalues : STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
+svalues: STRING { $$=grib_sarray_push(grib_parser_context,0,$1);}
     |  svalues ',' STRING { $$=grib_sarray_push(grib_parser_context,$1,$3);}
     ;
 
 
-integer_array :  INTEGER  { $$=grib_iarray_push(0,$1);}
+integer_array:  INTEGER  { $$=grib_iarray_push(0,$1);}
     |  integer_array ',' INTEGER { $$=grib_iarray_push($1,$3);}
    ;
 
-instructions : instruction
+instructions: instruction
          | instruction instructions { $1->next = $2; $$ = $1; }
          | instruction ';'  instructions { $1->next = $3; $$ = $1; }
          | instruction ';'  {  $$ = $1;}
@@ -306,7 +306,7 @@ instruction: simple  ';'
 
    ;
 
- semi: ';'
+semi: ';'
     | semi ';'
 
 
@@ -314,15 +314,15 @@ argument_list: empty       { $$ = 0; }
               | arguments
               ;
 
-arguments    : argument
+arguments: argument
               | argument ',' arguments { $1->next = $3; $$ = $1; }
               ;
 
-argument     : expression { $$ = grib_arguments_new(grib_parser_context,$1,NULL); }
+argument: expression { $$ = grib_arguments_new(grib_parser_context,$1,NULL); }
               ;
 
 
-simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
+simple: UNSIGNED '[' INTEGER ']'   IDENT   default flags
         { $$ = grib_action_create_gen(grib_parser_context,$5,"unsigned",$3,NULL,$6,$7,NULL,NULL);        free($5);  }
 
     | UNSIGNED '[' INTEGER ']'   IDENT   '[' argument_list ']'   default  flags
@@ -641,37 +641,37 @@ simple : UNSIGNED '[' INTEGER ']'   IDENT   default flags
   | PRINT { $$ = grib_action_create_print(grib_parser_context,"",0);  }
    ;
 
-if_block :
+if_block:
   IF '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,0,yylineno,file_being_parsed()); }
 | IF '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,0,yylineno,file_being_parsed()); }
 | IF_TRANSIENT '(' expression ')' '{' instructions '}' { $$ = grib_action_create_if(grib_parser_context,$3,$6,0,1,yylineno,file_being_parsed()); }
 | IF_TRANSIENT '(' expression ')' '{' instructions '}' ELSE '{' instructions '}'  { $$ = grib_action_create_if(grib_parser_context,$3,$6,$10,1,yylineno,file_being_parsed()); }
    ;
 
-when_block :
+when_block:
   WHEN '(' expression ')' set semi   { $$ = grib_action_create_when(grib_parser_context,$3,$5,NULL); }
   | WHEN '(' expression ')' '{' set_list '}'   { $$ = grib_action_create_when(grib_parser_context,$3,$6,NULL); }
   | WHEN '(' expression ')' '{' set_list '}' ELSE '{' set_list '}' { $$ = grib_action_create_when(grib_parser_context,$3,$6,$10); }
   ;
 
-set : SET IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,0); free($2); }
+set: SET IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,0); free($2); }
   | SET_NOFAIL IDENT '=' expression { $$ = grib_action_create_set(grib_parser_context,$2,$4,1); free($2); }
   ;
 
-set_list : set semi
+set_list: set semi
          | set_list set semi { $1->next = $2; $$ = $1; }
          ;
 
 
-default : empty { $$ = NULL ;}
+default: empty { $$ = NULL ;}
    | '=' argument_list { $$ = $2 ;}
    ;
 
-flags : empty         { $$ = 0 ; }
+flags: empty         { $$ = 0 ; }
       | ':' flag_list { $$ = $2; }
       ;
 
-flag_list  : flag
+flag_list: flag
    | flag_list ',' flag { $$ = $1 | $3; }
    ;
 
@@ -691,16 +691,16 @@ flag: READ_ONLY         { $$ = GRIB_ACCESSOR_FLAG_READ_ONLY; }
     | DOUBLE_TYPE       { $$ = GRIB_ACCESSOR_FLAG_DOUBLE_TYPE; }
     ;
 
-list_block : IDENT LIST '(' expression ')' '{' instructions '}' { $$ = grib_action_create_list(grib_parser_context,$1,$4,$7); free($1); }
+list_block: IDENT LIST '(' expression ')' '{' instructions '}' { $$ = grib_action_create_list(grib_parser_context,$1,$4,$7); free($1); }
   ;
 
-while_block : WHILE '(' expression ')' '{' instructions '}' { $$ = grib_action_create_while(grib_parser_context,$3,$6);  }
+while_block: WHILE '(' expression ')' '{' instructions '}' { $$ = grib_action_create_while(grib_parser_context,$3,$6);  }
   ;
 
-trigger_block : TRIGGER '(' argument_list ')' '{' instructions '}' { $$ = grib_action_create_trigger(grib_parser_context,$3,$6);  }
+trigger_block: TRIGGER '(' argument_list ')' '{' instructions '}' { $$ = grib_action_create_trigger(grib_parser_context,$3,$6);  }
    ;
 
-concept_block : CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
+concept_block: CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
    | CONCEPT IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$7,0,0,$4,0,0,0,$9,0);  free($2);free($4); }
    | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0);  free($2);free($6);free($4);free($8);free($10); }
    | CONCEPT IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,$12,$14,0);  free($2);free($6);free($4);free($8);free($10);free($12); }
@@ -709,7 +709,7 @@ concept_block : CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_crea
    | CONCEPT IDENT '.' IDENT '(' IDENT ',' STRING ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$4,0,$8,$2,$6,$10,0,0,$12,0);  free($4);free($8);free($6);free($10); free($2);}
    | CONCEPT IDENT '.' IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$6,0,$2,0,0,0,0,$8,0);  free($2);free($4); }
    | CONCEPT IDENT '.' IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$4,$9,0,$2,$6,0,0,0,$11,0);  free($2);free($4);free($6); }
-   |CONCEPT_NOFAIL IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,1);  free($2); }
+   | CONCEPT_NOFAIL IDENT '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,1);  free($2); }
    | CONCEPT_NOFAIL IDENT '(' IDENT ')' '{' concept_list '}' flags { $$ = grib_action_create_concept(grib_parser_context,$2,$7,0,0,$4,0,0,0,$9,1);  free($2);free($4); }
    | CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,1);  free($2);free($6);free($4);free($8);free($10); }
    | CONCEPT_NOFAIL IDENT '(' IDENT ',' STRING ',' IDENT ')' flags { $$ = grib_action_create_concept(grib_parser_context,$2,0,$6,0,$4,$8,0,0,$10,1);  free($2);free($6);free($4);free($8); }
@@ -720,63 +720,63 @@ concept_block : CONCEPT IDENT '{' concept_list '}' flags { $$ = grib_action_crea
    
    ;
 
-concept_list : concept_value
+concept_list: concept_value
              | concept_list concept_value { $$ = $2; $2->next = $1;   }
        ;
 
-hash_array_list : hash_array_value
+hash_array_list: hash_array_value
              | hash_array_list hash_array_value { $$ = $2; $2->next = $1;   }
        ;
 
-hash_array_block : HASH_ARRAY IDENT '{' hash_array_list '}' flags { $$ = grib_action_create_hash_array(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
+hash_array_block: HASH_ARRAY IDENT '{' hash_array_list '}' flags { $$ = grib_action_create_hash_array(grib_parser_context,$2,$4,0,0,0,0,0,0,$6,0);  free($2); }
    | HASH_ARRAY IDENT '(' IDENT ',' STRING ',' IDENT ',' IDENT ')' flags { $$ = grib_action_create_hash_array(grib_parser_context,$2,0,$6,0,$4,$8,$10,0,$12,0);  free($2);free($6);free($4);free($8);free($10); }
        ;
 
-case_list : case_value
+case_list: case_value
              | case_list case_value { $$ = $2; $2->next = $1;   }
        ;
 
-case_value :  CASE arguments ':' instructions  { $$ = grib_case_new(grib_parser_context,$2,$4);  }
+case_value:  CASE arguments ':' instructions  { $$ = grib_case_new(grib_parser_context,$2,$4);  }
         ;
 
-switch_block :
+switch_block:
   SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' instructions  '}' { $$ = grib_action_create_switch(grib_parser_context,$3,$6,$9); }
   | SWITCH '(' argument_list ')' '{' case_list DEFAULT ':' '}' { $$ = grib_action_create_switch(grib_parser_context,$3,$6,grib_action_create_noop(grib_parser_context,"continue")); }
   | SWITCH '(' argument_list ')' '{' case_list '}' { $$ = grib_action_create_switch(grib_parser_context,$3,$6,0); }
   ;
 
-  concept_value :  STRING '=' '{' concept_conditions '}' {
+concept_value:  STRING '=' '{' concept_conditions '}' {
 	  				$$ = grib_concept_value_new(grib_parser_context,$1,$4); free($1);}
   				| IDENT '=' '{' concept_conditions '}' {
 	  				$$ = grib_concept_value_new(grib_parser_context,$1,$4); free($1);}
 				| INTEGER '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
 				| FLOAT '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%g",(double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%g", (double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
         ;
 
-concept_conditions : concept_condition
+concept_conditions: concept_condition
                 | concept_condition concept_conditions { $1->next = $2; $$ = $1; }
         ;
 
-concept_condition   : IDENT '=' expression ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,$3,0); free($1); }
+concept_condition: IDENT '=' expression ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,$3,0); free($1); }
          | IDENT '=' '[' integer_array ']' ';' { $$ = grib_concept_condition_new(grib_parser_context,$1,0,$4); free($1); }
         ;
 
 
-hash_array_value :  STRING '=' '[' integer_array ']' {
+hash_array_value:  STRING '=' '[' integer_array ']' {
 	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
   				| IDENT '=' '[' integer_array ']' {
 	  				$$ = grib_integer_hash_array_value_new(grib_parser_context,$1,$4); free($1);}
         ;
 
-string_or_ident : SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }
+string_or_ident: SUBSTR '(' IDENT ',' INTEGER ',' INTEGER ')' { $$ = new_accessor_expression(grib_parser_context,$3,$5,$7); free($3); }
 				| IDENT   { $$ = new_accessor_expression(grib_parser_context,$1,0,0); free($1); }
                 | SUBSTR '(' STRING ',' INTEGER ',' INTEGER ')' { $$ = new_sub_string_expression(grib_parser_context,$3,$5,$7); free($3); }
                 | STRING  { $$ = new_string_expression(grib_parser_context,$1);  free($1); }
                 ;
 
-atom  : string_or_ident
+atom: string_or_ident
       | INTEGER { $$ = new_long_expression(grib_parser_context,$1);  }
       | FLOAT { $$ = new_double_expression(grib_parser_context,$1);  /* TODO: change to new_float_expression*/}
 
@@ -789,11 +789,11 @@ atom  : string_or_ident
       ;
 
 
-power          : atom '^' power     { $$ = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,$1,$3); }
+power: atom '^' power     { $$ = new_binop_expression(grib_parser_context,&grib_op_pow,NULL,$1,$3); }
                | atom
                ;
 
-factor         : factor '*' power    { $$ = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,$1,$3); }
+factor: factor '*' power    { $$ = new_binop_expression(grib_parser_context,&grib_op_mul,&grib_op_mul_d,$1,$3); }
                | factor '/' power    { $$ = new_binop_expression(grib_parser_context,&grib_op_div,&grib_op_div_d,$1,$3); }
                | factor '%' power    { $$ = new_binop_expression(grib_parser_context,&grib_op_modulo,NULL,$1,$3); }
             | factor BIT  power   { $$ = new_binop_expression(grib_parser_context,&grib_op_bit,NULL,$1,$3); }
@@ -807,12 +807,12 @@ factor         : factor '*' power    { $$ = new_binop_expression(grib_parser_con
             | IS_INTEGER '(' IDENT ')' { $$ = new_is_integer_expression(grib_parser_context,$3,0,0); free($3);}
                ;
 
-term           : term '+' factor    { $$ = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,$1,$3); }
+term: term '+' factor    { $$ = new_binop_expression(grib_parser_context,&grib_op_add,&grib_op_add_d,$1,$3); }
                | term '-' factor    { $$ = new_binop_expression(grib_parser_context,&grib_op_sub,&grib_op_sub_d,$1,$3); }
                | factor
               ;
 
-condition     : condition GT    term { $$ = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,$1,$3); }
+condition: condition GT    term { $$ = new_binop_expression(grib_parser_context,&grib_op_gt,&grib_op_gt_d,$1,$3); }
              /* | condition '=' term { $$ = new_binop_expression(grib_parser_context,&grib_op_eq,$1,$3); } */
              | condition EQ     term { $$ = new_binop_expression(grib_parser_context,&grib_op_eq,&grib_op_eq_d,$1,$3); }
              | condition LT     term { $$ = new_binop_expression(grib_parser_context,&grib_op_lt,&grib_op_lt_d,$1,$3); }
@@ -828,29 +828,29 @@ condition     : condition GT    term { $$ = new_binop_expression(grib_parser_con
             | term
              ;
 
-conjonction : conjonction AND condition { $$ = new_logical_and_expression(grib_parser_context,$1,$3); }
+conjunction: conjunction AND condition { $$ = new_logical_and_expression(grib_parser_context,$1,$3); }
             | condition
             ;
 
-disjonction    : disjonction OR conjonction { $$ = new_logical_or_expression(grib_parser_context,$1,$3);}
-            | conjonction
+disjunction: disjunction OR conjunction { $$ = new_logical_or_expression(grib_parser_context,$1,$3);}
+            | conjunction
             ;
 
-expression     : disjonction
+expression: disjunction
             ;
 
 
 /*  */
 
-rule : fact
+rule: fact
      | conditional_rule
    ;
 
-rule_entry : IDENT '=' expression ';'  { $$ = grib_new_rule_entry(grib_parser_context,$1,$3); free($1); }
+rule_entry: IDENT '=' expression ';'  { $$ = grib_new_rule_entry(grib_parser_context,$1,$3); free($1); }
             | SKIP ';' { $$ = grib_new_rule_entry(grib_parser_context,"skip",0);}
            ;
 
-rule_entries : rule_entry
+rule_entries: rule_entry
              | rule_entry rule_entries { $1->next = $2; $$ = $1; }
        ;
 
@@ -861,7 +861,7 @@ fact: rule_entry  { $$ = grib_new_rule(grib_parser_context,NULL,$1); }
 conditional_rule: IF '(' expression ')' '{' rule_entries '}' { $$ = grib_new_rule(grib_parser_context,$3,$6); }
                 ;
 
-rules : rule
+rules: rule
       | rule rules { $1->next = $2; $$ = $1; }
     ;
 
@@ -895,11 +895,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     return _reverse_hash_array(v,r);
 }
 
-
 static grib_hash_array_value* reverse_hash_array(grib_hash_array_value* r)
 {
     return _reverse_hash_array(r,NULL);
 }
-
-
-

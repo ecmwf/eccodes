@@ -3,7 +3,6 @@
 # S2S
 constant marsClass  = 's2';
 constant marsModel  = 'glob';
-alias is_s2s = one;
 
 alias parameter.paramId=paramId;
 alias parameter.shortName=shortName;
@@ -25,8 +24,7 @@ if (centre is "cnmc" && subCentre == 102) {
 
 unalias mars.domain;
 
-concept marsType {
-
+concept marsType(unknown) {
    fc = {
      typeOfProcessedData = 2;
    }
@@ -47,19 +45,13 @@ concept marsType {
    "11" = {
      typeOfProcessedData = 4;
    }
-
-   "default" = {
-     dummyc = 0;
-   }
 }
 
 # See GRIB-205 re no_copy
-concept marsStream {
-
+concept marsStream(unknown) {
     oper = {
       typeOfProcessedData = 0;
     }
-
     oper = {
       typeOfProcessedData = 2;
     }
@@ -67,17 +59,11 @@ concept marsStream {
     enfo = {
       typeOfProcessedData = 3;
     }
-
     enfo = {
       typeOfProcessedData = 4;
     }
-
     enfo = {
       typeOfProcessedData = 8;
-    }
-
-    "default" = {
-      dummyc = 0;
     }
 } : no_copy;
 

@@ -12,7 +12,6 @@
  * C Implementation: grib_iterator
  *
  * Description: how to use an iterator on lat/lon/values for GRIB messages
- *
  */
 
 #include <stdio.h>
@@ -31,13 +30,14 @@ int main(int argc, char** argv)
     FILE* in = NULL;
     int err  = 0;
     double lat, lon, value;
-    double missingValue = 1e+20; /* A value out of range */
+    double missingValue = 1.0e36; /* a value out of range */
     int n               = 0;
+    long bitmapPresent  = 0;
     char* filename      = NULL;
 
-    /* Message handle. Required in all the ecCodes calls acting on a message.*/
+    /* message handle. Required in all the ecCodes calls acting on a message.*/
     codes_handle* h = NULL;
-    /* Iterator on lat/lon/values.*/
+    /* iterator on lat/lon/values.*/
     codes_iterator* iter = NULL;
 
     if (argc != 2) usage(argv[0]);
@@ -50,36 +50,41 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    /* Loop on all the messages in a file.*/
+    /* loop on all the messages in a file.*/
     while ((h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {
-        /* Check of errors after reading a message. */
+        /* check of errors after reading a message. */
         if (err != CODES_SUCCESS) CODES_CHECK(err, 0);
 
-        /* Set the double representing the missing value in the field. */
-        /* Choose a missingValue that does not correspond to any real value in the data array */
-        CODES_CHECK(codes_set_double(h, "missingValue", missingValue), 0);
+        /* check if a bitmap applies */
+        CODES_CHECK(codes_get_long(h, "bitmapPresent", &bitmapPresent), 0);
 
-        /* A new iterator on lat/lon/values is created from the message handle h. */
+        if (bitmapPresent) {
+            /* set the double representing the missing value in the field. */
+            /* choose a missingValue that does not correspond to any real value in the data array */
+            CODES_CHECK(codes_set_double(h, "missingValue", missingValue), 0);
+        }
+
+        /* a new iterator on lat/lon/values is created from the message handle h */
         iter = codes_grib_iterator_new(h, 0, &err);
         if (err != CODES_SUCCESS) CODES_CHECK(err, 0);
 
         n = 0;
-        /* Loop on all the lat/lon/values. */
+        /* loop on all the lat/lon/values. */
         while (codes_grib_iterator_next(iter, &lat, &lon, &value)) {
-            /* You can now print lat and lon,  */
+            /* now print lat and lon,  */
             printf("- %d - lat=%f lon=%f value=", n, lat, lon);
             /* decide what to print if a missing value is found. */
-            if (value == missingValue) printf("missing\n");
+            if (bitmapPresent && value == missingValue) printf("missing\n");
             /* and print the value if is not missing. */
             else
                 printf("%f\n", value);
             n++;
         }
 
-        /* At the end the iterator is deleted to free memory. */
+        /* at the end the iterator is deleted to free memory. */
         codes_grib_iterator_delete(iter);
 
-        /* At the end the codes_handle is deleted to free memory. */
+        /* at the end the codes_handle is deleted to free memory */
         codes_handle_delete(h);
     }
 

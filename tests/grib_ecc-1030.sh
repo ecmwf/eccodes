@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1030
 # grib_get with the ordering option '-B'
 # ---------------------------------------------------------
-label="grib_ecc-1030-test"
+label="grib_ecc-1030_test"
 tempRef=temp.${label}.ref
 tempOut=temp.${label}.out
 

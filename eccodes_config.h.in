@@ -36,7 +36,7 @@
 
 #define ECCODES_SAMPLES_PATH    "@ECCODES_SAMPLES_PATH@"
 
-#define GRIB_TIMER @GRIB_TIMER@
+#define ECCODES_TIMER @ECCODES_TIMER@
 
 /* headers */
 
@@ -51,6 +51,8 @@
 #cmakedefine ECCODES_HAVE_FMEMOPEN
 #cmakedefine ECCODES_HAVE_FUNOPEN
 #cmakedefine ECCODES_HAVE_REALPATH
+#cmakedefine ECCODES_HAVE_FSYNC
+#cmakedefine ECCODES_HAVE_FDATASYNC
 
 #if defined(EC_HAVE_ASSERT_H) || defined(ECCODES_HAVE_ASSERT_H)
 #define   HAVE_ASSERT_H 1

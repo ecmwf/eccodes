@@ -13,19 +13,18 @@
 # Description: how to read values of different type of keys from GTS messages.
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/gts/EGRR20150317121020_00493212.DAT'
+INPUT = "../../data/gts/EGRR20150317121020_00493212.DAT"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open GTS file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     cnt = 0
 
@@ -42,11 +41,11 @@ def example():
         # ---------------------------------------------
         # get values for keys holding a single value
         # ---------------------------------------------
-        keys = ['TT', 'AA', 'II', 'CCCC', 'YY', 'GG', 'gg', 'BBB']
+        keys = ["TT", "AA", "II", "CCCC", "YY", "GG", "gg", "BBB"]
 
         for key in keys:
             try:
-                print('  %s: %s' % (key, codes_get(gid, key)))
+                print("  %s: %s" % (key, codes_get(gid, key)))
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
@@ -64,7 +63,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

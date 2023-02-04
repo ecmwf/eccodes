@@ -8,20 +8,19 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 #Define a common label for all the tmp files
 label="bufr_read_header_test_c"
 
 #Prepare tmp file
 fTmp=${label}.tmp.txt
-rm -f $fTmp | true
+rm -f $fTmp
 
 #-----------------------------------------------------
 # Test reading the header from a BUFR
 # file with multiple messages
 #----------------------------------------------------
-
 f=${data_dir}/bufr/syno_multi.bufr
 fRef=${f}.header.ref
 
@@ -36,4 +35,4 @@ diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
 #cat $fRes
 
 #Clean up
-rm -f ${fTmp} | true
+rm -f ${fTmp}

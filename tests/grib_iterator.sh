@@ -8,7 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
+set -u
+temp=temp.grib_iterator.grib
 
 files="reduced_latlon_surface.grib1 \
       reduced_gaussian_pressure_level.grib1 \
@@ -23,9 +25,22 @@ files="reduced_latlon_surface.grib1 \
 
 for f in $files; do
  file=${data_dir}/$f
- # Must exclude the first line of grib_get_data which is "Latitude, Longitude, Value"
+ # Must exclude the first line of grib_get_data which is "Latitude Longitude Value"
  iterator_count=`${tools_dir}/grib_get_data -m 9999:missing -f -p centre -F "%g" -w count=1 $file | grep -v Lat |wc -l `
  numberOfPoints=`${tools_dir}/grib_get -w count=1 -p numberOfPoints $file`
  [ $numberOfPoints = ${iterator_count} ]
 done
 
+# ECC-822: Increase lat/lon decimals using default grib_get_data
+${tools_dir}/grib_get_data -L%12.6f%11.5f ${data_dir}/regular_latlon_surface.grib2
+
+${tools_dir}/grib_get_data -p shortName,level ${data_dir}/regular_latlon_surface.grib2 > $temp
+grep -q "Latitude Longitude Value shortName level" $temp
+
+
+# Run on a spectral field - should just print out its values
+${tools_dir}/grib_get_data "$samp_dir/sh_ml_grib2.tmpl"
+
+
+# Clean up
+rm -f $temp

@@ -8,9 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-label="grib_lam_bf"
+label="grib_lam_bf_test"
 temp=temp.$label.txt
 
 if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
@@ -56,3 +56,6 @@ rm -f lam_bf_polar_stereographic_bf_ellipse_diamond.grib
 rm -f lam_bf_lambert_bf_rectangle_rectangle.grib
 rm -f lam_bf_mercator_bf_rectangle_rectangle.grib
 rm -f lam_bf_polar_stereographic_bf_rectangle_rectangle.grib
+rm -f lam_bf_mercator_bf_ellipse_full.grib
+rm -f lam_bf_polar_stereographic_bf_ellipse_full.grib
+rm -f lam_bf_lambert_bf_ellipse_full.grib

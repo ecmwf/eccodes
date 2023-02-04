@@ -8,17 +8,17 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_encode_fortran_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
 tempBufr=outfile.bufr
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
@@ -51,7 +51,7 @@ fi
 
 for file in ${bufr_files}
 do
-  tempSrc=$label.$file.f90
+  tempSrc=temp.$label.$file.f90
   tempExe=$label.$file.exe
 
   # Generate F90 code from BUFR file

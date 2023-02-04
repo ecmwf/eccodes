@@ -9,14 +9,13 @@
 #
 
 
-. ./include.sh
+. ./include.ctest.sh
 
 REDIRECT=/dev/null
 
-[ -z "$ECCODES_DEFINITION_PATH" ] | ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
+[ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
 for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v grib3/`
 do
   ${tools_dir}/codes_parser $file > $REDIRECT
 done
-

@@ -61,13 +61,15 @@ int main(int argc, char** argv)
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     if (h == NULL) {
         fprintf(stderr, "Error: unable to create handle from file %s\n", infile);
+        fclose(out);
+        return 1;
     }
 
     CODES_CHECK(codes_set_long(h, "PVPresent", 1), 0);
 
     CODES_CHECK(codes_set_double_array(h, "pv", pv, pvsize), 0);
 
-    /* Once we set the pv array, the NV key should be also set */
+    /* once we set the pv array, the NV key should be also set */
     CODES_CHECK(codes_get_long(h, "NV", &NV), 0);
     assert(NV == pvsize);
 

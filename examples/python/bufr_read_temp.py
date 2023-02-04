@@ -19,18 +19,19 @@
 # messages than the one used in the example. It is advised to use bufr_dump to
 # understand the structure of the messages.
 #
-from __future__ import print_function
-import traceback
+
 import sys
+import traceback
+
 from eccodes import *
 
-INPUT = '../../data/bufr/PraticaTemp.bufr'
+INPUT = "../../data/bufr/PraticaTemp.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open BUFR file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
     cnt = 0
     # loop over the messages in the file
     while 1:
@@ -41,11 +42,13 @@ def example():
         print("message: %s" % cnt)
         # we need to instruct ecCodes to expand all the descriptors
         # i.e. unpack the data section
-        codes_set(bufr, 'unpack', 1)
+        codes_set(bufr, "unpack", 1)
         # get all the timePeriods
         timePeriod = codes_get_array(bufr, "timePeriod")
         pressure = codes_get_array(bufr, "pressure")
-        extendedVerticalSoundingSignificance = codes_get_array(bufr, "extendedVerticalSoundingSignificance")
+        extendedVerticalSoundingSignificance = codes_get_array(
+            bufr, "extendedVerticalSoundingSignificance"
+        )
         geopotentialHeight = codes_get_array(bufr, "nonCoordinateGeopotentialHeight")
         latitudeDisplacement = codes_get_array(bufr, "latitudeDisplacement")
         longitudeDisplacement = codes_get_array(bufr, "longitudeDisplacement")
@@ -55,12 +58,22 @@ def example():
         windSpeed = codes_get_array(bufr, "windSpeed")
         blockNumber = codes_get(bufr, "blockNumber")
         stationNumber = codes_get(bufr, "stationNumber")
-        print('station %d%d' % (blockNumber, stationNumber))
+        print("station %d%d" % (blockNumber, stationNumber))
         print(
-            'timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance')
+            "timePeriod pressure geopotentialHeight latitudeDisplacement longitudeDisplacement airTemperature windDirection windSpeed significance"
+        )
         for i in range(0, len(windSpeed) - 1):
-            print(timePeriod[i], pressure[i], geopotentialHeight[i], latitudeDisplacement[i], longitudeDisplacement[i],
-                  airTemperature[i], windDirection[i], windSpeed[i], extendedVerticalSoundingSignificance[i])
+            print(
+                timePeriod[i],
+                pressure[i],
+                geopotentialHeight[i],
+                latitudeDisplacement[i],
+                longitudeDisplacement[i],
+                airTemperature[i],
+                windDirection[i],
+                windSpeed[i],
+                extendedVerticalSoundingSignificance[i],
+            )
         cnt += 1
         # delete handle
         codes_release(bufr)
@@ -75,7 +88,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
         return 1
 
 

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_samples_test"
@@ -23,7 +23,15 @@ for file in $ECCODES_SAMPLES_PATH/BUFR*.tmpl; do
 done
 
 # Check one specific BUFR file dump output
-${tools_dir}/bufr_dump -p $ECCODES_SAMPLES_PATH/BUFR3.tmpl > $temp
+input=$ECCODES_SAMPLES_PATH/BUFR3.tmpl
+${tools_dir}/bufr_dump -p $input > $temp
 diff ${data_dir}/BUFR3.tmpl.dump.plain.ref $temp
+
+# Code generation
+input=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+for lang in C python fortran filter; do
+  ${tools_dir}/bufr_dump -D $lang $input >/dev/null
+  ${tools_dir}/bufr_dump -E $lang $input >/dev/null
+done
 
 rm -f $temp

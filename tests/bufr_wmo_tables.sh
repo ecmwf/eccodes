@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_wmo_tables_test"
@@ -22,7 +22,6 @@ fDump=${label}".tmp.dump"
 # Testing latest WMO tables
 # --------------------------------
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
-REDIRECT=/dev/null
 
 blacklist=masterTablesVersionNumber
 
@@ -38,8 +37,7 @@ blacklist=$blacklist",scanLevelQualityFlags"
 # The units for centre also changed
 blacklist=$blacklist",centre,subCentre,generatingApplication"
 
-for file in ${bufr_files}
-do
+for file in ${bufr_files}; do
   input=${data_dir}/bufr/$file
   mtv=`${tools_dir}/bufr_get -wcount=1 -p masterTablesVersionNumber $input`
   # Must exclude old versions (before 14):

@@ -1,8 +1,7 @@
 #################################################
 #
-# author: Sebastien Villaume <Sebastien.Villaume@smhi.se>
+# author: Sebastien Villaume
 # created: 14 Feb 2014
-# modified:
 #
 #################################
 ### LOCAL SECTION DESCRIPTION ###
@@ -10,7 +9,7 @@
 
 
 # base file: contains keywords always present
-include "grib2/local.82.0.def";
+include "grib3/local.82.0.def";
 
 # extra keywords specific to local definition 83 (MATCH)
 codetable[1]    matchSort               "grib1/localConcepts/eswi/sort.table"              : dump,long_type;

@@ -35,35 +35,34 @@ int main(int argc, char** argv)
     int i               = 0;
     codes_fieldset* set = NULL;
     codes_handle* h     = NULL;
-    char param[20]      = {0,};
+    char shortName[20]      = {0,};
     size_t len     = 20;
     double lats[4] = {0,};
     double lons[4] = {0,};
     double values[4] = {0,};
     double distances[4] = {0,};
     int indexes[4] = {0,};
-    char* order_by = "param,step";
+    const char* order_by = "shortName,step:i";
 
     size_t size = 4;
     double lat = -40, lon = 15;
     int mode = 0;
     int count;
-    char** filenames;
+    const char** filenames = NULL;
     codes_nearest* nearest = NULL;
 
     if (argc < 2) usage(argv[0]);
 
     nfiles    = argc - 1;
-    filenames = (char**)malloc(sizeof(char*) * nfiles);
+    filenames = (const char**)malloc(sizeof(char*) * nfiles);
     for (i = 0; i < nfiles; i++)
-        filenames[i] = (char*)strdup(argv[i + 1]);
+        filenames[i] = strdup(argv[i + 1]);
 
     set = codes_fieldset_new_from_files(0, filenames, nfiles, 0, 0, 0, order_by, &err);
     CODES_CHECK(err, 0);
 
     printf("\nordering by %s\n", order_by);
     printf("\n%d fields in the fieldset\n", codes_fieldset_count(set));
-    printf("n,step,param\n");
 
     mode  = CODES_NEAREST_SAME_GRID | CODES_NEAREST_SAME_POINT;
     count = 1;
@@ -71,9 +70,9 @@ int main(int argc, char** argv)
     while ((h = codes_fieldset_next_handle(set, &err)) != NULL) {
         CODES_CHECK(codes_get_long(h, "step", &step), 0);
         len = 20;
-        CODES_CHECK(codes_get_string(h, "shortName", param, &len), 0);
+        CODES_CHECK(codes_get_string(h, "shortName", shortName, &len), 0);
 
-        printf("%d %ld %s  ", count, step, param);
+        printf("Msg #%d, step=%ld, shortName=%s", count, step, shortName);
         if (!nearest) nearest = codes_grib_nearest_new(h, &err);
         CODES_CHECK(err, 0);
         CODES_CHECK(codes_grib_nearest_find(nearest, h, lat, lon, mode, lats, lons, values, distances, indexes, &size), 0);
@@ -90,6 +89,10 @@ int main(int argc, char** argv)
     if (nearest) codes_grib_nearest_delete(nearest);
 
     if (set) codes_fieldset_delete(set);
+
+    for (i = 0; i < nfiles; i++)
+        free((char*)filenames[i]);
+    free(filenames);
 
     return 0;
 }

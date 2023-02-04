@@ -7,10 +7,10 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Take a GRIB file in the data folder and make it a sample file (extension .tmpl)
-rm -f ${data_dir}/regular_latlon_surface.grib1.tmpl | true
+rm -f ${data_dir}/regular_latlon_surface.grib1.tmpl
 cp ${data_dir}/regular_latlon_surface.grib1 ${data_dir}/regular_latlon_surface.grib1.tmpl
 
 # Change the ECCODES_SAMPLES_PATH: put the data dir first

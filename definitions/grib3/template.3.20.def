@@ -1,16 +1,9 @@
 # (C) Copyright 2005- ECMWF.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
-# In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
-# virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 
 # START 2/template.3.20 ----------------------------------------------------------------------
 # TEMPLATE 3.20, Polar stereographic projection
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib3/template.3.shape_of_the_earth.def";
 transient oneThousand=1000;
 
 #  Nx - number of points along X-axis
@@ -36,7 +29,7 @@ meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoin
 alias Lo1 =  longitudeOfFirstGridPoint;
 
 #  Resolution and component flag
-flags[1] resolutionAndComponentFlags 'grib2/tables/[tablesVersion]/3.3.table' : dump;
+flags[1] resolutionAndComponentFlags 'grib3/tables/[tablesVersion]/4.1.table' : dump;
 
 #  LaD - Latitude where Dx and Dy are specified
 signed[4] LaD  : edition_specific;
@@ -64,13 +57,13 @@ meta geography.DyInMetres scale(Dy,one,thousand,truncateDegrees) : dump;
 alias yDirectionGridLength=Dy;
 
 #  Projection centre flag
-flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
+flags[1] projectionCentreFlag 'grib3/tables/[tablesVersion]/3.5.table' : dump;
 # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
 # If bit 1 is 0, then the North Pole is on the projection plane
 # If bit 1 is 1, then the South Pole is on the projection plane
 flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
-include "grib2/template.3.scanning_mode.def";
+include "grib3/template.4.scanning_mode.def";
 
 
 iterator polar_stereographic(numberOfPoints,missingValue,values,

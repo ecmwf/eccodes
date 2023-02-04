@@ -1,4 +1,5 @@
 # (C) Copyright 2005- ECMWF.
+# Elaboration of ocean model products
 
 constant GRIBEXSection1Problem = 120 - section1Length ;
 
@@ -16,10 +17,10 @@ unsigned[1] numberOfForcasts=0 : dump;
 unsigned[1] numberOfAnalysis=1 : dump;
 
 if (numberOfForcasts) {
-	unsigned[3] forecastSteps[numberOfForcasts] : dump;
+  unsigned[3] forecastSteps[numberOfForcasts] : dump;
 }
 if (numberOfAnalysis) {
-	signed[3] analysisOffsets[numberOfAnalysis] : dump;
+  signed[3] analysisOffsets[numberOfAnalysis] : dump;
 }
 
 padto padding_local_35(offsetSection1 + 120);
@@ -28,5 +29,5 @@ meta dateOfReference  g1date(centuryOfReference,yearOfReference,monthOfReference
 meta timeOfReference  time(hourOfReference,minuteOfReference,secondsOfReference) : dump;
 
 if (indicatorOfTypeOfLevel==160) {
-	alias mars.levelist = level;
+  alias mars.levelist = level;
 }

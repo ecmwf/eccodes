@@ -3,7 +3,6 @@
 # Tigge
 constant marsClass = 'ti';
 constant marsModel = 'glob';
-alias is_tigge = one;
 
 alias tigge_short_name=shortName;
 alias short_name=shortName;
@@ -35,7 +34,7 @@ if (section2Used == 1) {
     unalias mars.domain;                # No mars domain needed
 }
 
-concept marsType {
+concept marsType(unknown) {
 
    fc = {
      typeOfProcessedData = 2;
@@ -57,19 +56,14 @@ concept marsType {
    "11" = {
      typeOfProcessedData = 4;
    }
-
-   "default" = {
-     dummyc = 0;
-   }
 }
 
 # See GRIB-205 re no_copy
-concept marsStream {
+concept marsStream(unknown) {
 
     oper = {
       typeOfProcessedData = 0;
     }
-
     oper = {
       typeOfProcessedData = 2;
     }
@@ -77,17 +71,11 @@ concept marsStream {
     enfo = {
       typeOfProcessedData = 3;
     }
-
     enfo = {
       typeOfProcessedData = 4;
     }
-
     enfo = {
       typeOfProcessedData = 8;
-    }
-
-    "default" = {
-      dummyc = 0;
     }
 } : no_copy;
 

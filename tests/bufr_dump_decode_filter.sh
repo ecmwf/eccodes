@@ -9,7 +9,7 @@
 #
 
 set -x
-. ./include.sh
+. ./include.ctest.sh
 
 cd ${data_dir}/bufr
 
@@ -17,12 +17,12 @@ cd ${data_dir}/bufr
 label="bufr_dump_decode_filter_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
 # Define filter rules file
-fRules=${label}.filter
+fRules=temp.${label}.filter
 
 #-----------------------------------------------------------
 # NOTE: not all of our BUFR files pass this test. bufr_filter is limited

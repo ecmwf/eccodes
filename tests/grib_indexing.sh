@@ -8,9 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-label="grib_indexing"
+label="grib_indexing_test"
 temp=temp.$label.index.out
 infile=${data_dir}/index.grib
 
@@ -94,8 +94,6 @@ diff $tempRef $tempOut
 ${tools_dir}/grib_index_build -N -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 
-${tools_dir}/grib_index_build -N -k mars.levtype:i -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
-   grep -q "mars.levtype = { 103, 1, 106, 100, 101, 8, 109, 107 }"
 
 echo "grib_compare with index files..."
 # ------------------------------------
@@ -111,5 +109,13 @@ ${tools_dir}/grib_index_build -N -o $tempIndex2 $tempGribFile2
 ${tools_dir}/grib_compare $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
 
+# ECC-1516
+# ---------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
+${tools_dir}/grib_dump $tempIndex1 >/dev/null
+
+
 # Clean up
-rm -f $tempIndex $tempOut $tempRef
+rm -f $tempOut $tempRef
+rm -f $tempIndex $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2

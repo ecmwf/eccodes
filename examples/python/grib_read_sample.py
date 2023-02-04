@@ -13,9 +13,8 @@
 # Description: read key values from a GRIB sample message.
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
@@ -24,19 +23,19 @@ VERBOSE = 1  # verbose error reporting
 
 def example(INPUT):
     # open GRIB file
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     # These keys should be in the sample files
     keys = [
-        'identifier',
-        'editionNumber',
-        'year',
-        'month',
-        'latitudeOfFirstGridPointInDegrees',
-        'longitudeOfFirstGridPointInDegrees',
-        'bitsPerValue',
-        'stepType',
-        'packingType'
+        "identifier",
+        "editionNumber",
+        "year",
+        "month",
+        "latitudeOfFirstGridPointInDegrees",
+        "longitudeOfFirstGridPointInDegrees",
+        "bitsPerValue",
+        "stepType",
+        "packingType",
     ]
 
     cnt = 0
@@ -50,7 +49,7 @@ def example(INPUT):
         print("message: %s" % cnt)
 
         for key in keys:
-            print('  %s=%s' % (key, codes_get(gid, key)))
+            print("  %s=%s" % (key, codes_get(gid, key)))
 
         cnt += 1
 
@@ -66,7 +65,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

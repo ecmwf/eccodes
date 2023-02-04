@@ -13,9 +13,8 @@
 # and encode messages with bpv < sizeof(long). Attempt to do otherwise will
 # result in an error. This is valid for Simple Packing.
 
-. ./include.sh
+. ./include.ctest.sh
 
-REDIRECT=/dev/null
 
 $EXEC ${test_dir}/grib_bpv_limit ${data_dir}/regular_latlon_surface.grib2 2>/dev/null
 

@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 
     /* get size of "paramId" list */
     CODES_CHECK(codes_index_get_size(index, "paramId", &paramIdSize), 0);
-    printf("grib contains %lu different parameters\n", paramIdSize);
+    printf("grib contains %zu different parameters\n", paramIdSize);
     /* allocate memory for "paramId" list */
     paramId = (char**)malloc(paramIdSize * sizeof(char*));
     /* get list of "paramId" */
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
     /* get size of ensemble number list */
     CODES_CHECK(codes_index_get_size(index, "number", &numberSize), 0);
-    printf("GRIB contains %lu different ensemble members\n", numberSize);
+    printf("GRIB contains %zu different ensemble members\n", numberSize);
     /* allocate memory for ensemble number list */
     number = (long*)malloc(numberSize * sizeof(long));
     /* get list of ensemble numbers */

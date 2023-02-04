@@ -79,10 +79,6 @@ int main(int argc, char* argv[])
     codes_set_long_array(ho, "unexpandedDescriptors", ud, size);
 
     while ((h = codes_handle_new_from_file(0, f, PRODUCT_BUFR, &err)) != NULL) {
-        if (!h) {
-            fprintf(stderr, "Error: Unable to create BUFR handle\n");
-            return 1;
-        }
         /* codes_copy_key(h,ho,"unexpandedDescriptors",0); */
         err = codes_set_long(h, "unpack", 1);
         if (err) {
@@ -97,7 +93,7 @@ int main(int argc, char* argv[])
             printf("Copied %s\n", keys[i]);
             free(keys[i]);
         }
-        printf("Total number of copied keys = %lu\n", nkeys);
+        printf("Total number of copied keys = %zu\n", nkeys);
         free(keys);
 
         codes_handle_delete(h);

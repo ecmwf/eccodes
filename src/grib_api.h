@@ -91,30 +91,27 @@ Log mode for information for processing information
 #define GRIB_TYPE_MISSING 7
 
 /* Missing values */
-/* #define GRIB_MISSING_LONG   0x80000001*/
+/* #define GRIB_MISSING_LONG 0x80000001 */
 /* #define GRIB_MISSING_LONG 0xffffffff */
 #define GRIB_MISSING_LONG 2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
-/*set spec flags*/
-#define GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING (1 << 0)
-
 /* Dump option flags*/
-#define GRIB_DUMP_FLAG_READ_ONLY (1 << 0)
-#define GRIB_DUMP_FLAG_DUMP_OK (1 << 1)
-#define GRIB_DUMP_FLAG_VALUES (1 << 2)
-#define GRIB_DUMP_FLAG_CODED (1 << 3)
-#define GRIB_DUMP_FLAG_OCTECT (1 << 4)
-#define GRIB_DUMP_FLAG_ALIASES (1 << 5)
-#define GRIB_DUMP_FLAG_TYPE (1 << 6)
-#define GRIB_DUMP_FLAG_HEXADECIMAL (1 << 7)
-#define GRIB_DUMP_FLAG_NO_DATA (1 << 8)
-#define GRIB_DUMP_FLAG_ALL_DATA (1 << 9)
+#define GRIB_DUMP_FLAG_READ_ONLY      (1 << 0)
+#define GRIB_DUMP_FLAG_DUMP_OK        (1 << 1)
+#define GRIB_DUMP_FLAG_VALUES         (1 << 2)
+#define GRIB_DUMP_FLAG_CODED          (1 << 3)
+#define GRIB_DUMP_FLAG_OCTET          (1 << 4)
+#define GRIB_DUMP_FLAG_ALIASES        (1 << 5)
+#define GRIB_DUMP_FLAG_TYPE           (1 << 6)
+#define GRIB_DUMP_FLAG_HEXADECIMAL    (1 << 7)
+#define GRIB_DUMP_FLAG_NO_DATA        (1 << 8)
+#define GRIB_DUMP_FLAG_ALL_DATA       (1 << 9)
 #define GRIB_DUMP_FLAG_ALL_ATTRIBUTES (1 << 10)
 
 /* grib_nearest flags */
-#define GRIB_NEAREST_SAME_GRID (1 << 0)
-#define GRIB_NEAREST_SAME_DATA (1 << 1)
+#define GRIB_NEAREST_SAME_GRID  (1 << 0)
+#define GRIB_NEAREST_SAME_DATA  (1 << 1)
 #define GRIB_NEAREST_SAME_POINT (1 << 2)
 
 /*! Iteration is carried out on all the keys available in the message
@@ -187,7 +184,7 @@ struct grib_values
 */
 typedef struct grib_handle grib_handle;
 
-/*! Grib multi field handle,   structure used to build multi field GRIB messages.
+/*! Grib multi field handle,   structure used to build multi-field GRIB messages.
     \ingroup grib_handle
  */
 typedef struct grib_multi_handle grib_multi_handle;
@@ -235,12 +232,12 @@ typedef struct bufr_descriptor bufr_descriptor;
 typedef struct bufr_descriptors_array bufr_descriptors_array;
 typedef struct bufr_descriptors_map_list bufr_descriptors_map_list;
 
-grib_fieldset* grib_fieldset_new_from_files(grib_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+grib_fieldset* grib_fieldset_new_from_files(grib_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 void grib_fieldset_delete(grib_fieldset* set);
 void grib_fieldset_rewind(grib_fieldset* set);
 int grib_fieldset_apply_order_by(grib_fieldset* set, const char* order_by_string);
 grib_handle* grib_fieldset_next_handle(grib_fieldset* set, int* err);
-int grib_fieldset_count(grib_fieldset* set);
+int grib_fieldset_count(const grib_fieldset* set);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 
 /*! \defgroup grib_index The grib_index
@@ -253,7 +250,7 @@ The grib_index is the structure giving indexed access to messages in a file.
 typedef struct grib_index grib_index;
 
 /**
- *  Create a new index form a file. The file is indexed with the keys in argument.
+ *  Create a new index from a file. The file is indexed with the keys in argument.
  *
  * @param c           : context  (NULL for default context)
  * @param filename    : name of the file of messages to be indexed
@@ -387,7 +384,7 @@ int grib_index_select_string(grib_index* index, const char* key, const char* val
  *
  * @param index       : an index created from a file.
  * @param err         : 0 if OK, integer value on error. GRIB_END_OF_INDEX when no more handles are contained in the index.
- * @return            grib handle.
+ * @return            GRIB handle.
  */
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 
@@ -474,7 +471,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
-*  This function works also with multi field messages.
+*  This function works also with multi-field messages.
 *  Note: The data pointer argument may be modified
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
@@ -502,7 +499,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_name);
@@ -526,7 +523,7 @@ grib_handle* grib_handle_clone(const grib_handle* h);
 int grib_handle_delete(grib_handle* h);
 
 /**
- *  Create an empty multi field handle.
+ *  Create an empty multi-field handle.
  *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
@@ -536,7 +533,7 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c);
 
 /**
  *  Append the sections starting with start_section of the message pointed by h at
- *  the end of the multi field handle mh.
+ *  the end of the multi-field handle mh.
  *  Remember always to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
@@ -548,20 +545,20 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c);
 int grib_multi_handle_append(grib_handle* h, int start_section, grib_multi_handle* mh);
 
 /**
- * Delete multi field handle.
+ * Delete multi-field handle.
  *
- * @param mh           : The multi field handle to be deleted.
+ * @param mh          : The multi-field handle to be deleted.
  * @return            0 if OK, integer value on error
  */
 int grib_multi_handle_delete(grib_multi_handle* mh);
 
 /**
- *  Write a multi field handle in a file.
- *  Remember always to delete the multi handle when it is not needed anymore to avoid
+ *  Write a multi-field handle in a file.
+ *  Remember to delete the multi handle when it is not needed anymore to avoid
  *  memory leaks.
  *
- * @param mh           : The multi field handle to be written.
- * @param f            : File on which the file handle is written.
+ * @param mh          : The multi field handle to be written.
+ * @param f           : File on which the file handle is written.
  * @return            0 if OK, integer value on error
  */
 int grib_multi_handle_write(grib_multi_handle* mh, FILE* f);
@@ -700,9 +697,9 @@ int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat,
                       double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees an nearest from memory
+*  Frees a nearest neighbour object from memory
 *
-* @param nearest           : the nearest
+* @param nearest     : the nearest
 * @return            0 if OK, integer value on error
 */
 int grib_nearest_delete(grib_nearest* nearest);
@@ -766,7 +763,7 @@ int grib_get_size(const grib_handle* h, const char* key, size_t* size);
 *
 * @param h           : the handle to get the offset from
 * @param key         : the key to be searched
-* @param length        : the address of a size_t where the length will be set
+* @param length      : the address of a size_t where the length will be set
 * @return            0 if OK, integer value on error
 */
 int grib_get_length(const grib_handle* h, const char* key, size_t* length);
@@ -805,16 +802,16 @@ int grib_get_double(const grib_handle* h, const char* key, double* value);
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param index_array : zero-based array of indexes
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int grib_get_double_elements(const grib_handle* h, const char* key, int* i, long size, double* value);
+int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -1005,7 +1002,7 @@ void grib_dump_action_tree(grib_context* c, FILE* f);
  */
 /*! @{ */
 /**
-* Grib free procedure, format of a procedure referenced in the context that is used to free memory
+* free procedure, format of a procedure referenced in the context that is used to free memory
 *
 * @param c           : the context where the memory freeing will apply
 * @param data        : pointer to the data to be freed
@@ -1014,7 +1011,7 @@ void grib_dump_action_tree(grib_context* c, FILE* f);
 typedef void (*grib_free_proc)(const grib_context* c, void* data);
 
 /**
-* Grib malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+* malloc procedure, format of a procedure referenced in the context that is used to allocate memory
 * @param c             : the context where the memory allocation will apply
 * @param length        : length to be allocated in number of bytes
 * @return              a pointer to the allocated memory, NULL if no memory can be allocated
@@ -1023,7 +1020,7 @@ typedef void (*grib_free_proc)(const grib_context* c, void* data);
 typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
 
 /**
-* Grib realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+* realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
 * @param c             : the context where the memory allocation will apply
 * @param data          : pointer to the data to be reallocated
 * @param length        : length to be allocated in number of bytes
@@ -1032,7 +1029,7 @@ typedef void* (*grib_malloc_proc)(const grib_context* c, size_t length);
 typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t length);
 
 /**
-* Grib loc proc, format of a procedure referenced in the context that is used to log internal messages
+* log procedure, format of a procedure referenced in the context that is used to log internal messages
 *
 * @param c             : the context where the logging will apply
 * @param level         : the log level, as defined in log modes
@@ -1041,7 +1038,7 @@ typedef void* (*grib_realloc_proc)(const grib_context* c, void* data, size_t len
 typedef void (*grib_log_proc)(const grib_context* c, int level, const char* mesg);
 
 /**
-* Grib print proc, format of a procedure referenced in the context that is used to print external messages
+* print procedure, format of a procedure referenced in the context that is used to print external messages
 *
 * @param c             : the context where the logging will apply
 * @param descriptor    : the structure to be printed on, must match the implementation
@@ -1051,29 +1048,29 @@ typedef void (*grib_print_proc)(const grib_context* c, void* descriptor, const c
 
 
 /**
-* Grib data read proc, format of a procedure referenced in the context that is used to read from a stream in a resource
+* data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
 *
-* @param c             : the context where the read will apply
+* @param c            : the context where the read will apply
 * @param ptr          : the resource
-* @param size          : size to read
+* @param size         : size to read
 * @param stream       : the stream
 * @return              size read
 */
 typedef size_t (*grib_data_read_proc)(const grib_context* c, void* ptr, size_t size, void* stream);
 
 /**
-* Grib data read write, format of a procedure referenced in the context that is used to write to a stream from a resource
+* data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
 *
-* @param c             : the context where the write will apply
+* @param c            : the context where the write will apply
 * @param ptr          : the resource
-* @param size          : size to read
+* @param size         : size to read
 * @param stream       : the stream
 * @return              size written
 */
 typedef size_t (*grib_data_write_proc)(const grib_context* c, const void* ptr, size_t size, void* stream);
 
 /**
-* Grib data tell, format of a procedure referenced in the context that is used to tell the current position in a stream
+* data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
 *
 * @param c             : the context where the tell will apply
 * @param stream       : the stream
@@ -1082,20 +1079,19 @@ typedef size_t (*grib_data_write_proc)(const grib_context* c, const void* ptr, s
 typedef off_t (*grib_data_tell_proc)(const grib_context* c, void* stream);
 
 /**
-* Grib data seek, format of a procedure referenced in the context that is used to seek the current position in a stream
+* data seek procedure, format of a procedure referenced in the context that is used to seek the current position in a stream
 *
-* @param c             : the context where the tell will apply
-* @param offset        : the offset to seek to
-* @param whence        : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
-                         the offset  is  relative  to  the start of the file,
-             the current position indicator, or end-of-file, respectively.
-* @param stream       : the stream
-* @return            0 if OK, integer value on error
+* @param c        : the context where the tell will apply
+* @param offset   : the offset to seek to
+* @param whence   : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
+                    the offset is relative to the start of the file, the current position indicator, or end-of-file, respectively.
+* @param stream   : the stream
+* @return         0 if OK, integer value on error
 */
 typedef off_t (*grib_data_seek_proc)(const grib_context* c, off_t offset, int whence, void* stream);
 
 /**
-* Grib data eof, format of a procedure referenced in the context that is used to test end of file
+* data eof procedure, format of a procedure referenced in the context that is used to test end of file
 *
 * @param c             : the context where the tell will apply
 * @param stream       : the stream
@@ -1221,21 +1217,21 @@ void grib_context_set_print_proc(grib_context* c, grib_print_proc printp);
 void grib_context_set_logging_proc(grib_context* c, grib_log_proc logp);
 
 /**
-*  Turn on support for multiple fields in single grib messages
+*  Turn on support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void grib_multi_support_on(grib_context* c);
 
 /**
-*  Turn off support for multiple fields in single GRIB messages
+*  Turn off support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void grib_multi_support_off(grib_context* c);
 
 /**
-*  Reset file handle in multiple field support mode
+*  Reset file handle in multi-field support mode
 *
 * @param c            : the context to be modified
 * @param f            : the file pointer
@@ -1399,10 +1395,6 @@ struct grib_points
     size_t size;
 };
 
-grib_box* grib_box_new(grib_handle* h, int* error);
-grib_points* grib_box_get_points(grib_box* box, double north, double west, double south, double east, int* err);
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
-
 
 /* --------------------------------------- */
 #define GRIB_UTIL_GRID_SPEC_REGULAR_LL 1
@@ -1423,7 +1415,7 @@ int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 
 typedef struct grib_util_grid_spec
 {
-    int grid_type;
+    int grid_type; /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
 
     /* Grid */
     long Ni;
@@ -1450,18 +1442,18 @@ typedef struct grib_util_grid_spec
     /* Gaussian number */
     long N;
 
-    /* bitmap */
+    /* Bitmap */
     long bitmapPresent;
-    double missingValue;
+    double missingValue; /* 0 means use the default */
 
-    /* pl list for reduced */
+    /* 'pl' array for reduced Gaussian grids */
     const long* pl;
     long pl_size;
 
     /* Spherical harmonics */
     long truncation;
 
-    /* polar stereographic */
+    /* Polar stereographic */
     double orientationOfTheGridInDegrees;
     long DyInMetres;
     long DxInMetres;
@@ -1470,7 +1462,7 @@ typedef struct grib_util_grid_spec
 
 typedef struct grib_util_grid_spec2
 {
-    int grid_type;
+    int grid_type;  /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
     const char* grid_name; /* e.g. N320 */
 
     /* Grid */
@@ -1499,18 +1491,18 @@ typedef struct grib_util_grid_spec2
     /* Gaussian number */
     long N;
 
-    /* bitmap */
+    /* Bitmap */
     long bitmapPresent;
-    double missingValue;
+    double missingValue;  /* 0 means use the default */
 
-    /* pl list for reduced */
+    /* 'pl' array for reduced Gaussian grids */
     const long* pl;
     long pl_size;
 
     /* Spherical harmonics */
     long truncation;
 
-    /* polar stereographic */
+    /* Polar stereographic */
     double orientationOfTheGridInDegrees;
     long DyInMetres;
     long DxInMetres;

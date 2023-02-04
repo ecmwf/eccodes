@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_decode_C_test"
@@ -19,10 +19,10 @@ if [ $HAVE_MEMFS -eq 1 ]; then
 fi
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 rm -rf $tempDir
 mkdir -p $tempDir
 
@@ -55,8 +55,8 @@ fi
 
 for file in ${bufr_files}
 do
-  tempSrc=$label.$file.c
-  tempExe=$label.$file.exe
+  tempSrc=temp.$label.$file.c
+  tempExe=temp.$label.$file.exe
   filePath=${data_dir}/bufr/$file
 
   # Generate C code from BUFR file

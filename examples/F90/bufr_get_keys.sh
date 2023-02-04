@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 
 #Define a common label for all the tmp files
@@ -16,7 +16,7 @@ label="bufr_get_keys_test_f"
 
 #Define tmp file
 fTmp=${label}.tmp.txt
-rm -f ${fTmp} | true
+rm -f ${fTmp}
 
 #We check "syno_multi.bufr". The path is
 #hardcoded in the example
@@ -28,7 +28,7 @@ ${examples_dir}/eccodes_f_bufr_get_keys 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
-#cat  $fTmp
+#cat $fTmp
 
 #Clean up
-rm -f ${fTmp} | true
+rm -f ${fTmp}

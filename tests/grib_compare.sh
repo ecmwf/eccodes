@@ -8,8 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
+label="grib_compare_test"
 REDIRECT=/dev/null
 
 infile="${data_dir}/regular_latlon_surface.grib1"
@@ -25,25 +26,41 @@ ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $out
 # ----------------------------------------
 infile=${data_dir}/v.grib2
 for i in 1 2 3; do
-  ${tools_dir}/grib_copy -wcount=$i $infile temp_comp.$i
+  ${tools_dir}/grib_copy -wcount=$i $infile temp.$label.$i
 done
-cat temp_comp.1 temp_comp.2 temp_comp.3 > temp_comp.123
-cat temp_comp.3 temp_comp.2 temp_comp.1 > temp_comp.321
+cat temp.$label.2 temp.$label.1 temp.$label.3 > temp.$label.213
+cat temp.$label.3 temp.$label.2 temp.$label.1 > temp.$label.321
 
 # Compare files in which the messages are not in the same order
-${tools_dir}/grib_compare -r temp_comp.123 temp_comp.321
+${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
-rm -f temp_comp.1 temp_comp.2 temp_comp.3 temp_comp.123 temp_comp.321
+rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
-# ----------------------------------------
+# ----------------------------------------------
 # GRIB-797: test last argument being a directory
-# ----------------------------------------
-temp_dir=tempdir.grib_compare
+# ----------------------------------------------
+temp_dir=tempdir.$label
 rm -rf $temp_dir
 mkdir $temp_dir
 cp $infile $temp_dir
 ${tools_dir}/grib_compare $infile  $temp_dir
 rm -rf $temp_dir
+
+# ----------------------------------------
+# ECC-1350: First arg is a directory
+# ----------------------------------------
+temp_dir=tempdir.$label
+temp_err=temp.$label.err
+rm -rf $temp_dir
+mkdir $temp_dir
+set +e
+${tools_dir}/grib_compare $temp_dir $temp_dir 2>$temp_err
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "ERROR:.*Is a directory" $temp_err
+rm -rf $temp_dir $temp_err
+
 
 # ----------------------------------------
 # ECC-245: blacklist and 2nd order packing
@@ -52,6 +69,9 @@ temp1=grib_compare_temp1.grib
 temp2=grib_compare_temp2.grib
 ${tools_dir}/grib_copy -w count=25 ${data_dir}/lfpw.grib1 $temp1
 ${tools_dir}/grib_copy -w count=30 ${data_dir}/lfpw.grib1 $temp2
+
+# Compare only message headers
+${tools_dir}/grib_compare -H -b level,totalLength $temp1 $temp2
 
 # This should fail but not crash! so check exit code is not 134
 set +e
@@ -131,7 +151,33 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+
+# ----------------------------------------
+# Test -R overriding "referenceValueError"
+# ----------------------------------------
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
+echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
+# Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical
+${tools_dir}/grib_compare $temp1 $temp2
+
+# Use relative error of 0 for all keys. Now comparison detects the difference
+set +e
+${tools_dir}/grib_compare -Rall=0 $temp1 $temp2 2>$outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+
+# Now use relative error of 0 for the referenceValue only
+set +e
+${tools_dir}/grib_compare -R referenceValue=0 $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+
+
 # Clean up
-# --------------
+# ---------
 rm -f $temp1 $temp2
 rm -f $outfile

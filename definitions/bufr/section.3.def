@@ -26,10 +26,10 @@ if (masterTablesVersionNumber == 19) {
 }
 constant rootTablesDir="bufr/tables" : hidden;
 
-meta clearTables bufr_clear_tables() = 0 : hidden,no_copy;
+#meta clearTables bufr_clear_tables() = 0 : hidden,no_copy;
 
-when (changed(tablesMasterDir)) { set clearTables=1;}
-when (changed(tablesLocalDir)) { set clearTables=1;}
+#when (changed(tablesMasterDir)) { set clearTables=1;}
+#when (changed(tablesLocalDir)) { set clearTables=1;}
 
 # we should implement some table version dependency
 #constant templatesMasterDir="bufr/templates/[masterTableNumber]/[masterTablesVersionNumber]";
@@ -112,6 +112,7 @@ alias expandedDescriptors=expandedCodes;
 meta bufrdcExpandedDescriptors bufrdc_expanded_descriptors(expandedCodes) : no_copy;
 
 #smart_table NAME (VALUES,FILE_NAME,MASTER_DIRECTORY,LOCAL_DIRECTORY,WIDTH_OF_CODE_IN_BITS,EXTRA_DIRECTORY,EXTRA_FILE_NAME);
+#Note: The WIDTH_OF_CODE_IN_BITS has to be big enough so 2^width > the highest BUFR descriptor code
 smart_table expandedOriginalCodes (expandedCodes,"element.table",tablesMasterDir,tablesLocalDir,18,rootTablesDir,"operators.table") :no_copy;
 meta expandedAbbreviations         smart_table_column(expandedOriginalCodes,0,1) : string_type,no_copy;
 meta expandedTypes                 smart_table_column(expandedOriginalCodes,1,0) : string_type,no_copy;

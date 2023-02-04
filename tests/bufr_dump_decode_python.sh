@@ -8,16 +8,16 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Define a common label for all the tmp files
 label="bufr_dump_decode_python_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 
-tempDir=${label}.dir
+tempDir=temp.${label}.dir
 mkdir -p $tempDir
 cd $tempDir
 
@@ -28,7 +28,7 @@ bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 for file in ${bufr_files}
 do
   inputBufr=${data_dir}/bufr/$file
-  tempSrc=$label.$file.py
+  tempSrc=temp.$label.$file.py
 
   # Too large for this test
   if [ "$file" = "ias1_240.bufr" ]; then
@@ -38,8 +38,9 @@ do
   # Generate Python code from BUFR file
   ${tools_dir}/bufr_dump -Dpython $inputBufr > $tempSrc
 
-  $PYTHON $tempSrc $inputBufr
-
+  if test "x$PYTHON" != "x"; then
+    $PYTHON $tempSrc $inputBufr
+  fi
   rm -f $tempSrc
 done
 

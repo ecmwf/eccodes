@@ -8,8 +8,8 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-label="grib_dump_debug"
+. ./include.ctest.sh
+label="grib_dump_debug_test"
 temp=temp.$label.txt
 
 REDIRECT=/dev/null
@@ -82,7 +82,7 @@ fi
 
 for file in $files; do
    if [ -f ${data_dir}/$file ]; then
-      ${tools_dir}/grib_dump -Da ${data_dir}/$file > $temp 2>&1
+      ${tools_dir}/grib_dump -w count=1 -Da ${data_dir}/$file > $temp 2>&1
       set +e
       # Look for the word ERROR in output. We should not find any
       grep -q 'ERROR ' $temp
@@ -93,5 +93,13 @@ for file in $files; do
       set -e
    fi
 done
+
+# ECC-1247: indicate which keys can have values which are 'missing'
+# ------------------------------------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_dump -D $infile > $temp
+grep -q "unsigned hoursAfterDataCutoff = 0 (can be missing)" $temp
+grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
+
 
 rm -f $temp

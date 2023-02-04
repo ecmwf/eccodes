@@ -8,26 +8,32 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-REDIRECT=/dev/null
-label="grib_png"
+label="grib_png_test"
 temp=${label}".grib.tmp"
 temp1=${label}".1.tmp"
 temp2=${label}".2.tmp"
+tempErr=${label}.err
 
 files="
  reduced_gaussian_model_level.grib2
  reduced_gaussian_sub_area.grib2
+ regular_gaussian_model_level.grib2
  regular_latlon_surface_constant.grib2
+ test_file.grib2
+ constant_field.grib2
 "
 
-if [ $HAVE_JPEG -eq 1 ]; then
- files="multi.grib2 v.grib2"$files
+if [ $HAVE_AEC -eq 1 ]; then
+ files="ccsds.grib2 "$files
 fi
 
-# TODO: For the following the PNG packing fails with an assert!
-#       grib_accessor_class_data_png_packing.c: Assert(p->offset + length <= p->length)
+if [ $HAVE_JPEG -eq 1 ]; then
+ files="jpeg.grib2 reduced_gaussian_surface_jpeg.grib2 "$files
+fi
+
+# TODO: For the following the PNG packing fails!
 #  data/sample.grib2
 #  data/missing.grib2
 #  data/tigge_af_ecmwf.grib2
@@ -42,3 +48,32 @@ for file in $files; do
 
   rm -f $temp $temp1 $temp2
 done
+
+infile=${data_dir}/sample.grib2
+set +e
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp > $tempErr 2>&1
+set -e
+grep -q "unable to set double array codedValues" $tempErr
+
+# Nearest neighbour
+# ----------------------
+infile=${data_dir}/reduced_gaussian_model_level.grib2
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
+${tools_dir}/grib_get -F%.6g -l 48.835,327.600,1 $temp > $temp1
+grep -q "224.455" $temp1
+
+${tools_dir}/grib_ls -F%.6g -l 48.835,327.600 $temp > $temp1
+grep -q "Grid Point chosen #4 index=936 " $temp1
+
+
+# Conversion from IEEE to PNG
+# ----------------------------
+infile=${data_dir}/grid_ieee.grib
+${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp
+# TODO: check results
+grib_check_key_equals $temp packingType grid_png
+grib_check_key_equals $temp accuracy 0
+
+
+# Clean up
+rm -f $temp $temp1 $temp2 $tempErr

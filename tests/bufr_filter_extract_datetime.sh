@@ -9,7 +9,7 @@
 #
 
 set -x
-. ./include.sh
+. ./include.ctest.sh
 
 cd ${data_dir}/bufr
 
@@ -285,6 +285,7 @@ ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
 
 generate_filter 20171102120000 20171102125959 8
 ${tools_dir}/codes_bufr_filter -o $outputBufr $fRules $inputBufr
+rm -f $outputBufr
 
 #-----------------------------------------------------------
 echo "Test ECC-1174 ..."

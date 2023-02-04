@@ -14,23 +14,22 @@
 #
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
 
 from eccodes import *
 
-INPUT = '../../data/bufr/syno_multi.bufr'
-OUTPUT = 'bufr_set_keys_test_p.tmp.bufr'
+INPUT = "../../data/bufr/syno_multi.bufr"
+OUTPUT = "bufr_set_keys_test_p.tmp.bufr"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
     # open BUFR file
-    fin = open(INPUT, 'rb')
+    fin = open(INPUT, "rb")
 
     # open output BUFR file
-    fout = open(OUTPUT, 'wb')
+    fout = open(OUTPUT, "wb")
 
     cnt = 0
 
@@ -53,16 +52,16 @@ def example():
 
         # set centre
         val = 222
-        print('  set bufrHeaderCentre to: %d' % val)
+        print("  set bufrHeaderCentre to: %d" % val)
 
-        key = 'bufrHeaderCentre'
+        key = "bufrHeaderCentre"
         try:
-            print('  %s: %s' % (key, codes_set(bufr, key, val)))
+            print("  %s: %s" % (key, codes_set(bufr, key, val)))
         except CodesInternalError as err:
             print('Error with key="%s" : %s' % (key, err.msg))
 
         # check bufrHeaderCentre's value
-        print('  %s''s new value is: %d' % (key, codes_get(bufr, key)))
+        print("  %s" "s new value is: %d" % (key, codes_get(bufr, key)))
 
         # write modified message to output
         codes_write(bufr, fout)
@@ -83,7 +82,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

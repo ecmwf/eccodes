@@ -142,3 +142,477 @@
  parameterCategory = 128 ;
  parameterNumber = 238 ;
 }
+#Sea-ice cover
+'31' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 31 ;
+}
+#Snow density
+'33' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 33 ;
+}
+#Sea surface temperature
+'34' = {
+  discipline = 192 ;
+  parameterCategory = 128 ;
+  parameterNumber = 34 ;
+}
+#Surface solar radiation downwards
+'169' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 169 ;
+}
+#Surface thermal radiation downwards
+'175' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 175 ;
+}
+#Eastward turbulent surface stress
+'180' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 180 ;
+}
+#Northward turbulent surface stress
+'181' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 181 ;
+}
+#Surface runoff
+'174008' = {
+ discipline = 192 ;
+ parameterCategory = 174 ;
+ parameterNumber = 8 ;
+}
+#Direct solar radiation
+'47' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 47 ;
+}
+#Lake total layer temperature
+'228011' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 11 ;
+}
+#Lake mix-layer temperature
+'228008' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 8 ;
+}
+#Lake mix-layer depth
+'228009' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 9 ;
+}
+#Lake bottom temperature
+'228010' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 10 ;
+}
+#Lake shape factor
+'228012' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 12 ;
+}
+#Lake ice surface temperature
+'228013' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 13 ;
+}
+#Lake ice total depth
+'228014' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 14 ;
+}
+#Lake total depth
+'228007' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 7 ;
+}
+#GEMS Ozone
+'210203' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 203 ;
+}
+#GEMS Ozone
+'211203' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 203 ;
+}
+#Carbon monoxide
+'210123' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 123 ;
+}
+#Carbon monoxide
+'211123' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 123 ;
+}
+#Nitrogen dioxide
+'210121' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 121 ;
+}
+#Nitrogen dioxide
+'211121' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 121 ;
+}
+#Sulphur dioxide
+'210122' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 122 ;
+}
+#Sulphur dioxide
+'211122' = {
+ discipline = 192 ;
+ parameterCategory = 211 ;
+ parameterNumber = 122 ;
+}
+#Ammonia
+'217019' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 19 ;
+}
+#Nitrogen monoxide
+'217027' = {
+ discipline = 192 ;
+ parameterCategory = 217 ;
+ parameterNumber = 27 ;
+}
+#Particulate matter d <= 1 um
+'210072' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 72 ;
+}
+#Particulate matter d <= 2.5 um
+'210073' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 73 ;
+}
+#Particulate matter d <= 10 um
+'210074' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 74 ;
+}
+#Runoff
+'205' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 205 ;
+}
+#Total column vertically-integrated water vapour
+'137' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 137 ;
+}
+#Total precipitation of at least 100 mm
+'131085' = {
+ discipline = 192 ;
+ parameterCategory = 131 ;
+ parameterNumber = 85 ;
+}
+#Mean zero-crossing wave period
+'140221' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 221 ;
+}
+#Peak wave period
+'140231' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 231 ;
+}
+#Instantaneous total lightning flash density
+'228050' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 50 ;
+}
+#Averaged total lightning flash density in the last hour
+'228051' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 51 ;
+}
+#Instantaneous cloud-to-ground lightning flash density
+'228052' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 52 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last hour
+'228053' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 53 ;
+}
+#Averaged total lightning flash density in the last 3 hours
+'228057' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 57 ;
+}
+#Averaged total lightning flash density in the last 6 hours
+'228058' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 58 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 3 hours
+'228059' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 59 ;
+}
+#Averaged cloud-to-ground lightning flash density in the last 6 hours
+'228060' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 60 ;
+}
+#Eastward gravity wave surface stress
+'195' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 195 ;
+}
+#Friction velocity
+'228003' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 3 ;
+}
+#Instantaneous eastward turbulent surface stress
+'229' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 229 ;
+}
+#Instantaneous northward turbulent surface stress
+'230' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 230 ;
+}
+#Instantaneous surface sensible heat flux
+'231' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 231 ;
+}
+#Instantaneous moisture flux
+'232' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 232 ;
+}
+#Large-scale precipitation
+'142' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 142 ;
+}
+#Large-scale precipitation fraction
+'50' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 50 ;
+}
+#Northward gravity wave surface stress
+'196' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 196 ;
+}
+#Snow evaporation
+'44' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 44 ;
+}
+#Snowfall
+'144' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 144 ;
+}
+#Surface runoff
+'8' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 8 ;
+}
+#TOA incident solar radiation
+'212' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 212 ;
+}
+#Top net thermal radiation, clear sky
+'209' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 209 ;
+}
+#Top net solar radiation, clear sky
+'208' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 208 ;
+}
+#Total cloud cover
+'164' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 164 ;
+}
+#Total column rain water
+'228089' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 89 ;
+}
+#Total column snow water
+'228090' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 90 ;
+}
+#Vertical integral of eastward water vapour flux
+'162071' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 71 ;
+}
+#Vertical integral of northward water vapour flux
+'162072' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 72 ;
+}
+#Snow albedo
+'32' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 32 ;
+}
+#Ice temperature
+'228094' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 94 ;
+}
+#Snowmelt
+'45' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 45 ;
+}
+#Downward UV radiation at the surface
+'57' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 57 ;
+}
+#Photosynthetically active radiation at the surface
+'58' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 58 ;
+}
+#Boundary layer height
+'159' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 159 ;
+}
+#Evaporation
+'182' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 182 ;
+}
+#Low cloud cover
+'186' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 186 ;
+}
+#Medium cloud cover
+'187' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 187 ;
+}
+#High cloud cover
+'188' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 188 ;
+}
+#Gravity wave dissipation
+'197' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 197 ;
+}
+#Potential evaporation
+'228251' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 251 ;
+}
+#Unbalanced component of temperature
+'21' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 21 ;
+}
+#Unbalanced component of logarithm of surface pressure
+'22' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 22 ;
+}
+#Unbalanced component of divergence
+'23' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 23 ;
+}
+#10 metre wind gust in the last 3 hours
+'228028' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 28 ;
+}

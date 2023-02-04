@@ -85,7 +85,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Total column water vapour
+#Total column vertically-integrated water vapour
 'kg m**-2' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 54 ;
@@ -105,7 +105,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 44 ;
 	}
-#Geopotential Height
+#Geopotential height
 'gpm' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 7 ;
@@ -945,7 +945,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 221 ;
 	}
-#Soil Temperature
+#Soil temperature
 'K' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 85 ;

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 tempOut=temp.bufr_keys_iter.$$.out
 tempRef=temp.bufr_keys_iter.$$.ref

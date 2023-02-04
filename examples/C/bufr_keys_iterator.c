@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
     codes_handle* h = NULL;
     int err = 0, cnt = 0;
     int keyType = 0;
+    int subsetNumber = 0;
 
     char value[MAX_VAL_LEN];
     size_t vlen = MAX_VAL_LEN;
@@ -76,6 +77,11 @@ int main(int argc, char* argv[])
         while (codes_bufr_keys_iterator_next(kiter)) {
             /* get key name */
             char* name = codes_bufr_keys_iterator_get_name(kiter);
+            if (strcmp(name, "subsetNumber") == 0) {
+                subsetNumber++;
+                printf("\n  Subset %d:\n", subsetNumber);
+                continue;
+            }
             printf("  %s=", name);
 
             CODES_CHECK(codes_get_native_type(h, name, &keyType), 0);
@@ -92,7 +98,7 @@ int main(int argc, char* argv[])
             }
             else {
                 /* for arrays */
-                printf("(array of %lu)\n", klen);
+                printf("(array of %zu)\n", klen);
             }
         }
 

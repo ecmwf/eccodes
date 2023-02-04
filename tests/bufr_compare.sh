@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Enter data dir
 cd ${data_dir}/bufr
@@ -17,17 +17,17 @@ cd ${data_dir}/bufr
 label="bufr_compare_test"
 
 # Create log file
-fLog=${label}".log"
+fLog=temp.${label}".log"
 rm -f $fLog
 touch $fLog
 
 # Define tmp bufr file
-fBufrTmp=${label}".bufr.tmp"
-fBufrInput1=${label}".bufr.input1"
-fBufrInput2=${label}".bufr.input2"
+fBufrTmp=temp.${label}".bufr"
+fBufrInput1=temp1.in.${label}".bufr"
+fBufrInput2=temp2.in.${label}".bufr"
 
 # Define filter rules file
-fRules=${label}.filter
+fRules=temp.${label}.filter
 
 #----------------------------------------------------
 # Test: comparing same files
@@ -198,6 +198,68 @@ ${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
 EOF
 # The relative differences are around 3.5e-5. Suppress all instances
 ${tools_dir}/bufr_compare -R airTemperature=4e-5 $f $fBufrTmp
+
+#--------------------------------------------------------------------
+# ECC-1283: string arrays
+#--------------------------------------------------------------------
+sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+fBufrTmp1=temp1.${label}".bufr"
+fBufrTmp2=temp2.${label}".bufr"
+
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ set stationOrSiteName = { "Black", "Rose", "Immortal" };
+ set pack=1;
+ write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp2 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ set stationOrSiteName = { "Black", "Rose", "Mortal" };
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare $fBufrTmp1 $fBufrTmp2 >$fLog
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "string \[stationOrSiteName\] 1 out of 3 different" $fLog
+
+${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
+rm -f $fBufrTmp1 $fBufrTmp2
+
+# Comparing empty string with 'missing'
+${tools_dir}/codes_bufr_filter -o $fBufrTmp1 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ set stationOrSiteName = { "", "y", "x" };
+ set pack=1;
+ write;
+EOF
+${tools_dir}/codes_bufr_filter -o $fBufrTmp2 - $sample <<EOF
+ set numberOfSubsets = 3;
+ set compressedData = 1;
+ set unexpandedDescriptors = { 1015 };
+ # stationOrSiteName not set so all entries 'missing'
+ set pack=1;
+ write;
+EOF
+export ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS=1
+set +e
+${tools_dir}/bufr_compare $fBufrTmp1 $fBufrTmp2 >$fLog
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "string \[stationOrSiteName\] 2 out of 3 different" $fLog
+
+${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
+unset ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS
+rm -f $fBufrTmp1 $fBufrTmp2
 
 
 # Clean up

@@ -44,37 +44,34 @@ Log mode for information for processing information
 
 /* Types */
 #define CODES_TYPE_UNDEFINED GRIB_TYPE_UNDEFINED
-#define CODES_TYPE_LONG GRIB_TYPE_LONG
-#define CODES_TYPE_DOUBLE GRIB_TYPE_DOUBLE
-#define CODES_TYPE_STRING GRIB_TYPE_STRING
-#define CODES_TYPE_BYTES GRIB_TYPE_BYTES
-#define CODES_TYPE_SECTION GRIB_TYPE_SECTION
-#define CODES_TYPE_LABEL GRIB_TYPE_LABEL
-#define CODES_TYPE_MISSING GRIB_TYPE_MISSING
+#define CODES_TYPE_LONG      GRIB_TYPE_LONG
+#define CODES_TYPE_DOUBLE    GRIB_TYPE_DOUBLE
+#define CODES_TYPE_STRING    GRIB_TYPE_STRING
+#define CODES_TYPE_BYTES     GRIB_TYPE_BYTES
+#define CODES_TYPE_SECTION   GRIB_TYPE_SECTION
+#define CODES_TYPE_LABEL     GRIB_TYPE_LABEL
+#define CODES_TYPE_MISSING   GRIB_TYPE_MISSING
 
 /* Missing values */
-#define CODES_MISSING_LONG GRIB_MISSING_LONG
+#define CODES_MISSING_LONG   GRIB_MISSING_LONG
 #define CODES_MISSING_DOUBLE GRIB_MISSING_DOUBLE
 
-/*set spec flags*/
-#define CODES_UTIL_SET_SPEC_FLAGS_ONLY_PACKING GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
-
 /* Dump option flags*/
-#define CODES_DUMP_FLAG_READ_ONLY GRIB_DUMP_FLAG_READ_ONLY
-#define CODES_DUMP_FLAG_DUMP_OK GRIB_DUMP_FLAG_DUMP_OK
-#define CODES_DUMP_FLAG_VALUES GRIB_DUMP_FLAG_VALUES
-#define CODES_DUMP_FLAG_CODED GRIB_DUMP_FLAG_CODED
-#define CODES_DUMP_FLAG_OCTECT GRIB_DUMP_FLAG_OCTECT
-#define CODES_DUMP_FLAG_ALIASES GRIB_DUMP_FLAG_ALIASES
-#define CODES_DUMP_FLAG_TYPE GRIB_DUMP_FLAG_TYPE
-#define CODES_DUMP_FLAG_HEXADECIMAL GRIB_DUMP_FLAG_HEXADECIMAL
-#define CODES_DUMP_FLAG_NO_DATA GRIB_DUMP_FLAG_NO_DATA
-#define CODES_DUMP_FLAG_ALL_DATA GRIB_DUMP_FLAG_ALL_DATA
+#define CODES_DUMP_FLAG_READ_ONLY      GRIB_DUMP_FLAG_READ_ONLY
+#define CODES_DUMP_FLAG_DUMP_OK        GRIB_DUMP_FLAG_DUMP_OK
+#define CODES_DUMP_FLAG_VALUES         GRIB_DUMP_FLAG_VALUES
+#define CODES_DUMP_FLAG_CODED          GRIB_DUMP_FLAG_CODED
+#define CODES_DUMP_FLAG_OCTET          GRIB_DUMP_FLAG_OCTET
+#define CODES_DUMP_FLAG_ALIASES        GRIB_DUMP_FLAG_ALIASES
+#define CODES_DUMP_FLAG_TYPE           GRIB_DUMP_FLAG_TYPE
+#define CODES_DUMP_FLAG_HEXADECIMAL    GRIB_DUMP_FLAG_HEXADECIMAL
+#define CODES_DUMP_FLAG_NO_DATA        GRIB_DUMP_FLAG_NO_DATA
+#define CODES_DUMP_FLAG_ALL_DATA       GRIB_DUMP_FLAG_ALL_DATA
 #define CODES_DUMP_FLAG_ALL_ATTRIBUTES GRIB_DUMP_FLAG_ALL_ATTRIBUTES
 
 /* codes_nearest flags */
-#define CODES_NEAREST_SAME_GRID GRIB_NEAREST_SAME_GRID
-#define CODES_NEAREST_SAME_DATA GRIB_NEAREST_SAME_DATA
+#define CODES_NEAREST_SAME_GRID  GRIB_NEAREST_SAME_GRID
+#define CODES_NEAREST_SAME_DATA  GRIB_NEAREST_SAME_DATA
 #define CODES_NEAREST_SAME_POINT GRIB_NEAREST_SAME_POINT
 
 /*! Iteration is carried out on all the keys available in the message
@@ -133,7 +130,7 @@ typedef struct grib_key_value_list codes_key_value_list;
 */
 typedef struct grib_handle codes_handle;
 
-/*! GRIB multi field handle,   structure used to build multi fields messages.
+/*! GRIB multi-field handle, structure used to build multi-field messages.
     \ingroup codes_handle
     \struct codes_multi_handle
  */
@@ -156,7 +153,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_box codes_box;
 typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
@@ -181,13 +177,13 @@ typedef struct grib_util_packing_spec codes_util_packing_spec;
 typedef struct grib_util_grid_spec codes_util_grid_spec;
 
 
-codes_fieldset* codes_fieldset_new_from_files(codes_context* c, char* filenames[], int nfiles, char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
+codes_fieldset* codes_fieldset_new_from_files(codes_context* c, const char* filenames[], int nfiles, const char** keys, int nkeys, const char* where_string, const char* order_by_string, int* err);
 
 void codes_fieldset_delete(codes_fieldset* set);
 void codes_fieldset_rewind(codes_fieldset* set);
 int codes_fieldset_apply_order_by(codes_fieldset* set, const char* order_by_string);
 codes_handle* codes_fieldset_next_handle(codes_fieldset* set, int* err);
-int codes_fieldset_count(codes_fieldset* set);
+int codes_fieldset_count(const codes_fieldset* set);
 int codes_values_check(codes_handle* h, codes_values* values, int count);
 
 /*! \defgroup codes_index The indexing feature
@@ -202,7 +198,7 @@ The codes_index is the structure giving indexed access to messages in a file.
 typedef struct grib_index codes_index;
 
 /**
- *  Create a new index form a file. The file is indexed with the keys in argument.
+ *  Create a new index from a file. The file is indexed with the keys in argument.
  *
  * @param c           : context  (NULL for default context)
  * @param filename    : name of the file of messages to be indexed
@@ -245,7 +241,7 @@ codes_index* codes_index_read(codes_context* c, const char* filename, int* err);
  *  Get the number of distinct values of the key in argument contained in the index. The key must belong to the index.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the number of values is computed
  * @param size        : number of distinct values of the key in the index
  * @return            0 if OK, integer value on error
@@ -256,7 +252,7 @@ int codes_index_get_size(const codes_index* index, const char* key, size_t* size
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -268,7 +264,7 @@ int codes_index_get_long(const codes_index* index, const char* key, long* values
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as double or when the native type of the key is double.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -280,7 +276,7 @@ int codes_index_get_double(const codes_index* index, const char* key, double* va
  *  Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as string or when the native type of the key is string.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key for which the values are returned
  * @param values      : array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
  * @param size        : size of the values array
@@ -293,7 +289,7 @@ int codes_index_get_string(const codes_index* index, const char* key, char** val
  *  Select the message subset with key==value. The value is a long. The key must have been created with long type or have long as native type if the type was not explicitly defined in the index creation.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key to be selected
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
@@ -312,10 +308,10 @@ int codes_index_select_long(codes_index* index, const char* key, long value);
 int codes_index_select_double(codes_index* index, const char* key, double value);
 
 /**
- *  Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
+ * Select the message subset with key==value. The value is a string. The key must have been created with string type or have string as native type if the type was not explicitly defined in the index creation.
  *
  * @param index       : an index created from a file.
- *     The index must have been created with the key in argument.
+ *                      The index must have been created with the key in argument.
  * @param key         : key to be selected
  * @param value       : value of the key to select
  * @return            0 if OK, integer value on error
@@ -323,13 +319,13 @@ int codes_index_select_double(codes_index* index, const char* key, double value)
 int codes_index_select_string(codes_index* index, const char* key, const char* value);
 
 /**
- *  Create a new handle from an index after having selected the key values.
- *  All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
+ * Create a new handle from an index after having selected the key values.
+ * All the keys belonging to the index must be selected before calling this function. Successive calls to this function will return all the handles compatible with the constraints defined selecting the values of the index keys.
  * When no more handles are available from the index a NULL pointer is returned and the err variable is set to CODES_END_OF_INDEX.
  *
  * @param index       : an index created from a file.
- * @param err         :  0 if OK, integer value on error. CODES_END_OF_INDEX when no more handles are contained in the index.
- * @return            grib handle.
+ * @param err         : 0 if OK, integer value on error. CODES_END_OF_INDEX when no more handles are contained in the index.
+ * @return            message handle.
  */
 codes_handle* codes_handle_new_from_index(codes_index* index, int* err);
 
@@ -435,7 +431,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, 
 /**
 *  Create a handle from a user message in memory. The message will not be freed at the end.
 *  The message will be copied as soon as a modification is needed.
-*  This function works also with multi field messages.
+*  This function works also with GRIB multi-field messages.
 *
 * @param c           : the context from which the handle will be created (NULL for default context)
 * @param data        : the actual message
@@ -462,7 +458,7 @@ codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* d
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the GRIB sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* sample_name);
@@ -472,10 +468,21 @@ codes_handle* codes_grib_handle_new_from_samples(codes_context* c, const char* s
  *  The message is copied at the creation of the handle
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
- * @param sample_name : the name of the sample file (without the .tmpl extension)
+ * @param sample_name : the name of the BUFR sample file
  * @return            the new handle, NULL if the resource is invalid or a problem is encountered
  */
 codes_handle* codes_bufr_handle_new_from_samples(codes_context* c, const char* sample_name);
+
+/**
+ *  Create a handle from a file contained in a samples directory.
+ *  The samples file can be GRIB, BUFR etc. Its type will be determined at runtime.
+ *  The message is copied at the creation of the handle
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param sample_name : the name of the sample file
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
+codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample_name);
 
 
 /**
@@ -498,7 +505,7 @@ int codes_handle_delete(codes_handle* h);
 /**
  *  Create an empty multi-field GRIB handle.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
@@ -509,7 +516,7 @@ codes_multi_handle* codes_grib_multi_handle_new(codes_context* c);
  *  Append the sections starting with start_section of the message pointed by h at
  *  the end of the multi-field GRIB handle mh.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param h           : The handle from which the sections are copied.
@@ -531,7 +538,7 @@ int codes_grib_multi_handle_delete(codes_multi_handle* mh);
 /**
  *  Write a multi-field GRIB handle in a file.
  *  This is only applicable to GRIB edition 2.
- *  Remember always to delete the multi-handle when it is not needed any more to avoid
+ *  Remember always to delete the multi-handle when it is not needed anymore to avoid
  *  memory leaks.
  *
  * @param mh          : The multi-field GRIB handle to be written.
@@ -581,8 +588,8 @@ int codes_get_message_copy(const codes_handle* h, void* message, size_t* message
 codes_iterator* codes_grib_iterator_new(const codes_handle* h, unsigned long flags, int* error);
 
 /**
-* Get latitude/longitude and data values.
-* The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+* Get latitude/longitude and data values for a GRIB message.
+* The latitudes, longitudes and values arrays must be properly allocated by the caller.
 * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
 *
 * @param h           : handle from which geography and data values are taken
@@ -674,7 +681,7 @@ int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, doubl
                             double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees an nearest from memory
+*  Frees a nearest object from memory
 *
 * @param nearest           : the nearest
 * @return            0 if OK, integer value on error
@@ -685,7 +692,7 @@ int codes_grib_nearest_delete(codes_nearest* nearest);
 * Find the nearest point of a set of points whose latitudes and longitudes
 * are given in the inlats, inlons arrays respectively.
 * If the flag is_lsm is 1 the nearest land point is returned and the
-* grib passed as handle (h) is considered a land sea mask.
+* GRIB passed as handle (h) is considered a land sea mask.
 * The land nearest point is the nearest point with land sea mask value>=0.5.
 * If no nearest land points are found the nearest value is returned.
 * If the flag is_lsm is 0 the nearest point is returned.
@@ -779,16 +786,16 @@ int codes_get_double(const codes_handle* h, const char* key, double* value);
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array i
+*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
 *
 * @param h           : the handle to get the data from
 * @param key         : the key to be searched
-* @param i           : zero-based array of indexes
-* @param size        : size of the i and value arrays
+* @param index_array : zero-based array of indexes
+* @param size        : size of the index_array and value arrays
 * @param value       : the double array for the data values
 * @return            0 if OK, integer value on error
 */
-int codes_get_double_elements(const codes_handle* h, const char* key, int* i, long size, double* value);
+int codes_get_double_elements(const codes_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
 *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -851,7 +858,7 @@ int codes_get_double_array(const codes_handle* h, const char* key, double* vals,
 int codes_get_long_array(const codes_handle* h, const char* key, long* vals, size_t* length);
 
 
-/*   setting      data         */
+/*   setting data         */
 /**
 *  Copy the keys belonging to a given namespace from a source handle to a destination handle
 *
@@ -980,22 +987,107 @@ void codes_dump_action_tree(codes_context* c, FILE* f);
  */
 /*! @{ */
 
-/* TODO: function pointers
- grib_malloc_proc
- grib_realloc_proc
- grib_log_proc
- grib_print_proc
- grib_data_read_proc
- grib_data_write_proc
- grib_data_tell_proc
- grib_data_seek_proc
- grib_data_eof_proc
+/**
+* ecCodes free procedure, format of a procedure referenced in the context that is used to free memory
+*
+* @param c     : the context where the memory freeing will apply
+* @param data  : pointer to the data to be freed
+* must match @see codes_malloc_proc
 */
+typedef void (*codes_free_proc)(const codes_context* c, void* data);
+
+/**
+* ecCodes malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+* @param c             : the context where the memory allocation will apply
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory, NULL if no memory can be allocated
+* must match @see codes_free_proc
+*/
+typedef void* (*codes_malloc_proc)(const codes_context* c, size_t length);
+
+/**
+* ecCodes realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+* @param c             : the context where the memory allocation will apply
+* @param data          : pointer to the data to be reallocated
+* @param length        : length to be allocated in number of bytes
+* @return              a pointer to the allocated memory
+*/
+typedef void* (*codes_realloc_proc)(const codes_context* c, void* data, size_t length);
+
+/**
+* ecCodes log procedure, format of a procedure referenced in the context that is used to log internal messages
+*
+* @param c             : the context where the logging will apply
+* @param level         : the log level, as defined in log modes
+* @param mesg          : the message to be logged
+*/
+typedef void (*codes_log_proc)(const codes_context* c, int level, const char* mesg);
+
+/**
+* ecCodes print procedure, format of a procedure referenced in the context that is used to print external messages
+*
+* @param c             : the context where the logging will apply
+* @param descriptor    : the structure to be printed on, must match the implementation
+* @param mesg          : the message to be printed
+*/
+typedef void (*codes_print_proc)(const codes_context* c, void* descriptor, const char* mesg);
+
+/**
+* ecCodes data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
+*
+* @param c            : the context where the read will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size read
+*/
+typedef size_t (*codes_data_read_proc)(const codes_context* c, void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
+*
+* @param c            : the context where the write will apply
+* @param ptr          : the resource
+* @param size         : size to read
+* @param stream       : the stream
+* @return              size written
+*/
+typedef size_t (*codes_data_write_proc)(const codes_context* c, const void* ptr, size_t size, void* stream);
+
+/**
+* ecCodes data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
+*
+* @param c           : the context where the tell will apply
+* @param stream      : the stream
+* @return            the position in the stream
+*/
+typedef off_t (*codes_data_tell_proc)(const codes_context* c, void* stream);
+
+/**
+* ecCodes data seek procedure, format of a procedure referenced in the context that is used to seek the current position in a stream
+*
+* @param c         : the context where the tell will apply
+* @param offset    : the offset to seek to
+* @param whence    : If whence is set to SEEK_SET, SEEK_CUR, or SEEK_END,
+                     the offset is relative to the start of the file, the current position indicator, or end-of-file, respectively.
+* @param stream    : the stream
+* @return          0 if OK, integer value on error
+*/
+typedef off_t (*codes_data_seek_proc)(const codes_context* c, off_t offset, int whence, void* stream);
+
+/**
+* ecCodes data eof procedure, format of a procedure referenced in the context that is used to test end of file
+*
+* @param c        : the context where the tell will apply
+* @param stream   : the stream
+* @return         the position in the stream
+*/
+typedef int (*codes_data_eof_proc)(const codes_context* c, void* stream);
 
 /**
 *  Get the static default context
 *
-* @return            the default context, NULL it the context is not available
+* @return         the default context, NULL it the context is not available
 */
 codes_context* codes_context_get_default(void);
 
@@ -1067,14 +1159,62 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
 void codes_context_set_samples_path(codes_context* c, const char* path);
 
 /**
-*  Turn on support for multiple fields in single GRIB messages
+*  Sets memory procedures of the context
+*
+* @param c         : the context to be modified
+* @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free    : the memory freeing procedure to be set @see codes_free_proc
+* @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                   codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets memory procedures of the context for persistent data
+*
+* @param c           : the context to be modified
+* @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
+* @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
+*/
+void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
+                                              codes_free_proc p_free);
+
+/**
+*  Sets memory procedures of the context for large buffers
+*
+* @param c        : the context to be modified
+* @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
+* @param p_free   : the memory freeing procedure to be set @see codes_free_proc
+* @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
+*/
+void codes_context_set_buffer_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+                                          codes_free_proc p_free, codes_realloc_proc p_realloc);
+
+/**
+*  Sets the context printing procedure used for user interaction
+*
+* @param c        : the context to be modified
+* @param p_print  : the printing procedure to be set @see codes_print_proc
+*/
+void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
+
+/**
+*  Sets the context logging procedure used for system (warning, errors, infos ...) messages
+*
+* @param c       : the context to be modified
+* @param p_log   : the logging procedure to be set @see codes_log_proc
+*/
+void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
+
+/**
+*  Turn on support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
 void codes_grib_multi_support_on(codes_context* c);
 
 /**
-*  Turn off support for multiple fields in single GRIB messages
+*  Turn off support for multi-fields in single GRIB messages
 *
 * @param c            : the context to be modified
 */
@@ -1105,6 +1245,8 @@ long codes_get_api_version(void);
 *  @return character string with SHA1 identifier
 */
 const char* codes_get_git_sha1(void);
+
+const char* codes_get_build_date(void);
 
 /**
 *  Get the package name
@@ -1229,9 +1371,6 @@ int codes_get_product_kind(const codes_handle* h, ProductKind* product_kind);
 int codes_check_message_header(const void* bytes, size_t length, ProductKind product);
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 
-codes_box* codes_box_new(codes_handle* h, int* error);
-codes_points* codes_box_get_points(codes_box* box, double north, double west, double south, double east, int* err);
-int codes_points_get_values(codes_handle* h, codes_points* points, double* val);
 
 /* --------------------------------------- */
 
@@ -1294,7 +1433,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

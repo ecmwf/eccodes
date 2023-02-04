@@ -21,6 +21,7 @@ alias geography.jScansPositively=jScansPositively;
 alias geography.jPointsAreConsecutive=jPointsAreConsecutive;
 
 transient iScansPositively = !iScansNegatively : constraint;
+transient jScansNegatively = !jScansPositively : constraint;
 
 flagbit scanningMode5(scanningMode,3) = 0: read_only;
 flagbit scanningMode6(scanningMode,2) = 0: read_only;
@@ -36,3 +37,6 @@ meta swapScanningY change_scanning_direction( values,Ni,Nj,
                  iScansNegatively,jScansPositively,
                  yFirst,yLast,y) : edition_specific,hidden,no_copy;
 alias swapScanningLat = swapScanningY;
+
+meta swapScanningAlternativeRows change_alternative_row_scanning(
+    values, Ni, Nj, alternativeRowScanning): edition_specific,hidden,no_copy;

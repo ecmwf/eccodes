@@ -7,7 +7,17 @@
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 
-. ./include.sh
+. ./include.ctest.sh
 
+tempGrib="out_surface_level.grib2"
+
+# Input and output GRIB files are hard coded in the example
 ${examples_dir}/c_grib_set_missing
-rm -f out_surface_level.grib2
+
+# Check the keys have been set to MISSING
+sf=`${tools_dir}/grib_get -p scaleFactorOfFirstFixedSurface $tempGrib`
+[ "$sf" = "MISSING" ]
+sf=`${tools_dir}/grib_get -p scaledValueOfFirstFixedSurface $tempGrib`
+[ "$sf" = "MISSING" ]
+
+rm -f $tempGrib

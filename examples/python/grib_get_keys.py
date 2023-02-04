@@ -12,25 +12,25 @@
 # Description: how to get values using keys from GRIB messages
 #
 
-from __future__ import print_function
-import traceback
 import sys
+import traceback
+
 from eccodes import *
 
-INPUT = '../../data/reduced_latlon_surface.grib1'
+INPUT = "../../data/reduced_latlon_surface.grib1"
 VERBOSE = 1  # verbose error reporting
 
 
 def example():
-    f = open(INPUT, 'rb')
+    f = open(INPUT, "rb")
 
     keys = [
-        'Ni',
-        'Nj',
-        'latitudeOfFirstGridPointInDegrees',
-        'longitudeOfFirstGridPointInDegrees',
-        'latitudeOfLastGridPointInDegrees',
-        'longitudeOfLastGridPointInDegrees',
+        "Ni",
+        "Nj",
+        "latitudeOfFirstGridPointInDegrees",
+        "longitudeOfFirstGridPointInDegrees",
+        "latitudeOfLastGridPointInDegrees",
+        "longitudeOfLastGridPointInDegrees",
     ]
 
     while 1:
@@ -40,7 +40,7 @@ def example():
 
         for key in keys:
             try:
-                print('  %s: %s' % (key, codes_get(gid, key)))
+                print("  %s: %s" % (key, codes_get(gid, key)))
             except KeyValueNotFoundError as err:
                 # Full list of exceptions here:
                 #   https://confluence.ecmwf.int/display/ECC/Python+exception+classes
@@ -48,12 +48,15 @@ def example():
             except CodesInternalError as err:
                 print('Error with key="%s" : %s' % (key, err.msg))
 
-        print('There are %d values, average is %f, min is %f, max is %f' % (
-            codes_get_size(gid, 'values'),
-            codes_get(gid, 'average'),
-            codes_get(gid, 'min'),
-            codes_get(gid, 'max')
-        ))
+        print(
+            "There are %d values, average is %f, min is %f, max is %f"
+            % (
+                codes_get_size(gid, "values"),
+                codes_get(gid, "average"),
+                codes_get(gid, "min"),
+                codes_get(gid, "max"),
+            )
+        )
 
         codes_release(gid)
 
@@ -67,7 +70,7 @@ def main():
         if VERBOSE:
             traceback.print_exc(file=sys.stderr)
         else:
-            sys.stderr.write(err.msg + '\n')
+            sys.stderr.write(err.msg + "\n")
 
         return 1
 

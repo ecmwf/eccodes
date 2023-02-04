@@ -5,7 +5,7 @@
 #include "test.h"
 
 void handle_error(int err,const char* caller);
-void preproc(double* values,double bias,int lenght,int mode);
+void preproc(double* values,double bias,int length,int mode);
 
 int main(int argc, char *argv[])
 {

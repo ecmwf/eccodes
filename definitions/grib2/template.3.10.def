@@ -50,7 +50,7 @@ include "grib2/template.3.scanning_mode.def";
 unsigned[4] orientationOfTheGrid : dump ;
 meta geography.orientationOfTheGridInDegrees
     scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
-    
+
 # Di - longitudinal direction grid length
 # NOTE 2: Grid lengths are in units of 10**-3 m, at the latitude specified by LaD
 unsigned[4] Di : edition_specific,no_copy;

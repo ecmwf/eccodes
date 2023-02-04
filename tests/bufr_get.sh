@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 # Enter data dir
 cd ${data_dir}/bufr
@@ -100,5 +100,11 @@ result=`${tools_dir}/bufr_get -f -p isSatellite,ident b003_56.bufr`
 [ "$result" = "1 not_found" ]
 
 
+# Check key 'file'
+result=`${tools_dir}/bufr_get -p file b004_145.bufr`
+[ "$result" = "b004_145.bufr" ]
+
+
 # Clean up
 rm -f $fLog $fTmp $res_get $tempRef
+

@@ -8,7 +8,7 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
 input=${data_dir}/test_file.grib2
 $EXEC ${test_dir}/grib_ecc-386 $input

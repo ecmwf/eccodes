@@ -8,9 +8,9 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
+. ./include.ctest.sh
 
-label="grib_lam_gp"
+label="grib_lam_gp_test"
 temp=temp.$label.txt
 
 dump_and_check()

@@ -44,7 +44,7 @@ jScansPositively
 jPointsAreConsecutive
 alternativeRowScanning (available only for edition 2)
 \endverbatim\n
-will provide access to single bits of the scanning mode octect hiding 
+will provide access to single bits of the scanning mode octet hiding 
 its structure from the user.\n
 The keys can also have some attributes as \e read \e only, which means that
 the key cannot be set (e.g. 7777 at the end of the message), or \e edition \e specific

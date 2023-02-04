@@ -109,16 +109,15 @@ alias DjInDegrees             = jDirectionIncrementInDegrees;
 alias numberOfPoints=numberOfDataPoints;
 #alias ls.valuesCount=numberOfValues;
 
-# END   1/grid_definition.latitude_longitude_grid ----------------------------------------------------------------------
+# END 1/grid_definition.latitude_longitude_grid
 constant PVPresent = 0;
 constant PLPresent = 0;
 constant reducedGrid =0;
 
 # we always include the bitmap keys if a GDS is not present
-#  Number of unused bits at end of Section 3
 constant numberOfUnusedBitsAtEndOfSection3 = 0;
 
-#  Table reference:
+# Table reference:
 constant tableReference = 0;
 
 #position offsetBeforeBitmap;
@@ -126,4 +125,3 @@ meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
                                     numberOfPoints,
                                     latitudeOfFirstGridPoint,
                                     Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
-

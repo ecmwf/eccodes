@@ -20,10 +20,7 @@ function( install_samples samples destination_install destination_build )
 endfunction()
 
 add_subdirectory( grib1 )
-
 add_subdirectory( grib1_mlgrib2 )
-
 # add_subdirectory( grib1_mlgrib2_ieee32 )
-
 add_subdirectory( grib1_mlgrib2_ieee64 )
-
+add_subdirectory( grib1_mlgrib2_ccsds )

@@ -23,35 +23,41 @@ extern "C" {
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
-#include "eccodes_config.h"
+ #include "eccodes_config.h"
 #endif
 
 /* autoconf config header */
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#ifdef _LARGE_FILES
-#undef _LARGE_FILE_API
-#endif
+ #include "config.h"
+ #ifdef _LARGE_FILES
+  #undef _LARGE_FILE_API
+ #endif
 #endif
 
 #ifndef GRIB_INLINE
-#define GRIB_INLINE
+ #define GRIB_INLINE
 #endif
 
+/* See ECC-670 */
 #if IS_BIG_ENDIAN
-#if GRIB_MEM_ALIGN
-#define FAST_BIG_ENDIAN 0
-#else
-#define FAST_BIG_ENDIAN 1
-#endif
+ #if GRIB_MEM_ALIGN
+  #define FAST_BIG_ENDIAN 1
+ #else
+  #define FAST_BIG_ENDIAN 0
+ #endif
 #endif
 
 #if IEEE_BE
-#define IEEE
+ #define IEEE
 #else
-#if IEEE_LE
-#define IEEE
+ #if IEEE_LE
+  #define IEEE
+ #endif
 #endif
+
+#if defined(_WIN32) && defined(_MSC_VER)
+  #define _CRT_SECURE_NO_WARNINGS
+  #define _CRT_NONSTDC_NO_DEPRECATE
 #endif
 
 #include <stdio.h>
@@ -61,48 +67,46 @@ extern "C" {
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS
-#include <dirent.h>
-#include <unistd.h>
-#include <inttypes.h>
-#define ecc_snprintf snprintf
+ #include <dirent.h>
+ #include <unistd.h>
+ #include <inttypes.h>
 #else
-#include <direct.h>
-#include <io.h>
+ #define strtok_r strtok_s
+ #include <direct.h>
+ #include <io.h>
 
-/* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
-#if defined _MSC_VER && _MSC_VER < 1800
-double rint(double x);
-#endif
+ /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+ #if defined _MSC_VER && _MSC_VER < 1800
+  double rint(double x);
+ #endif
 
-#ifndef S_ISREG
-#define S_ISREG(mode) (mode & S_IFREG)
-#endif
+ #ifndef S_ISREG
+  #define S_ISREG(mode) (mode & S_IFREG)
+ #endif
 
-#ifndef S_ISDIR
-#define S_ISDIR(mode) (mode & S_IFDIR)
-#endif
+ #ifndef S_ISDIR
+  #define S_ISDIR(mode) (mode & S_IFDIR)
+ #endif
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+ #ifndef M_PI
+  #define M_PI 3.14159265358979323846
+ #endif
 
-#define R_OK 04 /* Needed for Windows */
+ #define R_OK 04 /* Needed for Windows */
 
-#ifndef F_OK
-#define F_OK 0
-#endif
+ #ifndef F_OK
+  #define F_OK 0
+ #endif
 
-#define mkdir(dirname, mode) _mkdir(dirname)
+ #define mkdir(dirname, mode) _mkdir(dirname)
 
-#ifdef _MSC_VER
-#define access(path, mode) _access(path, mode)
-#define chmod(path, mode) _chmod(path, mode)
-#define strdup(str) _strdup(str)
-#endif
+ #ifdef _MSC_VER
+  #define access(path, mode) _access(path, mode)
+  #define chmod(path, mode) _chmod(path, mode)
+  #define strdup(str) _strdup(str)
+ #endif
 
-#define ecc_snprintf _snprintf
-
-#endif
+#endif /* ifndef ECCODES_ON_WINDOWS */
 
 
 #include <limits.h>
@@ -112,14 +116,16 @@ double rint(double x);
 
 
 #ifdef HAVE_STRING_H
-#include <string.h>
+ #include <string.h>
 #else
-#include <strings.h>
+ #include <strings.h>
 #endif
 
+/*
 #if GRIB_LINUX_PTHREADS
 extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #endif
+*/
 
 #if GRIB_PTHREADS
 #include <pthread.h>
@@ -307,7 +313,10 @@ typedef void (*accessor_destroy_proc)(grib_context*, grib_accessor*);
 
 typedef int (*accessor_unpack_long_proc)(grib_accessor*, long*, size_t* len);
 typedef int (*accessor_unpack_double_proc)(grib_accessor*, double*, size_t* len);
+
 typedef int (*accessor_unpack_double_element_proc)(grib_accessor*, size_t, double*);
+typedef int (*accessor_unpack_double_element_set_proc)(grib_accessor*, const size_t*, size_t, double*);
+
 typedef int (*accessor_unpack_double_subarray_proc)(grib_accessor*, double*, size_t, size_t);
 typedef int (*accessor_unpack_string_proc)(grib_accessor*, char*, size_t* len);
 typedef int (*accessor_unpack_string_array_proc)(grib_accessor*, char**, size_t* len);
@@ -587,7 +596,7 @@ struct grib_section
 struct grib_iterator_class
 {
     grib_iterator_class** super;
-    char* name;
+    const char* name;
     size_t size;
 
     int inited;
@@ -605,7 +614,7 @@ struct grib_iterator_class
 struct grib_nearest_class
 {
     grib_nearest_class** super;
-    char* name;
+    const char* name;
     size_t size;
 
     int inited;
@@ -620,7 +629,7 @@ struct grib_nearest_class
 struct grib_box_class
 {
     grib_box_class** super;
-    char* name;
+    const char* name;
     size_t size;
     int inited;
     box_init_class_proc init_class;
@@ -657,7 +666,7 @@ struct grib_dumper
 struct grib_dumper_class
 {
     grib_dumper_class** super;
-    char* name;
+    const char* name;
     size_t size;
     int inited;
     dumper_init_class_proc init_class;
@@ -903,7 +912,7 @@ struct grib_handle
     long missingValueLong;
     double missingValueDouble;
     ProductKind product_kind;
-    grib_trie* bufr_elements_table;
+    /* grib_trie* bufr_elements_table; */
 };
 
 struct grib_multi_handle
@@ -971,6 +980,7 @@ struct grib_accessor_class
     accessor_next_proc next;
     accessor_compare_proc compare;
     accessor_unpack_double_element_proc unpack_double_element;
+    accessor_unpack_double_element_set_proc unpack_double_element_set;
     accessor_unpack_double_subarray_proc unpack_double_subarray;
     accessor_clear_proc clear;
     accessor_clone_proc make_clone;
@@ -1095,7 +1105,7 @@ struct grib_context
     grib_hash_array_value* hash_array[MAX_NUM_HASH_ARRAY];
     grib_trie* def_files;
     grib_string_list* blocklist;
-    int ieee_packing;
+    int ieee_packing; /* 32 or 64 */
     int bufrdc_mode;
     int bufr_set_to_missing_if_out_of_range;
     int bufr_multi_element_constant_arrays;
@@ -1163,7 +1173,6 @@ struct grib_arguments
 {
     struct grib_arguments* next;
     grib_expression* expression;
-    char value[80];
 };
 
 
@@ -1261,7 +1270,7 @@ struct grib_int_array
     int* el;
 };
 
-#ifndef NEWDB
+#if 1
 struct grib_fieldset
 {
     grib_context* context;
@@ -1278,7 +1287,7 @@ struct grib_fieldset
 };
 #endif
 
-#ifdef NEWDB
+#if 0
 /* grib db */
 struct grib_db
 {
@@ -1541,7 +1550,7 @@ struct grib_smart_table
 };
 
 
-#if GRIB_TIMER
+#if ECCODES_TIMER
 typedef struct grib_timer
 {
     struct timeval start_;
@@ -1588,7 +1597,7 @@ typedef struct j2k_encode_helper
 
 } j2k_encode_helper;
 
-#include "grib_api_prototypes.h"
+#include "eccodes_prototypes.h"
 
 
 #ifdef __cplusplus

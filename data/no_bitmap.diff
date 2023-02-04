@@ -5,22 +5,19 @@ GRIB {
   # European Centre for Medium-Range Weather Forecasts (common/c-1.table)  
   centre = 98;
   generatingProcessIdentifier = 130;
-  # Temperature  (K)  (grib1/2.98.128.table)  
+  # Temperature (K)  (grib1/2.98.128.table)  
   indicatorOfParameter = 130;
-  # Hybrid level level number  (2 octets)  (grib1/local/ecmf/3.table , grib1/3.table)  
+  # Hybrid level level number (2 octets)  (grib1/local/ecmf/3.table , grib1/3.table)  
   indicatorOfTypeOfLevel = 109;
   level = 1;
-  # Forecast product valid at reference time + P1  (P1>0)  (grib1/local/ecmf/5.table , grib1/5.table)  
+  # Forecast product valid at reference time + P1 (P1>0)  (grib1/local/ecmf/5.table , grib1/5.table)  
   timeRangeIndicator = 0;
   # Unknown code table entry (grib1/0.ecmf.table)  
   subCentre = 0;
   paramId = 130;
-  #-READ ONLY- cfNameECMF = air_temperature;
   #-READ ONLY- cfName = air_temperature;
-  #-READ ONLY- cfVarNameECMF = t;
   #-READ ONLY- cfVarName = t;
   #-READ ONLY- units = K;
-  #-READ ONLY- nameECMF = Temperature;
   #-READ ONLY- name = Temperature;
   decimalScaleFactor = 0;
   dataDate = 20080206;
@@ -140,11 +137,11 @@ GRIB {
   #-READ ONLY- maximum = 224.455;
   #-READ ONLY- minimum = 160.252;
   #-READ ONLY- average = 194.458;
-  #-READ ONLY- numberOfMissing = 0;
   #-READ ONLY- standardDeviation = 12.8976;
   #-READ ONLY- skewness = -0.807543;
   #-READ ONLY- kurtosis = 0.45733;
   #-READ ONLY- isConstant = 0;
+  #-READ ONLY- numberOfMissing = 0;
   gridType = reduced_gg;
   #-READ ONLY- getNumberOfValues = 6114;
 }

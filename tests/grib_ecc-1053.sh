@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1053
 # It tests the human readable step key
 # ---------------------------------------------------------
-label="grib_ecc-1053-test"
+label="grib_ecc-1053_test"
 temp=temp.${label}.grib
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 

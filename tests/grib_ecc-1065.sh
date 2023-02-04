@@ -8,13 +8,13 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-. ./include.sh
-set -u
+. ./include.ctest.sh
+
 # ---------------------------------------------------------
 # This is the test for the JIRA issue ECC-1065
 # It tests the power operator
 # ---------------------------------------------------------
-label="grib_ecc-1065-test"
+label="grib_ecc-1065_test"
 tempRules=temp.${label}.filter
 
 cat > $tempRules <<EOF
