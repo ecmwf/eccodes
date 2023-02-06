@@ -114,6 +114,7 @@ int transform_iterator_data(grib_context* context, double* data,
         /* Already +i and +j. No need to change */
         return GRIB_SUCCESS;
     }
+    if (!data) return GRIB_SUCCESS;
 
     if (!context) context = grib_context_get_default();
 
@@ -201,11 +202,13 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: size(%s) is %ld", s_rawData, dli);
         return GRIB_WRONG_GRID;
     }
-    iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));
 
-    if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv))))
-        return err;
+    if (iter->flags == 0) {
+        iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));
 
+        if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv))))
+            return err;
+    }
     iter->e = -1;
 
     return err;
@@ -226,7 +229,7 @@ static int destroy(grib_iterator* iter)
 
 static long has_next(grib_iterator* iter)
 {
-    if (iter->data == NULL)
+    if (iter->flags == 0 && iter->data == NULL)
         return 0;
     if (iter->e >= (long)(iter->nv - 1))
         return 0;

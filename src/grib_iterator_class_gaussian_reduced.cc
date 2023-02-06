@@ -87,18 +87,19 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static int next(grib_iterator* i, double* lat, double* lon, double* val)
+static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
 
-    if (i->e >= (long)(i->nv - 1))
+    if (iter->e >= (long)(iter->nv - 1))
         return 0;
-    i->e++;
+    iter->e++;
 
-    *lat = self->las[i->e];
-    *lon = self->los[i->e];
-    *val = i->data[i->e];
-
+    *lat = self->las[iter->e];
+    *lon = self->los[iter->e];
+    if (val && iter->data) {
+        *val = iter->data[iter->e];
+    }
     return 1;
 }
 
