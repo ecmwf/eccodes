@@ -437,7 +437,9 @@ int grib_nearest_find_generic(
         outlats[i]   = neighbours[i].m_lat;
         outlons[i]   = neighbours[i].m_lon;
         indexes[i]   = neighbours[i].m_index;
-        values[i]    = neighbours[i].m_value;
+        if (values) {
+            values[i] = neighbours[i].m_value;
+        }
         /*printf("(%f,%f)  i=%d  d=%f  v=%f\n",outlats[i],outlons[i],indexes[i],distances[i],values[i]);*/
     }
 

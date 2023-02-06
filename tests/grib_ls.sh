@@ -118,6 +118,36 @@ diff $temp1 $temp2
 # Section pointers
 grib_check_key_equals $sample_g2 'section0Pointer,section1Pointer,section3Pointer,section4Pointer' '0_16 16_21 37_72 109_34'
 
+# constraints: -w option
+file=tigge_pf_ecmwf.grib2 # Has 38 messages
+${tools_dir}/grib_ls -w count!=1 $file > $temp_ls
+grep -q "37 of 38 messages" $temp_ls
 
+${tools_dir}/grib_ls -w count=1/2/38 $file > $temp_ls
+grep -q "3 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u $file > $temp_ls
+grep -q "3 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v $file > $temp_ls
+grep -q "5 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName!=u/v $file > $temp_ls
+grep -q "33 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v,level=925 $file > $temp_ls
+grep -q "2 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=u/v/10u/10v,level=925/10 $file > $temp_ls
+grep -q "4 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w packingType!=grid_simple $file > $temp_ls
+grep -q "0 of 38 messages" $temp_ls
+
+${tools_dir}/grib_ls -w units!=K $file > $temp_ls
+grep -q "30 of 38 messages" $temp_ls
+
+
+# Clean up
 rm -f $temp1 $temp2
 rm -f $temp_ls

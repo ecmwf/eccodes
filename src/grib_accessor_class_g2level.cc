@@ -182,7 +182,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *val = 0;
         return GRIB_SUCCESS;
     }
-    /* value = value_first * 10 ^ -scale_first */
+    // value = value_first * 10 ^ -scale_first
 
     if (*len < 1)
         return GRIB_WRONG_ARRAY_SIZE;
@@ -190,7 +190,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     v = value_first;
 
     if (scale_first != GRIB_MISSING_LONG) {
-        /* GRIB-637 Potential vorticity surface */
+        // GRIB-637 Potential vorticity surface
         if (type_first == 109) {
             scale_first -= 6;
         }
@@ -206,11 +206,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
     switch (type_first) {
-        case 100: /* Isobaric surface (Pa) */
+        case 100: // Isobaric surface (Pa)
             if (!strcmp(pressure_units, "hPa")) {
-                long x = v / 100.0; /* 1 hPa = 100 Pa */
+                long x = v / 100.0; // 1 hPa = 100 Pa
                 if (scale_first == 0 && x == 0) {
-                    /* Switch to Pa instead of hPa as the value is less than a hectoPascal */
+                    // Switch to Pa instead of hPa as the value is less than a hectoPascal
                     char pa[]  = "Pa";
                     size_t lpa = strlen(pa);
                     if ((ret = grib_set_string_internal(grib_handle_of_accessor(a), self->pressure_units, pa, &lpa)) != GRIB_SUCCESS)
@@ -233,7 +233,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     double dval = 0;
     int ret     = unpack_double(a, &dval, len);
     if (ret == GRIB_SUCCESS) {
-        *val = (long)(dval + 0.5); /* round up */
+        *val = (long)(dval + 0.5); // round up
     }
     return ret;
 }
@@ -258,7 +258,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return ret;
 
     switch (type_first) {
-        case 100: /* Pa */
+        case 100: // Pa
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
@@ -266,12 +266,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         default:
             break;
     }
-    /*
-     * final = scaled_value * 10 ^ -scale_factor
-     *      = scaled_value / (10^scale_factor)
-     *
-     * Choose 2 decimal places
-     */
+    //
+    // final = scaled_value * 10 ^ -scale_factor
+    //       = scaled_value / (10^scale_factor)
+    //
+    //  Choose 2 decimal places
+    //
     scale_first = 2;
     value_first *= 100;
     value_first = value_first + 0.5; /* round up */
@@ -292,6 +292,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long value_first        = *val;
     long scale_first        = 0;
     long type_first         = 0;
+    long levelFactor        = 1;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
 
@@ -302,15 +303,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    /*Not sure if this is necessary
-     *     if (value_first == GRIB_MISSING_LONG) {
-     *         if ((ret=grib_set_missing_internal(hand, self->scale_first)) != GRIB_SUCCESS)
-     *             return ret;
-     *         if ((ret=grib_set_missing_internal(hand, self->value_first)) != GRIB_SUCCESS)
-     *                 return ret;
-     *         return GRIB_SUCCESS;
-     *     }
-     */
+    // Not sure if this is necessary
+    //   if (value_first == GRIB_MISSING_LONG) {
+    //       if ((ret=grib_set_missing_internal(hand, self->scale_first)) != GRIB_SUCCESS)
+    //           return ret;
+    //       if ((ret=grib_set_missing_internal(hand, self->value_first)) != GRIB_SUCCESS)
+    //           return ret;
+    //       return GRIB_SUCCESS;
+    //   }
 
     if ((ret = grib_get_long_internal(hand, self->type_first, &type_first)) != GRIB_SUCCESS)
         return ret;
@@ -319,26 +319,30 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return ret;
 
     switch (type_first) {
-        case 100: /* Pa */
+        case 100: // Pa
             scale_first = 0;
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
+        case 109:
+            if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
+                // See ECC-1081
+                scale_first = levelFactor;
+            }
 
         default:
             break;
     }
 
-        /* ECC-530:
-     * The pack_long function can get called when key "typeOfSecondFixedSurface" is
-     * changed (via the trigger rule in the definitions). That can have an undesired
-     * side-effect that it sets the scale factor and scaled value keys
-     * (e.g. scaleFactorOfFirstFixedSurface, scaledValueOfFirstFixedSurface)
-     * overwriting their previous values.
-     * In this scenario we do not want to change the scale/value.
-     * However when the user directly sets the level or when we are changing edition, then
-     * we do want to change the scale/value.
-    */
+    // ECC-530:
+    // The pack_long function can get called when key "typeOfSecondFixedSurface" is
+    // changed (via the trigger rule in the definitions). That can have an undesired
+    // side-effect that it sets the scale factor and scaled value keys
+    // (e.g. scaleFactorOfFirstFixedSurface, scaledValueOfFirstFixedSurface)
+    // overwriting their previous values.
+    // In this scenario we do not want to change the scale/value.
+    // However when the user directly sets the level or when we are changing edition, then
+    // we do want to change the scale/value.
 #if 0
     if (hand->loader && hand->loader->changing_edition==0) {
         change_scale_and_value = 0;

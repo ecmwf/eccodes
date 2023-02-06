@@ -288,7 +288,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             return GRIB_SUCCESS;
             break;
         case GRIB_INVALID_BPV:
-            grib_context_log(a->context, GRIB_LOG_ERROR, "unable to compute packing parameters. Invalid bits per value\n");
+            grib_context_log(a->context, GRIB_LOG_ERROR, "unable to compute packing parameters. Invalid bits per value");
             return ret;
         case GRIB_SUCCESS:
             break;
