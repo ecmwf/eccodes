@@ -341,9 +341,7 @@ static int read_GRIB(reader* r)
                 }
 
                 /* fprintf(stderr,"%s sec1len=%d i=%d\n",type,sec1len,i); */
-
                 GROW_BUF_IF_REQUIRED(sec1len + sec2len + sec3len + 4 + 3);
-
 
                 for (j = 0; j < 3; j++) {
                     if (r->read(r->read_data, &tmp[i], 1, &err) != 1 || err)
