@@ -378,12 +378,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     return ret;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_space_view* self = (grib_iterator_space_view*)i;
-    const grib_context* c          = i->h->context;
+    grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
+    const grib_context* c          = iter->h->context;
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);
-    return 1;
+    return GRIB_SUCCESS;
 }

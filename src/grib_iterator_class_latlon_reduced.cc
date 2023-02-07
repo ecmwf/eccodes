@@ -101,9 +101,9 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
     return 1;
 }
 
-static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_latlon_reduced* self = (grib_iterator_latlon_reduced*)i;
+    grib_iterator_latlon_reduced* self = (grib_iterator_latlon_reduced*)iter;
 
     int ret = GRIB_SUCCESS;
     double laf;
@@ -149,8 +149,8 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     pl     = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
     grib_get_long_array_internal(h, plac, pl, &plsize);
 
-    self->las = (double*)grib_context_malloc(h->context, i->nv * sizeof(double));
-    self->los = (double*)grib_context_malloc(h->context, i->nv * sizeof(double));
+    self->las = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    self->los = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
 
     plmax = pl[0];
     for (j = 0; j < nlats; j++)
@@ -193,18 +193,18 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
         laf += jdirinc;
     }
 
-    i->e = -1;
+    iter->e = -1;
     grib_context_free(h->context, pl);
 
     return ret;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_latlon_reduced* self = (grib_iterator_latlon_reduced*)i;
-    const grib_context* c              = i->h->context;
+    grib_iterator_latlon_reduced* self = (grib_iterator_latlon_reduced*)iter;
+    const grib_context* c              = iter->h->context;
 
     grib_context_free(c, self->las);
     grib_context_free(c, self->los);
-    return 1;
+    return GRIB_SUCCESS;
 }
