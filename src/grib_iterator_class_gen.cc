@@ -184,6 +184,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     self->missingValue = grib_arguments_get_name(h, args, self->carg++);
     s_rawData          = grib_arguments_get_name(h, args, self->carg++);
 
+    iter->data = NULL;
     iter->h    = h; /* We may not need to keep them */
     iter->args = args;
     if ((err = grib_get_size(h, s_rawData, &dli)) != GRIB_SUCCESS)
@@ -203,7 +204,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    if (iter->flags == 0) {
+    if ((iter->flags & GRIB_GEOITERATOR_NO_VALUES) == 0) {
+        // When the NO_VALUES flag is unset, decode the values and store them in the iterator.
+        // By default (and legacy) flags==0, so we decode
         iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));
 
         if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv))))
