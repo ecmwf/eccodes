@@ -227,7 +227,7 @@ static int destroy(grib_iterator* iter)
 {
     const grib_context* c = iter->h->context;
     grib_context_free(c, iter->data);
-    return 1;
+    return GRIB_SUCCESS;
 }
 
 static long has_next(grib_iterator* iter)

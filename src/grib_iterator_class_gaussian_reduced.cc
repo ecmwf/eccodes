@@ -413,12 +413,12 @@ finalise:
     return ret;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)i;
-    const grib_context* c                = i->h->context;
+    grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    const grib_context* c                = iter->h->context;
 
     grib_context_free(c, self->las);
     grib_context_free(c, self->los);
-    return 1;
+    return GRIB_SUCCESS;
 }

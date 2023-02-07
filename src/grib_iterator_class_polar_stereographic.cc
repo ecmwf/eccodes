@@ -371,5 +371,5 @@ static int destroy(grib_iterator* i)
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);
-    return 1;
+    return GRIB_SUCCESS;
 }

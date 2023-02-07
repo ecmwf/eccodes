@@ -487,12 +487,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     return GRIB_SUCCESS;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)i;
-    const grib_context* c                            = i->h->context;
+    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)iter;
+    const grib_context* c                            = iter->h->context;
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);
-    return 1;
+    return GRIB_SUCCESS;
 }
