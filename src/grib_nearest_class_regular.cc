@@ -253,7 +253,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
      * This is for performance: if the grid has not changed, we only do this once
      * and reuse for other messages */
     if (!nearest->h || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        double dummy = 0;
         double olat = 1.e10, olon = 1.e10;
         int ilat = 0, ilon = 0;
         long n = 0;
@@ -316,12 +315,12 @@ static int find(grib_nearest* nearest, grib_handle* h,
         if (!self->lons)
             return GRIB_OUT_OF_MEMORY;
 
-        iter = grib_iterator_new(h, 0, &ret);
+        iter = grib_iterator_new(h, GRIB_GEOITERATOR_NO_VALUES, &ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to create lat/lon iterator");
             return ret;
         }
-        while (grib_iterator_next(iter, &lat, &lon, &dummy)) {
+        while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (ilat < self->lats_count && olat != lat) {
                 /* Assert(ilat < self->lats_count); */
                 self->lats[ilat++] = lat;
