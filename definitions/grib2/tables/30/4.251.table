@@ -78,13 +78,13 @@
 2019 INFO Interrupted forest
 2020 WLMI Water and land mixtures
 2021 BARE Bare soil
-2023 URB Urban
-2024 LORI Low-rise building
-2025 HIRI High-rise building
-# 2020-2500 Reserved for GLCC/HTESSEL variables
+2022 URB Urban
+2023 LORI Low-rise building
+2024 HIRI High-rise building
+# 2025-2500 Reserved for GLCC/HTESSEL variables
 2501 LVEG Group 001 (CROP + SHGR + TAGR + TUND + IRCR + SEDE + BOMA + EVSH + DESH + WLMI)
 2502 HVEG Group 002 (EVNE + DENE + DEBR + EVBR + MFWO + INFO)
-# 2501-3000 Reserved for GLCC/HTESSEL groupings
+# 2503-3000 Reserved for GLCC/HTESSEL groupings
 3001 PFIC Post-flooding or irrigated croplands
 3002 RACR Rainfed croplands
 3003 MCVE Mosaic Cropland (50-70%) / Vegetation (grassland, shrubland, forest) (20-50%)
@@ -107,9 +107,9 @@
 3020 BAAR Bare areas
 3021 WABO Water bodies
 3022 PESI Permanent snow and ice
-# 3001-3500 Reserved for GLOBCOVER/DWD Tile variables
+# 3023-3500 Reserved for GLOBCOVER/DWD Tile variables
 3501 GRDT Grouping using the dominant tiles approach (varying per gridbox)
-# 3501-4000 Reserved for GLOBCOVER/DWD Tile groupings
+# 3502-4000 Reserved for GLOBCOVER/DWD Tile groupings
 # 4001-32767 Reserved 
 # 32768-65534 Reserved for local use 
 65535 65535 Missing 
