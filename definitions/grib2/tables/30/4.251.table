@@ -1,9 +1,11 @@
 # Code table 4.251 - Tile classes and groupings
 0 0 Reserved
 1 SEA Sea and oceans
-2 HIV High vegetation
-3 LOV Low vegetation
-4 URB Urban
+2 INWA Inland water bodies
+3 BARE Bare areas
+4 HIV High vegetation
+5 LOV Low vegetation
+6 URB Urban
 # 1-1000 Common tile classes
 1001 SEAO Sea and oceans
 1002 LAKE Lakes
@@ -75,13 +77,39 @@
 2018 MFWO Mixed forest/woodland
 2019 INFO Interrupted forest
 2020 WLMI Water and land mixtures
-2021 URB Urban
-2022 LORI Low-rise building
-2023 HIRI High-rise building
-# 2020-2500 Reserved for HTESSEL variables
-# 2501-3000 Reserved for HTESSEL groupings
-# 3001-3500 Reserved for DWD Tile variables
-# 3501-4000 Reserved for DWD Tile groupings
+2021 BARE Bare soil
+2023 URB Urban
+2024 LORI Low-rise building
+2025 HIRI High-rise building
+# 2020-2500 Reserved for GLCC/HTESSEL variables
+2501 LVEG Group 001 (CROP + SHGR + TAGR + TUND + IRCR + SEDE + BOMA + EVSH + DESH + WLMI)
+2502 HVEG Group 002 (EVNE + DENE + DEBR + EVBR + MFWO + INFO)
+# 2501-3000 Reserved for GLCC/HTESSEL groupings
+3001 PFIC Post-flooding or irrigated croplands
+3002 RACR Rainfed croplands
+3003 MCVE Mosaic Cropland (50-70%) / Vegetation (grassland, shrubland, forest) (20-50%)
+3004 MVCR Mosaic Vegetation (grassland, shrubland, forest) (50-70%) / Cropland (20-50%)
+3005 COBS Closed to open (>15%) broadleaved evergreen and/or semi-deciduous forest (>5m)
+3006 CLBD Closed (>40%) broadleaved deciduous forest (>5m)
+3007 OPBD Open (15-40%) broadleaved deciduous forest (>5m)
+3008 CLNE Closed (>40%) needleleaved evergreen forest (>5m)
+3009 ONDE Open (15-40%) needleleaved deciduous or evergreen forest (>5m)
+3010 COBN Closed to open (>15%) mixed broadleaved and needleleaved forest (>5m)
+3011 MFSG Mosaic Forest/Shrubland (50-70%) / Grassland (20-50%)
+3012 MGFS Mosaic Grassland (50-70%) / Forest/Shrubland (20-50%)
+3013 COSH Closed to open (>15%) shrubland (<5m)
+3014 COGR Closed to open (>15%) grassland
+3015 SPVE Sparse (>15%) vegetation (woody vegetation, shrubs, grassland)
+3016 CLBFF Closed (>40%) broadleaved forest regularly flooded - Fresh water
+3017 CLBEFS Closed (>40%) broadleaved semi-deciduous and/or evergreen forest regularly flooded - Saline water
+3018 COVEF Closed to open (>15%) vegetation (grassland, shrubland, woody vegetation) on regularly flooded or waterlogged soil - Fresh, brackish or saline water
+3019 ASAA Artificial surfaces and associated areas (urban areas >50%)
+3020 BAAR Bare areas
+3021 WABO Water bodies
+3022 PESI Permanent snow and ice
+# 3001-3500 Reserved for GLOBCOVER/DWD Tile variables
+3501 GRDT Grouping using the dominant tiles approach (varying per gridbox)
+# 3501-4000 Reserved for GLOBCOVER/DWD Tile groupings
 # 4001-32767 Reserved 
 # 32768-65534 Reserved for local use 
 65535 65535 Missing 
