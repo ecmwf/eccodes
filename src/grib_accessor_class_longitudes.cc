@@ -197,7 +197,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    // Performance: We do not need the values to be decoded
+    // ECC-1525 Performance: We do not need the values to be decoded
     iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         if (iter)

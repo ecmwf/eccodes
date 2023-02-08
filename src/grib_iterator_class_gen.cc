@@ -205,12 +205,14 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if ((iter->flags & GRIB_GEOITERATOR_NO_VALUES) == 0) {
+        // ECC-1525
         // When the NO_VALUES flag is unset, decode the values and store them in the iterator.
         // By default (and legacy) flags==0, so we decode
         iter->data = (double*)grib_context_malloc(h->context, (iter->nv) * sizeof(double));
 
-        if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv))))
+        if ((err = grib_get_double_array_internal(h, s_rawData, iter->data, &(iter->nv)))) {
             return err;
+        }
     }
     iter->e = -1;
 
