@@ -7,7 +7,7 @@ my $verbose = 0;
 
 foreach $name ( @ARGV )
 {
-    next unless($name =~ /\.c$/);
+    next unless($name =~ /\.cc$/);
     print "$name\n" if ($verbose);
 
     open(IN,"<$name") or die "$name: $!";
@@ -345,9 +345,9 @@ sub parse_super {
     local $_;
 
     # Make sure it's up-to-date
-    system($0,"$name.c");
+    system($0,"$name.cc");
 
-    open(S,"<$name.c") or die "$name.c: $!";
+    open(S,"<$name.cc") or die "$name.cc: $!";
 
 #    print "SUPER: $name\n";
 

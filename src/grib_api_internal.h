@@ -1270,7 +1270,7 @@ struct grib_int_array
     int* el;
 };
 
-#ifndef NEWDB
+#if 1
 struct grib_fieldset
 {
     grib_context* context;
@@ -1287,7 +1287,7 @@ struct grib_fieldset
 };
 #endif
 
-#ifdef NEWDB
+#if 0
 /* grib db */
 struct grib_db
 {

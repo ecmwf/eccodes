@@ -49,7 +49,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
     grib_hash_array_value      *hash_array_value;
-	grib_case               *case_value;
+    grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 };
@@ -121,7 +121,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token CONCEPT_NOFAIL
 %token NIL
 %token DUMMY
-	
+
 %token MODIFY
 
 %token READ_ONLY

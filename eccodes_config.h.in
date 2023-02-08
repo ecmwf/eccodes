@@ -53,7 +53,6 @@
 #cmakedefine ECCODES_HAVE_REALPATH
 #cmakedefine ECCODES_HAVE_FSYNC
 #cmakedefine ECCODES_HAVE_FDATASYNC
-#cmakedefine ECCODES_ON_LINUX_32BIT
 
 #if defined(EC_HAVE_ASSERT_H) || defined(ECCODES_HAVE_ASSERT_H)
 #define   HAVE_ASSERT_H 1

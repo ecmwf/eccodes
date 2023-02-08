@@ -242,6 +242,29 @@ EOF
 diff $tempRef $tempOut
 
 
+echo "Test environment variables"
+# -----------------------------------------
+input="${samp_dir}/GRIB2.tmpl"
+cat >$tempFilt <<EOF
+  transient cds = environment_variable(CDS);
+  if (cds == 0) {
+    print "Either CDS is undefined or defined but equal to 0";
+  } else {
+    print "CDS is defined and equal to [cds]";
+  }
+EOF
+# No env var or zero
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
+grep -q "undefined" $tempOut
+CDS=0 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
+grep -q "defined but equal to 0" $tempOut
+# Set to a non-zero integer
+CDS=1 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
+grep -q "defined and equal to 1" $tempOut
+CDS=-42 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
+grep -q "defined and equal to -42" $tempOut
+
+
 echo "Test IEEE float overflow"
 # -----------------------------------------
 input="${samp_dir}/GRIB2.tmpl"
