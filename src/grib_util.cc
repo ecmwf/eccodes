@@ -1623,7 +1623,7 @@ cleanup:
         grib_handle_delete(h_out);
     return NULL;
 }
-
+#if 0
 int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
 {
     grib_iterator* iter = NULL;
@@ -1710,6 +1710,7 @@ int grib_moments(grib_handle* h, double east, double north, double west, double 
 
     return ret;
 }
+#endif
 
 /* Helper function for 'parse_keyval_string' */
 static void set_value(grib_values* value, char* str, int equal)
