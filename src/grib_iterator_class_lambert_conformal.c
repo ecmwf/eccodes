@@ -46,7 +46,7 @@ static int destroy            (grib_iterator* i);
 typedef struct grib_iterator_lambert_conformal{
   grib_iterator it;
     /* Members defined in gen */
-    long carg;
+    int carg;
     const char* missingValue;
     /* Members defined in lambert_conformal */
     double *lats;

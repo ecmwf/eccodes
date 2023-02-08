@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: grib_options
- *
- */
 #include "grib_tools.h"
 
 extern char* optarg;
@@ -131,7 +127,10 @@ void usage(void)
                    grib_options_get_help(grib_options[i].id));
         }
     }
-    printf("\n\n");
+    printf("\n");
+    if (tool_online_doc)
+        printf("SEE ALSO\n\tFull documentation and examples at:\n\t<%s>\n\n", tool_online_doc);
+    printf("\n");
     exit(1);
 }
 

@@ -146,7 +146,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 192 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Ice temperature layer 1
 'K' = {
@@ -16650,23 +16649,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
 	}
-#Significant height of wind waves
-'m' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
-	}
 #Mean direction of wind waves
 'degrees' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 235 ;
-	}
-#Mean period of wind waves
-'s' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 6 ;
 	}
 #Significant height of total swell
 'm' = {

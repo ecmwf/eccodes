@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api.h"
+#include "grib_api_internal.h"
 
 /*
  * Test the use of optimizeScaleFactor; on the following field, the packing error

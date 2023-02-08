@@ -4,7 +4,7 @@ set -xe
 cd ../tests
 
 echo "List all keys..."
-./list_all_keys.ksh
+./list_all_keys.sh
 
 cd ../src
 

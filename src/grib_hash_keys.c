@@ -80,7 +80,7 @@ hash_keys (const char *str, size_t len)
       32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423,
       32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423, 32423
     };
-  register unsigned int hval = len;
+  unsigned int hval = len;
 
   switch (hval)
     {
@@ -9399,18 +9399,18 @@ const struct grib_keys_hash *
 grib_keys_hash_get (const char *str, size_t len)
 {
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
-    {
-      register unsigned int key = hash_keys (str, len);
+  {
+      unsigned int key = hash_keys (str, len);
 
       if (key <= MAX_HASH_VALUE)
         if (len == lengthtable[key])
           {
-            register const char *s = wordlist[key].name;
+            const char *s = wordlist[key].name;
 
             if (*str == *s && !memcmp (str + 1, s + 1, len - 1))
               return &wordlist[key];
           }
-    }
+  }
   return 0;
 }
 /*

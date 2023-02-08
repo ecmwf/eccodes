@@ -14,6 +14,7 @@ const char* tool_description =
     "Copies the content of METAR files printing"
     " values of some keys.";
 const char* tool_name  = "metar_copy";
+const char* tool_online_doc = NULL;
 const char* tool_usage = "[options] file file ... output_file";
 
 grib_option grib_options[] = {

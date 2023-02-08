@@ -46,11 +46,6 @@ int main(int argc, char* argv[])
             p++;
         path = p;
 
-        if (!p) {
-            fprintf(stderr, "Invalid name %s\n", argv[i]);
-            exit(1);
-        }
-
         strcpy(name, "grib_");
         j = strlen(name);
         while (*p) {

@@ -1781,23 +1781,23 @@ int grib_get_nearest_smaller_value(grib_handle* h, const char* name,
     return grib_nearest_smaller_value(act, val, nearest);
 }
 
-void grib_print_values(grib_values* values, int count)
+void grib_print_values(const char* title, grib_values* values)
 {
-    int i;
-    for (i = 0; i < count; i++) {
-        printf("%s = ", values[i].name);
-        switch (values[i].type) {
+    while(values) {
+        printf("%s: %s%s", title, values->name, (values->equal?"=":"!="));
+        switch (values->type) {
             case GRIB_TYPE_LONG:
-                printf("%ld", values[i].long_value);
+                printf("%ld", values->long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
-                printf("%g", values[i].double_value);
+                printf("%g", values->double_value);
                 break;
             case GRIB_TYPE_STRING:
-                printf("%s", values[i].string_value);
+                printf("%s", values->string_value);
                 break;
         }
-        printf("\n");
+        printf(" (type=%s)\n", grib_get_type_name(values->type));
+        values = values->next;
     }
 }
 

@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: points
- *
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,42 +48,42 @@ int main(int argc, char** argv)
 
     vlat = (double*)malloc(npoints * sizeof(double));
     if (!vlat) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     vlon = (double*)malloc(npoints * sizeof(double));
     if (!vlon) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     outlats = (double*)malloc(npoints * sizeof(double));
     if (!outlats) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     outlons = (double*)malloc(npoints * sizeof(double));
     if (!outlons) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     values = (double*)malloc(npoints * sizeof(double));
     if (!values) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     lsm_values = (double*)malloc(npoints * sizeof(double));
     if (!lsm_values) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     distances = (double*)malloc(npoints * sizeof(double));
     if (!distances) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
     indexes = (size_t*)malloc(npoints * sizeof(double));
     if (!indexes) {
-        printf("unable to allocate %lu bytes\n", npoints * sizeof(double));
+        printf("unable to allocate %zu bytes\n", npoints * sizeof(double));
         exit(1);
     }
 

@@ -14,7 +14,6 @@
 #              position in the data tree and with the same number of values to the output handle.
 #              In this example we add the WIGOS sequence 301150 to a SYNOP
 #
-from __future__ import print_function
 
 import sys
 import traceback

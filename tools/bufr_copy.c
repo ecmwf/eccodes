@@ -8,19 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * C Implementation: bufr_copy
- *
- */
-
 #include "grib_tools.h"
 
 const char* tool_description =
     "Copies the content of BUFR files printing"
     " values of some keys."
     "\n\tIf the name of the output_bufr_file contains a key enclosed in square brackets, its value will be used.";
-const char* tool_name  = "bufr_copy";
-const char* tool_usage = "[options] bufr_file bufr_file ... output_bufr_file";
+const char* tool_name       = "bufr_copy";
+const char* tool_online_doc = "https://confluence.ecmwf.int/display/ECC/bufr_copy";
+const char* tool_usage      = "[options] bufr_file bufr_file ... output_bufr_file";
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */
