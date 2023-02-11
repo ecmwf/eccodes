@@ -147,6 +147,18 @@ grep -q "0 of 38 messages" $temp_ls
 ${tools_dir}/grib_ls -w units!=K $file > $temp_ls
 grep -q "30 of 38 messages" $temp_ls
 
+file=mixed.grib # Has 14 messages
+${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $temp_ls
+grep -q "12 of 14 messages" $temp_ls
+
+${tools_dir}/grib_ls -w packingType=grid_simple/grid_simple_matrix,gridType=regular_ll/regular_gg $file > $temp_ls
+grep -q "12 of 14 messages" $temp_ls
+
+${tools_dir}/grib_ls -w typeOfLevel=surface,centre=7 $file > $temp_ls
+grep -q "3 of 14 messages" $temp_ls
+
+${tools_dir}/grib_ls -w shortName=t/10u,gridType=regular_gg $file > $temp_ls
+grep -q "5 of 14 messages" $temp_ls
 
 # Clean up
 rm -f $temp1 $temp2
