@@ -808,6 +808,11 @@ static int to_skip(grib_handle* h, grib_values* v, int* err)
     size_t len = MAX_STRING_LEN;
     *err       = 0;
 
+    if (strcmp(v->name, "count")==0 && v->long_value < 1) {
+        fprintf(dump_file, "ERROR: Invalid value for key '%s' (must be an integer greater than 0)\n", v->name);
+        exit(1);
+    }
+
     switch (v->type) {
         case GRIB_TYPE_STRING:
             *err = grib_get_string(h, v->name, value, &len);
