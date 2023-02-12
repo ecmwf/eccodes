@@ -1,4 +1,7 @@
 # data/CMakeLists.txt
+set(ECBUILD_DOWNLOAD_TIMEOUT 60)
+set(ECBUILD_DOWNLOAD_RETRIES 3)
+
 add_subdirectory(tigge)
 add_subdirectory(bufr)
 add_subdirectory(metar)

@@ -99,48 +99,51 @@ static void init_class(grib_iterator_class* c)
 /* END_CLASS_IMP */
 
 
-static int next(grib_iterator* i, double* lat, double* lon, double* val)
+static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
-    grib_iterator_regular* self = (grib_iterator_regular*)i;
+    grib_iterator_regular* self = (grib_iterator_regular*)iter;
 
-    if ((long)i->e >= (long)(i->nv - 1))
+    if ((long)iter->e >= (long)(iter->nv - 1))
         return 0;
 
-    i->e++;
+    iter->e++;
 
-    *lat = self->las[(long)floor(i->e / self->Ni)];
-    *lon = self->los[(long)i->e % self->Ni];
-    *val = i->data[i->e];
+    *lat = self->las[(long)floor(iter->e / self->Ni)];
+    *lon = self->los[(long)iter->e % self->Ni];
+    if (val && iter->data) {
+        *val = iter->data[iter->e];
+    }
+    return 1;
+}
+
+static int previous(grib_iterator* iter, double* lat, double* lon, double* val)
+{
+    grib_iterator_regular* self = (grib_iterator_regular*)iter;
+
+    if (iter->e < 0)
+        return 0;
+    *lat = self->las[(long)floor(iter->e / self->Ni)];
+    *lon = self->los[iter->e % self->Ni];
+    if (val && iter->data) {
+        *val = iter->data[iter->e];
+    }
+    iter->e--;
 
     return 1;
 }
 
-static int previous(grib_iterator* i, double* lat, double* lon, double* val)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_regular* self = (grib_iterator_regular*)i;
-
-    if (i->e < 0)
-        return 0;
-    *lat = self->las[(long)floor(i->e / self->Ni)];
-    *lon = self->los[i->e % self->Ni];
-    *val = i->data[i->e];
-    i->e--;
-
-    return 1;
-}
-
-static int destroy(grib_iterator* i)
-{
-    grib_iterator_regular* self = (grib_iterator_regular*)i;
-    const grib_context* c       = i->h->context;
+    grib_iterator_regular* self = (grib_iterator_regular*)iter;
+    const grib_context* c       = iter->h->context;
     grib_context_free(c, self->las);
     grib_context_free(c, self->los);
     return GRIB_SUCCESS;
 }
 
-static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
+static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    grib_iterator_regular* self = (grib_iterator_regular*)i;
+    grib_iterator_regular* self = (grib_iterator_regular*)iter;
     int ret                     = GRIB_SUCCESS;
 
     long Ni; /* Number of points along a parallel = Nx */

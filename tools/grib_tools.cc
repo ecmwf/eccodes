@@ -756,6 +756,10 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             if (strlen(name) > options->default_print_width)
                 options->default_print_width = (int)strlen(name);
             options->print_keys[options->print_keys_count].type = GRIB_TYPE_STRING;
+            // For the statistics namespace, do not force the type to be string.
+            // Setting it to undefined will use the keys' native type i.e. GRIB_TYPE_DOUBLE
+            if (strcmp(ns,"statistics")==0)
+                options->print_keys[options->print_keys_count].type = GRIB_TYPE_UNDEFINED;
             options->print_keys_count++;
         }
 
@@ -990,7 +994,6 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
     double dvalue = 0;
     long lvalue   = 0;
     size_t len    = MAX_STRING_LEN;
-
     if (grib_is_missing(h, key_name, &ret) && ret == GRIB_SUCCESS) {
         snprintf(value_str, 32, "MISSING");
         return;

@@ -10,7 +10,6 @@
 
 /*! \file grib_api.h
   \brief grib_api C header file
-
 */
 
 #ifndef grib_api_H
@@ -58,9 +57,7 @@ extern "C" {
 #define GRIB_SECTION_BITMAP (1 << 4)
 
 
-/* LOG MODES
-Log mode for information for processing information
-*/
+/* Log modes for processing information */
 /*  Log mode for info */
 #define GRIB_LOG_INFO 0
 /*  Log mode for warnings */
@@ -93,10 +90,10 @@ Log mode for information for processing information
 /* Missing values */
 /* #define GRIB_MISSING_LONG 0x80000001 */
 /* #define GRIB_MISSING_LONG 0xffffffff */
-#define GRIB_MISSING_LONG 2147483647
+#define GRIB_MISSING_LONG   2147483647
 #define GRIB_MISSING_DOUBLE -1e+100
 
-/* Dump option flags*/
+/* Dump option flags */
 #define GRIB_DUMP_FLAG_READ_ONLY      (1 << 0)
 #define GRIB_DUMP_FLAG_DUMP_OK        (1 << 1)
 #define GRIB_DUMP_FLAG_VALUES         (1 << 2)
@@ -113,6 +110,9 @@ Log mode for information for processing information
 #define GRIB_NEAREST_SAME_GRID  (1 << 0)
 #define GRIB_NEAREST_SAME_DATA  (1 << 1)
 #define GRIB_NEAREST_SAME_POINT (1 << 2)
+
+/* Geoiterator flags */
+#define GRIB_GEOITERATOR_NO_VALUES  (1 << 0)
 
 /*! Iteration is carried out on all the keys available in the message
 \ingroup keys_iterator
@@ -179,17 +179,17 @@ struct grib_values
 };
 
 
-/*! Grib handle,   structure giving access to parsed message values by keys
+/*! Grib handle, structure giving access to parsed message values by keys
     \ingroup grib_handle
 */
 typedef struct grib_handle grib_handle;
 
-/*! Grib multi field handle,   structure used to build multi-field GRIB messages.
+/*! Grib multi field handle, structure used to build multi-field GRIB messages.
     \ingroup grib_handle
  */
 typedef struct grib_multi_handle grib_multi_handle;
 
-/*! Grib context,  structure containing the memory methods, the parsers and the formats.
+/*! Grib context, structure containing the memory methods, the parsers and the formats.
     \ingroup grib_context
 */
 typedef struct grib_context grib_context;
