@@ -21,12 +21,8 @@ int main(int argc, char** argv)
     float* fvalues     = NULL; /* data values as floats */
     double* dvalues    = NULL; /* data values as doubles */
     size_t values_len  = 0;    // number of data points
-    size_t cvalues_len = 0;    // coded values excluding missing
     size_t i           = 0;
-    int mode           = 2;  // 1=single-precision, 2=double-precision
 
-    double daverage      = 0;
-    float faverage       = 0;
     double abs_error     = 0;
     double max_abs_error = 1e-04;
     double tolerance     = 1e-04;
@@ -37,7 +33,6 @@ int main(int argc, char** argv)
     FILE* in             = NULL;
     const char* filename = 0;
     codes_handle* h      = NULL;
-
 
     if (argc != 2) {
         fprintf(stderr, "usage: %s file\n", argv[0]);

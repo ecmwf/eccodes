@@ -391,7 +391,6 @@ int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nva
 {
     int err = 0, i = 0, j = 0;
     unsigned char s[4] = {0,};
-    float fval;
 
     switch (bytes) {
         case 4:
