@@ -24,5 +24,7 @@ meta values data_apply_bitmap(codedValues,
 alias data.packedValues = codedValues;
 
 template statistics "common/statistics_grid.def";
-template missing_values "common/missing_values_grid.def";
 
+# This template can have undefined values within its Data Section
+meta numberOfMissing count_missing(bitmap,unusedBitsInBitmap,numberOfDataPoints,one) : dump;
+alias numberOfMissingValues=numberOfMissing;
