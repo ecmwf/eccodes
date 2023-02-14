@@ -10,23 +10,19 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_keys_iterator_test_f"
 
-#Define tmp file
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
-REDIRECT=/dev/null
-
 f=${data_dir}/bufr/syno_1.bufr
 
-#The input ($f) is hardcoded in the f90 example!!!
-${examples_dir}/eccodes_f_bufr_keys_iterator #2> $REDIRECT > $fTmp
+# The input ($f) is hard coded in the example
+${examples_dir}/eccodes_f_bufr_keys_iterator > $fTmp
 
-#TODO: check the output
+# Check the output
+grep -q '#49#dataPresentIndicator' $fTmp
+grep -q '#1#generatingApplication' $fTmp
 
-#cat  $fTmp
-
-#Clean up
 rm -f $fTmp

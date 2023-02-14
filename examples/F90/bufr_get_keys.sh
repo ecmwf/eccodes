@@ -28,7 +28,7 @@ ${examples_dir}/eccodes_f_bufr_get_keys 2> $REDIRECT > $fTmp
 
 #TODO: check the results
 
-#cat  $fTmp
+#cat $fTmp
 
 #Clean up
 rm -f ${fTmp}

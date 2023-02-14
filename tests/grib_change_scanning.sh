@@ -121,6 +121,13 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# ECC-1492
+grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB1.tmpl" iScansNegatively,iScansPositively '0 1'
+grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB1.tmpl" jScansNegatively,jScansPositively '1 0'
+
+grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" iScansNegatively,iScansPositively '0 1'
+grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" jScansNegatively,jScansPositively '1 0'
+
 # Clean up
 rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText
 rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib

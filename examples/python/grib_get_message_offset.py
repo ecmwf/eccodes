@@ -14,8 +14,6 @@
 # Description: how to get the message offset
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 

@@ -47,5 +47,14 @@ ${tools_dir}/grib_ls -jm $tempOut
 ms=`${tools_dir}/grib_get -p mars.step $tempOut`
 [ "$ms" = "19" ]
 
+# ECC-1491
+cat ${data_dir}/budg ${data_dir}/budg > $tempBud
+${tools_dir}/grib_get -p count,offset $tempBud > $tempOut
+cat > $tempRef << EOF
+1 0
+2 6000
+EOF
+diff $tempRef $tempOut
+
 
 rm -f $tempRef $tempOut $tempBud

@@ -1,7 +1,7 @@
 #!/usr/bin/ksh
 set -ex
 
-./list_all_keys.ksh
+./list_all_keys.sh
 
 
 gperf -I -t -G -H hash_keys -N grib_keys_hash_get -m 3  keys > ../src/grib_hash_keys.c

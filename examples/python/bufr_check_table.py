@@ -10,8 +10,6 @@
 # Description: Verify the given BUFR table (B or D) are correctly formed for ecCodes
 #
 
-from __future__ import print_function
-
 import os
 import sys
 

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < nvalues; i++) {
             if (values[i].error == err) name = (char*)values[i].name;
         }
-        printf("Error: \"%s\" %s\n", name, codes_get_error_message(err));
+        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
     }
 
     values[1].name = "levelll";
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
         for (i = 0; i < nvalues; i++) {
             if (values[i].error == err) name = (char*)values[i].name;
         }
-        printf("Error: \"%s\" %s\n", name, codes_get_error_message(err));
+        fprintf(stderr, "Error: \"%s\" %s\n", name, codes_get_error_message(err));
     }
 
     codes_handle_delete(h);

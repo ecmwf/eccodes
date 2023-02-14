@@ -16,8 +16,10 @@ INPUT=../../data/regular_latlon_surface.grib1
 res=`${tools_dir}/grib_get -p Ni,Nj $INPUT`
 [ "$res" = "16 31" ]
 
-#The input and output BUFR files are hardcoded in the f90 example!!!
-OUTPUT=out.grib_copy_namespace.grib
+# Note: The input and output GRIB files are hardcoded in the example!
+# The output is a clone of the regular lat/lon but then
+# we copy the reduced lat/lon geography namespace to the output
+OUTPUT=temp.$label.grib
 ${examples_dir}/eccodes_f_grib_copy_namespace
 
 res=`${tools_dir}/grib_get -p Ni,Nj $OUTPUT`

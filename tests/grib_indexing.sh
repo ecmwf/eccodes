@@ -109,5 +109,13 @@ ${tools_dir}/grib_index_build -N -o $tempIndex2 $tempGribFile2
 ${tools_dir}/grib_compare $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
 
+# ECC-1516
+# ---------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
+${tools_dir}/grib_dump $tempIndex1 >/dev/null
+
+
 # Clean up
-rm -f $tempIndex $tempOut $tempRef
+rm -f $tempOut $tempRef
+rm -f $tempIndex $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2

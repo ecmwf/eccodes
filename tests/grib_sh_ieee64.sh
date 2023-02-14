@@ -20,9 +20,5 @@ if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
     echo "$0: This test is currently disabled on Windows"
     exit 0
 fi
-if [ $ECCODES_ON_LINUX_32BIT -eq 1 ]; then
-    echo "$0: This test is currently disabled on Linux 32 bit system"
-    exit 0
-fi
 
 $EXEC $test_dir/grib_sh_ieee64

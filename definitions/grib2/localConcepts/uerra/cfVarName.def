@@ -130,6 +130,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #2 metre relative humidity
 'r2' = {
@@ -159,31 +161,31 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-}
+	}
 #Sea ice surface temperature
 'sist' = {
-     discipline = 10 ;
-     parameterCategory = 2 ;
-     parameterNumber = 8 ;
-     typeOfFirstFixedSurface = 174 ;
-     typeOfSecondFixedSurface = 255 ;
-  scaledValueOfFirstFixedSurface = missing() ;
-  scaleFactorOfFirstFixedSurface = missing() ;
-  scaledValueOfSecondFixedSurface = missing() ;
-  scaleFactorOfSecondFixedSurface = missing() ;
-    }
-#Snow on ice total depth
-'sitd' = {
-     discipline = 0 ;
-     parameterCategory = 1 ;
-     parameterNumber = 11 ;
-     typeOfFirstFixedSurface = 174 ;
-     typeOfSecondFixedSurface = 255 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
-    }
+	}
+#Snow on ice total depth
+'sitd' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Sea-ice thickness
 'sithick' = {
 	 discipline = 10 ;

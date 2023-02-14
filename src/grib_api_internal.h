@@ -23,36 +23,41 @@ extern "C" {
 
 /* cmake config header */
 #ifdef HAVE_ECCODES_CONFIG_H
-#include "eccodes_config.h"
+ #include "eccodes_config.h"
 #endif
 
 /* autoconf config header */
 #ifdef HAVE_CONFIG_H
-#include "config.h"
-#ifdef _LARGE_FILES
-#undef _LARGE_FILE_API
-#endif
+ #include "config.h"
+ #ifdef _LARGE_FILES
+  #undef _LARGE_FILE_API
+ #endif
 #endif
 
 #ifndef GRIB_INLINE
-#define GRIB_INLINE
+ #define GRIB_INLINE
 #endif
 
 /* See ECC-670 */
 #if IS_BIG_ENDIAN
-#if GRIB_MEM_ALIGN
-#define FAST_BIG_ENDIAN 1
-#else
-#define FAST_BIG_ENDIAN 0
-#endif
+ #if GRIB_MEM_ALIGN
+  #define FAST_BIG_ENDIAN 1
+ #else
+  #define FAST_BIG_ENDIAN 0
+ #endif
 #endif
 
 #if IEEE_BE
-#define IEEE
+ #define IEEE
 #else
-#if IEEE_LE
-#define IEEE
+ #if IEEE_LE
+  #define IEEE
+ #endif
 #endif
+
+#if defined(_WIN32) && defined(_MSC_VER)
+  #define _CRT_SECURE_NO_WARNINGS
+  #define _CRT_NONSTDC_NO_DEPRECATE
 #endif
 
 #include <stdio.h>
@@ -62,48 +67,46 @@ extern "C" {
 #include "eccodes_windef.h"
 
 #ifndef ECCODES_ON_WINDOWS
-#include <dirent.h>
-#include <unistd.h>
-#include <inttypes.h>
-#define ecc_snprintf snprintf
+ #include <dirent.h>
+ #include <unistd.h>
+ #include <inttypes.h>
 #else
-#include <direct.h>
-#include <io.h>
+ #define strtok_r strtok_s
+ #include <direct.h>
+ #include <io.h>
 
-/* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
-#if defined _MSC_VER && _MSC_VER < 1800
-double rint(double x);
-#endif
+ /* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+ #if defined _MSC_VER && _MSC_VER < 1800
+  double rint(double x);
+ #endif
 
-#ifndef S_ISREG
-#define S_ISREG(mode) (mode & S_IFREG)
-#endif
+ #ifndef S_ISREG
+  #define S_ISREG(mode) (mode & S_IFREG)
+ #endif
 
-#ifndef S_ISDIR
-#define S_ISDIR(mode) (mode & S_IFDIR)
-#endif
+ #ifndef S_ISDIR
+  #define S_ISDIR(mode) (mode & S_IFDIR)
+ #endif
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+ #ifndef M_PI
+  #define M_PI 3.14159265358979323846
+ #endif
 
-#define R_OK 04 /* Needed for Windows */
+ #define R_OK 04 /* Needed for Windows */
 
-#ifndef F_OK
-#define F_OK 0
-#endif
+ #ifndef F_OK
+  #define F_OK 0
+ #endif
 
-#define mkdir(dirname, mode) _mkdir(dirname)
+ #define mkdir(dirname, mode) _mkdir(dirname)
 
-#ifdef _MSC_VER
-#define access(path, mode) _access(path, mode)
-#define chmod(path, mode) _chmod(path, mode)
-#define strdup(str) _strdup(str)
-#endif
+ #ifdef _MSC_VER
+  #define access(path, mode) _access(path, mode)
+  #define chmod(path, mode) _chmod(path, mode)
+  #define strdup(str) _strdup(str)
+ #endif
 
-#define ecc_snprintf _snprintf
-
-#endif
+#endif /* ifndef ECCODES_ON_WINDOWS */
 
 
 #include <limits.h>
@@ -113,9 +116,9 @@ double rint(double x);
 
 
 #ifdef HAVE_STRING_H
-#include <string.h>
+ #include <string.h>
 #else
-#include <strings.h>
+ #include <strings.h>
 #endif
 
 /*
@@ -1267,7 +1270,7 @@ struct grib_int_array
     int* el;
 };
 
-#ifndef NEWDB
+#if 1
 struct grib_fieldset
 {
     grib_context* context;
@@ -1284,7 +1287,7 @@ struct grib_fieldset
 };
 #endif
 
-#ifdef NEWDB
+#if 0
 /* grib db */
 struct grib_db
 {

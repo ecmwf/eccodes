@@ -11,24 +11,18 @@
 . ./include.ctest.sh
 
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_attributes_test_f"
 
-#Define tmp file
+# Define tmp file
 fTmp=${label}.tmp.txt
 rm -f ${fTmp}
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
+# We check "syno_multi.bufr". The path is hard coded in the example
+${examples_dir}/eccodes_f_bufr_attributes > $fTmp
 
-REDIRECT=/dev/null
+# Check the results
+grep -q 'airTemperatureAt2M->percentConfidence->code: *33007' $fTmp
+grep -q 'airTemperatureAt2M->percentConfidence->width: *7'    $fTmp
 
-#Write the values into a file and compare with reference
-${examples_dir}/eccodes_f_bufr_attributes #2> $REDIRECT > $fTmp
-
-#TODO: check the results
-
-#cat  $fTmp
-
-#Clean up
 rm -f ${fTmp}

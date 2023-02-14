@@ -11,8 +11,6 @@
 # Description: how to read data of the ECMWF EPS tropical cyclone tracks encoded in BUFR format.
 #
 
-from __future__ import print_function
-
 import getopt
 import os
 import sys

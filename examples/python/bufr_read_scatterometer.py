@@ -19,8 +19,6 @@
 # understand the structure of these messages.
 #
 
-from __future__ import print_function
-
 import sys
 import traceback
 

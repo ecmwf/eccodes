@@ -101,7 +101,7 @@ program get
 
    average = 0
    do i = 1, numberOfValues
-      average = average + values(i); 
+      average = average + values(i);
    end do
 
    average = average/numberOfValues
