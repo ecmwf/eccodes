@@ -89,6 +89,7 @@
 105 105 Analysis or forecast in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 106 106 Individual ensemble forecast, control and perturbed in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 107 107 Derived forecasts based on all ensemble members in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
+112 112 Probability of anomalies, significance and other derived products from an ensemble forecast in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 # 99-253 Reserved
 254 254 CCITT IA5 character string 
 # 255-999 Reserved 
