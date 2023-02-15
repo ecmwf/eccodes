@@ -29,9 +29,7 @@
 #include "mir/util/Trace.h"
 
 
-namespace mir {
-namespace repres {
-namespace regular {
+namespace mir::repres::regular {
 
 
 static const RepresentationBuilder<SpaceView> __builder("space_view");
@@ -251,6 +249,4 @@ bool SpaceView::getLongestElementDiagonal(double& d) const {
 }
 
 
-}  // namespace regular
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::regular

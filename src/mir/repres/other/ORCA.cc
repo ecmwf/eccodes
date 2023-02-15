@@ -26,9 +26,7 @@
 #include "mir/util/MeshGeneratorParameters.h"
 
 
-namespace mir {
-namespace repres {
-namespace other {
+namespace mir::repres::other {
 
 
 // order is important for makeName()
@@ -175,6 +173,4 @@ void ORCA::fillMeshGen(util::MeshGeneratorParameters& params) const {
 }
 
 
-}  // namespace other
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::other

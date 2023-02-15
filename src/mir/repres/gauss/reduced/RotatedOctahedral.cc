@@ -18,10 +18,7 @@
 #include "mir/util/Grib.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 RotatedOctahedral::RotatedOctahedral(size_t N, const util::Rotation& rotation, const util::BoundingBox& bbox,
@@ -75,7 +72,4 @@ const Gridded* RotatedOctahedral::croppedRepresentation(const util::BoundingBox&
 }
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

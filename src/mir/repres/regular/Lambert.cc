@@ -18,9 +18,7 @@
 #include "mir/util/Grib.h"
 
 
-namespace mir {
-namespace repres {
-namespace regular {
+namespace mir::repres::regular {
 
 
 static const RepresentationBuilder<Lambert> __builder("lambert");
@@ -98,6 +96,4 @@ void Lambert::fillGrib(grib_info& info) const {
 }
 
 
-}  // namespace regular
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::regular

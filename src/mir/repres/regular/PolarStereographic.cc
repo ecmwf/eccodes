@@ -15,9 +15,7 @@
 #include "mir/util/Exceptions.h"
 
 
-namespace mir {
-namespace repres {
-namespace regular {
+namespace mir::repres::regular {
 
 
 static const RepresentationBuilder<PolarStereographic> __builder("polar_stereographic");
@@ -32,6 +30,4 @@ void PolarStereographic::fillGrib(grib_info& /*info*/) const {
 }
 
 
-}  // namespace regular
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::regular

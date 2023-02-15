@@ -17,10 +17,7 @@
 #include "mir/util/Domain.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 FromPL::FromPL(const param::MIRParametrisation& parametrisation) : Reduced(parametrisation) {}
@@ -64,7 +61,4 @@ atlas::Grid FromPL::atlasGrid() const {
 }
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

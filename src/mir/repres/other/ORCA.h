@@ -18,9 +18,7 @@
 #include "mir/util/Atlas.h"
 
 
-namespace mir {
-namespace repres {
-namespace other {
+namespace mir::repres::other {
 
 
 class ORCA : public Gridded {
@@ -114,6 +112,4 @@ private:
 };
 
 
-}  // namespace other
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::other

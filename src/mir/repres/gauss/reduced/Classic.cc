@@ -18,10 +18,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
@@ -73,7 +70,4 @@ atlas::Grid Classic::atlasGrid() const {
 }
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

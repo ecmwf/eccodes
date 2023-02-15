@@ -31,9 +31,7 @@
 #include "mir/util/MeshGeneratorParameters.h"
 
 
-namespace mir {
-namespace repres {
-namespace regular {
+namespace mir::repres::regular {
 
 
 RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGrid::Projection& projection) :
@@ -331,6 +329,4 @@ void RegularGrid::fillMeshGen(util::MeshGeneratorParameters& params) const {
 }
 
 
-}  // namespace regular
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::regular

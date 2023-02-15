@@ -33,10 +33,7 @@
 #include "mir/util/GridBox.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 template <typename T>
@@ -532,7 +529,4 @@ std::string Reduced::factory() const {
 }
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

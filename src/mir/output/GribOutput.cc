@@ -40,8 +40,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir {
-namespace output {
+namespace mir::output {
 
 
 static util::recursive_mutex local_mutex;
@@ -377,7 +376,8 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
         int flags          = 0;
         int err            = 0;
 
-        auto* result = codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, &values[0], values.size(), &err);
+        auto* result =
+            codes_grib_util_set_spec(h, &info.grid, &info.packing, flags, values.data(), values.size(), &err);
         HandleDeleter hf(result);  // Make sure handle deleted even in case of exception
 
 
@@ -514,5 +514,4 @@ void GribOutput::fill(grib_handle* /*unused*/, grib_info& /*unused*/) const {}
 #undef X
 
 
-}  // namespace output
-}  // namespace mir
+}  // namespace mir::output

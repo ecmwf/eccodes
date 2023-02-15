@@ -22,9 +22,7 @@
 #include "mir/util/GridBox.h"
 
 
-namespace mir {
-namespace repres {
-namespace latlon {
+namespace mir::repres::latlon {
 
 RegularLL::RegularLL(const param::MIRParametrisation& parametrisation) : LatLon(parametrisation) {}
 
@@ -204,6 +202,4 @@ std::string RegularLL::factory() const {
 static const RepresentationBuilder<RegularLL> regularLL("regular_ll");
 
 
-}  // namespace latlon
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::latlon

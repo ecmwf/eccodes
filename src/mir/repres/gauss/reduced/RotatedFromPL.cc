@@ -18,10 +18,7 @@
 #include "mir/util/Grib.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 RotatedFromPL::RotatedFromPL(const param::MIRParametrisation& parametrisation) :
@@ -83,7 +80,4 @@ const Gridded* RotatedFromPL::croppedRepresentation(const util::BoundingBox& bbo
 static const RepresentationBuilder<RotatedFromPL> rotatedFromPL("reduced_rotated_gg");
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

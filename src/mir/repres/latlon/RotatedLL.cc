@@ -20,9 +20,7 @@
 #include "mir/util/Grib.h"
 
 
-namespace mir {
-namespace repres {
-namespace latlon {
+namespace mir::repres::latlon {
 
 RotatedLL::RotatedLL(const param::MIRParametrisation& parametrisation) :
     LatLon(parametrisation), rotation_(parametrisation) {}
@@ -112,6 +110,4 @@ std::string RotatedLL::factory() const {
 static const RepresentationBuilder<RotatedLL> rotatedLL("rotated_ll");
 
 
-}  // namespace latlon
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::latlon

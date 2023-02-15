@@ -30,9 +30,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir {
-namespace repres {
-namespace latlon {
+namespace mir::repres::latlon {
 
 
 LatLon::LatLon(const param::MIRParametrisation& parametrisation) :
@@ -406,6 +404,4 @@ void LatLon::correctBoundingBox(util::BoundingBox& bbox, size_t& ni, size_t& nj,
 }
 
 
-}  // namespace latlon
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::latlon

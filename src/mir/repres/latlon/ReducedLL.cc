@@ -30,9 +30,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir {
-namespace repres {
-namespace latlon {
+namespace mir::repres::latlon {
 
 static bool checkPl(const std::vector<long>& pl) {
     ASSERT(!pl.empty());
@@ -155,7 +153,7 @@ void ReducedLL::fillMeshGen(util::MeshGeneratorParameters& params) const {
 }
 
 bool ReducedLL::isPeriodicWestEast() const {
-    ASSERT(pl_.size());
+    ASSERT(!pl_.empty());
 
     auto we    = bbox_.east() - bbox_.west();
     auto inc   = (Longitude::GLOBE - we).value();
@@ -327,6 +325,4 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
 static const RepresentationBuilder<ReducedLL> reducedLL("reduced_ll");
 
 
-}  // namespace latlon
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::latlon

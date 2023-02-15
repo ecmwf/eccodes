@@ -45,8 +45,7 @@
 #endif
 
 
-namespace mir {
-namespace repres {
+namespace mir::repres {
 namespace other {
 
 
@@ -293,5 +292,4 @@ Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param
 }
 
 
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres

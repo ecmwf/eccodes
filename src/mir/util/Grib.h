@@ -104,9 +104,7 @@ class Fraction;
 }
 
 
-namespace mir {
-namespace util {
-namespace grib {
+namespace mir::util::grib {
 
 
 struct Fraction {
@@ -152,6 +150,4 @@ struct BasicAngle : Fraction {
 };
 
 
-}  // namespace grib
-}  // namespace util
-}  // namespace mir
+}  // namespace mir::util::grib

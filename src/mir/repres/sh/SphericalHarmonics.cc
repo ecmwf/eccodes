@@ -22,9 +22,7 @@
 #include "mir/util/Log.h"
 
 
-namespace mir {
-namespace repres {
-namespace sh {
+namespace mir::repres::sh {
 
 
 SphericalHarmonics::SphericalHarmonics(const param::MIRParametrisation& parametrisation) {
@@ -206,6 +204,4 @@ std::string SphericalHarmonics::factory() const {
 static const RepresentationBuilder<SphericalHarmonics> sphericalHarmonics("sh");
 
 
-}  // namespace sh
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::sh

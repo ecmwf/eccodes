@@ -26,8 +26,7 @@
 #include "mir/util/Mutex.h"
 
 
-namespace mir {
-namespace repres {
+namespace mir::repres {
 
 
 Representation::Representation() = default;
@@ -390,5 +389,4 @@ void RepresentationFactory::list(std::ostream& out) {
 }
 
 
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres

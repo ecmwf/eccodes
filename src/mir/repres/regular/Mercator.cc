@@ -15,9 +15,7 @@
 #include "mir/util/Exceptions.h"
 
 
-namespace mir {
-namespace repres {
-namespace regular {
+namespace mir::repres::regular {
 
 
 static const RepresentationBuilder<Mercator> __builder("mercator");
@@ -31,6 +29,4 @@ void Mercator::fillGrib(grib_info& /*info*/) const {
 }
 
 
-}  // namespace regular
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::regular

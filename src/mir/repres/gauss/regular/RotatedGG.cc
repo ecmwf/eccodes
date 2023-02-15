@@ -19,10 +19,7 @@
 #include "mir/util/Grib.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace regular {
+namespace mir::repres::gauss::regular {
 
 
 RotatedGG::RotatedGG(const param::MIRParametrisation& parametrisation) :
@@ -84,7 +81,4 @@ atlas::Grid RotatedGG::atlasGrid() const {
 static const RepresentationBuilder<RotatedGG> rotatedGG("rotated_gg");
 
 
-}  // namespace regular
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::regular

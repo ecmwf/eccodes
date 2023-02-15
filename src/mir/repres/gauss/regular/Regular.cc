@@ -22,10 +22,7 @@
 #include "mir/util/Log.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace regular {
+namespace mir::repres::gauss::regular {
 
 Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(parametrisation), k_(0), Ni_(0), Nj_(0) {
     // adjust latitudes, longitudes and re-set bounding box
@@ -280,7 +277,4 @@ size_t Regular::frame(MIRValuesVector& values, size_t size, double missingValue,
 }
 
 
-}  // namespace regular
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::regular

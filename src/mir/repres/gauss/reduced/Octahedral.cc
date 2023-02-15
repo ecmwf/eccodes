@@ -19,10 +19,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir {
-namespace repres {
-namespace gauss {
-namespace reduced {
+namespace mir::repres::gauss::reduced {
 
 
 Octahedral::Octahedral(size_t N, const util::BoundingBox& bbox, double angularPrecision) :
@@ -80,7 +77,4 @@ void Octahedral::fillMeshGen(util::MeshGeneratorParameters& params) const {
 }
 
 
-}  // namespace reduced
-}  // namespace gauss
-}  // namespace repres
-}  // namespace mir
+}  // namespace mir::repres::gauss::reduced

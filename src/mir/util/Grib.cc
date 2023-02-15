@@ -166,9 +166,7 @@ void grib_info::extra_set(const char* key, const char* value) {
 }
 
 
-namespace mir {
-namespace util {
-namespace grib {
+namespace mir::util::grib {
 
 
 Fraction::Fraction(double d) : Fraction(eckit::Fraction(d)) {}
@@ -257,6 +255,4 @@ void BasicAngle::list(std::ostream& out) {
 }
 
 
-}  // namespace grib
-}  // namespace util
-}  // namespace mir
+}  // namespace mir::util::grib
