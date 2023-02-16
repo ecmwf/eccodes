@@ -1654,11 +1654,45 @@ static void test_parse_keyval_string()
     free( (void*)values3[0].name );
 }
 
+static void test_dates()
+{
+    printf("Testing: dates...\n");
+    Assert( is_date_valid(1979,12, 1, 0,0,0) );
+    Assert( is_date_valid(1900, 1, 1, 0,0,0) );
+    Assert( is_date_valid(1964, 4, 6, 0,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 12,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,10,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,0,59) );
+    Assert( is_date_valid(0000, 3, 4, 0,0,0) );
+    Assert( is_date_valid(2020, 2, 29, 0,0,0) );//leap year
+
+    Assert( !is_date_valid(  10, -1, 1, 0,0,0) );// bad months
+    Assert( !is_date_valid(1900, 0,  1, 0,0,0) );
+    Assert( !is_date_valid(1900, 13, 1, 0,0,0) );
+
+    Assert( !is_date_valid(1900, 5,  0, 0,0,0) ); // bad days
+    Assert( !is_date_valid(2000, 5, 32, 0,0,0) );
+    Assert( !is_date_valid(2000, 5, -7, 0,0,0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 99,0,0) );//bad hours
+    Assert( !is_date_valid(2000, 5, 9, -1,0,0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 0, 61,0) );//bad mins
+    Assert( !is_date_valid(2000, 5, 9, 0,-1, 0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 0, 1, -1) );//bad secs
+    Assert( !is_date_valid(2000, 5, 9, 0, 1, 60) );
+
+    Assert( !is_date_valid(2023, 2, 29, 0,0,0) );//Feb
+
+}
 
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
 
+    test_dates();
     test_logging_proc();
     test_grib_binary_search();
     test_parse_keyval_string();

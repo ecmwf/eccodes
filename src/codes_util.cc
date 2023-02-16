@@ -194,3 +194,23 @@ int codes_flush_sync_close_file(FILE* f)
     }
     return GRIB_SUCCESS;
 }
+
+// Return 1 if input date is valid. Otherwise 0
+int is_date_valid(long year, long month, long day, long hour, long minute, double second)
+{
+    // Convert input date to Julian number
+    double result = 0; // Julian number in units of days
+    long year1, month1, day1, hour1, minute1, lSecond1;
+
+    // For validating the date/time, we specify seconds as an integer
+    long lSecond = (long)second;
+    grib_datetime_to_julian(year, month, day, hour, minute, lSecond, &result);
+
+    // Check conversion worked by going other way
+    grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &lSecond1);
+    if (year1 != year || month1 != month || day1 != day || minute1 != minute || lSecond1 != lSecond) {
+        return 0; // bad date
+    }
+
+    return 1;
+}

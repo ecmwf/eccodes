@@ -1427,6 +1427,7 @@ int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
+int is_date_valid(long year, long month, long day, long hour, long minute, double second);
 
 /* grib_util.cc*/
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
