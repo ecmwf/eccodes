@@ -17,11 +17,11 @@ static int get_packing_type_code(const char* packingType)
 {
     int result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     if (packingType == NULL)
-        return result;
+        return GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT;
 
     if (STR_EQUAL(packingType, "grid_jpeg"))
         result = GRIB_UTIL_PACKING_TYPE_JPEG;
-    if (STR_EQUAL(packingType, "grid_ccsds"))
+    else if (STR_EQUAL(packingType, "grid_ccsds"))
         result = GRIB_UTIL_PACKING_TYPE_CCSDS;
     else if (STR_EQUAL(packingType, "grid_simple"))
         result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
@@ -90,7 +90,10 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
+    if (packingType)
+        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+    else
+        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     /*Extra settings
     packing_spec.extra_settings_count++;
@@ -201,7 +204,10 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
+    if (packingType)
+        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+    else
+        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     packing_spec.extra_settings_count++;
     packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;

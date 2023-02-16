@@ -14,12 +14,20 @@
 # --------------------------------------------------
 # Regular Lat/Lon Grid
 # --------------------------------------------------
-infile=../data/latlon.grib
+infile=${data_dir}/latlon.grib
 outfile=out.grib_util_set_spec.grib
 tempOut=temp.grib_util_set_spec.grib
 grib_util_set_spec=${test_dir}/grib_util_set_spec
 
 rm -f $outfile
+
+# CCSDS input
+$EXEC $grib_util_set_spec ${data_dir}/ccsds.grib2 $outfile > /dev/null
+grib_check_key_equals $outfile packingType grid_ccsds
+
+$EXEC $grib_util_set_spec -p grid_simple ${data_dir}/ccsds.grib2 $outfile > /dev/null
+grib_check_key_equals $outfile packingType grid_simple
+
 
 # GRIB1 with local definition for MARS. Convert to edition2 and remove local def
 $EXEC $grib_util_set_spec -e 2 -r $infile $outfile > /dev/null
