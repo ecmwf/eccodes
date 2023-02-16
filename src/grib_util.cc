@@ -982,6 +982,10 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
+    if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
+        setCcsdsPacking = 1;
+    }
+
     /* ECC-1201
        TODO: make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
