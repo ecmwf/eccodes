@@ -982,10 +982,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
-    if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
-        setCcsdsPacking = 1;
-    }
-
     /* ECC-1201
        TODO: make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
@@ -993,6 +989,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     {
         if (STR_EQUAL(input_packing_type, "grid_ieee")) {
             SET_STRING_VALUE("packingType", input_packing_type);
+        }
+        if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
+            setCcsdsPacking = 1;
         }
     }
 
@@ -1284,7 +1283,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
                  */
-                if (strcmp(input_packing_type, "grid_jpeg") && !strcmp(input_packing_type, "grid_simple"))
+                if (strcmp(input_packing_type, "grid_jpeg"))
                     setJpegPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_CCSDS:
