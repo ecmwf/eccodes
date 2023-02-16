@@ -21,14 +21,6 @@ grib_util_set_spec=${test_dir}/grib_util_set_spec
 
 rm -f $outfile
 
-# CCSDS input
-$EXEC $grib_util_set_spec ${data_dir}/ccsds.grib2 $outfile > /dev/null
-grib_check_key_equals $outfile packingType grid_ccsds
-
-$EXEC $grib_util_set_spec -p grid_simple ${data_dir}/ccsds.grib2 $outfile > /dev/null
-grib_check_key_equals $outfile packingType grid_simple
-
-
 # GRIB1 with local definition for MARS. Convert to edition2 and remove local def
 $EXEC $grib_util_set_spec -e 2 -r $infile $outfile > /dev/null
 
@@ -101,13 +93,26 @@ if [ -x $CHECK_TOOL ]; then
 fi
 
 ### Constant field N=32
-###########################################
+# ---------------------------
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 rm -f $outfile
 
 $EXEC $grib_util_set_spec $infile $outfile
 grib_check_key_equals $outfile "packingType,const" "grid_simple 0"
 ${tools_dir}/grib_get_data $outfile > /dev/null
+
+
+# CCSDS input
+# ---------------------------
+infile=${data_dir}/ccsds.grib2
+$EXEC $grib_util_set_spec $infile $outfile
+grib_check_key_equals $outfile packingType grid_ccsds
+
+$EXEC $grib_util_set_spec -p grid_simple $infile $outfile
+grib_check_key_equals $outfile packingType grid_simple
+
+$EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
+grib_check_key_equals $outfile packingType grid_second_order
 
 
 ### Clean up
