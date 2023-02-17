@@ -982,8 +982,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
-    /* ECC-1201
-       TODO: make sure input packing type is preserved */
+    /* ECC-1201, ECC-1529, ECC-1530
+       Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
         packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
     {
@@ -992,6 +992,9 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
         if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
             setCcsdsPacking = 1;
+        }
+        if (STR_EQUAL(input_packing_type, "grid_second_order")) {
+            setSecondOrder = 1;
         }
     }
 
