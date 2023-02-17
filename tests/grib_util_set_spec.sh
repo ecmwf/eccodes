@@ -104,15 +104,17 @@ ${tools_dir}/grib_get_data $outfile > /dev/null
 
 # CCSDS input
 # ---------------------------
-infile=${data_dir}/ccsds.grib2
-$EXEC $grib_util_set_spec $infile $outfile
-grib_check_key_equals $outfile packingType grid_ccsds
+if [ $HAVE_AEC -eq 1 ]; then
+  infile=${data_dir}/ccsds.grib2
+  $EXEC $grib_util_set_spec $infile $outfile
+  grib_check_key_equals $outfile packingType grid_ccsds
 
-$EXEC $grib_util_set_spec -p grid_simple $infile $outfile
-grib_check_key_equals $outfile packingType grid_simple
+  $EXEC $grib_util_set_spec -p grid_simple $infile $outfile
+  grib_check_key_equals $outfile packingType grid_simple
 
-$EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
-grib_check_key_equals $outfile packingType grid_second_order
+  $EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
+  grib_check_key_equals $outfile packingType grid_second_order
+fi
 
 
 ### Clean up
