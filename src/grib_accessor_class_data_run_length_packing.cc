@@ -193,6 +193,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     double level_scale_factor = 0;
     double* levels = NULL;
     unsigned char* buf = NULL;
+    double missingValue = 9999.0;
 
     if ((err = grib_get_long_internal(gh, self->seclen, &seclen)) != GRIB_SUCCESS)
         return err;
@@ -206,6 +207,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
+    if ((err = grib_get_double(gh, "missingValue", &missingValue)) != GRIB_SUCCESS)
+        return err;
 
     level_values       = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_level_values);
     level_values_size = number_of_level_values;
@@ -216,7 +219,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     number_of_compressed_values = ((seclen - 5) * 8) / bits_per_value;
     if (number_of_compressed_values == 0 || max_level_value == 0) {
         for (i = 0; i < number_of_values; i++) {
-            val[i] = GRIB_MISSING_DOUBLE;
+            val[i] = missingValue;
         }
         return GRIB_SUCCESS;
     }
@@ -230,7 +233,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
     level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
     levels            = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
-    levels[0]                 = 0;
+    levels[0]                 = missingValue;
     for (i = 0; i < number_of_level_values; i++) {
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
