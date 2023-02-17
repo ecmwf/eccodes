@@ -11,8 +11,6 @@
 #include "grib_api_internal.h"
 #include <float.h>
 
-#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
-
 typedef enum
 {
     eROUND_ANGLE_UP,

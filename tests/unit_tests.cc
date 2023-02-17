@@ -10,7 +10,6 @@
 
 #include "grib_api_internal.h"
 
-#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 int assertion_caught = 0;
@@ -1404,10 +1403,10 @@ static void test_string_splitting()
     if (!list) { Assert(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 4);
-    if (!list[0] || !STR_EQ(list[0], "Born")) Assert(0);
-    if (!list[1] || !STR_EQ(list[1], "To"))   Assert(0);
-    if (!list[2] || !STR_EQ(list[2], "Be"))   Assert(0);
-    if (!list[3] || !STR_EQ(list[3], "Wild")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "Born")) Assert(0);
+    if (!list[1] || !STR_EQUAL(list[1], "To"))   Assert(0);
+    if (!list[2] || !STR_EQUAL(list[2], "Be"))   Assert(0);
+    if (!list[3] || !STR_EQUAL(list[3], "Wild")) Assert(0);
     Assert(list[4] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
@@ -1417,8 +1416,8 @@ static void test_string_splitting()
     if (!list) { Assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 2);
-    if (!list[0] || !STR_EQ(list[0], "12345")) Assert(0);
-    if (!list[1] || !STR_EQ(list[1], "a gap")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "12345")) Assert(0);
+    if (!list[1] || !STR_EQUAL(list[1], "a gap")) Assert(0);
     Assert(list[2] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
@@ -1428,7 +1427,7 @@ static void test_string_splitting()
     if (!list) { Assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 1);
-    if (!list[0] || !STR_EQ(list[0], "Steppenwolf")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "Steppenwolf")) Assert(0);
     Assert(list[1] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
