@@ -17,19 +17,20 @@ static int get_packing_type_code(const char* packingType)
 {
     int result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     if (packingType == NULL)
-        return result;
+        return GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT;
 
     if (STR_EQUAL(packingType, "grid_jpeg"))
-        result = GRIB_UTIL_PACKING_TYPE_JPEG;
-    if (STR_EQUAL(packingType, "grid_ccsds"))
-        result = GRIB_UTIL_PACKING_TYPE_CCSDS;
+        return GRIB_UTIL_PACKING_TYPE_JPEG;
+    else if (STR_EQUAL(packingType, "grid_ccsds"))
+        return GRIB_UTIL_PACKING_TYPE_CCSDS;
     else if (STR_EQUAL(packingType, "grid_simple"))
-        result = GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
+        return GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE;
     else if (STR_EQUAL(packingType, "grid_second_order"))
-        result = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+        return GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
     else if (STR_EQUAL(packingType, "grid_ieee"))
-        result = GRIB_UTIL_PACKING_TYPE_IEEE;
+        return GRIB_UTIL_PACKING_TYPE_IEEE;
 
+    Assert(!"Invalid packingType");
     return result;
 }
 
@@ -47,8 +48,8 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     const void* buffer = NULL;
     char gridType[128] = {0,};
 
-    codes_handle* handle     = 0;
-    codes_handle* finalh     = 0;
+    grib_handle* handle     = 0;
+    grib_handle* finalh     = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
@@ -70,6 +71,9 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     CODES_CHECK(grib_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
     CODES_CHECK(grib_get_double_array(handle, "values", values, &inlen), 0);
+    // make sure values are not constant
+    values[0] = 4.4;
+    values[1] = 5.5;
     for (i = 0; i < inlen; ++i) {
         values[i] *= 1.10;
     }
@@ -90,7 +94,10 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
+    if (packingType)
+        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+    else
+        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     /*Extra settings
     packing_spec.extra_settings_count++;
@@ -112,7 +119,7 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
 
     /* Try some invalid inputs and check it is handled */
     {
-        codes_handle* h2      = 0;
+        grib_handle* h2      = 0;
         packing_spec.accuracy = 999;
         h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
         Assert(err == GRIB_INTERNAL_ERROR);
@@ -158,18 +165,18 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     char gridType[128] = {0,};
     long input_edition = 0;
 
-    codes_handle* handle     = 0;
-    codes_handle* finalh     = 0;
+    grib_handle* handle     = 0;
+    grib_handle* finalh     = 0;
     grib_util_grid_spec spec = {0,};
     grib_util_packing_spec packing_spec = {0,};
 
     Assert(input_filename);
     in = fopen(input_filename, "rb");
     Assert(in);
-    handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
+    handle = grib_handle_new_from_file(0, in, &err);
     Assert(handle);
 
-    CODES_CHECK(codes_get_long(handle, "edition", &input_edition), 0);
+    CODES_CHECK(grib_get_long(handle, "edition", &input_edition), 0);
 
     CODES_CHECK(grib_get_string(handle, "gridType", gridType, &slen), 0);
     if (!STR_EQUAL(gridType, "regular_ll")) {
@@ -180,9 +187,12 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     out = fopen(output_filename, "wb");
     Assert(out);
 
-    CODES_CHECK(codes_get_size(handle, "values", &inlen), 0);
+    CODES_CHECK(grib_get_size(handle, "values", &inlen), 0);
     values = (double*)malloc(sizeof(double) * inlen);
-    CODES_CHECK(codes_get_double_array(handle, "values", values, &inlen), 0);
+    CODES_CHECK(grib_get_double_array(handle, "values", values, &inlen), 0);
+    // make sure values are not constant
+    values[0] = 4.4;
+    values[1] = 5.5;
 
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
     spec.Nj        = 14;
@@ -201,7 +211,10 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     packing_spec.packing_type = get_packing_type_code(packingType);
     packing_spec.bitsPerValue = 24;
     packing_spec.accuracy     = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-    packing_spec.packing      = GRIB_UTIL_PACKING_USE_PROVIDED;
+    if (packingType)
+        packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+    else
+        packing_spec.packing  = GRIB_UTIL_PACKING_SAME_AS_INPUT;
 
     packing_spec.extra_settings_count++;
     packing_spec.extra_settings[0].type       = GRIB_TYPE_LONG;
@@ -215,7 +228,7 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
         packing_spec.deleteLocalDefinition = 1;
     }
 
-    finalh = codes_grib_util_set_spec(
+    finalh = grib_util_set_spec(
         handle,
         &spec,
         &packing_spec,
@@ -232,19 +245,19 @@ static void test_regular_ll(int remove_local_def, int edition, const char* packi
     if (input_edition == 1) {
         const double expected_lat1 = 60.001;
         double lat1                = 0;
-        CODES_CHECK(codes_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
+        CODES_CHECK(grib_get_double(finalh, "latitudeOfFirstGridPointInDegrees", &lat1), 0);
         Assert(fabs(lat1 - expected_lat1) < 1e-10);
     }
 
     /* Write out the message to the output file */
-    CODES_CHECK(codes_get_message(finalh, &buffer, &size), 0);
+    CODES_CHECK(grib_get_message(finalh, &buffer, &size), 0);
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_GRIB), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_GRIB), 0);
     if (fwrite(buffer, 1, size, out) != size) {
         Assert(0);
     }
-    codes_handle_delete(handle);
-    codes_handle_delete(finalh);
+    grib_handle_delete(handle);
+    grib_handle_delete(finalh);
     free(values);
     fclose(in);
     fclose(out);
@@ -266,13 +279,13 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     char gridType[128] = {0,};
     double theMax,theMin,theAverage;
 
-    codes_handle *handle = 0;
-    codes_handle *finalh = 0;
+    grib_handle *handle = 0;
+    grib_handle *finalh = 0;
     grib_util_grid_spec spec={0,};
     grib_util_packing_spec packing_spec={0,};
 
     in = fopen(input_filename,"rb");     Assert(in);
-    handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);    Assert(handle);
+    handle = grib_handle_new_from_file(0, in, &err);    Assert(handle);
 
     CODES_CHECK(grib_get_string(handle, "packingType", gridType, &slen),0);
     if (!STR_EQUAL(gridType, "grid_complex_spatial_differencing")) {
@@ -281,13 +294,13 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     }
     out = fopen(output_filename,"wb");   Assert(out);
 
-    CODES_CHECK(codes_get_size(handle,"values",&inlen), 0);
+    CODES_CHECK(grib_get_size(handle,"values",&inlen), 0);
     values = (double*)malloc(sizeof(double)*inlen);
-    CODES_CHECK(codes_get_double_array(handle, "values", values,&inlen), 0);
+    CODES_CHECK(grib_get_double_array(handle, "values", values,&inlen), 0);
 
-    CODES_CHECK(codes_get_double(handle, "max",    &theMax),0);
-    CODES_CHECK(codes_get_double(handle, "min",    &theMin),0);
-    CODES_CHECK(codes_get_double(handle, "average",&theAverage),0);
+    CODES_CHECK(grib_get_double(handle, "max",    &theMax),0);
+    CODES_CHECK(grib_get_double(handle, "min",    &theMin),0);
+    CODES_CHECK(grib_get_double(handle, "average",&theAverage),0);
     printf("inlen=%lu \t max=%g \t min=%g \t avg=%g\n", inlen, theMax, theMin, theAverage);
 
     spec.grid_type = GRIB_UTIL_GRID_SPEC_REGULAR_LL;
@@ -315,7 +328,7 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
         packing_spec.deleteLocalDefinition = 1;
     }
 
-    finalh = codes_grib_util_set_spec(
+    finalh = grib_util_set_spec(
             handle,
             &spec,
             &packing_spec,
@@ -327,12 +340,12 @@ static void test_grid_complex_spatial_differencing(int remove_local_def, int edi
     Assert(err == 0);
 
     /* Write out the message to the output file */
-    CODES_CHECK(codes_get_message(finalh, &buffer, &size),0);
+    CODES_CHECK(grib_get_message(finalh, &buffer, &size),0);
     if(fwrite(buffer,1,size,out) != size) {
         Assert(0);
     }
-    codes_handle_delete(handle);
-    codes_handle_delete(finalh);
+    grib_handle_delete(handle);
+    grib_handle_delete(finalh);
     fclose(in);
     fclose(out);
 }
