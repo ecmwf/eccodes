@@ -14,7 +14,7 @@
 # --------------------------------------------------
 # Regular Lat/Lon Grid
 # --------------------------------------------------
-infile=${data_dir}/latlon.grib
+infile=${data_dir}/latlon.grib  # edition 1
 outfile=out.grib_util_set_spec.grib
 tempOut=temp.grib_util_set_spec.grib
 grib_util_set_spec=${test_dir}/grib_util_set_spec
@@ -42,7 +42,7 @@ res=`${tools_dir}/grib_get -p edition,section2Used $outfile`
 [ "$res" = "2 0" ]
 
 # GRIB2 input with local definition
-infile=../data/regular_latlon_surface.grib2
+infile=${data_dir}/regular_latlon_surface.grib2
 $EXEC $grib_util_set_spec -r $infile $outfile > /dev/null
 grib_check_key_equals $outfile section2Used 0
 # GRIB2 input without local definition
@@ -52,18 +52,26 @@ grib_check_key_equals $outfile section2Used 0
 
 # Convert to edition2 and use JPEG for packing
 if [ $HAVE_JPEG -eq 1 ]; then
-    infile=../data/latlon.grib
+    infile=${data_dir}/latlon.grib
     $EXEC $grib_util_set_spec -e 2 -p grid_jpeg $infile $outfile > /dev/null
     res=`${tools_dir}/grib_get -p edition,section2Used,packingType $outfile`
     [ "$res" = "2 1 grid_jpeg" ]
 fi
 
-# Convert to edition2 and use CCSDS for packing
+# CCSDS for packing and different editions
 if [ $HAVE_AEC -eq 1 ]; then
-    infile=../data/latlon.grib
+    infile=${data_dir}/sample.grib2
+    $EXEC $grib_util_set_spec -p grid_ccsds $infile $outfile
+    grib_check_key_equals $outfile packingType grid_ccsds
+
+    infile=${data_dir}/latlon.grib #grib1
     $EXEC $grib_util_set_spec -e 2 -p grid_ccsds $infile $outfile > /dev/null
     res=`${tools_dir}/grib_get -p edition,section2Used,packingType $outfile`
     [ "$res" = "2 1 grid_ccsds" ]
+
+    # If we don't convert, then should leave it as grid_simple (No CCSDS in grib1)
+    $EXEC $grib_util_set_spec -p grid_ccsds $infile $outfile
+    grib_check_key_equals $outfile packingType grid_simple
 fi
 
 # --------------------------------------------------
@@ -72,7 +80,7 @@ fi
 # The gaussian tests intentionally cause an error so need to stop it failing
 unset ECCODES_FAIL_IF_LOG_MESSAGE
 
-infile=../data/reduced_gaussian_model_level.grib2
+infile=${data_dir}/reduced_gaussian_model_level.grib2
 outfile=out.grib_util_set_spec.grib
 rm -f $outfile
 
