@@ -131,6 +131,14 @@ grib_check_key_equals $tempOut packingType grid_second_order
 $EXEC $grib_util_set_spec $tempOut $outfile
 grib_check_key_equals $outfile packingType grid_second_order
 
+
+# Check DEBUG output
+# ---------------------------
+export ECCODES_DEBUG=-1
+$EXEC  $grib_util_set_spec ${data_dir}/sample.grib2 $outfile > $tempOut 2>&1
+grep -q "ECCODES DEBUG grib_util:" $tempOut
+
+
 ### Clean up
 rm -f $outfile $tempOut
 rm -f error.data
