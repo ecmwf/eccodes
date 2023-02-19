@@ -124,11 +124,14 @@ if [ $HAVE_AEC -eq 1 ]; then
   grib_check_key_equals $outfile packingType grid_second_order
 fi
 
-# Second order input
+# Second order input/output
 # ---------------------------
 ${tools_dir}/grib_set -r -s packingType=grid_second_order ${data_dir}/sample.grib2 $tempOut
 grib_check_key_equals $tempOut packingType grid_second_order
 $EXEC $grib_util_set_spec $tempOut $outfile
+grib_check_key_equals $outfile packingType grid_second_order
+
+$EXEC $grib_util_set_spec -p grid_second_order ${data_dir}/simple.grib $outfile
 grib_check_key_equals $outfile packingType grid_second_order
 
 
