@@ -9,9 +9,8 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005
- *   Enrico Fucile
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
+ *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -1375,25 +1374,25 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 int grib_get_message_size(const grib_handle* ch, size_t* size)
 {
     long totalLength = 0;
-    int ret          = 0;
+    int err          = 0;
     grib_handle* h   = (grib_handle*)ch;
     *size            = h->buffer->ulength;
-    ret              = grib_get_long(h, "totalLength", &totalLength);
-    if (!ret)
+    err              = grib_get_long(h, "totalLength", &totalLength);
+    if (!err)
         *size = totalLength;
-    return ret;
+    return err;
 }
 
 int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
 {
     long totalLength = 0;
-    int ret          = 0;
+    int err          = 0;
     grib_handle* h   = (grib_handle*)ch;
     *msg             = h->buffer->data;
     *size            = h->buffer->ulength;
 
-    ret = grib_get_long(h, "totalLength", &totalLength);
-    if (!ret)
+    err = grib_get_long(h, "totalLength", &totalLength);
+    if (!err)
         *size = totalLength;
 
     if (h->context->gts_header_on && h->gts_header) {
@@ -1406,20 +1405,20 @@ int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
 
 int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
 {
-    int ret = 0;
+    int err = 0;
     size_t endOfHeadersMarker;
     *msg  = h->buffer->data;
     *size = h->buffer->ulength;
 
-    if ((ret = grib_get_offset(h, "endOfHeadersMarker", &endOfHeadersMarker)) != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_FATAL,
-                         "grib_get_message_headers unable to get offset of endOfHeadersMarker");
-        return ret;
+    if ((err = grib_get_offset(h, "endOfHeadersMarker", &endOfHeadersMarker)) != GRIB_SUCCESS) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "grib_get_message_headers: unable to get offset of endOfHeadersMarker");
+        return err;
     }
 
     *size = endOfHeadersMarker;
 
-    return ret;
+    return err;
 }
 
 grib_handle* grib_handle_new(grib_context* c)
