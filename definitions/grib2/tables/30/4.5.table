@@ -85,5 +85,8 @@
 183 183 Grid tile ice fraction on sea, lake or river as a model surface
 184 184 Grid tile glacier ice and inland ice fraction as a model surface
 # 185-191 Reserved
-# 192-254 Reserved for local use
+192 sol Roof layer (numeric)
+193 sol Wall layer (numeric)
+194 sol Road layer (numeric)
+# 195-254 Reserved for local use
 255 255 Missing
