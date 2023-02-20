@@ -11,7 +11,7 @@
  *  Enrico Fucile
  ****************************/
 
-#include "grib_api_internal.h"
+#include "grib_api_internal_cpp.h"
 
 #define PRE_PROCESSING_NONE 0
 #define PRE_PROCESSING_DIFFERENCE 1
@@ -210,7 +210,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (*len < nvals)
         return GRIB_ARRAY_TOO_SMALL;
 
-    code = grib_ieee_decode_array(a->context, buf, nvals, bytes, val);
+    code = grib_ieee_decode_array<double>(a->context, buf, nvals, bytes, val);
 
     *len = nvals;
 

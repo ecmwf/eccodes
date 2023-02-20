@@ -12,6 +12,7 @@
  * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "grib_value.h"
 #include <float.h>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -1279,10 +1280,11 @@ const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
     return act ? act->cclass->name : NULL;
 }
 
-static int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length)
+template <>
+int _grib_get_array_internal<double>(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = _grib_get_double_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = _grib_get_array_internal<double>(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1297,10 +1299,11 @@ static int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* 
     }
 }
 
-int _grib_get_float_array_internal(const grib_handle* h, grib_accessor* a, float* val, size_t buffer_len, size_t* decoded_length)
+template <>
+int _grib_get_array_internal<float>(const grib_handle* h, grib_accessor* a, float* val, size_t buffer_len, size_t* decoded_length)
 {
     if (a) {
-        int err = _grib_get_float_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = _grib_get_array_internal<float>(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
@@ -1317,28 +1320,35 @@ int _grib_get_float_array_internal(const grib_handle* h, grib_accessor* a, float
 
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length)
 {
-    int ret = grib_get_double_array(h, name, val, length);
-
-    if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as double array (%s)",
-                         name, grib_get_error_message(ret));
-
-    return ret;
+    return grib_get_array_internal<double>(h, name, val, length);
 }
+
 int grib_get_float_array_internal(const grib_handle* h, const char* name, float* val, size_t* length)
 {
-    int ret = grib_get_float_array(h, name, val, length);
-
-    if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as float array (%s)",
-                         name, grib_get_error_message(ret));
-
-    return ret;
+    return grib_get_array_internal<float>(h, name, val, length);
 }
 
-int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
+template <>
+int grib_get_array<float>(const grib_handle* h, const char* name, float* val, size_t *length)
+{
+    size_t len = *length;
+    grib_accessor* a = grib_find_accessor(h, name);
+    if (!a) return GRIB_NOT_FOUND;
+
+    //[> TODO: For now only GRIB supported... no BUFR keys <]
+    if (h->product_kind != PRODUCT_GRIB) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        return GRIB_NOT_IMPLEMENTED;
+    }
+    Assert(name[0]!='/');
+    Assert(name[0]!='#');
+    *length = 0;
+    return _grib_get_array_internal<float>(h,a,val,len,length);
+}
+
+
+template <>
+int grib_get_array<double>(const grib_handle* h, const char* name, double* val, size_t* length)
 {
     size_t len              = *length;
     grib_accessor* a        = NULL;
@@ -1358,31 +1368,23 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
         if (!a)
             return GRIB_NOT_FOUND;
         if (name[0] == '#') {
-            return grib_unpack_double(a, val, length);
+            return grib_unpack_double(a, val, length); // TODO: change to template
         }
         else {
             *length = 0;
-            return _grib_get_double_array_internal(h, a, val, len, length);
+            return _grib_get_array_internal<double>(h, a, val, len, length);
         }
     }
 }
 
-// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
+int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
+{
+    return grib_get_array<double>(h, name, val, length);
+}
+
 int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
 {
-    size_t len = *length;
-    grib_accessor* a = grib_find_accessor(h, name);
-    if (!a) return GRIB_NOT_FOUND;
-
-    /* TODO: For now only GRIB supported... no BUFR keys */
-    if (h->product_kind != PRODUCT_GRIB) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
-        return GRIB_NOT_IMPLEMENTED;
-    }
-    Assert(name[0]!='/');
-    Assert(name[0]!='#');
-    *length = 0;
-    return _grib_get_float_array_internal(h,a,val,len,length);
+    return grib_get_array<float>(h, name, val, length);
 }
 
 int ecc__grib_get_string_length(grib_accessor* a, size_t* size)

@@ -48,7 +48,7 @@ static const unsigned long dmasks[] = {
     0x00,
 };
 
-static const int max_nbits        = sizeof(unsigned long) * 8;
+extern const int max_nbits        = sizeof(unsigned long) * 8;
 static const int max_nbits_size_t = sizeof(size_t) * 8;
 
 unsigned long grib_decode_unsigned_byte_long(const unsigned char* p, long o, int l)

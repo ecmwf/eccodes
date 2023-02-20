@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_accessor_class_data_ccsds_packing.h"
 
 /*
    This is used by make_class.pl
@@ -49,35 +49,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
-static int unpack_double(grib_accessor*, double* val, size_t* len);
-static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
-
-typedef struct grib_accessor_data_ccsds_packing
-{
-    grib_accessor att;
-    /* Members defined in gen */
-    /* Members defined in values */
-    int  carg;
-    const char* seclen;
-    const char* offsetdata;
-    const char* offsetsection;
-    int dirty;
-    /* Members defined in data_ccsds_packing */
-    const char*   number_of_values;
-    const char*   reference_value;
-    const char*   binary_scale_factor;
-    const char*   decimal_scale_factor;
-    const char*   bits_per_value;
-    const char*   number_of_data_points;
-    const char*   ccsds_flags;
-    const char*   ccsds_block_size;
-    const char*   ccsds_rsi;
-} grib_accessor_data_ccsds_packing;
 
 extern grib_accessor_class* grib_accessor_class_values;
 
@@ -104,8 +80,8 @@ static grib_accessor_class _grib_accessor_class_data_ccsds_packing = {
     0,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
-    &unpack_double,              /* grib_unpack procedures double */
-    &unpack_float,               /* grib_unpack procedures float */
+    &GribAccessorDataCcsdsPacking<double>::unpack, /* grib_unpack procedures double */
+    &GribAccessorDataCcsdsPacking<float>::unpack, /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -200,7 +176,7 @@ static int value_count(grib_accessor* a, long* count)
 
 #include <libaec.h>
 
-static const char* aec_get_error_message(int code)
+const char* aec_get_error_message(int code)
 {
     if (code == AEC_MEM_ERROR)    return "AEC_MEM_ERROR";
     if (code == AEC_DATA_ERROR)   return "AEC_DATA_ERROR";
@@ -209,7 +185,8 @@ static const char* aec_get_error_message(int code)
     if (code == AEC_OK)           return "AEC_OK";
     return "Unknown error code";
 }
-static void print_aec_stream_info(struct aec_stream* strm, const char* func)
+
+void print_aec_stream_info(struct aec_stream* strm, const char* func)
 {
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%u\n",           func, strm->flags);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.bits_per_sample=%u\n", func, strm->bits_per_sample);
@@ -217,232 +194,6 @@ static void print_aec_stream_info(struct aec_stream* strm, const char* func)
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.rsi=%u\n",             func, strm->rsi);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n",      func, strm->avail_out);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n",       func, strm->avail_in);
-}
-
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-
-    int err = GRIB_SUCCESS, i = 0;
-    size_t buflen = 0;
-    struct aec_stream strm;
-    double bscale      = 0;
-    double dscale      = 0;
-    unsigned char* buf = NULL;
-    size_t n_vals      = 0;
-    size_t size        = 0;
-    unsigned char* decoded = NULL;
-    /*unsigned char* p       = NULL;*/
-    long pos               = 0;
-    long nn                = 0;
-
-    long binary_scale_factor  = 0;
-    long decimal_scale_factor = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
-    long bits8;
-
-    long ccsds_flags;
-    long ccsds_block_size;
-    long ccsds_rsi;
-
-    self->dirty = 0;
-
-    if ((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
-        return err;
-    n_vals = nn;
-
-    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-
-    /* ECC-477: Don't call grib_get_long_internal to suppress error message being output */
-    if ((err = grib_get_long(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
-        return err;
-
-    /* TODO: This should be called upstream */
-    if (*len < n_vals)
-        return GRIB_ARRAY_TOO_SMALL;
-
-    /* Special case */
-    if (bits_per_value == 0) {
-        for (i = 0; i < n_vals; i++)
-            val[i] = reference_value;
-        *len = n_vals;
-        return GRIB_SUCCESS;
-    }
-
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
-
-    buflen = grib_byte_count(a);
-    buf = (unsigned char*)hand->buffer->data;
-    buf += grib_byte_offset(a);
-
-    strm.flags           = ccsds_flags;
-    strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
-
-    strm.next_in  = buf;
-    strm.avail_in = buflen;
-
-    bits8   = ((bits_per_value + 7) / 8) * 8;
-    size    = n_vals * ((bits_per_value + 7) / 8);
-    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
-    if (!decoded) {
-        err = GRIB_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-    strm.next_out  = decoded;
-    strm.avail_out = size;
-
-    if (hand->context->debug) print_aec_stream_info(&strm, "unpack_double");
-
-    if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS unpack_double: aec_buffer_decode error %d (%s)\n",
-                         err, aec_get_error_message(err));
-        err = GRIB_ENCODING_ERROR;
-        goto cleanup;
-    }
-
-    /* printf("bscale=%g dscale=%g reference_value=%g\n",bscale,dscale,reference_value); */
-    pos = 0;
-#if 0
-    p = decoded;
-    for (i = 0; i < n_vals; i++) {
-        val[i] = (double)(((grib_decode_unsigned_long(p, &pos, bits8) * bscale) + reference_value) * dscale);
-    }
-#endif
-    /* ECC-1427: Performance improvement */
-    grib_decode_double_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
-    *len = n_vals;
-
-cleanup:
-    grib_context_buffer_free(a->context, decoded);
-    return err;
-}
-
-// TODO(maee): ECC-1467: Copied the 'double' version and reused by copy/paste!
-// Should be merged with unpack_double and refactored! Most probably using C++ templates
-static int unpack_float(grib_accessor* a, float* val, size_t* len)
-{
-    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-
-    int err = GRIB_SUCCESS, i = 0;
-    size_t buflen = 0;
-    struct aec_stream strm;
-    double bscale      = 0;
-    double dscale      = 0;
-    unsigned char* buf = NULL;
-    size_t n_vals      = 0;
-    size_t size        = 0;
-    unsigned char* decoded = NULL;
-    /*unsigned char* p       = NULL;*/
-    long pos               = 0;
-    long nn                = 0;
-
-    long binary_scale_factor  = 0;
-    long decimal_scale_factor = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
-    long bits8;
-
-    long ccsds_flags;
-    long ccsds_block_size;
-    long ccsds_rsi;
-
-    self->dirty = 0;
-
-    if ((err = grib_value_count(a, &nn)) != GRIB_SUCCESS)
-        return err;
-    n_vals = nn;
-
-    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-
-    /* ECC-477: Don't call grib_get_long_internal to suppress error message being output */
-    if ((err = grib_get_long(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
-        return err;
-
-    /* TODO: This should be called upstream */
-    if (*len < n_vals)
-        return GRIB_ARRAY_TOO_SMALL;
-
-    /* Special case */
-    if (bits_per_value == 0) {
-        for (i = 0; i < n_vals; i++)
-            val[i] = reference_value;
-        *len = n_vals;
-        return GRIB_SUCCESS;
-    }
-
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
-
-    buflen = grib_byte_count(a);
-    buf = (unsigned char*)hand->buffer->data;
-    buf += grib_byte_offset(a);
-
-    strm.flags           = ccsds_flags;
-    strm.bits_per_sample = bits_per_value;
-    strm.block_size      = ccsds_block_size;
-    strm.rsi             = ccsds_rsi;
-
-    strm.next_in  = buf;
-    strm.avail_in = buflen;
-
-    bits8   = ((bits_per_value + 7) / 8) * 8;
-    size    = n_vals * ((bits_per_value + 7) / 8);
-    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
-    if (!decoded) {
-        err = GRIB_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-    strm.next_out  = decoded;
-    strm.avail_out = size;
-
-    if (hand->context->debug) print_aec_stream_info(&strm, "unpack_float");
-
-    if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS unpack_float: aec_buffer_decode error %d (%s)\n",
-                         err, aec_get_error_message(err));
-        err = GRIB_ENCODING_ERROR;
-        goto cleanup;
-    }
-
-    pos = 0;
-
-    /* ECC-1427: Performance improvement */
-    grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
-    *len = n_vals;
-
-cleanup:
-    grib_context_buffer_free(a->context, decoded);
-    return err;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
@@ -786,16 +537,6 @@ static void print_error_feature_not_enabled(grib_context* c)
     grib_context_log(c, GRIB_LOG_ERROR,
                      "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
-}
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    print_error_feature_not_enabled(a->context);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
-}
-static int unpack_float(grib_accessor* a, float* val, size_t* len)
-{
-    print_error_feature_not_enabled(a->context);
-    return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {

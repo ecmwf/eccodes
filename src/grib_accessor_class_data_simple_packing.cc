@@ -12,7 +12,7 @@
  *   Enrico Fucile
  *******************************/
 
-#include "grib_api_internal.h"
+#include "grib_api_internal_cpp.h"
 #include "grib_optimize_decimal_factor.h"
 #include <float.h>
 
@@ -442,9 +442,9 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
     if(dval)
-        grib_decode_double_array(buf, &pos, bits_per_value, reference_value, s, d, n_vals, dval);
+        grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, dval);
     if(fval)
-        grib_decode_float_array(buf, &pos, bits_per_value, reference_value, s, d, n_vals, fval);
+        grib_decode_array<float>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, fval);
 
     *len = (long)n_vals;
 
@@ -586,7 +586,7 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    grib_decode_double_array(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+    grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
 
     *len = (long)n_vals;
 

@@ -12,7 +12,7 @@
  *   Enrico Fucile  - 06.01.2009                                           *
  *                                                                         *
  ***************************************************************************/
-#include "grib_api_internal.h"
+#include "grib_ieeefloat.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -344,7 +344,8 @@ double grib_long_to_ieee64(unsigned long x)
     return dval;
 }
 
-int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
+template <>
+int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
     int err = 0, i = 0, j = 0;
     unsigned char s[8] = {0,};
@@ -387,7 +388,8 @@ int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, in
     return err;
 }
 
-int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
+template <>
+int grib_ieee_decode_array<float>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
 {
     int err = 0, i = 0, j = 0;
     unsigned char s[4] = {0,};
