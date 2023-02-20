@@ -21,6 +21,11 @@ outfile2=temp.$label.2
 
 rm -f $outfile1 $outfile2
 
+# Convert a non-constant grib2 file (Note: not using -r)
+grib2_sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
+${tools_dir}/grib_compare -c data:n $grib2_sample $outfile1
+
 
 # ECC-1263
 # ---------
