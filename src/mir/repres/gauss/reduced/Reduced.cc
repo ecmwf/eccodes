@@ -287,7 +287,7 @@ void Reduced::estimate(api::MIREstimation& estimation) const {
 
 
 std::vector<util::GridBox> Reduced::gridBoxes() const {
-    ASSERT(1 < Nj_);
+    ASSERT(1 <= Nj_);
 
 
     // latitude edges
@@ -328,13 +328,24 @@ std::vector<util::GridBox> Reduced::gridBoxes() const {
         Longitude lon0 = (Nw * inc) - (inc / 2);
         Longitude lon1 = lon0;
 
-        for (size_t i = 0; i < N; ++i) {
-            auto w = std::max(bbox_.west().value(), lon1.value());
-            lon1 += inc;
-            r.emplace_back(n, w, s, std::min(bbox_.east().value(), lon1.value()));
-        }
+        if (periodic) {
+            for (size_t i = 0; i < N; ++i) {
+                auto w = lon1.value();
+                lon1 += inc;
+                r.emplace_back(n, w, s, lon1.value());
+            }
 
-        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+            ASSERT(lon0 == lon1.normalise(lon0));
+        }
+        else {
+            for (size_t i = 0; i < N; ++i) {
+                auto w = std::max(bbox_.west().value(), lon1.value());
+                lon1 += inc;
+                r.emplace_back(n, w, s, std::min(bbox_.east().value(), lon1.value()));
+            }
+
+            ASSERT(lon0 < lon1.normalise(lon0));
+        }
     }
 
     ASSERT(r.size() == numberOfPoints());
