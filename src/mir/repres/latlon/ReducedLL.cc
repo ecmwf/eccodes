@@ -155,12 +155,11 @@ void ReducedLL::fillMeshGen(util::MeshGeneratorParameters& params) const {
 bool ReducedLL::isPeriodicWestEast() const {
     ASSERT(!pl_.empty());
 
-    auto we    = bbox_.east() - bbox_.west();
-    auto inc   = (Longitude::GLOBE - we).value();
-    auto maxpl = double(*std::max_element(pl_.begin(), pl_.end()));
+    auto maxpl = *std::max_element(pl_.begin(), pl_.end());
+    ASSERT(maxpl >= 2);
 
-    constexpr double GRIB1_EPSILON = 0.001;
-    return eckit::types::is_approximately_equal(inc * maxpl, Longitude::GLOBE.value(), GRIB1_EPSILON);
+    eckit::Fraction inc = (bbox_.east() - bbox_.west()).fraction() / maxpl;
+    return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
 bool ReducedLL::includesNorthPole() const {
@@ -271,7 +270,6 @@ Iterator* ReducedLL::iterator() const {
 }
 
 std::vector<util::GridBox> ReducedLL::gridBoxes() const {
-
     auto dom      = domain();
     bool periodic = isPeriodicWestEast();
 
@@ -294,8 +292,8 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
         latEdges[j + 1] = (lat0 - (j + half) * sn).value();
     }
 
-    latEdges.front() = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.front()));
-    latEdges.back()  = std::min(dom.north().value(), std::max(dom.south().value(), latEdges.back()));
+    latEdges.front() = std::min(dom.north().value(), latEdges.front());
+    latEdges.back()  = std::max(dom.south().value(), latEdges.back());
 
 
     for (size_t j = 0; j < Nj; ++j) {
@@ -305,16 +303,28 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
         ASSERT(Ni > 1);
         const eckit::Fraction we = (dom.east() - dom.west()).fraction() / (Ni - (periodic ? 0 : 1));
 
-        auto lon0 = bbox_.west();
+        auto lon0 = bbox_.west() - we / 2;
         auto lon1 = lon0;
 
-        for (long i = 0; i < Ni; ++i) {
-            auto l = lon1;
-            lon1 += we;
-            r.emplace_back(util::GridBox(latEdges[j], l.value(), latEdges[j + 1], lon1.value()));
-        }
+        if (periodic) {
+            for (long i = 0; i < Ni; ++i) {
+                auto w = lon1.value();
+                lon1 += we;
+                r.emplace_back(util::GridBox(latEdges[j], w, latEdges[j + 1], lon1.value()));
+            }
 
-        ASSERT(periodic ? lon0 == lon1.normalise(lon0) : lon0 < lon1.normalise(lon0));
+            ASSERT(lon0 == lon1.normalise(lon0));
+        }
+        else {
+            for (long i = 0; i < Ni; ++i) {
+                auto w = std::max(bbox_.west().value(), lon1.value());
+                lon1 += we;
+                auto e = std::min(bbox_.east().value(), lon1.value());
+                r.emplace_back(util::GridBox(latEdges[j], w, latEdges[j + 1], e));
+            }
+
+            ASSERT(lon0 < lon1.normalise(lon0));
+        }
     }
 
     ASSERT(r.size() == numberOfPoints());
