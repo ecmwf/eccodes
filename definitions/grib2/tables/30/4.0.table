@@ -80,7 +80,8 @@
 96 96 Average, accumulation, extreme values or other statistically processed values of an individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
 97 97 Average, accumulation, extreme values or other statistically processed values of post-processing analysis or forecast at a horizontal level or in a horizontal layer at a specified local time
 98 98 Average, accumulation, extreme values or other statistically processed values of a post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
-99 99 DestinE spatio-temporal changing tiles at a horizontal level or horizontal layer at a point in time
+113 113 Generalised spatio-temporal changing tiles at a horizontal level or horizontal layer at a point in time
+114 114 Average, accumulation, and/or extreme values or other statistically processed values on generalised spatio-temporal changing tiles at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 # 100-253 Reserved
 254 254 CCITT IA5 character string 
 # 255-999 Reserved 
