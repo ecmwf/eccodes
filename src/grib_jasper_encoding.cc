@@ -26,6 +26,11 @@ static int ecc_jasper_initialise()
     int jaserr = 0;
     jas_conf_clear();
     jas_conf_set_max_mem_usage(jas_get_total_mem_size());
+
+    #if defined GRIB_PTHREADS || defined GRIB_OMP_THREADS
+        jas_conf_set_multithread(1);
+    #endif
+
     jaserr = jas_init_library();
     if (jaserr) return jaserr;
     jaserr = jas_init_thread();
