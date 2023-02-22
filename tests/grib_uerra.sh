@@ -73,5 +73,23 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# ECC-1532
+# ---------
+# By default crraLocalVersion=1 which does not allow expver to be set
+# because it is a constant (prod or test)
+set +e
+${tools_dir}/grib_set -s \
+  productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,marsExpver=coco \
+$grib2_sample $temp1
+status=$?
+set -e
+[ $status -ne 0 ]
+
+# crraLocalVersion=2 has a coded key which can be set
+${tools_dir}/grib_set -s \
+  productionStatusOfProcessedData=10,grib2LocalSectionPresent=1,crraLocalVersion=2,marsExpver=coco \
+$grib2_sample $temp1
+grib_check_key_equals $temp1 'marsExpver,mars.expver' 'coco coco'
+
 # Clean up
 rm -f $temp1 $temp2 $tempSample
