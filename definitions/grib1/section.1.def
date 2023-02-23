@@ -137,8 +137,6 @@ codetable[1] timeRangeIndicator ('5.table',tablesLocalDir,tablesMasterDir) = 1 :
 
 unsigned[2] numberIncludedInAverage;
 
-meta mybits bits(numberIncludedInAverage,0,12);
-
 unsigned[1] numberMissingFromAveragesOrAccumulations;
 unsigned[1] centuryOfReferenceTimeOfData;
 
