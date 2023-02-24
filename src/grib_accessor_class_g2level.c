@@ -326,10 +326,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                 value_first *= 100;
             break;
         case 109:
-            //printf("type1 = 109\n");
             if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
-                // See ECC-1081
-                // printf("    Special case - change scale_first to %ld\n", levelFactor);
+                /* See ECC-1081 */
                 scale_first = levelFactor;
             }
 
