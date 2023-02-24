@@ -990,6 +990,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         if (STR_EQUAL(input_packing_type, "grid_ieee")) {
             SET_STRING_VALUE("packingType", input_packing_type);
         }
+        if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
+            setCcsdsPacking = 1;
+        }
+        if (STR_EQUAL(input_packing_type, "grid_second_order")) {
+            setSecondOrder = 1;
+        }
     }
 
     /*if ( (*err=check_values(data_values, data_values_count))!=GRIB_SUCCESS ) {
