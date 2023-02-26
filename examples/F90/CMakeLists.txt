@@ -115,7 +115,7 @@ foreach( tool ${tests_extra} )
                       CONDITION       HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
-                      TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs )
+                      TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs eccodes_download_bufr_refs )
 endforeach()
 
 # Test for CCSDS (AEC) packing

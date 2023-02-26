@@ -313,7 +313,8 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       RESOURCES asca_139.t1.ref
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
-                                   eccodes_download_bufrs eccodes_download_metars eccodes_download_gts )
+                                   eccodes_download_bufrs eccodes_download_bufr_refs
+                                   eccodes_download_metars eccodes_download_gts )
     endforeach()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
@@ -350,7 +351,7 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-1288.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
+                      TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
 
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
