@@ -45,6 +45,7 @@ list(APPEND test_c_bins
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
+    grib_copy_message
     grib_packing_order
     grib_sh_imag
     grib_sh_spectral_complex
@@ -241,6 +242,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_mercator
         grib_global
         grib_concept
+        grib_copy_message
         grib_decimalPrecision
         grib_bitsPerValue
         grib_get_fail

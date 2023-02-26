@@ -397,7 +397,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     values = (char**)grib_context_malloc_clear(c, size * sizeof(char*));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_FATAL, "Memory allocation error: %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_ERROR, "Memory allocation error: %zu bytes", size);
         return;
     }
 
@@ -458,7 +458,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
      * if (size==0) return;
      * value=(char*)grib_context_malloc_clear(a->context,size);
      * if (!value) {
-     *   grib_context_log(a->context,GRIB_LOG_FATAL,"unable to allocate %d bytes",(int)size);
+     *   grib_context_log(a->context,GRIB_LOG_ERROR,"unable to allocate %d bytes",(int)size);
      *   return;
      * }
     */

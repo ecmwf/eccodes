@@ -169,6 +169,14 @@ grib_check_key_equals $infile packingType grid_second_order
 ${tools_dir}/grib_set -d1 $infile $temp1
 grib_check_key_equals $temp1 packingType grid_simple
 
+infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
+infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2
