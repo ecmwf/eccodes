@@ -1,0 +1,24 @@
+name: sync
+
+# Controls when the workflow will run
+on:
+  # Trigger the workflow on all pushes
+  push:
+    branches:
+      - "**"
+    tags:
+      - "**"
+
+  # Trigger the workflow when a branch or tag is deleted
+  delete: ~
+
+jobs:
+  # Calls a reusable CI workflow to sync the current with a remote repository.
+  #   It will correctly handle addition of any new and removal of existing Git objects.
+  sync:
+    name: sync
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/sync.yml@v2
+    secrets:
+      target_repository: eccodes/eccodes
+      target_username: ClonedDuck
+      target_token: ${{ secrets.BITBUCKET_PAT }}
