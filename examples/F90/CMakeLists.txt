@@ -123,7 +123,7 @@ ecbuild_add_test( TARGET          eccodes_f_grib_set_packing
                   SOURCES         grib_set_packing.f90
                   LINKER_LANGUAGE Fortran
                   LIBS            eccodes_f90 eccodes
-                  CONDITION       HAVE_AEC AND HAVE_FORTRAN
+                  CONDITION       HAVE_BUILD_TOOLS AND HAVE_AEC AND HAVE_FORTRAN
                   COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/grib_set_packing.sh )
 
 # Executables without a shell script
