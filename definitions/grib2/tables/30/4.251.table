@@ -66,6 +66,9 @@
 1521 G021 Group 021 (BOBD + TEBD + TRBD + FLTR)
 1522 G022 Group 022 (TEBE + TRBE)
 1523 G023 Group 023 (BONE + TENE)
+# Other groupings
+1524 G024 Group 024 (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
+1525 G025 Group 025 (LAKE + RIVE)
 # 1524-2000 Reserved for ECOCLIMAP/SURFEX groupings
 2001 CROP Crops, mixed farming
 2002 SHGR Short grass
