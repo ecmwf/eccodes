@@ -1,23 +1,23 @@
 # Concept combinationOfAttributesOfTile
 
-'[UNMOD]' = {attributeOfTile = [1];}
-'[SNOW]' = {attributeOfTile = [2];}
-'[FLOOD]' = {attributeOfTile = [3];}
-'[ICE]' = {attributeOfTile = [4];}
-'[ITC]' = {attributeOfTile = [5];}
-'[AGG]' = {attributeOfTile = [6];}
-'[UNRES]' = {attributeOfTile = [7];}
+'UNMOD' = {attributeOfTile = [1];}
+'SNOW' = {attributeOfTile = [2];}
+'FLOOD' = {attributeOfTile = [3];}
+'ICE' = {attributeOfTile = [4];}
+'ITC' = {attributeOfTile = [5];}
+'AGG' = {attributeOfTile = [6];}
+'UNRES' = {attributeOfTile = [7];}
 
-'[SNOW,FLOOD]' = {attributeOfTile = [2,3];}
-'[SNOW,ICE]' = {attributeOfTile = [2,4];}
-'[SNOW,FLOOD]' = {attributeOfTile = [2,5];}
-'[FLOOD,ICE]' = {attributeOfTile = [3,4];}
-'[FLOOD,ITC]' = {attributeOfTile = [3,5];}
-'[ICE,ITC]' = {attributeOfTile = [4,5];}
+'SNOW_FLOOD' = {attributeOfTile = [2,3];}
+'SNOW_ICE' = {attributeOfTile = [2,4];}
+'SNOW_FLOOD' = {attributeOfTile = [2,5];}
+'FLOOD_ICE' = {attributeOfTile = [3,4];}
+'FLOOD_ITC' = {attributeOfTile = [3,5];}
+'ICE_ITC' = {attributeOfTile = [4,5];}
 
-'[SNOW,FLOOD,ICE]' = {attributeOfTile = [2,3,4];}
-'[SNOW,FLOOD,ITC]' = {attributeOfTile = [2,3,5];}
-'[SNOW,ICE,ITC]' = {attributeOfTile = [2,4,5];}
-'[FLOOD,ICE,ITC]' = {attributeOfTile = [3,4,5];}
+'SNOW_FLOOD_ICE' = {attributeOfTile = [2,3,4];}
+'SNOW_FLOOD_ITC' = {attributeOfTile = [2,3,5];}
+'SNOW_ICE_ITC' = {attributeOfTile = [2,4,5];}
+'FLOOD_ICE_ITC' = {attributeOfTile = [3,4,5];}
 
-'[SNOW,FLOOD,ICE,ITC]' = {attributeOfTile = [2,3,4,5];}
+'SNOW_FLOOD_ICE_ITC' = {attributeOfTile = [2,3,4,5];}
