@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grib_api_internal.h"
+#include <type_traits>
 
 typedef struct grib_accessor_data_g22order_packing
 {
@@ -45,6 +46,7 @@ public:
 template <typename T>
 int GribAccessorDataG22orderPacking<T>::unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
 
     size_t i    = 0;

@@ -51,6 +51,7 @@ public:
 template <typename T>
 int GribAccessorClassDataComplexPacking<T>::unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_complex_packing* self = (grib_accessor_data_complex_packing*)a;
     grib_handle* gh                          = grib_handle_of_accessor(a);
 

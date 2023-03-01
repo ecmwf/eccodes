@@ -1,5 +1,7 @@
 #pragma once
+
 #include "grib_api_internal_cpp.h"
+#include <type_traits>
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
 #include <libaec.h>
@@ -42,6 +44,7 @@ public:
 template <typename T>
 int GribAccessorDataCcsdsPacking<T>::unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
 
