@@ -71,7 +71,8 @@ GRIB2_INPUTS="
   ${data_dir}/test_file.grib2
   ${data_dir}/sample.grib2"
 
-if [ $HAVE_JPEG -eq 1 ]; then
+# There is a problem with multi-threading and Jasper versions > 2
+if [ $HAVE_JPEG -eq 1 -a $HAVE_LIBJASPER -eq 0 ]; then
     echo "Adding extra files (HAVE_JPEG=1)"
     GRIB2_INPUTS="${data_dir}/jpeg.grib2 ${data_dir}/reduced_gaussian_surface_jpeg.grib2 "$GRIB2_INPUTS
 fi

@@ -799,7 +799,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     }
 }
 
-static int to_skip(grib_handle* h, grib_values* v, int* err)
+static int to_skip(grib_runtime_options* options, grib_handle* h, grib_values* v, int* err)
 {
     double dvalue              = 0;
     int ret                    = 0;
@@ -807,6 +807,13 @@ static int to_skip(grib_handle* h, grib_values* v, int* err)
     char value[MAX_STRING_LEN] = {0,};
     size_t len = MAX_STRING_LEN;
     *err       = 0;
+
+    Assert(options->constraints_count > 0);
+
+    if (strcmp(v->name, "count")==0 && v->long_value < 1) {
+        fprintf(dump_file, "ERROR: Invalid value for key '%s' (must be an integer greater than 0)\n", v->name);
+        exit(1);
+    }
 
     switch (v->type) {
         case GRIB_TYPE_STRING:
@@ -853,7 +860,7 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
         if (v->equal) {
             options->skip = 1;
             while (v) {
-                if (!to_skip(h, v, &ret)) {
+                if (!to_skip(options, h, v, &ret)) {
                     if (!strcmp(v->name, "count") && !v->next) {
                         /* We have count=XX and nothing after that so we can
                          * skip every other message after it
@@ -874,7 +881,7 @@ void grib_skip_check(grib_runtime_options* options, grib_handle* h)
         else {
             options->skip = 0;
             while (v) {
-                if (to_skip(h, v, &ret)) {
+                if (to_skip(options, h, v, &ret)) {
                     options->skip = 1;
                     break;
                 }

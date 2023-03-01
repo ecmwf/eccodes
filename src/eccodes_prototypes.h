@@ -1,5 +1,5 @@
 #ifdef ECCODES_ON_WINDOWS
-#include <stdint.h>
+    #include <stdint.h>
 #endif
 
 /* action.cc */
@@ -1075,7 +1075,7 @@ void grib_math_delete(grib_context* c, grib_math* m);
 grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
 
 /* grib_hash_keys.cc*/
-const struct grib_keys_hash* grib_keys_hash_get(const char *str, size_t len);
+const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);
 grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
 void grib_hash_keys_delete(grib_itrie* t);
 int grib_hash_keys_get_id(grib_itrie* t, const char* key);
@@ -1341,13 +1341,13 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-    const char*  values_keyname, const char* Ni_keyname, const char* Nj_keyname,
-    double**     out_lats,
-    int*         out_lats_count,
-    double**     out_lons,
-    int*         out_lons_count,
-    double**     out_distances,
-    double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
+                              const char* values_keyname, const char* Ni_keyname, const char* Nj_keyname,
+                              double** out_lats,
+                              int* out_lats_count,
+                              double** out_lons,
+                              int* out_lons_count,
+                              double** out_distances,
+                              double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.cc*/
 grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
@@ -1427,6 +1427,7 @@ int path_is_directory(const char* filename);
 char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
+int is_date_valid(long year, long month, long day, long hour, long minute, double second);
 
 /* grib_util.cc*/
 grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int what, int* err);
@@ -1467,8 +1468,8 @@ int string_ends_with(const char* str1, const char* str2);
 int string_count_char(const char* str, char c);
 const char* codes_get_product_name(ProductKind product);
 const char* grib_get_type_name(int type);
-char* string_replace_char(char *str, char oldc, char newc);
-void string_remove_char(char * str, char c);
+char* string_replace_char(char* str, char oldc, char newc);
+void string_remove_char(char* str, char c);
 
 /* functions.cc*/
 long grib_op_eq(long a, long b);

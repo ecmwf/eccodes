@@ -22,7 +22,6 @@
 
 #include "grib_api_internal.h"
 
-#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 
 int exit_on_error = 1; /* By default exit if any check fails */
 int verbose       = 0; /* By default quiet unless errors */

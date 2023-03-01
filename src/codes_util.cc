@@ -86,44 +86,44 @@ char* codes_getenv(const char* name)
         const char* old_name = name;
 
         /* Test the most commonly used variables first */
-        if (STR_EQ(name, "ECCODES_SAMPLES_PATH"))
+        if (STR_EQUAL(name, "ECCODES_SAMPLES_PATH"))
             old_name = "GRIB_SAMPLES_PATH";
-        else if (STR_EQ(name, "ECCODES_DEFINITION_PATH"))
+        else if (STR_EQUAL(name, "ECCODES_DEFINITION_PATH"))
             old_name = "GRIB_DEFINITION_PATH";
-        else if (STR_EQ(name, "ECCODES_DEBUG"))
+        else if (STR_EQUAL(name, "ECCODES_DEBUG"))
             old_name = "GRIB_API_DEBUG";
 
-        else if (STR_EQ(name, "ECCODES_FAIL_IF_LOG_MESSAGE"))
+        else if (STR_EQUAL(name, "ECCODES_FAIL_IF_LOG_MESSAGE"))
             old_name = "GRIB_API_FAIL_IF_LOG_MESSAGE";
-        else if (STR_EQ(name, "ECCODES_GRIB_WRITE_ON_FAIL"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_WRITE_ON_FAIL"))
             old_name = "GRIB_API_WRITE_ON_FAIL";
-        else if (STR_EQ(name, "ECCODES_GRIB_LARGE_CONSTANT_FIELDS"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_LARGE_CONSTANT_FIELDS"))
             old_name = "GRIB_API_LARGE_CONSTANT_FIELDS";
-        else if (STR_EQ(name, "ECCODES_NO_ABORT"))
+        else if (STR_EQUAL(name, "ECCODES_NO_ABORT"))
             old_name = "GRIB_API_NO_ABORT";
-        else if (STR_EQ(name, "ECCODES_GRIBEX_MODE_ON"))
+        else if (STR_EQUAL(name, "ECCODES_GRIBEX_MODE_ON"))
             old_name = "GRIB_GRIBEX_MODE_ON";
-        else if (STR_EQ(name, "ECCODES_GRIB_IEEE_PACKING"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_IEEE_PACKING"))
             old_name = "GRIB_IEEE_PACKING";
-        else if (STR_EQ(name, "ECCODES_IO_BUFFER_SIZE"))
+        else if (STR_EQUAL(name, "ECCODES_IO_BUFFER_SIZE"))
             old_name = "GRIB_API_IO_BUFFER_SIZE";
-        else if (STR_EQ(name, "ECCODES_LOG_STREAM"))
+        else if (STR_EQUAL(name, "ECCODES_LOG_STREAM"))
             old_name = "GRIB_API_LOG_STREAM";
-        else if (STR_EQ(name, "ECCODES_GRIB_NO_BIG_GROUP_SPLIT"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_NO_BIG_GROUP_SPLIT"))
             old_name = "GRIB_API_NO_BIG_GROUP_SPLIT";
-        else if (STR_EQ(name, "ECCODES_GRIB_NO_SPD"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_NO_SPD"))
             old_name = "GRIB_API_NO_SPD";
-        else if (STR_EQ(name, "ECCODES_GRIB_KEEP_MATRIX"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_KEEP_MATRIX"))
             old_name = "GRIB_API_KEEP_MATRIX";
-        else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_DEFINITION_PATH"))
+        else if (STR_EQUAL(name, "_ECCODES_ECMWF_TEST_DEFINITION_PATH"))
             old_name = "_GRIB_API_ECMWF_TEST_DEFINITION_PATH";
-        else if (STR_EQ(name, "_ECCODES_ECMWF_TEST_SAMPLES_PATH"))
+        else if (STR_EQUAL(name, "_ECCODES_ECMWF_TEST_SAMPLES_PATH"))
             old_name = "_GRIB_API_ECMWF_TEST_SAMPLES_PATH";
-        else if (STR_EQ(name, "ECCODES_GRIB_JPEG"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_JPEG"))
             old_name = "GRIB_JPEG";
-        else if (STR_EQ(name, "ECCODES_GRIB_DUMP_JPG_FILE"))
+        else if (STR_EQUAL(name, "ECCODES_GRIB_DUMP_JPG_FILE"))
             old_name = "GRIB_DUMP_JPG_FILE";
-        else if (STR_EQ(name, "ECCODES_PRINT_MISSING"))
+        else if (STR_EQUAL(name, "ECCODES_PRINT_MISSING"))
             old_name = "GRIB_PRINT_MISSING";
 
         result = getenv(old_name);
@@ -193,4 +193,24 @@ int codes_flush_sync_close_file(FILE* f)
         return err;
     }
     return GRIB_SUCCESS;
+}
+
+// Return 1 if input date is valid. Otherwise 0
+int is_date_valid(long year, long month, long day, long hour, long minute, double second)
+{
+    // Convert input date to Julian number
+    double result = 0; // Julian number in units of days
+    long year1, month1, day1, hour1, minute1, lSecond1;
+
+    // For validating the date/time, we specify seconds as an integer
+    long lSecond = (long)second;
+    grib_datetime_to_julian(year, month, day, hour, minute, lSecond, &result);
+
+    // Check conversion worked by going other way
+    grib_julian_to_datetime(result, &year1, &month1, &day1, &hour1, &minute1, &lSecond1);
+    if (year1 != year || month1 != month || day1 != day || minute1 != minute || lSecond1 != lSecond) {
+        return 0; // bad date
+    }
+
+    return 1;
 }
