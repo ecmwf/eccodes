@@ -1,5 +1,3 @@
-// ECC-1467
-
 #pragma once
 
 #include "grib_api_internal_cpp.h"
@@ -49,7 +47,7 @@ public:
     static int unpack(grib_accessor* a, T* val, size_t* len);
 };
 
-
+// ECC-1467: FloatDataValues
 template <typename T>
 int GribAccessorClassDataComplexPacking<T>::unpack(grib_accessor* a, T* val, size_t* len)
 {
