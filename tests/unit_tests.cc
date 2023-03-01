@@ -10,7 +10,6 @@
 
 #include "grib_api_internal.h"
 
-#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 int assertion_caught = 0;
@@ -1404,10 +1403,10 @@ static void test_string_splitting()
     if (!list) { Assert(!"List is NULL"); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 4);
-    if (!list[0] || !STR_EQ(list[0], "Born")) Assert(0);
-    if (!list[1] || !STR_EQ(list[1], "To"))   Assert(0);
-    if (!list[2] || !STR_EQ(list[2], "Be"))   Assert(0);
-    if (!list[3] || !STR_EQ(list[3], "Wild")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "Born")) Assert(0);
+    if (!list[1] || !STR_EQUAL(list[1], "To"))   Assert(0);
+    if (!list[2] || !STR_EQUAL(list[2], "Be"))   Assert(0);
+    if (!list[3] || !STR_EQUAL(list[3], "Wild")) Assert(0);
     Assert(list[4] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
@@ -1417,8 +1416,8 @@ static void test_string_splitting()
     if (!list) { Assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 2);
-    if (!list[0] || !STR_EQ(list[0], "12345")) Assert(0);
-    if (!list[1] || !STR_EQ(list[1], "a gap")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "12345")) Assert(0);
+    if (!list[1] || !STR_EQUAL(list[1], "a gap")) Assert(0);
     Assert(list[2] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
@@ -1428,7 +1427,7 @@ static void test_string_splitting()
     if (!list) { Assert(0); return; }
     for (i = 0; list[i] != NULL; ++i) {} /* count how many tokens */
     Assert(i == 1);
-    if (!list[0] || !STR_EQ(list[0], "Steppenwolf")) Assert(0);
+    if (!list[0] || !STR_EQUAL(list[0], "Steppenwolf")) Assert(0);
     Assert(list[1] == NULL);
     for (i = 0; list[i] != NULL; ++i) free(list[i]);
     free(list);
@@ -1654,11 +1653,45 @@ static void test_parse_keyval_string()
     free( (void*)values3[0].name );
 }
 
+static void test_dates()
+{
+    printf("Testing: dates...\n");
+    Assert( is_date_valid(1979,12, 1, 0,0,0) );
+    Assert( is_date_valid(1900, 1, 1, 0,0,0) );
+    Assert( is_date_valid(1964, 4, 6, 0,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 12,0,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,10,0) );
+    Assert( is_date_valid(2023, 3, 4, 0,0,59) );
+    Assert( is_date_valid(0000, 3, 4, 0,0,0) );
+    Assert( is_date_valid(2020, 2, 29, 0,0,0) );//leap year
+
+    Assert( !is_date_valid(  10, -1, 1, 0,0,0) );// bad months
+    Assert( !is_date_valid(1900, 0,  1, 0,0,0) );
+    Assert( !is_date_valid(1900, 13, 1, 0,0,0) );
+
+    Assert( !is_date_valid(1900, 5,  0, 0,0,0) ); // bad days
+    Assert( !is_date_valid(2000, 5, 32, 0,0,0) );
+    Assert( !is_date_valid(2000, 5, -7, 0,0,0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 99,0,0) );//bad hours
+    Assert( !is_date_valid(2000, 5, 9, -1,0,0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 0, 61,0) );//bad mins
+    Assert( !is_date_valid(2000, 5, 9, 0,-1, 0) );
+
+    Assert( !is_date_valid(2000, 5, 8, 0, 1, -1) );//bad secs
+    Assert( !is_date_valid(2000, 5, 9, 0, 1, 60) );
+
+    Assert( !is_date_valid(2023, 2, 29, 0,0,0) );//Feb
+
+}
 
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
 
+    test_dates();
     test_logging_proc();
     test_grib_binary_search();
     test_parse_keyval_string();

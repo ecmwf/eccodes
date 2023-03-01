@@ -28,19 +28,19 @@ extern "C" {
 
 /* sections */
 #define CODES_SECTION_PRODUCT GRIB_SECTION_PRODUCT
-#define CODES_SECTION_GRID GRIB_SECTION_GRID
-#define CODES_SECTION_LOCAL GRIB_SECTION_LOCAL
-#define CODES_SECTION_DATA GRIB_SECTION_DATA
-#define CODES_SECTION_BITMAP GRIB_SECTION_BITMAP
+#define CODES_SECTION_GRID    GRIB_SECTION_GRID
+#define CODES_SECTION_LOCAL   GRIB_SECTION_LOCAL
+#define CODES_SECTION_DATA    GRIB_SECTION_DATA
+#define CODES_SECTION_BITMAP  GRIB_SECTION_BITMAP
 
 /* LOG MODES
-Log mode for information for processing information
+Log mode for processing information
 */
-#define CODES_LOG_INFO GRIB_LOG_INFO
+#define CODES_LOG_INFO    GRIB_LOG_INFO
 #define CODES_LOG_WARNING GRIB_LOG_WARNING
-#define CODES_LOG_ERROR GRIB_LOG_ERROR
-#define CODES_LOG_FATAL GRIB_LOG_FATAL
-#define CODES_LOG_DEBUG GRIB_LOG_DEBUG
+#define CODES_LOG_ERROR   GRIB_LOG_ERROR
+#define CODES_LOG_FATAL   GRIB_LOG_FATAL
+#define CODES_LOG_DEBUG   GRIB_LOG_DEBUG
 
 /* Types */
 #define CODES_TYPE_UNDEFINED GRIB_TYPE_UNDEFINED
@@ -73,6 +73,9 @@ Log mode for information for processing information
 #define CODES_NEAREST_SAME_GRID  GRIB_NEAREST_SAME_GRID
 #define CODES_NEAREST_SAME_DATA  GRIB_NEAREST_SAME_DATA
 #define CODES_NEAREST_SAME_POINT GRIB_NEAREST_SAME_POINT
+
+/* Geoiterator flags */
+#define CODES_GEOITERATOR_NO_VALUES GRIB_GEOITERATOR_NO_VALUES
 
 /*! Iteration is carried out on all the keys available in the message
 \ingroup keys_iterator
@@ -194,7 +197,7 @@ The codes_index is the structure giving indexed access to messages in a file.
 /*! index structure to access messages in a file.
  * \ingroup codes_index
  * \struct codes_index
-*/
+ */
 typedef struct grib_index codes_index;
 
 /**
@@ -343,74 +346,74 @@ The codes_handle is the structure giving access to parsed message values by keys
 */
 /*! @{*/
 /**
-*  Counts the messages contained in a file resource.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param n           : the number of messages in the file
-* @return            0 if OK, integer value on error
-*/
+ *  Counts the messages contained in a file resource.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param f           : the file resource
+ * @param n           : the number of messages in the file
+ * @return            0 if OK, integer value on error
+ */
 int codes_count_in_file(codes_context* c, FILE* f, int* n);
 
 /**
-*  Counts the messages contained in a file.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param filename    : the path to the file
-* @param n           : the number of messages in the file
-* @return            0 if OK, integer value on error
-*/
+ *  Counts the messages contained in a file.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param filename    : the path to the file
+ * @param n           : the number of messages in the file
+ * @return            0 if OK, integer value on error
+ */
 int codes_count_in_filename(codes_context* c, const char* filename, int* n);
 
 /**
-*  Create a handle from a file resource.
-*  The file is read until a message is found. The message is then copied.
-*  Remember always to delete the handle when it is not needed anymore to avoid
-*  memory leaks.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param product     : the kind of product e.g. PRODUCT_GRIB, PRODUCT_BUFR
-* @param error       : error code set if the returned handle is NULL and the end of file is not reached
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
+ *  Create a handle from a file resource.
+ *  The file is read until a message is found. The message is then copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param f           : the file resource
+ * @param product     : the kind of product e.g. PRODUCT_GRIB, PRODUCT_BUFR
+ * @param error       : error code set if the returned handle is NULL and the end of file is not reached
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
 codes_handle* codes_handle_new_from_file(codes_context* c, FILE* f, ProductKind product, int* error);
 
 /**
-*  Create a GRIB handle from a file resource.
-*  The file is read until a GRIB message is found. The message is then copied.
-*  Remember always to delete the handle when it is not needed anymore to avoid
-*  memory leaks.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param error       : error code set if the returned handle is NULL and the end of file is not reached
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
+ *  Create a GRIB handle from a file resource.
+ *  The file is read until a GRIB message is found. The message is then copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param f           : the file resource
+ * @param error       : error code set if the returned handle is NULL and the end of file is not reached
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
 codes_handle* codes_grib_handle_new_from_file(codes_context* c, FILE* f, int* error);
 
 /**
-*  Create a BUFR handle from a file resource.
-*  The file is read until a BUFR message is found. The message is then copied.
-*  Remember always to delete the handle when it is not needed anymore to avoid
-*  memory leaks.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param f           : the file resource
-* @param error       : error code set if the returned handle is NULL and the end of file is not reached
-* @return            the new handle, NULL if the resource is invalid or a problem is encountered
-*/
+ *  Create a BUFR handle from a file resource.
+ *  The file is read until a BUFR message is found. The message is then copied.
+ *  Remember always to delete the handle when it is not needed anymore to avoid
+ *  memory leaks.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param f           : the file resource
+ * @param error       : error code set if the returned handle is NULL and the end of file is not reached
+ * @return            the new handle, NULL if the resource is invalid or a problem is encountered
+ */
 codes_handle* codes_bufr_handle_new_from_file(codes_context* c, FILE* f, int* error);
 
 
 /**
-*  Write a coded message to a file.
-*
-* @param h           : codes_handle to be written
-* @param file        : name of the output file
-* @param mode        : mode
-* @return            0 if OK, integer value on error
-*/
+ *  Write a coded message to a file.
+ *
+ * @param h           : codes_handle to be written
+ * @param file        : name of the output file
+ * @param mode        : mode
+ * @return            0 if OK, integer value on error
+ */
 int codes_write_message(const codes_handle* h, const char* file, const char* mode);
 
 codes_handle* codes_grib_util_sections_copy(codes_handle* hfrom, codes_handle* hto, int what, int* err);
@@ -418,38 +421,38 @@ codes_string_list* codes_grib_util_get_param_id(const char* mars_param);
 codes_string_list* codes_grib_util_get_mars_param(const char* param_id);
 
 /**
-*  Create a handle from a user message in memory. The message will not be freed at the end.
-*  The message will be copied as soon as a modification is needed.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param data        : the actual message
-* @param data_len    : the length of the message in number of bytes
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
+ *  Create a handle from a user message in memory. The message will not be freed at the end.
+ *  The message will be copied as soon as a modification is needed.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param data        : the actual message
+ * @param data_len    : the length of the message in number of bytes
+ * @return            the new handle, NULL if the message is invalid or a problem is encountered
+ */
 codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, size_t data_len);
 
 /**
-*  Create a handle from a user message in memory. The message will not be freed at the end.
-*  The message will be copied as soon as a modification is needed.
-*  This function works also with GRIB multi-field messages.
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param data        : the actual message
-* @param data_len    : the length of the message in number of bytes
-* @param error       : error code
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
+ *  Create a handle from a user message in memory. The message will not be freed at the end.
+ *  The message will be copied as soon as a modification is needed.
+ *  This function works also with GRIB multi-field messages.
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param data        : the actual message
+ * @param data_len    : the length of the message in number of bytes
+ * @param error       : error code
+ * @return            the new handle, NULL if the message is invalid or a problem is encountered
+ */
 codes_handle* codes_grib_handle_new_from_multi_message(codes_context* c, void** data,
                                                        size_t* data_len, int* error);
 
 /**
-*  Create a handle from a user message. The message is copied and will be freed with the handle
-*
-* @param c           : the context from which the handle will be created (NULL for default context)
-* @param data        : the actual message
-* @param data_len    : the length of the message in number of bytes
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
+ *  Create a handle from a user message. The message is copied and will be freed with the handle
+ *
+ * @param c           : the context from which the handle will be created (NULL for default context)
+ * @param data        : the actual message
+ * @param data_len    : the length of the message in number of bytes
+ * @return            the new handle, NULL if the message is invalid or a problem is encountered
+ */
 codes_handle* codes_handle_new_from_message_copy(codes_context* c, const void* data, size_t data_len);
 
 
@@ -486,20 +489,20 @@ codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample
 
 
 /**
-*  Clone an existing handle using the context of the original handle,
-*  The message is copied and reparsed
-*
-* @param h           : The handle to be cloned
-* @return            the new handle, NULL if the message is invalid or a problem is encountered
-*/
+ *  Clone an existing handle using the context of the original handle,
+ *  The message is copied and reparsed
+ *
+ * @param h           : The handle to be cloned
+ * @return            the new handle, NULL if the message is invalid or a problem is encountered
+ */
 codes_handle* codes_handle_clone(const codes_handle* h);
 
 /**
-*  Frees a handle, also frees the message if it is not a user message
-*  @see  codes_handle_new_from_message
-* @param h           : The handle to be deleted
-* @return            0 if OK, integer value on error
-*/
+ *  Frees a handle, also frees the message if it is not a user message
+ *  @see  codes_handle_new_from_message
+ * @param h           : The handle to be deleted
+ * @return            0 if OK, integer value on error
+ */
 int codes_handle_delete(codes_handle* h);
 
 /**
@@ -552,25 +555,25 @@ int codes_grib_multi_handle_write(codes_multi_handle* mh, FILE* f);
 /*! \defgroup handling_coded_messages Handling coded messages */
 /*! @{ */
 /**
-* getting the message attached to a handle
-*
-* @param h              : the handle to which the buffer should be gathered
-* @param message        : the pointer to be set to the handle's data
-* @param message_length : On exit, the message size in number of bytes
-* @return            0 if OK, integer value on error
-*/
+ * getting the message attached to a handle
+ *
+ * @param h              : the handle to which the buffer should be gathered
+ * @param message        : the pointer to be set to the handle's data
+ * @param message_length : On exit, the message size in number of bytes
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_message(const codes_handle* h, const void** message, size_t* message_length);
 
 
 /**
-* getting a copy of the message attached to a handle
-*
-* @param h              : the handle to which the buffer should be returned
-* @param message        : the pointer to the data buffer to be filled
-* @param message_length : On entry, the size in number of bytes of the allocated empty message.
-*                         On exit, the actual message length in number of bytes
-* @return            0 if OK, integer value on error
-*/
+ * getting a copy of the message attached to a handle
+ *
+ * @param h              : the handle to which the buffer should be returned
+ * @param message        : the pointer to the data buffer to be filled
+ * @param message_length : On entry, the size in number of bytes of the allocated empty message.
+ *                         On exit, the actual message length in number of bytes
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_message_copy(const codes_handle* h, void* message, size_t* message_length);
 /*! @} */
 
@@ -578,140 +581,140 @@ int codes_get_message_copy(const codes_handle* h, void* message, size_t* message
 /*! @{ */
 
 /*!
-* \brief Create a new geoiterator from a GRIB handle, using current geometry and values.
-*
-* \param h           : the handle from which the geoiterator will be created
-* \param flags       : flags for future use.
-* \param error       : error code
-* \return            the new geoiterator, NULL if no geoiterator can be created
-*/
+ * \brief Create a new geoiterator from a GRIB handle, using current geometry and values.
+ *
+ * \param h           : the handle from which the geoiterator will be created
+ * \param flags       : flags for future use.
+ * \param error       : error code
+ * \return            the new geoiterator, NULL if no geoiterator can be created
+ */
 codes_iterator* codes_grib_iterator_new(const codes_handle* h, unsigned long flags, int* error);
 
 /**
-* Get latitude/longitude and data values for a GRIB message.
-* The latitudes, longitudes and values arrays must be properly allocated by the caller.
-* Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
-*
-* @param h           : handle from which geography and data values are taken
-* @param lats        : returned array of latitudes
-* @param lons        : returned array of longitudes
-* @param values      : returned array of data values
-* @return            0 if OK, integer value on error
-*/
+ * Get latitude/longitude and data values for a GRIB message.
+ * The latitudes, longitudes and values arrays must be properly allocated by the caller.
+ * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
+ *
+ * @param h           : handle from which geography and data values are taken
+ * @param lats        : returned array of latitudes
+ * @param lons        : returned array of longitudes
+ * @param values      : returned array of data values
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_get_data(const codes_handle* h, double* lats, double* lons, double* values);
 
 /**
-* Get the next value from a geoiterator.
-*
-* @param i           : the geoiterator
-* @param lat         : on output latitude in degree
-* @param lon         : on output longitude in degree
-* @param value       : on output value of the point
-* @return            positive value if successful, 0 if no more data are available
-*/
+ * Get the next value from a geoiterator.
+ *
+ * @param i           : the geoiterator
+ * @param lat         : on output latitude in degree
+ * @param lon         : on output longitude in degree
+ * @param value       : on output value of the point
+ * @return            positive value if successful, 0 if no more data are available
+ */
 int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double* value);
 
 /**
-* Get the previous value from a geoiterator.
-*
-* @param i           : the geoiterator
-* @param lat         : on output latitude in degree
-* @param lon         : on output longitude in degree
-* @param value       : on output value of the point*
-* @return            positive value if successful, 0 if no more data are available
-*/
+ * Get the previous value from a geoiterator.
+ *
+ * @param i           : the geoiterator
+ * @param lat         : on output latitude in degree
+ * @param lon         : on output longitude in degree
+ * @param value       : on output value of the point*
+ * @return            positive value if successful, 0 if no more data are available
+ */
 int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, double* value);
 
 /**
-* Test procedure for values in a geoiterator.
-*
-* @param i           : the geoiterator
-* @return            boolean, 1 if the iterator still nave next values, 0 otherwise
-*/
+ * Test procedure for values in a geoiterator.
+ *
+ * @param i           : the geoiterator
+ * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
+ */
 int codes_grib_iterator_has_next(codes_iterator* i);
 
 /**
-* Test procedure for values in a geoiterator.
-*
-* @param i           : the geoiterator
-* @return            0 if OK, integer value on error
-*/
+ * Test procedure for values in a geoiterator.
+ *
+ * @param i           : the geoiterator
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_iterator_reset(codes_iterator* i);
 
 /**
-*  Frees the geoiterator from memory.
-*
-* @param i           : the geoiterator
-* @return            0 if OK, integer value on error
-*/
+ *  Frees the geoiterator from memory.
+ *
+ * @param i           : the geoiterator
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_iterator_delete(codes_iterator* i);
 
 /*!
-* \brief Create a new nearest neighbour object from a handle, using current geometry.
-*
-* \param h           : the handle from which the nearest object will be created
-* \param error       : error code
-* \return            the new nearest, NULL if no nearest can be created
-*/
+ * \brief Create a new nearest neighbour object from a handle, using current geometry.
+ *
+ * \param h           : the handle from which the nearest object will be created
+ * \param error       : error code
+ * \return            the new nearest, NULL if no nearest can be created
+ */
 codes_nearest* codes_grib_nearest_new(const codes_handle* h, int* error);
 
 /**
-* Find the 4 nearest points of a latitude longitude point.
-* The flags are provided to speed up the process of searching. If you are
-* sure that the point you are asking for is not changing from a call
-* to another you can use CODES_NEAREST_SAME_POINT. The same is valid for
-* the grid. Flags can be used together doing a bitwise OR.
-* The distances are given in kilometres.
-*
-* @param nearest     : nearest structure
-* @param h           : handle from which geography and data values are taken
-* @param inlat       : latitude of the point to search for
-* @param inlon       : longitude of the point to search for
-* @param flags       : CODES_NEAREST_SAME_POINT, CODES_NEAREST_SAME_GRID
-* @param outlats     : returned array of latitudes of the nearest points
-* @param outlons     : returned array of longitudes of the nearest points
-* @param values      : returned array of data values of the nearest points
-* @param distances   : returned array of distances from the nearest points
-* @param indexes     : returned array of indexes of the nearest points
-* @param len         : size of the arrays
-* @return            0 if OK, integer value on error
-*/
+ * Find the 4 nearest points of a latitude longitude point.
+ * The flags are provided to speed up the process of searching. If you are
+ * sure that the point you are asking for is not changing from a call
+ * to another you can use CODES_NEAREST_SAME_POINT. The same is valid for
+ * the grid. Flags can be used together doing a bitwise OR.
+ * The distances are given in kilometres.
+ *
+ * @param nearest     : nearest structure
+ * @param h           : handle from which geography and data values are taken
+ * @param inlat       : latitude of the point to search for
+ * @param inlon       : longitude of the point to search for
+ * @param flags       : CODES_NEAREST_SAME_POINT, CODES_NEAREST_SAME_GRID
+ * @param outlats     : returned array of latitudes of the nearest points
+ * @param outlons     : returned array of longitudes of the nearest points
+ * @param values      : returned array of data values of the nearest points
+ * @param distances   : returned array of distances from the nearest points
+ * @param indexes     : returned array of indexes of the nearest points
+ * @param len         : size of the arrays
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, double inlat, double inlon,
                             unsigned long flags, double* outlats, double* outlons,
                             double* values, double* distances, int* indexes, size_t* len);
 
 /**
-*  Frees a nearest object from memory
-*
-* @param nearest           : the nearest
-* @return            0 if OK, integer value on error
-*/
+ *  Frees a nearest object from memory
+ *
+ * @param nearest           : the nearest
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_nearest_delete(codes_nearest* nearest);
 
 /**
-* Find the nearest point of a set of points whose latitudes and longitudes
-* are given in the inlats, inlons arrays respectively.
-* If the flag is_lsm is 1 the nearest land point is returned and the
-* GRIB passed as handle (h) is considered a land sea mask.
-* The land nearest point is the nearest point with land sea mask value>=0.5.
-* If no nearest land points are found the nearest value is returned.
-* If the flag is_lsm is 0 the nearest point is returned.
-* values, distances, indexes (in the "values" array) for the nearest points (ilons,ilats)
-* are returned.
-* The distances are given in kilometres.
-*
-* @param h           : handle from which geography and data values are taken
-* @param is_lsm      : lsm flag (1-> nearest land, 0-> nearest)
-* @param inlats      : latitudes of the points to search for
-* @param inlons      : longitudes of the points to search for
-* @param npoints     : number of points (size of the inlats,inlons,outlats,outlons,values,distances,indexes arrays)
-* @param outlats     : returned array of latitudes of the nearest points
-* @param outlons     : returned array of longitudes of the nearest points
-* @param values      : returned array of data values of the nearest points
-* @param distances   : returned array of distances from the nearest points
-* @param indexes     : returned array of indexes of the nearest points
-* @return            0 if OK, integer value on error
-*/
+ * Find the nearest point of a set of points whose latitudes and longitudes
+ * are given in the inlats, inlons arrays respectively.
+ * If the flag is_lsm is 1 the nearest land point is returned and the
+ * GRIB passed as handle (h) is considered a land sea mask.
+ * The land nearest point is the nearest point with land sea mask value>=0.5.
+ * If no nearest land points are found the nearest value is returned.
+ * If the flag is_lsm is 0 the nearest point is returned.
+ * values, distances, indexes (in the "values" array) for the nearest points (ilons,ilats)
+ * are returned.
+ * The distances are given in kilometres.
+ *
+ * @param h           : handle from which geography and data values are taken
+ * @param is_lsm      : lsm flag (1-> nearest land, 0-> nearest)
+ * @param inlats      : latitudes of the points to search for
+ * @param inlons      : longitudes of the points to search for
+ * @param npoints     : number of points (size of the inlats,inlons,outlats,outlons,values,distances,indexes arrays)
+ * @param outlats     : returned array of latitudes of the nearest points
+ * @param outlons     : returned array of longitudes of the nearest points
+ * @param values      : returned array of data values of the nearest points
+ * @param distances   : returned array of distances from the nearest points
+ * @param indexes     : returned array of indexes of the nearest points
+ * @return            0 if OK, integer value on error
+ */
 int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
                                      const double* inlats, const double* inlons, long npoints,
                                      double* outlats, double* outlons,
@@ -722,262 +725,262 @@ int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
 /*! \defgroup get_set Accessing header and data values   */
 /*! @{ */
 /**
-*  Get the number offset of a key, in a message if several keys of the same name
-*  are present, the offset of the last one is returned
-*
-* @param h           : the handle to get the offset from
-* @param key         : the key to be searched
-* @param offset      : the address of a size_t where the offset will be set
-* @return            0 if OK, integer value on error
-*/
+ *  Get the number offset of a key, in a message if several keys of the same name
+ *  are present, the offset of the last one is returned
+ *
+ * @param h           : the handle to get the offset from
+ * @param key         : the key to be searched
+ * @param offset      : the address of a size_t where the offset will be set
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_offset(const codes_handle* h, const char* key, size_t* offset);
 
 /**
-*  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
-*
-* @param h           : the handle to get the offset from
-* @param key         : the key to be searched
-* @param size        : the address of a size_t where the size will be set
-* @return            0 if OK, integer value on error
-*/
+ *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
+ *
+ * @param h           : the handle to get the offset from
+ * @param key         : the key to be searched
+ * @param size        : the address of a size_t where the size will be set
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_size(const codes_handle* h, const char* key, size_t* size);
 
 /**
-*  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
-*
-* @param h           : the handle to get the offset from
-* @param key         : the key to be searched
-* @param length        : the address of a size_t where the length will be set
-* @return            0 if OK, integer value on error
-*/
+ *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
+ *
+ * @param h           : the handle to get the offset from
+ * @param key         : the key to be searched
+ * @param length        : the address of a size_t where the length will be set
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_length(const codes_handle* h, const char* key, size_t* length);
 
 /**
-*  Get a long value from a key, if several keys of the same name are present, the last one is returned
-*  @see  codes_set_long
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param value       : the address of a long where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
+ *  Get a long value from a key, if several keys of the same name are present, the last one is returned
+ *  @see  codes_set_long
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param value       : the address of a long where the data will be retrieved
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_long(const codes_handle* h, const char* key, long* value);
 
 /**
-*  Get a double value from a key, if several keys of the same name are present, the last one is returned
-*  @see  codes_set_double
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param value       : the address of a double where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
+ *  Get a double value from a key, if several keys of the same name are present, the last one is returned
+ *  @see  codes_set_double
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param value       : the address of a double where the data will be retrieved
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_double(const codes_handle* h, const char* key, double* value);
 
 /**
-*  Get as double the i-th element of the "key" array
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param i           : zero-based index
-* @param value       : the address of a double where the data will be retrieved
-* @return            0 if OK, integer value on error
-*/
+ *  Get as double the i-th element of the "key" array
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param i           : zero-based index
+ * @param value       : the address of a double where the data will be retrieved
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
 
 /**
-*  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param index_array : zero-based array of indexes
-* @param size        : size of the index_array and value arrays
-* @param value       : the double array for the data values
-* @return            0 if OK, integer value on error
-*/
+ *  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param index_array : zero-based array of indexes
+ * @param size        : size of the index_array and value arrays
+ * @param value       : the double array for the data values
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_double_elements(const codes_handle* h, const char* key, const int* index_array, long size, double* value);
 
 /**
-*  Get a string value from a key, if several keys of the same name are present, the last one is returned
-* @see  codes_set_string
-*
-* @param h         : the handle to get the data from
-* @param key       : the key to be searched
-* @param mesg      : the address of a string where the data will be retrieved
-* @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
-* @return          0 if OK, integer value on error
-*/
+ *  Get a string value from a key, if several keys of the same name are present, the last one is returned
+ * @see  codes_set_string
+ *
+ * @param h         : the handle to get the data from
+ * @param key       : the key to be searched
+ * @param mesg      : the address of a string where the data will be retrieved
+ * @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+ * @return          0 if OK, integer value on error
+ */
 int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t* length);
 
 /**
-*  Get string array values from a key. If several keys of the same name are present, the last one is returned
-* @see  codes_set_string_array
-*
-* @param h       : the handle to get the data from
-* @param key     : the key to be searched
-* @param vals    : the address of a string array where the data will be retrieved
-* @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
-* @return        0 if OK, integer value on error
-*/
+ *  Get string array values from a key. If several keys of the same name are present, the last one is returned
+ * @see  codes_set_string_array
+ *
+ * @param h       : the handle to get the data from
+ * @param key     : the key to be searched
+ * @param vals    : the address of a string array where the data will be retrieved
+ * @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+ * @return        0 if OK, integer value on error
+ */
 int codes_get_string_array(const codes_handle* h, const char* key, char** vals, size_t* length);
 
 /**
-*  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
-* @see  codes_set_bytes
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param bytes       : the address of a byte array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
-* @return            0 if OK, integer value on error
-*/
+ *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
+ * @see  codes_set_bytes
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param bytes       : the address of a byte array where the data will be retrieved
+ * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes, size_t* length);
 
 /**
-*  Get double array values from a key. If several keys of the same name are present, the last one is returned
-* @see  codes_set_double_array
-*
-* @param h        : the handle to get the data from
-* @param key      : the key to be searched
-* @param vals     : the address of a double array where the data will be retrieved
-* @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
-* @return         0 if OK, integer value on error
-*/
+ *  Get double array values from a key. If several keys of the same name are present, the last one is returned
+ * @see  codes_set_double_array
+ *
+ * @param h        : the handle to get the data from
+ * @param key      : the key to be searched
+ * @param vals     : the address of a double array where the data will be retrieved
+ * @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+ * @return         0 if OK, integer value on error
+ */
 int codes_get_double_array(const codes_handle* h, const char* key, double* vals, size_t* length);
 
 /**
-*  Get long array values from a key. If several keys of the same name are present, the last one is returned
-* @see  codes_set_long_array
-*
-* @param h           : the handle to get the data from
-* @param key         : the key to be searched
-* @param vals       : the address of a long array where the data will be retrieved
-* @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
-* @return            0 if OK, integer value on error
-*/
+ *  Get long array values from a key. If several keys of the same name are present, the last one is returned
+ * @see  codes_set_long_array
+ *
+ * @param h           : the handle to get the data from
+ * @param key         : the key to be searched
+ * @param vals       : the address of a long array where the data will be retrieved
+ * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
+ * @return            0 if OK, integer value on error
+ */
 int codes_get_long_array(const codes_handle* h, const char* key, long* vals, size_t* length);
 
 
 /*   setting data         */
 /**
-*  Copy the keys belonging to a given namespace from a source handle to a destination handle
-*
-*
-* @param dest      : destination handle
-* @param name      : namespace
-* @param src       : source handle
-* @return          0 if OK, integer value on error
-*/
+ *  Copy the keys belonging to a given namespace from a source handle to a destination handle
+ *
+ *
+ * @param dest      : destination handle
+ * @param name      : namespace
+ * @param src       : source handle
+ * @return          0 if OK, integer value on error
+ */
 int codes_copy_namespace(codes_handle* dest, const char* name, codes_handle* src);
 
 /**
-*  Set a long value from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_long
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param val         : a long where the data will be read
-* @return            0 if OK, integer value on error
-*/
+ *  Set a long value from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_long
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param val         : a long where the data will be read
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_long(codes_handle* h, const char* key, long val);
 
 /**
-*  Set a double value from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_double
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param val       : a double where the data will be read
-* @return            0 if OK, integer value on error
-*/
+ *  Set a double value from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_double
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param val       : a double where the data will be read
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_double(codes_handle* h, const char* key, double val);
 
 /**
-*  Set a string value from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_string
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param mesg       : the address of a string where the data will be read
-* @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
-* @return            0 if OK, integer value on error
-*/
+ *  Set a string value from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_string
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param mesg       : the address of a string where the data will be read
+ * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t* length);
 
 /**
-*  Set a bytes array from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_bytes
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param bytes       : the address of a byte array where the data will be read
-* @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
-* @return            0 if OK, integer value on error
-*/
+ *  Set a bytes array from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_bytes
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param bytes       : the address of a byte array where the data will be read
+ * @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes, size_t* length);
 
 /**
-*  Set a double array from a key. If several keys of the same name are present, the last one is set
-*   @see  codes_get_double_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a double array where the data will be read
-* @param length      : a size_t that contains the length of the byte array on input
-* @return            0 if OK, integer value on error
-*/
+ *  Set a double array from a key. If several keys of the same name are present, the last one is set
+ *   @see  codes_get_double_array
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param vals        : the address of a double array where the data will be read
+ * @param length      : a size_t that contains the length of the byte array on input
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
 
 /**
-* Same as codes_set_double_array but allows setting of READ-ONLY keys like codedValues.
-* Use with great caution!!
-*/
+ * Same as codes_set_double_array but allows setting of READ-ONLY keys like codedValues.
+ * Use with great caution!!
+ */
 int codes_set_force_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
 
 
 /**
-*  Set a long array from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_long_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a long array where the data will be read
-* @param length      : a size_t that contains the length of the long array on input
-* @return            0 if OK, integer value on error
-*/
+ *  Set a long array from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_long_array
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param vals        : the address of a long array where the data will be read
+ * @param length      : a size_t that contains the length of the long array on input
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_long_array(codes_handle* h, const char* key, const long* vals, size_t length);
 
 /**
-*  Set a string array from a key. If several keys of the same name are present, the last one is set
-*  @see  codes_get_long_array
-*
-* @param h           : the handle to set the data to
-* @param key         : the key to be searched
-* @param vals        : the address of a string array where the data will be read
-* @param length      : a size_t that contains the length of the array on input
-* @return            0 if OK, integer value on error
-*/
+ *  Set a string array from a key. If several keys of the same name are present, the last one is set
+ *  @see  codes_get_long_array
+ *
+ * @param h           : the handle to set the data to
+ * @param key         : the key to be searched
+ * @param vals        : the address of a string array where the data will be read
+ * @param length      : a size_t that contains the length of the array on input
+ * @return            0 if OK, integer value on error
+ */
 int codes_set_string_array(codes_handle* h, const char* key, const char** vals, size_t length);
 /*! @} */
 
 
 /**
-*  Print all keys, with the context print procedure and dump mode to a resource
-*
-* @param h            : the handle to be printed
-* @param out          : output file handle
-* @param mode         : Examples of available dump modes: debug wmo
-* @param option_flags : all the CODES_DUMP_FLAG_x flags can be used
-* @param arg          : used to provide a format to output data (experimental)
-*/
+ *  Print all keys, with the context print procedure and dump mode to a resource
+ *
+ * @param h            : the handle to be printed
+ * @param out          : output file handle
+ * @param mode         : Examples of available dump modes: debug wmo
+ * @param option_flags : all the CODES_DUMP_FLAG_x flags can be used
+ * @param arg          : used to provide a format to output data (experimental)
+ */
 void codes_dump_content(const codes_handle* h, FILE* out, const char* mode, unsigned long option_flags, void* arg);
 
 /**
-*  Print all keys from the parsed definition files available in a context
-*
-* @param f           : the File used to print the keys on
-* @param c           : the context that contains the cached definition files to be printed
-*/
+ *  Print all keys from the parsed definition files available in a context
+ *
+ * @param f           : the File used to print the keys on
+ * @param c           : the context that contains the cached definition files to be printed
+ */
 void codes_dump_action_tree(codes_context* c, FILE* f);
 
 /*! \defgroup context The context object
@@ -988,79 +991,79 @@ void codes_dump_action_tree(codes_context* c, FILE* f);
 /*! @{ */
 
 /**
-* ecCodes free procedure, format of a procedure referenced in the context that is used to free memory
-*
-* @param c     : the context where the memory freeing will apply
-* @param data  : pointer to the data to be freed
-* must match @see codes_malloc_proc
-*/
+ * ecCodes free procedure, format of a procedure referenced in the context that is used to free memory
+ *
+ * @param c     : the context where the memory freeing will apply
+ * @param data  : pointer to the data to be freed
+ * must match @see codes_malloc_proc
+ */
 typedef void (*codes_free_proc)(const codes_context* c, void* data);
 
 /**
-* ecCodes malloc procedure, format of a procedure referenced in the context that is used to allocate memory
-* @param c             : the context where the memory allocation will apply
-* @param length        : length to be allocated in number of bytes
-* @return              a pointer to the allocated memory, NULL if no memory can be allocated
-* must match @see codes_free_proc
-*/
+ * ecCodes malloc procedure, format of a procedure referenced in the context that is used to allocate memory
+ * @param c             : the context where the memory allocation will apply
+ * @param length        : length to be allocated in number of bytes
+ * @return              a pointer to the allocated memory, NULL if no memory can be allocated
+ * must match @see codes_free_proc
+ */
 typedef void* (*codes_malloc_proc)(const codes_context* c, size_t length);
 
 /**
-* ecCodes realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
-* @param c             : the context where the memory allocation will apply
-* @param data          : pointer to the data to be reallocated
-* @param length        : length to be allocated in number of bytes
-* @return              a pointer to the allocated memory
-*/
+ * ecCodes realloc procedure, format of a procedure referenced in the context that is used to reallocate memory
+ * @param c             : the context where the memory allocation will apply
+ * @param data          : pointer to the data to be reallocated
+ * @param length        : length to be allocated in number of bytes
+ * @return              a pointer to the allocated memory
+ */
 typedef void* (*codes_realloc_proc)(const codes_context* c, void* data, size_t length);
 
 /**
-* ecCodes log procedure, format of a procedure referenced in the context that is used to log internal messages
-*
-* @param c             : the context where the logging will apply
-* @param level         : the log level, as defined in log modes
-* @param mesg          : the message to be logged
-*/
+ * ecCodes log procedure, format of a procedure referenced in the context that is used to log internal messages
+ *
+ * @param c             : the context where the logging will apply
+ * @param level         : the log level, as defined in log modes
+ * @param mesg          : the message to be logged
+ */
 typedef void (*codes_log_proc)(const codes_context* c, int level, const char* mesg);
 
 /**
-* ecCodes print procedure, format of a procedure referenced in the context that is used to print external messages
-*
-* @param c             : the context where the logging will apply
-* @param descriptor    : the structure to be printed on, must match the implementation
-* @param mesg          : the message to be printed
-*/
+ * ecCodes print procedure, format of a procedure referenced in the context that is used to print external messages
+ *
+ * @param c             : the context where the logging will apply
+ * @param descriptor    : the structure to be printed on, must match the implementation
+ * @param mesg          : the message to be printed
+ */
 typedef void (*codes_print_proc)(const codes_context* c, void* descriptor, const char* mesg);
 
 /**
-* ecCodes data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
-*
-* @param c            : the context where the read will apply
-* @param ptr          : the resource
-* @param size         : size to read
-* @param stream       : the stream
-* @return              size read
-*/
+ * ecCodes data read procedure, format of a procedure referenced in the context that is used to read from a stream in a resource
+ *
+ * @param c            : the context where the read will apply
+ * @param ptr          : the resource
+ * @param size         : size to read
+ * @param stream       : the stream
+ * @return              size read
+ */
 typedef size_t (*codes_data_read_proc)(const codes_context* c, void* ptr, size_t size, void* stream);
 
 /**
-* ecCodes data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
-*
-* @param c            : the context where the write will apply
-* @param ptr          : the resource
-* @param size         : size to read
-* @param stream       : the stream
-* @return              size written
-*/
+ * ecCodes data write procedure, format of a procedure referenced in the context that is used to write to a stream from a resource
+ *
+ * @param c            : the context where the write will apply
+ * @param ptr          : the resource
+ * @param size         : size to read
+ * @param stream       : the stream
+ * @return              size written
+ */
 typedef size_t (*codes_data_write_proc)(const codes_context* c, const void* ptr, size_t size, void* stream);
 
 /**
-* ecCodes data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
-*
-* @param c           : the context where the tell will apply
-* @param stream      : the stream
-* @return            the position in the stream
-*/
+ * ecCodes data tell procedure, format of a procedure referenced in the context that is used to tell the current position in a stream
+ *
+ * @param c           : the context where the tell will apply
+ * @param stream      : the stream
+ * @return            the position in the stream
+ */
 typedef off_t (*codes_data_tell_proc)(const codes_context* c, void* stream);
 
 /**
@@ -1076,65 +1079,65 @@ typedef off_t (*codes_data_tell_proc)(const codes_context* c, void* stream);
 typedef off_t (*codes_data_seek_proc)(const codes_context* c, off_t offset, int whence, void* stream);
 
 /**
-* ecCodes data eof procedure, format of a procedure referenced in the context that is used to test end of file
-*
-* @param c        : the context where the tell will apply
-* @param stream   : the stream
-* @return         the position in the stream
-*/
+ * ecCodes data eof procedure, format of a procedure referenced in the context that is used to test end of file
+ *
+ * @param c        : the context where the tell will apply
+ * @param stream   : the stream
+ * @return         the position in the stream
+ */
 typedef int (*codes_data_eof_proc)(const codes_context* c, void* stream);
 
 /**
-*  Get the static default context
-*
-* @return         the default context, NULL it the context is not available
-*/
+ *  Get the static default context
+ *
+ * @return         the default context, NULL it the context is not available
+ */
 codes_context* codes_context_get_default(void);
 
 /**
-*  Frees the cached definition files of the context
-*
-* @param c           : the context to be deleted
-*/
+ *  Frees the cached definition files of the context
+ *
+ * @param c           : the context to be deleted
+ */
 void codes_context_delete(codes_context* c);
 
 /**
-*  Set the GTS header mode on.
-*  The GTS headers will be preserved.
-*
-* @param c           : the context
-*/
+ *  Set the GTS header mode on.
+ *  The GTS headers will be preserved.
+ *
+ * @param c           : the context
+ */
 void codes_gts_header_on(codes_context* c);
 
 /**
-*  Set the GTS header mode off.
-*  The GTS headers will be deleted.
-*
-* @param c           : the context
-*/
+ *  Set the GTS header mode off.
+ *  The GTS headers will be deleted.
+ *
+ * @param c           : the context
+ */
 void codes_gts_header_off(codes_context* c);
 
 /**
-*  Set the GRIBEX mode on.
-*  GRIB files will be compatible with GRIBEX.
-*
-* @param c           : the context
-*/
+ *  Set the GRIBEX mode on.
+ *  GRIB files will be compatible with GRIBEX.
+ *
+ * @param c           : the context
+ */
 void codes_gribex_mode_on(codes_context* c);
 
 /**
-*  Get the GRIBEX mode.
-*
-* @param c           : the context
-*/
+ *  Get the GRIBEX mode.
+ *
+ * @param c           : the context
+ */
 int codes_get_gribex_mode(codes_context* c);
 
 /**
-*  Set the GRIBEX mode off.
-*  GRIB files won't be always compatible with GRIBEX.
-*
-* @param c           : the context
-*/
+ *  Set the GRIBEX mode off.
+ *  GRIB files won't be always compatible with GRIBEX.
+ *
+ * @param c           : the context
+ */
 void codes_gribex_mode_off(codes_context* c);
 
 
@@ -1159,73 +1162,73 @@ void codes_context_set_definitions_path(codes_context* c, const char* path);
 void codes_context_set_samples_path(codes_context* c, const char* path);
 
 /**
-*  Sets memory procedures of the context
-*
-* @param c         : the context to be modified
-* @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
-* @param p_free    : the memory freeing procedure to be set @see codes_free_proc
-* @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
-*/
-void codes_context_set_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+ *  Sets memory procedures of the context
+ *
+ * @param c         : the context to be modified
+ * @param p_malloc  : the memory allocation procedure to be set @see codes_malloc_proc
+ * @param p_free    : the memory freeing procedure to be set @see codes_free_proc
+ * @param p_realloc : the memory reallocation procedure to be set @see codes_realloc_proc
+ */
+void codes_context_set_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
                                    codes_free_proc p_free, codes_realloc_proc p_realloc);
 
 /**
-*  Sets memory procedures of the context for persistent data
-*
-* @param c           : the context to be modified
-* @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
-* @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
-*/
+ *  Sets memory procedures of the context for persistent data
+ *
+ * @param c           : the context to be modified
+ * @param griballoc   : the memory allocation procedure to be set @see codes_malloc_proc
+ * @param gribfree    : the memory freeing procedure to be set @see codes_free_proc
+ */
 void codes_context_set_persistent_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
                                               codes_free_proc p_free);
 
 /**
-*  Sets memory procedures of the context for large buffers
-*
-* @param c        : the context to be modified
-* @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
-* @param p_free   : the memory freeing procedure to be set @see codes_free_proc
-* @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
-*/
-void codes_context_set_buffer_memory_proc(codes_context* c,       codes_malloc_proc p_malloc,
+ *  Sets memory procedures of the context for large buffers
+ *
+ * @param c        : the context to be modified
+ * @param p_malloc : the memory allocation procedure to be set @see codes_malloc_proc
+ * @param p_free   : the memory freeing procedure to be set @see codes_free_proc
+ * @param p_free   : the memory reallocation procedure to be set @see codes_realloc_proc
+ */
+void codes_context_set_buffer_memory_proc(codes_context* c, codes_malloc_proc p_malloc,
                                           codes_free_proc p_free, codes_realloc_proc p_realloc);
 
 /**
-*  Sets the context printing procedure used for user interaction
-*
-* @param c        : the context to be modified
-* @param p_print  : the printing procedure to be set @see codes_print_proc
-*/
+ *  Sets the context printing procedure used for user interaction
+ *
+ * @param c        : the context to be modified
+ * @param p_print  : the printing procedure to be set @see codes_print_proc
+ */
 void codes_context_set_print_proc(codes_context* c, codes_print_proc p_print);
 
 /**
-*  Sets the context logging procedure used for system (warning, errors, infos ...) messages
-*
-* @param c       : the context to be modified
-* @param p_log   : the logging procedure to be set @see codes_log_proc
-*/
+ *  Sets the context logging procedure used for system (warning, errors, infos ...) messages
+ *
+ * @param c       : the context to be modified
+ * @param p_log   : the logging procedure to be set @see codes_log_proc
+ */
 void codes_context_set_logging_proc(codes_context* c, codes_log_proc p_log);
 
 /**
-*  Turn on support for multi-fields in single GRIB messages
-*
-* @param c            : the context to be modified
-*/
+ *  Turn on support for multi-fields in single GRIB messages
+ *
+ * @param c            : the context to be modified
+ */
 void codes_grib_multi_support_on(codes_context* c);
 
 /**
-*  Turn off support for multi-fields in single GRIB messages
-*
-* @param c            : the context to be modified
-*/
+ *  Turn off support for multi-fields in single GRIB messages
+ *
+ * @param c            : the context to be modified
+ */
 void codes_grib_multi_support_off(codes_context* c);
 
 /**
-*  Reset file handle in multiple GRIB field support mode
-*
-* @param c            : the context to be modified
-* @param f            : the file pointer
-*/
+ *  Reset file handle in multiple GRIB field support mode
+ *
+ * @param c            : the context to be modified
+ * @param f            : the file pointer
+ */
 void codes_grib_multi_support_reset_file(codes_context* c, FILE* f);
 
 char* codes_samples_path(const codes_context* c);
@@ -1233,32 +1236,32 @@ char* codes_definition_path(const codes_context* c);
 /*! @} */
 
 /**
-*  Get the API version
-*
-*  @return API version
-*/
+ *  Get the API version
+ *
+ *  @return API version
+ */
 long codes_get_api_version(void);
 
 /**
-*  Get the Git version control SHA1 identifier
-*
-*  @return character string with SHA1 identifier
-*/
+ *  Get the Git version control SHA1 identifier
+ *
+ *  @return character string with SHA1 identifier
+ */
 const char* codes_get_git_sha1(void);
 
 const char* codes_get_build_date(void);
 
 /**
-*  Get the package name
-*
-*  @return character string with package name
-*/
+ *  Get the package name
+ *
+ *  @return character string with package name
+ */
 const char* codes_get_package_name(void);
 
 /**
-*  Prints the API version
-*
-*/
+ *  Prints the API version
+ *
+ */
 void codes_print_api_version(FILE* out);
 
 /*! \defgroup keys_iterator Iterating on keys names
@@ -1268,13 +1271,13 @@ attributes or by the namespace they belong to.
 */
 /*! @{ */
 /*! Create a new iterator from a valid and initialised handle.
-*  @param h             : the handle whose keys you want to iterate
-*  @param filter_flags  : flags to filter out some of the keys through their attributes
-*  @param name_space    : if not null the iteration is carried out only on
-*                         keys belonging to the namespace passed. (NULL for all the keys)
-*  @return              keys iterator ready to iterate through keys according to filter_flags
-*                       and namespace
-*/
+ *  @param h             : the handle whose keys you want to iterate
+ *  @param filter_flags  : flags to filter out some of the keys through their attributes
+ *  @param name_space    : if not null the iteration is carried out only on
+ *                         keys belonging to the namespace passed. (NULL for all the keys)
+ *  @return              keys iterator ready to iterate through keys according to filter_flags
+ *                       and namespace
+ */
 codes_keys_iterator* codes_keys_iterator_new(codes_handle* h, unsigned long filter_flags, const char* name_space);
 
 /* codes_bufr_copy_data copies all the values in the data section that are present in the same position in the data tree
@@ -1287,28 +1290,28 @@ int codes_bufr_copy_data(codes_handle* hin, codes_handle* hout);
 
 
 /*! Step to the next item from the keys iterator.
-*  @param kiter         : valid codes_keys_iterator
-*  @return              1 if next iterator exists, 0 if no more elements to iterate on
-*/
+ *  @param kiter         : valid codes_keys_iterator
+ *  @return              1 if next iterator exists, 0 if no more elements to iterate on
+ */
 int codes_keys_iterator_next(codes_keys_iterator* kiter);
 
 
 /*! get the key name from the keys iterator
-*  @param kiter         : valid codes_keys_iterator
-*  @return              key name
-*/
+ *  @param kiter         : valid codes_keys_iterator
+ *  @return              key name
+ */
 const char* codes_keys_iterator_get_name(const codes_keys_iterator* kiter);
 
 /*! Delete the keys iterator.
-*  @param kiter         : valid codes_keys_iterator
-*  @return              0 if OK, integer value on error
-*/
+ *  @param kiter         : valid codes_keys_iterator
+ *  @return              0 if OK, integer value on error
+ */
 int codes_keys_iterator_delete(codes_keys_iterator* kiter);
 
 /*! Rewind the keys iterator.
-*  @param kiter         : valid codes_keys_iterator
-*  @return              0 if OK, integer value on error
-*/
+ *  @param kiter         : valid codes_keys_iterator
+ *  @return              0 if OK, integer value on error
+ */
 int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 
 
@@ -1324,17 +1327,17 @@ void codes_update_sections_lengths(codes_handle* h);
 
 
 /**
-* Convert an error code into a string
-* @param code       : the error code
-* @return           the error message
-*/
+ * Convert an error code into a string
+ * @param code       : the error code
+ * @return           the error message
+ */
 const char* codes_get_error_message(int code);
 const char* codes_get_type_name(int type);
 
 int codes_get_native_type(const codes_handle* h, const char* name, int* type);
 
 void codes_check(const char* call, const char* file, int line, int e, const char* msg);
-#define CODES_CHECK(a, msg) GRIB_CHECK(a, msg)
+#define CODES_CHECK(a, msg)        GRIB_CHECK(a, msg)
 #define CODES_CHECK_NOLINE(a, msg) GRIB_CHECK_NOLINE(a, msg)
 
 
@@ -1374,36 +1377,36 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 
 /* --------------------------------------- */
 
-#define CODES_UTIL_GRID_SPEC_REGULAR_LL     GRIB_UTIL_GRID_SPEC_REGULAR_LL
-#define CODES_UTIL_GRID_SPEC_ROTATED_LL     GRIB_UTIL_GRID_SPEC_ROTATED_LL
-#define CODES_UTIL_GRID_SPEC_REGULAR_GG     GRIB_UTIL_GRID_SPEC_REGULAR_GG
-#define CODES_UTIL_GRID_SPEC_ROTATED_GG     GRIB_UTIL_GRID_SPEC_ROTATED_GG
-#define CODES_UTIL_GRID_SPEC_REDUCED_GG     GRIB_UTIL_GRID_SPEC_REDUCED_GG
-#define CODES_UTIL_GRID_SPEC_SH             GRIB_UTIL_GRID_SPEC_SH
-#define CODES_UTIL_GRID_SPEC_REDUCED_LL     GRIB_UTIL_GRID_SPEC_REDUCED_LL
-#define CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC            GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC
-#define CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG             GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
-#define CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA   GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA
-#define CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL              GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL
-#define CODES_UTIL_GRID_SPEC_UNSTRUCTURED                   GRIB_UTIL_GRID_SPEC_UNSTRUCTURED
+#define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL
+#define CODES_UTIL_GRID_SPEC_ROTATED_LL                   GRIB_UTIL_GRID_SPEC_ROTATED_LL
+#define CODES_UTIL_GRID_SPEC_REGULAR_GG                   GRIB_UTIL_GRID_SPEC_REGULAR_GG
+#define CODES_UTIL_GRID_SPEC_ROTATED_GG                   GRIB_UTIL_GRID_SPEC_ROTATED_GG
+#define CODES_UTIL_GRID_SPEC_REDUCED_GG                   GRIB_UTIL_GRID_SPEC_REDUCED_GG
+#define CODES_UTIL_GRID_SPEC_SH                           GRIB_UTIL_GRID_SPEC_SH
+#define CODES_UTIL_GRID_SPEC_REDUCED_LL                   GRIB_UTIL_GRID_SPEC_REDUCED_LL
+#define CODES_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC          GRIB_UTIL_GRID_SPEC_POLAR_STEREOGRAPHIC
+#define CODES_UTIL_GRID_SPEC_REDUCED_ROTATED_GG           GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG
+#define CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA
+#define CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL
+#define CODES_UTIL_GRID_SPEC_UNSTRUCTURED                 GRIB_UTIL_GRID_SPEC_UNSTRUCTURED
 
-#define CODES_UTIL_PACKING_TYPE_SAME_AS_INPUT       GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT
-#define CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX    GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX
-#define CODES_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE     GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE
-#define CODES_UTIL_PACKING_TYPE_JPEG                GRIB_UTIL_PACKING_TYPE_JPEG
-#define CODES_UTIL_PACKING_TYPE_GRID_COMPLEX        GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX
-#define CODES_UTIL_PACKING_TYPE_GRID_SIMPLE         GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE
-#define CODES_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX  GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX
-#define CODES_UTIL_PACKING_TYPE_GRID_SECOND_ORDER   GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER
-#define CODES_UTIL_PACKING_TYPE_CCSDS               GRIB_UTIL_PACKING_TYPE_CCSDS
-#define CODES_UTIL_PACKING_TYPE_IEEE                GRIB_UTIL_PACKING_TYPE_IEEE
-#define CODES_UTIL_PACKING_SAME_AS_INPUT            GRIB_UTIL_PACKING_SAME_AS_INPUT
-#define CODES_UTIL_PACKING_USE_PROVIDED             GRIB_UTIL_PACKING_USE_PROVIDED
+#define CODES_UTIL_PACKING_TYPE_SAME_AS_INPUT      GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT
+#define CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX
+#define CODES_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE    GRIB_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE
+#define CODES_UTIL_PACKING_TYPE_JPEG               GRIB_UTIL_PACKING_TYPE_JPEG
+#define CODES_UTIL_PACKING_TYPE_GRID_COMPLEX       GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX
+#define CODES_UTIL_PACKING_TYPE_GRID_SIMPLE        GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE
+#define CODES_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX GRIB_UTIL_PACKING_TYPE_GRID_SIMPLE_MATRIX
+#define CODES_UTIL_PACKING_TYPE_GRID_SECOND_ORDER  GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER
+#define CODES_UTIL_PACKING_TYPE_CCSDS              GRIB_UTIL_PACKING_TYPE_CCSDS
+#define CODES_UTIL_PACKING_TYPE_IEEE               GRIB_UTIL_PACKING_TYPE_IEEE
+#define CODES_UTIL_PACKING_SAME_AS_INPUT           GRIB_UTIL_PACKING_SAME_AS_INPUT
+#define CODES_UTIL_PACKING_USE_PROVIDED            GRIB_UTIL_PACKING_USE_PROVIDED
 
-#define CODES_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT       GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT
-#define CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES        GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES
-#define CODES_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT  GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT
-#define CODES_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR   GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR
+#define CODES_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT      GRIB_UTIL_ACCURACY_SAME_BITS_PER_VALUES_AS_INPUT
+#define CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES       GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES
+#define CODES_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT
+#define CODES_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR  GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR
 
 
 codes_handle* codes_grib_util_set_spec(codes_handle* h,

@@ -11,8 +11,6 @@
 #include "grib_api_internal.h"
 #include <float.h>
 
-#define STR_EQUAL(s1, s2) (strcmp((s1), (s2)) == 0)
-
 typedef enum
 {
     eROUND_ANGLE_UP,
@@ -982,13 +980,19 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
-    /* ECC-1201
-       TODO: make sure input packing type is preserved */
+    /* ECC-1201, ECC-1529, ECC-1530
+       Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
         packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
     {
         if (STR_EQUAL(input_packing_type, "grid_ieee")) {
             SET_STRING_VALUE("packingType", input_packing_type);
+        }
+        if (STR_EQUAL(input_packing_type, "grid_ccsds")) {
+            setCcsdsPacking = 1;
+        }
+        if (STR_EQUAL(input_packing_type, "grid_second_order")) {
+            setSecondOrder = 1;
         }
     }
 
@@ -1280,7 +1284,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                  * Reason 1: It is not available in GRIB1 and so we have to wait until we change edition
                  * Reason 2: It has to be done AFTER we set the data values
                  */
-                if (strcmp(input_packing_type, "grid_jpeg") && !strcmp(input_packing_type, "grid_simple"))
+                if (strcmp(input_packing_type, "grid_jpeg"))
                     setJpegPacking = 1;
                 break;
             case GRIB_UTIL_PACKING_TYPE_CCSDS:
@@ -1623,7 +1627,7 @@ cleanup:
         grib_handle_delete(h_out);
     return NULL;
 }
-
+#if 0
 int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
 {
     grib_iterator* iter = NULL;
@@ -1710,6 +1714,7 @@ int grib_moments(grib_handle* h, double east, double north, double west, double 
 
     return ret;
 }
+#endif
 
 /* Helper function for 'parse_keyval_string' */
 static void set_value(grib_values* value, char* str, int equal)

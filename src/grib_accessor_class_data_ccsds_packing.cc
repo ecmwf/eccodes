@@ -191,6 +191,10 @@ static int value_count(grib_accessor* a, long* count)
 
 #include <libaec.h>
 
+#ifndef LIBAEC_DLL_EXPORTED
+    #error Version of libaec appears to be too old. Please upgrade.
+#endif
+
 static const char* aec_get_error_message(int code)
 {
     if (code == AEC_MEM_ERROR)    return "AEC_MEM_ERROR";

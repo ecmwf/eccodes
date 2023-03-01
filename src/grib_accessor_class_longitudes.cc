@@ -165,9 +165,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_longitudes* self = (grib_accessor_longitudes*)a;
     int ret                        = 0;
     double* v                      = val;
-    double dummyLat = 0, dummyVal = 0;
-    size_t size         = 0;
-    long count          = 0;
+    double dummyLat = 0;
+    size_t size = 0;
+    long count = 0;
     grib_iterator* iter = NULL;
 
     self->save = 1;
@@ -197,7 +197,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    iter = grib_iterator_new(grib_handle_of_accessor(a), 0, &ret);
+    // ECC-1525 Performance: We do not need the values to be decoded
+    iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         if (iter)
             grib_iterator_delete(iter);
@@ -205,7 +206,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     }
 
-    while (grib_iterator_next(iter, &dummyLat, v++, &dummyVal)) {}
+    while (grib_iterator_next(iter, &dummyLat, v++, NULL)) {}
     grib_iterator_delete(iter);
 
     *len = size;
@@ -250,12 +251,14 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     double prev;
     double* v       = NULL;
     double* v1      = NULL;
-    double dummyLat = 0, dummyVal = 0;
+    double dummyLat = 0;
     int ret = 0;
     int i;
     size_t size         = *len;
     grib_context* c     = a->context;
-    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), 0, &ret);
+
+    // Performance: We do not need the values to be decoded
+    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         if (iter)
             grib_iterator_delete(iter);
@@ -269,7 +272,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     }
     *val = v;
 
-    while (grib_iterator_next(iter, &dummyLat, v++, &dummyVal)) {}
+    while (grib_iterator_next(iter, &dummyLat, v++, NULL)) {}
     grib_iterator_delete(iter);
     v = *val;
 

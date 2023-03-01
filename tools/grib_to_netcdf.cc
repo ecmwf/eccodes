@@ -4011,13 +4011,14 @@ int grib_tool_init(grib_runtime_options* options)
 
     /* Option -S: Split according to keys */
     if (grib_options_on("S:")) {
+        char* lasts         = NULL;
         list = grib_options_get_option("S:");
-        p    = strtok(list, ",");
+        p    = strtok_r(list, ",", &lasts);
         set_value(user_r, "split", p);
-        p = strtok(NULL, ",");
+        p = strtok_r(NULL, ",", &lasts);
         while (p != NULL) {
             add_value(user_r, "split", p);
-            p = strtok(NULL, ",");
+            p = strtok_r(NULL, ",", &lasts);
         }
     }
     else {
@@ -4027,13 +4028,14 @@ int grib_tool_init(grib_runtime_options* options)
 
     /* Option -I: Ignore keys */
     if (grib_options_on("I:")) {
+        char* lasts = NULL;
         list = grib_options_get_option("I:");
-        p    = strtok(list, ",");
+        p    = strtok_r(list, ",", &lasts);
         set_value(user_r, "ignore", p);
-        p = strtok(NULL, ",");
+        p = strtok_r(NULL, ",", &lasts);
         while (p != NULL) {
             add_value(user_r, "ignore", p);
-            p = strtok(NULL, ",");
+            p = strtok_r(NULL, ",", &lasts);
         }
     }
     else {
@@ -4373,7 +4375,6 @@ int grib_no_handle_action(grib_runtime_options* options, int err)
 
 #else
 #include <stdio.h>
-#include <stdlib.h>
 int main(int argc, char** argv)
 {
     printf("\n");

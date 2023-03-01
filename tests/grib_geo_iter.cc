@@ -13,29 +13,60 @@
 
 #include "grib_api_internal.h"
 
+typedef enum IterMode
+{
+    WITH_VALUES,
+    NO_VALUES
+} IterMode;
+
 int main(int argc, char** argv)
 {
     int err  = 0;
-    double lat, lon, value;
-    int n                        = 0;
-    const int numberOfDataPoints = 13280;
-    const char* sample_filename  = "gg_sfc_grib2";
-    grib_handle* h               = NULL;
-    grib_iterator* iter          = NULL;
+    double lat = 0, lon = 0, value = 0;
+    long n = 0, numberOfDataPoints = 0;
+    char* filename = NULL;
+    FILE* fin = NULL;
+    grib_handle* h = NULL;
+    grib_iterator* iter = NULL;
+    char* option = NULL;
+    IterMode mode = WITH_VALUES;
+    int flags = 0;
+    double* pValue = NULL;
+    bool verbose = false;
 
-    h = grib_handle_new_from_samples(0, sample_filename);
+    Assert(argc == 3);
+    option = argv[1];
+    filename = argv[2];
+    if (strcmp(option, "-n")==0) {
+        mode = NO_VALUES;
+    }
+
+    fin = fopen(filename, "rb");
+    Assert(fin);
+    h = grib_handle_new_from_file(0, fin, &err);
+    Assert(!err);
     Assert(h);
 
-    iter = grib_iterator_new(h, 0, &err);
+    GRIB_CHECK(grib_get_long(h,"numberOfDataPoints", &numberOfDataPoints),0);
+
+    flags = (mode == NO_VALUES) ? GRIB_GEOITERATOR_NO_VALUES : 0;
+    iter = grib_iterator_new(h, flags, &err);
     Assert(!err);
     Assert(iter);
 
     Assert(grib_iterator_has_next(iter));
     n = 0;
 
-    while (grib_iterator_next(iter, &lat, &lon, &value)) {
-        if (n < numberOfDataPoints - 1)
+    pValue = (mode == NO_VALUES) ? NULL : &value;
+    while (grib_iterator_next(iter, &lat, &lon, pValue)) {
+        if (n < numberOfDataPoints - 1) {
             Assert(grib_iterator_has_next(iter));
+        }
+        if (verbose) {
+            printf("%9.3f %9.3f ",lat, lon);
+            if (pValue) printf(" %.10e\n", *pValue);
+            else printf("\n");
+        }
         n++;
     }
     Assert(n == numberOfDataPoints);
