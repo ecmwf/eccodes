@@ -16,7 +16,7 @@ temp_grib=temp.$label.grib
 temp_text=temp.$label.text
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=2 ${sample_grib2} ${temp_grib}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=30 ${sample_grib2} ${temp_grib}
 
 grib_check_key_equals ${temp_grib} tileIndex,totalNumberOfTileAttributeCombinations "1 1"
 
