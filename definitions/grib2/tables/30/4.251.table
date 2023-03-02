@@ -10,26 +10,26 @@
 1001 SEAO Sea and oceans
 1002 LAKE Lakes
 1003 RIVE Rivers
-1004 NONE Bare land
+1004 NO Bare land
 1005 ROCK Bare rock
 1006 SNOW Permanent snow
 1007 BOBD Boreal broadleaf deciduous
-1008 TEBD temperate broadleaf deciduous 
-1009 TRBD tropical broadleaf deciduous 
-1010 TEBE temperate broadleaf evergreen 
-1011 TRBE tropical broadleaf evergreen 
-1012 BONE boreal needleleaf evergreen 
-1013 TENE temperate needleleaf evergreen 
-1014 BOND boreal needleleaf deciduous 
-1015 SHRB shrubs 
-1016 BOGR boreal grassland 
-1017 GRAS temperate grassland 
-1018 TROG tropical grassland 
-1019 C3W winter C3 crops 
-1020 C3S summer C3 crops 
-1021 C4 C4 crops 
-1022 FLTR flooded trees 
-1023 FLGR flooded grassland 
+1008 TEBD temperate broadleaf deciduous
+1009 TRBD tropical broadleaf deciduous
+1010 TEBE temperate broadleaf evergreen
+1011 TRBE tropical broadleaf evergreen
+1012 BONE boreal needleleaf evergreen
+1013 TENE temperate needleleaf evergreen
+1014 BOND boreal needleleaf deciduous
+1015 SHRB shrubs
+1016 BOGR boreal grassland
+1017 GRAS temperate grassland
+1018 TROG tropical grassland
+1019 C3W winter C3 crops
+1020 C3S summer C3 crops
+1021 C4 C4 crops
+1022 FLTR flooded trees
+1023 FLGR flooded grassland
 1024 COHI LCZ1: compact high-rise
 1025 COMI LCZ2: compact midrise
 1026 COLO LCZ3: compact low-rise
@@ -40,36 +40,49 @@
 1031 LALO LCZ8: large low-rise
 1032 SPBU LCZ9: sparsely built
 1033 HEIN LCZ10: heavy industry
-# 1034-1500 Reserved for ECOCLIMAP/SURFEX variables
+1034 TEBDU Urban temperate broadleaf deciduous
+1035 TRBDU Urban tropical broadleaf deciduous
+1036 TEBEU Urban temperate broadleaf evergreen
+1037 TRBEU Urban tropical broadleaf evergreen
+1038 BONEU Urban boreal needleleaf evergreen
+1039 TENEU Urban temperate needleleaf evergreen
+1040 BONDU Urban boreal needleleaf deciduous
+# 1041-1500 Reserved for ECOCLIMAP/SURFEX variables
 # v8.1 groupings
-1501 G001 Group 001 (NONE + ROCK + SNOW + BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
-1502 G002 Group 002 (NONE + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
-1503 G003 Group 003 (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB)
-1504 G004 Group 004 (NONE + ROCK + SNOW)
-1505 G005 Group 005 (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + FLTR)
-1506 G006 Group 006 (BOGR + GRAS + TROG + C3W + C3S + C4 + FLGR)
-1507 G007 Group 007 (BOGR + GRAS + TROG + C3W + C3S + C4)
-1508 G008 Group 008 (C3W + C3S + C4)
-1509 G009 Group 009 (BOGR + GRAS + TROG)
-1510 G010 Group 010 (NONE + ROCK)
-1511 G011 Group 011 (C3W + C3S)
-1512 G012 Group 012 (BOBD + TEBD + TRBD + TEBE + TRBE + SHRB)
-1513 G013 Group 013 (BONE + TENE + BOND)
-1514 G014 Group 014 (BOBD + TEBD + TRBD + TEBE + SHRB)
-1515 G015 Group 015 (BOGR + GRAS)
-1516 G016 Group 016 (LCZ1 + LCZ2 + LCZ3 + LCZ4 + LCZ5 + LCZ6 + LCZ7 + LCZ8 + LCZ9 + LCZ10)
+1501 GNATU Nature grouping (NO + ROCK + SNOW + BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
+1502 GNOFO Non-forest grouping (NO + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
+1503 GFORE Forest grouping (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB)
+1504 GNOVE Non-vegetated grouping (NO + ROCK + SNOW)
+1505 GTREE Trees grouping (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + FLTR)
+1506 GLVEG Low vegetation grouping (BOGR + GRAS + TROG + C3W + C3S + C4 + FLGR)
+1507 GNFLV Non-flooded low vegetation grouping (BOGR + GRAS + TROG + C3W + C3S + C4)
+1508 GCROP Crops grouping (C3W + C3S + C4)
+1509 GGRAS Grassland grouping (BOGR + GRAS + TROG)
+1510 GBARO Bare and rock grouping (NO + ROCK)
+1511 GC3CR C3 crops grouping (C3W + C3S)
+1512 GBFOR Broadleaf forest grouping (BOBD + TEBD + TRBD + TEBE + TRBE + SHRB)
+1513 GNFOR Needleleaf forest grouping (BONE + TENE + BOND)
+1514 GDBFO Deciduous broadleaf forest grouping (BOBD + TEBD + TRBD + TEBE + SHRB)
+1515 GTGRA Temperate grassland grouping (BOGR + GRAS)
+1516 GLCZU LCZ or urban grouping (LCZ1 + LCZ2 + LCZ3 + LCZ4 + LCZ5 + LCZ6 + LCZ7 + LCZ8 + LCZ9 + LCZ10)
 # v9.0 groupings
-1517 G017 Group 017 (NONE + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLGR)
-1518 G018 Group 018 (BOBD + TEBD + TRBD + TEBE + TRBE + SHRB + FLTR)
-1519 G019 Group 019 (BOBD + TEBD + TRBD + TEBE + TRBE + FLTR)
-1520 G020 Group 020 (BOGR + GRAS + FLGR)
-1521 G021 Group 021 (BOBD + TEBD + TRBD + FLTR)
-1522 G022 Group 022 (TEBE + TRBE)
-1523 G023 Group 023 (BONE + TENE)
+1517 GNFNF Non-forest (no FLTR) grouping (NO + ROCK + SNOW + BOGR + GRAS + TROG + C3W + C3S + C4 + FLGR)
+1518 GBFFT Broadleaf forest (with FLTR) grouping (BOBD + TEBD + TRBD + TEBE + TRBE + SHRB + FLTR)
+1519 GBTRE Broadleaf trees grouping (BOBD + TEBD + TRBD + TEBE + TRBE + FLTR)
+1520 GCGRA C3/C4 grasslands grouping (BOGR + GRAS + FLGR)
+1521 GBDTR Broadleaf deciduous trees grouping (BOBD + TEBD + TRBD + FLTR)
+1522 GBETR Broadleaf evergreen trees grouping (TEBE + TRBE)
+1523 GNETR Needleleaf evergreen trees grouping (BONE + TENE)
 # Other groupings
-1524 G024 Group 024 (BOBD + TEBD + TRBD + TEBE + TRBE + BONE + TENE + BOND + SHRB + BOGR + GRAS + TROG + C3W + C3S + C4 + FLTR + FLGR)
-1525 G025 Group 025 (LAKE + RIVE)
-# 1524-2000 Reserved for ECOCLIMAP/SURFEX groupings
+1524 GIWAT Inland water grouping (LAKE + RIVE)
+1525 GPTEBD Urban parks and gardens TEBD grouping (NO + GRAS + TEBDU)
+1525 GPTRBD Urban parks and gardens TRBD grouping (NO + GRAS + TRBDU)
+1525 GPTEBE Urban parks and gardens TEBE grouping (NO + GRAS + TEBEU)
+1525 GPTRBE Urban parks and gardens TRBE grouping (NO + GRAS + TRBEU)
+1525 GPBONE Urban parks and gardens BONE grouping (NO + GRAS + BONEU)
+1525 GPTENE Urban parks and gardens TENE grouping (NO + GRAS + TENEU)
+1525 GPBOND Urban parks and gardens BOND grouping (NO + GRAS + BONDU)
+# 1525-2000 Reserved for ECOCLIMAP/SURFEX groupings
 2001 CROP Crops, mixed farming
 2002 SHGR Short grass
 2003 EVNE Evergreen needleleaf trees
