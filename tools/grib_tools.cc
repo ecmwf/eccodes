@@ -21,9 +21,8 @@
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#define _GNU_SOURCE
-#include <fenv.h>
-int feenableexcept(int excepts);
+ #include <fenv.h>
+ int feenableexcept(int excepts);
 #endif
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
