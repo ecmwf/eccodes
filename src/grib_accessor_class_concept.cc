@@ -342,6 +342,31 @@ static int cmpstringp(const void* p1, const void* p2)
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
+static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
+{
+    if ( strcmp(concept_name, "packingType")==0 ) {
+        char input_packing_type[100];
+        size_t len = sizeof(input_packing_type);
+        if (strstr(concept_value, "SPD")) {
+            return true;
+        }
+        if (edition == 2 && strstr(concept_value, "grid_run_length")) {
+            return true;
+        }
+        if (edition == 1 && (strstr(concept_value, "ccsds") || strstr(concept_value, "jpeg"))) {
+            return true;
+        }
+        grib_get_string(h, "packingType", input_packing_type, &len);
+        if (strstr(input_packing_type,"grid_") && !strstr(concept_value,"grid_")) {
+            return true;
+        }
+        if (strstr(input_packing_type,"spectral_") && !strstr(concept_value,"spectral_")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static int grib_concept_apply(grib_accessor* a, const char* name)
 {
     int err                   = 0;
@@ -397,16 +422,20 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             /* Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
              * Printing out all values for concepts like paramId would be silly! */
             if (concept_count < MAX_NUM_CONCEPT_VALUES) {
-                fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
+                fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
                 qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
                 for (i = 0; i < concept_count; ++i) {
                     if (all_concept_vals[i]) {
-                        int print_it = 1;
+                        bool print_it = true;
                         if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
-                            print_it = 0; /* skip duplicate entries */
+                            print_it = false; /* skip duplicate entries */
                         }
-                        if (print_it)
+                        if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
+                            print_it = false;
+                        }
+                        if (print_it) {
                             fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                        }
                     }
                 }
             }
