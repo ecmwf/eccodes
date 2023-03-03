@@ -11,22 +11,22 @@ listOfUsedTileAttributesInCombination list(numberOfUsedTileAttributesForTileAttr
 }
 unsigned[1]  totalNumberOfTileAttributeCombinations=1 : dump; # Sum over all tile-attribute pairs over whole grid. >= 1
 unsigned[1]  tileIndex=1 : dump; # Local index of tile
-byte[16] uuidOfDataGroup : dump; # UUID of data group
 transient unknownCombinationOfAttributesOfTile = "unknown";
 concept combinationOfAttributesOfTile (unknownCombinationOfAttributesOfTile,"combinationOfAttributesOfTileConcept.def",conceptsDir2,conceptsDir1): no_copy,dump;
+byte[16] uuidOfDataGroup : dump; # UUID of data group
 
 alias NT=totalNumberOfTileAttributeCombinations;
 alias NUT=numberOfUsedSpatialTiles;
 alias ITN=tileIndex;
 alias NATC=numberOfUsedTileAttributeCombinationsForTypeOfTile;
 alias uuid=uuidOfDataGroup;
-alias ls.typeOfTile=typeOfTile;
+alias ls.tile=typeOfTile;
 alias ls.tileAttribute=combinationOfAttributesOfTile;
 alias tile.tileIndex=tileIndex;
-alias tile.typeOfTile=typeOfTile;
-alias tile.listOfUsedTileAttributesInCombination=listOfUsedTileAttributesInCombination;
-alias tile.numberOfUsedSpatialTiles=numberOfUsedSpatialTiles;
-alias tile.totalNumberOfTileAttributeCombinations=totalNumberOfTileAttributeCombinations;
-alias tile.numberOfUsedTileAttributeCombinationsForTypeOfTile=numberOfUsedTileAttributeCombinationsForTypeOfTile;
-alias tile.numberOfUsedTileAttributesForTileAttributeCombination=numberOfUsedTileAttributesForTileAttributeCombination;
-alias tile.uuidOfDataGroup=uuidOfDataGroup;
+alias tile.tile=typeOfTile;
+alias tile.tileAttribute=combinationOfAttributesOfTile;
+alias tile.nTiles=numberOfUsedSpatialTiles;
+alias tile.totalTileAttCombo=totalNumberOfTileAttributeCombinations;
+alias tile.nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
+alias tile.nTileAtt=numberOfUsedTileAttributesForTileAttributeCombination;
+alias tile.uuid=uuidOfDataGroup;
