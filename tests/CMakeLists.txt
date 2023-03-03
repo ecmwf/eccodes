@@ -82,6 +82,7 @@ if( HAVE_BUILD_TOOLS )
         grib_uerra
         grib_s2s
         grib_fire
+        grib_referenceperiod_templates
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
