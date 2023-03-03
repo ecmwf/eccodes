@@ -643,6 +643,7 @@ static int init_definition_files_dir(grib_context* c)
 
     /* Note: strtok_r modifies its first argument so we copy */
     strncpy(path, c->grib_definition_files_path, ECC_PATH_MAXLEN-1);
+    path[ ECC_PATH_MAXLEN - 1 ] = '\0';
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
