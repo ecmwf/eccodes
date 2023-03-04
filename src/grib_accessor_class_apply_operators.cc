@@ -263,7 +263,7 @@ static int get_native_type(grib_accessor* a)
 
 size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors)
 {
-    int i            = 0;
+    size_t i         = 0;
     size_t sizeAO    = numberOfDescriptors;
     int extraElement = 0;
     int X, F, Y;
@@ -653,7 +653,7 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
 {
     grib_accessor_apply_operators* self = (grib_accessor_apply_operators*)a;
     int ret                             = 0;
-    int i                               = 0;
+    size_t i                            = 0;
     grib_context* c                     = a->context;
 
     ret = apply_operators(a);

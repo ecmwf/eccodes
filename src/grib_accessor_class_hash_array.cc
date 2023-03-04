@@ -234,10 +234,10 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_hash_array_value* ha      = 0;
+    grib_hash_array_value* ha = 0;
     grib_accessor_hash_array* self = (grib_accessor_hash_array*)a;
-    int err                        = 0;
-    int i;
+    int err = 0;
+    size_t i = 0;
 
     if (!self->ha) {
         ha = find_hash_value(a, &err);

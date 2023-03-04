@@ -808,7 +808,7 @@ static const char* get_grid_type_name(const int spec_grid_type)
 
 static int is_constant_field(const double missingValue, const double* data_values, size_t data_values_count)
 {
-    int ii       = 0;
+    size_t ii    = 0;
     int constant = 1;
     double value = missingValue;
 

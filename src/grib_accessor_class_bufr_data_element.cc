@@ -448,7 +448,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     value_count(a, &count);
 
-    if (*len < count)
+    if (*len < (size_t)count)
         return GRIB_ARRAY_TOO_SMALL;
 
     if (self->compressedData) {
@@ -477,7 +477,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     value_count(a, &count);
 
-    if (*len < count)
+    if (*len < (size_t)count)
         return GRIB_ARRAY_TOO_SMALL;
 
     if (self->compressedData) {
@@ -589,11 +589,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     /* ECC-415 */
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = GRIB_SUCCESS;
-    long count                            = 0;
+    int ret       = GRIB_SUCCESS;
+    long count    = 0;
 
     value_count(a, &count);
-    if (idx >= count) {
+    if (idx >= (size_t)count) {
         return GRIB_INTERNAL_ERROR;
     }
 

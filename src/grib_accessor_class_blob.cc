@@ -143,7 +143,7 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_bytes(grib_accessor* a, unsigned char* buffer, size_t* len)
 {
-    if (*len < a->length) {
+    if (*len < (size_t)a->length) {
         *len = a->length;
         return GRIB_ARRAY_TOO_SMALL;
     }
