@@ -4,9 +4,10 @@
 2 SNOW Snow covered
 3 FLOOD Flooded 
 4 ICE Ice covered
-5 ITC With intercepted water
-6 AGG Aggregated
-7 UNRES Unresolved
-# 8-191 Reserved
+5 ITCW With intercepted water
+6 ITCS With intercepted snow
+7 AGG Aggregated
+8 UNRES Unresolved
+# 9-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing value 
