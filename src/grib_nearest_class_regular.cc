@@ -213,13 +213,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
     return GRIB_SUCCESS;
 }
 #else
-static int is_rotated_grid(grib_handle* h)
+static bool is_rotated_grid(grib_handle* h)
 {
     long is_rotated = 0;
     int err         = grib_get_long(h, "isRotatedGrid", &is_rotated);
     if (!err && is_rotated)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 static int find(grib_nearest* nearest, grib_handle* h,
@@ -234,7 +234,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
 
     grib_iterator* iter = NULL;
     double lat = 0, lon = 0;
-    const int is_rotated   = is_rotated_grid(h);
+    const bool is_rotated  = is_rotated_grid(h);
     double angleOfRotation = 0, southPoleLat = 0, southPoleLon = 0;
 
     while (inlon < 0)
