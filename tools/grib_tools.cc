@@ -671,7 +671,7 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
     int width;
     int written_to_dump = 0; /* boolean */
     if (options->json_output && !options->latlon)
-        return; /* For JSON output we do not print a single header for all msgs */
+        return; // For JSON output we do not print a single header for all msgs
     if (options->handle_count != 1)
         return;
 
@@ -712,9 +712,9 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
 
 static int cmpstringp(const void* p1, const void* p2)
 {
-    /* The actual arguments to this function are "pointers to
-       pointers to char", but strcmp(3) arguments are "pointers
-       to char", hence the following cast plus dereference */
+    // The actual arguments to this function are "pointers to
+    // pointers to char", but strcmp(3) arguments are "pointers
+    // to char", hence the following cast plus dereference
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
@@ -765,9 +765,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count == 0 && options->latlon == 0) {
             int j = 0, k = 0, ns_count = 0;
-            const char* all_namespace_vals[1024] = {
-                NULL,
-            }; /* sorted array containing all namespaces */
+            const char* all_namespace_vals[1024] = {NULL,}; // sorted array containing all namespaces
             printf("ERROR: namespace \"%s\" does not contain any key.\n", ns);
             printf("Here are the available namespaces in this message:\n");
             for (i = 0; i < ACCESSORS_ARRAY_SIZE; i++) {
@@ -787,7 +785,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 if (all_namespace_vals[i]) {
                     int print_it = 1;
                     if (i > 0 && strcmp(all_namespace_vals[i], all_namespace_vals[i - 1]) == 0) {
-                        print_it = 0; /* skip duplicate entries */
+                        print_it = 0; // skip duplicate entries
                     }
                     if (print_it)
                         printf("\t%s\n", all_namespace_vals[i]);
