@@ -9,9 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
-label="grib_true-imagery_test"  # Change prod to bufr or grib etc
+
+label="grib_true_imagery_test"
 temp=temp.$label
 tempd=temp_dump.$label
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

@@ -80,12 +80,7 @@
 96 96 Average, accumulation, extreme values or other statistically processed values of an individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
 97 97 Average, accumulation, extreme values or other statistically processed values of post-processing analysis or forecast at a horizontal level or in a horizontal layer at a specified local time
 98 98 Average, accumulation, extreme values or other statistically processed values of a post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
-# 99-107 Reserved
-108 108 Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for generic optical properties
-109 109 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for generic optical properties
-110 110 Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical properties
-111 111 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical properties
-# 112-253 Reserved
+# 99-253 Reserved
 254 254 CCITT IA5 character string 
 # 255-999 Reserved 
 1000 1000 Cross-section of analysis and forecast at a point in time 

@@ -83,7 +83,7 @@ if( HAVE_BUILD_TOOLS )
         grib_uerra
         grib_s2s
         grib_fire
-        grib_true-imagery
+        # grib_true_imagery
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
