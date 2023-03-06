@@ -17,7 +17,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
 {
     size_t i               = 0;
     unsigned long lvalue = 0;
-    double x;
+    T x;
 
 #if 0
     /* slow reference code */
@@ -30,7 +30,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
             *bitp += 1;
         }
         x=((lvalue*s)+reference_value)*d;
-        val[i] = (double)x;
+        val[i] = x;
     }
 #endif
     if (bitsPerValue % 8 == 0) {
@@ -49,7 +49,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
                 lvalue |= p[o++];
             }
             x      = ((lvalue * s) + reference_value) * d;
-            val[i] = (T)x;
+            val[i] = x;
             /*  *bitp += bitsPerValue * n_vals; */
         }
     }
@@ -90,7 +90,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
             }
             /* scaling and move value to output */
             x      = ((lvalue * s) + reference_value) * d;
-            val[i] = (T)x;
+            val[i] = x;
         }
     }
     return 0;

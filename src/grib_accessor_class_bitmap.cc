@@ -40,8 +40,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-//static int unpack_double(grib_accessor*, double* val, size_t* len);
-//static int unpack_float(grib_accessor*, float* val, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static long next_offset(grib_accessor*);
@@ -89,8 +89,8 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
-    &GribAccessorClassBitmap<double>::unpack,              /* grib_unpack procedures double */
-    &GribAccessorClassBitmap<float>::unpack,              /* grib_unpack procedures float */
+    &unpack_double,              /* grib_unpack procedures double */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -245,6 +245,43 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
     *len = tlen;
     return GRIB_SUCCESS;
+}
+
+template <typename T>
+int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
+    long pos = a->offset * 8;
+    long tlen;
+    long i;
+    int err           = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+
+    err = grib_value_count(a, &tlen);
+    if (err)
+        return err;
+
+    if (*len < tlen) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %ld values", a->name, tlen);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    for (i = 0; i < tlen; i++) {
+        val[i] = (T)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
+    }
+    *len = tlen;
+    return GRIB_SUCCESS;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

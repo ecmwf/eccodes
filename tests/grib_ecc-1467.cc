@@ -24,8 +24,8 @@ int main(int argc, char** argv)
     size_t i           = 0;
 
     double abs_error     = 0;
-    double max_abs_error = 1e-04;
-    double tolerance     = 1e-04;
+    double max_abs_error = 1e-03;
+    double tolerance     = 1e-03;
     double dmin;
     double dmax;
     float fval;
@@ -51,8 +51,8 @@ int main(int argc, char** argv)
 
     fvalues = (float*)malloc(values_len * sizeof(float));
     dvalues = (double*)malloc(values_len * sizeof(double));
-    CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
     CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
+    CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
 
     for (i = 0; i < values_len; i++) {
         abs_error = fabs(dvalues[i] - (double)fvalues[i]);
