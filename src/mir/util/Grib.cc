@@ -16,10 +16,9 @@
 #include <cstring>
 #include <ios>
 #include <limits>
-#include <map>
+#include <utility>
 // #include <numeric> std::lcm, std::gcd (C++ 17)
 #include <ostream>
-#include <set>
 
 #include "eckit/config/Resource.h"
 #include "eckit/types/Fraction.h"
@@ -29,7 +28,6 @@
 #include "mir/util/Angles.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Log.h"
-#include "mir/util/Mutex.h"
 
 
 void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, size_t Nj) {
@@ -262,22 +260,10 @@ void BasicAngle::list(std::ostream& out) {
 }
 
 
-class PackingFactory;
-
-static util::once_flag once;
-static util::recursive_mutex* local_mutex         = nullptr;
-static std::map<std::string, PackingFactory*>* ms = nullptr;
-static std::map<std::string, PackingFactory*>* mg = nullptr;
-static void init() {
-    local_mutex = new util::recursive_mutex();
-    ms          = new std::map<std::string, PackingFactory*>();
-    mg          = new std::map<std::string, PackingFactory*>();
-}
-
-
 Packing::Packing(const std::string& name, const param::MIRParametrisation& param) :
-    accuracy_(0),
+    bitsPerValue_(0),
     edition_(0),
+    precision_(0),
     gridded_(param.userParametrisation().has("grid") || param.fieldParametrisation().has("gridded")) {
     const auto& user  = param.userParametrisation();
     const auto& field = param.fieldParametrisation();
@@ -289,39 +275,37 @@ Packing::Packing(const std::string& name, const param::MIRParametrisation& param
     bool gridded = false;
     field.get("gridded", gridded);
 
-    definePacking_               = !field.get("packing", packing) || packing_ != packing || gridded_ != gridded;
-    defineAccuracyBeforePacking_ = definePacking_ && packing == "ieee";
+    definePacking_                   = !field.get("packing", packing) || packing_ != packing || gridded_ != gridded;
+    defineBitsPerValueBeforePacking_ = definePacking_ && packing == "ieee";
 
-    defineAccuracy_ = false;
-    if (defineAccuracyBeforePacking_) {
-        ASSERT(param.get("accuracy", accuracy_));
-        defineAccuracy_ = true;
+    defineBitsPerValue_ = false;
+    if (defineBitsPerValueBeforePacking_) {
+        ASSERT(param.get("accuracy", bitsPerValue_));
+        defineBitsPerValue_ = true;
     }
-    else if (user.get("accuracy", accuracy_)) {
-        long accuracy   = 0;
-        defineAccuracy_ = !field.get("accuracy", accuracy) || accuracy_ != accuracy;
+    else if (user.get("accuracy", bitsPerValue_)) {
+        long accuracy       = 0;
+        defineBitsPerValue_ = !field.get("accuracy", accuracy) || bitsPerValue_ != accuracy;
     }
 
-    defineEdition_ = false;
-    if (user.get("edition", edition_)) {
-        long edition   = 0;
-        defineEdition_ = !field.get("edition", edition) || edition_ != edition;
-    }
+    param.get("edition", edition_);
+    long edition   = 0;
+    defineEdition_ = !field.get("edition", edition) || edition_ != edition;
 }
 
 
-Packing::~Packing() = default;
-
-
 bool Packing::sameAs(const Packing* other) const {
-    if (definePacking_ != other->definePacking_ || defineAccuracy_ != other->defineAccuracy_ ||
-        defineEdition_ != other->defineEdition_) {
+    if (definePacking_ != other->definePacking_ || defineBitsPerValue_ != other->defineBitsPerValue_ ||
+        defineEdition_ != other->defineEdition_ || definePrecision_ != other->definePrecision_) {
         return false;
     }
-    bool samePacking  = !definePacking_ || packing_ == other->packing_;
-    bool sameAccuracy = !defineAccuracy_ || accuracy_ == other->accuracy_;
-    bool sameEdition  = !defineEdition_ || edition_ == other->edition_;
-    return samePacking && sameAccuracy && sameEdition;
+
+    bool samePacking   = !definePacking_ || packing_ == other->packing_;
+    bool sameAccuracy  = !defineBitsPerValue_ || bitsPerValue_ == other->bitsPerValue_;
+    bool sameEdition   = !defineEdition_ || edition_ == other->edition_;
+    bool sameprecision = !definePrecision_ || precision_ == other->precision_;
+
+    return samePacking && sameAccuracy && sameEdition && sameprecision;
 }
 
 
@@ -338,8 +322,13 @@ bool Packing::printParametrisation(std::ostream& out) const {
         sep = ",";
     }
 
-    if (defineAccuracy_) {
-        out << sep << "accuracy=" << accuracy_;
+    if (defineBitsPerValue_) {
+        out << sep << "accuracy=" << bitsPerValue_;
+        sep = ",";
+    }
+
+    if (definePrecision_) {
+        out << sep << "precision=" << precision_;
         sep = ",";
     }
 
@@ -348,7 +337,7 @@ bool Packing::printParametrisation(std::ostream& out) const {
 
 
 bool Packing::empty() const {
-    return !definePacking_ && !defineAccuracy_ && !defineEdition_;
+    return !definePacking_ && !defineBitsPerValue_ && !defineEdition_ && !definePrecision_;
 }
 
 
@@ -362,13 +351,17 @@ void Packing::fill(grib_info& info, long pack) const {
         info.packing.packing_type = pack;
     }
 
-    if (defineAccuracy_) {
+    if (defineBitsPerValue_ && !definePrecision_) {
         info.packing.accuracy     = CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
-        info.packing.bitsPerValue = accuracy_;
+        info.packing.bitsPerValue = bitsPerValue_;
     }
 
     if (defineEdition_) {
         info.packing.editionNumber = edition_;
+    }
+
+    if (definePrecision_) {
+        info.extra_set("precision", precision_);
     }
 }
 
@@ -380,8 +373,8 @@ void Packing::set(grib_handle* h, const std::string& type) const {
         GRIB_CALL(codes_set_long(h, "edition", edition_));
     }
 
-    if (defineAccuracyBeforePacking_) {
-        GRIB_CALL(codes_set_long(h, "bitsPerValue", accuracy_));
+    if (defineBitsPerValueBeforePacking_) {
+        GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue_));
     }
 
     if (definePacking_) {
@@ -389,83 +382,48 @@ void Packing::set(grib_handle* h, const std::string& type) const {
         GRIB_CALL(codes_set_string(h, "packingType", type.c_str(), &len));
     }
 
-    if (defineAccuracy_) {
-        GRIB_CALL(codes_set_long(h, "bitsPerValue", accuracy_));
+    if (definePrecision_) {
+        GRIB_CALL(codes_set_long(h, "precision", precision_));
+    }
+    else if (defineBitsPerValue_) {
+        GRIB_CALL(codes_set_long(h, "bitsPerValue", bitsPerValue_));
     }
 }
 
 
-class ArchivedValue : public Packing {
-public:
-    // -- Constructors
+namespace packing {
 
+
+struct ArchivedValue : Packing {
     ArchivedValue(const std::string& name, const param::MIRParametrisation& param) : Packing(name, param) {
         ASSERT(!definePacking_);
     }
 
-private:
-    // -- Methods
-
     void fill(const repres::Representation*, grib_info& info) const override {
-        Packing::fill(info, 0 /* dummy, protected by ASSERT */);
+        Packing::fill(info, CODES_UTIL_PACKING_SAME_AS_INPUT);
     }
 
-    void set(const repres::Representation*, grib_handle* handle) const override {
-        Packing::set(handle, "" /* dummy, protected by ASSERT */);
-    }
+    void set(const repres::Representation*, grib_handle* handle) const override { Packing::set(handle, ""); }
 };
 
 
-class CCSDS : public Packing {
-public:
-    // -- Constructors
-
+struct CCSDS : Packing {
     CCSDS(const std::string& name, const param::MIRParametrisation& param) : Packing(name, param) {
-        if (!gridded()) {
-            std::string msg = "packing=ccsds: only supports gridded fields";
-            Log::error() << msg << std::endl;
-            throw exception::UserError(msg);
-        }
-
-        long required = 2;
-        long edition  = 0;
-        if (param.get("edition", edition) && edition != required) {
-            static const bool grib_edition_conversion_default =
-                eckit::Resource<bool>("$MIR_GRIB_EDITION_CONVERSION;mirGribEditionConversion", false);
-            bool grib_edition_conversion = grib_edition_conversion_default;
-            param.get("grib-edition-conversion", grib_edition_conversion);
-
-            if (!grib_edition_conversion) {
-                throw exception::UserError("Packing: edition conversion is required, but disabled");
-            }
-        }
-
-        if (edition != required) {
-            edition_       = required;
-            defineEdition_ = true;
-        }
+        edition_       = 2;
+        long edition   = 0;
+        defineEdition_ = !param.fieldParametrisation().get("edition", edition) || edition_ != edition;
     }
-
-private:
-    // -- Overridden methods
 
     void fill(const repres::Representation*, grib_info& info) const override {
         Packing::fill(info, CODES_UTIL_PACKING_TYPE_CCSDS);
     }
+
     void set(const repres::Representation*, grib_handle* handle) const override { Packing::set(handle, "grid_ccsds"); }
 };
 
 
-class Complex : public Packing {
-public:
-    // -- Constructors
-
-    Complex(const std::string& name, const param::MIRParametrisation& param) : Packing(name, param) {
-        ASSERT(!gridded());
-    }
-
-private:
-    // -- Overridden methods
+struct Complex : Packing {
+    using Packing::Packing;
 
     void fill(const repres::Representation*, grib_info& info) const override {
         Packing::fill(info, CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX);
@@ -477,28 +435,22 @@ private:
 };
 
 
-class IEEE : public Packing {
-public:
-    // -- Constructors
-
+struct IEEE : Packing {
     IEEE(const std::string& name, const param::MIRParametrisation& param) : Packing(name, param) {
-        const auto& user  = param.userParametrisation();
-        const auto& field = param.fieldParametrisation();
-
         constexpr long L32  = 32;
         constexpr long L64  = 64;
         constexpr long L128 = 128;
 
         // Accuracy set by user, otherwise by field (rounded up to a supported precision)
         long bits = L32;
-        field.get("accuracy", bits);
+        param.fieldParametrisation().get("accuracy", bits);
 
-        if (!user.get("accuracy", accuracy_)) {
-            accuracy_ = bits <= L32 ? L32 : bits <= L64 ? L64 : L128;
+        if (!param.userParametrisation().get("accuracy", bitsPerValue_)) {
+            bitsPerValue_ = bits <= L32 ? L32 : bits <= L64 ? L64 : L128;
         }
 
-        definePrecision_ = accuracy_ != bits || definePacking_ || !field.has("accuracy");
-        precision_       = accuracy_ == L32 ? 1 : accuracy_ == L64 ? 2 : accuracy_ == L128 ? 3 : 0;
+        definePrecision_ = bitsPerValue_ != bits || definePacking_ || !param.fieldParametrisation().has("accuracy");
+        precision_       = bitsPerValue_ == L32 ? 1 : bitsPerValue_ == L64 ? 2 : bitsPerValue_ == L128 ? 3 : 0;
 
         if (precision_ == 0) {
             std::string msg = "packing=ieee: only supports accuracy=32, 64 and 128";
@@ -507,57 +459,18 @@ public:
         }
     }
 
-private:
-    // -- Members
-
-    long precision_;
-    bool definePrecision_;
-
-    // -- Overridden methods
-
     void fill(const repres::Representation*, grib_info& info) const override {
-        info.packing.packing = CODES_UTIL_PACKING_SAME_AS_INPUT;
-        // (Representation can set edition, so it isn't reset)
-
-        if (definePacking_) {
-            info.packing.packing      = CODES_UTIL_PACKING_USE_PROVIDED;
-            info.packing.packing_type = CODES_UTIL_PACKING_TYPE_IEEE;
-        }
-
-        if (defineEdition_) {
-            info.packing.editionNumber = edition_;
-        }
-
-        if (definePrecision_) {
-            info.extra_set("precision", precision_);
-        }
+        Packing::fill(info, CODES_UTIL_PACKING_TYPE_IEEE);
     }
+
     void set(const repres::Representation*, grib_handle* handle) const override {
         Packing::set(handle, gridded() ? "grid_ieee" : "spectral_ieee");
-
-        if (definePrecision_) {
-            GRIB_CALL(codes_set_long(handle, "precision", precision_));
-        }
     }
-    bool printParametrisation(std::ostream& out) const override {
-        const auto* sep = Packing::printParametrisation(out) ? "," : "";
-        if (definePrecision_) {
-            out << sep << "precision=" << precision_;
-        }
-        return true;
-    }
-    bool empty() const override { return Packing::empty() && !definePrecision_; }
 };
 
 
-class Simple : public Packing {
-public:
-    // -- Constructors
-
+struct Simple : Packing {
     using Packing::Packing;
-
-private:
-    // -- Overridden methods
 
     void fill(const repres::Representation*, grib_info& info) const override {
         Packing::fill(info, gridded() ? CODES_UTIL_PACKING_TYPE_GRID_SIMPLE : CODES_UTIL_PACKING_TYPE_SPECTRAL_SIMPLE);
@@ -565,24 +478,14 @@ private:
     void set(const repres::Representation*, grib_handle* handle) const override {
         Packing::set(handle, gridded() ? "grid_simple" : "spectral_simple");
     }
-
-    friend class SecondOrder;
 };
 
 
-class SecondOrder : public Packing {
-public:
-    // -- Constructors
-
+struct SecondOrder : Packing {
     SecondOrder(const std::string& name, const param::MIRParametrisation& param) :
         Packing(name, param), simple_(name, param) {}
 
-private:
-    // -- Members
-
     Simple simple_;
-
-    // -- Methods
 
     static bool check(const repres::Representation* repres) {
         ASSERT(repres != nullptr);
@@ -595,8 +498,6 @@ private:
         }
         return true;
     }
-
-    // -- Overridden methods
 
     void fill(const repres::Representation* repres, grib_info& info) const override {
         if (!check(repres)) {
@@ -617,49 +518,19 @@ private:
 };
 
 
-class PackingFactory {
-public:
-    std::string name_;
-
-    virtual Packing* make(const std::string& name, const param::MIRParametrisation&) = 0;
-
-    PackingFactory(const PackingFactory&)            = delete;
-    PackingFactory& operator=(const PackingFactory&) = delete;
-
-protected:
-    PackingFactory(const std::string& name, const std::string& alias, bool spectral, bool gridded) : name_(name) {
-        util::call_once(once, init);
-        util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-
-        ASSERT(gridded || spectral);
-
-        if (gridded) {
-            ASSERT_MSG(mg->insert({name, this}).second, "PackingFactory: duplicate gridded packing");
-            if (!alias.empty()) {
-                ASSERT_MSG(mg->insert({alias, this}).second, "PackingFactory: duplicate gridded packing");
-            }
-        }
-
-        if (spectral) {
-            ASSERT_MSG(ms->insert({name, this}).second, "PackingFactory: duplicate spectral packing");
-            if (!alias.empty()) {
-                ASSERT_MSG(ms->insert({alias, this}).second, "PackingFactory: duplicate spectral packing");
-            }
-        }
-    }
-
-    virtual ~PackingFactory() {
-        util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-
-        mg->erase(name_);
-        ms->erase(name_);
-    }
-};
+}  // namespace packing
 
 
 Packing* Packing::build(const param::MIRParametrisation& param) {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
+    const auto& user  = param.userParametrisation();
+    const auto& field = param.fieldParametrisation();
+
+
+    // Defaults
+    static const bool grib_edition_conversion_default =
+        eckit::Resource<bool>("$MIR_GRIB_EDITION_CONVERSION;mirGribEditionConversion", false);
+    bool grib_edition_conversion = grib_edition_conversion_default;
+    param.get("grib-edition-conversion", grib_edition_conversion);
 
     long edition = 2;
     param.get("edition", edition);
@@ -669,88 +540,73 @@ Packing* Packing::build(const param::MIRParametrisation& param) {
     param.get("default-spectral-packing", default_spectral);
     param.get(edition <= 1 ? "default-grib1-gridded-packing" : "default-grib2-gridded-packing", default_gridded);
 
-    const auto& user  = param.userParametrisation();
-    const auto& field = param.fieldParametrisation();
-
-
-    // When converting from spectral to gridded...
-    auto name = user.has("grid") && field.has("spectral") ? default_gridded : "av";
-    user.get("packing", name);
-
-
-    // When converting formats, field packing needs a sensible default
-    std::string packing = field.has("spectral") ? default_spectral : default_gridded;
-    field.get("packing", packing);
-
-
-    bool av       = name == "av" || name == "archived-value";
-    bool gridded  = user.has("grid") || field.has("gridded");
-    std::string t = gridded ? "gridded" : "spectral";
-    const auto& m = gridded ? *mg : *ms;
-
-
-    // In case of packing=av, try instantiating specific packing
-    if (av) {
-        auto j = m.find(packing);
-        if (j != m.end()) {
-            return j->second->make(packing, param);
+    auto check = [](bool ok, const std::string& message) {
+        if (!ok) {
+            Log::error() << message << std::endl;
+            throw exception::UserError(message);
         }
+    };
+
+
+    // Converting spectral to gridded
+    auto packing = user.has("grid") && field.has("spectral") ? default_gridded : "av";
+    user.get("packing", packing);
+
+
+    // Aliasing
+    auto av      = packing == "av" || packing == "archived-value";
+    auto gridded = user.has("grid") || field.has("gridded");
+
+    if (av) {
+        packing = field.has("spectral") ? default_spectral : default_gridded;
+        field.get("packing", packing);
+    }
+    else if (packing == "co") {
+        packing = "complex";
+    }
+    else if (packing == "so") {
+        packing = "second-order";
     }
 
-    auto j = m.find(name);
-    if (j != m.end()) {
-        return j->second->make(av ? packing : j->second->name_, param);
+
+    // Instantiate packing method
+    if (packing == "ccsds") {
+        check(edition == 2 || grib_edition_conversion, "packing=ccsds requires edition conversion, which is disabled");
+        check(gridded, "packing=ccsds requires gridded data");
+        return new packing::CCSDS(packing, param);
     }
 
-    Log::error() << "Packing: unknown " << t << " packing '" << name << "', choices are: ";
-    for (const auto& j : m) {
-        Log::error() << ", " << j.first;
+    if (packing == "complex") {
+        check(!gridded, "packing=complex requires spectral data");
+        return new packing::Complex(packing, param);
     }
 
-    throw exception::SeriousBug("Packing: unknown " + t + " packing '" + name + "'");
+    if (packing == "ieee") {
+        return new packing::IEEE(packing, param);
+    }
+
+    if (packing.compare(0, 12, "second-order") == 0) {
+        check(gridded, "packing=second-order requires gridded data");
+        return new packing::SecondOrder(packing, param);
+    }
+
+    if (packing.compare(0, 6, "simple") == 0) {
+        return new packing::Simple(packing, param);
+    }
+
+    if (av) {
+        return new packing::ArchivedValue(packing, param);
+    }
+
+
+    list(Log::error() << "Packing: unknown packing '" << packing << "', choices are: ");
+    throw exception::UserError("Packing: unknown packing '" + packing + "'");
 }
 
 
 void Packing::list(std::ostream& out) {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-
-    std::set<std::string> p;
-    for (const auto& j : *ms) {
-        p.insert(j.first);
-    }
-    for (const auto& j : *mg) {
-        p.insert(j.first);
-    }
-
-    const char* sep = "";
-    for (const auto& j : p) {
-        out << sep << j;
-        sep = ", ";
-    }
+    out << "archived-value, av, ccsds, co, complex, ieee, second-order, simple, so" << std::endl;
 }
-
-
-template <class T>
-class PackingBuilder : public PackingFactory {
-    Packing* make(const std::string& name, const param::MIRParametrisation& param) override {
-        return new T(name, param);
-    }
-
-public:
-    PackingBuilder(const std::string& name, bool spectral, bool gridded) :
-        PackingFactory(name, "", spectral, gridded) {}
-    PackingBuilder(const std::string& name, const std::string& alias, bool spectral, bool gridded) :
-        PackingFactory(name, alias, spectral, gridded) {}
-};
-
-
-static const PackingBuilder<ArchivedValue> __packing1("archived-value", "av", true, true);
-static const PackingBuilder<CCSDS> __packing2("ccsds", false, true);
-static const PackingBuilder<Complex> __packing3("complex", "co", true, false);
-static const PackingBuilder<IEEE> __packing4("ieee", true, true);
-static const PackingBuilder<SecondOrder> __packing5("second-order", "so", false, true);
-static const PackingBuilder<Simple> __packing6("simple", true, true);
 
 
 }  // namespace mir::util::grib

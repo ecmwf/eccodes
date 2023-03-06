@@ -165,7 +165,7 @@ public:
     Packing(const Packing&) = delete;
     Packing(Packing&&)      = delete;
 
-    virtual ~Packing();
+    virtual ~Packing() = default;
 
     void operator=(const Packing&) = delete;
     void operator=(Packing&&)      = delete;
@@ -173,22 +173,24 @@ public:
     virtual void fill(const repres::Representation*, grib_info&) const  = 0;
     virtual void set(const repres::Representation*, grib_handle*) const = 0;
 
-    virtual bool sameAs(const Packing*) const;
-    virtual bool printParametrisation(std::ostream&) const;
-    virtual bool empty() const;
+    bool sameAs(const Packing*) const;
+    bool printParametrisation(std::ostream&) const;
+    bool empty() const;
 
     static Packing* build(const param::MIRParametrisation&);
     static void list(std::ostream&);
 
 protected:
-    long accuracy_;
+    long bitsPerValue_;
     long edition_;
     std::string packing_;
+    long precision_;
 
-    bool defineAccuracy_;
-    bool defineAccuracyBeforePacking_;
+    bool defineBitsPerValue_;
+    bool defineBitsPerValueBeforePacking_;
     bool defineEdition_;
     bool definePacking_;
+    bool definePrecision_;
 
     bool gridded() const { return gridded_; }
     void fill(grib_info&, long) const;
