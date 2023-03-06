@@ -22,6 +22,20 @@
 #include "mir/util/Exceptions.h"
 
 
+namespace eckit {
+class Fraction;
+}
+
+namespace mir {
+namespace param {
+class MIRParametrisation;
+}
+namespace repres {
+class Representation;
+}
+}  // namespace mir
+
+
 inline bool grib_call(int e, const char* call, bool missingOK = false) {
     if (static_cast<bool>(e)) {
         if (missingOK && (e == CODES_NOT_FOUND)) {
@@ -99,11 +113,6 @@ void grib_reorder(std::vector<double>& values, long scanningMode, size_t Ni, siz
 void grib_get_unique_missing_value(const std::vector<double>& values, double& missingValue);
 
 
-namespace eckit {
-class Fraction;
-}
-
-
 namespace mir::util::grib {
 
 
@@ -147,6 +156,46 @@ struct BasicAngle : Fraction {
     Fraction::value_type numerator(const Fraction&) const;
 
     static void list(std::ostream&);
+};
+
+
+class Packing {
+public:
+    Packing(const std::string& name, const param::MIRParametrisation&);
+    Packing(const Packing&) = delete;
+    Packing(Packing&&)      = delete;
+
+    virtual ~Packing();
+
+    void operator=(const Packing&) = delete;
+    void operator=(Packing&&)      = delete;
+
+    virtual void fill(const repres::Representation*, grib_info&) const  = 0;
+    virtual void set(const repres::Representation*, grib_handle*) const = 0;
+
+    virtual bool sameAs(const Packing*) const;
+    virtual bool printParametrisation(std::ostream&) const;
+    virtual bool empty() const;
+
+    static Packing* build(const param::MIRParametrisation&);
+    static void list(std::ostream&);
+
+protected:
+    long accuracy_;
+    long edition_;
+    std::string packing_;
+
+    bool defineAccuracy_;
+    bool defineAccuracyBeforePacking_;
+    bool defineEdition_;
+    bool definePacking_;
+
+    bool gridded() const { return gridded_; }
+    void fill(grib_info&, long) const;
+    void set(grib_handle*, const std::string&) const;
+
+private:
+    const bool gridded_;
 };
 
 
