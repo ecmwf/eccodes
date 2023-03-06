@@ -36,7 +36,7 @@ program bufr_keys_iterator
 
       ! We need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
-      call codes_set(ibufr, "unpack", 1); 
+      call codes_set(ibufr, "unpack", 1);
       ! Create BUFR keys iterator
       call codes_bufr_keys_iterator_new(ibufr, kiter, iret)
 

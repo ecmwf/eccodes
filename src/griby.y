@@ -49,7 +49,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
     grib_concept_condition  *concept_condition;
     grib_concept_value      *concept_value;
     grib_hash_array_value      *hash_array_value;
-	grib_case               *case_value;
+    grib_case               *case_value;
   grib_rule               *rules;
   grib_rule_entry         *rule_entry;
 };
@@ -121,7 +121,7 @@ static grib_hash_array_value *_reverse_hash_array(grib_hash_array_value *r,grib_
 %token CONCEPT_NOFAIL
 %token NIL
 %token DUMMY
-	
+
 %token MODIFY
 
 %token READ_ONLY
@@ -750,9 +750,9 @@ concept_value:  STRING '=' '{' concept_conditions '}' {
   				| IDENT '=' '{' concept_conditions '}' {
 	  				$$ = grib_concept_value_new(grib_parser_context,$1,$4); free($1);}
 				| INTEGER '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%ld",(long)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
 				| FLOAT '=' '{' concept_conditions '}' {
-					char buf[80]; sprintf(buf,"%g",(double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
+					char buf[80]; snprintf(buf, sizeof(buf), "%g", (double)$1); $$ = grib_concept_value_new(grib_parser_context,buf,$4);}
         ;
 
 concept_conditions: concept_condition

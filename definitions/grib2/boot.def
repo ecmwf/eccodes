@@ -9,7 +9,7 @@
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/activity-areas/wmo-codes/manual-codes/latest-version
-constant tablesVersionLatestOfficial = 29 : edition_specific;
+constant tablesVersionLatestOfficial = 30 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
 constant tablesVersionLatest = 30 : edition_specific;
 

@@ -10,9 +10,8 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="grib_values_check_c"
-tempOut=${label}.tmp.out
 tempErr=${label}.tmp.err
 tempRef=${label}.tmp.ref
 
@@ -22,11 +21,11 @@ Error: "levelll" Key/value not found
 EOF
 
 # Input GRIB file path is hard coded in the example
-${examples_dir}/c_grib_values_check > $tempOut
+${examples_dir}/c_grib_values_check 2> $tempErr
 
-# Compare output with the reference
-cat $tempOut
-diff $tempRef $tempOut
+# Compare stderr with the reference
+cat $tempErr
+diff $tempRef $tempErr
 
 # Clean up
-rm -f $tempRef $tempErr $tempOut
+rm -f $tempRef $tempErr

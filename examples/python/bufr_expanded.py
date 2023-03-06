@@ -13,7 +13,7 @@
 # Description: how to read values of different type of keys from BUFR messages.
 #
 
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import
 
 import sys
 import traceback

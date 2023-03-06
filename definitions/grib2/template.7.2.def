@@ -45,3 +45,5 @@ meta values data_apply_bitmap(codedValues,
 alias data.packedValues = codedValues; 
 
 template statistics "common/statistics_grid.def";
+meta numberOfMissing count_missing(bitmap,unusedBitsInBitmap,numberOfDataPoints,missingValueManagementUsed) : dump;
+alias numberOfMissingValues=numberOfMissing;

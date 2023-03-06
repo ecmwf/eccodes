@@ -48,6 +48,7 @@ concept packingType (unknown) {
   "spectral_ieee"                        = { dataRepresentationTemplateNumber = 50000; }
   "grid_simple_log_preprocessing"        = { dataRepresentationTemplateNumber = 61; }
   "bifourier_complex"                    = { dataRepresentationTemplateNumber = 53; spectralType=2; }
+  "grid_run_length"                      = { dataRepresentationTemplateNumber = 200; }
 }  : dump;
 
 template dataRepresentation "grib2/template.5.[dataRepresentationTemplateNumber:l].def";

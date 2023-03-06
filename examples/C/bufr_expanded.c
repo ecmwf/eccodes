@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
         /* get the size of the values array*/
         CODES_CHECK(codes_get_size(h, "numericValues", &values_len), 0);
-        printf("  number of expanded values: %lu\n", (unsigned long)values_len);
+        printf("  number of expanded values: %zu\n", values_len);
 
         /* allocate array for data values */
         values = (double*)malloc(values_len * sizeof(double));
