@@ -1539,7 +1539,7 @@ static int cube_position(const hypercube* h, const request* r)
 
 static void reserve_index_cache(hypercube* h, int size)
 {
-    if (size == 0)
+    if (size <= 0)
         return;
 
     if (h->index_cache != 0)
