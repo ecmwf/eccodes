@@ -264,6 +264,7 @@ Packing::Packing(const std::string& name, const param::MIRParametrisation& param
     bitsPerValue_(0),
     edition_(0),
     precision_(0),
+    definePrecision_(false),
     gridded_(param.userParametrisation().has("grid") || param.fieldParametrisation().has("gridded")) {
     const auto& user  = param.userParametrisation();
     const auto& field = param.fieldParametrisation();
