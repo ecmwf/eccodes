@@ -116,6 +116,9 @@ void grib_get_unique_missing_value(const std::vector<double>& values, double& mi
 namespace mir::util::grib {
 
 
+void check_edition_conversion(const mir::param::MIRParametrisation&);
+
+
 struct Fraction {
     using value_type = long;
 

@@ -260,6 +260,49 @@ void BasicAngle::list(std::ostream& out) {
 }
 
 
+void check(bool ok, const std::string& message) {
+    if (!ok) {
+        Log::error() << message << std::endl;
+        throw exception::UserError(message);
+    }
+};
+
+
+bool edition_conversion(const param::MIRParametrisation& param) {
+    static const bool edition_conversion_default =
+        eckit::Resource<bool>("$MIR_GRIB_EDITION_CONVERSION;mirGribEditionConversion", false);
+
+    bool edition_conversion = edition_conversion_default;
+    param.get("grib-edition-conversion", edition_conversion);
+
+    return edition_conversion;
+}
+
+
+void check_edition_conversion(const param::MIRParametrisation& param) {
+    long user  = 0;
+    long field = 0;
+    check(edition_conversion(param)                                   // if conversion is allowed
+              || param.userParametrisation().get("edition", user)     // or user specifies edition
+              || !param.fieldParametrisation().get("edition", field)  // or input doesn't specify edition
+              || (user == field),                                     // or there's no conversion
+          "GRIB edition conversion is disabled");
+}
+
+
+void check_edition_conversion(const param::MIRParametrisation& param, long required) {
+    ASSERT(required > 0);
+
+    long field = 0;
+    check(edition_conversion(param)                                   // if conversion is allowed
+              || required == 0                                        // or user specifies "same as input"
+              || param.userParametrisation().has("edition")           // ...
+              || !param.fieldParametrisation().get("edition", field)  // or input doesn't specify edition
+              || (required == field),                                 // or there's no conversion
+          "GRIB edition conversion is disabled (required edition=" + std::to_string(required) + ")");
+}
+
+
 Packing::Packing(const std::string& name, const param::MIRParametrisation& param) :
     bitsPerValue_(0),
     edition_(0),
@@ -292,6 +335,10 @@ Packing::Packing(const std::string& name, const param::MIRParametrisation& param
     param.get("edition", edition_);
     long edition   = 0;
     defineEdition_ = !field.get("edition", edition) || edition_ != edition;
+
+    if (defineEdition_) {
+        check_edition_conversion(param, edition_);
+    }
 }
 
 
@@ -528,11 +575,6 @@ Packing* Packing::build(const param::MIRParametrisation& param) {
 
 
     // Defaults
-    static const bool grib_edition_conversion_default =
-        eckit::Resource<bool>("$MIR_GRIB_EDITION_CONVERSION;mirGribEditionConversion", false);
-    bool grib_edition_conversion = grib_edition_conversion_default;
-    param.get("grib-edition-conversion", grib_edition_conversion);
-
     long edition = 2;
     param.get("edition", edition);
 
@@ -541,16 +583,8 @@ Packing* Packing::build(const param::MIRParametrisation& param) {
     param.get("default-spectral-packing", default_spectral);
     param.get(edition <= 1 ? "default-grib1-gridded-packing" : "default-grib2-gridded-packing", default_gridded);
 
-    auto check = [](bool ok, const std::string& message) {
-        if (!ok) {
-            Log::error() << message << std::endl;
-            throw exception::UserError(message);
-        }
-    };
-
-
     // Converting spectral to gridded
-    auto packing = user.has("grid") && field.has("spectral") ? default_gridded : "av";
+    auto packing = (user.has("grid") && field.has("spectral")) ? default_gridded : "av";
     user.get("packing", packing);
 
 
@@ -572,13 +606,13 @@ Packing* Packing::build(const param::MIRParametrisation& param) {
 
     // Instantiate packing method
     if (packing == "ccsds") {
-        check(edition == 2 || grib_edition_conversion, "packing=ccsds requires edition conversion, which is disabled");
-        check(gridded, "packing=ccsds requires gridded data");
+        check_edition_conversion(param, 2);
+        check(gridded, "GRIB packing=ccsds requires gridded data");
         return new packing::CCSDS(packing, param);
     }
 
     if (packing == "complex") {
-        check(!gridded, "packing=complex requires spectral data");
+        check(!gridded, "GRIB packing=complex requires spectral data");
         return new packing::Complex(packing, param);
     }
 
@@ -587,7 +621,7 @@ Packing* Packing::build(const param::MIRParametrisation& param) {
     }
 
     if (packing.compare(0, 12, "second-order") == 0) {
-        check(gridded, "packing=second-order requires gridded data");
+        check(gridded, "GRIB packing=second-order requires gridded data");
         return new packing::SecondOrder(packing, param);
     }
 
