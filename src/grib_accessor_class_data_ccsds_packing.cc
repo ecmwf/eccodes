@@ -669,15 +669,51 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
         if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
     }
 
-    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
-    err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
-    if (err) {
-        grib_context_free(a->context, values);
-        return err;
+    //values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    //err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
+    //if (err) {
+    //    grib_context_free(a->context, values);
+    //    return err;
+    //}
+    //for (i = 0; i < len; i++) {
+    //    val_array[i] = values[index_array[i]];
+    //}
+
+    std::vector<size_t> rsi_table;
+
+    struct Redirection {
+        size_t buf_pos; // position in the buffer
+        size_t idx; // user-requested data
+    };
+    
+    struct RsiBucket {
+        size_t rsi_idx;
+        std::vector<Redirection> redicrections;
+    };
+
+    unsigned char* buf = NULL;
+    size_t buflen = 0;
+
+    buflen = grib_byte_count(a);
+    buf = (unsigned char*)hand->buffer->data;
+    buf += grib_byte_offset(a);
+
+    size_t rsi_size = rsi * block_size;
+    std::vector<RsiBucket> buckets = create_buckets(index_array, rsi, block_size);
+
+    aec_stream strm;
+    strm.flags           = ccsds_flags;
+    strm.bits_per_sample = bits_per_value;
+    strm.block_size      = ccsds_block_size;
+    strm.rsi             = ccsds_rsi;
+
+    for (auto bucket: buckets) {
+        unsigned char* rsi = aec_rsi_at(&strm, rsi_table[bucket.rsi_idx]);
+        for (auto r: bucket.redirections) {
+            values[bucket.pos] = rsi[bucket.idx - bucket.rsi_idx * rsi_size];
+        }
     }
-    for (i = 0; i < len; i++) {
-        val_array[i] = values[index_array[i]];
-    }
+
     grib_context_free(a->context, values);
     return GRIB_SUCCESS;
 }
