@@ -305,7 +305,6 @@ void check_edition_conversion(const param::MIRParametrisation& param, long requi
 
 Packing::Packing(const std::string& name, const param::MIRParametrisation& param) :
     bitsPerValue_(0),
-    edition_(0),
     precision_(0),
     definePrecision_(false),
     gridded_(param.userParametrisation().has("grid") || param.fieldParametrisation().has("gridded")) {
@@ -332,10 +331,10 @@ Packing::Packing(const std::string& name, const param::MIRParametrisation& param
         defineBitsPerValue_ = !field.get("accuracy", accuracy) || bitsPerValue_ != accuracy;
     }
 
-    param.get("edition", edition_);
-    long edition   = 0;
-    defineEdition_ = !field.get("edition", edition) || edition_ != edition;
+    long edition = 0;
+    param.get("edition", edition_ = field.get("edition", edition) ? 0 : 2);
 
+    defineEdition_ = edition_ > 0 && edition_ != edition;
     if (defineEdition_) {
         check_edition_conversion(param, edition_);
     }
