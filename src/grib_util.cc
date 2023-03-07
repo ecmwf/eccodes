@@ -1890,15 +1890,19 @@ int parse_keyval_string(const char* grib_tool,
     return GRIB_SUCCESS;
 }
 
-// Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for EPS (ensemble) products
 int grib2_is_PDTN_EPS(long pdtn)
 {
-    return (
-        pdtn == 1 || pdtn == 11 ||
-        pdtn == 33 || pdtn == 34 || // simulated (synthetic) satellite data
-        pdtn == 41 || pdtn == 43 || // atmospheric chemical constituents
-        pdtn == 45 || pdtn == 47 || pdtn == 85  // aerosols
-    );
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
+
+    static int eps_pdtns[] = { 1, 2, 3, 4, 11, 12, 13, 14, 33, 34, 41, 43, 45, 47,
+                               49, 54, 56, 58, 59, 60, 61, 63, 68, 71, 73, 77, 79,
+                               81, 83, 84, 85, 92, 94, 96, 98 };
+    size_t i;
+    for (i = 0; i < NUMBER(eps_pdtns); ++i) {
+        if (eps_pdtns[i] == pdtn) return 1;
+    }
+    return 0;
 }
 
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents
@@ -1963,7 +1967,6 @@ int grib2_is_PDTN_AerosolOptical(long pdtn)
 //  is_eps:     ensemble or deterministic
 //  is_instant: instantaneous or interval-based
 //  etc...
-//
 int grib2_select_PDTN(int is_eps, int is_instant,
                       int is_chemical,
                       int is_chemical_srcsink,
