@@ -12,46 +12,39 @@
 set -u
 REDIRECT=/dev/null
 label="grib_generalised_tiles_test"
-temp_grib=temp.$label.grib
-temp2_grib=temp2.$label.grib
+temp_grib_a=temp.$label.a.grib
+temp_grib_b=temp2.$label.b.grib
 temp_dump=temp.$label.dump
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=30 ${sample_grib2} ${temp_grib}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
 
 # Check tile related keys are present
 
-grib_check_key_exists ${temp_grib} tileClassification,typeOfTile,numberOfUsedSpatialTiles,numberOfUsedTileAttributeCombinationsForTypeOfTile
+grib_check_key_exists ${temp_grib_a} tileClassification,typeOfTile,numberOfUsedSpatialTiles,numberOfUsedTileAttributeCombinationsForTypeOfTile
 
-grib_check_key_exists ${temp_grib} numberOfUsedTileAttributesForTileAttributeCombination,attributeOfTile,totalNumberOfTileAttributeCombinations
+grib_check_key_exists ${temp_grib_a} numberOfUsedTileAttributesForTileAttributeCombination,attributeOfTile,totalNumberOfTileAttributeCombinations
 
-grib_check_key_exists ${temp_grib} tileIndex,uuidOfDataGroup
+grib_check_key_exists ${temp_grib_a} tileIndex,uuidOfDataGroup
 
 # Check list is working correctly and that associated concept is working correctly
 
-echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | grib_filter - ${temp_grib} -o ${temp2_grib}
-output=$(echo 'print "[attributeOfTile]";' | grib_filter - ${temp2_grib})
+echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | ${tools_dir}/grib_filter - ${temp_grib_a} -o ${temp_grib_b}
+output=$(echo 'print "[attributeOfTile]";' | ${tools_dir}/grib_filter - ${temp_grib_b})
 [ "$output" == "2 4" ]
-[ "$(grib_get -p tileAttribute ${temp2_grib})" == "SNOW_ICE" ]
+[ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" == "SNOW_ICE" ]
 
 # Check template is being picked up correctly
 
-${tools_dir}/grib_dump -O -p section_4 $temp_grib > $temp_dump
+${tools_dir}/grib_dump -O -p section_4 $temp_grib_a > $temp_dump
 grep -q "Generalised spatio-temporal changing tiles at a horizontal level or horizontal layer at a point in time" $temp_dump
 
 # Check StatisticalProcessing template also works
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=114,tablesVersion=30 ${sample_grib2} ${temp_grib}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=114,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
 
-grib_check_key_exists ${temp_grib} typeOfTile,typeOfStatisticalProcessing
+grib_check_key_exists ${temp_grib_a} typeOfTile,typeOfStatisticalProcessing
 
-#...
-#infile=${data_dir}/SOME_FILE
-#${tools_dir}/grib_get
-#${tools_dir}/grib_set
-#grib_check_key_equals $temp k1,k2 "v1 v2"
-#${tools_dir}/bufr_get
-#${tools_dir}/bufr_set
-#...
+# Clean up
 
-rm -f $temp_grib $temp2_grib $temp_dump
+rm -f $temp_grib_a $temp_grib_b $temp_dump
