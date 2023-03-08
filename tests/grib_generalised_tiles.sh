@@ -31,8 +31,8 @@ grib_check_key_exists ${temp_grib_a} tileIndex,uuidOfDataGroup
 
 echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | ${tools_dir}/grib_filter - ${temp_grib_a} -o ${temp_grib_b}
 output=$(echo 'print "[attributeOfTile]";' | ${tools_dir}/grib_filter - ${temp_grib_b})
-[ "$output" == "2 4" ]
-[ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" == "SNOW_ICE" ]
+[ "$output" = "2 4" ]
+[ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" = "SNOW_ICE" ]
 
 # Check template is being picked up correctly
 
