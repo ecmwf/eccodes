@@ -199,7 +199,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     ret = grib_get_string(hand, self->stepType, stepType, &slen);
     Assert(ret == GRIB_SUCCESS);
 
-    eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
+    eps = grib_is_defined(hand, "perturbationNumber");
+    //eps = grib2_is_PDTN_EPS(productDefinitionTemplateNumber);
 
     if (!strcmp(stepType, "instant"))
         isInstant = 1;

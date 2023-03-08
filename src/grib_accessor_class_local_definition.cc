@@ -230,8 +230,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_ENCODING_ERROR;
     }
 
-    if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    if (grib_is_defined(hand, "perturbationNumber")) {
         eps = 1;
+    }
+    //if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    //    eps = 1;
 
     switch (localDefinitionNumber) {
         case 0:
