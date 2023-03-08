@@ -314,16 +314,6 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-template <typename T> inline T _strtod(const char* val, char** last);
-template <> inline float _strtod(const char* val, char** last) {
-    double v = strtod(val, last);
-    assert(v <= std::numeric_limits<float>::max());
-    return v;
-}
-template <> inline double _strtod(const char* val, char** last) {
-    return strtod(val, last);
-}
-
 template <typename T>
 static int unpack(grib_accessor* a, T* v, size_t* len)
 {
@@ -343,7 +333,6 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
         char* last = NULL;
         grib_unpack_string(a, val, &l);
 
-        //*v = _strtod<T>(val, &last);
         *v = strtod(val, &last);
         if (*last == 0) { /* conversion of string to double worked */
             grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);

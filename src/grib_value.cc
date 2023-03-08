@@ -12,7 +12,6 @@
  * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal_cpp.h"
-#include "grib_value.h"
 #include <float.h>
 
 

@@ -50,7 +50,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
-template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
@@ -551,13 +550,13 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     buf = (unsigned char*)hand->buffer->data;
     buf += grib_byte_offset(a);
 
-strm.flags           = ccsds_flags;
-strm.bits_per_sample = bits_per_value;
-strm.block_size      = ccsds_block_size;
-strm.rsi             = ccsds_rsi;
+    strm.flags           = ccsds_flags;
+    strm.bits_per_sample = bits_per_value;
+    strm.block_size      = ccsds_block_size;
+    strm.rsi             = ccsds_rsi;
 
-strm.next_in  = buf;
-strm.avail_in = buflen;
+    strm.next_in  = buf;
+    strm.avail_in = buflen;
 
     bits8   = ((bits_per_value + 7) / 8) * 8;
     size    = n_vals * ((bits_per_value + 7) / 8);
@@ -576,9 +575,9 @@ strm.avail_in = buflen;
                          __PRETTY_FUNCTION__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
-}
+    }
 
-pos = 0;
+    pos = 0;
 
 /* ECC-1427: Performance improvement */
 //grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);

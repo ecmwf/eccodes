@@ -11,7 +11,6 @@
  *  Enrico Fucile
  ****************************/
 
-#include "grib_api_internal.h"
 #include "grib_api_internal_cpp.h"
 
 #define PRE_PROCESSING_NONE 0

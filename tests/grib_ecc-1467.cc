@@ -51,8 +51,8 @@ int main(int argc, char** argv)
 
     fvalues = (float*)malloc(values_len * sizeof(float));
     dvalues = (double*)malloc(values_len * sizeof(double));
-    CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
     CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
+    CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
 
     for (i = 0; i < values_len; i++) {
         abs_error = fabs(dvalues[i] - (double)fvalues[i]);
