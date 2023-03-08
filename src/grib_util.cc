@@ -1895,7 +1895,7 @@ int grib2_is_PDTN_EPS(long pdtn)
 {
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
-    static int eps_pdtns[] = { 1, 2, 3, 4, 11, 12, 13, 14, 33, 34, 41, 43, 45, 47,
+    static int eps_pdtns[] = { 1, 11, 33, 34, 41, 43, 45, 47,
                                49, 54, 56, 58, 59, 60, 61, 63, 68, 71, 73, 77, 79,
                                81, 83, 84, 85, 92, 94, 96, 98 };
     size_t i;
