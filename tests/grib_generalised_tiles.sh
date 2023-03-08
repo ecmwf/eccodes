@@ -29,7 +29,7 @@ grib_check_key_exists ${temp_grib_a} tileIndex,uuidOfDataGroup
 
 # Check list is working correctly and that associated concept is working correctly
 
-echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | ${tools_dir}/grib_filter - ${temp_grib_a} -o ${temp_grib_b}
+echo 'set numberOfUsedTileAttributesForTileAttributeCombination=2; set attributeOfTile={2, 4}; write;' | ${tools_dir}/grib_filter -o ${temp_grib_b} - ${temp_grib_a}
 output=$(echo 'print "[attributeOfTile]";' | ${tools_dir}/grib_filter - ${temp_grib_b})
 [ "$output" = "2 4" ]
 [ "$(${tools_dir}/grib_get -p tileAttribute ${temp_grib_b})" = "SNOW_ICE" ]
