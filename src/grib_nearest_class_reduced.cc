@@ -135,12 +135,15 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                 double* outlats, double* outlons, double* values,
                 double* distances, int* indexes, size_t* len);
 
-static int is_legacy(grib_handle* h)
+static int is_legacy(grib_handle* h, int* legacy)
 {
-    long is_legacy = 0;
-    return (grib_get_long(h, "legacyGaussSubarea", &is_legacy) == GRIB_SUCCESS && is_legacy == 1);
+    int err = 0;
+    long lLegacy = 0;
+    err = grib_get_long(h, "legacyGaussSubarea", &lLegacy);
+    if (err) return err;
+    *legacy = (int)lLegacy;
+    return GRIB_SUCCESS;
 }
-
 
 static int find(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon, unsigned long flags,
@@ -198,7 +201,8 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
     get_reduced_row_proc get_reduced_row_func = &grib_get_reduced_row;
 
     if (self->legacy == -1 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        self->legacy = is_legacy(h);
+        ret = is_legacy(h, &(self->legacy));
+        if (ret) return ret;
     }
     if (self->legacy == 1) {
         get_reduced_row_func = &grib_get_reduced_row_legacy;
