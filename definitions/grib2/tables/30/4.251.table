@@ -1,11 +1,11 @@
 # Code table 4.251 - Tile classes and groupings
 0 0 Reserved
-1 SEA Sea and oceans
-2 INWA Inland water bodies
+1 SEOC Seas and oceans
+2 INWB Inland water bodies
 3 BARE Bare areas
 4 HIV High vegetation
 5 LOV Low vegetation
-6 URB Urban
+6 URBAN Urban
 # 1-1000 Common tile classes
 1001 SEAO Sea and oceans
 1002 LAKE Lakes
@@ -83,7 +83,7 @@
 1525 GPTENE Urban parks and gardens TENE grouping (NO + GRAS + TENEU)
 1525 GPBOND Urban parks and gardens BOND grouping (NO + GRAS + BONDU)
 # 1525-2000 Reserved for ECOCLIMAP/SURFEX groupings
-2001 CROP Crops, mixed farming
+2001 CRMF Crops, mixed farming
 2002 SHGR Short grass
 2003 EVNE Evergreen needleleaf trees
 2004 DENE Deciduous needleleaf trees
@@ -103,39 +103,63 @@
 2018 MFWO Mixed forest/woodland
 2019 INFO Interrupted forest
 2020 WLMI Water and land mixtures
-2021 BARE Bare soil
-2022 URB Urban
+2021 BASO Bare soil
+2022 URBA Urban
 2023 LORI Low-rise building
 2024 HIRI High-rise building
-# 2025-2500 Reserved for GLCC/HTESSEL variables
-2501 LVEG Group 001 (CROP + SHGR + TAGR + TUND + IRCR + SEDE + BOMA + EVSH + DESH + WLMI)
-2502 HVEG Group 002 (EVNE + DENE + DEBR + EVBR + MFWO + INFO)
-# 2503-3000 Reserved for GLCC/HTESSEL groupings
+# 2025-2500 Reserved for (GLCC v2.0 BATS Classification)/HTESSEL variables
+2501 GLVE Low vegetation grouping (CRMF + SHGR + TAGR + TUND + IRCR + SEDE + BOMA + EVSH + DESH + WLMI)
+2502 GHVE High vegetation grouping (EVNE + DENE + DEBR + EVBR + MFWO + INFO)
+# 2503-3000 Reserved for (GLCC v2.0 BATS Classification)/HTESSEL groupings
 3001 PFIC Post-flooding or irrigated croplands
 3002 RACR Rainfed croplands
-3003 MCVE Mosaic Cropland (50-70%) / Vegetation (grassland, shrubland, forest) (20-50%)
-3004 MVCR Mosaic Vegetation (grassland, shrubland, forest) (50-70%) / Cropland (20-50%)
+3003 MCVE Mosaic cropland (50-70%) / vegetation (grassland, shrubland, forest) (20-50%)
+3004 MVCR Mosaic vegetation (grassland, shrubland, forest) (50-70%) / cropland (20-50%)
 3005 COBS Closed to open (>15%) broadleaved evergreen and/or semi-deciduous forest (>5m)
 3006 CLBD Closed (>40%) broadleaved deciduous forest (>5m)
 3007 OPBD Open (15-40%) broadleaved deciduous forest (>5m)
 3008 CLNE Closed (>40%) needleleaved evergreen forest (>5m)
 3009 ONDE Open (15-40%) needleleaved deciduous or evergreen forest (>5m)
 3010 COBN Closed to open (>15%) mixed broadleaved and needleleaved forest (>5m)
-3011 MFSG Mosaic Forest/Shrubland (50-70%) / Grassland (20-50%)
-3012 MGFS Mosaic Grassland (50-70%) / Forest/Shrubland (20-50%)
+3011 MFSG Mosaic forest/shrubland (50-70%) / grassland (20-50%)
+3012 MGFS Mosaic grassland (50-70%) / forest / shrubland (20-50%)
 3013 COSH Closed to open (>15%) shrubland (<5m)
-3014 COGR Closed to open (>15%) grassland
-3015 SPVE Sparse (>15%) vegetation (woody vegetation, shrubs, grassland)
-3016 CLBFF Closed (>40%) broadleaved forest regularly flooded - Fresh water
-3017 CLBEFS Closed (>40%) broadleaved semi-deciduous and/or evergreen forest regularly flooded - Saline water
-3018 COVEF Closed to open (>15%) vegetation (grassland, shrubland, woody vegetation) on regularly flooded or waterlogged soil - Fresh, brackish or saline water
+3014 COHV Closed to open (>15%) herbaceous vegetation
+3015 SPVE Sparse (<15%) vegetation (woody vegetation, shrubs, grassland)
+3016 COBFF Closed to open (>15%) broadleaved forest regularly flooded (semi-permanently or temporarily) - fresh or brackish water
+3017 CLBFF Closed (>40%) broadleaved forest or shrubland permanently flooded - saline or brackish water
+3018 COVEF Closed to open (>15%) vegetation (grassland, shrubland, woody vegetation) on regularly flooded or waterlogged soil - fresh, brackish or saline water
 3019 ASAA Artificial surfaces and associated areas (urban areas >50%)
 3020 BAAR Bare areas
 3021 WABO Water bodies
 3022 PESI Permanent snow and ice
-# 3023-3500 Reserved for GLOBCOVER/DWD Tile variables
-3501 GRDT Grouping using the dominant tiles approach (varying per gridbox)
+# 3023-3500 Reserved for ESA-GlobCover GCV2009/DWD Tile variables
+3501 GRDT Grouping using the dominant tiles approach (dominant tile varies per gridbox)
 # 3502-4000 Reserved for GLOBCOVER/DWD Tile groupings
-# 4001-32767 Reserved 
+4001 TBECO Tree cover, broadleaved evergreen, closed to open (>15%)
+4002 TBDC Tree cover, broadleaved deciduous, closed (>40%)
+4003 TBDO Tree cover, broadleaved deciduous, open (15-40%)
+4004 TNECO Tree cover, needleleaved evergreen, closed to open (>15%)
+4005 TNDCO Tree cover, needleleaved decidous, closed to open (>15%)
+4006 TMLCO Tree cover, mixed leaftype, closed to open (>15%)
+4007 TCOFF Tree cover, closed to open (>15%), regularly flooded, fresh or brackish water: swamp forests
+4008 TCOFS Tree cover, closed to open (>15%), regularly flooded, saline water: mangrove forests
+4009 MTVG Mosaic of tree cover and other natural vegetation (crop component possible)
+4010 TBURN Tree Cover, burnt (mainly boreal forests)
+4011 SCOE Shrubcover, closed to open (>15%) , evergreen (broadleaved or needleleaved)
+4012 SCOD Shrubcover, closed to open (>15%), deciduous (broadleaved)
+4013 HCCO Herbaceous cover, closed to open (>15%)
+4014 SHSC Sparse herbaceous or sparse shrub cover
+4015 FSHCO Regularly flooded (>2 month) shrub or herbaceous cover, closed to open
+4016 CROP Cropland (upland crops or inundated/ flooded crops)
+4017 MCTNV Mosaic of cropland / tree cover/ other natural vegetation
+4018 MCSH Mosaic of cropland / shrub or herbaceous cover
+4019 BAARE Bare areas
+4020 WBNA Water bodies (natural or artificial)
+4021 SINA Snow or ice (natural or artificial)
+4022 URAR Urban areas
+# 4023-4500 Reserved for (European Commission-Global Land Cover Project GLC2000 ) variables
+# 4501-5000 Reserved for (European Commission-Global Land Cover Project GLC2000 ) groupings
+# 5001-32767 Reserved 
 # 32768-65534 Reserved for local use 
 65535 65535 Missing 
