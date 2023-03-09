@@ -540,6 +540,10 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
 #if EFDEBUG
                 printf("--  %d ", j);
 #endif
+                if (pl[j] == 0) {
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
 #if 0
                 if ( row_count != pl[j] ) {
