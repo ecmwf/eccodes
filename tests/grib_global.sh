@@ -9,6 +9,8 @@
 
 . ./include.ctest.sh
 
+label="grib_global_test"
+
 # Check Gaussian grids
 files_global="
     reduced_gaussian_lsm.grib1
@@ -49,3 +51,27 @@ for gg in $files_subarea; do
     filepath=${data_dir}/$gg
     grib_check_key_equals $filepath "global" 0
 done
+
+
+# ECC-1542
+# Invalid pl array in a Gaussian grid
+sample1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib1.tmpl
+sample2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+tempGrib=temp.$label.grib
+tempText=temp.$label.txt
+# Insert a zero into the pl array
+${tools_dir}/grib_filter -o $tempGrib - $sample2 <<EOF
+ meta pli element(pl, 3);
+ set pli = 0;
+ write;
+EOF
+
+set +e
+${tools_dir}/grib_get -p numberOfDataPointsExpected $tempGrib > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid pl array: entry at index=3 is zero" $tempText
+
+# Clean up
+rm -f $tempGrib $tempText

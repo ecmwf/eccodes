@@ -327,6 +327,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if ((ret = grib_get_long_internal(h, self->support_legacy, &support_legacy)) != GRIB_SUCCESS)
         return ret;
+
     if (support_legacy == 1)
         return unpack_long_with_legacy_support(a, val, len);
     else
@@ -415,6 +416,10 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
             *val = 0;
             for (j = 0; j < nj; j++) {
                 row_count = 0;
+                if (pl[j] == 0) {
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
                 lon_first_row = ((ilon_first)*360.0) / pl[j];
                 lon_last_row  = ((ilon_last)*360.0) / pl[j];
