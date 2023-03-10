@@ -172,7 +172,7 @@ bool RegularGrid::extendBoundingBoxOnIntersect() const {
 }
 
 
-bool RegularGrid::crop(util::BoundingBox& bbox, util::AreaCropperMapping& mapping) const {
+bool RegularGrid::crop(util::BoundingBox& bbox, util::IndexMapping& mapping) const {
     auto mm = minmax_ij(bbox);
     auto Ni = x_.size();
     auto N  = (mm.second.i - mm.first.i + 1) * (mm.second.j - mm.first.j + 1);
