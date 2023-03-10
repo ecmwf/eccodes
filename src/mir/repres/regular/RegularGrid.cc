@@ -156,7 +156,7 @@ std::pair<RegularGrid::ij_t, RegularGrid::ij_t> RegularGrid::minmax_ij(const uti
         }
     }
 
-    ASSERT_NONEMPTY_AREA_CROP("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
+    ASSERT_NONEMPTY_AREA("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
     return {min, max};
 }
 
