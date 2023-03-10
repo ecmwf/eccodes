@@ -208,10 +208,8 @@ bool RegularGrid::isPeriodicWestEast() const {
 
 
 void RegularGrid::fillGrib(grib_info& info) const {
-    // GRIB2 encoding of user-provided shape
-    if (info.packing.editionNumber == 2) {
-        shape_.fillGrib(info, grid_.projection().spec());
-    }
+    // shape of the reference object
+    shape_.fillGrib(info, grid_.projection().spec());
 
     // scanningMode
     info.grid.iScansNegatively = x_.back() < x_.front() ? 1 : 0;
