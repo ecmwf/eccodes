@@ -5572,12 +5572,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 40 ;
 	}
-#Potential evaporation rate
-'pevpr' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 41 ;
-	}
 #Snow cover
 'snowc' = {
 	 discipline = 0 ;
