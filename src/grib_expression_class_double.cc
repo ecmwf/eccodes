@@ -87,7 +87,13 @@ static void init_class(grib_expression_class* c)
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_double* e = (grib_expression_double*)g;
-    *lres                     = e->value;
+
+    if ( (long)(e->value) != e->value) {
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+            "Converting %g to an integer leads to a possible loss of precision", e->value);
+        return GRIB_WRONG_CONVERSION;
+    }
+    *lres = e->value;
     return GRIB_SUCCESS;
 }
 
