@@ -855,7 +855,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
                     grib_set_bits_on(buff->data, pos, modifiedWidth);
                 }
                 else {
-                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                                      bd->shortName, bd->code, *v, minAllowed, maxAllowed);
                     return GRIB_OUT_OF_RANGE; /* ECC-611 */
                 }
@@ -947,12 +947,12 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
         v++;
     }
     if (max > maxAllowed && max != GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
                          bd->shortName, bd->code, index_of_max, max, maxAllowed);
         return GRIB_OUT_OF_RANGE;
     }
     if (min < minAllowed && min != GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
                          bd->shortName, bd->code, index_of_min, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
     }
@@ -1044,7 +1044,7 @@ static int encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bu
             grib_set_bits_on(buff->data, pos, modifiedWidth);
         }
         else {
-            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                              bd->shortName, bd->code, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
