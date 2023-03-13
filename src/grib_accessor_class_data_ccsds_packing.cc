@@ -230,8 +230,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
 
     grib_handle* hand = grib_handle_of_accessor(a);
-    int err = GRIB_SUCCESS, i = 0, is_constant_field = 0;
-    size_t buflen = 0;
+    int err = GRIB_SUCCESS;
+    size_t buflen = 0, i = 0;
+    bool is_constant_field = false; 
 
     unsigned char* buf     = NULL;
     unsigned char* encoded = NULL;
@@ -291,7 +292,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     if (min == max) {
-        is_constant_field = 1;
+        is_constant_field = true;
     } else {
         if (bits_per_value == 0) {
             /* ECC-1202: A non-constant field with bitsPerValue==0! */

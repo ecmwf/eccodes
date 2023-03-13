@@ -167,11 +167,11 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     unsigned char* p = NULL;
     char* s          = v;
-    int i;
+    long i = 0;
     const long length = grib_byte_count(a);
     const long slength = 2 * length;
 
-    if (*len < slength) {
+    if (*len < (size_t)slength) {
         *len = slength;
         return GRIB_ARRAY_TOO_SMALL;
     }

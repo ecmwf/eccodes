@@ -211,7 +211,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 /* The ECMWF BUFR local use section */
 static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
-    int isSatelliteType       = 0;
+    bool isSatelliteType      = false;
     long start                = 0;
     const long offset_keyData = offset_section2 + 6;
     const long offset_keyMore = offset_section2 + 19; /* 8 bytes long */
@@ -223,7 +223,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     DebugAssert(hdr->ecmwfLocalSectionPresent);
 
     if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
-        isSatelliteType = 1;
+        isSatelliteType = true;
     }
     if (isSatelliteType || hdr->numberOfSubsets > 1) {
         hdr->isSatellite = 1;
@@ -844,7 +844,7 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len)
 {
     static const char* NOT_FOUND = "not_found";
-    int isEcmwfLocal             = 0;
+    bool isEcmwfLocal            = false;
     Assert(bh);
     Assert(key);
     *len = strlen(NOT_FOUND); /*By default*/

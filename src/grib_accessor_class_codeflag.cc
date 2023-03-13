@@ -176,7 +176,10 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
     int err  = 0;
 
     err = grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
-    if (err) strncpy(fname, self->tablename, 1023);
+    if (err) {
+        strncpy(fname, self->tablename, sizeof(fname)-1);
+        fname[sizeof(fname)-1] = '\0';
+    }
 
     if ((filename = grib_context_full_defs_path(a->context, fname)) == NULL) {
         grib_context_log(a->context, GRIB_LOG_WARNING, "Cannot open flag table %s", filename);

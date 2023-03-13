@@ -195,8 +195,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: wrong values size!=Ni*Nj (%ld!=%ld*%ld)", size, Ni, Nj);
+    if ( size > (size_t)(Ni * Nj) ) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: wrong values size!=Ni*Nj (%zu!=%ld*%ld)", size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 

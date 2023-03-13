@@ -415,19 +415,19 @@ static grib_math* reador(grib_context* c, char** form, int* err)
     return p;
 }
 
-grib_math* grib_math_clone(grib_context* c, grib_math* m)
-{
-    grib_math* n = NULL;
-    if (m) {
-        n        = (grib_math*)grib_context_malloc(c, sizeof(grib_math));
-        n->arity = m->arity;
-        n->name  = strdup(m->name);
-        Assert(n->name);
-        n->left  = grib_math_clone(c, m->left);
-        n->right = grib_math_clone(c, m->right);
-    }
-    return n;
-}
+// static grib_math* grib_math_clone(grib_context* c, grib_math* m)
+// {
+//     grib_math* n = NULL;
+//     if (m) {
+//         n        = (grib_math*)grib_context_malloc(c, sizeof(grib_math));
+//         n->arity = m->arity;
+//         n->name  = strdup(m->name);
+//         Assert(n->name);
+//         n->left  = grib_math_clone(c, m->left);
+//         n->right = grib_math_clone(c, m->right);
+//     }
+//     return n;
+// }
 
 void grib_math_delete(grib_context* c, grib_math* m)
 {

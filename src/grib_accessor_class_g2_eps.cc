@@ -173,12 +173,18 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g2_eps* self           = (grib_accessor_g2_eps*)a;
     long productDefinitionTemplateNumber = 0;
+    int err = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    err = grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    if (err) return err;
 
     *val = 0;
-    if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    if (grib_is_defined(hand, "perturbationNumber")) {
         *val = 1;
+    }
+    //if (grib2_is_PDTN_EPS(productDefinitionTemplateNumber))
+    //    *val = 1;
 
     return GRIB_SUCCESS;
 }

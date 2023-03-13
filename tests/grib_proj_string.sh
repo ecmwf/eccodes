@@ -10,6 +10,11 @@
 
 . ./include.ctest.sh
 
+label="grib_proj_string_test"
+tempGrib=temp.$label.grib
+tempText=temp.$label.txt
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
 files="
   mercator.grib2
   satellite.grib
@@ -39,3 +44,19 @@ for f in `echo $files`; do
             $PROJ_TOOL $ps
     fi
 done
+
+# Various grids
+${tools_dir}/grib_set -s gridType=lambert_azimuthal_equal_area $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib > $tempText
+grep -q "proj=laea" $tempText
+
+${tools_dir}/grib_set -s gridType=lambert $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib > $tempText
+grep -q "proj=lcc" $tempText
+
+${tools_dir}/grib_set -s gridType=polar_stereographic $grib2_sample $tempGrib
+${tools_dir}/grib_get -p projString $tempGrib > $tempText
+grep -q "proj=stere" $tempText
+
+
+rm -f $tempGrib $tempText
