@@ -45,7 +45,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
-template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);

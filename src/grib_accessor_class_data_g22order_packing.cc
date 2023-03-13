@@ -20,6 +20,7 @@
    SUPER      = grib_accessor_class_values
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_float
    IMPLEMENTS = pack_double
    IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
@@ -58,7 +59,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
-template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
@@ -167,7 +167,6 @@ static void init_class(grib_accessor_class* c)
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
     c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;

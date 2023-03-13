@@ -48,15 +48,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
-template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
-
-typedef unsigned long (*encode_float_proc)(double);
-typedef double (*decode_float_proc)(unsigned long);
 
 typedef struct grib_accessor_data_complex_packing
 {
@@ -185,6 +181,8 @@ static void init_class(grib_accessor_class* c)
 
 /* END_CLASS_IMP */
 
+typedef unsigned long (*encode_float_proc)(double);
+typedef double (*decode_float_proc)(unsigned long);
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
