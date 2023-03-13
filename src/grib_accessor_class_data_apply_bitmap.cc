@@ -8,7 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_api_internal_cpp.h"
+#include <typeinfo>
+#include <type_traits>
 
 /*
    This is used by make_class.pl
@@ -18,6 +20,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
+   IMPLEMENTS = unpack_float
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
    IMPLEMENTS = dump;get_native_type
@@ -42,7 +45,9 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
+template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -87,7 +92,9 @@ static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
     0,                  /* grib_pack procedures long */
     0,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -103,7 +110,9 @@ static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     &unpack_double_element_set,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -124,6 +133,7 @@ static void init_class(grib_accessor_class* c)
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -138,6 +148,8 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -178,86 +190,6 @@ static int value_count(grib_accessor* a, long* count)
     *count = len;
 
     return ret;
-}
-
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
-
-    size_t i             = 0;
-    size_t j             = 0;
-    size_t n_vals        = 0;
-    long nn              = 0;
-    int err              = 0;
-    size_t coded_n_vals  = 0;
-    double* coded_vals   = NULL;
-    double missing_value = 0;
-
-    err    = grib_value_count(a, &nn);
-    n_vals = nn;
-    if (err)
-        return err;
-
-    if (!grib_find_accessor(grib_handle_of_accessor(a), self->bitmap))
-        return grib_get_double_array(grib_handle_of_accessor(a), self->coded_values, val, len);
-
-    if ((err = grib_get_size(grib_handle_of_accessor(a), self->coded_values, &coded_n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
-        return err;
-
-    if (*len < n_vals) {
-        *len = n_vals;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    if (coded_n_vals == 0) {
-        for (i = 0; i < n_vals; i++)
-            val[i] = missing_value;
-
-        *len = n_vals;
-        return GRIB_SUCCESS;
-    }
-
-    if ((err = grib_get_double_array_internal(grib_handle_of_accessor(a), self->bitmap, val, &n_vals)) != GRIB_SUCCESS)
-        return err;
-
-    coded_vals = (double*)grib_context_malloc(a->context, coded_n_vals * sizeof(double));
-    if (coded_vals == NULL)
-        return GRIB_OUT_OF_MEMORY;
-
-    if ((err = grib_get_double_array(grib_handle_of_accessor(a), self->coded_values, coded_vals, &coded_n_vals)) != GRIB_SUCCESS) {
-        grib_context_free(a->context, coded_vals);
-        return err;
-    }
-
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
-                     "grib_accessor_class_data_apply_bitmap: unpack_double : creating %s, %d values",
-                     a->name, n_vals);
-
-    for (i = 0; i < n_vals; i++) {
-        if (val[i] == 0) {
-            val[i] = missing_value;
-        }
-        else {
-            val[i] = coded_vals[j++];
-            if (j > coded_n_vals) {
-                grib_context_free(a->context, coded_vals);
-                grib_context_log(a->context, GRIB_LOG_ERROR,
-                                 "grib_accessor_class_data_apply_bitmap [%s]:"
-                                 " unpack_double :  number of coded values does not match bitmap %ld %ld",
-                                 a->name, coded_n_vals, n_vals);
-
-                return GRIB_ARRAY_TOO_SMALL;
-            }
-        }
-    }
-
-    *len = n_vals;
-
-    grib_context_free(a->context, coded_vals);
-    return err;
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
@@ -445,6 +377,99 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     return err;
+}
+
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
+
+    size_t i             = 0;
+    size_t j             = 0;
+    size_t n_vals        = 0;
+    long nn              = 0;
+    int err              = 0;
+    size_t coded_n_vals  = 0;
+    T* coded_vals   = NULL;
+    double missing_value = 0;
+
+    err    = grib_value_count(a, &nn);
+    n_vals = nn;
+    if (err)
+        return err;
+
+    if (!grib_find_accessor(grib_handle_of_accessor(a), self->bitmap))
+        return grib_get_array<T>(grib_handle_of_accessor(a), self->coded_values, val, len);
+
+    if ((err = grib_get_size(grib_handle_of_accessor(a), self->coded_values, &coded_n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+        return err;
+
+    if (*len < n_vals) {
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if (coded_n_vals == 0) {
+        for (i = 0; i < n_vals; i++)
+            val[i] = missing_value;
+
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
+    if ((err = grib_get_array_internal<T>(grib_handle_of_accessor(a), self->bitmap, val, &n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    coded_vals = (T*)grib_context_malloc(a->context, coded_n_vals * sizeof(T));
+    if (coded_vals == NULL)
+        return GRIB_OUT_OF_MEMORY;
+
+    if ((err = grib_get_array<T>(grib_handle_of_accessor(a), self->coded_values, coded_vals, &coded_n_vals)) != GRIB_SUCCESS) {
+        grib_context_free(a->context, coded_vals);
+        return err;
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "grib_accessor_class_data_apply_bitmap: %s : creating %s, %d values",
+                     __func__,
+                     a->name, n_vals);
+
+    for (i = 0; i < n_vals; i++) {
+        if (val[i] == 0) {
+            val[i] = missing_value;
+        }
+        else {
+            val[i] = coded_vals[j++];
+            if (j > coded_n_vals) {
+                grib_context_free(a->context, coded_vals);
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "grib_accessor_class_data_apply_bitmap [%s]:"
+                                 " %s :  number of coded values does not match bitmap %ld %ld",
+                                 a->name, __func__, coded_n_vals, n_vals);
+
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        }
+    }
+
+    *len = n_vals;
+
+    grib_context_free(a->context, coded_vals);
+    return err;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int get_native_type(grib_accessor* a)

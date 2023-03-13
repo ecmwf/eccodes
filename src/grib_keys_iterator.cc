@@ -207,6 +207,10 @@ int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, si
 {
     return grib_unpack_double(kiter->current, v, len);
 }
+int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
+{
+    return grib_unpack_float(kiter->current, v, len);
+}
 
 int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
 {

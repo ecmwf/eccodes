@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "grib_api_internal.h"
+#include "grib_accessor.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -91,6 +91,19 @@ int grib_pack_double(grib_accessor* a, const double* v, size_t* len)
     while (c) {
         if (c->pack_double) {
             return c->pack_double(a, v, len);
+        }
+        c = c->super ? *(c->super) : NULL;
+    }
+    DebugAssert(0);
+    return 0;
+}
+
+int grib_pack_float(grib_accessor* a, const float* v, size_t* len)
+{
+    grib_accessor_class* c = a->cclass;
+    while (c) {
+        if (c->pack_float) {
+            return c->pack_float(a, v, len);
         }
         c = c->super ? *(c->super) : NULL;
     }
@@ -209,6 +222,32 @@ int grib_unpack_double(grib_accessor* a, double* v, size_t* len)
     return 0;
 }
 
+int grib_unpack_float(grib_accessor* a, float* v, size_t* len)
+{
+    grib_accessor_class* c = a->cclass;
+    while (c) {
+        /* printf("grib_accessor.c grib_unpack_float:: c->name=%s\n",c->name); */
+        if (c->unpack_float) {
+            return c->unpack_float(a, v, len);
+        }
+        c = c->super ? *(c->super) : NULL;
+    }
+    DebugAssert(0);
+    return 0;
+}
+
+template <> 
+int grib_unpack<double>(grib_accessor* a, double* v, size_t* len) 
+{
+    return grib_unpack_double(a, v, len);
+}
+
+template <> 
+int grib_unpack<float>(grib_accessor* a, float* v, size_t* len) 
+{
+    return grib_unpack_float(a, v, len);
+}
+
 int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)
 {
     grib_accessor_class* c = a->cclass;
@@ -218,6 +257,18 @@ int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)
         }
         c = c->super ? *(c->super) : NULL;
     }
+    return GRIB_NOT_IMPLEMENTED;
+}
+int grib_unpack_float_element(grib_accessor* a, size_t i, float* v)
+{
+    /* grib_accessor_class* c = a->cclass;
+    * while (c) {
+    *     if (c->unpack_float_element) {
+    *         return c->unpack_float_element(a, i, v);
+    *     }
+    *     c = c->super ? *(c->super) : NULL;
+    * }
+    */
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -235,6 +286,20 @@ int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, 
         c = c->super ? *(c->super) : NULL;
     }
     return GRIB_NOT_IMPLEMENTED;
+}
+int grib_unpack_float_element_set(grib_accessor* a, const size_t* index_array, size_t len, float* val_array)
+{
+    /*
+    *grib_accessor_class* c = a->cclass;
+    *DebugAssert(len > 0);
+    *while (c) {
+    *    if (c->unpack_float_element_set) {
+    *        return c->unpack_float_element_set(a, index_array, len, val_array);
+    *    }
+    *    c = c->super ? *(c->super) : NULL;
+    *}
+    */
+   return GRIB_NOT_IMPLEMENTED;
 }
 
 int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
@@ -290,6 +355,23 @@ int grib_accessors_list_unpack_double(grib_accessors_list* al, double* val, size
     while (al && err == GRIB_SUCCESS) {
         len = *buffer_len - unpacked_len;
         err = grib_unpack_double(al->accessor, val + unpacked_len, &len);
+        unpacked_len += len;
+        al = al->next;
+    }
+
+    *buffer_len = unpacked_len;
+    return err;
+}
+
+int grib_accessors_list_unpack_float(grib_accessors_list* al, float* val, size_t* buffer_len)
+{
+    int err             = GRIB_SUCCESS;
+    size_t unpacked_len = 0;
+    size_t len          = 0;
+
+    while (al && err == GRIB_SUCCESS) {
+        len = *buffer_len - unpacked_len;
+        err = grib_unpack_float(al->accessor, val + unpacked_len, &len);
         unpacked_len += len;
         al = al->next;
     }

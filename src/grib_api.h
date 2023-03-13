@@ -800,6 +800,7 @@ int grib_get_double(const grib_handle* h, const char* key, double* value);
  * @return            0 if OK, integer value on error
  */
 int grib_get_double_element(const grib_handle* h, const char* key, int i, double* value);
+int grib_get_float_element(const grib_handle* h, const char* key, int i, float* value);
 
 /**
  *  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
@@ -812,6 +813,7 @@ int grib_get_double_element(const grib_handle* h, const char* key, int i, double
  * @return            0 if OK, integer value on error
  */
 int grib_get_double_elements(const grib_handle* h, const char* key, const int* index_array, long size, double* value);
+int grib_get_float_elements(const grib_handle* h, const char* key, const int* index_array, long size, float* value);
 
 /**
  *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -859,6 +861,7 @@ int grib_get_bytes(const grib_handle* h, const char* key, unsigned char* bytes, 
  * @return            0 if OK, integer value on error
  */
 int grib_get_double_array(const grib_handle* h, const char* key, double* vals, size_t* length);
+int grib_get_float_array(const grib_handle* h, const char* key, float* vals, size_t* length);
 
 /**
  *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -942,12 +945,14 @@ int grib_set_bytes(grib_handle* h, const char* key, const unsigned char* bytes, 
  * @return            0 if OK, integer value on error
  */
 int grib_set_double_array(grib_handle* h, const char* key, const double* vals, size_t length);
+int grib_set_float_array(grib_handle* h, const char* key, const float* vals, size_t length);
 
 /**
  * Same as grib_set_double_array but allows setting of READ-ONLY keys like codedValues.
  * Use with great caution!!
  */
 int grib_set_force_double_array(grib_handle* h, const char* key, const double* vals, size_t length);
+int grib_set_force_float_array(grib_handle* h, const char* key, const float* vals, size_t length);
 
 
 /**
@@ -1318,6 +1323,7 @@ int grib_keys_iterator_set_flags(grib_keys_iterator* kiter, unsigned long flags)
 
 int grib_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_t* len);
 int grib_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len);
+int grib_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len);
 int grib_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len);
 int grib_keys_iterator_get_bytes(const grib_keys_iterator* kiter, unsigned char* v, size_t* len);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);

@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
+#include "grib_accessor_class_bitmap.h"
 /*
    This is used by make_class.pl
 
@@ -18,6 +18,7 @@
 
    IMPLEMENTS = next_offset
    IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
+   IMPLEMENTS = unpack_float
    IMPLEMENTS = unpack_long
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init;dump;update_size
@@ -40,6 +41,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static long next_offset(grib_accessor*);
@@ -86,7 +88,9 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     0,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -102,7 +106,9 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     &unpack_double_element_set,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -124,6 +130,7 @@ static void init_class(grib_accessor_class* c)
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_long    =    (*(c->super))->pack_long;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
@@ -136,6 +143,8 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -238,8 +247,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+template <typename T>
+int unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;
     long tlen;
     long i;
@@ -257,10 +268,20 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
     for (i = 0; i < tlen; i++) {
-        val[i] = (double)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
+        val[i] = (T)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
     }
     *len = tlen;
     return GRIB_SUCCESS;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

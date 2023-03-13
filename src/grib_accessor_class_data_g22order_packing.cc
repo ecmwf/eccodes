@@ -8,7 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+
 #include "grib_api_internal.h"
+#include <type_traits>
 
 /*
    This is used by make_class.pl
@@ -56,7 +58,9 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
+template <typename T> static int unpack(grib_accessor* a, T* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
@@ -119,7 +123,9 @@ static grib_accessor_class _grib_accessor_class_data_g22order_packing = {
     0,                  /* grib_pack procedures long */
     0,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -135,7 +141,9 @@ static grib_accessor_class _grib_accessor_class_data_g22order_packing = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     &unpack_double_element_set,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -158,6 +166,8 @@ static void init_class(grib_accessor_class* c)
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -172,6 +182,8 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -345,7 +357,7 @@ static int spatial_difference (grib_context *c, unsigned long* vals, long  len, 
 }
 #endif
 
-static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
+int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
     unsigned long last, penultimate, j = 0;
     Assert(order > 0);
@@ -446,8 +458,262 @@ static int de_spatial_difference (grib_context *c, unsigned long* vals, long  le
 }
 #endif
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+
+static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
+    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
+    grib_handle* gh                           = grib_handle_of_accessor(a);
+
+    size_t i      = 0;
+    size_t j      = 0;
+    size_t n_vals = *len;
+
+    int err = 0;
+
+    unsigned char* buf        = NULL;
+    unsigned char* buf_ref    = NULL;
+    unsigned char* buf_width  = NULL;
+    unsigned char* buf_length = NULL;
+    unsigned char* buf_vals   = NULL;
+
+    double d       = 0;
+    double divisor = 0;
+
+    unsigned long* sec_val   = NULL;
+    unsigned long* group_val = NULL;
+
+    double max;
+    double min;
+
+    long length_p = 0;
+    long ref_p    = 0;
+    long width_p  = 0;
+    long vals_p   = 0;
+
+    size_t nv       = 0;
+    size_t buf_size = 0;
+
+    long bits_per_value = 0;
+
+    double reference_value = 0;
+
+    long nvals_per_group     = 0;
+    long nbits_per_group_val = 0;
+    long group_ref_val       = 0;
+
+    long binary_scale_factor;
+    long decimal_scale_factor;
+    long typeOfOriginalFieldValues;
+    long groupSplittingMethodUsed;
+    long missingValueManagementUsed;
+    long primaryMissingValueSubstitute;
+    long secondaryMissingValueSubstitute;
+    long numberOfGroupsOfDataValues;
+    long referenceForGroupWidths;
+    long numberOfBitsUsedForTheGroupWidths;
+    long referenceForGroupLengths;
+    long lengthIncrementForTheGroupLengths;
+    long trueLengthOfLastGroup;
+    long numberOfBitsUsedForTheScaledGroupLengths;
+    long orderOfSpatialDifferencing;
+    long numberOfOctetsExtraDescriptors;
+
+    long maxgrw;
+    long maxgrl;
+    char packingType[254] = {0,};
+    size_t slen = 254;
+
+    if (*len == 0)
+        return GRIB_NO_VALUES;
+
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->typeOfOriginalFieldValues, &typeOfOriginalFieldValues)) != GRIB_SUCCESS)
+        return err;
+
+  /*if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS) return err;/*
+  /* Key groupSplittingMethodUsed uses Code table 5.4 which has two entries:
+   *  0 Row by row splitting
+   *  1 General group splitting
+   * We only support General group splitting
+   */
+    groupSplittingMethodUsed = 1;
+
+    if ((err = grib_get_long_internal(gh, self->missingValueManagementUsed, &missingValueManagementUsed)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->primaryMissingValueSubstitute, &primaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->secondaryMissingValueSubstitute, &secondaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, &numberOfBitsUsedForTheGroupWidths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, &numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->orderOfSpatialDifferencing, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfOctetsExtraDescriptors, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
+        return err;
+
+    self->dirty = 1;
+
+    referenceForGroupWidths                  = 0;
+    referenceForGroupLengths                 = 0;
+    lengthIncrementForTheGroupLengths        = 1;
+    numberOfBitsUsedForTheGroupWidths        = 4;
+    numberOfBitsUsedForTheScaledGroupLengths = 10;
+
+    /*     calculation of integer array    */
+    sec_val = (unsigned long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
+    if (!sec_val)
+        return GRIB_OUT_OF_MEMORY;
+
+    d = grib_power(decimal_scale_factor, 10);
+
+    max = val[0];
+    min = max;
+    for (i = 0; i < n_vals; i++) {
+        if (val[i] > max)
+            max = val[i];
+        else if (val[i] < min)
+            min = val[i];
+    }
+    min *= d;
+    max *= d;
+
+    if (grib_get_nearest_smaller_value(gh, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+        return GRIB_INTERNAL_ERROR;
+    }
+
+    binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
+    if (err != GRIB_SUCCESS)
+        return err;
+    divisor = grib_power(-binary_scale_factor, 2);
+
+    for (i = 0; i < n_vals; i++)
+        sec_val[i] = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+
+    group_val = sec_val;
+
+    maxgrw = calc_pow_2(numberOfBitsUsedForTheGroupWidths);
+    maxgrl = calc_pow_2(numberOfBitsUsedForTheScaledGroupLengths);
+
+    numberOfGroupsOfDataValues = 0;
+    nv                         = n_vals;
+    vals_p                     = 0;
+
+    while (find_next_group(group_val, nv, maxgrw, maxgrl, &nbits_per_group_val, &nvals_per_group, &group_ref_val) == GRIB_SUCCESS) {
+        numberOfGroupsOfDataValues++;
+        nv -= nvals_per_group;
+        group_val += nvals_per_group;
+        vals_p += nbits_per_group_val * nvals_per_group;
+    }
+
+    trueLengthOfLastGroup = nvals_per_group;
+
+    buf_size = (7 + (numberOfGroupsOfDataValues * bits_per_value)) / 8;
+    buf_size += (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths)) / 8;
+    buf_size += (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths)) / 8;
+
+    buf_size += (vals_p / 8) + ((vals_p % 8) ? 1 : 0);
+
+    buf = (unsigned char*)grib_context_malloc_clear(a->context, buf_size);
+
+    buf_ref    = buf;
+    buf_width  = buf_ref + (7 + (numberOfGroupsOfDataValues * bits_per_value)) / 8;
+    buf_length = buf_width + (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths)) / 8;
+    buf_vals   = buf_length + (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths)) / 8;
+
+    nv        = n_vals;
+    group_val = sec_val;
+    vals_p    = 0;
+    ref_p     = 0;
+    width_p   = 0;
+    length_p  = 0;
+    i         = 0;
+
+    while (find_next_group(group_val, nv, maxgrw, maxgrl, &nbits_per_group_val, &nvals_per_group, &group_ref_val) == GRIB_SUCCESS) {
+        grib_encode_unsigned_longb(buf_ref, group_ref_val, &ref_p, bits_per_value);
+        grib_encode_unsigned_longb(buf_width, nbits_per_group_val, &width_p, numberOfBitsUsedForTheGroupWidths);
+        grib_encode_unsigned_longb(buf_length, nvals_per_group, &length_p, numberOfBitsUsedForTheScaledGroupLengths);
+
+        if (nbits_per_group_val)
+            for (j = 0; j < nvals_per_group; j++) {
+                grib_encode_unsigned_longb(buf_vals, sec_val[i + j] - group_ref_val, &vals_p, nbits_per_group_val);
+            }
+        i += nvals_per_group;
+        group_val += nvals_per_group;
+        nv -= nvals_per_group;
+    }
+
+    /*fprintf(stdout,"spatial pack_double::  %ld  bytes %lu marked\n", (ref_p+7)/8 + (width_p+7)/8 + (length_p+7)/8 + (vals_p+7)/8, buf_size);*/
+
+    grib_buffer_replace(a, buf, buf_size, 1, 1);
+    grib_context_free(a->context, buf);
+    grib_context_free(a->context, sec_val);
+
+    if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
+        return err;
+    {
+        /* Make sure we can decode it again */
+        double ref = 1e-100;
+        grib_get_double_internal(gh, self->reference_value, &ref);
+        Assert(ref == reference_value);
+    }
+    if ((err = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->typeOfOriginalFieldValues, typeOfOriginalFieldValues)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->groupSplittingMethodUsed, groupSplittingMethodUsed)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, missingValueManagementUsed)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, primaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, secondaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, numberOfGroupsOfDataValues)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, referenceForGroupWidths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheGroupWidths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->referenceForGroupLengths, referenceForGroupLengths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->lengthIncrementForTheGroupLengths, lengthIncrementForTheGroupLengths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->trueLengthOfLastGroup, trueLengthOfLastGroup)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
+        return err;
+
+    err = grib_get_string(gh, "packingType", packingType, &slen);
+    if (!err && strcmp(packingType, "grid_complex_spatial_differencing") == 0) {
+        if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 0)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 0)) != GRIB_SUCCESS)
+            return err;
+    }
+
+    /* ECC-259: Set correct number of values */
+    if ((err = grib_set_long_internal(gh, self->numberOfValues, *len)) != GRIB_SUCCESS)
+        return err;
+
+    return GRIB_SUCCESS;
+}
+
+
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
 
     size_t i    = 0;
@@ -475,8 +741,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long group_ref_val       = 0;
 
     long bits_per_value    = 0;
-    double binary_s        = 0;
-    double decimal_s       = 0;
+    T binary_s        = 0;
+    T decimal_s       = 0;
     double reference_value = 0;
 
     long binary_scale_factor;
@@ -694,254 +960,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return err;
 }
 
-static int pack_double(grib_accessor* a, const double* val, size_t* len)
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
-    grib_handle* gh                           = grib_handle_of_accessor(a);
+    return unpack<double>(a, val, len);
+}
 
-    size_t i      = 0;
-    size_t j      = 0;
-    size_t n_vals = *len;
-
-    int err = 0;
-
-    unsigned char* buf        = NULL;
-    unsigned char* buf_ref    = NULL;
-    unsigned char* buf_width  = NULL;
-    unsigned char* buf_length = NULL;
-    unsigned char* buf_vals   = NULL;
-
-    double d       = 0;
-    double divisor = 0;
-
-    unsigned long* sec_val   = NULL;
-    unsigned long* group_val = NULL;
-
-    double max;
-    double min;
-
-    long length_p = 0;
-    long ref_p    = 0;
-    long width_p  = 0;
-    long vals_p   = 0;
-
-    size_t nv       = 0;
-    size_t buf_size = 0;
-
-    long bits_per_value = 0;
-
-    double reference_value = 0;
-
-    long nvals_per_group     = 0;
-    long nbits_per_group_val = 0;
-    long group_ref_val       = 0;
-
-    long binary_scale_factor;
-    long decimal_scale_factor;
-    long typeOfOriginalFieldValues;
-    long groupSplittingMethodUsed;
-    long missingValueManagementUsed;
-    long primaryMissingValueSubstitute;
-    long secondaryMissingValueSubstitute;
-    long numberOfGroupsOfDataValues;
-    long referenceForGroupWidths;
-    long numberOfBitsUsedForTheGroupWidths;
-    long referenceForGroupLengths;
-    long lengthIncrementForTheGroupLengths;
-    long trueLengthOfLastGroup;
-    long numberOfBitsUsedForTheScaledGroupLengths;
-    long orderOfSpatialDifferencing;
-    long numberOfOctetsExtraDescriptors;
-
-    long maxgrw;
-    long maxgrl;
-    char packingType[254] = {0,};
-    size_t slen = 254;
-
-    if (*len == 0)
-        return GRIB_NO_VALUES;
-
-    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->typeOfOriginalFieldValues, &typeOfOriginalFieldValues)) != GRIB_SUCCESS)
-        return err;
-
-    /*if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS) return err;*/
-    /* Key groupSplittingMethodUsed uses Code table 5.4 which has two entries:
-     *  0 Row by row splitting
-     *  1 General group splitting
-     * We only support General group splitting
-     */
-    groupSplittingMethodUsed = 1;
-
-    if ((err = grib_get_long_internal(gh, self->missingValueManagementUsed, &missingValueManagementUsed)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->primaryMissingValueSubstitute, &primaryMissingValueSubstitute)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->secondaryMissingValueSubstitute, &secondaryMissingValueSubstitute)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, &numberOfBitsUsedForTheGroupWidths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, &numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->orderOfSpatialDifferencing, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_get_long_internal(gh, self->numberOfOctetsExtraDescriptors, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
-        return err;
-
-    self->dirty = 1;
-
-    referenceForGroupWidths                  = 0;
-    referenceForGroupLengths                 = 0;
-    lengthIncrementForTheGroupLengths        = 1;
-    numberOfBitsUsedForTheGroupWidths        = 4;
-    numberOfBitsUsedForTheScaledGroupLengths = 10;
-
-    /*     calculation of integer array   */
-    sec_val = (unsigned long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
-    if (!sec_val)
-        return GRIB_OUT_OF_MEMORY;
-
-    d = grib_power(decimal_scale_factor, 10);
-
-    max = val[0];
-    min = max;
-    for (i = 0; i < n_vals; i++) {
-        if (val[i] > max)
-            max = val[i];
-        else if (val[i] < min)
-            min = val[i];
-    }
-    min *= d;
-    max *= d;
-
-    if (grib_get_nearest_smaller_value(gh, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
-        return GRIB_INTERNAL_ERROR;
-    }
-
-    binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    if (err != GRIB_SUCCESS)
-        return err;
-    divisor = grib_power(-binary_scale_factor, 2);
-
-    for (i = 0; i < n_vals; i++)
-        sec_val[i] = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
-
-    group_val = sec_val;
-
-    maxgrw = calc_pow_2(numberOfBitsUsedForTheGroupWidths);
-    maxgrl = calc_pow_2(numberOfBitsUsedForTheScaledGroupLengths);
-
-    numberOfGroupsOfDataValues = 0;
-    nv                         = n_vals;
-    vals_p                     = 0;
-
-    while (find_next_group(group_val, nv, maxgrw, maxgrl, &nbits_per_group_val, &nvals_per_group, &group_ref_val) == GRIB_SUCCESS) {
-        numberOfGroupsOfDataValues++;
-        nv -= nvals_per_group;
-        group_val += nvals_per_group;
-        vals_p += nbits_per_group_val * nvals_per_group;
-    }
-
-    trueLengthOfLastGroup = nvals_per_group;
-
-    buf_size = (7 + (numberOfGroupsOfDataValues * bits_per_value)) / 8;
-    buf_size += (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths)) / 8;
-    buf_size += (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths)) / 8;
-
-    buf_size += (vals_p / 8) + ((vals_p % 8) ? 1 : 0);
-
-    buf = (unsigned char*)grib_context_malloc_clear(a->context, buf_size);
-
-    buf_ref    = buf;
-    buf_width  = buf_ref + (7 + (numberOfGroupsOfDataValues * bits_per_value)) / 8;
-    buf_length = buf_width + (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths)) / 8;
-    buf_vals   = buf_length + (7 + (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths)) / 8;
-
-    nv        = n_vals;
-    group_val = sec_val;
-    vals_p    = 0;
-    ref_p     = 0;
-    width_p   = 0;
-    length_p  = 0;
-    i         = 0;
-
-    while (find_next_group(group_val, nv, maxgrw, maxgrl, &nbits_per_group_val, &nvals_per_group, &group_ref_val) == GRIB_SUCCESS) {
-        grib_encode_unsigned_longb(buf_ref, group_ref_val, &ref_p, bits_per_value);
-        grib_encode_unsigned_longb(buf_width, nbits_per_group_val, &width_p, numberOfBitsUsedForTheGroupWidths);
-        grib_encode_unsigned_longb(buf_length, nvals_per_group, &length_p, numberOfBitsUsedForTheScaledGroupLengths);
-
-        if (nbits_per_group_val)
-            for (j = 0; j < nvals_per_group; j++) {
-                grib_encode_unsigned_longb(buf_vals, sec_val[i + j] - group_ref_val, &vals_p, nbits_per_group_val);
-            }
-        i += nvals_per_group;
-        group_val += nvals_per_group;
-        nv -= nvals_per_group;
-    }
-
-    /*fprintf(stdout,"spatial pack_double::  %ld  bytes %lu marked\n", (ref_p+7)/8 + (width_p+7)/8 + (length_p+7)/8 + (vals_p+7)/8, buf_size);*/
-
-    grib_buffer_replace(a, buf, buf_size, 1, 1);
-    grib_context_free(a->context, buf);
-    grib_context_free(a->context, sec_val);
-
-    if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
-        return err;
-    {
-        /* Make sure we can decode it again */
-        double ref = 1e-100;
-        grib_get_double_internal(gh, self->reference_value, &ref);
-        Assert(ref == reference_value);
-    }
-    if ((err = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->typeOfOriginalFieldValues, typeOfOriginalFieldValues)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->groupSplittingMethodUsed, groupSplittingMethodUsed)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, missingValueManagementUsed)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, primaryMissingValueSubstitute)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, secondaryMissingValueSubstitute)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, numberOfGroupsOfDataValues)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, referenceForGroupWidths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheGroupWidths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->referenceForGroupLengths, referenceForGroupLengths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->lengthIncrementForTheGroupLengths, lengthIncrementForTheGroupLengths)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->trueLengthOfLastGroup, trueLengthOfLastGroup)) != GRIB_SUCCESS)
-        return err;
-    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
-        return err;
-
-    err = grib_get_string(gh, "packingType", packingType, &slen);
-    if (!err && strcmp(packingType, "grid_complex_spatial_differencing") == 0) {
-        if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 0)) != GRIB_SUCCESS)
-            return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 0)) != GRIB_SUCCESS)
-            return err;
-    }
-
-    /* ECC-259: Set correct number of values */
-    if ((err = grib_set_long_internal(gh, self->numberOfValues, *len)) != GRIB_SUCCESS)
-        return err;
-
-    return GRIB_SUCCESS;
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

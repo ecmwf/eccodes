@@ -32,6 +32,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling_sh
     grib_set_force
     grib_ecc-386
+    grib_ecc-1467
     grib_ecc-1431
     bufr_ecc-517
     bufr_ecc-1288
@@ -201,6 +202,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1030
         grib_ecc-1397
         grib_ecc-1425
+        grib_ecc-1467
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
