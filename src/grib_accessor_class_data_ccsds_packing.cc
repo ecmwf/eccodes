@@ -573,7 +573,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS %s: aec_buffer_decode error %d (%s)\n",
-                         __PRETTY_FUNCTION__, err, aec_get_error_message(err));
+                         __func__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }

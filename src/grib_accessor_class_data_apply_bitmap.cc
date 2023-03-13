@@ -435,7 +435,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_class_data_apply_bitmap: %s : creating %s, %d values",
-                     __PRETTY_FUNCTION__,
+                     __func__,
                      a->name, n_vals);
 
     for (i = 0; i < n_vals; i++) {
@@ -449,7 +449,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
                 grib_context_log(a->context, GRIB_LOG_ERROR,
                                  "grib_accessor_class_data_apply_bitmap [%s]:"
                                  " %s :  number of coded values does not match bitmap %ld %ld",
-                                 a->name, __PRETTY_FUNCTION__, coded_n_vals, n_vals);
+                                 a->name, __func__, coded_n_vals, n_vals);
 
                 return GRIB_ARRAY_TOO_SMALL;
             }
