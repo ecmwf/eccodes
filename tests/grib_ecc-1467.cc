@@ -7,25 +7,22 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-#include <stdio.h>
-#include <stdlib.h>
+
 #include <math.h>
-#undef NDEBUG
-#include <assert.h>
 #include "eccodes.h"
 #include "grib_api_internal.h"
 
 int main(int argc, char** argv)
 {
     int err            = 0;
-    float* fvalues     = NULL; /* data values as floats */
-    double* dvalues    = NULL; /* data values as doubles */
+    float* fvalues     = NULL; // data values as floats
+    double* dvalues    = NULL; // data values as doubles
     size_t values_len  = 0;    // number of data points
     size_t i           = 0;
 
     double abs_error     = 0;
-    double max_abs_error = 1e-03;
-    double tolerance     = 1e-03;
+    const double max_abs_error = 1e-03;
+    const double tolerance     = 1e-03;
     double dmin;
     double dmax;
     float fval;
@@ -42,10 +39,10 @@ int main(int argc, char** argv)
 
     printf("Opening %s\n", filename);
     in = fopen(filename, "rb");
-    assert(in);
+    Assert(in);
 
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
-    assert(h);
+    Assert(h);
 
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
@@ -57,7 +54,8 @@ int main(int argc, char** argv)
     for (i = 0; i < values_len; i++) {
         abs_error = fabs(dvalues[i] - (double)fvalues[i]);
         if (abs_error > max_abs_error) {
-            fprintf(stderr, "ERROR:\n\tfvalue %e\n\tdvalue %e\n\terror %e\n\tmax_abs_error %e\n", fvalues[i], dvalues[i], abs_error, max_abs_error);
+            fprintf(stderr, "ERROR:\n\tfvalue %e\n\tdvalue %e\n\terror %e\n\tmax_abs_error %e\n",
+                    fvalues[i], dvalues[i], abs_error, max_abs_error);
             Assert(!"Absolute error test failed\n");
         }
 

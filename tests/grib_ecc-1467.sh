@@ -10,40 +10,36 @@
 
 . ./include.ctest.sh
 
-# Constant Fields
+# Constant fields
 gfiles="constant_field.grib1" # grid_simple, edition=1
 gfiles="$gfiles constant_field.grib2" # grid_simple, edition=2
 
-# Grid Simple
+# Grid simple
 gfiles="$gfiles sst_globus0083.grib" # grid_simple, edition=1
 gfiles="$gfiles reduced_latlon_surface.grib1" # grid_simple, edition=1
 gfiles="$gfiles reduced_latlon_surface.grib2" # grid_simple, edition=2
 gfiles="$gfiles regular_latlon_surface.grib1" # grid_simple, edition=1
 gfiles="$gfiles regular_latlon_surface.grib2" # grid_simple, edition=2
 
-# Spherical Complex
+# Spectral complex
 gfiles="$gfiles spherical_pressure_level.grib1" # spectral_complex, edition=1
 gfiles="$gfiles spherical_pressure_level.grib2" # spectral_complex, edition=2
 
-# Grid Complex
+# Grid complex
 #gfiles="$gfiles " # grid_complex, edition=1
 gfiles="$gfiles gfs.complex.mvmu.grib2" # grid_complex, edition=2, g22order_packing
 
-# Second Order
+# Second order
 gfiles="$gfiles lfpw.grib1" # grid_second_order, edition=1
 #gfiles="$gfiles " # grid_second_order, edition=2
 
 # CCSDS
 if [ $HAVE_AEC -eq 1 ]; then
-    echo "Adding extra files (HAVE_AEC=1)"
     gfiles="$gfiles ccsds.grib2"
 fi
 
 for f in $gfiles; do
     input=${data_dir}/$f
-    ${tools_dir}/grib_ls -w count=1 -p numberOfDataPoints,numberOfCodedValues,numberOfMissing,avg $input
+    # ${tools_dir}/grib_ls -w count=1 -p numberOfDataPoints,numberOfCodedValues,numberOfMissing,avg $input
     $EXEC ${test_dir}/grib_ecc-1467 $input
 done
-
-
-
