@@ -158,7 +158,8 @@ bool ReducedLL::isPeriodicWestEast() const {
     auto maxpl = *std::max_element(pl_.begin(), pl_.end());
     ASSERT(maxpl >= 2);
 
-    eckit::Fraction inc = (bbox_.east() - bbox_.west()).fraction() / maxpl;
+    // if range West-East is within one increment (or greater than) 360 degree
+    const eckit::Fraction inc(360, maxpl);
     return bbox_.east() - bbox_.west() + inc >= Longitude::GLOBE;
 }
 
