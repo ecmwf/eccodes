@@ -8,7 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_accessor_class_bitmap.h"
+#include "grib_api_internal.h"
+
 /*
    This is used by make_class.pl
 
@@ -262,7 +263,7 @@ int unpack(grib_accessor* a, T* val, size_t* len)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %ld values", a->name, tlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
