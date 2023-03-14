@@ -174,8 +174,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
+    // DET = deterministic i.e., not ensemble
+    // ENS = ensemble system
     if (self->instant) {
-        /* Going from continuous or non-continuous interval to a point-in-time (instantaneous) */
+        // Going from continuous or non-continuous interval to a point-in-time (instantaneous)
         switch (productDefinitionTemplateNumber) {
             case 8:
                 productDefinitionTemplateNumberNew = 0;
@@ -198,28 +200,28 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             case 14:
                 productDefinitionTemplateNumberNew = 4;
                 break;
-            case 42: /* non-EPS chemical */
+            case 42: // DET chemical
                 productDefinitionTemplateNumberNew = 40;
                 break;
-            case 43: /* EPS chemical */
+            case 43: // ENS chemical
                 productDefinitionTemplateNumberNew = 41;
                 break;
-            case 46:                                     /* non-EPS aerosol */
-                productDefinitionTemplateNumberNew = 48; /*44 is deprecated*/
+            case 46:                                     // DET aerosol
+                productDefinitionTemplateNumberNew = 48; // 44 is deprecated
                 break;
-            case 47: /* EPS aerosol */
+            case 47: // ENS aerosol
                 productDefinitionTemplateNumberNew = 45;
                 break;
-            case 67: /* non-EPS chemical distrib func */
+            case 67: // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 57;
                 break;
-            case 68: /* EPS chemical distrib func */
+            case 68: // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 58;
                 break;
-            case 72: /* non-EPS post-processing */
+            case 72: // DET post-processing
                 productDefinitionTemplateNumberNew = 70;
                 break;
-            case 73: /* EPS post-processing */
+            case 73: // ENS post-processing */
                 productDefinitionTemplateNumberNew = 71;
                 break;
             case 0:
@@ -239,7 +241,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
     else {
-        /* Going from point-in-time (instantaneous) to continuous or non-continuous interval */
+        // Going from point-in-time (instantaneous) to continuous or non-continuous interval
         switch (productDefinitionTemplateNumber) {
             case 0:
                 productDefinitionTemplateNumberNew = 8;
@@ -262,29 +264,25 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             case 6:
                 productDefinitionTemplateNumberNew = 10;
                 break;
-            case 40: /* non-EPS chemical */
+            case 40: // DET chemical
                 productDefinitionTemplateNumberNew = 42;
                 break;
-            case 41: /* EPS chemical */
+            case 41: // ENS chemical
                 productDefinitionTemplateNumberNew = 43;
                 break;
-            case 48: /* non-EPS aerosol. Note template 44 is deprecated */
-                productDefinitionTemplateNumberNew = 46;
+            case 45: // ENS aerosol
+                productDefinitionTemplateNumberNew = 85; // 47 is  deprecated
                 break;
-            case 45: /* EPS aerosol */
-                /*productDefinitionTemplateNumberNew = 47;   PDT deprecated */
-                productDefinitionTemplateNumberNew = 85;
-                break;
-            case 57: /* non-EPS chemical distrib func */
+            case 57: // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 67;
                 break;
-            case 58: /* EPS chemical distrib func */
+            case 58: // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 68;
                 break;
-            case 70: /* non-EPS post-processing */
+            case 70: // DET post-processing
                 productDefinitionTemplateNumberNew = 72;
                 break;
-            case 71: /* EPS post-processing */
+            case 71: // ENS post-processing
                 productDefinitionTemplateNumberNew = 73;
                 break;
             case 7:
