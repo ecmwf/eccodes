@@ -8,12 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
+
 /*
    This is used by make_class.pl
 
@@ -154,10 +150,11 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
-    int n                                    = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->instant                         = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
+    self->instant                         = grib_arguments_get_long(hand, c, n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -169,10 +166,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     long productDefinitionTemplateNumber     = 0;
     long productDefinitionTemplateNumberNew  = 0;
 
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
     // DET = deterministic i.e., not ensemble
     // ENS = ensemble system
@@ -301,10 +299,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
 
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+    }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a, long* c)
