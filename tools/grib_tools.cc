@@ -1048,7 +1048,9 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
         if (ret == GRIB_NOT_FOUND) {
             snprintf(value_str, 32, "not_found");
         } else {
-            fprintf(dump_file, "ERROR: Failed to get value for key %s (%s)\n", key_name, grib_get_error_message(ret));
+            fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
+            if (ret == GRIB_ARRAY_TOO_SMALL)
+                fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
             exit(1);
         }
     }
@@ -1205,12 +1207,18 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         }
 
         if (ret != GRIB_SUCCESS) {
-            if (options->fail)
-                GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
-            if (ret == GRIB_NOT_FOUND)
+            if (options->fail) { // ECC-1551
+                //GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
+                grib_context_log(h->context, GRIB_LOG_ERROR, "%s (%s)",
+                                options->print_keys[i].name, grib_get_error_message(ret));
+                exit(ret);
+            }
+            if (ret == GRIB_NOT_FOUND) {
                 strcpy(value, notfound);
-            else {
-                fprintf(dump_file, "%s %s\n", grib_get_error_message(ret), options->print_keys[i].name);
+            } else {
+                fprintf(dump_file, "%s (%s)\n", options->print_keys[i].name, grib_get_error_message(ret));
+                if (ret == GRIB_ARRAY_TOO_SMALL)
+                    fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
                 exit(ret);
             }
         }
