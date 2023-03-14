@@ -274,7 +274,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    /* Special case */
+    // Special case
     if (*len == 0) {
         grib_buffer_replace(a, NULL, 0, 1, 1);
         return GRIB_SUCCESS;
@@ -295,8 +295,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         is_constant_field = true;
     } else {
         if (bits_per_value == 0) {
-            /* ECC-1202: A non-constant field with bitsPerValue==0! */
-            bits_per_value = 24; /* Set sane value */
+            // ECC-1202: A non-constant field with bitsPerValue==0!
+            bits_per_value = 24; // Set sane value
         }
     }
 
@@ -316,7 +316,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
             return err;
-        bits_per_value = 0; /* ECC-1387 */
+        bits_per_value = 0; // ECC-1387
         if ((err = grib_set_long_internal(hand, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
 
@@ -347,7 +347,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
     else {
-        int last = 127;  /* last must be a parameter coming from the def file*/
+        int last = 127;  // last must be a parameter coming from the def file
         double range = 0;
         double minrange = 0, maxrange = 0;
         double unscaled_max = 0;
@@ -407,11 +407,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             buflen++;
         }
     }
-    /* buflen = n_vals*(bits_per_value/8);*/
+    // buflen = n_vals*(bits_per_value/8);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,"CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
-    /*ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR*/
+    // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
     buflen += buflen / 20 + 256;
     buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
@@ -423,7 +423,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_set_double_internal(hand, self->reference_value, reference_value)) != GRIB_SUCCESS)
         return err;
     {
-        /* Make sure we can decode it again */
+        // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(hand, self->reference_value, &ref);
         Assert(ref == reference_value);
@@ -445,10 +445,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     strm.next_in   = encoded;
     strm.avail_in  = bits8 / 8 * n_vals;
 
-    /*
-        This does not support spherical harmonics, and treats 24 differently than:
-        see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
-    */
+    // This does not support spherical harmonics, and treats 24 differently than:
+    // see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
+
     if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
@@ -458,10 +457,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
-    /*
-    printf("n_vals = %ld, bits8 = %ld\n", n_vals, bits8);
-    printf("in %ld out => %zu\n", bits8/8*n_vals, buflen);
-    */
+    //printf("n_vals = %ld, bits8 = %ld\n", n_vals, bits8);
+    //printf("in %ld out => %zu\n", bits8/8*n_vals, buflen);
     buflen = strm.total_out;
     grib_buffer_replace(a, buf, buflen, 1, 1);
 
@@ -494,7 +491,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     size_t n_vals      = 0;
     size_t size        = 0;
     unsigned char* decoded = NULL;
-    /*unsigned char* p       = NULL;*/
+    // unsigned char* p       = NULL;
     long pos               = 0;
     long nn                = 0;
 
@@ -523,7 +520,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    /* ECC-477: Don't call grib_get_long_internal to suppress error message being output */
+    // ECC-477: Don't call grib_get_long_internal to suppress error message being output
     if ((err = grib_get_long(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
 
@@ -532,11 +529,11 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    /* TODO: This should be called upstream */
+    // TODO: This should be called upstream
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
 
-    /* Special case */
+    // Special case
     if (bits_per_value == 0) {
         for (i = 0; i < n_vals; i++)
             val[i] = reference_value;
@@ -580,8 +577,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     pos = 0;
 
-/* ECC-1427: Performance improvement */
-//grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
+    // ECC-1427: Performance improvement
+    //grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
     grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
     *len = n_vals;
 
@@ -602,7 +599,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
-    /* The index idx relates to codedValues NOT values! */
+    // The index idx relates to codedValues NOT values!
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int err = 0;
@@ -616,7 +613,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return err;
 
-    /* Special case of constant field */
+    // Special case of constant field
     if (bits_per_value == 0) {
         *val = reference_value;
         return GRIB_SUCCESS;
@@ -652,7 +649,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return err;
 
-    /* Special case of constant field */
+    // Special case of constant field
     if (bits_per_value == 0) {
         for (i = 0; i < len; i++) {
             val_array[i] = reference_value;
@@ -660,7 +657,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
         return GRIB_SUCCESS;
     }
 
-    /* GRIB-564: The indexes in index_array relate to codedValues NOT values! */
+    // GRIB-564: The indexes in index_array relate to codedValues NOT values!
     err = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
     if (err)
         return err;

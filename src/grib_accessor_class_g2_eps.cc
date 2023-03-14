@@ -8,12 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
+
 /*
    This is used by make_class.pl
 
@@ -220,10 +216,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_ENCODING_ERROR;
     }
 
-    /* eps or stream=(enda or elda or ewla) */
+    // eps or stream=(enda or elda or ewla)
     if (eps || stream == 1030 || stream == 1249 || stream == 1250) {
         if (isInstant) {
-            /* type=em || type=es  */
+            // type=em || type=es
             if (type == 17) {
                 productDefinitionTemplateNumberNew = 2;
                 derivedForecast                    = 0;
@@ -237,7 +233,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             }
         }
         else {
-            /* type=em || type=es */
+            // type=em || type=es
             if (type == 17) {
                 productDefinitionTemplateNumberNew = 12;
                 derivedForecast                    = 0;
@@ -260,7 +256,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
 
-    /* Adjust for chemical species */
+    // Adjust for chemical species
     if (chemical == 1) {
         if (eps == 1) {
             if (isInstant) {
@@ -280,20 +276,20 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
 
-    /* Adjust for aerosols */
+    // Adjust for aerosols
     if (aerosol == 1) {
         if (eps == 1) {
             if (isInstant) {
                 productDefinitionTemplateNumberNew = 45;
             }
             else {
-                /*productDefinitionTemplateNumberNew = 47;   This PDT is deprecated */
+                //productDefinitionTemplateNumberNew = 47;   This PDT is deprecated
                 productDefinitionTemplateNumberNew = 85;
             }
         }
         else {
             if (isInstant) {
-                productDefinitionTemplateNumberNew = 48; /*44 is deprecated*/
+                productDefinitionTemplateNumberNew = 48; //44 is deprecated*/
             }
             else {
                 productDefinitionTemplateNumberNew = 46;
