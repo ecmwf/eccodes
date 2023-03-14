@@ -45,8 +45,8 @@ You can also pass options to the cmake command above. Some typical examples are:
  -DENABLE_ECCODES_THREADS=ON     Enable POSIX threads
  -DENABLE_JPG=ON                 Enable JPEG encoding/decoding (for GRIB packing)
  -DCMAKE_Fortran_COMPILER=pgf90  Set Fortran compiler to Portland Group F90 compiler
- -DCMAKE_C_FLAGS="-O2 -Wall"     Prepend the specified flags at the front
-                                 of the compilation command for C source files
+ -DCMAKE_CXX_FLAGS="-O2 -Wall"   Prepend the specified flags at the front
+                                 of the compilation command for C++ source files
 
 By default the ctest step above does NOT require any data to be downloaded and only runs basic sanity tests.
 However if you wish to exercise more of the functionality of ecCodes, you are advised to configure the build with:

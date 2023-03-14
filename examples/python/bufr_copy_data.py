@@ -13,7 +13,6 @@
 # Description: How to copy all the values in the data section that are present in the same
 #              position in the data tree and with the same number of values to the output handle
 #
-from __future__ import print_function
 
 import sys
 import traceback
