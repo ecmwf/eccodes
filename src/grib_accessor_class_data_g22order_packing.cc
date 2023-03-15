@@ -533,12 +533,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(gh, self->typeOfOriginalFieldValues, &typeOfOriginalFieldValues)) != GRIB_SUCCESS)
         return err;
 
-  /*if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS) return err;/*
-  /* Key groupSplittingMethodUsed uses Code table 5.4 which has two entries:
-   *  0 Row by row splitting
-   *  1 General group splitting
-   * We only support General group splitting
-   */
+    //if((err = grib_get_long_internal(gh,self->groupSplittingMethodUsed,&groupSplittingMethodUsed )) != GRIB_SUCCESS) return err;
+    // Key groupSplittingMethodUsed uses Code table 5.4 which has two entries:
+    //   0 Row by row splitting
+    //   1 General group splitting
+    // We only support General group splitting
+
     groupSplittingMethodUsed = 1;
 
     if ((err = grib_get_long_internal(gh, self->missingValueManagementUsed, &missingValueManagementUsed)) != GRIB_SUCCESS)
