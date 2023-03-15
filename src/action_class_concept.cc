@@ -21,7 +21,7 @@
    SUPER      = action_class_gen
    IMPLEMENTS = dump
    IMPLEMENTS = destroy
-   MEMBERS    = grib_concept_value* concept
+   MEMBERS    = grib_concept_value* concept_value
    MEMBERS    = char* basename
    MEMBERS    = char* masterDir
    MEMBERS    = char* localDir
@@ -46,7 +46,7 @@ static void destroy         (grib_context*,grib_action*);
 
 
 typedef struct grib_action_concept {
-    grib_action          act;
+    grib_action          act;  
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

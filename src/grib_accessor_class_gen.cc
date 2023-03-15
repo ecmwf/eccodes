@@ -13,7 +13,11 @@
  *   Enrico Fucile                                                         *
  *   Shahram Najm                                                          *
  ***************************************************************************/
-#include "grib_accessor_class_gen.h"
+#include "grib_api_internal.h"
+#include <typeinfo>
+#include <limits>
+#include <cassert>
+
 /*
    This is used by make_class.pl
 
@@ -56,6 +60,10 @@ static int pack_string(grib_accessor*, const char*, size_t* len);
 static int pack_string_array(grib_accessor*, const char**, size_t* len);
 static int pack_expression(grib_accessor*, grib_expression*);
 static int unpack_bytes(grib_accessor*, unsigned char*, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
+static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_string(grib_accessor*, char*, size_t* len);
 static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static size_t string_length(grib_accessor*);
 static long byte_count(grib_accessor*);
@@ -104,13 +112,13 @@ static grib_accessor_class _grib_accessor_class_gen = {
     0,               /* grib_pack procedures long */
     &is_missing,                 /* grib_pack procedures long */
     &pack_long,                  /* grib_pack procedures long */
-    &GribAccessorClassGen<long>::unpack,                /* grib_unpack procedures long */
+    &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
-    &GribAccessorClassGen<double>::unpack,              /* grib_unpack procedures double */
-    &GribAccessorClassGen<float>::unpack,               /* grib_unpack procedures float */
+    &unpack_double,              /* grib_unpack procedures double */
+    &unpack_float,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
-    &GribAccessorClassGen<char>::unpack,              /* grib_unpack procedures string */
+    &unpack_string,              /* grib_unpack procedures string */
     &pack_string_array,          /* grib_pack array procedures string */
     &unpack_string_array,        /* grib_unpack array procedures string */
     &pack_bytes,                 /* grib_pack procedures bytes */
@@ -270,12 +278,10 @@ static int clear(grib_accessor* a)
     return GRIB_SUCCESS;
 }
 
-// ECC-1467
-template <>
-int GribAccessorClassGen<long>::unpack(grib_accessor* a, long* v, size_t* len)
+static int unpack_long(grib_accessor* a, long* v, size_t* len)
 {
     int type = GRIB_TYPE_UNDEFINED;
-    if (a->cclass->unpack_double && a->cclass->unpack_double != &GribAccessorClassGen<double>::unpack) {
+    if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
         double val = 0.0;
         size_t l   = 1;
         grib_unpack_double(a, &val, &l);
@@ -287,7 +293,7 @@ int GribAccessorClassGen<long>::unpack(grib_accessor* a, long* v, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if (a->cclass->unpack_string && a->cclass->unpack_string != &GribAccessorClassGen<char>::unpack) {
+    if (a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string) {
         char val[1024];
         size_t l   = sizeof(val);
         char* last = NULL;
@@ -308,18 +314,53 @@ int GribAccessorClassGen<long>::unpack(grib_accessor* a, long* v, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-// ECC-1467
-template <>
-int GribAccessorClassGen<float>::unpack(grib_accessor* a, float* v, size_t* len)
+template <typename T>
+static int unpack(grib_accessor* a, T* v, size_t* len)
 {
+    int type = GRIB_TYPE_UNDEFINED;
+    if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
+        long val = 0;
+        size_t l = 1;
+        grib_unpack_long(a, &val, &l);
+        *v = val;
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, typeid(T).name());
+        return GRIB_SUCCESS;
+    }
+
+    if (a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string) {
+        char val[1024];
+        size_t l   = sizeof(val);
+        char* last = NULL;
+        grib_unpack_string(a, val, &l);
+
+        *v = strtod(val, &last);
+        if (*last == 0) { /* conversion of string to double worked */
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
+            return GRIB_SUCCESS;
+        }
+    }
+
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack as %s", a->name);
+    if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
+    }
+
     return GRIB_NOT_IMPLEMENTED;
 }
 
-// ECC-1467
-template <>
-int GribAccessorClassGen<char>::unpack(grib_accessor* a, char* v, size_t* len)
+static int unpack_double(grib_accessor* a, double* v, size_t* len)
 {
-    if (a->cclass->unpack_double && a->cclass->unpack_double != &GribAccessorClassGen<double>::unpack) {
+    return unpack<double>(a, v, len);
+}
+
+static int unpack_float(grib_accessor* a, float* v, size_t* len)
+{
+    return unpack<float>(a, v, len);
+}
+
+static int unpack_string(grib_accessor* a, char* v, size_t* len)
+{
+    if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
         double val = 0.0;
         size_t l   = 1;
         grib_unpack_double(a, &val, &l);
@@ -329,13 +370,13 @@ int GribAccessorClassGen<char>::unpack(grib_accessor* a, char* v, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    if (a->cclass->unpack_long && a->cclass->unpack_long != &GribAccessorClassGen<long>::unpack) {
+    if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         snprintf(v, 64, "%ld", val);
         *len = strlen(v);
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string  \n", a->name);
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string\n", a->name);
         return GRIB_SUCCESS;
     }
 

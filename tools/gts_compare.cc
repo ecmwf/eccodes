@@ -665,7 +665,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int i;
+                size_t i;
                 countdiff = 0;
                 for (i = 0; i < len1; i++)
                     if (lval1[i] != lval2[i])
@@ -726,7 +726,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 if (memcmp(uval1, uval2, len1) != 0) {
-                    int i;
+                    size_t i;
                     for (i = 0; i < len1; i++)
                         if (uval1[i] != uval2[i]) {
                             printInfo(h1);
@@ -735,7 +735,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                                 printf("[%s] byte values are different: [%02x] and [%02x]\n",
                                        name, uval1[i], uval2[i]);
                             else
-                                printf("[%s] byte value %d of %ld are different: [%02x] and [%02x]\n",
+                                printf("[%s] byte value %zu of %ld are different: [%02x] and [%02x]\n",
                                        name, i, (long)len1, uval1[i], uval2[i]);
 
                             err1 = GRIB_VALUE_MISMATCH;

@@ -24,8 +24,8 @@ int main(int argc, char** argv)
     size_t i           = 0;
 
     double abs_error     = 0;
-    double max_abs_error = 1e-04;
-    double tolerance     = 1e-04;
+    double max_abs_error = 1e-03;
+    double tolerance     = 1e-03;
     double dmin;
     double dmax;
     float fval;

@@ -1079,7 +1079,6 @@ void grib_multi_support_reset(grib_context* c);
 
 /* grib_header_compute.cc*/
 void print_math(grib_math* m);
-grib_math* grib_math_clone(grib_context* c, grib_math* m);
 void grib_math_delete(grib_context* c, grib_math* m);
 grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
 

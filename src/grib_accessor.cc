@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "grib_api_internal.h"
+#include "grib_accessor.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -233,7 +233,19 @@ int grib_unpack_float(grib_accessor* a, float* v, size_t* len)
         c = c->super ? *(c->super) : NULL;
     }
     DebugAssert(0);
-    return GRIB_NOT_IMPLEMENTED;
+    return 0;
+}
+
+template <> 
+int grib_unpack<double>(grib_accessor* a, double* v, size_t* len) 
+{
+    return grib_unpack_double(a, v, len);
+}
+
+template <> 
+int grib_unpack<float>(grib_accessor* a, float* v, size_t* len) 
+{
+    return grib_unpack_float(a, v, len);
 }
 
 int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)

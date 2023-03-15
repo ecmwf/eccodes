@@ -30,7 +30,7 @@ gfiles="$gfiles spherical_pressure_level.grib2" # spectral_complex, edition=2
 gfiles="$gfiles gfs.complex.mvmu.grib2" # grid_complex, edition=2, g22order_packing
 
 # Second Order
-#gfiles="$gfiles lfpw.grib1" # grid_second_order, edition=1
+gfiles="$gfiles lfpw.grib1" # grid_second_order, edition=1
 #gfiles="$gfiles " # grid_second_order, edition=2
 
 # CCSDS

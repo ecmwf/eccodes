@@ -42,6 +42,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -87,7 +88,7 @@ static grib_accessor_class _grib_accessor_class_data_apply_boustrophedonic = {
     &pack_double,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -180,14 +181,15 @@ static int value_count(grib_accessor* a, long* numberOfPoints)
     return ret;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+template <typename T> 
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
     size_t plSize                                  = 0;
     long* pl                                       = 0;
     double* values                                 = 0;
     double* pvalues                                = 0;
-    double* pval                                   = 0;
+    T* pval                                        = 0;
     size_t valuesSize                              = 0;
     long i, j;
     int ret;
@@ -272,6 +274,16 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_context_free(a->context, values);
 
     return GRIB_SUCCESS;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

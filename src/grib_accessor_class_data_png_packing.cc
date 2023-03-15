@@ -380,15 +380,15 @@ cleanup:
     return err;
 }
 
-static int is_constant(const double* values, size_t n_vals)
+static bool is_constant(const double* values, size_t n_vals)
 {
-    int isConstant = 1;
+    bool isConstant = true;
     double v = 0;
     size_t i;
     for (i = 0; i < n_vals; i++) {
         if (i == 0) v = values[i];
         else if (v != values[i]) {
-            isConstant = 0;
+            isConstant = false;
             break;
         }
     }
@@ -399,7 +399,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
 
-    int err = GRIB_SUCCESS, is_constant_field = 0;
+    int err = GRIB_SUCCESS;
+    bool is_constant_field = false;
     int i, j;
     size_t buflen = 0;
 

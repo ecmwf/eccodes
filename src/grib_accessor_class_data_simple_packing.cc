@@ -321,16 +321,20 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
-// unpack an array of double-precision (double) or single-precision (float) real numbers.
-// As doubles if dval!=NULL
-// As floats  if fval!=NULL
-static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len, unsigned char* buf, long pos, size_t n_vals)
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
     grib_handle* gh                         = grib_handle_of_accessor(a);
+    unsigned char* buf                      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
 
-    size_t i = 0;
-    int err  = 0;
+    size_t i      = 0;
+    int err       = 0;
+    size_t n_vals = 0;
+    long pos      = 0;
+    long count    = 0;
 
     double reference_value;
     long binary_scale_factor;
@@ -342,8 +346,10 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
     double units_factor = 1.0;
     double units_bias   = 0.0;
 
-    // Either decode as double or float: cannot have both!
-    Assert( ! (fval && dval) );
+    err = grib_value_count(a, &count);
+    if (err)
+        return err;
+    n_vals = count;
 
     if (*len < n_vals) {
         *len = (long)n_vals;
@@ -390,13 +396,8 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
     /* Special case */
 
     if (bits_per_value == 0) {
-        if (dval) {
-            for (i = 0; i < n_vals; i++)
-                dval[i] = reference_value;
-        } else if (fval) {
-            for (i = 0; i < n_vals; i++)
-                fval[i] = reference_value;
-        }
+        for (i = 0; i < n_vals; i++)
+            val[i] = reference_value;
         *len = n_vals;
         return GRIB_SUCCESS;
     }
@@ -441,40 +442,32 @@ static int _unpack_real(grib_accessor* a, double* dval, float* fval, size_t* len
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "unpack_double: calling outline function : bpv %d, rv : %g, sf : %d, dsf : %d ",
                      bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
-    if(dval)
-        grib_decode_array<double>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, dval);
-    if(fval)
-        grib_decode_array<float>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, fval);
+    grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
 
     *len = (long)n_vals;
 
-    if(dval) {
-        if (units_factor != 1.0) {
-            if (units_bias != 0.0)
-                for (i = 0; i < n_vals; i++)
-                    dval[i] = dval[i] * units_factor + units_bias;
-            else
-                for (i = 0; i < n_vals; i++)
-                    dval[i] *= units_factor;
-        }
-        else if (units_bias != 0.0)
+    if (units_factor != 1.0) {
+        if (units_bias != 0.0)
             for (i = 0; i < n_vals; i++)
-                dval[i] += units_bias;
-    }
-    if(fval) {
-        if (units_factor != 1.0) {
-            if (units_bias != 0.0)
-                for (i = 0; i < n_vals; i++)
-                    fval[i] = fval[i] * units_factor + units_bias;
-            else
-                for (i = 0; i < n_vals; i++)
-                    fval[i] *= units_factor;
-        }
-        else if (units_bias != 0.0)
+                val[i] = val[i] * units_factor + units_bias;
+        else
             for (i = 0; i < n_vals; i++)
-                fval[i] += units_bias;
+                val[i] *= units_factor;
     }
+    else if (units_bias != 0.0)
+        for (i = 0; i < n_vals; i++)
+            val[i] += units_bias;
     return err;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
@@ -622,38 +615,6 @@ static int unpack_double_subarray(grib_accessor* a, double* val, size_t start, s
     buf += (start * bits_per_value) / 8;
     pos = start * bits_per_value % 8;
     return _unpack_double(a, val, plen, buf, pos, nvals);
-}
-
-static int unpack_double(grib_accessor* a, double* dval, size_t* len)
-{
-    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    size_t nvals       = 0;
-    long pos           = 0;
-    int err            = 0;
-    long count         = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    nvals = count;
-
-    return _unpack_real(a, dval, NULL, len, buf, pos, nvals);
-}
-
-static int unpack_float(grib_accessor* a, float* fval, size_t* len)
-{
-    unsigned char* buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    size_t nvals       = 0;
-    long pos           = 0;
-    int err            = 0;
-    long count         = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    nvals = count;
-
-    return _unpack_real(a, NULL, fval, len, buf, pos, nvals);
 }
 
 #if GRIB_IBMPOWER67_OPT

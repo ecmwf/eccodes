@@ -8,11 +8,9 @@ template <typename T>
 int grib_get_array(const grib_handle* h, const char* name, T* val, size_t* length);
 
 template <typename T>
-int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length);
-
-template <typename T>
 int grib_get_array_internal(const grib_handle* h, const char* name, T* val, size_t* length)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int ret = grib_get_array<T>(h, name, val, length);
 
     if (ret != GRIB_SUCCESS)
