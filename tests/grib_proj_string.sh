@@ -45,7 +45,19 @@ for f in `echo $files`; do
     fi
 done
 
-# Various grids
+# Various grid types
+${tools_dir}/grib_get -p projString $grib2_sample > $tempText
+grep -q "proj=longlat" $tempText
+${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl > $tempText
+grep -q "proj=longlat" $tempText
+${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_gg_ml_grib1.tmpl > $tempText
+grep -q "proj=longlat" $tempText
+${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText
+grep -q "proj=longlat" $tempText
+${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl > $tempText
+grep -q "proj=longlat" $tempText
+
+
 ${tools_dir}/grib_set -s gridType=lambert_azimuthal_equal_area $grib2_sample $tempGrib
 ${tools_dir}/grib_get -p projString $tempGrib > $tempText
 grep -q "proj=laea" $tempText
