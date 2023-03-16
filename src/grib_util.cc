@@ -1184,11 +1184,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(Ni); /* same as Nx */
             COPY_SPEC_LONG(Nj); /* same as Ny */
 
-            /*
-             * Note: DxInMetres and DyInMetres
-             * should be 'double' and not integer. WMO GRIB2 uses millimetres!
-             * TODO: Add other keys like Latin1, LoV etc
-            */
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_LONG(uvRelativeToGrid);
+
+            // Note: DxInMetres and DyInMetres
+            // should be 'double' and not integer. WMO GRIB2 uses millimetres!
+            // TODO: Add other keys like Latin1, LoV etc
+
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
