@@ -80,7 +80,13 @@ RegularGrid::RegularGrid(const param::MIRParametrisation& param, const RegularGr
 
 RegularGrid::RegularGrid(const Projection& projection, const util::BoundingBox& bbox, const LinearSpacing& x,
                          const LinearSpacing& y, const util::Shape& shape) :
-    Gridded(bbox), x_(x), y_(y), shape_(shape), xPlus_(true), yPlus_(false), firstPointBottomLeft_(false) {
+    Gridded(bbox),
+    x_(x),
+    y_(y),
+    shape_(shape),
+    xPlus_(x.front() <= x.back()),
+    yPlus_(y.front() < y.back()),
+    firstPointBottomLeft_(false) {
     grid_ = {x_, y_, projection};
 
     if (!shape_.provided) {
@@ -120,6 +126,7 @@ RegularGrid::Projection::Spec RegularGrid::make_proj_spec(const param::MIRParame
 
 
 RegularGrid::LinearSpacing RegularGrid::linspace(double start, double step, long num, bool plus) {
+    ASSERT(step >= 0.);
     return {start, start + step * double(plus ? num - 1 : 1 - num), num};
 }
 
