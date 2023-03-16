@@ -294,7 +294,8 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     return err;
 }
 
-// This is for regular_ll, regular_gg, reduced_ll, reduced_gg
+#if 0
+// ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
 static int proj_unprojected(grib_handle* h, char* result)
 {
     int err = 0;
@@ -305,6 +306,7 @@ static int proj_unprojected(grib_handle* h, char* result)
     snprintf(result, 1024, "+proj=longlat %s", shape);
     return err;
 }
+#endif
 
 static int proj_mercator(grib_handle* h, char* result)
 {
@@ -323,10 +325,10 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    { "regular_ll", &proj_unprojected },
-    { "regular_gg", &proj_unprojected },
-    { "reduced_ll", &proj_unprojected },
-    { "reduced_gg", &proj_unprojected },
+    // { "regular_ll", &proj_unprojected },
+    // { "regular_gg", &proj_unprojected },
+    // { "reduced_ll", &proj_unprojected },
+    // { "reduced_gg", &proj_unprojected },
 
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
