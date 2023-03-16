@@ -12,6 +12,8 @@
 
 #include "mir/repres/regular/LambertAzimuthalEqualArea.h"
 
+#include <cmath>
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Exceptions.h"
@@ -100,8 +102,8 @@ const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const uti
         throw exception::UserError("LambertAzimuthalEqualArea::croppedRepresentation: cannot find first point");
     }(mm.first.i, mm.first.j);
 
-    auto x = linspace(first.x(), x_.step(), long(mm.second.i - mm.first.i + 1), xPlus_);
-    auto y = linspace(first.y(), y_.step(), long(mm.second.j - mm.first.j + 1), yPlus_);
+    auto x = linspace(first.x(), std::abs(x_.step()), long(mm.second.i - mm.first.i + 1), xPlus_);
+    auto y = linspace(first.y(), std::abs(y_.step()), long(mm.second.j - mm.first.j + 1), yPlus_);
 
     return new LambertAzimuthalEqualArea(projection, bbox, x, y, shape_);
 }
