@@ -236,14 +236,14 @@ int grib_unpack_float(grib_accessor* a, float* v, size_t* len)
     return 0;
 }
 
-template <> 
-int grib_unpack<double>(grib_accessor* a, double* v, size_t* len) 
+template <>
+int grib_unpack<double>(grib_accessor* a, double* v, size_t* len)
 {
     return grib_unpack_double(a, v, len);
 }
 
-template <> 
-int grib_unpack<float>(grib_accessor* a, float* v, size_t* len) 
+template <>
+int grib_unpack<float>(grib_accessor* a, float* v, size_t* len)
 {
     return grib_unpack_float(a, v, len);
 }

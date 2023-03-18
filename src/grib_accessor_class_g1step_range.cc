@@ -499,7 +499,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     size_t stepTypeLen = 20;
 
     if (self->stepType) {
-        ret = grib_get_string_internal(grib_handle_of_accessor(a), self->stepType, stepType, &stepTypeLen);
+        ret = grib_get_string_internal(h, self->stepType, stepType, &stepTypeLen);
         if (ret)
             return ret;
     }
@@ -578,11 +578,17 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         }
         off = p1_accessor->offset * 8;
         /* Note: here we assume the key P2 is one octet and immediately follows P1. Hence 16 bits */
-        if (h->context->debug)
-            fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
+
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
         if (ret != 0)
             return ret;
+
+        if (h->context->debug) {
+            long dp1,dp2;
+            grib_get_long(h, self->p1, &dp1);
+            grib_get_long(h, self->p2, &dp2);
+            fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
+        }
 
         if (ounit != unit)
             ret = grib_set_long_internal(h, self->unit, unit);
@@ -622,11 +628,16 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             /* Note:  case for timeRangeIndicator of 10
              * We assume the key P2 is one octet and immediately follows P1. Hence 16 bits
              */
-            if (h->context->debug)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
             ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
             if (ret != 0)
                 return ret;
+
+            if (h->context->debug) {
+                long dp1,dp2;
+                grib_get_long(h, self->p1, &dp1);
+                grib_get_long(h, self->p2, &dp2);
+                fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
+            }
 
             if (ounit != unit)
                 ret = grib_set_long_internal(h, self->unit, unit);

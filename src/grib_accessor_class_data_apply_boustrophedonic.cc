@@ -181,7 +181,7 @@ static int value_count(grib_accessor* a, long* numberOfPoints)
     return ret;
 }
 
-template <typename T> 
+template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;

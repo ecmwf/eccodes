@@ -232,7 +232,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
     int err = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
-    bool is_constant_field = false; 
+    bool is_constant_field = false;
 
     unsigned char* buf     = NULL;
     unsigned char* encoded = NULL;
