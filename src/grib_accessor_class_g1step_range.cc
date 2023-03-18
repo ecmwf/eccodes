@@ -643,6 +643,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
                 ret = grib_set_long_internal(h, self->unit, unit);
         }
 
+        if (ret == GRIB_WRONG_STEP) {
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                    "Failed to set %s=%s: Keys P1 and P2 are one octet each (Range 0 to 255)", a->name, val);
+        }
         return ret;
     }
 
