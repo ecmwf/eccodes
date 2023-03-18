@@ -1162,7 +1162,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(iScansNegatively);
             COPY_SPEC_LONG(jScansPositively);
 
-            // TODO: pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+            // TODO(masn): pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
             // COPY_SPEC_LONG(DxInMetres);
             // COPY_SPEC_LONG(DyInMetres);
             // COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
@@ -1174,7 +1174,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            /* TODO: Other keys */
+            /* TODO(masn): Other keys */
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1192,7 +1192,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
             // Note: DxInMetres and DyInMetres
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
-            // TODO: Add other keys like Latin1, LoV etc
+            // TODO(masn): Add other keys like Latin1, LoV etc
 
             break;
 

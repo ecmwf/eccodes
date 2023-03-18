@@ -529,7 +529,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    // TODO: This should be called upstream
+    // TODO(masn): This should be called upstream
     if (*len < n_vals)
         return GRIB_ARRAY_TOO_SMALL;
 
