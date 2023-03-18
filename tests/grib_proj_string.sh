@@ -46,7 +46,15 @@ for f in `echo $files`; do
 done
 
 # Various grid types
-# ECC-1552
+# ECC-1552: To be done later. Current behaviour is to return KeyNotFound
+set +e
+${tools_dir}/grib_get -p projString $grib2_sample > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key/value not found" $tempText
+rm -f $tempText
+
 # ${tools_dir}/grib_get -p projString $grib2_sample > $tempText
 # grep -q "proj=longlat +R=6367470" $tempText
 # ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl > $tempText
