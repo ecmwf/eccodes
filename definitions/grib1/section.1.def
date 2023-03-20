@@ -112,6 +112,10 @@ if( indicatorOfTypeOfLevel == 109 ||
 {
     alias mars.levelist = level;
 }
+if (indicatorOfTypeOfLevel == 117) {
+    # See ECC-1081
+    constant levelFactor = 6;
+}
 
 unsigned[1] yearOfCentury : edition_specific;
 unsigned[1] month;
@@ -132,8 +136,6 @@ unsigned[1] P2 : edition_specific;
 codetable[1] timeRangeIndicator ('5.table',tablesLocalDir,tablesMasterDir) = 1 : dump,edition_specific;
 
 unsigned[2] numberIncludedInAverage;
-
-meta mybits bits(numberIncludedInAverage,0,12);
 
 unsigned[1] numberMissingFromAveragesOrAccumulations;
 unsigned[1] centuryOfReferenceTimeOfData;

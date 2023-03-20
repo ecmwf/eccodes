@@ -22,7 +22,8 @@
 int main(int argc, char** argv)
 {
     int err           = 0;
-    double* values    = NULL;
+    float* fvalues    = NULL; /* data values as floats */
+    double* dvalues   = NULL; /* data values as doubles */
     size_t values_len = 0;
     size_t i = 0, len = 0;
 
@@ -37,7 +38,8 @@ int main(int argc, char** argv)
     long numberOfPointsAlongAParallel;
     long numberOfPointsAlongAMeridian;
 
-    double average    = 0;
+    double daverage    = 0;
+    float  faverage    = 0;
     char* packingType = NULL;
 
     FILE* in             = NULL;
@@ -104,20 +106,27 @@ int main(int argc, char** argv)
     /* get the size of the values array*/
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
-    values = (double*)malloc(values_len * sizeof(double));
+    fvalues = (float*)malloc(values_len * sizeof(float));
+    dvalues = (double*)malloc(values_len * sizeof(double));
 
     /* get data values*/
-    CODES_CHECK(codes_get_double_array(h, "values", values, &values_len), 0);
+    CODES_CHECK(codes_get_float_array(h, "values", fvalues, &values_len), 0);
+    CODES_CHECK(codes_get_double_array(h, "values", dvalues, &values_len), 0);
 
-    average = 0;
-    for (i = 0; i < values_len; i++)
-        average += values[i];
+    faverage = 0;
+    daverage = 0;
+    for (i = 0; i < values_len; i++) {
+        faverage += fvalues[i];
+        daverage += dvalues[i];
+    }
 
-    average /= (double)values_len;
+    faverage /= (float)values_len;
+    daverage /= (double)values_len;
 
-    free(values);
-
-    printf("There are %d values, average is %g\n", (int)values_len, average);
+    free(fvalues);
+    free(dvalues);
+    printf("There are %zu values, double average is %g\n", values_len, daverage);
+    printf("There are %zu values, float average is  %f\n", values_len, faverage);
 
     {
         int eq = 0;

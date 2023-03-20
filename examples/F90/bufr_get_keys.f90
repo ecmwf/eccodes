@@ -37,21 +37,21 @@ program bufr_get_keys
 
       ! We need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
-      call codes_set(ibufr, "unpack", 1); 
+      call codes_set(ibufr, "unpack", 1);
       ! Get as character
       call codes_get(ibufr, 'typicalDate', typicalDate)
       write (*, *) '  typicalDate:', typicalDate
 
       ! Get as integer
-      call codes_get(ibufr, 'blockNumber', blockNumber); 
+      call codes_get(ibufr, 'blockNumber', blockNumber);
       write (*, *) '  blockNumber:', blockNumber
 
       ! Get as integer
-      call codes_get(ibufr, 'stationNumber', stationNumber); 
+      call codes_get(ibufr, 'stationNumber', stationNumber);
       write (*, *) '  stationNumber:', stationNumber
 
       ! get as real
-      call codes_get(ibufr, 'airTemperatureAt2M', t2m); 
+      call codes_get(ibufr, 'airTemperatureAt2M', t2m);
       write (*, *) '  airTemperatureAt2M:', t2m
 
       ! ---- array of integer ----------------

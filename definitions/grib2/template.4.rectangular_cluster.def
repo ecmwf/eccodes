@@ -47,4 +47,3 @@ unsigned[1] scaleFactorOfDistanceFromEnsembleMean : dump ;
 #  Scaled value of distance of the cluster from ensemble mean
 unsigned[4] scaledValueOfDistanceFromEnsembleMean : dump ;
 
-

@@ -69,8 +69,8 @@ program operator_3_test
   ivalues = 0
   call codes_set(ibufr,'#1#scaledIasiRadiance',ivalues)
   call codes_set(ibufr,'#2#scaledIasiRadiance',ivalues)
-  deallocate(ivalues)  
-  
+  deallocate(ivalues)
+
   call codes_set(ibufr,'pack',1)
 
   call codes_open_file(outfile, outfile_name, 'w')

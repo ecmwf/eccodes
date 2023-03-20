@@ -2,8 +2,6 @@
 # and then edited to add the bitmap.
 # See ECC-869
 
-from __future__ import print_function
-
 import sys
 import traceback
 

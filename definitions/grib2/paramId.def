@@ -2453,13 +2453,32 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Total snowfall water equivalent
+#Potential evaporation rate
 '231004' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 53 ;
+	 parameterNumber = 143 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Potential evaporation
+'231005' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 143 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Tile fraction
+'231006' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	}
+#Tile percentage
+'231007' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
 	}
 #Mean temperature tendency due to short-wave radiation
 '235001' = {
@@ -3032,6 +3051,12 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 27 ;
+	}
+#Soil moisture
+'260368' = {
+	 discipline = 2 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
 	}
 #Accumulated surface downward short-wave radiation flux, clear sky
 '260423' = {
@@ -4873,6 +4898,18 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Significant height of wind waves
+'140234' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 5 ;
+	}
+#Mean period of wind waves
+'140236' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	}
 #Eastward sea water velocity
 '151131' = {
 	 discipline = 10 ;
@@ -4990,6 +5027,8 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Lake mix-layer temperature
 '228008' = {
@@ -5022,6 +5061,8 @@
 	 parameterNumber = 1 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 162 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Lake shape factor
 '228012' = {
@@ -5044,6 +5085,10 @@
 	 parameterNumber = 5 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #100 metre U wind component
 '228246' = {
@@ -5554,12 +5599,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 40 ;
 	}
-#Potential evaporation rate
-'260037' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 41 ;
-	}
 #Snow cover
 '260038' = {
 	 discipline = 0 ;
@@ -5777,12 +5816,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
-	}
-#Geometric height
-'260075' = {
-	 discipline = 0 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 6 ;
 	}
 #Altimeter setting
 '260076' = {
@@ -6389,12 +6422,6 @@
 	 discipline = 1 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
-	}
-#Land cover (1=land, 0=sea)
-'260179' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 0 ;
 	}
 #Vegetation
 '260180' = {
@@ -7019,18 +7046,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 16 ;
-	}
-#Significant height of wind waves
-'3102' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
-	}
-#Mean period of wind waves
-'3103' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 6 ;
 	}
 #Direction of swell waves
 '3104' = {

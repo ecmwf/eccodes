@@ -10,21 +10,12 @@
 #
 
 list( APPEND ecc_tools_sources
-             grib_tools.c
-             grib_options.c
+             grib_tools.cc
+             grib_options.cc
              grib_tools.h )
 
 if( EC_OS_NAME MATCHES "windows" )
-  list( APPEND ecc_tools_sources wingetopt.c )
-endif()
-
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    foreach( _src ${ecc_tools_sources} )
-        get_filename_component( _ext ${_src} EXT )
-        if( _ext STREQUAL ".c" )
-            set_source_files_properties(${_src} PROPERTIES LANGUAGE CXX)
-        endif()
-    endforeach()
+  list( APPEND ecc_tools_sources wingetopt.cc )
 endif()
 
 # tools library
@@ -57,54 +48,46 @@ list( APPEND ecc_tools_binaries_extra
 # Install generic tools
 foreach( tool ${ecc_tools_binaries} )
     # here we use the fact that each tool has only one C file that matches its name
-    if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-        set_source_files_properties(${tool}.c PROPERTIES LANGUAGE CXX)
-    endif()
     ecbuild_add_executable( TARGET     ${tool}
-                            SOURCES    ${tool}.c
+                            SOURCES    ${tool}.cc
                             LIBS       ecc_tools )
 endforeach()
 
 # Install extra tools
 # User must run cmake with -DECCODES_INSTALL_EXTRA_TOOLS=ON
 foreach( tool ${ecc_tools_binaries_extra} )
-    if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-        set_source_files_properties(${tool}.c PROPERTIES LANGUAGE CXX)
-    endif()
     ecbuild_add_executable( TARGET     ${tool}
-                            SOURCES    ${tool}.c
+                            SOURCES    ${tool}.cc
                             CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                             LIBS       ecc_tools )
 endforeach()
 
+
 # grib_count/bufr_count etc. Same source code, different executable names
 ecbuild_add_executable( TARGET     grib_count
-                        SOURCES    codes_count.c
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     bufr_count
-                        SOURCES    codes_count.c
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 ecbuild_add_executable( TARGET     gts_count
-                        SOURCES    codes_count.c
+                        SOURCES    codes_count.cc
                         LIBS       ecc_tools )
 
 # grib to netcdf is optional
 ecbuild_add_executable( TARGET     grib_to_netcdf
-                        SOURCES    grib_to_netcdf.c
+                        SOURCES    grib_to_netcdf.cc
                         CONDITION  HAVE_NETCDF
                         LIBS       ecc_tools NetCDF::NetCDF_C )
 
 
 ecbuild_add_executable( TARGET     grib_list_keys
-                        SOURCES    list_keys.c
+                        SOURCES    list_keys.cc
                         CONDITION  ECCODES_INSTALL_EXTRA_TOOLS
                         LIBS       ecc_tools )
 
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    set_source_files_properties(bufr_filter.c PROPERTIES LANGUAGE CXX)
-endif()
 ecbuild_add_executable( TARGET     codes_bufr_filter
-                        SOURCES    bufr_filter.c
+                        SOURCES    bufr_filter.cc
                         LIBS       ecc_tools )
 
 

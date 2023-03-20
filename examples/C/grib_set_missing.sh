@@ -15,9 +15,11 @@ tempGrib="out_surface_level.grib2"
 ${examples_dir}/c_grib_set_missing
 
 # Check the keys have been set to MISSING
-sf=`${tools_dir}/grib_get -p scaleFactorOfFirstFixedSurface $tempGrib`
-[ "$sf" = "MISSING" ]
-sf=`${tools_dir}/grib_get -p scaledValueOfFirstFixedSurface $tempGrib`
-[ "$sf" = "MISSING" ]
+if [ -f "${tools_dir}/grib_get" ]; then
+    sf=`${tools_dir}/grib_get -p scaleFactorOfFirstFixedSurface $tempGrib`
+    [ "$sf" = "MISSING" ]
+    sf=`${tools_dir}/grib_get -p scaledValueOfFirstFixedSurface $tempGrib`
+    [ "$sf" = "MISSING" ]
+fi
 
 rm -f $tempGrib

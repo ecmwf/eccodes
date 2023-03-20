@@ -40,8 +40,8 @@ program grib_get_keys
    LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
 
       ! check if the value of the key is MISSING
-      is_missing = 0; 
-      call codes_is_missing(igrib, 'Ni', is_missing); 
+      is_missing = 0;
+      call codes_is_missing(igrib, 'Ni', is_missing);
       if (is_missing /= 1) then
          ! key value is not missing so get as an integer
          call codes_get(igrib, 'Ni', numberOfPointsAlongAParallel)

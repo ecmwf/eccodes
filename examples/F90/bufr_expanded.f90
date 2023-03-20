@@ -34,7 +34,7 @@ program bufr_expanded
 
       ! We need to instruct ecCodes to expand all the descriptors
       ! i.e. unpack the data values
-      call codes_set(ibufr, "unpack", 1); 
+      call codes_set(ibufr, "unpack", 1);
       ! Get the expanded data values
       call codes_get(ibufr, 'numericValues', values)
 
