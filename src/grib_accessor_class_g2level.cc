@@ -81,7 +81,9 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -97,7 +99,9 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -117,6 +121,8 @@ static void init_class(grib_accessor_class* c)
     c->get_native_type    =    (*(c->super))->get_native_type;
     c->sub_section    =    (*(c->super))->sub_section;
     c->pack_missing    =    (*(c->super))->pack_missing;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -132,7 +138,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -143,12 +151,13 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
+    grib_handle* hand           = grib_handle_of_accessor(a);
     int n                       = 0;
 
-    self->type_first     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->scale_first    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->value_first    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->pressure_units = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->type_first     = grib_arguments_get_name(hand, c, n++);
+    self->scale_first    = grib_arguments_get_name(hand, c, n++);
+    self->value_first    = grib_arguments_get_name(hand, c, n++);
+    self->pressure_units = grib_arguments_get_name(hand, c, n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -160,6 +169,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     int ret                     = 0;
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
+    grib_handle* hand           = grib_handle_of_accessor(a);
 
     long type_first         = 0;
     long scale_first        = 0;
@@ -169,13 +179,13 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     double v;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->type_first, &type_first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->type_first, &type_first)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->scale_first, &scale_first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->scale_first, &scale_first)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->value_first, &value_first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->value_first, &value_first)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_string_internal(grib_handle_of_accessor(a), self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
 
     if (value_first == GRIB_MISSING_LONG) {
@@ -213,7 +223,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
                     // Switch to Pa instead of hPa as the value is less than a hectoPascal
                     char pa[]  = "Pa";
                     size_t lpa = strlen(pa);
-                    if ((ret = grib_set_string_internal(grib_handle_of_accessor(a), self->pressure_units, pa, &lpa)) != GRIB_SUCCESS)
+                    if ((ret = grib_set_string_internal(hand, self->pressure_units, pa, &lpa)) != GRIB_SUCCESS)
                         return ret;
                 }
                 else {
@@ -241,6 +251,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
+    grib_handle* hand           = grib_handle_of_accessor(a);
     int ret                     = 0;
     double value_first          = *val;
     long scale_first            = 0;
@@ -251,10 +262,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->type_first, &type_first)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->type_first, &type_first)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_string_internal(grib_handle_of_accessor(a), self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
 
     switch (type_first) {
@@ -277,9 +288,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     value_first = value_first + 0.5; /* round up */
 
     if (type_first > 9) {
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->scale_first, scale_first)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(hand, self->scale_first, scale_first)) != GRIB_SUCCESS)
             return ret;
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->value_first, (long)value_first)) != GRIB_SUCCESS)
+        if ((ret = grib_set_long_internal(hand, self->value_first, (long)value_first)) != GRIB_SUCCESS)
             return ret;
     }
 
@@ -363,10 +374,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 static int is_missing(grib_accessor* a)
 {
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
+    grib_handle* hand           = grib_handle_of_accessor(a);
     int err                     = 0;
     int ret                     = 0;
 
-    ret = grib_is_missing(grib_handle_of_accessor(a), self->scale_first, &err) +
-          grib_is_missing(grib_handle_of_accessor(a), self->value_first, &err);
+    ret = grib_is_missing(hand, self->scale_first, &err) +
+          grib_is_missing(hand, self->value_first, &err);
     return ret;
 }

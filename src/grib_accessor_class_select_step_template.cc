@@ -8,12 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
+
 /*
    This is used by make_class.pl
 
@@ -81,7 +77,9 @@ static grib_accessor_class _grib_accessor_class_select_step_template = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -97,7 +95,9 @@ static grib_accessor_class _grib_accessor_class_select_step_template = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -119,7 +119,9 @@ static void init_class(grib_accessor_class* c)
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -135,7 +137,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -146,10 +150,11 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
-    int n                                    = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
-    self->productDefinitionTemplateNumber = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->instant                         = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
+    self->productDefinitionTemplateNumber = grib_arguments_get_name(hand, c, n++);
+    self->instant                         = grib_arguments_get_long(hand, c, n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -161,13 +166,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_select_step_template* self = (grib_accessor_select_step_template*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     long productDefinitionTemplateNumber     = 0;
     long productDefinitionTemplateNumberNew  = 0;
 
-    grib_get_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
+    grib_get_long(hand, self->productDefinitionTemplateNumber, &productDefinitionTemplateNumber);
 
+    // DET = deterministic i.e., not ensemble
+    // ENS = ensemble system
     if (self->instant) {
-        /* Going from continuous or non-continuous interval to a point-in-time (instantaneous) */
+        // Going from continuous or non-continuous interval to a point-in-time (instantaneous)
         switch (productDefinitionTemplateNumber) {
             case 8:
                 productDefinitionTemplateNumberNew = 0;
@@ -190,28 +198,28 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             case 14:
                 productDefinitionTemplateNumberNew = 4;
                 break;
-            case 42: /* non-EPS chemical */
+            case 42: // DET chemical
                 productDefinitionTemplateNumberNew = 40;
                 break;
-            case 43: /* EPS chemical */
+            case 43: // ENS chemical
                 productDefinitionTemplateNumberNew = 41;
                 break;
-            case 46:                                     /* non-EPS aerosol */
-                productDefinitionTemplateNumberNew = 48; /*44 is deprecated*/
+            case 46:                                     // DET aerosol
+                productDefinitionTemplateNumberNew = 48; // 44 is deprecated
                 break;
-            case 47: /* EPS aerosol */
+            case 47: // ENS aerosol
                 productDefinitionTemplateNumberNew = 45;
                 break;
-            case 67: /* non-EPS chemical distrib func */
+            case 67: // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 57;
                 break;
-            case 68: /* EPS chemical distrib func */
+            case 68: // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 58;
                 break;
-            case 72: /* non-EPS post-processing */
+            case 72: // DET post-processing
                 productDefinitionTemplateNumberNew = 70;
                 break;
-            case 73: /* EPS post-processing */
+            case 73: // ENS post-processing */
                 productDefinitionTemplateNumberNew = 71;
                 break;
             case 0:
@@ -231,7 +239,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
     else {
-        /* Going from point-in-time (instantaneous) to continuous or non-continuous interval */
+        // Going from point-in-time (instantaneous) to continuous or non-continuous interval
         switch (productDefinitionTemplateNumber) {
             case 0:
                 productDefinitionTemplateNumberNew = 8;
@@ -254,29 +262,25 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             case 6:
                 productDefinitionTemplateNumberNew = 10;
                 break;
-            case 40: /* non-EPS chemical */
+            case 40: // DET chemical
                 productDefinitionTemplateNumberNew = 42;
                 break;
-            case 41: /* EPS chemical */
+            case 41: // ENS chemical
                 productDefinitionTemplateNumberNew = 43;
                 break;
-            case 48: /* non-EPS aerosol. Note template 44 is deprecated */
-                productDefinitionTemplateNumberNew = 46;
+            case 45: // ENS aerosol
+                productDefinitionTemplateNumberNew = 85; // 47 is  deprecated
                 break;
-            case 45: /* EPS aerosol */
-                /*productDefinitionTemplateNumberNew = 47;   PDT deprecated */
-                productDefinitionTemplateNumberNew = 85;
-                break;
-            case 57: /* non-EPS chemical distrib func */
+            case 57: // DET chemical distrib func
                 productDefinitionTemplateNumberNew = 67;
                 break;
-            case 58: /* EPS chemical distrib func */
+            case 58: // ENS chemical distrib func
                 productDefinitionTemplateNumberNew = 68;
                 break;
-            case 70: /* non-EPS post-processing */
+            case 70: // DET post-processing
                 productDefinitionTemplateNumberNew = 72;
                 break;
-            case 71: /* EPS post-processing */
+            case 71: // ENS post-processing
                 productDefinitionTemplateNumberNew = 73;
                 break;
             case 7:
@@ -295,10 +299,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         }
     }
 
-    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew)
-        grib_set_long(grib_handle_of_accessor(a), self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+    if (productDefinitionTemplateNumber != productDefinitionTemplateNumberNew) {
+        grib_set_long(hand, self->productDefinitionTemplateNumber, productDefinitionTemplateNumberNew);
+    }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 static int value_count(grib_accessor* a, long* c)

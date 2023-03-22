@@ -2453,6 +2453,33 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Potential evaporation rate
+'Potential evaporation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 143 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Potential evaporation
+'Potential evaporation' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 143 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Tile fraction
+'Tile fraction' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 36 ;
+	}
+#Tile percentage
+'Tile percentage' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 'Mean temperature tendency due to short-wave radiation' = {
 	 discipline = 0 ;
@@ -5571,12 +5598,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 40 ;
-	}
-#Potential evaporation rate
-'Potential evaporation rate' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 41 ;
 	}
 #Snow cover
 'Snow cover' = {

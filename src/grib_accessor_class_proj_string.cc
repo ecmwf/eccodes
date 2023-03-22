@@ -71,7 +71,9 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
     0,                  /* grib_pack procedures long */
     0,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -87,7 +89,9 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -111,7 +115,9 @@ static void init_class(grib_accessor_class* c)
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
@@ -126,7 +132,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -151,17 +159,17 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_STRING;
 }
 
-/* Function pointer than takes a handle and returns the proj string */
+// Function pointer than takes a handle and returns the proj string
 typedef int (*proj_func)(grib_handle*, char*);
 struct proj_mapping
 {
-    const char* gridType; /* key gridType */
-    proj_func func;       /* function to compute proj string */
+    const char* gridType; // key gridType
+    proj_func func;       // function to compute proj string
 };
 typedef struct proj_mapping proj_mapping;
 
 
-/* This should only be called for GRID POINT data (not spherical harmonics etc) */
+// This should only be called for GRID POINT data (not spherical harmonics etc)
 static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 {
     int err = 0;
@@ -177,7 +185,7 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
     return err;
 }
 
-/* Caller must have allocated enough space in the 'result' argument */
+// Caller must have allocated enough space in the 'result' argument
 static int get_earth_shape(grib_handle* h, char* result)
 {
     int err      = 0;
@@ -185,22 +193,11 @@ static int get_earth_shape(grib_handle* h, char* result)
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
     if (major == minor)
-        snprintf(result, 128, "+R=%lf", major); /* spherical */
+        snprintf(result, 128, "+R=%lf", major); // spherical
     else
-        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); /*oblate*/
+        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); // oblate
     return err;
 }
-#if 0
-static int proj_regular_latlon(grib_handle* h, char* result)
-{
-    int err        = 0;
-    char shape[64] = {0,};
-    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
-        return err;
-    snprintf(result, 128, "+proj=latlong %s", shape);
-    return err;
-}
-#endif
 
 static int proj_space_view(grib_handle* h, char* result)
 {
@@ -297,6 +294,20 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     return err;
 }
 
+#if 0
+// ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
+static int proj_unprojected(grib_handle* h, char* result)
+{
+    int err = 0;
+    char shape[64] = {0,};
+    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+        return err;
+
+    snprintf(result, 1024, "+proj=longlat %s", shape);
+    return err;
+}
+#endif
+
 static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
@@ -314,7 +325,10 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    /*{ "regular_ll", &proj_regular_latlon },*/
+    // { "regular_ll", &proj_unprojected },
+    // { "regular_gg", &proj_unprojected },
+    // { "reduced_ll", &proj_unprojected },
+    // { "reduced_gg", &proj_unprojected },
 
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
@@ -350,7 +364,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
                 snprintf(v, 64, "EPSG:4326");
             }
             else {
-                /* Invoke the appropriate function to get the target proj string */
+                // Invoke the appropriate function to get the target proj string
                 if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
             }
         }

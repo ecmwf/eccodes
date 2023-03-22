@@ -93,7 +93,9 @@ static grib_accessor_class _grib_accessor_class_missing = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -109,7 +111,9 @@ static grib_accessor_class _grib_accessor_class_missing = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
