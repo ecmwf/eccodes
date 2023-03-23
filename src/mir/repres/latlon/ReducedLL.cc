@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cmath>
 #include <ostream>
+#include <sstream>
 
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
@@ -330,6 +331,13 @@ std::vector<util::GridBox> ReducedLL::gridBoxes() const {
 
     ASSERT(r.size() == numberOfPoints());
     return r;
+}
+
+
+const Representation* mir::repres::latlon::ReducedLL::croppedRepresentation(const util::BoundingBox&) const {
+    std::ostringstream os;
+    os << "ReducedLL::croppedRepresentation() not supported for " << *this;
+    throw exception::FunctionalityNotSupported(os.str());
 }
 
 
