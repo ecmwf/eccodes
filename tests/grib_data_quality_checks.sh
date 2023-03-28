@@ -200,13 +200,26 @@ unset ECCODES_EXTRA_DEFINITION_PATH
 
 # Check CCSDS encoding too
 # -------------------------
+if [ $HAVE_AEC -eq 1 ]; then
+   export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+   set +e
+   ${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
+   status=$?
+   set -e
+   [ $status -ne 0 ]
+fi
+
+# Invalid shortName
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+input2=${data_dir}/reduced_gaussian_surface.grib2
+${tools_dir}/grib_set -s discipline=254 $input2 $tempOut
+grib_check_key_equals $tempOut 'shortName' 'unknown'
 set +e
-${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
+${tools_dir}/grib_set -s scaleValuesBy=2  $tempOut $tempGrib2 2>$tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
-
+grep -q "Invalid metadata: shortName=unknown" $tempErr
 
 # Clean up
 rm -rf $tempDir
