@@ -16,7 +16,6 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <stdarg.h>
 #include <sys/stat.h>
 
@@ -64,16 +63,6 @@ static void error(const char* filename, int msg_num, const char* fmt, ...)
     }
 }
 
-static double get_precision(long edition)
-{
-    if (edition == 1)
-        return 1.0 / 1000.0; /* milli degrees */
-    if (edition == 2)
-        return 1.0 / 1000000.0; /* micro degrees */
-    assert(!"Invalid edition");
-    return 0.0;
-}
-
 static int process_file(const char* filename)
 {
     int err = 0, msg_num = 0;
@@ -97,7 +86,7 @@ static int process_file(const char* filename)
 
     while ((h = grib_handle_new_from_file(0, in, &err)) != NULL) {
         int is_reduced_gaussian = 0, is_regular_gaussian = 0, grid_ok = 0;
-        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, numberOfValues;
+        long edition = 0, N = 0, Nj = 0, numberOfDataPoints, numberOfValues, angleSubdivisions;
         size_t len = 0, sizeOfValuesArray = 0;
         double* lats       = NULL;
         long* pl           = NULL;
@@ -134,7 +123,10 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_double(h, "latitudeOfLastGridPointInDegrees", &lat2), 0);
         GRIB_CHECK(grib_get_double(h, "longitudeOfLastGridPointInDegrees", &lon2), 0);
 
-        angular_tolerance = get_precision(edition);
+        GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
+        Assert(angleSubdivisions > 0);
+        angular_tolerance = 1.0/angleSubdivisions;
+        printf(" angular_tolerance=%g\n",angular_tolerance);
 
         if (N <= 0) {
             error(filename, msg_num, "N should be > 0\n", N);
@@ -174,9 +166,9 @@ static int process_file(const char* filename)
             long iDirectionIncrementGiven = 0;
 
             is_missing_Ni      = grib_is_missing(h, "Ni", &err);
-            assert(err == GRIB_SUCCESS);
+            Assert(err == GRIB_SUCCESS);
             is_missing_Di = grib_is_missing(h, "iDirectionIncrement", &err);
-            assert(err == GRIB_SUCCESS);
+            Assert(err == GRIB_SUCCESS);
             GRIB_CHECK(grib_get_long(h, "iDirectionIncrementGiven", &iDirectionIncrementGiven), 0);
             if (iDirectionIncrementGiven) {
                 error(filename, msg_num, "For a reduced grid, iDirectionIncrementGiven should be 0\n");
@@ -189,12 +181,12 @@ static int process_file(const char* filename)
             }
 
             GRIB_CHECK(grib_get_size(h, "pl", &pl_len), 0);
-            assert(pl_len > 0);
+            Assert(pl_len > 0);
             if (pl_len != (size_t)(2 * N)) {
                 error(filename, msg_num, "Length of pl array is %ld but should be 2*N (%ld)\n", pl_len, 2 * N);
             }
             pl = (long*)malloc(pl_len * sizeof(long));
-            assert(pl);
+            Assert(pl);
             GRIB_CHECK(grib_get_long_array(h, "pl", pl, &pl_len), 0);
             max_pl = pl[0];
 
