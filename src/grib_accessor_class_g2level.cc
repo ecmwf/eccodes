@@ -258,6 +258,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long type_first             = 0;
     char pressure_units[10]     = {0,};
     size_t pressure_units_len = 10;
+    long lval        = (long)value_first;
+
+    //printf("pack_double::  received %g\n", *val);
+    if (value_first == lval) {
+        //printf(" .... use pack_long for %g\n", value_first);
+        return pack_long(a, &lval, len);
+    }
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;

@@ -162,7 +162,13 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
-    switch (grib_accessor_get_native_type(ga)) {
+    long ga_type = grib_accessor_get_native_type(ga);
+    if (STR_EQUAL(name,"level")) {
+        //printf("..... loader_from_file: switch type to DOUBLE\n");
+        ga_type = GRIB_TYPE_DOUBLE;
+    }
+
+    switch (ga_type) {
         case GRIB_TYPE_STRING:
 
             /*ecc__grib_get_string_length(ga,&len);  See ECC-490 */
