@@ -36,6 +36,8 @@
           scaledValueOfFirstFixedSurface=0; typeOfSecondFixedSurface=255;}
 'o2d'  = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=160;}
 'o2d'  = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=9;}
+'o2d'  = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=20;
+          scaledValueOfFirstFixedSurface=0; scaleFactorOfFirstFixedSurface=0;}
 'sfc'  = {typeOfFirstFixedSurface=162; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=166; typeOfSecondFixedSurface=255;}
 'o3d'  = {typeOfFirstFixedSurface=168; typeOfSecondFixedSurface=255;}
@@ -49,7 +51,11 @@
 'sfc'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=255; discipline=1;}
 'o2d'  = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=255;}
 'o2d'  = {typeOfFirstFixedSurface=176; typeOfSecondFixedSurface=255;}
+'o2d'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=160;
+          scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=0;}
 'o2d'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=176;}
 'sfc'  = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=176; discipline=1;}
 'o2d'  = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176;}
 'sfc'  = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
+'o2d'  = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=189;}
+
