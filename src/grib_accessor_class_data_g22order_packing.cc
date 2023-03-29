@@ -327,11 +327,9 @@ static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
 
     mn = mx = data[first];
 
-#pragma omp parallel private(min_val, max_val)
-{
+    {
         min_val = max_val = data[first];
 
-#pragma omp for private(i) schedule(static) nowait
         for (i = first + 1; i < n; i++) {
             if (data[i] != INT_MAX) {
                 min_val = (min_val > data[i]) ? data[i] : min_val;
@@ -339,7 +337,6 @@ static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
             }
         }
 
-#pragma omp critical
         {
             if (min_val < mn) mn = min_val;
             if (max_val > mx) mx = max_val;
@@ -393,19 +390,16 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
 
     mn = mx = data[first];
 
-#pragma omp parallel private(min_val, max_val)
     {
         min_val = max_val = data[first];
 
-#pragma omp for private(i) schedule(static) nowait
         for (i = first + 1; i < n; i++) {
             if (DEFINED_VAL(data[i])) {
                 min_val = (min_val > data[i]) ? data[i] : min_val;
                 max_val = (max_val < data[i]) ? data[i] : max_val;
+            }
         }
-    }
 
-#pragma omp critical
         {
             if (min_val < mn) mn = min_val;
             if (max_val > mx) mx = max_val;
@@ -1076,7 +1070,7 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
             s = t;
             continue;
         }
-        //	    if (val0 == INT_MAX || val1 == INT_MAX) { s=t; continue; }
+        //if (val0 == INT_MAX || val1 == INT_MAX) { s=t; continue; }
 
         if (nbit_s < nbit_t && val1 == INT_MAX) {
             if ((s->i1 - s->i0) < LEN_SEC_MAX && s->mx != s->mn)
@@ -1095,7 +1089,7 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
             continue;
         }
 
-        //	    if (s->missing == 1 || t->missing == 1) { s=t; continue; }
+        //if (s->missing == 1 || t->missing == 1) { s=t; continue; }
 
         // 3/2014   val0 = v[s->i1];
         // 3/2014   val1 = v[t->i0];
@@ -1425,13 +1419,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             min_val *= dec_factor;
             max_val *= dec_factor;
             if (has_undef) {
-#pragma omp parallel for private(i)
                 for (i = 0; i < nndata; i++) {
                     if (DEFINED_VAL(data[i])) data[i] *= dec_factor;
                 }
             }
             else {
-#pragma omp parallel for private(i)
                 for (i = 0; i < nndata; i++) {
                     data[i] *= dec_factor;
                 }
@@ -1451,7 +1443,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (binary_scale) {
         scale = ldexp(1.0, -binary_scale);
         if (has_undef) {
-#pragma omp parallel for private(i)
             for (i = 0; i < nndata; i++) {
                 if (DEFINED_VAL(data[i])) {
                     v[i] = floor((data[i] - ref) * scale + 0.5);
@@ -1462,7 +1453,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
         else {
-#pragma omp parallel for private(i)
             for (i = 0; i < nndata; i++) {
                 v[i] = floor((data[i] - ref) * scale + 0.5);
                 v[i] = v[i] >= 0 ? v[i] : 0;
@@ -1472,7 +1462,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     else {
         scale = 1.0;
         if (has_undef) {
-#pragma omp parallel for private(i)
             for (i = 0; i < nndata; i++) {
                 if (DEFINED_VAL(data[i])) {
                     v[i] = floor(data[i] - ref + 0.5);
@@ -1483,7 +1472,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
         else {
-#pragma omp parallel for private(i)
             for (i = 0; i < nndata; i++) {
                 v[i] = floor(data[i] - ref + 0.5);
                 v[i] = v[i] >= 0 ? v[i] : 0;
@@ -1564,7 +1552,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
            find_nbits(vmx - vmn + has_undef));
 #endif
 
-#pragma omp parallel for private(i)
     for (i = 0; i < nndata; i++) {
         v[i] = (v[i] != INT_MAX) ? v[i] - vmn : INT_MAX;
     }
@@ -1614,7 +1601,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (nstruct != ii + 1)
         grib_context_log(a->context, GRIB_LOG_ERROR, "complex_pk, nstruct=%d wanted %d", nstruct, ii + 1);
 
-#pragma omp parallel for private(k)
     for (i = 1; i < nstruct; i++) {
         list[i].head     = &list[i - 1];
         list[i - 1].tail = &list[i];
@@ -1732,7 +1718,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (i != nndata) 
         grib_context_log(a->context, GRIB_LOG_ERROR, "complex grib_out: program error 2");
 
-#pragma omp parallel for private(i)
     for (i = 0; i < ngroups; i++) {
         if (refs[i] == INT_MAX)
             widths[i] = 0;
@@ -1749,7 +1734,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     gwidmx = gwidmn = widths[0];
     grefmx          = refs[0] != INT_MAX ? refs[0] : 0;
 
-#pragma omp parallel private(i)
     {
         int glenmn_thread, glenmx_thread, gwidmx_thread, gwidmn_thread,
             grefmx_thread;
@@ -1757,7 +1741,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         gwidmn_thread = gwidmx_thread = widths[0];
         grefmx_thread                 = refs[0] != INT_MAX ? refs[0] : 0;
 
-#pragma omp for nowait
         for (i = 1; i < ngroups; i++) {
             glenmx_thread = glenmx_thread >= lens[i] ? glenmx_thread : lens[i];
             glenmn_thread = glenmn_thread <= lens[i] ? glenmn_thread : lens[i];
@@ -1768,7 +1751,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             if (refs[i] != INT_MAX && refs[i] > grefmx_thread)
                 grefmx_thread = refs[i];
         }
-#pragma omp critical
         {
             glenmx = glenmx >= glenmx_thread ? glenmx : glenmx_thread;
             glenmn = glenmn <= glenmn_thread ? glenmn : glenmn_thread;
@@ -1841,11 +1823,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_sec7 += (ngroups * sec5_46 + 7) / 8;
 
     k = 0;
-#pragma omp parallel private(i, j)
     {
         j = 0;
-#pragma omp for reduction(+ \
-                          : size_sec7)
         for (i = 0; i < ngroups; i++) {
             j += lens[i] * widths[i];
             size_sec7 += (j >> 3);
@@ -1854,7 +1833,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             itmp[i]  = widths[i] - gwidmn;
             itmp2[i] = lens[i] - glenmn;
         }
-#pragma omp atomic
         k += j;
     }
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
@@ -1899,7 +1877,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         itmp[i] = s->i0;
         refs[i] = s->mn;
     }
-#pragma omp parallel for private(i, j)
+
     for (i = 0; i < ngroups; i++) {
         if (widths[i]) {
             for (j = 0; j < lens[i]; j++) {
@@ -1926,6 +1904,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     free(widths);
     free(refs);
     free(itmp);
+    free(itmp2);
 
     /* ECC-259: Set correct number of values */
     if ((err = grib_set_long_internal(gh, self->numberOfValues, *len)) != GRIB_SUCCESS)
