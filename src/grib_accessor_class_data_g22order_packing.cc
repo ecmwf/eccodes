@@ -682,7 +682,9 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
         if (i == numberOfGroupsOfDataValues - 1)
             nvals_per_group = trueLengthOfLastGroup;
-        Assert(n_vals >= vcount + nvals_per_group);
+        if (n_vals < vcount + nvals_per_group) {
+            return GRIB_DECODING_ERROR;
+        }
 
         /*grib_decode_long_array(buf_vals, &vals_p, nbits_per_group_val, nvals_per_group,
                                &sec_val[vcount]); */
@@ -782,7 +784,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             val[i] = missingValue;
         }
         else {
-            val[i] = (double)((((double)sec_val[i]) * binary_s) + reference_value) * decimal_s;
+            val[i] = (T)((((T)sec_val[i]) * binary_s) + reference_value) * decimal_s;
         }
     }
 
@@ -1213,10 +1215,8 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
     }
 }
 
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    /*long size_sec7_header;*/
     unsigned char* sec7;
     long sec5_19, sec5_36, sec5_46, sec5_48;
     grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
@@ -1231,14 +1231,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     // unsigned char* buf        = NULL;
     // unsigned char* buf_ref    = NULL;
     //unsigned char* buf_length = NULL;
-
     // double d       = 0;
     //double divisor = 0;
 
     long bits_per_value = 0;
 
     //double reference_value = 0;
-
     //long nvals_per_group     = 0;
     //long nbits_per_group_val = 0;
 
@@ -1274,7 +1272,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     double max_val, min_val, ref, frange, dec_factor, scale;
     double mn, mx;
     struct section start, *list, *list_backup, *s;
-    /*Grouip*/
+    /*Group*/
     int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last;
     int size_sec7;
     int *refs, *lens, *widths, *itmp, *itmp2;
