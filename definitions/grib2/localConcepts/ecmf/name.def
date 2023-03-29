@@ -17069,12 +17069,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 148 ;
 	}
-#Bottom Pressure (equivalent height)
-'Bottom Pressure (equivalent height)' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 149 ;
-	}
 #Steric height
 'Steric height' = {
 	 discipline = 192 ;

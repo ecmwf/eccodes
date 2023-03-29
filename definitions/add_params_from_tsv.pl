@@ -109,48 +109,53 @@ if ($SANITY_CHECK) {
     print "Checking sanity: uniqueness of paramId and shortName keys ...\n";
     while (<>) {
         chomp;
+        $lcount++;
         s/\r//g;  # Remove DOS carriage returns
         if ($first == 1) {
             $first = 0;
             next;
         }
-        $lcount++;
+
         ($paramId, $shortName, $name, $units) = split(/\t/);
 
-        die "Error: shortName=$shortName is duplicated (line ", $lcount+1, ")\n" if (exists $map_sn{$shortName});
+        die "Error: shortName=$shortName is duplicated (line $lcount)\n" if (exists $map_sn{$shortName});
         $map_sn{$shortName}++; # increment count in shortName map
 
-        die "Error: paramId=$paramId is duplicated (line ", $lcount+1, ")\n" if (exists $map_pid{$paramId});
+        die "Error: paramId=$paramId is duplicated (line $lcount)\n" if (exists $map_pid{$paramId});
         $map_pid{$paramId}++; # increment count in paramId map
 
         if (!is_integer($paramId)) {
-            warn "Error: paramId=$paramId is not an integer (line ", $lcount+1, ")\n" ;
+            warn "Error: paramId=$paramId is not an integer (line $lcount)\n";
             $sanity_error_count++;
         }
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
         if (defined $x) {
-            warn "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n";
+            warn "Error: paramId=$x exists in the database (line $lcount)\n";
             $sanity_error_count++;
         }
 
         if ($name =~ / $/) {
-            die "Error: Name '$name': ends in space" ;
+            warn "Error: Name '$name': ends in space" ;
             $sanity_error_count++;
         }
         if ($name =~ /^ /) {
-            die "Error: Name '$name': starts with space" ;
+            warn "Error: Name '$name': starts with space" ;
+            $sanity_error_count++;
+        }
+        if ($name !~ /^[A-Z0-9]/) {
+            warn "Error: name \"$name\" should have uppercase 1st letter or digit (line $lcount)\n";
             $sanity_error_count++;
         }
 
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
         if (defined $x) {
-            warn "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n";
+            warn "Error: shortName=$x exists in the database (line $lcount)\n";
             $sanity_error_count++;
         }
 
         if (!check_units($units)) {
-            warn "Error: Database does not contain units=$units (line ", $lcount+1, ")\n";
+            warn "Error: Database does not contain units=$units (line $lcount)\n";
             $sanity_error_count++;
         }
     }

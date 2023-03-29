@@ -412,11 +412,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             }
             if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
             }
             if (strcmp(act->name, "shortName") == 0) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/'");
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
             }
 
             /* Create a list of all possible values for this concept and sort it */
