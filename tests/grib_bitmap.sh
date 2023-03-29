@@ -118,6 +118,12 @@ grib_check_key_equals $tempSimple bitmapPresent,numberOfMissing,numberOfValues,n
 stats=`${tools_dir}/grib_get -F%.2f -p max,min,avg $tempSimple`
 [ "$stats" = "2.81 0.00 0.30" ]
 
+# Repack
+${tools_dir}/grib_copy -r $infile $temp2
+${tools_dir}/grib_compare -c data:n $infile $temp2
+grib_check_key_equals $temp2 bitsPerValue 8  # Note: The input file has bpv=9
+
+
 # Simple to grid_complex
 tempComplex=temp.grib_bitmap.complex.grib
 ${tools_dir}/grib_set -r -s packingType=grid_complex  $tempSimple $tempComplex
