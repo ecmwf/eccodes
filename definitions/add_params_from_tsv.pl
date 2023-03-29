@@ -105,38 +105,65 @@ my $lcount = 0;
 if ($SANITY_CHECK) {
     my %map_sn = ();   # map of shortNames
     my %map_pid = ();  # map of paramIds
+    my $sanity_error_count = 0;
     print "Checking sanity: uniqueness of paramId and shortName keys ...\n";
     while (<>) {
         chomp;
+        $lcount++;
         s/\r//g;  # Remove DOS carriage returns
         if ($first == 1) {
             $first = 0;
             next;
         }
-        $lcount++;
+
         ($paramId, $shortName, $name, $units) = split(/\t/);
 
-        die "Error: shortName=$shortName is duplicated (line ", $lcount+1, ")\n" if (exists $map_sn{$shortName});
+        die "Error: shortName=$shortName is duplicated (line $lcount)\n" if (exists $map_sn{$shortName});
         $map_sn{$shortName}++; # increment count in shortName map
 
-        die "Error: paramId=$paramId is duplicated (line ", $lcount+1, ")\n" if (exists $map_pid{$paramId});
+        die "Error: paramId=$paramId is duplicated (line $lcount)\n" if (exists $map_pid{$paramId});
         $map_pid{$paramId}++; # increment count in paramId map
 
-        die "Error: paramId=$paramId is not an integer (line ", $lcount+1, ")\n" if (!is_integer($paramId));
+        if (!is_integer($paramId)) {
+            warn "Error: paramId=$paramId is not an integer (line $lcount)\n";
+            $sanity_error_count++;
+        }
 
         my $x = $dbh->selectrow_array("select * from param.param where id = ?",undef,$paramId);
-        die "Error: paramId=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
+        if (defined $x) {
+            warn "Error: paramId=$x exists in the database (line $lcount)\n";
+            $sanity_error_count++;
+        }
 
-        die "Error: Name '$name': ends in space" if ($name =~ / $/);
-        die "Error: Name '$name': starts with space" if ($name =~ /^ /);
-
-        # Will die if it fails
-        get_db_units_code($units);
+        if ($name =~ / $/) {
+            warn "Error: Name '$name': ends in space" ;
+            $sanity_error_count++;
+        }
+        if ($name =~ /^ /) {
+            warn "Error: Name '$name': starts with space" ;
+            $sanity_error_count++;
+        }
+        if ($name !~ /^[A-Z0-9]/) {
+            warn "Error: name \"$name\" should have uppercase 1st letter or digit (line $lcount)\n";
+            $sanity_error_count++;
+        }
 
         $x = $dbh->selectrow_array("select shortName from param.param where shortName = ?",undef,$shortName);
-        die "Error: shortName=$x exists in the database (line ", $lcount+1, ")\n" if (defined $x);
+        if (defined $x) {
+            warn "Error: shortName=$x exists in the database (line $lcount)\n";
+            $sanity_error_count++;
+        }
+
+        if (!check_units($units)) {
+            warn "Error: Database does not contain units=$units (line $lcount)\n";
+            $sanity_error_count++;
+        }
     }
-    print "\nSanity checking completed. $lcount rows checked. No errors.\nExiting.\n";
+    if ($sanity_error_count == 0) {
+        print "\nSanity checking completed. $lcount rows checked. No errors.\n";
+    } else {
+        die "\nSanity checking FAILED. $lcount rows checked. $sanity_error_count error(s).\n";
+    }
     exit 0;
 }
 
@@ -298,6 +325,13 @@ sub centre_as_str {
     return "ECMWF" if ($cc eq $centre_ecmwf);
     return "Unknown";
 }
+sub check_units {
+    my $u = shift;
+    my $unit_id = $dbh->selectrow_array("select id from units where name = ?",undef,$u);
+    return 0 if (!$unit_id);
+    return 1;
+}
+
 sub get_db_units_code {
     my $u = shift;
     my $unit_id = $dbh->selectrow_array("select id from units where name = ?",undef,$u);

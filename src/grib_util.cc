@@ -2141,14 +2141,22 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     grib_context* ctx      = h->context;
     bool is_error          = true;
     char description[1024] = {0,};
-    char step[32] = "unknown";
-    size_t len    = 32;
+    char step[32]          = "unknown";
+    char shortName[32]     = {0,};
+    size_t len             = 32;
 
     // If grib_data_quality_checks == 1, limits failure results in an error
     // If grib_data_quality_checks == 2, limits failure results in a warning
 
     Assert(ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2);
     is_error = (ctx->grib_data_quality_checks == 1);
+
+    err = grib_get_string(h, "shortName", shortName, &len);
+    if (err || STR_EQUAL(shortName, "unknown")) {
+        fprintf(stderr, "ECCODES %s   :  Invalid metadata: shortName=unknown\n",
+                    (is_error ? "ERROR" : "WARNING"));
+        if (is_error) return GRIB_INVALID_MESSAGE;
+    }
 
     // The limit keys must exist if we are here
     err = grib_get_double(h, "param_value_min", &min_field_value_allowed);
