@@ -21,7 +21,6 @@
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#define _GNU_SOURCE
 #include <fenv.h>
 int feenableexcept(int excepts);
 #endif
