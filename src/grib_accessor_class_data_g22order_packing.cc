@@ -238,14 +238,11 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 static unsigned char* bitstream;
 static int rbits, reg, n_bitstream;
 
-
 static void init_bitstream(unsigned char* new_bitstream)
 {
     bitstream   = new_bitstream;
     n_bitstream = reg = rbits = 0;
-    return;
-        }
-
+}
 
 static void finish_bitstream(void)
 {
@@ -254,17 +251,17 @@ static void finish_bitstream(void)
         *bitstream++ = (reg << (8 - rbits)) & 255;
         rbits        = 0;
     }
-    return;
-    }
-
+}
 
 static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
 {
     unsigned int jmask, tt;
     int i;
+    const int max_numbits = 25;
 
-    if (n_bits > 25) 
-        grib_context_log(a->context, GRIB_LOG_ERROR, "add_many_bitstream: n_bits = (%d)", n_bits);
+    if (n_bits > max_numbits) {
+        grib_context_log(a->context, GRIB_LOG_FATAL, "grid_complex packing: n_bits=%d exceeds the maximum=%d", n_bits, max_numbits);
+    }
     jmask = (1 << n_bits) - 1;
 
     for (i = 0; i < n; i++) {
@@ -276,22 +273,22 @@ static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
             rbits -= 8;
             *bitstream++ = (reg >> rbits) & 255;
             n_bitstream++;
-}
+        }
     }
-    return;
 }
-
 
 static void add_bitstream(grib_accessor* a, int t, int n_bits)
 {
     unsigned int jmask;
+    const int max_numbits = 25;
 
     if (n_bits > 16) {
         add_bitstream(a, t >> 16, n_bits - 16);
         n_bits = 16;
     }
-    if (n_bits > 25) 
-        grib_context_log(a->context, GRIB_LOG_ERROR, "add_bitstream: n_bits = (%d)", n_bits);
+    if (n_bits > max_numbits) {
+        grib_context_log(a->context, GRIB_LOG_FATAL, "grid_complex packing: n_bits=%d exceeds the maximum=%d", n_bits, max_numbits);
+    }
     jmask = (1 << n_bits) - 1;
     rbits += n_bits;
     reg = (reg << n_bits) | (t & jmask);
@@ -301,7 +298,6 @@ static void add_bitstream(grib_accessor* a, int t, int n_bits)
     }
     return;
 }
-
 
 /*
  * find min/max of an integer array
@@ -348,7 +344,6 @@ static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
     return 0;
 }
 
-
 static double Int_Power(double x, int y)
 {
     double value;
@@ -368,7 +363,6 @@ static double Int_Power(double x, int y)
     }
     return value;
 }
-
 
 static int min_max_array(double* data, unsigned int n, double* min, double* max)
 {
@@ -409,7 +403,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
     *min = mn;
     *max = mx;
     return 0;
-        }
+}
 
 #if 0
 static void uint_char(unsigned int i, unsigned char* p)
@@ -541,7 +535,7 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack(grib_accessor* a, T* val, const size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
@@ -825,14 +819,12 @@ static int find_nbits(unsigned int i)
 #endif
 }
 
-
 struct section
 {
     int mn, mx, missing;  // stats
     int i0, i1;           // pointers to data[]
     struct section *head, *tail;
 };
-
 
 static int sizeofsection(struct section* s, int ref_bits, int width_bits, int has_undef)
 {
@@ -852,7 +844,6 @@ static int sizeofsection(struct section* s, int ref_bits, int width_bits, int ha
     return find_nbits(s->mx - s->mn + has_undef) * (s->i1 - s->i0 + 1) + ref_bits + width_bits;
 }
 
-
 static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits,
                           int has_undef_sec, int has_undef)
 {
@@ -863,7 +854,6 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits,
     }
     return find_nbits(mx - mn + has_undef) * n + ref_bits + width_bits;
 }
-
 
 static int size_all(struct section* s, int ref_bits, int width_bits,
                     int has_undef)
@@ -878,7 +868,6 @@ static int size_all(struct section* s, int ref_bits, int width_bits,
     return (bits + 7) / 8;
 }
 
-
 static void move_one_left(struct section* s, int* v)
 {
     struct section* t;
@@ -890,7 +879,6 @@ static void move_one_left(struct section* s, int* v)
     val = v[s->i1];
 
     // update s statistics
-
     if (val == INT_MAX)
         s->missing = 1;
     else {
@@ -899,7 +887,6 @@ static void move_one_left(struct section* s, int* v)
     }
 
     // remove t?
-
     if (t->i0 > t->i1) {
         s->tail = t->tail;
         t       = s->tail;
@@ -908,7 +895,6 @@ static void move_one_left(struct section* s, int* v)
     }
 
     // update s statistics
-
     if (val == INT_MAX) {
         for (i = t->i0; i <= t->i1; i++) {
             if (v[i] == INT_MAX) return;
@@ -949,7 +935,6 @@ static void move_one_left(struct section* s, int* v)
     return;
 }
 
-
 static void move_one_right(struct section* s, int* v)
 {
     struct section* t;
@@ -961,7 +946,6 @@ static void move_one_right(struct section* s, int* v)
     val = v[t->i0];
 
     // update t statistics
-
     if (val == INT_MAX)
         t->missing = 1;
     else {
@@ -970,7 +954,6 @@ static void move_one_right(struct section* s, int* v)
     }
 
     // if s is empty, copy t to s and recalculate
-
     if (s->i0 > s->i1) {
         s->i0   = t->i0;
         s->i1   = t->i1;
@@ -994,7 +977,6 @@ static void move_one_right(struct section* s, int* v)
     }
 
     // update s statistics
-
     if (val == INT_MAX) {
         for (i = s->i0; i <= s->i1; i++) {
             if (v[i] == INT_MAX) return;
@@ -1034,7 +1016,6 @@ static void move_one_right(struct section* s, int* v)
     }
     return;
 }
-
 
 static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
 {
@@ -1108,7 +1089,6 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
             s = s->tail;
     }
 }
-
 
 static void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int param, int LEN_SEC_MAX)
 {
@@ -1323,6 +1303,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     max_bits = bits_per_value; // TODO(masn)
 
     packing_mode = orderOfSpatialDifferencing;
+    //if (orderOfSpatialDifferencing == 0) packing_mode = 1; //grid_complex
+    //if (orderOfSpatialDifferencing == 1) packing_mode = 2; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
+    //if (orderOfSpatialDifferencing == 2) packing_mode = 3; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
+
     use_bitmap = bitmap_present;
     wanted_bits = bits_per_value;
     data = (double*) val;
@@ -1386,8 +1370,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     has_undef = use_bitmap ? 0 : ndata != ndef;
 
     v = (int*)malloc(((size_t)nndata) * sizeof(int));
-    if (min_max_array(data, ndata, &mn, &mx) != 0)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex_pk: min max error", "");
+    if (min_max_array(data, ndata, &mn, &mx) != 0) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: Failed to get min max of data");
+        return GRIB_ENCODING_ERROR;
+    }
     min_val = (double)mn;
     max_val = (double)mx;
 
@@ -1568,8 +1554,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     list = (struct section*)malloc((size_t)nstruct * sizeof(struct section));
-    if (list == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex_grib_out: memory allocation of list failed", "");
+    if (list == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list failed");
+        return GRIB_OUT_OF_MEMORY;
+    }
 
     // initialize linked list
 
@@ -1596,9 +1584,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     list[ii].tail = NULL;
     start.tail    = &list[0];
 
-    if (nstruct != ii + 1)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex_pk, nstruct=%d wanted %d", nstruct, ii + 1);
-
+    if (nstruct != ii + 1) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: nstruct=%zu wanted %lu", nstruct, ii + 1);
+        return GRIB_ENCODING_ERROR;
+    }
     for (i = 1; i < nstruct; i++) {
         list[i].head     = &list[i - 1];
         list[i - 1].tail = &list[i];
@@ -1622,10 +1611,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     //  try making segment sizes larger
     //  12/2015 need to segment size less 25 bits, bitstream software limitation
 
-    list_backup =
-        (struct section*)malloc(((size_t)nstruct) * sizeof(struct section));
-    if (list_backup == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex_grib_out: memory allocation of list_backup failed");
+    list_backup = (struct section*)malloc(((size_t)nstruct) * sizeof(struct section));
+    if (list_backup == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list_backup failed");
+        return GRIB_OUT_OF_MEMORY;
+    }
 
     j  = size_all(start.tail, vbits, LEN_BITS + est_group_width, has_undef);
     j0 = j + 1;
@@ -1686,8 +1676,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     // scale the linked list
     s = start.tail;
-    if (s == NULL) 
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex grib_out: program error 1");
+    if (s == NULL) {
+        return GRIB_INTERNAL_ERROR;
+    }
     ngroups = 0;  // number  of groups
 
     while (s) {
@@ -1701,9 +1692,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     itmp   = (int*)malloc(((size_t)ngroups) * sizeof(int));
     itmp2  = (int*)malloc(((size_t)ngroups) * sizeof(int));
 
-    if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL ||
-        itmp2 == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex grib_out: memory allocation");
+    if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
+        return GRIB_OUT_OF_MEMORY;
+    }
 
     /* make vectors so we can OpenMP the loop */
     for (i = ii = 0, s = start.tail; ii < ngroups; ii++, s = s->tail) {
@@ -1714,7 +1705,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         itmp2[ii] = s->missing;
     }
     if (i != nndata) 
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex grib_out: program error 2");
+        return GRIB_INTERNAL_ERROR;
 
     for (i = 0; i < ngroups; i++) {
         if (refs[i] == INT_MAX)
@@ -1836,8 +1827,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
 
     sec7 = (unsigned char*)malloc(size_sec7);
-    if (sec7 == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "complex_grib_out memory allocation sec7");
+    if (sec7 == NULL) {
+        return GRIB_OUT_OF_MEMORY;
+    }
 
     // pack the values into a bitstream
 
