@@ -1791,14 +1791,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         size_sec7 += 2 * sec5_48;
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 1)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 2)) != GRIB_SUCCESS)
-            return err;
     }
     else if (packing_mode == 3) {
         size_sec7 += 3 * sec5_48;
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 2)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 3)) != GRIB_SUCCESS)
+    }
+    if (packing_mode != 1) {
+        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, sec5_48)) != GRIB_SUCCESS)
             return err;
     }
 
