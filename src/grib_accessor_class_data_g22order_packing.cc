@@ -770,12 +770,12 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         /*de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);*/
     }
 
-    binary_s  = grib_power(binary_scale_factor, 2);
-    decimal_s = grib_power(-decimal_scale_factor, 10);
+    binary_s  = (T)grib_power(binary_scale_factor, 2);
+    decimal_s = (T)grib_power(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
         if (sec_val[i] == LONG_MAX) {
-            val[i] = missingValue;
+            val[i] = (T)missingValue;
         }
         else {
             val[i] = (T)((((T)sec_val[i]) * binary_s) + reference_value) * decimal_s;
@@ -785,7 +785,6 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
     grib_context_free(a->context, sec_val);
     return err;
 }
-
 
 static int find_nbits(unsigned int i)
 {
@@ -932,7 +931,6 @@ static void move_one_left(struct section* s, int* v)
         t->mn = k;
         return;
     }
-    return;
 }
 
 static void move_one_right(struct section* s, int* v)
@@ -1200,7 +1198,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     unsigned char* sec7;
     long sec5_19, sec5_36, sec5_46, sec5_48;
     grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
-    grib_handle* gh                           = grib_handle_of_accessor(a);
+    grib_handle* gh = grib_handle_of_accessor(a);
 
     /*size_t i      = 0;*/
     /*size_t j      = 0;*/
