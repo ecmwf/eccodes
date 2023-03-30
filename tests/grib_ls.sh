@@ -183,7 +183,7 @@ done
 
 # ECC-1562: Segmentation fault: Invalid orderby directive
 set +e
-${tools_dir}/grib_ls -B'shortName: asc' tigge_af_ecmwf.grib2 > $tempText
+${tools_dir}/grib_ls -B'shortName: asc' tigge_af_ecmwf.grib2 > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
