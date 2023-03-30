@@ -1336,8 +1336,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long((float)9.999e20))) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
-            return err;
+        //if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
+        //    return err;
+
         if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, 1)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, 0)) != GRIB_SUCCESS)
@@ -1764,8 +1765,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long((float)9.999e20))) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS) return err;
+
     if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, ngroups)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, gwidmn)) != GRIB_SUCCESS)
