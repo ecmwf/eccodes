@@ -181,5 +181,13 @@ for cval in -1 0 xx; do
 done
 
 
+# ECC-1562: Segmentation fault: Invalid orderby directive
+set +e
+${tools_dir}/grib_ls -B'shortName: asc' tigge_af_ecmwf.grib2 > $tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid type for key=shortName" $tempText
+
 # Clean up
 rm -f $temp1 $temp2 $tempText $tempLog
