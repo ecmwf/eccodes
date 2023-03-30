@@ -33,3 +33,8 @@ meta _TS spectral_truncation(J,K,M,TS) : read_only,hidden;
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 2 : dump;
 
 alias precisionOfTheUnpackedSubset=unpackedSubsetPrecision;
+concept accuracy(zero) {
+  32  = { unpackedSubsetPrecision = 1; }
+  64  = { unpackedSubsetPrecision = 2; }
+  128 = { unpackedSubsetPrecision = 3; }
+} : long_type, no_copy;
