@@ -647,8 +647,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
 
     self->dirty = 0;
 
-    // sec_val = (long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
-    sec_val = new long[n_vals];
+    sec_val = (long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
     if (!sec_val)
         return GRIB_OUT_OF_MEMORY;
     memset(sec_val, 0, (n_vals) * sizeof(long)); /* See SUP-718 */
@@ -791,7 +790,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         }
     }
 
-    delete [] sec_val;
+    grib_context_free(a->context, sec_val);
     return err;
 }
 
@@ -1212,17 +1211,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh                           = grib_handle_of_accessor(a);
 
-    /*size_t i      = 0;*/
-    /*size_t j      = 0;*/
-    // size_t n_vals = *len;
-
     int err = 0;
-
-    // unsigned char* buf        = NULL;
-    // unsigned char* buf_ref    = NULL;
-    // unsigned char* buf_length = NULL;
-    // double d       = 0;
-    // double divisor = 0;
 
     long bits_per_value = 0;
 
@@ -1246,8 +1235,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long orderOfSpatialDifferencing;
     long numberOfOctetsExtraDescriptors;
 
-    // double* data;
-    // size_t ndata = *len;
     int dec_scale;
     int bin_scale;
     int wanted_bits;
@@ -1369,7 +1356,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     size_t ndata = *len;
-    double* data = new double[ndata];
+    double* data = reinterpret_cast<double*>(grib_context_malloc_clear(a->context, ndata * sizeof(double)));
+    if (data == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_data_g2complex_packing::pack_double unable to allocate %d bytes", ndata * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
     memcpy(data, val, sizeof(*data) * ndata);
 
     dec_scale = -decimal_scale_factor;
@@ -1389,7 +1380,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     nndata    = use_bitmap ? ndef : ndata;
     has_undef = use_bitmap ? 0 : ndata != ndef;
 
-    v = new int[nndata];
+    v = reinterpret_cast<int*>(grib_context_malloc(a->context, nndata * sizeof(int)));
+    if (v == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_data_g2complex_packing::pack_double unable to allocate %d bytes", nndata * sizeof(int));
+        return GRIB_OUT_OF_MEMORY;
+    }
     if (min_max_array(data, ndata, &mn, &mx) != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: Failed to get min max of data");
         return GRIB_ENCODING_ERROR;
@@ -1573,8 +1568,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    list = new section[nstruct];
-
+    list = reinterpret_cast<section*>(grib_context_malloc_clear(a->context, nstruct * sizeof(section)));
     if (list == NULL) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list failed");
         return GRIB_OUT_OF_MEMORY;
@@ -1632,7 +1626,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     //  try making segment sizes larger
     //  12/2015 need to segment size less 25 bits, bitstream software limitation
 
-    list_backup = new struct section[nstruct];
+    list_backup = reinterpret_cast<section*>(grib_context_malloc(a->context, nstruct * sizeof(section)));
     if (list_backup == NULL) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list_backup failed");
         return GRIB_OUT_OF_MEMORY;
@@ -1663,7 +1657,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             LEN_SEC_MAX = (LEN_SEC_MAX - 1) / 2;
         }
     }
-    delete[] list_backup;
+    grib_context_free(a->context,list_backup);
 
     exchange(start.tail, v, has_undef, LEN_SEC_MAX);
 #ifdef DEBUG
@@ -1707,13 +1701,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         s = s->tail;
     }
 
-    lens   = new int[ngroups];
-    widths = new int[ngroups];
-    refs   = new int[ngroups];
-    itmp   = new int[ngroups];
-    itmp2  = new int[ngroups];
+    lens   = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
+    widths = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
+    refs   = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
+    itmp   = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
+    itmp2  = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of lens/widths/refs/itmp/itmp2 failed");
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1849,8 +1844,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
 
-    sec7 = new unsigned char[size_sec7];
+
+    sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
     if (sec7 == NULL) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_data_g2simple_packing::pack_double unable to allocate %d bytes", size_sec7);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1910,15 +1907,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     grib_buffer_replace(a, sec7 + 5, size_sec7 - 5, 1, 1);
 
-    delete[] sec7;
-    delete[] list;
-    delete[] v;
-    delete[] lens;
-    delete[] widths;
-    delete[] refs;
-    delete[] itmp;
-    delete[] itmp2;
-    delete[] data;
+    grib_context_free(a->context, sec7);
+    grib_context_free(a->context, list);
+    grib_context_free(a->context, v);
+    grib_context_free(a->context, lens);
+    grib_context_free(a->context, widths);
+    grib_context_free(a->context, refs);
+    grib_context_free(a->context, itmp);
+    grib_context_free(a->context, itmp2);
+    grib_context_free(a->context, data);
 
     /* ECC-259: Set correct number of values */
     if ((err = grib_set_long_internal(gh, self->numberOfValues, *len)) != GRIB_SUCCESS)
