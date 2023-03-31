@@ -11,7 +11,6 @@
 
 #include "./grib_api_internal.h"
 #include <type_traits>
-#include <cstring>
 
 /*
    This is used by make_class.pl
@@ -433,7 +432,7 @@ static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata
     }
 
     if (i == nn) { /* all defined values, no need for bms */
-        bms = (unsigned char*)malloc(6);
+        bms = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, 6));
         if (bms == NULL)
             grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
         uint_char(6, bms);  // length of section 6
@@ -443,7 +442,7 @@ static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata
     }
 
     bms_size = 6 + (nn + 7) / 8;
-    bms      = (unsigned char*)malloc(bms_size);
+    bms      = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, bms_size));
     if (bms == NULL)
         grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
 
@@ -1371,7 +1370,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     size_t ndata = *len;
     double* data = new double[ndata];
-    std::memcpy(data, val, sizeof(*data) * ndata);
+    memcpy(data, val, sizeof(*data) * ndata);
 
     dec_scale = -decimal_scale_factor;
     bin_scale = binary_scale_factor;
@@ -1487,7 +1486,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     vmx = vmn = 0;
     extra_0 = extra_1 = 0;  // turn off warnings
 
-    if (orderOfSpatialDifferencing == 3) {
+    if (orderOfSpatialDifferencing == 2) {
         //        delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
 
         // single core version
@@ -1521,7 +1520,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
     }
-    else if (orderOfSpatialDifferencing == 2) {
+    else if (orderOfSpatialDifferencing == 1) {
         //        delta(v, nndata, &vmn, &vmx, &extra_0);
 
         // single core version
@@ -1546,7 +1545,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
     }
-    else if (orderOfSpatialDifferencing == 1) {
+    else if (orderOfSpatialDifferencing == 0) {
         // find min/max
         int_min_max_array(v, nndata, &vmn, &vmx);
     }
@@ -1682,13 +1681,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     // finished making segments
     // findout number of bytes for extra info (orderOfSpatialDifferencing 2/3)
 
-    if (orderOfSpatialDifferencing != 1) {  // packing modes 2/3
+    if (orderOfSpatialDifferencing != 0) {  // packing modes 2/3
         k = vmn >= 0 ? find_nbits(vmn) + 1 : find_nbits(-vmn) + 1;
         // + 1 work around for NCEP bug
         j = find_nbits(extra_0) + 1;
         if (j > k) k = j;
 
-        if (orderOfSpatialDifferencing == 3) {
+        if (orderOfSpatialDifferencing == 2) {
             // + 1 work around for NCEP bug
             j = find_nbits(extra_1) + 1;
             if (j > k) k = j;
@@ -1813,17 +1812,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     size_sec7 = 5;
 
-    if (orderOfSpatialDifferencing == 2) {
+    if (orderOfSpatialDifferencing == 1) {
         size_sec7 += 2 * numberOfOctetsExtraDescriptors;
-        if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 1)) != GRIB_SUCCESS)
-            return err;
     }
-    else if (orderOfSpatialDifferencing == 3) {
+    else if (orderOfSpatialDifferencing == 2) {
         size_sec7 += 3 * numberOfOctetsExtraDescriptors;
-        if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 2)) != GRIB_SUCCESS)
-            return err;
     }
-    if (orderOfSpatialDifferencing > 1) {
+    if (orderOfSpatialDifferencing > 0) {
+        if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, orderOfSpatialDifferencing)) != GRIB_SUCCESS)
+            return err;
         if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
             return err;
     }
@@ -1865,9 +1862,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     add_bitstream(a, 7, 8);
 
     // write extra octets
-    if (orderOfSpatialDifferencing == 2 || orderOfSpatialDifferencing == 3) {
+    if (orderOfSpatialDifferencing == 1 || orderOfSpatialDifferencing == 2) {
         add_bitstream(a, extra_0, 8 * numberOfOctetsExtraDescriptors);
-        if (orderOfSpatialDifferencing == 3) add_bitstream(a, extra_1, 8 * numberOfOctetsExtraDescriptors);
+        if (orderOfSpatialDifferencing == 2) add_bitstream(a, extra_1, 8 * numberOfOctetsExtraDescriptors);
         k = vmn;
         if (k < 0) {
             k = -vmn | (1 << (8 * numberOfOctetsExtraDescriptors - 1));
