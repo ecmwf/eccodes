@@ -1210,7 +1210,6 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     unsigned char* sec7;
-    long sec5_19, sec5_36, sec5_46, sec5_48;
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh                           = grib_handle_of_accessor(a);
 
@@ -1254,7 +1253,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     int bin_scale;
     int wanted_bits;
     int max_bits;
-    int packing_mode;
     int use_bitmap;
 
     int j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1;
@@ -1314,30 +1312,21 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     max_bits = bits_per_value;  // TODO(masn)
 
-    packing_mode = orderOfSpatialDifferencing;
-    // if (orderOfSpatialDifferencing == 0) packing_mode = 1; //grid_complex
-    // if (orderOfSpatialDifferencing == 1) packing_mode = 2; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
-    // if (orderOfSpatialDifferencing == 2) packing_mode = 3; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
+    // Mapping: eccodes : wgrib2
+    // orderOfSpatialDifferencing = 0 : packing_mode = 1 : grid_complex
+    // orderOfSpatialDifferencing = 1 : packing_mode = 2 : grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
+    // orderOfSpatialDifferencing = 2 : packing_mode = 3 : grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
 
     use_bitmap = bitmap_present;
     wanted_bits = bits_per_value;
-    // data = (double*) val;
 
-    size_t ndata = *len;
-    double* data = new double[ndata];
-    std::memcpy(data, val, sizeof(*data) * ndata);
-
-    dec_scale = -decimal_scale_factor;
-    bin_scale = binary_scale_factor;
-    ndef = 0;
-
-    for (i = 0; i < ndata; i++) {
-        if (DEFINED_VAL(data[i])) {
+    for (i = 0; i < *len; i++) {
+        if (DEFINED_VAL(val[i])) {
             ndef = ndef + 1;
         }
     }
 
-    if (ndef == 0) {  // all undefined values
+    if (ndef == 0) {  // Special case: All undefined values
         if ((err = grib_set_double_internal(gh, self->reference_value, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) != GRIB_SUCCESS)
@@ -1354,9 +1343,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
             return err;
-        //if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
+        // if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
         //    return err;
-
         if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, 1)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, 0)) != GRIB_SUCCESS)
@@ -1371,7 +1359,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, 8)) != GRIB_SUCCESS)
             return err;
+        return GRIB_SUCCESS;
     }
+
+    size_t ndata = *len;
+    double* data = new double[ndata];
+    std::memcpy(data, val, sizeof(*data) * ndata);
+
+    dec_scale = -decimal_scale_factor;
+    bin_scale = binary_scale_factor;
+    ndef = 0;
 
     /* compute bitmap section */
     /*if (use_bitmap == 0 || ndef == ndata) {*/
@@ -1483,7 +1480,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     vmx = vmn = 0;
     extra_0 = extra_1 = 0;  // turn off warnings
 
-    if (packing_mode == 3) {
+    if (orderOfSpatialDifferencing == 3) {
         //        delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
 
         // single core version
@@ -1517,7 +1514,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
     }
-    else if (packing_mode == 2) {
+    else if (orderOfSpatialDifferencing == 2) {
         //        delta(v, nndata, &vmn, &vmx, &extra_0);
 
         // single core version
@@ -1542,7 +1539,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
     }
-    else if (packing_mode == 1) {
+    else if (orderOfSpatialDifferencing == 1) {
         // find min/max
         int_min_max_array(v, nndata, &vmn, &vmx);
     }
@@ -1676,20 +1673,20 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #endif
 
     // finished making segments
-    // findout number of bytes for extra info (packing_mode 2/3)
+    // findout number of bytes for extra info (orderOfSpatialDifferencing 2/3)
 
-    if (packing_mode != 1) {  // packing modes 2/3
+    if (orderOfSpatialDifferencing != 1) {  // packing modes 2/3
         k = vmn >= 0 ? find_nbits(vmn) + 1 : find_nbits(-vmn) + 1;
         // + 1 work around for NCEP bug
         j = find_nbits(extra_0) + 1;
         if (j > k) k = j;
 
-        if (packing_mode == 3) {
+        if (orderOfSpatialDifferencing == 3) {
             // + 1 work around for NCEP bug
             j = find_nbits(extra_1) + 1;
             if (j > k) k = j;
         }
-        sec5_48 = (k + 7) / 8;  // number of bytes for extra and vmn
+        numberOfOctetsExtraDescriptors = (k + 7) / 8;  // number of bytes for extra and vmn
     }
 
     // scale the linked list
@@ -1767,8 +1764,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    sec5_19 = find_nbits(grefmx + has_undef);
-    if ((err = grib_set_long_internal(gh, self->bits_per_value, sec5_19)) != GRIB_SUCCESS)
+    //bits_per_value = find_nbits(grefmx + has_undef);
+    //numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
+
+    bits_per_value = find_nbits(grefmx + has_undef);
+    numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
+
+    if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_double_internal(gh, self->reference_value, static_cast<double>(ref))) != GRIB_SUCCESS)
         return err;
@@ -1790,7 +1792,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, gwidmn)) != GRIB_SUCCESS)
         return err;
-    sec5_36 = find_nbits(gwidmx - gwidmn + has_undef);
     if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, find_nbits(gwidmx - gwidmn + has_undef))) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->referenceForGroupLengths, glenmn)) != GRIB_SUCCESS)
@@ -1799,38 +1800,35 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_set_long_internal(gh, self->trueLengthOfLastGroup, len_last)) != GRIB_SUCCESS)
         return err;
-    sec5_46 = find_nbits(glenmx - glenmn);
-    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, sec5_46)) != GRIB_SUCCESS)
+    numberOfBitsUsedForTheScaledGroupLengths = find_nbits(glenmx - glenmn);
+    if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
         return err;
 
     size_sec7 = 5;
 
-    if (packing_mode == 2) {
-        size_sec7 += 2 * sec5_48;
+    if (orderOfSpatialDifferencing == 2) {
+        size_sec7 += 2 * numberOfOctetsExtraDescriptors;
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 1)) != GRIB_SUCCESS)
             return err;
-        // if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 2)) != GRIB_SUCCESS)
-        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, sec5_48)) != GRIB_SUCCESS)
-            return err;
     }
-    else if (packing_mode == 3) {
-        size_sec7 += 3 * sec5_48;
+    else if (orderOfSpatialDifferencing == 3) {
+        size_sec7 += 3 * numberOfOctetsExtraDescriptors;
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 2)) != GRIB_SUCCESS)
             return err;
     }
-    if (packing_mode > 1) {
-        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, sec5_48)) != GRIB_SUCCESS)
+    if (orderOfSpatialDifferencing > 1) {
+        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
             return err;
     }
 
     // group reference value
-    size_sec7 += (ngroups * sec5_19 + 7) / 8;
+    size_sec7 += (ngroups * bits_per_value + 7) / 8;
 
     // group widths
-    size_sec7 += (ngroups * sec5_36 + 7) / 8;
+    size_sec7 += (ngroups * numberOfBitsUsedForTheGroupWidths + 7) / 8;
 
     // group lengths
-    size_sec7 += (ngroups * sec5_46 + 7) / 8;
+    size_sec7 += (ngroups * numberOfBitsUsedForTheScaledGroupLengths + 7) / 8;
 
     k = 0;
     {
@@ -1860,27 +1858,27 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     add_bitstream(a, 7, 8);
 
     // write extra octets
-    if (packing_mode == 2 || packing_mode == 3) {
-        add_bitstream(a, extra_0, 8 * sec5_48);
-        if (packing_mode == 3) add_bitstream(a, extra_1, 8 * sec5_48);
+    if (orderOfSpatialDifferencing == 2 || orderOfSpatialDifferencing == 3) {
+        add_bitstream(a, extra_0, 8 * numberOfOctetsExtraDescriptors);
+        if (orderOfSpatialDifferencing == 3) add_bitstream(a, extra_1, 8 * numberOfOctetsExtraDescriptors);
         k = vmn;
         if (k < 0) {
-            k = -vmn | (1 << (8 * sec5_48 - 1));
+            k = -vmn | (1 << (8 * numberOfOctetsExtraDescriptors - 1));
         }
-        add_bitstream(a, k, 8 * sec5_48);
+        add_bitstream(a, k, 8 * numberOfOctetsExtraDescriptors);
         finish_bitstream();
     }
 
     // write the group reference values
-    add_many_bitstream(a, refs, ngroups, sec5_19);
+    add_many_bitstream(a, refs, ngroups, bits_per_value);
     finish_bitstream();
 
     // write the group widths
-    add_many_bitstream(a, itmp, ngroups, sec5_36);
+    add_many_bitstream(a, itmp, ngroups, numberOfBitsUsedForTheGroupWidths);
     finish_bitstream();
 
     // write the group lengths
-    add_many_bitstream(a, itmp2, ngroups, sec5_46);
+    add_many_bitstream(a, itmp2, ngroups, numberOfBitsUsedForTheScaledGroupLengths);
     finish_bitstream();
 
     s = start.tail;
