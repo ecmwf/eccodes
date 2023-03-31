@@ -780,12 +780,12 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         /*de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);*/
     }
 
-    binary_s  = grib_power(binary_scale_factor, 2);
-    decimal_s = grib_power(-decimal_scale_factor, 10);
+    binary_s  = (T)grib_power(binary_scale_factor, 2);
+    decimal_s = (T)grib_power(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
         if (sec_val[i] == LONG_MAX) {
-            val[i] = missingValue;
+            val[i] = (T)missingValue;
         }
         else {
             val[i] = (T)((((T)sec_val[i]) * binary_s) + reference_value) * decimal_s;
@@ -795,7 +795,6 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
     delete [] sec_val;
     return err;
 }
-
 
 static int find_nbits(unsigned int i)
 {
@@ -942,7 +941,6 @@ static void move_one_left(struct section* s, int* v)
         t->mn = k;
         return;
     }
-    return;
 }
 
 static void move_one_right(struct section* s, int* v)
@@ -1356,8 +1354,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
-            return err;
+        //if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
+        //    return err;
+
         if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, 1)) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, 0)) != GRIB_SUCCESS)
@@ -1785,8 +1784,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS) return err;
+
     if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, ngroups)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, gwidmn)) != GRIB_SUCCESS)
@@ -1819,7 +1818,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 2)) != GRIB_SUCCESS)
             return err;
     }
-    if (packing_mode != 1) {
+    if (packing_mode > 1) {
         if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, sec5_48)) != GRIB_SUCCESS)
             return err;
     }
