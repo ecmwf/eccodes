@@ -6,6 +6,10 @@ on:
       eccodes:
         required: false
         type: string
+      nightly_test:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   ci-hpc:
@@ -20,4 +24,5 @@ jobs:
           ninja
           aec
         --parallel: 64
+        ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh' }}
     secrets: inherit

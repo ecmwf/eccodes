@@ -1,0 +1,16 @@
+name: nightly
+
+on:
+  workflow_dispatch: ~
+
+  # Run at 20:00 UTC every day (on default branch)
+  schedule:
+    - cron: '0 20 * * *'
+
+jobs:
+  test:
+    uses: ./.github/workflows/reusable-ci-hpc.yml
+    with:
+      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
+      nightly_test: true
+    secrets: inherit
