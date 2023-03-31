@@ -9,8 +9,9 @@
  */
 
 
-#include "grib_api_internal.h"
+#include "./grib_api_internal.h"
 #include <type_traits>
+#include <cstring>
 
 /*
    This is used by make_class.pl
@@ -194,7 +195,7 @@ static void init_class(grib_accessor_class* c)
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
-    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
+    grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh                           = grib_handle_of_accessor(a);
 
     self->numberOfValues       = grib_arguments_get_name(gh, args, self->carg++);
@@ -255,7 +256,7 @@ static void finish_bitstream(void)
 
 static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
 {
-    unsigned int jmask, tt;
+    unsigned int jmask;
     int i;
     const int max_numbits = 25;
 
@@ -265,7 +266,7 @@ static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
     jmask = (1 << n_bits) - 1;
 
     for (i = 0; i < n; i++) {
-        tt = (unsigned int)*t++;
+        unsigned int tt = (unsigned int)*t++;
         rbits += n_bits;
         reg = (reg << n_bits) | (tt & jmask);
 
@@ -306,8 +307,8 @@ static void add_bitstream(grib_accessor* a, int t, int n_bits)
  */
 static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
 {
-    unsigned int first, i;
-    int mn, mx, min_val, max_val;
+    unsigned int first;
+    int mn, mx;
 
     if (n == 0) {
         return 1;
@@ -317,16 +318,18 @@ static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
         if (data[first] != INT_MAX) {
             mx = mn = data[first];
             break;
-}
+        }
     }
     if (first >= n) return 1;
 
     mn = mx = data[first];
 
     {
+        int max_val;
+        int min_val;
         min_val = max_val = data[first];
 
-        for (i = first + 1; i < n; i++) {
+        for (unsigned int i = first + 1; i < n; i++) {
             if (data[i] != INT_MAX) {
                 min_val = (min_val > data[i]) ? data[i] : min_val;
                 max_val = (max_val < data[i]) ? data[i] : max_val;
@@ -366,8 +369,8 @@ static double Int_Power(double x, int y)
 
 static int min_max_array(double* data, unsigned int n, double* min, double* max)
 {
-    unsigned int first, i;
-    double mn, mx, min_val, max_val;
+    unsigned int first;
+    double mn, mx;
 
     if (n == 0) {
         *min = *max = 0.0;
@@ -385,9 +388,11 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
     mn = mx = data[first];
 
     {
+        double min_val;
+        double max_val;
         min_val = max_val = data[first];
 
-        for (i = first + 1; i < n; i++) {
+        for (unsigned int i = first + 1; i < n; i++) {
             if (DEFINED_VAL(data[i])) {
                 min_val = (min_val > data[i]) ? data[i] : min_val;
                 max_val = (max_val < data[i]) ? data[i] : max_val;
@@ -429,7 +434,7 @@ static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata
 
     if (i == nn) { /* all defined values, no need for bms */
         bms = (unsigned char*)malloc(6);
-        if (bms == NULL) 
+        if (bms == NULL)
             grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
         uint_char(6, bms);  // length of section 6
         bms[4] = 6;         // section 6
@@ -439,7 +444,7 @@ static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata
 
     bms_size = 6 + (nn + 7) / 8;
     bms      = (unsigned char*)malloc(bms_size);
-    if (bms == NULL) 
+    if (bms == NULL)
         grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
 
     uint_char(bms_size, bms);  // length of section 6
@@ -488,16 +493,18 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
     if (order == 1) {
         last = extras[0];
         while (j < len) {
-            if (vals[j] == LONG_MAX)
+            if (vals[j] == LONG_MAX) {
                 j++;
+            }
             else {
                 vals[j++] = extras[0];
                 break;
             }
         }
         while (j < len) {
-            if (vals[j] == LONG_MAX)
+            if (vals[j] == LONG_MAX) {
                 j++;
+            }
             else {
                 vals[j] += last + bias;
                 last = vals[j++];
@@ -508,16 +515,18 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
         penultimate = extras[0];
         last        = extras[1];
         while (j < len) {
-            if (vals[j] == LONG_MAX)
+            if (vals[j] == LONG_MAX) {
                 j++;
+            }
             else {
                 vals[j++] = extras[0];
                 break;
             }
         }
         while (j < len) {
-            if (vals[j] == LONG_MAX)
+            if (vals[j] == LONG_MAX) {
                 j++;
+            }
             else {
                 vals[j++] = extras[1];
                 break;
@@ -538,7 +547,7 @@ template <typename T>
 static int unpack(grib_accessor* a, T* val, const size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
-    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
+    grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
 
     size_t i    = 0;
     size_t j    = 0;
@@ -549,7 +558,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
     long* sec_val   = NULL;
     grib_handle* gh = grib_handle_of_accessor(a);
 
-    unsigned char* buf        = (unsigned char*)gh->buffer->data;
+    unsigned char* buf        = reinterpret_cast<unsigned char*>(gh->buffer->data);
     unsigned char* buf_ref    = NULL;
     unsigned char* buf_width  = NULL;
     unsigned char* buf_length = NULL;
@@ -591,7 +600,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
     if (err)
         return err;
 
-    if (*len < (size_t)n_vals)
+    if (*len < static_cast<size_t>(n_vals))
         return GRIB_ARRAY_TOO_SMALL;
 
     if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
@@ -639,7 +648,8 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
 
     self->dirty = 0;
 
-    sec_val = (long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
+    // sec_val = (long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
+    sec_val = new long[n_vals];
     if (!sec_val)
         return GRIB_OUT_OF_MEMORY;
     memset(sec_val, 0, (n_vals) * sizeof(long)); /* See SUP-718 */
@@ -750,7 +760,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
 
     if (orderOfSpatialDifferencing) {
         long bias               = 0;
-        unsigned long extras[2] = {0,};
+        unsigned long extras[2] = {0, };
         ref_p = 0;
 
         /* For Complex packing, order == 0 */
@@ -782,7 +792,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         }
     }
 
-    grib_context_free(a->context, sec_val);
+    delete [] sec_val;
     return err;
 }
 
@@ -1053,13 +1063,15 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
             s = t;
             continue;
         }
-        //if (val0 == INT_MAX || val1 == INT_MAX) { s=t; continue; }
+        // if (val0 == INT_MAX || val1 == INT_MAX) { s=t; continue; }
 
         if (nbit_s < nbit_t && val1 == INT_MAX) {
-            if ((s->i1 - s->i0) < LEN_SEC_MAX && s->mx != s->mn)
+            if ((s->i1 - s->i0) < LEN_SEC_MAX && s->mx != s->mn) {
                 move_one_left(s, v);
-            else
+            }
+            else {
                 s = t;
+            }
             continue;
         }
 
@@ -1067,12 +1079,13 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
             if ((t->i1 - t->i0) < LEN_SEC_MAX && t->mn != t->mx) {
                 move_one_right(s, v);
             }
-            else
+            else {
                 s = t;
+            }
             continue;
         }
 
-        //if (s->missing == 1 || t->missing == 1) { s=t; continue; }
+        // if (s->missing == 1 || t->missing == 1) { s=t; continue; }
 
         // 3/2014   val0 = v[s->i1];
         // 3/2014   val1 = v[t->i0];
@@ -1085,8 +1098,9 @@ static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
                  val0 >= t->mn && val0 <= t->mx) {
             move_one_right(s, v);
         }
-        else
+        else {
             s = s->tail;
+        }
     }
 }
 
@@ -1199,7 +1213,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     unsigned char* sec7;
     long sec5_19, sec5_36, sec5_46, sec5_48;
-    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
+    grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh                           = grib_handle_of_accessor(a);
 
     /*size_t i      = 0;*/
@@ -1210,34 +1224,34 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     // unsigned char* buf        = NULL;
     // unsigned char* buf_ref    = NULL;
-    //unsigned char* buf_length = NULL;
+    // unsigned char* buf_length = NULL;
     // double d       = 0;
-    //double divisor = 0;
+    // double divisor = 0;
 
     long bits_per_value = 0;
 
-    //double reference_value = 0;
-    //long nvals_per_group     = 0;
-    //long nbits_per_group_val = 0;
+    // double reference_value = 0;
+    // long nvals_per_group     = 0;
+    // long nbits_per_group_val = 0;
 
     long binary_scale_factor;
     long decimal_scale_factor;
     long optimize_scale_factor;
     long typeOfOriginalFieldValues;
-    //long groupSplittingMethodUsed;
+    // long groupSplittingMethodUsed;
     long missingValueManagementUsed;
     long primaryMissingValueSubstitute;
     long secondaryMissingValueSubstitute;
-    //long numberOfGroupsOfDataValues;
+    // long numberOfGroupsOfDataValues;
     // long referenceForGroupWidths;
     long numberOfBitsUsedForTheGroupWidths;
-    //long trueLengthOfLastGroup;
+    // long trueLengthOfLastGroup;
     long numberOfBitsUsedForTheScaledGroupLengths;
     long orderOfSpatialDifferencing;
     long numberOfOctetsExtraDescriptors;
 
-    double* data;
-    size_t ndata = *len;
+    // double* data;
+    // size_t ndata = *len;
     int dec_scale;
     int bin_scale;
     int wanted_bits;
@@ -1260,7 +1274,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     int est_group_width = 6;
 
     size_t ndef   = 0;
-    size_t nndata = *len;  // done
+    size_t nndata = 0;
     size_t nstruct;
 
     long bitmap_present = 0;
@@ -1300,17 +1314,21 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(gh, "bitmapPresent", &bitmap_present)) != GRIB_SUCCESS)
         return err;
 
-    max_bits = bits_per_value; // TODO(masn)
+    max_bits = bits_per_value;  // TODO(masn)
 
     packing_mode = orderOfSpatialDifferencing;
-    //if (orderOfSpatialDifferencing == 0) packing_mode = 1; //grid_complex
-    //if (orderOfSpatialDifferencing == 1) packing_mode = 2; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
-    //if (orderOfSpatialDifferencing == 2) packing_mode = 3; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
+    // if (orderOfSpatialDifferencing == 0) packing_mode = 1; //grid_complex
+    // if (orderOfSpatialDifferencing == 1) packing_mode = 2; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
+    // if (orderOfSpatialDifferencing == 2) packing_mode = 3; //grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
 
     use_bitmap = bitmap_present;
     wanted_bits = bits_per_value;
-    data = (double*) val;
-    ndata = *len;
+    // data = (double*) val;
+
+    size_t ndata = *len;
+    double* data = new double[ndata];
+    std::memcpy(data, val, sizeof(*data) * ndata);
+
     dec_scale = -decimal_scale_factor;
     bin_scale = binary_scale_factor;
     ndef = 0;
@@ -1336,7 +1354,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, 1)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long((float)9.999e20))) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
             return err;
         if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
             return err;
@@ -1369,13 +1387,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     nndata    = use_bitmap ? ndef : ndata;
     has_undef = use_bitmap ? 0 : ndata != ndef;
 
-    v = (int*)malloc(((size_t)nndata) * sizeof(int));
+    v = new int[nndata];
     if (min_max_array(data, ndata, &mn, &mx) != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: Failed to get min max of data");
         return GRIB_ENCODING_ERROR;
     }
-    min_val = (double)mn;
-    max_val = (double)mx;
+    min_val = static_cast<double>(mn);
+    max_val = static_cast<double>(mx);
 
     binary_scale = bin_scale;
 
@@ -1444,7 +1462,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
     else {
-        scale = 1.0;
+        // scale = 1.0;
         if (has_undef) {
             for (i = 0; i < nndata; i++) {
                 if (DEFINED_VAL(data[i])) {
@@ -1553,7 +1571,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    list = (struct section*)malloc((size_t)nstruct * sizeof(struct section));
+    list = new section[nstruct];
+
     if (list == NULL) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list failed");
         return GRIB_OUT_OF_MEMORY;
@@ -1611,7 +1630,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     //  try making segment sizes larger
     //  12/2015 need to segment size less 25 bits, bitstream software limitation
 
-    list_backup = (struct section*)malloc(((size_t)nstruct) * sizeof(struct section));
+    list_backup = new struct section[nstruct];
     if (list_backup == NULL) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list_backup failed");
         return GRIB_OUT_OF_MEMORY;
@@ -1642,7 +1661,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             LEN_SEC_MAX = (LEN_SEC_MAX - 1) / 2;
         }
     }
-    free(list_backup);
+    delete[] list_backup;
 
     exchange(start.tail, v, has_undef, LEN_SEC_MAX);
 #ifdef DEBUG
@@ -1686,11 +1705,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         s = s->tail;
     }
 
-    lens   = (int*)malloc(((size_t)ngroups) * sizeof(int));
-    widths = (int*)malloc(((size_t)ngroups) * sizeof(int));
-    refs   = (int*)malloc(((size_t)ngroups) * sizeof(int));
-    itmp   = (int*)malloc(((size_t)ngroups) * sizeof(int));
-    itmp2  = (int*)malloc(((size_t)ngroups) * sizeof(int));
+    lens   = new int[ngroups];
+    widths = new int[ngroups];
+    refs   = new int[ngroups];
+    itmp   = new int[ngroups];
+    itmp2  = new int[ngroups];
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
         return GRIB_OUT_OF_MEMORY;
@@ -1704,7 +1723,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         itmp[ii]  = s->mx;
         itmp2[ii] = s->missing;
     }
-    if (i != nndata) 
+    if (i != nndata)
         return GRIB_INTERNAL_ERROR;
 
     for (i = 0; i < ngroups; i++) {
@@ -1752,7 +1771,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     sec5_19 = find_nbits(grefmx + has_undef);
     if ((err = grib_set_long_internal(gh, self->bits_per_value, sec5_19)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_double_internal(gh, self->reference_value, (double)ref)) != GRIB_SUCCESS)
+    if ((err = grib_set_double_internal(gh, self->reference_value, static_cast<double>(ref))) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale)) != GRIB_SUCCESS)
         return err;
@@ -1764,7 +1783,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, has_undef)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long((float)9.999e20))) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
         return err;
@@ -1784,12 +1803,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     sec5_46 = find_nbits(glenmx - glenmn);
     if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, sec5_46)) != GRIB_SUCCESS)
         return err;
-    
+
     size_sec7 = 5;
 
     if (packing_mode == 2) {
         size_sec7 += 2 * sec5_48;
         if ((err = grib_set_long_internal(gh, self->orderOfSpatialDifferencing, 1)) != GRIB_SUCCESS)
+            return err;
+        // if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, 2)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->numberOfOctetsExtraDescriptors, sec5_48)) != GRIB_SUCCESS)
             return err;
     }
     else if (packing_mode == 3) {
@@ -1826,7 +1848,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
 
-    sec7 = (unsigned char*)malloc(size_sec7);
+    sec7 = new unsigned char[size_sec7];
     if (sec7 == NULL) {
         return GRIB_OUT_OF_MEMORY;
     }
@@ -1884,17 +1906,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     finish_bitstream();
-    
+
     grib_buffer_replace(a, sec7 + 5, size_sec7 - 5, 1, 1);
 
-    free(sec7);
-    free(list);
-    free(v);
-    free(lens);
-    free(widths);
-    free(refs);
-    free(itmp);
-    free(itmp2);
+    delete[] sec7;
+    delete[] list;
+    delete[] v;
+    delete[] lens;
+    delete[] widths;
+    delete[] refs;
+    delete[] itmp;
+    delete[] itmp2;
+    delete[] data;
 
     /* ECC-259: Set correct number of values */
     if ((err = grib_set_long_internal(gh, self->numberOfValues, *len)) != GRIB_SUCCESS)
@@ -1923,7 +1946,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     if (idx > size)
         return GRIB_INVALID_ARGUMENT;
 
-    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    values = reinterpret_cast<double*>(grib_context_malloc_clear(a->context, size * sizeof(double)));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
     if (err) {
         grib_context_free(a->context, values);
@@ -1949,7 +1972,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
         if (index_array[i] > size) return GRIB_INVALID_ARGUMENT;
     }
 
-    values = (double*)grib_context_malloc_clear(a->context, size * sizeof(double));
+    values = reinterpret_cast<double*>(grib_context_malloc_clear(a->context, size * sizeof(double)));
     err    = grib_get_double_array(grib_handle_of_accessor(a), "codedValues", values, &size);
     if (err) {
         grib_context_free(a->context, values);
@@ -1964,7 +1987,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 
 static int value_count(grib_accessor* a, long* count)
 {
-    grib_accessor_data_g22order_packing* self = (grib_accessor_data_g22order_packing*)a;
+    grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     *count                                    = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues, count);
 }
