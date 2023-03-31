@@ -1312,10 +1312,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     max_bits = bits_per_value;  // TODO(masn)
 
-    // Mapping: eccodes : wgrib2
-    // orderOfSpatialDifferencing = 0 : packing_mode = 1 : grid_complex
-    // orderOfSpatialDifferencing = 1 : packing_mode = 2 : grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
-    // orderOfSpatialDifferencing = 2 : packing_mode = 3 : grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
+    // Note:
+    //  orderOfSpatialDifferencing = 0 means "grid_complex"
+    //  orderOfSpatialDifferencing = 1 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=1
+    //  orderOfSpatialDifferencing = 2 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=2
+    // The variable "packing_mode" in wgrib2 (file complex_pk.c) has 3 possible values:
+    //  packing_mode = 1 grid_complex
+    //  packing_mode = 2 grid_complex_spatial_differencing with orderOfSpatialDifferencing=1
+    //  packing_mode = 3 grid_complex_spatial_differencing with orderOfSpatialDifferencing=2
+    //
+    // TODO(masn): This needs to be reviewed!
+    //
 
     use_bitmap = bitmap_present;
     wanted_bits = bits_per_value;
