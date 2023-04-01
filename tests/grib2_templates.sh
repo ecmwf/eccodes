@@ -119,4 +119,9 @@ $tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=85 $samp
 $tools_dir/grib_compare -b productDefinitionTemplateNumber $temp1 $temp2
 
 
+# ECC-1564: Support local product definition templates for different centres
+$tools_dir/grib_set -s productDefinitionTemplateNumber=40033 $sample2 $temp
+$tools_dir/grib_set -s productDefinitionTemplateNumber=40034 $sample2 $temp
+
+
 rm -f $temp $temp1 $temp2 $tempFilt
