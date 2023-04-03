@@ -92,7 +92,9 @@ static grib_accessor_class _grib_accessor_class_number_of_points_gaussian = {
     0,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -108,7 +110,9 @@ static grib_accessor_class _grib_accessor_class_number_of_points_gaussian = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -132,7 +136,9 @@ static void init_class(grib_accessor_class* c)
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_long    =    (*(c->super))->pack_long;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -148,7 +154,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -320,13 +328,14 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len);
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                                       = GRIB_SUCCESS;
+    int err                                       = GRIB_SUCCESS;
     long support_legacy                           = 1;
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_handle* h                                = grib_handle_of_accessor(a);
 
-    if ((ret = grib_get_long_internal(h, self->support_legacy, &support_legacy)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->support_legacy, &support_legacy)) != GRIB_SUCCESS)
+        return err;
+
     if (support_legacy == 1)
         return unpack_long_with_legacy_support(a, val, len);
     else
@@ -336,7 +345,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 /* New algorithm */
 static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
 {
-    int ret       = GRIB_SUCCESS;
+    int err       = GRIB_SUCCESS;
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
@@ -352,14 +361,14 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_context* c                               = a->context;
 
-    if ((ret = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+        return err;
 
     if (nj == 0)
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -375,19 +384,19 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
         double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
-        if ((ret = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
+            return err;
 
-        if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+            return err;
 
         pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
@@ -415,6 +424,10 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
             *val = 0;
             for (j = 0; j < nj; j++) {
                 row_count = 0;
+                if (pl[j] == 0) {
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
                 lon_first_row = ((ilon_first)*360.0) / pl[j];
                 lon_last_row  = ((ilon_last)*360.0) / pl[j];
@@ -437,13 +450,13 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     if (plsave)
         grib_context_free(c, plsave);
 
-    return ret;
+    return err;
 }
 
 /* With Legacy support */
 static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
 {
-    int ret       = GRIB_SUCCESS;
+    int err       = GRIB_SUCCESS;
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
     size_t plsize = 0;
@@ -460,14 +473,14 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
     grib_context* c                               = a->context;
 
-    if ((ret = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->nj, &nj)) != GRIB_SUCCESS)
+        return err;
 
-    if ((ret = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_long_internal(h, self->plpresent, &plpresent)) != GRIB_SUCCESS)
+        return err;
 
     if (nj == 0)
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -483,19 +496,19 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
         double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
-        if ((ret = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lat_first, &lat_first)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lon_first, &lon_first)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lat_last, &lat_last)) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_get_double_internal(h, self->lon_last, &lon_last)) != GRIB_SUCCESS)
+            return err;
 
-        if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+            return err;
 
         pl     = (long*)grib_context_malloc_clear(c, sizeof(long) * plsize);
         plsave = pl;
@@ -535,6 +548,10 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
 #if EFDEBUG
                 printf("--  %d ", j);
 #endif
+                if (pl[j] == 0) {
+                    grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid pl array: entry at index=%d is zero", j);
+                    return GRIB_GEOCALCULUS_PROBLEM;
+                }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
 #if 0
                 if ( row_count != pl[j] ) {
@@ -585,5 +602,5 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
         }
     }
 
-    return ret;
+    return err;
 }

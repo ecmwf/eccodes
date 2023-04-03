@@ -33,7 +33,7 @@ static const struct table_entry table[] = {
 
 grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* ret)
 {
-    int i;
+    size_t i = 0;
     const char* type = (char*)grib_arguments_get_name(h, args, 0);
 
     for (i = 0; i < NUMBER(table); i++)

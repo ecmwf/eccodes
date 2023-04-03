@@ -198,6 +198,14 @@ grib_check_key_equals $temp 'mars.iteration' '23'
 ${tools_dir}/grib_ls -jm $temp > $temp.1
 grep -q "iteration.* 23" $temp.1
 
+# ECC-1540: Local Definition 36
+# --------------------------------
+${tools_dir}/grib_set -s \
+   setLocalDefinition=1,localDefinitionNumber=36,paramId=210170,class=rd,type=4v,stream=elda \
+   $sample_g2 $temp
+grib_check_key_exists $temp mars.number,constituentType,sourceSinkChemicalPhysicalProcess
+${tools_dir}/grib_set -s localDefinitionNumber=36 $temp $temp.1
+${tools_dir}/grib_compare $temp $temp.1
 
 # Clean up
 rm -f $temp $temp.1 $temp.2 $temp.3

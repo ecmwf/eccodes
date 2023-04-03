@@ -178,7 +178,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     &pack_long,                  /* grib_pack procedures long */
     0,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -194,7 +196,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     0,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -211,6 +215,8 @@ static void init_class(grib_accessor_class* c)
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
     c->unpack_long    =    (*(c->super))->unpack_long;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -225,7 +231,9 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -743,7 +751,12 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
     modifiedWidth = bd->width;
 
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + modifiedWidth);
-    grib_encode_string(buff->data, pos, modifiedWidth / 8, stringValues->v[ival]);
+    err = grib_encode_string(buff->data, pos, modifiedWidth / 8, stringValues->v[ival]);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: %s. Failed to encode '%s'",
+                         bd->shortName, stringValues->v[ival]);
+        return err;
+    }
     width = n > 1 ? modifiedWidth : 0;
 
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + 6);
@@ -752,7 +765,12 @@ static int encode_string_array(grib_context* c, grib_buffer* buff, long* pos, bu
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + width * n);
         for (j = 0; j < n; j++) {
             k = self->iss_list->v[j];
-            grib_encode_string(buff->data, pos, width / 8, stringValues->v[k]);
+            err = grib_encode_string(buff->data, pos, width / 8, stringValues->v[k]);
+            if (err) {
+                grib_context_log(c, GRIB_LOG_ERROR, "encode_string_array: %s. Failed to encode '%s'",
+                                 bd->shortName, stringValues->v[k]);
+                return err;
+            }
         }
     }
     return err;
@@ -798,8 +816,8 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
     double min = 0, max = 0, maxAllowed, minAllowed;
     double* v           = NULL;
     double* values      = NULL;
-    int thereIsAMissing = 0;
-    int is_constant;
+    bool thereIsAMissing = false;
+    bool is_constant = true;
     double val0;
     /* ECC-379, ECC-830 */
     const int dont_fail_if_out_of_range = self->set_to_missing_if_out_of_range;
@@ -845,7 +863,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
                     grib_set_bits_on(buff->data, pos, modifiedWidth);
                 }
                 else {
-                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+                    grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                                      bd->shortName, bd->code, *v, minAllowed, maxAllowed);
                     return GRIB_OUT_OF_RANGE; /* ECC-611 */
                 }
@@ -864,16 +882,16 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
         return GRIB_ARRAY_TOO_SMALL;
     values      = (double*)grib_context_malloc_clear(c, sizeof(double) * nvals);
     val0        = dvalues->v[self->iss_list->v[0]];
-    is_constant = 1;
+    is_constant = true;
     for (i = 0; i < nvals; i++) {
         values[i] = dvalues->v[self->iss_list->v[i]];
         if (val0 != values[i])
-            is_constant = 0;
+            is_constant = false;
     }
     v = values;
 
     /* encoding a range with constant values*/
-    if (is_constant == 1) {
+    if (is_constant) {
         localWidth = 0;
         grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + modifiedWidth);
         if (*v == GRIB_MISSING_DOUBLE) {
@@ -891,7 +909,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
 
     ii = 0;
     while (ii < nvals && *v == GRIB_MISSING_DOUBLE) {
-        thereIsAMissing = 1;
+        thereIsAMissing = true;
         v++;
         ii++;
     }
@@ -932,17 +950,17 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
             index_of_max = ii;
         }
         if (*v == GRIB_MISSING_DOUBLE)
-            thereIsAMissing = 1;
+            thereIsAMissing = true;
         ii++;
         v++;
     }
     if (max > maxAllowed && max != GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Maximum value (value[%lu]=%g) out of range (maxAllowed=%g).",
                          bd->shortName, bd->code, index_of_max, max, maxAllowed);
         return GRIB_OUT_OF_RANGE;
     }
     if (min < minAllowed && min != GRIB_MISSING_DOUBLE) {
-        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06d). Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_double_array: %s (%06ld). Minimum value (value[%lu]=%g) out of range (minAllowed=%g).",
                          bd->shortName, bd->code, index_of_min, min, minAllowed);
         return GRIB_OUT_OF_RANGE;
     }
@@ -962,7 +980,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
             localWidth++;
     }
     else {
-        if (thereIsAMissing == 1)
+        if (thereIsAMissing)
             localWidth = 1;
         else
             localWidth = 0;
@@ -1034,7 +1052,7 @@ static int encode_double_value(grib_context* c, grib_buffer* buff, long* pos, bu
             grib_set_bits_on(buff->data, pos, modifiedWidth);
         }
         else {
-            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s (%06d). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
+            grib_context_log(c, GRIB_LOG_ERROR, "encode_double_value: %s (%06ld). Value (%g) out of range (minAllowed=%g, maxAllowed=%g).",
                              bd->shortName, bd->code, value, minAllowed, maxAllowed);
             return GRIB_OUT_OF_RANGE;
         }
@@ -1057,8 +1075,10 @@ static int encode_string_value(grib_context* c, grib_buffer* buff, long* pos, bu
 
     len = bd->width / 8;
     grib_buffer_set_ulength_bits(c, buff, buff->ulength_bits + bd->width);
-
-    grib_encode_string(buff->data, pos, len, sval);
+    err = grib_encode_string(buff->data, pos, len, sval);
+    if (err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "encode_string_value: %s. Failed to encode '%s'", bd->shortName, sval);
+    }
 
     return err;
 }

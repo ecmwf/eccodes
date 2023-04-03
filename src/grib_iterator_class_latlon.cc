@@ -32,9 +32,11 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class  (grib_iterator_class*);
-static int init         (grib_iterator* i,grib_handle*,grib_arguments*);
-static int next         (grib_iterator* i, double *lat, double *lon, double *val);
+static void init_class              (grib_iterator_class*);
+
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+
 
 typedef struct grib_iterator_latlon{
   grib_iterator it;
@@ -77,16 +79,16 @@ grib_iterator_class* grib_iterator_class_latlon = &_grib_iterator_class_latlon;
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous  = (*(c->super))->previous;
-    c->reset     = (*(c->super))->reset;
-    c->has_next  = (*(c->super))->has_next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
 static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
     /* GRIB-238: Support rotated lat/lon grids */
-    double ret_lat, ret_lon, ret_val;
+    double ret_lat, ret_lon, ret_val=0;
     grib_iterator_latlon* self = (grib_iterator_latlon*)iter;
 
     if ((long)iter->e >= (long)(iter->nv - 1))
@@ -101,13 +103,15 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
         /* Adjacent points in i (x) direction are consecutive */
         ret_lat = self->las[(long)floor(iter->e / self->Ni)];
         ret_lon = self->los[(long)iter->e % self->Ni];
-        ret_val = iter->data[iter->e];
+        if (iter->data)
+            ret_val = iter->data[iter->e];
     }
     else {
         /* Adjacent points in j (y) direction is consecutive */
         ret_lon = self->los[(long)iter->e / self->Nj];
         ret_lat = self->las[(long)floor(iter->e % self->Nj)];
-        ret_val = iter->data[iter->e];
+        if (iter->data)
+            ret_val = iter->data[iter->e];
     }
 
     /* See ECC-808: Some users want to disable the unrotate */
@@ -122,7 +126,9 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 
     *lat = ret_lat;
     *lon = ret_lon;
-    *val = ret_val;
+    if (val && iter->data) {
+        *val = ret_val;
+    }
     return 1;
 }
 

@@ -27,6 +27,17 @@ fBufrTmp2=temp2.${label}.bufr
 fRules=${label}.filter
 
 #-----------------------------------------------------------
+# Test:  extract without unpacking
+#-----------------------------------------------------------
+set +e
+echo 'set extractSubset=1; set doExtractSubsets=1;' | ${tools_dir}/codes_bufr_filter - aaen_55.bufr > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Could not extract subset" $fLog
+rm -f $fLog
+
+#-----------------------------------------------------------
 # Test:  extract subsets uncompressed data
 #-----------------------------------------------------------
 cat > $fRules <<EOF

@@ -50,6 +50,10 @@ if (bitMapIndicator == 255)
   if (dataRepresentationTemplateNumber == 2 || dataRepresentationTemplateNumber == 3) {
     transient missingValuesPresent = (missingValueManagementUsed != 0) : read_only;
   }
+  if (dataRepresentationTemplateNumber == 200) {
+    # This template can have undefined values within its Data Section
+    transient missingValuesPresent = 1;
+  }
 }
 
 meta md5Section6 md5(offsetSection6,section6Length);

@@ -148,7 +148,7 @@ foreach( test ${tests_extra} )
                           TYPE         SCRIPT
                           CONDITION    ENABLE_EXTRA_TESTS
                           COMMAND      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
-                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs )
+                          TEST_DEPENDS eccodes_download_gribs eccodes_download_bufrs eccodes_download_bufr_refs )
 endforeach()
 
 # Tests which are conditional

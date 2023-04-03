@@ -84,7 +84,9 @@ static grib_accessor_class _grib_accessor_class_ascii = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -100,7 +102,9 @@ static grib_accessor_class _grib_accessor_class_ascii = {
     0,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -118,6 +122,8 @@ static void init_class(grib_accessor_class* c)
     c->sub_section    =    (*(c->super))->sub_section;
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
@@ -130,7 +136,9 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -167,17 +175,18 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int i             = 0;
+    size_t i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
+    const size_t alen = a->length;
 
-    if (len[0] < (a->length + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s it contains %ld values",
+    if (len[0] < (alen + 1)) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
                 len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    for (i = 0; i < a->length; i++)
+    for (i = 0; i < alen; i++)
         val[i] = hand->buffer->data[a->offset + i];
     val[i] = 0;
     len[0] = i;
@@ -186,16 +195,17 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    int i             = 0;
+    size_t i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
-    if (len[0] > (a->length) + 1) {
+    const size_t alen = a->length;
+    if (len[0] > (alen + 1)) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "pack_string: Wrong size (%lu) for %s it contains %ld values", len[0], a->name, a->length + 1);
+                "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    for (i = 0; i < a->length; i++) {
+    for (i = 0; i < alen; i++) {
         if (i < len[0])
             hand->buffer->data[a->offset + i] = val[i];
         else

@@ -337,6 +337,7 @@ int codes_get_double(const grib_handle* h, const char* key, double* value)
 {
     return grib_get_double(h, key, value);
 }
+
 int codes_get_double_element(const grib_handle* h, const char* key, int i, double* value)
 {
     return grib_get_double_element(h, key, i, value);
@@ -345,6 +346,15 @@ int codes_get_double_elements(const grib_handle* h, const char* key, const int* 
 {
     return grib_get_double_elements(h, key, index_array, size, value);
 }
+int codes_get_float_element(const grib_handle* h, const char* key, int i, float* value)
+{
+    return grib_get_float_element(h, key, i, value);
+}
+int codes_get_float_elements(const grib_handle* h, const char* key, const int* index_array, long size, float* value)
+{
+    return grib_get_float_elements(h, key, index_array, size, value);
+}
+
 int codes_get_string(const grib_handle* h, const char* key, char* mesg, size_t* length)
 {
     return grib_get_string(h, key, mesg, length);
@@ -360,6 +370,10 @@ int codes_get_bytes(const grib_handle* h, const char* key, unsigned char* bytes,
 int codes_get_double_array(const grib_handle* h, const char* key, double* vals, size_t* length)
 {
     return grib_get_double_array(h, key, vals, length);
+}
+int codes_get_float_array(const grib_handle* h, const char* key, float* vals, size_t* length)
+{
+    return grib_get_float_array(h, key, vals, length);
 }
 int codes_get_long_array(const grib_handle* h, const char* key, long* vals, size_t* length)
 {
@@ -385,6 +399,7 @@ int codes_set_bytes(grib_handle* h, const char* key, const unsigned char* bytes,
 {
     return grib_set_bytes(h, key, bytes, length);
 }
+
 int codes_set_double_array(grib_handle* h, const char* key, const double* vals, size_t length)
 {
     return grib_set_double_array(h, key, vals, length);
@@ -393,6 +408,15 @@ int codes_set_force_double_array(grib_handle* h, const char* key, const double* 
 {
     return grib_set_force_double_array(h, key, vals, length);
 }
+int codes_set_float_array(grib_handle* h, const char* key, const float* vals, size_t length)
+{
+    return grib_set_float_array(h, key, vals, length);
+}
+int codes_set_force_float_array(grib_handle* h, const char* key, const float* vals, size_t length)
+{
+    return grib_set_force_float_array(h, key, vals, length);
+}
+
 int codes_set_long_array(grib_handle* h, const char* key, const long* vals, size_t length)
 {
     return grib_set_long_array(h, key, vals, length);
@@ -468,10 +492,16 @@ int codes_keys_iterator_get_long(const grib_keys_iterator* kiter, long* v, size_
 {
     return grib_keys_iterator_get_long(kiter, v, len);
 }
+
 int codes_keys_iterator_get_double(const grib_keys_iterator* kiter, double* v, size_t* len)
 {
     return grib_keys_iterator_get_double(kiter, v, len);
 }
+int codes_keys_iterator_get_float(const grib_keys_iterator* kiter, float* v, size_t* len)
+{
+    return grib_keys_iterator_get_float(kiter, v, len);
+}
+
 int codes_keys_iterator_get_string(const grib_keys_iterator* kiter, char* v, size_t* len)
 {
     return grib_keys_iterator_get_string(kiter, v, len);

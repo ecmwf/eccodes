@@ -77,7 +77,9 @@ static grib_accessor_class _grib_accessor_class_change_alternative_row_scanning 
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -93,7 +95,9 @@ static grib_accessor_class _grib_accessor_class_change_alternative_row_scanning 
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -115,7 +119,9 @@ static void init_class(grib_accessor_class* c)
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -131,7 +137,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -187,8 +195,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
         return err;
 
-    if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: wrong values size!=Ni*Nj (%ld!=%ld*%ld)", size, Ni, Nj);
+    if ( size > (size_t)(Ni * Nj) ) {
+        grib_context_log(c, GRIB_LOG_ERROR, "change_alternative_row_scanning: wrong values size!=Ni*Nj (%zu!=%ld*%ld)", size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 

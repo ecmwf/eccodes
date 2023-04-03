@@ -86,7 +86,9 @@ static grib_accessor_class _grib_accessor_class_concept = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -102,7 +104,9 @@ static grib_accessor_class _grib_accessor_class_concept = {
     0,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -120,6 +124,8 @@ static void init_class(grib_accessor_class* c)
     c->sub_section    =    (*(c->super))->sub_section;
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
@@ -132,7 +138,9 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -342,6 +350,31 @@ static int cmpstringp(const void* p1, const void* p2)
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
+static bool blacklisted(grib_handle* h, long edition, const char* concept_name, const char* concept_value)
+{
+    if ( strcmp(concept_name, "packingType")==0 ) {
+        char input_packing_type[100];
+        size_t len = sizeof(input_packing_type);
+        if (strstr(concept_value, "SPD")) {
+            return true;
+        }
+        if (edition == 2 && strstr(concept_value, "grid_run_length")) {
+            return true;
+        }
+        if (edition == 1 && (strstr(concept_value, "ccsds") || strstr(concept_value, "jpeg"))) {
+            return true;
+        }
+        grib_get_string(h, "packingType", input_packing_type, &len);
+        if (strstr(input_packing_type,"grid_") && !strstr(concept_value,"grid_")) {
+            return true;
+        }
+        if (strstr(input_packing_type,"spectral_") && !strstr(concept_value,"spectral_")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static int grib_concept_apply(grib_accessor* a, const char* name)
 {
     int err                   = 0;
@@ -379,11 +412,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             }
             if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
             }
             if (strcmp(act->name, "shortName") == 0) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/'");
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
             }
 
             /* Create a list of all possible values for this concept and sort it */
@@ -397,16 +430,20 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
             /* Only print out all concepts if fewer than MAX_NUM_CONCEPT_VALUES.
              * Printing out all values for concepts like paramId would be silly! */
             if (concept_count < MAX_NUM_CONCEPT_VALUES) {
-                fprintf(stderr, "Here are the possible values for concept %s:\n", act->name);
+                fprintf(stderr, "Here are some possible values for concept %s:\n", act->name);
                 qsort(&all_concept_vals, concept_count, sizeof(char*), cmpstringp);
                 for (i = 0; i < concept_count; ++i) {
                     if (all_concept_vals[i]) {
-                        int print_it = 1;
+                        bool print_it = true;
                         if (i > 0 && all_concept_vals[i - 1] && strcmp(all_concept_vals[i], all_concept_vals[i - 1]) == 0) {
-                            print_it = 0; /* skip duplicate entries */
+                            print_it = false; /* skip duplicate entries */
                         }
-                        if (print_it)
+                        if (blacklisted(h, editionNumber, act->name, all_concept_vals[i])) {
+                            print_it = false;
+                        }
+                        if (print_it) {
                             fprintf(stderr, "\t%s\n", all_concept_vals[i]);
+                        }
                     }
                 }
             }

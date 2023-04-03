@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.29.1 LANGUAGES CXX )
+project( eccodes VERSION 2.30.0 LANGUAGES CXX )
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -64,6 +64,11 @@ endif()
 ecbuild_debug("ECCODES_BIG_ENDIAN=${ECCODES_BIG_ENDIAN}")
 ecbuild_debug("ECCODES_LITTLE_ENDIAN=${ECCODES_LITTLE_ENDIAN}")
 ecbuild_info("Operating system=${CMAKE_SYSTEM} (${EC_OS_BITS} bits)")
+
+# Only support 64 bit operating systems
+if( NOT EC_OS_BITS EQUAL "64" )
+    ecbuild_critical( "Operating system ${CMAKE_SYSTEM} (${EC_OS_BITS} bits) -- ecCodes only supports 64 bit platforms" )
+endif()
 
 ###############################################################################
 # some variables/options of this project
@@ -315,11 +320,6 @@ if( IEEE_LE )
     set( IEEE_BE 0 )
 endif()
 
-set( ECCODES_ON_LINUX_32BIT 0 )
-if( EC_OS_NAME MATCHES "linux" AND EC_OS_BITS EQUAL "32" )
-    set( ECCODES_ON_LINUX_32BIT 1 )
-endif()
-
 set( ECCODES_ON_WINDOWS 0 )
 if( EC_OS_NAME MATCHES "windows" )
     # Symbols need to be explicitly exported on Windows so we can link to dlls.
@@ -430,11 +430,12 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
+ecbuild_dont_pack( FILES .cproject .project )
 ecbuild_dont_pack( DIRS
-     experimental deprecated doxygen confluence tests/tests.ecmwf
-     config m4 examples/F77 src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
-     examples/examples.dev examples/extra examples/deprecated bamboo
-     fortran/fortranCtypes tigge/tools share/eccodes  .settings )
+    experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
+    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    examples/examples.dev examples/extra examples/deprecated bamboo
+    fortran/fortranCtypes tigge/tools share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

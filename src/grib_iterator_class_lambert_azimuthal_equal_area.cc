@@ -81,18 +81,19 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-static int next(grib_iterator* i, double* lat, double* lon, double* val)
+static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
-    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)i;
+    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)iter;
 
-    if ((long)i->e >= (long)(i->nv - 1))
+    if ((long)iter->e >= (long)(iter->nv - 1))
         return 0;
-    i->e++;
+    iter->e++;
 
-    *lat = self->lats[i->e];
-    *lon = self->lons[i->e];
-    *val = i->data[i->e];
-
+    *lat = self->lats[iter->e];
+    *lon = self->lons[iter->e];
+    if (val && iter->data) {
+        *val = iter->data[iter->e];
+    }
     return 1;
 }
 
@@ -486,12 +487,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     return GRIB_SUCCESS;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)i;
-    const grib_context* c                            = i->h->context;
+    grib_iterator_lambert_azimuthal_equal_area* self = (grib_iterator_lambert_azimuthal_equal_area*)iter;
+    const grib_context* c                            = iter->h->context;
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);
-    return 1;
+    return GRIB_SUCCESS;
 }

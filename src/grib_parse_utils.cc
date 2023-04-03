@@ -108,7 +108,8 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
                         snprintf(val, sizeof(val), "undef");
                     }
                     else {
-                        grib_context_log(h->context, GRIB_LOG_WARNING, "grib_recompose_name: Problem to recompose filename with : %s ( %s no accessor found)", uname, loc);
+                        grib_context_log(h->context, GRIB_LOG_WARNING,
+                        "Recompose name: Problem recomposing filename with : %s ( %s no accessor found)", uname, loc);
                         return GRIB_NOT_FOUND;
                     }
                 }
@@ -129,14 +130,15 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
                             snprintf(val, sizeof(val), "%d", (int)lval);
                             break;
                         default:
-                            grib_context_log(h->context, GRIB_LOG_WARNING, "grib_recompose_name: Problem to recompose filename with : %s, invalid type %d", loc, type);
+                            grib_context_log(h->context, GRIB_LOG_WARNING,
+                            "Recompose name: Problem recomposing filename with %s, invalid type %d", loc, type);
                             break;
                     }
 
                     grib_dependency_add(observer, a);
 
                     if ((ret != GRIB_SUCCESS)) {
-                        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_recompose_name: Could not recompose filename : %s", uname);
+                        grib_context_log(h->context, GRIB_LOG_ERROR, "Recompose name: Could not recompose filename: %s", uname);
                         return ret;
                     }
                 }
@@ -420,7 +422,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
             break;
         default:
             grib_context_log(h->context, GRIB_LOG_WARNING,
-                             "grib_accessor_print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
+                             "Accessor print: Problem printing \"%s\", invalid type %d", a->name, grib_get_type_name(type));
     }
     return ret;
 }
@@ -496,7 +498,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                             ret = GRIB_NOT_FOUND;
                         }
                         else {
-                            grib_context_log(h->context, GRIB_LOG_WARNING, "grib_recompose_print: Problem to recompose print with : %s, no accessor found", loc);
+                            grib_context_log(h->context, GRIB_LOG_WARNING,
+                            "Recompose print: Problem recomposing print with : %s, no accessor found", loc);
                             return GRIB_NOT_FOUND;
                         }
                     }
@@ -623,7 +626,7 @@ char* file_being_parsed()
 int grib_yyerror(const char* msg)
 {
     grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
-                     "grib_parser: %s at line %d of %s", msg, grib_yylineno + 1, parse_file);
+                     "Parser: %s at line %d of %s", msg, grib_yylineno + 1, parse_file);
     grib_context_log(grib_parser_context, GRIB_LOG_ERROR,
                      "ecCodes Version: %s", ECCODES_VERSION_STR);
     error = 1;
@@ -658,7 +661,7 @@ void grib_parser_include(const char* included_fname)
                     grib_parser_context->grib_definition_files_path);
 
             grib_context_log(grib_parser_context, GRIB_LOG_FATAL,
-                             "grib_parser_include: Could not resolve '%s' (included in %s)", included_fname, parse_file);
+                             "Parser include: Could not resolve '%s' (included in %s)", included_fname, parse_file);
 
             return;
         }
@@ -678,7 +681,7 @@ void grib_parser_include(const char* included_fname)
 
     if (f == NULL) {
         char buffer[1024];
-        grib_context_log(grib_parser_context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "grib_parser_include: cannot open: '%s'", parse_file);
+        grib_context_log(grib_parser_context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR), "Parser include: cannot open: '%s'", parse_file);
         snprintf(buffer, sizeof(buffer), "Cannot include file: '%s'", parse_file);
         grib_yyerror(buffer);
     }

@@ -32,6 +32,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling_sh
     grib_set_force
     grib_ecc-386
+    grib_ecc-1467
     grib_ecc-1431
     bufr_ecc-517
     bufr_ecc-1288
@@ -44,6 +45,7 @@ list(APPEND test_c_bins
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
+    grib_copy_message
     grib_packing_order
     grib_sh_imag
     grib_sh_spectral_complex
@@ -82,6 +84,7 @@ if( HAVE_BUILD_TOOLS )
         grib_uerra
         grib_s2s
         grib_fire
+        # grib_true_imagery
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
@@ -199,6 +202,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1030
         grib_ecc-1397
         grib_ecc-1425
+        grib_ecc-1467
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
@@ -239,6 +243,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_mercator
         grib_global
         grib_concept
+        grib_copy_message
         grib_decimalPrecision
         grib_bitsPerValue
         grib_get_fail
@@ -311,7 +316,8 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${test}.sh
                       RESOURCES asca_139.t1.ref
                       TEST_DEPENDS eccodes_download_gribs eccodes_download_tigge_gribs
-                                   eccodes_download_bufrs eccodes_download_metars eccodes_download_gts )
+                                   eccodes_download_bufrs eccodes_download_bufr_refs
+                                   eccodes_download_metars eccodes_download_gts )
     endforeach()
 
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
@@ -348,7 +354,7 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION NOT ECCODES_ON_WINDOWS AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-1288.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
+                      TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
 
     if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )

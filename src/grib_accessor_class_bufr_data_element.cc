@@ -110,7 +110,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     &pack_double,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     &pack_string_array,          /* grib_pack array procedures string */
@@ -126,7 +128,9 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     &make_clone,                 /* clone accessor */
@@ -143,6 +147,8 @@ static void init_class(grib_accessor_class* c)
     c->byte_count    =    (*(c->super))->byte_count;
     c->byte_offset    =    (*(c->super))->byte_offset;
     c->sub_section    =    (*(c->super))->sub_section;
+    c->pack_float    =    (*(c->super))->pack_float;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
     c->unpack_bytes    =    (*(c->super))->unpack_bytes;
     c->pack_expression    =    (*(c->super))->pack_expression;
@@ -153,7 +159,9 @@ static void init_class(grib_accessor_class* c)
     c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
 }
@@ -448,7 +456,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     value_count(a, &count);
 
-    if (*len < count)
+    if (*len < (size_t)count)
         return GRIB_ARRAY_TOO_SMALL;
 
     if (self->compressedData) {
@@ -477,7 +485,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     value_count(a, &count);
 
-    if (*len < count)
+    if (*len < (size_t)count)
         return GRIB_ARRAY_TOO_SMALL;
 
     if (self->compressedData) {
@@ -589,11 +597,11 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     /* ECC-415 */
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = GRIB_SUCCESS;
-    long count                            = 0;
+    int ret       = GRIB_SUCCESS;
+    long count    = 0;
 
     value_count(a, &count);
-    if (idx >= count) {
+    if (idx >= (size_t)count) {
         return GRIB_INTERNAL_ERROR;
     }
 

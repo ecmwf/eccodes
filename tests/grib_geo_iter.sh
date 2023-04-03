@@ -12,4 +12,33 @@
 
 label="grib_geo_iter_test"
 
-$EXEC ${test_dir}/grib_geo_iter
+infiles="
+    $ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+    $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl
+    $ECCODES_SAMPLES_PATH/regular_gg_ml_grib2.tmpl
+    $ECCODES_SAMPLES_PATH/polar_stereographic_pl_grib2.tmpl
+    $data_dir/regular_latlon_surface.grib1
+    $data_dir/mercator.grib2
+"
+
+# Run the iterator in two modes:
+#  -v  decodes the values
+#  -n  does not decode the values
+infile=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+for infile in $infiles; do
+    $EXEC ${test_dir}/grib_geo_iter -v $infile
+    $EXEC ${test_dir}/grib_geo_iter -n $infile
+done
+
+# Test a case where decoding is not possible but the iterator would work
+if [ $HAVE_JPEG -eq 0 ]; then
+    # No JPEG, so cannot decode the field but the iterator doesn't need to
+    infile=$data_dir/jpeg.grib2
+    set +e
+    ${tools_dir}/grib_get -p min,max $infile
+    status=$?
+    set -e
+    [ $status -ne 0 ]  # Make sure it fails to decode
+
+    $EXEC ${test_dir}/grib_geo_iter -n $infile
+fi

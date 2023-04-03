@@ -100,7 +100,9 @@ static grib_accessor_class _grib_accessor_class_g1step_range = {
     &pack_long,                  /* grib_pack procedures long */
     &unpack_long,                /* grib_unpack procedures long */
     0,                /* grib_pack procedures double */
+    0,                 /* grib_pack procedures float */
     0,              /* grib_unpack procedures double */
+    0,               /* grib_unpack procedures float */
     &pack_string,                /* grib_pack procedures string */
     &unpack_string,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -116,7 +118,9 @@ static grib_accessor_class _grib_accessor_class_g1step_range = {
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value */
+    0,       /* unpack only ith value */
     0,  /* unpack a given set of elements */
+    0,   /* unpack a given set of elements */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -135,7 +139,9 @@ static void init_class(grib_accessor_class* c)
     c->pack_missing    =    (*(c->super))->pack_missing;
     c->is_missing    =    (*(c->super))->is_missing;
     c->pack_double    =    (*(c->super))->pack_double;
+    c->pack_float    =    (*(c->super))->pack_float;
     c->unpack_double    =    (*(c->super))->unpack_double;
+    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
     c->unpack_string_array    =    (*(c->super))->unpack_string_array;
     c->pack_bytes    =    (*(c->super))->pack_bytes;
@@ -149,7 +155,9 @@ static void init_class(grib_accessor_class* c)
     c->next    =    (*(c->super))->next;
     c->compare    =    (*(c->super))->compare;
     c->unpack_double_element    =    (*(c->super))->unpack_double_element;
+    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
     c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
+    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
     c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
     c->clear    =    (*(c->super))->clear;
     c->make_clone    =    (*(c->super))->make_clone;
@@ -491,7 +499,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     size_t stepTypeLen = 20;
 
     if (self->stepType) {
-        ret = grib_get_string_internal(grib_handle_of_accessor(a), self->stepType, stepType, &stepTypeLen);
+        ret = grib_get_string_internal(h, self->stepType, stepType, &stepTypeLen);
         if (ret)
             return ret;
     }
@@ -570,11 +578,17 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         }
         off = p1_accessor->offset * 8;
         /* Note: here we assume the key P2 is one octet and immediately follows P1. Hence 16 bits */
-        if (h->context->debug)
-            fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
+
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
         if (ret != 0)
             return ret;
+
+        if (h->context->debug) {
+            long dp1,dp2;
+            grib_get_long(h, self->p1, &dp1);
+            grib_get_long(h, self->p2, &dp2);
+            fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
+        }
 
         if (ounit != unit)
             ret = grib_set_long_internal(h, self->unit, unit);
@@ -614,16 +628,25 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             /* Note:  case for timeRangeIndicator of 10
              * We assume the key P2 is one octet and immediately follows P1. Hence 16 bits
              */
-            if (h->context->debug)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (as two octets)\n", p1_accessor->name, P1);
             ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, P1, &off, 16);
             if (ret != 0)
                 return ret;
+
+            if (h->context->debug) {
+                long dp1,dp2;
+                grib_get_long(h, self->p1, &dp1);
+                grib_get_long(h, self->p2, &dp2);
+                fprintf(stderr, "ECCODES DEBUG pack_string: P1=%ld P2=%ld (as two octets => %ld)\n", dp1, dp2, P1);
+            }
 
             if (ounit != unit)
                 ret = grib_set_long_internal(h, self->unit, unit);
         }
 
+        if (ret == GRIB_WRONG_STEP) {
+            grib_context_log(h->context, GRIB_LOG_ERROR,
+                    "Failed to set %s=%s: Keys P1 and P2 are one octet each (Range 0 to 255)", a->name, val);
+        }
         return ret;
     }
 
