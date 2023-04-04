@@ -1352,6 +1352,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, 8)) != GRIB_SUCCESS)
             return err;
+
+        constexpr size_t sec7_size = 3;
+        unsigned char empty_sec7[sec7_size] = {255, 0, 0};  // group reference, group width, group length
+        grib_buffer_replace(a, empty_sec7, sec7_size, 1, 1);
         return GRIB_SUCCESS;
     }
 
