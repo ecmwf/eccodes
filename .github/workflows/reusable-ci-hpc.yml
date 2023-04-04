@@ -25,4 +25,5 @@ jobs:
           aec
         --parallel: 64
         ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh' }}
+        ${{ inputs.nightly_test && '--force-build: true' }}
     secrets: inherit
