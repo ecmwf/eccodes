@@ -23,6 +23,7 @@ jobs:
           ecbuild
           ninja
           aec
+          netcdf4/new
         --parallel: 64
         ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh' }}
         ${{ inputs.nightly_test && '--force-build: true' }}
