@@ -2,13 +2,16 @@
 
 set -e
 
-module unload ecmwf-toolbox # Very important if you are testing your own build/install
-module load  cdo/new
-module load  numdiff
-module load  nccmp netcdf4/new
-module load  gnuparallel/new
-module load  python3
+# We do not want to come across the ecCodes tools in the toolbox
+module unload ecmwf-toolbox
+
+module load cdo/new
+module load numdiff
+module load nccmp
+module load netcdf4/new
+module load gnuparallel/new
+module load python3
 
 cd ~masn/REGRESSION_TESTING/ecCodes
 # ./par-suite.sh -w $TMPDIR/install/eccodes
-./seq-suite.sh -w $TMPDIR/install/eccodes -d -t grib_png
+./seq-suite.sh -w $TMPDIR/install/eccodes -d -t py_binary_message
