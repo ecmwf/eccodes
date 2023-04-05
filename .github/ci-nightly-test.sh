@@ -13,5 +13,6 @@ module load gnuparallel/new
 module load python3
 
 cd ~masn/REGRESSION_TESTING/ecCodes
-# ./par-suite.sh -w $TMPDIR/install/eccodes
-./seq-suite.sh -w $TMPDIR/install/eccodes -d -t py_binary_message
+./par-suite.sh -w $TMPDIR/install/eccodes -t py_
+
+# ./seq-suite.sh -w $TMPDIR/install/eccodes -d -t py_
