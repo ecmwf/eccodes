@@ -11,4 +11,4 @@ module load  python3
 
 cd ~masn/REGRESSION_TESTING/ecCodes
 # ./par-suite.sh -w $TMPDIR/install/eccodes
-./seq-suite.sh -w $TMPDIR/install/eccodes -d -t ecc-1314-grib.sh
+./seq-suite.sh -w $TMPDIR/install/eccodes -d -t grib_png
