@@ -10,8 +10,8 @@
 
 #include "grib_api_internal.h"
 
-/* Input lon must be in degrees not radians */
-/* Not to be used for latitudes as they can be -ve */
+// Input lon must be in degrees not radians
+// Not to be used for latitudes as they can be -ve
 double normalise_longitude_in_degrees(double lon)
 {
     while (lon < 0)
@@ -23,7 +23,7 @@ double normalise_longitude_in_degrees(double lon)
 
 
 #ifdef ECCODES_ON_WINDOWS
-/* Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions) */
+// Replace C99/Unix rint() for Windows Visual C++ (only before VC++ 2013 versions)
 #if defined _MSC_VER && _MSC_VER < 1800
 double rint(double x)
 {
@@ -54,17 +54,17 @@ char get_dir_separator_char(void)
     return DIR_SEPARATOR_CHAR;
 }
 
-/* Return 1 if the filepath is a regular file, 0 otherwise */
+// Return 1 if the filepath is a regular file, 0 otherwise
 int path_is_regular_file(const char* path)
 {
     struct stat s;
     int stat_val = stat(path, &s);
     if (stat_val != 0)
-        return 0; /*error doing stat*/
-    return S_ISREG(s.st_mode); /* 1 if it's a regular file */
+        return 0; // error doing stat
+    return S_ISREG(s.st_mode); // 1 if it's a regular file
 }
 
-/* Return 1 if the filepath is a directory, 0 otherwise */
+// Return 1 if the filepath is a directory, 0 otherwise
 int path_is_directory(const char* path)
 {
     struct stat s;
@@ -79,13 +79,13 @@ int path_is_directory(const char* path)
 
 char* codes_getenv(const char* name)
 {
-    /* Look for the new ecCodes environment variable names */
-    /* if not found, then look for old grib_api ones for backward compatibility */
+    // Look for the new ecCodes environment variable names
+    // if not found, then look for old grib_api ones for backward compatibility
     char* result = getenv(name);
     if (result == NULL) {
         const char* old_name = name;
 
-        /* Test the most commonly used variables first */
+        // Test the most commonly used variables first
         if (STR_EQUAL(name, "ECCODES_SAMPLES_PATH"))
             old_name = "GRIB_SAMPLES_PATH";
         else if (STR_EQUAL(name, "ECCODES_DEFINITION_PATH"))
@@ -141,7 +141,7 @@ int codes_check_grib_ieee_packing_value(int value)
     return GRIB_SUCCESS;
 }
 
-/* Note: To be called in cases where we are WRITING a file (Do not call when reading) */
+// Note: To be called in cases where we are WRITING a file (Do not call when reading)
 int codes_flush_sync_close_file(FILE* f)
 {
     int err = 0;
@@ -157,14 +157,14 @@ int codes_flush_sync_close_file(FILE* f)
 
 #if 0
 #ifdef HAVE_FCNTL_H
-    /* Heavy handed way of getting the file access mode: only proceed if writing */
+    // Heavy handed way of getting the file access mode: only proceed if writing
     val = fcntl(fd, F_GETFL, 0);
     if (val < 0) {
         grib_context_log(c, GRIB_LOG_PERROR, "Call to fcntl failed");
         return err;
     }
     if ((val & O_ACCMODE) != O_WRONLY) {
-        /* File is not being written */
+        // File is not being written
         return GRIB_SUCCESS;
     }
 #endif
@@ -213,4 +213,110 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
     }
 
     return 1;
+}
+
+static float float_epsilon(void)
+{
+    float floatEps = 1.0;
+    while (1 + floatEps / 2 != 1)
+        floatEps /= 2;
+    return floatEps;
+}
+
+static int is_approximately_equal(double a, double b, double epsilon)
+{
+    if (a == b)
+        return 1;
+    if (fabs(a - b) <= epsilon)
+        return 1;
+    return 0;
+}
+
+static double eval_value_factor(int64_t value, int64_t factor)
+{
+    return (double)value * pow(10.0, -factor);
+}
+
+static int compute_scaled_value_and_scale_factor_algorithm1(
+    double input, int64_t maximum_value, int64_t maximum_factor,
+    int64_t* ret_value, int64_t* ret_factor)
+{
+    int64_t factor = 0;
+    int64_t value = 0;
+
+    if (input == 0) {
+        *ret_factor = *ret_value = 0;
+        return GRIB_SUCCESS;
+    }
+
+    factor = floor(log10(maximum_value)) - floor(log10(input < 0 ? -input : input));
+    value = (int64_t)round(input * pow(10, factor));
+    while ((value % 10 == 0) && (factor > 0)) {
+        value /= 10;
+        factor--;
+    }
+    if (value >= maximum_value)
+        return GRIB_INTERNAL_ERROR;
+    if (factor > maximum_factor)
+        return GRIB_INTERNAL_ERROR;
+
+    *ret_factor = factor;
+    *ret_value = value;
+    return GRIB_SUCCESS;
+}
+
+static int compute_scaled_value_and_scale_factor_algorithm2(
+    double input, int64_t maximum_value, int64_t maximum_factor,
+    int64_t* ret_value, int64_t* ret_factor)
+{
+    int64_t factor = 0, prev_factor = 0;
+    int64_t value = 0, prev_value = 0;
+    double exact        = input;
+    const float epsilon = float_epsilon();
+    int is_negative = 0;
+    // Loop until we find a close enough approximation. Keep the last good values
+    if (exact < 0) {
+        is_negative = 1;
+        exact *= -1;
+    }
+    factor = prev_factor = 0;
+    value = prev_value = round(exact);
+    while (!is_approximately_equal(exact, eval_value_factor(value, factor), epsilon) &&
+           value < maximum_value &&
+           factor < maximum_factor) {
+        value = round(exact * pow(10., ++factor));
+        if (value > maximum_value || factor > maximum_factor) {
+            // One or more maxima exceeded. So stop and use the previous values
+            value  = prev_value;
+            factor = prev_factor;
+            break;
+        }
+        prev_factor = factor;
+        prev_value  = value;
+    }
+
+    if (is_negative) {
+        value *= -1;
+    }
+
+    if (value == 0)
+        return GRIB_INTERNAL_ERROR;
+
+    *ret_factor = factor;
+    *ret_value = value;
+
+    return GRIB_SUCCESS;
+}
+
+// Return GRIB_SUCCESS if no error and set the two outputs 'ret_value' and 'ret_factor'.
+// ret_value cannot exceed scaled_value_max and ret_factor cannot exceed scale_factor_max
+int compute_scaled_value_and_scale_factor(
+    double input, int64_t scaled_value_max, int64_t scale_factor_max,
+    int64_t* ret_value, int64_t* ret_factor)
+{
+    int err = compute_scaled_value_and_scale_factor_algorithm1(input, scaled_value_max, scale_factor_max, ret_value, ret_factor);
+    if (err) {
+        err = compute_scaled_value_and_scale_factor_algorithm2(input, scaled_value_max, scale_factor_max, ret_value, ret_factor);
+    }
+    return err;
 }

@@ -17,6 +17,8 @@
 #include <typeinfo>
 #include <limits>
 #include <cassert>
+#include <type_traits>
+
 
 /*
    This is used by make_class.pl
@@ -317,6 +319,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 template <typename T>
 static int unpack(grib_accessor* a, T* v, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
