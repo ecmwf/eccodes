@@ -27,9 +27,11 @@ grib_check_key_equals $temp_PDTN08_Grib level:d 1.5
 # Now we change to PDTN 11
 ${tools_dir}/grib_set -s productDefinitionTemplateNumber=11 $temp_PDTN08_Grib $temp_PDTN11_Grib
 grib_check_key_equals $temp_PDTN11_Grib level:d 1.5
+grib_check_key_equals $temp_PDTN11_Grib scaledValueOfFirstFixedSurface 15
+grib_check_key_equals $temp_PDTN11_Grib scaleFactorOfFirstFixedSurface 1
 
 
-# Set integer value using the int/double encoding
+# Set whole value using the int/double encoding
 # -----------------------------------------------
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=105,level:i=34 $sample_grib2 $tempGrib
 grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface 0
@@ -38,6 +40,10 @@ grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface 34
 ${tools_dir}/grib_set -s typeOfFirstFixedSurface=105,level:d=34 $sample_grib2 $tempGrib
 grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface 0
 grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface 34
+
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=105,level:d=3.456 $sample_grib2 $tempGrib
+grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface 3
+grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface 3456
 
 
 # Clean up

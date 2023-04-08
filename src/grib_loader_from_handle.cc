@@ -163,14 +163,12 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     }
 
     long ga_type = grib_accessor_get_native_type(ga);
-    if (STR_EQUAL(name,"level")) {
-        //printf("..... loader_from_file: switch type to DOUBLE\n");
+    if (STR_EQUAL(name,"level")) { // See ECC-1560
         ga_type = GRIB_TYPE_DOUBLE;
     }
 
     switch (ga_type) {
         case GRIB_TYPE_STRING:
-
             /*ecc__grib_get_string_length(ga,&len);  See ECC-490 */
             grib_get_string_length(h, name, &len);
             sval = (char*)grib_context_malloc(h->context, len);
