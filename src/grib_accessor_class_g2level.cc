@@ -296,7 +296,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     ret = compute_scaled_value_and_scale_factor(value_first, scaled_value_max, scale_factor_max, &lscaled_value, &lscale_factor);
     if (ret) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s: Failed to compute %s and %s from %g",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Key %s (unpack_double): Failed to compute %s and %s from %g",
                          a->name, self->scale_first, self->value_first, value_first);
         return ret;
     }
