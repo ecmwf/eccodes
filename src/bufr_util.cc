@@ -742,6 +742,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "wiix";
         case 204:
             return "niwa";
+        case 213:
+            return "birk";
         case 214:
             return "lemm";
         case 215:
