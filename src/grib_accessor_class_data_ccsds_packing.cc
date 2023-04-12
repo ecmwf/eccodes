@@ -296,7 +296,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     } else {
         if (bits_per_value == 0) {
             // ECC-1202: A non-constant field with bitsPerValue==0!
-            bits_per_value = 24; // Set sane value
+            bits_per_value = 24; //Set sane value
         }
     }
 
