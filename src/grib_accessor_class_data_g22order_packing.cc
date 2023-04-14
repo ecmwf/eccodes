@@ -235,25 +235,29 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 #define DEFINED_VAL(x) ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
 #define UNDEFINED_ANGLE 999.0
 
-static unsigned char* bitstream;
-static int rbits, reg, n_bitstream;
+struct complex_context {
+    unsigned char* bitstream;
+    int rbits;
+    int reg;
+    int n_bitstream;
+};
 
-static void init_bitstream(unsigned char* new_bitstream)
+static void init_bitstream(complex_context *ctx, unsigned char* new_bitstream)
 {
-    bitstream   = new_bitstream;
-    n_bitstream = reg = rbits = 0;
+    ctx->bitstream   = new_bitstream;
+    ctx->n_bitstream = ctx->reg = ctx->rbits = 0;
 }
 
-static void finish_bitstream(void)
+static void finish_bitstream(complex_context *ctx)
 {
-    if (rbits) {
-        n_bitstream++;
-        *bitstream++ = (reg << (8 - rbits)) & 255;
-        rbits        = 0;
+    if (ctx->rbits) {
+        ctx->n_bitstream++;
+        *ctx->bitstream++ = (ctx->reg << (8 - ctx->rbits)) & 255;
+        ctx->rbits        = 0;
     }
 }
 
-static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
+static void add_many_bitstream(complex_context *ctx, grib_accessor* a, int* t, int n, int n_bits)
 {
     unsigned int jmask;
     int i;
@@ -266,35 +270,35 @@ static void add_many_bitstream(grib_accessor* a, int* t, int n, int n_bits)
 
     for (i = 0; i < n; i++) {
         unsigned int tt = (unsigned int)*t++;
-        rbits += n_bits;
-        reg = (reg << n_bits) | (tt & jmask);
+        ctx->rbits += n_bits;
+        ctx->reg = (ctx->reg << n_bits) | (tt & jmask);
 
-        while (rbits >= 8) {
-            rbits -= 8;
-            *bitstream++ = (reg >> rbits) & 255;
-            n_bitstream++;
+        while (ctx->rbits >= 8) {
+            ctx->rbits -= 8;
+            *ctx->bitstream++ = (ctx->reg >> ctx->rbits) & 255;
+            ctx->n_bitstream++;
         }
     }
 }
 
-static void add_bitstream(grib_accessor* a, int t, int n_bits)
+static void add_bitstream(complex_context *ctx, grib_accessor* a, int t, int n_bits)
 {
     unsigned int jmask;
     const int max_numbits = 25;
 
     if (n_bits > 16) {
-        add_bitstream(a, t >> 16, n_bits - 16);
+        add_bitstream(ctx, a, t >> 16, n_bits - 16);
         n_bits = 16;
     }
     if (n_bits > max_numbits) {
         grib_context_log(a->context, GRIB_LOG_FATAL, "grid_complex packing: n_bits=%d exceeds the maximum=%d", n_bits, max_numbits);
     }
     jmask = (1 << n_bits) - 1;
-    rbits += n_bits;
-    reg = (reg << n_bits) | (t & jmask);
-    while (rbits >= 8) {
-        *bitstream++ = (reg >> (rbits = rbits - 8)) & 255;
-        n_bitstream++;
+    ctx->rbits += n_bits;
+    ctx->reg = (ctx->reg << n_bits) | (t & jmask);
+    while (ctx->rbits >= 8) {
+        *ctx->bitstream++ = (ctx->reg >> (ctx->rbits = ctx->rbits - 8)) & 255;
+        ctx->n_bitstream++;
     }
     return;
 }
@@ -1320,39 +1324,49 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     if (ndef == 0) {  // Special case: All undefined values
-        if ((err = grib_set_double_internal(gh, self->reference_value, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)
+        // Section 5
+        const char* packing_type = "grid_complex";
+        size_t packing_type_len = strlen(packing_type);
+        grib_set_string_internal(gh, "packingType", packing_type, &packing_type_len);
+
+        
+        if ((err = grib_set_double_internal(gh, self->reference_value, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)                                      /* 12-15 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->binary_scale_factor, 0)) != GRIB_SUCCESS)                                                         /* 16-17 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, 0)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->decimal_scale_factor, 0)) != GRIB_SUCCESS)                                                        /* 18-19 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->bits_per_value, 8)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->bits_per_value, 8)) != GRIB_SUCCESS)                                                              /* 20    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->typeOfOriginalFieldValues, 0)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->typeOfOriginalFieldValues, 0)) != GRIB_SUCCESS)                                                   /* 21    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->groupSplittingMethodUsed, 1)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->groupSplittingMethodUsed, 1)) != GRIB_SUCCESS)                                                    /* 22    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, 1)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->missingValueManagementUsed, 1)) != GRIB_SUCCESS)                                                  /* 23    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->primaryMissingValueSubstitute, grib_ieee_to_long(static_cast<float>(9.999e20)))) != GRIB_SUCCESS) /* 24-27 */
             return err;
-        // if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)
-        //    return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, 1)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->secondaryMissingValueSubstitute, 0xFFFFFFFF)) != GRIB_SUCCESS)                                    /* 28-31 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, 0)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->numberOfGroupsOfDataValues, 1)) != GRIB_SUCCESS)                                                  /* 32-35 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, 8)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->referenceForGroupWidths, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)                                /* 36    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->referenceForGroupLengths, *len)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, 8)) != GRIB_SUCCESS)                                           /* 37    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->lengthIncrementForTheGroupLengths, 1)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->referenceForGroupLengths, *len)) != GRIB_SUCCESS)                                                 /* 38-41 */
             return err;
-        if ((err = grib_set_long_internal(gh, self->trueLengthOfLastGroup, *len)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->lengthIncrementForTheGroupLengths, 1)) != GRIB_SUCCESS)                                           /* 42    */
             return err;
-        if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, 8)) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(gh, self->trueLengthOfLastGroup, *len)) != GRIB_SUCCESS)                                                    /* 43-46 */
+            return err;
+        if ((err = grib_set_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, 8)) != GRIB_SUCCESS)                                    /* 47    */
             return err;
 
+        // Section 6
+        if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
+
+        // Section 7
         constexpr size_t sec7_size = 3;
         unsigned char empty_sec7[sec7_size] = {255, 0, 0};  // group reference, group width, group length
         grib_buffer_replace(a, empty_sec7, sec7_size, 1, 1);
@@ -1769,9 +1783,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    //bits_per_value = find_nbits(grefmx + has_undef);
-    //numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
-
     bits_per_value = find_nbits(grefmx + has_undef);
     numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
 
@@ -1857,34 +1868,35 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     // pack the values into a bitstream
 
-    init_bitstream(sec7);
-    add_bitstream(a, size_sec7 >> 16, 16);
-    add_bitstream(a, size_sec7, 16);
-    add_bitstream(a, 7, 8);
+    complex_context ctx;
+    init_bitstream(&ctx, sec7);
+    add_bitstream(&ctx, a, size_sec7 >> 16, 16);
+    add_bitstream(&ctx, a, size_sec7, 16);
+    add_bitstream(&ctx, a, 7, 8);
 
     // write extra octets
     if (orderOfSpatialDifferencing == 1 || orderOfSpatialDifferencing == 2) {
-        add_bitstream(a, extra_0, 8 * numberOfOctetsExtraDescriptors);
-        if (orderOfSpatialDifferencing == 2) add_bitstream(a, extra_1, 8 * numberOfOctetsExtraDescriptors);
+        add_bitstream(&ctx, a, extra_0, 8 * numberOfOctetsExtraDescriptors);
+        if (orderOfSpatialDifferencing == 2) add_bitstream(&ctx, a, extra_1, 8 * numberOfOctetsExtraDescriptors);
         k = vmn;
         if (k < 0) {
             k = -vmn | (1 << (8 * numberOfOctetsExtraDescriptors - 1));
         }
-        add_bitstream(a, k, 8 * numberOfOctetsExtraDescriptors);
-        finish_bitstream();
+        add_bitstream(&ctx, a, k, 8 * numberOfOctetsExtraDescriptors);
+        finish_bitstream(&ctx);
     }
 
     // write the group reference values
-    add_many_bitstream(a, refs, ngroups, bits_per_value);
-    finish_bitstream();
+    add_many_bitstream(&ctx, a, refs, ngroups, bits_per_value);
+    finish_bitstream(&ctx);
 
     // write the group widths
-    add_many_bitstream(a, itmp, ngroups, numberOfBitsUsedForTheGroupWidths);
-    finish_bitstream();
+    add_many_bitstream(&ctx, a, itmp, ngroups, numberOfBitsUsedForTheGroupWidths);
+    finish_bitstream(&ctx);
 
     // write the group lengths
-    add_many_bitstream(a, itmp2, ngroups, numberOfBitsUsedForTheScaledGroupLengths);
-    finish_bitstream();
+    add_many_bitstream(&ctx, a, itmp2, ngroups, numberOfBitsUsedForTheScaledGroupLengths);
+    finish_bitstream(&ctx);
 
     s = start.tail;
     for (i = 0; i < ngroups; i++, s = s->tail) {
@@ -1903,11 +1915,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     for (i = 0; i < ngroups; i++) {
         if (widths[i]) {
-            add_many_bitstream(a, v + itmp[i], lens[i], widths[i]);
+            add_many_bitstream(&ctx, a, v + itmp[i], lens[i], widths[i]);
         }
     }
 
-    finish_bitstream();
+    finish_bitstream(&ctx);
 
     grib_buffer_replace(a, sec7 + 5, size_sec7 - 5, 1, 1);
 
