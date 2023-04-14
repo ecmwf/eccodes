@@ -1383,7 +1383,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     dec_scale = -decimal_scale_factor;
     bin_scale = binary_scale_factor;
-    ndef = 0;
 
     /* compute bitmap section */
     /*if (use_bitmap == 0 || ndef == ndata) {*/
