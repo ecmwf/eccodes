@@ -235,20 +235,20 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 #define DEFINED_VAL(x) ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
 #define UNDEFINED_ANGLE 999.0
 
-struct complex_context {
+struct bitstream_context {
     unsigned char* bitstream;
     int rbits;
     int reg;
     int n_bitstream;
 };
 
-static void init_bitstream(complex_context *ctx, unsigned char* new_bitstream)
+static void init_bitstream(bitstream_context *ctx, unsigned char* new_bitstream)
 {
     ctx->bitstream   = new_bitstream;
     ctx->n_bitstream = ctx->reg = ctx->rbits = 0;
 }
 
-static void finish_bitstream(complex_context *ctx)
+static void finish_bitstream(bitstream_context *ctx)
 {
     if (ctx->rbits) {
         ctx->n_bitstream++;
@@ -257,7 +257,7 @@ static void finish_bitstream(complex_context *ctx)
     }
 }
 
-static void add_many_bitstream(complex_context *ctx, grib_accessor* a, int* t, int n, int n_bits)
+static void add_many_bitstream(bitstream_context *ctx, grib_accessor* a, int* t, int n, int n_bits)
 {
     unsigned int jmask;
     int i;
@@ -281,7 +281,7 @@ static void add_many_bitstream(complex_context *ctx, grib_accessor* a, int* t, i
     }
 }
 
-static void add_bitstream(complex_context *ctx, grib_accessor* a, int t, int n_bits)
+static void add_bitstream(bitstream_context *ctx, grib_accessor* a, int t, int n_bits)
 {
     unsigned int jmask;
     const int max_numbits = 25;
@@ -1868,7 +1868,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     // pack the values into a bitstream
 
-    complex_context ctx;
+    bitstream_context ctx;
     init_bitstream(&ctx, sec7);
     add_bitstream(&ctx, a, size_sec7 >> 16, 16);
     add_bitstream(&ctx, a, size_sec7, 16);
