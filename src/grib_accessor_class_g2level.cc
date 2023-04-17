@@ -208,10 +208,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (scale_first != GRIB_MISSING_LONG) {
         // GRIB-637, ECC-1081: Potential vorticity surface
         if (type_first == 109) {
-            if (is_tigge)
+            if (is_tigge) {
                 scale_first -= 6; // TIGGE data follows different rules
-            else
+            } else {
                 scale_first -= 9;
+            }
         }
 
         while (scale_first < 0 && v != 0) {
@@ -366,7 +367,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             break;
         case 109: // Potential vorticity surface
             if (!is_tigge) {
-                scale_first = 9; // TIGGE data follows different rules
+                scale_first = 9;
+            } else {
+                scale_first = 6; // TIGGE data follows different rules
             }
             if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
                 // ECC-1081: Conversion from grib1

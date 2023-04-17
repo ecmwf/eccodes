@@ -116,5 +116,12 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# ECC-1081
+# ---------
+${tools_dir}/grib_set -s level=2 ${data_dir}/tigge/tigge_ecmf_pv_pt.grib $TEMP
+grib_check_key_equals $TEMP level 2
+# ${tools_dir}/grib_dump -O -p section_4 $TEMP
+${tools_dir}/grib_compare ${data_dir}/tigge/tigge_ecmf_pv_pt.grib $TEMP
+
 
 rm -f $TEMP
