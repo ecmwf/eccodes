@@ -86,7 +86,7 @@ res=`${tools_dir}/grib_get -p level:d $temp`
 ${tools_dir}/grib_set -s typeOfLevel=potentialVorticity,shortName=q,level=1500 $sample_g1 $temp
 ${tools_dir}/grib_set -s edition=2  $temp $temp2
 grib_check_key_equals $temp2 'mars.levelist,level,typeOfLevel' '1500 1500 potentialVorticity'
-grib_check_key_equals $temp2 'scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface' '6 1500'
+grib_check_key_equals $temp2 'scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface' '9 1500'
 
 
 # GRIB-637 grib2 Potential vorticity surface

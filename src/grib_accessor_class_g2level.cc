@@ -176,6 +176,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long value_first        = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
+    long productionStatusOfProcessedData = 0;
+    bool is_tigge = false;
 
     double v;
 
@@ -187,6 +189,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
+        
+    if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
+        return ret;
+    if (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5) is_tigge=true;
 
     if (value_first == GRIB_MISSING_LONG) {
         *val = 0;
@@ -202,7 +208,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (scale_first != GRIB_MISSING_LONG) {
         // GRIB-637 Potential vorticity surface
         if (type_first == 109) {
-            scale_first -= 6;
+            scale_first -= 9;
         }
 
         while (scale_first < 0 && v != 0) {
@@ -229,6 +235,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
                 else {
                     v = x;
                 }
+            }
+            break;
+        case 109:
+            if (is_tigge) { // all tigge data on PV are like this?
+                *val = 2;
+                return GRIB_SUCCESS;
             }
             break;
     }
