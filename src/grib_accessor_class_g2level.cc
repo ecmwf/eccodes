@@ -206,10 +206,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     v = value_first;
 
     if (scale_first != GRIB_MISSING_LONG) {
-        // GRIB-637 Potential vorticity surface
+        // GRIB-637, ECC-1081: Potential vorticity surface
         if (type_first == 109) {
             if (is_tigge)
-                scale_first -= 6;
+                scale_first -= 6; // TIGGE data follows different rules
             else
                 scale_first -= 9;
         }
@@ -356,7 +356,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
         return ret;
-    if (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5) is_tigge=true;
+    is_tigge = (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5);
 
     switch (type_first) {
         case 100: // Pa
@@ -364,12 +364,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
-        case 109:
+        case 109: // Potential vorticity surface
             if (!is_tigge) {
-                scale_first = 9;
+                scale_first = 9; // TIGGE data follows different rules
             }
             if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
-                // See ECC-1081
+                // ECC-1081: Conversion from grib1
                 scale_first = levelFactor;
             }
             break;
