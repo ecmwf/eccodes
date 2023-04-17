@@ -114,7 +114,7 @@ if( indicatorOfTypeOfLevel == 109 ||
 }
 if (indicatorOfTypeOfLevel == 117) {
     # See ECC-1081
-    constant levelFactor = 6;
+    constant levelFactor = 9;
 }
 
 unsigned[1] yearOfCentury : edition_specific;
