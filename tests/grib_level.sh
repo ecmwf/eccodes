@@ -15,6 +15,7 @@ sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 temp=temp.level.grib
 temp2=temp2.level.grib
+temp3=temp3.level.grib
 
 file=${data_dir}/regular_gaussian_pressure_level.grib1
 
@@ -87,7 +88,9 @@ ${tools_dir}/grib_set -s typeOfLevel=potentialVorticity,shortName=q,level=1500 $
 ${tools_dir}/grib_set -s edition=2  $temp $temp2
 grib_check_key_equals $temp2 'mars.levelist,level,typeOfLevel' '1500 1500 potentialVorticity'
 grib_check_key_equals $temp2 'scaleFactorOfFirstFixedSurface,scaledValueOfFirstFixedSurface' '9 1500'
-
+${tools_dir}/grib_set -s level=1500 $temp2 $temp3
+grib_check_key_equals $temp3 level 1500
+${tools_dir}/grib_compare $temp2 $temp3
 
 # GRIB-637 grib2 Potential vorticity surface
 input=${data_dir}/tigge_pf_ecmwf.grib2
@@ -121,4 +124,4 @@ for pid in $params; do
 done
 
 
-rm -f level.filter temp.level.good test.dump $temp $temp2
+rm -f level.filter temp.level.good test.dump $temp $temp2 $temp3
