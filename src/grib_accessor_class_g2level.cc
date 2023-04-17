@@ -189,7 +189,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
-        
+
     if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
         return ret;
     if (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5) is_tigge=true;
@@ -332,6 +332,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long levelFactor        = 1;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
+    bool is_tigge = false;
+    long productionStatusOfProcessedData = 0;
 
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
     grib_handle* hand           = grib_handle_of_accessor(a);
@@ -355,6 +357,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
 
+    if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
+        return ret;
+    if (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5) is_tigge=true;
+
     switch (type_first) {
         case 100: // Pa
             scale_first = 0;
@@ -362,10 +368,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                 value_first *= 100;
             break;
         case 109:
+            if (!is_tigge) {
+                scale_first = 9;
+            }
             if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
                 // See ECC-1081
                 scale_first = levelFactor;
             }
+            break;
 
         default:
             break;
