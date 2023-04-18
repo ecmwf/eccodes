@@ -327,7 +327,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long value_first        = *val;
     long scale_first        = 0;
     long type_first         = 0;
-    long levelFactor        = 1;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
     bool is_tigge = false;
@@ -370,10 +369,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                 scale_first = 9;
             } else {
                 scale_first = 6; // TIGGE data follows different rules
-            }
-            if ((ret = grib_get_long(hand, "levelFactor", &levelFactor)) == GRIB_SUCCESS) {
-                // ECC-1081: Conversion from grib1
-                scale_first = levelFactor;
             }
             break;
 
