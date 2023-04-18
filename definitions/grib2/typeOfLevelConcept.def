@@ -68,3 +68,11 @@
 'iceLayerUnderSnowOnWater'     = {typeOfFirstFixedSurface=175; typeOfSecondFixedSurface=176;}
 'iceBottomOnWater'             = {typeOfFirstFixedSurface=176; typeOfSecondFixedSurface=255;}
 'indefiniteSoilDepth'          = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
+
+'meltPondTop'                  = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=255;}
+'meltPondBottom'               = {typeOfFirstFixedSurface=189; typeOfSecondFixedSurface=255;}
+'entireMeltPond'               = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=189;}
+'iceLayerAboveWaterSurface'    = {typeOfFirstFixedSurface=174; typeOfSecondFixedSurface=160;
+                                  scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=0;}
+'waterSurfaceToIsothermalOceanLayer' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=20;
+                                    scaledValueOfFirstFixedSurface=0; scaleFactorOfFirstFixedSurface=0;}
