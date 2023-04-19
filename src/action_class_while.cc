@@ -82,7 +82,8 @@ static void init_class(grib_action_class* c)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    Assert(!"action class while (dump): deprecated");
+    Assert(!"action_class_while::dump: 'while' statement is deprecated");
+
 #if 0
     grib_action_while* a = (grib_action_while*)act;
     int i                = 0;
@@ -95,7 +96,8 @@ static void dump(grib_action* act, FILE* f, int lvl)
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
-    Assert(!"action class while (create_accessor): deprecated");
+    Assert(!"action_class_while::create_accessor: 'while' statement is deprecated");
+
 #if 0
     grib_action_while* a = (grib_action_while*)act;
 
@@ -143,7 +145,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
 {
-    Assert(!"action class while (grib_action_create_while): deprecated");
+    Assert(!"action_class_while::grib_action_create_while: 'while' statement is deprecated");
     return NULL;
 #if 0
     char name[80];
@@ -170,7 +172,7 @@ grib_action* grib_action_create_while(grib_context* context, grib_expression* ex
 
 static void destroy(grib_context* context, grib_action* act)
 {
-    Assert(!"action class while (destroy): deprecated");
+    Assert(!"action_class_while::destroy: 'while' statement is deprecated");
 #if 0
     grib_action_while* self = (grib_action_while*)act;
     grib_action* a          = self->block_while;
