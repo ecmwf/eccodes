@@ -350,25 +350,26 @@ static grib_context default_grib_context = {
     0,              /* keys_count                 */
     0,              /* concepts_index             */
     0,              /* concepts_count             */
-    {0,}, /* concepts                   */
-    0, /* hash_array_index           */
-    0, /* hash_array_count           */
-    {0,},                                 /* hash_array                 */
-    0,                                 /* def_files                  */
-    0,                                 /* blocklist                  */
-    0,                                 /* ieee_packing               */
-    0,                                 /* bufrdc_mode                */
-    0,                                 /* bufr_set_to_missing_if_out_of_range */
-    0,                                 /* bufr_multi_element_constant_arrays */
-    0,                                 /* grib_data_quality_checks   */
-    0,                                 /* log_stream                 */
-    0,                                 /* classes                    */
-    0,                                 /* lists                      */
-    0,                                 /* expanded_descriptors       */
+    {0,},           /* concepts                   */
+    0,              /* hash_array_index           */
+    0,              /* hash_array_count           */
+    {0,},           /* hash_array                 */
+    0,              /* def_files                  */
+    0,              /* blocklist                  */
+    0,              /* ieee_packing               */
+    0,              /* bufrdc_mode                */
+    0,              /* bufr_set_to_missing_if_out_of_range */
+    0,              /* bufr_multi_element_constant_arrays */
+    0,              /* grib_data_quality_checks   */
+    0,              /* single_precision           */
+    0,              /* log_stream                 */
+    0,              /* classes                    */
+    0,              /* lists                      */
+    0,              /* expanded_descriptors       */
     DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
 #if GRIB_PTHREADS
     ,
-    PTHREAD_MUTEX_INITIALIZER /* mutex                      */
+    PTHREAD_MUTEX_INITIALIZER /* mutex */
 #endif
 };
 
@@ -396,6 +397,7 @@ grib_context* grib_context_get_default()
         const char* bufr_set_to_missing_if_out_of_range = NULL;
         const char* bufr_multi_element_constant_arrays  = NULL;
         const char* grib_data_quality_checks            = NULL;
+        const char* single_precision                    = NULL;
         const char* file_pool_max_opened_files          = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
@@ -407,6 +409,7 @@ grib_context* grib_context_get_default()
         bufr_set_to_missing_if_out_of_range = getenv("ECCODES_BUFR_SET_TO_MISSING_IF_OUT_OF_RANGE");
         bufr_multi_element_constant_arrays  = getenv("ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS");
         grib_data_quality_checks            = getenv("ECCODES_GRIB_DATA_QUALITY_CHECKS");
+        single_precision                    = getenv("ECCODES_SINGLE_PRECISION");
         large_constant_fields               = codes_getenv("ECCODES_GRIB_LARGE_CONSTANT_FIELDS");
         no_abort                            = codes_getenv("ECCODES_NO_ABORT");
         debug                               = codes_getenv("ECCODES_DEBUG");
@@ -550,6 +553,7 @@ grib_context* grib_context_get_default()
         default_grib_context.bufr_set_to_missing_if_out_of_range = bufr_set_to_missing_if_out_of_range ? atoi(bufr_set_to_missing_if_out_of_range) : 0;
         default_grib_context.bufr_multi_element_constant_arrays = bufr_multi_element_constant_arrays ? atoi(bufr_multi_element_constant_arrays) : 0;
         default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
+        default_grib_context.single_precision = single_precision ? atoi(single_precision) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
     }
 
