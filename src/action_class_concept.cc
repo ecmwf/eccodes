@@ -46,7 +46,7 @@ static void destroy         (grib_context*,grib_action*);
 
 
 typedef struct grib_action_concept {
-    grib_action          act;  
+    grib_action          act;
     /* Members defined in gen */
     long            len;
     grib_arguments* params;

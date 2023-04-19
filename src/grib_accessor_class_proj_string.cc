@@ -303,7 +303,7 @@ static int proj_unprojected(grib_handle* h, char* result)
     //if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
     //snprintf(result, 1024, "+proj=longlat %s", shape);
     snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
-    
+
     return err;
 }
 
