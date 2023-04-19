@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "eccodes.h"
 
 /* See JIRA issue GRIB-361 */
