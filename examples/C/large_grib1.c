@@ -22,7 +22,10 @@ int main()
     int i                = 0;
     codes_handle* h      = NULL;
     const char* filename = "bigfile.grib";
+
+#ifndef ECCODES_ON_WINDOWS
     unsigned int seed = time(NULL);
+#endif
 
     numbytes = ni * nj * sizeof(double);
     values = (double*)malloc(numbytes);
@@ -32,7 +35,11 @@ int main()
     }
 
     for (i = 0; i < ni * nj; i++) {
-        double r  = rand_r(&seed) * 1.0 / RAND_MAX;
+        #ifndef ECCODES_ON_WINDOWS
+            double r  = rand_r(&seed) * 1.0 / RAND_MAX;
+        #else
+            double r  = rand() * 1.0 / RAND_MAX;
+        #endif
         values[i] = r;
     }
 
