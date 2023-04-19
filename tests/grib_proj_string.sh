@@ -47,24 +47,25 @@ done
 
 # Various grid types
 # ECC-1552: To be done later. Current behaviour is to return KeyNotFound
-set +e
-${tools_dir}/grib_get -p projString $grib2_sample > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Key/value not found" $tempText
+# set +e
+# ${tools_dir}/grib_get -p projString $grib2_sample > $tempText 2>&1
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "Key/value not found" $tempText
 rm -f $tempText
 
-# ${tools_dir}/grib_get -p projString $grib2_sample > $tempText
-# grep -q "proj=longlat +R=6367470" $tempText
+${tools_dir}/grib_get -p projString $grib2_sample > $tempText
+grep -q "+proj=longlat +datum=WGS84" $tempText
+${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl > $tempText
+grep -q "+proj=longlat +datum=WGS84" $tempText
+
 # ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_ll_pl_grib2.tmpl > $tempText
 # grep -q "proj=longlat +R=6371229" $tempText
 # ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/regular_gg_ml_grib1.tmpl > $tempText
 # grep -q "proj=longlat +R=6367470" $tempText
 # ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText
 # grep -q "proj=longlat +R=6367470" $tempText
-# ${tools_dir}/grib_get -p projString $ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl > $tempText
-# grep -q "proj=longlat +R=6371229" $tempText
 
 
 ${tools_dir}/grib_set -s gridType=lambert_azimuthal_equal_area $grib2_sample $tempGrib

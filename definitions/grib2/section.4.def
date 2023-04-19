@@ -51,7 +51,12 @@ if (section2Used == 1) {
    }
 }
 transient genVertHeightCoords = 0;
-template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def" ;
+
+if (productDefinitionTemplateNumber >= 32768) {
+  template productDefinition "grib2/local/[centreForLocal]/template.4.[productDefinitionTemplateNumber:l].def";
+} else {
+  template productDefinition "grib2/template.4.[productDefinitionTemplateNumber:l].def";
+}
 
 if (defined(marsStream) && defined(marsType)) {
    template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";

@@ -439,13 +439,57 @@ static void test_dates()
     Assert( !is_date_valid(2000, 5, 9, 0, 1, 60) );
 
     Assert( !is_date_valid(2023, 2, 29, 0,0,0) );//Feb
+}
 
+void test_scale_factor_scaled_values()
+{
+    int err =0;
+    int64_t value, factor;
+    const int64_t scaled_value_max = 4294967295; // usually 4 octets
+    const int64_t scale_factor_max = 255; // usually 1 octet
+    printf("Testing: scaled values and scale factors...\n");
+
+    err = compute_scaled_value_and_scale_factor(0, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 0);
+    Assert(factor == 0);
+
+    err = compute_scaled_value_and_scale_factor(1, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 1);
+    Assert(factor == 0);
+
+    err = compute_scaled_value_and_scale_factor(1.5, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 15);
+    Assert(factor == 1);
+
+    err = compute_scaled_value_and_scale_factor(4.56, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 456);
+    Assert(factor == 2);
+
+    err = compute_scaled_value_and_scale_factor(-0.003, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == -3);
+    Assert(factor == 3);
+
+    err = compute_scaled_value_and_scale_factor(145.889, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 145889);
+    Assert(factor == 3);
+
+    err = compute_scaled_value_and_scale_factor(1111.00009, scaled_value_max, scale_factor_max, &value, &factor);
+    Assert(!err);
+    Assert(value == 111100009);
+    Assert(factor == 5);
 }
 
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
 
+    test_scale_factor_scaled_values();
     test_dates();
     test_logging_proc();
     test_grib_binary_search();
