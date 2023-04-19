@@ -9,10 +9,13 @@
 
 . ./include.ctest.sh
 
-# The executable should produce a GRIB1 file
+# The executable will produce a GRIB1 file called "bigfile.grib"
+output=bigfile.grib
 ${examples_dir}/c_large_grib1
 
 # Make sure the newly created file can be listed OK
-output=bigfile.grib
-${tools_dir}/grib_ls $output > /dev/null
+${tools_dir}/grib_ls -p numberOfDataPoints,numberOfCodedValues,numberOfMissing $output
+num=$(${tools_dir}/grib_get -p numberOfDataPoints $output)
+[ $num = 8294400 ]
+
 rm -f $output

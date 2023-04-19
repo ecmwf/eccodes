@@ -165,6 +165,14 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper, a, NULL);
 }
 
+static bool is_tigge(grib_handle* h)
+{
+    long productionStatus = 0;
+    int err = grib_get_long(h, "productionStatusOfProcessedData", &productionStatus);
+    if (err) return false;
+    return (productionStatus == 4 || productionStatus == 5);
+}
+
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     int ret                     = 0;
@@ -176,8 +184,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long value_first        = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
-    long productionStatusOfProcessedData = 0;
-    bool is_tigge = false;
+    bool tigge = is_tigge(hand);
 
     double v;
 
@@ -189,10 +196,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
-
-    if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
-        return ret;
-    is_tigge = (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5);
 
     if (value_first == GRIB_MISSING_LONG) {
         *val = 0;
@@ -208,7 +211,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (scale_first != GRIB_MISSING_LONG) {
         // GRIB-637, ECC-1081: Potential vorticity surface
         if (type_first == 109) {
-            if (is_tigge) {
+            if (tigge) {
                 scale_first -= 6; // TIGGE data follows different rules
             } else {
                 scale_first -= 9;
@@ -329,12 +332,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long type_first         = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
-    bool is_tigge = false;
-    long productionStatusOfProcessedData = 0;
 
     grib_accessor_g2level* self = (grib_accessor_g2level*)a;
     grib_handle* hand           = grib_handle_of_accessor(a);
     int change_scale_and_value  = 1;
+    bool tigge = is_tigge(hand);
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
@@ -354,18 +356,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_string_internal(hand, self->pressure_units, pressure_units, &pressure_units_len)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long(hand, "productionStatusOfProcessedData", &productionStatusOfProcessedData)) != GRIB_SUCCESS)
-        return ret;
-    is_tigge = (productionStatusOfProcessedData==4 || productionStatusOfProcessedData==5);
-
     switch (type_first) {
         case 100: // Pa
             scale_first = 0;
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
-        case 109: // Potential vorticity surface
-            if (!is_tigge) {
+        case 109: // Potential vorticity surface (See ECC-1081)
+            if (!tigge) {
                 scale_first = 9;
             } else {
                 scale_first = 6; // TIGGE data follows different rules
