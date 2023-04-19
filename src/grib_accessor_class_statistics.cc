@@ -14,6 +14,7 @@
 
 
 #include "grib_api_internal.h"
+#include "grib_api_internal_cpp.h"
 /*
    This is used by make_class.pl
 
@@ -173,43 +174,47 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     a->dirty  = 1;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+typedef struct GridStats {
+    double maximum;
+    double minimum;
+    double average;
+    double standardDev;
+    double skewness;
+    double kurtosis;
+    size_t numberOfMissing;
+    bool isConstant;
+} GridStats;
+
+template <typename T>
+static int calculate_stats(grib_accessor* a, GridStats* pStats)
 {
     grib_accessor_statistics* self = (grib_accessor_statistics*)a;
-    int ret = 0;
-    double* values = NULL;
+    grib_handle* h            = grib_handle_of_accessor(a);
+    grib_context* c           = a->context;
+
+    int err = 0;
     size_t i = 0, size = 0, real_size = 0;
     double max, min, avg, sd, value, skew, kurt, m2 = 0, m3 = 0, m4 = 0;
     double missing            = 0;
     long missingValuesPresent = 0;
     size_t number_of_missing  = 0;
-    grib_context* c           = a->context;
-    grib_handle* h            = grib_handle_of_accessor(a);
+    T* values = NULL;
 
-    if (!a->dirty)
-        return GRIB_SUCCESS;
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-    if (*len != self->number_of_elements)
-        return GRIB_ARRAY_TOO_SMALL;
+    if ((err = grib_get_size(h, self->values, &size)))
+        return err;
+    if ((err = grib_get_double(h, self->missing_value, &missing)))
+        return err;
+    if ((err = grib_get_long_internal(h, "missingValuesPresent", &missingValuesPresent)))
+        return err;
 
-    if ((ret = grib_get_size(h, self->values, &size)) != GRIB_SUCCESS)
-        return ret;
+    values = (T*)grib_context_malloc_clear(c, size * sizeof(T));
+    if (!values) return GRIB_OUT_OF_MEMORY;
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,
-                     "grib_accessor_statistics: computing statistics for %d values", size);
-
-    if ((ret = grib_get_double(h, self->missing_value, &missing)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(h, "missingValuesPresent", &missingValuesPresent)) != GRIB_SUCCESS)
-        return ret;
-
-    values = (double*)grib_context_malloc_clear(c, size * sizeof(double));
-    if (!values)
-        return GRIB_OUT_OF_MEMORY;
-
-    if ((ret = grib_get_double_array_internal(h, self->values, values, &size)) != GRIB_SUCCESS) {
+    if ((err = grib_get_array_internal<T>(h, self->values, values, &size))) {
         grib_context_free(c, values);
-        return ret;
+        return err;
     }
 
     number_of_missing = 0;
@@ -220,7 +225,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             number_of_missing++;
         }
         if (number_of_missing == size) {
-            /* ECC-649: All values are missing */
+            // ECC-649: All values are missing
             min = max = avg = missing;
         }
         else {
@@ -253,8 +258,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             avg += value;
         }
     }
-    /*printf("stats.......... number_of_missing=%ld\n", number_of_missing);*/
-    /* Don't divide by zero if all values are missing! */
+
+    // Don't divide by zero if all values are missing!
     if (size != number_of_missing) {
         avg /= (size - number_of_missing);
     }
@@ -287,18 +292,57 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         skew = m3 / (sd * sd * sd);
         kurt = m4 / (m2 * m2) - 3.0;
     }
-    a->dirty = 0;
+
+    pStats->maximum         = max;
+    pStats->minimum         = min;
+    pStats->average         = avg;
+    pStats->standardDev     = sd;
+    pStats->skewness        = skew;
+    pStats->kurtosis        = kurt;
+    pStats->numberOfMissing = number_of_missing;
+    pStats->isConstant      = (sd == 0);
 
     grib_context_free(c, values);
 
-    self->v[0] = max;
-    self->v[1] = min;
-    self->v[2] = avg;
-    self->v[3] = number_of_missing;
-    self->v[4] = sd;
-    self->v[5] = skew;
-    self->v[6] = kurt;
-    self->v[7] = sd == 0 ? 1 : 0;
+    return GRIB_SUCCESS;
+}
+
+// Ideally we should override unpack_float in this class.
+// Here we use the single_precision mode in the context to decode
+// the GRIB field values as double or float
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    grib_accessor_statistics* self = (grib_accessor_statistics*)a;
+    int ret = 0, i = 0;
+    size_t size = 0;
+    GridStats stats = {0,};
+
+    if (!a->dirty)
+        return GRIB_SUCCESS;
+
+    if (*len != self->number_of_elements)
+        return GRIB_ARRAY_TOO_SMALL;
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "grib_accessor_statistics: computing statistics for %zu values", size);
+
+    if (a->context->single_precision) {
+        ret = calculate_stats<float>(a, &stats);
+    } else {
+        ret = calculate_stats<double>(a, &stats);
+    }
+    if (ret) return ret;
+
+    a->dirty = 0;
+
+    self->v[0] = stats.maximum;
+    self->v[1] = stats.minimum;
+    self->v[2] = stats.average;
+    self->v[3] = stats.numberOfMissing;
+    self->v[4] = stats.standardDev;
+    self->v[5] = stats.skewness;
+    self->v[6] = stats.kurtosis;
+    self->v[7] = stats.isConstant ? 1 : 0;
 
     for (i = 0; i < self->number_of_elements; i++)
         val[i] = self->v[i];
