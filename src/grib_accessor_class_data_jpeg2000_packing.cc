@@ -583,7 +583,7 @@ cleanup:
 }
 #else
 
-static int unpack_float(grib_accessor*, float* val, size_t* len)
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
