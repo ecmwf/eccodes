@@ -14,9 +14,11 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
-#include <typeinfo>
+//#include <typeinfo>
 #include <limits>
 #include <cassert>
+#include <type_traits>
+#include "grib_api_internal_cpp.h"
 
 /*
    This is used by make_class.pl
@@ -317,13 +319,14 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 template <typename T>
 static int unpack(grib_accessor* a, T* v, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, typeid(T).name());
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, type_to_string<T>(*v));
         return GRIB_SUCCESS;
     }
 

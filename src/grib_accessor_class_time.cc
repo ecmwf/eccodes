@@ -182,7 +182,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Truncating time: non-zero seconds(%ld) ignored", second);
+                "Key %s (unpack_long): Truncating time: non-zero seconds(%ld) ignored", a->name, second);
     }
 
     if (*len < 1)
@@ -236,7 +236,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     unpack_long(a, &v, &lsize);
 
     if (*len < 5) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_time : unpack_string : Buffer too small for %s", a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Key %s (unpack_string): Buffer too small", a->name);
 
         *len = 5;
         return GRIB_BUFFER_TOO_SMALL;

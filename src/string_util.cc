@@ -166,7 +166,7 @@ int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
     DebugAssert(str);
-    for(i=0; str[i]; i++) {
+    for (i=0; str[i]; i++) {
         if (str[i] == c) count++;
     }
     return count;
@@ -213,7 +213,7 @@ const char* grib_get_type_name(int type)
 /* Replace all occurrences of character in string.
 *  Returns pointer to the NUL byte at the end of 's'
 */
-char *string_replace_char(char *s, char oldc, char newc)
+char* string_replace_char(char *s, char oldc, char newc)
 {
     for (; *s; ++s)
         if (*s == oldc)
@@ -222,9 +222,10 @@ char *string_replace_char(char *s, char oldc, char newc)
 }
 
 /* Remove all instances of character 'c' from 'str' */
-void string_remove_char(char * str, char c)
+void string_remove_char(char* str, char c)
 {
     size_t i, j;
+    DebugAssert(str);
     size_t len = strlen(str);
     for(i=0; i<len; i++) {
         if(str[i] == c) {

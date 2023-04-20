@@ -82,16 +82,23 @@ static void init_class(grib_action_class* c)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
+    Assert(!"action_class_while::dump: 'while' statement is deprecated");
+
+#if 0
     grib_action_while* a = (grib_action_while*)act;
     int i                = 0;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, "Loop   %s\n", act->name);
     grib_dump_action_branch(f, a->block_while, lvl + 1);
+#endif
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
+    Assert(!"action_class_while::create_accessor: 'while' statement is deprecated");
+
+#if 0
     grib_action_while* a = (grib_action_while*)act;
 
     grib_accessor* ga = NULL;
@@ -132,11 +139,15 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
             next = next->next;
         }
     }
+#endif
     return GRIB_SUCCESS;
 }
 
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
 {
+    Assert(!"action_class_while::grib_action_create_while: 'while' statement is deprecated");
+    return NULL;
+#if 0
     char name[80];
     const size_t nameLen = sizeof(name);
     grib_action_while* a;
@@ -147,7 +158,6 @@ grib_action* grib_action_create_while(grib_context* context, grib_expression* ex
     a                    = (grib_action_while*)act;
     act->next            = NULL;
 
-
     snprintf(name, nameLen, "_while%p", (void*)a);
     act->name     = grib_context_strdup_persistent(context, name);
     act->op       = grib_context_strdup_persistent(context, "section");
@@ -157,10 +167,13 @@ grib_action* grib_action_create_while(grib_context* context, grib_expression* ex
 
     grib_context_log(context, GRIB_LOG_DEBUG, " Action List %s is created  \n", act->name);
     return act;
+#endif
 }
 
 static void destroy(grib_context* context, grib_action* act)
 {
+    Assert(!"action_class_while::destroy: 'while' statement is deprecated");
+#if 0
     grib_action_while* self = (grib_action_while*)act;
     grib_action* a          = self->block_while;
 
@@ -169,8 +182,8 @@ static void destroy(grib_context* context, grib_action* act)
         grib_action_delete(context, a);
         a = na;
     }
-
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
     grib_expression_free(context, self->expression);
+#endif
 }

@@ -168,7 +168,6 @@ struct proj_mapping
 };
 typedef struct proj_mapping proj_mapping;
 
-
 // This should only be called for GRID POINT data (not spherical harmonics etc)
 static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 {
@@ -221,6 +220,7 @@ static int proj_space_view(grib_handle* h, char* result)
     return err;
 #endif
 }
+
 static int proj_albers(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
@@ -294,19 +294,18 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     return err;
 }
 
-#if 0
 // ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
+//           These are not 'projected' grids!
 static int proj_unprojected(grib_handle* h, char* result)
 {
     int err = 0;
-    char shape[64] = {0,};
-    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
-        return err;
+    //char shape[64] = {0,};
+    //if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
+    //snprintf(result, 1024, "+proj=longlat %s", shape);
+    snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
 
-    snprintf(result, 1024, "+proj=longlat %s", shape);
     return err;
 }
-#endif
 
 static int proj_mercator(grib_handle* h, char* result)
 {
@@ -325,10 +324,10 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    // { "regular_ll", &proj_unprojected },
-    // { "regular_gg", &proj_unprojected },
-    // { "reduced_ll", &proj_unprojected },
-    // { "reduced_gg", &proj_unprojected },
+    { "regular_ll", &proj_unprojected },
+    { "regular_gg", &proj_unprojected },
+    { "reduced_ll", &proj_unprojected },
+    { "reduced_gg", &proj_unprojected },
 
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },

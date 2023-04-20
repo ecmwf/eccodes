@@ -373,6 +373,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
         else {
             type = default_type;
         }
+        //if (type==0) type = default_type;
         *err = grib_fieldset_new_column(set, i, key, type);
         grib_context_free(c, key);
     }
@@ -925,6 +926,10 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob)
         if (*p == ':')
             *p = 0;
         for (i = 0; i < set->columns_size; i++) {
+            if (!set->columns[i].name) {  //ECC-1562
+                grib_context_log(set->context, GRIB_LOG_ERROR, "grib_fieldset_set_order_by: Invalid type for key=%s", next->key);
+                return GRIB_INVALID_TYPE;
+            }
             if (!grib_inline_strcmp(next->key, set->columns[i].name)) {
                 next->idkey = i;
                 break;
@@ -933,7 +938,7 @@ static int grib_fieldset_set_order_by(grib_fieldset* set, grib_order_by* ob)
         if (next->idkey == -1) {
             grib_context_log(set->context, GRIB_LOG_ERROR,
                              "grib_fieldset_set_order_by: "
-                             "Unable to apply the order by. Key missing from the fieldset.\n");
+                             "Unable to apply the order by. Key missing from the fieldset.");
             return GRIB_MISSING_KEY;
         }
         next = next->next;

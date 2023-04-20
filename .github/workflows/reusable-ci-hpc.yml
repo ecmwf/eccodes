@@ -6,6 +6,10 @@ on:
       eccodes:
         required: false
         type: string
+      nightly_test:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   ci-hpc:
@@ -19,5 +23,11 @@ jobs:
           ecbuild
           ninja
           aec
+          netcdf4/new
         --parallel: 64
+        --cmake-options: |
+          -DENABLE_EXTRA_TESTS=1
+          ${{ inputs.nightly_test && '-DENABLE_PNG=1,-DENABLE_NETCDF=1' || '' }}
+        ${{ inputs.nightly_test && '--post-script: .github/ci-nightly-test.sh' || '' }}
+        ${{ inputs.nightly_test && '--force-build: true' || '' }}
     secrets: inherit

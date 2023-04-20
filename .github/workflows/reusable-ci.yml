@@ -6,6 +6,10 @@ on:
       eccodes:
         required: false
         type: string
+      codecov:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   ci:
@@ -14,6 +18,7 @@ jobs:
     with:
       repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
       name_prefix: eccodes-
+      codecov_upload: ${{ inputs.codecov }}
       build_package_inputs: |
         repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
         self_coverage: true

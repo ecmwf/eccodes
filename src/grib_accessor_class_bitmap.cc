@@ -178,10 +178,7 @@ static void compute_size(grib_accessor* a)
         }
     }
 
-#if 0
-    printf("compute_size off=%ld slen=%ld a->offset=%ld\n",
-            (long)off,(long)slen,(long)a->offset);
-#endif
+    // printf("compute_size off=%ld slen=%ld a->offset=%ld\n", (long)off,(long)slen,(long)a->offset);
 
     a->length = off + (slen - a->offset);
 
@@ -237,7 +234,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %ld values", a->name, tlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -315,7 +312,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (len[0] < (a->length)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s it contains %ld values",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
                 len[0], a->name, a->length);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
