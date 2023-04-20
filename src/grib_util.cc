@@ -1360,7 +1360,12 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         } break;
 
         case GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES:
-            SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
+            if (packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_IEEE) {
+                // bitsPerValue is a transient for grid_ieee. Use "accuracy" which sets "precision"
+                SET_LONG_VALUE("accuracy", packing_spec->bitsPerValue);
+            } else {
+                SET_LONG_VALUE("bitsPerValue", packing_spec->bitsPerValue);
+            }
             break;
 
         case GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT: {
