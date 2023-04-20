@@ -2,7 +2,7 @@
 
 #include "grib_api_internal.h"
 //#include <typeinfo>
-//#include <type_traits>
+#include <type_traits>
 
 template<typename T> const char* type_to_string(T)        { return "unknown"; }
 template<> inline    const char* type_to_string<>(double) { return "double"; }

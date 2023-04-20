@@ -17,7 +17,7 @@
 //#include <typeinfo>
 #include <limits>
 #include <cassert>
-//#include <type_traits>
+#include <type_traits>
 #include "grib_api_internal_cpp.h"
 
 /*
