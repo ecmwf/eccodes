@@ -35,7 +35,7 @@ if ( addEmptySection2 == 0 ) {
         }
 
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
-        
+
         if (grib2LocalSectionNumber!=0) {
             template_nofail local "grib2/local.[centreForLocal:l].def";
         } else {
