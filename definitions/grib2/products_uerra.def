@@ -96,4 +96,3 @@ concept marsStream(unknown) {
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
-
