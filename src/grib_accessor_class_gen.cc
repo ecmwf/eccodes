@@ -14,11 +14,11 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
-#include <typeinfo>
+//#include <typeinfo>
 #include <limits>
 #include <cassert>
-#include <type_traits>
-
+//#include <type_traits>
+#include "grib_api_internal_cpp.h"
 
 /*
    This is used by make_class.pl
@@ -326,7 +326,7 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, typeid(T).name());
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, type_to_string<T>(*v));
         return GRIB_SUCCESS;
     }
 
