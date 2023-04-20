@@ -660,6 +660,8 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     char *gts_header = 0, *save_gts_header = 0;
     int gtslen = 0;
 
+    *error = GRIB_SUCCESS;
+
     if (c == NULL)
         c = grib_context_get_default();
 

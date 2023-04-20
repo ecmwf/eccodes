@@ -18,7 +18,7 @@
    SUPER      = grib_accessor_class_data_simple_packing
    IMPLEMENTS = init
    IMPLEMENTS = unpack_double
-   IMPLEMENTS = pack_double
+   IMPLEMENTS = pack_double;unpack_float
    IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
    MEMBERS=const char*   type_of_compression_used
@@ -46,6 +46,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void init_class(grib_accessor_class*);
@@ -111,7 +112,7 @@ static grib_accessor_class _grib_accessor_class_data_jpeg2000_packing = {
     &pack_double,                /* grib_pack procedures double */
     0,                 /* grib_pack procedures float */
     &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
+    &unpack_float,               /* grib_unpack procedures float */
     0,                /* grib_pack procedures string */
     0,              /* grib_unpack procedures string */
     0,          /* grib_pack array procedures string */
@@ -153,7 +154,6 @@ static void init_class(grib_accessor_class* c)
     c->pack_long    =    (*(c->super))->pack_long;
     c->unpack_long    =    (*(c->super))->unpack_long;
     c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
     c->pack_string    =    (*(c->super))->pack_string;
     c->unpack_string    =    (*(c->super))->unpack_string;
     c->pack_string_array    =    (*(c->super))->pack_string_array;
@@ -251,6 +251,11 @@ static int value_count(grib_accessor* a, long* n_vals)
 #define EXTRA_BUFFER_SIZE 10240
 
 #if HAVE_JPEG
+static int unpack_float(grib_accessor*, float* val, size_t* len)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_jpeg2000_packing* self = (grib_accessor_data_jpeg2000_packing*)a;
@@ -578,6 +583,11 @@ cleanup:
 }
 #else
 
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
+    return GRIB_FUNCTIONALITY_NOT_ENABLED;
+}
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");

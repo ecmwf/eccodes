@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal_cpp.h"
-#include <typeinfo>
+// #include <typeinfo>
 #include <type_traits>
 
 /*

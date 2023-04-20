@@ -410,13 +410,20 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
-            if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/?id=%s'", name);
+            if (strcmp(act->name, "paramId") == 0) {
+                if (string_to_long(name, &dummy) == GRIB_SUCCESS) {
+                    // The paramId value is an integer. Show them the param DB
+                    grib_context_log(h->context, GRIB_LOG_ERROR,
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
+                } else {
+                    // paramId being set to a non-integer
+                    grib_context_log(h->context, GRIB_LOG_ERROR,
+                                    "The paramId value should be an integer. Are you trying to set the shortName?");
+                }
             }
             if (strcmp(act->name, "shortName") == 0) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "Please check the Parameter Database 'https://apps.ecmwf.int/codes/grib/param-db/'");
+                                 "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/'");
             }
 
             /* Create a list of all possible values for this concept and sort it */

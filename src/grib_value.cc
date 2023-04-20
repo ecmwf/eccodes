@@ -9,12 +9,9 @@
  */
 /***************************************************************************
  * Jean Baptiste Filippi - 01.11.2005
- * Enrico Fucile                                                           *
  ***************************************************************************/
 #include "grib_api_internal_cpp.h"
 #include <float.h>
-
-
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */

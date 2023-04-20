@@ -1118,6 +1118,7 @@ struct grib_context
     int bufr_set_to_missing_if_out_of_range;
     int bufr_multi_element_constant_arrays;
     int grib_data_quality_checks;
+    int single_precision;
     FILE* log_stream;
     grib_trie* classes;
     grib_trie* lists;
