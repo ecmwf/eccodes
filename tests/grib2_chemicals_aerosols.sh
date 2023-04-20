@@ -124,8 +124,8 @@ ${tools_dir}/grib_ls -p firstSize,secondSize $temp
 ${tools_dir}/grib_set -s paramId=228104,setLocalDefinition=1,localDefinitionNumber=1 $sample2 $temp
 grib_check_key_equals $temp paramId,productDefinitionTemplateNumber,is_chemical_srcsink,localUsePresent '228104 76 1 1'
 
-${tools_dir}/grib_set -s stepType=accum,paramId=228104 $sample2 $temp
-grib_check_key_equals $temp shortName,productDefinitionTemplateNumber,is_chemical_srcsink 'e_WLCH4 78 1'
+${tools_dir}/grib_set -s paramId=228104 $sample2 $temp
+grib_check_key_equals $temp shortName,productDefinitionTemplateNumber,is_chemical_srcsink 'e_WLCH4 76 1'
 ${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=1 $temp $temp1
 ${tools_dir}/grib_compare -b totalLength,numberOfSection $temp $temp1
 grib_check_key_equals $temp1 localUsePresent 1
