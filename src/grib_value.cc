@@ -10,7 +10,10 @@
 /***************************************************************************
  * Jean Baptiste Filippi - 01.11.2005
  ***************************************************************************/
-#include "grib_api_internal_cpp.h"
+
+#include "grib_api_internal.h"
+#include "grib_value.h"
+#include "grib_accessor.h"
 #include <float.h>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */

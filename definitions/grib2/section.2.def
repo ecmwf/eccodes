@@ -16,6 +16,12 @@ if ( addEmptySection2 == 0 ) {
     if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
         alias section2Used=one;
 
+        if(productionStatusOfProcessedData == 8 || productionStatusOfProcessedData == 9) {
+            # This for adding an expver other than prod/test to UERRA
+            codetable[2] uerraLocalVersion 'grib2/uerraLocalVersion.table' = 1 : dump;
+            template  uerraSection "grib2/local.uerra.[uerraLocalVersion:l].def";
+        }
+
         if(productionStatusOfProcessedData == 4 || productionStatusOfProcessedData == 5) {
             # This is TIGGE-LAM because of the productionStatusOfProcessedData and the non-empty section 2
             codetable[2] tiggeLocalVersion 'grib2/tiggeLocalVersion.table' = 1 : dump;

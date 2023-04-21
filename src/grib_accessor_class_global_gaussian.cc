@@ -373,8 +373,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     ddi      = (360.0 * dfactor) / dNi;
     dlonlast = (360.0 * dfactor) - ddi + 0.5;
     ddi      = ddi + 0.5;
-    di       = ddi;
-    lonlast  = dlonlast;
+    di       = (long)ddi;
+    lonlast  = (long)dlonlast;
 
     grib_context_free(c, lats);
 

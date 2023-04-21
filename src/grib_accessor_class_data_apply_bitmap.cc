@@ -9,8 +9,6 @@
  */
 
 #include "grib_api_internal_cpp.h"
-#include <typeinfo>
-#include <type_traits>
 
 /*
    This is used by make_class.pl
