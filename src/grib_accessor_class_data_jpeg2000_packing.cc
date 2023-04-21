@@ -583,20 +583,25 @@ cleanup:
 }
 #else
 
+static void print_error_feature_not_enabled(grib_context* c)
+{
+    grib_context_log(c, GRIB_LOG_ERROR,
+                     "JPEG support not enabled. Please rebuild with -DENABLE_JPG=ON");
+}
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "JPEG support not enabled.");
+    print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 

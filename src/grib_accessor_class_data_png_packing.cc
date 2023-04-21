@@ -765,8 +765,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 static void print_error_feature_not_enabled(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
-                     "grib_accessor_data_png_packing: PNG support not enabled. "
-                     "Please rebuild with -DENABLE_PNG=ON");
+                     "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
