@@ -14,10 +14,8 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
-//#include <typeinfo>
 #include <limits>
 #include <cassert>
-#include <type_traits>
 #include "grib_api_internal_cpp.h"
 
 /*
