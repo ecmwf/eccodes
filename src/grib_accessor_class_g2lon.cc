@@ -184,7 +184,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     else {
         if (value < 0)
             value += 360;
-        longitude = value * 1000000;
+        longitude = (long)(value * 1000000);
     }
     return grib_set_long(grib_handle_of_accessor(a), self->longitude, longitude);
 }
