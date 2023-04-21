@@ -8,14 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***********************************
- *  Enrico Fucile
- **********************************/
-
 #include "grib_api_internal.h"
-#define DIRECT 0
+#define DIRECT  0
 #define INVERSE 1
-
 
 /*
    This is used by make_class.pl
@@ -32,9 +27,6 @@
    END_CLASS_DEF
 
  */
-
-static int pre_processing_func(double* values, long length, long pre_processing,
-                               double* pre_processing_parameter, int mode);
 
 /* START_CLASS_IMP */
 
@@ -176,24 +168,88 @@ static void init_class(grib_accessor_class* c)
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_g2simple_packing_with_preprocessing* self = (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-    self->pre_processing                                         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->pre_processing_parameter                               = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->pre_processing           = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->pre_processing_parameter = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 static int value_count(grib_accessor* a, long* n_vals)
 {
     grib_accessor_data_g2simple_packing_with_preprocessing* self = (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-    *n_vals                                                      = 0;
+    *n_vals = 0;
 
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
+}
+
+static int pre_processing_func(double* values, long length, long pre_processing,
+                               double* pre_processing_parameter, int mode)
+{
+    int i = 0, ret  = 0;
+    double min      = values[0];
+    double next_min = values[0];
+    Assert(length > 0);
+
+    switch (pre_processing) {
+        /* NONE */
+        case 0:
+            break;
+        /* LOGARITHM */
+        case 1:
+            if (mode == DIRECT) {
+                for (i = 0; i < length; i++) {
+                    if (values[i] < min)
+                        min = values[i];
+                    if (values[i] > next_min)
+                        next_min = values[i];
+                }
+                for (i = 0; i < length; i++) {
+                    if (values[i] > min && values[i] < next_min)
+                        next_min = values[i];
+                }
+                if (min > 0) {
+                    *pre_processing_parameter = 0;
+                    for (i = 0; i < length; i++) {
+                        DebugAssert(values[i] > 0);
+                        values[i] = log(values[i]);
+                    }
+                }
+                else {
+                    double ppp                = 0;
+                    *pre_processing_parameter = next_min - 2 * min;
+                    if (next_min == min)
+                        return ret;
+                    ppp = *pre_processing_parameter;
+                    for (i = 0; i < length; i++) {
+                        DebugAssert((values[i] + ppp) > 0);
+                        values[i] = log(values[i] + ppp);
+                    }
+                }
+            }
+            else {
+                Assert(mode == INVERSE);
+                if (*pre_processing_parameter == 0) {
+                    for (i = 0; i < length; i++)
+                        values[i] = exp(values[i]);
+                }
+                else {
+                    for (i = 0; i < length; i++)
+                        values[i] = exp(values[i]) - *pre_processing_parameter;
+                }
+            }
+            break;
+        default:
+            ret = GRIB_NOT_IMPLEMENTED;
+            break;
+    }
+
+    return ret;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_g2simple_packing_with_preprocessing* self = (grib_accessor_data_g2simple_packing_with_preprocessing*)a;
-    grib_accessor_class* super                                   = *(a->cclass->super);
-    grib_accessor_class* super2                                  = NULL;
+    grib_accessor_class* super  = *(a->cclass->super);
+    grib_accessor_class* super2 = NULL;
 
     size_t n_vals = 0;
     long nn       = 0;
@@ -215,12 +271,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     self->dirty = 0;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->pre_processing, &pre_processing)) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing, err);
         return err;
     }
 
     if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->pre_processing_parameter, &pre_processing_parameter)) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannont gather value for %s error %d \n", a->name, self->pre_processing_parameter, err);
         return err;
     }
 
@@ -270,68 +324,4 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     return GRIB_SUCCESS;
-}
-
-static int pre_processing_func(double* values, long length, long pre_processing,
-                               double* pre_processing_parameter, int mode)
-{
-    int i;
-    int ret         = 0;
-    double min      = values[0];
-    double next_min = values[0];
-    Assert(length > 0);
-
-    switch (pre_processing) {
-        /* NONE */
-        case 0:
-            break;
-        /* LOGARITHM */
-        case 1:
-            if (mode == DIRECT) {
-                for (i = 0; i < length; i++) {
-                    if (values[i] < min)
-                        min = values[i];
-                    if (values[i] > next_min)
-                        next_min = values[i];
-                }
-                for (i = 0; i < length; i++) {
-                    if (values[i] > min && values[i] < next_min)
-                        next_min = values[i];
-                }
-                if (min > 0) {
-                    *pre_processing_parameter = 0;
-                    for (i = 0; i < length; i++) {
-                        DebugAssert(values[i] > 0);
-                        values[i] = log(values[i]);
-                    }
-                }
-                else {
-                    double ppp                = 0;
-                    *pre_processing_parameter = next_min - 2 * min;
-                    if (next_min == min)
-                        return ret;
-                    ppp = *pre_processing_parameter;
-                    for (i = 0; i < length; i++) {
-                        DebugAssert((values[i] + ppp) > 0);
-                        values[i] = log(values[i] + ppp);
-                    }
-                }
-            }
-            else {
-                if (*pre_processing_parameter == 0) {
-                    for (i = 0; i < length; i++)
-                        values[i] = exp(values[i]);
-                }
-                else {
-                    for (i = 0; i < length; i++)
-                        values[i] = exp(values[i]) - *pre_processing_parameter;
-                }
-            }
-            break;
-        default:
-            ret = GRIB_NOT_IMPLEMENTED;
-            break;
-    }
-
-    return ret;
 }
