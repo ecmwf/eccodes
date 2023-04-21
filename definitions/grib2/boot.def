@@ -31,14 +31,12 @@ include "grib2/section.0.def";
 
 template core "grib2/sections.def";
 
-#if(!new())
-#{
-  #lookup[4] endOfProduct(0);
-  #while(endOfProduct != `7777`)
-  #{
-    #template core "grib2/sections.def";
-    #lookup[4] endOfProduct(0);
-  #}
+#if(!new()) {
+#  lookup[4] endOfProduct(0);
+#  while(endOfProduct != `7777`) {
+#    template core "grib2/sections.def";
+#    lookup[4] endOfProduct(0);
+#  }
 #}
 
 template section_8 "grib2/section.8.def";

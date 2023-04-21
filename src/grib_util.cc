@@ -2142,8 +2142,11 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     bool is_error          = true;
     char description[1024] = {0,};
     char step[32]          = "unknown";
-    char shortName[32]     = {0,};
-    size_t len             = 32;
+    char shortName[64]     = {0,};
+    char name[526]         = {0,};
+    size_t len             = 0;
+    const char* invalid_shortName = "unknown";
+    const char* invalid_name      = "Experimental product";
 
     // If grib_data_quality_checks == 1, limits failure results in an error
     // If grib_data_quality_checks == 2, limits failure results in a warning
@@ -2151,10 +2154,19 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     Assert(ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2);
     is_error = (ctx->grib_data_quality_checks == 1);
 
+    len = sizeof(shortName);
     err = grib_get_string(h, "shortName", shortName, &len);
-    if (err || STR_EQUAL(shortName, "unknown")) {
-        fprintf(stderr, "ECCODES %s   :  Invalid metadata: shortName=unknown\n",
-                    (is_error ? "ERROR" : "WARNING"));
+    if (err || STR_EQUAL(shortName, invalid_shortName)) {
+        fprintf(stderr, "ECCODES %s   :  Invalid metadata: shortName='%s'\n",
+                    (is_error ? "ERROR" : "WARNING"), invalid_shortName);
+        if (is_error) return GRIB_INVALID_MESSAGE;
+    }
+
+    len = sizeof(name);
+    err = grib_get_string(h, "name", name, &len);
+    if (err || STR_EQUAL(name, invalid_name)) {
+        fprintf(stderr, "ECCODES %s   :  Invalid metadata: name='%s'\n",
+                    (is_error ? "ERROR" : "WARNING"), invalid_name);
         if (is_error) return GRIB_INVALID_MESSAGE;
     }
 
