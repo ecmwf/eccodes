@@ -82,6 +82,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_ecc-1571
         grib_s2s
         grib_fire
         # grib_true_imagery
