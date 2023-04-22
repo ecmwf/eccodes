@@ -12,8 +12,6 @@
 label="grib_dump_debug_test"
 temp=temp.$label.txt
 
-REDIRECT=/dev/null
-
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
     unset ECCODES_SAMPLES_PATH

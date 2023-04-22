@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib_ecc-1560_test"
 temp_PDTN08_Grib=temp.$label.PDTN08.grib
 temp_PDTN11_Grib=temp.$label.PDTN11.grib

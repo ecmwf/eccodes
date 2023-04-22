@@ -9,10 +9,8 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
-label="bufr_ecc-1259_test"
 
+label="bufr_ecc-1259_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
 tempOut=temp.$label.out
