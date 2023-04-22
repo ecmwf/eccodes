@@ -150,6 +150,14 @@ infile=${data_dir}/ccsds_szip.grib2
 res=`${tools_dir}/grib_get '-F%.3f' -p min,max,avg $infile`
 [ "$res" = "-180.000 180.000 -0.044" ]
 
+# Conversion from JPEG to CCSDS (binaryScaleFactor=0, decimalScaleFactor!=0)
+# -------------------------------------------------------------------------
+if [ $HAVE_JPEG -eq 1 ]; then
+  ${tools_dir}/grib_copy -w count=2 ${data_dir}/v.grib2 $outfile1
+  grib_check_key_equals $outfile1 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor 'grid_jpeg 10 0 1'
+  ${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
+  ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
+fi
 
 # Clean up
 rm -f $outfile1 $outfile2
