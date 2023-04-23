@@ -58,7 +58,7 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_expanded_descriptors
 {
@@ -84,7 +84,7 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
     "expanded_descriptors",                      /* name */
     sizeof(grib_accessor_expanded_descriptors),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
     &destroy,                    /* free mem */
@@ -131,40 +131,10 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
 grib_accessor_class* grib_accessor_class_expanded_descriptors = &_grib_accessor_class_expanded_descriptors;
 
 
-static void init_class(grib_accessor_class* c)
-{
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
+//static void init_class(grib_accessor_class* c)
+//{
+//INIT
+//}
 
 /* END_CLASS_IMP */
 

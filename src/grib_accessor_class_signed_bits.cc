@@ -47,7 +47,7 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 
 typedef struct grib_accessor_signed_bits
@@ -67,7 +67,7 @@ static grib_accessor_class _grib_accessor_class_signed_bits = {
     "signed_bits",                      /* name */
     sizeof(grib_accessor_signed_bits),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* free mem */
@@ -114,38 +114,10 @@ static grib_accessor_class _grib_accessor_class_signed_bits = {
 grib_accessor_class* grib_accessor_class_signed_bits = &_grib_accessor_class_signed_bits;
 
 
-static void init_class(grib_accessor_class* c)
-{
-    c->string_length    =    (*(c->super))->string_length;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->unpack_float    =    (*(c->super))->unpack_float;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
+//static void init_class(grib_accessor_class* c)
+//{
+//INIT
+//}
 
 /* END_CLASS_IMP */
 
