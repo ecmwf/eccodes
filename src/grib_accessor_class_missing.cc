@@ -60,7 +60,7 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 static int notify_change(grib_accessor*, grib_accessor*);
 static void update_size(grib_accessor*, size_t);
 
@@ -76,7 +76,7 @@ static grib_accessor_class _grib_accessor_class_missing = {
     "missing",                      /* name */
     sizeof(grib_accessor_missing),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
     &destroy,                    /* free mem */
@@ -123,9 +123,10 @@ static grib_accessor_class _grib_accessor_class_missing = {
 grib_accessor_class* grib_accessor_class_missing = &_grib_accessor_class_missing;
 
 
-static void init_class(grib_accessor_class* c)
-{
-}
+//static void init_class(grib_accessor_class* c)
+//{
+//INIT
+//}
 
 /* END_CLASS_IMP */
 
