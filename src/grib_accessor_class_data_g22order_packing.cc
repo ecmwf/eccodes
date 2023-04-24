@@ -457,7 +457,7 @@ static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata
 
 static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
-    unsigned long last, penultimate, j = 0;
+    unsigned long last, penultimate = 0, j = 0;
     Assert(order > 0);
     Assert(order <= 3);
     if (!vals)
