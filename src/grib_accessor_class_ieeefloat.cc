@@ -16,6 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_double
    IMPLEMENTS = unpack_double;pack_double
+   IMPLEMENTS = unpack_float
    IMPLEMENTS = init
    IMPLEMENTS = value_count
    MEMBERS    = grib_arguments* arg
@@ -37,6 +38,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 //static void init_class(grib_accessor_class*);
@@ -78,7 +80,7 @@ static grib_accessor_class _grib_accessor_class_ieeefloat = {
     &pack_double,                /* pack_double */
     0,                 /* pack_float */
     &unpack_double,              /* unpack_double */
-    0,               /* unpack_float */
+    &unpack_float,               /* unpack_float */
     0,                /* pack_string */
     0,              /* unpack_string */
     0,          /* pack_string_array */
@@ -203,6 +205,30 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     *len = rlen;
     return GRIB_SUCCESS;
 }
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    long rlen = 0;
+    int err   = 0;
+    long i    = 0;
+    long bitp = a->offset * 8;
+
+    err = grib_value_count(a, &rlen);
+    if (err)
+        return err;
+
+    if (*len < (size_t)rlen) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %ld values", *len, a->name, rlen);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+    for (i = 0; i < rlen; i++)
+        val[i] = (float)grib_long_to_ieee(grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &bitp, 32));
+
+    *len = rlen;
+    return GRIB_SUCCESS;
+}
+
 static void update_size(grib_accessor* a, size_t s)
 {
     a->length = s;
