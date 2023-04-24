@@ -151,7 +151,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     rlen = count;
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %lu values", *len, a->name, rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %lu values", *len, a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -163,6 +163,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+// ECC-1572: TODO(masn) use templates
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
     unsigned long rlen = 0;
@@ -177,7 +178,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
     rlen = count;
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %lu values", *len, a->name, rlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %lu values", *len, a->name, rlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
