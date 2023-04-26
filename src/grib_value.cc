@@ -1349,7 +1349,7 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 
     //[> TODO: For now only GRIB supported... no BUFR keys <]
     if (h->product_kind != PRODUCT_GRIB) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        //grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
         return GRIB_NOT_IMPLEMENTED;
     }
     Assert(name[0]!='/');

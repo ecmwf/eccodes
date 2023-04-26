@@ -2770,11 +2770,30 @@ int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size, int len)
 
     if(!h){
         return GRIB_INVALID_GRIB;
-    }else{
-        err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
-        *size = lsize;
+    }
+
+    err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
+    if (err == GRIB_NOT_IMPLEMENTED) {
+        double* val8 = NULL;
+        size_t i = 0;
+        if(*size)
+            val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
+        else
+            val8 = (double*)grib_context_malloc(h->context,sizeof(double));
+        if(!val8) return GRIB_OUT_OF_MEMORY;
+
+        err = grib_get_double_array(h, cast_char(buf,key,len), val8, &lsize);
+        if (err) {
+            grib_context_free(h->context,val8);
+            return err;
+        }
+        for(i=0;i<lsize;i++)
+            val[i] = val8[i];
+        grib_context_free(h->context,val8);
         return  err;
     }
+    *size = lsize;
+    return err;
 }
 int grib_f_get_real4_array__(int* gid, char* key, float* val, int* size, int len){
     return grib_f_get_real4_array_( gid,  key, val,  size,  len);
