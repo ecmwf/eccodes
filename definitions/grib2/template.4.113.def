@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.113, Generalised spatio-temporal changing tiles at a horizontal level or horizontal layer at a point in time
+# TEMPLATE 4.113, Generalised tiles at a horizontal level or horizontal layer at a point in time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generalised_tile.def"
