@@ -201,7 +201,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         /* GRIB-637, ECC-1081: Potential vorticity surface */
         if (type_first == 109) {
             if (is_tigge) {
-                scale_first -= 6; // TIGGE data follows different rules
+                scale_first -= 6; /* TIGGE data follows different rules */
             } else {
                 scale_first -= 9;
             }
@@ -343,11 +343,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
-        case 109: // Potential vorticity surface
+        case 109: /* Potential vorticity surface */
             if (!is_tigge) {
                 scale_first = 9;
             } else {
-                scale_first = 6; // TIGGE data follows different rules
+                scale_first = 6; /* TIGGE data follows different rules */
             }
             break;
 
