@@ -693,9 +693,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             /* Make sure we can decode it again */
             double ref = 1e-100;
             grib_get_double_internal(gh, self->reference_value, &ref);
-            if (ref != reference_value)
-                printf("%.20e  !=  %.20e", ref, reference_value);
-            Assert(ref == reference_value);
+            if (ref != reference_value) {
+                grib_context_log(a->context, GRIB_LOG_ERROR, "data_simple_packing %s: (ref=%.10e != reference_value=%.10e)",
+                                __func__, ref, reference_value);
+                return GRIB_INTERNAL_ERROR;
+            }
         }
 
         large_constant_fields = grib_producing_large_constant_fields(gh, self->edition);

@@ -276,7 +276,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #endif
         if (grib_get_nearest_smaller_value(hand, self->reference_value, val[0], &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "CCSDS %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                             "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         if ((err = grib_set_double_internal(hand, self->reference_value, reference_value)) != GRIB_SUCCESS)
@@ -303,13 +303,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "CCSDS %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
 
         if (reference_value > min) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "CCSDS %s: reference_value=%g min_value=%g diff=%g", __func__, reference_value, min, reference_value - min);
+                "data_ccsds_packing %s: reference_value=%g min_value=%g diff=%g", __func__, reference_value, min, reference_value - min);
             DebugAssert(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
@@ -346,7 +346,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "CCSDS %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                             "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         d = grib_power(decimal_scale_factor, 10);
@@ -377,7 +377,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     // buflen = n_vals*(bits_per_value/8);
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,"CCSDS pack_double: packing %s, %d values", a->name, n_vals);
+    grib_context_log(a->context, GRIB_LOG_DEBUG,"data_ccsds_packing pack_double: packing %s, %d values", a->name, n_vals);
 
     // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
     buflen += buflen / 20 + 256;
@@ -394,7 +394,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(hand, self->reference_value, &ref);
-        Assert(ref == reference_value);
+        if (ref != reference_value) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "data_ccsds_packing %s: %s (ref=%.10e != reference_value=%.10e)",
+                            __func__, self->reference_value, ref, reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
 
     if ((err = grib_set_long_internal(hand, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
@@ -419,7 +423,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS %s: aec_buffer_encode error %d (%s)",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "data_ccsds_packing %s: aec_buffer_encode error %d (%s)",
                          __func__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
