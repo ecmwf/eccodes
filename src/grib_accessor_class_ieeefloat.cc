@@ -123,14 +123,13 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     self->arg                     = arg;
     grib_value_count(a, &count);
     a->length = 4 * count;
-
     Assert(a->length >= 0);
 }
 
 static int value_count(grib_accessor* a, long* len)
 {
     grib_accessor_ieeefloat* self = (grib_accessor_ieeefloat*)a;
-    *len                          = 0;
+    *len = 0;
 
     if (!self->arg) {
         *len = 1;
@@ -144,7 +143,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_ieeefloat* self = (grib_accessor_ieeefloat*)a;
     int ret                       = 0;
     unsigned long i               = 0;
-    unsigned long rlen            = *len;
+    unsigned long rlen            = (unsigned long)*len;
     size_t buflen                 = 0;
     unsigned char* buf            = NULL;
     long off                      = 0;
@@ -159,7 +158,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         off = a->offset * 8;
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, grib_ieee_to_long(val[0]), &off, 32);
         if (*len > 1)
-            grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, a->name);
+            grib_context_log(a->context, GRIB_LOG_WARNING, "ieeefloat: Trying to pack %zu values in a scalar %s, packing first value",
+                            *len, a->name);
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         return ret;
@@ -223,7 +223,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
 
 static void update_size(grib_accessor* a, size_t s)
 {
-    a->length = s;
+    a->length = (long)s;
     Assert(a->length >= 0);
 }
 

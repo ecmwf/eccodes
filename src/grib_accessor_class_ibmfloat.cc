@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/********************************
- *   Enrico Fucile
- *******************************/
-
 #include "grib_api_internal.h"
 #include <type_traits>
 
@@ -130,7 +126,7 @@ grib_accessor_class* grib_accessor_class_ibmfloat = &_grib_accessor_class_ibmflo
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_ibmfloat* self = (grib_accessor_ibmfloat*)a;
-    long count                   = 0;
+    long count = 0;
 
     self->arg = arg;
     grib_value_count(a, &count);
@@ -194,16 +190,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     if (rlen == 1) {
-        /*
-    double x = 0;
-    grib_nearest_smaller_ibm_float(val[0],&x);
-    double y = grib_long_to_ibm(grib_ibm_to_long(val[0]));
-    printf("IBMFLOAT val=%.20f nearest_smaller_ibm_float=%.20f long_to_ibm=%.20f\n",val[0],x ,y);
-         */
+
+        //double x = 0;
+        //grib_nearest_smaller_ibm_float(val[0],&x);
+        //double y = grib_long_to_ibm(grib_ibm_to_long(val[0]));
+        //printf("IBMFLOAT val=%.20f nearest_smaller_ibm_float=%.20f long_to_ibm=%.20f\n",val[0],x ,y);
+
         off = byte_offset(a) * 8;
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, grib_ibm_to_long(val[0]), &off, 32);
         if (*len > 1)
-            grib_context_log(a->context, GRIB_LOG_WARNING, "grib_accessor_unsigned : Trying to pack %d values in a scalar %s, packing first value", *len, a->name);
+            grib_context_log(a->context, GRIB_LOG_WARNING, "ibmfloat: Trying to pack %zu values in a scalar %s, packing first value",
+                             *len, a->name);
         if (ret == GRIB_SUCCESS)
             len[0] = 1;
         return ret;
@@ -238,7 +235,7 @@ static long byte_count(grib_accessor* a)
 static int value_count(grib_accessor* a, long* len)
 {
     grib_accessor_ibmfloat* self = (grib_accessor_ibmfloat*)a;
-    *len                         = 0;
+    *len = 0;
     if (!self->arg) {
         *len = 1;
         return 0;
@@ -250,11 +247,13 @@ static long byte_offset(grib_accessor* a)
 {
     return a->offset;
 }
+
 static void update_size(grib_accessor* a, size_t s)
 {
-    a->length = s;
+    a->length = (long)s;
     Assert(a->length >= 0);
 }
+
 static long next_offset(grib_accessor* a)
 {
     return grib_byte_offset(a) + grib_byte_count(a);
@@ -264,7 +263,7 @@ static int nearest_smaller_value(grib_accessor* a, double val, double* nearest)
 {
     int ret = 0;
     if (grib_nearest_smaller_ibm_float(val, nearest) == GRIB_INTERNAL_ERROR) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_nearest_smaller_ibm_float overflow value=%g\n", val);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "ibm_float:nearest_smaller_value overflow value=%g", val);
         grib_dump_content(grib_handle_of_accessor(a), stderr, "wmo", GRIB_DUMP_FLAG_HEXADECIMAL, 0);
         ret = GRIB_INTERNAL_ERROR;
     }
