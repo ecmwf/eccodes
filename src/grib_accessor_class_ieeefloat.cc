@@ -183,12 +183,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     return ret;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     long rlen = 0;
     int err   = 0;
     long i    = 0;
     long bitp = a->offset * 8;
+    grib_handle* hand  = grib_handle_of_accessor(a);
 
     err = grib_value_count(a, &rlen);
     if (err)
@@ -199,35 +202,22 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
+
     for (i = 0; i < rlen; i++)
-        val[i] = grib_long_to_ieee(grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &bitp, 32));
+        val[i] = (T)grib_long_to_ieee(grib_decode_unsigned_long(hand->buffer->data, &bitp, 32));
 
     *len = rlen;
     return GRIB_SUCCESS;
 }
 
-// ECC-1572: TODO(masn) use templates
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    long rlen = 0;
-    int err   = 0;
-    long i    = 0;
-    long bitp = a->offset * 8;
-
-    err = grib_value_count(a, &rlen);
-    if (err)
-        return err;
-
-    if (*len < (size_t)rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %ld values", *len, a->name, rlen);
-        *len = 0;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-    for (i = 0; i < rlen; i++)
-        val[i] = (float)grib_long_to_ieee(grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &bitp, 32));
-
-    *len = rlen;
-    return GRIB_SUCCESS;
+    return unpack<float>(a, val, len);
 }
 
 static void update_size(grib_accessor* a, size_t s)
