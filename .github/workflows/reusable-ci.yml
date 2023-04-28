@@ -1,0 +1,30 @@
+name: reusable-ci
+
+on:
+  workflow_call:
+    inputs:
+      eccodes:
+        required: false
+        type: string
+      codecov:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  ci:
+    name: eccodes-ci
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/ci.yml@v2
+    with:
+      repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
+      name_prefix: eccodes-
+      codecov_upload: ${{ inputs.codecov }}
+      build_package_inputs: |
+        repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
+        self_coverage: true
+        dependencies: |
+          ecmwf/ecbuild
+          MathisRosenhauer/libaec@master
+        dependency_branch: develop
+        parallelism_factor: 8
+    secrets: inherit
