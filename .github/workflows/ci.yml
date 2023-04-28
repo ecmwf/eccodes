@@ -51,8 +51,9 @@ jobs:
   downstream-ci-hpc:
     name: downstream-ci-hpc
     if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
+    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci-hpc.yml@drop-reusable-wf
     with:
+      dev_runner: true
       eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
     secrets: inherit
 
