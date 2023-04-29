@@ -142,7 +142,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 static int value_count(grib_accessor* a, long* number_of_values)
 {
     grib_accessor_data_run_length_packing* self = (grib_accessor_data_run_length_packing*)a;
-    *number_of_values                           = 0;
+    *number_of_values = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, number_of_values);
 }
 
@@ -193,21 +193,24 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
     range = (1 << bits_per_value) - 1 - max_level_value;
     if ((max_level_value <= 0) || (number_of_level_values <= 0) || (max_level_value > number_of_level_values) || (range <= 0)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)", max_level_value, number_of_level_values, range);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                "data_run_length_packing: parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
+                "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
+                max_level_value, number_of_level_values, range);
         return GRIB_DECODING_ERROR;
     }
     if (decimal_scale_factor > 127) {
         decimal_scale_factor = -(decimal_scale_factor - 128);
     }
     level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
-    levels            = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
-    levels[0]                 = missingValue;
+    levels = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
+    levels[0] = missingValue;
     for (i = 0; i < number_of_level_values; i++) {
         levels[i + 1] = level_values[i] * level_scale_factor;
     }
     compressed_values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_compressed_values);
-    buf      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    offsetBeforeData   = grib_byte_offset(a);
+    buf = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    offsetBeforeData = grib_byte_offset(a);
     buf += offsetBeforeData;
     pos = 0;
     grib_decode_long_array(buf, &pos, bits_per_value, number_of_compressed_values, compressed_values);
@@ -215,11 +218,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     i = 0;
     while (i < number_of_compressed_values) {
         if (compressed_values[i] > max_level_value) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "numberOfValues mismatch: i=%ld, compressed_values[i]=%ld, max_level_value=%ld", i, compressed_values[i], max_level_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                            "data_run_length_packing: numberOfValues mismatch: i=%d, "
+                            "compressed_values[i]=%ld, max_level_value=%ld",
+                             i, compressed_values[i], max_level_value);
             break;
         }
-        v      = compressed_values[i++];
-        n      = 1;
+        v = compressed_values[i++];
+        n = 1;
         factor = 1;
         while (i < number_of_compressed_values && compressed_values[i] > max_level_value) {
             n += factor * (compressed_values[i] - max_level_value - 1);
@@ -227,7 +233,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             i++;
         }
         if (n > number_of_values) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "numberOfValues mismatch: n=%ld, number_of_values=%ld", n, number_of_values);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "data_run_length_packing: numberOfValues mismatch: n=%ld, number_of_values=%ld",
+                             n, number_of_values);
             break;
         }
         for (k = 0; k < n; k++) {
@@ -238,7 +245,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_context_free(a->context, levels);
     grib_context_free(a->context, compressed_values);
     if (j != number_of_values) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "numberOfValues mismatch: j=%ld, number_of_values=%ld", j, number_of_values);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "data_run_length_packing: numberOfValues mismatch: j=%ld, number_of_values=%ld",
+                        j, number_of_values);
         return GRIB_DECODING_ERROR;
     }
     return err;
