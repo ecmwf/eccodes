@@ -1,3 +1,9 @@
-modules: ecbuild,ninja,aec,netcdf4/new
-parallel: 64
-cmake-options: -DENABLE_EXTRA_TESTS=1
+build:
+  modules:
+    - ecbuild
+    - ninja
+    - aec
+    - netcdf4/new
+  parallel: 64
+  cmake_options:
+    - -DENABLE_EXTRA_TESTS=1
