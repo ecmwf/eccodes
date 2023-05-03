@@ -1739,13 +1739,13 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 207 ;
 	}
-#Top net solar radiation, clear sky
-'Top net solar radiation, clear sky' = {
+#Top net short-wave (solar) radiation, clear sky
+'Top net short-wave (solar) radiation, clear sky' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
-'Top net thermal radiation, clear sky' = {
+#Top net long-wave (thermal) radiation, clear sky
+'Top net long-wave (thermal) radiation, clear sky' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 209 ;
 	}
@@ -1759,8 +1759,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 211 ;
 	}
-#TOA incident solar radiation
-'TOA incident solar radiation' = {
+#TOA incident short-wave (solar) radiation
+'TOA incident short-wave (solar) radiation' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 212 ;
 	}

@@ -314,16 +314,16 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Top net solar radiation, clear sky
-'Top net solar radiation, clear sky' = {
+#Top net short-wave (solar) radiation, clear sky
+'Top net short-wave (solar) radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 11 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net thermal radiation, clear sky
-'Top net thermal radiation, clear sky' = {
+#Top net long-wave (thermal) radiation, clear sky
+'Top net long-wave (thermal) radiation, clear sky' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
 	 parameterNumber = 6 ;
@@ -346,8 +346,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#TOA incident solar radiation
-'TOA incident solar radiation' = {
+#TOA incident short-wave (solar) radiation
+'TOA incident short-wave (solar) radiation' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
