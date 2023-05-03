@@ -29,10 +29,12 @@
 	}
 #Convective precipitation
 'lwe_thickness_of_convective_precipitation_amount' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 10 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Snowfall
 'lwe_thickness_of_snowfall_amount' = {
