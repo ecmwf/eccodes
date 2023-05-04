@@ -902,5 +902,27 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    // TODO(maee): See ECC-1579
+    // Investigate why results are not bit-identical
+
+    // return unpack<float>(a, val, len);
+
+    int err = 0;
+    size_t i = 0;
+    size_t size = *len;
+    double* val8 = NULL;
+    val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
+    if (!val8)
+        return GRIB_OUT_OF_MEMORY;
+    err = unpack<double>(a, val8, len);
+    if (err) {
+        grib_context_free(a->context,val8);
+        return err;
+    }
+
+    for(i=0; i<size; i++)
+        val[i] = val8[i];
+    grib_context_free(a->context,val8);
+
+    return GRIB_SUCCESS;
 }
