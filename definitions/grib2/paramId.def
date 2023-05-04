@@ -2846,6 +2846,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Total snowfall
+'260025' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #2 metre relative humidity
 '260242' = {
 	 discipline = 0 ;
@@ -6636,12 +6644,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 28 ;
-	}
-#Total snowfall
-'260025' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 29 ;
 	}
 #Precipitable water category
 '260026' = {
