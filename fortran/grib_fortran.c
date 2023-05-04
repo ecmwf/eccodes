@@ -2761,39 +2761,38 @@ int grib_f_get_real4(int* gid, char* key, float* val,  int len){
     return grib_f_get_real4_( gid,  key,  val,  len);
 }
 
-int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size, int len)
+int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size,  int len)
 {
+    /* See ECC-1579 */
+
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size;
+    double* val8 = NULL;
+    size_t i;
 
-    if(!h){
-        return GRIB_INVALID_GRIB;
-    }
+    if(!h) return GRIB_INVALID_GRIB;
 
-    err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
-    if (err == GRIB_NOT_IMPLEMENTED) {
-        double* val8 = NULL;
-        size_t i = 0;
-        if(*size)
-            val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
-        else
-            val8 = (double*)grib_context_malloc(h->context,sizeof(double));
-        if(!val8) return GRIB_OUT_OF_MEMORY;
+    if(*size)
+        val8 = (double*)grib_context_malloc(h->context,(*size)*(sizeof(double)));
+    else
+        val8 = (double*)grib_context_malloc(h->context,sizeof(double));
 
-        err = grib_get_double_array(h, cast_char(buf,key,len), val8, &lsize);
-        if (err) {
-            grib_context_free(h->context,val8);
-            return err;
-        }
-        for(i=0;i<lsize;i++)
-            val[i] = val8[i];
+    if(!val8) return GRIB_OUT_OF_MEMORY;
+
+    err  = grib_get_double_array(h, cast_char(buf,key,len), val8, &lsize);
+    if (err) {
         grib_context_free(h->context,val8);
-        return  err;
+        return err;
     }
-    *size = lsize;
-    return err;
+
+    for(i=0;i<lsize;i++)
+        val[i] = val8[i];
+
+    grib_context_free(h->context,val8);
+
+    return  err;
 }
 int grib_f_get_real4_array__(int* gid, char* key, float* val, int* size, int len){
     return grib_f_get_real4_array_( gid,  key, val,  size,  len);
