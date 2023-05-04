@@ -228,6 +228,11 @@ int grib_f_get_int(int *gid, char *key, int *val, int len);
 int grib_f_get_long_(int *gid, char *key, long *val, int len);
 int grib_f_get_long__(int *gid, char *key, long *val, int len);
 int grib_f_get_long(int *gid, char *key, long *val, int len);
+
+int grib_f_get_native_type_(int* gid, char* key, int* val, int len);
+int grib_f_get_native_type__(int* gid, char* key, int* val, int len);
+int grib_f_get_native_type(int* gid, char* key, int* val, int len);
+
 int grib_f_get_int_array_(int *gid, char *key, int *val, int *size, int len);
 int grib_f_get_int_array__(int *gid, char *key, int *val, int *size, int len);
 int grib_f_get_int_array(int *gid, char *key, int *val, int *size, int len);

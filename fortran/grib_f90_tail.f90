@@ -1896,6 +1896,35 @@
     end if
   end subroutine grib_get_long
 
+
+  !> Get the native type of a key from a message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the message loaded in memory
+  !> @param key         key name
+  !> @param value       the type as an integer(4) value
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_native_type(gribid, key, value, status)
+    integer(kind=kindOfInt), intent(in)      :: gribid
+    character(len=*), intent(in)             :: key
+    integer(kind=kindOfInt), intent(out)    :: value
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                  :: iret
+
+    iret = grib_f_get_native_type(gribid, key, value)
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    end if
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_native_type', key)
+    end if
+  end subroutine grib_get_native_type
+
   !> Check if the value of a key is MISSING.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will

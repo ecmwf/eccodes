@@ -36,6 +36,7 @@ integer, external :: grib_f_new_from_message, &
 integer, external :: grib_f_release
 integer, external :: grib_f_dump, grib_f_print
 integer, external :: grib_f_get_error_string
+integer, external :: grib_f_get_native_type
 integer, external :: grib_f_get_size_int,grib_f_get_size_long
 integer, external :: grib_f_get_data_real4,grib_f_get_data_real8
 integer, external :: grib_f_get_int, grib_f_get_long,grib_f_get_int_array, &
