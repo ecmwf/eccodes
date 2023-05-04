@@ -16,6 +16,7 @@ public :: grib_new_from_message, &
 public :: grib_release
 public :: grib_dump
 public :: grib_get_error_string
+public :: grib_get_native_type
 public :: grib_get_size
 public :: grib_get_message_size, grib_copy_message
 public :: grib_write, grib_multi_append

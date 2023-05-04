@@ -1618,18 +1618,40 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref codes_get_error_string.
   !>
-  !> @param msgid      id of the message loaded in memory
+  !> @param msgid       id of the message loaded in memory
   !> @param key         key name
   !> @param value       the integer(4) value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_int(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
-    character(len=*), intent(in)                  :: key
+    integer(kind=kindOfInt), intent(in)     :: msgid
+    character(len=*), intent(in)            :: key
     integer(kind=kindOfInt), intent(out)    :: value
     integer(kind=kindOfInt), optional, intent(out) :: status
 
     call grib_get_int(msgid, key, value, status)
   end subroutine codes_get_int
+
+
+  !> Get the native type of a key from a message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param msgid       id of the message loaded in memory
+  !> @param key         key name
+  !> @param value       the type as an integer(4) value
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine codes_get_native_type(msgid, key, value, status)
+    integer(kind=kindOfInt), intent(in)      :: msgid
+    character(len=*), intent(in)             :: key
+    integer(kind=kindOfInt), intent(out)     :: value
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                  :: iret
+
+    call grib_get_native_type(msgid, key, value, status)
+  end subroutine codes_get_native_type
+
 
   !> Get the integer value of a key from a message.
   !>
@@ -1661,9 +1683,9 @@
   !> @param is_missing  0->not missing, 1->missing
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_is_missing(msgid, key, is_missing, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
-    character(len=*), intent(in)                  :: key
-    integer(kind=kindOfInt), intent(out)    :: is_missing
+    integer(kind=kindOfInt), intent(in)            :: msgid
+    character(len=*), intent(in)                   :: key
+    integer(kind=kindOfInt), intent(out)           :: is_missing
     integer(kind=kindOfInt), optional, intent(out) :: status
 
     call grib_is_missing(msgid, key, is_missing, status)
@@ -1680,9 +1702,9 @@
   !> @param is_defined  0->not defined, 1->defined
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_is_defined(msgid, key, is_defined, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
-    character(len=*), intent(in)                  :: key
-    integer(kind=kindOfInt), intent(out)    :: is_defined
+    integer(kind=kindOfInt), intent(in)            :: msgid
+    character(len=*), intent(in)                   :: key
+    integer(kind=kindOfInt), intent(out)           :: is_defined
     integer(kind=kindOfInt), optional, intent(out) :: status
 
     call grib_is_defined(msgid, key, is_defined, status)
@@ -1700,9 +1722,9 @@
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_real4(msgid, key, value, status)
     integer(kind=kindOfInt), intent(in)             :: msgid
-    character(len=*), intent(in)             :: key
-    real(kind=kindOfFloat), intent(out)            :: value
-    integer(kind=kindOfInt), optional, intent(out)            :: status
+    character(len=*), intent(in)                    :: key
+    real(kind=kindOfFloat), intent(out)             :: value
+    integer(kind=kindOfInt), optional, intent(out)  :: status
 
     call grib_get_real4(msgid, key, value, status)
   end subroutine codes_get_real4
@@ -1718,10 +1740,10 @@
   !> @param value       the real(8) value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_real8(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)      :: msgid
-    character(len=*), intent(in)      :: key
-    real(kind=kindOfDouble), intent(out)     :: value
-    integer(kind=kindOfInt), optional, intent(out)     :: status
+    integer(kind=kindOfInt), intent(in)             :: msgid
+    character(len=*), intent(in)                    :: key
+    real(kind=kindOfDouble), intent(out)            :: value
+    integer(kind=kindOfInt), optional, intent(out)  :: status
 
     call grib_get_real8(msgid, key, value, status)
   end subroutine codes_get_real8
@@ -1737,9 +1759,9 @@
   !> @param value       the character value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_string(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
-    character(len=*), intent(in)  :: key
-    character(len=*), intent(out) :: value
+    integer(kind=kindOfInt), intent(in)            :: msgid
+    character(len=*), intent(in)                   :: key
+    character(len=*), intent(out)                  :: value
     integer(kind=kindOfInt), optional, intent(out) :: status
 
     call grib_get_string(msgid, key, value, status)
@@ -1757,10 +1779,10 @@
   !> @param value       string array value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_string_array(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)        :: msgid
-    character(len=*), intent(in)                        :: key
+    integer(kind=kindOfInt), intent(in)                        :: msgid
+    character(len=*), intent(in)                               :: key
     character(len=*), dimension(:), allocatable, intent(inout) :: value
-    integer(kind=kindOfInt), optional, intent(out)            :: status
+    integer(kind=kindOfInt), optional, intent(out)             :: status
 
     character                 :: cvalue(size(value)*len(value(0)))
     integer(kind=kindOfInt)                            :: iret
@@ -1802,10 +1824,10 @@
   !> @param msgid2      id of the message to which the data are copied
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_bufr_copy_data(msgid1, msgid2, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid1
-    integer(kind=kindOfInt), intent(in)  :: msgid2
-    integer(kind=kindOfInt), optional, intent(out)      :: status
-    integer(kind=kindOfInt)                            :: iret
+    integer(kind=kindOfInt), intent(in)             :: msgid1
+    integer(kind=kindOfInt), intent(in)             :: msgid2
+    integer(kind=kindOfInt), optional, intent(out)  :: status
+    integer(kind=kindOfInt)                         :: iret
 
     iret = codes_f_bufr_copy_data(msgid1, msgid2)
 
@@ -1829,10 +1851,10 @@
   !> @param value      string array value
   !> @param status     CODES_SUCCESS if OK, integer value on error
   subroutine codes_set_string_array(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)   :: msgid
-    character(len=*), intent(in)   :: key
-    character(len=*), dimension(:), allocatable, intent(in)   :: value
-    integer(kind=kindOfInt), optional, intent(out)  :: status
+    integer(kind=kindOfInt), intent(in)                     :: msgid
+    character(len=*), intent(in)                            :: key
+    character(len=*), dimension(:), allocatable, intent(in) :: value
+    integer(kind=kindOfInt), optional, intent(out)          :: status
 
     character                 :: cvalue(size(value)*len(value(0)))
     character                 :: svalue(len(value(0)))
@@ -1875,11 +1897,10 @@
   !> @param value       integer(4) array value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_int_array(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
+    integer(kind=kindOfInt), intent(in)           :: msgid
     character(len=*), intent(in)                  :: key
     integer(kind=kindOfInt), dimension(:), allocatable, intent(inout) :: value
-    integer(kind=kindOfInt), optional, intent(out)      :: status
-
+    integer(kind=kindOfInt), optional, intent(out)     :: status
     integer(kind=kindOfInt)                            :: iret
     integer(kind=kindOfInt)                            :: nb_values
     integer(kind=kindOfInt)                            :: size_value
@@ -1928,12 +1949,11 @@
   !> @param value       integer(4) array value
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_long_array(msgid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: msgid
+    integer(kind=kindOfInt), intent(in)           :: msgid
     character(len=*), intent(in)                  :: key
     integer(kind=kindOfLong), dimension(:), allocatable, intent(inout) :: value
-    integer(kind=kindOfInt), optional, intent(out)      :: status
+    integer(kind=kindOfInt), optional, intent(out)     :: status
     integer(kind=kindOfInt)                            :: iret
-
     integer(kind=kindOfInt)                            :: nb_values
     integer(kind=kindOfInt)                            :: size_value
     integer(kind=kindOfInt)                            :: i
@@ -2003,11 +2023,10 @@
   !> @param status      CODES_SUCCESS if OK, integer value on error
   subroutine codes_get_real4_array(msgid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: msgid
-    character(len=*), intent(in)  :: key
+    character(len=*), intent(in)         :: key
     real(kind=kindOfFloat), dimension(:), allocatable, intent(inout) :: value
-    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt), optional, intent(out)       :: status
     integer(kind=kindOfInt)                              :: iret
-
     integer(kind=kindOfInt)                              :: nb_values
     integer(kind=kindOfInt)                              :: size_value
     integer(kind=kindOfInt)                              :: i
