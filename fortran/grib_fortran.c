@@ -2763,7 +2763,11 @@ int grib_f_get_real4(int* gid, char* key, float* val,  int len){
 
 int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size,  int len)
 {
-    /* See ECC-1579 */
+    /* See ECC-1579:
+     * Ideally we should be calling:
+     * err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
+     *
+    */
 
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
