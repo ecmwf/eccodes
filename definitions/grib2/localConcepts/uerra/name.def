@@ -61,6 +61,14 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
+#Top net short-wave (solar) radiation
+'Top net short-wave (solar) radiation' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Maximum temperature at 2 metres since previous post-processing
 'Maximum temperature at 2 metres since previous post-processing' = {
 	 discipline = 0 ;
