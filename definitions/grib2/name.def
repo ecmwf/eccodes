@@ -5986,6 +5986,14 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
+#Snow melt
+'Snow melt' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Mean zero-crossing wave period
 'Mean zero-crossing wave period' = {
 	 discipline = 10 ;
@@ -8152,12 +8160,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 7 ;
-	}
-#Snow melt
-'Snow melt' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 16 ;
 	}
 #Direction of swell waves
 'Direction of swell waves' = {

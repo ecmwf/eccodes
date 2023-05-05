@@ -186,6 +186,12 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Snow melt
+'3099' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 16 ;
+	}
 #Sea-ice thickness
 '174098' = {
 	 discipline = 10 ;
