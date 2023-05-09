@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 #include <ctype.h>
 /*
@@ -89,8 +84,6 @@ grib_dumper_class* grib_dumper_class_keys = &_grib_dumper_class_keys;
 
 /* END_CLASS_IMP */
 
-static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a);
-
 static void init_class(grib_dumper_class* c) {}
 
 static int init(grib_dumper* d)
@@ -106,6 +99,7 @@ static int destroy(grib_dumper* d)
     return GRIB_SUCCESS;
 }
 
+#if 0
 static void aliases(grib_dumper* d, grib_accessor* a)
 {
     int i;
@@ -130,13 +124,14 @@ static void aliases(grib_dumper* d, grib_accessor* a)
         printf(") ");
     }
 }
+#endif
 
 static void dump_name_only(grib_dumper* d, grib_accessor* a, const char* comment)
 {
+#if 0
     grib_dumper_keys* self = (grib_dumper_keys*)d;
 
     print_offset(self->dumper.out, d, a);
-
 
     if (a->flags & GRIB_ACCESSOR_FLAG_HIDDEN) {
         return;
@@ -162,6 +157,7 @@ static void dump_name_only(grib_dumper* d, grib_accessor* a, const char* comment
     aliases(d, a);
 
     fprintf(self->dumper.out, "\n");
+#endif
 }
 
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
@@ -274,6 +270,7 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
+#if 0
     grib_dumper_keys* self = (grib_dumper_keys*)d;
     /*grib_section* s = grib_get_sub_section(a);*/
     int is_default_section = 0;
@@ -314,8 +311,5 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 
     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);*/
-}
-
-static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
-{
+#endif
 }
