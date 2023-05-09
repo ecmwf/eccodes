@@ -26,3 +26,4 @@ jobs:
         with:
           incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
           needs_context: ${{ toJSON(needs) }}
+          workflow_id: nightly.yml
