@@ -195,13 +195,10 @@ static int value_count(grib_accessor* a, long* numberOfSecondOrderPackedValues)
     return err;
 }
 
-static int unpack_float(grib_accessor*, float* val, size_t* len)
+template <typename T>
+static int unpack(grib_accessor* a, T* values, size_t* len)
 {
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int unpack_double(grib_accessor* a, double* values, size_t* len)
-{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_g1second_order_general_packing* self = (grib_accessor_data_g1second_order_general_packing*)a;
     int ret                                                 = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
@@ -291,7 +288,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     s = grib_power(binary_scale_factor, 2);
     d = grib_power(-decimal_scale_factor, 10);
     for (i = 0; i < numberOfSecondOrderPackedValues; i++) {
-        values[i] = (double)(((X[i] * s) + reference_value) * d);
+        values[i] = (T)(((X[i] * s) + reference_value) * d);
     }
 
     *len = numberOfSecondOrderPackedValues;
@@ -301,6 +298,16 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     grib_context_free(a->context, groupWidths);
 
     return ret;
+}
+
+static int unpack_float(grib_accessor* a, float* values, size_t* len)
+{
+    return unpack<float>(a, values, len);
+}
+
+static int unpack_double(grib_accessor* a, double* values, size_t* len)
+{
+    return unpack<double>(a, values, len);
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)

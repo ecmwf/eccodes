@@ -259,12 +259,8 @@ static int value_count(grib_accessor* a, long* count)
     return ret;
 }
 
-static int unpack_float(grib_accessor*, float* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int unpack_double(grib_accessor* a, double* values, size_t* len)
+template <typename T>
+static int unpack(grib_accessor* a, T* values, size_t* len)
 {
     grib_accessor_data_g1second_order_row_by_row_packing* self = (grib_accessor_data_g1second_order_row_by_row_packing*)a;
     grib_handle* gh                                            = grib_handle_of_accessor(a);
@@ -418,7 +414,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     s = grib_power(binary_scale_factor, 2);
     d = grib_power(-decimal_scale_factor, 10);
     for (i = 0; i < n; i++) {
-        values[i] = (double)(((X[i] * s) + reference_value) * d);
+        values[i] = (T)(((X[i] * s) + reference_value) * d);
     }
     grib_context_free(a->context, firstOrderValues);
     grib_context_free(a->context, X);
@@ -429,6 +425,16 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         grib_context_free(a->context, numbersPerRow);
 
     return ret;
+}
+
+static int unpack_float(grib_accessor* a, float* values, size_t* len)
+{
+    return unpack<float>(a, values, len);
+}
+
+static int unpack_double(grib_accessor* a, double* values, size_t* len)
+{
+    return unpack<double>(a, values, len);
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)
