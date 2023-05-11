@@ -1,4 +1,3 @@
-self_coverage: true
 dependencies: |
   ecmwf/ecbuild
   MathisRosenhauer/libaec@master
