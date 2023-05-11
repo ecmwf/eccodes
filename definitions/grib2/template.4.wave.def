@@ -1,0 +1,18 @@
+# Template for wave parameters
+
+## Direction part
+unsigned[2] waveDirectionNumber : dump;
+alias mars.direction = waveDirectionNumber;
+
+unsigned[2] numberOfWaveDirections = 1 : dump;
+alias totalNumberOfWaveDirections = numberOfWaveDirections;
+
+## Frequency part
+unsigned[2] waveFrequencyNumber : dump;
+alias mars.frequency = waveFrequencyNumber;
+
+unsigned[2] numberOfWaveFrequencies = 1 : dump;
+alias totalNumberOfWaveFrequencies = numberOfWaveFrequencies;
+
+constant waveLevType="sfc";
+alias mars.levtype = waveLevType;
