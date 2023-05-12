@@ -161,7 +161,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
     if ((ret = grib_get_double_internal(h, "longitudeOfLastGridPointInDegrees", &lon2)))
         return ret;
-    if ((ret = grib_get_double_internal(h, s_idir, &idir)))
+    if ((ret = grib_get_double_internal(h, s_idir, &idir))) // can be GRIB_MISSING_DOUBLE
         return ret;
     if ((ret = grib_get_long_internal(h, s_Ni, &Ni)))
         return ret;
