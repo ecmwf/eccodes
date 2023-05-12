@@ -191,7 +191,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         else {
             jdir = (lat2 - lat1) / (Nj - 1);
         }
-        grib_context_log(h->context, GRIB_LOG_INFO,
+        grib_context_log(h->context, GRIB_LOG_DEBUG,
                         "Cannot use jDirectionIncrement. Using value of %.6f obtained from La1, La2 and Nj", jdir);
     }
 
