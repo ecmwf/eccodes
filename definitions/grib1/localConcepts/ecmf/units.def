@@ -1090,12 +1090,12 @@
 	 indicatorOfParameter = 151 ;
 	}
 #Logarithm of surface pressure
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 152 ;
 	}
 #Logarithm of surface pressure
-'~' = {
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 152 ;
 	}

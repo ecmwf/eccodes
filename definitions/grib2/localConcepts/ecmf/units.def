@@ -692,7 +692,7 @@
 	 parameterNumber = 150 ;
 	}
 #Logarithm of surface pressure
-'~' = {
+'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
