@@ -616,3 +616,9 @@
  parameterCategory = 228 ;
  parameterNumber = 28 ;
 }
+#Forecast albedo
+'Forecast albedo' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 243 ;
+}
