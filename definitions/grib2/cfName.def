@@ -375,7 +375,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Albedo
+#Forecast albedo
 'surface_albedo' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;

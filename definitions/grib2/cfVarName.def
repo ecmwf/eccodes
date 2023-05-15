@@ -7903,7 +7903,7 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Albedo
+#Forecast albedo
 'al' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;

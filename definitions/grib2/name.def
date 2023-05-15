@@ -7903,8 +7903,8 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Albedo
-'Albedo' = {
+#Forecast albedo
+'Forecast albedo' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 1 ;

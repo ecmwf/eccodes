@@ -1027,9 +1027,10 @@
 	}
 #Forecast albedo
 '(0 - 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 243 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
 	}
 #Forecast surface roughness
 'm' = {

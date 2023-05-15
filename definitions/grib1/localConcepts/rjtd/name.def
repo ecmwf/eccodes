@@ -285,8 +285,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Albedo
-'Albedo' = {
+#Forecast albedo
+'Forecast albedo' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
