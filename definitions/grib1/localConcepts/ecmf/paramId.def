@@ -15344,11 +15344,6 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Sub-surface runoff
-'174009' = {
-	 table2Version = 174 ;
-	 indicatorOfParameter = 9 ;
-	}
 #Fraction of sea-ice in sea
 '174031' = {
 	 table2Version = 174 ;

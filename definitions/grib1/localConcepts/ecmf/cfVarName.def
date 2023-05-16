@@ -15344,11 +15344,6 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 8 ;
 	}
-#Sub-surface runoff
-'ssro' = {
-	 table2Version = 174 ;
-	 indicatorOfParameter = 9 ;
-	}
 #Fraction of sea-ice in sea
 'p31.174' = {
 	 table2Version = 174 ;

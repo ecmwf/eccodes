@@ -19694,12 +19694,6 @@
 	 parameterCategory = 174 ;
 	 parameterNumber = 6 ;
 	}
-#Sub-surface runoff
-'174009' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 9 ;
-	}
 #Fraction of sea-ice in sea
 '174031' = {
 	 discipline = 192 ;
