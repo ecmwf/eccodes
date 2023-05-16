@@ -13836,51 +13836,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 199 ;
 	}
-#Accumulated Carbon Dioxide Net Ecosystem Exchange
-'228080' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 192 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Gross Primary Production
-'228081' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 193 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Ecosystem Respiration
-'228082' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 194 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
-'228083' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 195 ;
-	}
-#Flux of Carbon Dioxide Gross Primary Production
-'228084' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 197 ;
-	}
-#Flux of Carbon Dioxide Ecosystem Respiration
-'228085' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 196 ;
-	}
 #Canopy cover fraction
 '228091' = {
 	 discipline = 192 ;

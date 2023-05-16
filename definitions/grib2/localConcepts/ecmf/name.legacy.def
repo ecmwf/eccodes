@@ -628,3 +628,48 @@
  parameterCategory = 128 ;
  parameterNumber = 244 ;
 }
+#Flux of Carbon Dioxide Net Ecosystem Exchange
+'Flux of Carbon Dioxide Net Ecosystem Exchange' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 195 ;
+}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange
+'Accumulated Carbon Dioxide Net Ecosystem Exchange' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 192 ;
+ typeOfStatisticalProcessing = 1 ;
+}
+#Flux of Carbon Dioxide Gross Primary Production
+'Flux of Carbon Dioxide Gross Primary Production' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 197 ;
+}
+#Accumulated Carbon Dioxide Gross Primary Production
+'Accumulated Carbon Dioxide Gross Primary Production' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 193 ;
+ typeOfStatisticalProcessing = 1 ;
+}
+#Flux of Carbon Dioxide Ecosystem Respiration
+'Flux of Carbon Dioxide Ecosystem Respiration' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 196 ;
+}
+#Accumulated Carbon Dioxide Ecosystem Respiration
+'Accumulated Carbon Dioxide Ecosystem Respiration' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 194 ;
+ typeOfStatisticalProcessing = 1 ;
+}
