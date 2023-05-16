@@ -622,3 +622,9 @@
  parameterCategory = 128 ;
  parameterNumber = 243 ;
 }
+#Forecast surface roughness
+'244' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 244 ;
+}

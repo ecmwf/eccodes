@@ -1032,12 +1032,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
 	}
-#Forecast surface roughness
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 244 ;
-	}
 #Forecast logarithm of surface roughness for heat
 '~' = {
 	 discipline = 192 ;

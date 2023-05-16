@@ -388,6 +388,13 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	}
+#Forecast surface roughness
+'244' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Specific cloud liquid water content
 '246' = {
 	 discipline = 0 ;

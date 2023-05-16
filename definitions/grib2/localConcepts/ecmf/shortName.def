@@ -1032,12 +1032,6 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
 	}
-#Forecast surface roughness
-'fsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 244 ;
-	}
 #Forecast logarithm of surface roughness for heat
 'flsr' = {
 	 discipline = 192 ;
