@@ -17720,12 +17720,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 54 ;
 	}
-#Vertical integral of water vapour
-'Vertical integral of water vapour' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 55 ;
-	}
 #Vertical integral of cloud liquid water
 'Vertical integral of cloud liquid water' = {
 	 discipline = 192 ;
