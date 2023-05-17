@@ -8,7 +8,7 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 8	SO2_v	Volcanic sulfur dioxide		8		7
 9	par	Paraffins		60009		
 10	C2H4	Ethene		10009		
-11	Ra	Radon		23		
+11	Rn	Radon		23		
 12	ALD2	Aldehydes		60018		
 13	PAN	Peroxyacetyl nitrate		10013		
 14	ROOH	Peroxides		60019		

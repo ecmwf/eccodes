@@ -32,7 +32,7 @@
 	constituentType = 10009 ;
 	}
 #Radon
-'Ra' = {
+'Rn' = {
 	constituentType = 23 ;
 	}
 #Aldehydes
