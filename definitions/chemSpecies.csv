@@ -1,11 +1,11 @@
 chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkChemicalPhysicalProcess
 2	CO	Carbon monoxide		4		
 3	H2O2	Hydrogen peroxide		19		
-4	CH4_c	Methane (chemistry)		2	1.0	
+4	CH4_c	Methane (chemistry)		2	1	
 5	HCHO	Formaldehyde		7		
 6	HNO3	Nitric acid		17		
 7	CH3OOH	Methyl peroxide		10002		
-8	SO2_v	Volcanic sulfur dioxide		8		7.0
+8	SO2_v	Volcanic sulfur dioxide		8		7
 9	par	Paraffins		60009		
 10	C2H4	Ethene		10009		
 11	Ra	Radon		23		
@@ -21,7 +21,7 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 21	NH4	Ammonium		10		
 22	MSA	Methane sulfonic acid		10024		
 23	CH3COCHO	Methyl glyoxal		10025		
-24	O3S	Stratospheric ozone		65524	1.0	
+24	O3S	Stratospheric ozone		65524	1	
 25	CO2	Carbon dioxide		3		
 26	Pb	Lead		30296		
 27	NO	Nitrogen monoxide		11		
@@ -34,11 +34,11 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 34	HO2NO2	Pernitric acid		18		
 35	C2O3_r	Peroxy acetyl radical		10026		
 36	ROR	Organic ethers		60021		
-37	rxpar	PAR budget corrector		65520	1.0	
-38	xo2	NO to NO2 operator		65521	1.0	
-39	xo2n	NO to alkyl nitrate operator		65522	1.0	
+37	rxpar	PAR budget corrector		65520	1	
+38	xo2	NO to NO2 operator		65521	1	
+39	xo2n	NO to alkyl nitrate operator		65522	1	
 40	NH2	Amine		60022		
-41	psc	Polar stratospheric cloud		65516	1.0	
+41	psc	Polar stratospheric cloud		65516	1	
 42	CH3OH	Methanol		10004		
 43	HCOOH	Formic acid		10005		
 44	MCOOH	Methacrylic acid		10027		
@@ -47,14 +47,14 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 47	C3H8	Propane		10014		
 48	C3H6	Propene		10015		
 49	C10H16	Terpenes		60012		
-50	ISPD	Methacrolein MVK		65523	1.0	
+50	ISPD	Methacrolein MVK		65523	1	
 52	CH3COCH3	Acetone		10029		
-53	aco2	Acetone product		65515	1.0	
-55	hypropo2	HYPROPO2		65519	1.0	
-56	noxa	Nitrogen oxides Transp		65514	1.0	
-57	CO2_c	Carbon dioxide (chemistry)		3	1.0	
-58	N2O_c	Nitrous oxide (chemistry)		6	1.0	
-59	H2O_c	Water vapour (chemistry)		1	1.0	
+53	aco2	Acetone product		65515	1	
+55	hypropo2	HYPROPO2		65519	1	
+56	noxa	Nitrogen oxides Transp		65514	1	
+57	CO2_c	Carbon dioxide (chemistry)		3	1	
+58	N2O_c	Nitrous oxide (chemistry)		6	1	
+59	H2O_c	Water vapour (chemistry)		1	1	
 60	O2	Dioxygen		38		
 61	O2_1s	Singlet sigma dioxygen		40000		
 62	O2_1d	Singlet Delta dioxygen		40001		
@@ -84,8 +84,8 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 94	C2H5OOH	Ethyl hydroperoxide		10052		
 96	CH3COOH	Acetic acid		10012		
 98	CH3CHO	Acetaldehyde		10032		
-99	tol	Toluene and less reactive aromatics		65529	1.0	
-100	xyl	Xylene and more reactive aromatics		65530	1.0	
+99	tol	Toluene and less reactive aromatics		65529	1	
+100	xyl	Xylene and more reactive aromatics		65530	1	
 101	GLYALD	Glycolaldehyde		10033		
 102	CRESOL	Cresol		10034		
 104	CH3COOOH	Peracetic acid		10035		
@@ -103,8 +103,8 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 116	POOH	C3h6ohooh		10054		
 118	HYAC	Hydroxyacetone		10041		
 119	PAA	Peroxyacetic acid		10042		
-124	BIGENE	Lumped alkenes		60010	1.0	
-126	BIGALK	Lumped alkanes		60009	1.0	
+124	BIGENE	Lumped alkenes		60010	1	
+126	BIGALK	Lumped alkanes		60009	1	
 129	NOx	Nitrogen oxides		60003		
 138	MVK	Methylvinylketone		10043		
 139	PhO	Phenoxy radical		10044		
@@ -119,11 +119,11 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 174	ClO	Chlorine monoxide		27		
 175	Cl	Chlorine atom		26		
 176	BrO	Bromine monoxide		33		
-177	h_c	Hydrogen atom		65513	1.0	
+177	h_c	Hydrogen atom		65513	1	
 178	ch3	Methyl group		10045		
-186	sog1	Condensable gas type 1		65526	1.0	
-187	sog2a	Condensable gas type 2a		65527	1.0	
-188	sog2b	Condensable gas type 2b		65528	1.0	
+186	sog1	Condensable gas type 1		65526	1	
+187	sog2a	Condensable gas type 2a		65527	1	
+188	sog2b	Condensable gas type 2b		65528	1	
 189	SO3	Sulfur trioxide		42		
 190	OCS_c	Carbonyl sulfide		10046		
 191	Br	Bromine atom		32		
@@ -133,7 +133,7 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 195	CH2Br2	Dibromomethane		10047		
 196	CH3O	Methoxy radical		10048		
 197	CHBr3	Tribromomethane		10049		
-198	cloo	Asymmetric chlorine dioxide radical		65518	1.0	
+198	cloo	Asymmetric chlorine dioxide radical		65518	1	
 199	H2	Dihydrogen		20		
 200	HCl	Hydrogen chloride		20001		
 201	HCO	Formyl radical		10050		
@@ -149,7 +149,7 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 228	HPALD2	Hydroperoxy aldehydes type 2		10059		
 229	ISOPBO2	Isoprene peroxy type B		10056		
 230	ISOPDO2	Isoprene peroxy type D		10057		
-231	gO3	GEMS ozone		0	1.0	
+231	gO3	GEMS ozone		0	1	
 232	SF6	Sulphur hexafluoride 		45		
 233	SO2	Sulphur dioxide		8		
 236	O3	Ozone		0		
