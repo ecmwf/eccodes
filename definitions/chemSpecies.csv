@@ -135,7 +135,7 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 225	CH3O2NO2	Methyl peroxy nitrate		10055		
 226	HCN	Hydrogen cyanide		10006		
 227	HPALD1	Hydroperoxy aldehydes type 1		10058		
-228	HPALD2	Hydroperoxy aldehydes type 2		10058		
+228	HPALD2	Hydroperoxy aldehydes type 2		10059		
 229	ISOPBO2	Isoprene peroxy type B		10056		
 230	ISOPDO2	Isoprene peroxy type D		10057		
 231	gO3	GEMS ozone		0	1	

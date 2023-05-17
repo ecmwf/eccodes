@@ -501,7 +501,7 @@
 	}
 #Hydroperoxy aldehydes type 2
 'Hydroperoxy aldehydes type 2' = {
-	constituentType = 10058 ;
+	constituentType = 10059 ;
 	}
 #Isoprene peroxy type B
 'Isoprene peroxy type B' = {
