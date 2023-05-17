@@ -1,4 +1,6 @@
 chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkChemicalPhysicalProcess	typeOfSizeInterval	scaleFactorOfFirstSize	scaledValueOfFirstSize	scaleFactorOfSecondSize	scaledValueOfSecondSize
+326	SOA	Secondary particulate organic matter dry		62012							
+51	aer_NO3	Nitrate		62004							
 901	aer_seasalt_003_05	Sea salt aerosol (0.03 - 0.5 um)		62008			7	8	3	7	5
 902	aer_seasalt_05_5	Sea salt aerosol (0.5 - 5 um)		62008			7	7	5	6	5
 903	aer_seasalt_5_20	Sea salt aerosol (5 - 20 um)		62008			7	6	5	5	2
@@ -15,4 +17,4 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 914	aer_nh4	Ammonium aerosol		62003							
 915	aer_biosecorg	Biogenic secondary organic aerosol		62032							
 916	aer_antsecorg	Anthropogenic secondary organic aerosol		62033							
-51	aer_NO3	Nitrate		62004							
+917	strataer	Stratospheric aerosol		65517	1					
