@@ -1364,18 +1364,18 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Albedo
-'Albedo' = {
+#Albedo (climatological)
+'Albedo (climatological)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
-'Albedo' = {
+#Albedo (climatological)
+'Albedo (climatological)' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
-'Albedo' = {
+#Albedo (climatological)
+'Albedo (climatological)' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;
 	}

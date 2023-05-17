@@ -761,11 +761,13 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 171 ;
 	}
-#Albedo
+#Albedo (climatological)
 '174' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 174 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Evaporation
 '182' = {
