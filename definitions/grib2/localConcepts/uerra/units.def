@@ -61,6 +61,12 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
+#Surface roughness (climatological)
+'m' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	}
 #Top net short-wave (solar) radiation
 'J m**-2' = {
 	 discipline = 0 ;

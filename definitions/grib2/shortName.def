@@ -253,6 +253,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Surface roughness (climatological)
+'sr' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Surface long-wave (thermal) radiation downwards
 'strd' = {
 	 discipline = 0 ;
@@ -6467,12 +6475,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Surface roughness
-'sr' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
 	}
 #Surface net short-wave (solar) radiation
 'ssr' = {

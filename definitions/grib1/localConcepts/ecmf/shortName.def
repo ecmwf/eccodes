@@ -1354,12 +1354,12 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 172 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'sr' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'sr' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
