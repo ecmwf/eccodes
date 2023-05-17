@@ -8,6 +8,26 @@
 	constituentType = 65524 ;
 	localTablesVersion = 1 ;
 	}
+#PAR budget corrector
+'rxpar' = {
+	constituentType = 65520 ;
+	localTablesVersion = 1 ;
+	}
+#NO to NO2 operator
+'xo2' = {
+	constituentType = 65521 ;
+	localTablesVersion = 1 ;
+	}
+#NO to alkyl nitrate operator
+'xo2n' = {
+	constituentType = 65522 ;
+	localTablesVersion = 1 ;
+	}
+#Polar stratospheric cloud
+'psc' = {
+	constituentType = 65516 ;
+	localTablesVersion = 1 ;
+	}
 #Methacrolein MVK
 'ISPD' = {
 	constituentType = 65523 ;
@@ -16,6 +36,11 @@
 #Acetone product
 'aco2' = {
 	constituentType = 65515 ;
+	localTablesVersion = 1 ;
+	}
+#HYPROPO2
+'hypropo2' = {
+	constituentType = 65519 ;
 	localTablesVersion = 1 ;
 	}
 #Nitrogen oxides Transp
@@ -38,6 +63,16 @@
 	constituentType = 1 ;
 	localTablesVersion = 1 ;
 	}
+#Toluene and less reactive aromatics
+'tol' = {
+	constituentType = 65529 ;
+	localTablesVersion = 1 ;
+	}
+#Xylene and more reactive aromatics
+'xyl' = {
+	constituentType = 65530 ;
+	localTablesVersion = 1 ;
+	}
 #Lumped alkenes
 'BIGENE' = {
 	constituentType = 60010 ;
@@ -51,41 +86,6 @@
 #Hydrogen atom
 'h_c' = {
 	constituentType = 65513 ;
-	localTablesVersion = 1 ;
-	}
-#GEMS ozone
-'gO3' = {
-	constituentType = 0 ;
-	localTablesVersion = 1 ;
-	}
-#Polar stratospheric cloud
-'psc' = {
-	constituentType = 65516 ;
-	localTablesVersion = 1 ;
-	}
-#Asymmetric chlorine dioxide radical
-'cloo' = {
-	constituentType = 65518 ;
-	localTablesVersion = 1 ;
-	}
-#HYPROPO2
-'hypropo2' = {
-	constituentType = 65519 ;
-	localTablesVersion = 1 ;
-	}
-#PAR budget corrector
-'rxpar' = {
-	constituentType = 65520 ;
-	localTablesVersion = 1 ;
-	}
-#NO to NO2 operator
-'xo2' = {
-	constituentType = 65521 ;
-	localTablesVersion = 1 ;
-	}
-#NO to alkyl nitrate operator
-'xo2n' = {
-	constituentType = 65522 ;
 	localTablesVersion = 1 ;
 	}
 #Condensable gas type 1
@@ -103,14 +103,14 @@
 	constituentType = 65528 ;
 	localTablesVersion = 1 ;
 	}
-#Toluene and less reactive aromatics
-'tol' = {
-	constituentType = 65529 ;
+#Asymmetric chlorine dioxide radical
+'cloo' = {
+	constituentType = 65518 ;
 	localTablesVersion = 1 ;
 	}
-#Xylene and more reactive aromatics
-'xyl' = {
-	constituentType = 65530 ;
+#GEMS ozone
+'gO3' = {
+	constituentType = 0 ;
 	localTablesVersion = 1 ;
 	}
 #Stratospheric aerosol

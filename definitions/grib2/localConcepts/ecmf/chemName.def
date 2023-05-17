@@ -8,6 +8,26 @@
 	constituentType = 65524 ;
 	localTablesVersion = 1 ;
 	}
+#PAR budget corrector
+'PAR budget corrector' = {
+	constituentType = 65520 ;
+	localTablesVersion = 1 ;
+	}
+#NO to NO2 operator
+'NO to NO2 operator' = {
+	constituentType = 65521 ;
+	localTablesVersion = 1 ;
+	}
+#NO to alkyl nitrate operator
+'NO to alkyl nitrate operator' = {
+	constituentType = 65522 ;
+	localTablesVersion = 1 ;
+	}
+#Polar stratospheric cloud
+'Polar stratospheric cloud' = {
+	constituentType = 65516 ;
+	localTablesVersion = 1 ;
+	}
 #Methacrolein MVK
 'Methacrolein MVK' = {
 	constituentType = 65523 ;
@@ -16,6 +36,11 @@
 #Acetone product
 'Acetone product' = {
 	constituentType = 65515 ;
+	localTablesVersion = 1 ;
+	}
+#HYPROPO2
+'HYPROPO2' = {
+	constituentType = 65519 ;
 	localTablesVersion = 1 ;
 	}
 #Nitrogen oxides Transp
@@ -38,6 +63,16 @@
 	constituentType = 1 ;
 	localTablesVersion = 1 ;
 	}
+#Toluene and less reactive aromatics
+'Toluene and less reactive aromatics' = {
+	constituentType = 65529 ;
+	localTablesVersion = 1 ;
+	}
+#Xylene and more reactive aromatics
+'Xylene and more reactive aromatics' = {
+	constituentType = 65530 ;
+	localTablesVersion = 1 ;
+	}
 #Lumped alkenes
 'Lumped alkenes' = {
 	constituentType = 60010 ;
@@ -51,41 +86,6 @@
 #Hydrogen atom
 'Hydrogen atom' = {
 	constituentType = 65513 ;
-	localTablesVersion = 1 ;
-	}
-#GEMS ozone
-'GEMS ozone' = {
-	constituentType = 0 ;
-	localTablesVersion = 1 ;
-	}
-#Polar stratospheric cloud
-'Polar stratospheric cloud' = {
-	constituentType = 65516 ;
-	localTablesVersion = 1 ;
-	}
-#Asymmetric chlorine dioxide radical
-'Asymmetric chlorine dioxide radical' = {
-	constituentType = 65518 ;
-	localTablesVersion = 1 ;
-	}
-#HYPROPO2
-'HYPROPO2' = {
-	constituentType = 65519 ;
-	localTablesVersion = 1 ;
-	}
-#PAR budget corrector
-'PAR budget corrector' = {
-	constituentType = 65520 ;
-	localTablesVersion = 1 ;
-	}
-#NO to NO2 operator
-'NO to NO2 operator' = {
-	constituentType = 65521 ;
-	localTablesVersion = 1 ;
-	}
-#NO to alkyl nitrate operator
-'NO to alkyl nitrate operator' = {
-	constituentType = 65522 ;
 	localTablesVersion = 1 ;
 	}
 #Condensable gas type 1
@@ -103,14 +103,14 @@
 	constituentType = 65528 ;
 	localTablesVersion = 1 ;
 	}
-#Toluene and less reactive aromatics
-'Toluene and less reactive aromatics' = {
-	constituentType = 65529 ;
+#Asymmetric chlorine dioxide radical
+'Asymmetric chlorine dioxide radical' = {
+	constituentType = 65518 ;
 	localTablesVersion = 1 ;
 	}
-#Xylene and more reactive aromatics
-'Xylene and more reactive aromatics' = {
-	constituentType = 65530 ;
+#GEMS ozone
+'GEMS ozone' = {
+	constituentType = 0 ;
 	localTablesVersion = 1 ;
 	}
 #Stratospheric aerosol
