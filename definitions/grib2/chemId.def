@@ -543,12 +543,8 @@
 '404' = {
 	constituentType = 2 ;
 	}
-#Secondary particulate organic matter dry
-'326' = {
-	constituentType = 62012 ;
-	}
 #Nitrate
-'51' = {
+'900' = {
 	constituentType = 62004 ;
 	}
 #Sea salt aerosol (0.03 - 0.5 um)
@@ -654,4 +650,8 @@
 #Anthropogenic secondary organic aerosol
 '916' = {
 	constituentType = 62033 ;
+	}
+#Secondary particulate organic matter dry
+'918' = {
+	constituentType = 62012 ;
 	}

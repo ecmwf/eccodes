@@ -543,10 +543,6 @@
 'CH4' = {
 	constituentType = 2 ;
 	}
-#Secondary particulate organic matter dry
-'SOA' = {
-	constituentType = 62012 ;
-	}
 #Nitrate
 'aer_NO3' = {
 	constituentType = 62004 ;
@@ -654,4 +650,8 @@
 #Anthropogenic secondary organic aerosol
 'aer_antsecorg' = {
 	constituentType = 62033 ;
+	}
+#Secondary particulate organic matter dry
+'SOA' = {
+	constituentType = 62012 ;
 	}

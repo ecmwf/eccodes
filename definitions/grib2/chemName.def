@@ -543,10 +543,6 @@
 'Methane' = {
 	constituentType = 2 ;
 	}
-#Secondary particulate organic matter dry
-'Secondary particulate organic matter dry' = {
-	constituentType = 62012 ;
-	}
 #Nitrate
 'Nitrate' = {
 	constituentType = 62004 ;
@@ -654,4 +650,8 @@
 #Anthropogenic secondary organic aerosol
 'Anthropogenic secondary organic aerosol' = {
 	constituentType = 62033 ;
+	}
+#Secondary particulate organic matter dry
+'Secondary particulate organic matter dry' = {
+	constituentType = 62012 ;
 	}
