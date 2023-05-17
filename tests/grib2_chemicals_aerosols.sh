@@ -93,7 +93,7 @@ grib_check_key_equals $temp aerosolType,typeOfSizeInterval '0 0'
 # =============================
 # Plain chemicals
 tempSample=temp.sample.$label
-${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=1 $sample2 $tempSample
+${tools_dir}/grib_set -s tablesVersion=29,productDefinitionTemplateNumber=1 $sample2 $tempSample
 grib_check_key_equals $tempSample perturbationNumber '0'
 
 ${tools_dir}/grib_set -s is_chemical=1 $tempSample $temp

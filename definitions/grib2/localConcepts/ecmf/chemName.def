@@ -1,0 +1,20 @@
+"GEMS ozone" = {
+constituentType = 0 ;
+localTablesVersion = 1 ;
+}
+"Methane (chemistry)" = {
+constituentType = 2 ;
+localTablesVersion = 1 ;
+}
+"Carbon dioxide (chemistry)" = {
+constituentType = 3 ;
+localTablesVersion = 1 ;
+}
+"Nitrous oxide (chemistry)" = {
+constituentType = 6 ;
+localTablesVersion = 1 ;
+}
+"Methacrolein MVK" = {
+constituentType = 65523 ;
+localTablesVersion = 1 ;
+}
