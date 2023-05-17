@@ -673,3 +673,9 @@
  parameterNumber = 194 ;
  typeOfStatisticalProcessing = 1 ;
 }
+#Albedo
+'Albedo' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 174 ;
+}
