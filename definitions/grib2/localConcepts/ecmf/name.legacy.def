@@ -679,3 +679,75 @@
  parameterCategory = 128 ;
  parameterNumber = 174 ;
 }
+#UV visible albedo for direct radiation
+'UV visible albedo for direct radiation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 15 ;
+}
+#UV visible albedo for diffuse radiation
+'UV visible albedo for diffuse radiation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 16 ;
+}
+#Near IR albedo for direct radiation
+'Near IR albedo for direct radiation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 17 ;
+}
+#Near IR albedo for diffuse radiation
+'Near IR albedo for diffuse radiation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 18 ;
+}
+#Standard deviation of filtered subgrid orography
+'Standard deviation of filtered subgrid orography' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 74 ;
+}
+#Logarithm of surface roughness length for heat
+'Logarithm of surface roughness length for heat' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 234 ;
+}
+#UV visible albedo for direct radiation, isotropic component 
+'UV visible albedo for direct radiation, isotropic component ' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 186 ;
+}
+#UV visible albedo for direct radiation, volumetric component 
+'UV visible albedo for direct radiation, volumetric component ' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 187 ;
+}
+#UV visible albedo for direct radiation, geometric component 
+'UV visible albedo for direct radiation, geometric component ' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 188 ;
+}
+#Near IR albedo for direct radiation, isotropic component 
+'Near IR albedo for direct radiation, isotropic component ' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 189 ;
+}
+#Near IR albedo for direct radiation, volumetric component
+'Near IR albedo for direct radiation, volumetric component' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 190 ;
+}
+#Near IR albedo for direct radiation, geometric component 
+'Near IR albedo for direct radiation, geometric component ' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 191 ;
+}

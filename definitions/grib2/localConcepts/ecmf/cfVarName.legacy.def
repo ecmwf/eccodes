@@ -679,3 +679,75 @@
  parameterCategory = 128 ;
  parameterNumber = 174 ;
 }
+#UV visible albedo for direct radiation
+'aluvp' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 15 ;
+}
+#UV visible albedo for diffuse radiation
+'aluvd' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 16 ;
+}
+#Near IR albedo for direct radiation
+'alnip' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 17 ;
+}
+#Near IR albedo for diffuse radiation
+'alnid' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 18 ;
+}
+#Standard deviation of filtered subgrid orography
+'sdfor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 74 ;
+}
+#Logarithm of surface roughness length for heat
+'lsrh' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 234 ;
+}
+#UV visible albedo for direct radiation, isotropic component 
+'aluvpi' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 186 ;
+}
+#UV visible albedo for direct radiation, volumetric component 
+'aluvpv' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 187 ;
+}
+#UV visible albedo for direct radiation, geometric component 
+'aluvpg' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 188 ;
+}
+#Near IR albedo for direct radiation, isotropic component 
+'alnipi' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 189 ;
+}
+#Near IR albedo for direct radiation, volumetric component
+'alnipv' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 190 ;
+}
+#Near IR albedo for direct radiation, geometric component 
+'alnipg' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 191 ;
+}

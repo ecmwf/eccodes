@@ -679,3 +679,75 @@
  parameterCategory = 128 ;
  parameterNumber = 174 ;
 }
+#UV visible albedo for direct radiation
+'15' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 15 ;
+}
+#UV visible albedo for diffuse radiation
+'16' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 16 ;
+}
+#Near IR albedo for direct radiation
+'17' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 17 ;
+}
+#Near IR albedo for diffuse radiation
+'18' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 18 ;
+}
+#Standard deviation of filtered subgrid orography
+'74' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 74 ;
+}
+#Logarithm of surface roughness length for heat
+'234' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 234 ;
+}
+#UV visible albedo for direct radiation, isotropic component 
+'210186' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 186 ;
+}
+#UV visible albedo for direct radiation, volumetric component 
+'210187' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 187 ;
+}
+#UV visible albedo for direct radiation, geometric component 
+'210188' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 188 ;
+}
+#Near IR albedo for direct radiation, isotropic component 
+'210189' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 189 ;
+}
+#Near IR albedo for direct radiation, volumetric component
+'210190' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 190 ;
+}
+#Near IR albedo for direct radiation, geometric component 
+'210191' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 191 ;
+}
