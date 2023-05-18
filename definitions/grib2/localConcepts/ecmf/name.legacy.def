@@ -673,80 +673,80 @@
  parameterNumber = 194 ;
  typeOfStatisticalProcessing = 1 ;
 }
-#Albedo
-'Albedo' = {
+#Albedo (climatological)
+'Albedo (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 174 ;
 }
-#UV visible albedo for direct radiation
-'UV visible albedo for direct radiation' = {
+#UV visible albedo for direct radiation (climatological)
+'UV visible albedo for direct radiation (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 15 ;
 }
-#UV visible albedo for diffuse radiation
-'UV visible albedo for diffuse radiation' = {
+#UV visible albedo for diffuse radiation (climatological)
+'UV visible albedo for diffuse radiation (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 16 ;
 }
-#Near IR albedo for direct radiation
-'Near IR albedo for direct radiation' = {
+#Near IR albedo for direct radiation (climatological)
+'Near IR albedo for direct radiation (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 17 ;
 }
-#Near IR albedo for diffuse radiation
-'Near IR albedo for diffuse radiation' = {
+#Near IR albedo for diffuse radiation (climatological)
+'Near IR albedo for diffuse radiation (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 18 ;
 }
-#Standard deviation of filtered subgrid orography
-'Standard deviation of filtered subgrid orography' = {
+#Standard deviation of filtered subgrid orography (climatological)
+'Standard deviation of filtered subgrid orography (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 74 ;
 }
-#Logarithm of surface roughness length for heat
-'Logarithm of surface roughness length for heat' = {
+#Logarithm of surface roughness length for heat (climatological)
+'Logarithm of surface roughness length for heat (climatological)' = {
  discipline = 192 ;
  parameterCategory = 128 ;
  parameterNumber = 234 ;
 }
-#UV visible albedo for direct radiation, isotropic component 
-'UV visible albedo for direct radiation, isotropic component ' = {
+#UV visible albedo for direct radiation, isotropic component (climatological)
+'UV visible albedo for direct radiation, isotropic component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 186 ;
 }
-#UV visible albedo for direct radiation, volumetric component 
-'UV visible albedo for direct radiation, volumetric component ' = {
+#UV visible albedo for direct radiation, volumetric component (climatological)
+'UV visible albedo for direct radiation, volumetric component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 187 ;
 }
-#UV visible albedo for direct radiation, geometric component 
-'UV visible albedo for direct radiation, geometric component ' = {
+#UV visible albedo for direct radiation, geometric component (climatological)
+'UV visible albedo for direct radiation, geometric component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 188 ;
 }
-#Near IR albedo for direct radiation, isotropic component 
-'Near IR albedo for direct radiation, isotropic component ' = {
+#Near IR albedo for direct radiation, isotropic component (climatological)
+'Near IR albedo for direct radiation, isotropic component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 189 ;
 }
-#Near IR albedo for direct radiation, volumetric component
-'Near IR albedo for direct radiation, volumetric component' = {
+#Near IR albedo for direct radiation, volumetric component (climatological)
+'Near IR albedo for direct radiation, volumetric component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 190 ;
 }
-#Near IR albedo for direct radiation, geometric component 
-'Near IR albedo for direct radiation, geometric component ' = {
+#Near IR albedo for direct radiation, geometric component (climatological)
+'Near IR albedo for direct radiation, geometric component (climatological)' = {
  discipline = 192 ;
  parameterCategory = 210 ;
  parameterNumber = 191 ;

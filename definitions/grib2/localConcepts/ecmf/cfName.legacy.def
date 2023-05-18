@@ -136,7 +136,7 @@
  parameterCategory = 128 ;
  parameterNumber = 182 ;
 }
-#Albedo
+#Albedo (climatological)
 'surface_albedo' = {
  discipline = 192 ;
  parameterCategory = 128 ;
