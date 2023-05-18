@@ -1,4 +1,14 @@
 # Code table 4.230 - Atmospheric chemical constituent type for ECMWF
+65513 65513 Hydrogen atom
+65514 65514 Nitrogen oxides Transp
+65515 65515 Acetone product
+65516 65516 Polar stratospheric cloud
+65517 65517 Stratospheric aerosol
+65518 65518 Asymmetric chlorine dioxide radical
+65519 65519 HYPROPO2
+65520 65520 PAR budget corrector
+65521 65521 NO to NO2 operator
+65522 65522 NO to alkyl nitrate operator
 65523 65523 Methacrolein MVK
 65524 65524 Stratospheric Ozone
 65525 65525 Nitrate aerosol
