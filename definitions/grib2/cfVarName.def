@@ -190,6 +190,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Standard deviation of filtered subgrid orography (climatological)
+'sdfor' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 38 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Specific rain water content
 'crwc' = {
 	 discipline = 0 ;
@@ -389,6 +396,14 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
+	}
+#Logarithm of surface roughness length for heat (climatological)
+'lsrh' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Temperature of snow layer
 'tsn' = {

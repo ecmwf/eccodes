@@ -66,6 +66,7 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Top net short-wave (solar) radiation
 'tsr' = {

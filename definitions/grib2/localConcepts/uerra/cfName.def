@@ -4,6 +4,7 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
