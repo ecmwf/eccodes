@@ -18,10 +18,6 @@
 'Methyl peroxide' = {
 	constituentType = 10002 ;
 	}
-#Sulfur dioxide
-'Sulfur dioxide' = {
-	constituentType = 8 ;
-	}
 #Paraffins
 'Paraffins' = {
 	constituentType = 60009 ;

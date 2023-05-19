@@ -5,7 +5,6 @@ chemId	chemName	name	aerosolType	constituentType	localTablesVersion	sourceSinkCh
 5	HCHO	Formaldehyde		7		
 6	HNO3	Nitric acid		17		
 7	CH3OOH	Methyl peroxide		10002		
-8	SO2	Sulfur dioxide		8		
 9	par	Paraffins		60009		
 10	C2H4	Ethene		10009		
 11	Rn	Radon		23		
