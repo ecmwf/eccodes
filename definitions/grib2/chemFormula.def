@@ -18,10 +18,6 @@
 'CH3OOH' = {
 	constituentType = 10002 ;
 	}
-#Sulfur dioxide
-'SO2' = {
-	constituentType = 8 ;
-	}
 #Paraffins
 'par' = {
 	constituentType = 60009 ;
