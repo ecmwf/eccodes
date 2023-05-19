@@ -18,10 +18,9 @@
 '7' = {
 	constituentType = 10002 ;
 	}
-#Volcanic sulfur dioxide
+#Sulfur dioxide
 '8' = {
 	constituentType = 8 ;
-	sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Paraffins
 '9' = {
