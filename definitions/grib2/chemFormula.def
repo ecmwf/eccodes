@@ -18,10 +18,9 @@
 'CH3OOH' = {
 	constituentType = 10002 ;
 	}
-#Volcanic sulfur dioxide
-'SO2_v' = {
+#Sulfur dioxide
+'SO2' = {
 	constituentType = 8 ;
-	sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Paraffins
 'par' = {

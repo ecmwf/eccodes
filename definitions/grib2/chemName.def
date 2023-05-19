@@ -18,10 +18,9 @@
 'Methyl peroxide' = {
 	constituentType = 10002 ;
 	}
-#Volcanic sulfur dioxide
-'Volcanic sulfur dioxide' = {
+#Sulfur dioxide
+'Sulfur dioxide' = {
 	constituentType = 8 ;
-	sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Paraffins
 'Paraffins' = {
