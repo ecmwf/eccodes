@@ -73,7 +73,6 @@ jobs:
           repository: private-downstream-ci
           event_type: downstream-ci-hpc
           payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
-<<<<<<< HEAD
 
   codecov:
     name: code-coverage
@@ -99,5 +98,3 @@ jobs:
         with:
           incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
           needs_context: ${{ toJSON(needs) }}
-=======
->>>>>>> feature/chemId_mars
