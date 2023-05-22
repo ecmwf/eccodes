@@ -755,6 +755,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     if ((ret = grib_get_double_internal(gh, self->laplacianOperator, &laplacianOperator)) != GRIB_SUCCESS)
         return ret;
+
     if ((ret = grib_get_long_internal(gh, self->sub_j, &sub_j)) != GRIB_SUCCESS)
         return ret;
     if ((ret = grib_get_long_internal(gh, self->sub_k, &sub_k)) != GRIB_SUCCESS)
@@ -905,24 +906,24 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
     // TODO(maee): See ECC-1579
     // Investigate why results are not bit-identical
 
-    // return unpack<float>(a, val, len);
+     return unpack<float>(a, val, len);
 
-    int err = 0;
-    size_t i = 0;
-    size_t size = *len;
-    double* val8 = NULL;
-    val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
-    if (!val8)
-        return GRIB_OUT_OF_MEMORY;
-    err = unpack<double>(a, val8, len);
-    if (err) {
-        grib_context_free(a->context,val8);
-        return err;
-    }
+    //int err = 0;
+    //size_t i = 0;
+    //size_t size = *len;
+    //double* val8 = NULL;
+    //val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
+    //if (!val8)
+    //    return GRIB_OUT_OF_MEMORY;
+    //err = unpack<double>(a, val8, len);
+    //if (err) {
+    //    grib_context_free(a->context,val8);
+    //    return err;
+    //}
 
-    for(i=0; i<size; i++)
-        val[i] = val8[i];
-    grib_context_free(a->context,val8);
+    //for(i=0; i<size; i++)
+    //    val[i] = val8[i];
+    //grib_context_free(a->context,val8);
 
     return GRIB_SUCCESS;
 }
