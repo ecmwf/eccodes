@@ -60,7 +60,7 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 static int notify_change(grib_accessor*, grib_accessor*);
 static void update_size(grib_accessor*, size_t);
 
@@ -76,32 +76,32 @@ static grib_accessor_class _grib_accessor_class_missing = {
     "missing",                      /* name */
     sizeof(grib_accessor_missing),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    &dump,                       /* describes himself */
-    &next_offset,                /* get length of section */
+    &destroy,                    /* destroy */
+    &dump,                       /* dump */
+    &next_offset,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     &byte_count,                 /* get number of bytes */
     &byte_offset,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     &sub_section,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    &pack_long,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    0,                 /* grib_pack procedures float */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
-    &pack_string,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    &pack_bytes,                 /* grib_pack procedures bytes */
-    &unpack_bytes,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    &pack_long,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    &pack_bytes,                 /* pack_bytes */
+    &unpack_bytes,               /* unpack_bytes */
     &pack_expression,            /* pack_expression */
     &notify_change,              /* notify_change */
     &update_size,                /* update_size */
@@ -110,10 +110,10 @@ static grib_accessor_class _grib_accessor_class_missing = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,       /* unpack only ith value */
-    0,  /* unpack a given set of elements */
-    0,   /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -123,9 +123,10 @@ static grib_accessor_class _grib_accessor_class_missing = {
 grib_accessor_class* grib_accessor_class_missing = &_grib_accessor_class_missing;
 
 
-static void init_class(grib_accessor_class* c)
-{
-}
+//static void init_class(grib_accessor_class* c)
+//{
+// INIT
+//}
 
 /* END_CLASS_IMP */
 

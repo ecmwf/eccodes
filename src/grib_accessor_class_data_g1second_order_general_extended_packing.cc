@@ -19,7 +19,7 @@
    SUPER      = grib_accessor_class_data_simple_packing
    IMPLEMENTS = init
    IMPLEMENTS = pack_double
-   IMPLEMENTS = unpack_double
+   IMPLEMENTS = unpack_double;unpack_float
    IMPLEMENTS = unpack_double_element;unpack_double_element_set
    IMPLEMENTS = value_count
    IMPLEMENTS = destroy
@@ -45,7 +45,8 @@
    MEMBERS=const char* orderOfSPD
    MEMBERS=const char* numberOfPoints
    MEMBERS=const char* dataFlag
-   MEMBERS=double* values
+   MEMBERS=double* dvalues
+   MEMBERS=float* fvalues
    MEMBERS=size_t size
 
 
@@ -65,10 +66,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -116,7 +118,10 @@ typedef struct grib_accessor_data_g1second_order_general_extended_packing
     const char* orderOfSPD;
     const char* numberOfPoints;
     const char* dataFlag;
-    double* values;
+    double* dvalues;
+    float* fvalues;
+    int double_dirty;
+    int float_dirty;
     size_t size;
 } grib_accessor_data_g1second_order_general_extended_packing;
 
@@ -127,32 +132,32 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_exte
     "data_g1second_order_general_extended_packing",                      /* name */
     sizeof(grib_accessor_data_g1second_order_general_extended_packing),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    &destroy,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    0,                 /* grib_pack procedures float */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
-    0,                /* grib_pack procedures string */
-    0,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    &unpack_float,               /* unpack_float */
+    0,                /* pack_string */
+    0,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -161,10 +166,10 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_exte
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    &unpack_double_element,      /* unpack only ith value */
-    0,       /* unpack only ith value */
-    &unpack_double_element_set,  /* unpack a given set of elements */
-    0,   /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    &unpack_double_element_set,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -174,41 +179,10 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_exte
 grib_accessor_class* grib_accessor_class_data_g1second_order_general_extended_packing = &_grib_accessor_class_data_g1second_order_general_extended_packing;
 
 
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
-    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
+//static void init_class(grib_accessor_class* c)
+//{
+// INIT
+//}
 
 /* END_CLASS_IMP */
 
@@ -280,7 +254,9 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
     self->dataFlag                        = grib_arguments_get_name(handle, args, self->carg++);
     self->edition                         = 1;
     self->dirty                           = 1;
-    self->values                          = NULL;
+    self->dvalues                          = NULL;
+    self->fvalues                          = NULL;
+    self->double_dirty = self->float_dirty = 1;
     self->size                            = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -374,11 +350,10 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
-
-static int unpack_double(grib_accessor* a, double* values, size_t* len)
+static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
-    int ret                                                          = 0;
+    int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* firstOrderValues = 0;
     long* X                = 0;
@@ -398,19 +373,33 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     long bias           = 0;
     long y = 0, z = 0, w = 0;
     size_t k, ngroups;
+    Assert(!(dvalues && fvalues));
 
-    if (!self->dirty) {
-        if (*len < self->size) {
-            return GRIB_ARRAY_TOO_SMALL;
+    if (dvalues) {
+        if (!self->double_dirty) {
+            if (*len < self->size) {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+            for (k = 0; k < self->size; k++)
+                dvalues[k] = self->dvalues[k];
+            *len = self->size;
+            return GRIB_SUCCESS;
         }
-        for (k = 0; k < self->size; k++)
-            values[k] = self->values[k];
-
-        *len = self->size;
-        return GRIB_SUCCESS;
+        self->double_dirty = 0;
     }
 
-    self->dirty = 0;
+    if (fvalues) {
+        if (!self->float_dirty) {
+            if (*len < self->size) {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+            for (k = 0; k < self->size; k++)
+                fvalues[k] = self->fvalues[k];
+            *len = self->size;
+            return GRIB_SUCCESS;
+        }
+        self->float_dirty = 0;
+    }
 
     buf += grib_byte_offset(a);
     ret = value_count(a, &numberOfValues);
@@ -532,21 +521,42 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
             break;
     }
 
-    if (self->values) {
-        if (numberOfValues != self->size) {
-            grib_context_free(a->context, self->values);
-            self->values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+    if (dvalues) { // double-precision
+        if (self->dvalues) {
+            if (numberOfValues != self->size) {
+                grib_context_free(a->context, self->dvalues);
+                self->dvalues = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+            }
+        }
+        else {
+            self->dvalues = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+        }
+
+        s = grib_power(binary_scale_factor, 2);
+        d = grib_power(-decimal_scale_factor, 10);
+        for (i = 0; i < numberOfValues; i++) {
+            dvalues[i]       = (double)(((X[i] * s) + reference_value) * d);
+            self->dvalues[i] = dvalues[i];
         }
     }
     else {
-        self->values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
-    }
+        // single-precision
+        if (self->fvalues) {
+            if (numberOfValues != self->size) {
+                grib_context_free(a->context, self->fvalues);
+                self->fvalues = (float*)grib_context_malloc_clear(a->context, sizeof(float) * numberOfValues);
+            }
+        }
+        else {
+            self->fvalues = (float*)grib_context_malloc_clear(a->context, sizeof(float) * numberOfValues);
+        }
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
-    for (i = 0; i < numberOfValues; i++) {
-        values[i]       = (double)(((X[i] * s) + reference_value) * d);
-        self->values[i] = values[i];
+        s = grib_power(binary_scale_factor, 2);
+        d = grib_power(-decimal_scale_factor, 10);
+        for (i = 0; i < numberOfValues; i++) {
+            fvalues[i]       = (float)(((X[i] * s) + reference_value) * d);
+            self->fvalues[i] = fvalues[i];
+        }
     }
 
     *len       = numberOfValues;
@@ -560,6 +570,16 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         grib_context_free(a->context, SPD);
 
     return ret;
+}
+
+static int unpack_float(grib_accessor* a, float* values, size_t* len)
+{
+    return unpack(a, NULL, values, len);
+}
+
+static int unpack_double(grib_accessor* a, double* values, size_t* len)
+{
+    return unpack(a, values, NULL, len);
 }
 
 static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* numberOfGroups, long* lengthOfSecondOrderValues,
@@ -1344,7 +1364,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_handle* handle          = grib_handle_of_accessor(a);
     long optimize_scaling_factor = 0;
 
-    self->dirty = 1;
+    self->double_dirty = 1;
 
     numberOfValues = *len;
 
@@ -1959,8 +1979,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static void destroy(grib_context* context, grib_accessor* a)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
-    if (self->values != NULL) {
-        grib_context_free(context, self->values);
-        self->values = NULL;
+    if (self->dvalues != NULL) {
+        grib_context_free(context, self->dvalues);
+        self->dvalues = NULL;
+    }
+    if (self->fvalues != NULL) {
+        grib_context_free(context, self->fvalues);
+        self->fvalues = NULL;
     }
 }

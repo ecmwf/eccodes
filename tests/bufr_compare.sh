@@ -200,6 +200,26 @@ EOF
 ${tools_dir}/bufr_compare -R airTemperature=4e-5 $f $fBufrTmp
 
 #--------------------------------------------------------------------
+# -d option
+#--------------------------------------------------------------------
+echo "Test: -d option" >> $fLog
+f='PraticaTemp.bufr'
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set #1#airTemperature=288.41;
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare -d $f $fBufrTmp
+status=$?
+set -e
+[ $status -eq 1 ]
+[ -f "error1_1.bufr" ]
+[ -f "error2_1.bufr" ]
+rm -f error1_1.bufr error2_1.bufr
+
+#--------------------------------------------------------------------
 # ECC-1283: string arrays
 #--------------------------------------------------------------------
 sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl

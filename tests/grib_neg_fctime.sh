@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 label="grib_neg_fctime_test"
 temp=temp.$label.grib
 input=${data_dir}/sample.grib2

@@ -66,11 +66,11 @@ int main(int argc, char** argv)
         if (!((dmin <= fval) && (fval <= dmax))) {
             fprintf(stderr, "Error:\n");
             fprintf(stderr, "dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
-            fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n", 
+            fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n",
                     dmin, fvalues[i], dmax);
-            fprintf(stderr, "\tfvalue - min = %.20e (%s)\n", 
+            fprintf(stderr, "\tfvalue - min = %.20e (%s)\n",
                     fvalues[i] - dmin, fvalues[i] - dmin >= 0 ? "OK" : "FAILED (should be positive)");
-            fprintf(stderr, "\tmax - fvalue = %.20e (%s)\n", 
+            fprintf(stderr, "\tmax - fvalue = %.20e (%s)\n",
                     dmax - fvalues[i], dmax - fvalues[i] >= 0 ? "OK" : "FAILED (should be positive)");
 
             Assert(!"Relative tolerance test failed\n");

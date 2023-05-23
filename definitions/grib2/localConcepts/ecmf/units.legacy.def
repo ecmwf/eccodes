@@ -616,3 +616,138 @@
  parameterCategory = 228 ;
  parameterNumber = 28 ;
 }
+#Forecast albedo
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 243 ;
+}
+#Forecast surface roughness
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 244 ;
+}
+#Flux of Carbon Dioxide Net Ecosystem Exchange
+'kg m**-2 s**-1' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 195 ;
+}
+#Accumulated Carbon Dioxide Net Ecosystem Exchange
+'kg m**-2' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 192 ;
+ typeOfStatisticalProcessing = 1 ;
+}
+#Flux of Carbon Dioxide Gross Primary Production
+'kg m**-2 s**-1' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 197 ;
+}
+#Accumulated Carbon Dioxide Gross Primary Production
+'kg m**-2' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 193 ;
+ typeOfStatisticalProcessing = 1 ;
+}
+#Flux of Carbon Dioxide Ecosystem Respiration
+'kg m**-2 s**-1' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 196 ;
+}
+#Accumulated Carbon Dioxide Ecosystem Respiration
+'kg m**-2' = {
+ localTablesVersion = 1 ;
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 194 ;
+ typeOfStatisticalProcessing = 1 ;
+}
+#Albedo (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 174 ;
+}
+#UV visible albedo for direct radiation (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 15 ;
+}
+#UV visible albedo for diffuse radiation (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 16 ;
+}
+#Near IR albedo for direct radiation (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 17 ;
+}
+#Near IR albedo for diffuse radiation (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 18 ;
+}
+#Standard deviation of filtered subgrid orography (climatological)
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 74 ;
+}
+#Logarithm of surface roughness length for heat (climatological)
+'~' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 234 ;
+}
+#UV visible albedo for direct radiation, isotropic component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 186 ;
+}
+#UV visible albedo for direct radiation, volumetric component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 187 ;
+}
+#UV visible albedo for direct radiation, geometric component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 188 ;
+}
+#Near IR albedo for direct radiation, isotropic component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 189 ;
+}
+#Near IR albedo for direct radiation, volumetric component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 190 ;
+}
+#Near IR albedo for direct radiation, geometric component (climatological)
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 191 ;
+}

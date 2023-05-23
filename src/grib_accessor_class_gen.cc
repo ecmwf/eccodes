@@ -14,9 +14,9 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
-#include <typeinfo>
 #include <limits>
 #include <cassert>
+#include "grib_api_internal_cpp.h"
 
 /*
    This is used by make_class.pl
@@ -73,7 +73,7 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
+//static void init_class(grib_accessor_class*);
 static int notify_change(grib_accessor*, grib_accessor*);
 static void update_size(grib_accessor*, size_t);
 static size_t preferred_size(grib_accessor*, int);
@@ -97,32 +97,32 @@ static grib_accessor_class _grib_accessor_class_gen = {
     "gen",                      /* name */
     sizeof(grib_accessor_gen),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    &dump,                       /* describes himself */
-    &next_offset,                /* get length of section */
+    &destroy,                    /* destroy */
+    &dump,                       /* dump */
+    &next_offset,                /* next_offset */
     &string_length,              /* get length of string */
     &value_count,                /* get number of values */
     &byte_count,                 /* get number of bytes */
     &byte_offset,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     &sub_section,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    &is_missing,                 /* grib_pack procedures long */
-    &pack_long,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    0,                 /* grib_pack procedures float */
-    &unpack_double,              /* grib_unpack procedures double */
-    &unpack_float,               /* grib_unpack procedures float */
-    &pack_string,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    &pack_string_array,          /* grib_pack array procedures string */
-    &unpack_string_array,        /* grib_unpack array procedures string */
-    &pack_bytes,                 /* grib_pack procedures bytes */
-    &unpack_bytes,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    &is_missing,                 /* is_missing */
+    &pack_long,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    &unpack_float,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    &pack_string_array,          /* pack_string_array */
+    &unpack_string_array,        /* unpack_string_array */
+    &pack_bytes,                 /* pack_bytes */
+    &unpack_bytes,               /* unpack_bytes */
     &pack_expression,            /* pack_expression */
     &notify_change,              /* notify_change */
     &update_size,                /* update_size */
@@ -131,10 +131,10 @@ static grib_accessor_class _grib_accessor_class_gen = {
     0,      /* nearest_smaller_value */
     &next,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
-    &unpack_double_element,      /* unpack only ith value */
-    0,       /* unpack only ith value */
-    &unpack_double_element_set,  /* unpack a given set of elements */
-    0,   /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    &unpack_double_element_set,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     &unpack_double_subarray,     /* unpack a subarray */
     &clear,                      /* clear */
     &make_clone,                 /* clone accessor */
@@ -144,9 +144,10 @@ static grib_accessor_class _grib_accessor_class_gen = {
 grib_accessor_class* grib_accessor_class_gen = &_grib_accessor_class_gen;
 
 
-static void init_class(grib_accessor_class* c)
-{
-}
+//static void init_class(grib_accessor_class* c)
+//{
+// INIT
+//}
 
 /* END_CLASS_IMP */
 
@@ -317,13 +318,14 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 template <typename T>
 static int unpack(grib_accessor* a, T* v, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, typeid(T).name());
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, type_to_string<T>(*v));
         return GRIB_SUCCESS;
     }
 

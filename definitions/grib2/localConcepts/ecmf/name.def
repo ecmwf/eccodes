@@ -62,29 +62,37 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 14 ;
 	}
-#UV visible albedo for direct radiation
-'UV visible albedo for direct radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 15 ;
+#UV visible albedo for direct radiation (climatological)
+'UV visible albedo for direct radiation (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for diffuse radiation
-'UV visible albedo for diffuse radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 16 ;
+#UV visible albedo for diffuse radiation (climatological)
+'UV visible albedo for diffuse radiation (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation
-'Near IR albedo for direct radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 17 ;
+#Near IR albedo for direct radiation (climatological)
+'Near IR albedo for direct radiation (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for diffuse radiation
-'Near IR albedo for diffuse radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 18 ;
+#Near IR albedo for diffuse radiation (climatological)
+'Near IR albedo for diffuse radiation (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 192 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Clear sky surface UV
 'Clear sky surface UV' = {
@@ -338,12 +346,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 73 ;
-	}
-#Standard deviation of filtered subgrid orography
-'Standard deviation of filtered subgrid orography' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 74 ;
 	}
 #Experimental product
 'Experimental product' = {
@@ -657,10 +659,12 @@
 	}
 #Convective precipitation
 'Convective precipitation' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 10 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Snowfall
 'Snowfall' = {
@@ -759,11 +763,13 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 171 ;
 	}
-#Albedo
-'Albedo' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 174 ;
+#Albedo (climatological)
+'Albedo (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Evaporation
 'Evaporation' = {
@@ -981,12 +987,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 233 ;
 	}
-#Logarithm of surface roughness length for heat
-'Logarithm of surface roughness length for heat' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 234 ;
-	}
 #Soil temperature level 4
 'Soil temperature level 4' = {
 	 discipline = 192 ;
@@ -1025,15 +1025,10 @@
 	}
 #Forecast albedo
 'Forecast albedo' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 243 ;
-	}
-#Forecast surface roughness
-'Forecast surface roughness' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 244 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
 	}
 #Forecast logarithm of surface roughness for heat
 'Forecast logarithm of surface roughness for heat' = {
@@ -2823,41 +2818,53 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 179 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
-'UV visible albedo for direct radiation, isotropic component ' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 186 ;
+#UV visible albedo for direct radiation, isotropic component (climatological)
+'UV visible albedo for direct radiation, isotropic component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 195 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
-'UV visible albedo for direct radiation, volumetric component ' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 187 ;
+#UV visible albedo for direct radiation, volumetric component (climatological)
+'UV visible albedo for direct radiation, volumetric component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 196 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
-'UV visible albedo for direct radiation, geometric component ' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 188 ;
+#UV visible albedo for direct radiation, geometric component (climatological)
+'UV visible albedo for direct radiation, geometric component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 194 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
-'Near IR albedo for direct radiation, isotropic component ' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 189 ;
+#Near IR albedo for direct radiation, isotropic component (climatological)
+'Near IR albedo for direct radiation, isotropic component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 195 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, volumetric component
-'Near IR albedo for direct radiation, volumetric component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 190 ;
+#Near IR albedo for direct radiation, volumetric component (climatological)
+'Near IR albedo for direct radiation, volumetric component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 196 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
-'Near IR albedo for direct radiation, geometric component ' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 191 ;
+#Near IR albedo for direct radiation, geometric component (climatological)
+'Near IR albedo for direct radiation, geometric component (climatological)' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 194 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #UV visible albedo for diffuse radiation, isotropic component 
 'UV visible albedo for diffuse radiation, isotropic component ' = {
@@ -13839,51 +13846,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 199 ;
 	}
-#Accumulated Carbon Dioxide Net Ecosystem Exchange
-'Accumulated Carbon Dioxide Net Ecosystem Exchange' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 192 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Gross Primary Production
-'Accumulated Carbon Dioxide Gross Primary Production' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 193 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Ecosystem Respiration
-'Accumulated Carbon Dioxide Ecosystem Respiration' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 194 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
-'Flux of Carbon Dioxide Net Ecosystem Exchange' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 195 ;
-	}
-#Flux of Carbon Dioxide Gross Primary Production
-'Flux of Carbon Dioxide Gross Primary Production' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 197 ;
-	}
-#Flux of Carbon Dioxide Ecosystem Respiration
-'Flux of Carbon Dioxide Ecosystem Respiration' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 196 ;
-	}
 #Canopy cover fraction
 'Canopy cover fraction' = {
 	 discipline = 192 ;
@@ -17069,12 +17031,6 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 148 ;
 	}
-#Bottom Pressure (equivalent height)
-'Bottom Pressure (equivalent height)' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 149 ;
-	}
 #Steric height
 'Steric height' = {
 	 discipline = 192 ;
@@ -17728,12 +17684,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 54 ;
-	}
-#Vertical integral of water vapour
-'Vertical integral of water vapour' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 55 ;
 	}
 #Vertical integral of cloud liquid water
 'Vertical integral of cloud liquid water' = {
@@ -19708,12 +19658,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 6 ;
-	}
-#Sub-surface runoff
-'Sub-surface runoff' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 9 ;
 	}
 #Fraction of sea-ice in sea
 'Fraction of sea-ice in sea' = {

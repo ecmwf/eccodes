@@ -85,6 +85,7 @@ if( HAVE_BUILD_TOOLS )
         grib_s2s
         grib_fire
         # grib_true_imagery
+        grib2_wave_spectra
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
@@ -108,6 +109,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1322
         grib_ecc-1319
         grib_ecc-1406
+        grib_ecc-1560
+        grib_ecc-1571
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259

@@ -116,6 +116,19 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1577: stepType when typeOfTimeIncrement=255
+# -----------------------------------------------
+${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp
+grib_check_key_equals $temp stepType accum
+${tools_dir}/grib_set -s stepType=accum $grib2_sample $temp
+grib_check_key_equals $temp typeOfTimeIncrement 2
+
+${tools_dir}/grib_set -s stepType=avg,typeOfTimeIncrement=255 $grib2_sample $temp
+grib_check_key_equals $temp stepType avg
+${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
+grib_check_key_equals $temp typeOfTimeIncrement 3
+
+
 # Clean up
 rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

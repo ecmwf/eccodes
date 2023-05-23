@@ -9,12 +9,12 @@
  */
 /***************************************************************************
  * Jean Baptiste Filippi - 01.11.2005
- * Enrico Fucile                                                           *
  ***************************************************************************/
-#include "grib_api_internal_cpp.h"
+
+#include "grib_api_internal.h"
+#include "grib_value.h"
+#include "grib_accessor.h"
 #include <float.h>
-
-
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -1349,7 +1349,7 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 
     //[> TODO: For now only GRIB supported... no BUFR keys <]
     if (h->product_kind != PRODUCT_GRIB) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        //grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
         return GRIB_NOT_IMPLEMENTED;
     }
     Assert(name[0]!='/');

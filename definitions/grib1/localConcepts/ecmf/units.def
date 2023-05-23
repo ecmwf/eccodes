@@ -124,22 +124,22 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 14 ;
 	}
-#UV visible albedo for direct radiation
+#UV visible albedo for direct radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 15 ;
 	}
-#UV visible albedo for diffuse radiation
+#UV visible albedo for diffuse radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 16 ;
 	}
-#Near IR albedo for direct radiation
+#Near IR albedo for direct radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 17 ;
 	}
-#Near IR albedo for diffuse radiation
+#Near IR albedo for diffuse radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 18 ;
@@ -414,7 +414,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Standard deviation of filtered subgrid orography
+#Standard deviation of filtered subgrid orography (climatological)
 'm' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 74 ;
@@ -1090,12 +1090,12 @@
 	 indicatorOfParameter = 151 ;
 	}
 #Logarithm of surface pressure
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 152 ;
 	}
 #Logarithm of surface pressure
-'~' = {
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 152 ;
 	}
@@ -1354,27 +1354,27 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 172 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'm' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'm' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;
@@ -1739,12 +1739,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 207 ;
 	}
-#Top net solar radiation, clear sky
+#Top net short-wave (solar) radiation, clear sky
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
+#Top net long-wave (thermal) radiation, clear sky
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 209 ;
@@ -1759,7 +1759,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 211 ;
 	}
-#TOA incident solar radiation
+#TOA incident short-wave (solar) radiation
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 212 ;
@@ -1919,13 +1919,13 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 233 ;
 	}
-#Logarithm of surface roughness length for heat
-'~' = {
+#Logarithm of surface roughness length for heat (climatological)
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 234 ;
 	}
-#Logarithm of surface roughness length for heat
-'~' = {
+#Logarithm of surface roughness length for heat (climatological)
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 234 ;
 	}
@@ -4024,32 +4024,32 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
+#UV visible albedo for direct radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 186 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
+#UV visible albedo for direct radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 187 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
+#UV visible albedo for direct radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 188 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
+#Near IR albedo for direct radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 189 ;
 	}
-#Near IR albedo for direct radiation, volumetric component
+#Near IR albedo for direct radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
+#Near IR albedo for direct radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
@@ -15343,11 +15343,6 @@
 'kg m**-2' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 8 ;
-	}
-#Sub-surface runoff
-'kg m**-2' = {
-	 table2Version = 174 ;
-	 indicatorOfParameter = 9 ;
 	}
 #Fraction of sea-ice in sea
 '(0 - 1)' = {

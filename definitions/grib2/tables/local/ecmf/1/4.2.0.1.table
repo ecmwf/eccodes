@@ -2,6 +2,7 @@
 192 192 Snow evaporation rate (kg m-2 s-1)
 193 193 Total precipitation (m)
 194 194 Accumulated freezing rain (m)
+195 195 Convective precipitation (m)
 196 196 Large-scale precipitation (m)
 197 197 Snow evaporation (m of water equivalent)
 198 198 Snowfall (m of water equivalent)

@@ -1875,6 +1875,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
     grib_field_list *fieldset, *next;
     grib_handle* h  = NULL;
     grib_context* c = NULL;
+    *err = 0;
 
     if (!index)
         return NULL;
