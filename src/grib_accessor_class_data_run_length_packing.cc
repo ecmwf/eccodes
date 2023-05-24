@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 
 /*
@@ -202,7 +203,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (decimal_scale_factor > 127) {
         decimal_scale_factor = -(decimal_scale_factor - 128);
     }
-    level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
+    level_scale_factor = grib_power<double>(-decimal_scale_factor, 10.0);
     levels = (double*)grib_context_malloc_clear(a->context, sizeof(double) * (number_of_level_values + 1));
     levels[0] = missingValue;
     for (i = 0; i < number_of_level_values; i++) {

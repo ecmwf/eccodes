@@ -12,6 +12,7 @@
  *   philippe.marguinaud@meteo.fr
  *******************************/
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 #include "grib_optimize_decimal_factor.h"
 #include <math.h>
@@ -667,8 +668,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     buf = (unsigned char*)gh->buffer->data;
     buf += grib_byte_offset(a);
 
-    s = grib_power(bt->binary_scale_factor, 2);
-    d = grib_power(-bt->decimal_scale_factor, 10);
+    s = grib_power<double>(bt->binary_scale_factor, 2);
+    d = grib_power<double>(-bt->decimal_scale_factor, 10);
 
     /*
      * Decode data
@@ -815,8 +816,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if (ret != GRIB_SUCCESS)
             goto cleanup;
 
-        s = grib_power(-bt->binary_scale_factor, 2);
-        d = grib_power(+bt->decimal_scale_factor, 10);
+        s = grib_power<double>(-bt->binary_scale_factor, 2);
+        d = grib_power<double>(+bt->decimal_scale_factor, 10);
     }
     else {
         bt->decimal_scale_factor = 0;

@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 
 /*
@@ -415,8 +416,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         k++;
     }
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = grib_power<double>(binary_scale_factor, 2);
+    d = grib_power<double>(-decimal_scale_factor, 10);
     for (i = 0; i < n; i++) {
         values[i] = (double)(((X[i] * s) + reference_value) * d);
     }

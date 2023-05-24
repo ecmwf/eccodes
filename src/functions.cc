@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 
 long grib_op_eq(long a, long b)
@@ -69,7 +70,7 @@ double grib_op_neg_d(double a)
 long grib_op_pow(long a, long b)
 {
     /* Note: This is actually 'a' to the power 'b' */
-    return grib_power(b, a);
+    return grib_power<double>(b, a);
 }
 
 long grib_op_add(long a, long b)

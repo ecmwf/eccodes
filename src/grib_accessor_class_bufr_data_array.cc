@@ -7,7 +7,7 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 
 /*
@@ -803,7 +803,7 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
 
     modifiedReference = bd->reference;
     modifiedFactor    = bd->factor;
-    inverseFactor     = grib_power(bd->scale, 10);
+    inverseFactor     = grib_power<double>(bd->scale, 10);
     modifiedWidth     = bd->width;
 
     err = descriptor_get_min_max(bd, modifiedWidth, modifiedReference, modifiedFactor, &minAllowed, &maxAllowed);
@@ -945,10 +945,10 @@ static int encode_double_array(grib_context* c, grib_buffer* buff, long* pos, bu
         localRange = (max - min) * inverseFactor + 1;
         localWidth = ceil(log(localRange) / log(2.0));
         lval       = round(max * inverseFactor) - reference;
-        allone     = grib_power(localWidth, 2) - 1;
+        allone     = grib_power<double>(localWidth, 2) - 1;
         while (allone <= lval) {
             localWidth++;
-            allone = grib_power(localWidth, 2) - 1;
+            allone = grib_power<double>(localWidth, 2) - 1;
         }
         if (localWidth == 1)
             localWidth++;
@@ -3227,7 +3227,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                                     return err;
                                 }
                                 bd            = grib_bufr_descriptor_clone(self->expanded->v[index]);
-                                bd->reference = -grib_power(bd->width, 2);
+                                bd->reference = -grib_power<double>(bd->width, 2);
                                 bd->width++;
 
                                 err = codec_element(c, self, iss, buffer, data, &pos, index, bd, elementIndex, dval, sval);

@@ -9,6 +9,7 @@
 */
 
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 /*
 This is used by make_class.pl
@@ -423,7 +424,7 @@ static int apply_operators(grib_accessor* a)
                 case 7:
                     if (Y) {
                         extraScale           = Y;
-                        referenceValueFactor = grib_power(Y, 10);
+                        referenceValueFactor = grib_power<double>(Y, 10);
                         extraWidth           = ((10 * Y) + 2) / 3;
                     }
                     else {

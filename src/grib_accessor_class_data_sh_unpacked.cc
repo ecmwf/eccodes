@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 #include <math.h>
 /*
@@ -307,8 +308,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     lpos = 8 * (packed_offset - offsetdata);
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = grib_power<double>(binary_scale_factor, 2);
+    d = grib_power<double>(-decimal_scale_factor, 10);
 
     scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
     Assert(scals);

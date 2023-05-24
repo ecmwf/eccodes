@@ -71,7 +71,7 @@ static long op_neg(long a) {return -a;}
 
 static double op_neg_d(double a) {return -a;}
 
-static long op_pow(long a, long b) {return grib_power(a,b);}
+static long op_pow(long a, long b) {return grib_power<double>(a,b);}
 static long op_add(long a, long b) {return a+b;}
 static long op_sub(long a, long b) {return a-b;}
 static long op_div(long a, long b) {return a/b;}

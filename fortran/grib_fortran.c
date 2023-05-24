@@ -3160,7 +3160,7 @@ int grib_f_get_real8_array_(int* gid, char* key, double*val, int* size, int len)
         return GRIB_INVALID_GRIB;
     }else{
         err = grib_get_double_array(h, cast_char(buf,key,len), val, &lsize);
-        printf("%30s - %0.60f\n", __PRETTY_FUNCTION__, val[40]);
+        printf("%30s - %0.60f\n", __func__, val[40]);
         *size = lsize;
         return  err;
     }
@@ -3170,7 +3170,7 @@ int grib_f_get_real8_array__(int* gid, char* key, double*val, int* size, int len
 }
 int grib_f_get_real8_array(int* gid, char* key, double*val, int* size, int len){
     return grib_f_get_real8_array_( gid,  key, val,  size,  len);
-    printf("%s - %0.60f\n", __PRETTY_FUNCTION__, val[40]);
+    printf("%s - %0.60f\n", __func__, val[40]);
 }
 
 int grib_f_set_force_real8_array__(int* gid, char* key, double *val, int* size, int len){

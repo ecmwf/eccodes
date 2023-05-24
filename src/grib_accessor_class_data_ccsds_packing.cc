@@ -297,7 +297,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor != 0)) {
-        d = grib_power(decimal_scale_factor, 10);
+        d = grib_power<double>(decimal_scale_factor, 10);
         min *= d;
         max *= d;
 
@@ -326,9 +326,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         range        = (max - min);
         unscaled_min = min;
         unscaled_max = max;
-        f            = (grib_power(bits_per_value, 2) - 1);
-        minrange     = grib_power(-last, 2) * f;
-        maxrange     = grib_power(last, 2) * f;
+        f            = (grib_power<double>(bits_per_value, 2) - 1);
+        minrange     = grib_power<double>(-last, 2) * f;
+        maxrange     = grib_power<double>(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
@@ -349,11 +349,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        d = grib_power(decimal_scale_factor, 10);
+        d = grib_power<double>(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = grib_power(-binary_scale_factor, 2);
+    divisor             = grib_power<double>(-binary_scale_factor, 2);
 
     bits8   = (bits_per_value + 7) / 8 * 8;
     encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
@@ -513,8 +513,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
+    bscale = grib_power<double>(binary_scale_factor, 2);
+    dscale = grib_power<double>(-decimal_scale_factor, 10);
 
     buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;

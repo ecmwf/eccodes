@@ -15,6 +15,7 @@
    can appear
 */
 
+#include "grib_api_internal_cpp.h"
 #include "grib_api_internal.h"
 /*
 This is used by make_class.pl
@@ -483,7 +484,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 case 7:
                     if (us->Y) {
                         ccp->extraScale      = us->Y;
-                        ccp->referenceFactor = grib_power(us->Y, 10);
+                        ccp->referenceFactor = grib_power<double>(us->Y, 10);
                         ccp->extraWidth      = ((10 * us->Y) + 2) / 3;
                     }
                     else {
