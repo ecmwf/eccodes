@@ -3839,8 +3839,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#X-component of sea ice velocity
-'X-component of sea ice velocity' = {
+#Eastward sea ice velocity
+'Eastward sea ice velocity' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 4 ;
@@ -3851,8 +3851,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Y-component of sea ice velocity
-'Y-component of sea ice velocity' = {
+#Northward sea ice velocity
+'Northward sea ice velocity' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 5 ;
