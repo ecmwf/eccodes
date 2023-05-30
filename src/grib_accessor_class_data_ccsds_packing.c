@@ -333,17 +333,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (((unsigned char *) decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (((uint8_t *) decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 2:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (((unsigned short *) decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (((uint16_t *) decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 4:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (((unsigned int *) decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (((uint32_t *) decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         default:
@@ -541,17 +541,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
-                encoded[i] = (unsigned char) (((val[i] * d - reference_value) * divisor) + 0.5);
+                encoded[i] = (uint8_t) (((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         case 2:
             for (i = 0; i < n_vals; i++) {
-                ((unsigned short*) encoded)[i] = (unsigned short) (((val[i] * d - reference_value) * divisor) + 0.5);
+                ((uint16_t*) encoded)[i] = (uint16_t) (((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         case 4:
             for (i = 0; i < n_vals; i++) {
-                ((unsigned int*) encoded)[i] = (unsigned int) (((val[i] * d - reference_value) * divisor) + 0.5);
+                ((uint32_t*) encoded)[i] = (uint32_t) (((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         default:
