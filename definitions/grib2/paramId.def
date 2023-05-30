@@ -5067,7 +5067,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean X-component of sea ice velocity
+#Time-mean eastward sea ice velocity
 '263003' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -5080,7 +5080,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean Y-component of sea ice velocity
+#Time-mean northward sea ice velocity
 '263004' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
