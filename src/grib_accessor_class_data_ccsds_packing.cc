@@ -241,10 +241,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    ccsds_flags &= ~AEC_DATA_MSB;  // reset MSB
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // reset 3BYTE
-    unsigned short endianess_test = 1;
-    if (reinterpret_cast<char*>(&endianess_test)[0] == 0)
+    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
+    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    unsigned short is_little_endian = 1;
+    if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
         ccsds_flags |= AEC_DATA_MSB;
 
     // Special case
@@ -519,10 +519,10 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    ccsds_flags &= ~AEC_DATA_MSB;  // reset MSB
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // reset 3BYTE
-    unsigned short endianess_test = 1;
-    if (reinterpret_cast<char*>(&endianess_test)[0] == 0)
+    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
+    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    unsigned short is_little_endian = 1;
+    if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
         ccsds_flags |= AEC_DATA_MSB;
 
     // TODO(masn): This should be called upstream
