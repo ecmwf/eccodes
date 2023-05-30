@@ -389,7 +389,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_NOT_IMPLEMENTED;
+            err = GRIB_OUT_OF_RANGE;
             goto cleanup;
     }
 
@@ -596,7 +596,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_NOT_IMPLEMENTED;
+            err = GRIB_OUT_OF_RANGE;
             goto cleanup;
     }
 
