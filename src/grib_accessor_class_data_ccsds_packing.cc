@@ -241,6 +241,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
+    // ECC-1602: Performance improvement
     ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
     ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
     unsigned short is_little_endian = 1;
@@ -371,6 +372,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
+    // ECC-1602: Performance improvement
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
@@ -519,6 +521,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
+    // ECC-1602: Performance improvement
     ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
     ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
     unsigned short is_little_endian = 1;
@@ -578,12 +581,11 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     pos = 0;
 
-    // ECC-1427: Performance improvement
+    // ECC-1427: Performance improvement (replaced by switch statement below)
     //grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
     //grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
-    
 
-
+    // ECC-1602: Performance improvement
     switch (nbytes) {
         case 1:
             {
