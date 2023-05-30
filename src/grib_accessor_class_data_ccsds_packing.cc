@@ -384,7 +384,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             break;
         case 4:
             for (i = 0; i < n_vals; i++) {
-                reinterpret_cast<unsigned int*>(encoded)[i] = static_cast<unsigned short>(((val[i] * d - reference_value) * divisor) + 0.5);
+                reinterpret_cast<unsigned int*>(encoded)[i] = static_cast<unsigned int>(((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         default:
@@ -589,7 +589,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             {
                 unsigned char *tmp_i8 = reinterpret_cast<unsigned char *>(decoded);
                 for (i = 0; i < n_vals; i++) {
-                    val[i] = ((tmp_i8[i] * bscale) + reference_value) * dscale;
+                    val[i] = (tmp_i8[i] * bscale + reference_value) * dscale;
                 }
             }
             break;
@@ -597,7 +597,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             {
                 unsigned short *tmp_i16 = reinterpret_cast<unsigned short *>(decoded);
                 for (i = 0; i < n_vals; i++) {
-                    val[i] = ((tmp_i16[i] * bscale) + reference_value) * dscale;
+                    val[i] = (tmp_i16[i] * bscale + reference_value) * dscale;
                 }
             }
             break;
@@ -605,7 +605,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             {
                 unsigned int *tmp_i32 = reinterpret_cast<unsigned int *>(decoded);
                 for (i = 0; i < n_vals; i++) {
-                    val[i] = ((tmp_i32[i] * bscale) + reference_value) * dscale;
+                    val[i] = (tmp_i32[i] * bscale + reference_value) * dscale;
                 }
             }
             break;
