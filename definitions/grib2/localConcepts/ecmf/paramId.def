@@ -34,9 +34,12 @@
 	}
 #Sub-surface runoff
 '9' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 9 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #U component of divergent wind
 '11' = {
@@ -100,12 +103,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 19 ;
 	}
-#Clear sky surface photosynthetically active radiation
-'20' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 20 ;
-	}
 #Reserved for future unbalanced components
 '24' = {
 	 discipline = 192 ;
@@ -123,30 +120,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 26 ;
-	}
-#Low vegetation cover
-'27' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 27 ;
-	}
-#High vegetation cover
-'28' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 28 ;
-	}
-#Type of low vegetation
-'29' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 29 ;
-	}
-#Type of high vegetation
-'30' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 30 ;
 	}
 #Snow albedo
 '32' = {
@@ -227,12 +200,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Magnitude of turbulent surface stress
-'48' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 48 ;
-	}
 #Maximum temperature at 2 metres in the last 24 hours
 '51' = {
 	 discipline = 0 ;
@@ -298,18 +265,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
-	}
-#Leaf area index, low vegetation
-'66' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 66 ;
-	}
-#Leaf area index, high vegetation
-'67' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 67 ;
 	}
 #Minimum stomatal resistance, low vegetation
 '68' = {
@@ -675,12 +630,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Charnock
-'148' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 148 ;
-	}
 #Surface net radiation
 '149' = {
 	 discipline = 192 ;
@@ -845,9 +794,10 @@
 	}
 #Skin reservoir content
 '198' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 198 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 205 ;
 	}
 #Vegetation fraction
 '199' = {
@@ -880,12 +830,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 206 ;
-	}
-#Vertically integrated moisture divergence
-'213' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 213 ;
 	}
 #Diabatic heating by radiation
 '214' = {
@@ -1029,12 +973,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
-	}
-#Forecast logarithm of surface roughness for heat
-'245' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 245 ;
 	}
 #Accumulated ice water tendency
 '249' = {
@@ -13754,12 +13692,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
-'228022' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 22 ;
-	}
 #Cloud base height
 '228023' = {
 	 discipline = 192 ;
@@ -13819,18 +13751,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
-	}
-#Height of zero-degree wet-bulb temperature
-'228047' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 47 ;
-	}
-#Height of one-degree wet-bulb temperature
-'228048' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 48 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 '228078' = {
@@ -16611,23 +16531,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
 	}
-#Mean direction of wind waves
-'140235' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 235 ;
-	}
 #Significant height of total swell
 '140237' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 237 ;
-	}
-#Mean direction of total swell
-'140238' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 238 ;
 	}
 #Mean period of total swell
 '140239' = {
@@ -16700,12 +16608,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#2D wave spectra (single)
-'140251' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 251 ;
 	}
 #Wave spectral kurtosis
 '140252' = {
@@ -17451,12 +17353,6 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 184 ;
 	}
-#Skin reservoir content
-'160198' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 198 ;
-	}
 #Percentage of vegetation
 '160199' = {
 	 discipline = 192 ;
@@ -17673,12 +17569,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 51 ;
 	}
-#Vertical integral of mass of atmosphere
-'162053' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 53 ;
-	}
 #Vertical integral of temperature
 '162054' = {
 	 discipline = 192 ;
@@ -17721,12 +17611,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 61 ;
 	}
-#Vertical integral of potential+internal+latent energy
-'162062' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 62 ;
-	}
 #Vertical integral of total energy
 '162063' = {
 	 discipline = 192 ;
@@ -17762,18 +17646,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward heat flux
-'162069' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 69 ;
-	}
-#Vertical integral of northward heat flux
-'162070' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 70 ;
 	}
 #Vertical integral of eastward geopotential flux
 '162073' = {
@@ -17828,12 +17700,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of moisture flux
-'162084' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
 '162085' = {
@@ -22124,48 +21990,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Minimum vertical gradient of refractivity inside trapping layer
-'228015' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 15 ;
-	}
-#Mean vertical gradient of refractivity inside trapping layer
-'228016' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 16 ;
-	}
-#Duct base height
-'228017' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 17 ;
-	}
-#Trapping layer base height
-'228018' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 18 ;
-	}
-#Trapping layer top height
-'228019' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 19 ;
-	}
-#Neutral wind at 10 m u-component
-'228131' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 131 ;
-	}
-#Neutral wind at 10 m v-component
-'228132' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 132 ;
 	}
 #Surface temperature significance
 '234139' = {

@@ -149,7 +149,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 19 ;
 	}
-#Clear sky surface photosynthetically active radiation
+#Surface photosynthetically active radiation, clear sky
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 20 ;
@@ -195,12 +195,12 @@
 	 indicatorOfParameter = 28 ;
 	}
 #Type of low vegetation
-'~' = {
+'(code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Type of high vegetation
-'~' = {
+'(code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
@@ -1050,7 +1050,7 @@
 	 indicatorOfParameter = 147 ;
 	}
 #Charnock
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
@@ -2005,12 +2005,12 @@
 	 indicatorOfParameter = 244 ;
 	}
 #Forecast logarithm of surface roughness for heat
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 245 ;
 	}
 #Forecast logarithm of surface roughness for heat
-'~' = {
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 245 ;
 	}
@@ -9884,7 +9884,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
+#Surface direct short-wave radiation, clear sky
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 22 ;
@@ -13814,7 +13814,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Vertical integral of divergence of moisture flux
+#Vertically integrated moisture divergence flux
 'kg m**-2 s**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
@@ -17594,12 +17594,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Neutral wind at 10 m u-component
+#U-component of neutral wind
 'm s**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Neutral wind at 10 m v-component
+#V-component of neutral wind
 'm s**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
