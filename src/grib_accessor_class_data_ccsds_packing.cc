@@ -209,7 +209,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
     double reference_value    = 0;
-    long bits8                = 0;
     long bits_per_value       = 0;
     double max, min, d, divisor;
 
@@ -448,8 +447,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
-    //printf("n_vals = %ld, bits8 = %ld\n", n_vals, bits8);
-    //printf("in %ld out => %zu\n", bits8/8*n_vals, buflen);
     buflen = strm.total_out;
     grib_buffer_replace(a, buf, buflen, 1, 1);
 
@@ -490,7 +487,6 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     long decimal_scale_factor = 0;
     double reference_value    = 0;
     long bits_per_value       = 0;
-    long bits8;
 
     long ccsds_flags;
     long ccsds_block_size;
@@ -559,8 +555,6 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if (nbytes == 3) 
         nbytes = 4;
 
-    bits8   = ((bits_per_value + 7) / 8) * 8;
-    //size    = n_vals * ((bits_per_value + 7) / 8);
     size    = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
     if (!decoded) {
