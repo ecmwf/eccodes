@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal_cpp.h"
+#include <cstdint>
 
 /*
    This is used by make_class.pl
