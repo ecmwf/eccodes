@@ -232,11 +232,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long decimal_scale_factor = 0;
     double reference_value    = 0;
     long bits_per_value       = 0;
-    long bits8;
 
     long ccsds_flags;
     long ccsds_block_size;
     long ccsds_rsi;
+    size_t nbytes;
+    unsigned short is_little_endian = 1;
 
     self->dirty = 0;
 
@@ -261,6 +262,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
+
+    // ECC-1602: Performance improvement
+    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
+    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    if (((char*) &is_little_endian)[0] == 0)
+        ccsds_flags |= AEC_DATA_MSB;
 
     /* TODO: This should be called upstream */
     if (*len < n_vals)
@@ -289,8 +296,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     strm.next_in  = buf;
     strm.avail_in = buflen;
 
-    bits8   = ((bits_per_value + 7) / 8) * 8;
-    size    = n_vals * ((bits_per_value + 7) / 8);
+    nbytes = (bits_per_value + 7) / 8;
+    if (nbytes == 3) 
+        nbytes = 4;
+
+    size    = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -310,14 +320,37 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     /* printf("bscale=%g dscale=%g reference_value=%g\n",bscale,dscale,reference_value); */
     pos = 0;
-#if 0
-    p = decoded;
-    for (i = 0; i < n_vals; i++) {
-        val[i] = (double)(((grib_decode_unsigned_long(p, &pos, bits8) * bscale) + reference_value) * dscale);
+
+    /*p = decoded;*/
+    /*for (i = 0; i < n_vals; i++) {*/
+    /*    val[i] = (double)(((grib_decode_unsigned_long(p, &pos, bits8) * bscale) + reference_value) * dscale);*/
+    /*}*/
+
+    /* ECC-1427: Performance improvement (replaced by ECC-1602) */
+    /*grib_decode_double_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);*/
+
+    /* ECC-1602: Performance improvement */
+    switch (nbytes) {
+        case 1:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (((unsigned char *) decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 2:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (((unsigned short *) decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 4:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (((unsigned int *) decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        default:
+            err = GRIB_NOT_IMPLEMENTED;
+            goto cleanup;
     }
-#endif
-    /* ECC-1427: Performance improvement */
-    grib_decode_double_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
+
     *len = n_vals;
 
 cleanup:
@@ -340,7 +373,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
     double reference_value    = 0;
-    long bits8                = 0;
     long bits_per_value       = 0;
     double max, min, d, divisor;
 
@@ -350,6 +382,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long ccsds_flags;
     long ccsds_block_size;
     long ccsds_rsi;
+    size_t nbytes;
+    unsigned short is_little_endian = 1;
 
     struct aec_stream strm;
 
@@ -372,6 +406,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
+
+    // ECC-1602: Performance improvement
+    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
+    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    if (((char*) &is_little_endian)[0] == 0)
+        ccsds_flags |= AEC_DATA_MSB;
 
     /* Special case */
     if (*len == 0) {
@@ -486,32 +526,43 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     divisor             = grib_power(-binary_scale_factor, 2);
 
-    bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
+    nbytes = (bits_per_value + 7) / 8;
+    if (nbytes == 3)
+        nbytes = 4;
+
+    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, nbytes * n_vals);
 
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
 
-    buflen = 0;
-    p      = encoded;
-    for (i = 0; i < n_vals; i++) {
-        long blen                  = bits8;
-        unsigned long unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
-        while (blen >= 8) {
-            blen -= 8;
-            *p = (unsigned_val >> blen);
-            p++;
-            buflen++;
-        }
+    // ECC-1602: Performance improvement
+    switch (nbytes) {
+        case 1:
+            for (i = 0; i < n_vals; i++) {
+                encoded[i] = (unsigned char) (((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        case 2:
+            for (i = 0; i < n_vals; i++) {
+                ((unsigned short*) encoded)[i] = (unsigned short) (((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        case 4:
+            for (i = 0; i < n_vals; i++) {
+                ((unsigned int*) encoded)[i] = (unsigned int) (((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        default:
+            err = GRIB_NOT_IMPLEMENTED;
+            goto cleanup;
     }
-    /* buflen = n_vals*(bits_per_value/8);*/
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,"CCSDS pack_double: packing %s, %d values", a->name, n_vals);
 
     /*ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR*/
-    buflen += buflen / 20 + 256;
+    buflen = (nbytes * n_vals) * 67 / 64 + 256;
     buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
@@ -542,7 +593,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     strm.next_out  = buf;
     strm.avail_out = buflen;
     strm.next_in   = encoded;
-    strm.avail_in  = bits8 / 8 * n_vals;
+    strm.avail_in  = nbytes * n_vals;
 
     /*
         This does not support spherical harmonics, and treats 24 differently than:
