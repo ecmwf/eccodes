@@ -274,7 +274,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
+    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
     ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
     unsigned short is_little_endian = 1;
     if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
@@ -547,7 +547,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return err;
 
     // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
+    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
     ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
     unsigned short is_little_endian = 1;
     if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
