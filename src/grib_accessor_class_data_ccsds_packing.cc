@@ -581,41 +581,30 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     pos = 0;
 
-    // ECC-1427: Performance improvement (replaced by switch statement below)
-    //grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
+    // ECC-1427: Performance improvement (replaced by ECC-1602)
     //grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
 
     // ECC-1602: Performance improvement
     switch (nbytes) {
         case 1:
-            {
-                unsigned char *tmp_i8 = reinterpret_cast<unsigned char *>(decoded);
-                for (i = 0; i < n_vals; i++) {
-                    val[i] = (tmp_i8[i] * bscale + reference_value) * dscale;
-                }
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<unsigned char *>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 2:
-            {
-                unsigned short *tmp_i16 = reinterpret_cast<unsigned short *>(decoded);
-                for (i = 0; i < n_vals; i++) {
-                    val[i] = (tmp_i16[i] * bscale + reference_value) * dscale;
-                }
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<unsigned short *>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 4:
-            {
-                unsigned int *tmp_i32 = reinterpret_cast<unsigned int *>(decoded);
-                for (i = 0; i < n_vals; i++) {
-                    val[i] = (tmp_i32[i] * bscale + reference_value) * dscale;
-                }
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<unsigned int *>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         default:
             err = GRIB_NOT_IMPLEMENTED;
             goto cleanup;
     }
-
 
     *len = n_vals;
 
