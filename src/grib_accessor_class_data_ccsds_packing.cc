@@ -375,17 +375,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
-                encoded[i] = static_cast<unsigned char>(((val[i] * d - reference_value) * divisor) + 0.5);
+                encoded[i] = static_cast<uint8_t>(((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         case 2:
             for (i = 0; i < n_vals; i++) {
-                reinterpret_cast<unsigned short*>(encoded)[i] = static_cast<unsigned short>(((val[i] * d - reference_value) * divisor) + 0.5);
+                reinterpret_cast<uint16_t*>(encoded)[i] = static_cast<uint16_t>(((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         case 4:
             for (i = 0; i < n_vals; i++) {
-                reinterpret_cast<unsigned int*>(encoded)[i] = static_cast<unsigned int>(((val[i] * d - reference_value) * divisor) + 0.5);
+                reinterpret_cast<uint32_t*>(encoded)[i] = static_cast<uint32_t>(((val[i] * d - reference_value) * divisor) + 0.5);
             }
             break;
         default:
@@ -582,17 +582,17 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<unsigned char *>(decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 2:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<unsigned short *>(decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         case 4:
             for (i = 0; i < n_vals; i++) {
-                val[i] = (reinterpret_cast<unsigned int *>(decoded)[i] * bscale + reference_value) * dscale;
+                val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
             }
             break;
         default:
