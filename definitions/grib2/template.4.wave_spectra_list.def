@@ -1,0 +1,13 @@
+# Template for wave spectra defined using an array of frequencies and directions
+
+## Direction part
+signed[1] scaleFactorOfWaveDirections : dump;
+alias integerScalingFactorAppliedToDirections = scaleFactorOfWaveDirections;
+
+unsigned[4] scaledValuesOfWaveDirections[numberOfWaveDirections] : dump;
+
+## Frequency part
+signed[1] scaleFactorOfWaveFrequencies : dump;
+alias integerScalingFactorAppliedToFrequencies = scaleFactorOfWaveFrequencies;
+
+unsigned[4] scaledValuesOfWaveFrequencies[numberOfWaveFrequencies] : dump;

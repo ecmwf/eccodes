@@ -15,6 +15,7 @@
 #define ILCHAM 992
 #define MTRONC 30
 #define STRONC 10
+#define TOLERANCE 1e-5
 static const char* TEMPFILE = "output.grib_sh_spectral_complex.grib";
 
 int main(int argc, char* argv[])
@@ -59,8 +60,8 @@ int main(int argc, char* argv[])
     /* Compare our values */
     for (i = 0; i < ILCHAM; ++i) {
         const double diff = fabs(zval[i] - values[i]);
-        if (diff > 1e-5) {
-            fprintf(stderr, "Unpacked value different: i=%d values[i]=%g zval[i]=%g\n", i, values[i], zval[i]);
+        if (diff > TOLERANCE) {
+            fprintf(stderr, "Unpacked value different: i=%d values[i]=%.10g zval[i]=%.10g (diff=%.10g)\n", i, values[i], zval[i], diff);
             return 1;
         }
     }
@@ -84,8 +85,8 @@ int main(int argc, char* argv[])
     GRIB_CHECK(grib_get_double_array(h, "values", zval, &len), 0);
     for (i = 0; i < ILCHAM; ++i) {
         const double diff = fabs(zval[i] - values[i]);
-        if (diff > 1e-5) {
-            fprintf(stderr, "Unpacked value different: i=%d values[i]=%g zval[i]=%g\n", i, values[i], zval[i]);
+        if (diff > TOLERANCE) {
+            fprintf(stderr, "Unpacked value different: i=%d values[i]=%.10g zval[i]=%.10g (diff=%.10g)\n", i, values[i], zval[i], diff);
             return 1;
         }
     }

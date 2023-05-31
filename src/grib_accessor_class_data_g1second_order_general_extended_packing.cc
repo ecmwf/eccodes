@@ -46,7 +46,8 @@
    MEMBERS=const char* orderOfSPD
    MEMBERS=const char* numberOfPoints
    MEMBERS=const char* dataFlag
-   MEMBERS=double* values
+   MEMBERS=double* dvalues
+   MEMBERS=float* fvalues
    MEMBERS=size_t size
 
 
@@ -118,7 +119,10 @@ typedef struct grib_accessor_data_g1second_order_general_extended_packing
     const char* orderOfSPD;
     const char* numberOfPoints;
     const char* dataFlag;
-    double* values;
+    double* dvalues;
+    float* fvalues;
+    int double_dirty;
+    int float_dirty;
     size_t size;
 } grib_accessor_data_g1second_order_general_extended_packing;
 
@@ -251,7 +255,9 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
     self->dataFlag                        = grib_arguments_get_name(handle, args, self->carg++);
     self->edition                         = 1;
     self->dirty                           = 1;
-    self->values                          = NULL;
+    self->dvalues                          = NULL;
+    self->fvalues                          = NULL;
+    self->double_dirty = self->float_dirty = 1;
     self->size                            = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -345,15 +351,10 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
-static int unpack_float(grib_accessor*, float* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int unpack_double(grib_accessor* a, double* values, size_t* len)
+static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
-    int ret                                                          = 0;
+    int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* firstOrderValues = 0;
     long* X                = 0;
@@ -364,7 +365,6 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     double reference_value;
     long binary_scale_factor;
     long decimal_scale_factor;
-    double s, d;
     long j, count = 0;
     long *groupWidths = NULL, *groupLengths = NULL;
     long orderOfSPD     = 0;
@@ -373,19 +373,33 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
     long bias           = 0;
     long y = 0, z = 0, w = 0;
     size_t k, ngroups;
+    Assert(!(dvalues && fvalues));
 
-    if (!self->dirty) {
-        if (*len < self->size) {
-            return GRIB_ARRAY_TOO_SMALL;
+    if (dvalues) {
+        if (!self->double_dirty) {
+            if (*len < self->size) {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+            for (k = 0; k < self->size; k++)
+                dvalues[k] = self->dvalues[k];
+            *len = self->size;
+            return GRIB_SUCCESS;
         }
-        for (k = 0; k < self->size; k++)
-            values[k] = self->values[k];
-
-        *len = self->size;
-        return GRIB_SUCCESS;
+        self->double_dirty = 0;
     }
 
-    self->dirty = 0;
+    if (fvalues) {
+        if (!self->float_dirty) {
+            if (*len < self->size) {
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+            for (k = 0; k < self->size; k++)
+                fvalues[k] = self->fvalues[k];
+            *len = self->size;
+            return GRIB_SUCCESS;
+        }
+        self->float_dirty = 0;
+    }
 
     buf += grib_byte_offset(a);
     ret = value_count(a, &numberOfValues);
@@ -507,21 +521,42 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
             break;
     }
 
-    if (self->values) {
-        if (numberOfValues != self->size) {
-            grib_context_free(a->context, self->values);
-            self->values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+    if (dvalues) { // double-precision
+        if (self->dvalues) {
+            if (numberOfValues != self->size) {
+                grib_context_free(a->context, self->dvalues);
+                self->dvalues = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+            }
+        }
+        else {
+            self->dvalues = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
+        }
+
+        double s = grib_power<double>(binary_scale_factor, 2);
+        double d = grib_power<double>(-decimal_scale_factor, 10);
+        for (i = 0; i < numberOfValues; i++) {
+            dvalues[i]       = (double)(((X[i] * s) + reference_value) * d);
+            self->dvalues[i] = dvalues[i];
         }
     }
     else {
-        self->values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
-    }
+        // single-precision
+        if (self->fvalues) {
+            if (numberOfValues != self->size) {
+                grib_context_free(a->context, self->fvalues);
+                self->fvalues = (float*)grib_context_malloc_clear(a->context, sizeof(float) * numberOfValues);
+            }
+        }
+        else {
+            self->fvalues = (float*)grib_context_malloc_clear(a->context, sizeof(float) * numberOfValues);
+        }
 
-    s = grib_power<double>(binary_scale_factor, 2);
-    d = grib_power<double>(-decimal_scale_factor, 10);
-    for (i = 0; i < numberOfValues; i++) {
-        values[i]       = (double)(((X[i] * s) + reference_value) * d);
-        self->values[i] = values[i];
+        float s = grib_power<float>(binary_scale_factor, 2);
+        float d = grib_power<float>(-decimal_scale_factor, 10);
+        for (i = 0; i < numberOfValues; i++) {
+            fvalues[i]       = (float)(((X[i] * s) + reference_value) * d);
+            self->fvalues[i] = fvalues[i];
+        }
     }
 
     *len       = numberOfValues;
@@ -535,6 +570,16 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         grib_context_free(a->context, SPD);
 
     return ret;
+}
+
+static int unpack_float(grib_accessor* a, float* values, size_t* len)
+{
+    return unpack(a, NULL, values, len);
+}
+
+static int unpack_double(grib_accessor* a, double* values, size_t* len)
+{
+    return unpack(a, values, NULL, len);
 }
 
 static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* numberOfGroups, long* lengthOfSecondOrderValues,
@@ -1319,7 +1364,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_handle* handle          = grib_handle_of_accessor(a);
     long optimize_scaling_factor = 0;
 
-    self->dirty = 1;
+    self->double_dirty = 1;
 
     numberOfValues = *len;
 
@@ -1934,8 +1979,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static void destroy(grib_context* context, grib_accessor* a)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
-    if (self->values != NULL) {
-        grib_context_free(context, self->values);
-        self->values = NULL;
+    if (self->dvalues != NULL) {
+        grib_context_free(context, self->dvalues);
+        self->dvalues = NULL;
+    }
+    if (self->fvalues != NULL) {
+        grib_context_free(context, self->fvalues);
+        self->fvalues = NULL;
     }
 }
