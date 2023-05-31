@@ -264,9 +264,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    /* ECC-1602: Performance improvement */
+    ccsds_flags &= ~AEC_DATA_MSB;  /* set little-endian flag */
+    ccsds_flags &= ~AEC_DATA_3BYTE;  /* disable support for 3-bytes per value */
     if (((char*) &is_little_endian)[0] == 0)
         ccsds_flags |= AEC_DATA_MSB;
 
@@ -408,9 +408,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // set little-endian flag
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    /* ECC-1602: Performance improvement */
+    ccsds_flags &= ~AEC_DATA_MSB;  /* set little-endian flag */
+    ccsds_flags &= ~AEC_DATA_3BYTE;  /* disable support for 3-bytes per value */
     if (((char*) &is_little_endian)[0] == 0)
         ccsds_flags |= AEC_DATA_MSB;
 
@@ -538,7 +538,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
-    // ECC-1602: Performance improvement
+    /* ECC-1602: Performance improvement */
     switch (nbytes) {
         case 1:
             for (i = 0; i < n_vals; i++) {
