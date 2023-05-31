@@ -245,7 +245,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long bits_per_value       = 0;
     double max, min, d, divisor;
 
-    unsigned char* p;
     long number_of_data_points;
 
     long ccsds_flags;
@@ -510,7 +509,6 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     size_t size        = 0;
     unsigned char* decoded = NULL;
     // unsigned char* p       = NULL;
-    long pos               = 0;
     long nn                = 0;
 
     long binary_scale_factor  = 0;
@@ -582,7 +580,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     strm.avail_in = buflen;
 
     nbytes = (bits_per_value + 7) / 8;
-    if (nbytes == 3) 
+    if (nbytes == 3)
         nbytes = 4;
 
     size    = n_vals * nbytes;
@@ -603,8 +601,6 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
-
-    pos = 0;
 
     // ECC-1427: Performance improvement
     //grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
