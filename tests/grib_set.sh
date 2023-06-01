@@ -75,6 +75,22 @@ set -e
 [ $status -ne 0 ]
 grep -q "Trying to encode a negative value of -1 for key of type unsigned" $temp
 
+# ECC-1605: Out-of-bounds value for signed keys
+# ----------------------------------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+set +e
+${tools_dir}/grib_set -s forecastTime=2147483648 $input $outfile 2>$temp
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Trying to encode value of 2147483648 but the allowable range is -2147483648 to 2147483647" $temp
+
+set +e
+${tools_dir}/grib_set -s forecastTime=-2147483650 $input $outfile 2>$temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # GRIB-941: encoding of GRIB2 angles
 # -----------------------------------
