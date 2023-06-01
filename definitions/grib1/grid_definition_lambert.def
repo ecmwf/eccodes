@@ -60,7 +60,7 @@ alias xFirst=longitudeOfFirstGridPointInDegrees;
 include "grib1/scanning_mode.def";
 
 #  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
-signed[3] Latin1 : edition_specific;
+signed[3] Latin1 : edition_specific, no_copy;
 meta geography.Latin1InDegrees scale(Latin1,oneConstant,grib1divider,truncateDegrees) : dump;
 alias firstLatitude=Latin1;
 alias firstLatitudeInDegrees=Latin1InDegrees;
@@ -70,7 +70,7 @@ constant LaDInDegrees = Latin1InDegrees : dump;
 alias geography.LaDInDegrees=LaDInDegrees;
 
 #  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
-signed[3] Latin2 :edition_specific;
+signed[3] Latin2 :edition_specific,no_copy;
 alias secondLatitude=Latin2;
 meta geography.Latin2InDegrees scale(Latin2,oneConstant,grib1divider,truncateDegrees) : dump;
 alias secondLatitudeInDegrees=Latin2InDegrees;
