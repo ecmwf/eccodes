@@ -57,6 +57,8 @@ static void init(grib_accessor*, const long, grib_arguments*);
 //static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
+static bool is_big_endian();
+static void modify_aec_flags(long& flags);
 
 typedef struct grib_accessor_data_ccsds_packing
 {
@@ -240,12 +242,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
-    unsigned short is_little_endian = 1;
-    if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
-        ccsds_flags |= AEC_DATA_MSB;
+    modify_aec_flags(ccsds_flags);
 
     // Special case
     if (*len == 0) {
@@ -361,15 +358,33 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     divisor             = grib_power(-binary_scale_factor, 2);
 
     size_t nbytes = (bits_per_value + 7) / 8;
+    // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
     if (nbytes == 3)
         nbytes = 4;
 
-    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, nbytes * n_vals);
+    encoded = reinterpret_cast<unsigned char*>(grib_context_buffer_malloc_clear(a->context, nbytes * n_vals));
 
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
+
+    /*
+    // Original code is memory efficient and supports 3 bytes per value
+    // replaced by ECC-1602 for performance reasons
+    buflen = 0;
+    p      = encoded;
+    for (i = 0; i < n_vals; i++) {
+        long blen                  = bits8;
+        unsigned long unsigned_val = (unsigned long)((((val[i] * d) - reference_value) * divisor) + 0.5);
+        while (blen >= 8) {
+            blen -= 8;
+            *p = (unsigned_val >> blen);
+            p++;
+            buflen++;
+        }
+    }
+    */
 
     // ECC-1602: Performance improvement
     switch (nbytes) {
@@ -389,10 +404,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_OUT_OF_RANGE;
+            grib_context_log(a->context, GRIB_LOG_DEBUG,"data_ccsds_packing pack_double: packing %s, bits_per_value %d (max 32)", a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
             goto cleanup;
     }
-
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,"data_ccsds_packing pack_double: packing %s, %d values", a->name, n_vals);
 
@@ -463,6 +478,23 @@ cleanup:
     return err;
 }
 
+static bool is_big_endian()
+{
+    unsigned char is_big_endian = 0;
+    unsigned short endianess_test = 1;
+    return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
+}
+
+static void modify_aec_flags(long& flags)
+{
+    // ECC-1602: Performance improvement: enabled the use of native data types
+    flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    if (is_big_endian())
+        flags |= AEC_DATA_MSB; // enable big-endian
+    else
+        flags &= ~AEC_DATA_MSB;  // enable little-endian
+}
+
 template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
@@ -516,12 +548,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    // ECC-1602: Performance improvement
-    ccsds_flags &= ~AEC_DATA_MSB;  // enable little-endian
-    ccsds_flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
-    unsigned short is_little_endian = 1;
-    if (reinterpret_cast<char*>(&is_little_endian)[0] == 0)
-        ccsds_flags |= AEC_DATA_MSB;
+    modify_aec_flags(ccsds_flags);
 
     // TODO(masn): This should be called upstream
     if (*len < n_vals)
@@ -551,8 +578,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     strm.avail_in = buflen;
 
     nbytes = (bits_per_value + 7) / 8;
-    if (nbytes == 3) 
-        nbytes = 4;
+    if (nbytes == 3)
+        nbytes = 4
 
     size    = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
@@ -593,7 +620,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_OUT_OF_RANGE;
+            grib_context_log(a->context, GRIB_LOG_DEBUG,"data_ccsds_packing %s: packing %s, bits_per_value %d (max 32)", __func__, a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
             goto cleanup;
     }
 
