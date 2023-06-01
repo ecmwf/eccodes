@@ -579,7 +579,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     nbytes = (bits_per_value + 7) / 8;
     if (nbytes == 3)
-        nbytes = 4
+        nbytes = 4;
 
     size    = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
