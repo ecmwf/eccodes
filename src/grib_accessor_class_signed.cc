@@ -228,7 +228,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         } else {
             // ECC-1605: Check overflow/underflow
             const int nbits = self->nbytes * 8;
-            const long minval = -(1L << (nbits-1));
+            const long minval = -(1L << (nbits-1)) + 1;
             const long maxval = (1L << (nbits-1)) - 1;
             //printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", a->name, v, minval, maxval);
             if (v > maxval || v < minval) {
