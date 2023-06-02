@@ -145,7 +145,9 @@ ${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
 
 # Test increasing bitsPerValue
 # -----------------------------
-# input=${data_dir}/ccsds.grib2    TODO: This is broken for some BPV values!!
+# TODO: This one is broken for some BPV values. It has AEC_DATA_3BYTE_OPTION_MASK==0
+# input=${data_dir}/ccsds.grib2
+
 ifs_samples="gg_ml.tmpl gg_sfc_grib2.tmpl"
 ifs_dir=${proj_dir}/ifs_samples/grib1_mlgrib2_ccsds
 MAX_BPV=32 # libaec cannot handle more than this
@@ -154,7 +156,7 @@ for sample in $ifs_samples; do
   input=$ifs_dir/$sample
   MIN_BPV=`${tools_dir}/grib_get -p bitsPerValue $input`
   stats1=`${tools_dir}/grib_get -F%.3f -p min,max,avg,sd $input`
-  grib_check_key_equals $input 'bitsPerValue,packingType' '16 grid_ccsds'
+  grib_check_key_equals $input 'bitsPerValue,packingType,AEC_DATA_3BYTE_OPTION_MASK' '16 grid_ccsds 1'
   for bpv in `seq $MIN_BPV $MAX_BPV`; do
       ${tools_dir}/grib_set -s setBitsPerValue=$bpv $input $outfile2
       ${tools_dir}/grib_compare -c data:n $input $outfile2
