@@ -751,3 +751,195 @@
  parameterCategory = 210 ;
  parameterNumber = 191 ;
 }
+#Vertically integrated moisture divergence
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 213 ;
+}
+#Vertically integrated moisture divergence flux
+'kg m**-2 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 84 ;
+}
+#Forecast logarithm of surface roughness for heat
+'Numeric' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 245 ;
+}
+#U-component of neutral wind
+'m s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 131 ;
+}
+#V-component of neutral wind
+'m s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 132 ;
+}
+#Magnitude of turbulent surface stress
+'N m**-2 s' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 48 ;
+}
+#Vertical integral of mass of atmosphere
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 53 ;
+}
+#Height of zero-degree wet-bulb temperature
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 47 ;
+}
+#Height of one-degree wet-bulb temperature
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 48 ;
+}
+#Surface photosynthetically active radiation, clear sky
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 20 ;
+}
+#Surface direct short-wave radiation, clear sky
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 22 ;
+}
+#Duct base height
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 17 ;
+}
+#Trapping layer base height
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 18 ;
+}
+#Trapping layer top height
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 19 ;
+}
+#Mean vertical gradient of refractivity inside trapping layer
+'m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 16 ;
+}
+#Minimum vertical gradient of refractivity inside trapping layer
+'m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 15 ;
+}
+#Vertical integral of eastward heat flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 69 ;
+}
+#Vertical integral of northward heat flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 70 ;
+}
+#Vertical integral of potential+internal+latent energy
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 62 ;
+}
+#Skin reservoir content
+'m of water equivalent' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 198 ;
+}
+#Skin reservoir content
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 160 ;
+ parameterNumber = 198 ;
+}
+#Sub-surface runoff
+'m' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 9 ;
+}
+#Low vegetation cover
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 27 ;
+}
+#High vegetation cover
+'(0 - 1)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 28 ;
+}
+#Leaf area index, low vegetation
+'m**2 m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 66 ;
+}
+#Leaf area index, high vegetation
+'m**2 m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 67 ;
+}
+#Type of low vegetation
+'(code table 4.234)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 29 ;
+}
+#Type of high vegetation
+'(code table 4.234)' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 30 ;
+}
+#Mean direction of total swell
+'degrees' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 238 ;
+}
+#Mean direction of wind waves
+'degrees' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 235 ;
+}
+#Charnock
+'Numeric' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 148 ;
+}
+#2D wave spectra (single)
+'m**2 s radian**-1' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 251 ;
+}
