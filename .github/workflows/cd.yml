@@ -1,0 +1,11 @@
+name: cd
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  deploy:
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/create-package.yml@v2
+    secrets: inherit
