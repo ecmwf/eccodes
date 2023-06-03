@@ -1209,7 +1209,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     int use_bitmap;
 
     int j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1;
-    unsigned int i, ii;
+    size_t i, ii;
     int vmn, vmx, vbits;
     // Sections
     double max_val, min_val, ref, frange, dec_factor, scale;
@@ -1563,7 +1563,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     start.tail    = &list[0];
 
     if (nstruct != ii + 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %lu", cclass_name, nstruct, ii + 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", cclass_name, nstruct, ii + 1);
         return GRIB_ENCODING_ERROR;
     }
     for (i = 1; i < nstruct; i++) {
