@@ -422,7 +422,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_OUT_OF_RANGE;
+            grib_context_log(a->context, GRIB_LOG_ERROR,"CCSDS pack_double: packing %s, bits_per_value=%ld (max 32)",
+                            a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
             goto cleanup;
     }
 
@@ -623,9 +625,12 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             }
             break;
         default:
-            err = GRIB_OUT_OF_RANGE;
+            grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS %s: unpacking %s, bits_per_value=%d (max 32)",
+               __func__, a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
             goto cleanup;
     }
+
     *len = n_vals;
 
 cleanup:
@@ -731,7 +736,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 static void print_error_feature_not_enabled(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
-                     "grib_accessor_data_ccsds_packing: CCSDS support not enabled. "
+                     "CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
 }
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
