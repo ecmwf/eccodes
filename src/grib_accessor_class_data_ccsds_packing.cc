@@ -322,6 +322,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         double unscaled_min = 0;
         double f = 0;
         double decimal = 1;
+        decimal_scale_factor = 0;
 
         range        = (max - min);
         unscaled_min = min;
@@ -344,10 +345,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             max   = unscaled_max * decimal;
             range = (max - min);
         }
-
-        d = grib_power(decimal_scale_factor, 10);
-        min   = unscaled_min * d;
-        max   = unscaled_max * d;
 
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
