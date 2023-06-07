@@ -150,6 +150,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_run_length_packing* self = (grib_accessor_data_run_length_packing*)a;
     grib_handle* gh                             = grib_handle_of_accessor(a);
+    const char* cclass_name                     = a->cclass->name;
     int err                                     = GRIB_SUCCESS;
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values = NULL;
@@ -194,9 +195,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     range = (1 << bits_per_value) - 1 - max_level_value;
     if ((max_level_value <= 0) || (number_of_level_values <= 0) || (max_level_value > number_of_level_values) || (range <= 0)) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "data_run_length_packing: parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
+                "%s: parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
                 "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
-                max_level_value, number_of_level_values, range);
+                cclass_name, max_level_value, number_of_level_values, range);
         return GRIB_DECODING_ERROR;
     }
     if (decimal_scale_factor > 127) {
@@ -219,9 +220,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     while (i < number_of_compressed_values) {
         if (compressed_values[i] > max_level_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                            "data_run_length_packing: numberOfValues mismatch: i=%d, "
+                            "%s: numberOfValues mismatch: i=%d, "
                             "compressed_values[i]=%ld, max_level_value=%ld",
-                             i, compressed_values[i], max_level_value);
+                            cclass_name, i, compressed_values[i], max_level_value);
             break;
         }
         v = compressed_values[i++];
@@ -233,8 +234,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             i++;
         }
         if (n > number_of_values) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "data_run_length_packing: numberOfValues mismatch: n=%ld, number_of_values=%ld",
-                             n, number_of_values);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: n=%ld, number_of_values=%ld",
+                            cclass_name, n, number_of_values);
             break;
         }
         for (k = 0; k < n; k++) {
@@ -245,8 +246,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_context_free(a->context, levels);
     grib_context_free(a->context, compressed_values);
     if (j != number_of_values) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "data_run_length_packing: numberOfValues mismatch: j=%ld, number_of_values=%ld",
-                        j, number_of_values);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: numberOfValues mismatch: j=%ld, number_of_values=%ld",
+                         cclass_name, j, number_of_values);
         return GRIB_DECODING_ERROR;
     }
     return err;
@@ -254,6 +255,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Changing the packing type to 'grid_run_length' is not implemented.");
+    grib_context_log(a->context, GRIB_LOG_ERROR,
+                    "%s: Function '%s' is not implemented", a->cclass->name, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }

@@ -751,3 +751,195 @@
  parameterCategory = 210 ;
  parameterNumber = 191 ;
 }
+#Vertically integrated moisture divergence
+'Vertically integrated moisture divergence' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 213 ;
+}
+#Vertically integrated moisture divergence flux
+'Vertically integrated moisture divergence flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 84 ;
+}
+#Forecast logarithm of surface roughness for heat
+'Forecast logarithm of surface roughness for heat' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 245 ;
+}
+#U-component of neutral wind
+'U-component of neutral wind' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 131 ;
+}
+#V-component of neutral wind
+'V-component of neutral wind' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 132 ;
+}
+#Magnitude of turbulent surface stress
+'Magnitude of turbulent surface stress' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 48 ;
+}
+#Vertical integral of mass of atmosphere
+'Vertical integral of mass of atmosphere' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 53 ;
+}
+#Height of zero-degree wet-bulb temperature
+'Height of zero-degree wet-bulb temperature' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 47 ;
+}
+#Height of one-degree wet-bulb temperature
+'Height of one-degree wet-bulb temperature' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 48 ;
+}
+#Surface photosynthetically active radiation, clear sky
+'Surface photosynthetically active radiation, clear sky' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 20 ;
+}
+#Surface direct short-wave radiation, clear sky
+'Surface direct short-wave radiation, clear sky' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 22 ;
+}
+#Duct base height
+'Duct base height' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 17 ;
+}
+#Trapping layer base height
+'Trapping layer base height' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 18 ;
+}
+#Trapping layer top height
+'Trapping layer top height' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 19 ;
+}
+#Mean vertical gradient of refractivity inside trapping layer
+'Mean vertical gradient of refractivity inside trapping layer' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 16 ;
+}
+#Minimum vertical gradient of refractivity inside trapping layer
+'Minimum vertical gradient of refractivity inside trapping layer' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 15 ;
+}
+#Vertical integral of eastward heat flux
+'Vertical integral of eastward heat flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 69 ;
+}
+#Vertical integral of northward heat flux
+'Vertical integral of northward heat flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 70 ;
+}
+#Vertical integral of potential+internal+latent energy
+'Vertical integral of potential+internal+latent energy' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 62 ;
+}
+#Skin reservoir content
+'Skin reservoir content' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 198 ;
+}
+#Skin reservoir content
+'Skin reservoir content' = {
+ discipline = 192 ;
+ parameterCategory = 160 ;
+ parameterNumber = 198 ;
+}
+#Sub-surface runoff
+'Sub-surface runoff' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 9 ;
+}
+#Low vegetation cover
+'Low vegetation cover' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 27 ;
+}
+#High vegetation cover
+'High vegetation cover' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 28 ;
+}
+#Leaf area index, low vegetation
+'Leaf area index, low vegetation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 66 ;
+}
+#Leaf area index, high vegetation
+'Leaf area index, high vegetation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 67 ;
+}
+#Type of low vegetation
+'Type of low vegetation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 29 ;
+}
+#Type of high vegetation
+'Type of high vegetation' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 30 ;
+}
+#Mean direction of total swell
+'Mean direction of total swell' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 238 ;
+}
+#Mean direction of wind waves
+'Mean direction of wind waves' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 235 ;
+}
+#Charnock
+'Charnock' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 148 ;
+}
+#2D wave spectra (single)
+'2D wave spectra (single)' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 251 ;
+}
