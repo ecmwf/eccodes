@@ -650,3 +650,7 @@
 'SOA' = {
 	constituentType = 62012 ;
 	}
+#Total aerosol
+'aer_total' = {
+	constituentType = 62000 ;
+	}
