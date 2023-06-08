@@ -18,11 +18,12 @@
 #ifndef eccodes_H
 #define eccodes_H
 
+#include "grib_api.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "grib_api.h"
 
 #define CODES_VERSION ECCODES_VERSION
 
