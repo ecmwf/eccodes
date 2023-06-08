@@ -542,8 +542,8 @@
 'Nitrate' = {
 	constituentType = 62004 ;
 	}
-#Sea salt aerosol (03 - 0.5 um)
-'Sea salt aerosol (03 - 0.5 um)' = {
+#Sea salt aerosol (0.03 - 0.5 um)
+'Sea salt aerosol (0.03 - 0.5 um)' = {
 	constituentType = 62008 ;
 	typeOfSizeInterval = 7 ;
 	scaleFactorOfFirstSize = 8 ;
