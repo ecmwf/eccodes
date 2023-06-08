@@ -650,3 +650,7 @@
 '918' = {
 	constituentType = 62012 ;
 	}
+#Total aerosol
+'922' = {
+	constituentType = 62000 ;
+	}
