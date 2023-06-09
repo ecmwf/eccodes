@@ -191,6 +191,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out, "%ld-%ld %s %s = %ld", self->begin, self->theEnd, a->creator->op, a->name, value);
         if (comment)
             fprintf(self->dumper.out, " [%s]", comment);
+        if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+            fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
         if ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)
             fprintf(self->dumper.out, " %s", "(can be missing)");
         if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
@@ -269,6 +271,8 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%ld-%ld %s %s = %g", self->begin, self->theEnd, a->creator->op, a->name, value);
     if (comment)
         fprintf(self->dumper.out, " [%s]", comment);
+    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+        fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_double]", err, grib_get_error_message(err));
     aliases(d, a);
@@ -317,6 +321,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (comment)
         fprintf(self->dumper.out, " [%s]", comment);
+    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+        fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
+
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_string]", err, grib_get_error_message(err));
     aliases(d, a);
