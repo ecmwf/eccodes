@@ -463,7 +463,7 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "Unable to allocate %d bytes\n", (int)(*len * (sizeof(double))));
+                             "Unable to allocate %zu bytes", *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
         for (i = 0; i < *len; i++)
@@ -473,7 +473,6 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
         return ret;
     }
     grib_context_log(c, GRIB_LOG_ERROR, "Should not grib_pack %s as long", a->name);
-    Assert(0);
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -565,7 +564,7 @@ static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t* len)
     const size_t length = *len;
     if (length != a->length) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "pack_bytes: Wrong size (%lu) for %s. It is %lu bytes long",
+                         "pack_bytes: Wrong size (%zu) for %s. It is %ld bytes long",
                          length, a->name, a->length);
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -599,7 +598,7 @@ static void update_size(grib_accessor* a, size_t s)
 {
     grib_context_log(a->context, GRIB_LOG_ERROR,
                      "Accessor %s [%s] must implement 'update_size'", a->name, a->cclass->name);
-    Assert(0 == 1);
+    Assert(0);
 }
 
 static grib_accessor* next(grib_accessor* a, int mod)
