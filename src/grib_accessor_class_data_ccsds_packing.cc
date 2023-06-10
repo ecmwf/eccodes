@@ -325,12 +325,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         double f = 0;
         double decimal = 1;
 
-        range        = (max - min);
-        unscaled_min = min;
-        unscaled_max = max;
-        f            = (grib_power(bits_per_value, 2) - 1);
-        minrange     = grib_power(-last, 2) * f;
-        maxrange     = grib_power(last, 2) * f;
+        decimal_scale_factor = 0;
+        range                = (max - min);
+        unscaled_min         = min;
+        unscaled_max         = max;
+        f                    = (grib_power(bits_per_value, 2) - 1);
+        minrange             = grib_power(-last, 2) * f;
+        maxrange             = grib_power(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
@@ -346,12 +347,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             max   = unscaled_max * decimal;
             range = (max - min);
         }
+
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        d = grib_power(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
