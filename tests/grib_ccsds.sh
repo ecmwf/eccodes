@@ -18,6 +18,7 @@ BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateN
 infile=${data_dir}/ccsds.grib2
 outfile1=temp.$label.1
 outfile2=temp.$label.2
+logfile=temp.$label.log
 
 rm -f $outfile1 $outfile2
 
@@ -166,6 +167,15 @@ for sample in $ifs_samples; do
   done
 done
 
+# Invalid bitsPerValue (>32)
+# --------------------------
+input=${data_dir}/ccsds.grib2
+set +e
+${tools_dir}/grib_set -s setBitsPerValue=33 $input $outfile2 2> $logfile
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid number of bits per value" $logfile
 
 # ECC-1362
 # ---------
@@ -183,4 +193,4 @@ if [ $HAVE_JPEG -eq 1 ]; then
 fi
 
 # Clean up
-rm -f $outfile1 $outfile2
+rm -f $outfile1 $outfile2 $logfile
