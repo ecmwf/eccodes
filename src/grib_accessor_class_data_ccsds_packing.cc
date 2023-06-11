@@ -351,6 +351,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
+        d = grib_power(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
