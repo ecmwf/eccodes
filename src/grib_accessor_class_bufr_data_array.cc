@@ -2562,6 +2562,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
+
+                //gaGroup->flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD; //??
                 accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);
@@ -2734,6 +2736,9 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                             }
                         }
                         if (add_key) {
+                            if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X)) { //??
+                                elementAccessor->flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD;
+                            }
                             grib_push_accessor(elementAccessor, section->block);
                             rank = grib_data_accessors_trie_push(self->dataAccessorsTrie, elementAccessor);
                             grib_accessors_list_push(self->dataAccessors, elementAccessor, rank);

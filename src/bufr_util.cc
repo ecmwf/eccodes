@@ -1123,3 +1123,14 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
     }
     return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
 }
+
+/* Returns 1 if the BUFR key is a coordinate descriptor */
+int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err)
+{
+    grib_accessor* acc = grib_find_accessor(h, key);
+    if (!acc) {
+        *err = GRIB_NOT_FOUND;
+        return 0;
+    }
+    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
+}
