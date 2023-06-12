@@ -34,6 +34,7 @@ list(APPEND test_c_bins
     grib_ecc-386
     grib_ecc-1467
     grib_ecc-1431
+    grib_ecc-1433
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
@@ -281,6 +282,7 @@ if( HAVE_BUILD_TOOLS )
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
+        list(APPEND tests_extra grib_ecc-1433)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
