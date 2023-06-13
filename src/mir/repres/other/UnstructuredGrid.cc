@@ -293,5 +293,4 @@ static const RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstruct
 }  // namespace other
 
 
-
 }  // namespace mir::repres
