@@ -9,7 +9,7 @@
  */
 
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)

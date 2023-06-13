@@ -8,7 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
+#include "grib_bits_any_endian_simple.h"
 #include "grib_optimize_decimal_factor.h"
 #include <float.h>
 

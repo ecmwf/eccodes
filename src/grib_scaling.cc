@@ -12,7 +12,7 @@
  *  Enrico Fucile
  **************************************/
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)

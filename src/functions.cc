@@ -8,7 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 long grib_op_eq(long a, long b)

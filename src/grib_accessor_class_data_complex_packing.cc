@@ -8,8 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_cpp.h"
-#include "grib_api_internal_cpp.h"
+#include "grib_ieeefloat.h"
+#include "grib_scaling.h"
 #include <math.h>
 /*
    This is used by make_class.pl

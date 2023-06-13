@@ -15,7 +15,7 @@
    can appear
 */
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
 This is used by make_class.pl

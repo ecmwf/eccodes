@@ -12,7 +12,7 @@
  *  Enrico Fucile
  ****************************************/
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 #if GRIB_PTHREADS
