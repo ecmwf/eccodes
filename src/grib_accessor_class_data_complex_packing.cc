@@ -315,6 +315,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_complex_packing* self = (grib_accessor_data_complex_packing*)a;
     grib_handle* gh                          = grib_handle_of_accessor(a);
+    const char* cclass_name                  = a->cclass->name;
 
     size_t i      = 0;
     int ret       = GRIB_SUCCESS;
@@ -431,8 +432,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     n_vals = (pen_j + 1) * (pen_j + 2);
 
     if (*len != n_vals) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "COMPLEX_PACKING: wrong number of values, expected %ld - got %lu",
-                n_vals, *len);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong number of values, expected %ld - got %zu",
+                         cclass_name, n_vals, *len);
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -488,7 +489,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     hpos = 0;
 
     scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
-    Assert(scals);
+    if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
     for (i = 1; i < maxv; i++)
@@ -544,7 +545,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                                            &reference_value);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                             "%s: unable to find nearest_smaller_value of %g for %s", cclass_name, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         d = grib_power<double>(+decimal_scale_factor, 10);
@@ -553,7 +554,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         d = grib_power<double>(+decimal_scale_factor, 10);
         if (grib_get_nearest_smaller_value(gh, self->reference_value, d * min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", d * min, self->reference_value);
+                             "%s: unable to find nearest_smaller_value of %g for %s", cclass_name, d * min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(d * max, reference_value, bits_per_value, &ret);
@@ -565,7 +566,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         else {
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "COMPLEX_PACKING : Cannot compute binary_scale_factor");
+                grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Cannot compute binary_scale_factor", cclass_name);
                 return ret;
             }
         }
@@ -610,13 +611,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(a->context, GRIB_LOG_ERROR,
-                                     "COMPLEX_PACKING : negative coput before packing (%g)", current_val);
+                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(a->context, GRIB_LOG_ERROR,
-                                     "COMPLEX_PACKING : negative coput before packing (%g)", current_val);
+                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_longb(lres, current_val, &lpos, bits_per_value);
                 lup++;
             }
@@ -626,13 +627,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(a->context, GRIB_LOG_ERROR,
-                                     "COMPLEX_PACKING : negative coput before packing (%g)", current_val);
+                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
 
                 current_val = (((((val[i++] * d) * scals[lup]) - reference_value) * s) + 0.5);
                 if (current_val < 0)
                     grib_context_log(a->context, GRIB_LOG_ERROR,
-                                     "COMPLEX_PACKING : negative coput before packing (%g)", current_val);
+                                     "%s: negative coput before packing (%g)", cclass_name, current_val);
                 grib_encode_unsigned_long(lres, current_val, &lpos, bits_per_value);
                 lup++;
             }
@@ -646,7 +647,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (((hpos / 8) != hsize) && ((lpos / 8) != lsize)) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "COMPLEX_PACKING : Mismatch in packing between high resolution and low resolution part");
+                         "%s: Mismatch in packing between high resolution and low resolution part", cclass_name);
         grib_context_free(a->context, buf);
         grib_context_free(a->context, scals);
         return GRIB_INTERNAL_ERROR;
@@ -682,6 +683,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_complex_packing* self = (grib_accessor_data_complex_packing*)a;
     grib_handle* gh                          = grib_handle_of_accessor(a);
+    const char* cclass_name                  = a->cclass->name;
 
     size_t i       = 0;
     int ret        = GRIB_SUCCESS;
@@ -817,7 +819,6 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return 0;
     }
 
-
     packed_offset = grib_byte_offset(a) + bytes * (sub_k + 1) * (sub_k + 2);
 
     lpos = 8 * (packed_offset - offsetdata);
@@ -826,7 +827,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     d = grib_power<T>(-decimal_scale_factor, 10);
 
     scals = (T*)grib_context_malloc(a->context, maxv * sizeof(T));
-    Assert(scals);
+    if (!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
     for (i = 1; i < maxv; i++) {
@@ -835,8 +836,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             scals[i] = (1.0 / operat);
         else {
             grib_context_log(a->context, GRIB_LOG_WARNING,
-                             "COMPLEX_PACKING : problem with operator div by zero at index %d of %d \n",
-                             i, maxv);
+                            "%s: Problem with operator div by zero at index %d of %d", cclass_name, i, maxv);
             scals[i] = 0;
         }
     }
@@ -910,24 +910,24 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
     // TODO(maee): See ECC-1579
     // Investigate why results are not bit-identical
 
-     return unpack<float>(a, val, len);
+    // return unpack<float>(a, val, len);
 
-    //int err = 0;
-    //size_t i = 0;
-    //size_t size = *len;
-    //double* val8 = NULL;
-    //val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
-    //if (!val8)
-    //    return GRIB_OUT_OF_MEMORY;
-    //err = unpack<double>(a, val8, len);
-    //if (err) {
-    //    grib_context_free(a->context,val8);
-    //    return err;
-    //}
+    int err = 0;
+    size_t i = 0;
+    size_t size = *len;
+    double* val8 = NULL;
+    val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
+    if (!val8) return GRIB_OUT_OF_MEMORY;
 
-    //for(i=0; i<size; i++)
-    //    val[i] = val8[i];
-    //grib_context_free(a->context,val8);
+    err = unpack<double>(a, val8, len);
+    if (err) {
+        grib_context_free(a->context,val8);
+        return err;
+    }
+
+    for(i=0; i<size; i++)
+        val[i] = val8[i];
+    grib_context_free(a->context,val8);
 
     return GRIB_SUCCESS;
 }
