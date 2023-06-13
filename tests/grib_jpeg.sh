@@ -10,6 +10,8 @@
 
 . ./include.ctest.sh
 
+label="grib_jpeg_test"
+
 REDIRECT=/dev/null
 
 BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateNumber,typeOfPacking"
@@ -102,3 +104,24 @@ if [ "x$HAVE_LIBOPENJPEG" != x ]; then
         do_tests
     fi
 fi
+
+# ECC-802
+# -------
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+tempFilt=temp.$label.filt
+tempGrib=temp.$label.grib
+cat > $tempFilt <<EOF
+  set Ni = 2;
+  set Nj = 2;
+  set bitsPerValue = 12;
+  set packingType = 'grid_jpeg';
+  set values = {-0.01, 11.99, 56.11, 98.99 };
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample2 2>/dev/null
+grib_check_key_equals $tempGrib 'packingType,numberOfValues' 'grid_jpeg 4'
+stats=`${tools_dir}/grib_get -M -F%.2f -p min,max $tempGrib`
+[ "$stats" = "-0.01 98.99" ]
+
+
+rm -f $tempFilt $tempGrib

@@ -78,9 +78,9 @@ typedef struct grib_options_help
 
 typedef struct grib_option
 {
-    char* id;
-    char* args;
-    char* help;
+    const char* id;
+    const char* args;
+    const char* help;
     int on;
     int command_line;
     char* value;
@@ -181,6 +181,7 @@ extern int grib_options_count;
 extern const char* tool_name;
 extern const char* tool_description;
 extern const char* tool_usage;
+extern const char* tool_online_doc; /* Can be NULL */
 
 extern FILE* dump_file;
 

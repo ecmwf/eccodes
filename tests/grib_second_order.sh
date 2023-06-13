@@ -153,11 +153,7 @@ grib_check_key_equals $temp3 packingType,accuracy 'grid_second_order 24'
 
 # ECC-1219: packingType conversion from grid_ieee to grid_second_order
 # ---------------------------------------------------------------------
-if [ $ECCODES_ON_LINUX_32BIT -eq 1 ] ; then
-    ALLOWED_ERROR=7e-06
-else
-    ALLOWED_ERROR=3e-06
-fi
+ALLOWED_ERROR=3e-06
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
     infile=grid_ieee.grib
     ${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
@@ -171,6 +167,14 @@ fi
 infile=gen_ext_spd_2.grib
 grib_check_key_equals $infile packingType grid_second_order
 ${tools_dir}/grib_set -d1 $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
+infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
+grib_check_key_equals $temp1 packingType grid_simple
+
+infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
 grib_check_key_equals $temp1 packingType grid_simple
 
 

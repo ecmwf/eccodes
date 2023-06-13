@@ -1,5 +1,5 @@
-
 Action Class Hierarchy
+
    |action
    |-action_class_alias
    |-action_class_assert

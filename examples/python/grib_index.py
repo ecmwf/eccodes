@@ -12,8 +12,6 @@
 # Description: How to create and use an index to access GRIB messages from
 # a file
 
-from __future__ import print_function
-
 import os
 import sys
 import traceback

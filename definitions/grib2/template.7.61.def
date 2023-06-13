@@ -1,6 +1,10 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 7.6, Grid point data - simple packing with preprocessing
+# TEMPLATE 7.61, Grid point data - simple packing with logarithm pre-processing
+
+# Note from WMO document:
+# This template is experimental, was not validated at the time of publication and should be used only for bilateral previously agreed tests
+
 # Octets 6-nn : Binary data values - binary string, with each (scaled)
 
 meta codedValues data_g2simple_packing_with_preprocessing(

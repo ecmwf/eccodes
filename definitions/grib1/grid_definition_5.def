@@ -23,7 +23,7 @@ alias Lo1 = longitudeOfFirstGridPoint;
 include "grib1/resolution_flags.def";
 
 #  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
-signed[3] orientationOfTheGrid  ;
+signed[3] orientationOfTheGrid : edition_specific, no_copy ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 alias LoV = orientationOfTheGrid ;
 

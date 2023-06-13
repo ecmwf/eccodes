@@ -13,7 +13,7 @@ program codes_ecc_1392
 
     integer           :: ifile
     character(len=60) :: inputfile
-    
+
     call getarg(1, inputfile)
     call codes_open_file(ifile, inputfile, 'R')
     write (*, *) 'Opened file OK: |',inputfile,'|'

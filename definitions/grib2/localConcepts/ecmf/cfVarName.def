@@ -34,9 +34,12 @@
 	}
 #Sub-surface runoff
 'ssro' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 9 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #U component of divergent wind
 'udvw' = {
@@ -62,41 +65,43 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 14 ;
 	}
-#UV visible albedo for direct radiation
+#UV visible albedo for direct radiation (climatological)
 'aluvp' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 15 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for diffuse radiation
+#UV visible albedo for diffuse radiation (climatological)
 'aluvd' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 16 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 192 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation
+#Near IR albedo for direct radiation (climatological)
 'alnip' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 17 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for diffuse radiation
+#Near IR albedo for diffuse radiation (climatological)
 'alnid' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 18 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 192 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Clear sky surface UV
 'uvcs' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 19 ;
-	}
-#Clear sky surface photosynthetically active radiation
-'parcs' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 20 ;
 	}
 #Reserved for future unbalanced components
 'p24.128' = {
@@ -116,37 +121,12 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 26 ;
 	}
-#Low vegetation cover
-'cvl' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 27 ;
-	}
-#High vegetation cover
-'cvh' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 28 ;
-	}
-#Type of low vegetation
-'tvl' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 29 ;
-	}
-#Type of high vegetation
-'tvh' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 30 ;
-	}
 #Snow albedo
 'asn' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 192 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Ice temperature layer 1
 'istl1' = {
@@ -220,12 +200,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Magnitude of turbulent surface stress
-'magss' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 48 ;
-	}
 #Maximum temperature at 2 metres in the last 24 hours
 'mx2t24' = {
 	 discipline = 0 ;
@@ -292,18 +266,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
 	}
-#Leaf area index, low vegetation
-'lai_lv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 66 ;
-	}
-#Leaf area index, high vegetation
-'lai_hv' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 67 ;
-	}
 #Minimum stomatal resistance, low vegetation
 'msr_lv' = {
 	 discipline = 192 ;
@@ -339,12 +301,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 73 ;
-	}
-#Standard deviation of filtered subgrid orography
-'sdfor' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 74 ;
 	}
 #Experimental product
 'p80.128' = {
@@ -658,10 +614,12 @@
 	}
 #Convective precipitation
 'cp' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 10 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Snowfall
 'sf' = {
@@ -671,12 +629,6 @@
 	 parameterNumber = 198 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Charnock
-'chnk' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 148 ;
 	}
 #Surface net radiation
 'snr' = {
@@ -760,11 +712,13 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 171 ;
 	}
-#Albedo
+#Albedo (climatological)
 'al' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 174 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Evaporation
 'e' = {
@@ -840,9 +794,10 @@
 	}
 #Skin reservoir content
 'src' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 198 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 205 ;
 	}
 #Vegetation fraction
 'veg' = {
@@ -875,12 +830,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 206 ;
-	}
-#Vertically integrated moisture divergence
-'vimd' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 213 ;
 	}
 #Diabatic heating by radiation
 'dhr' = {
@@ -982,12 +931,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 233 ;
 	}
-#Logarithm of surface roughness length for heat
-'lsrh' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 234 ;
-	}
 #Soil temperature level 4
 'stl4' = {
 	 discipline = 192 ;
@@ -1026,21 +969,10 @@
 	}
 #Forecast albedo
 'fal' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 243 ;
-	}
-#Forecast surface roughness
-'fsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 244 ;
-	}
-#Forecast logarithm of surface roughness for heat
-'flsr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 245 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
 	}
 #Accumulated ice water tendency
 'aiw' = {
@@ -2824,41 +2756,53 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 179 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
+#UV visible albedo for direct radiation, isotropic component (climatological)
 'aluvpi' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 186 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 195 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
+#UV visible albedo for direct radiation, volumetric component (climatological)
 'aluvpv' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 187 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 196 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
+#UV visible albedo for direct radiation, geometric component (climatological)
 'aluvpg' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 188 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 194 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
+#Near IR albedo for direct radiation, isotropic component (climatological)
 'alnipi' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 189 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 195 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, volumetric component
+#Near IR albedo for direct radiation, volumetric component (climatological)
 'alnipv' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 190 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 196 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
+#Near IR albedo for direct radiation, geometric component (climatological)
 'alnipg' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 191 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 194 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #UV visible albedo for diffuse radiation, isotropic component 
 'aluvdi' = {
@@ -13748,12 +13692,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
-'cdir' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 22 ;
-	}
 #Cloud base height
 'cbh' = {
 	 discipline = 192 ;
@@ -13814,18 +13752,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
 	}
-#Height of zero-degree wet-bulb temperature
-'hwbt0' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 47 ;
-	}
-#Height of one-degree wet-bulb temperature
-'hwbt1' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 48 ;
-	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'gppbfas' = {
 	 localTablesVersion = 1 ;
@@ -13839,51 +13765,6 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 199 ;
-	}
-#Accumulated Carbon Dioxide Net Ecosystem Exchange
-'aco2nee' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 192 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Gross Primary Production
-'aco2gpp' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 193 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Accumulated Carbon Dioxide Ecosystem Respiration
-'aco2rec' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 194 ;
-	 typeOfStatisticalProcessing = 1 ;
-	}
-#Flux of Carbon Dioxide Net Ecosystem Exchange
-'fco2nee' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 195 ;
-	}
-#Flux of Carbon Dioxide Gross Primary Production
-'fco2gpp' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 197 ;
-	}
-#Flux of Carbon Dioxide Ecosystem Respiration
-'fco2rec' = {
-	 localTablesVersion = 1 ;
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 196 ;
 	}
 #Canopy cover fraction
 'ccf' = {
@@ -15895,8 +15776,8 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
+	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 6 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
@@ -15906,8 +15787,8 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 101 ;
 	 productDefinitionTemplateNumber = 5 ;
+	 typeOfFirstFixedSurface = 101 ;
 	 scaledValueOfLowerLimit = 8 ;
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 3 ;
@@ -16650,35 +16531,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
 	}
-#Significant height of wind waves
-'shww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 5 ;
-	}
-#Mean direction of wind waves
-'mdww' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 235 ;
-	}
-#Mean period of wind waves
-'mpww' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 6 ;
-	}
 #Significant height of total swell
 'shts' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 237 ;
-	}
-#Mean direction of total swell
-'mdts' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 238 ;
 	}
 #Mean period of total swell
 'mpts' = {
@@ -16751,12 +16608,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#2D wave spectra (single)
-'d2fd' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 251 ;
 	}
 #Wave spectral kurtosis
 'wsk' = {
@@ -17081,12 +16932,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 151 ;
 	 parameterNumber = 148 ;
-	}
-#Bottom Pressure (equivalent height)
-'btp' = {
-	 discipline = 192 ;
-	 parameterCategory = 151 ;
-	 parameterNumber = 149 ;
 	}
 #Steric height
 'sh' = {
@@ -17508,12 +17353,6 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 184 ;
 	}
-#Skin reservoir content
-'srcrea' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 198 ;
-	}
 #Percentage of vegetation
 'vegrea' = {
 	 discipline = 192 ;
@@ -17730,23 +17569,11 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 51 ;
 	}
-#Vertical integral of mass of atmosphere
-'vima' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 53 ;
-	}
 #Vertical integral of temperature
 'vit' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 54 ;
-	}
-#Vertical integral of water vapour
-'viwv' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 55 ;
 	}
 #Vertical integral of cloud liquid water
 'vilw' = {
@@ -17784,12 +17611,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 61 ;
 	}
-#Vertical integral of potential+internal+latent energy
-'vipile' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 62 ;
-	}
 #Vertical integral of total energy
 'vitoe' = {
 	 discipline = 192 ;
@@ -17825,18 +17646,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward heat flux
-'vithee' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 69 ;
-	}
-#Vertical integral of northward heat flux
-'vithen' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 70 ;
 	}
 #Vertical integral of eastward geopotential flux
 'vige' = {
@@ -17891,12 +17700,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of moisture flux
-'viwvd' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
 'vigd' = {
@@ -19721,12 +19524,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 174 ;
 	 parameterNumber = 6 ;
-	}
-#Sub-surface runoff
-'ssro' = {
-	 discipline = 192 ;
-	 parameterCategory = 174 ;
-	 parameterNumber = 9 ;
 	}
 #Fraction of sea-ice in sea
 'p31.174' = {
@@ -22193,48 +21990,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Minimum vertical gradient of refractivity inside trapping layer
-'dndzn' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 15 ;
-	}
-#Mean vertical gradient of refractivity inside trapping layer
-'dndza' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 16 ;
-	}
-#Duct base height
-'dctb' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 17 ;
-	}
-#Trapping layer base height
-'tplb' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 18 ;
-	}
-#Trapping layer top height
-'tplt' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 19 ;
-	}
-#Neutral wind at 10 m u-component
-'u10n' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 131 ;
-	}
-#Neutral wind at 10 m v-component
-'v10n' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 132 ;
 	}
 #Surface temperature significance
 'sts' = {

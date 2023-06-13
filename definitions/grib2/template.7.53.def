@@ -1,7 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 7.53, BiFourier coefficients - complex packing
-# Spectral data for limited area models \u2013 complex packing
+# TEMPLATE 7.53, Bi-Fourier: Spectral data for limited area models - complex packing
 
 constant biFourierCoefficients = 1;
 constant complexPacking = 1;
@@ -39,9 +38,10 @@ meta codedValues data_g2bifourier_packing(
           numberOfValues
       ): read_only;
 
-meta values data_apply_bitmap(codedValues,
-                              bitmap,
-                              missingValue,
-                              binaryScaleFactor,
-                              numberOfDataPoints,
-                              numberOfValues) : dump;
+meta values data_apply_bitmap(
+    codedValues,
+    bitmap,
+    missingValue,
+    binaryScaleFactor,
+    numberOfDataPoints,
+    numberOfValues) : dump;

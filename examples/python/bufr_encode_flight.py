@@ -10,8 +10,6 @@
 
 # Description: how to encode flight dataset into BUFR
 
-from __future__ import print_function
-
 import sys
 import traceback
 from datetime import datetime

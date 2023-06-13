@@ -17,6 +17,7 @@ meta codedValues data_g22order_packing(
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
+     optimizeScaleFactor,
 
      typeOfOriginalFieldValues ,
      groupSplittingMethodUsed,

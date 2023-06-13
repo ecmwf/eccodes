@@ -2305,6 +2305,7 @@ int grib_f_get_int__(int* gid, char* key, int* val,  int len){
 int grib_f_get_int(int* gid, char* key, int* val,  int len){
     return grib_f_get_int_( gid,  key,  val,   len);
 }
+
 int grib_f_get_long_(int* gid, char* key, long* val,  int len){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -2319,6 +2320,25 @@ int grib_f_get_long__(int* gid, char* key, long* val,  int len){
 }
 int grib_f_get_long(int* gid, char* key, long* val,  int len){
     return grib_f_get_long_( gid,  key,  val,   len);
+}
+
+/*****************************************************************************/
+int grib_f_get_native_type_(int* gid, char* key, int* val,  int len){
+    grib_handle *h = get_handle(*gid);
+    int type_val = 0;
+    int err = GRIB_SUCCESS;
+    char buf[1024];
+
+    if(!h) return GRIB_INVALID_GRIB;
+    err = grib_get_native_type(h, cast_char(buf,key,len), &type_val);
+    *val = type_val;
+    return err;
+}
+int grib_f_get_native_type__(int* gid, char* key, int* val,  int len){
+    return grib_f_get_native_type_( gid,  key,  val,   len);
+}
+int grib_f_get_native_type(int* gid, char* key, int* val,  int len){
+    return grib_f_get_native_type_( gid,  key,  val,   len);
 }
 
 /*****************************************************************************/
@@ -2763,6 +2783,12 @@ int grib_f_get_real4(int* gid, char* key, float* val,  int len){
 
 int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size,  int len)
 {
+    /* See ECC-1579:
+     * Ideally we should be calling:
+     * err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
+     *
+    */
+
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
     char buf[1024];
@@ -2800,7 +2826,7 @@ int grib_f_get_real4_array(int* gid, char* key, float* val, int* size, int len){
 }
 
 /*****************************************************************************/
-int grib_f_set_force_real4_array_(int* gid, char* key, float*val, int* size, int len)
+int grib_f_set_force_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;

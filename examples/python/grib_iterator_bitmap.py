@@ -12,7 +12,6 @@
 #              for missing values
 #              (rather than compare each value with the missingValue key)
 #
-from __future__ import print_function
 
 import sys
 import traceback

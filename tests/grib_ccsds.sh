@@ -21,6 +21,11 @@ outfile2=temp.$label.2
 
 rm -f $outfile1 $outfile2
 
+# Convert a non-constant grib2 file (Note: not using -r)
+grib2_sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
+${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
+${tools_dir}/grib_compare -c data:n $grib2_sample $outfile1
+
 
 # ECC-1263
 # ---------
@@ -77,8 +82,8 @@ fi
 rm -f $outfile1 $outfile2
 
 infile=${data_dir}/reduced_latlon_surface.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+#outfile1=$infile.tmp_ccsds.1
+#outfile2=$infile.tmp_ccsds.2
 
 ${tools_dir}/grib_set -r -s packingType=grid_ccsds $infile $outfile1
 ${tools_dir}/grib_compare -b $BLACKLIST $infile $outfile1 > $REDIRECT
@@ -96,8 +101,8 @@ rm -f $outfile1 $outfile2
 # ECC-297: Basic support
 # --------------------------------------
 infile=${data_dir}/tigge_ecmwf.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+#outfile1=$infile.tmp_ccsds.1
+#outfile2=$infile.tmp_ccsds.2
 
 ${tools_dir}/grib_set -r -s bitsPerValue=17 $infile $outfile1
 ${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
@@ -138,6 +143,29 @@ grib_check_key_equals $outfile2 packingType grid_ccsds
 ${tools_dir}/grib_compare -b $BLACKLIST  $infile   $outfile1
 ${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
 
+# Test increasing bitsPerValue
+# -----------------------------
+# TODO: This one is broken for some BPV values. It has AEC_DATA_3BYTE_OPTION_MASK==0
+# input=${data_dir}/ccsds.grib2
+
+ifs_samples="gg_ml.tmpl gg_sfc_grib2.tmpl"
+ifs_dir=${proj_dir}/ifs_samples/grib1_mlgrib2_ccsds
+MAX_BPV=32 # libaec cannot handle more than this
+
+for sample in $ifs_samples; do
+  input=$ifs_dir/$sample
+  MIN_BPV=`${tools_dir}/grib_get -p bitsPerValue $input`
+  stats1=`${tools_dir}/grib_get -F%.3f -p min,max,avg,sd $input`
+  grib_check_key_equals $input 'bitsPerValue,packingType,AEC_DATA_3BYTE_OPTION_MASK' '16 grid_ccsds 1'
+  for bpv in `seq $MIN_BPV $MAX_BPV`; do
+      ${tools_dir}/grib_set -s setBitsPerValue=$bpv $input $outfile2
+      ${tools_dir}/grib_compare -c data:n $input $outfile2
+      stats2=`${tools_dir}/grib_get -F%.3f -p min,max,avg,sd $outfile2`
+      [ "$stats1" = "$stats2" ]
+      rm -f $outfile2
+  done
+done
+
 
 # ECC-1362
 # ---------
@@ -145,6 +173,14 @@ infile=${data_dir}/ccsds_szip.grib2
 res=`${tools_dir}/grib_get '-F%.3f' -p min,max,avg $infile`
 [ "$res" = "-180.000 180.000 -0.044" ]
 
+# Conversion from JPEG to CCSDS (binaryScaleFactor=0, decimalScaleFactor!=0)
+# -------------------------------------------------------------------------
+if [ $HAVE_JPEG -eq 1 ]; then
+  ${tools_dir}/grib_copy -w count=2 ${data_dir}/v.grib2 $outfile1
+  grib_check_key_equals $outfile1 packingType,bitsPerValue,binaryScaleFactor,decimalScaleFactor 'grid_jpeg 10 0 1'
+  ${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
+  ${tools_dir}/grib_compare -c data:n $outfile1 $outfile2
+fi
 
 # Clean up
 rm -f $outfile1 $outfile2

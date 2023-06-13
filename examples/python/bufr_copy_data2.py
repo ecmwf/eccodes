@@ -14,7 +14,6 @@
 #              position in the data tree and with the same number of values to the output handle.
 #              This example is for messages which use the operator 203YYY (overridden reference values)
 #
-from __future__ import print_function
 
 import sys
 import traceback

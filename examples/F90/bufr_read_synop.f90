@@ -60,18 +60,18 @@ program bufr_read_synop
       write (*, *) '  longitude:', lat
 
       ! 2m temperature
-      call codes_get(ibufr, 'airTemperatureAt2M', t2m); 
+      call codes_get(ibufr, 'airTemperatureAt2M', t2m);
       write (*, *) '  airTemperatureAt2M:', t2m
 
       ! 2m dewpoint temperature
-      call codes_get(ibufr, 'dewpointTemperatureAt2M', td2m); 
+      call codes_get(ibufr, 'dewpointTemperatureAt2M', td2m);
       write (*, *) '  dewpointTemperatureAt2M:', td2m
 
       ! 10m wind
-      call codes_get(ibufr, 'windSpeedAt10M', ws); 
+      call codes_get(ibufr, 'windSpeedAt10M', ws);
       write (*, *) '  windSpeedAt10M:', ws
 
-      call codes_get(ibufr, 'windDirectionAt10M', wdir); 
+      call codes_get(ibufr, 'windDirectionAt10M', wdir);
       write (*, *) '  windDirectionAt10M:', wdir
 
       ! The cloud information is stored in several blocks in the

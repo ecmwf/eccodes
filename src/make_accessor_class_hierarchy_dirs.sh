@@ -10,8 +10,8 @@ ROOT=$TMPDIR/ecCodes_Accessor_Class_Hierarchy
 rm -fr $ROOT; mkdir $ROOT
 
 # Assume we're in the src directory
-for f in grib_accessor_class_*.c; do
-    fbase=`echo $f | sed -e 's/\.c$//'`
+for f in grib_accessor_class_*.cc; do
+    fbase=`echo $f | sed -e 's/\.cc$//'`
     super=`grep 'SUPER *= *' $f | awk '{print $3}'`
     if [ "$super" != "" ] ; then
         super_path=`find $ROOT -type d -name $super`

@@ -22,7 +22,6 @@
 # messages than the one used in the example. It is advised to use bufr_dump to
 # understand the structure of the messages.
 #
-from __future__ import print_function
 
 import sys
 import traceback
