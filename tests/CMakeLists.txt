@@ -61,20 +61,6 @@ foreach( tool ${test_c_bins} )
                             LIBS      eccodes )
 endforeach()
 
-if( HAVE_EXPERIMENTAL_BUILD_WITH_CXX )
-    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-        list(APPEND test_cpp_bins grib_ecc-1431)
-        list(APPEND test_cpp_bins grib_ecc-1433)
-    endif()
-
-    foreach( tool ${test_cpp_bins} )
-        # here we use the fact that each tool has only one C file that matches its name
-        ecbuild_add_executable( TARGET    ${tool}
-            NOINSTALL
-            SOURCES   ${tool}.cpp
-            LIBS      eccodes )
-    endforeach()
-endif()
 
 # Now add each test (shell scripts)
 #################################################
