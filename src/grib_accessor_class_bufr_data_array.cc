@@ -1991,8 +1991,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
         operatorCreator.flags |= GRIB_ACCESSOR_FLAG_DUMP;
     }
     if (add_coord_flag) {
-        creator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD;
-        operatorCreator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD;
+        creator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD; // ECC-1611
     }
 
     idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] : self->elementsDescriptorsIndex->v[subset]->v[ide];
