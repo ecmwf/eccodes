@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal_cpp.h"
+#include <cstdint>
 
 /*
    This is used by make_class.pl
@@ -56,6 +57,8 @@ static void init(grib_accessor*, const long, grib_arguments*);
 //static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
+static bool is_big_endian();
+static void modify_aec_flags(long& flags);
 
 typedef struct grib_accessor_data_ccsds_packing
 {
@@ -198,6 +201,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
 
     grib_handle* hand = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
     int err = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
     bool is_constant_field = false;
@@ -209,11 +213,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
     double reference_value    = 0;
-    long bits8                = 0;
     long bits_per_value       = 0;
     double max, min, d, divisor;
 
-    unsigned char* p;
     long number_of_data_points;
 
     long ccsds_flags;
@@ -234,13 +236,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
-
     if ((err = grib_get_long_internal(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
+
+    modify_aec_flags(ccsds_flags);
 
     // Special case
     if (*len == 0) {
@@ -276,7 +279,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #endif
         if (grib_get_nearest_smaller_value(hand, self->reference_value, val[0], &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                             "%s %s: unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         if ((err = grib_set_double_internal(hand, self->reference_value, reference_value)) != GRIB_SUCCESS)
@@ -303,13 +306,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                "%s %s: unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
 
         if (reference_value > min) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "data_ccsds_packing %s: reference_value=%g min_value=%g diff=%g", __func__, reference_value, min, reference_value - min);
+                "%s %s: reference_value=%g min_value=%g diff=%g", cclass_name, __func__, reference_value, min, reference_value - min);
             DebugAssert(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
@@ -323,12 +326,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         double f = 0;
         double decimal = 1;
 
-        range        = (max - min);
-        unscaled_min = min;
-        unscaled_max = max;
-        f            = (grib_power(bits_per_value, 2) - 1);
-        minrange     = grib_power(-last, 2) * f;
-        maxrange     = grib_power(last, 2) * f;
+        decimal_scale_factor = 0;
+        range                = (max - min);
+        unscaled_min         = min;
+        unscaled_max         = max;
+        f                    = (grib_power(bits_per_value, 2) - 1);
+        minrange             = grib_power(-last, 2) * f;
+        maxrange             = grib_power(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
@@ -344,9 +348,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             max   = unscaled_max * decimal;
             range = (max - min);
         }
+
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "data_ccsds_packing %s: unable to find nearest_smaller_value of %g for %s", __func__, min, self->reference_value);
+                             "%s %s: unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         d = grib_power(decimal_scale_factor, 10);
@@ -355,14 +360,21 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     divisor             = grib_power(-binary_scale_factor, 2);
 
-    bits8   = (bits_per_value + 7) / 8 * 8;
-    encoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, bits8 / 8 * n_vals);
+    size_t nbytes = (bits_per_value + 7) / 8;
+    // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
+    if (nbytes == 3)
+        nbytes = 4;
+
+    encoded = reinterpret_cast<unsigned char*>(grib_context_buffer_malloc_clear(a->context, nbytes * n_vals));
 
     if (!encoded) {
         err = GRIB_OUT_OF_MEMORY;
         goto cleanup;
     }
 
+    /*
+    // Original code is memory efficient and supports 3 bytes per value
+    // replaced by ECC-1602 for performance reasons
     buflen = 0;
     p      = encoded;
     for (i = 0; i < n_vals; i++) {
@@ -375,12 +387,36 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             buflen++;
         }
     }
-    // buflen = n_vals*(bits_per_value/8);
+    */
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,"data_ccsds_packing pack_double: packing %s, %d values", a->name, n_vals);
+    // ECC-1602: Performance improvement
+    switch (nbytes) {
+        case 1:
+            for (i = 0; i < n_vals; i++) {
+                encoded[i] = static_cast<uint8_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        case 2:
+            for (i = 0; i < n_vals; i++) {
+                reinterpret_cast<uint16_t*>(encoded)[i] = static_cast<uint16_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        case 4:
+            for (i = 0; i < n_vals; i++) {
+                reinterpret_cast<uint32_t*>(encoded)[i] = static_cast<uint32_t>(((val[i] * d - reference_value) * divisor) + 0.5);
+            }
+            break;
+        default:
+            grib_context_log(a->context, GRIB_LOG_ERROR,"%s pack_double: packing %s, bits_per_value=%ld (max 32)",
+                            cclass_name, a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
+            goto cleanup;
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,"%s pack_double: packing %s, %zu values", cclass_name, a->name, n_vals);
 
     // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
-    buflen += buflen / 20 + 256;
+    buflen = (nbytes * n_vals) * 67 / 64 + 256;
     buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
@@ -395,8 +431,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         double ref = 1e-100;
         grib_get_double_internal(hand, self->reference_value, &ref);
         if (ref != reference_value) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "data_ccsds_packing %s: %s (ref=%.10e != reference_value=%.10e)",
-                            __func__, self->reference_value, ref, reference_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                            cclass_name, __func__, self->reference_value, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
@@ -415,7 +451,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     strm.next_out  = buf;
     strm.avail_out = buflen;
     strm.next_in   = encoded;
-    strm.avail_in  = bits8 / 8 * n_vals;
+    strm.avail_in  = nbytes * n_vals;
+
 
     // This does not support spherical harmonics, and treats 24 differently than:
     // see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
@@ -423,14 +460,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (hand->context->debug) print_aec_stream_info(&strm, "pack_double");
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "data_ccsds_packing %s: aec_buffer_encode error %d (%s)",
-                         __func__, err, aec_get_error_message(err));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: aec_buffer_encode error %d (%s)",
+                        cclass_name, __func__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
 
-    //printf("n_vals = %ld, bits8 = %ld\n", n_vals, bits8);
-    //printf("in %ld out => %zu\n", bits8/8*n_vals, buflen);
     buflen = strm.total_out;
     grib_buffer_replace(a, buf, buflen, 1, 1);
 
@@ -447,12 +482,30 @@ cleanup:
     return err;
 }
 
+static bool is_big_endian()
+{
+    unsigned char is_big_endian = 0;
+    unsigned short endianess_test = 1;
+    return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
+}
+
+static void modify_aec_flags(long& flags)
+{
+    // ECC-1602: Performance improvement: enabled the use of native data types
+    flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    if (is_big_endian())
+        flags |= AEC_DATA_MSB; // enable big-endian
+    else
+        flags &= ~AEC_DATA_MSB;  // enable little-endian
+}
+
 template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand       = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
 
     int err = GRIB_SUCCESS, i = 0;
     size_t buflen = 0;
@@ -464,18 +517,17 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     size_t size        = 0;
     unsigned char* decoded = NULL;
     // unsigned char* p       = NULL;
-    long pos               = 0;
     long nn                = 0;
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
     double reference_value    = 0;
     long bits_per_value       = 0;
-    long bits8;
 
     long ccsds_flags;
     long ccsds_block_size;
     long ccsds_rsi;
+    size_t nbytes;
 
     self->dirty = 0;
 
@@ -500,6 +552,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
+
+    modify_aec_flags(ccsds_flags);
 
     // TODO(masn): This should be called upstream
     if (*len < n_vals)
@@ -528,8 +582,11 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     strm.next_in  = buf;
     strm.avail_in = buflen;
 
-    bits8   = ((bits_per_value + 7) / 8) * 8;
-    size    = n_vals * ((bits_per_value + 7) / 8);
+    nbytes = (bits_per_value + 7) / 8;
+    if (nbytes == 3)
+        nbytes = 4;
+
+    size    = n_vals * nbytes;
     decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
     if (!decoded) {
         err = GRIB_OUT_OF_MEMORY;
@@ -541,17 +598,39 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
 
     if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "CCSDS %s: aec_buffer_decode error %d (%s)",
-                         __func__, err, aec_get_error_message(err));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
+                       cclass_name, __func__, err, aec_get_error_message(err));
         err = GRIB_DECODING_ERROR;
         goto cleanup;
     }
 
-    pos = 0;
+    // ECC-1427: Performance improvement (replaced by ECC-1602)
+    //grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
 
-    // ECC-1427: Performance improvement
-    //grib_decode_float_array(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
-    grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
+    // ECC-1602: Performance improvement
+    switch (nbytes) {
+        case 1:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 2:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 4:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        default:
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%d (max 32)",
+               cclass_name, __func__, a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
+            goto cleanup;
+    }
+
     *len = n_vals;
 
 cleanup:
