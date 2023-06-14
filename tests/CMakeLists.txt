@@ -75,7 +75,6 @@ if( HAVE_BUILD_TOOLS )
         grib_dump_samples
         bufr_dump_samples
         bufr_check_descriptors
-        bufr_coordinate_descriptors
         definitions
         grib2_version
         grib_calendar
@@ -148,6 +147,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
+        bufr_coordinate_descriptors
         bufr_dump_subset
         bufr_dump_decode_filter
         bufr_dump_encode_filter
@@ -440,7 +440,6 @@ else()
         unit_tests
         julian
         bufr_check_descriptors
-        bufr_coordinate_descriptors
         grib_sh_imag
         grib_sh_spectral_complex
         grib_2nd_order_numValues
