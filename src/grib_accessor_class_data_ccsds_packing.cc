@@ -57,8 +57,6 @@ static void init(grib_accessor*, const long, grib_arguments*);
 //static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
-static bool is_big_endian();
-static void modify_aec_flags(long& flags);
 
 typedef struct grib_accessor_data_ccsds_packing
 {
@@ -176,7 +174,24 @@ static int value_count(grib_accessor* a, long* count)
     #error Version of libaec appears to be too old. Please upgrade.
 #endif
 
-const char* aec_get_error_message(int code)
+static bool is_big_endian()
+{
+    unsigned char is_big_endian = 0;
+    unsigned short endianess_test = 1;
+    return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
+}
+
+static void modify_aec_flags(long* flags)
+{
+    // ECC-1602: Performance improvement: enabled the use of native data types
+    *flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
+    if (is_big_endian())
+        *flags |= AEC_DATA_MSB; // enable big-endian
+    else
+        *flags &= ~AEC_DATA_MSB;  // enable little-endian
+}
+
+static const char* aec_get_error_message(int code)
 {
     if (code == AEC_MEM_ERROR)    return "AEC_MEM_ERROR";
     if (code == AEC_DATA_ERROR)   return "AEC_DATA_ERROR";
@@ -186,7 +201,7 @@ const char* aec_get_error_message(int code)
     return "Unknown error code";
 }
 
-void print_aec_stream_info(struct aec_stream* strm, const char* func)
+static void print_aec_stream_info(struct aec_stream* strm, const char* func)
 {
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%u\n",           func, strm->flags);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.bits_per_sample=%u\n", func, strm->bits_per_sample);
@@ -243,7 +258,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    modify_aec_flags(ccsds_flags);
+    modify_aec_flags(&ccsds_flags);
 
     // Special case
     if (*len == 0) {
@@ -482,23 +497,6 @@ cleanup:
     return err;
 }
 
-static bool is_big_endian()
-{
-    unsigned char is_big_endian = 0;
-    unsigned short endianess_test = 1;
-    return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
-}
-
-static void modify_aec_flags(long& flags)
-{
-    // ECC-1602: Performance improvement: enabled the use of native data types
-    flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
-    if (is_big_endian())
-        flags |= AEC_DATA_MSB; // enable big-endian
-    else
-        flags &= ~AEC_DATA_MSB;  // enable little-endian
-}
-
 template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
@@ -553,7 +551,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
         return err;
 
-    modify_aec_flags(ccsds_flags);
+    modify_aec_flags(&ccsds_flags);
 
     // TODO(masn): This should be called upstream
     if (*len < n_vals)
