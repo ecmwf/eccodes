@@ -41,6 +41,7 @@ list(APPEND test_c_bins
     bufr_extract_headers
     extract_offsets
     bufr_check_descriptors
+    bufr_coordinate_descriptors
     codes_new_from_samples
     codes_set_samples_path
     grib_sh_ieee64
@@ -75,6 +76,7 @@ if( HAVE_BUILD_TOOLS )
         grib_dump_samples
         bufr_dump_samples
         bufr_check_descriptors
+        bufr_coordinate_descriptors
         definitions
         grib2_version
         grib_calendar
@@ -440,6 +442,7 @@ else()
         unit_tests
         julian
         bufr_check_descriptors
+        bufr_coordinate_descriptors
         grib_sh_imag
         grib_sh_spectral_complex
         grib_2nd_order_numValues
