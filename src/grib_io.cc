@@ -89,44 +89,46 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     int err = GRIB_SUCCESS;
     size_t buffer_size;
     size_t rest;
-    unsigned char* buffer;
+    unsigned char* buffer=0;
     grib_context* c = grib_context_get_default();
 
     if (message_length == 0)
         return GRIB_BUFFER_TOO_SMALL;
 
     buffer_size     = message_length;
+    buffer_size     = 5;
     rest            = message_length - already_read;
     r->message_size = message_length;
+    //buffer          = (unsigned char*)r->alloc(r->alloc_data, &buffer_size, &err);
     buffer          = (unsigned char*)r->alloc(r->alloc_data, &buffer_size, &err);
     if (err)
         return err;
 
-    if (buffer == NULL || (buffer_size < message_length)) {
-        return GRIB_BUFFER_TOO_SMALL;
-    }
-
-    memcpy(buffer, tmp, already_read);
-
-    if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
+    //if (buffer_size < message_length) {
+    //    return GRIB_BUFFER_TOO_SMALL;
+    //}
+    r->seek(r->read_data,  rest-4);
+#if 1
+    //memcpy(buffer, tmp, already_read);
+    if ((r->read(r->read_data, buffer, 4, &err) != 4) || err) {
         /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
         if (c->debug)
             fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%zu, Already read=%d)\n",
                     message_length, already_read);
         return err;
     }
-
+    //printf(" buffer=%s\n",buffer);
     if (check7777 && !r->headers_only &&
-        (buffer[message_length - 4] != '7' ||
-         buffer[message_length - 3] != '7' ||
-         buffer[message_length - 2] != '7' ||
-         buffer[message_length - 1] != '7'))
+        (buffer[0] != '7' ||
+         buffer[1] != '7' ||
+         buffer[2] != '7' ||
+         buffer[3] != '7'))
     {
         if (c->debug)
             fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%zu)\n", message_length);
         return GRIB_WRONG_LENGTH;
     }
-
+#endif
     return GRIB_SUCCESS;
 }
 
