@@ -41,6 +41,7 @@ list(APPEND test_c_bins
     bufr_extract_headers
     extract_offsets
     bufr_check_descriptors
+    bufr_coordinate_descriptors
     codes_new_from_samples
     codes_set_samples_path
     grib_sh_ieee64
@@ -147,6 +148,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
+        bufr_coordinate_descriptors
         bufr_dump_subset
         bufr_dump_decode_filter
         bufr_dump_encode_filter
