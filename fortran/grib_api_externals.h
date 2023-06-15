@@ -34,7 +34,7 @@ integer, external :: grib_f_new_from_message, &
                      bufr_f_new_from_file, &
                      grib_f_headers_only_new_from_file
 integer, external :: grib_f_release
-integer, external :: grib_f_dump, grib_f_print
+integer, external :: grib_f_dump
 integer, external :: grib_f_get_error_string
 integer, external :: grib_f_get_native_type
 integer, external :: grib_f_get_size_int,grib_f_get_size_long
