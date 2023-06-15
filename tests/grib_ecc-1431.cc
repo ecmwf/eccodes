@@ -56,6 +56,7 @@ int main(int argc, char** argv)
     int err;
 
     std::default_random_engine re;
+    size_t in_values_ecc_1612_workaround_len = 0;
     size_t grid_simple_values_len = 0;
     size_t grid_ccsds_values_len  = 0;
     std::string packing_type      = "";
@@ -73,9 +74,11 @@ int main(int argc, char** argv)
 
             codes_handle* handle       = codes_grib_handle_new_from_samples(0, "reduced_gg_pl_128_grib2");
             double* in_values          = new double[in_values_len];
+            double* in_values_ecc_1612_workaround = new double[in_values_len];
             double* grid_simple_values = new double[in_values_len];
             double* grid_ccsds_values  = new double[in_values_len];
 
+            in_values_ecc_1612_workaround_len = in_values_len;
             grid_simple_values_len = in_values_len;
             grid_ccsds_values_len  = in_values_len;
 
@@ -84,9 +87,16 @@ int main(int argc, char** argv)
                 in_values[i] = unif(re);
             }
 
-            // Convert original values to quantized values, by grid_simple
-            CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
-            CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
+            // Convert original values to quantized values using grid_simple
+            { // Workaround ECC-1612. Can be removed when fixed. Use code below instead.
+                CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
+                CODES_CHECK(codes_get_double_array(handle, "values", in_values_ecc_1612_workaround, &in_values_ecc_1612_workaround_len), 0);
+                CODES_CHECK(codes_set_double_array(handle, "values", in_values_ecc_1612_workaround, in_values_ecc_1612_workaround_len), 0);
+                CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
+                //CODES_CHECK(codes_set_double_array(handle, "values", in_values, in_values_len), 0);
+                //CODES_CHECK(codes_get_double_array(handle, "values", grid_simple_values, &grid_simple_values_len), 0);
+            }
+
             Assert(in_values_len == grid_simple_values_len);
 
             // Test grid_ccsds
@@ -113,6 +123,7 @@ int main(int argc, char** argv)
             codes_handle_delete(handle);
 
             delete[] in_values;
+            delete[] in_values_ecc_1612_workaround;
             delete[] grid_simple_values;
             delete[] grid_ccsds_values;
         }
