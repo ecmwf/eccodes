@@ -50,7 +50,7 @@ list(APPEND test_c_bins
     grib_copy_message
     grib_packing_order
     grib_sh_imag
-    grib_sh_spectral_complex
+    grib_spectral
     grib_lam_bf
     grib_lam_gp)
 
@@ -126,7 +126,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
-        grib_sh_spectral_complex
+        grib_spectral
         grib_levtype
         grib_typeOfLevel
         grib_grid_unstructured
@@ -443,7 +443,6 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
-        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 

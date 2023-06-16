@@ -15,13 +15,13 @@ label="grib_spectral_test"
 output=output.$label.grib
 input_complex=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
 
-$EXEC ${test_dir}/grib_sh_spectral_complex $input_complex $output
+$EXEC ${test_dir}/grib_spectral $input_complex $output
 
 rm -f $output
 
 # Now try spectral simple
 input_simple=$label.simple.grib
 ${tools_dir}/grib_set  -rs packingType=spectral_simple $input_complex $input_simple
-$EXEC ${test_dir}/grib_sh_spectral_complex $input_simple $output
+$EXEC ${test_dir}/grib_spectral $input_simple $output
 
 rm -f $output $input_simple
