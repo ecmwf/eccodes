@@ -18,6 +18,7 @@ BLACKLIST="totalLength,section5Length,section7Length,dataRepresentationTemplateN
 infile=${data_dir}/ccsds.grib2
 outfile1=temp.$label.1
 outfile2=temp.$label.2
+logfile=temp.$label.log
 
 rm -f $outfile1 $outfile2
 
@@ -82,8 +83,8 @@ fi
 rm -f $outfile1 $outfile2
 
 infile=${data_dir}/reduced_latlon_surface.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+#outfile1=$infile.tmp_ccsds.1
+#outfile2=$infile.tmp_ccsds.2
 
 ${tools_dir}/grib_set -r -s packingType=grid_ccsds $infile $outfile1
 ${tools_dir}/grib_compare -b $BLACKLIST $infile $outfile1 > $REDIRECT
@@ -101,8 +102,8 @@ rm -f $outfile1 $outfile2
 # ECC-297: Basic support
 # --------------------------------------
 infile=${data_dir}/tigge_ecmwf.grib2
-outfile1=$infile.tmp_ccsds.1
-outfile2=$infile.tmp_ccsds.2
+#outfile1=$infile.tmp_ccsds.1
+#outfile2=$infile.tmp_ccsds.2
 
 ${tools_dir}/grib_set -r -s bitsPerValue=17 $infile $outfile1
 ${tools_dir}/grib_set -r -s packingType=grid_ccsds $outfile1 $outfile2
@@ -143,6 +144,38 @@ grib_check_key_equals $outfile2 packingType grid_ccsds
 ${tools_dir}/grib_compare -b $BLACKLIST  $infile   $outfile1
 ${tools_dir}/grib_compare -c data:n      $outfile1 $outfile2
 
+# Test increasing bitsPerValue
+# -----------------------------
+# TODO: This one is broken for some BPV values. It has AEC_DATA_3BYTE_OPTION_MASK==0
+# input=${data_dir}/ccsds.grib2
+
+ifs_samples="gg_ml.tmpl gg_sfc_grib2.tmpl"
+ifs_dir=${proj_dir}/ifs_samples/grib1_mlgrib2_ccsds
+MAX_BPV=32 # libaec cannot handle more than this
+
+for sample in $ifs_samples; do
+  input=$ifs_dir/$sample
+  MIN_BPV=`${tools_dir}/grib_get -p bitsPerValue $input`
+  stats1=`${tools_dir}/grib_get -F%.3f -p min,max,avg,sd $input`
+  grib_check_key_equals $input 'bitsPerValue,packingType,AEC_DATA_3BYTE_OPTION_MASK' '16 grid_ccsds 1'
+  for bpv in `seq $MIN_BPV $MAX_BPV`; do
+      ${tools_dir}/grib_set -s setBitsPerValue=$bpv $input $outfile2
+      ${tools_dir}/grib_compare -c data:n $input $outfile2
+      stats2=`${tools_dir}/grib_get -F%.3f -p min,max,avg,sd $outfile2`
+      [ "$stats1" = "$stats2" ]
+      rm -f $outfile2
+  done
+done
+
+# Invalid bitsPerValue (>32)
+# --------------------------
+input=${data_dir}/ccsds.grib2
+set +e
+${tools_dir}/grib_set -s setBitsPerValue=33 $input $outfile2 2> $logfile
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid number of bits per value" $logfile
 
 # ECC-1362
 # ---------
@@ -152,4 +185,4 @@ res=`${tools_dir}/grib_get '-F%.3f' -p min,max,avg $infile`
 
 
 # Clean up
-rm -f $outfile1 $outfile2
+rm -f $outfile1 $outfile2 $logfile
