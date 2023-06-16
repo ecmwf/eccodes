@@ -569,8 +569,8 @@
 	scaleFactorOfSecondSize = 5 ;
 	scaledValueOfSecondSize = 2 ;
 	}
-#Dust aerosol (03 - 0.55 um)
-'Dust aerosol (03 - 0.55 um)' = {
+#Dust aerosol (0.03 - 0.55 um)
+'Dust aerosol (0.03 - 0.55 um)' = {
 	constituentType = 62001 ;
 	typeOfSizeInterval = 7 ;
 	scaleFactorOfFirstSize = 8 ;
