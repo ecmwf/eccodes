@@ -2154,6 +2154,7 @@ int grib_f_dump(int* gid){
 }
 
 /*****************************************************************************/
+#ifdef USE_GRIB_PRINT
 int grib_f_print_(int* gid, char* key, int len){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -2175,7 +2176,7 @@ int grib_f_print__(int* gid, char* key,  int len){
 int grib_f_print(int* gid, char* key,  int len){
     return grib_f_print_(gid,  key, len);
 }
-
+#endif
 /*****************************************************************************/
 int grib_f_get_error_string_(int* err, char* buf,  int len){
     const char* err_msg = grib_get_error_message(*err);

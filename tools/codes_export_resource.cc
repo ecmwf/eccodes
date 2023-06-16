@@ -20,6 +20,10 @@ typedef enum ResourceType
 static void usage(const char* prog)
 {
     printf("Usage: %s [-s | -d] resource_path out_file\n", prog);
+    printf("       -s Extract a resource from the samples directory\n");
+    printf("       -d Extract a resource from the definitions directory\n");
+    printf("\n");
+    printf("       E.g., %s -s GRIB2.tmpl my.grib2\n", prog);
     exit(1);
 }
 

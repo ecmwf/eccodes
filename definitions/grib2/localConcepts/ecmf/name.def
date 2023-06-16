@@ -34,9 +34,12 @@
 	}
 #Sub-surface runoff
 'Sub-surface runoff' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 9 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #U component of divergent wind
 'U component of divergent wind' = {
@@ -100,12 +103,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 19 ;
 	}
-#Clear sky surface photosynthetically active radiation
-'Clear sky surface photosynthetically active radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 20 ;
-	}
 #Reserved for future unbalanced components
 'Reserved for future unbalanced components' = {
 	 discipline = 192 ;
@@ -123,30 +120,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 26 ;
-	}
-#Low vegetation cover
-'Low vegetation cover' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 27 ;
-	}
-#High vegetation cover
-'High vegetation cover' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 28 ;
-	}
-#Type of low vegetation
-'Type of low vegetation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 29 ;
-	}
-#Type of high vegetation
-'Type of high vegetation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 30 ;
 	}
 #Snow albedo
 'Snow albedo' = {
@@ -227,12 +200,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 46 ;
 	}
-#Magnitude of turbulent surface stress
-'Magnitude of turbulent surface stress' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 48 ;
-	}
 #Maximum temperature at 2 metres in the last 24 hours
 'Maximum temperature at 2 metres in the last 24 hours' = {
 	 discipline = 0 ;
@@ -298,18 +265,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 65 ;
-	}
-#Leaf area index, low vegetation
-'Leaf area index, low vegetation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 66 ;
-	}
-#Leaf area index, high vegetation
-'Leaf area index, high vegetation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 67 ;
 	}
 #Minimum stomatal resistance, low vegetation
 'Minimum stomatal resistance, low vegetation' = {
@@ -675,12 +630,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Charnock
-'Charnock' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 148 ;
-	}
 #Surface net radiation
 'Surface net radiation' = {
 	 discipline = 192 ;
@@ -845,9 +794,10 @@
 	}
 #Skin reservoir content
 'Skin reservoir content' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 198 ;
+	 localTablesVersion = 1 ;
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 205 ;
 	}
 #Vegetation fraction
 'Vegetation fraction' = {
@@ -880,12 +830,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 206 ;
-	}
-#Vertically integrated moisture divergence
-'Vertically integrated moisture divergence' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 213 ;
 	}
 #Diabatic heating by radiation
 'Diabatic heating by radiation' = {
@@ -1029,12 +973,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
 	 parameterNumber = 193 ;
-	}
-#Forecast logarithm of surface roughness for heat
-'Forecast logarithm of surface roughness for heat' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 245 ;
 	}
 #Accumulated ice water tendency
 'Accumulated ice water tendency' = {
@@ -13754,12 +13692,6 @@
 	 parameterCategory = 228 ;
 	 parameterNumber = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
-'Clear-sky direct solar radiation at surface' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 22 ;
-	}
 #Cloud base height
 'Cloud base height' = {
 	 discipline = 192 ;
@@ -13819,18 +13751,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 43 ;
-	}
-#Height of zero-degree wet-bulb temperature
-'Height of zero-degree wet-bulb temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 47 ;
-	}
-#Height of one-degree wet-bulb temperature
-'Height of one-degree wet-bulb temperature' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 48 ;
 	}
 #GPP coefficient from Biogenic Flux Adjustment System
 'GPP coefficient from Biogenic Flux Adjustment System' = {
@@ -16611,23 +16531,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 233 ;
 	}
-#Mean direction of wind waves
-'Mean direction of wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 235 ;
-	}
 #Significant height of total swell
 'Significant height of total swell' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 237 ;
-	}
-#Mean direction of total swell
-'Mean direction of total swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 238 ;
 	}
 #Mean period of total swell
 'Mean period of total swell' = {
@@ -16700,12 +16608,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#2D wave spectra (single)
-'2D wave spectra (single)' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 251 ;
 	}
 #Wave spectral kurtosis
 'Wave spectral kurtosis' = {
@@ -17451,12 +17353,6 @@
 	 parameterCategory = 160 ;
 	 parameterNumber = 184 ;
 	}
-#Skin reservoir content
-'Skin reservoir content' = {
-	 discipline = 192 ;
-	 parameterCategory = 160 ;
-	 parameterNumber = 198 ;
-	}
 #Percentage of vegetation
 'Percentage of vegetation' = {
 	 discipline = 192 ;
@@ -17673,12 +17569,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 51 ;
 	}
-#Vertical integral of mass of atmosphere
-'Vertical integral of mass of atmosphere' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 53 ;
-	}
 #Vertical integral of temperature
 'Vertical integral of temperature' = {
 	 discipline = 192 ;
@@ -17721,12 +17611,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 61 ;
 	}
-#Vertical integral of potential+internal+latent energy
-'Vertical integral of potential+internal+latent energy' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 62 ;
-	}
 #Vertical integral of total energy
 'Vertical integral of total energy' = {
 	 discipline = 192 ;
@@ -17762,18 +17646,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 68 ;
-	}
-#Vertical integral of eastward heat flux
-'Vertical integral of eastward heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 69 ;
-	}
-#Vertical integral of northward heat flux
-'Vertical integral of northward heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 70 ;
 	}
 #Vertical integral of eastward geopotential flux
 'Vertical integral of eastward geopotential flux' = {
@@ -17828,12 +17700,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 83 ;
-	}
-#Vertical integral of divergence of moisture flux
-'Vertical integral of divergence of moisture flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 84 ;
 	}
 #Vertical integral of divergence of geopotential flux
 'Vertical integral of divergence of geopotential flux' = {
@@ -22124,48 +21990,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 228 ;
 	 parameterNumber = 6 ;
-	}
-#Minimum vertical gradient of refractivity inside trapping layer
-'Minimum vertical gradient of refractivity inside trapping layer' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 15 ;
-	}
-#Mean vertical gradient of refractivity inside trapping layer
-'Mean vertical gradient of refractivity inside trapping layer' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 16 ;
-	}
-#Duct base height
-'Duct base height' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 17 ;
-	}
-#Trapping layer base height
-'Trapping layer base height' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 18 ;
-	}
-#Trapping layer top height
-'Trapping layer top height' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 19 ;
-	}
-#Neutral wind at 10 m u-component
-'Neutral wind at 10 m u-component' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 131 ;
-	}
-#Neutral wind at 10 m v-component
-'Neutral wind at 10 m v-component' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 132 ;
 	}
 #Surface temperature significance
 'Surface temperature significance' = {
