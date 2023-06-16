@@ -21,53 +21,49 @@ static void usage(const char* prog)
 
 static int count_messages(FILE* in, int message_type, unsigned long* count)
 {
-    void* mesg   = NULL;
     size_t size  = 0;
-    off_t offset = 0;
     int err      = GRIB_SUCCESS;
-    typedef void* (*wmo_read_proc)(FILE*, int, size_t*, off_t*, int*);
+    typedef int (*wmo_read_proc)(FILE* , void* , size_t*);
     wmo_read_proc wmo_read = NULL;
-    grib_context* c        = grib_context_get_default();
+    //grib_context* c        = grib_context_get_default();
+    unsigned char buff1[1000];
+    size = sizeof(buff1);
 
     if (!in)
         return 1;
     /* printf("message_type=%d\n", message_type); */
     if (message_type == CODES_GRIB)
-        wmo_read = wmo_read_grib_from_file_malloc;
+        wmo_read = wmo_read_grib_from_file_noalloc;
     else if (message_type == CODES_BUFR)
-        wmo_read = wmo_read_bufr_from_file_malloc;
+        wmo_read = wmo_read_bufr_from_file_noalloc;
     else if (message_type == CODES_GTS)
-        wmo_read = wmo_read_gts_from_file_malloc;
+        wmo_read = NULL;
     else
-        wmo_read = wmo_read_any_from_file_malloc;
+        wmo_read = wmo_read_any_from_file_noalloc;
 
     if (fail_on_error) {
-        while ((mesg = wmo_read(in, 0, &size, &offset, &err)) != NULL && err == GRIB_SUCCESS) {
-            grib_context_free(c, mesg);
+        while ((err = wmo_read(in, buff1, &size)) == GRIB_SUCCESS) {
             (*count)++;
         }
     }
     else {
         int done = 0;
         while (!done) {
-            mesg = wmo_read(in, 0, &size, &offset, &err);
+            err = wmo_read(in, 0, &size);
             /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
-            if (!mesg) {
+            if (err) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                     done = 1; /* reached the end */
                 }
             }
-            if (mesg && !err) {
+            else {
                 (*count)++;
             }
-            grib_context_free(c, mesg);
         }
     }
 
     if (err == GRIB_END_OF_FILE)
         err = GRIB_SUCCESS;
-
-    if (mesg) grib_context_free(c, mesg);
 
     return err;
 }
