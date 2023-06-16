@@ -97,7 +97,7 @@
 # 113-120 Reserved 
 121 121 Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
 122 122, Post-processed quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-# 123-254 Reserved
+# 123-253 Reserved
 254 254 CCITT IA5 character string 
 # 255-999 Reserved 
 1000 1000 Cross-section of analysis and forecast at a point in time 
