@@ -84,6 +84,7 @@ typedef struct reader
 
 } reader;
 
+// If no_alloc argument is 1, then the content of the message are not stored. We just seek to the final 7777
 static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, int already_read, int check7777, int no_alloc)
 {
     int err = GRIB_SUCCESS;
@@ -95,61 +96,48 @@ static int read_the_rest(reader* r, size_t message_length, unsigned char* tmp, i
     if (message_length == 0)
         return GRIB_BUFFER_TOO_SMALL;
 
-    buffer_size     = message_length;
+    buffer_size     = message_length; // store the whole message in the buffer
     if (no_alloc)
-        buffer_size = 5;
+        buffer_size = 5; // big enough to store the 7777
     rest            = message_length - already_read;
     r->message_size = message_length;
     buffer          = (unsigned char*)r->alloc(r->alloc_data, &buffer_size, &err);
     if (err)
         return err;
 
-    if (!no_alloc) {
+    if (no_alloc) {
+        r->seek(r->read_data,  rest - 4); // jump to the end before the 7777
+    } else {
         if (buffer == NULL || (buffer_size < message_length)) {
             return GRIB_BUFFER_TOO_SMALL;
         }
         memcpy(buffer, tmp, already_read);
-    } else {
-        r->seek(r->read_data,  rest-4);
     }
 
+    bool read_failed = false;
     if (no_alloc) {
-        if ((r->read(r->read_data, buffer, 4, &err) != 4) || err) {
-            /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
-            if (c->debug)
-                fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%zu, Already read=%d)\n",
-                        message_length, already_read);
-            return err;
-        }
-        if (check7777 && !r->headers_only &&
-            (buffer[0] != '7' ||
-             buffer[1] != '7' ||
-             buffer[2] != '7' ||
-             buffer[3] != '7')) {
-            if (c->debug)
-                fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%zu)\n", message_length);
-            return GRIB_WRONG_LENGTH;
-        }
+        read_failed = ((r->read(r->read_data, buffer, 4, &err) != 4) || err);
     }
     else {
-        if ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err) {
-            /*fprintf(stderr, "read_the_rest: r->read failed: %s\n", grib_get_error_message(err));*/
-            if (c->debug)
-                fprintf(stderr, "ECCODES DEBUG read_the_rest: Read failed (Coded length=%zu, Already read=%d)\n",
-                        message_length, already_read);
-            return err;
-        }
+        read_failed = ((r->read(r->read_data, buffer + already_read, rest, &err) != rest) || err);
+    }
+    if (read_failed) {
+        if (c->debug)
+            fprintf(stderr, "ECCODES DEBUG %s: Read failed (Coded length=%zu, Already read=%d)",
+                    __func__, message_length, already_read);
+        return err;
+    }
 
-        if (check7777 && !r->headers_only &&
-            (buffer[message_length - 4] != '7' ||
-            buffer[message_length - 3] != '7' ||
-            buffer[message_length - 2] != '7' ||
-            buffer[message_length - 1] != '7'))
-        {
-            if (c->debug)
-                fprintf(stderr, "ECCODES DEBUG read_the_rest: No final 7777 at expected location (Coded length=%zu)\n", message_length);
-            return GRIB_WRONG_LENGTH;
-        }
+    const size_t mlen = no_alloc ? 4 : message_length;
+    if (check7777 && !r->headers_only &&
+        (buffer[mlen - 4] != '7' ||
+         buffer[mlen - 3] != '7' ||
+         buffer[mlen - 2] != '7' ||
+         buffer[mlen - 1] != '7'))
+    {
+        if (c->debug)
+            fprintf(stderr, "ECCODES DEBUG %s: No final 7777 at expected location (Coded length=%zu)\n", __func__, message_length);
+        return GRIB_WRONG_LENGTH;
     }
 
     return GRIB_SUCCESS;
@@ -1215,16 +1203,18 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/0, 0, 1, 0, 0);
 }
 
-int wmo_read_any_from_file_noalloc(FILE* f, void* buffer, size_t* len) {
+int wmo_read_any_from_file_fast(FILE* f, void* buffer, size_t* len) {
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 1, 1, 1, 1);
 }
-int wmo_read_grib_from_file_noalloc(FILE* f, void* buffer, size_t* len) {
+int wmo_read_grib_from_file_fast(FILE* f, void* buffer, size_t* len) {
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 1, 0, 0, 0);
 }
-int wmo_read_bufr_from_file_noalloc(FILE* f, void* buffer, size_t* len) {
+int wmo_read_bufr_from_file_fast(FILE* f, void* buffer, size_t* len) {
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 0, 1, 0, 0);
 }
-int wmo_read_gts_from_file_noalloc(FILE* f, void* buffer, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
+int wmo_read_gts_from_file_fast(FILE* f, void* buffer, size_t* len) {
+    return GRIB_NOT_IMPLEMENTED;
+}
 
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
 {
