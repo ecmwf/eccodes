@@ -69,3 +69,7 @@
 88 gsd Gridded satellite data
 89 ga GFAS analysis
 90 gai Gridded analysis input
+91 gbf ecPoint bias-corrected gridbox
+92 pfc ecPoint point values
+93 ppm ecPoint point value metrics
+94 gwt ecPoint weather types
