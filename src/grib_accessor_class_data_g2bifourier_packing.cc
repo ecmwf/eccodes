@@ -716,6 +716,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
     grib_handle* gh                              = grib_handle_of_accessor(a);
+    const char* cclass_name                      = a->cclass->name;
+
     size_t buflen                                = 0;
     size_t hsize                                 = 0;
     size_t lsize                                 = 0;
@@ -883,10 +885,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
 
     {
-        /* Make sure we can decode it again */
+        // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(gh, self->reference_value, &ref);
-        Assert(ref == bt->reference_value);
+        if (ref != bt->reference_value) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                            cclass_name, __func__, self->reference_value, ref, bt->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
 
     if ((ret = grib_set_long_internal(gh, self->binary_scale_factor, bt->binary_scale_factor)) != GRIB_SUCCESS)
