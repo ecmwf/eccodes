@@ -47,6 +47,7 @@
 
 namespace mir::repres {
 
+
 template <>
 Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
 #if mir_HAVE_ATLAS
