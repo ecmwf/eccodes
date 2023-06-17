@@ -46,6 +46,24 @@
 
 
 namespace mir::repres {
+
+
+template <>
+Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
+#if mir_HAVE_ATLAS
+    // specially-named unstructured grids
+    std::string grid;
+    if (param.get("grid", grid)) {
+        if (!key::grid::ORCAPattern::match(grid, param).empty()) {
+            return new other::ORCA(param);
+        }
+    }
+#endif
+
+    return new other::UnstructuredGrid(param);
+}
+
+
 namespace other {
 
 
@@ -274,22 +292,6 @@ static const RepresentationBuilder<UnstructuredGrid> unstructured_grid("unstruct
 
 
 }  // namespace other
-
-
-template <>
-Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param::MIRParametrisation& param) {
-#if mir_HAVE_ATLAS
-    // specially-named unstructured grids
-    std::string grid;
-    if (param.get("grid", grid)) {
-        if (!key::grid::ORCAPattern::match(grid, param).empty()) {
-            return new other::ORCA(param);
-        }
-    }
-#endif
-
-    return new other::UnstructuredGrid(param);
-}
 
 
 }  // namespace mir::repres
