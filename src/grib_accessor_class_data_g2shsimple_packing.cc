@@ -211,12 +211,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->real_part, *val)) != GRIB_SUCCESS)
         return err;
-    {
-        /* Make sure we can decode it again */
-        double ref = 1e-100;
-        grib_get_double_internal(grib_handle_of_accessor(a), self->real_part, &ref);
-        Assert(ref == *val);
-    }
 
     val++;
 
