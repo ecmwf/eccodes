@@ -1203,17 +1203,30 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/0, 0, 1, 0, 0);
 }
 
-int wmo_read_any_from_file_fast(FILE* f, void* buffer, size_t* len) {
+int wmo_read_any_from_file_fast(FILE* f, void* buffer, size_t* len)
+{
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 1, 1, 1, 1);
 }
-int wmo_read_grib_from_file_fast(FILE* f, void* buffer, size_t* len) {
+int wmo_read_grib_from_file_fast(FILE* f, void* buffer, size_t* len)
+{
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 1, 0, 0, 0);
 }
-int wmo_read_bufr_from_file_fast(FILE* f, void* buffer, size_t* len) {
+int wmo_read_bufr_from_file_fast(FILE* f, void* buffer, size_t* len)
+{
     return ecc_wmo_read_any_from_file(f, buffer, len, /*no_alloc=*/1, 0, 1, 0, 0);
 }
-int wmo_read_gts_from_file_fast(FILE* f, void* buffer, size_t* len) {
-    return GRIB_NOT_IMPLEMENTED;
+int wmo_read_gts_from_file_fast(FILE* f, void* buffer, size_t* len)
+{
+    //TODO(masn): Needs proper implementation; no malloc
+    void* mesg   = NULL;
+    size_t size  = 0;
+    off_t offset = 0;
+    int err      = GRIB_SUCCESS;
+    grib_context* c = grib_context_get_default();
+
+    mesg = wmo_read_gts_from_file_malloc(f, 0, &size, &offset, &err);
+    grib_context_free(c, mesg);
+    return err;
 }
 
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)

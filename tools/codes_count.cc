@@ -18,6 +18,8 @@ static void usage(const char* prog)
     printf("Usage: %s [-v] [-f] infile1 infile2 ... \n", prog);
     exit(1);
 }
+
+// This version uses malloc and reads the whole contents of each message
 static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
 {
     void* mesg   = NULL;
@@ -28,8 +30,7 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
     wmo_read_proc wmo_read = NULL;
     grib_context* c        = grib_context_get_default();
 
-    if (!in)
-        return 1;
+    if (!in) return 1;
 
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_malloc;
@@ -50,10 +51,10 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
         int done = 0;
         while (!done) {
             mesg = wmo_read(in, 0, &size, &offset, &err);
-            /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
+            // printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));
             if (!mesg) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
-                    done = 1; /* reached the end */
+                    done = 1; // reached the end
                 }
             }
             if (mesg && !err) {
@@ -71,17 +72,17 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
     return err;
 }
 
+// This version does not store the message contents. Much faster
 static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
 {
     size_t size  = 0;
     int err      = GRIB_SUCCESS;
     typedef int (*wmo_read_proc)(FILE* , void* , size_t*);
     wmo_read_proc wmo_read = NULL;
-    unsigned char buff1[1000];
+    unsigned char buff1[1000] = {0,};
     size = sizeof(buff1);
 
-    if (!in)
-        return 1;
+    if (!in) return 1;
 
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_fast;
@@ -101,10 +102,9 @@ static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
         int done = 0;
         while (!done) {
             err = wmo_read(in, buff1, &size);
-            /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
             if (err) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
-                    done = 1; /* reached the end */
+                    done = 1; // reached the end
                 }
             }
             else {
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     int i, verbose = 0;
     int err = 0, files_processed = 0;
     unsigned long count_total = 0, count_curr = 0;
-    int message_type = 0; /* GRIB, BUFR etc */
+    int message_type = 0; // GRIB, BUFR etc
     typedef int (*count_proc)(FILE*, int, unsigned long*);
     count_proc do_count = count_messages_fast;
 
@@ -167,10 +167,8 @@ int main(int argc, char* argv[])
             perror(filename);
             exit(1);
         }
-        if (message_type == CODES_GTS) {
-            do_count = count_messages_slow; // not yet implemented
-        }
-        files_processed = 1; /* At least one file processed */
+
+        files_processed = 1; // At least one file processed
         count_curr      = 0;
         err             = do_count(infh, message_type, &count_curr);
         if (err && fail_on_error) {
@@ -180,7 +178,7 @@ int main(int argc, char* argv[])
             fprintf(stderr, "\n");
             exit(err);
 #ifdef DONT_EXIT_ON_BAD_APPLE
-            /* If we did not want to fail but warn and continue */
+            // If we did not want to fail but warn and continue
             fclose(infh);
             continue;
 #endif
