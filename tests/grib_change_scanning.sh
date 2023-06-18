@@ -128,6 +128,11 @@ grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB1.tmpl" jScansNegatively,jScans
 grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" iScansNegatively,iScansPositively '0 1'
 grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB2.tmpl" jScansNegatively,jScansPositively '1 0'
 
+# Rare case of pack_string for an integer key
+${tools_dir}/grib_set -s swapScanningX:s=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGribA 2>/dev/null
+${tools_dir}/grib_set -s swapScanningX:i=1 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGribB 2>/dev/null
+cmp $tempGribA $tempGribB
+
 # Clean up
 rm -f $tempFilt $tempGribA $tempGribB $tempRef $tempText
 rm -f ${data_dir}/scan1.grib ${data_dir}/scan.grib
