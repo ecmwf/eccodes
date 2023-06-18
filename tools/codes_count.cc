@@ -30,8 +30,6 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
     wmo_read_proc wmo_read = NULL;
     grib_context* c        = grib_context_get_default();
 
-    if (!in) return 1;
-
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_malloc;
     else if (message_type == CODES_BUFR)
@@ -72,17 +70,14 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
     return err;
 }
 
-// This version does not store the message contents. Much faster
+// This version does not store the message contents (no malloc). Much faster
 static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
 {
-    size_t size  = 0;
     int err      = GRIB_SUCCESS;
     typedef int (*wmo_read_proc)(FILE* , void* , size_t*);
     wmo_read_proc wmo_read = NULL;
-    unsigned char buff1[1000] = {0,};
-    size = sizeof(buff1);
-
-    if (!in) return 1;
+    unsigned char buffer[1000] = {0,};
+    size_t size = sizeof(buffer);
 
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_fast;
@@ -94,14 +89,14 @@ static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
         wmo_read = wmo_read_any_from_file_fast;
 
     if (fail_on_error) {
-        while ((err = wmo_read(in, buff1, &size)) == GRIB_SUCCESS) {
+        while ((err = wmo_read(in, buffer, &size)) == GRIB_SUCCESS) {
             (*count)++;
         }
     }
     else {
         int done = 0;
         while (!done) {
-            err = wmo_read(in, buff1, &size);
+            err = wmo_read(in, buffer, &size);
             if (err) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                     done = 1; // reached the end
