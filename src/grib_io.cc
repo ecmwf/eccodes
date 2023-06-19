@@ -1209,26 +1209,34 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
 }
 
 // Fast versions
-int wmo_read_any_from_file_fast(FILE* f, void* buffer, size_t* len, off_t* offset)
+int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/1, 1, 1, 1, 1);
+    unsigned char buffer[64] = {0,};
+    *msg_len = sizeof(buffer);
+    return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 1, 1, 1);
 }
-int wmo_read_grib_from_file_fast(FILE* f, void* buffer, size_t* len, off_t* offset)
+int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/1, 1, 0, 0, 0);
+    unsigned char buffer[64] = {0,};
+    *msg_len = sizeof(buffer);
+    return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 1, 0, 0, 0);
 }
-int wmo_read_bufr_from_file_fast(FILE* f, void* buffer, size_t* len, off_t* offset)
+int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
-    return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/1, 0, 1, 0, 0);
+    unsigned char buffer[64] = {0,};
+    *msg_len = sizeof(buffer);
+    return ecc_wmo_read_any_from_file(f, buffer, msg_len, msg_offset, /*no_alloc=*/1, 0, 1, 0, 0);
 }
-int wmo_read_gts_from_file_fast(FILE* f, void* buffer, size_t* len, off_t* offset)
+int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
     //TODO(masn): Needs proper implementation; no malloc
+    unsigned char buffer[1024] = {0,};
     void* mesg   = NULL;
     int err      = GRIB_SUCCESS;
     grib_context* c = grib_context_get_default();
 
-    mesg = wmo_read_gts_from_file_malloc(f, 0, len, offset, &err);
+    *msg_len = sizeof(buffer);
+    mesg = wmo_read_gts_from_file_malloc(f, 0, msg_len, msg_offset, &err);
     grib_context_free(c, mesg);
     return err;
 }
