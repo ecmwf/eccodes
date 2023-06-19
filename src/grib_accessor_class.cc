@@ -139,6 +139,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     size_t size            = 0;
 
     // See if we have a cpp implementation
+//#define BUILD_CPP_ACCESSOR_IMPLEMENTATION
 #ifdef BUILD_CPP_ACCESSOR_IMPLEMENTATION
     int use_cpp_impl = 0;
     if(strcmp(creator->op,"proj_string") == 0)

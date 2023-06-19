@@ -43,7 +43,7 @@ namespace eccodes {
         Assert(in_view.ptr && !out_view.ptr);
 
         using out_type = typename OUT_VIEW::type;
-        std::size_t out_buffer_size_bytes = in_view.len * sizeof(out_type);
+        std::size_t out_buffer_size_bytes = *in_view.len * sizeof(out_type);
 
         if(out_view.ptr = (out_type*)grib_context_malloc(c, out_buffer_size_bytes); !out_view.ptr)
         {
@@ -51,7 +51,7 @@ namespace eccodes {
             return GRIB_OUT_OF_MEMORY;
         }
 
-        for(std::size_t index = 0; index < in_view.len; ++index)
+        for(std::size_t index = 0; index < *in_view.len; ++index)
         {
             out_view.ptr[index] = static_cast<out_type>(in_view.ptr[index]);
         }
@@ -87,7 +87,7 @@ namespace eccodes {
                              *in_view.ptr);
             return GRIB_WRONG_TYPE;
         }
-        out_view.len = dlen;
+        *out_view.len = dlen;
 
         return GRIB_SUCCESS;
     }
@@ -107,7 +107,7 @@ namespace eccodes {
         }
 
         *out_view.ptr = atol(in_view.ptr);
-        out_view.len = llen;
+        *out_view.len = llen;
         
         return GRIB_SUCCESS;
     }
@@ -265,7 +265,8 @@ namespace eccodes {
 
         // Long to double
         long long_buf[LEN] = {1,1,2,3,5,8,13,21,34,55};
-        pack_buffer pb_long(context, const_long_view{long_buf, LEN});
+        std::size_t long_len{LEN};
+        pack_buffer pb_long(context, const_long_view{long_buf, &long_len});
         auto pb_long_to_doubles = pb_long.to_doubles();
         if(!pb_long_to_doubles.ptr)
         {
@@ -274,7 +275,8 @@ namespace eccodes {
 
         // double to long
         double double_buf[LEN] = {0.5,1.1,2.2,3.3,4.4,5.5,6.6,7.7,8.8,9.9};
-        pack_buffer pb_double(context, const_double_view{double_buf, LEN});
+        std::size_t double_len{LEN};
+        pack_buffer pb_double(context, const_double_view{double_buf, &double_len});
         auto pb_double_to_longs = pb_double.to_longs();
         if(!pb_double_to_longs.ptr)
         {
@@ -283,7 +285,8 @@ namespace eccodes {
 
         // char to double and long
         char const pch_long[LEN] = "-3.141593";
-        pack_buffer pb_char(context, const_char_view{pch_long, LEN});
+        std::size_t char_len{LEN};
+        pack_buffer pb_char(context, const_char_view{pch_long, &char_len});
         auto pb_char_as_doubles = pb_char.to_doubles();
         if(!pb_char_as_doubles.ptr)
         {

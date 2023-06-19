@@ -3,7 +3,9 @@
 
 #include "grib_accessor_impl.h"
 #include "grib_api_internal.h"
+#include "type_view.h"
 #include "pack_buffer.h"
+#include <vector>
 
 namespace eccodes {
 
@@ -65,11 +67,20 @@ namespace eccodes {
     protected:
         virtual void init_gen(const long len, grib_arguments* params);
 
-        virtual int pack_bytes(pack_buffer& bytes, std::size_t& packed_len) { return GRIB_NOT_IMPLEMENTED; }
-        virtual int pack_double(pack_buffer& doubles, std::size_t& packed_len) { return GRIB_NOT_IMPLEMENTED; }
-        virtual int pack_float(pack_buffer& floats, std::size_t& packed_len) { return GRIB_NOT_IMPLEMENTED; }
-        virtual int pack_long(pack_buffer& longs, std::size_t& packed_len) { return GRIB_NOT_IMPLEMENTED; }
-        virtual int pack_string(pack_buffer& chars, std::size_t& packed_len) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int pack_bytes(pack_buffer& bytes, std::size_t* packed_len) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int pack_double(pack_buffer& doubles, std::size_t* packed_len) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int pack_float(pack_buffer& floats, std::size_t* packed_len) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int pack_long(pack_buffer& longs, std::size_t* packed_len) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int pack_string(pack_buffer& chars, std::size_t* packed_len) { return GRIB_NOT_IMPLEMENTED; }
+
+        template<typename T>
+        int unpack(T* val, size_t* len);
+
+        virtual int unpack_bytes(byte_view bytes) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int unpack_double(double_view doubles) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int unpack_float(float_view floats) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int unpack_long(long_view longs) { return GRIB_NOT_IMPLEMENTED; }
+        virtual int unpack_string(char_view chars) { return GRIB_NOT_IMPLEMENTED; }
 
         // Helpers
         grib_accessor* as_accessor() { return static_cast<grib_accessor*>(this); }
