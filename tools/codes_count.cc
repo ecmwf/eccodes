@@ -74,10 +74,12 @@ static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
 static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
 {
     int err      = GRIB_SUCCESS;
-    typedef int (*wmo_read_proc)(FILE* , void* , size_t*);
+    //Signature: FILE* f, void* buffer, size_t* len, off_t* offset
+    typedef int (*wmo_read_proc)(FILE* , void* , size_t*, off_t*);
     wmo_read_proc wmo_read = NULL;
     unsigned char buffer[1000] = {0,};
     size_t size = sizeof(buffer);
+    off_t offset = 0;
 
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_fast;
@@ -89,14 +91,15 @@ static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
         wmo_read = wmo_read_any_from_file_fast;
 
     if (fail_on_error) {
-        while ((err = wmo_read(in, buffer, &size)) == GRIB_SUCCESS) {
+        while ((err = wmo_read(in, buffer, &size, &offset)) == GRIB_SUCCESS) {
+            //printf("%zu %lld\n", size,offset);
             (*count)++;
         }
     }
     else {
         int done = 0;
         while (!done) {
-            err = wmo_read(in, buffer, &size);
+            err = wmo_read(in, buffer, &size, &offset);
             if (err) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
                     done = 1; // reached the end
