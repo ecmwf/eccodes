@@ -145,6 +145,7 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_change_packing
         grib_grid_space_view
+        grib_count
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
