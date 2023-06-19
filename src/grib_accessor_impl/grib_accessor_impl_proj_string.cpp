@@ -110,7 +110,7 @@ namespace eccodes {
     {
     }
     
-    int grib_accessor_impl_proj_string::notify_change()
+    int grib_accessor_impl_proj_string::notify_change(grib_accessor* /* observed */)
     {
         return -1; // TO DO
     }

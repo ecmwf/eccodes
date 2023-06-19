@@ -24,6 +24,7 @@ namespace eccodes {
 
     public:
         grib_accessor_impl_gen(grib_section* p, grib_action* creator);
+        ~grib_accessor_impl_gen();
         void init(const long len, grib_arguments* params) override;
         grib_section* sub_section() override { return nullptr; }
         int native_type() override { return native_type_def; }
@@ -49,7 +50,7 @@ namespace eccodes {
         int value_count(long* count) override;
         void dump(grib_dumper* dumper) override;
         void post_init() override;
-        int notify_change() override;
+        int notify_change(grib_accessor* observed) override;
         void update_size(size_t s) override;
         size_t preferred_size(int from_handle) override;
         void resize(size_t new_size) override;

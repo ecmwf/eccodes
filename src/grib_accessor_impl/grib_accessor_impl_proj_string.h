@@ -34,7 +34,7 @@ namespace eccodes {
         int value_count(long* count) override;
         void dump(grib_dumper* dumper) override;
         void post_init() override;
-        int notify_change() override;
+        int notify_change(grib_accessor* observed) override;
         void update_size(size_t s) override;
         size_t preferred_size(int from_handle) override;
         void resize(size_t new_size) override;

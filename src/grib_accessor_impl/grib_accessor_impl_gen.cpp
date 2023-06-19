@@ -33,6 +33,16 @@ namespace eccodes {
         }
     }
 
+    grib_accessor_impl_gen::~grib_accessor_impl_gen()
+    {
+        grib_dependency_remove_observed(as_accessor());
+        grib_dependency_remove_observer(as_accessor());
+        if (vvalue != NULL) {
+            grib_context_free(context, vvalue);
+            vvalue = NULL;
+        }
+    }
+
     void grib_accessor_impl_gen::init(const long len, grib_arguments* params)
     {
         init_gen(len, params);
@@ -436,18 +446,22 @@ namespace eccodes {
     {
     }
     
-    int grib_accessor_impl_gen::notify_change()
+    int grib_accessor_impl_gen::notify_change(grib_accessor* observed)
     {
-        return GRIB_NOT_IMPLEMENTED; // TO DO
+        /* Default behaviour is to notify creator */
+        return grib_action_notify_change(creator, as_accessor(), observed);
     }
     
     void grib_accessor_impl_gen::update_size(size_t /* s */)
     {
+        grib_context_log(context, GRIB_LOG_ERROR,
+                            "Accessor %s [%s] must implement 'update_size'", name, /* a->cclass-> */name);
+        Assert(0 == 1);
     }
     
     size_t grib_accessor_impl_gen::preferred_size(int /* from_handle */)
     {
-        return GRIB_NOT_IMPLEMENTED; // TO DO
+        return length;
     }
     
     void grib_accessor_impl_gen::resize(size_t /* new_size */)
@@ -456,17 +470,18 @@ namespace eccodes {
     
     int grib_accessor_impl_gen::nearest_smaller_value (double /* val */, double* /* nearest */)
     {
-        return GRIB_NOT_IMPLEMENTED; // TO DO
+        return GRIB_NOT_IMPLEMENTED;
     }
     
     grib_accessor_impl* grib_accessor_impl_gen::next_accessor(int /* mod */)
     {
+        Assert(0);
         return nullptr; // TO DO
     }
     
     int grib_accessor_impl_gen::compare()
     {
-        return GRIB_NOT_IMPLEMENTED; // TO DO
+        return GRIB_NOT_IMPLEMENTED;
     }
     
     int grib_accessor_impl_gen::unpack_double_element(size_t /* i */, double* /* val */)
@@ -496,12 +511,19 @@ namespace eccodes {
     
     int grib_accessor_impl_gen::clear()
     {
-        return GRIB_NOT_IMPLEMENTED; // TO DO
+        unsigned char* buf = accessor_handle()->buffer->data;
+        long length        = grib_byte_count(as_accessor());
+        long offset        = grib_byte_offset(as_accessor());
+
+        memset(buf + offset, 0, length);
+
+        return GRIB_SUCCESS;
     }
     
-    grib_accessor_impl* grib_accessor_impl_gen::make_clone(grib_section* /* s */, int* /* err */)
+    grib_accessor_impl* grib_accessor_impl_gen::make_clone(grib_section* /* s */, int* err)
     {
-        return nullptr; // TO DO
+        *err = GRIB_NOT_IMPLEMENTED;
+        return NULL;
     }
     
     // Helpers

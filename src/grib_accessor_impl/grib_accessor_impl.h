@@ -7,6 +7,7 @@ struct grib_arguments;
 struct grib_section;
 struct grib_dumper;
 struct grib_expression;
+struct grib_accessor;
 
 namespace eccodes {
     class grib_accessor_impl {
@@ -38,7 +39,7 @@ namespace eccodes {
         virtual int value_count(long* count) = 0;
         virtual void dump(grib_dumper* dumper) = 0;
         virtual void post_init() = 0;
-        virtual int notify_change() = 0;
+        virtual int notify_change(grib_accessor* observed) = 0;
         virtual void update_size(size_t s) = 0;
         virtual size_t preferred_size(int from_handle) = 0;
         virtual void resize(size_t new_size) = 0;
