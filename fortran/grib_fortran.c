@@ -2351,7 +2351,6 @@ int grib_f_get_int_array_(int* gid, char* key, int *val, int* size,  int len){
     char buf[1024];
     size_t lsize = *size;
 
-
     if(!h)  return GRIB_INVALID_GRIB;
 
     if(sizeof(long) == sizeof(int)){
