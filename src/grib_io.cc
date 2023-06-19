@@ -1208,6 +1208,7 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len)
     return ecc_wmo_read_any_from_file(f, buffer, len, &offset, /*no_alloc=*/0, 0, 1, 0, 0);
 }
 
+// Fast versions
 int wmo_read_any_from_file_fast(FILE* f, void* buffer, size_t* len, off_t* offset)
 {
     return ecc_wmo_read_any_from_file(f, buffer, len, offset, /*no_alloc=*/1, 1, 1, 1, 1);
