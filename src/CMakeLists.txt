@@ -396,6 +396,13 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g2bifourier_packing.cc
     grib_accessor_class_data_run_length_packing.cc
     eccodes_windef.h
+    # grib_accessor_impl (cpp)
+    grib_accessor_impl/grib_accessor_impl.h
+    grib_accessor_impl/grib_accessor_impl_factory.cpp
+    grib_accessor_impl/grib_accessor_impl_gen.cpp
+    grib_accessor_impl/grib_accessor_impl_proj_string.cpp
+    grib_accessor_impl/pack_buffer.cpp
+ 
     # We ship our own generated lex/yacc C files
     grib_yacc.cc  grib_lex.cc )
 
