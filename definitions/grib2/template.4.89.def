@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.121, Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
+# TEMPLATE 4.89, Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.postproc.def"
