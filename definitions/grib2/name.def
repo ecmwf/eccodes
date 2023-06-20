@@ -4271,8 +4271,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea surface salinity
-'Sea surface salinity' = {
+#Sea surface practical salinity
+'Sea surface practical salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
@@ -4487,8 +4487,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 300 m
-'Vertically-integrated sea water practical salinity in the upper 300 m' = {
+#Average sea water practical salinity in the upper 300 m
+'Average sea water practical salinity in the upper 300 m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -4499,8 +4499,8 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 700 m
-'Vertically-integrated sea water practical salinity in the upper 700 m' = {
+#Average sea water practical salinity in the upper 700 m
+'Average sea water practical salinity in the upper 700 m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -4511,8 +4511,8 @@
 	 scaledValueOfSecondFixedSurface = 700 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Total column sea water practical salinity
-'Total column sea water practical salinity' = {
+#Total column average sea water practical salinity
+'Total column average sea water practical salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -5321,8 +5321,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea surface salinity
-'Time-mean sea surface salinity' = {
+#Time-mean sea surface practical salinity
+'Time-mean sea surface practical salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 3 ;
@@ -5555,8 +5555,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 300 m
-'Time-mean vertically-integrated sea water practical salinity in the upper 300 m' = {
+#Time-mean average sea water practical salinity in the upper 300 m
+'Time-mean average sea water practical salinity in the upper 300 m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -5568,8 +5568,8 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 700 m
-'Time-mean vertically-integrated sea water practical salinity in the upper 700 m' = {
+#Time-mean average sea water practical salinity in the upper 700 m
+'Time-mean average sea water practical salinity in the upper 700 m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;
@@ -5581,8 +5581,8 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean total column sea water practical salinity
-'Time-mean total column sea water practical salinity' = {
+#Time-mean total column average sea water practical salinity
+'Time-mean total column average sea water practical salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 21 ;

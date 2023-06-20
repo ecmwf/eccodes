@@ -150,7 +150,7 @@
 	 constituentType = 11 ;
 	 is_chemical = 1 ;
 	}
-#Sea surface salinity
+#Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
