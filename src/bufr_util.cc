@@ -783,7 +783,7 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
     }
 }
 
-#if 0
+#if defined(BUFR_PROCESS_CODE_TABLE)
 // TODO: Not efficient as it opens the code table every time
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {

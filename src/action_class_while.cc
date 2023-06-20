@@ -84,62 +84,51 @@ static void dump(grib_action* act, FILE* f, int lvl)
 {
     Assert(!"action_class_while::dump: 'while' statement is deprecated");
 
-#if 0
-    grib_action_while* a = (grib_action_while*)act;
-    int i                = 0;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-    grib_context_print(act->context, f, "Loop   %s\n", act->name);
-    grib_dump_action_branch(f, a->block_while, lvl + 1);
-#endif
+//     grib_action_while* a = (grib_action_while*)act;
+//     int i                = 0;
+//     for (i = 0; i < lvl; i++)
+//         grib_context_print(act->context, f, "     ");
+//     grib_context_print(act->context, f, "Loop   %s\n", act->name);
+//     grib_dump_action_branch(f, a->block_while, lvl + 1);
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     Assert(!"action_class_while::create_accessor: 'while' statement is deprecated");
 
-#if 0
-    grib_action_while* a = (grib_action_while*)act;
+//     grib_action_while* a = (grib_action_while*)act;
+//     grib_accessor* ga = NULL;
+//     grib_section* gs  = NULL;
+//     grib_action* la   = NULL;
+//     grib_action* next = NULL;
+//     int ret           = 0;
+//     ga = grib_accessor_factory(p, act, 0, NULL);
+//     if (!ga)
+//         return GRIB_BUFFER_TOO_SMALL;
+//     gs = ga->sub_section;
 
-    grib_accessor* ga = NULL;
-    grib_section* gs  = NULL;
-    grib_action* la   = NULL;
-    grib_action* next = NULL;
-    int ret           = 0;
-    /* long n = 0; */
+//     grib_push_accessor(ga, p->block);
+//     la = a->block_while;
 
-    ga = grib_accessor_factory(p, act, 0, NULL);
-    if (!ga)
-        return GRIB_BUFFER_TOO_SMALL;
-    gs = ga->sub_section;
+//     for (;;) {
+//         long val = 0;
 
-    grib_push_accessor(ga, p->block);
+//         if ((ret = grib_expression_evaluate_long(p->h, a->expression, &val)) != GRIB_SUCCESS) {
+//             grib_context_log(p->h->context, GRIB_LOG_DEBUG, " List %s creating %d values unable to evaluate long \n", act->name, val);
+//             return ret;
+//         }
+//         if (!val)
+//             break;
 
-    la = a->block_while;
+//         next = la;
+//         while (next) {
+//             ret = grib_create_accessor(gs, next, h);
+//             if (ret != GRIB_SUCCESS)
+//                 return ret;
+//             next = next->next;
+//         }
+//     }
 
-    for (;;) {
-        long val = 0;
-
-        if ((ret = grib_expression_evaluate_long(p->h, a->expression, &val)) != GRIB_SUCCESS) {
-            grib_context_log(p->h->context, GRIB_LOG_DEBUG, " List %s creating %d values unable to evaluate long \n", act->name, val);
-            return ret;
-        }
-
-        /* printf("val=%ld %ld\n",val,n++); */
-
-        if (!val)
-            break;
-
-
-        next = la;
-        while (next) {
-            ret = grib_create_accessor(gs, next, h);
-            if (ret != GRIB_SUCCESS)
-                return ret;
-            next = next->next;
-        }
-    }
-#endif
     return GRIB_SUCCESS;
 }
 
@@ -147,43 +136,41 @@ grib_action* grib_action_create_while(grib_context* context, grib_expression* ex
 {
     Assert(!"action_class_while::grib_action_create_while: 'while' statement is deprecated");
     return NULL;
-#if 0
-    char name[80];
-    const size_t nameLen = sizeof(name);
-    grib_action_while* a;
-    grib_action_class* c = grib_action_class_while;
-    grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
-    act->cclass          = c;
-    act->context         = context;
-    a                    = (grib_action_while*)act;
-    act->next            = NULL;
 
-    snprintf(name, nameLen, "_while%p", (void*)a);
-    act->name     = grib_context_strdup_persistent(context, name);
-    act->op       = grib_context_strdup_persistent(context, "section");
-    a->expression = expression;
+//     char name[80];
+//     const size_t nameLen = sizeof(name);
+//     grib_action_while* a;
+//     grib_action_class* c = grib_action_class_while;
+//     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+//     act->cclass          = c;
+//     act->context         = context;
+//     a                    = (grib_action_while*)act;
+//     act->next            = NULL;
 
-    a->block_while = block;
+//     snprintf(name, nameLen, "_while%p", (void*)a);
+//     act->name     = grib_context_strdup_persistent(context, name);
+//     act->op       = grib_context_strdup_persistent(context, "section");
+//     a->expression = expression;
 
-    grib_context_log(context, GRIB_LOG_DEBUG, " Action List %s is created  \n", act->name);
-    return act;
-#endif
+//     a->block_while = block;
+
+//     grib_context_log(context, GRIB_LOG_DEBUG, " Action List %s is created  \n", act->name);
+//     return act;
 }
 
 static void destroy(grib_context* context, grib_action* act)
 {
     Assert(!"action_class_while::destroy: 'while' statement is deprecated");
-#if 0
-    grib_action_while* self = (grib_action_while*)act;
-    grib_action* a          = self->block_while;
 
-    while (a) {
-        grib_action* na = a->next;
-        grib_action_delete(context, a);
-        a = na;
-    }
-    grib_context_free_persistent(context, act->name);
-    grib_context_free_persistent(context, act->op);
-    grib_expression_free(context, self->expression);
-#endif
+    // grib_action_while* self = (grib_action_while*)act;
+    // grib_action* a          = self->block_while;
+
+    // while (a) {
+    //     grib_action* na = a->next;
+    //     grib_action_delete(context, a);
+    //     a = na;
+    // }
+    // grib_context_free_persistent(context, act->name);
+    // grib_context_free_persistent(context, act->op);
+    // grib_expression_free(context, self->expression);
 }

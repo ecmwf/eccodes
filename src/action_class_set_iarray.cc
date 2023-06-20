@@ -76,26 +76,21 @@ grib_action* grib_action_create_set_iarray(grib_context* context,
 {
     Assert(!"grib_action_create_set_iarray: Not implemented");
     return NULL;
-#if 0
-    char buf[1024];
-    grib_action_set_iarray* a;
-    grib_action_class* c = grib_action_class_set_iarray;
-    grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
-    act->op              = grib_context_strdup_persistent(context, "section");
 
-    act->cclass  = c;
-    a            = (grib_action_set_iarray*)act;
-    act->context = context;
+//     char buf[1024];
+//     grib_action_set_iarray* a;
+//     grib_action_class* c = grib_action_class_set_iarray;
+//     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+//     act->op              = grib_context_strdup_persistent(context, "section");
 
-    a->iarray = iarray;
-    a->name   = grib_context_strdup_persistent(context, name);
-
-    snprintf(buf, 1024, "set_iarray%p", (void*)iarray);
-
-    act->name = grib_context_strdup_persistent(context, buf);
-
-    return act;
-#endif
+//     act->cclass  = c;
+//     a            = (grib_action_set_iarray*)act;
+//     act->context = context;
+//     a->iarray = iarray;
+//     a->name   = grib_context_strdup_persistent(context, name);
+//     snprintf(buf, 1024, "set_iarray%p", (void*)iarray);
+//     act->name = grib_context_strdup_persistent(context, buf);
+//     return act;
 }
 
 static int execute(grib_action* a, grib_handle* h)

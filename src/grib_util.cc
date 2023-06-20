@@ -636,7 +636,7 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
     return err;
 }
 
-#if 0
+#if defined(CHECK_HANDLE_AGAINST_SPEC)
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
 static int check_handle_against_spec(grib_handle* handle, const long edition,
