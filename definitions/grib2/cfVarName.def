@@ -2561,6 +2561,20 @@
 	 parameterNumber = 77 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Convective snowfall rate water equivalent
+'csfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 55 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Large scale snowfall rate water equivalent
+'lssfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Mixed-layer CAPE in the lowest 50 hPa
 'mlcape50' = {
 	 discipline = 0 ;
@@ -7433,19 +7447,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
-	}
-#Convective snowfall rate water equivalent
-'csrwe' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 55 ;
-	}
-#Large scale snowfall rate water equivalent
-'lssrwe' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 56 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 'tsrate' = {
