@@ -127,11 +127,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
     grib_context_print(act->context, f, "%s[%d] %s \n", act->op, a->len, act->name);
 }
 
-// #define F(x)                      \
-//     if (flg & x) {                \
-//         fprintf(f, "%s=>1,", #x); \
-//         flg &= !x;                \
-//     }
+// #define F(x)  if (flg & x) { fprintf(f, "%s=>1,", #x); flg &= !x; }
 // static int count = 0;
 // static void xref(grib_action* act, FILE* f, const char* path)
 // {

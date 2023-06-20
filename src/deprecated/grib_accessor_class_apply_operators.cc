@@ -390,7 +390,7 @@ static int apply_operators(grib_accessor* a)
     self->types                  = (char**)grib_context_malloc_clear(c, sizeof(char*) * sizeAO);
     self->names                  = (char**)grib_context_malloc_clear(c, sizeof(char*) * sizeAO);
     self->units                  = (char**)grib_context_malloc_clear(c, sizeof(char*) * sizeAO);
-
+Assert(0);
     j                     = 0;
     ielement              = 0;
     iassociatedInfoNumber = 0;

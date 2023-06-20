@@ -319,9 +319,6 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
 /* grib_accessor_class_unpack_bufr_values.cc*/
 
-/* grib_accessor_class_apply_operators.cc*/
-size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
-
 /* grib_accessor_class_non_alpha.cc*/
 
 /* grib_accessor_class_g1bitmap.cc*/
