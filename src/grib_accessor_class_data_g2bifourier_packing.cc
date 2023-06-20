@@ -15,6 +15,7 @@
 #include "grib_api_internal.h"
 #include "grib_optimize_decimal_factor.h"
 #include <math.h>
+#include <algorithm>
 
 /*
    This is used by make_class.pl
@@ -192,9 +193,6 @@ static int value_count(grib_accessor* a, long* numberOfValues)
     return grib_get_long_internal(gh, self->number_of_values, numberOfValues);
 }
 
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-
 static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
 {
     const double zeps   = 1.E-10;
@@ -207,7 +205,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (j = 1; j < nj; j++) {
-        zi        = (double)ni / (double)nj * sqrt(MAX(zauxil, (double)(nj * nj - j * j)));
+        zi        = (double)ni / (double)nj * sqrt(std::max(zauxil, (double)(nj * nj - j * j)));
         itrunc[j] = (int)(zi + zeps);
     }
 
@@ -224,7 +222,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (i = 1; i < ni; i++) {
-        zj        = (double)nj / (double)ni * sqrt(MAX(zauxil, (double)(ni * ni - i * i)));
+        zj        = (double)nj / (double)ni * sqrt(std::max(zauxil, (double)(ni * ni - i * i)));
         jtrunc[i] = (int)(zj + zeps);
     }
 
@@ -422,7 +420,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
                 DebugAssertAccess(znorm, (long)ll, (long)lmax);
                 DebugAssertAccess(val, (long)isp, (long)bt->n_vals_bif);
                 if (ll < lmax && isp < bt->n_vals_bif) {
-                    znorm[ll] = MAX(znorm[ll], fabs(val[isp]));
+                    znorm[ll] = std::max(znorm[ll], fabs(val[isp]));
                 }
             }
         }
@@ -471,7 +469,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
     zbeta1 = zsum1 / zsum2;
     zp     = -zbeta1;
-    zp     = MAX(-9.999, MIN(9.999, zp));
+    zp     = std::max(-9.999, std::min(9.999, zp));
 
     free(itab1);
     free(itab2);

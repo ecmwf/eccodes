@@ -10,6 +10,7 @@
 
 #include "grib_api_internal_cpp.h"
 #include <math.h>
+#include <algorithm>
 /*
    This is used by make_class.pl
 
@@ -201,8 +202,6 @@ static int value_count(grib_accessor* a, long* count)
     return ret;
 }
 
-#define MAXVAL(a, b) a > b ? a : b
-
 static double calculate_pfactor(grib_context* ctx, const double* spectralField, long fieldTruncation, long subsetTruncation)
 {
     /*long n_vals = ((fieldTruncation+1)*(fieldTruncation+2));*/
@@ -243,8 +242,8 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
             if (n >= subsetTruncation) {
-                norms[n] = MAXVAL(norms[n], fabs(spectralField[index]));
-                norms[n] = MAXVAL(norms[n], fabs(spectralField[index + 1]));
+                norms[n] = std::max(norms[n], fabs(spectralField[index]));
+                norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
             }
         }
     }
@@ -256,8 +255,8 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
     for (m = subsetTruncation; m <= fieldTruncation; m++) {
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
-            norms[n] = MAXVAL(norms[n], fabs(spectralField[index]));
-            norms[n] = MAXVAL(norms[n], fabs(spectralField[index + 1]));
+            norms[n] = std::max(norms[n], fabs(spectralField[index]));
+            norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
         }
     }
 
@@ -266,7 +265,7 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
      * problems with math functions (e.g. LOG).
      */
     for (loop = ismin; loop <= ismax; loop++) {
-        norms[loop] = MAXVAL(norms[loop], zeps);
+        norms[loop] = std::max(norms[loop], zeps);
         if (norms[loop] == zeps)
             weights[loop] = 100.0 * zeps;
     }
