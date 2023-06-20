@@ -27,7 +27,7 @@ rm -f $tempGrib
 
 # 2. Point values
 ## we check if we can set PDTN 122 and typeOfPostProcessing to ecPoint, ecPoint versioning, MARS type, quantile
-${tools_dir}/grib_set -s tablesVersion=33,productDefinitionTemplateNumber=122,backgroundProcess=1,\
+${tools_dir}/grib_set -s tablesVersion=33,productDefinitionTemplateNumber=90,backgroundProcess=1,\
 setLocalDefinition=1,grib2LocalSectionNumber=1,type=pfc,class=od,stream=enfo,\
 totalNumberOfQuantiles=1000,quantileValue=995,\
 generatingProcessIdentifier=2,typeOfPostProcessing=206 $sample_grib2 $tempGrib
@@ -36,7 +36,7 @@ rm -f $tempGrib
 
 # 3. Point value metrics
 ## we check if we can set PDTN 122 and typeOfPostProcessing to ecPoint, ecPoint versioning, MARS type, quantile
-${tools_dir}/grib_set -s tablesVersion=33,productDefinitionTemplateNumber=122,backgroundProcess=1,\
+${tools_dir}/grib_set -s tablesVersion=33,productDefinitionTemplateNumber=90,backgroundProcess=1,\
 setLocalDefinition=1,grib2LocalSectionNumber=1,type=ppm,class=od,stream=enfo,\
 totalNumberOfQuantiles=1000,quantileValue=995,\
 generatingProcessIdentifier=2,typeOfPostProcessing=206 $sample_grib2 $tempGrib
