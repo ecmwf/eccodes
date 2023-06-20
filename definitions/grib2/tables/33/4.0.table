@@ -71,7 +71,8 @@
 86 86 Quantile forecasts at a horizontal level or in a horizontal layer at a point in time 
 87 87 Quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 88 88 Analysis or forecast at a horizontal level or in a horizontal layer at a specified local time 
-# 89-90 Reserved 
+89 89 Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
+90 90 Post-processed quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 91 91 Categorical forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
 92 92 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time 
 93 93 Post-processing analysis or forecast at a horizontal level or in a horizontal layer at a specified local time 
@@ -94,10 +95,7 @@
 110 110 Average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical products 
 111 111 Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer, in a continuous or non-continuous interval for generic optical products 
 112 112 Anomalies, significance and other derived products as probability forecasts in relation to a reference period at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval 
-# 113-120 Reserved 
-121 121 Post-processed quantile forecasts at a horizontal level or in a horizontal layer at a point in time
-122 122, Post-processed quantile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-# 123-253 Reserved
+# 113-253 Reserved 
 254 254 CCITT IA5 character string 
 # 255-999 Reserved 
 1000 1000 Cross-section of analysis and forecast at a point in time 
