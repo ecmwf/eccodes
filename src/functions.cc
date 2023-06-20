@@ -136,10 +136,7 @@ double grib_op_le_d(double a, double b)
     return a <= b;
 }
 
-// #define LOOKUP(a)      \
-//     if (proc == a) {   \
-//         return "&" #a; \
-//     }
+// #define LOOKUP(a) if (proc == a) { return "&" #a; }
 // const char* grib_binop_long_proc_name(const grib_binop_long_proc proc)
 // {
 //     if (!proc)
