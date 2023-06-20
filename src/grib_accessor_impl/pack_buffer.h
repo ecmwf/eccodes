@@ -36,8 +36,6 @@ namespace eccodes {
         const_long_view to_longs();
         const_char_view to_string();
     };
-
-    void pack_buffer_test();
  }
 
 #endif // _PACK_BUFFER_H_20230613_

@@ -16,38 +16,8 @@ namespace eccodes {
     public:
         grib_accessor_impl_proj_string(grib_section* p, grib_action* creator);
         void init(const long len, grib_arguments* params) override;
-        grib_section* sub_section() override;
-        int pack_missing() override;
-        int is_missing() override;
-        int pack_string_array(const char** v, size_t* len) override;
-        int pack_expression(grib_expression* e) override;
-        int unpack_bytes(unsigned char* val, size_t* len) override;
-        int unpack_double(double* val, size_t* len) override;
-        int unpack_float(float* val, size_t* len) override;
-        int unpack_long(long* val, size_t* len) override;
+        int native_type() override { return GRIB_TYPE_STRING; }
         int unpack_string(char* val, size_t* len) override;
-        int unpack_string_array(char** v, size_t* len) override;
-        size_t string_length() override;
-        long byte_count() override;
-        long byte_offset() override;
-        long next_offset() override;
-        int value_count(long* count) override;
-        void dump(grib_dumper* dumper) override;
-        void post_init() override;
-        int notify_change(grib_accessor* observed) override;
-        void update_size(size_t s) override;
-        size_t preferred_size(int from_handle) override;
-        void resize(size_t new_size) override;
-        int nearest_smaller_value (double val, double* nearest) override;
-        grib_accessor_impl* next_accessor(int mod) override;
-        int compare() override;
-        int unpack_double_element(size_t i, double* val) override;
-        int unpack_float_element(size_t i, float* val) override;
-        int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
-        int unpack_float_element_set(const size_t* index_array, size_t len, float* val_array) override;
-        int unpack_double_subarray(double* val, size_t start, size_t len) override;
-        int clear() override;
-        grib_accessor_impl* make_clone(grib_section* s, int* err) override;
 
     protected:
         virtual void init_proj_string(const long len, grib_arguments* params);

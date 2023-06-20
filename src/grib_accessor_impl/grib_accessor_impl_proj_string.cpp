@@ -1,4 +1,5 @@
 #include "grib_accessor_impl_proj_string.h"
+#include "proj_string_helper.h"
 
 namespace eccodes {  
     grib_accessor_impl_proj_string::grib_accessor_impl_proj_string(grib_section* p, grib_action* creator) :
@@ -21,161 +22,46 @@ namespace eccodes {
         this->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
         this->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     }
+    
+    #define ENDPOINT_SOURCE 0
+    #define ENDPOINT_TARGET 1
 
-    grib_section* grib_accessor_impl_proj_string::sub_section()
+    int grib_accessor_impl_proj_string::unpack_string(char* val, size_t* len)
     {
-        return nullptr; // TO DO
-    }
+        int err = 0, found = 0;
+        size_t i           = 0;
+        char target_grid_type[64] = {0,};
+        grib_handle* h = accessor_handle();
+        size_t size    = sizeof(target_grid_type) / sizeof(*target_grid_type);
 
-    int grib_accessor_impl_proj_string::pack_missing()
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::is_missing()
-    {
-        return -1; // TO DO
-    }
+        Assert(endpoint == ENDPOINT_SOURCE || endpoint == ENDPOINT_TARGET);
 
-    int grib_accessor_impl_proj_string::pack_string_array(const char** /* v */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::pack_expression(grib_expression* /* e */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_bytes(unsigned char* /* val */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_double(double* /* val */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_float(float* /* val */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_long(long* /* val */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_string(char* /* val */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_string_array(char** /* v */, size_t* /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    size_t grib_accessor_impl_proj_string::string_length()
-    {
-        return -1; // TO DO
-    }
-    
-    long grib_accessor_impl_proj_string::byte_count()
-    {
-        return -1; // TO DO
-    }
-    
-    long grib_accessor_impl_proj_string::byte_offset()
-    {
-        return -1; // TO DO
-    }
-    
-    long grib_accessor_impl_proj_string::next_offset()
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::value_count(long* /* count */)
-    {
-        return -1; // TO DO
-    }
-    
-    void grib_accessor_impl_proj_string::dump(grib_dumper* /* dumper */)
-    {
-    }
-    
-    void grib_accessor_impl_proj_string::post_init()
-    {
-    }
-    
-    int grib_accessor_impl_proj_string::notify_change(grib_accessor* /* observed */)
-    {
-        return -1; // TO DO
-    }
-    
-    void grib_accessor_impl_proj_string::update_size(size_t /* s */)
-    {
-    }
-    
-    size_t grib_accessor_impl_proj_string::preferred_size(int /* from_handle */)
-    {
-        return -1; // TO DO
-    }
-    
-    void grib_accessor_impl_proj_string::resize(size_t /* new_size */)
-    {
-    }
-    
-    int grib_accessor_impl_proj_string::nearest_smaller_value (double /* val */, double* /* nearest */)
-    {
-        return -1; // TO DO
-    }
-    
-    grib_accessor_impl* grib_accessor_impl_proj_string::next_accessor(int /* mod */)
-    {
-        return nullptr; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::compare()
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_double_element(size_t /* i */, double* /* val */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_float_element(size_t /* i */, float* /* val */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_double_element_set(const size_t* /* index_array */, size_t /* len */, double* /* val_array */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_float_element_set(const size_t* /* index_array */, size_t /* len */, float* /* val_array */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::unpack_double_subarray(double* /* val */, size_t /* start */, size_t /* len */)
-    {
-        return -1; // TO DO
-    }
-    
-    int grib_accessor_impl_proj_string::clear()
-    {
-        return -1; // TO DO
-    }
-    
-    grib_accessor_impl* grib_accessor_impl_proj_string::make_clone(grib_section* /* s */, int* /* err */)
-    {
-        return nullptr; // TO DO
+        err = grib_get_string(h, grid_type, target_grid_type, &size);
+        if (err) return err;
+
+        proj_func func{};
+        err = get_proj_func(target_grid_type, func);
+        if(err == GRIB_SUCCESS)
+        {
+            if (endpoint == ENDPOINT_SOURCE) {
+                snprintf(val, 64, "EPSG:4326");
+            }
+            else {
+                // Invoke the appropriate function to get the target proj string
+                if ((err = func(h, val)) != GRIB_SUCCESS) return err;
+            }
+        }
+        else if(err == GRIB_NOT_FOUND)
+        {
+            *len = 0;
+            return GRIB_NOT_FOUND;
+        }
+        else return err;
+
+        size = strlen(val);
+        Assert(size > 0);
+        *len = size + 1;
+        return err;
     }
     
 }

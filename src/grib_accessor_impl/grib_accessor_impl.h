@@ -46,7 +46,7 @@ namespace eccodes {
         virtual int nearest_smaller_value(double val, double* nearest) = 0;
         // Note: Renamed fron next() to avoid clash with member variable of the same name!
         virtual grib_accessor_impl* next_accessor(int mod) = 0;
-        virtual int compare() = 0;
+        virtual int compare(grib_accessor_impl* ga_impl) = 0;
         virtual int unpack_double_element(size_t i, double* val) = 0;
         virtual int unpack_float_element(size_t i, float* val) = 0;
         virtual int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) = 0;

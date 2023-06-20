@@ -400,8 +400,10 @@ list( APPEND eccodes_src_files
     grib_accessor_impl/grib_accessor_impl.h
     grib_accessor_impl/grib_accessor_impl_factory.cpp
     grib_accessor_impl/grib_accessor_impl_gen.cpp
+    grib_accessor_impl/grib_accessor_impl_helper.cpp
     grib_accessor_impl/grib_accessor_impl_proj_string.cpp
     grib_accessor_impl/pack_buffer.cpp
+    grib_accessor_impl/proj_string_helper.cpp
  
     # We ship our own generated lex/yacc C files
     grib_yacc.cc  grib_lex.cc )

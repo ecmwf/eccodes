@@ -18,8 +18,7 @@ namespace eccodes {
     // This will be removed once all grib_accessors have been migrated
     //
     class grib_accessor_impl_gen : public grib_accessor_impl, public grib_accessor {
-    private:
-        int native_type_def{GRIB_TYPE_UNDEFINED};
+    protected:
         size_t str_len{1024};
 
     public:
@@ -27,7 +26,7 @@ namespace eccodes {
         ~grib_accessor_impl_gen();
         void init(const long len, grib_arguments* params) override;
         grib_section* sub_section() override { return nullptr; }
-        int native_type() override { return native_type_def; }
+        int native_type() override;
         int pack_missing() override { return GRIB_INVALID_TYPE; }
         int is_missing() override;
         int pack_bytes(const unsigned char* val, size_t* len) final;
@@ -56,7 +55,7 @@ namespace eccodes {
         void resize(size_t new_size) override;
         int nearest_smaller_value (double val, double* nearest) override;
         grib_accessor_impl* next_accessor(int mod) override;
-        int compare() override;
+        int compare(grib_accessor_impl* ga_impl) override;
         int unpack_double_element(size_t i, double* val) override;
         int unpack_float_element(size_t i, float* val) override;
         int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;

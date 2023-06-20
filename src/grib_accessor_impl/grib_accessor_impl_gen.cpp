@@ -43,6 +43,12 @@ namespace eccodes {
         }
     }
 
+    int grib_accessor_impl_gen::native_type() 
+    {
+        Assert(0); // MUST override!
+        return GRIB_TYPE_UNDEFINED;
+    }
+
     void grib_accessor_impl_gen::init(const long len, grib_arguments* params)
     {
         init_gen(len, params);
@@ -427,7 +433,7 @@ namespace eccodes {
     
     void grib_accessor_impl_gen::dump(grib_dumper* dumper)
     {
-        switch (native_type_def) {
+        switch (native_type()) {
         case GRIB_TYPE_STRING:
             grib_dump_string(dumper, as_accessor(), NULL);
             break;
@@ -479,7 +485,7 @@ namespace eccodes {
         return nullptr; // TO DO
     }
     
-    int grib_accessor_impl_gen::compare()
+    int grib_accessor_impl_gen::compare(grib_accessor_impl* ga_impl)
     {
         return GRIB_NOT_IMPLEMENTED;
     }

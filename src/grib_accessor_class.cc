@@ -139,26 +139,12 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     size_t size            = 0;
 
     // See if we have a cpp implementation
-//#define BUILD_CPP_ACCESSOR_IMPLEMENTATION
-#ifdef BUILD_CPP_ACCESSOR_IMPLEMENTATION
-    int use_cpp_impl = 0;
-    if(strcmp(creator->op,"proj_string") == 0)
+    if(eccodes::grib_accessor_impl_gen* ga_impl = eccodes::create_grib_accessor_impl(p, creator); ga_impl)
     {
-        use_cpp_impl = 1;
-        size = 0;
-
-        if(use_cpp_impl) {eccodes::pack_buffer_test();}
-    }
-
-    eccodes::grib_accessor_impl_gen* ga_impl = use_cpp_impl ? eccodes::create_grib_accessor_impl(p, creator) : NULL;
-    if(ga_impl)
-    {
-        ga_impl->init(len, params);
         a = (grib_accessor*)ga_impl; 
     }
     else
     {
-#endif /* BUILD_CPP_ACCESSOR_IMPLEMENTATION */
 #ifdef ACCESSOR_FACTORY_USE_TRIE
         c = get_class(p->h->context, creator->op);
 #else
@@ -201,13 +187,12 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
             else
                 a->offset = 0;
         }
-        grib_init_accessor(a, len, params);
-#ifdef BUILD_CPP_ACCESSOR_IMPLEMENTATION
     }
 
-    // Verify that we created either a cclass object OR a grib_accessor_impl_gen class, but NOT BOTH!
-    Assert(!a->cclass != !ga_impl);
-#endif /* BUILD_CPP_ACCESSOR_IMPLEMENTATION */
+    // Verify that we created either a valid object
+    Assert(a);
+
+    grib_init_accessor(a, len, params);
 
     size = grib_get_next_position_offset(a);
 
@@ -298,13 +283,14 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     }
 }
 
+// NOTE: The C++ code doesn't support post_init...
 void grib_section_post_init(grib_section* s)
 {
     grib_accessor* a = s ? s->block->first : NULL;
 
     while (a) {
         grib_accessor_class* c = a->cclass;
-        if (c->post_init)
+        if (c && c->post_init)
             c->post_init(a);
         if (a->sub_section)
             grib_section_post_init(a->sub_section);
