@@ -11,7 +11,6 @@
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005
  *   Enrico Fucile
- *                                                                         *
  ***************************************************************************/
 
 #include "grib_accessor.h"
@@ -550,17 +549,6 @@ void grib_init_accessor(grib_accessor* a, const long len, grib_arguments* args)
 {
     init_accessor(a->cclass, a, len, args);
 }
-
-#if 0
-static void post_init_accessor(grib_accessor_class* c,grib_accessor* a)
-{
-    if(c) {
-        grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        post_init_accessor(s,a);
-        if(c->post_init) c->post_init(a);
-    }
-}
-#endif
 
 /* For this one, ALL destroy are called */
 

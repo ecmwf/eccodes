@@ -145,7 +145,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_iterator.cc
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
-    grib_accessor_class_box.cc
     grib_accessor_class_ksec1expver.cc
     grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
