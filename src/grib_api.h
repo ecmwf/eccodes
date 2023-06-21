@@ -204,10 +204,6 @@ typedef struct grib_iterator grib_iterator;
 */
 typedef struct grib_nearest grib_nearest;
 
-/*! Grib box, structure used to crop a box given north/west/south/east boundaries.
-    \ingroup grib_box
-*/
-typedef struct grib_box grib_box;
 typedef struct grib_points grib_points;
 
 /*! Grib keys iterator. Iterator over keys.

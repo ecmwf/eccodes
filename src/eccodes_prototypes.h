@@ -1347,15 +1347,6 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 /* grib_expression_class_sub_string.cc*/
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
 
-/* grib_box.cc*/
-int grib_box_init(grib_box* box, grib_handle* h, grib_arguments* args);
-void grib_points_delete(grib_points* points);
-
-/* grib_box_class.cc*/
-grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
-
-/* grib_box_class_gen.cc*/
-
 /* grib_nearest.cc*/
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 int grib_nearest_init(grib_nearest* i, grib_handle* h, grib_arguments* args);

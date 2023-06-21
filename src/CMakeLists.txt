@@ -145,7 +145,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_iterator.cc
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
-    grib_accessor_class_box.cc
     grib_accessor_class_ksec1expver.cc
     grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
@@ -326,9 +325,6 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_box.cc
-    grib_box_class.cc
-    grib_box_class_gen.cc
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
@@ -364,8 +360,6 @@ list( APPEND eccodes_src_files
     grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
-    grib_box_class.h
-    grib_box_factory.h
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h
