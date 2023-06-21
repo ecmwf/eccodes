@@ -1,0 +1,74 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+ #include "{{ include_header }}"
+
+{% for i in includes %}
+#include {{ i }}
+{% endfor %}
+
+{% for n in namespaces %}namespace {{ n }} {
+{% endfor %}
+
+
+{% for line in top_level['-start-'] %}{{ line }}
+{% endfor %}
+
+{% for m in static_procs %}
+{% for line in top_level[m.name] %}{{ line }}
+{% endfor %}
+static {{ m.result }} {{ m.name }}({{ m.args }}) const {
+        {{ m.body }}
+ }
+ {% endfor %}
+
+
+{% for line in top_level['init'] %}{{ line }}
+{% endfor %}
+{{ name }}({{constructor.args}}) {
+       {{ constructor.body }}
+}
+
+{% for line in top_level['destroy'] %}{{ line }}
+{% endfor %}
+~{{ name }}() {
+       {{ destructor.body }}
+}
+
+{% for m in inherited_methods %}
+{% for line in top_level[m.name] %}{{ line }}
+{% endfor %}
+
+ {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
+        {{ m.body }}
+ }
+ {% endfor %}
+
+{% for m in private_methods %}
+{% for line in top_level[m.name] %}{{ line }}
+{% endfor %}
+ {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
+        {{ m.body }}
+ }
+ {% endfor %}
+
+void {{ name }}::print(std::ostream& s) const {
+    s << "{{ name }}["
+    {% for m in members %} << "{{ m.name }}="  << {{ m.name }} {% if not loop.last %}<< ',' {% endif %}
+    {% endfor %} << "]";
+}
+
+{% for line in top_level['-end-'] %}{{ line }}
+{% endfor %}
+
+static AccessorMaker<{{ name }}> maker("{{ factory_name }}");
+
+{% for n in namespace_reversed %}} // namespace {{ n }}
+{% endfor %}
