@@ -86,8 +86,8 @@ class Class:
 
     substitute_str_top_level = {}
     substitute_re_top_level = {
-        r"^#define\s+(\w+)\s+(-?\d+)": r"const long \1 = \2;",
-        r"^#define\s+(\w+)\s+(-?\d+\.\d+)([eE]-?\d+)?": r"const double \1 = \2;",
+        r"^#define\s+(\w+)\s+(-?\d+)?!(\.|e|E)": r"const long \1 = \2;",
+        r"^#define\s+(\w+)\s+(-?\d+\.\d+([eE]-?\d+)?)": r"const double \1 = \2;",
     }
 
     def __init__(
@@ -287,9 +287,11 @@ class Accessor(Class):
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
-        r'\bDebugAssert\b': 'ASSERT',
-        r'\bAssert\b': 'ASSERT',
-        r'\bunpack_long\(this,': 'this->unpack_long(',
+        r"\bDebugAssert\b": "ASSERT",
+        r"\bAssert\b": "ASSERT",
+        r"\bunpack_long\(this,": "this->unpack_long(",
+        r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",
+        r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
     }
 
     def class_to_type(self):
@@ -394,7 +396,7 @@ def make_class(path):
             top_level[p] = [x for x in top_level_lines]
             top_level_lines = []
 
-            if p in definitions.get("IMPLEMENTS",[]):
+            if p in definitions.get("IMPLEMENTS", []):
                 in_proc = True
                 proc = inherited_procs[p] = Method(p, m.group(1), m.group(3))
                 depth = stripped_line.count("{") - stripped_line.count("}")
