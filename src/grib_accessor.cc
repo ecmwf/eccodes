@@ -819,7 +819,7 @@ grib_accessor* grib_next_accessor(grib_accessor* a)
 {
     if(eccodes::grib_accessor_impl_gen* ga_impl = eccodes::get_grib_accessor_impl(a); ga_impl)
     {
-        return (grib_accessor*)ga_impl->next_accessor(1);
+        return ga_impl->next_accessor(1);
     }
 
     grib_accessor_class* c = a->cclass;

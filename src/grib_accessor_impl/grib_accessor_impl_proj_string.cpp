@@ -2,8 +2,8 @@
 #include "proj_string_helper.h"
 
 namespace eccodes {  
-    grib_accessor_impl_proj_string::grib_accessor_impl_proj_string(grib_section* p, grib_action* creator) :
-        grib_accessor_impl_gen(p, creator)
+    grib_accessor_impl_proj_string::grib_accessor_impl_proj_string(grib_section* p, grib_action* ga_creator) :
+        grib_accessor_impl_gen(p, ga_creator)
     {
         // No extra logic here - init() handles this
     }

@@ -19,7 +19,7 @@ namespace eccodes {
       static cpp_mode grib_cpp_mode = [](){
             if(const char* env_str = std::getenv(grib_cpp_env)){
                if(strcmp(env_str, "1") == 0) {
-                  fprintf(stderr, "ECCODES DEBUG Using GRIB C++ classes\n");
+                  //fprintf(stdout, "ECCODES DEBUG Using GRIB C++ classes\n");
                   return cpp_mode::enabled;
                }
             }

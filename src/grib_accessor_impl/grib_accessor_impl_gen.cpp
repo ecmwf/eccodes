@@ -1,36 +1,48 @@
 #include "grib_accessor_impl_gen.h"
+#include "grib_accessor_impl_factory.h"
 #include "grib_value.h"
 
 namespace eccodes {  
-    grib_accessor_impl_gen::grib_accessor_impl_gen(grib_section* p, grib_action* creator)
+    grib_accessor_impl_gen::grib_accessor_impl_gen(grib_section* p, grib_action* ga_creator)
     {
-        name       = creator->name;
-        name_space = creator->name_space;
+        // Due to the way we're building this class from an existing grib_accessor struct
+        // we need to manually init all the members...
+        name                = ga_creator->name;
+        name_space          = ga_creator->name_space;
+        context             = p->h->context;
+        h                   = NULL;
+        creator             = ga_creator;
+        length              = 0;
 
-        all_names[0]       = creator->name;
-        all_name_spaces[0] = creator->name_space;
-
-        creator  = creator;
-        context  = p->h->context;
-        h        = NULL;
-        next     = NULL;
-        previous = NULL;
-        parent   = p;
-        length   = 0;
-        offset   = 0;
-        flags    = creator->flags;
-        set      = creator->set;
-
-        if (p->block->last) {
-            offset = grib_get_next_position_offset(p->block->last);
-        }
+        if (p->block->last) { offset = grib_get_next_position_offset(p->block->last); }
         else {
-            if (p->owner) {
-                offset = p->owner->offset;
-            }
-            else
-                offset = 0;
+            if (p->owner)   { offset = p->owner->offset; }
+            else            { offset = 0; }
         }
+
+        parent              = p;
+        next                = NULL;
+        previous            = NULL;
+        cclass              = NULL;
+        flags               = ga_creator->flags;
+        sub_section         = NULL;
+
+        memset(all_names, 0 , sizeof(all_names));
+        memset(all_name_spaces, 0 , sizeof(all_name_spaces));
+
+        all_names[0]        = ga_creator->name;
+        all_name_spaces[0]  = ga_creator->name_space;
+        dirty               = 0;
+        same                = NULL;
+        loop                = 0;
+        bufr_subset_number  = 0;
+        bufr_group_number   = 0;
+        vvalue              = NULL;
+        set                 = ga_creator->set;
+
+        memset(attributes, 0 , sizeof(attributes));
+
+        parent_as_attribute = NULL;
     }
 
     grib_accessor_impl_gen::~grib_accessor_impl_gen()
@@ -479,10 +491,26 @@ namespace eccodes {
         return GRIB_NOT_IMPLEMENTED;
     }
     
-    grib_accessor_impl* grib_accessor_impl_gen::next_accessor(int /* mod */)
+    grib_accessor* grib_accessor_impl_gen::next_accessor(int mod)
     {
-        Assert(0);
-        return nullptr; // TO DO
+        grib_accessor* ga_next = NULL;
+        
+        if (next) {
+            ga_next = next;
+        }
+        else if (parent->owner) {
+            // TODO - Whilst porting the C code there may be instances of parent->owner
+            //        that do not have a C++ implementation so we have to support the
+            //        'C' way of doing it too!
+            if(eccodes::grib_accessor_impl_gen* ga_impl = eccodes::get_grib_accessor_impl(parent->owner); ga_impl) {
+                ga_next = ga_impl->next_accessor(0);
+            }
+            else if(parent->owner->cclass) {
+                ga_next = parent->owner->cclass->next(parent->owner, 0);
+            }
+        }
+
+        return ga_next;
     }
     
     int grib_accessor_impl_gen::compare(grib_accessor_impl* ga_impl)

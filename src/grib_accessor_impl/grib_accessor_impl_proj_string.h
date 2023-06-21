@@ -14,7 +14,7 @@ namespace eccodes {
         int endpoint;
 
     public:
-        grib_accessor_impl_proj_string(grib_section* p, grib_action* creator);
+        grib_accessor_impl_proj_string(grib_section* p, grib_action* ga_creator);
         void init(const long len, grib_arguments* params) override;
         int native_type() override { return GRIB_TYPE_STRING; }
         int unpack_string(char* val, size_t* len) override;

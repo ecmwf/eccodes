@@ -15,7 +15,6 @@ namespace eccodes {
         virtual ~grib_accessor_impl() = default;
         virtual void init(const long len, grib_arguments* params) = 0;
         //virtual void destroy(grib_context* ct) = 0;
-        virtual grib_section* sub_section() = 0;
         virtual int native_type() = 0;
         virtual int pack_missing() = 0;
         virtual int is_missing() = 0;
@@ -44,8 +43,8 @@ namespace eccodes {
         virtual size_t preferred_size(int from_handle) = 0;
         virtual void resize(size_t new_size) = 0;
         virtual int nearest_smaller_value(double val, double* nearest) = 0;
-        // Note: Renamed fron next() to avoid clash with member variable of the same name!
-        virtual grib_accessor_impl* next_accessor(int mod) = 0;
+        // Note: Renamed from next() to avoid clash with member variable of the same name!
+        virtual grib_accessor* next_accessor(int mod) = 0;
         virtual int compare(grib_accessor_impl* ga_impl) = 0;
         virtual int unpack_double_element(size_t i, double* val) = 0;
         virtual int unpack_float_element(size_t i, float* val) = 0;
