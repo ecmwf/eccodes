@@ -26,8 +26,6 @@ typedef struct grib_templates {
     size_t               size;
 } grib_templates;
 
-#include "grib_templates.h"
-
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
 grib_handle* grib_internal_sample(grib_context* c,const char* name)

@@ -27,7 +27,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
     unsigned long lvalue = 0;
     T x;
 
-#if 0
+#ifdef SLOW_OLD_CODE
     /* slow reference code */
     int j=0;
     for(i=0; i < n_vals; i++) {
