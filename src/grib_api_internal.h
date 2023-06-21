@@ -272,7 +272,6 @@ typedef struct grib_smart_table grib_smart_table;
 typedef struct grib_accessor grib_accessor;
 typedef struct grib_iterator_class grib_iterator_class;
 typedef struct grib_nearest_class grib_nearest_class;
-// typedef struct grib_box_class grib_box_class;
 typedef struct grib_dumper grib_dumper;
 typedef struct grib_dumper_class grib_dumper_class;
 typedef struct grib_dependency grib_dependency;
@@ -291,11 +290,6 @@ typedef int (*nearest_find_proc)(grib_nearest* nearest, grib_handle* h,
                                  double* outlons, double* values,
                                  double* distances, int* indexes, size_t* len);
 typedef int (*nearest_destroy_proc)(grib_nearest* nearest);
-
-// typedef void (*box_init_class_proc)(grib_box_class*);
-// typedef int (*box_destroy_proc)(grib_box*);
-// typedef int (*box_init_proc)(grib_box*, grib_handle*, grib_arguments*);
-// typedef grib_points* (*box_get_points_proc)(grib_box*, double, double, double, double, int*);
 
 typedef void (*iterator_init_class_proc)(grib_iterator_class*);
 typedef int (*iterator_init_proc)(grib_iterator* i, grib_handle*, grib_arguments*);
@@ -631,18 +625,6 @@ struct grib_nearest_class
     nearest_find_proc find;
 };
 
-// struct grib_box_class
-// {
-//     grib_box_class** super;
-//     const char* name;
-//     size_t size;
-//     int inited;
-//     box_init_class_proc init_class;
-//     box_init_proc init;
-//     box_destroy_proc destroy;
-//     box_get_points_proc get_points;
-// };
-
 /* --------------- */
 /* --------------- */
 typedef void (*search_all_callback_proc)(grib_accessor*, void* data);
@@ -711,16 +693,6 @@ struct grib_nearest
     grib_nearest_class* cclass;
     unsigned long flags;
 };
-
-// struct grib_box
-// {
-//     grib_box_class* cclass;
-//     grib_context* context;
-//     grib_arguments* args;
-//     grib_handle* h;
-//     unsigned long flags;
-//     grib_points* points;
-// };
 
 struct grib_dependency
 {
