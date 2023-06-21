@@ -1398,7 +1398,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
             return 0;
         }
-#if 0
+#if defined(BUFR_COMPARE_BYTES)
         else {
             int lcount=count,ii;
             if (options->current_infile) lcount=options->current_infile->filter_handle_count;

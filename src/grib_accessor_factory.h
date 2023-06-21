@@ -9,7 +9,6 @@
 { "bits", &grib_accessor_class_bits, },
 { "bits_per_value", &grib_accessor_class_bits_per_value, },
 { "blob", &grib_accessor_class_blob, },
-{ "box", &grib_accessor_class_box, },
 { "budgdate", &grib_accessor_class_budgdate, },
 { "bufr_data_array", &grib_accessor_class_bufr_data_array, },
 { "bufr_data_element", &grib_accessor_class_bufr_data_element, },

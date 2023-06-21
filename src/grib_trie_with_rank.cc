@@ -382,7 +382,7 @@ void grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
     GRIB_MUTEX_UNLOCK(&mutex);
 }
 
-#if 0
+#ifdef TRIE_WITH_RANK_OLD
 static void grib_trie_with_rank_delete_list(grib_context* c,grib_trie_with_rank_list *list)
 {
   grib_trie_with_rank_list* next=list;
