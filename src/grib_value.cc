@@ -1125,23 +1125,6 @@ int grib_get_float_element_set(const grib_handle* h, const char* name, const siz
     return GRIB_NOT_FOUND;
 }
 
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
-{
-    int i, ret;
-    grib_accessor* a = NULL;
-    fprintf(stderr, "Warning: The grib_points_get_values function is deprecated and will be removed later.");
-
-    a = grib_find_accessor(h, "values");
-
-    for (i = 0; i < points->n_groups; i++) {
-        ret = grib_unpack_double_subarray(a, val, points->group_start[i], points->group_len[i]);
-        if (ret)
-            return ret;
-        val += points->group_len[i];
-    }
-    return GRIB_SUCCESS;
-}
-
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     double* values = 0;

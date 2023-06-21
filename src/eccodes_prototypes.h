@@ -1256,7 +1256,6 @@ int grib_get_double_element_set(const grib_handle* h, const char* name, const si
 int grib_get_float_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 int grib_get_float_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array);
 int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);
