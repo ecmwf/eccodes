@@ -105,15 +105,12 @@ grib_accessor_class* grib_accessor_class_forward = &_grib_accessor_class_forward
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-#if 0
-    /* grib_accessor_forward* self = (grib_accessor_forward*)a; */
-    grib_accessor *target = grib_find_accessor(grib_handle_of_accessor(a),a->alias);
-    if(target) {
-        grib_dump_label(dumper,a,"is:");
-        dumper->depth += 2;
-        grib_accessor_dump(target, dumper);
-        dumper->depth -= 2;
-    }
-    else grib_dump_label(dumper,a," undefined ");
-#endif
+    // grib_accessor *target = grib_find_accessor(grib_handle_of_accessor(a),a->alias);
+    // if(target) {
+    //     grib_dump_label(dumper,a,"is:");
+    //     dumper->depth += 2;
+    //     grib_accessor_dump(target, dumper);
+    //     dumper->depth -= 2;
+    // }
+    // else grib_dump_label(dumper,a," undefined ");
 }

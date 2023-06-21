@@ -455,10 +455,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     char buf[80];
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
-#if 0
-    if(*len > 1)
-        return GRIB_NOT_IMPLEMENTED;
-#endif
+
+    //if(*len > 1)
+    //    return GRIB_NOT_IMPLEMENTED;
+
     s = strlen(buf) + 1;
     return pack_string(a, buf, &s);
 }
@@ -589,62 +589,56 @@ static int get_native_type(grib_accessor* a)
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
-    /*
-     * grib_accessor_concept *self = (grib_accessor_concept*)a;
-     * grib_context_free(c,self->cval);
-     */
+    //grib_accessor_concept *self = (grib_accessor_concept*)a;
+    //grib_context_free(c,self->cval);
 }
 
-#if 0
-static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
-{
-    if (edition == 2 && centre == 98) {
-        if (a->parent->owner && a->parent->owner->name && strcmp(a->parent->owner->name, "parameters") == 0)
-            return 1;
-    }
-    return 0;
-}
-#endif
+// static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
+// {
+//     if (edition == 2 && centre == 98) {
+//         if (a->parent->owner && a->parent->owner->name && strcmp(a->parent->owner->name, "parameters") == 0)
+//             return 1;
+//     }
+//     return 0;
+// }
 
-#if 0
-/* Try to get the name, shortName, units etc for a GRIB2 message with
- * local ECMWF coding i.e. discipline=192 etc
- */
-static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
-{
-    int err              = 0;
-    const char* key_name = a->name; /*this is the key whose value we want*/
-    long edition, centre;
-    if (h->product_kind != PRODUCT_GRIB)
-        return NULL;
-    err = grib_get_long(h, "centre", &centre);
-    if (err)
-        return NULL;
-    err = grib_get_long(h, "edition", &edition);
-    if (err)
-        return NULL;
-    if (is_local_ecmwf_grib2_param_key(a, edition, centre)) {
-        /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
-        grib_accessor* a2    = NULL;
-        const long pid_guess = guess_paramId(h);
-        if (pid_guess == -1)
-            return NULL;
+// /* Try to get the name, shortName, units etc for a GRIB2 message with
+//  * local ECMWF coding i.e. discipline=192 etc
+//  */
+// static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
+// {
+//     int err              = 0;
+//     const char* key_name = a->name; /*this is the key whose value we want*/
+//     long edition, centre;
+//     if (h->product_kind != PRODUCT_GRIB)
+//         return NULL;
+//     err = grib_get_long(h, "centre", &centre);
+//     if (err)
+//         return NULL;
+//     err = grib_get_long(h, "edition", &edition);
+//     if (err)
+//         return NULL;
+//     if (is_local_ecmwf_grib2_param_key(a, edition, centre)) {
+//         /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
+//         grib_accessor* a2    = NULL;
+//         const long pid_guess = guess_paramId(h);
+//         if (pid_guess == -1)
+//             return NULL;
 
-        /* Change the paramId so we can get the other string key*/
-        err = grib_set_long(h, "paramId", pid_guess);
-        if (err)
-            return NULL;
-        /* Get the string value of key. Do not call grib_get_string() to avoid
-         * dangers of infinite recursion as that calls unpack_string()!
-         */
-        a2 = grib_find_accessor(h, key_name);
-        if (!a2)
-            return NULL;
-        return concept_evaluate(a2);
-    }
-    return NULL;
-}
-#endif
+//         /* Change the paramId so we can get the other string key*/
+//         err = grib_set_long(h, "paramId", pid_guess);
+//         if (err)
+//             return NULL;
+//         /* Get the string value of key. Do not call grib_get_string() to avoid
+//          * dangers of infinite recursion as that calls unpack_string()!
+//          */
+//         a2 = grib_find_accessor(h, key_name);
+//         if (!a2)
+//             return NULL;
+//         return concept_evaluate(a2);
+//     }
+//     return NULL;
+// }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
@@ -669,14 +663,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
     strcpy(val, p); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
     *len = slen;
-#if 0
-    if (a->context->debug==1) {
-        int err = 0;
-        char result[1024] = {0,};
-        err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
-        if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
-    }
-#endif
+
+//     if (a->context->debug==1) {
+//         int err = 0;
+//         char result[1024] = {0,};
+//         err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
+//         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
+//     }
+
     return GRIB_SUCCESS;
 }
 
