@@ -434,7 +434,7 @@ static int read_GRIB(reader* r, int no_alloc)
     return err;
 }
 
-static int read_PSEUDO(reader* r, const char* type)
+static int read_PSEUDO(reader* r, const char* type, int no_alloc)
 {
     unsigned char tmp[32]; /* Should be enough */
     size_t sec1len = 0;
@@ -480,7 +480,7 @@ static int read_PSEUDO(reader* r, const char* type)
     /* fprintf(stderr,"%s sec4len=%d i=%d l=%d\n",type,sec4len,i,4+sec1len+sec4len+4); */
 
     Assert(i <= sizeof(tmp));
-    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, /*no_alloc=*/0);
+    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, no_alloc);
 }
 
 static int read_HDF5_offset(reader* r, int length, unsigned long* v, unsigned char* tmp, int* i)
@@ -899,19 +899,19 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
 
             case BUDG:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "BUDG");
+                    err = read_PSEUDO(r, "BUDG", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case DIAG:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "DIAG");
+                    err = read_PSEUDO(r, "DIAG", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case TIDE:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "TIDE");
+                    err = read_PSEUDO(r, "TIDE", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -1754,11 +1754,9 @@ int grib_count_in_file(grib_context* c, FILE* f, int* n)
         }
     }
     else {
-        void* mesg   = NULL;
         size_t size  = 0;
         off_t offset = 0;
-        while ((mesg = wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err)) != NULL && err == GRIB_SUCCESS) {
-            grib_context_free(c, mesg);
+        while ((err = wmo_read_any_from_file_fast(f, &size, &offset)) == GRIB_SUCCESS) {
             (*n)++;
         }
     }
