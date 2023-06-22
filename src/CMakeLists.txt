@@ -273,7 +273,6 @@ list( APPEND eccodes_src_files
     grib_dumper_class_serialize.cc
     grib_dumper_class_debug.cc
     grib_dumper_class_default.cc
-    grib_dumper_class_keys.cc
     grib_dumper_class_bufr_encode_C.cc
     grib_dumper_class_bufr_encode_filter.cc
     grib_dumper_class_bufr_encode_fortran.cc

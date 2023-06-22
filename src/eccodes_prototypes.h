@@ -886,8 +886,6 @@ void grib_dump_footer(grib_dumper* d, const grib_handle* h);
 
 /* grib_dumper_class_default.cc*/
 
-/* grib_dumper_class_keys.cc*/
-
 /* grib_dumper_class_bufr_encode_C.cc*/
 
 /* grib_dumper_class_bufr_encode_filter.cc*/

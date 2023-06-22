@@ -178,7 +178,6 @@ static int is_missing(grib_accessor* a){
         Assert( ret == 0);
         return value == GRIB_MISSING_LONG;
     }
-
     return 0;
 }
 */
@@ -277,12 +276,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     long v = 0; /* The converted value */
 
-#if 0
-    /* Requires more work e.g. filter */
-    if (strcmp_nocase(val, "missing")==0) {
-        return pack_missing(a);
-    }
-#endif
+    // Requires more work e.g. filter
+    //if (strcmp_nocase(val, "missing")==0) {
+    //    return pack_missing(a);
+    //}
 
     if (string_to_long(val, &v) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,

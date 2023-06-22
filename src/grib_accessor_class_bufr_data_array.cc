@@ -2322,11 +2322,9 @@ static int is_bitmap_start_descriptor(grib_accessors_list* al, int* err)
         case 237000:
             /*case 243000:*/
             {
-#if 0
-        long index[1];
-        grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
-        grib_unpack_long(anindex,index,&l);
-#endif
+                //long index[1];
+                //grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
+                //grib_unpack_long(anindex,index,&l);
                 return 1;
             }
     }
@@ -2412,20 +2410,19 @@ static grib_accessor* accessor_or_attribute_with_same_name(grib_accessor* a, con
         return ok;
     }
 }
-#if 0
-static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
-{
-    int* r=(int*)grib_trie_get(accessorsRank,a->name);
 
-    if (r) (*r)++;
-    else {
-        r=(int*)grib_context_malloc(a->context,sizeof(int));
-        *r=1;
-        grib_trie_insert(accessorsRank,a->name,(void*)r);
-    }
-    return *r;
-}
-#endif
+// static int get_key_rank(grib_trie* accessorsRank,grib_accessor* a)
+// {
+//     int* r=(int*)grib_trie_get(accessorsRank,a->name);
+//     if (r) (*r)++;
+//     else {
+//         r=(int*)grib_context_malloc(a->context,sizeof(int));
+//         *r=1;
+//         grib_trie_insert(accessorsRank,a->name,(void*)r);
+//     }
+//     return *r;
+// }
+
 static int grib_data_accessors_trie_push(grib_trie_with_rank* accessorsTrie, grib_accessor* a)
 {
     return grib_trie_with_rank_insert(accessorsTrie, a->name, a);
