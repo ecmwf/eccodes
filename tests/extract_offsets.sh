@@ -39,7 +39,7 @@ $EXEC ${test_dir}/extract_offsets ${data_dir} > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Input output problem" $tempLog
+grep -q "is a directory" $tempLog
 
 set +e
 $EXEC ${test_dir}/extract_offsets ${data_dir}/bad.grib > $tempLog 2>&1
