@@ -12,6 +12,7 @@
 #include "grib_bits_any_endian_simple.h"
 #include "grib_optimize_decimal_factor.h"
 #include <float.h>
+#include <type_traits>
 
 /*
    This is used by make_class.pl
