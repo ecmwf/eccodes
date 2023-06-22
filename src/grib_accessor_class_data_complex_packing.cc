@@ -447,7 +447,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (pen_j == sub_j) {
         double* values;
-        d = grib_power<double>(decimal_scale_factor, 10);
+        d = codes_power<double>(decimal_scale_factor, 10);
         if (d) {
             values = (double*)grib_context_malloc_clear(a->context, sizeof(double) * n_vals);
             for (i = 0; i < n_vals; i++)
@@ -547,10 +547,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              "%s: unable to find nearest_smaller_value of %g for %s", cclass_name, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        d = grib_power<double>(+decimal_scale_factor, 10);
+        d = codes_power<double>(+decimal_scale_factor, 10);
     }
     else {
-        d = grib_power<double>(+decimal_scale_factor, 10);
+        d = codes_power<double>(+decimal_scale_factor, 10);
         if (grib_get_nearest_smaller_value(gh, self->reference_value, d * min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(gh->context, GRIB_LOG_ERROR,
                              "%s: unable to find nearest_smaller_value of %g for %s", cclass_name, d * min, self->reference_value);
@@ -570,7 +570,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
     }
-    s = grib_power<double>(-binary_scale_factor, 2);
+    s = codes_power<double>(-binary_scale_factor, 2);
 
     i = 0;
 
@@ -812,7 +812,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     if (pen_j == sub_j) {
         n_vals = (pen_j + 1) * (pen_j + 2);
-        d      = grib_power<T>(-decimal_scale_factor, 10);
+        d      = codes_power<T>(-decimal_scale_factor, 10);
 
         grib_ieee_decode_array<T>(a->context, buf, n_vals, bytes, val);
         if (d) {
@@ -826,8 +826,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
     lpos = 8 * (packed_offset - offsetdata);
 
-    s = grib_power<T>(binary_scale_factor, 2);
-    d = grib_power<T>(-decimal_scale_factor, 10);
+    s = codes_power<T>(binary_scale_factor, 2);
+    d = codes_power<T>(-decimal_scale_factor, 10);
 
     scals = (T*)grib_context_malloc(a->context, maxv * sizeof(T));
     if (!scals) return GRIB_OUT_OF_MEMORY;

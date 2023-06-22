@@ -70,7 +70,7 @@ double grib_op_neg_d(double a)
 long grib_op_pow(long a, long b)
 {
     /* Note: This is actually 'a' to the power 'b' */
-    return grib_power<double>(b, a);
+    return codes_power<double>(b, a);
 }
 
 long grib_op_add(long a, long b)

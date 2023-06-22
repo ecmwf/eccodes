@@ -484,7 +484,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 case 7:
                     if (us->Y) {
                         ccp->extraScale      = us->Y;
-                        ccp->referenceFactor = grib_power<double>(us->Y, 10);
+                        ccp->referenceFactor = codes_power<double>(us->Y, 10);
                         ccp->extraWidth      = ((10 * us->Y) + 2) / 3;
                     }
                     else {

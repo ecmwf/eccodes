@@ -308,8 +308,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     lpos = 8 * (packed_offset - offsetdata);
 
-    s = grib_power<double>(binary_scale_factor, 2);
-    d = grib_power<double>(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
     Assert(scals);

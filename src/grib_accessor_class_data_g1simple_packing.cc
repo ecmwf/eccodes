@@ -291,8 +291,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection)) != GRIB_SUCCESS)
         return ret;
 
-    decimal = grib_power<double>(decimal_scale_factor, 10);
-    divisor = grib_power<double>(-binary_scale_factor, 2);
+    decimal = codes_power<double>(decimal_scale_factor, 10);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
     buflen = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
     if ((buflen + (offsetdata - offsetsection)) % 2) {

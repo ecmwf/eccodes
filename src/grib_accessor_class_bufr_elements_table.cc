@@ -351,7 +351,7 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
     v->scale  = atol_fast(list[5]);
-    v->factor = grib_power<double>(-v->scale, 10);
+    v->factor = codes_power<double>(-v->scale, 10);
 
     v->reference = atol_fast(list[6]);
     v->width     = atol(list[7]);

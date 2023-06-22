@@ -167,7 +167,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         Assert(1 == 0);
 
     if (bitsPerValue != 0)
-        *val = (*val + grib_power<double>(binaryScaleFactor, 2)) * grib_power<double>(-decimalScaleFactor, 10) * 0.5;
+        *val = (*val + codes_power<double>(binaryScaleFactor, 2)) * codes_power<double>(-decimalScaleFactor, 10) * 0.5;
 
     if (ret == GRIB_SUCCESS)
         *len = 1;

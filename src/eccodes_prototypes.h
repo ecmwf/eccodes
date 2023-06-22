@@ -1191,7 +1191,7 @@ grib_accessor* grib_find_attribute(grib_handle* h, const char* name, const char*
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name);
 
 /* grib_scaling.cc*/
-//double grib_power(long s, long n);
+double grib_power(long s, long n);
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret);
 long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
 long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);

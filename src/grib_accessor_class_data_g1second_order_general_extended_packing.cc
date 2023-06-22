@@ -532,8 +532,8 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
             self->dvalues = (double*)grib_context_malloc_clear(a->context, sizeof(double) * numberOfValues);
         }
 
-        double s = grib_power<double>(binary_scale_factor, 2);
-        double d = grib_power<double>(-decimal_scale_factor, 10);
+        double s = codes_power<double>(binary_scale_factor, 2);
+        double d = codes_power<double>(-decimal_scale_factor, 10);
         for (i = 0; i < numberOfValues; i++) {
             dvalues[i]       = (double)(((X[i] * s) + reference_value) * d);
             self->dvalues[i] = dvalues[i];
@@ -551,8 +551,8 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
             self->fvalues = (float*)grib_context_malloc_clear(a->context, sizeof(float) * numberOfValues);
         }
 
-        float s = grib_power<float>(binary_scale_factor, 2);
-        float d = grib_power<float>(-decimal_scale_factor, 10);
+        float s = codes_power<float>(binary_scale_factor, 2);
+        float d = codes_power<float>(-decimal_scale_factor, 10);
         for (i = 0; i < numberOfValues; i++) {
             fvalues[i]       = (float)(((X[i] * s) + reference_value) * d);
             self->fvalues[i] = fvalues[i];
@@ -756,7 +756,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
     if((ret = grib_get_long_internal(handle,self->decimal_scale_factor, &decimal_scale_factor))
             != GRIB_SUCCESS)
         return ret;
-    decimal = grib_power<double>(decimal_scale_factor,10);
+    decimal = codes_power<double>(decimal_scale_factor,10);
 
     max*=decimal;
     min*=decimal;
@@ -790,7 +790,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
             GRIB_SUCCESS)
         return ret;
 
-    divisor = grib_power<double>(-binary_scale_factor,2);
+    divisor = codes_power<double>(-binary_scale_factor,2);
     X=(long*)grib_context_malloc_clear(a->context,sizeof(long)*numberOfValues);
     for(i=0;i< numberOfValues;i++){
         X[i] = (((val[i]*decimal)-reference_value)*divisor)+0.5;
@@ -861,7 +861,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
             }
         }
         groupWidthA=number_of_bits(handle, maxA-minA);
-        range=(long)grib_power<double>(groupWidthA,2)-1;
+        range=(long)codes_power<double>(groupWidthA,2)-1;
 
         offsetC=count+groupLengthA;
         if (offsetC==numberOfValues) {
@@ -949,7 +949,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
                     if (minA>X[count+i]) minA=X[count+i];
                 }
                 groupWidthA=number_of_bits(maxA-minA);
-                range=(long)grib_power<double>(groupWidthA,2)-1;
+                range=(long)codes_power<double>(groupWidthA,2)-1;
                 groupLengths[numberOfGroups]=groupLengthA;
                 groupWidths[numberOfGroups]=groupWidthA;
                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
@@ -1013,7 +1013,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
                     if (minA>X[count+i]) minA=X[count+i];
                 }
                 groupWidthA=number_of_bits(maxA-minA);
-                range=(long)grib_power<double>(groupWidthA,2)-1;
+                range=(long)codes_power<double>(groupWidthA,2)-1;
                 groupLengths[numberOfGroups]=groupLengthA;
                 groupWidths[numberOfGroups]=groupWidthA;
                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
@@ -1055,7 +1055,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
         if (min>firstOrderValues[i]) min=firstOrderValues[i];
     }
     widthOfFirstOrderValues=number_of_bits(handle, max-min);
-    firstOrderValuesMax=(long)grib_power<double>(widthOfFirstOrderValues,2)-1;
+    firstOrderValuesMax=(long)codes_power<double>(widthOfFirstOrderValues,2)-1;
 
     if (numberOfGroups>2) {
         /* loop through all the groups except the last in reverse order to
@@ -1079,7 +1079,7 @@ static int pack_double_old(grib_accessor* a, const double* val, size_t *len)
                 if (min>X[offset+j]) min=X[offset+j];
             }
             groupWidth=number_of_bits(handle, max-min);
-            range=(long)grib_power<double>(groupWidth,2)-1;
+            range=(long)codes_power<double>(groupWidth,2)-1;
 
             /* width of first order values has to be unchanged.*/
             for (j=groupWidth;j<groupWidths[i];j++) {
@@ -1392,8 +1392,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                                                 &decimal_scale_factor, &binary_scale_factor, &reference_value)) != GRIB_SUCCESS)
             return ret;
 
-        decimal = grib_power<double>(decimal_scale_factor, 10);
-        divisor = grib_power<double>(-binary_scale_factor, 2);
+        decimal = codes_power<double>(decimal_scale_factor, 10);
+        divisor = codes_power<double>(-binary_scale_factor, 2);
         /*min     = min * decimal;*/
         /*max     = max * decimal;*/
 
@@ -1410,7 +1410,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if ((ret = grib_get_long_internal(handle, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
             return ret;
 
-        decimal = grib_power<double>(decimal_scale_factor, 10);
+        decimal = codes_power<double>(decimal_scale_factor, 10);
         min     = min * decimal;
         max     = max * decimal;
 
@@ -1421,7 +1421,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
         binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &ret);
 
-        divisor = grib_power<double>(-binary_scale_factor, 2);
+        divisor = codes_power<double>(-binary_scale_factor, 2);
     }
 
     if ((ret = grib_set_long_internal(handle, self->binary_scale_factor, binary_scale_factor)) !=
@@ -1515,7 +1515,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             }
         }
         groupWidthA = number_of_bits(handle, maxA - minA);
-        range       = (long)grib_power<double>(groupWidthA, 2) - 1;
+        range       = (long)codes_power<double>(groupWidthA, 2) - 1;
 
         offsetC = count + groupLengthA;
         if (offsetC == numberOfValues) {
@@ -1608,7 +1608,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                     if (minA>X[count+i]) minA=X[count+i];
                 }
                 groupWidthA=number_of_bits(maxA-minA);
-                range=(long)grib_power<double>(groupWidthA,2)-1;
+                range=(long)codes_power<double>(groupWidthA,2)-1;
                 groupLengths[numberOfGroups]=groupLengthA;
                 groupWidths[numberOfGroups]=groupWidthA;
                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
@@ -1673,7 +1673,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                     if (minA>X[count+i]) minA=X[count+i];
                 }
                 groupWidthA=number_of_bits(maxA-minA);
-                range=(long)grib_power<double>(groupWidthA,2)-1;
+                range=(long)codes_power<double>(groupWidthA,2)-1;
                 groupLengths[numberOfGroups]=groupLengthA;
                 groupWidths[numberOfGroups]=groupWidthA;
                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
@@ -1717,7 +1717,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             min = firstOrderValues[i];
     }
     widthOfFirstOrderValues = number_of_bits(handle, max - min);
-    firstOrderValuesMax     = (long)grib_power<double>(widthOfFirstOrderValues, 2) - 1;
+    firstOrderValuesMax     = (long)codes_power<double>(widthOfFirstOrderValues, 2) - 1;
 
     if (numberOfGroups > 2) {
         /* loop through all the groups except the last in reverse order to
@@ -1745,7 +1745,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                     min = X[offset + j];
             }
             groupWidth = number_of_bits(handle, max - min);
-            range      = (long)grib_power<double>(groupWidth, 2) - 1;
+            range      = (long)codes_power<double>(groupWidth, 2) - 1;
 
             /* width of first order values has to be unchanged.*/
             for (j = groupWidth; j < groupWidths[i]; j++) {

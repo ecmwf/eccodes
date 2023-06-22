@@ -236,8 +236,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     }
 
     Assert(idx < n_vals);
-    s = grib_power<double>(binary_scale_factor, 2);
-    d = grib_power<double>(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s: %s: creating %s, %ld values (idx=%zu)",
@@ -369,8 +369,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    s = grib_power<T>(binary_scale_factor, 2);
-    d = grib_power<T>(-decimal_scale_factor, 10);
+    s = codes_power<T>(binary_scale_factor, 2);
+    d = codes_power<T>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
@@ -507,8 +507,8 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
         return GRIB_SUCCESS;
     }
 
-    s = grib_power<double>(binary_scale_factor, 2);
-    d = grib_power<double>(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
@@ -744,7 +744,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         /* decimal_scale_factor is given, binary_scale_factor=0 and bits_per_value is computed */
         binary_scale_factor  = 0;
         decimal_scale_factor = decimal_scale_factor_get;
-        decimal              = grib_power<double>(decimal_scale_factor, 10);
+        decimal              = codes_power<double>(decimal_scale_factor, 10);
         min *= decimal;
         max *= decimal;
 
@@ -790,14 +790,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                 return err;
         }
         else {
-            /* printf("max=%g reference_value=%g grib_power<double>(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
-               max,reference_value,grib_power<double>(-last,2),decimal_scale_factor,bits_per_value);*/
+            /* printf("max=%g reference_value=%g codes_power<double>(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
+               max,reference_value,codes_power<double>(-last,2),decimal_scale_factor,bits_per_value);*/
             range        = (max - min);
             unscaled_min = min;
             unscaled_max = max;
-            f            = (grib_power<double>(bits_per_value, 2) - 1);
-            minrange     = grib_power<double>(-last, 2) * f;
-            maxrange     = grib_power<double>(last, 2) * f;
+            f            = (codes_power<double>(bits_per_value, 2) - 1);
+            minrange     = codes_power<double>(-last, 2) * f;
+            maxrange     = codes_power<double>(last, 2) * f;
 
             while (range < minrange) {
                 decimal_scale_factor += 1;

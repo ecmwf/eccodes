@@ -622,8 +622,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (boustrophedonic)
         reverse_rows(sec_val, n_vals, Ni, bitmap, bitmap_len);
 
-    s = grib_power<double>(binary_scale_factor, 2);
-    d = grib_power<double>(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++)
         val[i] = (double)((((double)sec_val[i]) * s) + reference_value) * d;
@@ -765,7 +765,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /*     calculation of integer array   */
 
     sec_val = (unsigned long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
-    d       = grib_power<double>(decimal_scale_factor, 10);
+    d       = codes_power<double>(decimal_scale_factor, 10);
     max     = val[0];
     min     = max;
     for (i = 0; i < n_vals; i++) {
@@ -787,7 +787,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     /*  the scale factor in Grib 1 is adjusted in gribex, for "normalization purpose" ... ?*/
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
 
-    divisor = grib_power<double>(-binary_scale_factor, 2);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
 
     for (i = 0; i < n_vals; i++)

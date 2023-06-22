@@ -226,8 +226,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             min = values[i];
     }
 
-    d = grib_power<double>(decimalScaleFactor, 10);
-    b = grib_power<double>(-binaryScaleFactor, 2);
+    d = codes_power<double>(decimalScaleFactor, 10);
+    b = codes_power<double>(-binaryScaleFactor, 2);
 
     /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */

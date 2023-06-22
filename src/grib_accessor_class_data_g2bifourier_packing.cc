@@ -666,8 +666,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     buf = (unsigned char*)gh->buffer->data;
     buf += grib_byte_offset(a);
 
-    s = grib_power<double>(bt->binary_scale_factor, 2);
-    d = grib_power<double>(-bt->decimal_scale_factor, 10);
+    s = codes_power<double>(bt->binary_scale_factor, 2);
+    d = codes_power<double>(-bt->decimal_scale_factor, 10);
 
     /*
      * Decode data
@@ -816,8 +816,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if (ret != GRIB_SUCCESS)
             goto cleanup;
 
-        s = grib_power<double>(-bt->binary_scale_factor, 2);
-        d = grib_power<double>(+bt->decimal_scale_factor, 10);
+        s = codes_power<double>(-bt->binary_scale_factor, 2);
+        d = codes_power<double>(+bt->decimal_scale_factor, 10);
     }
     else {
         bt->decimal_scale_factor = 0;

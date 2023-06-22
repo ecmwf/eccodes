@@ -316,7 +316,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor != 0)) {
-        d = grib_power<double>(decimal_scale_factor, 10);
+        d = codes_power<double>(decimal_scale_factor, 10);
         min *= d;
         max *= d;
 
@@ -346,9 +346,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         range                = (max - min);
         unscaled_min         = min;
         unscaled_max         = max;
-        f                    = (grib_power<double>(bits_per_value, 2) - 1);
-        minrange             = grib_power<double>(-last, 2) * f;
-        maxrange             = grib_power<double>(last, 2) * f;
+        f                    = (codes_power<double>(bits_per_value, 2) - 1);
+        minrange             = codes_power<double>(-last, 2) * f;
+        maxrange             = codes_power<double>(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
@@ -370,11 +370,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              "%s %s: unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        d = grib_power<double>(decimal_scale_factor, 10);
+        d = codes_power<double>(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = grib_power<double>(-binary_scale_factor, 2);
+    divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     size_t nbytes = (bits_per_value + 7) / 8;
     // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
@@ -566,8 +566,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    bscale = grib_power<T>(binary_scale_factor, 2);
-    dscale = grib_power<T>(-decimal_scale_factor, 10);
+    bscale = codes_power<T>(binary_scale_factor, 2);
+    dscale = codes_power<T>(-decimal_scale_factor, 10);
 
     buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;

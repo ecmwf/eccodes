@@ -392,7 +392,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
     }
 #ifdef DEBUG
     {
-        unsigned long maxV = grib_power<double>(nb, 2);
+        unsigned long maxV = codes_power<double>(nb, 2);
         if (val > maxV) {
             fprintf(stderr, "grib_encode_unsigned_longb: Value=%lu, but number of bits=%ld!\n", val, nb);
             Assert(0);
@@ -421,7 +421,7 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
     }
 #ifdef DEBUG
     {
-        size_t maxV = grib_power<double>(nb, 2);
+        size_t maxV = codes_power<double>(nb, 2);
         if (val > maxV) {
             fprintf(stderr, "grib_encode_size_tb: Value=%lu, but number of bits=%ld!\n", val, nb);
             Assert(0);
