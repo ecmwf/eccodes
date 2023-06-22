@@ -882,18 +882,3 @@ void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
         al = tmp;
     }
 }
-
-
-#if 0
-void grib_print_accessor_flags(const grib_accessor* acc)
-{
-    const unsigned long f = acc->flags;
-    if (f & GRIB_ACCESSOR_FLAG_READ_ONLY)        printf("READ_ONLY ");
-    if (f & GRIB_ACCESSOR_FLAG_DUMP)             printf("DUMP ");
-    if (f & GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC) printf("EDITION_SPECIFIC ");
-    if (f & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)   printf("CAN_BE_MISSING ");
-    if (f & GRIB_ACCESSOR_FLAG_LOWERCASE)        printf("LOWERCASE ");
-    if (f & GRIB_ACCESSOR_FLAG_HIDDEN)           printf("HIDDEN ");
-    /* TODO: the rest */
-}
-#endif
