@@ -391,7 +391,7 @@ static void uint_char(unsigned int i, unsigned char* p)
     p[1] = (i >> 16) & 255;
     p[2] = (i >> 8) & 255;
     p[3] = (i)&255;
-    }
+}
 
 static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata)
 {

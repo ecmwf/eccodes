@@ -222,15 +222,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *val = (double)directionIncrement / angleDivisor * angleMultiplier;
     }
 
-#if 0
-    printf("unpack -- %s=%ld %s=%ld %s=%f %s=%f %s=%ld %s=%f\n",
-            self->directionIncrementGiven,directionIncrementGiven,
-            self->directionIncrement,directionIncrement,
-            self->last,last,
-            self->first,first,
-            self->numberOfPoints,numberOfPoints,
-            a->name,*val);
-#endif
     if (ret == GRIB_SUCCESS)
         *len = 1;
 
@@ -317,16 +308,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (ret)
         return ret;
 
-#if 0
-    printf("pack -- %s=%ld %s=%ld \n ------- %s=%f %s=%f \n ------- %s=%ld codedNumberOfPoints=%ld %s=%f\n",
-            self->directionIncrementGiven,directionIncrementGiven,
-            self->directionIncrement,directionIncrement,
-            self->last,last,
-            self->first,first,
-            self->numberOfPoints,numberOfPoints,
-            codedNumberOfPoints,
-            a->name,*val);
-#endif
     if (ret == GRIB_SUCCESS)
         *len = 1;
 

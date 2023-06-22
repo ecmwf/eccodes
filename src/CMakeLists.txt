@@ -273,7 +273,6 @@ list( APPEND eccodes_src_files
     grib_dumper_class_serialize.cc
     grib_dumper_class_debug.cc
     grib_dumper_class_default.cc
-    grib_dumper_class_keys.cc
     grib_dumper_class_bufr_encode_C.cc
     grib_dumper_class_bufr_encode_filter.cc
     grib_dumper_class_bufr_encode_fortran.cc
@@ -325,9 +324,6 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_box.cc
-    grib_box_class.cc
-    grib_box_class_gen.cc
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
@@ -363,8 +359,6 @@ list( APPEND eccodes_src_files
     grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
-    grib_box_class.h
-    grib_box_factory.h
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h

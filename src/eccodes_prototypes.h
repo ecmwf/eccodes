@@ -886,8 +886,6 @@ void grib_dump_footer(grib_dumper* d, const grib_handle* h);
 
 /* grib_dumper_class_default.cc*/
 
-/* grib_dumper_class_keys.cc*/
-
 /* grib_dumper_class_bufr_encode_C.cc*/
 
 /* grib_dumper_class_bufr_encode_filter.cc*/
@@ -1256,7 +1254,6 @@ int grib_get_double_element_set(const grib_handle* h, const char* name, const si
 int grib_get_float_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 int grib_get_float_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array);
 int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);
@@ -1346,15 +1343,6 @@ grib_expression* new_string_expression(grib_context* c, const char* value);
 
 /* grib_expression_class_sub_string.cc*/
 grib_expression* new_sub_string_expression(grib_context* c, const char* value, size_t start, size_t length);
-
-/* grib_box.cc*/
-int grib_box_init(grib_box* box, grib_handle* h, grib_arguments* args);
-void grib_points_delete(grib_points* points);
-
-/* grib_box_class.cc*/
-grib_box* grib_box_factory(grib_handle* h, grib_arguments* args);
-
-/* grib_box_class_gen.cc*/
 
 /* grib_nearest.cc*/
 int grib_nearest_find(grib_nearest* nearest, const grib_handle* h, double inlat, double inlon, unsigned long flags, double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);

@@ -1750,7 +1750,7 @@ static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
     grib_dump_key_values(fout, keys->values);
     grib_dump_index_keys(fout, keys->next);
 }
-#if 0
+#ifdef INDEX_DUMPS
 static void grib_dump_files(FILE* fout, grib_file* files)
 {
     if (!files) return;
