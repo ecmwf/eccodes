@@ -121,10 +121,11 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     int n                              = 0;
     grib_accessor_gds_is_present* self = (grib_accessor_gds_is_present*)a;
-    self->gds_present                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->grid_definition              = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->bitmap_present               = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->values                       = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    grib_handle* h                     = grib_handle_of_accessor(a);
+    self->gds_present                  = grib_arguments_get_name(h, c, n++);
+    self->grid_definition              = grib_arguments_get_name(h, c, n++);
+    self->bitmap_present               = grib_arguments_get_name(h, c, n++);
+    self->values                       = grib_arguments_get_name(h, c, n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
@@ -133,13 +134,13 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    long missing = 255;
-    int ret      = 0;
-    size_t size  = 0;
-    double* values;
-    grib_context* c                    = a->context;
-    grib_handle* h                     = grib_handle_of_accessor(a);
     grib_accessor_gds_is_present* self = (grib_accessor_gds_is_present*)a;
+    long missing    = 255;
+    int ret         = 0;
+    size_t size     = 0;
+    double* values  = NULL;
+    grib_context* c = a->context;
+    grib_handle* h  = grib_handle_of_accessor(a);
 
     if (*val != 1)
         return GRIB_NOT_IMPLEMENTED;
