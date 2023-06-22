@@ -178,16 +178,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->real_part, *val)) != GRIB_SUCCESS)
         return err;
-    {
-        /* Make sure we can decode it again */
-        double ref = 1e-100;
-        grib_get_double_internal(grib_handle_of_accessor(a), self->real_part, &ref);
-        if (ref != *val) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "data_g2shsimple_packing %s: %s (ref=%.10e != *val=%.10e)",
-                            __func__, self->real_part, ref, *val);
-            return GRIB_INTERNAL_ERROR;
-        }
-    }
 
     val++;
 

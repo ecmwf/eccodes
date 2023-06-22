@@ -71,7 +71,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_bufr_string_values.cc
     grib_accessor_class_pack_bufr_values.cc
     grib_accessor_class_unpack_bufr_values.cc
-    grib_accessor_class_apply_operators.cc
     grib_accessor_class_group.cc
     grib_accessor_class_non_alpha.cc
     grib_accessor_class_g1bitmap.cc
@@ -146,7 +145,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_iterator.cc
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
-    grib_accessor_class_box.cc
     grib_accessor_class_ksec1expver.cc
     grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc

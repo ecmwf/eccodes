@@ -691,8 +691,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             double ref = 1e-100;
             grib_get_double_internal(gh, self->reference_value, &ref);
             if (ref != reference_value) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: (ref=%.10e != reference_value=%.10e)",
-                cclass_name, __func__, ref, reference_value);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                                 cclass_name, __func__, self->reference_value, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }

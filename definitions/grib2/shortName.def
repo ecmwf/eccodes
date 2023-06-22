@@ -2561,6 +2561,20 @@
 	 parameterNumber = 77 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Convective snowfall rate water equivalent
+'csfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 55 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Large scale snowfall rate water equivalent
+'lssfr' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
 #Mixed-layer CAPE in the lowest 50 hPa
 'mlcape50' = {
 	 discipline = 0 ;
@@ -4271,7 +4285,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea surface salinity
+#Sea surface practical salinity
 'sos' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -4487,7 +4501,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 300 m
+#Average sea water practical salinity in the upper 300 m
 'sc300m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4499,7 +4513,7 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 700 m
+#Average sea water practical salinity in the upper 700 m
 'sc700m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4511,7 +4525,7 @@
 	 scaledValueOfSecondFixedSurface = 700 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Total column sea water practical salinity
+#Total column average sea water practical salinity
 'scbtm' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4793,6 +4807,18 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 20 ;
 	}
+#Average sea water potential temperature in the upper 300m
+'pt300m' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
 #Sea water practical salinity
 'so' = {
 	 discipline = 10 ;
@@ -4918,6 +4944,14 @@
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water salinity
+'salo' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
@@ -5301,7 +5335,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea surface salinity
+#Time-mean sea surface practical salinity
 'avg_sos' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -5535,7 +5569,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 300 m
+#Time-mean average sea water practical salinity in the upper 300 m
 'avg_sc300m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -5548,7 +5582,7 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 700 m
+#Time-mean average sea water practical salinity in the upper 700 m
 'avg_sc700m' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -5561,7 +5595,7 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean total column sea water practical salinity
+#Time-mean total column average sea water practical salinity
 'avg_scbtm' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -5858,6 +5892,19 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean average sea water potential temperature in the upper 300m
+'avg_pt300m' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea water practical salinity
@@ -7400,19 +7447,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
-	}
-#Convective snowfall rate water equivalent
-'csrwe' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 55 ;
-	}
-#Large scale snowfall rate water equivalent
-'lssrwe' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 56 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 'tsrate' = {

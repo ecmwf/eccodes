@@ -20,29 +20,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#if 0
-GRIB_INLINE static int strcmp(const char* a,const char* b) {
-  if (*a != *b) return 1;
-  while((*a!=0 && *b!=0) &&  *(a) == *(b) ) {a++;b++;}
-  return (*a==0 && *b==0) ? 0 : 1;
-}
-#endif
-
-#ifndef NUMBER
-#define NUMBER(a) (sizeof(a) / sizeof(a[0])) /* number of elem. of an array */
-#endif
-#ifndef MAX
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef MIN
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#endif
-#define ABS(a) ((a) < 0 ? -(a) : (a))
-#define ROUND(a) ((long)((a) + 0.5))
-#define EQ(a, b) ((*(a) == *(b)) && (strcmp(a, b) == 0))
-#define LT(a, b) ((*(a) < *(b)) || (strcmp(a, b) < 0))
-
-
 static grib_math* readpower(grib_context* c, char** form, int* err);
 static grib_math* readatom(grib_context* c, char** form, int* err);
 static grib_math* readfactor(grib_context* c, char** form, int* err);

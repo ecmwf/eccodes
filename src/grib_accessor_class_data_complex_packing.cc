@@ -11,6 +11,7 @@
 #include "grib_ieeefloat.h"
 #include "grib_scaling.h"
 #include <math.h>
+#include <algorithm>
 /*
    This is used by make_class.pl
 
@@ -202,8 +203,6 @@ static int value_count(grib_accessor* a, long* count)
     return ret;
 }
 
-#define MAXVAL(a, b) a > b ? a : b
-
 static double calculate_pfactor(grib_context* ctx, const double* spectralField, long fieldTruncation, long subsetTruncation)
 {
     /*long n_vals = ((fieldTruncation+1)*(fieldTruncation+2));*/
@@ -244,8 +243,8 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
             if (n >= subsetTruncation) {
-                norms[n] = MAXVAL(norms[n], fabs(spectralField[index]));
-                norms[n] = MAXVAL(norms[n], fabs(spectralField[index + 1]));
+                norms[n] = std::max(norms[n], fabs(spectralField[index]));
+                norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
             }
         }
     }
@@ -257,8 +256,8 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
     for (m = subsetTruncation; m <= fieldTruncation; m++) {
         for (n = m; n <= fieldTruncation; n++) {
             index += 2;
-            norms[n] = MAXVAL(norms[n], fabs(spectralField[index]));
-            norms[n] = MAXVAL(norms[n], fabs(spectralField[index + 1]));
+            norms[n] = std::max(norms[n], fabs(spectralField[index]));
+            norms[n] = std::max(norms[n], fabs(spectralField[index + 1]));
         }
     }
 
@@ -267,7 +266,7 @@ static double calculate_pfactor(grib_context* ctx, const double* spectralField, 
      * problems with math functions (e.g. LOG).
      */
     for (loop = ismin; loop <= ismax; loop++) {
-        norms[loop] = MAXVAL(norms[loop], zeps);
+        norms[loop] = std::max(norms[loop], zeps);
         if (norms[loop] == zeps)
             weights[loop] = 100.0 * zeps;
     }
@@ -658,10 +657,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((ret = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
         return ret;
     {
-        /* Make sure we can decode it again */
+        // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(gh, self->reference_value, &ref);
-        Assert(ref == reference_value);
+        if (ref != reference_value) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                            cclass_name, __func__, self->reference_value, ref, reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
 
     if ((ret = grib_set_long_internal(gh, self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)

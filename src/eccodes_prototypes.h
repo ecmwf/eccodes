@@ -319,9 +319,6 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
 
 /* grib_accessor_class_unpack_bufr_values.cc*/
 
-/* grib_accessor_class_apply_operators.cc*/
-size_t compute_size_AO(const long* descriptors, size_t numberOfDescriptors);
-
 /* grib_accessor_class_non_alpha.cc*/
 
 /* grib_accessor_class_g1bitmap.cc*/
@@ -1100,6 +1097,10 @@ int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len);
+int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
+int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
+int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
+int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_any_from_stream(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), void* buffer, size_t* len);
 void* wmo_read_any_from_stream_malloc(void* stream_data, long (*stream_proc)(void*, void* buffer, long len), size_t* size, int* err);
 void* wmo_read_gts_from_file_malloc(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
@@ -1479,6 +1480,7 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout);
 int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, codes_bufr_header** result, int* num_messages, int strict_mode);
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
+int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err);
 
 /* string_util.cc*/
 int strcmp_nocase(const char* s1, const char* s2);

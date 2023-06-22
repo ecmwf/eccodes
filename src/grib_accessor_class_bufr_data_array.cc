@@ -1961,7 +1961,8 @@ static int adding_extra_key_attributes(grib_handle* h)
 }
 
 static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, grib_accessor* attribute, grib_section* section,
-                                                      long ide, long subset, int add_dump_flag, int count, int add_extra_attributes)
+                                                      long ide, long subset, int add_dump_flag, int add_coord_flag,
+                                                      int count, int add_extra_attributes)
 {
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
     char code[10]               = {0,};
@@ -1989,6 +1990,9 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
         creator.flags = GRIB_ACCESSOR_FLAG_DUMP;
         operatorCreator.flags |= GRIB_ACCESSOR_FLAG_DUMP;
     }
+    if (add_coord_flag) {
+        creator.flags |= GRIB_ACCESSOR_FLAG_BUFR_COORD; // ECC-1611
+    }
 
     idx = self->compressedData ? self->elementsDescriptorsIndex->v[0]->v[ide] : self->elementsDescriptorsIndex->v[subset]->v[ide];
 
@@ -1996,6 +2000,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
         case 0:
         case 1:
             creator.name = grib_context_strdup(a->context, self->expanded->v[idx]->shortName);
+
             /* ECC-325: store alloc'd string (due to strdup) for clean up later */
             grib_sarray_push(a->context, self->tempStrings, creator.name);
             elementAccessor = grib_accessor_factory(section, &creator, 0, NULL);
@@ -2466,7 +2471,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     grib_accessor* elementFromBitmap        = NULL;
     grib_handle* hand = grib_handle_of_accessor(a);
     /*int reuseBitmap=0;*/
-    int add_dump_flag = 1, count = 0;
+    int add_dump_flag = 1, add_coord_flag = 0, count = 0;
     /*int forceGroupClosure=0;*/
 
     creatorGroup.op         = (char*)"bufr_group";
@@ -2533,11 +2538,13 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 continue; /* Descriptor does not have an associated key e.g. inside op 203YYY */
             }
             elementFromBitmap = NULL;
+            add_coord_flag = 0;
             if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X) &&
                 self->unpackMode == CODES_BUFR_UNPACK_STRUCTURE) {
                 const int sidx = descriptor->Y + significanceQualifierIndexArray[descriptor->X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
                 DebugAssert(sidx > 0);
                 groupNumber++;
+                add_coord_flag = 1;
 
                 if (significanceQualifierGroup[sidx]) {
                     groupSection = significanceQualifierGroup[sidx]->parent;
@@ -2562,6 +2569,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
+
                 accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);
@@ -2675,7 +2683,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 grib_accessors_list_push(self->dataAccessors, asn, rank);
             }
             count++;
-            elementAccessor = create_accessor_from_descriptor(a, associatedFieldAccessor, section, ide, iss, add_dump_flag, count, add_extra_attributes);
+            elementAccessor = create_accessor_from_descriptor(a, associatedFieldAccessor, section, ide, iss,
+                                                              add_dump_flag, add_coord_flag, count, add_extra_attributes);
             if (!elementAccessor) {
                 err = GRIB_DECODING_ERROR;
                 return err;

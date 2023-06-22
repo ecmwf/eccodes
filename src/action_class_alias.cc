@@ -271,19 +271,18 @@ static void dump(grib_action* act, FILE* f, int lvl)
 static void xref(grib_action* act, FILE* f, const char* path)
 {
     Assert(!"xref is disabled");
-#if 0
-    grib_action_alias* a = (grib_action_alias*)act;
-    if (a->target) {
-        fprintf(f, "bless({name=>'%s', target=>'%s', path=>'%s'},'xref::alias'),\n", act->name, a->target, path);
-        if (act->name_space)
-            fprintf(f, "bless({name=>'%s.%s', target=>'%s', path=>'%s'},'xref::alias'),\n", act->name_space, act->name, a->target, path);
-    }
-    else {
-        fprintf(f, "bless({name=>'%s',  path=>'%s'},'xref::unalias'),\n", act->name, path);
-        if (act->name_space)
-            fprintf(f, "bless({name=>'%s.%s', path=>'%s'},'xref::unalias'),\n", act->name_space, act->name, path);
-    }
-#endif
+
+    // grib_action_alias* a = (grib_action_alias*)act;
+    // if (a->target) {
+    //     fprintf(f, "bless({name=>'%s', target=>'%s', path=>'%s'},'xref::alias'),\n", act->name, a->target, path);
+    //     if (act->name_space)
+    //         fprintf(f, "bless({name=>'%s.%s', target=>'%s', path=>'%s'},'xref::alias'),\n", act->name_space, act->name, a->target, path);
+    // }
+    // else {
+    //     fprintf(f, "bless({name=>'%s',  path=>'%s'},'xref::unalias'),\n", act->name, path);
+    //     if (act->name_space)
+    //         fprintf(f, "bless({name=>'%s.%s', path=>'%s'},'xref::unalias'),\n", act->name_space, act->name, path);
+    // }
 }
 
 static void destroy(grib_context* context, grib_action* act)

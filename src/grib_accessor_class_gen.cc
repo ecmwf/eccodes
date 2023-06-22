@@ -542,8 +542,8 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
         double val = strtod(v, &endPtr);
         if (*endPtr) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "pack_string: Invalid value (%s) for %s. String cannot be converted to a double",
-                             v, a->name);
+                             "%s: Invalid value (%s) for %s. String cannot be converted to a double",
+                             __func__, v, a->name);
             return GRIB_WRONG_TYPE;
         }
         return grib_pack_double(a, &val, &l);
@@ -551,7 +551,7 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
 
     if (a->cclass->pack_long && a->cclass->pack_long != &pack_long) {
         size_t l = 1;
-        long val = atof(v);
+        long val = atol(v);
         return grib_pack_long(a, &val, &l);
     }
 

@@ -155,19 +155,17 @@ int codes_flush_sync_close_file(FILE* f)
         return GRIB_IO_PROBLEM;
     }
 
-#if 0
 #ifdef HAVE_FCNTL_H
     // Heavy handed way of getting the file access mode: only proceed if writing
-    val = fcntl(fd, F_GETFL, 0);
-    if (val < 0) {
-        grib_context_log(c, GRIB_LOG_PERROR, "Call to fcntl failed");
-        return err;
-    }
-    if ((val & O_ACCMODE) != O_WRONLY) {
-        // File is not being written
-        return GRIB_SUCCESS;
-    }
-#endif
+    //val = fcntl(fd, F_GETFL, 0);
+    //if (val < 0) {
+    //    grib_context_log(c, GRIB_LOG_PERROR, "Call to fcntl failed");
+    //    return err;
+    //}
+    //if ((val & O_ACCMODE) != O_WRONLY) {
+    //    // File is not being written
+    //    return GRIB_SUCCESS;
+    //}
 #endif
 
     err = fflush(f);

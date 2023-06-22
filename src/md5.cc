@@ -37,19 +37,6 @@ static const unsigned long k[] = {
     0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1, 0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-#if 0
-static const unsigned long t = 32;
-
-static unsigned long rotate(unsigned long x,unsigned long c) { return (x << c) | (x >> (t-c)); }
-
-
-static unsigned long F(unsigned long x,unsigned long y,unsigned long z) { return (x&y)|((~x)&z); }
-static unsigned long G(unsigned long x,unsigned long y,unsigned long z) { return (x&z)|(y&(~z)); }
-static unsigned long H(unsigned long x,unsigned long y,unsigned long z) { return x^y^z;          }
-static unsigned long I(unsigned long x,unsigned long y,unsigned long z) { return y^(x|(~z));     }
-#endif
-
-
 #define ROT(x, c) ((x << c) | (x >> (32 - c)))
 
 #define ECC_F(x, y, z) ((x & y) | ((~x) & z))
