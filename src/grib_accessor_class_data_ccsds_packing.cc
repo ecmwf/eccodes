@@ -514,8 +514,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    bscale = grib_power<double>(binary_scale_factor, 2);
-    dscale = grib_power<double>(-decimal_scale_factor, 10);
+    bscale = grib_power<T>(binary_scale_factor, 2);
+    dscale = grib_power<T>(-decimal_scale_factor, 10);
 
     buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;
