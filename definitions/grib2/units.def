@@ -508,7 +508,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -6538,7 +6538,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
-#Snow melt
+#Snowmelt
 'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -8913,7 +8913,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

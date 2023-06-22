@@ -201,7 +201,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Snow melt
+#Snowmelt
 'snom' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

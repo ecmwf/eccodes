@@ -488,8 +488,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_times.cc*/
 
-/* grib_accessor_class_forward.cc*/
-
 /* grib_accessor_class_g2bitmap_present.cc*/
 
 /* grib_accessor_class_ibmfloat.cc*/
