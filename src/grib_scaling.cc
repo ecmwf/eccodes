@@ -18,7 +18,7 @@
 // Unfortunately, metkit uses grib_power() (illegal usage of private API)
 // As soon as it is fixed, the wrapper below can be deleted
 double grib_power(long s, long n) {
-    codes_power<double>(s, n);
+    return codes_power<double>(s, n);
 }
 
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)

@@ -17,6 +17,8 @@
 #include <stdint.h>
 #endif
 
+#include "grib_scaling.h"
+
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
