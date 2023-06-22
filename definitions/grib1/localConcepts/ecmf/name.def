@@ -17614,8 +17614,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Snow Fall water equivalent
-'Snow Fall water equivalent' = {
+#Snowfall water equivalent
+'Snowfall water equivalent' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 144 ;
 	}

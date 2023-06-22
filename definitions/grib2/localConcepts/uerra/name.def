@@ -201,8 +201,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Snow melt
-'Snow melt' = {
+#Snowmelt
+'Snowmelt' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 16 ;
