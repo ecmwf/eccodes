@@ -9,6 +9,7 @@
  */
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include <type_traits>
 
@@ -749,8 +750,8 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         // de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 
-    binary_s  = (T)grib_power(binary_scale_factor, 2);
-    decimal_s = (T)grib_power(-decimal_scale_factor, 10);
+    binary_s  = (T)codes_power<T>(binary_scale_factor, 2);
+    decimal_s = (T)codes_power<T>(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
         if (sec_val[i] == LONG_MAX) {
