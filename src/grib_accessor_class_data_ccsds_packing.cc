@@ -11,6 +11,7 @@
 #include "grib_bits_any_endian_simple.h"
 #include "grib_scaling.h"
 #include <cstdint>
+#include <type_traits>
 
 /*
    This is used by make_class.pl
