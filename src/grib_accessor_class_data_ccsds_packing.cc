@@ -346,9 +346,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         range                = (max - min);
         unscaled_min         = min;
         unscaled_max         = max;
-        f                    = (grib_power(bits_per_value, 2) - 1);
-        minrange             = grib_power(-last, 2) * f;
-        maxrange             = grib_power(last, 2) * f;
+        f                    = (grib_power<double>(bits_per_value, 2) - 1);
+        minrange             = grib_power<double>(-last, 2) * f;
+        maxrange             = grib_power<double>(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
