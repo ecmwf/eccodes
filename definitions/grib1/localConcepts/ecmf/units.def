@@ -4054,32 +4054,32 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;

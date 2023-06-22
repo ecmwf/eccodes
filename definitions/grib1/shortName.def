@@ -392,12 +392,12 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 'ucurr' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 'vcurr' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 50 ;
@@ -1073,12 +1073,12 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 'ucurr' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 'vcurr' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 50 ;
@@ -1754,12 +1754,12 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 'ucurr' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 'vcurr' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 50 ;
