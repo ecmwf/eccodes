@@ -13,7 +13,7 @@
 
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 
 int grib_lookup_long_from_array(grib_context* gc, grib_loader* loader, const char* name, long* lvalue)
 {

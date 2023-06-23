@@ -17,7 +17,7 @@
 #include "grib_api_internal.h"
 #include <math.h>
 #include <signal.h>
-#include <ctype.h>
+#include <cctype>
 #include <stdlib.h>
 
 static grib_math* readpower(grib_context* c, char** form, int* err);
