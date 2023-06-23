@@ -10,7 +10,7 @@
 
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 /*
    This is used by make_class.pl
 

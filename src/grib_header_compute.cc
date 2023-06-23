@@ -15,7 +15,7 @@
 */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 #include <signal.h>
 #include <cctype>
 #include <stdlib.h>

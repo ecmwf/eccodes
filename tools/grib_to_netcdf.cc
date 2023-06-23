@@ -12,7 +12,7 @@
 
 #ifdef HAVE_NETCDF
 
-#include <math.h>
+#include <cmath>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>

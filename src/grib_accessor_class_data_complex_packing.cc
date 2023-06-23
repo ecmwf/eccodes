@@ -10,7 +10,7 @@
 
 #include "grib_ieeefloat.h"
 #include "grib_scaling.h"
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 /*
    This is used by make_class.pl
