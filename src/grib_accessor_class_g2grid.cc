@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*************************************************
- * Enrico Fucile
- ***********************************************/
-
 #include "grib_api_internal.h"
 #include <cmath>
 /*
@@ -275,11 +271,9 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     *basic_angle  = 360;
     *sub_division = lcm(ni, nj);
 
-#if 0
-    printf("ni = %ld, nj = %ld , basic_angle=%ld sub_division = %ld\n",
-            ni,nj,
-            *basic_angle,*sub_division);
-#endif
+    // printf("ni = %ld, nj = %ld , basic_angle=%ld sub_division = %ld\n",
+    //        ni, nj, *basic_angle,*sub_division);
+
     if (*sub_division < 0)
         return 0;
 
