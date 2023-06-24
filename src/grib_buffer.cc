@@ -9,8 +9,7 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -31,7 +30,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
     grib_buffer* b = (grib_buffer*)grib_context_malloc_clear(c, sizeof(grib_buffer));
 
     if (b == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_new_buffer: cannot allocate buffer");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: cannot allocate buffer", __func__);
         return NULL;
     }
 
@@ -42,7 +41,7 @@ grib_buffer* grib_create_growable_buffer(const grib_context* c)
     b->growable = 1;
 
     if (!b->data) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_new_buffer: cannot allocate buffer");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: cannot allocate buffer", __func__);
         grib_context_free(c, b);
         return NULL;
     }
@@ -55,7 +54,7 @@ grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, s
     grib_buffer* b = (grib_buffer*)grib_context_malloc_clear(c, sizeof(grib_buffer));
 
     if (b == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_new_buffer: cannot allocate buffer");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: cannot allocate buffer", __func__);
         return NULL;
     }
 
@@ -138,87 +137,75 @@ static void update_offsets_after(grib_accessor* a, long len)
     }
 }
 
-#if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
-void grib_recompute_sections_lengths(grib_section* s)
-{
-    if(s)
-    {
-        long   plen = 0;
-        size_t  len = 1;
+// /* new GCC compiler v4.5.0 complains function is defined but not used*/
+// void grib_recompute_sections_lengths(grib_section* s)
+// {
+//     if(s)
+//     {
+//         long   plen = 0;
+//         size_t  len = 1;
 
-        grib_accessor* a = s->block->first;
+//         grib_accessor* a = s->block->first;
 
-        while(a)
-        {
-            /* grib_recompute_sections_lengths(grib_get_sub_section(a)); */
-            grib_recompute_sections_lengths(a->sub_section);
-            a = a->next;
-        }
+//         while(a)
+//         {
+//             /* grib_recompute_sections_lengths(grib_get_sub_section(a)); */
+//             grib_recompute_sections_lengths(a->sub_section);
+//             a = a->next;
+//         }
 
-        if(s->aclength)
-        {
-            int ret;
-            if(s->owner)
-                plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
-            else
-                plen = grib_get_next_position_offset(s->block->last);
+//         if(s->aclength)
+//         {
+//             int ret;
+//             if(s->owner)
+//                 plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
+//             else
+//                 plen = grib_get_next_position_offset(s->block->last);
 
-            if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
-                ;
+//             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
+//                 ;
 
-#if 0
-            if(s->h->context->debug)
-                printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
-#endif
+// 
+//             if(s->h->context->debug)
+//                 printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
+//         }
+//     }
+// }
 
-        }
-    }
-}
-#endif
+// /* new GCC compiler v4.5.0 complains function is defined but not used*/
+// static void update_sections_lengths(grib_section* s)
+// {
+//     long   plen = 0;
+//     size_t  len = 1;
 
+//     if(!s) return;
+//     if(s->aclength)
+//     {
+//         int ret;
+//         if(s->owner)
+//             plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
+//         else
+//             plen = grib_get_next_position_offset(s->block->last);
 
-#if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
-static void update_sections_lengths(grib_section* s)
-{
-    long   plen = 0;
-    size_t  len = 1;
+//         /* if(s->owner) */
+//         /* s->owner->length = plen; */
 
-    if(!s) return;
+//         /* if(s->aclength)  */
+//         if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
+//             ;
 
-
-    if(s->aclength)
-    {
-        int ret;
-        if(s->owner)
-            plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
-        else
-            plen = grib_get_next_position_offset(s->block->last);
-
-        /* if(s->owner) */
-        /* s->owner->length = plen; */
-
-        /* if(s->aclength)  */
-        if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
-            ;
-
-        if(s->h->context->debug)
-        {
-            printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
-            printf("NEXT_POS = %ld, owner offset= %ld %s %s\n",
-                    grib_get_next_position_offset(s->block->last),
-                    s->owner ? s->owner->offset : 0L, s->owner->name,
-                            s->block->last->name);
-        }
-    }
-
-    if(s->owner)
-        update_sections_lengths(s->owner->parent);
-
-}
-#endif
-
+//         if(s->h->context->debug)
+//         {
+//             printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
+//             printf("NEXT_POS = %ld, owner offset= %ld %s %s\n",
+//                     grib_get_next_position_offset(s->block->last),
+//                     s->owner ? s->owner->offset : 0L, s->owner->name,
+//                             s->block->last->name);
+//         }
+//     }
+//     if(s->owner)
+//         update_sections_lengths(s->owner->parent);
+// }
 
 void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
                          size_t newsize, int update_lengths, int update_paddings)

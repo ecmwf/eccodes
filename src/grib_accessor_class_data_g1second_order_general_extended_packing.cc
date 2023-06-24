@@ -465,15 +465,15 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
                 count++;
                 n++;
             }
-#if 0
-            for (j=0;j<groupLengths[i];j++) {
-                X[n]=grib_decode_unsigned_long(buf,&pos,groupWidths[i]);
-                //printf("DXXXXX %ld %ld %ld %ld\n",n,X[n],groupWidths[i],groupLengths[i]);
-                X[n]+=firstOrderValues[i];
-                count++;
-                n++;
-            }
-#endif
+
+//             for (j=0;j<groupLengths[i];j++) {
+//                 X[n]=grib_decode_unsigned_long(buf,&pos,groupWidths[i]);
+//                 //printf("DXXXXX %ld %ld %ld %ld\n",n,X[n],groupWidths[i],groupLengths[i]);
+//                 X[n]+=firstOrderValues[i];
+//                 count++;
+//                 n++;
+//             }
+
         }
         else {
             for (j = 0; j < groupLengths[i]; j++) {
@@ -992,23 +992,23 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
              */
             incrementGroupLengthA = startGroupLength;
             computeGroupA         = 1;
-#if 0
-            if (numberOfGroups==MAX_NUMBER_OF_GROUPS) {
-                groupLengthA= remainingValues ;
-                maxA=X[count];
-                minA=X[count];
-                for (i=1;i<groupLengthA;i++) {
-                    if (maxA<X[count+i]) maxA=X[count+i];
-                    if (minA>X[count+i]) minA=X[count+i];
-                }
-                groupWidthA=number_of_bits(maxA-minA);
-                range=(long)codes_power<double>(groupWidthA,2)-1;
-                groupLengths[numberOfGroups]=groupLengthA;
-                groupWidths[numberOfGroups]=groupWidthA;
-                firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
-                break;
-            }
-#endif
+
+            //             if (numberOfGroups==MAX_NUMBER_OF_GROUPS) {
+            //                 groupLengthA= remainingValues ;
+            //                 maxA=X[count];
+            //                 minA=X[count];
+            //                 for (i=1;i<groupLengthA;i++) {
+            //                     if (maxA<X[count+i]) maxA=X[count+i];
+            //                     if (minA>X[count+i]) minA=X[count+i];
+            //                 }
+            //                 groupWidthA=number_of_bits(maxA-minA);
+            //                 range=(long)codes_power<double>(groupWidthA,2)-1;
+            //                 groupLengths[numberOfGroups]=groupLengthA;
+            //                 groupWidths[numberOfGroups]=groupWidthA;
+            //                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
+            //                 break;
+            //             }
+
             continue;
         }
 
@@ -1057,23 +1057,23 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             count += groupLengthA;
             remainingValues -= groupLengthA;
             numberOfGroups++;
-#if 0
-            if (numberOfGroups==MAX_NUMBER_OF_GROUPS) {
-                groupLengthA= remainingValues ;
-                maxA=X[count];
-                minA=X[count];
-                for (i=1;i<groupLengthA;i++) {
-                    if (maxA<X[count+i]) maxA=X[count+i];
-                    if (minA>X[count+i]) minA=X[count+i];
-                }
-                groupWidthA=number_of_bits(maxA-minA);
-                range=(long)codes_power<double>(groupWidthA,2)-1;
-                groupLengths[numberOfGroups]=groupLengthA;
-                groupWidths[numberOfGroups]=groupWidthA;
-                firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
-                break;
-            }
-#endif
+
+            //             if (numberOfGroups==MAX_NUMBER_OF_GROUPS) {
+            //                 groupLengthA= remainingValues ;
+            //                 maxA=X[count];
+            //                 minA=X[count];
+            //                 for (i=1;i<groupLengthA;i++) {
+            //                     if (maxA<X[count+i]) maxA=X[count+i];
+            //                     if (minA>X[count+i]) minA=X[count+i];
+            //                 }
+            //                 groupWidthA=number_of_bits(maxA-minA);
+            //                 range=(long)codes_power<double>(groupWidthA,2)-1;
+            //                 groupLengths[numberOfGroups]=groupLengthA;
+            //                 groupWidths[numberOfGroups]=groupWidthA;
+            //                 firstOrderValues[numberOfGroups] = maxA-range > 0 ? maxA-range : 0;
+            //                 break;
+            //             }
+
             incrementGroupLengthA = startGroupLength;
             computeGroupA         = 1;
             continue;
@@ -1331,8 +1331,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (ret)
         return ret;
 
-    Xp    = X + orderOfSPD;
-    pos   = 0;
+    Xp  = X + orderOfSPD;
+    pos = 0;
 #if EFDEBUG
     count = 0;
 #endif
