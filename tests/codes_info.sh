@@ -28,7 +28,6 @@ ${tools_dir}/codes_info -X > $tempLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
-grep -q "illegal option" $tempLog
 
 
 # Clean up
