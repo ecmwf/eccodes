@@ -1,53 +1,27 @@
 #include "grib_accessor_impl_factory.h"
-
-#include "grib_accessor_impl_proj_string.h"
+#include "ga_impl_creators.h"
+#include "grib_cpp_utils.h"
 
 #include <unordered_set>
-#include <type_traits>
-#include <cstdlib>
 
 namespace eccodes {  
 
    std::unordered_set<grib_accessor_impl_gen*> ga_store{};
-
-   // Set env var grib_cpp to 1 to enable C++ mode:
-   // $ export grib_cpp=1
-   const char grib_cpp_env[] = "grib_cpp";
-   enum class cpp_mode { not_set, enabled, disabled};
-   static cpp_mode get_cpp_mode()
-   {
-      static cpp_mode grib_cpp_mode = [](){
-            if(const char* env_str = std::getenv(grib_cpp_env)){
-               if(strcmp(env_str, "1") == 0) {
-                  //fprintf(stdout, "ECCODES DEBUG Using GRIB C++ classes\n");
-                  return cpp_mode::enabled;
-               }
-            }
-            return cpp_mode::disabled;
-         }();
-
-      return grib_cpp_mode;
-   }
-
-   // Helper to create the requested accessor and store a copy of it
-   template<typename GA_TYPE>
-   std::enable_if_t<std::is_base_of_v<grib_accessor_impl_gen, GA_TYPE>, grib_accessor_impl_gen*>
-   create_and_store(grib_section* p, grib_action* creator)
-   {
-      grib_accessor_impl_gen* ga_impl = new GA_TYPE(p, creator);
-      if(ga_impl) { ga_store.insert(ga_impl); }
-
-      return ga_impl;
-   }
 
    grib_accessor_impl_gen* create_grib_accessor_impl(grib_section* p, grib_action* creator)
    {
       if(get_cpp_mode() != cpp_mode::enabled) { return nullptr; }
       if(!creator->op)                        { return nullptr; }
 
-      if(strcmp(creator->op,"proj_string") == 0) { return create_and_store<grib_accessor_impl_proj_string>(p, creator); }
+      grib_accessor_impl_gen* ga_impl{};
 
-      return nullptr;
+      if(auto impl_creator = get_ga_impl_creator(creator->op)) 
+      {
+         ga_impl = impl_creator(p, creator);
+         if(ga_impl) { ga_store.insert(ga_impl); }
+      }
+
+      return ga_impl;
    }
 
    int destroy_grib_accessor_impl(grib_accessor* a)

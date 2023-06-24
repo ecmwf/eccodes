@@ -10,7 +10,8 @@ namespace eccodes {
 
     void grib_accessor_impl_proj_string::init(const long len, grib_arguments* params)
     {
-        init_gen(len, params);
+        // Default is to call parent's init, then init self (i.e. like a constructor)
+        grib_accessor_impl_gen::init(len, params);
         init_proj_string(len, params);
     }
 
@@ -26,7 +27,7 @@ namespace eccodes {
     #define ENDPOINT_SOURCE 0
     #define ENDPOINT_TARGET 1
 
-    int grib_accessor_impl_proj_string::unpack_string(char* val, size_t* len)
+    int grib_accessor_impl_proj_string::unpack_string(char_view chars)
     {
         int err = 0, found = 0;
         size_t i           = 0;
@@ -44,23 +45,23 @@ namespace eccodes {
         if(err == GRIB_SUCCESS)
         {
             if (endpoint == ENDPOINT_SOURCE) {
-                snprintf(val, 64, "EPSG:4326");
+                snprintf(chars.ptr, 64, "EPSG:4326");
             }
             else {
                 // Invoke the appropriate function to get the target proj string
-                if ((err = func(h, val)) != GRIB_SUCCESS) return err;
+                if ((err = func(h, chars.ptr)) != GRIB_SUCCESS) return err;
             }
         }
         else if(err == GRIB_NOT_FOUND)
         {
-            *len = 0;
+            *chars.len = 0;
             return GRIB_NOT_FOUND;
         }
         else return err;
 
-        size = strlen(val);
+        size = strlen(chars.ptr);
         Assert(size > 0);
-        *len = size + 1;
+        *chars.len = size + 1;
         return err;
     }
     

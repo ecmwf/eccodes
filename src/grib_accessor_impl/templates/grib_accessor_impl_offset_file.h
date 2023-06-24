@@ -1,31 +1,26 @@
 #ifndef _GRIB_ACCESSOR_IMPL_TEMPLATE_H_2023MMDD_
 #define _GRIB_ACCESSOR_IMPL_TEMPLATE_H_2023MMDD_
 
-#include "grib_accessor_impl_gen.h"
+#include "grib_accessor_impl_PARENT.h"
 
 namespace eccodes {
 
-    class grib_accessor_impl_TEMPLATE : public grib_accessor_impl_gen {
+    class grib_accessor_impl_TEMPLATE : public grib_accessor_impl_PARENT {
     protected:
         // grib_accessor_class_TEMPLATE data
         // 
         // In order to support interop with the existing C code, this should be
-        // kept in sync with grib_accessor_class_proj_string
+        // kept in sync with grib_accessor_class_TEMPLATE
 
     public:
         grib_accessor_impl_TEMPLATE(grib_section* p, grib_action* ga_creator);
         ~grib_accessor_impl_TEMPLATE();
         void init(const long len, grib_arguments* params) override;
-        int native_type() override;
+        int native_type() override { return SET_TYPE_OR_DELETE_THIS_OVERLOAD; }
         int pack_missing() override;
         int is_missing() override;
         int pack_string_array(const char** v, size_t* len) override;
         int pack_expression(grib_expression* e) override;
-        int unpack_bytes(unsigned char* val, size_t* len) override;
-        int unpack_double(double* val, size_t* len) override;
-        int unpack_float(float* val, size_t* len) override;
-        int unpack_long(long* val, size_t* len) override;
-        int unpack_string(char* val, size_t* len) override;
         int unpack_string_array(char** v, size_t* len) override;
         size_t string_length() override;
         long byte_count() override;
@@ -63,6 +58,9 @@ namespace eccodes {
         int unpack_float(float_view floats) override;
         int unpack_long(long_view longs) override;
         int unpack_string(char_view chars) override;
+
+    private:
+        void init_TEMPLATE(const long len, grib_arguments* params);
     };
 }
 

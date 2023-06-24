@@ -396,17 +396,12 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g2bifourier_packing.cc
     grib_accessor_class_data_run_length_packing.cc
     eccodes_windef.h
-    # grib_accessor_impl (cpp)
-    grib_accessor_impl/grib_accessor_impl.h
-    grib_accessor_impl/grib_accessor_impl_factory.cpp
-    grib_accessor_impl/grib_accessor_impl_gen.cpp
-    grib_accessor_impl/grib_accessor_impl_helper.cpp
-    grib_accessor_impl/grib_accessor_impl_proj_string.cpp
-    grib_accessor_impl/pack_buffer.cpp
-    grib_accessor_impl/proj_string_helper.cpp
  
     # We ship our own generated lex/yacc C files
     grib_yacc.cc  grib_lex.cc )
+
+# C++ Support
+add_subdirectory(grib_accessor_impl)
 
 list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian.cc grib_bits_any_endian.cc
@@ -442,6 +437,7 @@ ecbuild_add_library( TARGET    eccodes
                      SOURCES   ${CMAKE_CURRENT_BINARY_DIR}/grib_api_version.cc
                               # griby.cc gribl.cc
                               ${eccodes_src_files}
+                              ${eccodes_grib_accessor_impl_src_files}
                      #PRIVATE_LIBS      ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMATH_LIBRARIES}
                      PRIVATE_INCLUDES "${AEC_INCLUDE_DIRS}" "${PNG_INCLUDE_DIRS}"
                      PRIVATE_LIBS ${ECCODES_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${AEC_LIBRARIES} ${PNG_LIBRARIES}

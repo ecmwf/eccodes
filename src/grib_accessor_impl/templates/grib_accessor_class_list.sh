@@ -1,5 +1,4 @@
 #!/bin/sh
-cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_abstract_long_vector.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_abstract_vector.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_apply_operators.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_array.h
@@ -91,7 +90,6 @@ cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1forecastmonth.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1monthlydate.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1number_of_coded_values_sh_complex.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1number_of_coded_values_sh_simple.h
-cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1step_range.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g1verificationdate.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g2_aerosol.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_g2_chemical.h
@@ -218,7 +216,6 @@ cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_variable.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_vector.h
 cp grib_accessor_impl_TEMPLATE.h grib_accessor_impl_when.h
 
-cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_abstract_long_vector.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_abstract_vector.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_apply_operators.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_array.cpp
@@ -310,7 +307,6 @@ cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1forecastmonth.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1monthlydate.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1number_of_coded_values_sh_complex.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1number_of_coded_values_sh_simple.cpp
-cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1step_range.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g1verificationdate.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g2_aerosol.cpp
 cp grib_accessor_impl_TEMPLATE.cpp grib_accessor_impl_g2_chemical.cpp

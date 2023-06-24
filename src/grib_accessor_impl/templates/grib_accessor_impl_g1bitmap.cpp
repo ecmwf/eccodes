@@ -3,7 +3,7 @@
 namespace eccodes {
 
     grib_accessor_impl_TEMPLATE::grib_accessor_impl_TEMPLATE(grib_section* p, grib_action* ga_creator) :
-        grib_accessor_impl_gen(p, ga_creator)
+        grib_accessor_impl_PARENT(p, ga_creator)
     {
         // No extra logic here - init() handles this
     }
@@ -13,22 +13,17 @@ namespace eccodes {
 
     void grib_accessor_impl_TEMPLATE::init(const long len, grib_arguments* params)
     {
-        init_gen(len, params);
+        // Default is to call parent's init, then init self (i.e. like a constructor)
+        grib_accessor_impl_PARENT::init(len, params);
         init_TEMPLATE(len, params);
     }
 
     void grib_accessor_impl_TEMPLATE::init_TEMPLATE(const long len, grib_arguments* params) {}
 
-    int grib_accessor_impl_TEMPLATE::native_type() { return GRIB_NOT_IMPLEMENTED; }
     int grib_accessor_impl_TEMPLATE::pack_missing() { return GRIB_NOT_IMPLEMENTED; }
     int grib_accessor_impl_TEMPLATE::is_missing() { return GRIB_NOT_IMPLEMENTED; }
     int grib_accessor_impl_TEMPLATE::pack_string_array(const char** v, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
     int grib_accessor_impl_TEMPLATE::pack_expression(grib_expression* e) { return GRIB_NOT_IMPLEMENTED; }
-    int grib_accessor_impl_TEMPLATE::unpack_bytes(unsigned char* val, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
-    int grib_accessor_impl_TEMPLATE::unpack_double(double* val, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
-    int grib_accessor_impl_TEMPLATE::unpack_float(float* val, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
-    int grib_accessor_impl_TEMPLATE::unpack_long(long* val, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
-    int grib_accessor_impl_TEMPLATE::unpack_string(char* val, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
     int grib_accessor_impl_TEMPLATE::unpack_string_array(char** v, size_t* len) { return GRIB_NOT_IMPLEMENTED; }
     size_t grib_accessor_impl_TEMPLATE::string_length() { return GRIB_NOT_IMPLEMENTED; }
     long grib_accessor_impl_TEMPLATE::byte_count() { return GRIB_NOT_IMPLEMENTED; }

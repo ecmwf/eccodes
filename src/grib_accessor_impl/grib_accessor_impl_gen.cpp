@@ -6,7 +6,9 @@ namespace eccodes {
     grib_accessor_impl_gen::grib_accessor_impl_gen(grib_section* p, grib_action* ga_creator)
     {
         // Due to the way we're building this class from an existing grib_accessor struct
-        // we need to manually init all the members...
+        // we need to manually init all the members inside the constructor
+        //
+        // TODO: Move to constructor init list when these are part of this class...
         name                = ga_creator->name;
         name_space          = ga_creator->name_space;
         context             = p->h->context;
@@ -145,14 +147,21 @@ namespace eccodes {
     
     int grib_accessor_impl_gen::pack_bytes(const unsigned char* val, size_t* len)
     {
-        const size_t chlength = *len;
+        pack_buffer in_buffer(context, const_byte_view{val, len});
+        return pack_bytes(in_buffer, len);
+    }
+    
+    int grib_accessor_impl_gen::pack_bytes(pack_buffer& bytes, std::size_t* packed_len)
+    {
+        const_byte_view bytes_to_pack = bytes.to_bytes();
+        const size_t chlength = *bytes_to_pack.len;
         if (chlength != length) {
             grib_context_log(context, GRIB_LOG_ERROR,
                             "pack_bytes: Wrong size (%lu) for %s. It is %lu bytes long",
                             length, name, length);
             return GRIB_BUFFER_TOO_SMALL;
         }
-        grib_buffer_replace(as_accessor(), val, chlength, 1, 1);
+        grib_buffer_replace(as_accessor(), bytes_to_pack.ptr, chlength, 1, 1);
         return GRIB_SUCCESS;
     }
     
@@ -281,18 +290,23 @@ namespace eccodes {
     
     int grib_accessor_impl_gen::unpack_bytes(unsigned char* val, size_t* len)
     {
+        return unpack_bytes(byte_view{val, len});
+    }
+
+    int grib_accessor_impl_gen::unpack_bytes(byte_view bytes)
+    {
         unsigned char* buf = accessor_handle()->buffer->data;
         long length        = grib_byte_count(as_accessor());
         long offset        = grib_byte_offset(as_accessor());
 
-        if (*len < length) {
+        if (*bytes.len < length) {
             grib_context_log(context, GRIB_LOG_ERROR, "Wrong size for %s, it is %ld bytes long", name, length);
-            *len = length;
+            *bytes.len = length;
             return GRIB_ARRAY_TOO_SMALL;
         }
 
-        memcpy(val, buf + offset, length);
-        *len = length;
+        memcpy(bytes.ptr, buf + offset, length);
+        *bytes.len = length;
 
         return GRIB_SUCCESS;
     }
