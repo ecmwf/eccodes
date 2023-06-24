@@ -291,7 +291,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     grib_geography.cc
     grib_handle.cc
-    grib_header_compute.cc
     grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc

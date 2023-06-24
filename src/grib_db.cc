@@ -449,12 +449,9 @@ int grib_db_apply_where(grib_fieldset* set)
     if (!set)
         return GRIB_INVALID_ARGUMENT;
 
-    /*
-  m=grib_math_new(set->context,where_string,&err);
-
-  print_math(m);
-  printf("\n");
-  */
+    // m=grib_math_new(set->context,where_string,&err);
+    // print_math(m);
+    // printf("\n");
 
     if (set->filter)
         grib_db_delete_int_array(set->filter);
