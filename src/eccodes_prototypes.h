@@ -267,8 +267,6 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
-grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v);
-size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_array.cc*/
 
