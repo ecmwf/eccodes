@@ -71,6 +71,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests do not require any data downloads
     # and are generally quick
     list(APPEND tests_basic
+        codes_info
         unit_tests
         julian
         grib_dump_samples
