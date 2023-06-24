@@ -230,15 +230,13 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
     binary_search(lats, numlats - 1, lat_first, &l);
     Assert(l < numlats);
 
-#if 0
-    for(il=0; il<numlats; ++il) {
-        const double diff = fabs(lat_first-lats[il]);
-        if (diff < min_d) {
-            min_d = diff;
-            l = il; /* index of the latitude */
-        }
-    }
-#endif
+//     for(il=0; il<numlats; ++il) {
+//         const double diff = fabs(lat_first-lats[il]);
+//         if (diff < min_d) {
+//             min_d = diff;
+//             l = il; /* index of the latitude */
+//         }
+//     }
 
     iter->e = 0;
     for (j = 0; j < plsize; j++) {
@@ -282,15 +280,13 @@ static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_ha
 {
     return iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
 
-#if 0
-    /* Try legacy approach, if that fails try the next algorithm */
-    int err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
-    if (err == GRIB_WRONG_GRID) {
-        /* ECC-445: First attempt failed. Try again with a different algorithm */
-        err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
-    }
-    return err;
-#endif
+    // Try legacy approach, if that fails try the next algorithm
+    //     int err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
+    //     if (err == GRIB_WRONG_GRID) {
+    //         /* ECC-445: First attempt failed. Try again with a different algorithm */
+    //         err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+    //     }
+    //     return err;
 }
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
