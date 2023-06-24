@@ -97,47 +97,45 @@ static int next(grib_iterator* iter, double* lat, double* lon, double* val)
     return 1;
 }
 
-#if 0
-static void adjustBadlyEncodedEcmwfGribs(grib_handle* h,
-                                    long* nx, long* ny, double* dx, double* dy, double* xp, double* yp)
-{
-    /* Correct the information provided in the headers of certain satellite imagery that
-     * we have available. This is specific to ECMWF.
-     * Obtained through trial-and-error to get the best match with the coastlines.
-     *
-     * Copied from Magics GribSatelliteInterpretor::AdjustBadlyEncodedGribs()
-     */
-    long centre = 0;
-    int err     = grib_get_long(h, "centre", &centre);
-    if (!err && centre == 98) {
-        int err1 = 0, err2 = 0, err3 = 0;
-        long satelliteIdentifier, channelNumber, functionCode;
-        /* These keys are defined in the ECMWF local definition 24 - Satellite image simulation */
-        err1 = grib_get_long(h, "satelliteIdentifier", &satelliteIdentifier);
-        err2 = grib_get_long(h, "channelNumber", &channelNumber);
-        err3 = grib_get_long(h, "functionCode", &functionCode);
-        if (!err1 && !err2 && !err3) {
-            if (satelliteIdentifier == 54 && channelNumber == 2 && *dx == 1179) { /* Meteosat 7, channel 2 */
-                *nx = *ny = 900;
-                *dx = *dy = 853;
-                *xp = *yp = 450;
-            }
-            else if (satelliteIdentifier == 54 && channelNumber == 3 && *dx == 1179) { /* Meteosat 7, channel 3 */
-                *dx = *dy = 1184;
-                *xp = *yp = 635;
-            }
-            else if (satelliteIdentifier == 259 && channelNumber == 4 && *dx == 1185) { /* GOES-15 (West) channel 4 */
-                *dx = *dy = 880;
-                *xp = *yp = 450;
-            }
-            else if (satelliteIdentifier == 57 && *dx == 1732) { /* MSG (Meteosat second generation), non-HRV channels */
-                *dx = *dy = 1811;
-                *xp = *yp = 928;
-            }
-        }
-    }
-}
-#endif
+// static void adjustBadlyEncodedEcmwfGribs(grib_handle* h,
+//                                     long* nx, long* ny, double* dx, double* dy, double* xp, double* yp)
+// {
+//     /* Correct the information provided in the headers of certain satellite imagery that
+//      * we have available. This is specific to ECMWF.
+//      * Obtained through trial-and-error to get the best match with the coastlines.
+//      *
+//      * Copied from Magics GribSatelliteInterpretor::AdjustBadlyEncodedGribs()
+//      */
+//     long centre = 0;
+//     int err     = grib_get_long(h, "centre", &centre);
+//     if (!err && centre == 98) {
+//         int err1 = 0, err2 = 0, err3 = 0;
+//         long satelliteIdentifier, channelNumber, functionCode;
+//         /* These keys are defined in the ECMWF local definition 24 - Satellite image simulation */
+//         err1 = grib_get_long(h, "satelliteIdentifier", &satelliteIdentifier);
+//         err2 = grib_get_long(h, "channelNumber", &channelNumber);
+//         err3 = grib_get_long(h, "functionCode", &functionCode);
+//         if (!err1 && !err2 && !err3) {
+//             if (satelliteIdentifier == 54 && channelNumber == 2 && *dx == 1179) { /* Meteosat 7, channel 2 */
+//                 *nx = *ny = 900;
+//                 *dx = *dy = 853;
+//                 *xp = *yp = 450;
+//             }
+//             else if (satelliteIdentifier == 54 && channelNumber == 3 && *dx == 1179) { /* Meteosat 7, channel 3 */
+//                 *dx = *dy = 1184;
+//                 *xp = *yp = 635;
+//             }
+//             else if (satelliteIdentifier == 259 && channelNumber == 4 && *dx == 1185) { /* GOES-15 (West) channel 4 */
+//                 *dx = *dy = 880;
+//                 *xp = *yp = 450;
+//             }
+//             else if (satelliteIdentifier == 57 && *dx == 1732) { /* MSG (Meteosat second generation), non-HRV channels */
+//                 *dx = *dy = 1811;
+//                 *xp = *yp = 928;
+//             }
+//         }
+//     }
+// }
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
