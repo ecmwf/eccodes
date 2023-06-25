@@ -1154,14 +1154,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         } */
     }
 
-#if 0
-    {
-        long of1,of2; /* Debugging: print offset of each handle */
-        grib_get_long(h1, "offset", &of1); grib_get_long(h2, "offset", &of2);
-        printf("of1=%lu   of2=%lu\n",of1,of2);
-    }
-#endif
-
     if (headerMode) {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
