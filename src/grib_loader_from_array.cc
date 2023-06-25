@@ -172,7 +172,7 @@ int grib_lookup_long_from_array(grib_context* gc, grib_loader* loader, const cha
 //                 grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s to double, wrong type (%d)",
 //                                  ga->name, type);
 //         }
-// #if 0
+// #if defined(OLD_IMPL)
 //         switch(grib_accessor_get_native_type(ga))
 //         {
 //         case GRIB_TYPE_STRING:
