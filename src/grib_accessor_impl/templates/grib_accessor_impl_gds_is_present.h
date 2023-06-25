@@ -7,11 +7,16 @@ namespace eccodes {
 
     class grib_accessor_impl_TEMPLATE : public grib_accessor_impl_PARENT {
     protected:
-        // grib_accessor_class_TEMPLATE data
+        // grib_accessor_TEMPLATE data
         // 
-        // In order to support interop with the existing C code, this should be
-        // kept in sync with grib_accessor_class_TEMPLATE
-
+        // WARNING: Whilst converting from C to C++ the code supports casting
+        //          this class to the equivalent grib_accessor_TEMPLATE C struct
+        //
+        //          This is only possible if the member variables MATCH EXACTLY!
+        //
+        //          DO NOT ADD any extra member variables to this class otherwise
+        //          this functionality will break!
+        //
     public:
         grib_accessor_impl_TEMPLATE(grib_section* p, grib_action* ga_creator);
         ~grib_accessor_impl_TEMPLATE();

@@ -112,7 +112,7 @@ namespace eccodes {
       //{"g1monthlydate"sv, create_ga_impl<grib_accessor_impl_g1monthlydate>},
       //{"g1number_of_coded_values_sh_complex"sv, create_ga_impl<grib_accessor_impl_g1number_of_coded_values_sh_complex>},
       //{"g1number_of_coded_values_sh_simple"sv, create_ga_impl<grib_accessor_impl_g1number_of_coded_values_sh_simple>},
-      //{"g1step_range"sv, create_ga_impl<grib_accessor_impl_g1step_range>},
+      {"g1step_range"sv, create_ga_impl<grib_accessor_impl_g1step_range>},
       //{"g2_aerosol"sv, create_ga_impl<grib_accessor_impl_g2_aerosol>},
       //{"g2_chemical"sv, create_ga_impl<grib_accessor_impl_g2_chemical>},
       //{"g2_eps"sv, create_ga_impl<grib_accessor_impl_g2_eps>},

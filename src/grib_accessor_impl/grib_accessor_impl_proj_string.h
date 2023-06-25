@@ -6,10 +6,16 @@
 namespace eccodes {
     class grib_accessor_impl_proj_string : public grib_accessor_impl_gen {
     public:
-        // grib_accessor_class_proj_string data
+        // grib_accessor_TEMPLATE data
         // 
-        // In order to support interop with the existing C code, this should be
-        // kept in sync with grib_accessor_class_proj_string
+        // WARNING: Whilst converting from C to C++ the code supports casting
+        //          this class to the equivalent grib_accessor_TEMPLATE C struct
+        //
+        //          This is only possible if the member variables MATCH EXACTLY!
+        //
+        //          DO NOT ADD any extra member variables to this class otherwise
+        //          this functionality will break!
+        //
         const char* grid_type;
         int endpoint;
 

@@ -19,8 +19,16 @@ namespace eccodes {
     //
     class grib_accessor_impl_gen : public grib_accessor_impl, public grib_accessor {
     protected:
-        size_t str_len{1024};
-
+        // grib_accessor_TEMPLATE data
+        // 
+        // WARNING: Whilst converting from C to C++ the code supports casting
+        //          this class to the equivalent grib_accessor_TEMPLATE C struct
+        //
+        //          This is only possible if the member variables MATCH EXACTLY!
+        //
+        //          DO NOT ADD any extra member variables to this class otherwise
+        //          this functionality will break!
+        //
     public:
         grib_accessor_impl_gen(grib_section* p, grib_action* ga_creator);
         ~grib_accessor_impl_gen();
@@ -41,7 +49,7 @@ namespace eccodes {
         int unpack_long(long* val, size_t* len) final;
         int unpack_string(char* val, size_t* len) final;
         int unpack_string_array(char** v, size_t* len) override;
-        size_t string_length() override { return str_len; }
+        size_t string_length() override { return 1024; }
         long byte_count() override { return length; }
         long byte_offset() override { return offset; }
         long next_offset() override { return offset + length; }

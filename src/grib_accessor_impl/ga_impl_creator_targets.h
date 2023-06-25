@@ -94,7 +94,7 @@
 //#include "grib_accessor_impl_g1monthlydate.h"
 //#include "grib_accessor_impl_g1number_of_coded_values_sh_complex.h"
 //#include "grib_accessor_impl_g1number_of_coded_values_sh_simple.h"
-//#include "grib_accessor_impl_g1step_range.h"
+#include "grib_accessor_impl_g1step_range.h"
 //#include "grib_accessor_impl_g2_aerosol.h"
 //#include "grib_accessor_impl_g2_chemical.h"
 //#include "grib_accessor_impl_g2_eps.h"

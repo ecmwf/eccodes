@@ -236,7 +236,7 @@ namespace eccodes {
                     snprintf(buff, sizeof(buff), "%ld-%s", *val, ++p);
                 }
                 else {
-                    if (strcmp(stepType, "instant") && strcmp(stepType, "avgd")) {
+                    if (strcmp(stepType_val, "instant") && strcmp(stepType_val, "avgd")) {
                         snprintf(buff, sizeof(buff), "%ld-%s", *val, sval);
                     }
                     else {
@@ -259,7 +259,7 @@ namespace eccodes {
                     snprintf(buff, sizeof(buff), "%s-%ld", sval, *val);
                 }
                 else {
-                    if (strcmp(stepType, "instant") && strcmp(stepType, "avgd")) {
+                    if (strcmp(stepType_val, "instant") && strcmp(stepType_val, "avgd")) {
                         snprintf(buff, sizeof(buff), "%s-%ld", sval, *val);
                     }
                     else {
@@ -595,27 +595,27 @@ namespace eccodes {
             start += 24;
         }
 
-        if (strcmp(stepType, "instant") == 0) {
+        if (strcmp(stepType_val, "instant") == 0) {
             snprintf(buf, sizeof(buf), "%ld", start);
         }
-        else if ((strcmp(stepType, "avgfc") == 0) ||
-                (strcmp(stepType, "avgua") == 0) ||
-                (strcmp(stepType, "avgia") == 0) ||
-                (strcmp(stepType, "varins") == 0)) {
+        else if ((strcmp(stepType_val, "avgfc") == 0) ||
+                (strcmp(stepType_val, "avgua") == 0) ||
+                (strcmp(stepType_val, "avgia") == 0) ||
+                (strcmp(stepType_val, "varins") == 0)) {
             snprintf(buf, sizeof(buf), "%ld", start);
         }
         else if (
-            (strcmp(stepType, "accum") == 0) ||
-            (strcmp(stepType, "avg") == 0) ||
-            (strcmp(stepType, "min") == 0) ||
-            (strcmp(stepType, "max") == 0) ||
-            (strcmp(stepType, "rms") == 0) ||
-            (strcmp(stepType, "diff") == 0) ||
-            (strcmp(stepType, "avgas") == 0) ||
-            (strcmp(stepType, "avgad") == 0) ||
-            (strcmp(stepType, "avgid") == 0) ||
-            (strcmp(stepType, "varas") == 0) ||
-            (strcmp(stepType, "varad") == 0)) {
+            (strcmp(stepType_val, "accum") == 0) ||
+            (strcmp(stepType_val, "avg") == 0) ||
+            (strcmp(stepType_val, "min") == 0) ||
+            (strcmp(stepType_val, "max") == 0) ||
+            (strcmp(stepType_val, "rms") == 0) ||
+            (strcmp(stepType_val, "diff") == 0) ||
+            (strcmp(stepType_val, "avgas") == 0) ||
+            (strcmp(stepType_val, "avgad") == 0) ||
+            (strcmp(stepType_val, "avgid") == 0) ||
+            (strcmp(stepType_val, "varas") == 0) ||
+            (strcmp(stepType_val, "varad") == 0)) {
             if (start == theEnd) {
                 snprintf(buf, sizeof(buf), "%ld", theEnd);
             }
@@ -624,7 +624,7 @@ namespace eccodes {
             }
         }
         else {
-            grib_context_log(context, GRIB_LOG_ERROR, "Unknown stepType=[%s] timeRangeIndicator=[%ld]", stepType, timeRangeIndicator);
+            grib_context_log(context, GRIB_LOG_ERROR, "Unknown stepType=[%s] timeRangeIndicator=[%ld]", stepType_val, timeRangeIndicator_val);
             return GRIB_NOT_IMPLEMENTED;
         }
 
