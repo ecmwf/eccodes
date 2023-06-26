@@ -752,12 +752,12 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 
     if (parse(gc, filename) == 0) {
         if (grib_parser_all_actions) {
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return grib_parser_all_actions;
         }
         else {
             grib_action* ret = grib_action_create_noop(gc, filename);
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return ret;
         }
     }

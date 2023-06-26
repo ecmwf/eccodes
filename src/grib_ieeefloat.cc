@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 06.01.2009                                           *
- *                                                                         *
  ***************************************************************************/
 #include "grib_ieeefloat.h"
 
@@ -86,13 +85,13 @@ static void init_ieee_table()
 
 static void init_table_if_needed()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
 
     if (!ieee_table.inited)
         init_ieee_table();
 
-    GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
