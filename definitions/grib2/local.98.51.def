@@ -1,0 +1,13 @@
+# (C) Copyright 2005- ECMWF.
+
+# Local definition 51 -Machine learning 
+
+codetable[2] MLmodel    "mars/MLmodel.table" = 0      : dump;
+codetable[2] initClass  "mars/class.table"   = "od"   : dump,string_type,lowercase;
+codetable[2] initType   "mars/type.table"    = "an"   : dump,string_type,lowercase;
+codetable[2] initStream "mars/stream.table"  = "oper" : dump,string_type,lowercase ;
+
+meta MLinit sprintf("%s-%s-%s",initClass,initStream,initType) : dump;
+
+alias mars.model = MLmodel;
+alias mars.init = MLinit; 
