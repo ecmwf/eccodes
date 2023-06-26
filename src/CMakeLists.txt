@@ -405,7 +405,6 @@ converted/eccodes/accessor/Dictionary.cc
 converted/eccodes/accessor/Time.h
 converted/eccodes/accessor/Divdouble.h
 converted/eccodes/accessor/Generic.h
-converted/eccodes/accessor/ApplyOperators.h
 converted/eccodes/accessor/DataG2shsimplePacking.h
 converted/eccodes/accessor/G1HalfByteCodeflag.cc
 converted/eccodes/accessor/Size.h
@@ -415,7 +414,6 @@ converted/eccodes/accessor/Bytes.cc
 converted/eccodes/accessor/G1forecastmonth.cc
 converted/eccodes/accessor/SectionPadding.cc
 converted/eccodes/accessor/ValidityTime.cc
-converted/eccodes/accessor/Box.h
 converted/eccodes/accessor/G1monthlydate.h
 converted/eccodes/accessor/GdsNotPresentBitmap.cc
 converted/eccodes/accessor/Concept.h
@@ -576,7 +574,6 @@ converted/eccodes/accessor/DataRawPacking.cc
 converted/eccodes/accessor/StepHumanReadable.h
 converted/eccodes/accessor/DataSecondaryBitmap.cc
 converted/eccodes/accessor/GtsHeader.cc
-converted/eccodes/accessor/Forward.cc
 converted/eccodes/accessor/DataPngPacking.h
 converted/eccodes/accessor/MarsParam.h
 converted/eccodes/accessor/Message.h
@@ -731,7 +728,6 @@ converted/eccodes/accessor/G2Aerosol.h
 converted/eccodes/accessor/PackBufrValues.h
 converted/eccodes/accessor/G1monthlydate.cc
 converted/eccodes/accessor/Uint32.cc
-converted/eccodes/accessor/ApplyOperators.cc
 converted/eccodes/accessor/CodetableTitle.cc
 converted/eccodes/accessor/DataRunLengthPacking.h
 converted/eccodes/accessor/BufrDataArray.cc
@@ -751,7 +747,6 @@ converted/eccodes/accessor/DataCcsdsPacking.cc
 converted/eccodes/accessor/MessageCopy.h
 converted/eccodes/accessor/Uint64LittleEndian.cc
 converted/eccodes/accessor/Evaluate.h
-converted/eccodes/accessor/Box.cc
 converted/eccodes/accessor/CheckInternalVersion.h
 converted/eccodes/accessor/Missing.cc
 converted/eccodes/accessor/UnexpandedDescriptors.cc
@@ -834,7 +829,6 @@ converted/eccodes/accessor/Vector.cc
 converted/eccodes/accessor/Ieeefloat.cc
 converted/eccodes/accessor/G1dayOfTheYearDate.cc
 converted/eccodes/accessor/SectionLength.h
-converted/eccodes/accessor/Forward.h
 converted/eccodes/accessor/Int8.h
 converted/eccodes/accessor/SecondOrderBitsPerValue.cc
 converted/eccodes/accessor/DataG2simplePackingWithPreprocessing.h

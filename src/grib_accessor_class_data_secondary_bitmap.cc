@@ -215,8 +215,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_secondary_bitmap* self =  (grib_accessor_data_secondary_bitmap*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
-
+    // grib_accessor_data_secondary_bitmap* self =  (grib_accessor_data_secondary_bitmap*)a;
+    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
     return GRIB_TYPE_DOUBLE;
 }

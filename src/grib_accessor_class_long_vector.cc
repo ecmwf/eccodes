@@ -164,7 +164,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /*TODO implement the dirty mechanism to avoid to unpack every time */
     err = grib_get_size(grib_handle_of_accessor(a), self->vector, &size);
     if (err) return err;
-    DebugAssert(size > 0);
+    DEBUG_ASSERT(size > 0);
     vector = (long*)grib_context_malloc(a->context, sizeof(long) * size);
     err = grib_unpack_long(va, vector, &size);
     grib_context_free(a->context, vector);

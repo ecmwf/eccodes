@@ -112,7 +112,7 @@ void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
 
 void* grib_oarray_get(grib_oarray* v, int i)
 {
-    DebugAssert(i >= 0);
+    DEBUG_ASSERT(i >= 0);
     if (v == NULL || (size_t)i > v->n - 1)
         return NULL;
     return v->v[i];

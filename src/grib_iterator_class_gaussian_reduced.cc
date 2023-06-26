@@ -253,7 +253,7 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
                 return GRIB_WRONG_GRID;
             }
             self->los[iter->e] = lon2;
-            DebugAssert(j + l < numlats);
+            DEBUG_ASSERT(j + l < numlats);
             self->las[iter->e] = lats[j + l];
             iter->e++;
         }

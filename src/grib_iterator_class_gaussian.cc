@@ -148,7 +148,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 
     if (jScansPositively) {
         for (lai = 0; lai < self->Nj; lai++) {
-            DebugAssert(istart >= 0);
+            DEBUG_ASSERT(istart >= 0);
             self->las[lai] = lats[istart--];
             if (istart<0) istart=size-1;
         }

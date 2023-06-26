@@ -152,7 +152,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
 
     if (bpv != 0) {
-        DebugAssert(offsetAfterData > offsetBeforeData);
+        DEBUG_ASSERT(offsetAfterData > offsetBeforeData);
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits) / bpv;
     }
     else {

@@ -176,7 +176,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                 if (min > 0) {
                     *pre_processing_parameter = 0;
                     for (i = 0; i < length; i++) {
-                        DebugAssert(values[i] > 0);
+                        DEBUG_ASSERT(values[i] > 0);
                         values[i] = log(values[i]);
                     }
                 }
@@ -187,7 +187,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                         return ret;
                     ppp = *pre_processing_parameter;
                     for (i = 0; i < length; i++) {
-                        DebugAssert((values[i] + ppp) > 0);
+                        DEBUG_ASSERT((values[i] + ppp) > 0);
                         values[i] = log(values[i] + ppp);
                     }
                 }

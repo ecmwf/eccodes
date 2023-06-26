@@ -314,7 +314,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     char long_format[]       = "%ld";   /* default format for printing integer keys */
     char default_separator[] = " ";
     grib_accessor* a         = al->accessor;
-    DebugAssert(a);
+    DEBUG_ASSERT(a);
 
     /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
     if (maxcols == 0)
@@ -752,12 +752,12 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 
     if (parse(gc, filename) == 0) {
         if (grib_parser_all_actions) {
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return grib_parser_all_actions;
         }
         else {
             grib_action* ret = grib_action_create_noop(gc, filename);
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return ret;
         }
     }

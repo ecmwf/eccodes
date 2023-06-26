@@ -230,17 +230,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (latitude_of_first_point == 0) {
         for (i = 0; i < number_of_values; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[i];
         }
         for (i = number_of_values; i < number_of_points; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[number_of_values - 1];
         }
     }
     else {
         for (i = 0; i < ni - 1; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[0];
         }
         for (i = ni - 1; i < number_of_points; i++) {
@@ -289,8 +289,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
+    // grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
+    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
 
     return GRIB_TYPE_DOUBLE;
 }
