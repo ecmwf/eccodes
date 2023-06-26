@@ -9,5 +9,8 @@ codetable[2] initStream "mars/stream.table"  = "oper" : dump,string_type,lowerca
 
 meta MLinit sprintf("%s-%s-%s",initClass,initStream,initType) : dump;
 
+alias ls.MLmodel = MLmodel; 
+alias ls.MLinit = MLinit; 
+
 alias mars.model = MLmodel;
 alias mars.init = MLinit; 
