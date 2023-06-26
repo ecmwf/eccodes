@@ -128,11 +128,18 @@ grib_check_key_equals $temp stepType avg
 ${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
 grib_check_key_equals $temp typeOfTimeIncrement 3
 
-# Decode stepRange as an int and double
+# Decode/Encode stepRange as an int and double
 ${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp
 grib_check_key_equals $temp "stepRange:s" "23-28"
 grib_check_key_equals $temp "stepRange:i" "28"
 grib_check_key_equals $temp "stepRange:d" "28"
+
+${tools_dir}/grib_set -s stepRange:i=24 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "24 24 24"
+# Should this be an error? currently this gets cast from double to int
+${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
+
 
 # Clean up
 rm -f $temp
