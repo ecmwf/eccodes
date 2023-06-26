@@ -332,10 +332,6 @@ CLASSES = dict(
     dumper=Dumper,
 )
 
-
-substitutions_re = {r"#define (\w+) (-?\d+)": r"const int \1 = \2;"}
-
-
 def make_class(path):
     in_def = False
     in_imp = False
