@@ -165,23 +165,6 @@ static int pack_missing(grib_accessor* a)
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
 
-/*
-static int is_missing(grib_accessor* a){
-
-    size_t len = 1;
-    long value = GRIB_MISSING_LONG;
-    long ret=0;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        ret = grib_unpack_long(a,&value,&len);
-        Assert( ret == 0);
-        return value == GRIB_MISSING_LONG;
-    }
-    return 0;
-}
-*/
-
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     size_t rlen     = 0;
