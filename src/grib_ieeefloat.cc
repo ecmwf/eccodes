@@ -330,7 +330,7 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 unsigned long grib_ieee64_to_long(double x)
 {
     unsigned long lval;
-    DebugAssert(sizeof(double) == sizeof(long));
+    DEBUG_ASSERT(sizeof(double) == sizeof(long));
     memcpy(&lval, &x, sizeof(long));
     return lval;
 }
@@ -338,7 +338,7 @@ unsigned long grib_ieee64_to_long(double x)
 double grib_long_to_ieee64(unsigned long x)
 {
     double dval;
-    DebugAssert(sizeof(double) == sizeof(long));
+    DEBUG_ASSERT(sizeof(double) == sizeof(long));
     memcpy(&dval, &x, sizeof(long));
     return dval;
 }

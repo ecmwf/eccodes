@@ -314,7 +314,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     char long_format[]       = "%ld";   /* default format for printing integer keys */
     char default_separator[] = " ";
     grib_accessor* a         = al->accessor;
-    DebugAssert(a);
+    DEBUG_ASSERT(a);
 
     /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
     if (maxcols == 0)

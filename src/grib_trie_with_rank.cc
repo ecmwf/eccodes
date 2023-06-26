@@ -361,7 +361,7 @@ static void grib_trie_with_rank_delete_container_list(grib_context* c,grib_trie_
 static void _grib_trie_with_rank_delete_container(grib_trie_with_rank* t)
 {
     int i;
-    DebugAssert(t);
+    DEBUG_ASSERT(t);
     for (i = t->first; i <= t->last; i++)
         if (t->next[i]) {
             grib_trie_with_rank_delete_container(t->next[i]);
@@ -453,7 +453,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
 {
     grib_trie_with_rank* last = t;
     const char* k             = key;
-    DebugAssert(t);
+    DEBUG_ASSERT(t);
     if (!t) return -1;
 
     GRIB_MUTEX_INIT_ONCE(&once, &init);

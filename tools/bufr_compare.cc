@@ -652,7 +652,7 @@ static char* get_keyname_without_rank(const char* name)
     if (*p == '#') {
         strtol(++p, &pEnd, 10);
         if (*pEnd != '#') {
-            DebugAssert(!"Badly formed rank in key");
+            DEBUG_ASSERT(!"Badly formed rank in key");
         }
         else {
             /* Take everything after 2nd '#' */

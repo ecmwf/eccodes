@@ -168,7 +168,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     grib_handle* hand             = grib_handle_of_accessor(a);
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     grib_action* act              = (grib_action*)(a->creator);
-    DebugAssert(len == self->nbytes);
+    DEBUG_ASSERT(len == self->nbytes);
 
     if (new_len == 0) {
         /* ECC-485: When the codetable length is 0, it means we are passing

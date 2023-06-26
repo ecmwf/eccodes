@@ -901,7 +901,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             maxA = X[count];
             minA = X[count];
             for (i = 1; i < groupLengthA; i++) {
-                DebugAssertAccess(X, count + i, numberOfValues);
+                DEBUG_ASSERT_ACCESS(X, count + i, numberOfValues);
                 if (maxA < X[count + i])
                     maxA = X[count + i];
                 if (minA > X[count + i])
@@ -933,7 +933,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         maxC = X[offsetC];
         minC = X[offsetC];
         for (i = 1; i < groupLengthC; i++) {
-            DebugAssertAccess(X, offsetC + i, numberOfValues);
+            DEBUG_ASSERT_ACCESS(X, offsetC + i, numberOfValues);
             if (maxC < X[offsetC + i])
                 maxC = X[offsetC + i];
             if (minC > X[offsetC + i])

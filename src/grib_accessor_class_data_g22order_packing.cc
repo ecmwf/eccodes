@@ -662,7 +662,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         if (missingValueManagementUsed == 0) {
             // No explicit missing values included within data values
             for (j = 0; j < nvals_per_group; j++) {
-                DebugAssertAccess(sec_val, (long)(vcount + j), n_vals);
+                DEBUG_ASSERT_ACCESS(sec_val, (long)(vcount + j), n_vals);
                 sec_val[vcount + j] = group_ref_val + grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
                 // printf("sec_val[%ld]=%ld\n", vcount+j, sec_val[vcount+j]);
             }

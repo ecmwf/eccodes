@@ -1240,7 +1240,7 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
     grib_accessor* a        = NULL;
     *type                   = GRIB_TYPE_UNDEFINED;
 
-    DebugAssert(name != NULL && strlen(name) > 0);
+    DEBUG_ASSERT(name != NULL && strlen(name) > 0);
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);

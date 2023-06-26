@@ -770,7 +770,7 @@ static int descriptor_get_min_max(bufr_descriptor* bd, long width, long referenc
     if (width <= 0)
         return GRIB_MISSING_BUFR_ENTRY; /* ECC-1395 */
 
-    DebugAssert(width > 0 && width < 64);
+    DEBUG_ASSERT(width > 0 && width < 64);
 
     *maxAllowed = (max1 + reference) * factor;
     *minAllowed = reference * factor;
@@ -1387,7 +1387,7 @@ static int encode_new_replication(grib_context* c, grib_accessor_bufr_data_array
     int err                       = 0;
     unsigned long repetitions     = 1;
     bufr_descriptor** descriptors = self->expanded->v;
-    DebugAssert( buff->data == data );
+    DEBUG_ASSERT( buff->data == data );
 
     switch (descriptors[i]->code) {
         case 31000:
@@ -1521,7 +1521,7 @@ static int encode_replication(grib_context* c, grib_accessor_bufr_data_array* se
 {
     /* Assert( buff->data == data); */
     if (self->compressedData) {
-        DebugAssert(grib_darray_used_size(self->numericValues->v[elementIndex]) == 1);
+        DEBUG_ASSERT(grib_darray_used_size(self->numericValues->v[elementIndex]) == 1);
         *numberOfRepetitions = self->numericValues->v[elementIndex]->v[0];
     }
     else {
@@ -1757,7 +1757,7 @@ static int get_next_bitmap_descriptor_index_new_bitmap(grib_accessor_bufr_data_a
     i = self->bitmapCurrent;
 
     if (self->compressedData) {
-        DebugAssert(i < self->nInputBitmap);
+        DEBUG_ASSERT(i < self->nInputBitmap);
         if (i >= self->nInputBitmap)
             return GRIB_WRONG_BITMAP_SIZE;
         while (self->inputBitmap[i] == 1) {
@@ -1797,7 +1797,7 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array* self,
         self->bitmapCurrent++;
         self->bitmapCurrentElementsDescriptorsIndex++;
         i = self->bitmapCurrent + self->bitmapStart;
-        DebugAssert(i < self->numericValues->n);
+        DEBUG_ASSERT(i < self->numericValues->n);
         while (self->numericValues->v[i]->v[0] == 1) {
             self->bitmapCurrent++;
             self->bitmapCurrentElementsDescriptorsIndex++;
@@ -1813,7 +1813,7 @@ static int get_next_bitmap_descriptor_index(grib_accessor_bufr_data_array* self,
         self->bitmapCurrent++;
         self->bitmapCurrentElementsDescriptorsIndex++;
         i = self->bitmapCurrent + self->bitmapStart;
-        DebugAssert(i < numericValues->n);
+        DEBUG_ASSERT(i < numericValues->n);
         while (numericValues->v[i] == 1) {
             self->bitmapCurrent++;
             self->bitmapCurrentElementsDescriptorsIndex++;
@@ -1984,7 +1984,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
     operatorCreator.name       = (char*)"operator";
 
     if (attribute) {
-        DebugAssert(attribute->parent == NULL);
+        DEBUG_ASSERT(attribute->parent == NULL);
     }
 
     if (add_dump_flag) {
@@ -2538,7 +2538,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
             if (descriptor->F == 0 && IS_COORDINATE_DESCRIPTOR(descriptor->X) &&
                 self->unpackMode == CODES_BUFR_UNPACK_STRUCTURE) {
                 const int sidx = descriptor->Y + significanceQualifierIndexArray[descriptor->X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
-                DebugAssert(sidx > 0);
+                DEBUG_ASSERT(sidx > 0);
                 groupNumber++;
                 add_coord_flag = 1;
 
@@ -2875,7 +2875,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
             decoding        = 1;
             do_clean        = 1;
             dataAccessor    = grib_find_accessor(grib_handle_of_accessor(a), self->bufrDataEncodedName);
-            DebugAssert(dataAccessor);
+            DEBUG_ASSERT(dataAccessor);
             dataOffset        = accessor_raw_get_offset(dataAccessor);
             pos               = dataOffset * 8;
             codec_element     = &decode_element;
@@ -3036,7 +3036,7 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
                     /* Delayed replication */
                     inr = numberOfNestedRepetitions;
                     numberOfNestedRepetitions++;
-                    DebugAssert(numberOfNestedRepetitions <= MAX_NESTED_REPLICATIONS);
+                    DEBUG_ASSERT(numberOfNestedRepetitions <= MAX_NESTED_REPLICATIONS);
                     numberOfElementsToRepeat[inr] = descriptors[i]->X;
                     n[inr]                        = numberOfElementsToRepeat[inr];
                     i++;

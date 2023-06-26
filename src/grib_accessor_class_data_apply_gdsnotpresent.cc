@@ -230,17 +230,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (latitude_of_first_point == 0) {
         for (i = 0; i < number_of_values; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[i];
         }
         for (i = number_of_values; i < number_of_points; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[number_of_values - 1];
         }
     }
     else {
         for (i = 0; i < ni - 1; i++) {
-            DebugAssert(coded_vals);
+            DEBUG_ASSERT(coded_vals);
             if (coded_vals) val[i] = coded_vals[0];
         }
         for (i = ni - 1; i < number_of_points; i++) {

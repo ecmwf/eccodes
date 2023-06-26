@@ -233,8 +233,8 @@ void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
             message_length - offset - oldsize);
 
     /* copy new data */
-    DebugAssert(buffer->data + offset);
-    DebugAssert(data || (newsize == 0)); /* if data==NULL then newsize must be 0 */
+    DEBUG_ASSERT(buffer->data + offset);
+    DEBUG_ASSERT(data || (newsize == 0)); /* if data==NULL then newsize must be 0 */
     if (data) {
         /* Note: memcpy behaviour is undefined if either dest or src is NULL */
         memcpy(buffer->data + offset, data, newsize);

@@ -2245,7 +2245,7 @@ static int def_latlon(int ncid, fieldset* fs)
 
     field* g = get_field(fs, 0, expand_mem);
 
-    DebugAssert(check_grid(g) == GRIB_SUCCESS);
+    DEBUG_ASSERT(check_grid(g) == GRIB_SUCCESS);
 
     if ((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
@@ -2629,8 +2629,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      return;
     }
     */
-    DebugAssert(vals);
-    DebugAssert(n > 0);
+    DEBUG_ASSERT(vals);
+    DEBUG_ASSERT(n > 0);
     if (!vals) return;
 
     switch (nctype) {

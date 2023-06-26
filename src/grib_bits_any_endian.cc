@@ -60,7 +60,7 @@ static void init_bits_all_one()
     int size            = sizeof(int64_t) * 8;
     int64_t* v             = 0;
     uint64_t cmask = -1;
-    DebugAssert(!bits_all_one.inited);
+    DEBUG_ASSERT(!bits_all_one.inited);
 
     bits_all_one.size   = size;
     bits_all_one.inited = 1;
@@ -131,7 +131,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
         *bitOffset += numberOfCharacters * 8;
         return err;
     }
-    DebugAssert(remainderComplement >= 0);
+    DEBUG_ASSERT(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = ((*s) >> remainder) & ~mask[remainder];
         *p |= c;
@@ -169,7 +169,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
         return string;
     }
 
-    DebugAssert(remainderComplement >= 0);
+    DEBUG_ASSERT(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = (*p) << remainder;
         p++;
@@ -242,7 +242,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     while (bitsToRead > 0) {
         ret <<= 8;
         /*   ret += p[pi];     */
-        DebugAssert((ret & p[pi]) == 0);
+        DEBUG_ASSERT((ret & p[pi]) == 0);
         ret = ret | p[pi];
         pi++;
         bitsToRead -= usefulBitsInByte;
@@ -366,7 +366,7 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     while (bitsToRead > 0) {
         ret <<= 8;
         /*   ret += p[pi];     */
-        DebugAssert((ret & p[pi]) == 0);
+        DEBUG_ASSERT((ret & p[pi]) == 0);
         ret = ret | p[pi];
         pi++;
         bitsToRead -= usefulBitsInByte;

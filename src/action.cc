@@ -95,7 +95,7 @@ void grib_dump(grib_action* a, FILE* f, int l)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
 }
 
 void grib_xref(grib_action* a, FILE* f, const char* path)
@@ -111,7 +111,7 @@ void grib_xref(grib_action* a, FILE* f, const char* path)
         c = c->super ? *(c->super) : NULL;
     }
     printf("xref not implemented for %s\n", a->cclass->name);
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
 }
 
 
@@ -144,7 +144,7 @@ int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
         c = c->super ? *(c->super) : NULL;
     }
     fprintf(stderr, "Cannot create accessor %s %s\n", a->name, a->cclass->name);
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -167,7 +167,7 @@ int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_acce
         c = c->super ? *(c->super) : NULL;
     }
     /*GRIB_MUTEX_UNLOCK(&mutex1);*/
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -180,7 +180,7 @@ grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit)
             return c->reparse(a, acc, doit);
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -193,7 +193,7 @@ int grib_action_execute(grib_action* a, grib_handle* h)
             return c->execute(a, h);
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 

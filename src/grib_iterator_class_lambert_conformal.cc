@@ -361,7 +361,7 @@ static int init_oblate(grib_handle* h,
             }
             lonRad = adjust_lon_radians(theta / ns + LoVInRadians);
             if (i == 0 && j == 0) {
-                DebugAssert(fabs(latFirstInRadians - latRad) <= EPSILON);
+                DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
             latDeg = latRad * RAD2DEG;  /* Convert to degrees */
             lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
