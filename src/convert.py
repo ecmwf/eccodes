@@ -113,7 +113,8 @@ class Class:
 
         self.self = None
         self.a = None
-        self.includes = includes
+        self.header_includes = []
+        self.body_includes = includes
         if SUPER:
             self.super, _ = self.tidy_class_name(SUPER[0])
         else:
@@ -180,7 +181,7 @@ class Class:
                 name=self.name,
                 super=self.super,
                 members=self.members,
-                includes=self.includes,
+                includes=self.header_includes,
                 inherited_methods=self.inherited_methods,
                 private_methods=self.private_methods,
                 static_procs=self.static_procs,
@@ -188,6 +189,7 @@ class Class:
                 destructor=self.destructor,
                 namespaces=self.namespaces,
                 namespace_reversed=reversed(self.namespaces),
+                include_super="/".join(self.namespaces + [f"{self.super}.h"]),
             ),
         )
 
@@ -213,7 +215,7 @@ class Class:
                     name=self.name,
                     super=self.super,
                     members=self.members,
-                    includes=self.includes,
+                    includes=self.body_includes,
                     inherited_methods=self.inherited_methods,
                     private_methods=self.private_methods,
                     static_procs=self.static_procs,
@@ -283,13 +285,12 @@ class Accessor(Class):
         r"\bthis->offset\b": "this->offset_",
         r"\bthis->flags\b": "this->flags_",
         r"\bthis->context\b": "this->context_",
-        r"\bgrib_byte_offset\((\w+)\s*,": r"\1->pack_string(",
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
-        r'\bDebugAssert\b': 'ASSERT',
-        r'\bAssert\b': 'ASSERT',
-        r'\bunpack_long\(this,': 'this->unpack_long(',
+        r"\bDebugAssert\b": "ASSERT",
+        r"\bAssert\b": "ASSERT",
+        r"\bunpack_long\(this,": "this->unpack_long(",
     }
 
     def class_to_type(self):
@@ -394,7 +395,7 @@ def make_class(path):
             top_level[p] = [x for x in top_level_lines]
             top_level_lines = []
 
-            if p in definitions.get("IMPLEMENTS",[]):
+            if p in definitions.get("IMPLEMENTS", []):
                 in_proc = True
                 proc = inherited_procs[p] = Method(p, m.group(1), m.group(3))
                 depth = stripped_line.count("{") - stripped_line.count("}")
