@@ -19,20 +19,20 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     int theRank            = 0;
     size_t size            = 0;
     grib_context* c        = h->context;
-    DebugAssert(h->product_kind == PRODUCT_BUFR);
+    DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value, key)) {
         prev = next;
         next = next->next;
     }
     if (!next) {
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
             next       = prev->next;
         }
     }
-    DebugAssert(next);
+    DEBUG_ASSERT(next);
     if (!next) return 0;
 
     if (!next->value) {
@@ -166,7 +166,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 
     unsigned char* p = (unsigned char*)message + offset_keyData;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     hdr->rdbType    = (long)grib_decode_unsigned_long(pMessage, &pos_rdbType, nbits_rdbType);
     hdr->oldSubtype = (long)grib_decode_unsigned_long(pMessage, &pos_oldSubtype, nbits_oldSubtype);
@@ -218,7 +218,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     unsigned char* pKeyData = (unsigned char*)message + offset_keyData;
     char* pKeyMore          = (char*)message + offset_keyMore;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
         isSatelliteType = true;

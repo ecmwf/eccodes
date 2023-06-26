@@ -92,7 +92,7 @@ static grib_handle* try_product_template(grib_context* c, ProductKind product_ki
             g = codes_bufr_handle_new_from_file(c, f, &err);
         } else {
             /* Note: Pseudo GRIBs like DIAG and BUDG also come here */
-            DebugAssert(product_kind == PRODUCT_GRIB);
+            DEBUG_ASSERT(product_kind == PRODUCT_GRIB);
             g = grib_handle_new_from_file(c, f, &err);
         }
         if (!g) {

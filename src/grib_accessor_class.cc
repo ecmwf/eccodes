@@ -248,11 +248,11 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     l->last = a;
 
     if (hand->use_trie) {
-        DebugAssert( a->all_names[0] );
+        DEBUG_ASSERT( a->all_names[0] );
         if (*(a->all_names[0]) != '_') {
             id = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
 
-            DebugAssert(id >= 0 && id < ACCESSORS_ARRAY_SIZE);
+            DEBUG_ASSERT(id >= 0 && id < ACCESSORS_ARRAY_SIZE);
 
             a->same = hand->accessors[id];
             link_same_attributes(a, a->same);

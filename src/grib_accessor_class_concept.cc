@@ -363,7 +363,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     grib_action* act             = a->creator;
     int nofail                   = action_concept_get_nofail(a);
 
-    DebugAssert(concepts);
+    DEBUG_ASSERT(concepts);
 
     c = (grib_concept_value*)grib_trie_get(concepts->index, name);
 

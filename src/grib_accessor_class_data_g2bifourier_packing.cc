@@ -418,8 +418,8 @@ static double laplam(bif_trunc_t* bt, const double val[])
         else {
             int m, ll = itab1[i * i + j * j];
             for (m = 0; m < 4; m++, isp++) {
-                DebugAssertAccess(znorm, (long)ll, (long)lmax);
-                DebugAssertAccess(val, (long)isp, (long)bt->n_vals_bif);
+                DEBUG_ASSERT_ACCESS(znorm, (long)ll, (long)lmax);
+                DEBUG_ASSERT_ACCESS(val, (long)isp, (long)bt->n_vals_bif);
                 if (ll < lmax && isp < bt->n_vals_bif) {
                     znorm[ll] = std::max(znorm[ll], fabs(val[isp]));
                 }

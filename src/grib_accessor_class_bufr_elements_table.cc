@@ -241,7 +241,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     dictionary = grib_trie_new(c);
 
     while (fgets(line, sizeof(line) - 1, f)) {
-        DebugAssert( strlen(line) > 0 );
+        DEBUG_ASSERT( strlen(line) > 0 );
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
         grib_trie_insert(dictionary, list[0], list);
@@ -258,7 +258,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         }
 
         while (fgets(line, sizeof(line) - 1, f)) {
-            DebugAssert( strlen(line) > 0 );
+            DEBUG_ASSERT( strlen(line) > 0 );
             if (line[0] == '#') continue;  /* Ignore first line with column titles */
             list = string_split(line, "|");
             /* Look for the descriptor code in the trie. It might be there from before */
@@ -383,7 +383,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
         return NULL;
 
     c = a->context;
-    DebugAssert(c);
+    DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,

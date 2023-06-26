@@ -290,7 +290,7 @@ void grib_file_pool_delete_file(grib_file* file)
                 break;
             prev = prev->next;
         }
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = file->next;
         }

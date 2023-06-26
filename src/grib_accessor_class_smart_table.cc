@@ -351,13 +351,13 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 
         numberOfColumns = 0;
         /* The highest possible descriptor code must fit into t->numberOfEntries */
-        DebugAssert(code < t->numberOfEntries);
+        DEBUG_ASSERT(code < t->numberOfEntries);
         while (*s) {
             char* tcol = t->entries[code].column[numberOfColumns];
             if ( tcol ) grib_context_free_persistent(c, tcol);
             t->entries[code].column[numberOfColumns] = grib_context_strdup_persistent(c, s);
             numberOfColumns++;
-            DebugAssert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
+            DEBUG_ASSERT(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
 
             p++;
             s = p;

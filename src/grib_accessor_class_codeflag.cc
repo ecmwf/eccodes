@@ -124,7 +124,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* param)
 
 static int test_bit(long a, long b)
 {
-    DebugAssert(b>=0);
+    DEBUG_ASSERT(b>=0);
     return a & (1 << b);
 }
 

@@ -662,7 +662,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         printf("  comparing %s", name);
 
     /* If key was blocklisted, then we should not have got here */
-    DebugAssert(!blocklisted(name));
+    DEBUG_ASSERT(!blocklisted(name));
 
     if (type1 == GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h1, name, &type1)) != GRIB_SUCCESS) {
         printInfo(h1);

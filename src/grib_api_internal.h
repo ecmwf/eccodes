@@ -186,8 +186,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #endif
 
 #ifdef DEBUG
-#define DebugAssert(a) Assert(a)
-#define DebugAssertAccess(array, index, size)                                                                             \
+#define DEBUG_ASSERT(a) Assert(a)
+#define DEBUG_ASSERT_ACCESS(array, index, size)                                                                             \
     do {                                                                                                                  \
         if (!((index) >= 0 && (index) < (size))) {                                                                        \
             printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); \
@@ -195,8 +195,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
         }                                                                                                                 \
     } while (0)
 #else
-#define DebugAssert(a)
-#define DebugAssertAccess(array, index, size)
+#define DEBUG_ASSERT(a)
+#define DEBUG_ASSERT_ACCESS(array, index, size)
 #endif
 
 /* Return true if two strings are equal */

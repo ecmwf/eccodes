@@ -26,7 +26,7 @@ grib_handle* grib_handle_of_accessor(const grib_accessor* a)
 static grib_handle* handle_of(grib_accessor* observed)
 {
     grib_handle* h = NULL;
-    DebugAssert(observed);
+    DEBUG_ASSERT(observed);
     /* printf("+++++ %s->parent = %p\n",observed->name,observed->parent); */
     /* printf("+++++ %s = %p\n",observed->name,observed); */
     /* printf("+++++       h=%p\n",observed->h); */
