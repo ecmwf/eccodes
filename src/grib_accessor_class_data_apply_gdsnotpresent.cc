@@ -289,8 +289,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
+    // grib_accessor_data_apply_gdsnotpresent* self =  (grib_accessor_data_apply_gdsnotpresent*)a;
+    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
 
     return GRIB_TYPE_DOUBLE;
 }
