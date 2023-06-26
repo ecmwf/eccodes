@@ -320,12 +320,13 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
+    const char* Tname = type_to_string<T>(*v);
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, type_to_string<T>(*v));
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, Tname);
         return GRIB_SUCCESS;
     }
 
@@ -337,12 +338,12 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
 
         *v = strtod(val, &last);
         if (*last == 0) { /* conversion of string to double worked */
-            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to %s", a->name, Tname);
             return GRIB_SUCCESS;
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack as %s", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as %s", a->name, Tname);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
