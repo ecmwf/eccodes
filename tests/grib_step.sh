@@ -128,6 +128,11 @@ grib_check_key_equals $temp stepType avg
 ${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
 grib_check_key_equals $temp typeOfTimeIncrement 3
 
+# Decode stepRange as an int and double
+${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange:s" "23-28"
+grib_check_key_equals $temp "stepRange:i" "28"
+grib_check_key_equals $temp "stepRange:d" "28"
 
 # Clean up
 rm -f $temp
