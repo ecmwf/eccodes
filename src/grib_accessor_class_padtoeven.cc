@@ -12,7 +12,6 @@
  *  Enrico Fucile
  **************************************/
 
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -124,11 +123,9 @@ static size_t preferred_size(grib_accessor* a, int from_handle)
     grib_get_long_internal(grib_handle_of_accessor(a), self->section_length, &length);
 
     if ((length % 2) && from_handle) {
-#if 0
-        grib_context_log(a->context,
-                GRIB_LOG_ERROR,"GRIB message has an odd length section (%ld, %s)",
-                (long)length,a->name);
-#endif
+        //  grib_context_log(a->context,
+        //       GRIB_LOG_ERROR,"GRIB message has an odd length section (%ld, %s)",
+        //       (long)length,a->name);
         return 0;
     }
 

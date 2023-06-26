@@ -14,9 +14,9 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "grib_value.h"
 #include <limits>
 #include <cassert>
-#include "grib_api_internal_cpp.h"
 
 /*
    This is used by make_class.pl

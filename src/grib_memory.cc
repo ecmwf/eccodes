@@ -208,26 +208,20 @@ static void* fast_realloc(void* p, size_t s, mempool* pool)
     return q;
 }
 
-#if 0
 /*
-   void fast_memory_info(const char *title,mempool *pool)
-   {
+   void fast_memory_info(const char *title,mempool *pool) {
    memblk *m = (memblk*)pool->priv;
    int count = 0;
    int size = 0;
-   while(m)
-   {
-   count++;
-   size += m->size;
-   m = m->next;
+   while(m) {
+    count++;
+    size += m->size;
+    m = m->next;
    }
-   marslog(LOG_INFO,"%s : %sbytes %d blocks",
-   title,
-   bytename(size),count);
+   marslog(LOG_INFO,"%s : %sbytes %d blocks", title, bytename(size),count);
    }
 
-   void memory_info()
-   {
+   void memory_info() {
    memblk *r = reserve;
    long size = 0;
    while(r)
@@ -237,13 +231,11 @@ static void* fast_realloc(void* p, size_t s, mempool* pool)
    size += r->size;
    r = r->next;
    }
-
    marslog(LOG_INFO,"Total large : %sbytes",bytename(size));
    fast_memory_info("Transient memory",transient_mem);
    fast_memory_info("Permanent memory",permanent_mem);
    }
  */
-#endif
 
 void* grib_transient_malloc(const grib_context* c, size_t s)
 {

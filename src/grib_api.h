@@ -204,8 +204,6 @@ typedef struct grib_iterator grib_iterator;
 */
 typedef struct grib_nearest grib_nearest;
 
-typedef struct grib_points grib_points;
-
 /*! Grib keys iterator. Iterator over keys.
     \ingroup keys_iterator
 */
@@ -1383,19 +1381,6 @@ void* wmo_read_grib_from_file_malloc(FILE* f, int headers_only, size_t* size, of
 int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* len);
 int grib_get_message_offset(const grib_handle* h, off_t* offset);
 int grib_get_message_size(const grib_handle* h, size_t* size);
-
-struct grib_points
-{
-    grib_context* context;
-    double* latitudes;
-    double* longitudes;
-    size_t* indexes;
-    size_t* group_start;
-    size_t* group_len;
-    size_t n_groups;
-    size_t n;
-    size_t size;
-};
 
 
 /* --------------------------------------- */

@@ -86,8 +86,8 @@ class Class:
 
     substitute_str_top_level = {}
     substitute_re_top_level = {
-        r"^#define\s+(\w+)\s+(-?\d+)": r"const long \1 = \2;",
-        r"^#define\s+(\w+)\s+(-?\d+\.\d+)([eE]-?\d+)?": r"const double \1 = \2;",
+        r"^#define\s+(\w+)\s+(-?\d+)?!(\.|e|E)": r"const long \1 = \2;",
+        r"^#define\s+(\w+)\s+(-?\d+\.\d+([eE]-?\d+)?)": r"const double \1 = \2;",
     }
 
     def __init__(
@@ -291,6 +291,8 @@ class Accessor(Class):
         r"\bDebugAssert\b": "ASSERT",
         r"\bAssert\b": "ASSERT",
         r"\bunpack_long\(this,": "this->unpack_long(",
+        r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",
+        r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
     }
 
     def class_to_type(self):
@@ -330,10 +332,6 @@ CLASSES = dict(
     box=Box,
     dumper=Dumper,
 )
-
-
-substitutions_re = {r"#define (\w+) (-?\d+)": r"const int \1 = \2;"}
-
 
 def make_class(path):
     in_def = False

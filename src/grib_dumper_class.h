@@ -13,7 +13,6 @@ extern grib_dumper_class* grib_dumper_class_default;
 extern grib_dumper_class* grib_dumper_class_file;
 extern grib_dumper_class* grib_dumper_class_grib_encode_C;
 extern grib_dumper_class* grib_dumper_class_json;
-extern grib_dumper_class* grib_dumper_class_keys;
 extern grib_dumper_class* grib_dumper_class_serialize;
 extern grib_dumper_class* grib_dumper_class_string;
 extern grib_dumper_class* grib_dumper_class_wmo;

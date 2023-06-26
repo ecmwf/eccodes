@@ -201,7 +201,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Snow melt
+#Snowmelt
 '3099' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

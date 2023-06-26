@@ -56,5 +56,8 @@ cat > $tempRef << EOF
 EOF
 diff $tempRef $tempOut
 
+# Count
+count=`${tools_dir}/grib_count ${data_dir}/budg`
+[ $count -eq 1 ]
 
 rm -f $tempRef $tempOut $tempBud

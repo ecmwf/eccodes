@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include <float.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 #ifdef __PGI
 #undef __AVX__
@@ -20,18 +23,12 @@
 #endif
 
 #ifdef __AVX__
-#include <float.h>
-#include <stdint.h>
-#include <inttypes.h>
 #include <immintrin.h>
 #ifdef _GET_X86_COUNTER
 #include <x86intrin.h>
 #endif
 #else
 #ifdef __SSE2__
-#include <float.h>
-#include <stdint.h>
-#include <inttypes.h>
 #include <emmintrin.h>
 #ifdef _GET_X86_COUNTER
 #include <x86intrin.h>
@@ -229,7 +226,7 @@ static void minmax_val(const double* restrict data, long datasize, double* fmin,
 #else
 
 #ifdef _ARCH_PWR6
-#define __UNROLL_DEPTH_1 6
+#define kUNROLL_DEPTH_1 6
 
         /* to allow pipelining we have to unroll */
 
@@ -238,18 +235,18 @@ static void minmax_val(const double* restrict data, long datasize, double* fmin,
 #endif
     {
         long i, j;
-        long residual = datasize % __UNROLL_DEPTH_1;
+        long residual = datasize % kUNROLL_DEPTH_1;
         long ofs = datasize - residual;
-        double dmin[__UNROLL_DEPTH_1];
-        double dmax[__UNROLL_DEPTH_1];
+        double dmin[kUNROLL_DEPTH_1];
+        double dmax[kUNROLL_DEPTH_1];
 
-        for (j = 0; j < __UNROLL_DEPTH_1; j++) {
+        for (j = 0; j < kUNROLL_DEPTH_1; j++) {
             dmin[j] = data[0];
             dmax[j] = data[0];
         }
 
-        for (i = 0; i < datasize - residual; i += __UNROLL_DEPTH_1) {
-            for (j = 0; j < __UNROLL_DEPTH_1; j++) {
+        for (i = 0; i < datasize - residual; i += kUNROLL_DEPTH_1) {
+            for (j = 0; j < kUNROLL_DEPTH_1; j++) {
                 dmin[j] = __fsel(dmin[j] - data[i + j], data[i + j], dmin[j]);
                 dmax[j] = __fsel(data[i + j] - dmax[j], data[i + j], dmax[j]);
             }
@@ -260,7 +257,7 @@ static void minmax_val(const double* restrict data, long datasize, double* fmin,
             dmax[j] = __fsel(data[ofs + j] - dmax[j], data[ofs + j], dmax[j]);
         }
 
-        for (j = 0; j < __UNROLL_DEPTH_1; j++) {
+        for (j = 0; j < kUNROLL_DEPTH_1; j++) {
             *fmin = __fsel(*fmin - dmin[j], dmin[j], *fmin);
             *fmax = __fsel(dmax[j] - *fmax, dmax[j], *fmax);
         }
@@ -269,7 +266,7 @@ static void minmax_val(const double* restrict data, long datasize, double* fmin,
     hpmStop(1);
 #endif
 
-#undef __UNROLL_DEPTH_1
+#undef kUNROLL_DEPTH_1
 #else
 
 #ifdef _GET_IBM_COUNTER

@@ -8,7 +8,7 @@ ecmf 3 pt K Potential temperature
 ecmf 60 pv K m**2 kg**-1 s**-1 Potential vorticity
 ecmf 235 skt K Skin temperature
 ecmf 228141 sd kg m**-2 Snow depth water equivalent
-ecmf 228144 sf kg m**-2 Snow Fall water equivalent
+ecmf 228144 sf kg m**-2 Snowfall water equivalent
 ecmf 228039 sm kg m**-3 Soil moisture
 ecmf 228139 st K Soil temperature
 ecmf 133 q kg kg**-1 Specific humidity

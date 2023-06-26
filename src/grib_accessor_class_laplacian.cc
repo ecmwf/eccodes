@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -242,18 +237,15 @@ static int is_missing(grib_accessor* a)
     if (!av)
         return GRIB_NOT_FOUND;
     return grib_is_missing_internal(av);
-#if 0
-    int ret=0;
-    long value=0;
 
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->value,
-            &value) )   != GRIB_SUCCESS){
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Accessor %s cannot gather value for %s error %d", a->name,
-                self->value, ret);
-        return 0;
-    }
-
-    return (value == GRIB_MISSING_LONG);
-#endif
+    //     int ret=0;
+    //     long value=0;
+    //     if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->value,
+    //             &value) )   != GRIB_SUCCESS){
+    //         grib_context_log(a->context, GRIB_LOG_ERROR,
+    //                 "Accessor %s cannot gather value for %s error %d", a->name,
+    //                 self->value, ret);
+    //         return 0;
+    //     }
+    //     return (value == GRIB_MISSING_LONG);
 }

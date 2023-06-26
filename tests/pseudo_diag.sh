@@ -25,6 +25,10 @@ sample=$ECCODES_SAMPLES_PATH/diag.tmpl
 ${tools_dir}/grib_ls $sample > $REDIRECT
 ${tools_dir}/grib_dump $sample > $REDIRECT
 
+count=`${tools_dir}/grib_count $sample`
+[ $count -eq 1 ]
+
+
 echo "Check setting integer keys..."
 # ----------------------------------
 echo 'set numberOfIntegers=3; set integerValues={55, 44, 66}; write;' | ${tools_dir}/grib_filter -o $tempOut - $sample

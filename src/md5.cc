@@ -275,7 +275,7 @@ void grib_md5_end(grib_md5_state* s, char* digest)
             U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
 }
 
-#if 0
+#if defined(TESTING_MD5)
 
 main(int argc, char **argv)
 {

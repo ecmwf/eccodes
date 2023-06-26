@@ -561,52 +561,52 @@ grib_context* grib_context_get_default()
     return &default_grib_context;
 }
 
-#if 0 /* function removed */
-grib_context* grib_context_new(grib_context* parent)
-{
-    grib_context* c;
-#if GRIB_PTHREADS
-    pthread_mutexattr_t attr;
-#endif
+// Do we really need this?
+// grib_context* grib_context_new(grib_context* parent)
+// {
+//     grib_context* c;
+// #if GRIB_PTHREADS
+//     pthread_mutexattr_t attr;
+// #endif
 
-    if (!parent) parent=grib_context_get_default();
+//     if (!parent) parent=grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&(parent->mutex));
+//     GRIB_MUTEX_INIT_ONCE(&once,&init);
+//     GRIB_MUTEX_LOCK(&(parent->mutex));
 
-    c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
+//     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
 
-    c->inited              = default_grib_context.inited;
-    c->debug               = default_grib_context.debug;
+//     c->inited              = default_grib_context.inited;
+//     c->debug               = default_grib_context.debug;
 
-    c->real_mode           = default_grib_context.real_mode;
+//     c->real_mode           = default_grib_context.real_mode;
 
-    c->free_mem            = default_grib_context.free_mem;
-    c->alloc_mem           = default_grib_context.alloc_mem;
+//     c->free_mem            = default_grib_context.free_mem;
+//     c->alloc_mem           = default_grib_context.alloc_mem;
 
-    c->free_persistent_mem = default_grib_context.free_persistent_mem;
-    c->alloc_persistent_mem= default_grib_context.alloc_persistent_mem;
+//     c->free_persistent_mem = default_grib_context.free_persistent_mem;
+//     c->alloc_persistent_mem= default_grib_context.alloc_persistent_mem;
 
-    c->read                = default_grib_context.read;
-    c->write               = default_grib_context.write;
-    c->tell                = default_grib_context.tell;
+//     c->read                = default_grib_context.read;
+//     c->write               = default_grib_context.write;
+//     c->tell                = default_grib_context.tell;
 
-    c->output_log          = default_grib_context.output_log;
-    c->print               = default_grib_context.print    ;
-    c->user_data           = default_grib_context.user_data;
-    c->def_files           = default_grib_context.def_files;
-    c->lists               = default_grib_context.lists;
+//     c->output_log          = default_grib_context.output_log;
+//     c->print               = default_grib_context.print    ;
+//     c->user_data           = default_grib_context.user_data;
+//     c->def_files           = default_grib_context.def_files;
+//     c->lists               = default_grib_context.lists;
 
-#if GRIB_PTHREADS
-    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex_c,&attr);
-    pthread_mutexattr_destroy(&attr);
-#endif
+// #if GRIB_PTHREADS
+//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+//     pthread_mutex_init(&mutex_c,&attr);
+//     pthread_mutexattr_destroy(&attr);
+// #endif
 
-    GRIB_MUTEX_UNLOCK(&(parent->mutex));
-    return c;
-}
-#endif /* function removed */
+//     GRIB_MUTEX_UNLOCK(&(parent->mutex));
+//     return c;
+// }
+
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 /* Note: return value is allocated. Client has to free */

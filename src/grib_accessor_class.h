@@ -74,7 +74,6 @@ extern grib_accessor_class* grib_accessor_class_double;
 extern grib_accessor_class* grib_accessor_class_element;
 extern grib_accessor_class* grib_accessor_class_evaluate;
 extern grib_accessor_class* grib_accessor_class_expanded_descriptors;
-extern grib_accessor_class* grib_accessor_class_forward;
 extern grib_accessor_class* grib_accessor_class_from_scale_factor_scaled_value;
 extern grib_accessor_class* grib_accessor_class_g1_half_byte_codeflag;
 extern grib_accessor_class* grib_accessor_class_g1_message_length;

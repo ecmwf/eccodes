@@ -267,8 +267,6 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
-grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v);
-size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_array.cc*/
 
@@ -487,8 +485,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 /* grib_accessor_class_from_scale_factor_scaled_value.cc*/
 
 /* grib_accessor_class_times.cc*/
-
-/* grib_accessor_class_forward.cc*/
 
 /* grib_accessor_class_g2bitmap_present.cc*/
 
@@ -886,8 +882,6 @@ void grib_dump_footer(grib_dumper* d, const grib_handle* h);
 
 /* grib_dumper_class_default.cc*/
 
-/* grib_dumper_class_keys.cc*/
-
 /* grib_dumper_class_bufr_encode_C.cc*/
 
 /* grib_dumper_class_bufr_encode_filter.cc*/
@@ -1074,11 +1068,6 @@ int grib_handle_prepare_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_multi_support_reset(grib_context* c);
 
-/* grib_header_compute.cc*/
-void print_math(grib_math* m);
-void grib_math_delete(grib_context* c, grib_math* m);
-grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
-
 /* grib_hash_keys.cc*/
 const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);
 grib_itrie* grib_hash_keys_new(grib_context* c, int* count);
@@ -1256,7 +1245,6 @@ int grib_get_double_element_set(const grib_handle* h, const char* name, const si
 int grib_get_float_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 int grib_get_float_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array);
 
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val);
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array);
 int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);

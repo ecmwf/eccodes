@@ -14,33 +14,28 @@
 #include <unistd.h>
 #endif
 
-#if 0
-/* This is a mechanism where we generate C code in grib_templates.h
- * from our GRIB sample files and then include the header so one
- * can instantiate samples without any disk access.
- * This is now superseded by MEMFS
- */
-typedef struct grib_templates {
-    const char*           name;
-    const unsigned char* data;
-    size_t               size;
-} grib_templates;
+//  This is a mechanism where we generate C code in grib_templates.h
+//  from our GRIB sample files and then include the header so one
+//  can instantiate samples without any disk access.
+//  Note: This is now superseded by MEMFS
+//
+// typedef struct grib_templates {
+//     const char*           name;
+//     const unsigned char* data;
+//     size_t               size;
+// } grib_templates;
 
-#include "grib_templates.h"
-
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
-grib_handle* grib_internal_sample(grib_context* c,const char* name)
-{
-    size_t i;
-    const size_t num_samples = NUMBER(templates);
-    Assert(0);
-    for(i = 0; i < num_samples; i++)
-        if(strcmp(name,templates[i].name) == 0)
-            return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
-    return NULL;
-}
-#endif
+// #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
+// grib_handle* grib_internal_sample(grib_context* c,const char* name)
+// {
+//     size_t i;
+//     const size_t num_samples = NUMBER(templates);
+//     Assert(0);
+//     for(i = 0; i < num_samples; i++)
+//         if(strcmp(name,templates[i].name) == 0)
+//             return grib_handle_new_from_message_copy(c,templates[i].data,templates[i].size);
+//     return NULL;
+// }
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. It uses semi-colons as delimiter */
 #ifdef ECCODES_ON_WINDOWS
