@@ -42,7 +42,7 @@ class Member:
 
 
 class Method:
-    def __init__(self, name, result, args) -> None:
+    def __init__(self, name, result, args, template=None) -> None:
         self.name = name
 
         self.result = result
@@ -58,6 +58,7 @@ class Method:
             self.args_list.append((type, name))
 
         self.call_args = ", ".join([n for _, n in self.args_list[1:]])
+        self.template = template
 
     def add_line(self, line):
         self.lines.append(line)
@@ -66,9 +67,20 @@ class Method:
     def body(self):
         return "\n".join(self.lines)
 
+    def has_this(self):
+        return True
+        if self.template is not None:
+            return False
+        for line in self.lines:
+            if "this->" in line:
+                return True
+        return False
+
+
+class SimpleMethod(Method):
     def tidy_lines(self, klass):
         this = [r"\bself\b"]
-        if self.args_list:
+        if self.args_list and self.template is None:
             type, name = self.args_list[0]
             # Check if the first argument is a pointer to the class
             if type == klass.type_name + "*":
@@ -76,11 +88,48 @@ class Method:
                     this.append(rf"\b{name}\b")
         self.lines = [klass.tidy_line(n, this) for n in self.lines[1:-1]]
 
+
+class CompareMethod(Method):
+    def tidy_lines(self, klass):
+        assert len(self.args_list) == 2
+        assert self.args_list[0][0] == "grib_accessor*"
+        assert self.args_list[1][0] == "grib_accessor*"
+
+        a = self.args_list[0][1]
+        b = self.args_list[1][1]
+
+        lines = []
+        for line in self.lines[1:-1]:
+            line = re.sub(rf"\b{a}\b", "this", line)
+            line = re.sub(rf"\b{b}\b", "other", line)
+            line = klass.tidy_line(line, [])
+            line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
+            lines.append(line)
+
+        self.lines = lines
+        self.args_list[0] = ('Accessor*','this')
+        self.args_list[1] = ('const Accessor*', 'other')
+        self.args = 'const Accessor* other'
+
+
+class DumpMethod(Method):
+    def tidy_lines(self, klass):
+        # For now, just remove the method
+        self.lines = []
+
+
+class StaticProc(Method):
     def has_this(self):
-        for line in self.lines:
-            if "this->" in line:
-                return True
         return False
+
+    def tidy_lines(self, klass):
+        self.lines = [klass.tidy_line(n, []) for n in self.lines[1:-1]]
+
+
+METHOD_CLASS = {
+    "compare": CompareMethod,
+    "dump": DumpMethod,
+}
 
 
 class Class:
@@ -122,7 +171,7 @@ class Class:
             self.src = args.target
         else:
             self.super, _ = self.tidy_class_name(class_)
-            self.src = 'cpp'
+            self.src = "cpp"
 
         self.members = [Member(m) for m in MEMBERS if m != ""]
 
@@ -139,10 +188,18 @@ class Class:
             )
         ]
         init = [p for p in inherited_procs.values() if p.name == "init"]
-        self.constructor = init[0] if init else Method("init", "void", "grib_accessor* a, const long length, grib_arguments* args")
+        self.constructor = (
+            init[0]
+            if init
+            else SimpleMethod(
+                "init",
+                "void",
+                "grib_accessor* a, const long length, grib_arguments* args",
+            )
+        )
 
         init = [p for p in inherited_procs.values() if p.name == "destroy"]
-        self.destructor = init[0] if init else Method("init", "void", "void")
+        self.destructor = init[0] if init else SimpleMethod("destroy", "void", "void")
 
         for p in other_procs.values():
             p.tidy_lines(self)
@@ -193,7 +250,9 @@ class Class:
                 destructor=self.destructor,
                 namespaces=self.namespaces,
                 namespace_reversed=reversed(self.namespaces),
-                include_super="/".join([self.src] + self.namespaces + [f"{self.super}.h"]),
+                include_super="/".join(
+                    [self.src] + self.namespaces + [f"{self.super}.h"]
+                ),
             ),
         )
 
@@ -227,7 +286,9 @@ class Class:
                     destructor=self.destructor,
                     namespaces=self.namespaces,
                     namespace_reversed=reversed(self.namespaces),
-                    include_header="/".join([self.src] +self.namespaces + [f"{self.name}.h"]),
+                    include_header="/".join(
+                        [self.src] + self.namespaces + [f"{self.name}.h"]
+                    ),
                     top_level=self.top_level,
                     factory_name=self.factory_name,
                 )
@@ -340,12 +401,14 @@ CLASSES = dict(
     dumper=Dumper,
 )
 
+
 def make_class(path):
     in_def = False
     in_imp = False
     in_proc = False
     includes = []
     factory_name = None
+    template = None
 
     definitions = {}
     inherited_procs = {}
@@ -402,13 +465,16 @@ def make_class(path):
 
             if p in definitions.get("IMPLEMENTS", []):
                 in_proc = True
-                proc = inherited_procs[p] = Method(p, m.group(1), m.group(3))
+                method_class = METHOD_CLASS.get(p, SimpleMethod)
+                proc = inherited_procs[p] = method_class(
+                    p, m.group(1), m.group(3), template
+                )
                 depth = stripped_line.count("{") - stripped_line.count("}")
                 assert depth >= 0, line
                 continue
             else:
                 in_proc = True
-                proc = Method(p, m.group(1), m.group(3))
+                proc = StaticProc(p, m.group(1), m.group(3), template)
                 other_procs[p] = proc
                 depth = stripped_line.count("{") - stripped_line.count("}")
                 assert depth >= 0, line
@@ -421,6 +487,7 @@ def make_class(path):
             assert depth >= 0, line
             if depth == 0:
                 in_proc = False
+                template = None
                 del proc
             continue
 
@@ -429,6 +496,10 @@ def make_class(path):
                 # Forget lines before the first include
                 top_level_lines = []
             includes.append(line[9:])
+            continue
+
+        if stripped_line.startswith("template "):
+            template = stripped_line
             continue
 
         top_level_lines.append(line)

@@ -14,6 +14,8 @@
 
 #include "grib_api_internal.h"
 
+#define ASSERT(a) /* */
+
 namespace eccodes
 {
 namespace accessor
@@ -34,9 +36,9 @@ protected:
     Accessor(const long len, grib_arguments* param);
     virtual ~Accessor();
 
-private:
-    // Inherited methods
+public:
 
+    // Legacy methods
 
     virtual void dump(grib_dumper* dumper) const =0;
     virtual long next_offset() const =0;
@@ -62,7 +64,7 @@ private:
     virtual int notify_change(grib_accessor* observed) const =0;
     virtual void update_size(size_t s) const =0;
     virtual grib_accessor* next(int mod) const =0;
-    virtual int compare(grib_accessor* b) const =0;
+    virtual int compare(const Accessor*) const =0;
     virtual size_t preferred_size(int from_handle) const =0;
     virtual int is_missing() const =0;
     virtual int unpack_double_element(size_t i, double* val) const =0;
@@ -73,8 +75,7 @@ private:
 
     // Missing from the original
 
-    virtual int pack_missing() const =0;
-
+    virtual int pack_missing() const;
 
 
     // Members
@@ -90,9 +91,17 @@ private:
 
     // For now....
     public:
+
     grib_context *context_;
     unsigned long flags_;
     const char* name;
+
+    size_t offset_;
+
+    // mutable == bug
+    mutable size_t length_;
+
+    grib_handle* handle() const;
 
 
 };
