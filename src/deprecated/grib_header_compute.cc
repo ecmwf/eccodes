@@ -15,9 +15,9 @@
 */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 #include <signal.h>
-#include <ctype.h>
+#include <cctype>
 #include <stdlib.h>
 
 static grib_math* readpower(grib_context* c, char** form, int* err);
@@ -48,7 +48,7 @@ static long op_neg(long a) {return -a;}
 
 static double op_neg_d(double a) {return -a;}
 
-static long op_pow(long a, long b) {return grib_power(a,b);}
+static long op_pow(long a, long b) {return codes_power<double>(a,b);}
 static long op_add(long a, long b) {return a+b;}
 static long op_sub(long a, long b) {return a-b;}
 static long op_div(long a, long b) {return a/b;}

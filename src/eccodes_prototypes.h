@@ -267,8 +267,6 @@ grib_viarray* grib_viarray_new(grib_context* c, size_t size, size_t incsize);
 grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* val);
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
-grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v);
-size_t grib_viarray_used_size(grib_viarray* v);
 
 /* grib_accessor_class_array.cc*/
 
@@ -487,8 +485,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 /* grib_accessor_class_from_scale_factor_scaled_value.cc*/
 
 /* grib_accessor_class_times.cc*/
-
-/* grib_accessor_class_forward.cc*/
 
 /* grib_accessor_class_g2bitmap_present.cc*/
 
@@ -1071,11 +1067,6 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a);
 int grib_handle_prepare_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
 void grib_multi_support_reset(grib_context* c);
-
-/* grib_header_compute.cc*/
-void print_math(grib_math* m);
-void grib_math_delete(grib_context* c, grib_math* m);
-grib_math* grib_math_new(grib_context* c, const char* formula, int* err);
 
 /* grib_hash_keys.cc*/
 const struct grib_keys_hash* grib_keys_hash_get(const char* str, size_t len);

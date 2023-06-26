@@ -1840,6 +1840,11 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
         return GRIB_INVALID_ARGUMENT;
     }
     if (!c) c = grib_context_get_default();
+
+    if (path_is_directory(filename)) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: \"%s\" is a directory", __func__, filename);
+        return GRIB_IO_PROBLEM;
+    }
     f = fopen(filename, "rb");
     if (!f) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read file \"%s\"", __func__, filename);

@@ -508,7 +508,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 'lsp' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -6538,7 +6538,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
-#Snow melt
+#Snowmelt
 'snom' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -8210,12 +8210,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
-#Volumetric soil moisture content
-'soilw' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 9 ;
-	}
 #Ground heat flux
 'gflux' = {
 	 discipline = 2 ;
@@ -8306,59 +8300,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
 	}
-#Upper layer soil temperature
-'uplst' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	}
-#Upper layer soil moisture
-'uplsm' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 2 ;
-	}
-#Lower layer soil moisture
-'lowlsm' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 3 ;
-	}
-#Bottom layer soil temperature
-'botlst' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 4 ;
-	}
-#Liquid volumetric soil moisture (non-frozen)
-'soill' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 5 ;
-	}
 #Number of soil layers in root zone
 'rlyrs' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
-	}
-#Transpiration stress-onset (soil moisture)
-'smref' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 7 ;
-	}
-#Direct evaporation cease (soil moisture)
-'smdry' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 8 ;
-	}
-#Soil porosity
-'poros' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 9 ;
 	}
 #Liquid volumetric soil moisture (non-frozen)
 'liqvsm' = {
@@ -8913,7 +8859,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 'sf' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

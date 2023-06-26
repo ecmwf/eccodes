@@ -508,7 +508,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -1178,7 +1178,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Volcanic sulfur dioxide 
+#Column integrated mass density of Volcanic sulfur dioxide
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1187,7 +1187,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Column integrated mass density of Aromatic peroxy radical 
+#Column integrated mass density of Aromatic peroxy radical
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1195,7 +1195,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Ethyne 
+#Column integrated mass density of Ethyne
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1203,7 +1203,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Acetonitrile 
+#Column integrated mass density of Acetonitrile
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1211,7 +1211,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Methyl peroxy nitrate 
+#Column integrated mass density of Methyl peroxy nitrate
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1219,7 +1219,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydrogen cyanide 
+#Column integrated mass density of Hydrogen cyanide
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1227,7 +1227,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydroperoxy aldehydes type 1 
+#Column integrated mass density of Hydroperoxy aldehydes type 1
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1235,7 +1235,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydroperoxy aldehydes type 2 
+#Column integrated mass density of Hydroperoxy aldehydes type 2
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1243,7 +1243,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Isoprene peroxy type B 
+#Column integrated mass density of Isoprene peroxy type B
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1251,7 +1251,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Isoprene peroxy type D 
+#Column integrated mass density of Isoprene peroxy type D
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1259,7 +1259,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Volcanic sulfur dioxide 
+#Atmosphere emission mass flux of Volcanic sulfur dioxide
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1268,7 +1268,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Atmosphere emission mass flux of Aromatic peroxy radical 
+#Atmosphere emission mass flux of Aromatic peroxy radical
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1276,7 +1276,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Ethyne 
+#Atmosphere emission mass flux of Ethyne
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1284,7 +1284,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Acetonitrile 
+#Atmosphere emission mass flux of Acetonitrile
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1292,7 +1292,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Methyl peroxy nitrate 
+#Atmosphere emission mass flux of Methyl peroxy nitrate
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1300,7 +1300,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydrogen cyanide 
+#Atmosphere emission mass flux of Hydrogen cyanide
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1308,7 +1308,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1316,7 +1316,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1324,7 +1324,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Isoprene peroxy type B 
+#Atmosphere emission mass flux of Isoprene peroxy type B
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1332,7 +1332,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Isoprene peroxy type D 
+#Atmosphere emission mass flux of Isoprene peroxy type D
 'kg m**-2 s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1340,7 +1340,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Volcanic sulfur dioxide 
+#Dry deposition velocity of Volcanic sulfur dioxide
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1349,7 +1349,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Dry deposition velocity of Aromatic peroxy radical 
+#Dry deposition velocity of Aromatic peroxy radical
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1357,7 +1357,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Ethyne 
+#Dry deposition velocity of Ethyne
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1365,7 +1365,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Acetonitrile 
+#Dry deposition velocity of Acetonitrile
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1373,7 +1373,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Methyl peroxy nitrate 
+#Dry deposition velocity of Methyl peroxy nitrate
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1381,7 +1381,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydrogen cyanide 
+#Dry deposition velocity of Hydrogen cyanide
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1389,7 +1389,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydroperoxy aldehydes type 1 
+#Dry deposition velocity of Hydroperoxy aldehydes type 1
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1397,7 +1397,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydroperoxy aldehydes type 2 
+#Dry deposition velocity of Hydroperoxy aldehydes type 2
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1405,7 +1405,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Isoprene peroxy type B 
+#Dry deposition velocity of Isoprene peroxy type B
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1413,7 +1413,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Isoprene peroxy type D 
+#Dry deposition velocity of Isoprene peroxy type D
 'm s**-1' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -6538,7 +6538,7 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
 	}
-#Snow melt
+#Snowmelt
 'kg m**-2' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -7676,7 +7676,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 50 ;
 	}
-#UV index 
+#UV index
 'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -8210,12 +8210,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
-#Volumetric soil moisture content
-'Proportion' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 9 ;
-	}
 #Ground heat flux
 'W m**-2' = {
 	 discipline = 2 ;
@@ -8306,59 +8300,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
 	}
-#Upper layer soil temperature
-'K' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	}
-#Upper layer soil moisture
-'kg m**-3' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 2 ;
-	}
-#Lower layer soil moisture
-'kg m**-3' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 3 ;
-	}
-#Bottom layer soil temperature
-'K' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 4 ;
-	}
-#Liquid volumetric soil moisture (non-frozen)
-'Proportion' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 5 ;
-	}
 #Number of soil layers in root zone
 'Numeric' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
-	}
-#Transpiration stress-onset (soil moisture)
-'Proportion' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 7 ;
-	}
-#Direct evaporation cease (soil moisture)
-'Proportion' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 8 ;
-	}
-#Soil porosity
-'Proportion' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 9 ;
 	}
 #Liquid volumetric soil moisture (non-frozen)
 'm**3 m**-3' = {
@@ -8432,7 +8378,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
-#Estimated u component of wind 
+#Estimated u component of wind
 'm s**-1' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
@@ -8696,13 +8642,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 16 ;
 	}
-#U-component of current 
+#U-component of current
 'm s**-1' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
 	}
-#V-component of current 
+#V-component of current
 'm s**-1' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
@@ -8913,7 +8859,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 'kg m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

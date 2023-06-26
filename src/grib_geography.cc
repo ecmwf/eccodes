@@ -13,7 +13,7 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))

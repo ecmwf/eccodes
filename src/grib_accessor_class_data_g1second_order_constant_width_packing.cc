@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 /*
@@ -298,8 +299,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         printf("XXXXXXX extrabits=%ld pos=%ld\n",extrabits,pos);
     }*/
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
     for (i = 0; i < numberOfSecondOrderPackedValues; i++) {
         values[i] = (double)(((X[i] * s) + reference_value) * d);
     }

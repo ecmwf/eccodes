@@ -9,6 +9,7 @@
  */
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include <type_traits>
 
@@ -383,77 +384,75 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
     return GRIB_SUCCESS;
 }
 
-#if 0
-static void uint_char(unsigned int i, unsigned char* p)
-{
-    p[0] = (i >> 24) & 255;
-    p[1] = (i >> 16) & 255;
-    p[2] = (i >> 8) & 255;
-    p[3] = (i)&255;
-}
+// static void uint_char(unsigned int i, unsigned char* p)
+// {
+//     p[0] = (i >> 24) & 255;
+//     p[1] = (i >> 16) & 255;
+//     p[2] = (i >> 8) & 255;
+//     p[3] = (i)&255;
+// }
 
-static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata)
-{
-    int bms_size;
-    unsigned char *bms, *cbits;
-    unsigned int nn, i, start, c, imask, i0;
+// static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata)
+// {
+//     int bms_size;
+//     unsigned char *bms, *cbits;
+//     unsigned int nn, i, start, c, imask, i0;
 
-    nn = *ndata;
+//     nn = *ndata;
 
-    /* find first grid point with undefined data */
-    for (i = 0; i < nn; i++) {
-        if (UNDEFINED_VAL(data[i])) break;
-    }
+//     /* find first grid point with undefined data */
+//     for (i = 0; i < nn; i++) {
+//         if (UNDEFINED_VAL(data[i])) break;
+//     }
 
-    if (i == nn) { /* all defined values, no need for bms */
-        bms = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, 6));
-        if (bms == NULL)
-            grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
-        uint_char(6, bms);  // length of section 6
-        bms[4] = 6;         // section 6
-        bms[5] = 255;       // no bitmap
-        return bms;
-    }
+//     if (i == nn) { /* all defined values, no need for bms */
+//         bms = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, 6));
+//         if (bms == NULL)
+//             grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
+//         uint_char(6, bms);  // length of section 6
+//         bms[4] = 6;         // section 6
+//         bms[5] = 255;       // no bitmap
+//         return bms;
+//     }
 
-    bms_size = 6 + (nn + 7) / 8;
-    bms      = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, bms_size));
-    if (bms == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
+//     bms_size = 6 + (nn + 7) / 8;
+//     bms      = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, bms_size));
+//     if (bms == NULL)
+//         grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
 
-    uint_char(bms_size, bms);  // length of section 6
-    bms[4] = 6;                // section 6
-    bms[5] = 0;                // has bitmap
+//     uint_char(bms_size, bms);  // length of section 6
+//     bms[4] = 6;                // section 6
+//     bms[5] = 0;                // has bitmap
 
-    /* bitmap is accessed by bytes, make i0=i/8 bytes of bitmap */
-    cbits = bms + 6;
-    i0    = i >> 3;  // Number of bytes, required to store the bitmap
-    for (i = 0; i < i0; i++) {
-        // Set all bits in the bitmap to 1
-        *cbits++ = 255;
-    }
+//     /* bitmap is accessed by bytes, make i0=i/8 bytes of bitmap */
+//     cbits = bms + 6;
+//     i0    = i >> 3;  // Number of bytes, required to store the bitmap
+//     for (i = 0; i < i0; i++) {
+//         // Set all bits in the bitmap to 1
+//         *cbits++ = 255;
+//     }
 
-    /* start processing data, skip i0*8 */
+//     /* start processing data, skip i0*8 */
 
-    c     = 0;        // counter: c += imask
-    imask = 128;      // 100.0000
-    i0    = i0 << 3;  // Number of bits in the bitmap
-    start = i0;
-    for (i = i0; i < nn; i++) {
-        if (DEFINED_VAL(data[i])) {
-            c += imask;
-            data[start++] = data[i];
-        }
-        if ((imask >>= 1) == 0) {
-            *cbits++ = c;
-            c        = 0;
-            imask    = 128;
-        }
-    }
-    if (imask != 128) *cbits = c;
-    *ndata = start;
-    return bms;
-}
-#endif
+//     c     = 0;        // counter: c += imask
+//     imask = 128;      // 100.0000
+//     i0    = i0 << 3;  // Number of bits in the bitmap
+//     start = i0;
+//     for (i = i0; i < nn; i++) {
+//         if (DEFINED_VAL(data[i])) {
+//             c += imask;
+//             data[start++] = data[i];
+//         }
+//         if ((imask >>= 1) == 0) {
+//             *cbits++ = c;
+//             c        = 0;
+//             imask    = 128;
+//         }
+//     }
+//     if (imask != 128) *cbits = c;
+//     *ndata = start;
+//     return bms;
+// }
 
 static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
@@ -749,8 +748,8 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         // de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 
-    binary_s  = (T)grib_power(binary_scale_factor, 2);
-    decimal_s = (T)grib_power(-decimal_scale_factor, 10);
+    binary_s  = (T)codes_power<T>(binary_scale_factor, 2);
+    decimal_s = (T)codes_power<T>(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
         if (sec_val[i] == LONG_MAX) {

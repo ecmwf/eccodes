@@ -434,23 +434,22 @@ static void print_values(grib_context* c,
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
             get_packing_spec_packing_type_name(packing_spec->packing_type));
 
-#if 0
-        if (spec->bitmapPresent) {
-            int missing = 0;
-            size_t j = 0;
-            double min = 1e100;
-            for(j = 0; j < data_values_count ; j++)
-            {
-                double d = data_values[j] - spec->missingValue;
-                if(d < 0) d = -d;
-                if(d < min) {
-                    min = d;
-                }
-                if(data_values[j] == spec->missingValue)
-                    missing++;
-            }
-        }
-#endif
+//         if (spec->bitmapPresent) {
+//             int missing = 0;
+//             size_t j = 0;
+//             double min = 1e100;
+//             for(j = 0; j < data_values_count ; j++)
+//             {
+//                 double d = data_values[j] - spec->missingValue;
+//                 if(d < 0) d = -d;
+//                 if(d < min) {
+//                     min = d;
+//                 }
+//                 if(data_values[j] == spec->missingValue)
+//                     missing++;
+//             }
+//         }
+
 }
 
 /*
@@ -459,33 +458,32 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) < tolerance;
 }
 */
-#if 0
-/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
-static int grib1_angle_can_be_encoded(const double angle)
-{
-    const double angle_milliDegrees = angle * 1000;
-    double rounded = (int)(angle_milliDegrees+0.5)/1000.0;
-    if (angle<0) {
-        rounded = (int)(angle_milliDegrees-0.5)/1000.0;
-    }
-    if (angle == rounded) return 1;
-    return 0; /* sub millidegree. Cannot be encoded in grib1 */
-}
 
-/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
-static int angle_can_be_encoded(const double angle, const double angular_precision)
-{
-    const double angle_expanded = angle * angular_precision;
-    Assert(angular_precision>0);
-    double rounded = (long)(angle_expanded+0.5)/angular_precision;
-    if (angle<0) {
-        rounded = (long)(angle_expanded-0.5)/angular_precision;
-    }
-    if (angle == rounded) return 1;
-    /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
-    return 0; /* Cannot be encoded */
-}
-#endif
+// /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+// static int grib1_angle_can_be_encoded(const double angle)
+// {
+//     const double angle_milliDegrees = angle * 1000;
+//     double rounded = (int)(angle_milliDegrees+0.5)/1000.0;
+//     if (angle<0) {
+//         rounded = (int)(angle_milliDegrees-0.5)/1000.0;
+//     }
+//     if (angle == rounded) return 1;
+//     return 0; /* sub millidegree. Cannot be encoded in grib1 */
+// }
+
+// /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+// static int angle_can_be_encoded(const double angle, const double angular_precision)
+// {
+//     const double angle_expanded = angle * angular_precision;
+//     Assert(angular_precision>0);
+//     double rounded = (long)(angle_expanded+0.5)/angular_precision;
+//     if (angle<0) {
+//         rounded = (long)(angle_expanded-0.5)/angular_precision;
+//     }
+//     if (angle == rounded) return 1;
+//     /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
+//     return 0; /* Cannot be encoded */
+// }
 
 /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int angle_can_be_encoded(grib_handle* h, const double angle)
@@ -1612,17 +1610,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     /* Disable check: need to re-examine GRIB-864 */
-#if 0
-    if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
-        grib_context* c=grib_context_get_default();
-        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
-        if (editionNumber == 1) {
-            fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
-        }
-        if (c->write_on_fail) grib_write_message(h_out,"error.grib","w");
-        goto cleanup;
-    }
-#endif
+
+//     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
+//         grib_context* c=grib_context_get_default();
+//         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
+//         if (editionNumber == 1) {
+//             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
+//         }
+//         if (c->write_on_fail) grib_write_message(h_out,"error.grib","w");
+//         goto cleanup;
+//     }
+
     if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: grib_util_set_spec end\n");
 
     return h_out;
@@ -1632,94 +1630,93 @@ cleanup:
         grib_handle_delete(h_out);
     return NULL;
 }
-#if 0
-int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
-{
-    grib_iterator* iter = NULL;
-    int ret             = 0, i, j, l;
-    size_t n = 0, numberOfPoints = 0;
-    double *lat, *lon, *values;
-    double vlat, vlon, val;
-    double dx, dy, ddx, ddy;
-    double mass, centroidX, centroidY;
-    double missingValue;
-    grib_context* c = grib_context_get_default();
 
-    ret = grib_get_size(h, "values", &n);
-    if (ret)
-        return ret;
+// int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
+// {
+//     grib_iterator* iter = NULL;
+//     int ret             = 0, i, j, l;
+//     size_t n = 0, numberOfPoints = 0;
+//     double *lat, *lon, *values;
+//     double vlat, vlon, val;
+//     double dx, dy, ddx, ddy;
+//     double mass, centroidX, centroidY;
+//     double missingValue;
+//     grib_context* c = grib_context_get_default();
 
-    lat    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
-    lon    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
-    values = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     ret = grib_get_size(h, "values", &n);
+//     if (ret)
+//         return ret;
 
-    iter           = grib_iterator_new(h, 0, &ret);
-    numberOfPoints = 0;
-    while (grib_iterator_next(iter, &vlat, &vlon, &val)) {
-        if (vlon >= east && vlon <= west && vlat >= south && vlat <= north) {
-            lat[numberOfPoints]    = vlat;
-            lon[numberOfPoints]    = vlon;
-            values[numberOfPoints] = val;
-            numberOfPoints++;
-        }
-    }
-    grib_iterator_delete(iter);
+//     lat    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     lon    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     values = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
 
-    ret = grib_get_double(h, "missingValue", &missingValue);
+//     iter           = grib_iterator_new(h, 0, &ret);
+//     numberOfPoints = 0;
+//     while (grib_iterator_next(iter, &vlat, &vlon, &val)) {
+//         if (vlon >= east && vlon <= west && vlat >= south && vlat <= north) {
+//             lat[numberOfPoints]    = vlat;
+//             lon[numberOfPoints]    = vlon;
+//             values[numberOfPoints] = val;
+//             numberOfPoints++;
+//         }
+//     }
+//     grib_iterator_delete(iter);
 
-    centroidX = 0;
-    centroidY = 0;
-    mass      = 0;
-    *count    = 0;
-    for (i = 0; i < numberOfPoints; i++) {
-        if (values[i] != missingValue) {
-            centroidX += lon[i] * values[i];
-            centroidY += lat[i] * values[i];
-            mass += values[i];
-            (*count)++;
-        }
-    }
-    centroidX /= mass;
-    centroidY /= mass;
-    mass /= *count;
+//     ret = grib_get_double(h, "missingValue", &missingValue);
 
-    for (j = 0; j < order * order; j++)
-        moments[j] = 0;
+//     centroidX = 0;
+//     centroidY = 0;
+//     mass      = 0;
+//     *count    = 0;
+//     for (i = 0; i < numberOfPoints; i++) {
+//         if (values[i] != missingValue) {
+//             centroidX += lon[i] * values[i];
+//             centroidY += lat[i] * values[i];
+//             mass += values[i];
+//             (*count)++;
+//         }
+//     }
+//     centroidX /= mass;
+//     centroidY /= mass;
+//     mass /= *count;
 
-    for (i = 0; i < numberOfPoints; i++) {
-        if (values[i] != missingValue) {
-            dx  = (lon[i] - centroidX);
-            dy  = (lat[i] - centroidY);
-            ddx = 1;
-            for (j = 0; j < order; j++) {
-                ddy = 1;
-                for (l = 0; l < order; l++) {
-                    moments[j * order + l] += ddx * ddy * values[i];
-                    ddy *= dy;
-                }
-                ddx *= dx;
-            }
-        }
-    }
-    for (j = 0; j < order; j++) {
-        for (l = 0; l < order; l++) {
-            if (j + l > 1) {
-                moments[j * order + l] = pow(fabs(moments[j * order + l]), 1.0 / (j + l)) / *count;
-            }
-            else {
-                moments[j * order + l] /= *count;
-            }
-        }
-    }
+//     for (j = 0; j < order * order; j++)
+//         moments[j] = 0;
 
-    grib_context_free(c, lat);
-    grib_context_free(c, lon);
-    grib_context_free(c, values);
-    (void)mass;
+//     for (i = 0; i < numberOfPoints; i++) {
+//         if (values[i] != missingValue) {
+//             dx  = (lon[i] - centroidX);
+//             dy  = (lat[i] - centroidY);
+//             ddx = 1;
+//             for (j = 0; j < order; j++) {
+//                 ddy = 1;
+//                 for (l = 0; l < order; l++) {
+//                     moments[j * order + l] += ddx * ddy * values[i];
+//                     ddy *= dy;
+//                 }
+//                 ddx *= dx;
+//             }
+//         }
+//     }
+//     for (j = 0; j < order; j++) {
+//         for (l = 0; l < order; l++) {
+//             if (j + l > 1) {
+//                 moments[j * order + l] = pow(fabs(moments[j * order + l]), 1.0 / (j + l)) / *count;
+//             }
+//             else {
+//                 moments[j * order + l] /= *count;
+//             }
+//         }
+//     }
 
-    return ret;
-}
-#endif
+//     grib_context_free(c, lat);
+//     grib_context_free(c, lon);
+//     grib_context_free(c, values);
+//     (void)mass;
+
+//     return ret;
+// }
 
 // Helper function for 'parse_keyval_string'
 static void set_value(grib_values* value, char* str, int equal)

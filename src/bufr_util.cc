@@ -619,25 +619,25 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     if (!c)
         c = grib_context_get_default();
     if (path_is_directory(filename)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: \"%s\" is a directory", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: \"%s\" is a directory", __func__, filename);
         return GRIB_IO_PROBLEM;
     }
     fp = fopen(filename, "rb");
     if (!fp) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read file \"%s\"", __func__, filename);
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
     err = count_bufr_messages(c, fp, num_messages, strict_mode);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to count BUFR messages in file \"%s\"", __func__, filename);
         fclose(fp);
         return err;
     }
 
     size = *num_messages;
     if (size == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: No BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: No BUFR messages in file \"%s\"", __func__, filename);
         return GRIB_INVALID_MESSAGE;
     }
     *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
@@ -668,7 +668,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         if (!mesg) {
             if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
                 // An error occurred
-                grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read BUFR message", __func__);
                 if (strict_mode) {
                     fclose(fp);
                     return GRIB_DECODING_ERROR;

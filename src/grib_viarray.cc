@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *
- *   Enrico Fucile
- *
- ***************************************************************************/
-
 #include "grib_api_internal.h"
 
 /* For debugging purposes */
@@ -110,19 +104,19 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v)
     v->n = 0;
 }
 
-grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v)
-{
-    grib_iarray** ret;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// grib_iarray** grib_viarray_get_array(grib_context* c, grib_viarray* v)
+// {
+//     grib_iarray** ret;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (grib_iarray**)grib_context_malloc_clear(c, sizeof(grib_iarray*) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
-size_t grib_viarray_used_size(grib_viarray* v)
-{
-    return v->n;
-}
+// size_t grib_viarray_used_size(grib_viarray* v)
+// {
+//     return v->n;
+// }

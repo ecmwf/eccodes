@@ -79,6 +79,25 @@ done
 cd $test_dir
 
 # -------------------------------
+echo "WMO legacy parameters..."
+# -------------------------------
+ECMF_DIR=$ECCODES_DEFINITION_PATH/grib2
+
+tempDir=temp.${label}.dir
+rm -fr $tempDir
+mkdir -p $tempDir
+cd $tempDir
+#cp $ECMF_DIR/cfName.legacy.def    cfName.def
+#cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
+cp $ECMF_DIR/name.legacy.def      name.def
+cp $ECMF_DIR/paramId.legacy.def   paramId.def
+cp $ECMF_DIR/shortName.legacy.def shortName.def
+cp $ECMF_DIR/units.legacy.def     units.def
+$CHECK_DEFS
+cd $test_dir
+rm -fr $tempDir
+
+# -------------------------------
 echo "ECMWF legacy parameters..."
 # -------------------------------
 ECMF_DIR=$ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
@@ -94,6 +113,8 @@ cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
 $CHECK_DEFS
+cd $test_dir
+rm -fr $tempDir
 
 # -------------------------------
 echo "Check duplicates"

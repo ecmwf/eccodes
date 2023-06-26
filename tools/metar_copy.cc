@@ -57,15 +57,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-#if 0
-    if (options->outfile && options->outfile->name) {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-#endif
     return 0;
 }
 
@@ -107,11 +98,6 @@ void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    /*
-  if (options->outfile->file) {
-    fclose(options->outfile->file);
-  }
-     */
     return 0;
 }
 

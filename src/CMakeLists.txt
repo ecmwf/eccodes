@@ -137,7 +137,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
     grib_accessor_class_times.cc
-    grib_accessor_class_forward.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc
@@ -292,7 +291,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     grib_geography.cc
     grib_handle.cc
-    grib_header_compute.cc
     grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc

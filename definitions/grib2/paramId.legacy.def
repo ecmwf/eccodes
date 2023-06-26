@@ -1,0 +1,54 @@
+#Volumetric soil moisture content
+'260185' = {
+  discipline = 2 ;
+  parameterCategory = 0 ;
+  parameterNumber = 9 ;
+ }
+#Upper layer soil temperature
+'260201' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 1 ;
+ }
+#Upper layer soil moisture
+'260202' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 2 ;
+ }
+#Lower layer soil moisture
+'260203' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 3 ;
+ }
+#Bottom layer soil temperature
+'260204' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 4 ;
+ }
+#Liquid volumetric soil moisture (non-frozen)
+'260205' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 5 ;
+ }
+#Transpiration stress-onset (soil moisture)
+'260207' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 7 ;
+ }
+#Direct evaporation cease (soil moisture)
+'260208' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 8 ;
+ }
+#Soil porosity
+'260209' = {
+  discipline = 2 ;
+  parameterCategory = 3 ;
+  parameterNumber = 9 ;
+ }

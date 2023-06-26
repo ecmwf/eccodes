@@ -271,13 +271,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return ret;
     }
 
-#if 0
-    if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap)){
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Accessor %s cannot access bitmap \n", a->name, self->bitmap_present, ret);
-        return ret;
-    }
-#endif
+//     if(!grib_find_accessor(grib_handle_of_accessor(a),self->bitmap)){
+//         grib_context_log(a->context, GRIB_LOG_ERROR,
+//                 "Accessor %s cannot access bitmap \n", a->name, self->bitmap_present, ret);
+//         return ret;
+//     }
 
     ret = grib_set_double_array_internal(grib_handle_of_accessor(a), self->coded_values, val, *len);
     if (ret) {

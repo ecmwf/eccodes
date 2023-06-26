@@ -2,7 +2,7 @@
 set -eu
 
 # Usage:
-#  create_legacy_def.sh $paramId $paramId...
+#  $0 $paramId $paramId...
 #
 # This script will insert the local ECMWF GRIB2 representation
 # for each paramId into the files:
@@ -31,7 +31,7 @@ fi
 pids="$@"
 
 sample2=samples/GRIB2.tmpl
-temp=$TMPDIR/temp.create_legacy_def.grib
+temp=$TMPDIR/temp.create_legacy_ecmf_def.grib
 defs=definitions/grib2/localConcepts/ecmf
 
 output_def()

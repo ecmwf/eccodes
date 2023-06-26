@@ -11,7 +11,7 @@
  *  Enrico Fucile
  ****************************/
 
-#include "grib_api_internal_cpp.h"
+#include "grib_ieeefloat.h"
 
 #define PRE_PROCESSING_NONE 0
 #define PRE_PROCESSING_DIFFERENCE 1

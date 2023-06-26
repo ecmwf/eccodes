@@ -74,7 +74,6 @@
 { "element", &grib_accessor_class_element, },
 { "evaluate", &grib_accessor_class_evaluate, },
 { "expanded_descriptors", &grib_accessor_class_expanded_descriptors, },
-{ "forward", &grib_accessor_class_forward, },
 { "from_scale_factor_scaled_value", &grib_accessor_class_from_scale_factor_scaled_value, },
 { "g1_half_byte_codeflag", &grib_accessor_class_g1_half_byte_codeflag, },
 { "g1_message_length", &grib_accessor_class_g1_message_length, },

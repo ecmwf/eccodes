@@ -8,7 +8,7 @@
 * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 */
 
-
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
 This is used by make_class.pl
@@ -423,7 +423,7 @@ Assert(0);
                 case 7:
                     if (Y) {
                         extraScale           = Y;
-                        referenceValueFactor = grib_power(Y, 10);
+                        referenceValueFactor = grib_power<double>(Y, 10);
                         extraWidth           = ((10 * Y) + 2) / 3;
                     }
                     else {

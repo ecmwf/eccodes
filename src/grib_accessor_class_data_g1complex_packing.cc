@@ -173,29 +173,27 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-#if 0
-    /* TODO: spectral_ieee does not work */
-    if (c->ieee_packing && self->ieee_packing) {
-        grib_handle* h       = grib_handle_of_accessor(a);
-        grib_context* c      = a->context;
-        char* packingType_s  = NULL;
-        char* ieee_packing_s = NULL;
-        long precision = c->ieee_packing == 32 ? 1 : 2;
-        size_t lenstr  = strlen(self->ieee_packing);
+//     /* TODO: spectral_ieee does not work */
+//     if (c->ieee_packing && self->ieee_packing) {
+//         grib_handle* h       = grib_handle_of_accessor(a);
+//         grib_context* c      = a->context;
+//         char* packingType_s  = NULL;
+//         char* ieee_packing_s = NULL;
+//         long precision = c->ieee_packing == 32 ? 1 : 2;
+//         size_t lenstr  = strlen(self->ieee_packing);
 
-        packingType_s  = grib_context_strdup(c, self->packingType);
-        ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
-        precision_s    = grib_context_strdup(c, self->precision);
+//         packingType_s  = grib_context_strdup(c, self->packingType);
+//         ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
+//         precision_s    = grib_context_strdup(c, self->precision);
 
-        grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
-        grib_set_long(h, precision_s, precision);
+//         grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
+//         grib_set_long(h, precision_s, precision);
 
-        grib_context_free(c, packingType_s);
-        grib_context_free(c, ieee_packing_s);
-        grib_context_free(c, precision_s);
-        return grib_set_double_array(h, "values", val, *len);
-    }
-#endif
+//         grib_context_free(c, packingType_s);
+//         grib_context_free(c, ieee_packing_s);
+//         grib_context_free(c, precision_s);
+//         return grib_set_double_array(h, "values", val, *len);
+//     }
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
         return ret;

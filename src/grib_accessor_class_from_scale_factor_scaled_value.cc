@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 #ifdef ECCODES_ON_WINDOWS
  #include <stdint.h>
 #endif
