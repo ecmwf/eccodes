@@ -20,19 +20,26 @@
 
 class {{ name }} : public {{ super }} {
 
-protected:
+public:
 
     {{ name }}({{constructor.args}});
     virtual ~{{ name }}();
 
 private:
+    // No copy allowed
+    {{ name }}(const {{ name }}&);
+    {{ name }}& operator=(const {{ name }}&);
+
+protected:
 
     // Inherited methods
+    // Protected for now
 
     {% for m in inherited_methods %}
     virtual {{ m.result }} {{ m.name }}({{ m.args }}) const override;{% endfor %}
     virtual void print(std::ostream& s) const override;
 
+private:
     // Private methods
     {% for m in private_methods %}
     {{ m.result }} {{ m.name }}({{ m.args }}) const;{% endfor %}
@@ -42,10 +49,6 @@ private:
     {% for m in members %}{{ m.type }} {{ m.name }};
     {% endfor %}
 
-
-
-    // friends
-    friend std::ostream& operator<<(std::ostream& s, const {{ name }}& p) { p.print(s); return s; }
 };
 
 {% for n in namespace_reversed %}} // namespace {{ n }}

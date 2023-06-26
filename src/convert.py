@@ -57,6 +57,8 @@ class Method:
             name = bits[-1]
             self.args_list.append((type, name))
 
+        self.call_args = ", ".join([n for _, n in self.args_list[1:]])
+
     def add_line(self, line):
         self.lines.append(line)
 
@@ -117,8 +119,10 @@ class Class:
         self.body_includes = includes
         if SUPER:
             self.super, _ = self.tidy_class_name(SUPER[0])
+            self.src = args.target
         else:
             self.super, _ = self.tidy_class_name(class_)
+            self.src = 'cpp'
 
         self.members = [Member(m) for m in MEMBERS if m != ""]
 
@@ -135,7 +139,7 @@ class Class:
             )
         ]
         init = [p for p in inherited_procs.values() if p.name == "init"]
-        self.constructor = init[0] if init else Method("init", "void", "void")
+        self.constructor = init[0] if init else Method("init", "void", "grib_accessor* a, const long length, grib_arguments* args")
 
         init = [p for p in inherited_procs.values() if p.name == "destroy"]
         self.destructor = init[0] if init else Method("init", "void", "void")
@@ -189,7 +193,7 @@ class Class:
                 destructor=self.destructor,
                 namespaces=self.namespaces,
                 namespace_reversed=reversed(self.namespaces),
-                include_super="/".join(self.namespaces + [f"{self.super}.h"]),
+                include_super="/".join([self.src] + self.namespaces + [f"{self.super}.h"]),
             ),
         )
 
@@ -223,7 +227,7 @@ class Class:
                     destructor=self.destructor,
                     namespaces=self.namespaces,
                     namespace_reversed=reversed(self.namespaces),
-                    include_header="/".join(self.namespaces + [f"{self.name}.h"]),
+                    include_header="/".join([self.src] +self.namespaces + [f"{self.name}.h"]),
                     top_level=self.top_level,
                     factory_name=self.factory_name,
                 )
@@ -288,6 +292,9 @@ class Accessor(Class):
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
+        r"\bgrib_pack_long\((\w+)\s*,": r"\1->pack_long(",
+        r"\bgrib_unpack_long\((\w+)\s*,": r"\1->unpack_long(",
+        r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
         r"\bDebugAssert\b": "ASSERT",
         r"\bAssert\b": "ASSERT",
         r"\bunpack_long\(this,": "this->unpack_long(",

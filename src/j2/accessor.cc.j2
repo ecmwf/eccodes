@@ -32,13 +32,13 @@ static {{ m.result }} {{ m.name }}({{ m.args }}) const {
 
 {% for line in top_level['init'] %}{{ line }}
 {% endfor %}
-{{ name }}({{constructor.args}}) {
+{{ name }}::{{ name }}({{constructor.args}}) : {{ super }}({{ constructor.call_args }}){
        {{ constructor.body }}
 }
 
 {% for line in top_level['destroy'] %}{{ line }}
 {% endfor %}
-~{{ name }}() {
+{{ name }}::~{{ name }}() {
        {{ destructor.body }}
 }
 
