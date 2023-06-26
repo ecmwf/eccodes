@@ -7,6 +7,7 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 
@@ -286,6 +287,7 @@ static void tableB_override_store_ref_val(grib_context* c, grib_accessor_bufr_da
         q->next = tb;
     }
 }
+
 /* Operator 203YYY: Retrieve changed reference value from linked list */
 static int tableB_override_get_ref_val(grib_accessor_bufr_data_array* self, int code, long* out_ref_val)
 {
@@ -299,6 +301,7 @@ static int tableB_override_get_ref_val(grib_accessor_bufr_data_array* self, int 
     }
     return GRIB_NOT_FOUND;
 }
+
 /* Operator 203YYY: Clear and free linked list */
 static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array* self)
 {
@@ -310,6 +313,7 @@ static void tableB_override_clear(grib_context* c, grib_accessor_bufr_data_array
     }
     self->tableb_override = NULL;
 }
+
 /* Operator 203YYY: Copy contents of linked list to the transient array key */
 static int tableB_override_set_key(grib_handle* h, grib_accessor_bufr_data_array* self)
 {
@@ -347,18 +351,17 @@ static int check_overridden_reference_values(const grib_context* c, long* refVal
     }
     return GRIB_SUCCESS;
 }
-/*
-static void tableB_override_dump(grib_accessor_bufr_data_array *self)
-{
-    bufr_tableb_override* p = self->tableb_override;
-    int i = 1;
-    while (p) {
-        printf("ECCODES DEBUG: Table B Override: [%d] code=%d, rv=%ld\n", i, p->code, p->new_ref_val);
-        p = p->next;
-        ++i;
-    }
-}
- */
+
+// static void tableB_override_dump(grib_accessor_bufr_data_array *self)
+// {
+//     bufr_tableb_override* p = self->tableb_override;
+//     int i = 1;
+//     while (p) {
+//         printf("ECCODES DEBUG: Table B Override: [%d] code=%d, rv=%ld\n", i, p->code, p->new_ref_val);
+//         p = p->next;
+//         ++i;
+//     }
+// }
 
 #define DYN_ARRAY_SIZE_INIT 1000 /* Initial size for grib_iarray_new and grib_darray_new */
 #define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
@@ -403,17 +406,15 @@ static void init(grib_accessor* a, const long v, grib_arguments* params)
     /* Assert(a->length>=0); */
 }
 
-/*
-static void clean_string(char* s,int len)
-{
-    int i=len-1;
-    while (i) {
-        if (!isalnum(s[i])) s[i]=0;
-        else break;
-        i--;
-    }
-}
- */
+// static void clean_string(char* s,int len)
+// {
+//     int i=len-1;
+//     while (i) {
+//         if (!isalnum(s[i])) s[i]=0;
+//         else break;
+//         i--;
+//     }
+// }
 
 static int check_end_data(grib_context* c, bufr_descriptor* bd, grib_accessor_bufr_data_array* self, int size)
 {
@@ -2207,14 +2208,12 @@ static grib_accessor* get_element_from_bitmap(const grib_accessor* a, bitmap_s* 
     return bitmap->referredElement ? bitmap->referredElement->prev->accessor : NULL;
 }
 
-/*
-static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[])
-{
-    int i;
-    for (i=0;i<number_of_qualifiers;i++)
-        significanceQualifierGroup[i]=0;
-}
- */
+// static GRIB_INLINE void reset_qualifiers(grib_accessor* significanceQualifierGroup[])
+// {
+//     int i;
+//     for (i=0;i<number_of_qualifiers;i++)
+//         significanceQualifierGroup[i]=0;
+// }
 
 static void grib_convert_to_attribute(grib_accessor* a)
 {
@@ -3389,10 +3388,9 @@ static int process_elements(grib_accessor* a, int flag, long onlySubset, long st
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    /* grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a; */
-    /* int err=process_elements(a,PROCESS_DECODE); */
-
-    /* grib_dump_section(dumper,a,self->dataKeys->block); */
+    // grib_accessor_bufr_data_array *self =(grib_accessor_bufr_data_array*)a;
+    // int err=process_elements(a,PROCESS_DECODE);
+    // grib_dump_section(dumper,a,self->dataKeys->block);
     return;
 }
 
