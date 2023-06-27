@@ -8,21 +8,21 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
- #include "{{ include_header }}"
+ #include "{{ c.include_header }}"
 
-{% for i in includes %}
+{% for i in c.body_includes %}
 #include {{ i }}
 {% endfor %}
 
-{% for n in namespaces %}namespace {{ n }} {
+{% for n in c.namespaces %}namespace {{ n }} {
 {% endfor %}
 
 
-{% for line in top_level['-start-'] %}{{ line }}
+{% for line in c.top_level_code['-start-'] %}{{ line }}
 {% endfor %}
 
-{% for m in static_procs %}
-{% for line in top_level[m.name] %}{{ line }}
+{% for m in c.static_functions %}
+{% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 static {{ m.result }} {{ m.name }}({{ m.args }}) {
         {{ m.body }}
@@ -30,20 +30,20 @@ static {{ m.result }} {{ m.name }}({{ m.args }}) {
  {% endfor %}
 
 
-{% for line in top_level['init'] %}{{ line }}
+{% for line in c.top_level_code['init'] %}{{ line }}
 {% endfor %}
-{{ name }}::{{ name }}({{constructor.args}}) : {{ super }}({{ constructor.call_args }}){
-       {{ constructor.body }}
+{{ c.name }}::{{ c.name }}({{c.constructor.args_declaration}}) : {{ c.super }}({{ c.constructor.call_args }}){
+       {{ c.constructor.body }}
 }
 
-{% for line in top_level['destroy'] %}{{ line }}
+{% for line in c.top_level_code['destroy'] %}{{ line }}
 {% endfor %}
-{{ name }}::~{{ name }}() {
-       {{ destructor.body }}
+{{ c.name }}::~{{ c.name }}() {
+       {{ c.destructor.body }}
 }
 
-{% for m in inherited_methods %}
-{% for line in top_level[m.name] %}{{ line }}
+{% for m in c.inherited_methods %}
+{% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 
  {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
@@ -51,24 +51,24 @@ static {{ m.result }} {{ m.name }}({{ m.args }}) {
  }
  {% endfor %}
 
-{% for m in private_methods %}
-{% for line in top_level[m.name] %}{{ line }}
+{% for m in c.private_methods %}
+{% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
  {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
         {{ m.body }}
  }
  {% endfor %}
 
-void {{ name }}::print(std::ostream& s) const {
-    s << "{{ name }}["
-    {% for m in members %} << "{{ m.name }}="  << {{ m.name }} {% if not loop.last %}<< ',' {% endif %}
+void {{ c.name }}::print(std::ostream& s) const {
+    s << "{{ c.name }}["
+    {% for m in c.members %} << "{{ m.name }}="  << {{ m.name }} {% if not loop.last %}<< ',' {% endif %}
     {% endfor %} << "]";
 }
 
-{% for line in top_level['-end-'] %}{{ line }}
+{% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}
 
-static AccessorMaker<{{ name }}> maker("{{ factory_name }}");
+static AccessorMaker<{{ c.name }}> maker("{{ c.factory_name }}");
 
-{% for n in namespace_reversed %}} // namespace {{ n }}
+{% for n in c.namespaces_reversed %}} // namespace {{ n }}
 {% endfor %}

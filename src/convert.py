@@ -41,6 +41,47 @@ class Member:
             self.type += "*"
 
 
+class Arg:
+    def __init__(self, name, type) -> None:
+        self.name = name
+        self.type = type
+
+        if self.name[0] == "*":
+            self.name = self.name[1:]
+            self.type += "*"
+
+
+class Function:
+    def __init__(self, name, result, args, template=None) -> None:
+        self._name = name
+        self._result = result
+        self._template = template
+        self._args = []
+        self._lines = []
+
+        for arg in [a.strip() for a in args.split(",")]:
+            bits = arg.split()
+            type = " ".join(bits[:-1])
+            name = bits[-1]
+            self._args.append(Arg(name, type))
+
+    def add_line(self, line):
+        self._lines.append(line)
+
+    @property
+    def args_declaration(self):
+        return ", ".join([f"{a.type} {a.name}" for a in self._args])
+
+    @property
+    def call_args(self):
+        return ", ".join([a.name for a in self._args])
+
+    @property
+    def body(self):
+        return ""
+        return "\n".join(self._lines)
+
+
 class Method:
     def __init__(self, name, result, args, template=None) -> None:
         self.name = name
@@ -70,7 +111,6 @@ class Method:
 
     def has_this(self):
         return True
-
 
 
 class SimpleMethod(Method):
@@ -111,7 +151,7 @@ class CompareMethod(Method):
 class DumpMethod(Method):
     def tidy_lines(self, klass):
         # For now, just remove the method
-        self.lines = ['#if 0'] + self.lines[1:-1] + ['#endif']
+        self.lines = ["#if 0"] + self.lines[1:-1] + ["#endif"]
 
 
 class StaticProc(Method):
@@ -147,70 +187,157 @@ class Class:
         *,
         path,
         class_,
-        inherited_procs,
-        other_procs,
-        top_level,
+        functions,
+        top_level_code,
         includes,
         factory_name,
-        SUPER=[],
-        IMPLEMENTS=[],
-        MEMBERS=[],
+        super,
+        implements,
+        members,
     ):
         assert factory_name is not None
 
-        self.class_ = class_
-        self.name, self.cname = self.tidy_class_name(path)
-        self.inherited_procs = inherited_procs
-        self.factory_name = factory_name
+        self._class = class_
+        self._name, self.cname = self.tidy_class_name(path)
+        self._top_level_code = top_level_code
+        self._factory_name = factory_name
+        self._members = members
+        self._functions = functions
 
-        self.self = None
-        self.a = None
-        self.header_includes = []
-        self.body_includes = includes
-        if SUPER:
-            self.super, _ = self.tidy_class_name(SUPER[0])
-            self.src = args.target
+        self._body_includes = includes
+
+        if super is None:
+            self._super, _ = self.tidy_class_name(class_)
+            self._include_dir = "cpp"
         else:
-            self.super, _ = self.tidy_class_name(class_)
-            self.src = "cpp"
+            self._super, _ = self.tidy_class_name(super)
+            self._include_dir = args.target
 
-        self.members = [Member(m) for m in MEMBERS if m != ""]
+    def finalise(self, other_classes):
+        self._other_classes = other_classes
 
-        for p in inherited_procs.values():
-            p.tidy_lines(self)
+        # Classify functions
+        self._inherided_methods = []
+        self._private_methods = []
+        self._static_functions = []
 
-        self.inherited_methods = [
-            p
-            for p in inherited_procs.values()
-            if p.name
-            not in (
-                "init",
-                "destroy",
-            )
-        ]
-        init = [p for p in inherited_procs.values() if p.name == "init"]
-        self.constructor = (
-            init[0]
-            if init
-            else SimpleMethod(
-                "init",
-                "void",
-                "grib_accessor* a, const long length, grib_arguments* args",
-            )
-        )
 
-        init = [p for p in inherited_procs.values() if p.name == "destroy"]
-        self.destructor = init[0] if init else SimpleMethod("destroy", "void", "void")
+    @property
+    def name(self):
+        return self._name
 
-        for p in other_procs.values():
-            p.tidy_lines(self)
+    @property
+    def factory_name(self):
+        return self._factory_name
 
-        self.private_methods = [p for p in other_procs.values() if p.has_this()]
-        self.static_procs = [p for p in other_procs.values() if not p.has_this()]
+    @property
+    def super(self):
+        return self._super
 
-        self.top_level = defaultdict(list)
-        for k, v in top_level.items():
-            self.top_level[k] = [self.tidy_top_level(p) for p in v]
+    @property
+    def top_level_code(self):
+        return self._top_level_code
+
+    @property
+    def members(self):
+        # if self.super in self.other_classes:
+        #     return self.other_classes[self.super].members + self._members
+        return self._members
+
+    @property
+    def include_super(self):
+        return "/".join([self._include_dir] + self.namespaces + [self._super + ".h"])
+
+    @property
+    def include_header(self):
+        return "/".join([args.target] + self.namespaces + [self._super + ".h"])
+
+    @property
+    def header_includes(self):
+        return []
+
+    @property
+    def body_includes(self):
+        return []
+
+    @property
+    def namespaces(self):
+        return ["eccodes", self._class]
+
+    @property
+    def namespaces_reversed(self):
+        return reversed(self.namespaces)
+
+    @property
+    def constructor(self):
+        if "init" in self._functions:
+            return self._functions["init"]
+
+        return Function("a")
+
+    @property
+    def destructor(self):
+        if "destroy" in self._functions:
+            return self._functions["destroy"]
+
+        return Function("a", "b", "c")
+
+    @property
+    def inherited_methods(self):
+        return []
+
+    @property
+    def private_methods(self):
+        return []
+
+    @property
+    def static_functions(self):
+        return []
+
+        # if SUPER:
+        #     self.super, _ = self.tidy_class_name(SUPER[0])
+        #     self.src = args.target
+        # else:
+        #     self.super, _ = self.tidy_class_name(class_)
+        #     self.src = "cpp"
+
+        # self.members = [Member(m) for m in MEMBERS if m != ""]
+
+        # for p in inherited_procs.values():
+        #     p.tidy_lines(self)
+
+        # self.inherited_methods = [
+        #     p
+        #     for p in inherited_procs.values()
+        #     if p.name
+        #     not in (
+        #         "init",
+        #         "destroy",
+        #     )
+        # ]
+        # init = [p for p in inherited_procs.values() if p.name == "init"]
+        # self.constructor = (
+        #     init[0]
+        #     if init
+        #     else SimpleMethod(
+        #         "init",
+        #         "void",
+        #         "grib_accessor* a, const long length, grib_arguments* args",
+        #     )
+        # )
+
+        # init = [p for p in inherited_procs.values() if p.name == "destroy"]
+        # self.destructor = init[0] if init else SimpleMethod("destroy", "void", "void")
+
+        # for p in other_procs.values():
+        #     p.tidy_lines(self)
+
+        # self.private_methods = [p for p in other_procs.values() if p.has_this()]
+        # self.static_procs = [p for p in other_procs.values() if not p.has_this()]
+
+        # self.top_level = defaultdict(list)
+        # for k, v in top_level.items():
+        #     self.top_level[k] = [self.tidy_top_level(p) for p in v]
 
     def update(self, classes):
         if self.super in classes:
@@ -222,47 +349,32 @@ class Class:
 
     def tidy_class_name(self, path):
         path, ext = os.path.splitext(path)
-        cname = os.path.basename(path)
+        c_name = os.path.basename(path)
 
-        name = cname.replace(self.prefix, "")
+        name = c_name.replace(self.prefix, "")
 
         name = to_camel_class(name)
-        return self.rename.get(name, name), cname
+        return self.rename.get(name, name), c_name
 
     def save(self, ext, content):
         target = os.path.join(args.target, *self.namespaces, f"{self.name}.{ext}")
         os.makedirs(os.path.dirname(target), exist_ok=True)
+        print("Writting ", target)
         with open(target, "w") as f:
             f.write(content)
 
         ret = os.system(f"clang-format -i {target}")
         assert ret == 0
-        print("      ", target)
 
     def dump_header(self):
-        template = env.get_template(f"{self.class_}.h.j2")
+        template = env.get_template(f"{self._class}.h.j2")
         self.save(
             "h",
-            template.render(
-                name=self.name,
-                super=self.super,
-                members=self.members,
-                includes=self.header_includes,
-                inherited_methods=self.inherited_methods,
-                private_methods=self.private_methods,
-                static_procs=self.static_procs,
-                constructor=self.constructor,
-                destructor=self.destructor,
-                namespaces=self.namespaces,
-                namespace_reversed=reversed(self.namespaces),
-                include_super="/".join(
-                    [self.src] + self.namespaces + [f"{self.super}.h"]
-                ),
-            ),
+            template.render(c=self),
         )
 
     def dump_body(self):
-        template = env.get_template(f"{self.class_}.cc.j2")
+        template = env.get_template(f"{self._class}.cc.j2")
 
         def tidy_more(text):
             # Some more tidying
@@ -278,26 +390,7 @@ class Class:
 
         self.save(
             "cc",
-            tidy_more(
-                template.render(
-                    name=self.name,
-                    super=self.super,
-                    members=self.members,
-                    includes=self.body_includes,
-                    inherited_methods=self.inherited_methods,
-                    private_methods=self.private_methods,
-                    static_procs=self.static_procs,
-                    constructor=self.constructor,
-                    destructor=self.destructor,
-                    namespaces=self.namespaces,
-                    namespace_reversed=reversed(self.namespaces),
-                    include_header="/".join(
-                        [self.src] + self.namespaces + [f"{self.name}.h"]
-                    ),
-                    top_level=self.top_level,
-                    factory_name=self.factory_name,
-                )
-            ),
+            tidy_more(template.render(c=self)),
         )
 
     def tidy_line(self, line, this=[]):
@@ -408,20 +501,19 @@ CLASSES = dict(
 )
 
 
-def make_class(classes, path):
+def parse_file(path):
     in_def = False
     in_imp = False
-    in_proc = False
+    in_function = False
     includes = []
     factory_name = None
     template = None
 
     definitions = {}
-    inherited_procs = {}
-    other_procs = {}
+    functions = {}
     top_level_lines = []
-    top_level = defaultdict(list)
-    print(path, file=sys.stderr)
+    top_level_code = defaultdict(list)
+    print("Parsing", path)
 
     f = open(path, "r")
     for line in f:
@@ -465,36 +557,29 @@ def make_class(classes, path):
 
         m = re.match(r"static\s+([^(]+)\s+(\w+)\s*\(([^(]+)\)", line)
         if m:
-            p = m.group(2)
-            top_level[p] = [x for x in top_level_lines]
+            function_name = m.group(2)
+            top_level_code[function_name] = [x for x in top_level_lines]
             top_level_lines = []
 
-            if p in definitions.get("IMPLEMENTS", []):
-                in_proc = True
-                method_class = METHOD_CLASS.get(p, SimpleMethod)
-                proc = inherited_procs[p] = method_class(
-                    p, m.group(1), m.group(3), template
-                )
-                depth = stripped_line.count("{") - stripped_line.count("}")
-                assert depth >= 0, line
-                continue
-            else:
-                in_proc = True
-                proc = StaticProc(p, m.group(1), m.group(3), template)
-                other_procs[p] = proc
-                depth = stripped_line.count("{") - stripped_line.count("}")
-                assert depth >= 0, line
-                continue
+            in_function = True
+            function = functions[function_name] = Function(
+                function_name,
+                m.group(1),
+                m.group(3),
+                template,
+            )
+            depth = stripped_line.count("{") - stripped_line.count("}")
+            assert depth >= 0, line
 
-        if in_proc:
-            proc.add_line(stripped_line)
+        if in_function:
+            function.add_line(stripped_line)
             depth += stripped_line.count("{")
             depth -= stripped_line.count("}")
             assert depth >= 0, line
             if depth == 0:
-                in_proc = False
+                in_function = False
                 template = None
-                del proc
+                del function
             continue
 
         if stripped_line.startswith("#include"):
@@ -511,29 +596,31 @@ def make_class(classes, path):
         top_level_lines.append(line)
 
     if definitions:
-        top_level["-end-"] = top_level_lines
+        top_level_code["-end-"] = top_level_lines
         class_ = definitions.pop("CLASS")[0]
         klass = CLASSES[class_](
             path=path,
             class_=class_,
-            inherited_procs=inherited_procs,
-            other_procs=other_procs,
-            top_level=top_level,
+            functions=functions,
+            top_level_code=top_level_code,
             includes=includes,
             factory_name=factory_name,
-            **definitions,
+            super=definitions["SUPER"][0] if "SUPER" in definitions else None,
+            implements=definitions.get("IMPLEMENTS", []),
+            members=[Member(m) for m in definitions.get("MEMBERS", []) if m != ""],
         )
-        classes[klass.cname] = klass
-
+        return klass
 
 
 def main():
     classes = {}
     for a in args.path:
-        make_class(classes, a)
+        klass = parse_file(a)
+        if klass is not None:
+            classes[klass.cname] = klass
 
     for klass in classes.values():
-        klass.update(classes)
+        klass.finalise(classes)
 
     for klass in classes.values():
         klass.dump()

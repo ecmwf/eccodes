@@ -10,48 +10,48 @@
 
 #pragma once
 
-#include "{{ include_super }}"
+#include "{{ c.include_super }}"
 
-{% for i in includes %}
+{% for i in c.header_includes %}
 #include {{ i }}
 {% endfor %}
 
 
-{% for n in namespaces %}namespace {{ n }} {
+{% for n in c.namespaces %}namespace {{ n }} {
 {% endfor %}
 
-class {{ name }} : public {{ super }} {
+class {{ c.name }} : public {{ c.super }} {
 
 public:
 
-    {{ name }}({{constructor.args}});
-    virtual ~{{ name }}();
+    {{ c.name }}({{c.constructor.args_declaration}});
+    virtual ~{{ c.name }}();
 
 private:
     // No copy allowed
-    {{ name }}(const {{ name }}&);
-    {{ name }}& operator=(const {{ name }}&);
+    {{ c.name }}(const {{ c.name }}&);
+    {{ c.name }}& operator=(const {{ c.name }}&);
 
 protected:
 
     // Inherited methods
     // Protected for now
 
-    {% for m in inherited_methods %}
-    virtual {{ m.result }} {{ m.name }}({{ m.args }}) const override;{% endfor %}
+    {% for m in c.inherited_methods %}
+    virtual {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
     virtual void print(std::ostream& s) const override;
 
 private:
     // Private methods
-    {% for m in private_methods %}
+    {% for m in c.private_methods %}
     {{ m.result }} {{ m.name }}({{ m.args }}) const;{% endfor %}
 
 
     // Members
-    {% for m in members %}{{ m.type }} {{ m.name }};
+    {% for m in c.members %}{{ m.type }} {{ m.name }};
     {% endfor %}
 
 };
 
-{% for n in namespace_reversed %}} // namespace {{ n }}
+{% for n in c.namespaces_reversed %}} // namespace {{ n }}
 {% endfor %}
