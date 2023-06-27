@@ -24,7 +24,7 @@
 {% for m in static_procs %}
 {% for line in top_level[m.name] %}{{ line }}
 {% endfor %}
-static {{ m.result }} {{ m.name }}({{ m.args }}) const {
+static {{ m.result }} {{ m.name }}({{ m.args }}) {
         {{ m.body }}
  }
  {% endfor %}

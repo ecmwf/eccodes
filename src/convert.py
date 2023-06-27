@@ -49,6 +49,7 @@ class Method:
         self.lines = []
 
         args = [a.strip() for a in args.split(",")]
+        self.full_args = ", ".join(args)
         self.args = ", ".join(args[1:])
         self.args_list = []
         for arg in [re.sub(r"\s+", " ", a).strip() for a in args]:
@@ -69,12 +70,7 @@ class Method:
 
     def has_this(self):
         return True
-        if self.template is not None:
-            return False
-        for line in self.lines:
-            if "this->" in line:
-                return True
-        return False
+
 
 
 class SimpleMethod(Method):
@@ -107,19 +103,24 @@ class CompareMethod(Method):
             lines.append(line)
 
         self.lines = lines
-        self.args_list[0] = ('Accessor*','this')
-        self.args_list[1] = ('const Accessor*', 'other')
-        self.args = 'const Accessor* other'
+        self.args_list[0] = ("Accessor*", "this")
+        self.args_list[1] = ("const Accessor*", "other")
+        self.args = "const Accessor* other"
 
 
 class DumpMethod(Method):
     def tidy_lines(self, klass):
         # For now, just remove the method
-        self.lines = []
+        self.lines = ['#if 0'] + self.lines[1:-1] + ['#endif']
 
 
 class StaticProc(Method):
     def has_this(self):
+        if self.template is not None:
+            return False
+        for line in self.lines:
+            if "this->" in line:
+                return True
         return False
 
     def tidy_lines(self, klass):
@@ -295,7 +296,7 @@ class Class:
             ),
         )
 
-    def tidy_line(self, line, this):
+    def tidy_line(self, line, this=[]):
         line = re.sub(r"\bsuper->\b", f"{self.super}::", line)
 
         for n in this:
@@ -356,7 +357,8 @@ class Accessor(Class):
         r"\bgrib_pack_long\((\w+)\s*,": r"\1->pack_long(",
         r"\bgrib_unpack_long\((\w+)\s*,": r"\1->unpack_long(",
         r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
-        r"\bDebugAssert\b": "ASSERT",
+        r"\bpreferred_size\(this,": r"this->preferred_size(",
+        r"\bDebugAssert\b": "DEBUG_ASSERT",
         r"\bAssert\b": "ASSERT",
         r"\bunpack_long\(this,": "this->unpack_long(",
         r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",

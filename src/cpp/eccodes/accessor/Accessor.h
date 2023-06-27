@@ -15,6 +15,7 @@
 #include "grib_api_internal.h"
 
 #define ASSERT(a) /* */
+#define DEBUG_ASSERT(a) /* */
 
 namespace eccodes
 {
@@ -102,6 +103,10 @@ public:
     mutable size_t length_;
 
     grib_handle* handle() const;
+    grib_handle* h;
+    Accessor* parent;
+    int carg;
+
 
 
 };
