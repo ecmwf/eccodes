@@ -140,8 +140,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_long(dumper, a, NULL);
 }
 
-static int calculate_fcmonth(grib_accessor* a,
-        long verification_yearmonth, long base_date, long day, long hour, long* result)
+static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
 {
     long base_yearmonth         = 0;
     long vyear  = 0;

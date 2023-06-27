@@ -44,6 +44,7 @@ protected:
 private:
     // Private methods
     {% for m in c.private_methods %}
+    {{ m.template }}
     {{ m.result }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
 
 

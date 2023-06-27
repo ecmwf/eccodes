@@ -1,4 +1,4 @@
-_other_classes/*
+/*
  * (C) Copyright 2005- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
@@ -203,17 +203,3 @@ static int pack_missing(grib_accessor* a)
         return grib_pack_double(a, &value, &len);
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
-/*
-static int is_missing(grib_accessor* a){
-    size_t one = 1;
-    double value = GRIB_MISSING_DOUBLE;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        int e=grib_unpack_double(a,&value,&one);
-        Assert(e == 0);
-        return value == GRIB_MISSING_DOUBLE;
-    }
-    return 0;
-}
-*/

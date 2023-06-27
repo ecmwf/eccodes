@@ -97,10 +97,14 @@ class Function:
         return ""
 
     @property
+    def template(self):
+        return "" if self._template is None else self._template
+
+    @property
     def code(self):
         if self._lines:
-            assert self._lines[0].strip() == "{", self._lines[0]
-            assert self._lines[-1].strip() == "}", self._lines[-1]
+            assert self._lines[0].strip() == "{", "\n".join(self._lines)
+            assert self._lines[-1].strip() == "}", "\n".join(self._lines)
         return self._lines[1:-1]
 
 
@@ -129,6 +133,9 @@ class Method(FunctionDelegate):
     def const(self):
         return "const"
 
+    def tidy_lines(self, lines):
+        return lines
+
     @property
     def body(self):
         this = [r"\bself\b"]
@@ -138,7 +145,8 @@ class Method(FunctionDelegate):
             arg = self.args[0]
             if arg.type == ptr_type_name:
                 this.append(rf"\b{arg.name}\b")
-        lines = [self._owner_class.tidy_line(n, this) for n in self.code]
+        lines = self.tidy_lines(self.code)
+        lines = [self._owner_class.tidy_line(n, this) for n in lines]
         return "\n".join(lines)
 
 
@@ -163,36 +171,50 @@ class CompareMethod(Method):
     def args_declaration(self):
         return "const Accessor* other"
 
-    # def tidy_lines(self, klass):
-    #     assert len(self.args_list) == 2
-    #     assert self.args_list[0][0] == "grib_accessor*"
-    #     assert self.args_list[1][0] == "grib_accessor*"
+    def tidy_lines(self, lines):
+        try:
+            args = self.args
+            assert len(args) == 2
+            assert args[0].type == "grib_accessor*"
+            assert args[1].type == "grib_accessor*"
 
-    #     a = self.args_list[0][1]
-    #     b = self.args_list[1][1]
+            a = args[0].name
+            b = args[1].name
 
-    #     lines = []
-    #     for line in self.lines[1:-1]:
-    #         line = re.sub(rf"\b{a}\b", "this", line)
-    #         line = re.sub(rf"\b{b}\b", "other", line)
-    #         line = klass.tidy_line(line, [])
-    #         line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
-    #         lines.append(line)
+            result = []
+            for line in lines:
+                line = re.sub(rf"\b{a}\b", "this", line)
+                line = re.sub(rf"\b{b}\b", "other", line)
+                line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
+                result.append(line)
 
-    #     self.lines = lines
-    #     self.args_list[0] = ("Accessor*", "this")
-    #     self.args_list[1] = ("const Accessor*", "other")
-    #     self.args = "const Accessor* other"
+            return result
+
+        except Exception as e:
+            print(self.name, e)
+
+            raise Exception("")
 
 
 class DumpMethod(Method):
     @property
     def body(self):
-        return "\n".join(["#if 0"] + self.code + ["#endif", 'throw EccodesException(GRIB_NOT_IMPLEMENTED);'])
+        return "\n".join(
+            ["#if 0"]
+            + self.code
+            + ["#endif", "throw EccodesException(GRIB_NOT_IMPLEMENTED);"]
+        )
 
 
-class StaticProc(Method):
-    pass
+class StaticProc(FunctionDelegate):
+    def __init__(self, owner_class, function):
+        super().__init__(function)
+        self._owner_class = owner_class
+
+    @property
+    def body(self):
+        return "\n".join(self.code)
+
     # def has_this(self):
     #     if self.template is not None:
     #         return False
@@ -320,10 +342,17 @@ class Class:
 
     @property
     def members(self):
-        if self.super in self._other_classes:
-            return self._other_classes[self.super].members + self._members
+        return self._members
 
-        return self._members + self.top_members
+    @property
+    def members_names(self):
+        result = set(self.top_members)
+        for m in self._members:
+            result.add(m.name)
+        if self.super in self._other_classes:
+            result.update(self._other_classes[self.super].members_names)
+
+        return sorted(result)
 
     @property
     def include_super(self):
@@ -368,55 +397,6 @@ class Class:
     @property
     def static_functions(self):
         return self._static_functions
-
-        # if SUPER:
-        #     self.super, _ = self.tidy_class_name(SUPER[0])
-        #     self.src = args.target
-        # else:
-        #     self.super, _ = self.tidy_class_name(class_)
-        #     self.src = "cpp"
-
-        # self.members = [Member(m) for m in MEMBERS if m != ""]
-
-        # for p in inherited_procs.values():
-        #     p.tidy_lines(self)
-
-        # self.inherited_methods = [
-        #     p
-        #     for p in inherited_procs.values()
-        #     if p.name
-        #     not in (
-        #         "init",
-        #         "destroy",
-        #     )
-        # ]
-        # init = [p for p in inherited_procs.values() if p.name == "init"]
-        # self.constructor = (
-        #     init[0]
-        #     if init
-        #     else SimpleMethod(
-        #         "init",
-        #         "void",
-        #         "grib_accessor* a, const long length, grib_arguments* args",
-        #     )
-        # )
-
-        # init = [p for p in inherited_procs.values() if p.name == "destroy"]
-        # self.destructor = init[0] if init else SimpleMethod("destroy", "void", "void")
-
-        # for p in other_procs.values():
-        #     p.tidy_lines(self)
-
-        # self.private_methods = [p for p in other_procs.values() if p.has_this()]
-        # self.static_procs = [p for p in other_procs.values() if not p.has_this()]
-
-        # self.top_level = defaultdict(list)
-        # for k, v in top_level.items():
-        #     self.top_level[k] = [self.tidy_top_level(p) for p in v]
-
-    def update(self, classes):
-        if self.super in classes:
-            self.members += classes[self.super].members
 
     def dump(self):
         self.dump_header()
@@ -480,9 +460,13 @@ class Class:
         for k, v in self.substitute_re.items():
             line = re.sub(k, v, line)
 
-        for m in self.members:
-            name = m.name[:-1]
+        for m in self.members_names:
+            name = m[:-1]
             line = re.sub(rf"\bthis->{name}\b", rf"this->{name}_", line)
+
+        for m in self._private_methods:
+            name = m.name
+            line = re.sub(rf"\b{name}\s*\(\s*([^,]+),", f"this->{name}(", line)
 
         m = re.match(r"\s*\breturn\s+(GRIB_\w*)\s*;", line)
         if m and m.group(1) != "GRIB_SUCCESS":
@@ -506,13 +490,12 @@ class Accessor(Class):
     type_name = "grib_accessor"
     constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
 
-    # The type does not matter
     top_members = [
-        Member("int length"),
-        Member("int offset"),
-        Member("int dirty"),
-        Member("int flags"),
-        Member("int context"),
+        "length_",
+        "offset_",
+        "dirty_",
+        "flags_",
+        "context_",
     ]
 
     # namespaces = ["eccodes", "accessor"]
@@ -539,8 +522,6 @@ class Accessor(Class):
 
     def class_to_type(self):
         return self.cname.replace("_class_", "_")
-
-
 
 
 class Iterator(Class):
