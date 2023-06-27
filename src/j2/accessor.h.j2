@@ -41,7 +41,7 @@ protected:
     virtual {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
     virtual void print(std::ostream& s) const override;
 
-private:
+protected:
     // Private methods
     {% for m in c.private_methods %}
     {{ m.template }}
@@ -50,7 +50,7 @@ private:
 
 protected:
     // Members
-    {% for m in c.members %}{{ m.type }} {{ m.name }};
+    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }};
     {% endfor %}
 
 };

@@ -77,7 +77,8 @@ public:
     // Missing from the original
 
     virtual int pack_missing() const;
-
+    virtual void resize(size_t new_size) const;
+    virtual int nearest_smaller_value(double val, double* nearest) const;
 
     // Members
 
@@ -95,23 +96,30 @@ public:
 
     grib_context *context_;
     unsigned long flags_;
-    const char* name;
+    const char* name_;
 
     size_t offset_;
 
     // mutable == bug
     mutable size_t length_;
+    mutable int dirty_;
+    mutable int dirty;
 
     grib_handle* handle() const;
-    grib_handle* h;
-    Accessor* parent;
+    grib_section* parent_;
     int carg;
+    grib_handle* h;
+    grib_section* parent;
+    grib_action* creator;
+
+    operator grib_accessor*() const;
+
 
 
 
 };
 
-
+void grib_buffer_replace(const Accessor* a, const unsigned char* data, size_t newsize, int update_lengths, int update_paddings);
 
 class AccessorFactory {
     std::string name_;

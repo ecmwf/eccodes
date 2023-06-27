@@ -39,6 +39,12 @@ class Member:
             self.name = self.name[1:]
             self.type += "*"
 
+        self._mutable = False
+
+    @property
+    def mutable(self):
+        return "mutable" if self._mutable else ""
+
 
 class Arg:
     def __init__(self, name, type) -> None:
@@ -215,21 +221,21 @@ class StaticProc(FunctionDelegate):
     def body(self):
         return "\n".join(self.code)
 
-    # def has_this(self):
-    #     if self.template is not None:
-    #         return False
-    #     for line in self.lines:
-    #         if "this->" in line:
-    #             return True
-    #     return False
-
-    # def tidy_lines(self, klass):
-    #     self.lines = [klass.tidy_line(n, []) for n in self.lines[1:-1]]
-
 
 SPECIALISED_METHODS = {
     ("accessor", "compare"): CompareMethod,
     ("accessor", "dump"): DumpMethod,
+}
+
+
+def patch_mutable(klass):
+    for m in klass._members:
+        m._mutable = True
+
+
+PATCHES = {
+    "BufrExtractSubsets": patch_mutable,
+    "SecondOrderBitsPerValue": patch_mutable,
 }
 
 
@@ -323,6 +329,9 @@ class Class:
                 del self._functions[name]
 
         assert len(self._functions) == 0, sorted(self._functions.keys())
+
+        if self.name in PATCHES:
+            PATCHES[self.name](self)
 
     @property
     def name(self):
@@ -491,11 +500,15 @@ class Accessor(Class):
     constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
 
     top_members = [
+        "name_",
         "length_",
         "offset_",
         "dirty_",
         "flags_",
         "context_",
+        "parent_",
+        "next_",
+        "h_",
     ]
 
     # namespaces = ["eccodes", "accessor"]
@@ -504,20 +517,40 @@ class Accessor(Class):
 
     substitute_str = {
         "grib_handle_of_accessor(this)": "this->handle()",
+        "get_accessors(this)": "this->get_accessors()",
+        "select_area(this)": "this->select_area()",
+        "byte_offset(this)": "this->byte_offset()",
+        "byte_count(this)": "this->byte_count()",
+        "init_length(this)": "this->init_length()",
+        "compute_byte_count(this)": "this->compute_byte_count()",
     }
     substitute_re = {
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
+        r"\bgrib_pack_double\((\w+)\s*,": r"\1->pack_double(",
+        r"\bgrib_unpack_string\((\w+)\s*,": r"\1->unpack_string(",
+        r"\bgrib_unpack_double\((\w+)\s*,": r"\1->unpack_double(",
         r"\bgrib_pack_long\((\w+)\s*,": r"\1->pack_long(",
         r"\bgrib_unpack_long\((\w+)\s*,": r"\1->unpack_long(",
         r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
+        r"\bgrib_update_size\((\w+)\s*,": r"\1->update_size(",
         r"\bpreferred_size\(this,": r"this->preferred_size(",
+        r"\bvalue_count\(this,": r"this->value_count(",
         r"\bDebugAssert\b": "DEBUG_ASSERT",
         r"\bAssert\b": "ASSERT",
+        r"\bpack_double\(this,": "this->pack_double(",
         r"\bunpack_long\(this,": "this->unpack_long(",
+        r"\bpack_string\(this,": "this->pack_string(",
+        r"\bunpack_string\(this,": "this->unpack_string(",
+        r"\bpack_bytes\(this,": "this->pack_bytes(",
+        r"\bpack_double\(this,": "this->pack_double(",
+        r"\bunpack<(\w+)>\(this,": r"this->unpack<\1>(",
         r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",
         r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
+        r"\b(\w+)::this->": r"\1::",
+        r"\b(\w+)->this->": r"\1::",
+        r"\bgrib_accessor\*": r"const Accessor*",
     }
 
     def class_to_type(self):
