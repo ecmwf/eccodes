@@ -43,10 +43,12 @@ static {{ m.result }} {{ m.name }}({{ m.args }}) {
 }
 
 {% for m in c.inherited_methods %}
+/* top level code {{ m.name }} */
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 
- {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
+/* inherited methods {{ m.name }} */
+ {{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) const {
         {{ m.body }}
  }
  {% endfor %}
@@ -54,7 +56,7 @@ static {{ m.result }} {{ m.name }}({{ m.args }}) {
 {% for m in c.private_methods %}
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
- {{ m.result }} {{ name }}::{{ m.name }}({{ m.args }}) const {
+ {{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) const {
         {{ m.body }}
  }
  {% endfor %}

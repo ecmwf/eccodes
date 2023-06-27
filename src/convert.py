@@ -3,7 +3,6 @@
 import argparse
 import os
 import re
-import sys
 from collections import defaultdict
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
@@ -60,13 +59,22 @@ class Function:
         self._lines = []
 
         for arg in [a.strip() for a in args.split(",")]:
+            if not arg:
+                continue
             bits = arg.split()
             type = " ".join(bits[:-1])
             name = bits[-1]
             self._args.append(Arg(name, type))
 
+    def is_empty(self):
+        return len(self._lines) == 0
+
     def add_line(self, line):
         self._lines.append(line)
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def args_declaration(self):
@@ -77,99 +85,129 @@ class Function:
         return ", ".join([a.name for a in self._args])
 
     @property
-    def body(self):
+    def args(self):
+        return self._args
+
+    @property
+    def result(self):
+        return self._result
+
+    @property
+    def const(self):
         return ""
-        return "\n".join(self._lines)
+
+    @property
+    def code(self):
+        if self._lines:
+            assert self._lines[0].strip() == "{", self._lines[0]
+            assert self._lines[-1].strip() == "}", self._lines[-1]
+        return self._lines[1:-1]
 
 
-class Method:
-    def __init__(self, name, result, args, template=None) -> None:
-        self.name = name
+class FunctionDelegate:
+    def __init__(self, function):
+        self._function = function
 
-        self.result = result
-        self.lines = []
+    def __getattr__(self, name):
+        return getattr(self._function, name)
 
-        args = [a.strip() for a in args.split(",")]
-        self.full_args = ", ".join(args)
-        self.args = ", ".join(args[1:])
-        self.args_list = []
-        for arg in [re.sub(r"\s+", " ", a).strip() for a in args]:
-            bits = arg.split()
-            type = " ".join(bits[:-1])
-            name = bits[-1]
-            self.args_list.append((type, name))
 
-        self.call_args = ", ".join([n for _, n in self.args_list[1:]])
-        self.template = template
+class Method(FunctionDelegate):
+    def __init__(self, owner_class, function):
+        super().__init__(function)
+        self._owner_class = owner_class
 
-    def add_line(self, line):
-        self.lines.append(line)
+    @property
+    def args_declaration(self):
+        return ", ".join([f"{a.type} {a.name}" for a in self._args[1:]])
+
+    @property
+    def call_args(self):
+        return ", ".join([a.name for a in self._args[1:]])
+
+    @property
+    def const(self):
+        return "const"
 
     @property
     def body(self):
-        return "\n".join(self.lines)
-
-    def has_this(self):
-        return True
-
-
-class SimpleMethod(Method):
-    def tidy_lines(self, klass):
         this = [r"\bself\b"]
-        if self.args_list and self.template is None:
-            type, name = self.args_list[0]
-            # Check if the first argument is a pointer to the class
-            if type == klass.type_name + "*":
-                if re.match(r"^\w+$", name):
-                    this.append(rf"\b{name}\b")
-        self.lines = [klass.tidy_line(n, this) for n in self.lines[1:-1]]
+        # Look for this-> or self-> or a->
+        ptr_type_name = self._owner_class.type_name + "*"
+        if len(self.args) > 0:
+            arg = self.args[0]
+            if arg.type == ptr_type_name:
+                this.append(rf"\b{arg.name}\b")
+        lines = [self._owner_class.tidy_line(n, this) for n in self.code]
+        return "\n".join(lines)
+
+
+class InheritedMethod(Method):
+    pass
+
+
+class PrivateMethod(Method):
+    pass
+
+
+class DestructorMethod(Method):
+    pass
+
+
+class ConstructorMethod(Method):
+    pass
 
 
 class CompareMethod(Method):
-    def tidy_lines(self, klass):
-        assert len(self.args_list) == 2
-        assert self.args_list[0][0] == "grib_accessor*"
-        assert self.args_list[1][0] == "grib_accessor*"
+    @property
+    def args_declaration(self):
+        return "const Accessor* other"
 
-        a = self.args_list[0][1]
-        b = self.args_list[1][1]
+    # def tidy_lines(self, klass):
+    #     assert len(self.args_list) == 2
+    #     assert self.args_list[0][0] == "grib_accessor*"
+    #     assert self.args_list[1][0] == "grib_accessor*"
 
-        lines = []
-        for line in self.lines[1:-1]:
-            line = re.sub(rf"\b{a}\b", "this", line)
-            line = re.sub(rf"\b{b}\b", "other", line)
-            line = klass.tidy_line(line, [])
-            line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
-            lines.append(line)
+    #     a = self.args_list[0][1]
+    #     b = self.args_list[1][1]
 
-        self.lines = lines
-        self.args_list[0] = ("Accessor*", "this")
-        self.args_list[1] = ("const Accessor*", "other")
-        self.args = "const Accessor* other"
+    #     lines = []
+    #     for line in self.lines[1:-1]:
+    #         line = re.sub(rf"\b{a}\b", "this", line)
+    #         line = re.sub(rf"\b{b}\b", "other", line)
+    #         line = klass.tidy_line(line, [])
+    #         line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
+    #         lines.append(line)
+
+    #     self.lines = lines
+    #     self.args_list[0] = ("Accessor*", "this")
+    #     self.args_list[1] = ("const Accessor*", "other")
+    #     self.args = "const Accessor* other"
 
 
 class DumpMethod(Method):
-    def tidy_lines(self, klass):
-        # For now, just remove the method
-        self.lines = ["#if 0"] + self.lines[1:-1] + ["#endif"]
+    @property
+    def body(self):
+        return "\n".join(["#if 0"] + self.code + ["#endif", 'throw EccodesException(GRIB_NOT_IMPLEMENTED);'])
 
 
 class StaticProc(Method):
-    def has_this(self):
-        if self.template is not None:
-            return False
-        for line in self.lines:
-            if "this->" in line:
-                return True
-        return False
+    pass
+    # def has_this(self):
+    #     if self.template is not None:
+    #         return False
+    #     for line in self.lines:
+    #         if "this->" in line:
+    #             return True
+    #     return False
 
-    def tidy_lines(self, klass):
-        self.lines = [klass.tidy_line(n, []) for n in self.lines[1:-1]]
+    # def tidy_lines(self, klass):
+    #     self.lines = [klass.tidy_line(n, []) for n in self.lines[1:-1]]
 
 
-METHOD_CLASS = {
-    "compare": CompareMethod,
-    "dump": DumpMethod,
+SPECIALISED_METHODS = {
+    ("accessor", "compare"): CompareMethod,
+    ("accessor", "dump"): DumpMethod,
 }
 
 
@@ -200,27 +238,69 @@ class Class:
         self._class = class_
         self._name, self.cname = self.tidy_class_name(path)
         self._top_level_code = top_level_code
+
         self._factory_name = factory_name
         self._members = members
         self._functions = functions
 
         self._body_includes = includes
+        self._implements = implements
 
         if super is None:
             self._super, _ = self.tidy_class_name(class_)
             self._include_dir = "cpp"
+            self._top = True
         else:
             self._super, _ = self.tidy_class_name(super)
             self._include_dir = args.target
+            self._top = False
 
     def finalise(self, other_classes):
         self._other_classes = other_classes
 
+        if not self._top and self._super not in self._other_classes:
+            raise Exception(f"Unknown super class {self._super}")
+
         # Classify functions
-        self._inherided_methods = []
+        self._inherited_methods = []
         self._private_methods = []
         self._static_functions = []
 
+        # Overwitten functions
+        for name, f in list(self._functions.items()):
+            if name in self._implements and name not in ("init", "destroy"):
+                METHOD = SPECIALISED_METHODS.get((self._class, name), InheritedMethod)
+                self._inherited_methods.append(METHOD(self, f))
+                del self._functions[name]
+
+        # Constructor
+        if "init" in self._functions:
+            self._constructor = ConstructorMethod(self, self._functions["init"])
+            del self._functions["init"]
+        else:
+            self._constructor = ConstructorMethod(
+                self, Function("init", "void", self.constructor_args)
+            )
+
+        # Destructor
+        if "destroy" in self._functions:
+            self._destructor = DestructorMethod(self, self._functions["destroy"])
+            del self._functions["destroy"]
+        else:
+            self._destructor = DestructorMethod(self, Function("destroy", "void", ""))
+
+        # Other functions
+        ptr_type_name = self.type_name + "*"
+        for name, f in list(self._functions.items()):
+            # If starts with ptr_type_name, then it's a private method
+            if f.args[0].type == ptr_type_name:
+                self._private_methods.append(PrivateMethod(self, f))
+                del self._functions[name]
+            else:
+                self._static_functions.append(StaticProc(self, f))
+                del self._functions[name]
+
+        assert len(self._functions) == 0, sorted(self._functions.keys())
 
     @property
     def name(self):
@@ -240,9 +320,10 @@ class Class:
 
     @property
     def members(self):
-        # if self.super in self.other_classes:
-        #     return self.other_classes[self.super].members + self._members
-        return self._members
+        if self.super in self._other_classes:
+            return self._other_classes[self.super].members + self._members
+
+        return self._members + self.top_members
 
     @property
     def include_super(self):
@@ -250,7 +331,7 @@ class Class:
 
     @property
     def include_header(self):
-        return "/".join([args.target] + self.namespaces + [self._super + ".h"])
+        return "/".join([args.target] + self.namespaces + [self._name + ".h"])
 
     @property
     def header_includes(self):
@@ -258,7 +339,7 @@ class Class:
 
     @property
     def body_includes(self):
-        return []
+        return self._body_includes
 
     @property
     def namespaces(self):
@@ -270,29 +351,23 @@ class Class:
 
     @property
     def constructor(self):
-        if "init" in self._functions:
-            return self._functions["init"]
-
-        return Function("a")
+        return self._constructor
 
     @property
     def destructor(self):
-        if "destroy" in self._functions:
-            return self._functions["destroy"]
-
-        return Function("a", "b", "c")
+        return self._destructor
 
     @property
     def inherited_methods(self):
-        return []
+        return self._inherited_methods
 
     @property
     def private_methods(self):
-        return []
+        return self._private_methods
 
     @property
     def static_functions(self):
-        return []
+        return self._static_functions
 
         # if SUPER:
         #     self.super, _ = self.tidy_class_name(SUPER[0])
@@ -368,10 +443,7 @@ class Class:
 
     def dump_header(self):
         template = env.get_template(f"{self._class}.h.j2")
-        self.save(
-            "h",
-            template.render(c=self),
-        )
+        self.save("h", template.render(c=self))
 
     def dump_body(self):
         template = env.get_template(f"{self._class}.cc.j2")
@@ -388,10 +460,7 @@ class Class:
 
             return text
 
-        self.save(
-            "cc",
-            tidy_more(template.render(c=self)),
-        )
+        self.save("cc", tidy_more(template.render(c=self)))
 
     def tidy_line(self, line, this=[]):
         line = re.sub(r"\bsuper->\b", f"{self.super}::", line)
@@ -435,8 +504,18 @@ class Class:
 
 class Accessor(Class):
     type_name = "grib_accessor"
+    constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
 
-    namespaces = ["eccodes", "accessor"]
+    # The type does not matter
+    top_members = [
+        Member("int length"),
+        Member("int offset"),
+        Member("int dirty"),
+        Member("int flags"),
+        Member("int context"),
+    ]
+
+    # namespaces = ["eccodes", "accessor"]
     prefix = "grib_accessor_class_"
     rename = {"Gen": "Generic"}
 
@@ -444,10 +523,6 @@ class Accessor(Class):
         "grib_handle_of_accessor(this)": "this->handle()",
     }
     substitute_re = {
-        r"\bthis->length\b": "this->length_",
-        r"\bthis->offset\b": "this->offset_",
-        r"\bthis->flags\b": "this->flags_",
-        r"\bthis->context\b": "this->context_",
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
@@ -464,6 +539,8 @@ class Accessor(Class):
 
     def class_to_type(self):
         return self.cname.replace("_class_", "_")
+
+
 
 
 class Iterator(Class):
@@ -502,12 +579,13 @@ CLASSES = dict(
 
 
 def parse_file(path):
-    in_def = False
-    in_imp = False
+    in_definition = False
+    in_implementation = False
     in_function = False
     includes = []
     factory_name = None
     template = None
+    depth = 0
 
     definitions = {}
     functions = {}
@@ -521,28 +599,28 @@ def parse_file(path):
         line = line.rstrip()
 
         if stripped_line.startswith("START_CLASS_DEF"):
-            in_def = True
+            in_definition = True
             continue
 
         if stripped_line.startswith("END_CLASS_DEF"):
-            in_def = False
+            in_definition = False
             continue
 
         if stripped_line.startswith("/* START_CLASS_IMP */"):
-            in_imp = True
+            in_implementation = True
             continue
 
         if stripped_line.startswith("/* END_CLASS_IMP */"):
-            in_imp = False
+            in_implementation = False
             continue
 
-        if in_imp:
+        if in_implementation:
             m = re.match(r"\s*\"(\w+)\",\s+/\* name \*/", stripped_line)
             if m:
                 factory_name = m.group(1)
             continue
 
-        if in_def:
+        if in_definition:
             if stripped_line.strip() == "":
                 continue
             bits = [s.strip() for s in re.split(r"[=;]+", stripped_line)]
@@ -557,6 +635,11 @@ def parse_file(path):
 
         m = re.match(r"static\s+([^(]+)\s+(\w+)\s*\(([^(]+)\)", line)
         if m:
+            if line.rstrip().endswith(");"):
+                # Forward declaration
+                continue
+
+            assert not in_function, line
             function_name = m.group(2)
             top_level_code[function_name] = [x for x in top_level_lines]
             top_level_lines = []
@@ -570,13 +653,16 @@ def parse_file(path):
             )
             depth = stripped_line.count("{") - stripped_line.count("}")
             assert depth >= 0, line
+            # print("Start of function", function.name)
+            continue
 
         if in_function:
             function.add_line(stripped_line)
             depth += stripped_line.count("{")
             depth -= stripped_line.count("}")
             assert depth >= 0, line
-            if depth == 0:
+            if depth == 0 and not function.is_empty():
+                # print("End of function", function.name)
                 in_function = False
                 template = None
                 del function
@@ -617,8 +703,9 @@ def main():
     for a in args.path:
         klass = parse_file(a)
         if klass is not None:
-            classes[klass.cname] = klass
+            classes[klass.name] = klass
 
+    print("Finalising", sorted(classes.keys()))
     for klass in classes.values():
         klass.finalise(classes)
 

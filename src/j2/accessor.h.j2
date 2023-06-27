@@ -44,9 +44,10 @@ protected:
 private:
     // Private methods
     {% for m in c.private_methods %}
-    {{ m.result }} {{ m.name }}({{ m.args }}) const;{% endfor %}
+    {{ m.result }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
 
 
+protected:
     // Members
     {% for m in c.members %}{{ m.type }} {{ m.name }};
     {% endfor %}
