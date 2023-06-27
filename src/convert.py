@@ -212,6 +212,10 @@ class Class:
         for k, v in top_level.items():
             self.top_level[k] = [self.tidy_top_level(p) for p in v]
 
+    def update(self, classes):
+        if self.super in classes:
+            self.members += classes[self.super].members
+
     def dump(self):
         self.dump_header()
         self.dump_body()
@@ -404,7 +408,7 @@ CLASSES = dict(
 )
 
 
-def make_class(path):
+def make_class(classes, path):
     in_def = False
     in_imp = False
     in_proc = False
@@ -519,12 +523,20 @@ def make_class(path):
             factory_name=factory_name,
             **definitions,
         )
-        klass.dump()
+        classes[klass.cname] = klass
+
 
 
 def main():
+    classes = {}
     for a in args.path:
-        make_class(a)
+        make_class(classes, a)
+
+    for klass in classes.values():
+        klass.update(classes)
+
+    for klass in classes.values():
+        klass.dump()
 
 
 if __name__ == "__main__":
