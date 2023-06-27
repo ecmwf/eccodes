@@ -837,10 +837,9 @@ static int value_count(grib_accessor* a, long* rlen)
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
-    /* grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a; */
-    /* if (self->rank==0 && self->expanded) { */
-    /* grib_bufr_descriptors_array_delete(self->expanded); */
-    /* } */
+    // grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+    // if (self->rank==0 && self->expanded)
+    //  grib_bufr_descriptors_array_delete(self->expanded);
 }
 
 static int get_native_type(grib_accessor* a)

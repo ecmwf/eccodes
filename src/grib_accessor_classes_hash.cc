@@ -51,8 +51,7 @@ struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
 
 #endif
 #endif
-static unsigned int
-grib_accessor_classes_get_id (const char *str, size_t len)
+static unsigned int grib_accessor_classes_get_id (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -687,8 +686,7 @@ static const struct accessor_class_hash classes[] =
     {"g1forecastmonth", &grib_accessor_class_g1forecastmonth}
   };
 
-static const struct accessor_class_hash *
-grib_accessor_classes_hash (const char *str, size_t len)
+static const struct accessor_class_hash* grib_accessor_classes_hash (const char *str, size_t len)
 {
     unsigned int key = grib_accessor_classes_get_id (str, len);
 
