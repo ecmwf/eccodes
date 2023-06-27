@@ -1157,17 +1157,16 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     if (headerMode) {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        grib_handle *h11, *h22;
+        size_t endOfHeadersOffset = 0;
         GRIB_CHECK_NOLINE(grib_get_message_headers(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message_headers(h2, &msg2, &size2), 0);
         if (size1 == size2 && !memcmp(msg1, msg2, size1))
             return 0;
 
         err = 0;
-        h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
-        h22 = grib_handle_new_from_partial_message(h1->context, msg2, size2);
+        GRIB_CHECK_NOLINE(grib_get_offset(h1, "endOfHeadersMarker", &endOfHeadersOffset), 0);
 
-        iter = grib_keys_iterator_new(h11, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
+        iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
 
         if (!iter) {
             grib_context_log(context, GRIB_LOG_ERROR, "unable to create the GRIB keys iterator");
@@ -1177,16 +1176,19 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         while (grib_keys_iterator_next(iter)) {
             name = grib_keys_iterator_get_name(iter);
             /*printf("----- comparing %s\n",name);*/
+            size_t keyOffset = 0;
+            GRIB_CHECK_NOLINE(grib_get_offset(h1, name, &keyOffset), 0);
 
             if (blocklisted(name))
                 continue;
-            if (compare_values(options, h11, h22, name, GRIB_TYPE_UNDEFINED))
-                err++;
+            if (keyOffset < endOfHeadersOffset) {
+                if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
+                    err++;
+                }
+            }
         }
 
         grib_keys_iterator_delete(iter);
-        grib_handle_delete(h11);
-        grib_handle_delete(h22);
         return err;
     }
 
