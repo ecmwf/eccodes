@@ -29,6 +29,7 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
  }
  {% endfor %}
 
+/* top level code init */
 
 {% for line in c.top_level_code['init'] %}{{ line }}
 {% endfor %}
@@ -36,6 +37,7 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
        {{ c.constructor.body }}
 }
 
+/* top level code destroy */
 {% for line in c.top_level_code['destroy'] %}{{ line }}
 {% endfor %}
 {{ c.name }}::~{{ c.name }}() {

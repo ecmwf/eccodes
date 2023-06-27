@@ -102,8 +102,8 @@ public:
 
     // mutable == bug
     mutable size_t length_;
-    mutable int dirty_;
-    mutable int dirty;
+    // mutable int dirty_;
+    // mutable int dirty;
 
     grib_handle* handle() const;
     grib_section* parent_;
@@ -115,7 +115,7 @@ public:
     operator grib_accessor*() const;
 
 
-
+    mutable int dirty_; // WARNING: redefine in subclasses
 
 };
 

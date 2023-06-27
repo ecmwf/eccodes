@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import importlib
 import os
 import re
 from collections import defaultdict
@@ -71,6 +72,9 @@ class Function:
             type = " ".join(bits[:-1])
             name = bits[-1]
             self._args.append(Arg(name, type))
+
+    def update_lines(self, lines):
+        self._lines = lines
 
     def is_empty(self):
         return len(self._lines) == 0
@@ -228,17 +232,6 @@ SPECIALISED_METHODS = {
 }
 
 
-def patch_mutable(klass):
-    for m in klass._members:
-        m._mutable = True
-
-
-PATCHES = {
-    "BufrExtractSubsets": patch_mutable,
-    "SecondOrderBitsPerValue": patch_mutable,
-}
-
-
 class Class:
     rename = {}
 
@@ -264,7 +257,7 @@ class Class:
         assert factory_name is not None
 
         self._class = class_
-        self._name, self.cname = self.tidy_class_name(path)
+        self._name, self._cname = self.tidy_class_name(path)
         self._top_level_code = top_level_code
 
         self._factory_name = factory_name
@@ -329,9 +322,14 @@ class Class:
                 del self._functions[name]
 
         assert len(self._functions) == 0, sorted(self._functions.keys())
+        self.apply_patches()
 
-        if self.name in PATCHES:
-            PATCHES[self.name](self)
+    def apply_patches(self):
+        try:
+            m = importlib.import_module(f'patches.{self._cname}')
+        except ModuleNotFoundError:
+            return
+        m.patch(self)
 
     @property
     def name(self):
@@ -495,6 +493,8 @@ class Class:
         return line
 
 
+
+
 class Accessor(Class):
     type_name = "grib_accessor"
     constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
@@ -519,8 +519,6 @@ class Accessor(Class):
         "grib_handle_of_accessor(this)": "this->handle()",
         "get_accessors(this)": "this->get_accessors()",
         "select_area(this)": "this->select_area()",
-        "byte_offset(this)": "this->byte_offset()",
-        "byte_count(this)": "this->byte_count()",
         "init_length(this)": "this->init_length()",
         "compute_byte_count(this)": "this->compute_byte_count()",
     }
