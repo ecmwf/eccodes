@@ -13,5 +13,5 @@
 input=${data_dir}/test_file.grib2
 $EXEC ${test_dir}/grib_partial_message $input
 
-input=${data_dir}/spectral_compex.grib1
+input=${data_dir}/regular_latlon_surface.grib1
 $EXEC ${test_dir}/grib_partial_message $input
