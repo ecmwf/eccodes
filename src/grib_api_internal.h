@@ -1252,7 +1252,6 @@ struct grib_int_array
     int* el;
 };
 
-#if 1
 struct grib_fieldset
 {
     grib_context* context;
@@ -1267,7 +1266,6 @@ struct grib_fieldset
     long current;
     grib_field** fields;
 };
-#endif
 
 /* concept index structures */
 

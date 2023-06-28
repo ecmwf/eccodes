@@ -102,9 +102,3 @@ grib_accessor_class* grib_accessor_class_NAME = &_grib_accessor_class_NAME;
 ADD_TO_FILE grib_accessor_class.h      extern grib_accessor_class* grib_accessor_class_NAME;
 ADD_TO_FILE grib_accessor_factory.h    { "NAME", &grib_accessor_class_NAME, },
 ADD_TO_FILE grib_accessor_factory_hash_list     NAME, &grib_accessor_class_NAME
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-

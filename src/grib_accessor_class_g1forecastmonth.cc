@@ -111,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_g1forecastmonth = {
 
 grib_accessor_class* grib_accessor_class_g1forecastmonth = &_grib_accessor_class_g1forecastmonth;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -142,12 +136,12 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
 {
-    long base_yearmonth         = 0;
+    long base_yearmonth = 0;
     long vyear  = 0;
     long vmonth = 0;
     long byear  = 0;
     long bmonth = 0;
-    long fcmonth           = 0;
+    long fcmonth = 0;
 
     base_yearmonth = base_date / 100;
 

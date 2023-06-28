@@ -97,12 +97,6 @@ static grib_accessor_class _grib_accessor_class_size = {
 
 grib_accessor_class* grib_accessor_class_size = &_grib_accessor_class_size;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

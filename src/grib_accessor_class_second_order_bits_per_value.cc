@@ -110,12 +110,6 @@ static grib_accessor_class _grib_accessor_class_second_order_bits_per_value = {
 
 grib_accessor_class* grib_accessor_class_second_order_bits_per_value = &_grib_accessor_class_second_order_bits_per_value;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static const size_t nbits[64] = {

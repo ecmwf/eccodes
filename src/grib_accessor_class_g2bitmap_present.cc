@@ -103,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_g2bitmap_present = {
 
 grib_accessor_class* grib_accessor_class_g2bitmap_present = &_grib_accessor_class_g2bitmap_present;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

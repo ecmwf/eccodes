@@ -68,20 +68,18 @@ typedef struct grib_expression_is_integer{
 static grib_expression_class _grib_expression_class_is_integer = {
     0,                    /* super                     */
     "is_integer",                    /* name                      */
-    sizeof(grib_expression_is_integer),/* size of instance          */
+    sizeof(grib_expression_is_integer),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_is_integer = &_grib_expression_class_is_integer;

@@ -103,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_long = {
 
 grib_accessor_class* grib_accessor_class_long = &_grib_accessor_class_long;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int get_native_type(grib_accessor* a)

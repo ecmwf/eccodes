@@ -1069,17 +1069,15 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
             level = level & ~GRIB_LOG_PERROR;
 
             /* #if HAS_STRERROR */
-#if 1
             strcat(msg, " (");
             strcat(msg, strerror(errsv));
             strcat(msg, ")");
-#else
-            if (errsv > 0 && errsv < sys_nerr) {
-                strcat(msg, " (");
-                strcat(msg, sys_errlist[errsv]);
-                strcat(msg, " )");
-            }
-#endif
+
+            // if (errsv > 0 && errsv < sys_nerr) {
+            //     strcat(msg, " (");
+            //     strcat(msg, sys_errlist[errsv]);
+            //     strcat(msg, " )");
+            // }
         }
 
         if (c->output_log)

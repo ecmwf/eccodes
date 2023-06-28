@@ -110,12 +110,6 @@ static grib_accessor_class _grib_accessor_class_transient_darray = {
 
 grib_accessor_class* grib_accessor_class_transient_darray = &_grib_accessor_class_transient_darray;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long length, grib_arguments* args)

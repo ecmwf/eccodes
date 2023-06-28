@@ -103,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_pad = {
 
 grib_accessor_class* grib_accessor_class_pad = &_grib_accessor_class_pad;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

@@ -116,12 +116,6 @@ static grib_accessor_class _grib_accessor_class_latlon_increment = {
 
 grib_accessor_class* grib_accessor_class_latlon_increment = &_grib_accessor_class_latlon_increment;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -293,10 +287,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    /*ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
-      if(ret)
-          grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
-     */
+    //ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
+    //if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
 
     grib_get_long_internal(hand, self->numberOfPoints, &codedNumberOfPoints);
 

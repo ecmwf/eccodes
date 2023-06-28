@@ -119,12 +119,6 @@ static grib_accessor_class _grib_accessor_class_hash_array = {
 
 grib_accessor_class* grib_accessor_class_hash_array = &_grib_accessor_class_hash_array;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 #define MAX_HASH_ARRAY_STRING_LENGTH 255

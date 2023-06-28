@@ -131,12 +131,6 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
 
 grib_accessor_class* grib_accessor_class_expanded_descriptors = &_grib_accessor_class_expanded_descriptors;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 #define MYDEBUG 0
@@ -837,10 +831,9 @@ static int value_count(grib_accessor* a, long* rlen)
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
-    /* grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a; */
-    /* if (self->rank==0 && self->expanded) { */
-    /* grib_bufr_descriptors_array_delete(self->expanded); */
-    /* } */
+    // grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+    // if (self->rank==0 && self->expanded)
+    //  grib_bufr_descriptors_array_delete(self->expanded);
 }
 
 static int get_native_type(grib_accessor* a)

@@ -61,20 +61,18 @@ typedef struct grib_expression_constant{
 static grib_expression_class _grib_expression_class_constant = {
     0,                    /* super                     */
     "constant",                    /* name                      */
-    sizeof(grib_expression_constant),/* size of instance          */
+    sizeof(grib_expression_constant),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	0,
-	0,
-	0,
+    &native_type,
+    0,
+    0,
+    0,
+    0,
 };
 
 grib_expression_class* grib_expression_class_constant = &_grib_expression_class_constant;

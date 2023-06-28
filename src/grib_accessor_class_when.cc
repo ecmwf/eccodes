@@ -101,12 +101,6 @@ static grib_accessor_class _grib_accessor_class_when = {
 
 grib_accessor_class* grib_accessor_class_when = &_grib_accessor_class_when;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)

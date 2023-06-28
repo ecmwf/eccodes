@@ -45,21 +45,19 @@ int grib_julian_to_datetime(double jd, long* year, long* month, long* day,
     *day = (long)dday;
     dday -= *day;
 
-#if 1
     /* ANF-CG 02.03.2012 */
     s       = ROUND((double)(dday * 86400)); /* total in sec , no msec*/
     *hour   = (long)s / 3600;
     *minute = (long)((s % 3600) / 60);
     *second = (long)(s % 60);
-#else
-    /* Old algorithm, now replaced by above. See GRIB-180 */
-    dhour = dday * 24;
-    *hour = (long)dhour;
-    dhour -= *hour;
-    dminute = dhour * 60;
-    *minute = (long)dminute;
-    *second = (long)((dminute - *minute) * 60);
-#endif
+
+    // Old algorithm, now replaced by above. See GRIB-180
+    // dhour = dday * 24;
+    // *hour = (long)dhour;
+    // dhour -= *hour;
+    // dminute = dhour * 60;
+    // *minute = (long)dminute;
+    // *second = (long)((dminute - *minute) * 60);
 
     if (e < 14)
         *month = e - 1;
