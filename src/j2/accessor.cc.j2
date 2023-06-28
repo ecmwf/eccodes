@@ -19,19 +19,19 @@
 {% for n in c.namespaces %}namespace {{ n }} {
 {% endfor %}
 
-
+// top level code '-start-'
 {% for line in c.top_level_code['-start-'] %}{{ line }}
 {% endfor %}
 
 {% for m in c.static_functions %}
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
-static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
+static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
         {{ m.body }}
  }
  {% endfor %}
 
-/* top level code init */
+// top level code 'init'
 
 {% for line in c.top_level_code['init'] %}{{ line }}
 {% endfor %}
@@ -39,7 +39,7 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
        {{ c.constructor.body }}
 }
 
-/* top level code destroy */
+// top level code 'destroy'
 {% for line in c.top_level_code['destroy'] %}{{ line }}
 {% endfor %}
 {{ c.name }}::~{{ c.name }}() {
@@ -47,22 +47,23 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
 }
 
 {% for m in c.inherited_methods %}
-/* top level code {{ m.name }} */
+// top level code '{{ m.name }}'
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 
-/* inherited methods {{ m.name }} */
+// inherited methods {{ m.name }}
 {{ m.template }}
-{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
 
 {% for m in c.private_methods %}
+// top level code '{{ m.name }}'
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 {{ m.template }}
-{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }})  {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }})  {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
@@ -77,7 +78,7 @@ const char* {{ c.name }}::className() const {
        return "{{ c.name }}";
 }
 
-
+/* top level code -end- */
 {% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}
 

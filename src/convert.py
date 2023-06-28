@@ -20,10 +20,10 @@ parser.add_argument("path", nargs="+")
 ARGS = parser.parse_args()
 
 logging.basicConfig(
-        format="%(asctime)s %(levelname)s %(message)s",
-        level=logging.DEBUG if ARGS.debug else logging.INFO,
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    format="%(asctime)s %(levelname)s %(message)s",
+    level=logging.DEBUG if ARGS.debug else logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 env = Environment(
     loader=FileSystemLoader(ARGS.templates),
@@ -80,9 +80,9 @@ class Arg:
 
 
 class Function:
-    def __init__(self, name, result, args, template=None) -> None:
+    def __init__(self, name, return_type, args, template=None) -> None:
         self._name = name
-        self._result = result
+        self._return_type = return_type
         self._template = template
         self._args = []
         self._lines = []
@@ -121,8 +121,8 @@ class Function:
         return self._args
 
     @property
-    def result(self):
-        return self._result
+    def return_type(self):
+        return self._return_type
 
     @property
     def const(self):
@@ -199,8 +199,9 @@ class PrivateMethod(Method):
 class DestructorMethod(Method):
     @property
     def body(self):
-        lines = ['grib_context* c = 0;', super().body]
+        lines = ["grib_context* c = 0;", super().body]
         return "\n".join(lines)
+
 
 class ConstructorMethod(Method):
     pass
@@ -212,25 +213,22 @@ class CompareMethod(Method):
         return "const Accessor* other"
 
     def tidy_lines(self, lines):
+        args = self.args
+        assert len(args) == 2
+        assert args[0].type == "grib_accessor*"
+        assert args[1].type == "grib_accessor*"
 
-            args = self.args
-            assert len(args) == 2
-            assert args[0].type == "grib_accessor*"
-            assert args[1].type == "grib_accessor*"
+        a = args[0].name
+        b = args[1].name
 
-            a = args[0].name
-            b = args[1].name
+        result = []
+        for line in lines:
+            line = re.sub(rf"\b{a}\b", "this", line)
+            line = re.sub(rf"\b{b}\b", "other", line)
+            line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
+            result.append(line)
 
-            result = []
-            for line in lines:
-                line = re.sub(rf"\b{a}\b", "this", line)
-                line = re.sub(rf"\b{b}\b", "other", line)
-                line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
-                result.append(line)
-
-            return result
-
-
+        return result
 
 
 class DumpMethod(Method):
@@ -362,6 +360,9 @@ class Class:
         # Other functions
         ptr_type_name = self.type_name + "*"
         for name, f in list(self._functions.items()):
+            if f._return_type == ptr_type_name:
+                f._return_type = self.class_name + "*"
+
             # If starts with ptr_type_name, then it's a private method
             if f.args[0].type == ptr_type_name:
                 self._private_methods.append(
@@ -397,6 +398,15 @@ class Class:
             if m.name == name:
                 m.cannot_convert()
                 ok = True
+
+        if name == 'init':
+            self._constructor.cannot_convert()
+            ok = True
+
+        if name == 'destroy':
+            self._destructor.cannot_convert()
+            ok = True
+
         if not ok:
             raise Exception(f"Cannot convert method {name}")
 
@@ -404,7 +414,6 @@ class Class:
         self._top_level_code[name] = (
             ["#ifdef CANNOT_CONVERT_CODE"] + self._top_level_code[name] + ["#endif"]
         )
-
 
     def mark_mutable(self, name):
         ok = False
@@ -610,7 +619,10 @@ class Accessor(Class):
 
     # namespaces = ["eccodes", "accessor"]
     prefix = "grib_accessor_class_"
-    rename = {"Gen": "Generic"}
+    rename = {
+        "Gen": "Generic",
+        "Md5": "Md5Sum",  # We rename because of macos case insensitive file system
+    }
 
     substitute_re = {
         r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
@@ -619,9 +631,13 @@ class Accessor(Class):
         r"\bcompute_size\(this\)": "this->compute_size()",
         r"\binit_length\(this\)": "this->init_length()",
         r"\blog_message\(this\)": "this->log_message()",
+        r"\bstring_length\(this\)": "this->string_length()",
+        r"\bget_accessor\(this\)": "this->get_accessor()",
         r"\bcompute_byte_count\(this\)": "this->compute_byte_count()",
         r"\bselect_datetime\(this\)": "this->select_datetime()",
         r"\bapply_thinning\(this\)": "this->apply_thinning()",
+        r"\bgrib_accessor_get_native_type\(this\)": "this->native_type()",
+        r"\bget_native_type\(this\)": "this->get_native_type()",
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bbyte_offset\((\w+)\s*\)": r"\1->byte_offset()",
@@ -636,14 +652,16 @@ class Accessor(Class):
         r"\bgrib_unpack_bytes\((\w+)\s*,": r"\1->unpack_bytes(",
         r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
         r"\bgrib_update_size\((\w+)\s*,": r"\1->update_size(",
+        r"\bgrib_is_missing_internal\((\w+)\)": r"\1->is_missing()",
         r"\bpreferred_size\(this,": r"this->preferred_size(",
-        r"\bvalue_count\(this,": r"this->value_count(",
+        r"\bvalue_count\((\w+),": r"\1->value_count(",
         r"\bDebugAssert\b": "DEBUG_ASSERT",
         r"\bAssert\b": "ASSERT",
         r"\bpack_double\(this,": "this->pack_double(",
         r"\bunpack_long\(this,": "this->unpack_long(",
         r"\bunpack_double\(this,": "this->unpack_double(",
         r"\bpack_string\(this,": "this->pack_string(",
+        r"\bpack_long\(this,": "this->pack_long(",
         r"\bunpack_string\(this,": "this->unpack_string(",
         r"\bpack_bytes\(this,": "this->pack_bytes(",
         r"\bpack_double\(this,": "this->pack_double(",
@@ -653,13 +671,23 @@ class Accessor(Class):
         r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
         r"\b(\w+)::this->": r"\1::",
         r"\b(\w+)->this->": r"\1::",
-        r"\bgrib_accessor\*": "const Accessor*",
+        r"\bgrib_accessor\*": "Accessor*",
         r"\bthis->cclass->name\b": "this->className()",
         r"\bdirty\b": "dirty_",
-        r"\bother->length\b": "other->length_",
-        r"\bother->offset\b": "other->offset_",
+        r"\b(\w+)->length\b": r"\1->length_",
+        r"\b(\w+)->offset\b": r"\1->offset_",
         r"\bgrib_find_accessor\b": "Accessor::find",
         r"\bgrib_pack_long\(this->(\w+),": r"this->\1->pack_long(",
+        r"\bgrib_value_count\(this->(\w+),": r"this->\1->value_count(",
+        r"\bAccessor::find\(this->handle\(\),": r"Accessor::find(",
+        # Temp stuff for making sure we still compile
+        r"\bgrib_optimize_decimal_factor\(this,": r"grib_optimize_decimal_factor(this->as_grib_accessor_while_converting(),",
+        r"\bpack_long_unsigned_helper\(this,": r"pack_long_unsigned_helper(this->as_grib_accessor_while_converting(),",
+        r"\bgrib_g1_step_get_steps\(this,": r"grib_g1_step_get_steps(this->as_grib_accessor_while_converting(),",
+        r"\bfree_bif_trunc\(bt, this\)": r"free_bif_trunc(bt, this->as_grib_accessor_while_converting())",
+        r"\badd_many_bitstream\(&ctx, this,": r"add_many_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
+        r"\badd_bitstream\(&ctx, this,": r"add_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
+        r"\baccessor_raw_get_offset\(this->(\w+)": r"accessor_raw_get_offset(this->\1->as_grib_accessor_while_converting()",
     }
 
     def class_to_type(self):
@@ -795,7 +823,8 @@ def parse_file(path):
             if len(includes) == 0:
                 # Forget lines before the first include
                 top_level_lines = []
-            includes.append(line[9:])
+            if 'minmax_val' not in line:
+                includes.append(line[9:])
             continue
 
         if stripped_line.startswith("template "):

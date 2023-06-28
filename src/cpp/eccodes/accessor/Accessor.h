@@ -17,6 +17,9 @@
 #define ASSERT(a) /* */
 #define DEBUG_ASSERT(a) /* */
 
+const int TRUE  = 1;
+const int FALSE = 0;
+
 // See https://github.com/ecmwf/mir/blob/develop/src/mir/repres/Representation.cc
 // for a similar approach
 
@@ -42,6 +45,19 @@ protected:
 
 public:
 
+    // new methods
+#if 0
+    virtual long unpackLong() const;
+    virtual long unpackDouble() const;
+    virtual std::string unpackString() const;
+
+    // or...
+
+    virtual void unpack(long&) const;
+    virtual void unpack(double&) const;
+    virtual void unpack(std::string&) const;
+    virtual void unpack(std::vector<double>&) const;
+#endif
     // Legacy methods
 
     virtual grib_accessor* make_clone(grib_section* s, int* err) const;
@@ -89,7 +105,7 @@ public:
     virtual int pack_missing();
     virtual void resize(size_t new_size) const;
     virtual int nearest_smaller_value(double val, double* nearest) const;
-    void post_init() const;
+    virtual void post_init() const;
 
     // Members
 
@@ -110,7 +126,7 @@ public:
     const char* name_;
 
     size_t offset_;
-    size_t length_;
+    mutable size_t length_; // Updated by Bitmap
 
     grib_handle* handle() const;
     grib_section* parent_;
@@ -118,10 +134,12 @@ public:
     grib_handle* h;
     grib_section* parent;
     grib_action* creator;
+    grib_virtual_value* vvalue;
 
-    operator grib_accessor*() const;
+    grib_accessor* as_grib_accessor_while_converting() const;
+
     static Accessor* find(const grib_handle*, const char*) ;
-
+    Accessor* find(const char*) const;
 
     mutable int dirty_; // WARNING: redefine in subclasses
 
@@ -141,7 +159,7 @@ protected:
     virtual ~AccessorFactory();
 
 public:
-    static const Accessor* build(long length, grib_arguments* args);
+    static Accessor* build(const std::string& name, long length, grib_arguments* args);
     static void list(std::ostream&);
 };
 
