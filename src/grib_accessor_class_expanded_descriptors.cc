@@ -131,12 +131,6 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
 
 grib_accessor_class* grib_accessor_class_expanded_descriptors = &_grib_accessor_class_expanded_descriptors;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 #define MYDEBUG 0

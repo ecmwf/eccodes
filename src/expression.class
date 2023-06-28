@@ -26,20 +26,18 @@ extern grib_expression_class* SUPER;
 static grib_expression_class _grib_expression_class_NAME = {
     &SUPER,                    /* super                     */
     "NAME",                    /* name                      */
-    sizeof(grib_expression_NAME),/* size of instance          */
+    sizeof(grib_expression_NAME),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     &init,                     /* constructor               */
     &destroy,                  /* destructor                */
-    &print,                 
-    &add_dependency,       
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &print,
+    &add_dependency,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_NAME = &_grib_expression_class_NAME;

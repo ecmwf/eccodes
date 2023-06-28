@@ -114,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_gds_not_present_bitmap = {
 
 grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accessor_class_gds_not_present_bitmap;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)

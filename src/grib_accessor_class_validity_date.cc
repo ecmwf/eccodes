@@ -112,12 +112,6 @@ static grib_accessor_class _grib_accessor_class_validity_date = {
 
 grib_accessor_class* grib_accessor_class_validity_date = &_grib_accessor_class_validity_date;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 /* Table of multipliers to convert step units to minutes */

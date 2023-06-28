@@ -48,8 +48,9 @@
    MEMBERS=const char* dataFlag
    MEMBERS=double* dvalues
    MEMBERS=float* fvalues
+   MEMBERS=int double_dirty
+   MEMBERS=int float_dirty
    MEMBERS=size_t size
-
 
    END_CLASS_DEF
 
@@ -178,12 +179,6 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_exte
 
 
 grib_accessor_class* grib_accessor_class_data_g1second_order_general_extended_packing = &_grib_accessor_class_data_g1second_order_general_extended_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

@@ -111,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_number_of_values = {
 
 grib_accessor_class* grib_accessor_class_number_of_values = &_grib_accessor_class_number_of_values;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

@@ -67,7 +67,6 @@ static const unsigned long k[] = {
 
 static void grib_md5_flush(grib_md5_state* s)
 {
-#if 1
     unsigned long a  = s->h0;
     unsigned long b  = s->h1;
     unsigned long c  = s->h2;
@@ -153,60 +152,6 @@ static void grib_md5_flush(grib_md5_state* s)
     I_(d, a, b, c, 11, 61);
     I_(c, d, a, b, 2, 62);
     I_(b, c, d, a, 9, 63);
-
-#else
-    unsigned long i, g;
-    unsigned long a = s->h0;
-    unsigned long b = s->h1;
-    unsigned long c = s->h2;
-    unsigned long d = s->h3;
-    unsigned long f;
-    unsigned long temp;
-    unsigned long* w = &s->words[0];
-    unsigned long h;
-    for (i = 0; i < 16; i++) {
-        f    = F(b, c, d);
-        g    = i;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-
-    for (i = 16; i < 32; i++) {
-        f    = G(b, c, d);
-        g    = (5 * i + 1) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-    for (i = 32; i < 48; i++) {
-        f    = H(b, c, d);
-        g    = (3 * i + 5) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-    for (i = 48; i < 64; i++) {
-        f    = I(b, c, d);
-        g    = (7 * i) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-
-#endif
 
     s->h0 += a;
     s->h1 += b;

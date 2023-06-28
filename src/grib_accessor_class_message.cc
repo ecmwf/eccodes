@@ -106,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_message = {
 
 grib_accessor_class* grib_accessor_class_message = &_grib_accessor_class_message;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

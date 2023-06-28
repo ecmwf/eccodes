@@ -114,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_change_scanning_direction = {
 
 grib_accessor_class* grib_accessor_class_change_scanning_direction = &_grib_accessor_class_change_scanning_direction;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* args)

@@ -103,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_padto = {
 
 grib_accessor_class* grib_accessor_class_padto = &_grib_accessor_class_padto;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

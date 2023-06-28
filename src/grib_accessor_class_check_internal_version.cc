@@ -97,12 +97,6 @@ static grib_accessor_class _grib_accessor_class_check_internal_version = {
 
 grib_accessor_class* grib_accessor_class_check_internal_version = &_grib_accessor_class_check_internal_version;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 /* This is the internal engine version number */

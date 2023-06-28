@@ -106,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_data_secondary_bitmap = {
 
 grib_accessor_class* grib_accessor_class_data_secondary_bitmap = &_grib_accessor_class_data_secondary_bitmap;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)

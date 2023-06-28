@@ -122,12 +122,6 @@ static grib_accessor_class _grib_accessor_class_to_integer = {
 
 grib_accessor_class* grib_accessor_class_to_integer = &_grib_accessor_class_to_integer;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
