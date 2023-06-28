@@ -104,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_bufr_extract_subsets = {
 
 grib_accessor_class* grib_accessor_class_bufr_extract_subsets = &_grib_accessor_class_bufr_extract_subsets;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void get_accessors(grib_accessor* a)

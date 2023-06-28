@@ -96,12 +96,6 @@ static grib_accessor_class _grib_accessor_class_int64 = {
 
 grib_accessor_class* grib_accessor_class_int64 = &_grib_accessor_class_int64;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)

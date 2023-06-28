@@ -108,12 +108,6 @@ static grib_accessor_class _grib_accessor_class_longitudes = {
 
 grib_accessor_class* grib_accessor_class_longitudes = &_grib_accessor_class_longitudes;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

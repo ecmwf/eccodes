@@ -55,9 +55,12 @@ static grib_action_class _grib_action_class_set_iarray = {
     &init_class,                         /* init_class */
     0,                               /* init                      */
     &destroy,                            /* destroy */
+
     &dump,                               /* dump                      */
     &xref,                               /* xref                      */
+
     0,             /* create_accessor*/
+
     0,                            /* notify_change */
     0,                            /* reparse */
     &execute,                            /* execute */

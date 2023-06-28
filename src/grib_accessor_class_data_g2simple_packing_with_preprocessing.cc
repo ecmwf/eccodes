@@ -124,12 +124,6 @@ static grib_accessor_class _grib_accessor_class_data_g2simple_packing_with_prepr
 
 grib_accessor_class* grib_accessor_class_data_g2simple_packing_with_preprocessing = &_grib_accessor_class_data_g2simple_packing_with_preprocessing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)

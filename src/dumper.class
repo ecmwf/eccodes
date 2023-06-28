@@ -14,8 +14,8 @@ static void header         (grib_dumper*,grib_handle*);
 static void footer         (grib_dumper*,grib_handle*);
 
 typedef struct grib_dumper_NAME {
-    grib_dumper          dumper;  
-MEMBERS 
+    grib_dumper          dumper;
+MEMBERS
 } grib_dumper_NAME;
 
 extern grib_dumper_class* SUPER;

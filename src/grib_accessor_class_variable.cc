@@ -120,12 +120,6 @@ static grib_accessor_class _grib_accessor_class_variable = {
 
 grib_accessor_class* grib_accessor_class_variable = &_grib_accessor_class_variable;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 #define MAX_VARIABLE_STRING_LENGTH 255

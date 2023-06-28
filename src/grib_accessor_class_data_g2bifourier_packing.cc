@@ -151,12 +151,6 @@ static grib_accessor_class _grib_accessor_class_data_g2bifourier_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef unsigned long (*encode_float_proc)(double);

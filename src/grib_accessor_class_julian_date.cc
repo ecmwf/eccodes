@@ -126,12 +126,6 @@ static grib_accessor_class _grib_accessor_class_julian_date = {
 
 grib_accessor_class* grib_accessor_class_julian_date = &_grib_accessor_class_julian_date;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

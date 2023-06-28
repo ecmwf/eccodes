@@ -113,12 +113,6 @@ static grib_accessor_class _grib_accessor_class_spd = {
 
 grib_accessor_class* grib_accessor_class_spd = &_grib_accessor_class_spd;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static long byte_count(grib_accessor* a)

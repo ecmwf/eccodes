@@ -150,12 +150,6 @@ static grib_accessor_class _grib_accessor_class_codetable = {
 
 grib_accessor_class* grib_accessor_class_codetable = &_grib_accessor_class_codetable;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int grib_load_codetable(grib_context* c, const char* filename,

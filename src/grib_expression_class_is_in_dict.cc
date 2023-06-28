@@ -64,20 +64,18 @@ typedef struct grib_expression_is_in_dict{
 static grib_expression_class _grib_expression_class_is_in_dict = {
     0,                    /* super                     */
     "is_in_dict",                    /* name                      */
-    sizeof(grib_expression_is_in_dict),/* size of instance          */
+    sizeof(grib_expression_is_in_dict),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     0,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_is_in_dict = &_grib_expression_class_is_in_dict;

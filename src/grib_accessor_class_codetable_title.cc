@@ -98,12 +98,6 @@ static grib_accessor_class _grib_accessor_class_codetable_title = {
 
 grib_accessor_class* grib_accessor_class_codetable_title = &_grib_accessor_class_codetable_title;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef struct grib_accessor_codetable
