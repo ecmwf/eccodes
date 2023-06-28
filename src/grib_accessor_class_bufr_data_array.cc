@@ -2503,8 +2503,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     section                    = gaGroup->sub_section;
     /*rootSection=section;*/
     /*sectionUp=self->dataKeys;*/
-    accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
-    accessor_constant_set_dval(gaGroup, groupNumber);
+    //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
+    //accessor_constant_set_dval(gaGroup, groupNumber);
     /* ECC-765: Don't empty out the section_4 keys otherwise there will be memory leaks. */
     /* Setting first and last to zero effectively masks out those section 4 keys! */
     /* self->dataKeys->block->first=0; */
@@ -2566,8 +2566,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
 
-                accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
-                accessor_constant_set_dval(gaGroup, groupNumber);
+                //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
+                //accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);
 
                 section = gaGroup->sub_section;
@@ -2610,8 +2610,8 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
                 gaGroup->bufr_group_number = groupNumber;
-                accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
-                accessor_constant_set_dval(gaGroup, groupNumber);
+                //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
+                //accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);
 
                 section = gaGroup->sub_section;
