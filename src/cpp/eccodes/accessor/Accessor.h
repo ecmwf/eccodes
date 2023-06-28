@@ -17,6 +17,9 @@
 #define ASSERT(a) /* */
 #define DEBUG_ASSERT(a) /* */
 
+// See https://github.com/ecmwf/mir/blob/develop/src/mir/repres/Representation.cc
+// for a similar approach
+
 namespace eccodes
 {
 namespace accessor
@@ -41,44 +44,52 @@ public:
 
     // Legacy methods
 
-    virtual void dump(grib_dumper* dumper) const =0;
-    virtual long next_offset() const =0;
-    virtual int value_count(long* count) const =0;
-    virtual size_t string_length() const =0;
-    virtual long byte_count() const =0;
-    virtual int get_native_type() const =0;
-    virtual long byte_offset() const =0;
-    virtual int unpack_bytes(unsigned char* val, size_t* len) const =0;
-    virtual int clear() const =0;
-    virtual int unpack_long(long* v, size_t* len) const =0;
-    virtual int unpack_double(double* v, size_t* len) const =0;
-    virtual int unpack_float(float* v, size_t* len) const =0;
-    virtual int unpack_string(char* v, size_t* len) const =0;
-    virtual int unpack_string_array(char** v, size_t* len) const =0;
-    virtual int pack_expression(grib_expression* e) const =0;
-    virtual int pack_long(const long* v, size_t* len) const =0;
-    virtual int pack_double(const double* v, size_t* len) const =0;
-    virtual int pack_string_array(const char** v, size_t* len) const =0;
-    virtual int pack_string(const char* v, size_t* len) const =0;
-    virtual int pack_bytes(const unsigned char* val, size_t* len) const =0;
-    virtual grib_section* sub_section() const =0;
-    virtual int notify_change(grib_accessor* observed) const =0;
-    virtual void update_size(size_t s) const =0;
-    virtual grib_accessor* next(int mod) const =0;
-    virtual int compare(const Accessor*) const =0;
-    virtual size_t preferred_size(int from_handle) const =0;
-    virtual int is_missing() const =0;
-    virtual int unpack_double_element(size_t i, double* val) const =0;
-    virtual int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) const =0;
-    virtual int unpack_double_subarray(double* val, size_t start, size_t len) const =0;
-    virtual grib_accessor* make_clone(grib_section* s, int* err) const =0;
+    virtual grib_accessor* make_clone(grib_section* s, int* err) const;
+    virtual grib_accessor* next(int mod) const;
+    virtual grib_section* sub_section() const;
+    virtual int clear() const;
+    virtual int compare(const Accessor*) const;
+    virtual int get_native_type() const;
+    virtual int is_missing() const;
+    virtual int notify_change(grib_accessor* observed) const;
+
+    virtual int pack_bytes(const unsigned char* val, size_t* len);
+    virtual int pack_double(const double* v, size_t* len);
+    virtual int pack_expression(grib_expression* e);
+    virtual int pack_long(const long* v, size_t* len);
+    virtual int pack_string(const char* v, size_t* len);
+    virtual int pack_string_array(const char** v, size_t* len);
+
+    virtual int unpack_bytes(unsigned char* val, size_t* len) const;
+    virtual int unpack_double(double* v, size_t* len) const;
+    virtual int unpack_double_element(size_t i, double* val) const;
+    virtual int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) const;
+    virtual int unpack_double_subarray(double* val, size_t start, size_t len) const;
+    virtual int unpack_float(float* v, size_t* len) const;
+    virtual int unpack_long(long* v, size_t* len) const;
+    virtual int unpack_string(char* v, size_t* len) const;
+    virtual int unpack_string_array(char** v, size_t* len) const;
+
+    virtual int value_count(long* count) const;
+    virtual long byte_count() const;
+    virtual long byte_offset() const;
+    virtual long next_offset() const;
+    virtual size_t preferred_size(int from_handle) const;
+    virtual size_t string_length() const;
+    virtual void dump(grib_dumper* dumper) const;
+    virtual void update_size(size_t s);
+
     virtual void print(std::ostream& s) const =0;
+
+
+    virtual const char* className() const =0;
 
     // Missing from the original
 
-    virtual int pack_missing() const;
+    virtual int pack_missing();
     virtual void resize(size_t new_size) const;
     virtual int nearest_smaller_value(double val, double* nearest) const;
+    void post_init() const;
 
     // Members
 
@@ -99,11 +110,7 @@ public:
     const char* name_;
 
     size_t offset_;
-
-    // mutable == bug
-    mutable size_t length_;
-    // mutable int dirty_;
-    // mutable int dirty;
+    size_t length_;
 
     grib_handle* handle() const;
     grib_section* parent_;
@@ -113,6 +120,7 @@ public:
     grib_action* creator;
 
     operator grib_accessor*() const;
+    static Accessor* find(const grib_handle*, const char*) ;
 
 
     mutable int dirty_; // WARNING: redefine in subclasses
@@ -140,7 +148,8 @@ public:
 
 template <class T>
 class AccessorMaker : public AccessorFactory {
-    Accessor* make(long length, grib_arguments* args) override { return new T(length, args); }
+    Accessor* make(long length, grib_arguments* args) override {
+         return new T(length, args); }
 
 public:
     AccessorMaker(const std::string& name) : AccessorFactory(name) {}

@@ -73,3 +73,4 @@ data/bufr/*test
 build/
 *.back
 converted/
+*.pyc

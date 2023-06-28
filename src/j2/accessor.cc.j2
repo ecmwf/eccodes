@@ -10,6 +10,8 @@
 
  #include "{{ c.include_header }}"
 
+ // converted from {{ c.cname }}.cc
+
 {% for i in c.body_includes %}
 #include {{ i }}
 {% endfor %}
@@ -51,7 +53,7 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
 
 /* inherited methods {{ m.name }} */
 {{ m.template }}
-{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) const {
+{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
@@ -60,7 +62,7 @@ static {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 {{ m.template }}
-{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) const {
+{{ m.result }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }})  {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
@@ -70,6 +72,11 @@ void {{ c.name }}::print(std::ostream& s) const {
     {% for m in c.members %} << "{{ m.name }}="  << {{ m.name }} {% if not loop.last %}<< ',' {% endif %}
     {% endfor %} << "]";
 }
+
+const char* {{ c.name }}::className() const {
+       return "{{ c.name }}";
+}
+
 
 {% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}

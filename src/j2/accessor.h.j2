@@ -40,6 +40,7 @@ protected:
     {% for m in c.inherited_methods %}
     virtual {{ m.result }} {{ m.name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
     virtual void print(std::ostream& s) const override;
+    virtual const char* className() const override;
 
 protected:
     // Private methods
@@ -50,7 +51,7 @@ protected:
 
 protected:
     // Members
-    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }};
+    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }}{{ m.array }};
     {% endfor %}
 
 };

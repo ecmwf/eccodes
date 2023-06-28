@@ -5,18 +5,28 @@ import importlib
 import os
 import re
 from collections import defaultdict
+import logging
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+LOG = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--templates", default="j2")
 parser.add_argument("--target", default="converted")
+parser.add_argument("--debug", action="store_true")
 parser.add_argument("path", nargs="+")
 
-args = parser.parse_args()
+ARGS = parser.parse_args()
+
+logging.basicConfig(
+        format="%(asctime)s %(levelname)s %(message)s",
+        level=logging.DEBUG if ARGS.debug else logging.INFO,
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
 
 env = Environment(
-    loader=FileSystemLoader(args.templates),
+    loader=FileSystemLoader(ARGS.templates),
     undefined=StrictUndefined,
 )
 
@@ -34,7 +44,15 @@ class Member:
     def __init__(self, s) -> None:
         bits = s.split()
         self.type = " ".join(bits[:-1])
-        self.name = bits[-1] + "_"
+
+        if "[" in bits[-1]:
+            self.name, self._array = bits[-1].split("[")
+            self._array = "[" + self._array
+        else:
+            self.name = bits[-1]
+            self._array = ""
+
+        self.name = self.name + "_"
 
         if self.name[0] == "*":
             self.name = self.name[1:]
@@ -45,6 +63,10 @@ class Member:
     @property
     def mutable(self):
         return "mutable" if self._mutable else ""
+
+    @property
+    def array(self):
+        return self._array
 
 
 class Arg:
@@ -117,6 +139,11 @@ class Function:
             assert self._lines[-1].strip() == "}", "\n".join(self._lines)
         return self._lines[1:-1]
 
+    def cannot_convert(self):
+        self._lines.insert(1, "#ifdef CANNOT_CONVERT_CODE")
+        self._lines.insert(-1, "#endif")
+        self._lines.insert(-1, "throw EccodesException(GRIB_NOT_IMPLEMENTED);")
+
 
 class FunctionDelegate:
     def __init__(self, function):
@@ -127,9 +154,10 @@ class FunctionDelegate:
 
 
 class Method(FunctionDelegate):
-    def __init__(self, owner_class, function):
+    def __init__(self, owner_class, function, const):
         super().__init__(function)
         self._owner_class = owner_class
+        self._const = const
 
     @property
     def args_declaration(self):
@@ -141,7 +169,7 @@ class Method(FunctionDelegate):
 
     @property
     def const(self):
-        return "const"
+        return "const" if self._const else ""
 
     def tidy_lines(self, lines):
         return lines
@@ -169,8 +197,10 @@ class PrivateMethod(Method):
 
 
 class DestructorMethod(Method):
-    pass
-
+    @property
+    def body(self):
+        lines = ['grib_context* c = 0;', super().body]
+        return "\n".join(lines)
 
 class ConstructorMethod(Method):
     pass
@@ -182,7 +212,7 @@ class CompareMethod(Method):
         return "const Accessor* other"
 
     def tidy_lines(self, lines):
-        try:
+
             args = self.args
             assert len(args) == 2
             assert args[0].type == "grib_accessor*"
@@ -200,10 +230,7 @@ class CompareMethod(Method):
 
             return result
 
-        except Exception as e:
-            print(self.name, e)
 
-            raise Exception("")
 
 
 class DumpMethod(Method):
@@ -273,7 +300,7 @@ class Class:
             self._top = True
         else:
             self._super, _ = self.tidy_class_name(super)
-            self._include_dir = args.target
+            self._include_dir = ARGS.target
             self._top = False
 
     def finalise(self, other_classes):
@@ -281,6 +308,12 @@ class Class:
 
         if not self._top and self._super not in self._other_classes:
             raise Exception(f"Unknown super class {self._super}")
+
+        for m in self._members:
+            if m.name in self.top_members:
+                LOG.warning(f'{self._cname}.cc member "{m.name}" is already defined')
+            if m.type == self.type_name + "*":
+                m.type = self.class_name + "*"
 
         # Classify functions
         self._inherited_methods = []
@@ -291,31 +324,49 @@ class Class:
         for name, f in list(self._functions.items()):
             if name in self._implements and name not in ("init", "destroy"):
                 METHOD = SPECIALISED_METHODS.get((self._class, name), InheritedMethod)
-                self._inherited_methods.append(METHOD(self, f))
+                self._inherited_methods.append(
+                    METHOD(self, f, const=name not in self.non_const_methods)
+                )
                 del self._functions[name]
 
         # Constructor
         if "init" in self._functions:
-            self._constructor = ConstructorMethod(self, self._functions["init"])
+            self._constructor = ConstructorMethod(
+                self,
+                self._functions["init"],
+                const=False,
+            )
             del self._functions["init"]
         else:
             self._constructor = ConstructorMethod(
-                self, Function("init", "void", self.constructor_args)
+                self,
+                Function("init", "void", self.constructor_args),
+                const=False,
             )
 
         # Destructor
         if "destroy" in self._functions:
-            self._destructor = DestructorMethod(self, self._functions["destroy"])
+            self._destructor = DestructorMethod(
+                self,
+                self._functions["destroy"],
+                const=False,
+            )
             del self._functions["destroy"]
         else:
-            self._destructor = DestructorMethod(self, Function("destroy", "void", ""))
+            self._destructor = DestructorMethod(
+                self,
+                Function("destroy", "void", ""),
+                const=False,
+            )
 
         # Other functions
         ptr_type_name = self.type_name + "*"
         for name, f in list(self._functions.items()):
             # If starts with ptr_type_name, then it's a private method
             if f.args[0].type == ptr_type_name:
-                self._private_methods.append(PrivateMethod(self, f))
+                self._private_methods.append(
+                    PrivateMethod(self, f, const=name not in self.non_const_methods)
+                )
                 del self._functions[name]
             else:
                 self._static_functions.append(StaticProc(self, f))
@@ -326,14 +377,52 @@ class Class:
 
     def apply_patches(self):
         try:
-            m = importlib.import_module(f'patches.{self._cname}')
+            m = importlib.import_module(f"patches.{self._cname}")
         except ModuleNotFoundError:
             return
+        LOG.info(f"Applying patches for {self._cname}")
         m.patch(self)
+
+    def cannot_convert_method(self, name):
+        ok = False
+        for m in self._inherited_methods:
+            if m.name == name:
+                m.cannot_convert()
+                ok = True
+        for m in self._private_methods:
+            if m.name == name:
+                m.cannot_convert()
+                ok = True
+        for m in self._static_functions:
+            if m.name == name:
+                m.cannot_convert()
+                ok = True
+        if not ok:
+            raise Exception(f"Cannot convert method {name}")
+
+    def cannot_convert_top_level(self, name):
+        self._top_level_code[name] = (
+            ["#ifdef CANNOT_CONVERT_CODE"] + self._top_level_code[name] + ["#endif"]
+        )
+
+
+    def mark_mutable(self, name):
+        ok = False
+        for m in self._members:
+            if m.name == name:
+                m._mutable = True
+                ok = True
+
+        if not ok:
+            raise Exception(f"Cannot convert member {name}")
 
     @property
     def name(self):
         return self._name
+
+    @property
+    def cname(self):
+        return self._cname
 
     @property
     def factory_name(self):
@@ -367,7 +456,7 @@ class Class:
 
     @property
     def include_header(self):
-        return "/".join([args.target] + self.namespaces + [self._name + ".h"])
+        return "/".join([ARGS.target] + self.namespaces + [self._name + ".h"])
 
     @property
     def header_includes(self):
@@ -419,9 +508,9 @@ class Class:
         return self.rename.get(name, name), c_name
 
     def save(self, ext, content):
-        target = os.path.join(args.target, *self.namespaces, f"{self.name}.{ext}")
+        target = os.path.join(ARGS.target, *self.namespaces, f"{self.name}.{ext}")
         os.makedirs(os.path.dirname(target), exist_ok=True)
-        print("Writting ", target)
+        LOG.info("Writting %s", target)
         with open(target, "w") as f:
             f.write(content)
 
@@ -433,6 +522,7 @@ class Class:
         self.save("h", template.render(c=self))
 
     def dump_body(self):
+        # Beware of this: https://github.com/pallets/jinja/issues/604
         template = env.get_template(f"{self._class}.cc.j2")
 
         def tidy_more(text):
@@ -460,9 +550,6 @@ class Class:
 
         if re.match(r".*\bsuper\s+=\s+\*\(this->cclass->super\)", line):
             line = ""
-
-        for k, v in self.substitute_str.items():
-            line = line.replace(k, v)
 
         for k, v in self.substitute_re.items():
             line = re.sub(k, v, line)
@@ -493,9 +580,8 @@ class Class:
         return line
 
 
-
-
 class Accessor(Class):
+    class_name = "Accessor"
     type_name = "grib_accessor"
     constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
 
@@ -511,26 +597,43 @@ class Accessor(Class):
         "h_",
     ]
 
+    non_const_methods = [
+        "pack_long",
+        "pack_missing",
+        "pack_string",
+        "pack_double",
+        "pack_bytes",
+        "pack_expression",
+        "pack_string_array",
+        "update_size",
+    ]
+
     # namespaces = ["eccodes", "accessor"]
     prefix = "grib_accessor_class_"
     rename = {"Gen": "Generic"}
 
-    substitute_str = {
-        "grib_handle_of_accessor(this)": "this->handle()",
-        "get_accessors(this)": "this->get_accessors()",
-        "select_area(this)": "this->select_area()",
-        "init_length(this)": "this->init_length()",
-        "compute_byte_count(this)": "this->compute_byte_count()",
-    }
     substitute_re = {
+        r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
+        r"\bget_accessors\(this\)": "this->get_accessors()",
+        r"\bselect_area\(this\)": "this->select_area()",
+        r"\bcompute_size\(this\)": "this->compute_size()",
+        r"\binit_length\(this\)": "this->init_length()",
+        r"\blog_message\(this\)": "this->log_message()",
+        r"\bcompute_byte_count\(this\)": "this->compute_byte_count()",
+        r"\bselect_datetime\(this\)": "this->select_datetime()",
+        r"\bapply_thinning\(this\)": "this->apply_thinning()",
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
+        r"\bbyte_offset\((\w+)\s*\)": r"\1->byte_offset()",
+        r"\bbyte_count\((\w+)\s*\)": r"\1->byte_count()",
         r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
         r"\bgrib_pack_double\((\w+)\s*,": r"\1->pack_double(",
         r"\bgrib_unpack_string\((\w+)\s*,": r"\1->unpack_string(",
         r"\bgrib_unpack_double\((\w+)\s*,": r"\1->unpack_double(",
         r"\bgrib_pack_long\((\w+)\s*,": r"\1->pack_long(",
         r"\bgrib_unpack_long\((\w+)\s*,": r"\1->unpack_long(",
+        r"\bgrib_unpack_double\((\w+)\s*,": r"\1->unpack_double(",
+        r"\bgrib_unpack_bytes\((\w+)\s*,": r"\1->unpack_bytes(",
         r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
         r"\bgrib_update_size\((\w+)\s*,": r"\1->update_size(",
         r"\bpreferred_size\(this,": r"this->preferred_size(",
@@ -539,16 +642,24 @@ class Accessor(Class):
         r"\bAssert\b": "ASSERT",
         r"\bpack_double\(this,": "this->pack_double(",
         r"\bunpack_long\(this,": "this->unpack_long(",
+        r"\bunpack_double\(this,": "this->unpack_double(",
         r"\bpack_string\(this,": "this->pack_string(",
         r"\bunpack_string\(this,": "this->unpack_string(",
         r"\bpack_bytes\(this,": "this->pack_bytes(",
         r"\bpack_double\(this,": "this->pack_double(",
+        r"\bunpack_double_element\(this,": "this->unpack_double_element(",
         r"\bunpack<(\w+)>\(this,": r"this->unpack<\1>(",
         r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",
         r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
         r"\b(\w+)::this->": r"\1::",
         r"\b(\w+)->this->": r"\1::",
-        r"\bgrib_accessor\*": r"const Accessor*",
+        r"\bgrib_accessor\*": "const Accessor*",
+        r"\bthis->cclass->name\b": "this->className()",
+        r"\bdirty\b": "dirty_",
+        r"\bother->length\b": "other->length_",
+        r"\bother->offset\b": "other->offset_",
+        r"\bgrib_find_accessor\b": "Accessor::find",
+        r"\bgrib_pack_long\(this->(\w+),": r"this->\1->pack_long(",
     }
 
     def class_to_type(self):
@@ -603,7 +714,7 @@ def parse_file(path):
     functions = {}
     top_level_lines = []
     top_level_code = defaultdict(list)
-    print("Parsing", path)
+    LOG.info("Parsing %s", path)
 
     f = open(path, "r")
     for line in f:
@@ -641,7 +752,7 @@ def parse_file(path):
                 definitions.setdefault(what, [])
                 definitions[what] += bits[1:]
             except KeyError:
-                print(f"Unknown definition: {bits}")
+                LOG.error(f"Unknown definition: {bits}")
                 raise
             continue
 
@@ -665,7 +776,7 @@ def parse_file(path):
             )
             depth = stripped_line.count("{") - stripped_line.count("}")
             assert depth >= 0, line
-            # print("Start of function", function.name)
+            LOG.debug("Start of function %s", function.name)
             continue
 
         if in_function:
@@ -674,7 +785,7 @@ def parse_file(path):
             depth -= stripped_line.count("}")
             assert depth >= 0, line
             if depth == 0 and not function.is_empty():
-                # print("End of function", function.name)
+                LOG.debug("End of function %s", function.name)
                 in_function = False
                 template = None
                 del function
@@ -712,12 +823,12 @@ def parse_file(path):
 
 def main():
     classes = {}
-    for a in args.path:
+    for a in ARGS.path:
         klass = parse_file(a)
         if klass is not None:
             classes[klass.name] = klass
 
-    print("Finalising", sorted(classes.keys()))
+    LOG.info("Finalising %s classes", len(classes))
     for klass in classes.values():
         klass.finalise(classes)
 
