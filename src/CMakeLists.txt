@@ -396,8 +396,7 @@ list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian_omp.cc grib_bits_any_endian_omp.cc
     encode_double_array.cc
     grib_bits_ibmpow.cc
-    grib_bits_ibmpow_opt.cc
-    minmax_val.cc )
+    grib_bits_ibmpow_opt.cc )
 
 if(UNIX)
     ecbuild_get_date(eccodes_BUILD_DATE)

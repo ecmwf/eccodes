@@ -582,31 +582,6 @@ static int unpack_double_subarray(grib_accessor* a, double* val, size_t start, s
     return _unpack_double(a, val, plen, buf, pos, nvals);
 }
 
-#if GRIB_IBMPOWER67_OPT
-#define restrict
-#include "minmax_val.cc"
-#undef restrict
-#endif
-
-// static int grib_producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
-// {
-//     /* GRIB-802: If override key is set, ignore env. var and produce compressed fields */
-//     if (c->large_constant_fields) {  /* This is set by the environment variable */
-//         /* check the override key */
-//         int err = 0;
-//         long override_large_constant_fields = 0;
-//         err = grib_get_long_internal(h, "override_large_constant_fields", &override_large_constant_fields);
-//         if (err == GRIB_SUCCESS && override_large_constant_fields) {
-//             return 0;
-//         }
-//         return 1;
-//     }
-//     if (c->gribex_mode_on==1 && edition==1) {
-//         return 1;
-//     }
-//     return 0;
-// }
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_simple_packing* self = (grib_accessor_data_simple_packing*)a;
@@ -659,14 +634,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     max = val[0];
     min = max;
-#if GRIB_IBMPOWER67_OPT
-    minmax_val(val + 1, n_vals - 1, &min, &max);
-#else
     for (i = 1; i < n_vals; i++) {
         if (val[i] > max)      max = val[i];
         else if (val[i] < min) min = val[i];
     }
-#endif
+
     if ((err = grib_check_data_values_range(gh, min, max)) != GRIB_SUCCESS) {
         return err;
     }
