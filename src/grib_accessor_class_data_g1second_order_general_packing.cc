@@ -154,12 +154,6 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_general_pack
 
 grib_accessor_class* grib_accessor_class_data_g1second_order_general_packing = &_grib_accessor_class_data_g1second_order_general_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)

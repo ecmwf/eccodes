@@ -99,12 +99,6 @@ static grib_accessor_class _grib_accessor_class_data_g1shsimple_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g1shsimple_packing = &_grib_accessor_class_data_g1shsimple_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 

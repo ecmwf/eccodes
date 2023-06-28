@@ -20,7 +20,6 @@ grib_option grib_options[] = {
     { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
     { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    { "H", 0, "Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
     { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
@@ -85,7 +84,6 @@ static int lastPrint           = 0;
 static int force               = 0;
 static double maxAbsoluteError = 1e-19;
 static int onlyListed          = 1;
-static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
 static int listFromCommandLine;
@@ -230,11 +228,6 @@ int grib_tool_init(grib_runtime_options* options)
         onlyListed = 0;
     else
         onlyListed = 1;
-
-    if (grib_options_on("H"))
-        headerMode = 1;
-    else
-        headerMode = 0;
 
     if (grib_options_on("H") && grib_options_on("c:")) {
         printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
@@ -1033,53 +1026,14 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     grib_keys_iterator* iter = NULL;
     const char* name         = NULL;
 
-    /* mask only if no -c option or headerMode (-H)*/
-    if (blocklist && (!listFromCommandLine || headerMode)) {
+    /* mask only if no -c option (-H)*/
+    if (blocklist && !listFromCommandLine) {
         grib_string_list* nextb = blocklist;
         while (nextb) {
             grib_clear(h1, nextb->value);
             grib_clear(h2, nextb->value);
             nextb = nextb->next;
         }
-    }
-
-    if (headerMode) {
-        const void *msg1 = NULL, *msg2 = NULL;
-        size_t size1 = 0, size2 = 0;
-        grib_handle *h11, *h22;
-        GRIB_CHECK_NOLINE(grib_get_message_headers(h1, &msg1, &size1), 0);
-        GRIB_CHECK_NOLINE(grib_get_message_headers(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
-            return 0;
-
-        err = 0;
-        h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
-        h22 = grib_handle_new_from_partial_message(h1->context, msg2, size2);
-
-        iter = grib_keys_iterator_new(h11,
-                                      GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
-
-        if (!iter) {
-            printf("ERROR: unable to get iterator\n");
-            exit(1);
-        }
-
-        while (grib_keys_iterator_next(iter)) {
-            name = grib_keys_iterator_get_name(iter);
-            /*printf("----- comparing %s\n",name);*/
-
-            if (blocklisted(name))
-                continue;
-            if (compare_values(options, h11, h22, name, GRIB_TYPE_UNDEFINED)) {
-                err++;
-                write_messages(h11, h22);
-            }
-        }
-
-        grib_keys_iterator_delete(iter);
-        grib_handle_delete(h11);
-        grib_handle_delete(h22);
-        return err;
     }
 
     if (listFromCommandLine && onlyListed) {

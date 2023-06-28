@@ -109,12 +109,6 @@ static grib_accessor_class _grib_accessor_class_g1number_of_coded_values_sh_simp
 
 grib_accessor_class* grib_accessor_class_g1number_of_coded_values_sh_simple = &_grib_accessor_class_g1number_of_coded_values_sh_simple;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

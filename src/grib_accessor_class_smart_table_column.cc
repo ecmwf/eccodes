@@ -105,12 +105,6 @@ static grib_accessor_class _grib_accessor_class_smart_table_column = {
 
 grib_accessor_class* grib_accessor_class_smart_table_column = &_grib_accessor_class_smart_table_column;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef struct grib_accessor_smart_table

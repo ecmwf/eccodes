@@ -51,13 +51,9 @@ int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const ch
     if (b)
         return grib_unpack_long(b, value, &len);
 
-        /* TODO: fix me. For now, we don't fail on a lookup. */
-#if 1
+    /* TODO: fix me. For now, we don't fail on a lookup. */
     *value = -1;
     return GRIB_SUCCESS;
-#else
-    return GRIB_NOT_FOUND;
-#endif
 }
 
 int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)

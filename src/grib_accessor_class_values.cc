@@ -120,12 +120,6 @@ static grib_accessor_class _grib_accessor_class_values = {
 
 grib_accessor_class* grib_accessor_class_values = &_grib_accessor_class_values;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 static long init_length(grib_accessor* a)
 {

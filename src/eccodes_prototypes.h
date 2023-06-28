@@ -493,8 +493,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 /* grib_accessor_class_ieeefloat.cc*/
 
 /* grib_accessor_class_constant.cc*/
-void accessor_constant_set_type(grib_accessor* a, int type);
-void accessor_constant_set_dval(grib_accessor* a, double dval);
 
 /* grib_accessor_class_iterator.cc*/
 grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int* error);

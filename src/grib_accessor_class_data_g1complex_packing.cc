@@ -135,12 +135,6 @@ static grib_accessor_class _grib_accessor_class_data_g1complex_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g1complex_packing = &_grib_accessor_class_data_g1complex_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
@@ -209,17 +203,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (ret == GRIB_SUCCESS) {
         n = a->offset + 4 * ((sub_k + 1) * (sub_k + 2));
-#if 1
+
         /*     Octet number starts from beginning of message but shouldn't     */
         if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n)) != GRIB_SUCCESS)
             return ret;
-#else
-        ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection);
-        if (ret != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n - offsetsection)) != GRIB_SUCCESS)
-            return ret;
-#endif
+
+        // ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection);
+        // if (ret != GRIB_SUCCESS)
+        //     return ret;
+        // if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n - offsetsection)) != GRIB_SUCCESS)
+        //     return ret;
+
         ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value);
         if (ret != GRIB_SUCCESS)
             return ret;

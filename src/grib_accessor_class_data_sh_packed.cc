@@ -137,12 +137,6 @@ static grib_accessor_class _grib_accessor_class_data_sh_packed = {
 
 grib_accessor_class* grib_accessor_class_data_sh_packed = &_grib_accessor_class_data_sh_packed;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef unsigned long (*encode_float_proc)(double);

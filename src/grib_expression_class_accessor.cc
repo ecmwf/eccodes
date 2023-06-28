@@ -68,20 +68,18 @@ typedef struct grib_expression_accessor{
 static grib_expression_class _grib_expression_class_accessor = {
     0,                    /* super                     */
     "accessor",                    /* name                      */
-    sizeof(grib_expression_accessor),/* size of instance          */
+    sizeof(grib_expression_accessor),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_accessor = &_grib_expression_class_accessor;

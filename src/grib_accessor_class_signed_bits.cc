@@ -113,12 +113,6 @@ static grib_accessor_class _grib_accessor_class_signed_bits = {
 
 grib_accessor_class* grib_accessor_class_signed_bits = &_grib_accessor_class_signed_bits;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static long byte_count(grib_accessor* a)

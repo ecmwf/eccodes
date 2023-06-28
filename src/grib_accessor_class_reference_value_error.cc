@@ -105,12 +105,6 @@ static grib_accessor_class _grib_accessor_class_reference_value_error = {
 
 grib_accessor_class* grib_accessor_class_reference_value_error = &_grib_accessor_class_reference_value_error;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

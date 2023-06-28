@@ -129,12 +129,6 @@ static grib_accessor_class _grib_accessor_class_g1step_range = {
 
 grib_accessor_class* grib_accessor_class_g1step_range = &_grib_accessor_class_g1step_range;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)

@@ -106,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_g1fcperiod = {
 
 grib_accessor_class* grib_accessor_class_g1fcperiod = &_grib_accessor_class_g1fcperiod;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
