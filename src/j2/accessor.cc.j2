@@ -19,11 +19,12 @@
 {% for n in c.namespaces %}namespace {{ n }} {
 {% endfor %}
 
-// top level code '-start-'
+// start top level code '-start-'
 {% for line in c.top_level_code['-start-'] %}{{ line }}
 {% endfor %}
 
 {% for m in c.static_functions %}
+// start top level code '{{ m.name }}'
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
 static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
@@ -78,7 +79,7 @@ const char* {{ c.name }}::className() const {
        return "{{ c.name }}";
 }
 
-/* top level code -end- */
+// top level code '-end-'
 {% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}
 

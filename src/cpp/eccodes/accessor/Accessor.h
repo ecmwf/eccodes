@@ -19,6 +19,7 @@
 
 const int TRUE  = 1;
 const int FALSE = 0;
+inline int grib_inline_strcmp(const char* a, const char* b) { return strcmp(a, b); }
 
 // See https://github.com/ecmwf/mir/blob/develop/src/mir/repres/Representation.cc
 // for a similar approach

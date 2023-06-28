@@ -142,7 +142,8 @@ class Function:
     def cannot_convert(self):
         self._lines.insert(1, "#ifdef CANNOT_CONVERT_CODE")
         self._lines.insert(-1, "#endif")
-        self._lines.insert(-1, "throw EccodesException(GRIB_NOT_IMPLEMENTED);")
+        if self._name != "destroy":
+            self._lines.insert(-1, "throw EccodesException(GRIB_NOT_IMPLEMENTED);")
 
 
 class FunctionDelegate:
@@ -264,6 +265,7 @@ class Class:
     substitute_re_top_level = {
         r"^#define\s+(\w+)\s+(-?\d+)?!(\.|e|E)": r"const long \1 = \2;",
         r"^#define\s+(\w+)\s+(-?\d+\.\d+([eE]-?\d+)?)": r"const double \1 = \2;",
+        r'\bgrib_inline_strcmp\b': 'strcmp',
     }
 
     def __init__(
@@ -288,9 +290,9 @@ class Class:
         self._factory_name = factory_name
         self._members = members
         self._functions = functions
-
-        self._body_includes = includes
         self._implements = implements
+        self._body_includes = includes
+        self._forward_declarations = []
 
         if super is None:
             self._super, _ = self.tidy_class_name(class_)
@@ -411,6 +413,9 @@ class Class:
             raise Exception(f"Cannot convert method {name}")
 
     def cannot_convert_top_level(self, name):
+        if name not in self._top_level_code:
+            print(list(self._top_level_code.keys()))
+            raise Exception(f"Cannot convert top level {name}")
         self._top_level_code[name] = (
             ["#ifdef CANNOT_CONVERT_CODE"] + self._top_level_code[name] + ["#endif"]
         )
@@ -424,6 +429,9 @@ class Class:
 
         if not ok:
             raise Exception(f"Cannot convert member {name}")
+
+    def add_forward_declaration(self, name):
+        self._forward_declarations.append(name)
 
     @property
     def name(self):
@@ -503,6 +511,10 @@ class Class:
     def static_functions(self):
         return self._static_functions
 
+    @property
+    def forward_declarations(self):
+        return self._forward_declarations
+
     def dump(self):
         self.dump_header()
         self.dump_body()
@@ -518,13 +530,32 @@ class Class:
 
     def save(self, ext, content):
         target = os.path.join(ARGS.target, *self.namespaces, f"{self.name}.{ext}")
-        os.makedirs(os.path.dirname(target), exist_ok=True)
         LOG.info("Writting %s", target)
-        with open(target, "w") as f:
+
+        tmp = os.path.join(ARGS.target, *self.namespaces, f"{self.name}-tmp.{ext}")
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+
+        with open(tmp, "w") as f:
             f.write(content)
 
-        ret = os.system(f"clang-format -i {target}")
+        ret = os.system(f"clang-format -i {tmp}")
         assert ret == 0
+
+        # So we don't recomplie everything
+        if os.path.exists(target):
+            with open(target) as f:
+                old = f.read()
+            with open(tmp) as f:
+                new = f.read()
+            if old == new:
+                LOG.info("No change")
+                os.unlink(tmp)
+                return
+
+        LOG.info("Updating %s", target)
+        os.rename(tmp, target)
+
+
 
     def dump_header(self):
         template = env.get_template(f"{self._class}.h.j2")
@@ -622,9 +653,11 @@ class Accessor(Class):
     rename = {
         "Gen": "Generic",
         "Md5": "Md5Sum",  # We rename because of macos case insensitive file system
+        "Assert": "Assertion", # Name clash with assert.h
     }
 
     substitute_re = {
+        r'\bgrib_inline_strcmp\b': 'strcmp',
         r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
         r"\bget_accessors\(this\)": "this->get_accessors()",
         r"\bselect_area\(this\)": "this->select_area()",
@@ -636,7 +669,12 @@ class Accessor(Class):
         r"\bcompute_byte_count\(this\)": "this->compute_byte_count()",
         r"\bselect_datetime\(this\)": "this->select_datetime()",
         r"\bapply_thinning\(this\)": "this->apply_thinning()",
-        r"\bgrib_accessor_get_native_type\(this\)": "this->native_type()",
+        r"\bconcept_evaluate\(this\)": "this->concept_evaluate()",
+        r"\bnew_bif_trunc\(this\)": "this->new_bif_trunc()",
+        r"\bget_table_codes\(this\)": "this->get_table_codes()",
+
+        r"\bload_table\(this\)": "this->load_table()",
+        r"\bgrib_accessor_get_native_type\(this\)": "this->get_native_type()",
         r"\bget_native_type\(this\)": "this->get_native_type()",
         r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
         r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
@@ -652,6 +690,7 @@ class Accessor(Class):
         r"\bgrib_unpack_bytes\((\w+)\s*,": r"\1->unpack_bytes(",
         r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
         r"\bgrib_update_size\((\w+)\s*,": r"\1->update_size(",
+        r"\bgrib_unpack_string_array\((\w+)\s*,": r"\1->unpack_string_array(",
         r"\bgrib_is_missing_internal\((\w+)\)": r"\1->is_missing()",
         r"\bpreferred_size\(this,": r"this->preferred_size(",
         r"\bvalue_count\((\w+),": r"\1->value_count(",
@@ -679,6 +718,7 @@ class Accessor(Class):
         r"\bgrib_find_accessor\b": "Accessor::find",
         r"\bgrib_pack_long\(this->(\w+),": r"this->\1->pack_long(",
         r"\bgrib_value_count\(this->(\w+),": r"this->\1->value_count(",
+        r"\bgrib_pack_bytes\(this->(\w+),": r"this->\1->pack_bytes(",
         r"\bAccessor::find\(this->handle\(\),": r"Accessor::find(",
         # Temp stuff for making sure we still compile
         r"\bgrib_optimize_decimal_factor\(this,": r"grib_optimize_decimal_factor(this->as_grib_accessor_while_converting(),",
@@ -688,6 +728,16 @@ class Accessor(Class):
         r"\badd_many_bitstream\(&ctx, this,": r"add_many_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
         r"\badd_bitstream\(&ctx, this,": r"add_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
         r"\baccessor_raw_get_offset\(this->(\w+)": r"accessor_raw_get_offset(this->\1->as_grib_accessor_while_converting()",
+        r"\bgrib_accessor_class_expanded_descriptors_set_do_expand\((\w+)": r"grib_accessor_class_expanded_descriptors_set_do_expand(\1->as_grib_accessor_while_converting()",
+
+        r"\bgrib_is_missing_string\((\w+)": r"grib_is_missing_string(\1->as_grib_accessor_while_converting()",
+        r"\bgrib_is_missing_long\((\w+)": r"grib_is_missing_long(\1->as_grib_accessor_while_converting()",
+        r"\bgrib_is_missing_double\((\w+)": r"grib_is_missing_double(\1->as_grib_accessor_while_converting()",
+r"\baccessor_bufr_data_array_set_unpackMode\((\w+)": r"accessor_bufr_data_array_set_unpackMode(\1->as_grib_accessor_while_converting()",
+
+r"\baction_concept_get_nofail\((\w+)": r"action_concept_get_nofail(\1->as_grib_accessor_while_converting()",
+r"\baction_concept_get_concept\((\w+)": r"action_concept_get_concept(\1->as_grib_accessor_while_converting()",
+
     }
 
     def class_to_type(self):

@@ -16,8 +16,11 @@
 #include {{ i }}
 {% endfor %}
 
-
 {% for n in c.namespaces %}namespace {{ n }} {
+{% endfor %}
+
+{% for f in c.forward_declarations %}
+{{ f }};
 {% endfor %}
 
 class {{ c.name }} : public {{ c.super }} {
