@@ -67,7 +67,6 @@ static const unsigned long k[] = {
 
 static void grib_md5_flush(grib_md5_state* s)
 {
-#if 1
     unsigned long a  = s->h0;
     unsigned long b  = s->h1;
     unsigned long c  = s->h2;
@@ -153,8 +152,6 @@ static void grib_md5_flush(grib_md5_state* s)
     I_(d, a, b, c, 11, 61);
     I_(c, d, a, b, 2, 62);
     I_(b, c, d, a, 9, 63);
-
-#endif
 
     s->h0 += a;
     s->h1 += b;
