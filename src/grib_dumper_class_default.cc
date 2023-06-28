@@ -611,7 +611,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
         fprintf(self->dumper.out, "  ");
         for (j = 0; j < 5 && k < size; j++, k++) {
@@ -620,11 +619,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
     }
     if (more) {
         fprintf(self->dumper.out, "  ");

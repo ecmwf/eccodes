@@ -157,11 +157,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         strcpy(tmp, table->entries[value].title);
     }
     else {
-#if 1
         snprintf(tmp, sizeof(tmp), "%d", (int)value);
-#else
-        return GRIB_DECODING_ERROR;
-#endif
     }
 
     l = strlen(tmp) + 1;

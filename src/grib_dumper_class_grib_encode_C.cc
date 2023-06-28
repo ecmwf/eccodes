@@ -135,10 +135,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
 
-#if 1
     if (comment)
         pcomment(self->dumper.out, value, comment);
-#endif
 
     if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
         fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_missing(h,\"%s\"),%d);\n", a->name, 0);
@@ -231,10 +229,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (a->length == 0)
         return;
 
-#if 1
     if (comment)
         fprintf(self->dumper.out, "/* %s */\n", comment);
-#endif
 
     fprintf(self->dumper.out, "    p    = \"%s\";\n", value);
     fprintf(self->dumper.out, "    size = strlen(p);\n");
