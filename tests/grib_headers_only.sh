@@ -21,7 +21,7 @@ sample_g2="$ECCODES_SAMPLES_PATH/GRIB2.tmpl"
 files="$sample_g1 $sample_g2"
 for file in $files; do
   # Since we're not including the data section, the packingType key must not appear
-  $EXEC ${tools_dir}/grib_ls -j -M -x $sample_g1 > $tempLog
+  ${tools_dir}/grib_ls -j -M -x $sample_g1 > $tempLog
   set +e
   grep -q "packingType" $tempLog
   status=$?
