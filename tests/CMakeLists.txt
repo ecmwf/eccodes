@@ -81,6 +81,7 @@ if( HAVE_BUILD_TOOLS )
         definitions
         grib2_version
         grib_calendar
+        grib_headers_only
         grib_md5
         grib_cfNames
         grib_packing_order
