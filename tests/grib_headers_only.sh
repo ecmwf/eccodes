@@ -29,8 +29,8 @@ for file in $files; do
   [ $status -ne 0 ]
 done
 
-$EXEC ${tools_dir}/grib_dump -M -x -O $sample_g1 > $tempLog
-$EXEC ${tools_dir}/grib_dump -M -x -O $sample_g2 > $tempLog
+${tools_dir}/grib_dump -M -x -O $sample_g1 > $tempLog
+${tools_dir}/grib_dump -M -x -O $sample_g2 > $tempLog
 
 
 files="reduced_gaussian_lsm.grib1
