@@ -1,8 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.0, Grid point data - simple packing
-# Octets 6-nn : Binary data values - binary string, with each
-# (scaled)
 
 meta codedValues data_g2simple_packing(
       section7Length,
