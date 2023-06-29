@@ -81,7 +81,6 @@ if( HAVE_BUILD_TOOLS )
         definitions
         grib2_version
         grib_calendar
-        grib_headers_only
         grib_md5
         grib_cfNames
         grib_packing_order
@@ -149,6 +148,7 @@ if( HAVE_BUILD_TOOLS )
         grib_change_packing
         grib_grid_space_view
         grib_partial_message
+        grib_headers_only
         grib_count
         bufr_templates
         bufr_dump_data
