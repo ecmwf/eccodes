@@ -18,11 +18,10 @@ rm -f $tempText $tempLog
 sample_g1="$ECCODES_SAMPLES_PATH/GRIB1.tmpl"
 sample_g2="$ECCODES_SAMPLES_PATH/GRIB2.tmpl"
 
-# files="$sample_g1 $sample_g2"   #TODO: include GRIB2 as well
-files="$sample_g1"                #TODO: include GRIB2 as well
-for file in $files; do
+files="$sample_g1 $sample_g2"
+for f in $files; do
   # Since we're not including the data section, the packingType key must not appear
-  ${tools_dir}/grib_ls -j -M -x $file > $tempLog
+  ${tools_dir}/grib_ls -j -M -x $f > $tempLog
   set +e
   grep -q "packingType" $tempLog
   status=$?
