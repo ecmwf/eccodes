@@ -50,7 +50,6 @@ static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_ascii

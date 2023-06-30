@@ -41,7 +41,6 @@ static int get_native_type(grib_accessor*);
 static int pack_missing(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_double

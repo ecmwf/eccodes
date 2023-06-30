@@ -53,7 +53,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_apply_gdsnotpresent
 {

@@ -31,7 +31,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_abstract_vector
 {

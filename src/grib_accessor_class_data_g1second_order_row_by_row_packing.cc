@@ -57,7 +57,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g1second_order_row_by_row_packing
 {

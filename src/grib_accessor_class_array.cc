@@ -37,7 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_array
 {
