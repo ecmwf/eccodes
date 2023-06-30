@@ -38,7 +38,7 @@ namespace accessor
     };
 
 
-class Accessor /* eckit non copyable : public Accessor */
+class Accessor : public grib_accessor
 {
 protected:
     Accessor(const long len, grib_arguments* param);
@@ -68,7 +68,7 @@ public:
     virtual int compare(const Accessor*) const;
     virtual int get_native_type() const;
     virtual int is_missing() const;
-    virtual int notify_change(grib_accessor* observed) const;
+    virtual int notify_change(grib_accessor* observed);
 
     virtual int pack_bytes(const unsigned char* val, size_t* len);
     virtual int pack_double(const double* v, size_t* len);
@@ -122,27 +122,30 @@ public:
     // For now....
     public:
 
-    grib_context *context_;
-    unsigned long flags_;
-    const char* name_;
+    // grib_context *context_;
+    // unsigned long flags_;
+    // const char* name_;
 
-    size_t offset_;
-    mutable size_t length_; // Updated by Bitmap
+    // size_t offset_;
+    // mutable size_t length_; // Updated by Bitmap
 
-    grib_handle* handle() const;
-    grib_section* parent_;
-    int carg;
-    grib_handle* h;
-    grib_section* parent;
-    grib_action* creator;
-    grib_virtual_value* vvalue;
+    grib_handle* handle() const { return h; }
+    // grib_handle* handle() { return h; }
 
-    grib_accessor* as_grib_accessor_while_converting() const;
+
+    // grib_section* parent_;
+    // int carg;
+    // grib_handle* h;
+    // grib_section* parent;
+    // grib_action* creator;
+    // grib_virtual_value* vvalue;
+
+    // grib_accessor* as_grib_accessor_while_converting() const;
 
     static Accessor* find(const grib_handle*, const char*) ;
     Accessor* find(const char*) const;
 
-    mutable int dirty_; // WARNING: redefine in subclasses
+    // mutable int dirty_; // WARNING: redefine in subclasses
 
 };
 

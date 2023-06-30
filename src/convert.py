@@ -226,7 +226,6 @@ class CompareMethod(Method):
         for line in lines:
             line = re.sub(rf"\b{a}\b", "this", line)
             line = re.sub(rf"\b{b}\b", "other", line)
-            line = re.sub(r"\bother->(\w+),", r"other->\1_,", line)
             result.append(line)
 
         return result
@@ -626,15 +625,15 @@ class Accessor(Class):
     constructor_args = "grib_accessor* a, const long l, grib_arguments* c"
 
     top_members = [
-        "name_",
-        "length_",
-        "offset_",
-        "dirty_",
-        "flags_",
-        "context_",
-        "parent_",
-        "next_",
-        "h_",
+        # "name_",
+        # "length_",
+        # "offset_",
+        # "dirty_",
+        # "flags_",
+        # "context_",
+        # "parent_",
+        # "next_",
+        # "h_",
     ]
 
     non_const_methods = [
@@ -645,7 +644,7 @@ class Accessor(Class):
         "pack_bytes",
         "pack_expression",
         "pack_string_array",
-        "update_size",
+        "update_size","notify_change",
     ]
 
     # namespaces = ["eccodes", "accessor"]
@@ -657,7 +656,7 @@ class Accessor(Class):
     }
 
     substitute_re = {
-        r'\bgrib_inline_strcmp\b': 'strcmp',
+        # r'\bgrib_inline_strcmp\b': 'strcmp',
         r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
         r"\bget_accessors\(this\)": "this->get_accessors()",
         r"\bselect_area\(this\)": "this->select_area()",
@@ -712,32 +711,15 @@ class Accessor(Class):
         r"\b(\w+)->this->": r"\1::",
         r"\bgrib_accessor\*": "Accessor*",
         r"\bthis->cclass->name\b": "this->className()",
-        r"\bdirty\b": "dirty_",
-        r"\b(\w+)->length\b": r"\1->length_",
-        r"\b(\w+)->offset\b": r"\1->offset_",
         r"\bgrib_find_accessor\b": "Accessor::find",
         r"\bgrib_pack_long\(this->(\w+),": r"this->\1->pack_long(",
         r"\bgrib_value_count\(this->(\w+),": r"this->\1->value_count(",
         r"\bgrib_pack_bytes\(this->(\w+),": r"this->\1->pack_bytes(",
         r"\bAccessor::find\(this->handle\(\),": r"Accessor::find(",
-        # Temp stuff for making sure we still compile
-        r"\bgrib_optimize_decimal_factor\(this,": r"grib_optimize_decimal_factor(this->as_grib_accessor_while_converting(),",
-        r"\bpack_long_unsigned_helper\(this,": r"pack_long_unsigned_helper(this->as_grib_accessor_while_converting(),",
-        r"\bgrib_g1_step_get_steps\(this,": r"grib_g1_step_get_steps(this->as_grib_accessor_while_converting(),",
-        r"\bfree_bif_trunc\(bt, this\)": r"free_bif_trunc(bt, this->as_grib_accessor_while_converting())",
-        r"\badd_many_bitstream\(&ctx, this,": r"add_many_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
-        r"\badd_bitstream\(&ctx, this,": r"add_bitstream(&ctx, this->as_grib_accessor_while_converting(),",
-        r"\baccessor_raw_get_offset\(this->(\w+)": r"accessor_raw_get_offset(this->\1->as_grib_accessor_while_converting()",
-        r"\bgrib_accessor_class_expanded_descriptors_set_do_expand\((\w+)": r"grib_accessor_class_expanded_descriptors_set_do_expand(\1->as_grib_accessor_while_converting()",
 
-        r"\bgrib_is_missing_string\((\w+)": r"grib_is_missing_string(\1->as_grib_accessor_while_converting()",
-        r"\bgrib_is_missing_long\((\w+)": r"grib_is_missing_long(\1->as_grib_accessor_while_converting()",
-        r"\bgrib_is_missing_double\((\w+)": r"grib_is_missing_double(\1->as_grib_accessor_while_converting()",
-r"\baccessor_bufr_data_array_set_unpackMode\((\w+)": r"accessor_bufr_data_array_set_unpackMode(\1->as_grib_accessor_while_converting()",
-
-r"\baction_concept_get_nofail\((\w+)": r"action_concept_get_nofail(\1->as_grib_accessor_while_converting()",
-r"\baction_concept_get_concept\((\w+)": r"action_concept_get_concept(\1->as_grib_accessor_while_converting()",
-
+        # For now...
+        r'\b(\w+)\(this,': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)),',
+        r'\b(\w+)\(this\)': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)))',
     }
 
     def class_to_type(self):
