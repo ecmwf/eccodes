@@ -40,4 +40,18 @@ EOF
 
 diff $tempRef $tempText
 
+# ------------------------
+cat > $tempFilt <<EOF
+ set unpack = 1;
+ set stationOrSiteName = {"Opeth", "Advent", "Night", "Silent", "Water", "Nectar",
+                          "Black", "Rose", "Immortal", "Bid", "You", "Farewell"};
+ set pack = 1;
+ write;
+EOF
+input=$data_dir/bufr/synop_multi_subset.bufr
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $input
+result=`${tools_dir}/bufr_get -s unpack=1 -p '#3#stationOrSiteName' $tempBufr`
+[ "$result" = "Night" ]
+
+# Clean up
 rm -f $tempBufr $tempFilt $tempRef $tempText
