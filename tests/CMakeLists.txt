@@ -122,7 +122,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1304
         bufr_ecc-1347
         bufr_ecc-1395
-        bufr_ecc-1623
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
@@ -201,6 +200,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1187
         bufr_ecc-1305
         bufr_ecc-1476
+        bufr_ecc-1623
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
