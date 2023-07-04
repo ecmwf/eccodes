@@ -2911,6 +2911,168 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time integrated, vertically integrated divergence of mass flux
+'233014' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward mass flux
+'233015' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward mass flux
+'233016' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of water vapour flux
+'233017' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 160 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of cloud liquid water flux
+'233018' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 161 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of cloud ice water flux
+'233019' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 162 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of rain flux
+'233020' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 163 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of snow flux
+'233021' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 164 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward water vapour flux
+'233022' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 150 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward water vapour flux
+'233023' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 151 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward cloud liquid water flux
+'233024' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 152 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward cloud liquid water flux
+'233025' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 153 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward cloud ice water flux
+'233026' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 154 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward cloud ice water flux
+'233027' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 155 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward rain flux
+'233028' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 156 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward rain flux
+'233029' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 157 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward snow flux
+'233030' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 158 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward snow flux
+'233031' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 159 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 '235001' = {
 	 discipline = 0 ;
@@ -6512,6 +6674,52 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Emission mass flux from bio fuel
+'438000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Emission mass flux from fossil fuel
+'439000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
+#Emission mass flux from other
+'440000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Emission mass flux from oceans
+'441000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
+#Accumulated wet deposition mass flux
+'444000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated dry deposition mass flux
+'445000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Aerosol number density

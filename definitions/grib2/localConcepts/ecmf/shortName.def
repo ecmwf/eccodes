@@ -13992,6 +13992,24 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 194 ;
 	}
+#Emission mass flux from soil
+'emi_mflx_soil' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'emi_mflx_wildanim' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
+	}
 #Aerosol negative fixer mass flux
 'aer_negfix_mflx' = {
 	 localTablesVersion = 1 ;
