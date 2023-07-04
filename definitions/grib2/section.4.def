@@ -28,8 +28,9 @@ concept datasetForLocal(unknown) {
   "tigge"   = {productionStatusOfProcessedData=5;}
   "s2s"     = {productionStatusOfProcessedData=6;}
   "s2s"     = {productionStatusOfProcessedData=7;}
+  "era6"    = {marsClass="e6";} # for ERA6 parameters with constituentType
   "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
-  "hydro"   = {marsClass="ul";} #ULYSSES
+  "hydro"   = {marsClass="ul";} # ULYSSES
   "fire"    = {marsClass="gw";} # Global Wildfire awareness system
   "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
   "uerra"   = {productionStatusOfProcessedData=9;} # UERRA
