@@ -13699,17 +13699,17 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
+#Total column vertically-integrated kinetic energy
 'vike' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
+#Total column vertically-integrated enthalpy
 'vithe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
+#Total column vertically-integrated potential + internal energy
 'vipie' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
@@ -13719,7 +13719,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
+#Total column vertically-integrated total energy
 'vitoe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;

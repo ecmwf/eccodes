@@ -943,3 +943,27 @@
  parameterCategory = 140 ;
  parameterNumber = 251 ;
 }
+#Vertical integral of thermal energy
+'vithe' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 60 ;
+}
+#Vertical integral of potential+internal energy
+'vipie' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 61 ;
+}
+#Vertical integral of kinetic energy
+'vike' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 59 ;
+}
+#Vertical integral of total energy
+'vitoe' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 63 ;
+}
