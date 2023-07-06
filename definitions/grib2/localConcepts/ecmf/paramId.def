@@ -17611,30 +17611,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 58 ;
 	}
-#Vertical integral of kinetic energy
-'162059' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 59 ;
-	}
-#Vertical integral of thermal energy
-'162060' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 60 ;
-	}
-#Vertical integral of potential+internal energy
-'162061' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 61 ;
-	}
-#Vertical integral of total energy
-'162063' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 63 ;
-	}
 #Vertical integral of energy conversion
 '162064' = {
 	 discipline = 192 ;

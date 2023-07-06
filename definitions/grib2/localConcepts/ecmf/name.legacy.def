@@ -943,3 +943,27 @@
  parameterCategory = 140 ;
  parameterNumber = 251 ;
 }
+#Vertical integral of thermal energy
+'Vertical integral of thermal energy' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 60 ;
+}
+#Vertical integral of potential+internal energy
+'Vertical integral of potential+internal energy' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 61 ;
+}
+#Vertical integral of kinetic energy
+'Vertical integral of kinetic energy' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 59 ;
+}
+#Vertical integral of total energy
+'Vertical integral of total energy' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 63 ;
+}
