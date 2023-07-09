@@ -1460,5 +1460,24 @@ res=`${tools_dir}/bufr_get -s unpack=1 -p temperature $f.out`
 [ "$res" = "-101" ]
 
 
+# Decode expandedDescriptors as array of string
+cat > $fRules <<EOF
+ print "[expandedDescriptors:s]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules airc_142.bufr > $fLog
+fRef=temp.$label.ref
+cat > $fRef <<EOF
+001006 002061 004001 004002 004003 004004 004005 005001 
+006001 008004 007002 012001 011001 011002 011031 011032 
+011033 020041 222000 031031 031031 031031 031031 031031 
+031031 031031 031031 031031 031031 031031 031031 031031 
+031031 031031 031031 031031 031031 001031 001032 033007 
+033007 033007 033007 033007 033007 033007 033007 033007 
+033007 033007 033007 033007 033007 033007 033007 033007 
+033007
+EOF
+diff $fRef $fLog
+rm -f $fRef
+
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

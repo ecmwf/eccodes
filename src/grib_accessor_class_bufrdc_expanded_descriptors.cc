@@ -169,24 +169,26 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 {
+    int err = 0;
     grib_accessor* descriptors = 0;
     size_t l     = 0;
     long lenall  = 0;
     size_t i     = 0;
     long* v      = 0;
     char buf[25] = {0,};
-    grib_context* c            = a->context;
+    grib_context* c = a->context;
 
     descriptors = get_accessor(a);
     if (!descriptors) return GRIB_NOT_FOUND;
 
-    grib_value_count(a, &lenall);
+    err = grib_value_count(a, &lenall);
+    if (err) return err;
     l = lenall;
-    if (l > *len)
-        return GRIB_ARRAY_TOO_SMALL;
+    if (l > *len) return GRIB_ARRAY_TOO_SMALL;
 
     v = (long*)grib_context_malloc_clear(c, sizeof(long) * l);
-    grib_unpack_long(descriptors, v, &l);
+    err = grib_unpack_long(descriptors, v, &l);
+    if (err) return err;
 
     for (i = 0; i < l; i++) {
         snprintf(buf, sizeof(buf), "%06ld", v[i]);
