@@ -43,5 +43,5 @@
 41 41 Snow melt rate (kg m-2 s-1)
 42 42 Water runoff and drainage rate (kg m-2 s-1)
 # 43-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing
