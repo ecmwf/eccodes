@@ -3,8 +3,8 @@
 1 1 Rotated latitude/longitude
 2 2 Stretched latitude/longitude
 3 3 Stretched and rotated latitude/longitude
-4 4 Variable resolution latitude/longitude 
-5 5 Variable resolution rotated latitude/longitude 
+4 4 Variable resolution latitude/longitude
+5 5 Variable resolution rotated latitude/longitude
 # 6-9 Reserved
 10 10 Mercator
 12 12 Transverse Mercator
