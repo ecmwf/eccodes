@@ -3,5 +3,5 @@
 1 1 Per cent precipitation in a sub-period of an overall period (Encoded as per cent accumulation over the sub-period) (%)
 2 2 Probability of 0.01 inch of precipitation (POP) (%)
 # 3-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

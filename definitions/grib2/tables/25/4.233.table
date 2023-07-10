@@ -101,10 +101,10 @@
 10052 10052 Ethyl hydroperoxide CH3CH2OOH
 10053 10053 3-hydroxypropyl dioxidanyl radical HOCH2CH2CH2OO
 10054 10054 3-hydroxypropyl hydroperoxide HOCH2CH2CH2OOH
-# 10055-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides, ...) 
+# 10055-10499 Reserved for other simple organic molecules (e.g. higher aldehydes, alcohols, peroxides, ...)
 10500 10500 Dimethyl sulphide CH3SCH3 (DMS)
 10501 10501 DMSO (dimethyl sulfoxide) (CH3)2SO
-# 10502-20000 Reserved 
+# 10502-20000 Reserved
 20001 20001 Hydrogen chloride HCl
 20002 20002 CFC-11 (trichlorofluoromethane) CCl3F
 20003 20003 CFC-12 (dichlorodifluoromethane) CCl2F2
@@ -507,6 +507,6 @@
 62205 62205 Urtica (nettle) pollen
 # 62206-62299 Reserved
 62300 62300 Poaceae (grass family) pollen
-# 62301-62999 Reserved 
-# 63000-65534 For experimental use at local level 
+# 62301-62999 Reserved
+# 63000-65534 For experimental use at local level
 65535 65535 Missing
