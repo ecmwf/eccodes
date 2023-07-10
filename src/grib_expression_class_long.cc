@@ -60,20 +60,18 @@ typedef struct grib_expression_long{
 static grib_expression_class _grib_expression_class_long = {
     0,                    /* super                     */
     "long",                    /* name                      */
-    sizeof(grib_expression_long),/* size of instance          */
+    sizeof(grib_expression_long),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	&evaluate_long,
-	&evaluate_double,
-	0,
+    &native_type,
+    0,
+    &evaluate_long,
+    &evaluate_double,
+    0,
 };
 
 grib_expression_class* grib_expression_class_long = &_grib_expression_class_long;

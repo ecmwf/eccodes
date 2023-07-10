@@ -52,7 +52,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_concept
@@ -69,32 +68,32 @@ static grib_accessor_class _grib_accessor_class_concept = {
     "concept",                      /* name */
     sizeof(grib_accessor_concept),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    &dump,                       /* describes himself */
-    0,                /* get length of section */
+    &destroy,                    /* destroy */
+    &dump,                       /* dump */
+    0,                /* next_offset */
     &string_length,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    &pack_long,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    0,                 /* grib_pack procedures float */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,               /* grib_unpack procedures float */
-    &pack_string,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    &pack_long,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -103,10 +102,10 @@ static grib_accessor_class _grib_accessor_class_concept = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,       /* unpack only ith value */
-    0,  /* unpack a given set of elements */
-    0,   /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -114,37 +113,6 @@ static grib_accessor_class _grib_accessor_class_concept = {
 
 
 grib_accessor_class* grib_accessor_class_concept = &_grib_accessor_class_concept;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_float    =    (*(c->super))->pack_float;
-    c->unpack_float    =    (*(c->super))->unpack_float;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_float_element    =    (*(c->super))->unpack_float_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_float_element_set    =    (*(c->super))->unpack_float_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -388,7 +356,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
     grib_action* act             = a->creator;
     int nofail                   = action_concept_get_nofail(a);
 
-    DebugAssert(concepts);
+    DEBUG_ASSERT(concepts);
 
     c = (grib_concept_value*)grib_trie_get(concepts->index, name);
 
@@ -410,9 +378,16 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
-            if (strcmp(act->name, "paramId") == 0 && string_to_long(name, &dummy) == GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
+            if (strcmp(act->name, "paramId") == 0) {
+                if (string_to_long(name, &dummy) == GRIB_SUCCESS) {
+                    // The paramId value is an integer. Show them the param DB
+                    grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
+                } else {
+                    // paramId being set to a non-integer
+                    grib_context_log(h->context, GRIB_LOG_ERROR,
+                                    "The paramId value should be an integer. Are you trying to set the shortName?");
+                }
             }
             if (strcmp(act->name, "shortName") == 0) {
                 grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -473,10 +448,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     char buf[80];
     size_t s;
     snprintf(buf, sizeof(buf), "%ld", *val);
-#if 0
-    if(*len > 1)
-        return GRIB_NOT_IMPLEMENTED;
-#endif
+
+    //if(*len > 1)
+    //    return GRIB_NOT_IMPLEMENTED;
+
     s = strlen(buf) + 1;
     return pack_string(a, buf, &s);
 }
@@ -607,62 +582,9 @@ static int get_native_type(grib_accessor* a)
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
-    /*
-     * grib_accessor_concept *self = (grib_accessor_concept*)a;
-     * grib_context_free(c,self->cval);
-     */
+    //grib_accessor_concept *self = (grib_accessor_concept*)a;
+    //grib_context_free(c,self->cval);
 }
-
-#if 0
-static int is_local_ecmwf_grib2_param_key(grib_accessor* a, long edition, long centre)
-{
-    if (edition == 2 && centre == 98) {
-        if (a->parent->owner && a->parent->owner->name && strcmp(a->parent->owner->name, "parameters") == 0)
-            return 1;
-    }
-    return 0;
-}
-#endif
-
-#if 0
-/* Try to get the name, shortName, units etc for a GRIB2 message with
- * local ECMWF coding i.e. discipline=192 etc
- */
-static const char* get_ECMWF_local_parameter(grib_accessor* a, grib_handle* h)
-{
-    int err              = 0;
-    const char* key_name = a->name; /*this is the key whose value we want*/
-    long edition, centre;
-    if (h->product_kind != PRODUCT_GRIB)
-        return NULL;
-    err = grib_get_long(h, "centre", &centre);
-    if (err)
-        return NULL;
-    err = grib_get_long(h, "edition", &edition);
-    if (err)
-        return NULL;
-    if (is_local_ecmwf_grib2_param_key(a, edition, centre)) {
-        /* Must be one of: 'name', 'shortName', 'units', 'cfName' etc */
-        grib_accessor* a2    = NULL;
-        const long pid_guess = guess_paramId(h);
-        if (pid_guess == -1)
-            return NULL;
-
-        /* Change the paramId so we can get the other string key*/
-        err = grib_set_long(h, "paramId", pid_guess);
-        if (err)
-            return NULL;
-        /* Get the string value of key. Do not call grib_get_string() to avoid
-         * dangers of infinite recursion as that calls unpack_string()!
-         */
-        a2 = grib_find_accessor(h, key_name);
-        if (!a2)
-            return NULL;
-        return concept_evaluate(a2);
-    }
-    return NULL;
-}
-#endif
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
@@ -687,14 +609,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
     strcpy(val, p); /* NOLINT: CWE-119 clang-analyzer-security.insecureAPI.strcpy */
     *len = slen;
-#if 0
-    if (a->context->debug==1) {
-        int err = 0;
-        char result[1024] = {0,};
-        err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
-        if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
-    }
-#endif
+
+//     if (a->context->debug==1) {
+//         int err = 0;
+//         char result[1024] = {0,};
+//         err = get_concept_condition_string(grib_handle_of_accessor(a), a->name, val, result);
+//         if (!err) fprintf(stderr, "ECCODES DEBUG concept name=%s, value=%s, conditions=%s\n", a->name, val, result);
+//     }
+
     return GRIB_SUCCESS;
 }
 

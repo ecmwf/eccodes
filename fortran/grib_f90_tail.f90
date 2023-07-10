@@ -12,14 +12,14 @@
   !>
   !> \b Examples: \ref grib_set_missing.f90 "grib_set_missing.f90"
   !>
-  !> @param  gribid     id of the grib loaded in memory
+  !> @param  gribid     ID of the message loaded in memory
   !> @param key     key name
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_missing(gribid, key, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    integer(kind=kindOfInt), optional, intent(out)        :: status
-    integer(kind=kindOfInt)                              :: iret
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    character(len=*), intent(in)                   :: key
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
 
     iret = grib_f_set_missing(gribid, key)
     if (iret /= 0) then
@@ -41,15 +41,15 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param  indexid     id of the newly created index
-  !> @param filename     name of the file of messages to be indexed
-  !> @param keys        : comma separated list of keys for the index. The type of the key can be explicitly declared appending :l for long, :d for double, :s for string to the key name. If the type is not declared explicitly, the native type is assumed.
+  !> @param  indexid    ID of the newly created index
+  !> @param filename    name of the file of messages to be indexed
+  !> @param keys        comma separated list of keys for the index. The type of the key can be explicitly declared appending :l for long, :d for double, :s for string to the key name. If the type is not declared explicitly, the native type is assumed.
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_create(indexid, filename, keys, status)
     integer(kind=kindOfInt), intent(inout)  :: indexid
     character(len=*), intent(in)                    :: filename
     character(len=*), intent(in)                    :: keys
-    integer(kind=kindOfInt), optional, intent(out)   :: status
+    integer(kind=kindOfInt), optional, intent(out)  :: status
     integer(kind=kindOfInt)                         :: iret
 
     iret = grib_f_index_new_from_file(filename, keys, indexid)
@@ -69,13 +69,13 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param indexid     id of the index I want to add a file to
+  !> @param indexid     ID of the index I want to add a file to
   !> @param filename    name of the file I want to add to the index
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_add_file(indexid, filename, status)
     integer(kind=kindOfInt), intent(in)             :: indexid
     character(len=*), intent(in)                    :: filename
-    integer(kind=kindOfInt), optional, intent(out)   :: status
+    integer(kind=kindOfInt), optional, intent(out)  :: status
     integer(kind=kindOfInt)                         :: iret
 
     iret = grib_f_index_add_file(indexid, filename)
@@ -95,15 +95,15 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param  indexid     id of an index created from a file. The index must have been created with the key in argument.
+  !> @param  indexid   ID of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for which the number of values is computed
   !> @param size       number of distinct values of the key in the index
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_get_size_long(indexid, key, size, status)
-    integer(kind=kindOfInt), intent(in)     :: indexid
+    integer(kind=kindOfInt), intent(in)             :: indexid
     character(len=*), intent(in)                    :: key
-    integer(kind=kindOfLong), intent(out)   :: size
-    integer(kind=kindOfInt), optional, intent(out)   :: status
+    integer(kind=kindOfLong), intent(out)           :: size
+    integer(kind=kindOfInt), optional, intent(out)  :: status
     integer(kind=kindOfInt)                         :: iret
 
     iret = grib_f_index_get_size_long(indexid, key, size)
@@ -123,15 +123,15 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param  indexid     id of an index created from a file. The index must have been created with the key in argument.
+  !> @param  indexid   ID of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for which the number of values is computed
   !> @param size       number of distinct values of the key in the index
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_get_size_int(indexid, key, size, status)
-    integer(kind=kindOfInt), intent(in)     :: indexid
+    integer(kind=kindOfInt), intent(in)             :: indexid
     character(len=*), intent(in)                    :: key
-    integer(kind=kindOfInt), intent(out)   :: size
-    integer(kind=kindOfInt), optional, intent(out)   :: status
+    integer(kind=kindOfInt), intent(out)            :: size
+    integer(kind=kindOfInt), optional, intent(out)  :: status
     integer(kind=kindOfInt)                         :: iret
 
     iret = grib_f_index_get_size_int(indexid, key, size)
@@ -142,7 +142,9 @@
     end if
   end subroutine grib_index_get_size_int
 
-  !> Get the distinct values of the key in argument contained in the index. The key must belong to the index. This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
+  !> Get the distinct values of the key in argument contained in the index.
+  !> The key must belong to the index.
+  !> This function is used when the type of the key was explicitly defined as long or when the native type of the key is long.
   !>
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
@@ -151,10 +153,10 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param  indexid   id of an index created from a file. The index must have been created with the key in argument.
+  !> @param  indexid   ID of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for wich the values are returned
   !> @param values     array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_get_int(indexid, key, values, status)
     integer(kind=kindOfInt), intent(in)  :: indexid
     character(len=*), intent(in)  :: key
@@ -181,10 +183,10 @@
   !>
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
-  !> @param  indexid   id of an index created from a file. The index must have been created with the key in argument.
+  !> @param  indexid   ID of an index created from a file. The index must have been created with the key in argument.
   !> @param key        key for wich the values are returned
   !> @param values     array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
-  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_index_get_long(indexid, key, values, status)
     integer(kind=kindOfInt), intent(in)  :: indexid
     character(len=*), intent(in)  :: key
@@ -388,7 +390,7 @@
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
   !> @param indexid   id of an index created from a file.
-  !> @param gribid    id of the grib loaded in memory
+  !> @param gribid    ID of the message loaded in memory
   !> @param status    GRIB_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
   subroutine grib_new_from_index(indexid, gribid, status)
     integer(kind=kindOfInt), intent(in)              :: indexid
@@ -1250,7 +1252,7 @@
   !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile     id of the file opened with @ref grib_open_file
-  !> @param gribid    id of the grib loaded in memory
+  !> @param gribid    ID of the message loaded in memory
   !> @param status    GRIB_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
   subroutine grib_headers_only_new_from_file(ifile, gribid, status)
     integer(kind=kindOfInt), intent(in)             :: ifile
@@ -1274,7 +1276,7 @@
   !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
   !> @param ifile     id of the file opened with @ref grib_open_file
-  !> @param gribid    id of the grib loaded in memory
+  !> @param gribid    ID of the message loaded in memory
   !> @param status    GRIB_SUCCESS if OK, GRIB_END_OF_FILE at the end of file, or error code
   subroutine grib_new_from_file(ifile, gribid, status)
     integer(kind=kindOfInt), intent(in)             :: ifile
@@ -1348,7 +1350,7 @@
   !>
   !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param message     character array containing the coded message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_new_from_message_char(gribid, message, status)
@@ -1381,7 +1383,7 @@
   !>
   !> \b Examples: \ref grib_copy_message.f90 "grib_copy_message.f90"
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param message     integer array containing the coded message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_new_from_message_int4(gribid, message, status)
@@ -1412,7 +1414,7 @@
   !>
   !> \b Examples: \ref grib_samples.f90 "grib_samples.f90"
   !>
-  !> @param gribid       id of the grib loaded in memory
+  !> @param gribid       ID of the message loaded in memory
   !> @param samplename name of the sample to be used
   !> @param status       GRIB_SUCCESS if OK, integer value on error
   subroutine grib_new_from_samples(gribid, samplename, status)
@@ -1437,7 +1439,7 @@
   !>
   !> \b Examples: \ref grib_get_keys.f90 "grib_get_keys.f90"
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_release(gribid, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
@@ -1561,7 +1563,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param lats        latitudes array with dimension "size"
   !> @param lons        longitudes array with dimension "size"
   !> @param values      data values array with dimension "size"
@@ -1597,7 +1599,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param lats        latitudes array
   !> @param lons        longitudes array
   !> @param values      data values array
@@ -1640,7 +1642,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param iterid      keys iterator id to be used in the keys iterator functions
   !> @param namespace   the namespace of the keys to search for (all the keys if empty)
   !> @param status      GRIB_SUCCESS if OK, integer value on error
@@ -1746,7 +1748,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_dump(gribid, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
@@ -1788,7 +1790,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key     name of the key
   !> @param size        size of the array key
   !> @param status      GRIB_SUCCESS if OK, integer value on error
@@ -1818,8 +1820,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     name of the key
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         name of the key
   !> @param size        size of the array key
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_size_long(gribid, key, size, status)
@@ -1846,8 +1848,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       the integer(4) value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_int(gribid, key, value, status)
@@ -1874,8 +1876,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       the integer(4) value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_long(gribid, key, value, status)
@@ -1896,13 +1898,42 @@
     end if
   end subroutine grib_get_long
 
+
+  !> Get the native type of a key from a message.
+  !>
+  !> In case of error, if the status parameter (optional) is not given, the program will
+  !> exit with an error message.\n Otherwise the error message can be
+  !> gathered with @ref grib_get_error_string.
+  !>
+  !> @param gribid      id of the message loaded in memory
+  !> @param key         key name
+  !> @param value       the type as an integer(4) value
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
+  subroutine grib_get_native_type(gribid, key, value, status)
+    integer(kind=kindOfInt), intent(in)      :: gribid
+    character(len=*), intent(in)             :: key
+    integer(kind=kindOfInt), intent(out)    :: value
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                  :: iret
+
+    iret = grib_f_get_native_type(gribid, key, value)
+    if (iret /= 0) then
+      call grib_f_write_on_fail(gribid)
+    end if
+    if (present(status)) then
+      status = iret
+    else
+      call grib_check(iret, 'get_native_type', key)
+    end if
+  end subroutine grib_get_native_type
+
   !> Check if the value of a key is MISSING.
   !>
   !> In case of error, if the status parameter (optional) is not given, the program will
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key         key name
   !> @param is_missing  0->not missing, 1->missing
   !> @param status      GRIB_SUCCESS if OK, integer value on error
@@ -1930,7 +1961,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key         key name
   !> @param is_defined  0->not defined, 1->defined
   !> @param status      GRIB_SUCCESS if OK, integer value on error
@@ -1958,8 +1989,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       the real(4) value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_real4(gribid, key, value, status)
@@ -1976,7 +2007,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4', key)
     end if
   end subroutine grib_get_real4
 
@@ -1986,8 +2017,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       the real(8) value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_real8(gribid, key, value, status)
@@ -2004,7 +2035,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real8', key)
     end if
   end subroutine grib_get_real8
 
@@ -2014,8 +2045,8 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       the real(8) value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_string(gribid, key, value, status)
@@ -2032,7 +2063,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_string', key)
     end if
   end subroutine grib_get_string
 
@@ -2042,10 +2073,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       integer(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_int_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)                  :: key
@@ -2063,7 +2094,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_int_array', key)
     end if
   end subroutine grib_get_int_array
 
@@ -2073,10 +2104,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       integer(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_long_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2093,7 +2124,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_long_array', key)
     end if
   end subroutine grib_get_long_array
 
@@ -2103,7 +2134,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key         key name
   !> @param value       character(len=1) array of byte values
   !> @param length      (optional) output: number of values retrieved
@@ -2131,7 +2162,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_byte_array', key)
     end if
   end subroutine grib_get_byte_array
 
@@ -2141,10 +2172,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_real4_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2161,7 +2192,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4_array', key)
     end if
   end subroutine grib_get_real4_array
 
@@ -2171,10 +2202,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param value       real(8) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param gribid     ID of the message loaded in memory
+  !> @param key        key name
+  !> @param value      real(8) array value
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_real8_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2191,7 +2222,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real8_array', key)
     end if
   end subroutine grib_get_real8_array
 
@@ -2201,7 +2232,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key         key name
   !> @param kindex      integer(4) index
   !> @param value       real(4) value
@@ -2221,7 +2252,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4_element', key)
     end if
   end subroutine grib_get_real4_element
 
@@ -2231,7 +2262,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid    id of the grib loaded in memory
+  !> @param gribid    ID of the message loaded in memory
   !> @param key       key name
   !> @param kindex    integer(4) index
   !> @param value     real(8) value
@@ -2261,7 +2292,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid   id of the grib loaded in memory
+  !> @param gribid   ID of the message loaded in memory
   !> @param key      key name
   !> @param kindex   integer(4) array indexes
   !> @param value    real(4) array value
@@ -2293,7 +2324,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid   id of the grib loaded in memory
+  !> @param gribid   ID of the message loaded in memory
   !> @param key      key name
   !> @param kindex   integer(4) array index
   !> @param value    real(8) array value
@@ -2325,10 +2356,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       integer(4) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_int(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)                  :: key
@@ -2353,10 +2384,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       integer(4) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_long(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)                  :: key
@@ -2381,10 +2412,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(4) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_real4(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2409,10 +2440,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(8) value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_real8(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2427,7 +2458,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_real8', key)
     end if
   end subroutine grib_set_real8
 
@@ -2437,10 +2468,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       integer(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_int_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2457,7 +2488,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_int_array', key)
     end if
   end subroutine grib_set_int_array
 
@@ -2467,10 +2498,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
-  !> @param value       integer(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param gribid     ID of the message loaded in memory
+  !> @param key        key name
+  !> @param value      integer(4) array value
+  !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_long_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2487,7 +2518,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_long_array', key)
     end if
 
   end subroutine grib_set_long_array
@@ -2498,7 +2529,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key         key name
   !> @param value       character(len=1) array of byte values
   !> @param length      (optional) output: number of values written
@@ -2525,7 +2556,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_byte_array', key)
     end if
   end subroutine grib_set_byte_array
 
@@ -2535,7 +2566,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key     key name
   !> @param value       real(4) array value
   !> @param status       GRIB_SUCCESS if OK, integer value on error
@@ -2555,7 +2586,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_real4_array', key)
     end if
   end subroutine grib_set_real4_array
 
@@ -2565,10 +2596,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(8) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_real8_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2585,7 +2616,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_real8_array', key)
     end if
   end subroutine grib_set_real8_array
 
@@ -2596,10 +2627,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(4) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_force_real4_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2627,10 +2658,10 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
-  !> @param key     key name
+  !> @param gribid      ID of the message loaded in memory
+  !> @param key         key name
   !> @param value       real(8) array value
-  !> @param status       GRIB_SUCCESS if OK, integer value on error
+  !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_force_real8_array(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
     character(len=*), intent(in)  :: key
@@ -2657,7 +2688,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param key     key name
   !> @param value       character value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
@@ -2675,7 +2706,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_string', key)
     end if
   end subroutine grib_set_string
 
@@ -2685,7 +2716,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_int(gribid, nbytes, status)
@@ -2716,7 +2747,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_size_t(gribid, nbytes, status)
@@ -2742,7 +2773,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param message     array containing the coded message to be copied
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_copy_message(gribid, message, status)
@@ -2770,7 +2801,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param ifile       file id of a file opened with \ref grib_open_file
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_write(gribid, ifile, status)
@@ -2845,7 +2876,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid      id of the grib loaded in memory
+  !> @param gribid      ID of the message loaded in memory
   !> @param is_lsm      .true. if the nearest land point is required otherwise .false.
   !> @param inlats      input real(8) array of the latitudes of the points
   !> @param inlons      input real(8) array of the longitudes of the points
@@ -2891,7 +2922,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid     id of the grib loaded in memory
+  !> @param gribid     ID of the message loaded in memory
   !> @param is_lsm     .true. if the nearest land point is required otherwise .false.
   !> @param inlat      latitude of the point
   !> @param inlon      longitudes of the point
@@ -2934,7 +2965,7 @@
   !> exit with an error message.\n Otherwise the error message can be
   !> gathered with @ref grib_get_error_string.
   !>
-  !> @param gribid     id of the grib loaded in memory
+  !> @param gribid     ID of the message loaded in memory
   !> @param is_lsm     .true. if the nearest land point is required otherwise .false.
   !> @param inlat      latitude of the point
   !> @param inlon      longitudes of the point
@@ -3133,9 +3164,9 @@
   !> @param iterid      keys iterator id
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_skip_read_only(iterid, status)
-    integer(kind=kindOfInt), intent(in)  :: iterid
+    integer(kind=kindOfInt), intent(in)            :: iterid
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)  :: iret
+    integer(kind=kindOfInt)                        :: iret
 
     iret = grib_f_skip_read_only(iterid)
     if (present(status)) then
@@ -3175,9 +3206,9 @@
   !> @param path       samples path
   !> @param status     GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_samples_path(path, status)
-    character(len=*), intent(in)  :: path
-    integer(kind=kindOfInt), optional, intent(out)        :: status
-    integer(kind=kindOfInt)                              :: iret
+    character(len=*), intent(in)                   :: path
+    integer(kind=kindOfInt), optional, intent(out) :: status
+    integer(kind=kindOfInt)                        :: iret
 
     iret = grib_f_set_samples_path(path)
     if (present(status)) then
@@ -3188,4 +3219,3 @@
   end subroutine grib_set_samples_path
 
 end module grib_api
-

@@ -1,4 +1,12 @@
-// ECC-1467
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
 
 #pragma once
 
@@ -19,7 +27,7 @@ int grib_decode_array(const unsigned char* p, long* bitp, long bitsPerValue,
     unsigned long lvalue = 0;
     T x;
 
-#if 0
+#ifdef SLOW_OLD_CODE
     /* slow reference code */
     int j=0;
     for(i=0; i < n_vals; i++) {

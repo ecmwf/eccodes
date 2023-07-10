@@ -481,27 +481,25 @@ void usage_doxygen(void)
     exit(1);
 }
 
-#if 0
-void usage_doxygen(void) {
-    int i=0;
-    printf("/*!  \\page %s %s\n",tool_name,tool_name);
-    printf("\\section DESCRIPTION \n%s\n\n",tool_description);
-    printf("\\section USAGE \n%s \n%s\n\n",tool_name,tool_usage);
-    printf("\\section OPTIONS\n");
-    printf("<table frame=void border=0>\n");
-    for (i=0;i<grib_options_count;i++) {
-        if (grib_options[i].command_line) {
-            printf("<tr>\n");
-            printf("<td colspan=2>-%c %s</td>\n",
-                    grib_options[i].id[0],
-                    grib_options_get_args(grib_options[i].id));
-            printf("</tr><tr>\n");
-            printf("<td width=20></td><td>%s</td>",
-                    grib_options_get_help(grib_options[i].id));
-            printf("</tr><tr><td></td></tr>\n");
-        }
-    }
-    printf("</table>\n");
-    exit(1);
-}
-#endif
+// void usage_doxygen(void) {
+//     int i=0;
+//     printf("/*!  \\page %s %s\n",tool_name,tool_name);
+//     printf("\\section DESCRIPTION \n%s\n\n",tool_description);
+//     printf("\\section USAGE \n%s \n%s\n\n",tool_name,tool_usage);
+//     printf("\\section OPTIONS\n");
+//     printf("<table frame=void border=0>\n");
+//     for (i=0;i<grib_options_count;i++) {
+//         if (grib_options[i].command_line) {
+//             printf("<tr>\n");
+//             printf("<td colspan=2>-%c %s</td>\n",
+//                     grib_options[i].id[0],
+//                     grib_options_get_args(grib_options[i].id));
+//             printf("</tr><tr>\n");
+//             printf("<td width=20></td><td>%s</td>",
+//                     grib_options_get_help(grib_options[i].id));
+//             printf("</tr><tr><td></td></tr>\n");
+//         }
+//     }
+//     printf("</table>\n");
+//     exit(1);
+// }

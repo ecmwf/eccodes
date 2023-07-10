@@ -9,6 +9,7 @@
  */
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)
@@ -109,7 +110,7 @@ void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale)
     v->scale = scale;
     if (scale != 0)
         v->type = BUFR_DESCRIPTOR_TYPE_DOUBLE;
-    v->factor = grib_power(-scale, 10);
+    v->factor = codes_power<double>(-scale, 10);
 }
 
 int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v)

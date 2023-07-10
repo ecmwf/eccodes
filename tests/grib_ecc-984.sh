@@ -27,5 +27,11 @@ ${tools_dir}/grib_get_data -F%.2f $tempGrb >$tempOut 2>$tempErr
 grep -q "2.000   20.000 302.53"  $tempOut
 # grep -q "Cannot use jDirectionIncrement" $tempErr
 
+# ECC-1586
+${tools_dir}/grib_set -s jDirectionIncrement=MISSING,iDirectionIncrement=MISSING $input $tempGrb
+${tools_dir}/grib_get_data -F%.2f $tempGrb >$tempOut 2>$tempErr
+grep -q "2.000   20.000 302.53"  $tempOut
+
+
 # Clean up
 rm -f $tempGrb $tempOut $tempErr

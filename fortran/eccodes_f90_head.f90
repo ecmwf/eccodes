@@ -17,12 +17,22 @@ module eccodes
   include "eccodes_visibility.h"
   include "eccodes_settings.h"
 
-  real(8), parameter, public :: CODES_MISSING_DOUBLE = -1.D+100
-  integer(4), parameter, public :: CODES_MISSING_LONG = 2147483647
+  real(8),    parameter, public :: CODES_MISSING_DOUBLE = -1.D+100
+  integer(4), parameter, public :: CODES_MISSING_LONG   = 2147483647
 
-  integer, parameter, public :: CODES_PRODUCT_ANY = 0
+  integer, parameter, public :: CODES_PRODUCT_ANY  = 0
   integer, parameter, public :: CODES_PRODUCT_GRIB = 1
   integer, parameter, public :: CODES_PRODUCT_BUFR = 2
+
+  ! Key types
+  integer, parameter, public :: CODES_TYPE_UNDEFINED = 0
+  integer, parameter, public :: CODES_TYPE_LONG      = 1
+  integer, parameter, public :: CODES_TYPE_DOUBLE    = 2
+  integer, parameter, public :: CODES_TYPE_STRING    = 3
+  integer, parameter, public :: CODES_TYPE_BYTES     = 4
+  integer, parameter, public :: CODES_TYPE_SECTION   = 5
+  integer, parameter, public :: CODES_TYPE_LABEL     = 6
+  integer, parameter, public :: CODES_TYPE_MISSING   = 7
 
   !> Create a new message in memory from an integer or character array containting the coded message.
   !>
@@ -100,7 +110,7 @@ module eccodes
   !>
   !> \b Examples: \ref grib_nearest.f90 "grib_nearest.f90"
   !>
-  !> @param[in] gribid     id of the grib loaded in memory
+  !> @param[in] gribid      ID of the GRIB loaded in memory
   !> @param[in] is_lsm      .true. if the nearest land point is required otherwise .false.
   !> @param[in] inlat       latitude of the point in degrees
   !> @param[in] inlon       longitudes of the point in degrees
@@ -129,7 +139,7 @@ module eccodes
   !>
   !> \b Examples: \ref grib_get_data.f90 "grib_get_data.f90"
   !>
-  !> @param[in] gribid       id of the grib loaded in memory
+  !> @param[in] gribid       ID of the GRIB loaded in memory
   !> @param[out] lats        latitudes array with dimension "size"
   !> @param[out] lons        longitudes array with dimension "size"
   !> @param[out] values      data values array with dimension "size"

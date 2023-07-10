@@ -106,6 +106,8 @@ grep -q 'Point chosen #3 index=21 .* distance=11\.' $tempText
 ${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
 grep -q 'Point chosen #2 index=749 .* distance=204\.' $tempText
 
+${tools_dir}/grib_get -F%.2f -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+grep -q '252.88' $tempText
 
 echo "ECC-278: grib_ls -n namespace..."
 # ----------------------------------------------------------

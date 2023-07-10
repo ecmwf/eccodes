@@ -124,22 +124,22 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 14 ;
 	}
-#UV visible albedo for direct radiation
+#UV visible albedo for direct radiation (climatological)
 '15' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 15 ;
 	}
-#UV visible albedo for diffuse radiation
+#UV visible albedo for diffuse radiation (climatological)
 '16' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 16 ;
 	}
-#Near IR albedo for direct radiation
+#Near IR albedo for direct radiation (climatological)
 '17' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 17 ;
 	}
-#Near IR albedo for diffuse radiation
+#Near IR albedo for diffuse radiation (climatological)
 '18' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 18 ;
@@ -149,7 +149,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 19 ;
 	}
-#Clear sky surface photosynthetically active radiation
+#Surface photosynthetically active radiation, clear sky
 '20' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 20 ;
@@ -414,7 +414,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Standard deviation of filtered subgrid orography
+#Standard deviation of filtered subgrid orography (climatological)
 '74' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 74 ;
@@ -1354,27 +1354,27 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 172 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 '173' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 '173' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Albedo
+#Albedo (climatological)
 '174' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '174' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '174' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;
@@ -1739,12 +1739,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 207 ;
 	}
-#Top net solar radiation, clear sky
+#Top net short-wave (solar) radiation, clear sky
 '208' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 208 ;
 	}
-#Top net thermal radiation, clear sky
+#Top net long-wave (thermal) radiation, clear sky
 '209' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 209 ;
@@ -1759,7 +1759,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 211 ;
 	}
-#TOA incident solar radiation
+#TOA incident short-wave (solar) radiation
 '212' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 212 ;
@@ -1919,12 +1919,12 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 233 ;
 	}
-#Logarithm of surface roughness length for heat
+#Logarithm of surface roughness length for heat (climatological)
 '234' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 234 ;
 	}
-#Logarithm of surface roughness length for heat
+#Logarithm of surface roughness length for heat (climatological)
 '234' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 234 ;
@@ -4024,62 +4024,62 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
+#UV visible albedo for direct radiation, isotropic component (climatological)
 '210186' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 186 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
+#UV visible albedo for direct radiation, volumetric component (climatological)
 '210187' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 187 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
+#UV visible albedo for direct radiation, geometric component (climatological)
 '210188' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 188 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
+#Near IR albedo for direct radiation, isotropic component (climatological)
 '210189' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 189 ;
 	}
-#Near IR albedo for direct radiation, volumetric component
+#Near IR albedo for direct radiation, volumetric component (climatological)
 '210190' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
+#Near IR albedo for direct radiation, geometric component (climatological)
 '210191' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component
 '210192' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component
 '210193' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component
 '210194' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component
 '210195' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component
 '210196' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component
 '210197' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;
@@ -9884,7 +9884,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
+#Surface direct short-wave radiation, clear sky
 '228022' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 22 ;
@@ -13699,17 +13699,17 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
+#Total column vertically-integrated kinetic energy
 '162059' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
+#Total column vertically-integrated enthalpy
 '162060' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
+#Total column vertically-integrated potential + internal energy
 '162061' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
@@ -13719,7 +13719,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
+#Total column vertically-integrated total energy
 '162063' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
@@ -13814,7 +13814,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Vertical integral of divergence of moisture flux
+#Vertically integrated moisture divergence flux
 '162084' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
@@ -15343,11 +15343,6 @@
 '174008' = {
 	 table2Version = 174 ;
 	 indicatorOfParameter = 8 ;
-	}
-#Sub-surface runoff
-'174009' = {
-	 table2Version = 174 ;
-	 indicatorOfParameter = 9 ;
 	}
 #Fraction of sea-ice in sea
 '174031' = {
@@ -17599,12 +17594,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Neutral wind at 10 m u-component
+#U-component of neutral wind
 '228131' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Neutral wind at 10 m v-component
+#V-component of neutral wind
 '228132' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
@@ -17619,7 +17614,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 '228144' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 144 ;

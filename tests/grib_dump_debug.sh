@@ -12,8 +12,6 @@
 label="grib_dump_debug_test"
 temp=temp.$label.txt
 
-REDIRECT=/dev/null
-
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
     unset ECCODES_SAMPLES_PATH
@@ -95,11 +93,14 @@ for file in $files; do
 done
 
 # ECC-1247: indicate which keys can have values which are 'missing'
+# ECC-1584: indicate which keys are 'read-only'
 # ------------------------------------------------------------------
 infile=${data_dir}/sample.grib2
 ${tools_dir}/grib_dump -D $infile > $temp
 grep -q "unsigned hoursAfterDataCutoff = 0 (can be missing)" $temp
 grep -q "unsigned iDirectionIncrement = 2000000 (can be missing)" $temp
+grep -q "constant zero = 0 (read-only)" $temp
+grep -q "unsigned reserved = MISSING (can be missing) (read-only)" $temp
 
-
+# Clean up
 rm -f $temp

@@ -199,11 +199,20 @@ cat >$tempFilt <<EOF
 switch (edition) {
   case 1: print "1";
   case 2: print "2";
-  default: print "what is this?";assert(0);
+  default: print "[file]: what is this?"; assert(0);
 }
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+cat >$tempFilt <<EOF
+switch (packingType) {
+  case "grid_simple": print "simple";
+  case "grid_ccsds":  print "ccsds";
+  case "spectral_complex": print "spectral";
+  default: print "[file]: what is this?"; assert(0);
+}
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2 ${data_dir}/ccsds.grib2 $data_dir/spherical_model_level.grib2
 
 echo "Test MISSING"
 # -----------------

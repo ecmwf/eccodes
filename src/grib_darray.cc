@@ -22,23 +22,21 @@ void grib_darray_print(const char* title, const grib_darray* darray)
     printf("\n");
 }
 
-#if 0
-grib_darray* grib_darray_new_from_array(grib_context* c, double* src_array, size_t size)
-{
-    size_t i;
-    grib_darray* v;
+// grib_darray* grib_darray_new_from_array(grib_context* c, double* src_array, size_t size)
+// {
+//     size_t i;
+//     grib_darray* v;
 
-    if (!c)
-        c = grib_context_get_default();
+//     if (!c)
+//         c = grib_context_get_default();
 
-    v = grib_darray_new(c, size, 100);
-    for (i = 0; i < size; i++)
-        v->v[i] = src_array[i];
-    v->n       = size;
-    v->context = c;
-    return v;
-}
-#endif
+//     v = grib_darray_new(c, size, 100);
+//     for (i = 0; i < size; i++)
+//         v->v[i] = src_array[i];
+//     v->n       = size;
+//     v->context = c;
+//     return v;
+// }
 
 grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
 {

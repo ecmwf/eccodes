@@ -9,9 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
 
-REDIRECT=/dev/null
 label="bufr_ecc-1304_test"
 
 tempBufr=temp.$label.bufr

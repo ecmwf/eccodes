@@ -494,27 +494,27 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 172 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'surface_roughness_length' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'surface_roughness_length' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Albedo
+#Albedo (climatological)
 'surface_albedo' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 'surface_albedo' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 'surface_albedo' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;

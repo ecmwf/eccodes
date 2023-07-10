@@ -14,37 +14,6 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#if 0
- /* #if GRIB_PTHREADS */
- static pthread_once_t once  = PTHREAD_ONCE_INIT;
- static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
- static void init() {
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1,&attr);
-    pthread_mutex_init(&mutex2,&attr);
-    pthread_mutexattr_destroy(&attr);
- }
- /* #elif GRIB_OMP_THREADS */
- static int once = 0;
- static omp_nest_lock_t mutex1;
- static omp_nest_lock_t mutex2;
- static void init()
- {
-    GRIB_OMP_CRITICAL(lock_grib_handle_c)
-    {
-        if (once == 0)
-        {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
- }
-#endif
-
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
 static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
@@ -660,6 +629,8 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     char *gts_header = 0, *save_gts_header = 0;
     int gtslen = 0;
 
+    *error = GRIB_SUCCESS;
+
     if (c == NULL)
         c = grib_context_get_default();
 
@@ -798,7 +769,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc_clear(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
@@ -1031,7 +1002,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
@@ -1154,7 +1125,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);

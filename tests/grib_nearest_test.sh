@@ -96,7 +96,7 @@ ${tools_dir}/grib_ls -l 70,345.2,1 $input_grb > $temp
 grep -q "Grid Point chosen #4 index=0 " $temp
 
 
-# CCDSDS regular lat/lon
+# CCSDS regular lat/lon
 # ----------------------------------------
 if [ $HAVE_AEC -eq 1 ]; then
     input_grb=${data_dir}/ccsds.grib2
@@ -111,6 +111,13 @@ if [ $HAVE_AEC -eq 1 ]; then
     grep -q "1" $temp
 fi
 
+# JPEG regular lat/lon
+# ----------------------------------------
+if [ $HAVE_JPEG -eq 1 ]; then
+    input_grb=${data_dir}/jpeg.grib2
+    res=$(${tools_dir}/grib_get -l 0,0,1 $input_grb | tr -d ' ')
+    [ "$res" = "101309" ]
+fi
 
 # GRIB2 Complex packing regular lat/lon
 # ----------------------------------------

@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 
 /*
    This is used by make_class.pl
@@ -217,7 +217,7 @@ static int init_mercator(grib_handle* h,
             }
             lonRad = adjust_lon_radians(orientationInRadians + _x / (earthMajorAxisInMetres * m1));
             if (i == 0 && j == 0) {
-                DebugAssert(fabs(latFirstInRadians - latRad) <= EPSILON);
+                DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
             latDeg            = latRad * RAD2DEG; /* Convert to degrees */
             lonDeg            = normalise_longitude_in_degrees(lonRad * RAD2DEG);

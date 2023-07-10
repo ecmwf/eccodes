@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 19.06.2007                                           *
- *                                                                         *
  ***************************************************************************/
 
 #include "grib_bits_any_endian_simple.h"
@@ -84,7 +83,7 @@ int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue
 //    unsigned long lvalue = 0;
 //    double x;
 
-//#if 0
+//#if OLD_REF_CODE
 //    [> slow reference code <]
 //    int j=0;
 //    for(i=0;i < n_vals;i++) {

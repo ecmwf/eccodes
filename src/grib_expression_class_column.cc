@@ -65,20 +65,18 @@ typedef struct grib_expression_column{
 static grib_expression_class _grib_expression_class_column = {
     0,                    /* super                     */
     "column",                    /* name                      */
-    sizeof(grib_expression_column),/* size of instance          */
+    sizeof(grib_expression_column),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     0,
     0,
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_column = &_grib_expression_class_column;

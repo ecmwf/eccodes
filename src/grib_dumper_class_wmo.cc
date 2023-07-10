@@ -14,7 +14,7 @@
 
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -486,7 +486,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
         /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
         for (j = 0; j < 8 && k < size; j++, k++) {
@@ -498,14 +497,10 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        if (is_char)
-            fprintf(self->dumper.out, "%d '%c'\n", k, (char)buf[k]);
-        else
-            fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
+        // if (is_char)
+        //     fprintf(self->dumper.out, "%d '%c'\n", k, (char)buf[k]);
+        // else
+        //     fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
     }
     if (more) {
         /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/

@@ -31,15 +31,18 @@ list(APPEND test_c_bins
     grib_optimize_scaling
     grib_optimize_scaling_sh
     grib_set_force
+    grib_partial_message
     grib_ecc-386
     grib_ecc-1467
     grib_ecc-1431
+    grib_ecc-1433
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
     bufr_extract_headers
     extract_offsets
     bufr_check_descriptors
+    bufr_coordinate_descriptors
     codes_new_from_samples
     codes_set_samples_path
     grib_sh_ieee64
@@ -48,7 +51,7 @@ list(APPEND test_c_bins
     grib_copy_message
     grib_packing_order
     grib_sh_imag
-    grib_sh_spectral_complex
+    grib_spectral
     grib_lam_bf
     grib_lam_gp)
 
@@ -69,6 +72,7 @@ if( HAVE_BUILD_TOOLS )
     # These tests do not require any data downloads
     # and are generally quick
     list(APPEND tests_basic
+        codes_info
         unit_tests
         julian
         grib_dump_samples
@@ -85,6 +89,7 @@ if( HAVE_BUILD_TOOLS )
         grib_s2s
         grib_fire
         # grib_true_imagery
+        grib2_wave_spectra
         grib_element
         grib_suppressed
         grib_2nd_order_numValues
@@ -108,6 +113,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1322
         grib_ecc-1319
         grib_ecc-1406
+        grib_ecc-1560
+        grib_ecc-1571
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -121,7 +128,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
-        grib_sh_spectral_complex
+        grib_spectral
         grib_levtype
         grib_typeOfLevel
         grib_grid_unstructured
@@ -140,9 +147,13 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_change_packing
         grib_grid_space_view
+        grib_partial_message
+        grib_headers_only
+        grib_count
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
+        bufr_coordinate_descriptors
         bufr_dump_subset
         bufr_dump_decode_filter
         bufr_dump_encode_filter
@@ -189,6 +200,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1187
         bufr_ecc-1305
         bufr_ecc-1476
+        bufr_ecc-1623
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -278,6 +290,7 @@ if( HAVE_BUILD_TOOLS )
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
+        list(APPEND tests_extra grib_ecc-1433)
     endif()
     if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra bufr_dump_encode_fortran)
@@ -436,7 +449,6 @@ else()
         julian
         bufr_check_descriptors
         grib_sh_imag
-        grib_sh_spectral_complex
         grib_2nd_order_numValues
         grib_sh_ieee64)
 

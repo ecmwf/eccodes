@@ -9,9 +9,9 @@
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/activity-areas/wmo-codes/manual-codes/latest-version
-constant tablesVersionLatestOfficial = 30 : edition_specific;
+constant tablesVersionLatestOfficial = 31 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 30 : edition_specific;
+constant tablesVersionLatest = 31 : edition_specific;
 
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
@@ -31,14 +31,12 @@ include "grib2/section.0.def";
 
 template core "grib2/sections.def";
 
-#if(!new())
-#{
-  #lookup[4] endOfProduct(0);
-  #while(endOfProduct != `7777`)
-  #{
-    #template core "grib2/sections.def";
-    #lookup[4] endOfProduct(0);
-  #}
+#if(!new()) {
+#  lookup[4] endOfProduct(0);
+#  while(endOfProduct != `7777`) {
+#    template core "grib2/sections.def";
+#    lookup[4] endOfProduct(0);
+#  }
 #}
 
 template section_8 "grib2/section.8.def";

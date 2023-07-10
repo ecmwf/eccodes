@@ -12,25 +12,13 @@
  *  Enrico Fucile
  **************************************/
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
-/* Return n to the power of s */
-double grib_power(long s, long n)
-{
-    double divisor = 1.0;
-    if (s == 0)
-        return 1.0;
-    if (s == 1)
-        return n;
-    while (s < 0) {
-        divisor /= n;
-        s++;
-    }
-    while (s > 0) {
-        divisor *= n;
-        s--;
-    }
-    return divisor;
+// Unfortunately, metkit uses grib_power() (illegal usage of private API)
+// As soon as it is fixed, the wrapper below can be deleted
+double grib_power(long s, long n) {
+    return codes_power<double>(s, n);
 }
 
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
@@ -43,14 +31,14 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
     const size_t ulong_size = sizeof(maxint) * 8;
 
     /* See ECC-246
-      unsigned long maxint = grib_power(bpval,2) - 1;
+      unsigned long maxint = codes_power<double>(bpval,2) - 1;
       double dmaxint=(double)maxint;
     */
     if (bpval >= ulong_size) {
         *ret = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;
     }
-    const double dmaxint = grib_power(bpval, 2) - 1;
+    const double dmaxint = codes_power<double>(bpval, 2) - 1;
     maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
     *ret = 0;
@@ -101,7 +89,7 @@ long grib_get_bits_per_value(double max, double min, long binary_scale_factor)
     long scale      = 0;
     const long last = 127; /* Depends on edition, should be parameter */
 
-    unsigned long maxint = grib_power(binary_scale_factor, 2) - 1;
+    unsigned long maxint = codes_power<double>(binary_scale_factor, 2) - 1;
     double dmaxint       = (double)maxint;
 
     if (maxint == 0)
@@ -145,10 +133,10 @@ long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary
     long scale      = 0;
     const long last = 127; /* Depends on edition, should be parameter */
 
-    unsigned long maxint = grib_power(bpval, 2) - 1;
+    unsigned long maxint = codes_power<double>(bpval, 2) - 1;
     double dmaxint       = (double)maxint;
 
-    range *= grib_power(-binary_scale, 2);
+    range *= codes_power<double>(-binary_scale, 2);
 
     Assert(bpval >= 1);
     if (range == 0)
