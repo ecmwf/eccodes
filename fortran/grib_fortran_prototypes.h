@@ -199,9 +199,6 @@ int grib_f_release(int *hid);
 int grib_f_dump_(int *gid);
 int grib_f_dump__(int *gid);
 int grib_f_dump(int *gid);
-int grib_f_print_(int *gid, char *key, int len);
-int grib_f_print__(int *gid, char *key, int len);
-int grib_f_print(int *gid, char *key, int len);
 
 int grib_f_get_api_version_(int* apiVersion,int len);
 int grib_f_get_api_version__(int* apiVersion,int len);
@@ -228,6 +225,11 @@ int grib_f_get_int(int *gid, char *key, int *val, int len);
 int grib_f_get_long_(int *gid, char *key, long *val, int len);
 int grib_f_get_long__(int *gid, char *key, long *val, int len);
 int grib_f_get_long(int *gid, char *key, long *val, int len);
+
+int grib_f_get_native_type_(int* gid, char* key, int* val, int len);
+int grib_f_get_native_type__(int* gid, char* key, int* val, int len);
+int grib_f_get_native_type(int* gid, char* key, int* val, int len);
+
 int grib_f_get_int_array_(int *gid, char *key, int *val, int *size, int len);
 int grib_f_get_int_array__(int *gid, char *key, int *val, int *size, int len);
 int grib_f_get_int_array(int *gid, char *key, int *val, int *size, int len);

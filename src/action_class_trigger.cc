@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
@@ -88,66 +87,60 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block)
 {
-    char name[1024];
-    const size_t nameLen = sizeof(name);
+    Assert(!"action_class_trigger::grib_action_create_trigger: 'trigger' statement is deprecated");
+    return NULL;
 
-    grib_action_trigger* a = 0;
-    grib_action_class* c   = grib_action_class_trigger;
-    grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
-
-    snprintf(name, nameLen, "_trigger%p", (void*)act);
-
-    act->name    = grib_context_strdup_persistent(context, name);
-    act->op      = grib_context_strdup_persistent(context, "section");
-    act->cclass  = c;
-    act->next    = NULL;
-    act->context = context;
-
-    a             = (grib_action_trigger*)act;
-    a->trigger_on = args;
-    a->block      = block;
-
-    return act;
+//     char name[1024];
+//     const size_t nameLen = sizeof(name);
+//     grib_action_trigger* a = 0;
+//     grib_action_class* c   = grib_action_class_trigger;
+//     grib_action* act       = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+//     snprintf(name, nameLen, "_trigger%p", (void*)act);
+//     act->name    = grib_context_strdup_persistent(context, name);
+//     act->op      = grib_context_strdup_persistent(context, "section");
+//     act->cclass  = c;
+//     act->next    = NULL;
+//     act->context = context;
+//     a             = (grib_action_trigger*)act;
+//     a->trigger_on = args;
+//     a->block      = block;
+//     return act;
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    /* grib_action_trigger* a = ( grib_action_trigger*)act; */
-    int i = 0;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-    grib_context_print(act->context, f, "Trigger\n");
+    Assert(!"action_class_trigger::dump: 'trigger' statement is deprecated");
+
+    // int i = 0;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_context_print(act->context, f, "Trigger\n");
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
-    int ret                = GRIB_SUCCESS;
-    grib_action_trigger* a = (grib_action_trigger*)act;
-    grib_action* next      = NULL;
-    grib_accessor* as      = NULL;
-    grib_section* gs       = NULL;
+    Assert(!"action_class_trigger::create_accessor: 'trigger' statement is deprecated");
 
+//     int ret                = GRIB_SUCCESS;
+//     grib_action_trigger* a = (grib_action_trigger*)act;
+//     grib_action* next      = NULL;
+//     grib_accessor* as      = NULL;
+//     grib_section* gs       = NULL;
+//     as = grib_accessor_factory(p, act, 0, NULL);
+//     if (!as)
+//         return GRIB_INTERNAL_ERROR;
 
-    as = grib_accessor_factory(p, act, 0, NULL);
-
-    if (!as)
-        return GRIB_INTERNAL_ERROR;
-
-    gs         = as->sub_section;
-    gs->branch = 0; /* Force a reparse each time */
-
-    grib_push_accessor(as, p->block);
-    grib_dependency_observe_arguments(as, a->trigger_on);
-
-    next = a->block;
-
-    while (next) {
-        ret = grib_create_accessor(gs, next, h);
-        if (ret != GRIB_SUCCESS)
-            return ret;
-        next = next->next;
-    }
-
+//     gs         = as->sub_section;
+//     gs->branch = 0; /* Force a reparse each time */
+//     grib_push_accessor(as, p->block);
+//     grib_dependency_observe_arguments(as, a->trigger_on);
+//     next = a->block;
+//     while (next) {
+//         ret = grib_create_accessor(gs, next, h);
+//         if (ret != GRIB_SUCCESS)
+//             return ret;
+//         next = next->next;
+//     }
     return GRIB_SUCCESS;
 }
 
@@ -157,20 +150,18 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
     return self->block;
 }
 
-/* COMEBACK */
 static void destroy(grib_context* context, grib_action* act)
 {
-    grib_action_trigger* a = (grib_action_trigger*)act;
+    Assert(!"action_class_trigger::destroy: 'trigger' statement is deprecated");
 
-    grib_action* b = a->block;
-
-    while (b) {
-        grib_action* n = b->next;
-        grib_action_delete(context, b);
-        b = n;
-    }
-
-    grib_arguments_free(context, a->trigger_on);
-    grib_context_free_persistent(context, act->name);
-    grib_context_free_persistent(context, act->op);
+//     grib_action_trigger* a = (grib_action_trigger*)act;
+//     grib_action* b = a->block;
+//     while (b) {
+//         grib_action* n = b->next;
+//         grib_action_delete(context, b);
+//         b = n;
+//     }
+//     grib_arguments_free(context, a->trigger_on);
+//     grib_context_free_persistent(context, act->name);
+//     grib_context_free_persistent(context, act->op);
 }

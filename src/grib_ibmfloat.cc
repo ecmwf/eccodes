@@ -80,13 +80,13 @@ static void init_ibm_table()
 
 static void init_table_if_needed()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
 
     if (!ibm_table.inited)
         init_ibm_table();
 
-    GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)

@@ -2154,6 +2154,7 @@ int grib_f_dump(int* gid){
 }
 
 /*****************************************************************************/
+#ifdef USE_GRIB_PRINT
 int grib_f_print_(int* gid, char* key, int len){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -2175,7 +2176,7 @@ int grib_f_print__(int* gid, char* key,  int len){
 int grib_f_print(int* gid, char* key,  int len){
     return grib_f_print_(gid,  key, len);
 }
-
+#endif
 /*****************************************************************************/
 int grib_f_get_error_string_(int* err, char* buf,  int len){
     const char* err_msg = grib_get_error_message(*err);
@@ -2305,6 +2306,7 @@ int grib_f_get_int__(int* gid, char* key, int* val,  int len){
 int grib_f_get_int(int* gid, char* key, int* val,  int len){
     return grib_f_get_int_( gid,  key,  val,   len);
 }
+
 int grib_f_get_long_(int* gid, char* key, long* val,  int len){
     grib_handle *h = get_handle(*gid);
     int err = GRIB_SUCCESS;
@@ -2322,6 +2324,25 @@ int grib_f_get_long(int* gid, char* key, long* val,  int len){
 }
 
 /*****************************************************************************/
+int grib_f_get_native_type_(int* gid, char* key, int* val,  int len){
+    grib_handle *h = get_handle(*gid);
+    int type_val = 0;
+    int err = GRIB_SUCCESS;
+    char buf[1024];
+
+    if(!h) return GRIB_INVALID_GRIB;
+    err = grib_get_native_type(h, cast_char(buf,key,len), &type_val);
+    *val = type_val;
+    return err;
+}
+int grib_f_get_native_type__(int* gid, char* key, int* val,  int len){
+    return grib_f_get_native_type_( gid,  key,  val,   len);
+}
+int grib_f_get_native_type(int* gid, char* key, int* val,  int len){
+    return grib_f_get_native_type_( gid,  key,  val,   len);
+}
+
+/*****************************************************************************/
 int grib_f_get_int_array_(int* gid, char* key, int *val, int* size,  int len){
 
     grib_handle *h = get_handle(*gid);
@@ -2329,7 +2350,6 @@ int grib_f_get_int_array_(int* gid, char* key, int *val, int* size,  int len){
     int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size;
-
 
     if(!h)  return GRIB_INVALID_GRIB;
 
@@ -2761,21 +2781,50 @@ int grib_f_get_real4(int* gid, char* key, float* val,  int len){
     return grib_f_get_real4_( gid,  key,  val,  len);
 }
 
-int grib_f_get_real4_array_(int* gid, char* key, float *val, int* size, int len)
+int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
-    grib_handle *h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
-    char buf[1024];
-    size_t lsize = *size;
+    /* See ECC-1579:
+     * Ideally we should ALWAYS be calling:
+     * err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
+     */
 
-    if(!h){
-        return GRIB_INVALID_GRIB;
-    }else{
-        err = grib_get_float_array(h, cast_char(buf,key,len), val, &lsize);
-        *size = lsize;
-        return  err;
+    grib_handle* h = get_handle(*gid);
+    size_t lsize   = *size;
+    char buf[1024];
+    int err        = GRIB_SUCCESS;
+    const int single_precision_mode = (h->context->single_precision != 0);
+
+    if (!h) return GRIB_INVALID_GRIB;
+
+    if (single_precision_mode) {
+        err = grib_get_float_array(h, cast_char(buf, key, len), val, &lsize);
     }
+    else {
+        double* val8 = NULL;
+        size_t i;
+
+        if (*size)
+            val8 = (double*)grib_context_malloc(h->context, (*size) * (sizeof(double)));
+        else
+            val8 = (double*)grib_context_malloc(h->context, sizeof(double));
+
+        if (!val8) return GRIB_OUT_OF_MEMORY;
+
+        err = grib_get_double_array(h, cast_char(buf, key, len), val8, &lsize);
+        if (err) {
+            grib_context_free(h->context, val8);
+            return err;
+        }
+
+        for (i = 0; i < lsize; i++)
+            val[i] = val8[i];
+
+        grib_context_free(h->context, val8);
+    }
+
+    return err;
 }
+
 int grib_f_get_real4_array__(int* gid, char* key, float* val, int* size, int len){
     return grib_f_get_real4_array_( gid,  key, val,  size,  len);
 }

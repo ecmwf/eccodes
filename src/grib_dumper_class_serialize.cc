@@ -13,7 +13,7 @@
 
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -121,18 +121,15 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         (strcmp(a->cclass->name, "lookup") != 0))
         fprintf(self->dumper.out, " (read_only)");
 
-#if 0
-    if(comment) fprintf(self->dumper.out," [%s]",comment);
-#endif
+    //if(comment) fprintf(self->dumper.out," [%s]",comment);
+
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_serialize::dump_long]", err, grib_get_error_message(err));
 
     fprintf(self->dumper.out, "\n");
 }
 
-#if 0
-static int test_bit(long a, long b) {return a&(1<<b);}
-#endif
+//static int test_bit(long a, long b) {return a&(1<<b);}
 
 static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 {
@@ -150,21 +147,19 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 
     fprintf(self->dumper.out, "%s = %ld ", a->name, value);
 
-#if 0
+    // fprintf(self->dumper.out,"[");
+    // for(i=0;i<(a->length*8);i++) {
+    //     if(test_bit(value,a->length*8-i-1))
+    //         fprintf(self->dumper.out,"1");
+    //     else
+    //         fprintf(self->dumper.out,"0");
+    // }
 
-    fprintf(self->dumper.out,"[");
-    for(i=0;i<(a->length*8);i++) {
-        if(test_bit(value,a->length*8-i-1))
-            fprintf(self->dumper.out,"1");
-        else
-            fprintf(self->dumper.out,"0");
-    }
+    // if(comment)
+    //     fprintf(self->dumper.out,":%s]",comment);
+    // else
+    //     fprintf(self->dumper.out,"]");
 
-    if(comment)
-        fprintf(self->dumper.out,":%s]",comment);
-    else
-        fprintf(self->dumper.out,"]");
-#endif
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s)", err, grib_get_error_message(err));
 
@@ -193,9 +188,8 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         fprintf(self->dumper.out, " (read_only)");
 
-#if 0
-    if(comment) fprintf(self->dumper.out," [%s]",comment);
-#endif
+    //if (comment) fprintf(self->dumper.out," [%s]",comment);
+
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_serialize::dump_double]", err, grib_get_error_message(err));
     fprintf(self->dumper.out, "\n");
@@ -231,9 +225,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         fprintf(self->dumper.out, " (read_only)");
 
-#if 0
-    if(comment) fprintf(self->dumper.out," [%s]",comment);
-#endif
+    // if(comment) fprintf(self->dumper.out," [%s]",comment);
+
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_serialize::dump_string]", err, grib_get_error_message(err));
     fprintf(self->dumper.out, "\n");
@@ -407,12 +400,10 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
 static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
-#if 0
-    grib_dumper_serialize *self = (grib_dumper_serialize*)d;
-    int i;
-    for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-    fprintf(self->dumper.out,"----> %s %s %s\n",a->creator->op, a->name,comment?comment:"");
-#endif
+    // grib_dumper_serialize *self = (grib_dumper_serialize*)d;
+    // int i;
+    // for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+    // fprintf(self->dumper.out,"----> %s %s %s\n",a->creator->op, a->name,comment?comment:"");
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -433,7 +424,5 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 
     grib_dump_accessors_block(d, block);
 
-#if 0
-    fprintf(self->dumper.out,"<------ %s %s\n",a->creator->op, a->name);
-#endif
+    //fprintf(self->dumper.out,"<------ %s %s\n",a->creator->op, a->name);
 }

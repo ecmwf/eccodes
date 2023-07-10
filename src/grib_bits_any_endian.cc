@@ -10,12 +10,13 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 19.06.2007                                           *
- *                                                                         *
  ***************************************************************************/
 
 #ifdef ECCODES_ON_WINDOWS
 #include <stdint.h>
 #endif
+
+#include "grib_scaling.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -59,7 +60,7 @@ static void init_bits_all_one()
     int size            = sizeof(int64_t) * 8;
     int64_t* v             = 0;
     uint64_t cmask = -1;
-    DebugAssert(!bits_all_one.inited);
+    DEBUG_ASSERT(!bits_all_one.inited);
 
     bits_all_one.size   = size;
     bits_all_one.inited = 1;
@@ -130,7 +131,7 @@ int grib_encode_string(unsigned char* bitStream, long* bitOffset, size_t numberO
         *bitOffset += numberOfCharacters * 8;
         return err;
     }
-    DebugAssert(remainderComplement >= 0);
+    DEBUG_ASSERT(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = ((*s) >> remainder) & ~mask[remainder];
         *p |= c;
@@ -168,7 +169,7 @@ char* grib_decode_string(const unsigned char* bitStream, long* bitOffset, size_t
         return string;
     }
 
-    DebugAssert(remainderComplement >= 0);
+    DEBUG_ASSERT(remainderComplement >= 0);
     for (i = 0; i < numberOfCharacters; i++) {
         c = (*p) << remainder;
         p++;
@@ -221,15 +222,16 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
 
         return grib_decode_unsigned_long(p, bitp, bits);
     }
-#if 0
-    long ret2 = 0;
-    for(i=0; i< nbits;i++){
-        ret2 <<= 1;
-        if(grib_get_bit( p, *bitp)) ret2 += 1;
-        *bitp += 1;
-    }
-    *bitp -= nbits;
-#else
+
+    // Old algorithm:
+    //  long ret2 = 0;
+    //  for(i=0; i< nbits;i++){
+    //     ret2 <<= 1;
+    //     if(grib_get_bit( p, *bitp)) ret2 += 1;
+    //     *bitp += 1;
+    //  }
+    //  *bitp -= nbits;
+
     mask = BIT_MASK(nbits);
     /* pi: position of bitp in p[]. >>3 == /8 */
     pi = oc;
@@ -240,7 +242,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     while (bitsToRead > 0) {
         ret <<= 8;
         /*   ret += p[pi];     */
-        DebugAssert((ret & p[pi]) == 0);
+        DEBUG_ASSERT((ret & p[pi]) == 0);
         ret = ret | p[pi];
         pi++;
         bitsToRead -= usefulBitsInByte;
@@ -254,7 +256,7 @@ unsigned long grib_decode_unsigned_long(const unsigned char* p, long* bitp, long
     /* remove leading bits (from previous value) */
     ret &= mask;
     /* printf("%d %d\n", ret2, ret);*/
-#endif
+
     return ret;
 }
 
@@ -364,7 +366,7 @@ size_t grib_decode_size_t(const unsigned char* p, long* bitp, long nbits)
     while (bitsToRead > 0) {
         ret <<= 8;
         /*   ret += p[pi];     */
-        DebugAssert((ret & p[pi]) == 0);
+        DEBUG_ASSERT((ret & p[pi]) == 0);
         ret = ret | p[pi];
         pi++;
         bitsToRead -= usefulBitsInByte;
@@ -392,7 +394,7 @@ int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, 
     }
 #ifdef DEBUG
     {
-        unsigned long maxV = grib_power(nb, 2);
+        unsigned long maxV = codes_power<double>(nb, 2);
         if (val > maxV) {
             fprintf(stderr, "grib_encode_unsigned_longb: Value=%lu, but number of bits=%ld!\n", val, nb);
             Assert(0);
@@ -421,7 +423,7 @@ int grib_encode_size_tb(unsigned char* p, size_t val, long* bitp, long nb)
     }
 #ifdef DEBUG
     {
-        size_t maxV = grib_power(nb, 2);
+        size_t maxV = codes_power<double>(nb, 2);
         if (val > maxV) {
             fprintf(stderr, "grib_encode_size_tb: Value=%lu, but number of bits=%ld!\n", val, nb);
             Assert(0);

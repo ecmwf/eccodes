@@ -135,10 +135,8 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY))
         return;
 
-#if 1
     if (comment)
         pcomment(self->dumper.out, value, comment);
-#endif
 
     if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && (value == GRIB_MISSING_LONG))
         fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_missing(h,\"%s\"),%d);\n", a->name, 0);
@@ -210,9 +208,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     if (a->length == 0)
         return;
 
-#if 0
-    if(comment) fprintf(self->dumper.out,"/* %s */\n",comment);
-#endif
+    //if(comment) fprintf(self->dumper.out,"/* %s */\n",comment);
 
     fprintf(self->dumper.out, "    GRIB_CHECK(grib_set_double(h,\"%s\",%g),%d);\n", a->name, value, 0);
 
@@ -233,10 +229,8 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (a->length == 0)
         return;
 
-#if 1
     if (comment)
         fprintf(self->dumper.out, "/* %s */\n", comment);
-#endif
 
     fprintf(self->dumper.out, "    p    = \"%s\";\n", value);
     fprintf(self->dumper.out, "    size = strlen(p);\n");
@@ -273,27 +267,26 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-#if 0
-    if(size > 100) {
-        more = size - 100;
-        size = 100;
-    }
+    // if(size > 100) {
+    //     more = size - 100;
+    //     size = 100;
+    // }
 
-    k = 0;
-    /* if(size > 100) size = 100;  */
-    while(k < size)
-    {
-        int j;
-        for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-        for(j = 0; j < 16 && k < size; j++, k++)
-        {
-            fprintf(self->dumper.out,"%02x",buf[k]);
-            if(k != size-1)
-                fprintf(self->dumper.out,", ");
-        }
-        fprintf(self->dumper.out,"\n");
-    }
-#endif
+    // k = 0;
+    //  //if(size > 100) size = 100;
+    // while(k < size)
+    // {
+    //     int j;
+    //     for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+    //     for(j = 0; j < 16 && k < size; j++, k++)
+    //     {
+    //         fprintf(self->dumper.out,"%02x",buf[k]);
+    //         if(k != size-1)
+    //             fprintf(self->dumper.out,", ");
+    //     }
+    //     fprintf(self->dumper.out,"\n");
+    // }
+
     grib_context_free(d->context, buf);
 }
 

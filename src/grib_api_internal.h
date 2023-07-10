@@ -186,8 +186,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #endif
 
 #ifdef DEBUG
-#define DebugAssert(a) Assert(a)
-#define DebugAssertAccess(array, index, size)                                                                             \
+#define DEBUG_ASSERT(a) Assert(a)
+#define DEBUG_ASSERT_ACCESS(array, index, size)                                                                             \
     do {                                                                                                                  \
         if (!((index) >= 0 && (index) < (size))) {                                                                        \
             printf("ARRAY ACCESS ERROR: array=%s idx=%ld size=%ld @ %s +%d \n", #array, index, size, __FILE__, __LINE__); \
@@ -195,8 +195,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
         }                                                                                                                 \
     } while (0)
 #else
-#define DebugAssert(a)
-#define DebugAssertAccess(array, index, size)
+#define DEBUG_ASSERT(a)
+#define DEBUG_ASSERT_ACCESS(array, index, size)
 #endif
 
 /* Return true if two strings are equal */
@@ -272,7 +272,6 @@ typedef struct grib_smart_table grib_smart_table;
 typedef struct grib_accessor grib_accessor;
 typedef struct grib_iterator_class grib_iterator_class;
 typedef struct grib_nearest_class grib_nearest_class;
-typedef struct grib_box_class grib_box_class;
 typedef struct grib_dumper grib_dumper;
 typedef struct grib_dumper_class grib_dumper_class;
 typedef struct grib_dependency grib_dependency;
@@ -291,11 +290,6 @@ typedef int (*nearest_find_proc)(grib_nearest* nearest, grib_handle* h,
                                  double* outlons, double* values,
                                  double* distances, int* indexes, size_t* len);
 typedef int (*nearest_destroy_proc)(grib_nearest* nearest);
-
-typedef void (*box_init_class_proc)(grib_box_class*);
-typedef int (*box_destroy_proc)(grib_box*);
-typedef int (*box_init_proc)(grib_box*, grib_handle*, grib_arguments*);
-typedef grib_points* (*box_get_points_proc)(grib_box*, double, double, double, double, int*);
 
 typedef void (*iterator_init_class_proc)(grib_iterator_class*);
 typedef int (*iterator_init_proc)(grib_iterator* i, grib_handle*, grib_arguments*);
@@ -562,23 +556,24 @@ struct grib_accessor
     grib_accessor* parent_as_attribute;
 };
 
-#define GRIB_ACCESSOR_FLAG_READ_ONLY (1 << 1)
-#define GRIB_ACCESSOR_FLAG_DUMP (1 << 2)
+#define GRIB_ACCESSOR_FLAG_READ_ONLY        (1 << 1)
+#define GRIB_ACCESSOR_FLAG_DUMP             (1 << 2)
 #define GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC (1 << 3)
-#define GRIB_ACCESSOR_FLAG_CAN_BE_MISSING (1 << 4)
-#define GRIB_ACCESSOR_FLAG_HIDDEN (1 << 5)
-#define GRIB_ACCESSOR_FLAG_CONSTRAINT (1 << 6)
-#define GRIB_ACCESSOR_FLAG_BUFR_DATA (1 << 7)
-#define GRIB_ACCESSOR_FLAG_NO_COPY (1 << 8)
-#define GRIB_ACCESSOR_FLAG_COPY_OK (1 << 9)
-#define GRIB_ACCESSOR_FLAG_FUNCTION (1 << 10)
-#define GRIB_ACCESSOR_FLAG_DATA (1 << 11)
-#define GRIB_ACCESSOR_FLAG_NO_FAIL (1 << 12)
-#define GRIB_ACCESSOR_FLAG_TRANSIENT (1 << 13)
-#define GRIB_ACCESSOR_FLAG_STRING_TYPE (1 << 14)
-#define GRIB_ACCESSOR_FLAG_LONG_TYPE (1 << 15)
-#define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE (1 << 16)
-#define GRIB_ACCESSOR_FLAG_LOWERCASE (1 << 17)
+#define GRIB_ACCESSOR_FLAG_CAN_BE_MISSING   (1 << 4)
+#define GRIB_ACCESSOR_FLAG_HIDDEN           (1 << 5)
+#define GRIB_ACCESSOR_FLAG_CONSTRAINT       (1 << 6)
+#define GRIB_ACCESSOR_FLAG_BUFR_DATA        (1 << 7)
+#define GRIB_ACCESSOR_FLAG_NO_COPY          (1 << 8)
+#define GRIB_ACCESSOR_FLAG_COPY_OK          (1 << 9)
+#define GRIB_ACCESSOR_FLAG_FUNCTION         (1 << 10)
+#define GRIB_ACCESSOR_FLAG_DATA             (1 << 11)
+#define GRIB_ACCESSOR_FLAG_NO_FAIL          (1 << 12)
+#define GRIB_ACCESSOR_FLAG_TRANSIENT        (1 << 13)
+#define GRIB_ACCESSOR_FLAG_STRING_TYPE      (1 << 14)
+#define GRIB_ACCESSOR_FLAG_LONG_TYPE        (1 << 15)
+#define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1 << 16)
+#define GRIB_ACCESSOR_FLAG_LOWERCASE        (1 << 17)
+#define GRIB_ACCESSOR_FLAG_BUFR_COORD       (1 << 18)
 
 /**
 *  a section accessor
@@ -628,18 +623,6 @@ struct grib_nearest_class
     nearest_destroy_proc destroy;
 
     nearest_find_proc find;
-};
-
-struct grib_box_class
-{
-    grib_box_class** super;
-    const char* name;
-    size_t size;
-    int inited;
-    box_init_class_proc init_class;
-    box_init_proc init;
-    box_destroy_proc destroy;
-    box_get_points_proc get_points;
 };
 
 /* --------------- */
@@ -709,16 +692,6 @@ struct grib_nearest
     size_t values_count;
     grib_nearest_class* cclass;
     unsigned long flags;
-};
-
-struct grib_box
-{
-    grib_box_class* cclass;
-    grib_context* context;
-    grib_arguments* args;
-    grib_handle* h;
-    unsigned long flags;
-    grib_points* points;
 };
 
 struct grib_dependency
@@ -1118,6 +1091,7 @@ struct grib_context
     int bufr_set_to_missing_if_out_of_range;
     int bufr_multi_element_constant_arrays;
     int grib_data_quality_checks;
+    int single_precision;
     FILE* log_stream;
     grib_trie* classes;
     grib_trie* lists;
@@ -1278,7 +1252,6 @@ struct grib_int_array
     int* el;
 };
 
-#if 1
 struct grib_fieldset
 {
     grib_context* context;
@@ -1293,31 +1266,6 @@ struct grib_fieldset
     long current;
     grib_field** fields;
 };
-#endif
-
-#if 0
-/* grib db */
-struct grib_db
-{
-    grib_context* context;
-    size_t size;
-    size_t fields_array_size;
-    grib_column* columns;
-    size_t columns_size;
-    grib_field** fields;
-};
-
-struct grib_fieldset
-{
-    grib_context* context;
-    grib_db* db;
-    grib_int_array* filter;
-    grib_int_array* order;
-    size_t size;
-    grib_query* query;
-    long current;
-};
-#endif
 
 /* concept index structures */
 
@@ -1612,8 +1560,6 @@ typedef struct j2k_encode_helper
 #endif
 
 #endif
-
-
 
 /* This part is automatically generated by ./errors.pl, do not edit */
 #ifndef grib_errors_internal_H

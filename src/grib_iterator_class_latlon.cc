@@ -171,7 +171,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
     if ((err = grib_get_double_internal(h, "latitudeLastInDegrees", &lat2)))
         return err;
-    if ((err = grib_get_double_internal(h, s_jdir, &jdir)))
+    if ((err = grib_get_double_internal(h, s_jdir, &jdir))) //can be GRIB_MISSING_DOUBLE
         return err;
     if ((err = grib_get_long_internal(h, s_jScansPos, &jScansPositively)))
         return err;
@@ -182,7 +182,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* ECC-984: If jDirectionIncrement is missing, then we cannot use it (See jDirectionIncrementGiven) */
     /* So try to compute the increment */
-    if (grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) {
+    if ( (grib_is_missing(h, s_jdir, &err) && err == GRIB_SUCCESS) || (jdir == GRIB_MISSING_DOUBLE) ) {
         const long Nj = self->Nj;
         Assert(Nj > 1);
         if (lat1 > lat2) {
@@ -191,8 +191,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         else {
             jdir = (lat2 - lat1) / (Nj - 1);
         }
-        grib_context_log(h->context, GRIB_LOG_INFO,
-                        "%s is missing (See jDirectionIncrementGiven). Using value of %.6f obtained from La1, La2 and Nj", s_jdir, jdir);
+        grib_context_log(h->context, GRIB_LOG_DEBUG,
+                        "Cannot use jDirectionIncrement. Using value of %.6f obtained from La1, La2 and Nj", jdir);
     }
 
     if (jScansPositively) {

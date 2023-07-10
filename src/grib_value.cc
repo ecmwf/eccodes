@@ -9,12 +9,12 @@
  */
 /***************************************************************************
  * Jean Baptiste Filippi - 01.11.2005
- * Enrico Fucile                                                           *
  ***************************************************************************/
-#include "grib_api_internal_cpp.h"
+
+#include "grib_api_internal.h"
+#include "grib_value.h"
+#include "grib_accessor.h"
 #include <float.h>
-
-
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -1125,23 +1125,6 @@ int grib_get_float_element_set(const grib_handle* h, const char* name, const siz
     return GRIB_NOT_FOUND;
 }
 
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
-{
-    int i, ret;
-    grib_accessor* a = NULL;
-    fprintf(stderr, "Warning: The grib_points_get_values function is deprecated and will be removed later.");
-
-    a = grib_find_accessor(h, "values");
-
-    for (i = 0; i < points->n_groups; i++) {
-        ret = grib_unpack_double_subarray(a, val, points->group_start[i], points->group_len[i]);
-        if (ret)
-            return ret;
-        val += points->group_len[i];
-    }
-    return GRIB_SUCCESS;
-}
-
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
 {
     double* values = 0;
@@ -1257,7 +1240,7 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
     grib_accessor* a        = NULL;
     *type                   = GRIB_TYPE_UNDEFINED;
 
-    DebugAssert(name != NULL && strlen(name) > 0);
+    DEBUG_ASSERT(name != NULL && strlen(name) > 0);
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1349,7 +1332,7 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 
     //[> TODO: For now only GRIB supported... no BUFR keys <]
     if (h->product_kind != PRODUCT_GRIB) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        //grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
         return GRIB_NOT_IMPLEMENTED;
     }
     Assert(name[0]!='/');

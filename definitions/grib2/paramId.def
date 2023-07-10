@@ -113,6 +113,14 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
 	}
+#Surface photosynthetically active radiation, clear sky
+'20' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Unbalanced component of temperature
 '21' = {
 	 discipline = 0 ;
@@ -130,6 +138,30 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
+	}
+#Low vegetation cover
+'27' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 53 ;
+	}
+#High vegetation cover
+'28' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 54 ;
+	}
+#Type of low vegetation
+'29' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 57 ;
+	}
+#Type of high vegetation
+'30' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 58 ;
 	}
 #Sea ice area fraction
 '31' = {
@@ -166,6 +198,14 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Magnitude of turbulent surface stress
+'48' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 58 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Large-scale precipitation fraction
 '50' = {
 	 discipline = 0 ;
@@ -189,6 +229,25 @@
 	 parameterNumber = 10 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Leaf area index, low vegetation
+'66' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	}
+#Leaf area index, high vegetation
+'67' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	}
+#Standard deviation of filtered subgrid orography (climatological)
+'74' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 38 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Specific rain water content
 '75' = {
@@ -239,6 +298,12 @@
 	 parameterNumber = 20 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Charnock
+'148' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 76 ;
+	}
 #Boundary layer height
 '159' = {
 	 discipline = 0 ;
@@ -253,6 +318,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Surface roughness (climatological)
+'173' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Surface long-wave (thermal) radiation downwards
 '175' = {
 	 discipline = 0 ;
@@ -265,7 +338,7 @@
 '178' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
-	 parameterNumber = 1 ;
+	 parameterNumber = 9 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
@@ -314,7 +387,7 @@
 	 parameterCategory = 14 ;
 	 parameterNumber = 1 ;
 	}
-#Top net solar radiation, clear sky
+#Top net short-wave (solar) radiation, clear sky
 '208' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -322,7 +395,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Top net thermal radiation, clear sky
+#Top net long-wave (thermal) radiation, clear sky
 '209' = {
 	 discipline = 0 ;
 	 parameterCategory = 5 ;
@@ -346,12 +419,19 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#TOA incident solar radiation
+#TOA incident short-wave (solar) radiation
 '212' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 7 ;
 	 typeOfFirstFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Vertically integrated moisture divergence
+'213' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 165 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Instantaneous eastward turbulent surface stress
@@ -382,11 +462,33 @@
 	 parameterNumber = 79 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Logarithm of surface roughness length for heat (climatological)
+'234' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Temperature of snow layer
 '238' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
+	}
+#Forecast surface roughness
+'244' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Forecast logarithm of surface roughness for heat
+'245' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 54 ;
+	 typeOfFirstFixedSurface = 1 ;
 	}
 #Specific cloud liquid water content
 '246' = {
@@ -406,7 +508,7 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 32 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 '3062' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -542,6 +644,92 @@
 	 scaleFactorOfLowerLimit = 0 ;
 	 probabilityType = 0 ;
 	}
+#Wave induced mean sea level correction
+'140098' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 87 ;
+	}
+#Ratio of wave angular and frequency width
+'140099' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 80 ;
+	}
+#Number of events in freak waves statistics
+'140100' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 89 ;
+	}
+#U-component of surface momentum flux into ocean
+'140103' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 90 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#V-component of surface momentum flux into ocean
+'140104' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 91 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Wave turbulent energy flux into ocean
+'140105' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 92 ;
+	}
+#Wave energy flux magnitude
+'140112' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 78 ;
+	}
+#Wave energy flux mean direction
+'140113' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 79 ;
+	}
+#Wave Spectral Skewness
+'140207' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 77 ;
+	}
+#Free convective velocity over the oceans
+'140208' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 81 ;
+	}
+#Air density over the oceans
+'140209' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 82 ;
+	}
+#Normalized energy flux into waves
+'140211' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 83 ;
+	}
+#Normalized energy flux into ocean
+'140212' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 85 ;
+	}
+#Normalized stress into ocean
+'140214' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 84 ;
+	}
 #Mean sea water temperature in the upper 300 m
 '151127' = {
 	 discipline = 10 ;
@@ -553,6 +741,14 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Total column vertically-integrated water enthalpy
+'162093' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 4 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #2 metre specific humidity
 '174096' = {
@@ -612,6 +808,41 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
+#UV visible albedo for diffuse radiation (climatological)
+'210198' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 55 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#UV visible albedo for direct radiation (climatological)
+'210199' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 56 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#UV visible albedo for direct radiation, geometric component (climatological)
+'210200' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 57 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#UV visible albedo for direct radiation, isotropic component (climatological)
+'210201' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 58 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#UV visible albedo for direct radiation, volumetric component (climatological)
+'210202' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 59 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Ammonium aerosol mass mixing ratio
 '210249' = {
 	 discipline = 0 ;
@@ -659,6 +890,41 @@
 	 parameterNumber = 2 ;
 	 aerosolType = 62033 ;
 	 is_aerosol = 1 ;
+	}
+#Near IR albedo for diffuse radiation (climatological)
+'210260' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 9 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Near IR albedo for direct radiation (climatological)
+'210261' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 10 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Near IR albedo for direct radiation, geometric component (climatological)
+'210262' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 11 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Near IR albedo for direct radiation, isotropic component (climatological)
+'210263' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 12 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
+#Near IR albedo for direct radiation, volumetric component (climatological)
+'210264' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 13 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Volcanic sulfur dioxide mass mixing ratio increment
 '211170' = {
@@ -920,7 +1186,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Volcanic sulfur dioxide 
+#Column integrated mass density of Volcanic sulfur dioxide
 '218221' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -929,7 +1195,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Column integrated mass density of Aromatic peroxy radical 
+#Column integrated mass density of Aromatic peroxy radical
 '218222' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -937,7 +1203,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Ethyne 
+#Column integrated mass density of Ethyne
 '218223' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -945,7 +1211,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Acetonitrile 
+#Column integrated mass density of Acetonitrile
 '218224' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -953,7 +1219,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Methyl peroxy nitrate 
+#Column integrated mass density of Methyl peroxy nitrate
 '218225' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -961,7 +1227,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydrogen cyanide 
+#Column integrated mass density of Hydrogen cyanide
 '218226' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -969,7 +1235,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydroperoxy aldehydes type 1 
+#Column integrated mass density of Hydroperoxy aldehydes type 1
 '218227' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -977,7 +1243,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Hydroperoxy aldehydes type 2 
+#Column integrated mass density of Hydroperoxy aldehydes type 2
 '218228' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -985,7 +1251,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Isoprene peroxy type B 
+#Column integrated mass density of Isoprene peroxy type B
 '218229' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -993,7 +1259,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Isoprene peroxy type D 
+#Column integrated mass density of Isoprene peroxy type D
 '218230' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1001,7 +1267,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Volcanic sulfur dioxide 
+#Atmosphere emission mass flux of Volcanic sulfur dioxide
 '219221' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1010,7 +1276,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Atmosphere emission mass flux of Aromatic peroxy radical 
+#Atmosphere emission mass flux of Aromatic peroxy radical
 '219222' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1018,7 +1284,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Ethyne 
+#Atmosphere emission mass flux of Ethyne
 '219223' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1026,7 +1292,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Acetonitrile 
+#Atmosphere emission mass flux of Acetonitrile
 '219224' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1034,7 +1300,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Methyl peroxy nitrate 
+#Atmosphere emission mass flux of Methyl peroxy nitrate
 '219225' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1042,7 +1308,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydrogen cyanide 
+#Atmosphere emission mass flux of Hydrogen cyanide
 '219226' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1050,7 +1316,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1 
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 1
 '219227' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1058,7 +1324,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2 
+#Atmosphere emission mass flux of Hydroperoxy aldehydes type 2
 '219228' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1066,7 +1332,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Isoprene peroxy type B 
+#Atmosphere emission mass flux of Isoprene peroxy type B
 '219229' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1074,7 +1340,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Isoprene peroxy type D 
+#Atmosphere emission mass flux of Isoprene peroxy type D
 '219230' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1082,7 +1348,7 @@
 	 constituentType = 60057 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Volcanic sulfur dioxide 
+#Dry deposition velocity of Volcanic sulfur dioxide
 '221221' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1091,7 +1357,7 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
-#Dry deposition velocity of Aromatic peroxy radical 
+#Dry deposition velocity of Aromatic peroxy radical
 '221222' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1099,7 +1365,7 @@
 	 constituentType = 60029 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Ethyne 
+#Dry deposition velocity of Ethyne
 '221223' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1107,7 +1373,7 @@
 	 constituentType = 10010 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Acetonitrile 
+#Dry deposition velocity of Acetonitrile
 '221224' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1115,7 +1381,7 @@
 	 constituentType = 10007 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Methyl peroxy nitrate 
+#Dry deposition velocity of Methyl peroxy nitrate
 '221225' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1123,7 +1389,7 @@
 	 constituentType = 10055 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydrogen cyanide 
+#Dry deposition velocity of Hydrogen cyanide
 '221226' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1131,7 +1397,7 @@
 	 constituentType = 10006 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydroperoxy aldehydes type 1 
+#Dry deposition velocity of Hydroperoxy aldehydes type 1
 '221227' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1139,7 +1405,7 @@
 	 constituentType = 60058 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Hydroperoxy aldehydes type 2 
+#Dry deposition velocity of Hydroperoxy aldehydes type 2
 '221228' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1147,7 +1413,7 @@
 	 constituentType = 60059 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Isoprene peroxy type B 
+#Dry deposition velocity of Isoprene peroxy type B
 '221229' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1155,7 +1421,7 @@
 	 constituentType = 60056 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Isoprene peroxy type D 
+#Dry deposition velocity of Isoprene peroxy type D
 '221230' = {
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
@@ -1946,6 +2212,14 @@
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Surface direct short-wave radiation, clear sky
+'228022' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 61 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #0 degrees C isothermal level (atm)
 '228024' = {
 	 discipline = 0 ;
@@ -2050,6 +2324,18 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 27 ;
+	}
+#Height of zero-degree wet-bulb temperature
+'228047' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 44 ;
+	}
+#Height of one-degree wet-bulb temperature
+'228048' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 45 ;
 	}
 #Instantaneous total lightning flash density
 '228050' = {
@@ -2175,6 +2461,14 @@
 	 scaledValueOfSecondFixedSurface = 10 ;
 	 scaleFactorOfSecondFixedSurface = 1 ;
 	}
+#Total column supercooled liquid water
+'228088' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 167 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #Total column rain water
 '228089' = {
 	 discipline = 0 ;
@@ -2230,6 +2524,16 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
+#Accumulated mass emission of methane from Wetlands
+'228109' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 3 ;
+	 constituentType = 2 ;
+	 typeOfStatisticalProcessing = 1 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
 #Convective precipitation
 '228143' = {
 	 discipline = 0 ;
@@ -2263,6 +2567,20 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 77 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Convective snowfall rate water equivalent
+'228220' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 55 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Large scale snowfall rate water equivalent
+'228221' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 56 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Mixed-layer CAPE in the lowest 50 hPa
@@ -2480,6 +2798,379 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 37 ;
 	}
+#Forecast logarithm of surface roughness length for moisture
+'231008' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 55 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface runoff rate
+'231009' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Surface runoff
+'231010' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Sub-surface runoff rate
+'231011' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Sub-surface runoff
+'231012' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Reflectance in 0.4 micron channel
+'231013' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 30 ;
+	}
+#Burned area
+'232000' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	}
+#Burning area
+'232001' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 20 ;
+	}
+#Burnable area
+'232002' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 21 ;
+	}
+#Un-burnable area
+'232003' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 22 ;
+	}
+#Fuel load
+'232004' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 23 ;
+	}
+#Combustion completeness
+'232005' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 24 ;
+	}
+#Fuel moisture content
+'232006' = {
+	 discipline = 2 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 25 ;
+	}
+#Time-integrated total column vertically-integrated eastward geopotential flux
+'233000' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated northward geopotential flux
+'233001' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of water geopotential flux
+'233002' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 42 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of geopotential flux
+'233003' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 43 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated eastward enthalpy flux
+'233004' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 5 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated northward enthalpy flux
+'233005' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated eastward kinetic energy flux
+'233006' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated northward kinetic energy flux
+'233007' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 10 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated eastward total energy flux
+'233008' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated northward total energy flux
+'233009' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 12 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of enthalpy flux
+'233010' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of kinetic energy flux
+'233011' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of total energy flux
+'233012' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total column vertically-integrated divergence of water enthalpy flux
+'233013' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of mass flux
+'233014' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward mass flux
+'233015' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward mass flux
+'233016' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of water vapour flux
+'233017' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 160 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of cloud liquid water flux
+'233018' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 161 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of cloud ice water flux
+'233019' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 162 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of rain flux
+'233020' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 163 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated divergence of snow flux
+'233021' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 164 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward water vapour flux
+'233022' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 150 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward water vapour flux
+'233023' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 151 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward cloud liquid water flux
+'233024' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 152 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward cloud liquid water flux
+'233025' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 153 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward cloud ice water flux
+'233026' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 154 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward cloud ice water flux
+'233027' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 155 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward rain flux
+'233028' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 156 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward rain flux
+'233029' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 157 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated eastward snow flux
+'233030' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 158 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time integrated, vertically integrated northward snow flux
+'233031' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 159 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Mean temperature tendency due to short-wave radiation
 '235001' = {
 	 discipline = 0 ;
@@ -2613,6 +3304,36 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Mean surface photosynthetically active radiation flux, clear sky
+'235022' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 60 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Sunshine duration fraction
+'235044' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	}
+#Mean vertically integrated moisture divergence
+'235054' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 165 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean surface direct short-wave radiation flux, clear sky
+'235059' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 61 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time integral of surface latent heat sublimation flux
 '235071' = {
@@ -2835,6 +3556,14 @@
 	 parameterNumber = 74 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total snowfall
+'260025' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #2 metre relative humidity
 '260242' = {
@@ -3600,7 +4329,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#X-component of sea ice velocity
+#Eastward sea ice velocity
 '262003' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -3612,7 +4341,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Y-component of sea ice velocity
+#Northward sea ice velocity
 '262004' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -3660,7 +4389,163 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea surface salinity
+#Sea ice volume per unit area
+'262008' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow volume over sea ice per unit area
+'262009' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice temperature
+'262010' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow temperature over sea ice
+'262011' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice temperature at the sea ice and snow interface
+'262012' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 175 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Underside ice temperature
+'262013' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 176 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice heat content
+'262014' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow heat content over sea ice
+'262015' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice freeboard thickness
+'262016' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = 0 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
+#Sea ice melt pond fraction
+'262017' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice melt pond depth
+'262018' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice melt pond volume per unit area
+'262019' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice fraction tendency due to parameterization
+'262020' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea surface practical salinity
 '262100' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -3876,7 +4761,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 300 m
+#Average sea water practical salinity in the upper 300 m
 '262118' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -3888,7 +4773,7 @@
 	 scaledValueOfSecondFixedSurface = 300 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Vertically-integrated sea water practical salinity in the upper 700 m
+#Average sea water practical salinity in the upper 700 m
 '262119' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -3900,7 +4785,7 @@
 	 scaledValueOfSecondFixedSurface = 700 ;
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
-#Total column sea water practical salinity
+#Total column average sea water practical salinity
 '262120' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4008,6 +4893,192 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Bottom pressure equivalent height
+'262129' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 29 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 9 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Net surface upward water flux
+'262130' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Fresh water flux into sea water (from rivers)
+'262131' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Virtual salt flux into sea water
+'262132' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 32 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Heat flux correction
+'262133' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Fresh water flux correction
+'262134' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Virtual salt flux correction
+'262135' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 33 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Turbocline depth (kz=5e-4)
+'262136' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 171 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 5 ;
+	 scaleFactorOfFirstFixedSurface = 4 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Y-component of surface sea water velocity
+'262137' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#X-component of surface sea water velocity
+'262138' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Northward surface sea water velocity
+'262139' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Eastward surface sea water velocity
+'262140' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Heat Content surface to 26C isotherm
+'262141' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 29915 ;
+	 scaleFactorOfSecondFixedSurface = 2 ;
+	}
+#Sea surface height tendency due to parameterization
+'262142' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea surface height with inverse barometer correction
+'262143' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
+	}
+#Average sea water potential temperature in the upper 300m
+'262144' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	}
 #Sea water practical salinity
 '262500' = {
 	 discipline = 10 ;
@@ -4072,6 +5143,198 @@
 	 typeOfFirstFixedSurface = 168 ;
 	 typeOfSecondFixedSurface = 168 ;
 	}
+#Sea water potential temperature tendency due to newtonian relaxation
+'262508' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water salinity tendency due to newtonian relaxation
+'262509' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water temperature tendency due to parameterization
+'262510' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water salinity tendency due to parameterization
+'262511' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Eastward sea water velocity tendency due to parameterization
+'262512' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Northward sea water velocity tendency due to parameterization
+'262513' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water temperature tendency due to direct bias correction
+'262514' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water salinity tendency due to direct bias correction
+'262515' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Sea water salinity
+'262516' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	}
+#Net short wave radiation rate at sea surface
+'262900' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Wind stress at 10m above sea surface
+'262901' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 49 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Wind speed at 10m above sea surface
+'262902' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Neutral drag coefficient at 10m above sea surface
+'262903' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 29 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Total precipitation rate at sea surface
+'262904' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow precipitation rate at sea surface
+'262905' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Eastward of wind stress over sea ice
+'262906' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 50 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Northward of wind stress over sea ice
+'262907' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#U-component of wind stress over sea ice
+'262908' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#V-component of wind stress over sea ice
+'262909' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Time-mean sea ice thickness
 '263000' = {
 	 discipline = 10 ;
@@ -4098,7 +5361,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean X-component of sea ice velocity
+#Time-mean eastward sea ice velocity
 '263003' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -4111,7 +5374,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean Y-component of sea ice velocity
+#Time-mean northward sea ice velocity
 '263004' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
@@ -4163,7 +5426,176 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea surface salinity
+#Time-mean sea ice volume per unit area
+'263008' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow volume over sea ice per unit area
+'263009' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice temperature
+'263010' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow temperature over sea ice
+'263011' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice temperature at the sea ice and snow interface
+'263012' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 175 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean underside ice temperature
+'263013' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 176 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice heat content
+'263014' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow heat content over sea ice
+'263015' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 173 ;
+	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice freeboard thickness
+'263016' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = 0 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice melt pond fraction
+'263017' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice melt pond depth
+'263018' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice melt pond volume per unit area
+'263019' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 188 ;
+	 typeOfSecondFixedSurface = 189 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice fraction tendency due to parameterization
+'263020' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea surface practical salinity
 '263100' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -4397,7 +5829,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 300 m
+#Time-mean average sea water practical salinity in the upper 300 m
 '263118' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4410,7 +5842,7 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean vertically-integrated sea water practical salinity in the upper 700 m
+#Time-mean average sea water practical salinity in the upper 700 m
 '263119' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4423,7 +5855,7 @@
 	 scaleFactorOfSecondFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean total column sea water practical salinity
+#Time-mean total column average sea water practical salinity
 '263120' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
@@ -4540,6 +5972,201 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean bottom pressure equivalent height
+'263129' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 29 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 9 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean net surface upward water flux
+'263130' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fresh water flux into sea water (from rivers)
+'263131' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 30 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean virtual salt flux into sea water
+'263132' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 32 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean heat flux correction
+'263133' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean fresh water flux correction
+'263134' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 31 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean virtual salt flux correction
+'263135' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 33 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean turbocline depth (kz=5e-4)
+'263136' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 171 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 5 ;
+	 scaleFactorOfFirstFixedSurface = 4 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Y-component of surface sea water velocity
+'263137' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean X-component of surface sea water velocity
+'263138' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward surface sea water velocity
+'263139' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward surface sea water velocity
+'263140' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 14 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean heat content surface to 26C isotherm
+'263141' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 22 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 20 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 29915 ;
+	 scaleFactorOfSecondFixedSurface = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea surface height tendency due to parameterization
+'263142' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean average sea water potential temperature in the upper 300m
+'263144' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 18 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 160 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = 300 ;
+	 scaleFactorOfSecondFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean sea water practical salinity
 '263500' = {
 	 discipline = 10 ;
@@ -4612,6 +6239,247 @@
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea water potential temperature tendency due to newtonian relaxation
+'263508' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 34 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water salinity tendency due to newtonian relaxation
+'263509' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 35 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water temperature tendency due to parameterization
+'263510' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 36 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water salinity tendency due to parameterization
+'263511' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward sea water velocity tendency due to parameterization
+'263512' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward sea water velocity tendency due to parameterization
+'263513' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water temperature tendency due to direct bias correction
+'263514' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea water salinity tendency due to direct bias correction
+'263515' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean net short wave radiation rate at sea surface
+'263900' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wind stress at 10m above sea surface
+'263901' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 49 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean wind speed at 10m above sea surface
+'263902' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean neutral drag coefficient at 10m above sea surface
+'263903' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 29 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean total precipitation rate at sea surface
+'263904' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow precipitation rate at sea surface
+'263905' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean eastward of wind stress over sea ice
+'263906' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 50 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean northward of wind stress over sea ice
+'263907' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean U-component of wind stress over sea ice
+'263908' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean V-component of wind stress over sea ice
+'263909' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 53 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-accumulated net short wave radiation at sea surface
+'264900' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 9 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-accumulated total precipitation at sea surface
+'264904' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-accumulated snow precipitation at sea surface
+'264905' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 66 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Virtual temperature
 '300012' = {
 	 discipline = 0 ;
@@ -4641,6 +6509,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 255 ;
 	}
 #Dry deposition velocity
 '404000' = {
@@ -4844,6 +6714,112 @@
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
 	}
+#Net ecosystem exchange flux
+'435000' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	}
+#Mean net ecosystem exchange flux
+'435001' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Accumulated net ecosystem exchange flux
+'435002' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Gross primary production flux
+'436000' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	}
+#Mean gross primary production flux
+'436001' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Accumulated gross primary production flux
+'436002' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Ecosystem respiration flux
+'437000' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	}
+#Mean ecosystem respiration flux
+'437001' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Accumulated ecosystem respiration flux
+'437002' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Emission mass flux from bio fuel
+'438000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 8 ;
+	}
+#Emission mass flux from fossil fuel
+'439000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 9 ;
+	}
+#Emission mass flux from other
+'440000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 0 ;
+	}
+#Emission mass flux from oceans
+'441000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 11 ;
+	}
+#Accumulated wet deposition mass flux
+'444000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 7 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated dry deposition mass flux
+'445000' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 6 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Aerosol number density
 '450000' = {
 	 discipline = 0 ;
@@ -4867,6 +6843,14 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
+	}
+#Snowmelt
+'3099' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Mean zero-crossing wave period
 '140221' = {
@@ -4904,11 +6888,29 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 5 ;
 	}
+#Mean direction of wind waves
+'140235' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 75 ;
+	}
 #Mean period of wind waves
 '140236' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
+	}
+#Mean direction of total swell
+'140238' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 74 ;
+	}
+#2D wave spectra (single)
+'140251' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 86 ;
 	}
 #Eastward sea water velocity
 '151131' = {
@@ -4923,6 +6925,76 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	 typeOfFirstFixedSurface = 160 ;
+	}
+#Skin reservoir content
+'160198' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	}
+#Vertical integral of mass of atmosphere
+'162053' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated kinetic energy
+'162059' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated enthalpy
+'162060' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated potential + internal energy
+'162061' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertical integral of potential+internal+latent energy
+'162062' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 21 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column vertically-integrated total energy
+'162063' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertical integral of eastward heat flux
+'162069' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertical integral of northward heat flux
+'162070' = {
+	 discipline = 0 ;
+	 parameterCategory = 21 ;
+	 parameterNumber = 20 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Vertical integral of eastward water vapour flux
 '162071' = {
@@ -4939,6 +7011,12 @@
 	 parameterNumber = 151 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Vertically integrated moisture divergence flux
+'162084' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 165 ;
 	}
 #Surface runoff
 '174008' = {
@@ -5089,6 +7167,48 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Minimum vertical gradient of refractivity inside trapping layer
+'228015' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 45 ;
+	}
+#Mean vertical gradient of refractivity inside trapping layer
+'228016' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 44 ;
+	}
+#Duct base height
+'228017' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 41 ;
+	}
+#Trapping layer base height
+'228018' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 42 ;
+	}
+#Trapping layer top height
+'228019' = {
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 43 ;
+	}
+#U-component of neutral wind
+'228131' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 56 ;
+	}
+#V-component of neutral wind
+'228132' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 57 ;
 	}
 #100 metre U wind component
 '228246' = {
@@ -5335,12 +7455,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Surface roughness
-'173' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
-	}
 #Surface net short-wave (solar) radiation
 '176' = {
 	 discipline = 0 ;
@@ -5527,12 +7641,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 28 ;
 	}
-#Total snowfall
-'260025' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 29 ;
-	}
 #Precipitable water category
 '260026' = {
 	 discipline = 0 ;
@@ -5677,19 +7785,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 54 ;
-	}
-#Convective snowfall rate water equivalent
-'260051' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 55 ;
-	}
-#Large scale snowfall rate water equivalent
-'260052' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 56 ;
-	 typeOfFirstFixedSurface = 1 ;
 	}
 #Total snowfall rate
 '260053' = {
@@ -5919,7 +8014,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 50 ;
 	}
-#UV index 
+#UV index
 '260094' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
@@ -6453,12 +8548,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 8 ;
 	}
-#Volumetric soil moisture content
-'260185' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 9 ;
-	}
 #Ground heat flux
 '260186' = {
 	 discipline = 2 ;
@@ -6549,59 +8638,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 27 ;
 	}
-#Upper layer soil temperature
-'260201' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 1 ;
-	}
-#Upper layer soil moisture
-'260202' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 2 ;
-	}
-#Lower layer soil moisture
-'260203' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 3 ;
-	}
-#Bottom layer soil temperature
-'260204' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 4 ;
-	}
-#Liquid volumetric soil moisture (non-frozen)
-'260205' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 5 ;
-	}
 #Number of soil layers in root zone
 '260206' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 6 ;
-	}
-#Transpiration stress-onset (soil moisture)
-'260207' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 7 ;
-	}
-#Direct evaporation cease (soil moisture)
-'260208' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 8 ;
-	}
-#Soil porosity
-'260209' = {
-	 discipline = 2 ;
-	 parameterCategory = 3 ;
-	 parameterNumber = 9 ;
 	}
 #Liquid volumetric soil moisture (non-frozen)
 '260210' = {
@@ -6675,7 +8716,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 3 ;
 	}
-#Estimated u component of wind 
+#Estimated u component of wind
 '260222' = {
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
@@ -6783,7 +8824,7 @@
 	 parameterCategory = 191 ;
 	 parameterNumber = 0 ;
 	}
-#Albedo
+#Forecast albedo
 '260509' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;
@@ -6939,13 +8980,13 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 16 ;
 	}
-#U-component of current 
+#U-component of current
 '3049' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 2 ;
 	}
-#V-component of current 
+#V-component of current
 '3050' = {
 	 discipline = 10 ;
 	 parameterCategory = 1 ;
@@ -7040,12 +9081,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 7 ;
-	}
-#Snow melt
-'3099' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 16 ;
 	}
 #Direction of swell waves
 '3104' = {
@@ -7162,7 +9197,7 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 '228144' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

@@ -1,7 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.6, Grid point data - simple packing with preprocessing
-# Octets 6-nn : Binary data values - binary string, with each (scaled)
 
 meta codedValues data_g2simple_packing_with_preprocessing(
         section7Length,

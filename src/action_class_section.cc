@@ -74,20 +74,17 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-#if 0
-/* new GCC compiler v4.5.0 complains function is defined but not used*/
-static void check_sections(grib_section *s,grib_handle* h)
-{
-    grib_accessor *a = s?s->block->first:NULL;
-    if(s) Assert(s->h == h);
-    while(a)
-    {
-      Assert(grib_handle_of_accessor(a) == h);
-      check_sections(a->sub_section,h);
-      a = a->next;
-    }
-}
-#endif
+// static void check_sections(grib_section *s,grib_handle* h)
+// {
+//     grib_accessor *a = s?s->block->first:NULL;
+//     if(s) Assert(s->h == h);
+//     while(a)
+//     {
+//       Assert(grib_handle_of_accessor(a) == h);
+//       check_sections(a->sub_section,h);
+//       a = a->next;
+//     }
+// }
 
 static int notify_change(grib_action* act, grib_accessor* notified,
                          grib_accessor* changed)
@@ -196,10 +193,8 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     grib_get_block_length(tmp_handle->root, &len);
     grib_context_log(h->context, GRIB_LOG_DEBUG, "-------------  TMP BLOCK IS sectlen=%d buffer=%d", len, tmp_handle->buffer->ulength);
 
-#if 0
-    if(h->context->debug > 10)
-        grib_dump_content(tmp_handle,stdout,NULL,0,NULL);
-#endif
+    //if(h->context->debug > 10)
+    //    grib_dump_content(tmp_handle,stdout,NULL,0,NULL);
 
     /* Assert(tmp_handle->buffer->ulength == len); */
     /* grib_empty_section(h->context,old_section); */

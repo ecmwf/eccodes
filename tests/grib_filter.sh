@@ -199,11 +199,20 @@ cat >$tempFilt <<EOF
 switch (edition) {
   case 1: print "1";
   case 2: print "2";
-  default: print "what is this?";assert(0);
+  default: print "[file]: what is this?"; assert(0);
 }
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+cat >$tempFilt <<EOF
+switch (packingType) {
+  case "grid_simple": print "simple";
+  case "grid_ccsds":  print "ccsds";
+  case "spectral_complex": print "spectral";
+  default: print "[file]: what is this?"; assert(0);
+}
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2 ${data_dir}/ccsds.grib2 $data_dir/spherical_model_level.grib2
 
 echo "Test MISSING"
 # -----------------
@@ -278,6 +287,26 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "ECCODES ERROR.*Number is too large" $tempOut
+
+
+echo "Padded count for filenames"
+# -----------------------------------------
+input=${data_dir}/tigge_af_ecmwf.grib2
+tempDir=temp.${label}.dir
+rm -fr $tempDir
+mkdir -p $tempDir
+cd $tempDir
+cat >$tempFilt <<EOF
+  meta count_padded sprintf("%.2d", count);
+  write "out__[count_padded].grib";
+EOF
+${tools_dir}/grib_filter $tempFilt $input
+[ -f out__01.grib ]
+[ -f out__02.grib ]
+[ -f out__39.grib ]
+[ -f out__40.grib ]
+cd ..
+rm -rf $tempDir
 
 
 # Clean up

@@ -50,7 +50,7 @@ bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a
 {
     bufr_descriptor* v = a->v[0];
     if (a->n == 0) {
-        DebugAssert(0);
+        DEBUG_ASSERT(0);
     }
     a->n--;
     a->v++;

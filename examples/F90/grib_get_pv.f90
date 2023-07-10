@@ -16,7 +16,7 @@ program grib_get_pv
    integer                         :: infile
    integer                         :: igrib
    integer                         :: PVPresent, nb_pv
-   real(kind=8), dimension(:), allocatable :: pv
+   real(kind=4), dimension(:), allocatable :: pv
 
    call codes_open_file(infile, '../../data/reduced_gaussian_model_level.grib1', 'r')
 

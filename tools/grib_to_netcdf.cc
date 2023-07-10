@@ -12,7 +12,7 @@
 
 #ifdef HAVE_NETCDF
 
-#include <math.h>
+#include <cmath>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -1744,15 +1744,12 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
 
     struct stuff_1 s;
 
-#if 0
-    const request *lang = mars_language_from_request(r);
-    int count = 0;
-
-    count = init_axis(lang);
-    grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
-    /* print_all_requests(mars_language_from_request(r)); */
-    grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
-#endif
+//     const request *lang = mars_language_from_request(r);
+//     int count = 0;
+//     count = init_axis(lang);
+//     grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
+//     /* print_all_requests(mars_language_from_request(r)); */
+//     grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
 
     s.c = new_hypercube(r);
     s.r = clone_one_request(r);
@@ -2248,7 +2245,7 @@ static int def_latlon(int ncid, fieldset* fs)
 
     field* g = get_field(fs, 0, expand_mem);
 
-    DebugAssert(check_grid(g) == GRIB_SUCCESS);
+    DEBUG_ASSERT(check_grid(g) == GRIB_SUCCESS);
 
     if ((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
@@ -2632,8 +2629,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      return;
     }
     */
-    DebugAssert(vals);
-    DebugAssert(n > 0);
+    DEBUG_ASSERT(vals);
+    DEBUG_ASSERT(n > 0);
     if (!vals) return;
 
     switch (nctype) {
@@ -2817,9 +2814,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             return e;
         }
 
-#if 0
-        bool missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
-#endif
+        // bool missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
 
         r = field_to_request(g);
         if (!missing) {
@@ -3119,14 +3114,12 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
-#if 0
-        if(subsets[i].att.other)
-        {
-            const char *txt = subsets[i].att.long_name;
-            stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
-            check_err("nc_put_att_text", stat,__LINE__,__FILE__);
-        }
-#endif
+        // if(subsets[i].att.other)
+        // {
+        //     const char *txt = subsets[i].att.long_name;
+        //     stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
+        //     check_err("nc_put_att_text", stat,__LINE__,__FILE__);
+        // }
 
         if (subsets[i].att.metadata) {
             parameter* p = subsets[i].att.metadata->params;
@@ -3200,13 +3193,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err("nc_put_att_text", stat, __LINE__);
 
-#if 0
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
-        check_err(stat,__LINE__,__FILE__);
-
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
-        check_err(stat,__LINE__,__FILE__);
-#endif
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
+        //check_err(stat,__LINE__,__FILE__);
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
+        //check_err(stat,__LINE__,__FILE__);
 
         if (setup.title) {
             stat = nc_put_att_text(ncid, NC_GLOBAL, "title", strlen(setup.title), setup.title);

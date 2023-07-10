@@ -29,11 +29,19 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Surface roughness (climatological)
+'surface_roughness_length' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 discipline = 0 ;
 	 parameterCategory = 4 ;
-	 parameterNumber = 1 ;
+	 parameterNumber = 9 ;
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
@@ -142,7 +150,7 @@
 	 constituentType = 11 ;
 	 is_chemical = 1 ;
 	}
-#Sea surface salinity
+#Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -183,6 +191,18 @@
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Heat flux correction
+'heat_flux_correction' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 255 ;
 	 scaledValueOfFirstFixedSurface = 0 ;
@@ -333,12 +353,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Surface roughness
-'surface_roughness_length' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
-	}
 #Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {
 	 discipline = 0 ;
@@ -363,7 +377,7 @@
 	 typeOfFirstFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Albedo
+#Forecast albedo
 'surface_albedo' = {
 	 discipline = 0 ;
 	 parameterCategory = 19 ;

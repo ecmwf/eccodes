@@ -1,8 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
 # Grid point data - Simple packing with logarithmic preprocessing
-constant typeOfPreProcessing=1;
+
+# Note from WMO document:
+# This template is experimental, was not validated at the time of publication and should be used only for bilateral previously agreed tests
+constant typeOfPreProcessing = 1;
 
 include "grib2/template.5.packing.def";
 
-ieeefloat   preProcessingParameter  : read_only;
+ieeefloat preProcessingParameter  : read_only;

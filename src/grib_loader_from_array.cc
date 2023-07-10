@@ -13,7 +13,7 @@
 
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 
 int grib_lookup_long_from_array(grib_context* gc, grib_loader* loader, const char* name, long* lvalue)
 {
@@ -55,176 +55,176 @@ int grib_lookup_long_from_array(grib_context* gc, grib_loader* loader, const cha
 
     return GRIB_SUCCESS;
 }
-#if 0
-int grib_init_accessor_from_array(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
-{
-    grib_handle* h = grib_handle_of_accessor(ga);
-    int retval     = GRIB_SUCCESS;
-    char* strvalue;
-    size_t len                 = 0;
-    int type                   = 0;
-    double* dvalue             = 0;
-    long* lvalue               = 0;
-    long lval                  = 0;
-    double dval                = 0;
-    int i                      = 0;
-    grib_associative_array* ar = NULL;
-    grib_runtime_type* value   = NULL;
 
-    ar = (grib_associative_array*)loader->data;
+// int grib_init_accessor_from_array(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
+// {
+//     grib_handle* h = grib_handle_of_accessor(ga);
+//     int retval     = GRIB_SUCCESS;
+//     char* strvalue;
+//     size_t len                 = 0;
+//     int type                   = 0;
+//     double* dvalue             = 0;
+//     long* lvalue               = 0;
+//     long lval                  = 0;
+//     double dval                = 0;
+//     int i                      = 0;
+//     grib_associative_array* ar = NULL;
+//     grib_runtime_type* value   = NULL;
 
-    grib_context_log(h->context, GRIB_LOG_DEBUG, "Initialize  %s", ga->name);
+//     ar = (grib_associative_array*)loader->data;
 
-    retval = grib_associative_array_get(ar, ga->name, &value);
+//     grib_context_log(h->context, GRIB_LOG_DEBUG, "Initialize  %s", ga->name);
 
-    if ((retval != GRIB_ARRAY_SUCCESS) && default_value) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to default value", ga->name);
-        grib_pack_expression(ga, grib_arguments_get_expression(h, default_value, 0));
-        return GRIB_SUCCESS;
-    }
+//     retval = grib_associative_array_get(ar, ga->name, &value);
 
-    if (ga->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting  %s  ignored (read only)", ga->name);
-        return GRIB_SUCCESS;
-    }
+//     if ((retval != GRIB_ARRAY_SUCCESS) && default_value) {
+//         grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to default value", ga->name);
+//         grib_pack_expression(ga, grib_arguments_get_expression(h, default_value, 0));
+//         return GRIB_SUCCESS;
+//     }
 
-    if (retval != GRIB_ARRAY_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_DEBUG,
-                         "Grib array error %d", retval);
-        if ((ga->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG,
-                             "Setting  %s  ignored (optional or can be missing)", ga->name);
-            return GRIB_SUCCESS;
-        }
-        else {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "%s  required", ga->name);
-            return retval;
-        }
-    }
+//     if (ga->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) {
+//         grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting  %s  ignored (read only)", ga->name);
+//         return GRIB_SUCCESS;
+//     }
 
-    if (value && grib_runtimetype_get_type(value, &type) == GRIB_RUNTIMETYPE_SUCCESS) {
-        if (type == GRIB_RUNTIMETYPE_CHAR) {
-            grib_runtimetype_get_char(value, &strvalue, &len);
-            switch (grib_accessor_get_native_type(ga)) {
-                case GRIB_TYPE_STRING:
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to string %s",
-                                     ga->name, strvalue);
-                    grib_set_string_internal(h, ga->name, strvalue, &len);
-                    break;
+//     if (retval != GRIB_ARRAY_SUCCESS) {
+//         grib_context_log(h->context, GRIB_LOG_DEBUG,
+//                          "Grib array error %d", retval);
+//         if ((ga->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)) {
+//             grib_context_log(h->context, GRIB_LOG_DEBUG,
+//                              "Setting  %s  ignored (optional or can be missing)", ga->name);
+//             return GRIB_SUCCESS;
+//         }
+//         else {
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "%s  required", ga->name);
+//             return retval;
+//         }
+//     }
 
-                case GRIB_TYPE_LONG:
-                    if (!strcmp(strvalue, "MISSING"))
-                        lval = GRIB_MISSING_LONG;
-                    else
-                        lval = atol(strvalue);
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to long %ld", ga->name, lval);
-                    grib_set_long_internal(h, ga->name, lval);
-                    break;
+//     if (value && grib_runtimetype_get_type(value, &type) == GRIB_RUNTIMETYPE_SUCCESS) {
+//         if (type == GRIB_RUNTIMETYPE_CHAR) {
+//             grib_runtimetype_get_char(value, &strvalue, &len);
+//             switch (grib_accessor_get_native_type(ga)) {
+//                 case GRIB_TYPE_STRING:
+//                     grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to string %s",
+//                                      ga->name, strvalue);
+//                     grib_set_string_internal(h, ga->name, strvalue, &len);
+//                     break;
 
-                case GRIB_TYPE_DOUBLE:
-                    if (!strcmp(strvalue, "MISSING"))
-                        dval = GRIB_MISSING_DOUBLE;
-                    else if (sscanf(strvalue, "%lg", &dval) != 1) {
-                        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s wrong value format", ga->name);
-                    }
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to double %lg (%s)", ga->name, dval, strvalue);
-                    grib_set_double_internal(h, ga->name, dval);
-                    break;
+//                 case GRIB_TYPE_LONG:
+//                     if (!strcmp(strvalue, "MISSING"))
+//                         lval = GRIB_MISSING_LONG;
+//                     else
+//                         lval = atol(strvalue);
+//                     grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to long %ld", ga->name, lval);
+//                     grib_set_long_internal(h, ga->name, lval);
+//                     break;
 
-                case GRIB_TYPE_BYTES:
-                    grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to string %s",
-                                     ga->name, strvalue);
-                    grib_set_bytes_internal(h, ga->name, (unsigned char*)strvalue, &len);
-                    break;
+//                 case GRIB_TYPE_DOUBLE:
+//                     if (!strcmp(strvalue, "MISSING"))
+//                         dval = GRIB_MISSING_DOUBLE;
+//                     else if (sscanf(strvalue, "%lg", &dval) != 1) {
+//                         grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s wrong value format", ga->name);
+//                     }
+//                     grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to double %lg (%s)", ga->name, dval, strvalue);
+//                     grib_set_double_internal(h, ga->name, dval);
+//                     break;
 
-                case GRIB_TYPE_LABEL:
-                    break;
+//                 case GRIB_TYPE_BYTES:
+//                     grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting %s to string %s",
+//                                      ga->name, strvalue);
+//                     grib_set_bytes_internal(h, ga->name, (unsigned char*)strvalue, &len);
+//                     break;
 
-                default:
-                    grib_context_log(h->context, GRIB_LOG_ERROR, "Setting %s, cannot establish type %d [%s]", ga->name, grib_accessor_get_native_type(ga), ga->creator->cclass->name);
-                    break;
-            }
-        }
-        else {
-            if (grib_runtimetype_get_double(value, &dvalue, &len) == GRIB_RUNTIMETYPE_SUCCESS) {
-                switch (grib_accessor_get_native_type(ga)) {
-                    case GRIB_TYPE_LONG:
-                        lvalue = (long*)malloc(sizeof(long) * len);
-                        Assert(lvalue);
-                        for (i = 0; i < len; i++)
-                            lvalue[i] = (long)dvalue[i];
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting long array %s", ga->name);
-                        grib_set_long_array(h, ga->name, lvalue, len);
-                        free(lvalue);
-                        break;
+//                 case GRIB_TYPE_LABEL:
+//                     break;
 
-                    case GRIB_TYPE_DOUBLE:
-                        grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting double array %s", ga->name);
-                        grib_set_double_array(h, ga->name, dvalue, len);
-                        break;
+//                 default:
+//                     grib_context_log(h->context, GRIB_LOG_ERROR, "Setting %s, cannot establish type %d [%s]", ga->name, grib_accessor_get_native_type(ga), ga->creator->cclass->name);
+//                     break;
+//             }
+//         }
+//         else {
+//             if (grib_runtimetype_get_double(value, &dvalue, &len) == GRIB_RUNTIMETYPE_SUCCESS) {
+//                 switch (grib_accessor_get_native_type(ga)) {
+//                     case GRIB_TYPE_LONG:
+//                         lvalue = (long*)malloc(sizeof(long) * len);
+//                         Assert(lvalue);
+//                         for (i = 0; i < len; i++)
+//                             lvalue[i] = (long)dvalue[i];
+//                         grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting long array %s", ga->name);
+//                         grib_set_long_array(h, ga->name, lvalue, len);
+//                         free(lvalue);
+//                         break;
 
-                    default:
-                        grib_context_log(h->context, GRIB_LOG_ERROR, "Setting array %s, wrong type [%d]", ga->name, grib_accessor_get_native_type(ga));
-                        break;
-                }
-            }
-            else
-                grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s to double, wrong type (%d)",
-                                 ga->name, type);
-        }
-#if 0
-        switch(grib_accessor_get_native_type(ga))
-        {
-        case GRIB_TYPE_STRING:
-            if (grib_runtimetype_get_char(value,&strvalue,&strvalue_size) == GRIB_RUNTIMETYPE_SUCCESS) {
-                grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to string %s",
-                        ga->name, strvalue);
-                len=strlen(strvalue);
-                grib_set_string_internal(h,ga->name,strvalue,&len);
-            } else
-                grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to string, wrong type",
-                        ga->name);
-            break;
+//                     case GRIB_TYPE_DOUBLE:
+//                         grib_context_log(h->context, GRIB_LOG_DEBUG, "Setting double array %s", ga->name);
+//                         grib_set_double_array(h, ga->name, dvalue, len);
+//                         break;
 
-        case GRIB_TYPE_LONG:
-            if (grib_runtimetype_get_long(value,&lval,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
-                grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to long %d", ga->name, lval);
-                grib_set_long_internal(h,ga->name,*lval);
-            } else
-                grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to long, wrong type",
-                        ga->name);
-            break;
+//                     default:
+//                         grib_context_log(h->context, GRIB_LOG_ERROR, "Setting array %s, wrong type [%d]", ga->name, grib_accessor_get_native_type(ga));
+//                         break;
+//                 }
+//             }
+//             else
+//                 grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s to double, wrong type (%d)",
+//                                  ga->name, type);
+//         }
+// #if defined(OLD_IMPL)
+//         switch(grib_accessor_get_native_type(ga))
+//         {
+//         case GRIB_TYPE_STRING:
+//             if (grib_runtimetype_get_char(value,&strvalue,&strvalue_size) == GRIB_RUNTIMETYPE_SUCCESS) {
+//                 grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to string %s",
+//                         ga->name, strvalue);
+//                 len=strlen(strvalue);
+//                 grib_set_string_internal(h,ga->name,strvalue,&len);
+//             } else
+//                 grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to string, wrong type",
+//                         ga->name);
+//             break;
 
-        case GRIB_TYPE_DOUBLE:
-            if (grib_runtimetype_get_double(value,&dval,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
-                grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to long %d", ga->name, dval);
-                grib_set_double_internal(h,ga->name,*dval);
-            } else
-                grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to double, wrong type",
-                        ga->name);
-            break;
+//         case GRIB_TYPE_LONG:
+//             if (grib_runtimetype_get_long(value,&lval,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
+//                 grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to long %d", ga->name, lval);
+//                 grib_set_long_internal(h,ga->name,*lval);
+//             } else
+//                 grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to long, wrong type",
+//                         ga->name);
+//             break;
 
-        case GRIB_TYPE_BYTES:
-            if (grib_runtimetype_get_char(value,&strvalue,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
-                grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to string %s",
-                        ga->name, strvalue);
-                grib_set_bytes_internal(h,ga->name,(unsigned char*)strvalue,&len);
-            } else
-                grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to string, wrong type",
-                        ga->name);
-            break;
+//         case GRIB_TYPE_DOUBLE:
+//             if (grib_runtimetype_get_double(value,&dval,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
+//                 grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to long %d", ga->name, dval);
+//                 grib_set_double_internal(h,ga->name,*dval);
+//             } else
+//                 grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to double, wrong type",
+//                         ga->name);
+//             break;
 
-        case GRIB_TYPE_LABEL:
-            break;
+//         case GRIB_TYPE_BYTES:
+//             if (grib_runtimetype_get_char(value,&strvalue,&len) == GRIB_RUNTIMETYPE_SUCCESS) {
+//                 grib_context_log(h->context,GRIB_LOG_DEBUG, "Setting %s to string %s",
+//                         ga->name, strvalue);
+//                 grib_set_bytes_internal(h,ga->name,(unsigned char*)strvalue,&len);
+//             } else
+//                 grib_context_log(h->context,GRIB_LOG_ERROR, "Unable to set %s to string, wrong type",
+//                         ga->name);
+//             break;
 
-        default:
-            grib_context_log(h->context,GRIB_LOG_ERROR, "Setting %s, cannot establish type %d [%s]"
-                    , ga->name,grib_accessor_get_native_type(ga),ga->creator->cclass->name);
-            break;
-        }
-#endif
-    }
+//         case GRIB_TYPE_LABEL:
+//             break;
 
-    return retval;
-}
-#endif
+//         default:
+//             grib_context_log(h->context,GRIB_LOG_ERROR, "Setting %s, cannot establish type %d [%s]"
+//                     , ga->name,grib_accessor_get_native_type(ga),ga->creator->cclass->name);
+//             break;
+//         }
+// #endif
+//     }
+
+//     return retval;
+// }
+

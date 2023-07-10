@@ -37,19 +37,6 @@ static const unsigned long k[] = {
     0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1, 0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-#if 0
-static const unsigned long t = 32;
-
-static unsigned long rotate(unsigned long x,unsigned long c) { return (x << c) | (x >> (t-c)); }
-
-
-static unsigned long F(unsigned long x,unsigned long y,unsigned long z) { return (x&y)|((~x)&z); }
-static unsigned long G(unsigned long x,unsigned long y,unsigned long z) { return (x&z)|(y&(~z)); }
-static unsigned long H(unsigned long x,unsigned long y,unsigned long z) { return x^y^z;          }
-static unsigned long I(unsigned long x,unsigned long y,unsigned long z) { return y^(x|(~z));     }
-#endif
-
-
 #define ROT(x, c) ((x << c) | (x >> (32 - c)))
 
 #define ECC_F(x, y, z) ((x & y) | ((~x) & z))
@@ -80,7 +67,6 @@ static unsigned long I(unsigned long x,unsigned long y,unsigned long z) { return
 
 static void grib_md5_flush(grib_md5_state* s)
 {
-#if 1
     unsigned long a  = s->h0;
     unsigned long b  = s->h1;
     unsigned long c  = s->h2;
@@ -167,60 +153,6 @@ static void grib_md5_flush(grib_md5_state* s)
     I_(c, d, a, b, 2, 62);
     I_(b, c, d, a, 9, 63);
 
-#else
-    unsigned long i, g;
-    unsigned long a = s->h0;
-    unsigned long b = s->h1;
-    unsigned long c = s->h2;
-    unsigned long d = s->h3;
-    unsigned long f;
-    unsigned long temp;
-    unsigned long* w = &s->words[0];
-    unsigned long h;
-    for (i = 0; i < 16; i++) {
-        f    = F(b, c, d);
-        g    = i;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-
-    for (i = 16; i < 32; i++) {
-        f    = G(b, c, d);
-        g    = (5 * i + 1) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-    for (i = 32; i < 48; i++) {
-        f    = H(b, c, d);
-        g    = (3 * i + 5) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-    for (i = 48; i < 64; i++) {
-        f    = I(b, c, d);
-        g    = (7 * i) % 16;
-        temp = d;
-        d    = c;
-        c    = b;
-        h    = a + f + k[i] + w[g];
-        b    = b + rotate(h, r[i]);
-        a    = temp;
-    }
-
-#endif
-
     s->h0 += a;
     s->h1 += b;
     s->h2 += c;
@@ -288,7 +220,7 @@ void grib_md5_end(grib_md5_state* s, char* digest)
             U(s->h3 & 0xff), U((s->h3 >> 8) & 0xff), U((s->h3 >> 16) & 0xff), U((s->h3 >> 24) & 0xff));
 }
 
-#if 0
+#if defined(TESTING_MD5)
 
 main(int argc, char **argv)
 {

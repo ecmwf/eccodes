@@ -10,7 +10,7 @@ static int execute(grib_action* a,grib_handle* h);
 
 
 typedef struct grib_action_NAME {
-    grib_action          act;  
+    grib_action          act;
 MEMBERS
 } grib_action_NAME;
 

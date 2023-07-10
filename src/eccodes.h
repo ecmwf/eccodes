@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
     \ingroup keys_iterator
@@ -1359,6 +1358,10 @@ int codes_is_defined(const codes_handle* h, const char* key);
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */
 int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
+
+/* Returns 1 if the BUFR key is a coordinate descriptor and 0 otherwise.
+   The error code is the final argument */
+int codes_bufr_key_is_coordinate(const codes_handle* h, const char* key, int* err);
 
 int codes_set_missing(codes_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */
