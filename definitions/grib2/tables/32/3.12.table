@@ -1,0 +1,6 @@
+# Code table 3.12 - Numbering order of points 
+0 0 Ring ordering 
+1 1 Nested ordering 
+# 2-191 Reserved 
+# 192-254 Reserved for Local use
+255 255 missing
