@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "step_optimizer.h"
 
 /*
    This is used by make_class.pl
@@ -122,7 +123,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 {
     int err = 0;
     size_t slen = 2;
-    long step, hour, minute, second;
+    long step;
 
     /* Change units to seconds (highest resolution)
      * before computing the step value
@@ -132,17 +133,11 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     err = grib_get_long(h, "step", &step);
     if (err) return err;
 
-    hour = step/3600;
-    minute = step/60 % 60;
-    second = step % 60;
-    /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
+    long indicator = grib_get_long(h, "indicatorOfUnitOfTimeRange", &indicator);
+    auto stepOptimizer = Step(step, indicator);
+    stepOptimizer.optimizeUnit();
 
-    if (second) {
-        snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
-    } else {
-        if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
-        else snprintf(result, 1024, "%ldh", hour);
-    }
+    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_str());
 
     *length = strlen(result);
     return GRIB_SUCCESS;

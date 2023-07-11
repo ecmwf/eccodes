@@ -13,6 +13,7 @@
  *******************************************/
 
 #include "grib_api_internal.h"
+#include "step_optimizer.h"
 /*
    This is used by make_class.pl
 
@@ -139,23 +140,47 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t size = 0;
     long start = 0, theEnd = 0;
 
+    //0 m Minute
+    //1 h Hour
+    //2 D Day
+    //3 M Month
+    //4 Y Year
+    //5 10Y Decade
+    //6 30Y Normal (30 years)
+    //7 C Century
+    //10 3h 3 hours
+    //11 6h 6 hours
+    //12 12h 12 hours
+    //13 15m 15 minutes
+    //14 30m 30 minutes
+    //254 s Second
+
+
     ret = grib_get_long_internal(h, self->startStep, &start);
+    long indicatorOfUnitOfTimeRange;
+    ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange);
+
+    Step startOptimizer{(int) start, indicatorOfUnitOfTimeRange};
+    startOptimizer.optimizeUnit();
+
     if (ret)
         return ret;
 
     if (self->endStep == NULL) {
-        snprintf(buf, sizeof(buf), "%ld", start);
+        snprintf(buf, sizeof(buf), "%d%s", startOptimizer.value(), startOptimizer.unit_str());
     }
     else {
         ret = grib_get_long_internal(h, self->endStep, &theEnd);
+        Step endOptimizer{(int) theEnd, indicatorOfUnitOfTimeRange};
         if (ret)
             return ret;
 
         if (start == theEnd) {
-            snprintf(buf, sizeof(buf), "%ld", theEnd);
+            snprintf(buf, sizeof(buf), "%d%s", endOptimizer.value(), endOptimizer.unit_str());
         }
         else {
-            snprintf(buf, sizeof(buf), "%ld-%ld", start, theEnd);
+            auto [s, e] = findCommonUnits(startOptimizer, endOptimizer);
+            snprintf(buf, sizeof(buf), "%d-%d%s", s.value(), e.value(), e.unit_str());
         }
     }
 
