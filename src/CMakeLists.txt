@@ -10,7 +10,6 @@
 #
 list( APPEND eccodes_src_files
     step_optimizer.cc
-    timer.cc
     grib_api.h
     eccodes.h
     action.cc
@@ -264,7 +263,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_abstract_long_vector.cc
     grib_loader_from_handle.cc
     grib_bits.cc
-    grib_timer.cc
     grib_ibmfloat.cc
     grib_ieeefloat.cc
     grib_accessor_class_reference_value_error.cc
