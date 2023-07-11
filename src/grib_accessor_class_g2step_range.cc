@@ -138,7 +138,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     char buf[100];
     int ret     = 0;
     size_t size = 0;
-    long start = 0, theEnd = 0;
+    //long start = 0, theEnd = 0;
 
     //0 m Minute
     //1 h Hour
@@ -156,7 +156,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     //254 s Second
 
 
-    ret = grib_get_long_internal(h, self->startStep, &start);
+    //ret = grib_get_long_internal(h, self->startStep, &start);
     if (ret)
         return ret;
     long indicatorOfUnitOfTimeRange;
@@ -169,14 +169,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
 
-    Step startOptimizer{(int) forecastTime, indicatorOfUnitOfTimeRange};
-    startOptimizer.optimizeUnit();
+    Step step_a{(int) forecastTime, indicatorOfUnitOfTimeRange};
+    step_a.optimizeUnit();
 
     if (ret)
         return ret;
 
     if (self->endStep == NULL) {
-        snprintf(buf, sizeof(buf), "%d%s", startOptimizer.value(), startOptimizer.unit_str());
+        snprintf(buf, sizeof(buf), "%d%s", step_a.value(), step_a.unit_str());
     }
     else {
         long indicatorOfUnitForTimeRange;
@@ -187,18 +187,17 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         ret = grib_get_long_internal(h, "lengthOfTimeRange", &lengthOfTimeRange);
         if (ret)
             return ret;
-        //ret = grib_get_long_internal(h, self->endStep, &theEnd);
-        Step length{(int) lengthOfTimeRange, indicatorOfUnitForTimeRange};
-        Step endOptimizer = startOptimizer + length;
-        if (ret)
-            return ret;
 
-        if (start == theEnd) {
-            snprintf(buf, sizeof(buf), "%d%s", endOptimizer.value(), endOptimizer.unit_str());
+        Step length{(int) lengthOfTimeRange, indicatorOfUnitForTimeRange};
+        Step step_b = step_a + length;
+        step_b.optimizeUnit();
+        auto [a, b] = findCommonUnits(step_a, step_b);
+
+        if (a.value() == 0) {
+            snprintf(buf, sizeof(buf), "%d%s", step_b.value(), step_b.unit_str());
         }
         else {
-            auto [s, e] = findCommonUnits(startOptimizer, endOptimizer);
-            snprintf(buf, sizeof(buf), "%d-%d%s", s.value(), e.value(), e.unit_str());
+            snprintf(buf, sizeof(buf), "%d-%d%s", a.value(), b.value(), a.unit_str());
         }
     }
 
