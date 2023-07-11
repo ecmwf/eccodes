@@ -32,5 +32,5 @@
 30 30 Downdraught detrainment rate (kg m-3 s-1)
 31 31 Unbalanced component of logarithm of surface pressure (-)
 # 32-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

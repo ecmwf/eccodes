@@ -40,11 +40,11 @@
 38 38 Mass density of cloud droplets (kg m-3)
 39 39 Mass density of cloud ice (kg m-3)
 40 40 Mass density of convective cloud water droplets (kg m-3)
-# 41-46 Reserved 
+# 41-46 Reserved
 47 47 Volume fraction of cloud water droplets (Numeric)
 48 48 Volume fraction of cloud ice particles (Numeric)
 49 49 Volume fraction of cloud (ice and/or water) (Numeric)
 50 50 Fog (%)
 # 51-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

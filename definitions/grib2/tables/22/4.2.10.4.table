@@ -7,7 +7,7 @@
 5 5 Ocean vertical salt diffusivity (m2/s)
 6 6 Ocean vertical momentum diffusivity (m2/s)
 7 7 Bathymetry (m)
-# 8-10 Reserved 
+# 8-10 Reserved
 11 11 Shape factor with respect to salinity profile (-)
 12 12 Shape factor with respect to temperature profile in thermocline (-)
 13 13 Attenuation coefficient of water with respect to solar radiation (/m)
@@ -19,6 +19,6 @@
 19 19 Water potential density (rho theta) (kg m-3)
 20 20 Water potential density anomaly (sigma theta) (kg m-3)
 21 21 Practical salinity (Numeric)
-# 22-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 22-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

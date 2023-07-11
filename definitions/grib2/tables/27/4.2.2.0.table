@@ -41,5 +41,5 @@
 39 39 Evapotranspiration rate (kg m-2 s-1)
 40 40 Potential evapotranspiration rate (kg m-2 s-1)
 # 41-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

@@ -14,12 +14,12 @@
 12 12 Downward UV radiation (W m-2)
 13 13 Direct short-wave radiation flux (W m-2)
 14 14 Diffuse short-wave radiation flux (W m-2)
-# 15-49 Reserved 
+# 15-49 Reserved
 50 50 UV index (under clear sky) (Numeric)
 51 51 UV index (Numeric)
 52 52 Downward short-wave radiation flux, clear sky (W m-2)
 53 53 Upward short-wave radiation flux, clear sky (W m-2)
 54 54 Direct normal short-wave radiation flux (W m-2)
 # 55-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing
