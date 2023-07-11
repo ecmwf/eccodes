@@ -193,12 +193,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         step_b.optimizeUnit();
         auto [a, b] = findCommonUnits(step_a, step_b);
 
-        //if (a.value() == 0) {
-        //    snprintf(buf, sizeof(buf), "%d%s", step_b.value(), step_b.unit_str());
-        //}
-        //else {
+        if (a.value() == 0) {
+            snprintf(buf, sizeof(buf), "0-%d%s", step_b.value(), step_b.unit_str());
+        }
+        else {
             snprintf(buf, sizeof(buf), "%d-%d%s", a.value(), b.value(), a.unit_str());
-        //}
+        }
     }
 
     size = strlen(buf) + 1;
