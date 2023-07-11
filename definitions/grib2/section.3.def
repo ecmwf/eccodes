@@ -90,20 +90,20 @@ concept gridType {
 "regular_stretched_gg"         = { gridDefinitionTemplateNumber=42; PLPresent=0; } # = stretched_gg
 "regular_stretched_rotated_gg" = { gridDefinitionTemplateNumber=43; PLPresent=0; } # = stretched_rotated_gg
 
- "sh"                    = { gridDefinitionTemplateNumber=50; PLPresent=0;}
- "rotated_sh"            = { gridDefinitionTemplateNumber=51; PLPresent=0;}
- "stretched_sh"          = { gridDefinitionTemplateNumber=52; PLPresent=0;}
- "stretched_rotated_sh"  = { gridDefinitionTemplateNumber=53; PLPresent=0;}
- "space_view"            = { gridDefinitionTemplateNumber=90; PLPresent=0;}
- "triangular_grid"       = { gridDefinitionTemplateNumber=100;PLPresent=0;}
- "unstructured_grid"     = { gridDefinitionTemplateNumber=101;PLPresent=0;}
+ "sh"                      = { gridDefinitionTemplateNumber=50; PLPresent=0;}
+ "rotated_sh"              = { gridDefinitionTemplateNumber=51; PLPresent=0;}
+ "stretched_sh"            = { gridDefinitionTemplateNumber=52; PLPresent=0;}
+ "stretched_rotated_sh"    = { gridDefinitionTemplateNumber=53; PLPresent=0;}
+ "space_view"              = { gridDefinitionTemplateNumber=90; PLPresent=0;}
+ "triangular_grid"         = { gridDefinitionTemplateNumber=100;PLPresent=0;}
+ "unstructured_grid"       = { gridDefinitionTemplateNumber=101;PLPresent=0;}
  "equatorial_azimuthal_equidistant" = { gridDefinitionTemplateNumber=110; PLPresent=0;}
- "azimuth_range"         = { gridDefinitionTemplateNumber=120;PLPresent=0; }
- "irregular_latlon"      = { gridDefinitionTemplateNumber=130;PLPresent=0; }
+ "azimuth_range"           = { gridDefinitionTemplateNumber=120;PLPresent=0; }
+ "irregular_latlon"        = { gridDefinitionTemplateNumber=130;PLPresent=0; }
  "lambert_azimuthal_equal_area"= { gridDefinitionTemplateNumber=140;PLPresent=0; }
- "cross_section"         = { gridDefinitionTemplateNumber=1000;PLPresent=0; }
- "Hovmoller"             = { gridDefinitionTemplateNumber=1100;PLPresent=0; }
- "time_section"          = { gridDefinitionTemplateNumber=1200;PLPresent=0; }
+ "cross_section"           = { gridDefinitionTemplateNumber=1000;PLPresent=0; }
+ "Hovmoller"               = { gridDefinitionTemplateNumber=1100;PLPresent=0; }
+ "time_section"            = { gridDefinitionTemplateNumber=1200;PLPresent=0; }
  "lambert_lam"             = { gridDefinitionTemplateNumber=33; PLPresent=0; }
  "mercator_lam"            = { gridDefinitionTemplateNumber=13; PLPresent=0; }
  "polar_stereographic_lam" = { gridDefinitionTemplateNumber=23; PLPresent=0; }
@@ -111,9 +111,10 @@ concept gridType {
  "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0; }
  "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0; }
 
- "healpix" = { centre=98; localTablesVersion=1; gridDefinitionTemplateNumber=33000; PLPresent=0; }
+ "healpix"                 = { centre=98; localTablesVersion=1; gridDefinitionTemplateNumber=33000; PLPresent=0; }
+ "HEALPix"                 = { gridDefinitionTemplateNumber=150; PLPresent=0; }
 
- "ncep_32769" = { centre=7; gridDefinitionTemplateNumber=32769; PLPresent=0; }
+ "ncep_32769"              = { centre=7; gridDefinitionTemplateNumber=32769; PLPresent=0; }
 
  "unknown"               = {PLPresent=0;}
  "unknown_PLPresent"     = {PLPresent=1;}
