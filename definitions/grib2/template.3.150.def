@@ -5,19 +5,3 @@ include "grib2/template.3.shape_of_the_earth.def";
 include "grib2/template.3.resolution_flags.def";
 include "grib2/template.3.healpix.def";
 
-# Number of grid points along one side of one of the 12 base resolution pixels (>=1)
-unsigned[4] nside: dump;
-alias N=nside;
-alias numberOfSides=nside;
-alias geography.nside=nside;
-
-# Ordering convention of points. Default = ring
-unsigned[1] ordering = 0: dump;
-
-concept orderingConvention(unknown) {
- "ring"   = { ordering = 0; }
- "nested" = { ordering = 1; }
-} : dump;
-
-# No scanning mode needed; healpix is a standardized way of ordering points
-# include "grib2/template.3.scanning_mode.def";
