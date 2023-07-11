@@ -53,6 +53,15 @@ Step::Step(int value, long indicatorOfUnitOfTimeRange) {
     unit_ = u;
 }
 
+Step::Step(int value, Unit u) {
+    static_assert(sizeof(int) == 4, "int is not 4 bytes");
+    if (!(value >= 0 && value <= std::numeric_limits<int>::max())) {
+        throw std::out_of_range("Step is out of range.");
+    }
+    value_ = value;
+    unit_ = u;
+}
+
 Step& Step::optimizeUnit() {
     if (value_ == 0) {
         return *this;
@@ -107,6 +116,12 @@ bool Step::operator==(const Step& other) const {
     }
     return false;
 }
+
+Step operator+(const Step step1, const Step step2) {
+    auto [a, b] = findCommonUnits(step1, step2);
+    return Step(a.value_ + b.value_, a.unit_);
+}
+
 
 std::pair<Step, Step> findCommonUnits(Step startStep, Step endStep) {
     if (startStep.value_ == 0 || endStep.value_ == 0) {

@@ -11,6 +11,7 @@
 list( APPEND eccodes_src_files
     step_optimizer.cc
     grib_api.h
+    grib_timer.cc
     eccodes.h
     action.cc
     action_class_alias.cc

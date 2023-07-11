@@ -157,10 +157,19 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 
     ret = grib_get_long_internal(h, self->startStep, &start);
+    if (ret)
+        return ret;
     long indicatorOfUnitOfTimeRange;
+    long forecastTime;
     ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange);
+    if (ret)
+        return ret;
+    ret = grib_get_long_internal(h, "forecastTime", &forecastTime);
+    if (ret)
+        return ret;
 
-    Step startOptimizer{(int) start, indicatorOfUnitOfTimeRange};
+
+    Step startOptimizer{(int) forecastTime, indicatorOfUnitOfTimeRange};
     startOptimizer.optimizeUnit();
 
     if (ret)
@@ -170,8 +179,17 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         snprintf(buf, sizeof(buf), "%d%s", startOptimizer.value(), startOptimizer.unit_str());
     }
     else {
-        ret = grib_get_long_internal(h, self->endStep, &theEnd);
-        Step endOptimizer{(int) theEnd, indicatorOfUnitOfTimeRange};
+        long indicatorOfUnitForTimeRange;
+        long lengthOfTimeRange;
+        ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &indicatorOfUnitForTimeRange);
+        if (ret)
+            return ret;
+        ret = grib_get_long_internal(h, "lengthOfTimeRange", &lengthOfTimeRange);
+        if (ret)
+            return ret;
+        //ret = grib_get_long_internal(h, self->endStep, &theEnd);
+        Step length{(int) lengthOfTimeRange, indicatorOfUnitForTimeRange};
+        Step endOptimizer = startOptimizer + length;
         if (ret)
             return ret;
 
