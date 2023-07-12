@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <utility>
 #include <limits>
+#include <iostream>
 
 #include "step_optimizer.h"
 
@@ -83,6 +84,10 @@ Step& Step::optimizeUnit() {
 }
 
 Step& Step::setUnit(Unit new_unit) {
+    if (value_ == 0) {
+        unit_ = new_unit;
+        return *this;
+    }
     if (unit_ == new_unit) {
         return *this;
     }
@@ -125,6 +130,17 @@ Step operator+(const Step step1, const Step step2) {
 
 std::pair<Step, Step> findCommonUnits(Step startStep, Step endStep) {
     if (startStep.value_ == 0 || endStep.value_ == 0) {
+        if (startStep.value_ == 0 && endStep.value_ == 0) {
+            Unit unit = std::max(startStep.unit_, endStep.unit_);
+            startStep.setUnit(unit);
+            endStep.setUnit(unit);
+        }
+        else if (startStep.value_ == 0) {
+            startStep.setUnit(endStep.unit_);
+        }
+        else if (endStep.value_ == 0) {
+            endStep.setUnit(startStep.unit_);
+        }
         return {startStep, endStep};
     }
 
