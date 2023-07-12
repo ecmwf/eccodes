@@ -7198,17 +7198,23 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 43 ;
 	}
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 'u10n' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#V-component of neutral wind
+#10 metre v-component of neutral wind
 'v10n' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #100 metre U wind component
 '100u' = {
