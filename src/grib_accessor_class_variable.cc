@@ -240,6 +240,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     *len = 1;
     return GRIB_SUCCESS;
 }
+
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_variable* self = (grib_accessor_variable*)a;

@@ -146,7 +146,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_bit* ac = (grib_accessor_bit*)a;
+    grib_accessor_bit* self = (grib_accessor_bit*)a;
     grib_accessor* owner  = NULL;
     unsigned char* mdata  = 0;
     if (*len < 1) {
@@ -155,10 +155,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    owner = grib_find_accessor(grib_handle_of_accessor(a), ac->owner);
+    owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
 
     if (!owner) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ", ac->owner, a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ", self->owner, a->name);
         *len = 0;
         return GRIB_NOT_FOUND;
     }
@@ -169,9 +169,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
     if (a->context->debug) {
         /* Print bit positions from 1 (MSB) */
-        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - ac->bit_index, owner->name, (*val > 0) );
+        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - self->bit_index, owner->name, (*val > 0) );
     }
-    grib_set_bit(mdata, 7 - ac->bit_index, *val > 0);
+    grib_set_bit(mdata, 7 - self->bit_index, *val > 0);
 
     *len = 1;
     return GRIB_SUCCESS;
