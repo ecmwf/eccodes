@@ -51,8 +51,6 @@
    MEMBERS=int double_dirty
    MEMBERS=int float_dirty
    MEMBERS=size_t size
-   MEMBERS=int double_dirty
-   MEMBERS=int float_dirty
 
    END_CLASS_DEF
 
