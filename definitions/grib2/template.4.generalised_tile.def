@@ -2,7 +2,7 @@
 
 # Generalised tile specifications
 codetable[1] tileClassification ('4.242.table',masterDir,localDir) : dump;
-codetable[2] typeOfTile ('4.251.table',masterDir,localDir) : dump;
+codetable[2] typeOfTile ('4.252.table',masterDir,localDir) : dump;
 unsigned[1]  numberOfUsedSpatialTiles=1 : dump; # Maximum number of tiles used in the entire grid
 unsigned[1]  numberOfUsedTileAttributeCombinationsForTypeOfTile=1 : dump; # Number of tile attributes for a given tile in the gridbox
 unsigned[1]  numberOfUsedTileAttributesForTileAttributeCombination=1 : dump; # Number of used attributes in a given combination
