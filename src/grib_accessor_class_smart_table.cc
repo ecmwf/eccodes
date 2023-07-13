@@ -161,8 +161,7 @@ static void thread_init()
 }
 #endif
 
-static int grib_load_smart_table(grib_context* c, const char* filename,
-                                 const char* recomposed_name, size_t size, grib_smart_table* t);
+static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
