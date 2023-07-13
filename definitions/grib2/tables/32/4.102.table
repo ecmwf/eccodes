@@ -1,0 +1,11 @@
+# Code table 4.102 - Statistical processing of reference period
+0 0 Average
+1 1 Accumulation
+2 2 Maximum
+3 3 Minimum
+4 4 Median
+# 5-19 Reserved
+20 20 Model Climate
+# 21-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
