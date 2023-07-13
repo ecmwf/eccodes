@@ -25,6 +25,7 @@ ${tools_dir}/grib_compare $infile $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
+${tools_dir}/grib_compare -b referenceValue $infile $outfile
 ${tools_dir}/grib_compare -H $infile $outfile
 
 
