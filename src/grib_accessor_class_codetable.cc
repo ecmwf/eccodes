@@ -268,14 +268,14 @@ static void dump_codetable(grib_codetable* atable)
     }
 }
 #endif
-static grib_codetable* load_table(grib_accessor_codetable* self)
+static grib_codetable* load_table(grib_accessor* a)
 {
+    grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     size_t size           = 0;
     grib_handle* h        = ((grib_accessor*)self)->parent->h;
     grib_context* c       = h->context;
     grib_codetable* t     = NULL;
     grib_codetable* next  = NULL;
-    grib_accessor* a      = (grib_accessor*)self;
     char* filename        = 0;
     char recomposed[1024] = {0,};
     char localRecomposed[1024] = {0,};
@@ -533,7 +533,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     long value;
 
     if (!self->table_loaded) {
-        self->table        = load_table(self); /* may return NULL */
+        self->table        = load_table(a); /* may return NULL */
         self->table_loaded = 1;
     }
     table = self->table;
@@ -596,7 +596,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         return err;
 
     if (!self->table_loaded) {
-        self->table        = load_table(self); /* may return NULL */
+        self->table        = load_table(a); /* may return NULL */
         self->table_loaded = 1;
     }
     table = self->table;
@@ -643,7 +643,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 #endif
 
     if (!self->table_loaded) {
-        self->table        = load_table(self); /* may return NULL */
+        self->table        = load_table(a); /* may return NULL */
         self->table_loaded = 1;
     }
     table = self->table;
@@ -766,7 +766,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     rlen = 1; /* ECC-480 Performance: avoid func call overhead of grib_value_count */
 
     if (!self->table_loaded) {
-        self->table        = load_table(self); /* may return NULL */
+        self->table        = load_table(a); /* may return NULL */
         self->table_loaded = 1;
     }
 

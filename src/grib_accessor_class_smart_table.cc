@@ -161,8 +161,7 @@ static void thread_init()
 }
 #endif
 
-static int grib_load_smart_table(grib_context* c, const char* filename,
-                                 const char* recomposed_name, size_t size, grib_smart_table* t);
+static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
@@ -185,8 +184,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     self->tableCodes     = 0;
 }
 
-static grib_smart_table* load_table(grib_accessor_smart_table* self)
+static grib_smart_table* load_table(grib_accessor* a)
 {
+    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
     size_t size            = 0;
     grib_handle* h         = ((grib_accessor*)self)->parent->h;
     grib_context* c        = h->context;
@@ -416,7 +416,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         return err;
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
     table = self->table;
 
     if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
@@ -457,7 +457,7 @@ static int get_table_codes(grib_accessor* a)
     table_size = (1 << self->widthOfCode); /* 2 ^ self->widthOfCode */
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
 
     err = grib_get_size(grib_handle_of_accessor(a), self->values, &size);
     if (err) {
