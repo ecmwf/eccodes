@@ -151,8 +151,7 @@ grib_accessor_class* grib_accessor_class_codetable = &_grib_accessor_class_codet
 
 /* END_CLASS_IMP */
 
-static int grib_load_codetable(grib_context* c, const char* filename,
-                               const char* recomposed_name, size_t size, grib_codetable* t);
+static int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {

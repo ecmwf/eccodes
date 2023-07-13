@@ -229,27 +229,28 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_accessor_variable* ac = (grib_accessor_variable*)a;
+    grib_accessor_variable* self = (grib_accessor_variable*)a;
 
     if (*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    *val = ac->dval;
+    *val = self->dval;
     *len = 1;
     return GRIB_SUCCESS;
 }
+
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_variable* ac = (grib_accessor_variable*)a;
+    grib_accessor_variable* self = (grib_accessor_variable*)a;
 
     if (*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
-    *val = (long)ac->dval;
+    *val = (long)self->dval;
     *len = 1;
     return GRIB_SUCCESS;
 }

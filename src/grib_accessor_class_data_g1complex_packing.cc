@@ -150,8 +150,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_accessor_data_g1complex_packing* self =
-        (grib_accessor_data_g1complex_packing*)a;
+    grib_accessor_data_g1complex_packing* self = (grib_accessor_data_g1complex_packing*)a;
     int ret              = GRIB_SUCCESS;
     long seclen          = 0;
     long sub_j           = 0;
