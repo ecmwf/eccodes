@@ -58,6 +58,6 @@
 56 56 u-component of neutral wind (m s-1)
 57 57 v-component of neutral wind (m s-1)
 58 58 Magnitude of turbulent surface stress (N m-2)
-# 59-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 59-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

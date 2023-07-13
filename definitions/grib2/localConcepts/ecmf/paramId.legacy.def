@@ -769,7 +769,7 @@
  parameterCategory = 128 ;
  parameterNumber = 245 ;
 }
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 '228131' = {
  discipline = 192 ;
  parameterCategory = 228 ;
@@ -942,4 +942,28 @@
  discipline = 192 ;
  parameterCategory = 140 ;
  parameterNumber = 251 ;
+}
+#Vertical integral of thermal energy
+'162060' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 60 ;
+}
+#Vertical integral of potential+internal energy
+'162061' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 61 ;
+}
+#Vertical integral of kinetic energy
+'162059' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 59 ;
+}
+#Vertical integral of total energy
+'162063' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 63 ;
 }

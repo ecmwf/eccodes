@@ -4054,32 +4054,32 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component
 'aluvdi' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component
 'aluvdv' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component
 'aluvdg' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component
 'alnidi' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component
 'alnidv' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component
 'alnidg' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;
@@ -13699,43 +13699,43 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
-'p59.162' = {
+#Total column vertically-integrated kinetic energy
+'vike' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
-'p60.162' = {
+#Total column vertically-integrated enthalpy
+'vithe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
-'p61.162' = {
+#Total column vertically-integrated potential + internal energy
+'vipie' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
 #Vertical integral of potential+internal+latent energy
-'p62.162' = {
+'vipile' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
-'p63.162' = {
+#Total column vertically-integrated total energy
+'vitoe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
 #Vertical integral of energy conversion
-'p64.162' = {
+'viec' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
 #Vertical integral of eastward mass flux
-'p65.162' = {
+'vimae' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Vertical integral of northward mass flux
-'p66.162' = {
+'viman' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -17594,12 +17594,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 'u10n' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#V-component of neutral wind
+#10 metre v-component of neutral wind
 'v10n' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;

@@ -31,7 +31,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_string(grib_accessor*, char*, size_t* len);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g1fcperiod
 {

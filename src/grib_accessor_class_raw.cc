@@ -40,7 +40,6 @@ static int unpack_bytes(grib_accessor*, unsigned char*, size_t* len);
 static long byte_count(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int compare(grib_accessor*, grib_accessor*);
 

@@ -18,7 +18,7 @@
 16 16 Mass mixing ratio with respect to dry air (kg/kg)
 17 17 Mass mixing ratio with respect to wet air (kg/kg)
 18 18 Potential of hydrogen (pH) (pH)
-# 19-49 Reserved 
+# 19-49 Reserved
 50 50 Amount in atmosphere (mol)
 51 51 Concentration in air (mol m-3)
 52 52 Volume mixing ratio (fraction in air) (mol/mol)
@@ -51,7 +51,7 @@
 79 79 Column integrated northward mass flux (kg m-1 s-1)
 80 80 Column integrated divergence of mass flux (kg m-2 s-1)
 81 81 Column integrated net source (kg m-2 s-1)
-# 82-99 Reserved 
+# 82-99 Reserved
 100 100 Surface area density (aerosol) (/m)
 101 101 Vertical visual range (m)
 102 102 Aerosol optical thickness (Numeric)
@@ -64,6 +64,6 @@
 109 109 Aerosol lidar extinction from satellite (/m)
 110 110 Aerosol lidar extinction from the ground (/m)
 111 111 Angstrom exponent (Numeric)
-# 112-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 112-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

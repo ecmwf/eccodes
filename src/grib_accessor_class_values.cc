@@ -51,7 +51,6 @@ static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int compare(grib_accessor*, grib_accessor*);
 

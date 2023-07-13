@@ -2865,35 +2865,43 @@ int grib_f_set_force_real4_array(int* gid, char* key, float*val, int* size, int 
 }
 
 /*****************************************************************************/
-int grib_f_set_real4_array_(int* gid, char* key, float*val, int* size, int len)
+int grib_f_set_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
-    grib_handle *h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
+    grib_handle* h = get_handle(*gid);
+    int err        = GRIB_SUCCESS;
     char buf[1024];
-    size_t lsize = *size;
-    double* val8 = NULL;
+    const size_t lsize = *size;
+    const int single_precision_mode = (h->context->single_precision != 0);
 
-    if(!h) return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
 
-    if(*size)
-        val8 = (double*)grib_context_malloc(h->context,lsize*(sizeof(double)));
-    else
-        val8 = (double*)grib_context_malloc(h->context,sizeof(double));
+    if (single_precision_mode) {
+        err = grib_set_float_array(h, cast_char(buf, key, len), val, lsize);
+    }
+    else {
+        double* val8 = NULL;
+        size_t i     = 0;
+        if (*size)
+            val8 = (double*)grib_context_malloc(h->context, lsize * (sizeof(double)));
+        else
+            val8 = (double*)grib_context_malloc(h->context, sizeof(double));
 
-    if(!val8) return GRIB_OUT_OF_MEMORY;
+        if (!val8) return GRIB_OUT_OF_MEMORY;
 
-    for(lsize=0;lsize<*size;lsize++)
-        val8[lsize] = val[lsize];
+        for (i = 0; i < lsize; i++)
+            val8[i] = val[i];
 
-    err = grib_set_double_array(h, cast_char(buf,key,len), val8, lsize);
-    grib_context_free(h->context,val8);
+        err = grib_set_double_array(h, cast_char(buf, key, len), val8, lsize);
+        grib_context_free(h->context, val8);
+    }
+
     return err;
 }
-int grib_f_set_real4_array__(int* gid, char* key, float*val, int* size, int len){
-    return grib_f_set_real4_array_( gid,  key, val,  size, len);
+int grib_f_set_real4_array__(int* gid, char* key, float* val, int* size, int len) {
+    return grib_f_set_real4_array_(gid, key, val, size, len);
 }
-int grib_f_set_real4_array(int* gid, char* key, float*val, int* size, int len){
-    return grib_f_set_real4_array_( gid,  key, val,  size, len);
+int grib_f_set_real4_array(int* gid, char* key, float* val, int* size, int len) {
+    return grib_f_set_real4_array_(gid, key, val, size, len);
 }
 
 /*****************************************************************************/
@@ -3201,7 +3209,7 @@ int grib_f_set_real8_array_(int* gid, char* key, double*val, int* size, int len)
     char buf[1024];
     size_t lsize = *size;
 
-    if(!h)   return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
 
     return grib_set_double_array(h, cast_char(buf,key,len), val, lsize);
 }

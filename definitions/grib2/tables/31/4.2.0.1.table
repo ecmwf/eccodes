@@ -62,7 +62,7 @@
 60 60 Snow depth water equivalent (kg m-2)
 61 61 Snow density (kg m-3)
 62 62 Snow evaporation (kg m-2)
-63 63 Reserved 
+63 63 Reserved
 64 64 Total column integrated water vapour (kg m-2)
 65 65 Rain precipitation rate (kg m-2 s-1)
 66 66 Snow precipitation rate (kg m-2 s-1)
@@ -167,6 +167,6 @@
 165 165 Column integrated divergence of total water mass flux (kg m-2 s-1)
 166 166 Column integrated water vapour flux (kg m-2 s-1)
 167 167 Total column supercooled liquid water (kg m-2)
-# 168-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 168-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

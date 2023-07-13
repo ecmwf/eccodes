@@ -28,6 +28,6 @@
 26 26 Soil heat flux (W m-2)
 27 27 Soil depth (m)
 28 28 Snow temperature (K)
-# 29-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 29-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

@@ -29,10 +29,9 @@
    MEMBERS=const char*   reference_value
    MEMBERS=const char*   binary_scale_factor
    MEMBERS=const char*   decimal_scale_factor
+   MEMBERS=const char*   optimize_scaling_factor
    MEMBERS=const char*   bits_per_value
-
    MEMBERS=const char*   number_of_data_points
-
    MEMBERS=const char*   ccsds_flags
    MEMBERS=const char*   ccsds_block_size
    MEMBERS=const char*   ccsds_rsi
@@ -56,7 +55,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -75,6 +73,7 @@ typedef struct grib_accessor_data_ccsds_packing
     const char*   reference_value;
     const char*   binary_scale_factor;
     const char*   decimal_scale_factor;
+    const char*   optimize_scaling_factor;
     const char*   bits_per_value;
     const char*   number_of_data_points;
     const char*   ccsds_flags;
@@ -140,17 +139,18 @@ grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_cl
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h                         = grib_handle_of_accessor(a);
 
-    self->number_of_values     = grib_arguments_get_name(h, args, self->carg++);
-    self->reference_value      = grib_arguments_get_name(h, args, self->carg++);
-    self->binary_scale_factor  = grib_arguments_get_name(h, args, self->carg++);
-    self->decimal_scale_factor = grib_arguments_get_name(h, args, self->carg++);
-    self->bits_per_value       = grib_arguments_get_name(h, args, self->carg++);
-    self->number_of_data_points = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_flags      = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_block_size = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_rsi        = grib_arguments_get_name(h, args, self->carg++);
+    self->number_of_values        = grib_arguments_get_name(h, args, self->carg++);
+    self->reference_value         = grib_arguments_get_name(h, args, self->carg++);
+    self->binary_scale_factor     = grib_arguments_get_name(h, args, self->carg++);
+    self->decimal_scale_factor    = grib_arguments_get_name(h, args, self->carg++);
+    self->optimize_scaling_factor = grib_arguments_get_name(h, args, self->carg++);
+    self->bits_per_value          = grib_arguments_get_name(h, args, self->carg++);
+    self->number_of_data_points   = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_flags             = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_block_size        = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_rsi               = grib_arguments_get_name(h, args, self->carg++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -223,6 +223,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
+    //long optimize_scaling_factor  = 0;
     double reference_value    = 0;
     long bits_per_value       = 0;
     double max, min, d, divisor;
@@ -247,6 +248,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
+
+    //if ((err = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
+    //    return err;
+
     if ((err = grib_get_long_internal(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)

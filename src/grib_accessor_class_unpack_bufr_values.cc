@@ -47,7 +47,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_unpack_bufr_values
 {
@@ -138,6 +137,8 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
     grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+    strcpy(buffer, "0");
+    *len=1;
 
     return grib_unpack_double(data, 0, 0);
 }

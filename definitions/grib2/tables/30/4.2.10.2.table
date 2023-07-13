@@ -24,5 +24,5 @@
 22 22 Ice melt pond volume per unit area (m3 m-2)
 23 23 Sea ice fraction tendency due to parameterization (s-1)
 # 24-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

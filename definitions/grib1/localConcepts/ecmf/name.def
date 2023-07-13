@@ -13699,18 +13699,18 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
-'Vertical integral of kinetic energy' = {
+#Total column vertically-integrated kinetic energy
+'Total column vertically-integrated kinetic energy' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
-'Vertical integral of thermal energy' = {
+#Total column vertically-integrated enthalpy
+'Total column vertically-integrated enthalpy' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
-'Vertical integral of potential+internal energy' = {
+#Total column vertically-integrated potential + internal energy
+'Total column vertically-integrated potential + internal energy' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
@@ -13719,8 +13719,8 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
-'Vertical integral of total energy' = {
+#Total column vertically-integrated total energy
+'Total column vertically-integrated total energy' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
@@ -17594,13 +17594,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#U-component of neutral wind
-'U-component of neutral wind' = {
+#10 metre u-component of neutral wind
+'10 metre u-component of neutral wind' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#V-component of neutral wind
-'V-component of neutral wind' = {
+#10 metre v-component of neutral wind
+'10 metre v-component of neutral wind' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
 	}

@@ -1,5 +1,6 @@
 # (C) Copyright 2005- ECMWF.
-# Second order
+
+# TEMPLATE 7.50001, Second order
 
 if (bitsPerValue) {
  meta groupWidths unsigned_bits(widthOfWidths,numberOfGroups) : read_only;

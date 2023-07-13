@@ -32,7 +32,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static grib_accessor* next(grib_accessor*, int);
 
 typedef struct grib_accessor_bufr_group

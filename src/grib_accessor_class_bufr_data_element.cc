@@ -65,7 +65,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static grib_accessor* make_clone(grib_accessor*, grib_section*, int*);
 
@@ -323,7 +322,19 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
         }
     }
     else {
-        ret = GRIB_NOT_IMPLEMENTED;
+        //ECC-1623
+        if (*len != self->numberOfSubsets) {
+            grib_context_log(c, GRIB_LOG_ERROR,
+                "Number of values mismatch for '%s': %zu strings provided but expected %ld (=number of subsets)",
+                a->name, *len, self->numberOfSubsets);
+            return GRIB_WRONG_ARRAY_SIZE;
+        }
+        for (i = 0; i < *len; i++) {
+            //idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+            idx = (int)self->numericValues->v[i]->v[self->index] / 1000 - 1;
+            self->stringValues->v[idx]->v[0] = strdup(v[i]);
+        }
+        *len=1;
     }
 
     return ret;

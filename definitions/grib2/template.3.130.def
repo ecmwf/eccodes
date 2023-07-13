@@ -1,6 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.130, Irregular Latitude/longitude grid
+# Note: This template is deprecated.
 
 include "grib2/template.3.shape_of_the_earth.def";
 

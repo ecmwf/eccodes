@@ -17,7 +17,7 @@
 15 15 Dry deposition velocity (m/s)
 16 16 Mass mixing ratio with respect to dry air (kg/kg)
 17 17 Mass mixing ratio with respect to wet air (kg/kg)
-# 18-49 Reserved 
+# 18-49 Reserved
 50 50 Amount in atmosphere (mol)
 51 51 Concentration in air (mol m-3)
 52 52 Volume mixing ratio (fraction in air) (mol/mol)
@@ -46,7 +46,7 @@
 75 75 Wildfire flux (kg m-2 s-1)
 76 76 Emission rate (kg kg-1 s-1)
 77 77 Surface emission flux (kg m-2 s-1)
-# 78-99 Reserved 
+# 78-99 Reserved
 100 100 Surface area density (aerosol) (/m)
 101 101 Vertical visual range (m)
 102 102 Aerosol optical thickness (Numeric)
@@ -59,6 +59,6 @@
 109 109 Aerosol lidar extinction from satellite (/m)
 110 110 Aerosol lidar extinction from the ground (/m)
 111 111 Angstrom exponent (Numeric)
-# 112-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 112-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

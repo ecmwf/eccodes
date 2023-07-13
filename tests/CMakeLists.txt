@@ -31,6 +31,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling
     grib_optimize_scaling_sh
     grib_set_force
+    grib_partial_message
     grib_ecc-386
     grib_ecc-1467
     grib_ecc-1431
@@ -146,6 +147,8 @@ if( HAVE_BUILD_TOOLS )
         grib_double_cmp
         grib_change_packing
         grib_grid_space_view
+        grib_partial_message
+        grib_headers_only
         grib_count
         bufr_templates
         bufr_dump_data
@@ -197,6 +200,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1187
         bufr_ecc-1305
         bufr_ecc-1476
+        bufr_ecc-1623
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -271,7 +275,6 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        grib_tigge_check
         read_any
         codes_new_from_samples
         codes_set_samples_path
