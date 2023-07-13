@@ -9,9 +9,11 @@
  */
 /***************************************************************************
  * Jean Baptiste Filippi - 01.11.2005
- * Enrico Fucile                                                           *
  ***************************************************************************/
+
 #include "grib_api_internal.h"
+#include "grib_value.h"
+#include "grib_accessor.h"
 #include <float.h>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -780,6 +782,11 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     return ret;
 }
 
+int grib_set_float_array_internal(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    return GRIB_NOT_IMPLEMENTED;
+}
+
 static int __grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length, int check)
 {
     double v = 0;
@@ -852,10 +859,22 @@ int grib_set_force_double_array(grib_handle* h, const char* name, const double* 
     /* Use with great caution!! */
     return __grib_set_double_array(h, name, val, length, /*check=*/0);
 }
+int grib_set_force_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    /* GRIB-285: Same as grib_set_float_array but allows setting of READ-ONLY keys like codedValues */
+    /* Use with great caution!! */
+    //return __grib_set_float_array(h, name, val, length, /*check=*/0);
+    return GRIB_NOT_IMPLEMENTED;
+}
 
 int grib_set_double_array(grib_handle* h, const char* name, const double* val, size_t length)
 {
     return __grib_set_double_array(h, name, val, length, /*check=*/1);
+}
+int grib_set_float_array(grib_handle* h, const char* name, const float* val, size_t length)
+{
+    //return __grib_set_float_array(h, name, val, length, /*check=*/1);
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int _grib_set_long_array_internal(grib_handle* h, grib_accessor* a, const long* val, size_t buffer_len, size_t* encoded_length, int check)
@@ -1054,6 +1073,15 @@ int grib_get_double_element(const grib_handle* h, const char* name, int i, doubl
     }
     return GRIB_NOT_FOUND;
 }
+int grib_get_float_element(const grib_handle* h, const char* name, int i, float* val)
+{
+    grib_accessor* act = grib_find_accessor(h, name);
+
+    if (act) {
+        return grib_unpack_float_element(act, i, val);
+    }
+    return GRIB_NOT_FOUND;
+}
 
 int grib_get_double_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, double* val_array)
 {
@@ -1062,6 +1090,17 @@ int grib_get_double_element_set_internal(grib_handle* h, const char* name, const
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "unable to get %s as double element set (%s)",
+                         name, grib_get_error_message(ret));
+
+    return ret;
+}
+int grib_get_float_element_set_internal(grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array)
+{
+    int ret = grib_get_float_element_set(h, name, index_array, len, val_array);
+
+    if (ret != GRIB_SUCCESS)
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "unable to get %s as float element set (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1076,22 +1115,14 @@ int grib_get_double_element_set(const grib_handle* h, const char* name, const si
     }
     return GRIB_NOT_FOUND;
 }
-
-int grib_points_get_values(grib_handle* h, grib_points* points, double* val)
+int grib_get_float_element_set(const grib_handle* h, const char* name, const size_t* index_array, size_t len, float* val_array)
 {
-    int i, ret;
-    grib_accessor* a = NULL;
-    fprintf(stderr, "Warning: The grib_points_get_values function is deprecated and will be removed later.");
+    grib_accessor* acc = grib_find_accessor(h, name);
 
-    a = grib_find_accessor(h, "values");
-
-    for (i = 0; i < points->n_groups; i++) {
-        ret = grib_unpack_double_subarray(a, val, points->group_start[i], points->group_len[i]);
-        if (ret)
-            return ret;
-        val += points->group_len[i];
+    if (acc) {
+        return grib_unpack_float_element_set(acc, index_array, len, val_array);
     }
-    return GRIB_SUCCESS;
+    return GRIB_NOT_FOUND;
 }
 
 int grib_get_double_elements(const grib_handle* h, const char* name, const int* index_array, long len, double* val_array)
@@ -1140,6 +1171,10 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     grib_context_free(h->context, values);
 
     return err;
+}
+int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array)
+{
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length)
@@ -1205,7 +1240,7 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
     grib_accessor* a        = NULL;
     *type                   = GRIB_TYPE_UNDEFINED;
 
-    DebugAssert(name != NULL && strlen(name) > 0);
+    DEBUG_ASSERT(name != NULL && strlen(name) > 0);
 
     if (name[0] == '/') {
         al = grib_find_accessors_list(h, name);
@@ -1230,14 +1265,16 @@ const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
     return act ? act->cclass->name : NULL;
 }
 
-static int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length)
+template <typename T>
+static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     if (a) {
-        int err = _grib_get_double_array_internal(h, a->same, val, buffer_len, decoded_length);
+        int err = _grib_get_array_internal<T>(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
-            err        = grib_unpack_double(a, val + *decoded_length, &len);
+            err        = grib_unpack<T>(a, val + *decoded_length, &len);
             *decoded_length += len;
         }
 
@@ -1250,14 +1287,12 @@ static int _grib_get_double_array_internal(const grib_handle* h, grib_accessor* 
 
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length)
 {
-    int ret = grib_get_double_array(h, name, val, length);
+    return grib_get_array_internal<double>(h, name, val, length);
+}
 
-    if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as double array (%s)",
-                         name, grib_get_error_message(ret));
-
-    return ret;
+int grib_get_float_array_internal(const grib_handle* h, const char* name, float* val, size_t* length)
+{
+    return grib_get_array_internal<float>(h, name, val, length);
 }
 
 int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length)
@@ -1280,13 +1315,42 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
         if (!a)
             return GRIB_NOT_FOUND;
         if (name[0] == '#') {
-            return grib_unpack_double(a, val, length);
+            return grib_unpack<double>(a, val, length);
         }
         else {
             *length = 0;
-            return _grib_get_double_array_internal(h, a, val, len, length);
+            return _grib_get_array_internal<double>(h, a, val, len, length);
         }
     }
+}
+
+int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t *length)
+{
+    size_t len = *length;
+    grib_accessor* a = grib_find_accessor(h, name);
+    if (!a) return GRIB_NOT_FOUND;
+
+    //[> TODO: For now only GRIB supported... no BUFR keys <]
+    if (h->product_kind != PRODUCT_GRIB) {
+        //grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_float_array only supported for GRIB");
+        return GRIB_NOT_IMPLEMENTED;
+    }
+    Assert(name[0]!='/');
+    Assert(name[0]!='#');
+    *length = 0;
+    return _grib_get_array_internal<float>(h,a,val,len,length);
+}
+
+template <>
+int grib_get_array<float>(const grib_handle* h, const char* name, float* val, size_t *length)
+{
+    return grib_get_float_array(h, name, val, length);
+}
+
+template <>
+int grib_get_array<double>(const grib_handle* h, const char* name, double* val, size_t* length)
+{
+    return grib_get_double_array(h, name, val, length);
 }
 
 int ecc__grib_get_string_length(grib_accessor* a, size_t* size)

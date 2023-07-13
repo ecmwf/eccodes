@@ -434,23 +434,22 @@ static void print_values(grib_context* c,
     fprintf(stderr, "ECCODES DEBUG grib_util: packing_spec->packing_type = %s\n",
             get_packing_spec_packing_type_name(packing_spec->packing_type));
 
-#if 0
-        if (spec->bitmapPresent) {
-            int missing = 0;
-            size_t j = 0;
-            double min = 1e100;
-            for(j = 0; j < data_values_count ; j++)
-            {
-                double d = data_values[j] - spec->missingValue;
-                if(d < 0) d = -d;
-                if(d < min) {
-                    min = d;
-                }
-                if(data_values[j] == spec->missingValue)
-                    missing++;
-            }
-        }
-#endif
+//         if (spec->bitmapPresent) {
+//             int missing = 0;
+//             size_t j = 0;
+//             double min = 1e100;
+//             for(j = 0; j < data_values_count ; j++)
+//             {
+//                 double d = data_values[j] - spec->missingValue;
+//                 if(d < 0) d = -d;
+//                 if(d < min) {
+//                     min = d;
+//                 }
+//                 if(data_values[j] == spec->missingValue)
+//                     missing++;
+//             }
+//         }
+
 }
 
 /*
@@ -459,33 +458,32 @@ static int DBL_EQUAL(double d1, double d2, double tolerance)
     return fabs(d1-d2) < tolerance;
 }
 */
-#if 0
-/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
-static int grib1_angle_can_be_encoded(const double angle)
-{
-    const double angle_milliDegrees = angle * 1000;
-    double rounded = (int)(angle_milliDegrees+0.5)/1000.0;
-    if (angle<0) {
-        rounded = (int)(angle_milliDegrees-0.5)/1000.0;
-    }
-    if (angle == rounded) return 1;
-    return 0; /* sub millidegree. Cannot be encoded in grib1 */
-}
 
-/* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
-static int angle_can_be_encoded(const double angle, const double angular_precision)
-{
-    const double angle_expanded = angle * angular_precision;
-    Assert(angular_precision>0);
-    double rounded = (long)(angle_expanded+0.5)/angular_precision;
-    if (angle<0) {
-        rounded = (long)(angle_expanded-0.5)/angular_precision;
-    }
-    if (angle == rounded) return 1;
-    /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
-    return 0; /* Cannot be encoded */
-}
-#endif
+// /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+// static int grib1_angle_can_be_encoded(const double angle)
+// {
+//     const double angle_milliDegrees = angle * 1000;
+//     double rounded = (int)(angle_milliDegrees+0.5)/1000.0;
+//     if (angle<0) {
+//         rounded = (int)(angle_milliDegrees-0.5)/1000.0;
+//     }
+//     if (angle == rounded) return 1;
+//     return 0; /* sub millidegree. Cannot be encoded in grib1 */
+// }
+
+// /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
+// static int angle_can_be_encoded(const double angle, const double angular_precision)
+// {
+//     const double angle_expanded = angle * angular_precision;
+//     Assert(angular_precision>0);
+//     double rounded = (long)(angle_expanded+0.5)/angular_precision;
+//     if (angle<0) {
+//         rounded = (long)(angle_expanded-0.5)/angular_precision;
+//     }
+//     if (angle == rounded) return 1;
+//     /*printf("      ......... angle cannot be encoded: %.10e\n", angle);*/
+//     return 0; /* Cannot be encoded */
+// }
 
 /* Returns a boolean: 1 if angle can be encoded, 0 otherwise */
 static int angle_can_be_encoded(grib_handle* h, const double angle)
@@ -636,7 +634,7 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
     return err;
 }
 
-#if 0
+#if defined(CHECK_HANDLE_AGAINST_SPEC)
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
 static int check_handle_against_spec(grib_handle* handle, const long edition,
@@ -808,7 +806,7 @@ static const char* get_grid_type_name(const int spec_grid_type)
 
 static int is_constant_field(const double missingValue, const double* data_values, size_t data_values_count)
 {
-    int ii       = 0;
+    size_t ii    = 0;
     int constant = 1;
     double value = missingValue;
 
@@ -1159,22 +1157,22 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_DOUBLE(latitudeOfFirstGridPointInDegrees);
             COPY_SPEC_LONG(Ni); /* same as Nx */
             COPY_SPEC_LONG(Nj); /* same as Ny */
-            /* TODO: pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude */
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
 
-            /*
-            COPY_SPEC_LONG(DxInMetres);
-            COPY_SPEC_LONG(DyInMetres);
-            COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
-            COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
-            COPY_SPEC_LONG(standardParallelInMicrodegrees);
-            COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
-            */
+            // TODO(masn): pass in extra keys e.g. Dx, Dy, standardParallel and centralLongitude
+            // COPY_SPEC_LONG(DxInMetres);
+            // COPY_SPEC_LONG(DyInMetres);
+            // COPY_SPEC_LONG(xDirectionGridLengthInMillimetres);
+            // COPY_SPEC_LONG(yDirectionGridLengthInMillimetres);
+            // COPY_SPEC_LONG(standardParallelInMicrodegrees);
+            // COPY_SPEC_LONG(centralLongitudeInMicrodegrees);
 
             break;
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
-            /* TODO: Other keys */
+            /* TODO(masn): Other keys */
             break;
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
             COPY_SPEC_LONG(bitmapPresent);
@@ -1184,11 +1182,16 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(Ni); /* same as Nx */
             COPY_SPEC_LONG(Nj); /* same as Ny */
 
-            /*
-             * Note: DxInMetres and DyInMetres
-             * should be 'double' and not integer. WMO GRIB2 uses millimetres!
-             * TODO: Add other keys like Latin1, LoV etc
-            */
+            COPY_SPEC_LONG(iScansNegatively);
+            COPY_SPEC_LONG(jScansPositively);
+            COPY_SPEC_DOUBLE(latitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_DOUBLE(longitudeOfSouthernPoleInDegrees);
+            COPY_SPEC_LONG(uvRelativeToGrid);
+
+            // Note: DxInMetres and DyInMetres
+            // should be 'double' and not integer. WMO GRIB2 uses millimetres!
+            // TODO(masn): Add other keys like Latin1, LoV etc
+
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
@@ -1607,17 +1610,17 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     /* Disable check: need to re-examine GRIB-864 */
-#if 0
-    if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
-        grib_context* c=grib_context_get_default();
-        fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
-        if (editionNumber == 1) {
-            fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
-        }
-        if (c->write_on_fail) grib_write_message(h_out,"error.grib","w");
-        goto cleanup;
-    }
-#endif
+
+//     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
+//         grib_context* c=grib_context_get_default();
+//         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
+//         if (editionNumber == 1) {
+//             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
+//         }
+//         if (c->write_on_fail) grib_write_message(h_out,"error.grib","w");
+//         goto cleanup;
+//     }
+
     if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: grib_util_set_spec end\n");
 
     return h_out;
@@ -1627,96 +1630,95 @@ cleanup:
         grib_handle_delete(h_out);
     return NULL;
 }
-#if 0
-int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
-{
-    grib_iterator* iter = NULL;
-    int ret             = 0, i, j, l;
-    size_t n = 0, numberOfPoints = 0;
-    double *lat, *lon, *values;
-    double vlat, vlon, val;
-    double dx, dy, ddx, ddy;
-    double mass, centroidX, centroidY;
-    double missingValue;
-    grib_context* c = grib_context_get_default();
 
-    ret = grib_get_size(h, "values", &n);
-    if (ret)
-        return ret;
+// int grib_moments(grib_handle* h, double east, double north, double west, double south, int order, double* moments, long* count)
+// {
+//     grib_iterator* iter = NULL;
+//     int ret             = 0, i, j, l;
+//     size_t n = 0, numberOfPoints = 0;
+//     double *lat, *lon, *values;
+//     double vlat, vlon, val;
+//     double dx, dy, ddx, ddy;
+//     double mass, centroidX, centroidY;
+//     double missingValue;
+//     grib_context* c = grib_context_get_default();
 
-    lat    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
-    lon    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
-    values = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     ret = grib_get_size(h, "values", &n);
+//     if (ret)
+//         return ret;
 
-    iter           = grib_iterator_new(h, 0, &ret);
-    numberOfPoints = 0;
-    while (grib_iterator_next(iter, &vlat, &vlon, &val)) {
-        if (vlon >= east && vlon <= west && vlat >= south && vlat <= north) {
-            lat[numberOfPoints]    = vlat;
-            lon[numberOfPoints]    = vlon;
-            values[numberOfPoints] = val;
-            numberOfPoints++;
-        }
-    }
-    grib_iterator_delete(iter);
+//     lat    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     lon    = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
+//     values = (double*)grib_context_malloc_clear(c, sizeof(double) * n);
 
-    ret = grib_get_double(h, "missingValue", &missingValue);
+//     iter           = grib_iterator_new(h, 0, &ret);
+//     numberOfPoints = 0;
+//     while (grib_iterator_next(iter, &vlat, &vlon, &val)) {
+//         if (vlon >= east && vlon <= west && vlat >= south && vlat <= north) {
+//             lat[numberOfPoints]    = vlat;
+//             lon[numberOfPoints]    = vlon;
+//             values[numberOfPoints] = val;
+//             numberOfPoints++;
+//         }
+//     }
+//     grib_iterator_delete(iter);
 
-    centroidX = 0;
-    centroidY = 0;
-    mass      = 0;
-    *count    = 0;
-    for (i = 0; i < numberOfPoints; i++) {
-        if (values[i] != missingValue) {
-            centroidX += lon[i] * values[i];
-            centroidY += lat[i] * values[i];
-            mass += values[i];
-            (*count)++;
-        }
-    }
-    centroidX /= mass;
-    centroidY /= mass;
-    mass /= *count;
+//     ret = grib_get_double(h, "missingValue", &missingValue);
 
-    for (j = 0; j < order * order; j++)
-        moments[j] = 0;
+//     centroidX = 0;
+//     centroidY = 0;
+//     mass      = 0;
+//     *count    = 0;
+//     for (i = 0; i < numberOfPoints; i++) {
+//         if (values[i] != missingValue) {
+//             centroidX += lon[i] * values[i];
+//             centroidY += lat[i] * values[i];
+//             mass += values[i];
+//             (*count)++;
+//         }
+//     }
+//     centroidX /= mass;
+//     centroidY /= mass;
+//     mass /= *count;
 
-    for (i = 0; i < numberOfPoints; i++) {
-        if (values[i] != missingValue) {
-            dx  = (lon[i] - centroidX);
-            dy  = (lat[i] - centroidY);
-            ddx = 1;
-            for (j = 0; j < order; j++) {
-                ddy = 1;
-                for (l = 0; l < order; l++) {
-                    moments[j * order + l] += ddx * ddy * values[i];
-                    ddy *= dy;
-                }
-                ddx *= dx;
-            }
-        }
-    }
-    for (j = 0; j < order; j++) {
-        for (l = 0; l < order; l++) {
-            if (j + l > 1) {
-                moments[j * order + l] = pow(fabs(moments[j * order + l]), 1.0 / (j + l)) / *count;
-            }
-            else {
-                moments[j * order + l] /= *count;
-            }
-        }
-    }
+//     for (j = 0; j < order * order; j++)
+//         moments[j] = 0;
 
-    grib_context_free(c, lat);
-    grib_context_free(c, lon);
-    grib_context_free(c, values);
-    (void)mass;
+//     for (i = 0; i < numberOfPoints; i++) {
+//         if (values[i] != missingValue) {
+//             dx  = (lon[i] - centroidX);
+//             dy  = (lat[i] - centroidY);
+//             ddx = 1;
+//             for (j = 0; j < order; j++) {
+//                 ddy = 1;
+//                 for (l = 0; l < order; l++) {
+//                     moments[j * order + l] += ddx * ddy * values[i];
+//                     ddy *= dy;
+//                 }
+//                 ddx *= dx;
+//             }
+//         }
+//     }
+//     for (j = 0; j < order; j++) {
+//         for (l = 0; l < order; l++) {
+//             if (j + l > 1) {
+//                 moments[j * order + l] = pow(fabs(moments[j * order + l]), 1.0 / (j + l)) / *count;
+//             }
+//             else {
+//                 moments[j * order + l] /= *count;
+//             }
+//         }
+//     }
 
-    return ret;
-}
-#endif
+//     grib_context_free(c, lat);
+//     grib_context_free(c, lon);
+//     grib_context_free(c, values);
+//     (void)mass;
 
-/* Helper function for 'parse_keyval_string' */
+//     return ret;
+// }
+
+// Helper function for 'parse_keyval_string'
 static void set_value(grib_values* value, char* str, int equal)
 {
     char *p = 0, *q = 0, *s = 0;
@@ -1802,14 +1804,14 @@ static void set_value(grib_values* value, char* str, int equal)
     }
 }
 
-/*
- 'grib_tool'        Optional tool name which is printed on error. Can be NULL
- 'arg'              The string to be parsed e.g. key1=value1,key2!=value2 etc (cannot be const)
- 'values_required'  If true then each key must have a value after it
- 'default_type'     The default type e.g. GRIB_TYPE_UNDEFINED or GRIB_TYPE_DOUBLE
- 'values'           The array we populate and return (output)
- 'count'            Number of elements (output). Must be initialised to the size of the values array
- */
+//
+//  'grib_tool'        Optional tool name which is printed on error. Can be NULL
+//  'arg'              The string to be parsed e.g. key1=value1,key2!=value2 etc (cannot be const)
+//  'values_required'  If true then each key must have a value after it
+//  'default_type'     The default type e.g. GRIB_TYPE_UNDEFINED or GRIB_TYPE_DOUBLE
+//  'values'           The array we populate and return (output)
+//  'count'            Number of elements (output). Must be initialised to the size of the values array
+//
 int parse_keyval_string(const char* grib_tool,
                         char* arg, int values_required, int default_type,
                         grib_values values[], int* count)
@@ -1890,18 +1892,22 @@ int parse_keyval_string(const char* grib_tool,
     return GRIB_SUCCESS;
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is related to EPS */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for EPS (ensemble) products
 int grib2_is_PDTN_EPS(long pdtn)
 {
-    return (
-        pdtn == 1 || pdtn == 11 ||
-        pdtn == 33 || pdtn == 34 || /*simulated (synthetic) satellite data*/
-        pdtn == 41 || pdtn == 43 || /*atmospheric chemical constituents*/
-        pdtn == 45 || pdtn == 47 || pdtn == 85  /*aerosols*/
-    );
+#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
+
+    static int eps_pdtns[] = { 1, 11, 33, 34, 41, 43, 45, 47,
+                               49, 54, 56, 58, 59, 60, 61, 63, 68, 71, 73, 77, 79,
+                               81, 83, 84, 85, 92, 94, 96, 98 };
+    size_t i;
+    for (i = 0; i < NUMBER(eps_pdtns); ++i) {
+        if (eps_pdtns[i] == pdtn) return 1;
+    }
+    return 0;
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for atmospheric chemical constituents
 int grib2_is_PDTN_Chemical(long pdtn)
 {
     return (
@@ -1911,8 +1917,8 @@ int grib2_is_PDTN_Chemical(long pdtn)
         pdtn == 43);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
- * atmospheric chemical constituents with source or sink */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
+// atmospheric chemical constituents with source or sink
 int grib2_is_PDTN_ChemicalSourceSink(long pdtn)
 {
     return (
@@ -1922,8 +1928,8 @@ int grib2_is_PDTN_ChemicalSourceSink(long pdtn)
         pdtn == 79);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
- * atmospheric chemical constituents based on a distribution function */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for
+// atmospheric chemical constituents based on a distribution function
 int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
 {
     return (
@@ -1933,11 +1939,11 @@ int grib2_is_PDTN_ChemicalDistFunc(long pdtn)
         pdtn == 68);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for aerosols
 int grib2_is_PDTN_Aerosol(long pdtn)
 {
-    /* Notes: PDT 44 is deprecated and replaced by 48 */
-    /*        PDT 47 is deprecated and replaced by 85 */
+    // Notes: PDT 44 is deprecated and replaced by 48
+    //        PDT 47 is deprecated and replaced by 85
     return (
         pdtn == 44 ||
         pdtn == 48 ||
@@ -1948,23 +1954,21 @@ int grib2_is_PDTN_Aerosol(long pdtn)
         pdtn == 85);
 }
 
-/* Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol */
+// Return 1 if the productDefinitionTemplateNumber (GRIB2) is for optical properties of aerosol
 int grib2_is_PDTN_AerosolOptical(long pdtn)
 {
-    /* Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
-     * For the former user must set the optical wavelength range to missing.
-     */
+    // Note: PDT 48 can be used for both plain aerosols as well as optical properties of aerosol.
+    // For the former user must set the optical wavelength range to missing
     return (
         pdtn == 48 ||
         pdtn == 49);
 }
 
-/* Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
- * All arguments are booleans (0 or 1)
- * is_eps:     ensemble or deterministic
- * is_instant: instantaneous or interval-based
- * etc
- */
+// Given some information about the type of grib2 parameter, return the productDefinitionTemplateNumber to use.
+// All arguments are booleans (0 or 1)
+//  is_eps:     ensemble or deterministic
+//  is_instant: instantaneous or interval-based
+//  etc...
 int grib2_select_PDTN(int is_eps, int is_instant,
                       int is_chemical,
                       int is_chemical_srcsink,
@@ -1972,8 +1976,8 @@ int grib2_select_PDTN(int is_eps, int is_instant,
                       int is_aerosol,
                       int is_aerosol_optical)
 {
-    /* At most one has to be set. All could be 0 */
-    /* Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1! */
+    // At most one has to be set. All could be 0
+    // Unfortunately if PDTN=48 then both aerosol and aerosol_optical can be 1!
     const int sum = is_chemical + is_chemical_srcsink + is_chemical_distfn + is_aerosol + is_aerosol_optical;
     Assert(sum == 0 || sum == 1 || sum == 2);
 
@@ -2026,12 +2030,12 @@ int grib2_select_PDTN(int is_eps, int is_instant,
         if (is_eps) {
             if (is_instant)
                 return 49;
-            /* WMO does not have a non-instantaneous case here! */
+            // WMO does not have a non-instantaneous case here!
         }
         else {
             if (is_instant)
                 return 48;
-            /* WMO does not have a non-instantaneous case here! */
+            // WMO does not have a non-instantaneous case here!
         }
     }
 
@@ -2040,17 +2044,17 @@ int grib2_select_PDTN(int is_eps, int is_instant,
             if (is_instant)
                 return 45;
             else
-                return 85; /* PDT 47 is deprecated*/
+                return 85; // PDT 47 is deprecated
         }
         else {
             if (is_instant)
-                return 48; /*44 is deprecated*/
+                return 48; // 44 is deprecated
             else
                 return 46;
         }
     }
 
-    /* Fallthru case: default */
+    // Fallthru case: default
     if (is_eps) {
         if (is_instant)
             return 1;
@@ -2098,7 +2102,7 @@ int grib_check_data_values_range(grib_handle* h, const double min_val, const dou
         return GRIB_ENCODING_ERROR;
     }
 
-    /* Data Quality checks */
+    // Data Quality checks
     if (ctx->grib_data_quality_checks) {
         result = grib_util_grib_data_quality_check(h, min_val, max_val);
     }
@@ -2106,10 +2110,10 @@ int grib_check_data_values_range(grib_handle* h, const double min_val, const dou
     return result;
 }
 
-/* Return true(1) if large constant fields are to be created, otherwise false(0) */
+// Return true(1) if large constant fields are to be created, otherwise false(0)
 int grib_producing_large_constant_fields(grib_handle* h, int edition)
 {
-    /* First check if the transient key is set */
+    // First check if the transient key is set
     grib_context* c                 = h->context;
     long produceLargeConstantFields = 0;
     if (grib_get_long(h, "produceLargeConstantFields", &produceLargeConstantFields) == GRIB_SUCCESS &&
@@ -2121,7 +2125,7 @@ int grib_producing_large_constant_fields(grib_handle* h, int edition)
         return 1;
     }
 
-    /* Finally check the environment variable via the context */
+    // Finally check the environment variable via the context
     return c->large_constant_fields;
 }
 
@@ -2132,18 +2136,38 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     double min_field_value_allowed = 0, max_field_value_allowed = 0;
     long paramId           = 0;
     grib_context* ctx      = h->context;
-    int is_error           = 1;
+    bool is_error          = true;
     char description[1024] = {0,};
-    char step[32] = "unknown";
-    size_t len    = 32;
-    /*
-     * If grib_data_quality_checks == 1, limits failure results in an error
-     * If grib_data_quality_checks == 2, limits failure results in a warning
-     */
+    char step[32]          = "unknown";
+    char shortName[64]     = {0,};
+    char name[526]         = {0,};
+    size_t len             = 0;
+    const char* invalid_shortName = "unknown";
+    const char* invalid_name      = "Experimental product";
+
+    // If grib_data_quality_checks == 1, limits failure results in an error
+    // If grib_data_quality_checks == 2, limits failure results in a warning
+
     Assert(ctx->grib_data_quality_checks == 1 || ctx->grib_data_quality_checks == 2);
     is_error = (ctx->grib_data_quality_checks == 1);
 
-    /* The limit keys must exist if we are here */
+    len = sizeof(shortName);
+    err = grib_get_string(h, "shortName", shortName, &len);
+    if (err || STR_EQUAL(shortName, invalid_shortName)) {
+        fprintf(stderr, "ECCODES %s   :  Invalid metadata: shortName='%s'\n",
+                    (is_error ? "ERROR" : "WARNING"), invalid_shortName);
+        if (is_error) return GRIB_INVALID_MESSAGE;
+    }
+
+    len = sizeof(name);
+    err = grib_get_string(h, "name", name, &len);
+    if (err || STR_EQUAL(name, invalid_name)) {
+        fprintf(stderr, "ECCODES %s   :  Invalid metadata: name='%s'\n",
+                    (is_error ? "ERROR" : "WARNING"), invalid_name);
+        if (is_error) return GRIB_INVALID_MESSAGE;
+    }
+
+    // The limit keys must exist if we are here
     err = grib_get_double(h, "param_value_min", &min_field_value_allowed);
     if (err) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "grib_data_quality_check: Could not get param_value_min");
@@ -2177,7 +2201,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
             }
         }
         if (is_error) {
-            return GRIB_OUT_OF_RANGE; /* Failure */
+            return GRIB_OUT_OF_RANGE; // Failure
         }
     }
     if (max_val > max_field_value_allowed) {
@@ -2193,7 +2217,7 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
             }
         }
         if (is_error) {
-            return GRIB_OUT_OF_RANGE; /* Failure */
+            return GRIB_OUT_OF_RANGE; // Failure
         }
     }
 

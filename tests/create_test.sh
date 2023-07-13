@@ -34,10 +34,14 @@ cat <<EOF
 #
 
 . ./include.ctest.sh
-set -u
+
 REDIRECT=/dev/null
+
 label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
-temp=temp.\$label
+tempGrib=temp.\$label.grib
+tempBufr=temp.\$label.bufr
+tempText=temp.\$label.txt
+
 sample_grib1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 sample_bufr3=\$ECCODES_SAMPLES_PATH/BUFR3.tmpl
@@ -48,11 +52,12 @@ sample_bufr4=\$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 #\${tools_dir}/grib_get
 #\${tools_dir}/grib_set
 #grib_check_key_equals \$temp k1,k2 "v1 v2"
+
 #\${tools_dir}/bufr_get
 #\${tools_dir}/bufr_set
 #...
 
-rm -f \$temp
+rm -f \$tempText \$tempGrib \$tempBufr
 EOF
 
 echo >&2

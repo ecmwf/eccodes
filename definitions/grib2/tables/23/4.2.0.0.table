@@ -29,6 +29,6 @@
 27 27 Wet-bulb temperature (K)
 28 28 Unbalanced component of temperature (K)
 29 29 Temperature advection (K s-1)
-# 30-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 30-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

@@ -652,7 +652,7 @@ static char* get_keyname_without_rank(const char* name)
     if (*p == '#') {
         strtol(++p, &pEnd, 10);
         if (*pEnd != '#') {
-            DebugAssert(!"Badly formed rank in key");
+            DEBUG_ASSERT(!"Badly formed rank in key");
         }
         else {
             /* Take everything after 2nd '#' */
@@ -1398,7 +1398,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
             return 0;
         }
-#if 0
+#if defined(BUFR_COMPARE_BYTES)
         else {
             int lcount=count,ii;
             if (options->current_infile) lcount=options->current_infile->filter_handle_count;

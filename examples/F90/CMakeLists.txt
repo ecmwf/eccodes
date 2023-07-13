@@ -13,6 +13,7 @@ if( HAVE_BUILD_TOOLS )
           grib_set_data
           bufr_ecc-1284
           bufr_ecc-1019
+          get_native_type
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
@@ -62,6 +63,7 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          get_native_type
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
@@ -97,24 +99,24 @@ else()
           get_product_kind )
 endif()
 
-foreach( tool ${tests_sanity} )
-    ecbuild_add_test( TARGET          eccodes_f_${tool}
-                      SOURCES         ${tool}.f90
+foreach( atest ${tests_sanity} )
+    ecbuild_add_test( TARGET          eccodes_f_${atest}
+                      SOURCES         ${atest}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS            eccodes_f90 eccodes
                       CONDITION       HAVE_FORTRAN
                       LABELS          "sanity"
                       RESOURCES       bufr_read_scatterometer_f.ref
-                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh )
+                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh )
 endforeach()
-foreach( tool ${tests_extra} )
-    ecbuild_add_test( TARGET          eccodes_f_${tool}
-                      SOURCES         ${tool}.f90
+foreach( atest ${tests_extra} )
+    ecbuild_add_test( TARGET          eccodes_f_${atest}
+                      SOURCES         ${atest}.f90
                       LINKER_LANGUAGE Fortran
                       LIBS            eccodes_f90 eccodes
                       CONDITION       HAVE_FORTRAN AND ENABLE_EXTRA_TESTS
                       RESOURCES       bufr_read_scatterometer_f.ref
-                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${tool}.sh
+                      COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh
                       TEST_DEPENDS    eccodes_download_gribs eccodes_download_bufrs eccodes_download_bufr_refs )
 endforeach()
 

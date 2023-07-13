@@ -40,7 +40,7 @@ void string_rtrim(char* s)
 
 void string_lrtrim(char** x, int do_left, int do_right)
 {
-    DebugAssert(do_left || do_right);
+    DEBUG_ASSERT(do_left || do_right);
     if (do_left) {
         while (isspace(**x) && **x != '\0')
             (*x)++;
@@ -91,8 +91,8 @@ char** string_split(char* inputString, const char* delimiter)
     size_t index        = 0;
     char delimiterChar  = 0;
 
-    DebugAssert(inputString);
-    DebugAssert(delimiter && (strlen(delimiter) == 1));
+    DEBUG_ASSERT(inputString);
+    DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
     delimiterChar = delimiter[0];
     while (*p) {
         const char ctmp = *p;
@@ -165,8 +165,8 @@ int string_ends_with(const char* s, const char* suffix)
 int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
-    DebugAssert(str);
-    for(i=0; str[i]; i++) {
+    DEBUG_ASSERT(str);
+    for (i=0; str[i]; i++) {
         if (str[i] == c) count++;
     }
     return count;
@@ -213,7 +213,7 @@ const char* grib_get_type_name(int type)
 /* Replace all occurrences of character in string.
 *  Returns pointer to the NUL byte at the end of 's'
 */
-char *string_replace_char(char *s, char oldc, char newc)
+char* string_replace_char(char *s, char oldc, char newc)
 {
     for (; *s; ++s)
         if (*s == oldc)
@@ -222,9 +222,10 @@ char *string_replace_char(char *s, char oldc, char newc)
 }
 
 /* Remove all instances of character 'c' from 'str' */
-void string_remove_char(char * str, char c)
+void string_remove_char(char* str, char c)
 {
     size_t i, j;
+    DEBUG_ASSERT(str);
     size_t len = strlen(str);
     for(i=0; i<len; i++) {
         if(str[i] == c) {

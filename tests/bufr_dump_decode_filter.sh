@@ -53,4 +53,14 @@ do
     rm -f $fRules
   fi
 done
+
+# Check expected failures
+set +e
+${tools_dir}/bufr_dump -Dfilter ${data_dir}/bufr/tropical_cyclone.bufr > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Cannot dump filter for multi-message BUFR files" $fLog
+
+# Clean up
 rm -f $fLog $fRules

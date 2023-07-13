@@ -10,9 +10,8 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 06.01.2009                                           *
- *                                                                         *
  ***************************************************************************/
-#include "grib_api_internal.h"
+#include "grib_ieeefloat.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -86,13 +85,13 @@ static void init_ieee_table()
 
 static void init_table_if_needed()
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
-    GRIB_MUTEX_LOCK(&mutex)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
+    GRIB_MUTEX_LOCK(&mutex);
 
     if (!ieee_table.inited)
         init_ieee_table();
 
-    GRIB_MUTEX_UNLOCK(&mutex)
+    GRIB_MUTEX_UNLOCK(&mutex);
 }
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
@@ -246,6 +245,7 @@ double grib_long_to_ieee(unsigned long x)
     return val;
 }
 
+
 unsigned long grib_ieee_nearest_smaller_to_long(double x)
 {
     unsigned long l;
@@ -330,7 +330,7 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 unsigned long grib_ieee64_to_long(double x)
 {
     unsigned long lval;
-    DebugAssert(sizeof(double) == sizeof(long));
+    DEBUG_ASSERT(sizeof(double) == sizeof(long));
     memcpy(&lval, &x, sizeof(long));
     return lval;
 }
@@ -338,12 +338,13 @@ unsigned long grib_ieee64_to_long(double x)
 double grib_long_to_ieee64(unsigned long x)
 {
     double dval;
-    DebugAssert(sizeof(double) == sizeof(long));
+    DEBUG_ASSERT(sizeof(double) == sizeof(long));
     memcpy(&dval, &x, sizeof(long));
     return dval;
 }
 
-int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
+template <>
+int grib_ieee_decode_array<double> (grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
 {
     int err = 0, i = 0, j = 0;
     unsigned char s[8] = {0,};
@@ -386,6 +387,34 @@ int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, in
     return err;
 }
 
+template <>
+int grib_ieee_decode_array<float>(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
+{
+    int err = 0, i = 0, j = 0;
+    unsigned char s[4] = {0,};
+
+    switch (bytes) {
+        case 4:
+            for (i = 0; i < nvals; i++) {
+#if IEEE_LE
+                for (j = 3; j >= 0; j--)
+                    s[j] = *(buf++);
+                memcpy(&val[i], s, 4);
+#elif IEEE_BE
+                memcpy(&val[i], buf, 4);
+                buf += 4;
+#endif
+            }
+            break;
+        default:
+            grib_context_log(c, GRIB_LOG_ERROR,
+                             "grib_ieee_decode_array_float: %d bits not implemented", bytes * 8);
+            return GRIB_NOT_IMPLEMENTED;
+    }
+
+    return err;
+}
+
 #else
 
 int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, double* val)
@@ -395,6 +424,17 @@ int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, in
 
     for (i = 0; i < nvals; i++)
         val[i] = grib_long_to_ieee(grib_decode_unsigned_long(buf, &bitr, bytes * 8));
+
+    return err;
+}
+
+int grib_ieee_decode_array_float(grib_context* c, unsigned char* buf, size_t nvals, int bytes, float* val)
+{
+    int err = 0, i = 0;
+    long bitr = 0;
+
+    for (i = 0; i < nvals; i++)
+        val[i] = (float) grib_long_to_ieee(grib_decode_unsigned_long(buf, &bitr, bytes * 8));
 
     return err;
 }

@@ -21,7 +21,7 @@
    SUPER      = action_class_gen
    IMPLEMENTS = dump
    IMPLEMENTS = destroy
-   MEMBERS    = grib_concept_value* concept
+   MEMBERS    = grib_concept_value* concept_value
    MEMBERS    = char* basename
    MEMBERS    = char* masterDir
    MEMBERS    = char* localDir
@@ -306,7 +306,7 @@ static grib_concept_value* get_concept_impl(grib_handle* h, grib_action_concept*
 static grib_concept_value* get_concept(grib_handle* h, grib_action_concept* self)
 {
     grib_concept_value* result = NULL;
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
 
     result = get_concept_impl(h, self);

@@ -55,7 +55,7 @@
 53 53 Mean wave direction of first swell partition (deg)
 54 54 Mean wave direction of second swell partition (deg)
 55 55 Mean wave direction of third swell partition (deg)
-# 56-191 Reserved 
+# 56-191 Reserved
 56 56 Wave directional width of first swell partition (-)
 57 57 Wave directional width of second swell partition (-)
 58 58 Wave directional width of third swell partition (-)
@@ -65,6 +65,6 @@
 62 62 Wave frequency width (-)
 63 63 Frequency width of wind waves (-)
 64 64 Frequency width of total swell (-)
-# 65-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 65-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

@@ -1,5 +1,5 @@
 # Code table 4.5 - Fixed surface types and units
-0 0 Reserved 
+0 0 Reserved
 1 sfc Ground or water surface (-)
 2 2 Cloud base level (-)
 3 3 Level of cloud tops (-)
@@ -16,7 +16,7 @@
 14 14 Level of free convection (LFC)
 15 15 Convective condensation level (CCL)
 16 16 Level of neutral buoyancy or equilibrium level (LNB)
-# 17-19 Reserved 
+# 17-19 Reserved
 20 20 Isothermal level (K)
 21 21 Lowest level where mass density exceeds the specified value (base for a given threshold of mass density) (kg m-3)
 22 22 Highest level where mass density exceeds the specified value (top for a given threshold of mass density) (kg m-3)
@@ -25,7 +25,7 @@
 25 25 Highest level where radar reflectivity exceeds the specified value (echo top for a given threshold of reflectivity) (dBZ)
 # 26-99 Reserved
 100 pl Isobaric surface (Pa)
-101 sfc Mean sea level 
+101 sfc Mean sea level
 102 102 Specific altitude above mean sea level (m)
 103 sfc Specified height level above ground (m)
 104 104 Sigma level (sigma value)
@@ -34,18 +34,18 @@
 107 pt Isentropic (theta) level (K)
 108 108 Level at specified pressure difference from ground to level (Pa)
 109 pv Potential vorticity surface (K m2 kg-1 s-1)
-110 110 Reserved 
+110 110 Reserved
 111 111 Eta level (-)
-112 112 Reserved 
-113 113 Logarithmic hybrid level 
+112 112 Reserved
+113 113 Logarithmic hybrid level
 114 114 Snow level (Numeric)
 115 115 Sigma height level
 # 116 Reserved
 117 117 Mixed layer depth (m)
 118 hhl Hybrid height level (-)
 119 hpl Hybrid pressure level (-)
-# 120-149 Reserved 
-150 150 Generalized vertical height coordinate 
+# 120-149 Reserved
+150 150 Generalized vertical height coordinate
 151 sol Soil level (Numeric)
 # 152-159 Reserved
 160 o2d Depth below sea level (m)
@@ -59,7 +59,7 @@
 168 168 Ocean model level (Numeric)
 169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
 170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
-# 171-173 Reserved 
+# 171-173 Reserved
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
 176 176 Bottom surface (underside) ice on sea, lake or river
@@ -71,6 +71,6 @@
 182 182 Grid tile water fraction as a model surface
 183 183 Grid tile ice fraction on sea, lake or river as a model surface
 184 184 Grid tile glacier ice and inland ice fraction as a model surface
-# 185-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 185-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

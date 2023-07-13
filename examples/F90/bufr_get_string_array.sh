@@ -9,31 +9,23 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_get_string_array_test_f"
 
-#Prepare tmp file
+# Prepare tmp file
 fTmp=${label}.tmp.txt
 rm -f $fTmp
 
-#-----------------------------------------------------
+#----------------------------------------------------
 # Test get string array from a BUFR
 #----------------------------------------------------
-
 fRef=${data_dir}/bufr/get_string_array.ref
 
-REDIRECT=/dev/null
-
-#Write the values into a file and compare with reference
+# Write the values into a file and compare with reference
 ${examples_dir}/eccodes_f_bufr_get_string_array > $fTmp
 
-#We compare output to the reference by ignoring the whitespaces 
+# Compare output to the reference by ignoring the whitespaces
 diff -w $fRef $fTmp
 
-#cat $fRes
-
-#Clean up
+# Clean up
 rm -f ${fTmp}
-
-
-

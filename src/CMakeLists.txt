@@ -71,7 +71,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_bufr_string_values.cc
     grib_accessor_class_pack_bufr_values.cc
     grib_accessor_class_unpack_bufr_values.cc
-    grib_accessor_class_apply_operators.cc
     grib_accessor_class_group.cc
     grib_accessor_class_non_alpha.cc
     grib_accessor_class_g1bitmap.cc
@@ -138,7 +137,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
     grib_accessor_class_times.cc
-    grib_accessor_class_forward.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc
@@ -146,7 +144,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_iterator.cc
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
-    grib_accessor_class_box.cc
     grib_accessor_class_ksec1expver.cc
     grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
@@ -275,7 +272,6 @@ list( APPEND eccodes_src_files
     grib_dumper_class_serialize.cc
     grib_dumper_class_debug.cc
     grib_dumper_class_default.cc
-    grib_dumper_class_keys.cc
     grib_dumper_class_bufr_encode_C.cc
     grib_dumper_class_bufr_encode_filter.cc
     grib_dumper_class_bufr_encode_fortran.cc
@@ -295,7 +291,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     grib_geography.cc
     grib_handle.cc
-    grib_header_compute.cc
     grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc
@@ -327,9 +322,6 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_box.cc
-    grib_box_class.cc
-    grib_box_class_gen.cc
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
@@ -365,8 +357,6 @@ list( APPEND eccodes_src_files
     grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
-    grib_box_class.h
-    grib_box_factory.h
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h
@@ -406,8 +396,7 @@ list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian_omp.cc grib_bits_any_endian_omp.cc
     encode_double_array.cc
     grib_bits_ibmpow.cc
-    grib_bits_ibmpow_opt.cc
-    minmax_val.cc )
+    grib_bits_ibmpow_opt.cc )
 
 if(UNIX)
     ecbuild_get_date(eccodes_BUILD_DATE)

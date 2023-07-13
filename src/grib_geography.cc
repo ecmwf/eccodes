@@ -9,25 +9,18 @@
  */
 
 /***************************************************************************
- *   Jean Baptiste Filippi - 01.11.2005                                                           *
- *                                                                         *
+ *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#include <math.h>
+#include <cmath>
+#include <algorithm>
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 #define MAXITER 10
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 #define DEG2RAD 0.01745329251994329576  /* pi over 180 */
-
-#ifndef MAX
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#endif
-#ifndef MIN
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#endif
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -4067,15 +4060,15 @@ void rotate(const double inlat, const double inlon,
     const double ZCXMXC = cos(ZXMXC);
     const double ZSYREG = sin(DEG2RAD * inlat);
     const double ZCYREG = cos(DEG2RAD * inlat);
-    double ZSYROT       = ZCYCEN * ZSYREG - ZSYCEN * ZCYREG * ZCXMXC;
+    double ZSYROT = ZCYCEN * ZSYREG - ZSYCEN * ZCYREG * ZCXMXC;
 
-    ZSYROT = MAX(MIN(ZSYROT, +1.0), -1.0);
+    ZSYROT = std::max(std::min(ZSYROT, +1.0), -1.0);
 
     PYROT = asin(ZSYROT) * RAD2DEG;
 
     ZCYROT = cos(PYROT * DEG2RAD);
     ZCXROT = (ZCYCEN * ZCYREG * ZCXMXC + ZSYCEN * ZSYREG) / ZCYROT;
-    ZCXROT = MAX(MIN(ZCXROT, +1.0), -1.0);
+    ZCXROT = std::max(std::min(ZCXROT, +1.0), -1.0);
     ZSXROT = ZCYREG * ZSXMXC / ZCYROT;
 
     PXROT = acos(ZCXROT) * RAD2DEG;

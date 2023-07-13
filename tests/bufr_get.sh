@@ -104,6 +104,16 @@ result=`${tools_dir}/bufr_get -f -p isSatellite,ident b003_56.bufr`
 result=`${tools_dir}/bufr_get -p file b004_145.bufr`
 [ "$result" = "b004_145.bufr" ]
 
+# Decoding the "unpack" key also decodes the whole Data Section
+result=`${tools_dir}/bufr_get -f -p heightOfStation aaen_55.bufr`
+[ "$result" = "not_found" ]
+result=`${tools_dir}/bufr_get -p unpack,heightOfStation aaen_55.bufr`
+[ "$result" = "0 858000" ]
+result=`${tools_dir}/bufr_get -p unpack:d,heightOfStation aaen_55.bufr`
+[ "$result" = "0 858000" ]
+result=`${tools_dir}/bufr_get -p unpack:s,heightOfStation aaen_55.bufr`
+[ "$result" = "0 858000" ]
+
 
 # Clean up
 rm -f $fLog $fTmp $res_get $tempRef

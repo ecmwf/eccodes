@@ -10,8 +10,12 @@
 
 . ./include.ctest.sh
 
-tempLog=temp.ls.log
-rm -f $tempLog
+label="grib_ls_test"
+tempLog=temp.$label.log
+temp1=temp.$label.1.txt
+temp2=temp.$label.2.txt
+tempText=temp.$label.txt
+rm -f $temp1 $temp2 $tempText $tempLog
 
 sample_g1="$ECCODES_SAMPLES_PATH/GRIB1.tmpl"
 sample_g2="$ECCODES_SAMPLES_PATH/GRIB2.tmpl"
@@ -86,7 +90,6 @@ if [ -f "sst_globus0083.grib" ]; then
   ${tools_dir}/grib_ls sst_globus0083.grib > /dev/null
 fi
 
-
 echo "GRIB-387 printing key of type byte..."
 # ----------------------------------------------------------
 ${tools_dir}/grib_ls -p uuidOfVGrid test_uuid.grib2 > /dev/null
@@ -97,13 +100,14 @@ type=`${tools_dir}/grib_get -wcount=1 -p typeOfLevel test_uuid.grib2`
 
 echo "GRIB-213 nearest with land-sea mask..."
 # ----------------------------------------------------------
-temp_ls=temp.grib_ls.grib-213.txt
-${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
-grep -q 'Point chosen #3 index=21 .* distance=11\.' $temp_ls
+${tools_dir}/grib_ls -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+grep -q 'Point chosen #3 index=21 .* distance=11\.' $tempText
 
-${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$temp_ls
-grep -q 'Point chosen #2 index=749 .* distance=204\.' $temp_ls
+${tools_dir}/grib_ls -l 53,2,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+grep -q 'Point chosen #2 index=749 .* distance=204\.' $tempText
 
+${tools_dir}/grib_get -F%.2f -l 85,13,1,reduced_gaussian_lsm.grib1 reduced_gaussian_surface.grib1 >$tempText
+grep -q '252.88' $tempText
 
 echo "ECC-278: grib_ls -n namespace..."
 # ----------------------------------------------------------
@@ -115,8 +119,6 @@ grib_check_key_equals $sample_g1 angleSubdivisions 1000
 grib_check_key_equals $sample_g2 angleSubdivisions 1000000
 
 # Print 'offset' key as string and integer
-temp1=temp.grib_ls.1.txt
-temp2=temp.grib_ls.2.txt
 ${tools_dir}/grib_ls -p offset:s tigge_cf_ecmwf.grib2 > $temp1
 ${tools_dir}/grib_ls -p offset:i tigge_cf_ecmwf.grib2 > $temp2
 diff $temp1 $temp2
@@ -128,59 +130,66 @@ grib_check_key_equals $sample_g2 'section0Pointer,section1Pointer,section3Pointe
 echo "Test constraints: -w option..."
 # ----------------------------------------------------------
 file=tigge_pf_ecmwf.grib2 # Has 38 messages
-${tools_dir}/grib_ls -w count!=1 $file > $temp_ls
-grep -q "37 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w count!=1 $file > $tempText
+grep -q "37 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w count=1/2/38 $file > $temp_ls
-grep -q "3 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w count=1/2/38 $file > $tempText
+grep -q "3 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName=u $file > $temp_ls
-grep -q "3 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName=u $file > $tempText
+grep -q "3 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName=u/v $file > $temp_ls
-grep -q "5 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName=u/v $file > $tempText
+grep -q "5 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName!=u/v $file > $temp_ls
-grep -q "33 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName!=u/v $file > $tempText
+grep -q "33 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName=u/v,level=925 $file > $temp_ls
-grep -q "2 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName=u/v,level=925 $file > $tempText
+grep -q "2 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName=u/v/10u/10v,level=925/10 $file > $temp_ls
-grep -q "4 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName=u/v/10u/10v,level=925/10 $file > $tempText
+grep -q "4 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w packingType!=grid_simple $file > $temp_ls
-grep -q "0 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w packingType!=grid_simple $file > $tempText
+grep -q "0 of 38 messages" $tempText
 
-${tools_dir}/grib_ls -w units!=K $file > $temp_ls
-grep -q "30 of 38 messages" $temp_ls
+${tools_dir}/grib_ls -w units!=K $file > $tempText
+grep -q "30 of 38 messages" $tempText
 
 file=mixed.grib # Has 14 messages
-${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $temp_ls
-grep -q "12 of 14 messages" $temp_ls
+${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $tempText
+grep -q "12 of 14 messages" $tempText
 
-${tools_dir}/grib_ls -w packingType=grid_simple/grid_simple_matrix,gridType=regular_ll/regular_gg $file > $temp_ls
-grep -q "12 of 14 messages" $temp_ls
+${tools_dir}/grib_ls -w packingType=grid_simple/grid_simple_matrix,gridType=regular_ll/regular_gg $file > $tempText
+grep -q "12 of 14 messages" $tempText
 
-${tools_dir}/grib_ls -w typeOfLevel=surface,centre=7 $file > $temp_ls
-grep -q "3 of 14 messages" $temp_ls
+${tools_dir}/grib_ls -w typeOfLevel=surface,centre=7 $file > $tempText
+grep -q "3 of 14 messages" $tempText
 
-${tools_dir}/grib_ls -w shortName=t/10u,gridType=regular_gg $file > $temp_ls
-grep -q "5 of 14 messages" $temp_ls
+${tools_dir}/grib_ls -w shortName=t/10u,gridType=regular_gg $file > $tempText
+grep -q "5 of 14 messages" $tempText
 
 
 # ECC-1528: Try some invalid values for the count constraint
 for cval in -1 0 xx; do
   set +e
-  rm -f $temp_ls
-  ${tools_dir}/grib_ls -w count=$cval $file > $temp_ls 2>&1
+  rm -f $tempText
+  ${tools_dir}/grib_ls -w count=$cval $file > $tempText 2>&1
   status=$?
   set -e
   [ $status -ne 0 ]
-  grep -q "Invalid value for key 'count'" $temp_ls
+  grep -q "Invalid value for key 'count'" $tempText
 done
 
 
+# ECC-1562: Segmentation fault: Invalid orderby directive
+set +e
+${tools_dir}/grib_ls -B'shortName: asc' tigge_af_ecmwf.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid type for key=shortName" $tempText
+
 # Clean up
-rm -f $temp1 $temp2
-rm -f $temp_ls
+rm -f $temp1 $temp2 $tempText $tempLog

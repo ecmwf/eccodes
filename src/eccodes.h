@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
     \ingroup keys_iterator
@@ -787,6 +786,7 @@ int codes_get_double(const codes_handle* h, const char* key, double* value);
  * @return            0 if OK, integer value on error
  */
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
+int codes_get_float_element(const codes_handle* h, const char* key, int i, float* value);
 
 /**
  *  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
@@ -799,6 +799,7 @@ int codes_get_double_element(const codes_handle* h, const char* key, int i, doub
  * @return            0 if OK, integer value on error
  */
 int codes_get_double_elements(const codes_handle* h, const char* key, const int* index_array, long size, double* value);
+int codes_get_float_elements(const codes_handle* h, const char* key, const int* index_array, long size, float* value);
 
 /**
  *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -847,6 +848,7 @@ int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes
  * @return         0 if OK, integer value on error
  */
 int codes_get_double_array(const codes_handle* h, const char* key, double* vals, size_t* length);
+int codes_get_float_array(const codes_handle* h, const char* key, float* vals, size_t* length);
 
 /**
  *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -930,12 +932,14 @@ int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes
  * @return            0 if OK, integer value on error
  */
 int codes_set_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 /**
  * Same as codes_set_double_array but allows setting of READ-ONLY keys like codedValues.
  * Use with great caution!!
  */
 int codes_set_force_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_force_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 
 /**
@@ -1318,6 +1322,7 @@ int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 int codes_keys_iterator_set_flags(codes_keys_iterator* kiter, unsigned long flags);
 int codes_keys_iterator_get_long(const codes_keys_iterator* kiter, long* v, size_t* len);
 int codes_keys_iterator_get_double(const codes_keys_iterator* kiter, double* v, size_t* len);
+int codes_keys_iterator_get_float(const codes_keys_iterator* kiter, float* v, size_t* len);
 int codes_keys_iterator_get_string(const codes_keys_iterator* kiter, char* v, size_t* len);
 int codes_keys_iterator_get_bytes(const codes_keys_iterator* kiter, unsigned char* v, size_t* len);
 
@@ -1353,6 +1358,10 @@ int codes_is_defined(const codes_handle* h, const char* key);
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */
 int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
+
+/* Returns 1 if the BUFR key is a coordinate descriptor and 0 otherwise.
+   The error code is the final argument */
+int codes_bufr_key_is_coordinate(const codes_handle* h, const char* key, int* err);
 
 int codes_set_missing(codes_handle* h, const char* key);
 /* The truncation is the Gaussian number (or order) */

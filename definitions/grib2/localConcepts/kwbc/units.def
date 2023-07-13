@@ -65,12 +65,6 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 199 ;
 	}
-#Potential evaporation rate
-'W m**-2' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 200 ;
-	}
 #Snow cover
 '%' = {
 	 discipline = 0 ;
@@ -179,7 +173,7 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 193 ;
 	}
-#UV index 
+#UV index
 'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
@@ -1596,7 +1590,7 @@
 	 parameterNumber = 196 ;
 	}
 #Ocean Heat Content
-'Jm-2' = {
+'J m**-2' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
 	 parameterNumber = 197 ;

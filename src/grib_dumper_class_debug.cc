@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -191,8 +191,12 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             fprintf(self->dumper.out, "%ld-%ld %s %s = %ld", self->begin, self->theEnd, a->creator->op, a->name, value);
         if (comment)
             fprintf(self->dumper.out, " [%s]", comment);
+        if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+            fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
         if ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)
             fprintf(self->dumper.out, " %s", "(can be missing)");
+        if ((a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
+            fprintf(self->dumper.out, " %s", "(read-only)");
     }
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_long]", err, grib_get_error_message(err));
@@ -267,6 +271,8 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%ld-%ld %s %s = %g", self->begin, self->theEnd, a->creator->op, a->name, value);
     if (comment)
         fprintf(self->dumper.out, " [%s]", comment);
+    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+        fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_double]", err, grib_get_error_message(err));
     aliases(d, a);
@@ -315,6 +321,9 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (comment)
         fprintf(self->dumper.out, " [%s]", comment);
+    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+        fprintf(self->dumper.out, " (%s)", grib_get_type_name(grib_accessor_get_native_type(a)));
+
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_debug::dump_string]", err, grib_get_error_message(err));
     aliases(d, a);
@@ -444,7 +453,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
@@ -454,11 +462,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
     }
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
@@ -488,12 +491,11 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     /* grib_section* s = grib_get_sub_section(a); */
     grib_section* s = a->sub_section;
 
-#if 1
     if (a->name[0] == '_') {
         grib_dump_accessors_block(d, block);
         return;
     }
-#endif
+
     for (i = 0; i < d->depth; i++)
         fprintf(self->dumper.out, " ");
     fprintf(self->dumper.out, "======> %s %s (%ld,%ld,%ld)\n", a->creator->op,

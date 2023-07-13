@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 5.53, BiFourier coefficients data - complex packing
-# Spectral data for limited area models \u2013 complex packing
+# Spectral data for limited area models - complex packing
 
 include "grib2/template.5.packing.def";
 

@@ -662,7 +662,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         printf("  comparing %s", name);
 
     /* If key was blocklisted, then we should not have got here */
-    DebugAssert(!blocklisted(name));
+    DEBUG_ASSERT(!blocklisted(name));
 
     if (type1 == GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h1, name, &type1)) != GRIB_SUCCESS) {
         printInfo(h1);
@@ -1153,14 +1153,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             nextb=nextb->next;
         } */
     }
-
-#if 0
-    {
-        long of1,of2; /* Debugging: print offset of each handle */
-        grib_get_long(h1, "offset", &of1); grib_get_long(h2, "offset", &of2);
-        printf("of1=%lu   of2=%lu\n",of1,of2);
-    }
-#endif
 
     if (headerMode) {
         const void *msg1 = NULL, *msg2 = NULL;

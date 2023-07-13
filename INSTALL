@@ -3,11 +3,9 @@ How to build and install ecCodes library/tools
 
 Building and installation has been tested on several platforms and with several compilers.
 However for some platforms modifications to the installation engine may be required.
-If you encounter any problems during the installation procedure please send an e-mail
-with your problem to:
+If you encounter any problems during the installation procedure, please visit our Support Portal:
 
-    Software.Support@ecmwf.int
-
+    https://support.ecmwf.int
 
 Installation using CMake
 ------------------------

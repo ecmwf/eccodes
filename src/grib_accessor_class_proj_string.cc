@@ -36,7 +36,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int get_native_type(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_proj_string
 {
@@ -54,30 +53,32 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
     "proj_string",                      /* name */
     sizeof(grib_accessor_proj_string),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    0,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    0,              /* unpack_double */
+    0,               /* unpack_float */
+    0,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -86,8 +87,10 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -95,42 +98,6 @@ static grib_accessor_class _grib_accessor_class_proj_string = {
 
 
 grib_accessor_class* grib_accessor_class_proj_string = &_grib_accessor_class_proj_string;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -151,17 +118,16 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_STRING;
 }
 
-/* Function pointer than takes a handle and returns the proj string */
+// Function pointer than takes a handle and returns the proj string
 typedef int (*proj_func)(grib_handle*, char*);
 struct proj_mapping
 {
-    const char* gridType; /* key gridType */
-    proj_func func;       /* function to compute proj string */
+    const char* gridType; // key gridType
+    proj_func func;       // function to compute proj string
 };
 typedef struct proj_mapping proj_mapping;
 
-
-/* This should only be called for GRID POINT data (not spherical harmonics etc) */
+// This should only be called for GRID POINT data (not spherical harmonics etc)
 static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
 {
     int err = 0;
@@ -177,7 +143,7 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
     return err;
 }
 
-/* Caller must have allocated enough space in the 'result' argument */
+// Caller must have allocated enough space in the 'result' argument
 static int get_earth_shape(grib_handle* h, char* result)
 {
     int err      = 0;
@@ -185,45 +151,29 @@ static int get_earth_shape(grib_handle* h, char* result)
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
     if (major == minor)
-        snprintf(result, 128, "+R=%lf", major); /* spherical */
+        snprintf(result, 128, "+R=%lf", major); // spherical
     else
-        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); /*oblate*/
+        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); // oblate
     return err;
 }
-#if 0
-static int proj_regular_latlon(grib_handle* h, char* result)
-{
-    int err        = 0;
-    char shape[64] = {0,};
-    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
-        return err;
-    snprintf(result, 128, "+proj=latlong %s", shape);
-    return err;
-}
-#endif
 
 static int proj_space_view(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
-#if 0
-    int err        = 0;
-    char shape[64] = {0,};
-    double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
-
-    if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
-        return err;
-
-    if ((err = grib_get_double_internal(h, "longitudeOfSubSatellitePointInDegrees", &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
-        return err;
-
-    snprintf(result, 526, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
-    return err;
-
-    /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
-    snprintf(result, 526, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
-    return err;
-#endif
+    //     int err        = 0;
+    //     char shape[64] = {0,};
+    //     double latOfSubSatellitePointInDegrees, lonOfSubSatellitePointInDegrees;
+    //     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
+    //         return err;
+    //     if ((err = grib_get_double_internal(h, "longitudeOfSubSatellitePointInDegrees", &lonOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
+    //         return err;
+    //     snprintf(result, 526, "+proj=geos +lon_0=%lf +h=35785831 +x_0=0 +y_0=0 %s", lonOfSubSatellitePointInDegrees, shape);
+    //     return err;
+    //     /* Experimental: For now do the same as gdalsrsinfo - hard coded values! */
+    //     snprintf(result, 526, "+proj=geos +lon_0=0 +h=35785831 +x_0=0 +y_0=0 %s",  shape);
+    //     return err;
 }
+
 static int proj_albers(grib_handle* h, char* result)
 {
     return GRIB_NOT_IMPLEMENTED;
@@ -297,6 +247,19 @@ static int proj_polar_stereographic(grib_handle* h, char* result)
     return err;
 }
 
+// ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
+//           These are not 'projected' grids!
+static int proj_unprojected(grib_handle* h, char* result)
+{
+    int err = 0;
+    //char shape[64] = {0,};
+    //if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
+    //snprintf(result, 1024, "+proj=longlat %s", shape);
+    snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
+
+    return err;
+}
+
 static int proj_mercator(grib_handle* h, char* result)
 {
     int err             = 0;
@@ -314,7 +277,10 @@ static int proj_mercator(grib_handle* h, char* result)
 
 #define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
-    /*{ "regular_ll", &proj_regular_latlon },*/
+    { "regular_ll", &proj_unprojected },
+    { "regular_gg", &proj_unprojected },
+    { "reduced_ll", &proj_unprojected },
+    { "reduced_gg", &proj_unprojected },
 
     { "mercator", &proj_mercator },
     { "lambert", &proj_lambert_conformal },
@@ -350,7 +316,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
                 snprintf(v, 64, "EPSG:4326");
             }
             else {
-                /* Invoke the appropriate function to get the target proj string */
+                // Invoke the appropriate function to get the target proj string
                 if ((err = pm.func(h, v)) != GRIB_SUCCESS) return err;
             }
         }

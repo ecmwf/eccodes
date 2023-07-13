@@ -665,7 +665,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int i;
+                size_t i;
                 countdiff = 0;
                 for (i = 0; i < len1; i++)
                     if (lval1[i] != lval2[i])
@@ -726,7 +726,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
                 if (memcmp(uval1, uval2, len1) != 0) {
-                    int i;
+                    size_t i;
                     for (i = 0; i < len1; i++)
                         if (uval1[i] != uval2[i]) {
                             printInfo(h1);
@@ -735,7 +735,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                                 printf("[%s] byte values are different: [%02x] and [%02x]\n",
                                        name, uval1[i], uval2[i]);
                             else
-                                printf("[%s] byte value %d of %ld are different: [%02x] and [%02x]\n",
+                                printf("[%s] byte value %zu of %ld are different: [%02x] and [%02x]\n",
                                        name, i, (long)len1, uval1[i], uval2[i]);
 
                             err1 = GRIB_VALUE_MISMATCH;
@@ -900,28 +900,26 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
             return 0;
         }
-#if 0
-        else {
-            int lcount=count,ii;
-            if (options->current_infile) lcount=options->current_infile->filter_handle_count;
-            if (size1 != size2) {
-                printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
-            }
-            if (memcmp_ret) {
-                unsigned char *m1=(unsigned char*)msg1;
-                unsigned char *m2=(unsigned char*)msg2;
-                printf("=== list of different bytes for message %d\n",lcount);
-                for (ii=0;ii<size1;ii++) {
-                    if (memcmp(m1,m2,1)) {
-                        printf("  %d 0x%.2X != 0x%.2X\n",ii,*m1,*m2);
-                    }
-                    m1++; m2++;
-                }
-            }
-            return err;
-        }
-#endif
 
+//         else {
+//             int lcount=count,ii;
+//             if (options->current_infile) lcount=options->current_infile->filter_handle_count;
+//             if (size1 != size2) {
+//                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
+//             }
+//             if (memcmp_ret) {
+//                 unsigned char *m1=(unsigned char*)msg1;
+//                 unsigned char *m2=(unsigned char*)msg2;
+//                 printf("=== list of different bytes for message %d\n",lcount);
+//                 for (ii=0;ii<size1;ii++) {
+//                     if (memcmp(m1,m2,1)) {
+//                         printf("  %d 0x%.2X != 0x%.2X\n",ii,*m1,*m2);
+//                     }
+//                     m1++; m2++;
+//                 }
+//             }
+//             return err;
+//         }
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {

@@ -116,6 +116,31 @@ grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalPro
 ${tools_dir}/grib_set -s stepType=mode,paramId=260320     $grib2_sample $temp
 grib_check_key_equals $temp productDefinitionTemplateNumber,typeOfStatisticalProcessing '8 101'
 
+# ECC-1577: stepType when typeOfTimeIncrement=255
+# -----------------------------------------------
+${tools_dir}/grib_set -s stepType=accum,typeOfTimeIncrement=255 $grib2_sample $temp
+grib_check_key_equals $temp stepType accum
+${tools_dir}/grib_set -s stepType=accum $grib2_sample $temp
+grib_check_key_equals $temp typeOfTimeIncrement 2
+
+${tools_dir}/grib_set -s stepType=avg,typeOfTimeIncrement=255 $grib2_sample $temp
+grib_check_key_equals $temp stepType avg
+${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
+grib_check_key_equals $temp typeOfTimeIncrement 3
+
+# Decode/Encode stepRange as an int and double
+${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange:s" "23-28"
+grib_check_key_equals $temp "stepRange:i" "28"
+grib_check_key_equals $temp "stepRange:d" "28"
+
+${tools_dir}/grib_set -s stepRange:i=24 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "24 24 24"
+# Should this be an error? currently this gets cast from double to int
+${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
+
+
 # Clean up
 rm -f $temp
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

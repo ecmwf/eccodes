@@ -10,8 +10,8 @@
 
 #include "grib_api_internal.h"
 
-/* Return the rank of the key using list of keys (For BUFR keys) */
-/* The argument 'keys' is an input as well as output from each call */
+// Return the rank of the key using list of keys (For BUFR keys)
+// The argument 'keys' is an input as well as output from each call
 int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* key)
 {
     grib_string_list* next = keys;
@@ -19,20 +19,20 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     int theRank            = 0;
     size_t size            = 0;
     grib_context* c        = h->context;
-    DebugAssert(h->product_kind == PRODUCT_BUFR);
+    DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value, key)) {
         prev = next;
         next = next->next;
     }
     if (!next) {
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
             next       = prev->next;
         }
     }
-    DebugAssert(next);
+    DEBUG_ASSERT(next);
     if (!next) return 0;
 
     if (!next->value) {
@@ -43,11 +43,11 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     next->count++;
     theRank = next->count;
     if (theRank == 1) {
-        /* If the count is 1 it could mean two things: */
-        /*   This is the first instance of the key and there is another one */
-        /*   This is the first and only instance of the key */
-        /* So we check if there is a second one of this key, */
-        /* If not, then rank is zero i.e. this is the only instance */
+        // If the count is 1 it could mean two things:
+        //   This is the first instance of the key and there is another one
+        //   This is the first and only instance of the key
+        // So we check if there is a second one of this key,
+        // If not, then rank is zero i.e. this is the only instance
         size_t slen = strlen(key) + 5;
         char* s = (char*)grib_context_malloc_clear(c, slen);
         snprintf(s, slen, "#2#%s", key);
@@ -77,14 +77,13 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
 
     while (codes_bufr_keys_iterator_next(kiter)) {
         char* name = codes_bufr_keys_iterator_get_name(kiter);
-        /* if the copy fails we want to keep copying without any errors.
-           This is because the copy can be between structures that are not
-           identical and we want to copy what can be copied and skip what
-           cannot be copied because is not in the output handle
-         */
+        // if the copy fails we want to keep copying without any errors.
+        //   This is because the copy can be between structures that are not
+        //   identical and we want to copy what can be copied and skip what
+        //   cannot be copied because is not in the output handle
         *err = codes_copy_key(hin, hout, name, 0);
         if (*err == 0) {
-            /* 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy */
+            // 'name' will be freed when we call codes_bufr_keys_iterator_delete so copy
             char* copied_name = strdup(name);
             k                 = grib_sarray_push(hin->context, k, copied_name);
         }
@@ -93,7 +92,7 @@ char** codes_bufr_copy_data_return_copied_keys(grib_handle* hin, grib_handle* ho
     keys   = grib_sarray_get_array(hin->context, k);
     grib_sarray_delete(hin->context, k);
     if (*nkeys > 0) {
-        /* Do the pack if something was copied */
+        // Do the pack if something was copied
         *err = grib_set_long(hout, "pack", 1);
     }
     codes_bufr_keys_iterator_delete(kiter);
@@ -116,18 +115,17 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
 
     while (codes_bufr_keys_iterator_next(kiter)) {
         char* name = codes_bufr_keys_iterator_get_name(kiter);
-        /* if the copy fails we want to keep copying without any error messages.
-           This is because the copy can be between structures that are not
-           identical and we want to copy what can be copied and skip what
-           cannot be copied because is not in the output handle
-         */
+        // if the copy fails we want to keep copying without any error messages.
+        //   This is because the copy can be between structures that are not
+        //   identical and we want to copy what can be copied and skip what
+        //   cannot be copied because is not in the output handle
         err = codes_copy_key(hin, hout, name, GRIB_TYPE_UNDEFINED);
         if (err == 0)
             nkeys++;
     }
 
     if (nkeys > 0) {
-        /* Do the pack if something was copied */
+        // Do the pack if something was copied
         err = grib_set_long(hout, "pack", 1);
     }
 
@@ -135,7 +133,7 @@ int codes_bufr_copy_data(grib_handle* hin, grib_handle* hout)
     return err;
 }
 
-#define BUFR_SECTION0_LEN 8 /* BUFR section 0 is always 8 bytes long */
+#define BUFR_SECTION0_LEN 8 // BUFR section 0 is always 8 bytes long
 static int bufr_extract_edition(const void* message, long* edition)
 {
     const long nbits_edition = 8;
@@ -145,7 +143,7 @@ static int bufr_extract_edition(const void* message, long* edition)
     *edition = (long)grib_decode_unsigned_long(pMessage, &pos_edition, nbits_edition);
     return GRIB_SUCCESS;
 }
-/* The ECMWF BUFR local use section */
+// The ECMWF BUFR local use section
 static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
     const unsigned char* pMessage = (const unsigned char*)message;
@@ -168,7 +166,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 
     unsigned char* p = (unsigned char*)message + offset_keyData;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     hdr->rdbType    = (long)grib_decode_unsigned_long(pMessage, &pos_rdbType, nbits_rdbType);
     hdr->oldSubtype = (long)grib_decode_unsigned_long(pMessage, &pos_oldSubtype, nbits_oldSubtype);
@@ -181,7 +179,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->localMinute = (long)grib_decode_unsigned_long(p, &start, 6);
     hdr->localSecond = (long)grib_decode_unsigned_long(p, &start, 6);
 
-    /* rdbtime */
+    // rdbtime
     p                  = (unsigned char*)message + offset_rdbtime;
     start              = 0;
     hdr->rdbtimeDay    = (long)grib_decode_unsigned_long(p, &start, 6);
@@ -189,7 +187,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     hdr->rdbtimeMinute = (long)grib_decode_unsigned_long(p, &start, 6);
     hdr->rdbtimeSecond = (long)grib_decode_unsigned_long(p, &start, 6);
 
-    /* rectime */
+    // rectime
     p                  = (unsigned char*)message + offset_rectime;
     start              = 0;
     hdr->rectimeDay    = (long)grib_decode_unsigned_long(p, &start, 6);
@@ -206,24 +204,24 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
     return GRIB_SUCCESS;
 }
 
-#define IDENT_LEN 9 /* 8 chars plus the final 0 terminator */
+#define IDENT_LEN 9 // 8 chars plus the final 0 terminator
 
-/* The ECMWF BUFR local use section */
+// The ECMWF BUFR local use section
 static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2, codes_bufr_header* hdr)
 {
-    int isSatelliteType       = 0;
+    bool isSatelliteType      = false;
     long start                = 0;
     const long offset_keyData = offset_section2 + 6;
-    const long offset_keyMore = offset_section2 + 19; /* 8 bytes long */
-    const long offset_keySat  = offset_section2 + 27; /* 9 bytes long */
+    const long offset_keyMore = offset_section2 + 19; // 8 bytes long
+    const long offset_keySat  = offset_section2 + 27; // 9 bytes long
 
     unsigned char* pKeyData = (unsigned char*)message + offset_keyData;
     char* pKeyMore          = (char*)message + offset_keyMore;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
-        isSatelliteType = 1;
+        isSatelliteType = true;
     }
     if (isSatelliteType || hdr->numberOfSubsets > 1) {
         hdr->isSatellite = 1;
@@ -233,7 +231,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     }
 
     if (hdr->isSatellite) {
-        unsigned char* pKeyMoreLong = (unsigned char*)message + offset_keyMore; /* as an integer */
+        unsigned char* pKeyMoreLong = (unsigned char*)message + offset_keyMore; // as an integer
         unsigned char* pKeySat      = (unsigned char*)message + offset_keySat;
         unsigned long lValue        = 0;
         start                       = 40;
@@ -277,13 +275,13 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
         lValue              = grib_decode_unsigned_long(pKeyData, &start, 26);
         hdr->localLongitude = (lValue - 18000000.0) / 100000.0;
 
-        /* interpret keyMore as a string. Copy to a temporary */
+        // interpret keyMore as a string. Copy to a temporary
         for (i = 0; i < IDENT_LEN - 1; ++i) {
             temp[i] = *pKeyMore++;
         }
         temp[i] = '\0';
         pTemp = temp;
-        string_lrtrim(&pTemp, 1, 1); /* Trim left and right */
+        string_lrtrim(&pTemp, 1, 1); // Trim left and right
         strncpy(hdr->ident, pTemp, IDENT_LEN - 1);
     }
 
@@ -331,7 +329,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1 * 8;
     long pos_localTablesVersionNumber   = 19 * 8;
 
-    const long typicalCentury       = 21; /* This century */
+    const long typicalCentury       = 21; // This century
     long typicalYearOfCentury       = 0;
     long nbits_typicalYearOfCentury = 1 * 8;
     long pos_typicalYearOfCentury   = 20 * 8;
@@ -352,11 +350,11 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     long offset_section2       = 0;
     long offset_section3       = 0;
     long nbits_numberOfSubsets = 2 * 8;
-    long pos_numberOfSubsets   = 0; /*depends on offset_section3*/
+    long pos_numberOfSubsets   = 0; //depends on offset_section3
 
     unsigned long section3Flags;
     long nbits_section3Flags = 1 * 8;
-    long pos_section3Flags   = 0; /*depends on offset_section3*/
+    long pos_section3Flags   = 0; //depends on offset_section3
 
     totalLength = grib_decode_unsigned_long(pMessage, &pos_totalLength, nbits_totalLength);
     if (totalLength != hdr->message_size) {
@@ -383,7 +381,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
     hdr->typicalDate              = hdr->typicalYear * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
     hdr->typicalTime              = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
-    offset_section2          = BUFR_SECTION0_LEN + section1Length; /*bytes*/
+    offset_section2          = BUFR_SECTION0_LEN + section1Length; //bytes
     section2Length           = 0;
     hdr->localSectionPresent = (section1Flags != 0);
     if (hdr->localSectionPresent) {
@@ -399,7 +397,7 @@ static int bufr_decode_edition3(const void* message, codes_bufr_header* hdr)
         }
     }
 
-    offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; /*bytes*/
+    offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; //bytes
     pos_numberOfSubsets   = (offset_section3 + 4) * 8;
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
@@ -459,7 +457,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long nbits_localTablesVersionNumber = 1 * 8;
     long pos_localTablesVersionNumber   = 22 * 8;
 
-    long typicalYear2      = 0; /* corrected */
+    long typicalYear2      = 0; // corrected
     long nbits_typicalYear = 2 * 8;
     long pos_typicalYear   = 23 * 8;
 
@@ -482,11 +480,11 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     long offset_section2       = 0;
     long offset_section3       = 0;
     long nbits_numberOfSubsets = 2 * 8;
-    long pos_numberOfSubsets   = 0; /*depends on offset_section3*/
+    long pos_numberOfSubsets   = 0; //depends on offset_section3
 
     unsigned long section3Flags;
     long nbits_section3Flags = 1 * 8;
-    long pos_section3Flags   = 0; /*depends on offset_section3*/
+    long pos_section3Flags   = 0; //depends on offset_section3
 
     totalLength = grib_decode_unsigned_long(pMessage, &pos_totalLength, nbits_totalLength);
     if (totalLength != hdr->message_size) {
@@ -505,7 +503,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->localTablesVersionNumber     = (long)grib_decode_unsigned_long(pMessage, &pos_localTablesVersionNumber, nbits_localTablesVersionNumber);
 
     hdr->typicalYear   = (long)grib_decode_unsigned_long(pMessage, &pos_typicalYear, nbits_typicalYear);
-    typicalYear2       = hdr->typicalYear < 100 ? 2000 + hdr->typicalYear : hdr->typicalYear; /*ECC-556*/
+    typicalYear2       = hdr->typicalYear < 100 ? 2000 + hdr->typicalYear : hdr->typicalYear; //ECC-556
     hdr->typicalMonth  = (long)grib_decode_unsigned_long(pMessage, &pos_typicalMonth, nbits_typicalMonth);
     hdr->typicalDay    = (long)grib_decode_unsigned_long(pMessage, &pos_typicalDay, nbits_typicalDay);
     hdr->typicalHour   = (long)grib_decode_unsigned_long(pMessage, &pos_typicalHour, nbits_typicalHour);
@@ -514,7 +512,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
     hdr->typicalDate   = typicalYear2 * 10000 + hdr->typicalMonth * 100 + hdr->typicalDay;
     hdr->typicalTime   = hdr->typicalHour * 10000 + hdr->typicalMinute * 100 + hdr->typicalSecond;
 
-    offset_section2          = BUFR_SECTION0_LEN + section1Length; /*bytes*/
+    offset_section2          = BUFR_SECTION0_LEN + section1Length; //bytes
     section2Length           = 0;
     hdr->localSectionPresent = (section1Flags != 0);
     if (hdr->localSectionPresent) {
@@ -530,7 +528,7 @@ static int bufr_decode_edition4(const void* message, codes_bufr_header* hdr)
         }
     }
 
-    offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; /*bytes*/
+    offset_section3       = BUFR_SECTION0_LEN + section1Length + section2Length; //bytes
     pos_numberOfSubsets   = (offset_section3 + 4) * 8;
     hdr->numberOfSubsets  = grib_decode_unsigned_long(pMessage, &pos_numberOfSubsets, nbits_numberOfSubsets);
 
@@ -584,10 +582,10 @@ static int count_bufr_messages(grib_context* c, FILE* f, int* n, int strict_mode
 
     while (!done) {
         mesg = wmo_read_bufr_from_file_malloc(f, 0, &size, &offset, &err);
-        /*printf("Count so far=%d, mesg=%x, err=%d (%s)\n", *n, mesg, err, grib_get_error_message(err));*/
+        //printf("Count so far=%d, mesg=%x, err=%d (%s)\n", *n, mesg, err, grib_get_error_message(err));
         if (!mesg) {
             if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
-                done = 1; /* reached the end */
+                done = 1; // reached the end
                 break;
             }
             if (strict_mode)
@@ -621,25 +619,25 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     if (!c)
         c = grib_context_get_default();
     if (path_is_directory(filename)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: \"%s\" is a directory", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: \"%s\" is a directory", __func__, filename);
         return GRIB_IO_PROBLEM;
     }
     fp = fopen(filename, "rb");
     if (!fp) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read file \"%s\"", __func__, filename);
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
     err = count_bufr_messages(c, fp, num_messages, strict_mode);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to count BUFR messages in file \"%s\"", __func__, filename);
         fclose(fp);
         return err;
     }
 
     size = *num_messages;
     if (size == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: No BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: No BUFR messages in file \"%s\"", __func__, filename);
         return GRIB_INVALID_MESSAGE;
     }
     *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
@@ -669,8 +667,8 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         }
         if (!mesg) {
             if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
-                /* An error occurred */
-                grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+                // An error occurred
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read BUFR message", __func__);
                 if (strict_mode) {
                     fclose(fp);
                     return GRIB_DECODING_ERROR;
@@ -742,6 +740,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
             return "wiix";
         case 204:
             return "niwa";
+        case 213:
+            return "birk";
         case 214:
             return "lemm";
         case 215:
@@ -783,8 +783,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
     }
 }
 
-#if 0
-/* TODO: Not efficient as it opens the code table every time */
+#if defined(BUFR_PROCESS_CODE_TABLE)
+// TODO(masn): Not efficient as it opens the code table every time
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
     char full_path[2014] = {0,};
@@ -844,10 +844,10 @@ static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len)
 {
     static const char* NOT_FOUND = "not_found";
-    int isEcmwfLocal             = 0;
+    bool isEcmwfLocal            = false;
     Assert(bh);
     Assert(key);
-    *len = strlen(NOT_FOUND); /*By default*/
+    *len = strlen(NOT_FOUND); // By default
 
     isEcmwfLocal = (bh->ecmwfLocalSectionPresent == 1);
     Assert(!(isEcmwfLocal && bh->bufrHeaderCentre != 98));
@@ -911,7 +911,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     else if (strcmp(key, "ecmwfLocalSectionPresent") == 0)
         *len = snprintf(val, 32, "%ld", bh->ecmwfLocalSectionPresent);
 
-    /* Local ECMWF keys. Can be absent so must return NOT_FOUND */
+    // Local ECMWF keys. Can be absent so must return NOT_FOUND
     else if (strcmp(key, "rdbType") == 0) {
         if (isEcmwfLocal)
             *len = snprintf(val, 32, "%ld", bh->rdbType);
@@ -1111,7 +1111,7 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
     return GRIB_SUCCESS;
 }
 
-/* Returns 1 if the BUFR key is in the header and 0 if it is in the data section */
+// Returns 1 if the BUFR key is in the header and 0 if it is in the data section
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
 {
     grib_accessor* acc = grib_find_accessor(h, key);
@@ -1119,5 +1119,18 @@ int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err)
         *err = GRIB_NOT_FOUND;
         return 0;
     }
+    *err = GRIB_SUCCESS;
     return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_DATA) == 0);
+}
+
+// Returns 1 if the BUFR key is a coordinate descriptor
+int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err)
+{
+    grib_accessor* acc = grib_find_accessor(h, key);
+    if (!acc) {
+        *err = GRIB_NOT_FOUND;
+        return 0;
+    }
+    *err = GRIB_SUCCESS;
+    return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
 }

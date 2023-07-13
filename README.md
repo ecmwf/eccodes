@@ -67,9 +67,9 @@ To add the Python3 bindings, use pip3 install from PyPI as follows:
 For more details, please see:
 https://confluence.ecmwf.int/display/ECC/ecCodes+installation
 
-If you encounter any problems please send an e-mail with your problem to:
+If you encounter any problems please visit our Support Portal:
 
-   Software.Support@ecmwf.int
+   https://support.ecmwf.int
 
 
 

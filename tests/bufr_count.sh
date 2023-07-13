@@ -10,6 +10,9 @@
 
 . ./include.ctest.sh
 
+label="bufr_count_test"
+temp=temp.$label.truncated.bufr
+
 # Enter data dir
 cd ${data_dir}/bufr
 input=syno_multi.bufr
@@ -23,7 +26,6 @@ count=`${tools_dir}/codes_count $input`
 
 # Files with invalid (unreadable) messages
 # -----------------------------------------
-temp=$input.truncated
 # BUFR file size = 660 bytes. Write out only the first 640 bytes
 # thereby creating an unreadable final message
 head -c 640 $input > $temp
@@ -39,5 +41,5 @@ set -e
 vcount=`${tools_dir}/bufr_count -f $temp`
 [ "$vcount" = "2" ]
 
-
+# Clean up
 rm -f $temp
