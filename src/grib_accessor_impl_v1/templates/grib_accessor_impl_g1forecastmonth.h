@@ -1,0 +1,72 @@
+#ifndef _GRIB_ACCESSOR_IMPL_TEMPLATE_H_2023MMDD_
+#define _GRIB_ACCESSOR_IMPL_TEMPLATE_H_2023MMDD_
+
+#include "grib_accessor_impl_PARENT.h"
+
+namespace eccodes {
+
+    class grib_accessor_impl_TEMPLATE : public grib_accessor_impl_PARENT {
+    protected:
+        // grib_accessor_TEMPLATE data
+        // 
+        // WARNING: Whilst converting from C to C++ the code supports casting
+        //          this class to the equivalent grib_accessor_TEMPLATE C struct
+        //
+        //          This is only possible if the member variables MATCH EXACTLY!
+        //
+        //          DO NOT ADD any extra member variables to this class otherwise
+        //          this functionality will break!
+        //
+    public:
+        grib_accessor_impl_TEMPLATE(grib_section* p, grib_action* ga_creator);
+        ~grib_accessor_impl_TEMPLATE();
+        void init(const long len, grib_arguments* params) override;
+        int native_type() override { return SET_TYPE_OR_DELETE_THIS_OVERLOAD; }
+        int pack_missing() override;
+        int is_missing() override;
+        int pack_string_array(const char** v, size_t* len) override;
+        int pack_expression(grib_expression* e) override;
+        int unpack_string_array(char** v, size_t* len) override;
+        size_t string_length() override;
+        long byte_count() override;
+        long byte_offset() override;
+        long next_offset() override;
+        int value_count(long* count) override;
+        void dump(grib_dumper* dumper) override;
+        void post_init() override;
+        int notify_change(grib_accessor* observed) override;
+        void update_size(size_t s) override;
+        size_t preferred_size(int from_handle) override;
+        void resize(size_t new_size) override;
+        int nearest_smaller_value (double val, double* nearest) override;
+        grib_accessor* next_accessor(int mod) override;
+        int compare(grib_accessor_impl* ga_impl) override;
+        int unpack_double_element(size_t i, double* val) override;
+        int unpack_float_element(size_t i, float* val) override;
+        int unpack_double_element_set(const size_t* index_array, size_t len, double* val_array) override;
+        int unpack_float_element_set(const size_t* index_array, size_t len, float* val_array) override;
+        int unpack_double_subarray(double* val, size_t start, size_t len) override;
+        int clear() override;
+        grib_accessor_impl* make_clone(grib_section* s, int* err) override;
+
+    protected:
+        virtual void init_TEMPLATE(const long len, grib_arguments* params);
+
+        int pack_bytes(pack_buffer& bytes, std::size_t* packed_len) override;
+        int pack_double(pack_buffer& doubles, std::size_t* packed_len) override;
+        int pack_float(pack_buffer& floats, std::size_t* packed_len) override;
+        int pack_long(pack_buffer& longs, std::size_t* packed_len) override;
+        int pack_string(pack_buffer& chars, std::size_t* packed_len) override;
+
+        int unpack_bytes(byte_view bytes) override;
+        int unpack_double(double_view doubles) override;
+        int unpack_float(float_view floats) override;
+        int unpack_long(long_view longs) override;
+        int unpack_string(char_view chars) override;
+
+    private:
+        void init_TEMPLATE(const long len, grib_arguments* params);
+    };
+}
+
+#endif // _GRIB_ACCESSOR_IMPL_TEMPLATE_H_2023MMDD_

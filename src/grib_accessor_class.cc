@@ -19,7 +19,8 @@
 
 
 // C++ support
-#include "grib_accessor_impl/grib_accessor_impl_factory.h"
+#include "grib_accessor_impl/AccessorFactory.h"
+#include "grib_accessor_impl/Accessor.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
@@ -139,9 +140,9 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     size_t size            = 0;
 
     // See if we have a cpp implementation
-    if(eccodes::grib_accessor_impl_gen* ga_impl = eccodes::create_grib_accessor_impl(p, creator); ga_impl)
+    if(eccodes::AccessorPtr accessorPtr = eccodes::makeAccessor(p, creator, len, params); accessorPtr)
     {
-        a = (grib_accessor*)ga_impl; 
+        a = asGribAccessor(*accessorPtr);
     }
     else
     {
@@ -187,12 +188,12 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
             else
                 a->offset = 0;
         }
+
+        grib_init_accessor(a, len, params);
     }
 
-    // Verify that we created either a valid object
+    // Verify that we created a valid object
     Assert(a);
-
-    grib_init_accessor(a, len, params);
 
     size = grib_get_next_position_offset(a);
 

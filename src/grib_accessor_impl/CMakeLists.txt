@@ -13,15 +13,21 @@
 # Note the PARENT_SCOPE option sets the variable in the calling CMakeLists.txt
 # file - it remains undefined in this file: https://cmake.org/cmake/help/latest/command/set.html
 set(eccodes_grib_accessor_impl_src_files
-    ${CMAKE_CURRENT_LIST_DIR}/ga_impl_creators.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl.h
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_abstract_long_vector.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_factory.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_g1step_range.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_gen.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_helper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_accessor_impl_proj_string.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/grib_cpp_utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Accessor_Utils.h
+    ${CMAKE_CURRENT_LIST_DIR}/Accessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorConcept.h
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorFactory.h
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorMaker.h
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorPtr.h
+    ${CMAKE_CURRENT_LIST_DIR}/Generic.h
+    ${CMAKE_CURRENT_LIST_DIR}/ProjString.h
+    ${CMAKE_CURRENT_LIST_DIR}/Accessor_Utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Accessor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorFactory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorMaker.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AccessorPtr.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Generic.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ProjString.cpp
     ${CMAKE_CURRENT_LIST_DIR}/pack_buffer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/proj_string_helper.cpp
     PARENT_SCOPE
