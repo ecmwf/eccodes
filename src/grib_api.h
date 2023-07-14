@@ -783,6 +783,7 @@ int grib_get_long(const grib_handle* h, const char* key, long* value);
  * @return            0 if OK, integer value on error
  */
 int grib_get_double(const grib_handle* h, const char* key, double* value);
+int grib_get_float(const grib_handle* h, const char* key, float* value);
 
 /**
  *  Get as double the i-th element of the "key" array

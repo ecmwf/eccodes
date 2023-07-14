@@ -775,6 +775,7 @@ int codes_get_long(const codes_handle* h, const char* key, long* value);
  * @return            0 if OK, integer value on error
  */
 int codes_get_double(const codes_handle* h, const char* key, double* value);
+int codes_get_float(const codes_handle* h, const char* key, float* value);
 
 /**
  *  Get as double the i-th element of the "key" array
