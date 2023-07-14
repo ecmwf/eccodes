@@ -247,6 +247,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     self->dval = *val;
+    self->fval = *val;
     self->type = GRIB_TYPE_LONG;
 
     return GRIB_SUCCESS;
@@ -354,6 +355,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_context_free(c, self->cval);
     self->cval  = grib_context_strdup(c, val);
     self->dval  = atof(val);
+    self->fval  = atof(val);
     self->type  = GRIB_TYPE_STRING;
     self->cname = NULL;
     return GRIB_SUCCESS;
@@ -447,6 +449,7 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
     }
     else {
         variableAccessor->dval = self->dval;
+        variableAccessor->fval = self->fval;
     }
 
     return the_clone;

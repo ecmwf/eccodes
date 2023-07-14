@@ -40,6 +40,7 @@ typedef struct grib_accessor_bufr_group
     /* Members defined in gen */
     /* Members defined in variable */
     double dval;
+    float  fval;
     char*  cval;
     char*  cname;
     int    type;
