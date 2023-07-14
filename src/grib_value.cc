@@ -1055,6 +1055,29 @@ int grib_get_double(const grib_handle* h, const char* name, double* val)
     return ret;
 }
 
+int grib_get_float(const grib_handle* h, const char* name, float* val)
+{
+    size_t length           = 1;
+    grib_accessor* a        = NULL;
+    grib_accessors_list* al = NULL;
+    int ret                 = 0;
+
+    if (name[0] == '/') {
+        al = grib_find_accessors_list(h, name);
+        if (!al)
+            return GRIB_NOT_FOUND;
+        ret = grib_unpack_float(al->accessor, val, &length);
+        grib_context_free(h->context, al);
+    }
+    else {
+        a = grib_find_accessor(h, name);
+        if (!a)
+            return GRIB_NOT_FOUND;
+        ret = grib_unpack_float(a, val, &length);
+    }
+    return ret;
+}
+
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i, double* val)
 {
     int ret = grib_get_double_element(h, name, i, val);
