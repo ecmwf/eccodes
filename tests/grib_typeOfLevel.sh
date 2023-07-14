@@ -22,6 +22,8 @@ fi
 def_file="$ECCODES_DEFINITION_PATH/grib2/typeOfLevelConcept.def"
 
 rm -f $temp
+
+# uniq -d outputs a single copy of each line that is repeated in the input
 grep "^'" $def_file | awk -F= '{print $1}' | tr -d "' " | sort | uniq -d > $temp
 
 if [ -s "$temp" ]; then

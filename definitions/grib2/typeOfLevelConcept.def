@@ -1,4 +1,4 @@
-# Concept typeOfLevel 
+# Concept typeOfLevel
 'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
