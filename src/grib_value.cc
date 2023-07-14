@@ -15,6 +15,7 @@
 #include "grib_value.h"
 #include "grib_accessor.h"
 #include <float.h>
+#include <limits>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
