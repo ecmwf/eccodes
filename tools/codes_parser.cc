@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
     for (i = 1; i < argc; i++) {
         printf("%s ... ", argv[i]);
         fflush(stdout);
+        // argv can be "-" to indicate stdin
         if (!(a = grib_parse_file(c, argv[i]))) {
             fail++;
             printf("FAILED\n");
