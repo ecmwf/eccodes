@@ -68,7 +68,7 @@ ${tools_dir}/grib_ls -l 0,0 $tempGrib > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "Nearest neighbour functionality is not supported for grid type" $tempText
+grep -q "Nearest neighbour functionality is not supported for grid: Variable resolution latitude/longitude" $tempText
 
 
 # Clean up
