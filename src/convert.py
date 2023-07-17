@@ -352,10 +352,10 @@ class Class:
 
             if self._super == "Generic":
                 self._include_dir = "cpp"
+                self._top = True
             else:
                 self._include_dir = ARGS.target
-
-            self._top = False
+                self._top = False
 
     def finalise(self, other_classes):
         self._other_classes = other_classes
@@ -490,6 +490,10 @@ class Class:
     @property
     def name(self):
         return self._name
+    
+    @property
+    def name_camel_case(self):
+        return pascal_to_camel(self._name)
 
     @property
     def cname(self):
@@ -505,7 +509,11 @@ class Class:
 
     @property
     def top_level_code(self):
-        return self._top_level_code
+        tidy_top_level_code = defaultdict(list)
+        for func_name in self._top_level_code:
+            tidy_top_level_code[func_name] = [self.tidy_top_level(line) for line in self._top_level_code[func_name]]
+        return tidy_top_level_code
+        #return self._top_level_code
 
     @property
     def members(self):
@@ -686,11 +694,16 @@ class Class:
 
 
     def tidy_top_level(self, line):
-        for k, v in self.substitute_str_top_level.items():
-            line = line.replace(k, v)
+        #for k, v in self.substitute_str_top_level.items():
+        #    line = line.replace(k, v)
 
-        for k, v in self.substitute_re_top_level.items():
-            line = re.sub(k, v, line)
+        #for k, v in self.substitute_re_top_level.items():
+        #    line = re.sub(k, v, line)
+
+        # Transform any function pointers in top level structs etc
+        for m in self._static_functions:
+            name = m.name
+            line = re.sub(rf"\b{name}\b", f"{snake_to_camel(transform_function_name(name))}", line)
 
         return line
 
@@ -958,19 +971,41 @@ def parse_file(path):
         return klass
 
 
+def write_makefile(class_list):
+    template = env.get_template("CMakeLists.txt.j2")
+    content = template.render(c=class_list)
+
+    target = os.path.join(ARGS.target, "CMakeLists.txt")
+    LOG.info("Writing %s", target)
+
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    with open(target, "w") as f:
+        f.write(content)
+
+
+ignore_files = ["grib_accessor_class_gen.cc"]
+
 def main():
     classes = {}
     for a in ARGS.path:
-        klass = parse_file(a)
-        if klass is not None:
-            classes[klass.name] = klass
+        if a in ignore_files:
+            LOG.info("Ignoring file %s", a)
+        else:
+            klass = parse_file(a)
+            if klass is not None:
+                classes[klass.name] = klass
 
     LOG.info("Finalising %s classes", len(classes))
     for klass in classes.values():
         klass.finalise(classes)
 
+    class_list = []
+
     for klass in classes.values():
+        class_list.append(klass.name)
         klass.dump()
+
+    write_makefile(class_list)
 
 
 if __name__ == "__main__":

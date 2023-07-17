@@ -11,15 +11,9 @@
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005
  *   Enrico Fucile
- *                                                                         *
  ***************************************************************************/
 
 #include "grib_accessor.h"
-
-// C++ support
-#include "cpp/eccodes/accessor/Accessor.h"
-#include "cpp/eccodes/accessor/AccessorFactory.h"
-
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -36,11 +30,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 
 void grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorDump(*accessorPtr, f);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->dump) {
@@ -54,11 +43,6 @@ void grib_accessor_dump(grib_accessor* a, grib_dumper* f)
 
 int grib_pack_missing(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackMissing(*accessorPtr);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -73,11 +57,6 @@ int grib_pack_missing(grib_accessor* a)
 
 int grib_pack_zero(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorClear(*accessorPtr);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -92,11 +71,6 @@ int grib_pack_zero(grib_accessor* a)
 
 int grib_is_missing_internal(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorIsMissing(*accessorPtr);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -111,11 +85,6 @@ int grib_is_missing_internal(grib_accessor* a)
 
 int grib_pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackDouble(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -130,11 +99,6 @@ int grib_pack_double(grib_accessor* a, const double* v, size_t* len)
 
 int grib_pack_float(grib_accessor* a, const float* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackFloat(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->pack_float) {
@@ -148,11 +112,6 @@ int grib_pack_float(grib_accessor* a, const float* v, size_t* len)
 
 int grib_pack_expression(grib_accessor* a, grib_expression* e)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackExpression(*accessorPtr, e);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -167,11 +126,6 @@ int grib_pack_expression(grib_accessor* a, grib_expression* e)
 
 int grib_pack_string(grib_accessor* a, const char* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackString(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
     while (c) {
@@ -186,11 +140,6 @@ int grib_pack_string(grib_accessor* a, const char* v, size_t* len)
 
 int grib_pack_string_array(grib_accessor* a, const char** v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackStringArray(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (string) %s",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?v:"(null)");*/
     while (c) {
@@ -205,11 +154,6 @@ int grib_pack_string_array(grib_accessor* a, const char** v, size_t* len)
 
 int grib_pack_long(grib_accessor* a, const long* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackLong(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -224,11 +168,6 @@ int grib_pack_long(grib_accessor* a, const long* v, size_t* len)
 
 int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPackBytes(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (bytes) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -243,11 +182,6 @@ int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t* len)
 
 int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackBytes(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (bytes)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while (c) {
@@ -262,11 +196,6 @@ int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len)
 
 int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_t len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackDoubleSubarray(*accessorPtr, v, start, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->unpack_double_subarray) {
@@ -280,11 +209,6 @@ int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_
 
 int grib_unpack_double(grib_accessor* a, double* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackDouble(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (double)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while (c) {
@@ -299,11 +223,6 @@ int grib_unpack_double(grib_accessor* a, double* v, size_t* len)
 
 int grib_unpack_float(grib_accessor* a, float* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackFloat(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         /* printf("grib_accessor.c grib_unpack_float:: c->name=%s\n",c->name); */
@@ -330,11 +249,6 @@ int grib_unpack<float>(grib_accessor* a, float* v, size_t* len)
 
 int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackDoubleElement(*accessorPtr, i, v);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->unpack_double_element) {
@@ -346,11 +260,6 @@ int grib_unpack_double_element(grib_accessor* a, size_t i, double* v)
 }
 int grib_unpack_float_element(grib_accessor* a, size_t i, float* v)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackFloatElement(*accessorPtr, i, v);
-    }
-
     /* grib_accessor_class* c = a->cclass;
     * while (c) {
     *     if (c->unpack_float_element) {
@@ -367,11 +276,6 @@ int grib_unpack_float_element(grib_accessor* a, size_t i, float* v)
  */
 int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackDoubleElementSet(*accessorPtr, index_array, len, val_array);
-    }
-
     grib_accessor_class* c = a->cclass;
     DEBUG_ASSERT(len > 0);
     while (c) {
@@ -384,11 +288,6 @@ int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, 
 }
 int grib_unpack_float_element_set(grib_accessor* a, const size_t* index_array, size_t len, float* val_array)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackFloatElementSet(*accessorPtr, index_array, len, val_array);
-    }
-
     /*
     *grib_accessor_class* c = a->cclass;
     *DEBUG_ASSERT(len > 0);
@@ -404,11 +303,6 @@ int grib_unpack_float_element_set(grib_accessor* a, const size_t* index_array, s
 
 int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackString(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /* grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (string)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while (c) {
@@ -423,11 +317,6 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
 
 int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackStringArray(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->unpack_string_array) {
@@ -509,11 +398,6 @@ int grib_accessors_list_unpack_string(grib_accessors_list* al, char** val, size_
 
 int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUnpackLong(*accessorPtr, v, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while (c) {
@@ -528,11 +412,6 @@ int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
 
 long grib_accessor_get_native_type(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorNativeType(*accessorPtr);
-    }
-
     grib_accessor_class* c = NULL;
     if (a)
         c = a->cclass;
@@ -548,11 +427,6 @@ long grib_accessor_get_native_type(grib_accessor* a)
 
 long grib_get_next_position_offset(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorNextOffset(*accessorPtr);
-    }
-
     grib_accessor_class* c = NULL;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is checking next (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     if (a)
@@ -569,11 +443,6 @@ long grib_get_next_position_offset(grib_accessor* a)
 
 long grib_string_length(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorStringLength(*accessorPtr);
-    }
-
     grib_accessor_class* c = NULL;
     if (a)
         c = a->cclass;
@@ -589,11 +458,6 @@ long grib_string_length(grib_accessor* a)
 
 long grib_byte_offset(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorByteOffset(*accessorPtr);
-    }
-
     grib_accessor_class* c = NULL;
     if (a)
         c = a->cclass;
@@ -609,11 +473,6 @@ long grib_byte_offset(grib_accessor* a)
 
 long grib_byte_count(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorByteCount(*accessorPtr);
-    }
-
     grib_accessor_class* c = NULL;
     if (a)
         c = a->cclass;
@@ -629,11 +488,6 @@ long grib_byte_count(grib_accessor* a)
 
 int grib_value_count(grib_accessor* a, long* count)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorValueCount(*accessorPtr, count);
-    }
-
     grib_accessor_class* c = NULL;
     int err                = 0;
     if (a)
@@ -664,11 +518,6 @@ int grib_accessors_list_value_count(grib_accessors_list* al, size_t* count)
 
 int grib_accessor_notify_change(grib_accessor* a, grib_accessor* changed)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorNotifyChange(*accessorPtr, changed);
-    }
-
     grib_accessor_class* c = NULL;
     if (a)
         c = a->cclass;
@@ -698,34 +547,13 @@ static void init_accessor(grib_accessor_class* c, grib_accessor* a, const long l
 
 void grib_init_accessor(grib_accessor* a, const long len, grib_arguments* args)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return; // Part of constructor
-    }
-
     init_accessor(a->cclass, a, len, args);
 }
-
-#if 0
-static void post_init_accessor(grib_accessor_class* c,grib_accessor* a)
-{
-    if(c) {
-        grib_accessor_class *s = c->super ? *(c->super) : NULL;
-        post_init_accessor(s,a);
-        if(c->post_init) c->post_init(a);
-    }
-}
-#endif
 
 /* For this one, ALL destroy are called */
 
 void grib_accessor_delete(grib_context* ct, grib_accessor* a)
 {
-    if(eccodes::accessor::destroyAccessor(a) == GRIB_SUCCESS)
-    {
-        return;
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         grib_accessor_class* s = c->super ? *(c->super) : NULL;
@@ -741,11 +569,6 @@ void grib_accessor_delete(grib_context* ct, grib_accessor* a)
 
 grib_accessor* grib_accessor_clone(grib_accessor* a, grib_section* s, int* err)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorMakeClone(*accessorPtr, s, err);
-    }
-
     grib_accessor_class* c = a->cclass;
     grib_context* ct       = a->context;
     while (c) {
@@ -761,11 +584,6 @@ grib_accessor* grib_accessor_clone(grib_accessor* a, grib_section* s, int* err)
 
 void grib_update_size(grib_accessor* a, size_t len)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorUpdateSize(*accessorPtr, len);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -780,11 +598,6 @@ void grib_update_size(grib_accessor* a, size_t len)
 
 int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorNearestSmallerValue(*accessorPtr, val, nearest);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->nearest_smaller_value) {
@@ -799,11 +612,6 @@ int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest)
 
 size_t grib_preferred_size(grib_accessor* a, int from_handle)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorPreferredSize(*accessorPtr, from_handle);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -818,11 +626,6 @@ size_t grib_preferred_size(grib_accessor* a, int from_handle)
 
 grib_accessor* grib_next_accessor(grib_accessor* a)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorNext(*accessorPtr, 1);
-    }
-
     grib_accessor_class* c = a->cclass;
     while (c) {
         if (c->next) {
@@ -836,11 +639,6 @@ grib_accessor* grib_next_accessor(grib_accessor* a)
 
 void grib_resize(grib_accessor* a, size_t new_size)
 {
-    if(eccodes::accessor::AccessorPtr accessorPtr = eccodes::accessor::getAccessor(a); accessorPtr)
-    {
-        return accessorResize(*accessorPtr, new_size);
-    }
-
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
     while (c) {
@@ -856,14 +654,6 @@ void grib_resize(grib_accessor* a, size_t new_size)
 
 int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags)
 {
-#if 0
-    eccodes::accessor::grib_accessor_impl_gen* ga_impl1 = eccodes::accessor::get_grib_accessor_impl(a1);
-    eccodes::accessor::grib_accessor_impl_gen* ga_impl2 = eccodes::accessor::get_grib_accessor_impl(a2);
-    if(ga_impl1 && ga_impl2)
-    {
-        return eccodes::accessor::compare_accessors(ga_impl1, ga_impl2, compare_flags);
-    }
-#endif
     int ret                 = 0;
     long type1              = 0;
     long type2              = 0;
@@ -1092,18 +882,3 @@ void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
         al = tmp;
     }
 }
-
-
-#if 0
-void grib_print_accessor_flags(const grib_accessor* acc)
-{
-    const unsigned long f = acc->flags;
-    if (f & GRIB_ACCESSOR_FLAG_READ_ONLY)        printf("READ_ONLY ");
-    if (f & GRIB_ACCESSOR_FLAG_DUMP)             printf("DUMP ");
-    if (f & GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC) printf("EDITION_SPECIFIC ");
-    if (f & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)   printf("CAN_BE_MISSING ");
-    if (f & GRIB_ACCESSOR_FLAG_LOWERCASE)        printf("LOWERCASE ");
-    if (f & GRIB_ACCESSOR_FLAG_HIDDEN)           printf("HIDDEN ");
-    /* TODO: the rest */
-}
-#endif

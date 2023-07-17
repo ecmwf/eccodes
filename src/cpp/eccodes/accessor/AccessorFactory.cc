@@ -1,10 +1,8 @@
 #include "AccessorFactory.h"
 #include "Accessor.h"
-#include "Accessor_Utils.h"
+#include "AccessorUtils.h"
 #include "AccessorMaker.h"
 #include "grib_api_internal.h"
-
-#include "ProjString.h"
 
 #include <vector>
 #include <algorithm>

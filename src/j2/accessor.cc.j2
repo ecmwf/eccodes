@@ -85,7 +85,7 @@ static {{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }}) {
 {% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}
 
-static AccessorMaker<{{ c.name }}> maker("{{ c.factory_name }}");
+static AccessorMaker {{ c.name_camel_case }}Maker("{{ c.factory_name }}", AccessorType<{{ c.name }}>{});
 
 {% for n in c.namespaces_reversed %}} // namespace {{ n }}
 {%- endfor %}

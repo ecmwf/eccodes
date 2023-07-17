@@ -47,7 +47,7 @@ grib_section* accessorSubSection(Accessor const& accessor)
     return accessor.pimpl->accessorSubSection();
 }
 
-int accessorPackMissing(Accessor const& accessor)
+int accessorPackMissing(Accessor& accessor)
 {
     return accessor.pimpl->accessorPackMissing();
 }
@@ -57,7 +57,7 @@ int accessorIsMissing(Accessor const& accessor)
     return accessor.pimpl->accessorIsMissing();
 }
 
-int accessorPackLong(Accessor const& accessor, const long* val, size_t* len)
+int accessorPackLong(Accessor& accessor, const long* val, size_t* len)
 {
     return accessor.pimpl->accessorPackLong(val, len);
 }
@@ -67,12 +67,12 @@ int accessorUnpackLong(Accessor const& accessor, long* val, size_t* len)
     return accessor.pimpl->accessorUnpackLong(val, len);
 }
 
-int accessorPackDouble(Accessor const& accessor, const double* val, size_t* len)
+int accessorPackDouble(Accessor& accessor, const double* val, size_t* len)
 {
     return accessor.pimpl->accessorPackDouble(val, len);
 }
 
-int accessorPackFloat(Accessor const& accessor, const float* val, size_t* len)
+int accessorPackFloat(Accessor& accessor, const float* val, size_t* len)
 {
     return accessor.pimpl->accessorPackFloat(val, len);
 }
@@ -87,7 +87,7 @@ int accessorUnpackFloat(Accessor const& accessor, float* val, size_t* len)
     return accessor.pimpl->accessorUnpackFloat(val, len);
 }
 
-int accessorPackString(Accessor const& accessor, const char* v, size_t* len)
+int accessorPackString(Accessor& accessor, const char* v, size_t* len)
 {
     return accessor.pimpl->accessorPackString(v, len);
 }
@@ -97,7 +97,7 @@ int accessorUnpackString(Accessor const& accessor, char* v, size_t* len)
     return accessor.pimpl->accessorUnpackString(v, len);
 }
 
-int accessorPackStringArray(Accessor const& accessor, const char** v, size_t* len)
+int accessorPackStringArray(Accessor& accessor, const char** v, size_t* len)
 {
     return accessor.pimpl->accessorPackStringArray(v, len);
 }
@@ -107,7 +107,7 @@ int accessorUnpackStringArray(Accessor const& accessor, char** v, size_t* len)
     return accessor.pimpl->accessorUnpackStringArray(v, len);
 }
 
-int accessorPackBytes(Accessor const& accessor, const unsigned char* val, size_t* len)
+int accessorPackBytes(Accessor& accessor, const unsigned char* val, size_t* len)
 {
     return accessor.pimpl->accessorPackBytes(val, len);
 }
@@ -117,17 +117,17 @@ int accessorUnpackBytes(Accessor const& accessor, unsigned char* val, size_t* le
     return accessor.pimpl->accessorUnpackBytes(val, len);
 }
 
-int accessorPackExpression(Accessor const& accessor, grib_expression* e)
+int accessorPackExpression(Accessor& accessor, grib_expression* e)
 {
     return accessor.pimpl->accessorPackExpression(e);
 }
 
-int accessorNotifyChange(Accessor const& accessor, grib_accessor* observed)
+int accessorNotifyChange(Accessor& accessor, grib_accessor* observed)
 {
     return accessor.pimpl->accessorNotifyChange(observed);
 }
 
-void accessorUpdateSize(Accessor const& accessor, size_t s)
+void accessorUpdateSize(Accessor& accessor, size_t s)
 {
     return accessor.pimpl->accessorUpdateSize(s);
 }

@@ -533,7 +533,9 @@ struct grib_accessor
     grib_context* context;
     grib_handle* h;
     grib_action* creator;        /** < action that created the accessor           */
-    long length;                 /** < byte length of the accessor                */
+
+    // mutable because of Bitmap
+    mutable long length;                 /** < byte length of the accessor                */
     long offset;                 /** < offset of the data in the buffer           */
     grib_section* parent;        /** < section to which the accessor is attached  */
     grib_accessor* next;         /** < next accessor in list                      */
@@ -544,7 +546,8 @@ struct grib_accessor
 
     const char* all_names[MAX_ACCESSOR_NAMES];       /** < name of the accessor */
     const char* all_name_spaces[MAX_ACCESSOR_NAMES]; /** < namespace to which the accessor belongs */
-    int dirty;
+
+    mutable int dirty;
 
     grib_accessor* same;        /** < accessors with the same name */
     long loop;                  /** < used in lists */
@@ -554,6 +557,10 @@ struct grib_accessor
     const char* set;
     grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
     grib_accessor* parent_as_attribute;
+
+
+    grib_accessor(); // To initialise the members
+    virtual ~grib_accessor(); // To allow dynamic_cast
 };
 
 #define GRIB_ACCESSOR_FLAG_READ_ONLY        (1 << 1)

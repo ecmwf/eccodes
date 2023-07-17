@@ -7,12 +7,13 @@ namespace eccodes::accessor {
 
 struct Generic
 {
-    grib_accessor att_{};
+    // mutable during initial conversion from C - to be addressed later...
+    mutable grib_accessor att_{};
 
     Generic(grib_section* p, grib_action* creator, const long len, grib_arguments* arg);
     virtual ~Generic();
 
-    operator grib_accessor const*() const { return &att_; }
+    operator grib_accessor*() const { return &att_; }
 
     // Prevent copies and moves
     Generic(Generic const&) = delete;
@@ -24,7 +25,7 @@ struct Generic
 // Templated versions of the Accessor functions that provide a "fallback" version if not specialised
 
 template<typename ACCESSOR_TYPE>
-void dump(ACCESSOR_TYPE& accessor, grib_dumper* dumper)
+void dump(ACCESSOR_TYPE const& accessor, grib_dumper* dumper)
 {
     int type = grib_accessor_get_native_type(accessor);
 
@@ -44,46 +45,46 @@ void dump(ACCESSOR_TYPE& accessor, grib_dumper* dumper)
 }
 
 template<typename ACCESSOR_TYPE>
-long nextOffset(ACCESSOR_TYPE& accessor)
+long nextOffset(ACCESSOR_TYPE const& accessor)
 {
-    return accessor.att.offset + accessor.att.length;
+    return accessor.att_.offset + accessor.att_.length;
 }
 
 template<typename ACCESSOR_TYPE>
-size_t stringLength(ACCESSOR_TYPE& accessor)
+size_t stringLength(ACCESSOR_TYPE const& accessor)
 {
     return 1024;
 }
 
 template<typename ACCESSOR_TYPE>
-int valueCount(ACCESSOR_TYPE& accessor, long* count)
+int valueCount(ACCESSOR_TYPE const& accessor, long* count)
 {
     *count = 1;
     return 0;
 }
 
 template<typename ACCESSOR_TYPE>
-long byteCount(ACCESSOR_TYPE& accessor)
+long byteCount(ACCESSOR_TYPE const& accessor)
 {
-    return accessor.att.length;
+    return accessor.att_.length;
 }
 
 template<typename ACCESSOR_TYPE>
-long byteOffset(ACCESSOR_TYPE& accessor)
+long byteOffset(ACCESSOR_TYPE const& accessor)
 {
-    return accessor.att.offset;
+    return accessor.att_.offset;
 }
 
 template<typename ACCESSOR_TYPE>
-int nativeType(ACCESSOR_TYPE& accessor)
+int nativeType(ACCESSOR_TYPE const& accessor)
 {
-    grib_context_log(accessor.att.context, GRIB_LOG_ERROR,
-                     "Accessor %s must implement 'get_native_type'", accessor.att.name);
+    grib_context_log(accessor.att_.context, GRIB_LOG_ERROR,
+                     "Accessor %s must implement 'get_native_type'", accessor.att_.name);
     return GRIB_TYPE_UNDEFINED;
 }
 
 template<typename ACCESSOR_TYPE>
-grib_section* subSection(ACCESSOR_TYPE& accessor)
+grib_section* subSection(ACCESSOR_TYPE const& accessor)
 {
     return NULL;
 }
@@ -95,26 +96,26 @@ int packMissing(ACCESSOR_TYPE& accessor)
 }
 
 template<typename ACCESSOR_TYPE>
-int isMissing(ACCESSOR_TYPE& accessor)
+int isMissing(ACCESSOR_TYPE const& accessor)
 {
     int i              = 0;
     int is_missing     = 1;
     unsigned char ones = 0xff;
     unsigned char* v   = NULL;
 
-    if (accessor.att.flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
-        if (accessor.att.vvalue == NULL) {
-            grib_context_log(accessor.att.context, GRIB_LOG_ERROR, "%s internal error (flags=0x%lX)", accessor.att.name, accessor.att.flags);
-            Assert(!"grib_accessor_class_gen::is_missing(): accessor.att.vvalue == NULL");
+    if (accessor.att_.flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
+        if (accessor.att_.vvalue == NULL) {
+            grib_context_log(accessor.att_.context, GRIB_LOG_ERROR, "%s internal error (flags=0x%lX)", accessor.att_.name, accessor.att_.flags);
+            Assert(!"grib_accessor_class_gen::is_missing(): accessor.att_.vvalue == NULL");
             return 0;
         }
-        return accessor.att.vvalue->missing;
+        return accessor.att_.vvalue->missing;
     }
-    Assert(accessor.att.length >= 0);
+    Assert(accessor.att_.length >= 0);
 
-    v = grib_handle_of_accessor(accessor)->buffer->data + accessor.att.offset;
+    v = grib_handle_of_accessor(accessor)->buffer->data + accessor.att_.offset;
 
-    for (i = 0; i < accessor.att.length; i++) {
+    for (i = 0; i < accessor.att_.length; i++) {
         if (*v != ones) {
             is_missing = 0;
             break;
@@ -132,7 +133,7 @@ int packLong(ACCESSOR_TYPE& accessor, const long* val, size_t* len)
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackLong(ACCESSOR_TYPE& accessor, long* val, size_t* len)
+int unpackLong(ACCESSOR_TYPE const& accessor, long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -150,13 +151,13 @@ int packFloat(ACCESSOR_TYPE& accessor, const float* val, size_t* len)
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackDouble(ACCESSOR_TYPE& accessor, double* val, size_t* len)
+int unpackDouble(ACCESSOR_TYPE const& accessor, double* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackFloat(ACCESSOR_TYPE& accessor, float* val, size_t* len)
+int unpackFloat(ACCESSOR_TYPE const& accessor, float* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -168,7 +169,7 @@ int packString(ACCESSOR_TYPE& accessor, const char* v, size_t* len)
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackString(ACCESSOR_TYPE& accessor, char* v, size_t* len)
+int unpackString(ACCESSOR_TYPE const& accessor, char* v, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -180,7 +181,7 @@ int packStringArray(ACCESSOR_TYPE& accessor, const char** v, size_t* len)
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackStringArray(ACCESSOR_TYPE& accessor, char** v, size_t* len)
+int unpackStringArray(ACCESSOR_TYPE const& accessor, char** v, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -192,7 +193,7 @@ int packBytes(ACCESSOR_TYPE& accessor, const unsigned char* val, size_t* len)
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackBytes(ACCESSOR_TYPE& accessor, unsigned char* val, size_t* len)
+int unpackBytes(ACCESSOR_TYPE const& accessor, unsigned char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -207,88 +208,88 @@ template<typename ACCESSOR_TYPE>
 int notifyChange(ACCESSOR_TYPE& accessor, grib_accessor* observed)
 {
     /* Default behaviour is to notify creator */
-    return grib_action_notify_change(accessor.att.creator, accessor, observed);
+    return grib_action_notify_change(accessor.att_.creator, accessor, observed);
 }
 
 template<typename ACCESSOR_TYPE>
 void updateSize(ACCESSOR_TYPE& accessor, size_t s)
 {
-    grib_context_log(accessor.att.context, GRIB_LOG_ERROR,
-                     "Accessor %s must implement 'update_size'", accessor.att.name);
+    grib_context_log(accessor.att_.context, GRIB_LOG_ERROR,
+                     "Accessor %s must implement 'update_size'", accessor.att_.name);
     Assert(0 == 1);
 }
 
 template<typename ACCESSOR_TYPE>
-size_t preferredSize(ACCESSOR_TYPE& accessor, int from_handle)
+size_t preferredSize(ACCESSOR_TYPE const& accessor, int from_handle)
 {
-    return accessor.att.length;
+    return accessor.att_.length;
 }
 
 template<typename ACCESSOR_TYPE>
-void resize(ACCESSOR_TYPE& accessor, size_t new_size)
+void resize(ACCESSOR_TYPE const& accessor, size_t new_size)
 {
     return;
 }
 
 template<typename ACCESSOR_TYPE>
-int nearestSmallerValue(ACCESSOR_TYPE& accessor, double val, double* nearest)
+int nearestSmallerValue(ACCESSOR_TYPE const& accessor, double val, double* nearest)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-grib_accessor* next(ACCESSOR_TYPE& accessor, int mod)
+grib_accessor* next(ACCESSOR_TYPE const& accessor, int mod)
 {
     grib_accessor* next = NULL;
-    if (accessor.att.next) {
-        next = accessor.att.next;
+    if (accessor.att_.next) {
+        next = accessor.att_.next;
     }
     else {
         // TODO - Need to convert parent->owner to Accessor)
-        if (accessor.att.parent->owner)
-            next = accessor.att.parent->owner->cclass->next(accessor.att.parent->owner, 0);
+        if (accessor.att_.parent->owner)
+            next = accessor.att_.parent->owner->cclass->next(accessor.att_.parent->owner, 0);
     }
     return next;
 }
 
 template<typename ACCESSOR_TYPE>
-int compare(ACCESSOR_TYPE& accessor, grib_accessor* b)
+int compare(ACCESSOR_TYPE const& accessor, grib_accessor* b)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackDoubleElement(ACCESSOR_TYPE& accessor, size_t i, double* val)
+int unpackDoubleElement(ACCESSOR_TYPE const& accessor, size_t i, double* val)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackFloatElement(ACCESSOR_TYPE& accessor, size_t i, float* val)
+int unpackFloatElement(ACCESSOR_TYPE const& accessor, size_t i, float* val)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackDoubleElementSet(ACCESSOR_TYPE& accessor, const size_t* index_array, size_t len, double* val_array)
+int unpackDoubleElementSet(ACCESSOR_TYPE const& accessor, const size_t* index_array, size_t len, double* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackFloatElementSet(ACCESSOR_TYPE& accessor, const size_t* index_array, size_t len, float* val_array)
+int unpackFloatElementSet(ACCESSOR_TYPE const& accessor, const size_t* index_array, size_t len, float* val_array)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int unpackDoubleSubarray(ACCESSOR_TYPE& accessor, double* val, size_t start, size_t len)
+int unpackDoubleSubarray(ACCESSOR_TYPE const& accessor, double* val, size_t start, size_t len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
 
 template<typename ACCESSOR_TYPE>
-int clear(ACCESSOR_TYPE& accessor)
+int clear(ACCESSOR_TYPE const& accessor)
 {
     unsigned char* buf = grib_handle_of_accessor(accessor)->buffer->data;
     long length        = grib_byte_count(accessor);
@@ -300,7 +301,7 @@ int clear(ACCESSOR_TYPE& accessor)
 }
 
 template<typename ACCESSOR_TYPE>
-grib_accessor* makeClone(ACCESSOR_TYPE& accessor, grib_section* s, int* err)
+grib_accessor* makeClone(ACCESSOR_TYPE const& accessor, grib_section* s, int* err)
 {
     *err = GRIB_NOT_IMPLEMENTED; 
     return NULL;

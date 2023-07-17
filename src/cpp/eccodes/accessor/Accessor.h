@@ -3,10 +3,11 @@
 
 #include <memory>
 
-struct grib_accessor;
-
 #include "AccessorConcept.h"
-#include "ProjString.h"
+
+struct grib_accessor;
+struct grib_action;
+struct grib_arguments;
 
 namespace eccodes::accessor {
 
@@ -81,16 +82,16 @@ private:
     friend long accessorByteOffset(Accessor const& accessor);
     friend int accessorNativeType(Accessor const& accessor);
     friend grib_section* accessorSubSection(Accessor const& accessor);
-    friend int accessorPackMissing(Accessor const& accessor);
+    friend int accessorPackMissing(Accessor& accessor);
     friend int accessorIsMissing(Accessor const& accessor);
 
-    friend int accessorPackLong(Accessor const& accessor, const long* val, size_t* len);
-    friend int accessorPackDouble(Accessor const& accessor, const double* val, size_t* len);
-    friend int accessorPackFloat(Accessor const& accessor, const float* val, size_t* len);
-    friend int accessorPackString(Accessor const& accessor, const char* v, size_t* len);
-    friend int accessorPackStringArray(Accessor const& accessor, const char** v, size_t* len);
-    friend int accessorPackBytes(Accessor const& accessor, const unsigned char* val, size_t* len);
-    friend int accessorPackExpression(Accessor const& accessor, grib_expression* e);
+    friend int accessorPackLong(Accessor& accessor, const long* val, size_t* len);
+    friend int accessorPackDouble(Accessor& accessor, const double* val, size_t* len);
+    friend int accessorPackFloat(Accessor& accessor, const float* val, size_t* len);
+    friend int accessorPackString(Accessor& accessor, const char* v, size_t* len);
+    friend int accessorPackStringArray(Accessor& accessor, const char** v, size_t* len);
+    friend int accessorPackBytes(Accessor& accessor, const unsigned char* val, size_t* len);
+    friend int accessorPackExpression(Accessor& accessor, grib_expression* e);
     
     friend int accessorUnpackLong(Accessor const& accessor, long* val, size_t* len);
     friend int accessorUnpackDouble(Accessor const& accessor, double* val, size_t* len);
@@ -104,8 +105,8 @@ private:
     friend int accessorUnpackFloatElementSet(Accessor const& accessor, const size_t* index_array, size_t len, float* val_array);
     friend int accessorUnpackDoubleSubarray(Accessor const& accessor, double* val, size_t start, size_t len);
 
-    friend int accessorNotifyChange(Accessor const& accessor, grib_accessor* observed);
-    friend void accessorUpdateSize(Accessor const& accessor, size_t s);
+    friend int accessorNotifyChange(Accessor& accessor, grib_accessor* observed);
+    friend void accessorUpdateSize(Accessor& accessor, size_t s);
     friend size_t accessorPreferredSize(Accessor const& accessor, int from_handle);
     friend void accessorResize(Accessor const& accessor, size_t new_size);
     friend int accessorNearestSmallerValue(Accessor const& accessor, double val, double* nearest);
