@@ -31,13 +31,27 @@ env = Environment(
 )
 
 
-def to_camel_class(s):
+def snake_to_pascal(s):
     return "".join(x.capitalize() for x in s.lower().split("_"))
 
 
-def to_camel_member(s):
-    s = to_camel_class(s)
+def snake_to_camel(s):
+    s = snake_to_pascal(s)
     return s[0].lower() + s[1:]
+
+
+def pascal_to_camel(s):
+    return s[0].lower() + s[1:]
+
+
+def transform_function_name(name):
+    name = re.sub(rf"^get_", f"", name)
+    name = re.sub(rf"^set_", f"", name)
+
+    return name
+
+
+common_includes = ["AccessorException.h", "AccessorMaker.h"]
 
 
 class Member:
@@ -109,6 +123,10 @@ class Function:
         return self._name
 
     @property
+    def transformed_name(self):
+        return snake_to_camel(transform_function_name(self._name))
+
+    @property
     def args_declaration(self):
         return ", ".join([f"{a.type} {a.name}" for a in self._args])
 
@@ -143,7 +161,7 @@ class Function:
         self._lines.insert(1, "#ifdef CANNOT_CONVERT_CODE")
         self._lines.insert(-1, "#endif")
         if self._name != "destroy":
-            self._lines.insert(-1, "throw EccodesException(GRIB_NOT_IMPLEMENTED);")
+            self._lines.insert(-1, "throw AccessorException(GRIB_NOT_IMPLEMENTED);")
 
 
 class FunctionDelegate:
@@ -159,6 +177,8 @@ class Method(FunctionDelegate):
         super().__init__(function)
         self._owner_class = owner_class
         self._const = const
+        self._owner_arg_type = self._owner_class.name
+        self._owner_arg_name = pascal_to_camel(self._owner_arg_type)
 
     @property
     def args_declaration(self):
@@ -188,24 +208,48 @@ class Method(FunctionDelegate):
         lines = [self._owner_class.tidy_line(n, this) for n in lines]
         return "\n".join(lines)
 
-
+# Override to add the "this" object to the method args
 class InheritedMethod(Method):
-    pass
+    def __init__(self, owner_class, function, const):
+        super().__init__(owner_class, function, const)
 
-
+    @property
+    def args_declaration(self):
+        extended_args = [Arg(self._owner_arg_name, self._owner_arg_type + " " + self.const + "&")]
+        extended_args.extend(self._args[1:])
+        return ", ".join([f"{a.type} {a.name}" for a in extended_args])
+    
 class PrivateMethod(Method):
     pass
 
 
 class DestructorMethod(Method):
-    @property
-    def body(self):
-        lines = ["grib_context* c = 0;", super().body]
-        return "\n".join(lines)
-
-
-class ConstructorMethod(Method):
     pass
+
+
+# Override to combine factory and constructor args
+class ConstructorMethod(Method):
+    @property
+    def args_declaration(self):
+        extended_args = [Arg("p", "grib_section*"),Arg("creator", "grib_action*")]
+        extended_args.extend(self._args[1:])
+        return ", ".join([f"{a.type} {a.name}" for a in extended_args])
+
+    @property
+    def call_args(self):
+        extended_args = [Arg("p", "grib_section*"),Arg("creator", "grib_action*")]
+        extended_args.extend(self._args[1:])
+        return ", ".join([a.name for a in extended_args])
+
+    def tidy_lines(self, lines):
+        result = []
+        for line in lines:
+            line = re.sub(rf"\bself->(\w+)\b", rf"\1_", line)
+            line = re.sub(rf"\ba->(\w+)\b", rf"att_.\1", line)
+            line = re.sub(r"\ba\b", f"*this", line)
+            result.append(line)
+
+        return result
 
 
 class CompareMethod(Method):
@@ -237,7 +281,7 @@ class DumpMethod(Method):
         return "\n".join(
             ["#if 0"]
             + self.code
-            + ["#endif", "throw EccodesException(GRIB_NOT_IMPLEMENTED);"]
+            + ["#endif", "throw AccessorException(GRIB_NOT_IMPLEMENTED);"]
         )
 
 
@@ -246,9 +290,15 @@ class StaticProc(FunctionDelegate):
         super().__init__(function)
         self._owner_class = owner_class
 
+    def tidy_lines(self, lines):
+        return lines
+
     @property
     def body(self):
-        return "\n".join(self.code)
+        # return "\n".join(self.code)
+        lines = self.tidy_lines(self.code)
+        lines = [self._owner_class.tidy_static_function_line(n) for n in lines]
+        return "\n".join(lines)
 
 
 SPECIALISED_METHODS = {
@@ -299,7 +349,12 @@ class Class:
             self._top = True
         else:
             self._super, _ = self.tidy_class_name(super)
-            self._include_dir = ARGS.target
+
+            if self._super == "Generic":
+                self._include_dir = "cpp"
+            else:
+                self._include_dir = ARGS.target
+
             self._top = False
 
     def finalise(self, other_classes):
@@ -478,6 +533,10 @@ class Class:
     def header_includes(self):
         return []
 
+    @property 
+    def common_includes(self):
+        return ["/".join([self._include_dir] + self.namespaces + [inc]) for inc in common_includes]
+
     @property
     def body_includes(self):
         return self._body_includes
@@ -486,6 +545,10 @@ class Class:
     def namespaces(self):
         return ["eccodes", self._class]
 
+    @property
+    def nested_namespaces(self):
+        return "::".join(["eccodes", self._class])
+    
     @property
     def namespaces_reversed(self):
         return reversed(self.namespaces)
@@ -524,12 +587,12 @@ class Class:
 
         name = c_name.replace(self.prefix, "")
 
-        name = to_camel_class(name)
+        name = snake_to_pascal(name)
         return self.rename.get(name, name), c_name
 
     def save(self, ext, content):
         target = os.path.join(ARGS.target, *self.namespaces, f"{self.name}.{ext}")
-        LOG.info("Writting %s", target)
+        LOG.info("Writing %s", target)
 
         tmp = os.path.join(ARGS.target, *self.namespaces, f"{self.name}-tmp.{ext}")
         os.makedirs(os.path.dirname(target), exist_ok=True)
@@ -581,13 +644,16 @@ class Class:
     def tidy_line(self, line, this=[]):
         line = re.sub(r"\bsuper->\b", f"{self.super}::", line)
 
-        for n in this:
-            line = re.sub(n, "this", line)
+        accessor_variable_name = pascal_to_camel(self._name)
 
-        if re.match(r".*\bthis\s+=", line):
+        for n in this:
+            #line = re.sub(n, "this", line)
+            line = re.sub(n, f"{accessor_variable_name}", line)
+
+        if re.match(rf".*\b{accessor_variable_name}\s+=", line):
             line = ""
 
-        if re.match(r".*\bsuper\s+=\s+\*\(this->cclass->super\)", line):
+        if re.match(rf".*\bsuper\s+=\s+\*\({accessor_variable_name}->cclass->super\)", line):
             line = ""
 
         for k, v in self.substitute_re.items():
@@ -595,19 +661,29 @@ class Class:
 
         for m in self.members_names:
             name = m[:-1]
-            line = re.sub(rf"\bthis->{name}\b", rf"this->{name}_", line)
+            line = re.sub(rf"\b{accessor_variable_name}->{name}\b", rf"{accessor_variable_name}.{name}_", line)
 
         for m in self._private_methods:
             name = m.name
-            line = re.sub(rf"\b{name}\s*\(\s*([^,]+),", f"this->{name}(", line)
+            line = re.sub(rf"\b{name}\s*\(\s*([^,]+),", f"{accessor_variable_name}.{name}(", line)
 
         m = re.match(r"\s*\breturn\s+(GRIB_\w*)\s*;", line)
-        if m and m.group(1) != "GRIB_SUCCESS":
-            # e = to_camel_class(m.group(1))
-            # line = f"throw {e}Exception();"
-            line = f"throw EccodesException({m.group(1)});"
+        if m:
+            if m.group(1).startswith("GRIB_TYPE_"):
+                # OK
+                pass
+            elif m.group(1) != "GRIB_SUCCESS":
+                line = f"throw AccessorException({m.group(1)});"
 
         return line
+
+    def tidy_static_function_line(self, line):
+        for m in self._static_functions:
+            name = m.name
+            line = re.sub(rf"\b{name}\s*\(", f"{snake_to_camel(transform_function_name(name))}(", line)
+
+        return line
+
 
     def tidy_top_level(self, line):
         for k, v in self.substitute_str_top_level.items():
@@ -657,7 +733,7 @@ class Accessor(Class):
 
     substitute_re = {
         # r'\bgrib_inline_strcmp\b': 'strcmp',
-        r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
+        #r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
         r"\bget_accessors\(this\)": "this->get_accessors()",
         r"\bselect_area\(this\)": "this->select_area()",
         r"\bcompute_size\(this\)": "this->compute_size()",
@@ -718,8 +794,8 @@ class Accessor(Class):
         r"\bAccessor::find\(this->handle\(\),": r"Accessor::find(",
 
         # For now...
-        r'\b(\w+)\(this,': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)),',
-        r'\b(\w+)\(this\)': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)))',
+        # r'\b(\w+)\(this,': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)),',
+        # r'\b(\w+)\(this\)': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)))',
     }
 
     def class_to_type(self):

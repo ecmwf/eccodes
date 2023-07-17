@@ -14,50 +14,42 @@
 
 {% for i in c.header_includes %}
 #include {{ i }}
-{% endfor %}
+{%- endfor %}
 
-{% for n in c.namespaces %}namespace {{ n }} {
-{% endfor %}
+namespace {{ c.nested_namespaces }} {
 
-{% for f in c.forward_declarations %}
+{%- for f in c.forward_declarations %}
 {{ f }};
-{% endfor %}
+{%- endfor %}
 
-class {{ c.name }} : public {{ c.super }} {
+struct {{ c.name }} : public {{ c.super }} {
 
-public:
+    // Members
+    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }}{{ m.array }};
+    {%- endfor %}
 
     {{ c.name }}({{c.constructor.args_declaration}});
     virtual ~{{ c.name }}();
 
-private:
     // No copy allowed
-    {{ c.name }}(const {{ c.name }}&);
-    {{ c.name }}& operator=(const {{ c.name }}&);
-
-protected:
-
-    // Inherited methods
-    // Protected for now
-
-    {% for m in c.inherited_methods %}
-    virtual {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
-    virtual void print(std::ostream& s) const override;
-    virtual const char* className() const override;
-
-protected:
-    // Private methods
-    {% for m in c.private_methods %}
-    {{ m.template }}
-    {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
-
-
-protected:
-    // Members
-    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }}{{ m.array }};
-    {% endfor %}
-
+    {{ c.name }}(const {{ c.name }}&) = delete;
+    {{ c.name }}& operator=(const {{ c.name }}&) = delete;
 };
 
+// Accessor-specific functions
+{%- for m in c.inherited_methods %}
+{{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }});{% endfor %}
+
+//void print(std::ostream& s) const override;
+//const char* className() const override;
+
+// Private methods
+//{% for m in c.private_methods %}
+//{{ m.template }}
+//{{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
+
+
+
+
 {% for n in c.namespaces_reversed %}} // namespace {{ n }}
-{% endfor %}
+{%- endfor %}

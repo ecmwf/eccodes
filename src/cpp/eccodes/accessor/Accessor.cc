@@ -1,134 +1,196 @@
-/*
- * (C) Copyright 2005- ECMWF.
- *
- * This software is licensed under the terms of the Apache Licence Version 2.0
- * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
- */
+#include "Accessor.h"
 
-#include "cpp/eccodes/accessor/Accessor.h"
-#include <map>
-#include <sstream>
+namespace eccodes::accessor {
 
-namespace eccodes
+grib_accessor* asGribAccessor(Accessor const& accessor)
 {
-namespace accessor
-{
-
-
-#if CODE_USING_ECKIT
-
-int Accessor::pack_bytes(const unsigned char* val, size_t* len)
-{
-    std::ostringstream os;
-    os << "Accessor::pack_bytes() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->operator grib_accessor*();
 }
 
-int Accessor::pack_double(const double* v, size_t* len)
+void accessorDump(Accessor const& accessor, grib_dumper* dumper)
 {
-    std::ostringstream os;
-    os << "Accessor::pack_double() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->accessorDump(dumper);
 }
 
-int Accessor::pack_expression(grib_expression* e)
+long accessorNextOffset(Accessor const& accessor)
 {
-    std::ostringstream os;
-    os << "Accessor::pack_expression() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->accessorNextOffset();
 }
 
-int Accessor::pack_long(const long* v, size_t* len)
+size_t accessorStringLength(Accessor const& accessor)
 {
-    std::ostringstream os;
-    os << "Accessor::pack_long() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->accessorStringLength();
 }
 
-int Accessor::pack_string(const char* v, size_t* len)
+int accessorValueCount(Accessor const& accessor, long* count)
 {
-    std::ostringstream os;
-    os << "Accessor::pack_string() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->accessorValueCount(count);
 }
 
-int Accessor::pack_string_array(const char** v, size_t* len)
+long accessorByteCount(Accessor const& accessor)
 {
-    std::ostringstream os;
-    os << "Accessor::pack_string() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return accessor.pimpl->accessorByteCount();
 }
 
-
-
-static util::once_flag once;
-static util::recursive_mutex* local_mutex         = nullptr;
-static std::map<std::string, AccessorFactory*>* m = nullptr;
-
-static void init()
+long accessorByteOffset(Accessor const& accessor)
 {
-    local_mutex = new util::recursive_mutex();
-    m           = new std::map<std::string, AccessorFactory*>();
+    return accessor.pimpl->accessorByteOffset();
 }
 
-
-AccessorFactory::AccessorFactory(const std::string& name) :
-    name_(name)
+int accessorNativeType(Accessor const& accessor)
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    if (m->find(name) != m->end()) {
-        throw exception::SeriousBug("AccessorFactory: duplicate '" + name + "'");
-    }
-
-    ASSERT(m->find(name) == m->end());
-    (*m)[name] = this;
+    return accessor.pimpl->accessorNativeType();
 }
 
-AccessorFactory::~AccessorFactory()
+grib_section* accessorSubSection(Accessor const& accessor)
 {
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    m->erase(name_);
+    return accessor.pimpl->accessorSubSection();
 }
 
-
-Accessor* AccessorFactory::build(std::string& name, long length, grib_arguments* args)
+int accessorPackMissing(Accessor const& accessor)
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    std::string name;
-    if (!params.get("gridType", name)) {
-        throw exception::SeriousBug("AccessorFactory: cannot get 'gridType'");
-    }
-
-    Log::debug() << "AccessorFactory: looking for '" << name << "'" << std::endl;
-
-    auto j = m->find(name);
-    if (j == m->end()) {
-        list(Log::error() << "AccessorFactory: unknown '" << name << "', choices are: ");
-        throw exception::SeriousBug("AccessorFactory: unknown '" + name + "'");
-    }
-
-    return j->second->make(length, args);
+    return accessor.pimpl->accessorPackMissing();
 }
 
-
-void AccessorFactory::list(std::ostream& out)
+int accessorIsMissing(Accessor const& accessor)
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-
-    const char* sep = "";
-    for (const auto& j : *m) {
-        out << sep << j.first;
-        sep = ", ";
-    }
+    return accessor.pimpl->accessorIsMissing();
 }
-#endif
 
+int accessorPackLong(Accessor const& accessor, const long* val, size_t* len)
+{
+    return accessor.pimpl->accessorPackLong(val, len);
+}
 
-}  // namespace accessor
-}  // namespace eccodes
+int accessorUnpackLong(Accessor const& accessor, long* val, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackLong(val, len);
+}
+
+int accessorPackDouble(Accessor const& accessor, const double* val, size_t* len)
+{
+    return accessor.pimpl->accessorPackDouble(val, len);
+}
+
+int accessorPackFloat(Accessor const& accessor, const float* val, size_t* len)
+{
+    return accessor.pimpl->accessorPackFloat(val, len);
+}
+
+int accessorUnpackDouble(Accessor const& accessor, double* val, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackDouble(val, len);
+}
+
+int accessorUnpackFloat(Accessor const& accessor, float* val, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackFloat(val, len);
+}
+
+int accessorPackString(Accessor const& accessor, const char* v, size_t* len)
+{
+    return accessor.pimpl->accessorPackString(v, len);
+}
+
+int accessorUnpackString(Accessor const& accessor, char* v, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackString(v, len);
+}
+
+int accessorPackStringArray(Accessor const& accessor, const char** v, size_t* len)
+{
+    return accessor.pimpl->accessorPackStringArray(v, len);
+}
+
+int accessorUnpackStringArray(Accessor const& accessor, char** v, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackStringArray(v, len);
+}
+
+int accessorPackBytes(Accessor const& accessor, const unsigned char* val, size_t* len)
+{
+    return accessor.pimpl->accessorPackBytes(val, len);
+}
+
+int accessorUnpackBytes(Accessor const& accessor, unsigned char* val, size_t* len)
+{
+    return accessor.pimpl->accessorUnpackBytes(val, len);
+}
+
+int accessorPackExpression(Accessor const& accessor, grib_expression* e)
+{
+    return accessor.pimpl->accessorPackExpression(e);
+}
+
+int accessorNotifyChange(Accessor const& accessor, grib_accessor* observed)
+{
+    return accessor.pimpl->accessorNotifyChange(observed);
+}
+
+void accessorUpdateSize(Accessor const& accessor, size_t s)
+{
+    return accessor.pimpl->accessorUpdateSize(s);
+}
+
+size_t accessorPreferredSize(Accessor const& accessor, int from_handle)
+{
+    return accessor.pimpl->accessorPreferredSize(from_handle);
+}
+
+void accessorResize(Accessor const& accessor, size_t new_size)
+{
+    return accessor.pimpl->accessorResize(new_size);
+}
+
+int accessorNearestSmallerValue(Accessor const& accessor, double val, double* nearest)
+{
+    return accessor.pimpl->accessorNearestSmallerValue(val, nearest);
+}
+
+grib_accessor* accessorNext(Accessor const& accessor, int mod)
+{
+    return accessor.pimpl->accessorNext(mod);
+}
+
+int accessorCompare(Accessor const& accessor, grib_accessor* b)
+{
+    return accessor.pimpl->accessorCompare(b);
+}
+
+int accessorUnpackDoubleElement(Accessor const& accessor, size_t i, double* val)
+{
+    return accessor.pimpl->accessorUnpackDoubleElement(i, val);
+}
+
+int accessorUnpackFloatElement(Accessor const& accessor, size_t i, float* val)
+{
+    return accessor.pimpl->accessorUnpackFloatElement(i, val);
+}
+
+int accessorUnpackDoubleElementSet(Accessor const& accessor, const size_t* index_array, size_t len, double* val_array)
+{
+    return accessor.pimpl->accessorUnpackDoubleElementSet(index_array, len, val_array);
+}
+
+int accessorUnpackFloatElementSet(Accessor const& accessor, const size_t* index_array, size_t len, float* val_array)
+{
+    return accessor.pimpl->accessorUnpackFloatElementSet(index_array, len, val_array);
+}
+
+int accessorUnpackDoubleSubarray(Accessor const& accessor, double* val, size_t start, size_t len)
+{
+    return accessor.pimpl->accessorUnpackDoubleSubarray(val, start, len);
+}
+
+int accessorClear(Accessor const& accessor)
+{
+    return accessor.pimpl->accessorClear();
+}
+
+grib_accessor* accessorMakeClone(Accessor const& accessor, grib_section* s, int* err)
+{
+    return accessor.pimpl->accessorMakeClone(s, err);
+}
+
+}
+
