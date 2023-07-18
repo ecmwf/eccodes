@@ -104,14 +104,3 @@ grib_check_key_equals $temp2 stepType,stepRange 'accum 0-240'
 rm -f $temp1 $temp2
 
 rm -f $output
-
-#sed "s:toolsdir:${tools_dir}/:" ${tools_dir}/grib1to2.txt > ${tools_dir}/grib1to2.test
-#chmod +x ${tools_dir}/grib1to2.test
-#${tools_dir}/grib1to2.test -f ${data_dir}/test.grib1 ${data_dir}/test.grib2
-#${tools_dir}/grib_get -p typeOfProcessedData:s,type:s ${data_dir}/test.grib2 > ${data_dir}/typeOfProcessedData.log
-
-#diff ${data_dir}/typeOfProcessedData.log ${data_dir}/typeOfProcessedData.ok
-
-#${tools_dir}/grib_compare -Pe ${data_dir}/test.grib1 ${data_dir}/test.grib2
-
-#rm -f ${data_dir}/test.grib2
