@@ -15,6 +15,7 @@
 #include "grib_value.h"
 #include "grib_accessor.h"
 #include <float.h>
+#include <limits>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -30,15 +31,17 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 }
 
 /* Debug utility function to track GRIB packing/repacking issues */
-static void print_debug_info__set_double_array(grib_handle* h, const char* func, const char* name, const double* val, size_t length)
+template <typename T>
+static void print_debug_info__set_array(grib_handle* h, const char* func, const char* name, const T* val, size_t length)
 {
     size_t N = 7, i = 0;
-    double minVal = DBL_MAX, maxVal = -DBL_MAX;
+    T minVal = std::numeric_limits<T>::max();
+    T maxVal = -std::numeric_limits<T>::max();
     Assert( h->context->debug );
 
     if (length <= N)
         N = length;
-    fprintf(stderr, "ECCODES DEBUG %s key=%s %zu values (", func, name, length);
+    fprintf(stderr, "ECCODES DEBUG %s key=%s, %zu entries (", func, name, length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
         fprintf(stderr, "%.10g", val[i]);
@@ -764,7 +767,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret = 0;
 
     if (h->context->debug) {
-        print_debug_info__set_double_array(h, "grib_set_double_array_internal", name, val, length);
+        print_debug_info__set_array(h, "grib_set_double_array_internal", name, val, length);
     }
 
     if (length == 0) {
@@ -793,7 +796,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     size_t i = 0;
 
     if (h->context->debug) {
-        print_debug_info__set_double_array(h, "__grib_set_double_array", name, val, length);
+        print_debug_info__set_array(h, "__grib_set_double_array", name, val, length);
     }
 
     if (length == 0) {

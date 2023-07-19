@@ -2639,7 +2639,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_BYTE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2653,7 +2656,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
                     double d = 0;
                     Assert(scale_factor > 0);
                     d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_SHORT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2665,7 +2671,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_INT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2677,7 +2686,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_FLOAT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2689,7 +2701,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if(!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_DOUBLE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
