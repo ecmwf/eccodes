@@ -2332,7 +2332,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
-    Assert(n == ni);
+    if (n != ni) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)",n,ni);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2349,8 +2352,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
-
-    Assert(n == nj);
+    if (n != nj) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)",n,nj);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -3256,6 +3261,7 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     }
     return result;
 }
+
 static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
 {
     const request* cube = h->cube;
