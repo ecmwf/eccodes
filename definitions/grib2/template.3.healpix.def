@@ -1,4 +1,5 @@
-# TEMPLATE  - The HEALPix grid
+# (C) Copyright 2005- ECMWF.
+
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
@@ -12,15 +13,18 @@ unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
 alias Lo  = longitudeOfFirstGridPoint;
 alias geography.Lo = Lo;
 
-# position of the points
+# Position of the points
 codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) =4 : edition_specific,dump;
 alias geography.gridPointPosition = gridPointPosition;
 
-
 # Ordering convention of points. Default = ring
 codetable[1] ordering ('3.12.table',masterDir,localDir) = 0 : edition_specific,dump;
-alias geography.pointsOrdering = ordering;
+concept orderingConvention(unknown) {
+ "ring"   = { ordering = 0; }
+ "nested" = { ordering = 1; }
+} : dump;
+alias geography.pointsOrdering = orderingConvention;
 
 # No scanning mode needed; healpix is a standardized way of ordering points
-flags[1] scanningModeForHEALPix 'grib2/tables/[tablesVersion]/3.13.table';
+flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
 

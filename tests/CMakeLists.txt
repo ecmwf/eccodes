@@ -134,6 +134,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
+        grib_grid_healpix
         grib_g1monthlydate
         grib_g1day_of_the_year_date
         grib_g1fcperiod)
@@ -303,7 +304,6 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_extra bufr_dump_encode_C)
         list(APPEND tests_extra bufr_dump_decode_C)
         list(APPEND tests_extra list_codetable_flagtable_keys)
-        list(APPEND tests_extra grib_grid_healpix)
     endif()
 
     # These tests do not require any data downloads
