@@ -3,18 +3,19 @@
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
+# The number of data points should be = 12 * nside * nside
 unsigned[4] nside : edition_specific,dump;
-alias N=nside;
-alias numberOfSides=nside;
-alias geography.nside=nside;
+alias N = nside;
+alias numberOfSides = nside;
+alias geography.nside = nside;
 
 # Longitude of first points from first of 12 rhomboids
 unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
 alias Lo  = longitudeOfFirstGridPoint;
 alias geography.Lo = Lo;
 
-# Position of the points
-codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) =4 : edition_specific,dump;
+# Position of the points. Default = Grid points at centres of shape
+codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) = 4 : edition_specific,dump;
 alias geography.gridPointPosition = gridPointPosition;
 
 # Ordering convention of points. Default = ring
