@@ -126,7 +126,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
-        bufr_operators
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -164,6 +163,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
+        bufr_operators
         bufr_filter_misc
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
