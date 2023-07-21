@@ -181,6 +181,8 @@ if( HAVE_BUILD_TOOLS )
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_ecc-147
+        bufr_ecc-389
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286

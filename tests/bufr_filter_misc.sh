@@ -715,35 +715,8 @@ EOF
 
 ${tools_dir}/codes_bufr_filter -o ${fout} $fRules $f 2>> $fLog 1>> $fLog
 ${tools_dir}/bufr_compare $fout ${fout}.ref #2>> $fLog 1>> $fLog
+rm -f $fout
 
-#-----------------------------------------------------------
-# ECC-147
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set unpack=1;
- set relativeHumidity=27;
- set horizontalVisibility=1500;
- set pack=1;
- write;
-EOF
-
-f="syno_1.bufr"
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-# This part of the test is meant to fail
-set +e
-${tools_dir}/bufr_compare ${f}.out $f
-status=$?
-set -e
-if [ $status -eq 0 ]; then
-  # compare should have failed and returned a non-zero exit code
-  exit 1
-fi
-# Now blacklist the failing keys and it should pass
-${tools_dir}/bufr_compare -b relativeHumidity,horizontalVisibility ${f}.out $f
-
-rm -f ${f}.out 
-
-rm -f $fRules ${fout} $fLog
 #-----------------------------------------------------------
 # Test:  access subsets by condition 
 #-----------------------------------------------------------
@@ -1276,39 +1249,6 @@ cat > ${f}.log.ref <<EOF
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 5 
 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 -1e+100 
 -1e+100 -1e+100 -1e+100
-EOF
-
-diff ${f}.log.ref ${f}.log 
-
-rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
-
-#-----------------------------------------------------------
-# Test: fix for ECC-389 
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set numberOfSubsets=2;
- set unexpandedDescriptors={310008};
- set #14#brightnessTemperature={266.53,266.53000000001};
- set pack=1;
- write;
-EOF
-
-f="amsu_55.bufr"
-
-echo "Test: fix for ECC-389" >> $fLog
-echo "file: $f" >> $fLog
-
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-
-cat > $fRules <<EOF
-set unpack=1;
-print "[#14#brightnessTemperature]";
-EOF
-
-${tools_dir}/codes_bufr_filter $fRules ${f}.out > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-266.53
 EOF
 
 diff ${f}.log.ref ${f}.log 
