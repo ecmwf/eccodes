@@ -1256,43 +1256,6 @@ diff ${f}.log.ref ${f}.log
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
 
 #-----------------------------------------------------------
-# Test: change width using operator 201YYY
-#-----------------------------------------------------------
-HIGH_TEMPERATURE=10000
-cat > $fRules <<EOF
- set unpack=1;
- set airTemperature=$HIGH_TEMPERATURE;
- set pack=1;
- write;
-EOF
-f="bssh_176.bufr"
-
- # This should fail. Out of Range
-set +e
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-status=$?
-set -e
-[ $status -ne 0 ]
-
-# Now change the width of airTemperature to allow high value
-cat > $fRules <<EOF
- set unpack=1;
- set edition=4;
- set unexpandedDescriptors={301022,12023,201138,12101,201000,12023};
- set airTemperature=$HIGH_TEMPERATURE;
- set pack=1;
- print "airTemperature=[airTemperature], width=[airTemperature->width]";
- write;
-EOF
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f > ${f}.log
-
-cat > ${f}.log.ref <<EOF
-airTemperature=$HIGH_TEMPERATURE, width=26
-EOF
-diff ${f}.log.ref ${f}.log
-
-rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
-#-----------------------------------------------------------
 # Test: DateTime
 #-----------------------------------------------------------
 cat > $fRules <<EOF
@@ -1353,51 +1316,6 @@ EOF
 diff ${f}.log.ref ${f}.log
 rm -f $f.log ${f}.log.ref
 
-#-----------------------------------------------------------
-# Test: change reference val using operator 203YYY
-#-----------------------------------------------------------
-# Normally min. temperature = -99
-#          max. nonlinearInverseSpectralWidth = 655.35
-#          min. shortestOceanWavelengthOnSpectralResolution = 0
-f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
-cat > $fRules <<EOF
- set masterTablesVersionNumber = 37;
- set inputOverriddenReferenceValues = { -100, 10000, -100 };
- set unexpandedDescriptors = { 
-        203015,   12023, 42008, 42007,   203255, 
-                  12023, 42008, 42007,
-        203000 };
- # Now setting out-of-range values will work
- set temperature = -100;  # code 012023
- set nonlinearInverseSpectralWidth = 755; # code 042008
- set shortestOceanWavelengthOnSpectralResolution = -1; # code 042007
- set pack=1;
- write;
-EOF
-
-${tools_dir}/codes_bufr_filter -o ${f}.out $fRules $f
-${tools_dir}/bufr_get -s unpack=1 \
-   -p temperature,nonlinearInverseSpectralWidth,shortestOceanWavelengthOnSpectralResolution \
-   $f.out > $f.log
-
-cat > $f.log.ref <<EOF
--100 755 -1
-EOF
-diff $f.log.ref $f.log
-
-# Try with one element
-cat > $fRules <<EOF
- set masterTablesVersionNumber = 37;
- set inputOverriddenReferenceValues = { -150 };
- set unexpandedDescriptors = { 
-        203015, 12023,  203255, 12023, 203000 };
- set temperature = -101;
- set pack=1;
- write;
-EOF
-${tools_dir}/codes_bufr_filter -o $f.out $fRules $f
-res=`${tools_dir}/bufr_get -s unpack=1 -p temperature $f.out`
-[ "$res" = "-101" ]
 
 
 # Decode expandedDescriptors as array of string

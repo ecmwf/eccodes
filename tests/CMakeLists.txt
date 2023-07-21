@@ -126,6 +126,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-359
         bufr_ecc-517
         bufr_rdbSubTypes
+        bufr_operators
         grib_efas
         grib_sh_imag
         grib_spectral
