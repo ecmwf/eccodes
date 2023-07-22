@@ -288,7 +288,8 @@ if( HAVE_BUILD_TOOLS )
         grib_local_NCEP
         grib_neg_fctime
         codes_split_file
-        grib_mars_keys)
+        grib_mars_keys1
+        grib_mars_keys2)
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)

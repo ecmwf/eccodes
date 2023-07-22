@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_mars_keys_test"
+label="grib_mars_keys1_test"
 tempOut=temp.${label}.out
 tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
