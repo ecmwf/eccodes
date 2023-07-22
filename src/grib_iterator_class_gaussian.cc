@@ -129,7 +129,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     ret = grib_get_gaussian_latitudes(trunc, lats);
 
     if (ret != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "error %d calculating gaussian points", ret);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error calculating gaussian points: %s", grib_get_error_message(ret));
         return ret;
     }
     /*

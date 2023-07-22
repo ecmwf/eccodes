@@ -301,7 +301,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long max_pl = 0;
     long nj = 0, order = 0, i;
     long row_count                       = 0;
-    long editionNumber                   = 0;
+    long angleSubdivisions               = 0;
     grib_context* c                      = h->context;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     const char* slat_first               = grib_arguments_get_name(h, args, self->carg++);
@@ -323,12 +323,16 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     if ((ret = grib_get_long_internal(h, sorder, &order)) != GRIB_SUCCESS)
         return ret;
+    if (order == 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Invalid Gaussian grid: N cannot be 0!");
+        return GRIB_WRONG_GRID;
+    }
     if ((ret = grib_get_long_internal(h, snj, &nj)) != GRIB_SUCCESS)
         return ret;
 
-    if (grib_get_long(h, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        if (editionNumber == 1)
-            angular_precision = 1.0 / 1000;
+    if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
+        Assert(angleSubdivisions > 0);
+        angular_precision = 1.0 / angleSubdivisions;
     }
 
     numlats = order * 2;

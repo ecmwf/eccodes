@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# Grid point data - Run length encoding
+# TEMPLATE 7.200, Grid point data – run length packing with level values
 
 meta codedValues data_run_length_packing(
       section7Length,

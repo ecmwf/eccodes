@@ -163,6 +163,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
+        bufr_operators
         bufr_filter_misc
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -181,6 +182,8 @@ if( HAVE_BUILD_TOOLS )
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_ecc-147
+        bufr_ecc-389
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286

@@ -329,6 +329,9 @@ static bool blacklisted(grib_handle* h, long edition, const char* concept_name, 
         if (edition == 2 && strstr(concept_value, "grid_run_length")) {
             return true;
         }
+        if (strstr(concept_value, "grid_simple_matrix")) {
+            return true;
+        }
         if (edition == 1 && (strstr(concept_value, "ccsds") || strstr(concept_value, "jpeg"))) {
             return true;
         }
