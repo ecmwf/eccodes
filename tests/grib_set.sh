@@ -154,6 +154,23 @@ set -e
 grep -q "String cannot be converted to a double" $temp
 
 
+# Set ascii key via double or long
+# --------------------------------
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=21 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
+${tools_dir}/grib_set -s marsDomain=x $outfile $temp
+grib_check_key_equals $temp 'marsDomain' 'x'
+set +e
+${tools_dir}/grib_set -s marsDomain=9 $outfile $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_set -s marsDomain=1.2 $outfile $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
 # Strict option
 # ---------------
 # There is only one field in this file with shortName=2t

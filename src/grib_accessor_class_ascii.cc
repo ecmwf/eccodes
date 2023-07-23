@@ -185,13 +185,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
