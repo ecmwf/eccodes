@@ -249,7 +249,6 @@ grib_vdarray* grib_vdarray_new(grib_context* c, size_t size, size_t incsize);
 grib_vdarray* grib_vdarray_push(grib_context* c, grib_vdarray* v, grib_darray* val);
 void grib_vdarray_delete(grib_context* c, grib_vdarray* v);
 void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v);
-grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v);
 size_t grib_vdarray_used_size(grib_vdarray* v);
 
 /* grib_vsarray.cc*/
@@ -258,7 +257,6 @@ grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize);
 grib_vsarray* grib_vsarray_push(grib_context* c, grib_vsarray* v, grib_sarray* val);
 void grib_vsarray_delete(grib_context* c, grib_vsarray* v);
 void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v);
-grib_sarray** grib_vsarray_get_array(grib_context* c, grib_vsarray* v);
 size_t grib_vsarray_used_size(grib_vsarray* v);
 
 /* grib_viarray.cc*/
