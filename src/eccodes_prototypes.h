@@ -154,7 +154,6 @@ int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest);
 size_t grib_preferred_size(grib_accessor* a, int from_handle);
 grib_accessor* grib_next_accessor(grib_accessor* a);
 void grib_resize(grib_accessor* a, size_t new_size);
-int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags);
 int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash);
 int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr);
 int grib_accessor_delete_attribute(grib_accessor* a, const char* name);

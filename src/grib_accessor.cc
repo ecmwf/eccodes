@@ -652,39 +652,39 @@ void grib_resize(grib_accessor* a, size_t new_size)
     return;
 }
 
-int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags)
-{
-    int ret                 = 0;
-    long type1              = 0;
-    long type2              = 0;
-    int type_mismatch       = 0;
-    grib_accessor_class* c1 = NULL;
+// int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags)
+// {
+//     int ret                 = 0;
+//     long type1              = 0;
+//     long type2              = 0;
+//     int type_mismatch       = 0;
+//     grib_accessor_class* c1 = NULL;
 
-    if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name, a2->name))
-        return GRIB_NAME_MISMATCH;
+//     if ((compare_flags & GRIB_COMPARE_NAMES) && grib_inline_strcmp(a1->name, a2->name))
+//         return GRIB_NAME_MISMATCH;
 
-    if (compare_flags & GRIB_COMPARE_TYPES) {
-        type1 = grib_accessor_get_native_type(a1);
-        type2 = grib_accessor_get_native_type(a2);
+//     if (compare_flags & GRIB_COMPARE_TYPES) {
+//         type1 = grib_accessor_get_native_type(a1);
+//         type2 = grib_accessor_get_native_type(a2);
 
-        type_mismatch = type1 != type2 ? 1 : 0;
-    }
+//         type_mismatch = type1 != type2 ? 1 : 0;
+//     }
 
-    ret = GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-    c1  = a1->cclass;
-    while (c1) {
-        if (c1->compare) {
-            ret = c1->compare(a1, a2);
-            break;
-        }
-        c1 = c1->super ? *(c1->super) : NULL;
-    }
+//     ret = GRIB_UNABLE_TO_COMPARE_ACCESSORS;
+//     c1  = a1->cclass;
+//     while (c1) {
+//         if (c1->compare) {
+//             ret = c1->compare(a1, a2);
+//             break;
+//         }
+//         c1 = c1->super ? *(c1->super) : NULL;
+//     }
 
-    if (ret == GRIB_VALUE_MISMATCH && type_mismatch)
-        ret = GRIB_TYPE_AND_VALUE_MISMATCH;
+//     if (ret == GRIB_VALUE_MISMATCH && type_mismatch)
+//         ret = GRIB_TYPE_AND_VALUE_MISMATCH;
 
-    return ret;
-}
+//     return ret;
+// }
 
 /*
 int grib_accessor_clear_attributes(grib_accessor* a)
