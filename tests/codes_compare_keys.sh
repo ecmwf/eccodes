@@ -11,6 +11,7 @@
 . ./include.ctest.sh
 
 label="codes_compare_keys_test"
+tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
 tempLog=temp.$label.log
 
@@ -37,9 +38,30 @@ key: minutesAfterDataCutoff  (Long values are different)
 key: numberOfValues  (Long values are different)
 key: referenceValue  (Double values are different)
 
-Comparison failed: One or more keys are different
+Comparison failed: 13 key(s) are different
+EOF
+
+diff $tempRef $tempLog
+rm -f $tempRef $tempLog
+
+# Different values
+# ---------------------
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $input $tempGrib
+set +e
+$EXEC ${test_dir}/codes_compare_keys $input $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempLog
+cat > $tempRef <<EOF
+key: referenceValue  (Double values are different)
+key: codedValues  (Double values are different)
+
+Comparison failed: 2 key(s) are different
 EOF
 
 diff $tempRef $tempLog
 
-rm -f $tempLog $tempRef
+# Clean up
+rm -f $tempLog $tempRef $tempGrib

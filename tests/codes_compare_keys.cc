@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
     grib_handle* h2 = NULL;
     int err       = 0;
     int failed    = 0;
+    size_t count  = 0;
 
     Assert(argc == 3);
     f1 = fopen(argv[1], "rb");
@@ -40,6 +41,7 @@ int main(int argc, char* argv[])
             if (err) {
                 fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
                 failed = 1;
+                ++count;
             }
         }
 
@@ -50,7 +52,7 @@ int main(int argc, char* argv[])
     fclose(f1);
     fclose(f2);
     if (failed) {
-        fprintf(stderr, "\nComparison failed: One or more keys are different\n");
+        fprintf(stderr, "\nComparison failed: %zu key(s) are different\n", count);
     }
     return failed;
 }
