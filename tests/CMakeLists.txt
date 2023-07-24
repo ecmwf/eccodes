@@ -45,6 +45,7 @@ list(APPEND test_c_bins
     bufr_coordinate_descriptors
     codes_new_from_samples
     codes_set_samples_path
+    codes_compare_keys
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes

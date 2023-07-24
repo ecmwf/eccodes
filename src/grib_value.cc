@@ -2083,3 +2083,19 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
             return GRIB_INVALID_TYPE;
     }
 }
+
+int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags)
+{
+    grib_accessor* a1 = grib_find_accessor(h1, key);
+    if (!a1) {
+        grib_context_log(h1->context, GRIB_LOG_ERROR, "Key %s not found in first message", key);
+        return GRIB_NOT_FOUND;
+    }
+    grib_accessor* a2 = grib_find_accessor(h2, key);
+    if (!a2) {
+        grib_context_log(h1->context, GRIB_LOG_ERROR, "Key %s not found in second message", key);
+        return GRIB_NOT_FOUND;
+    }
+
+    return grib_compare_accessors(a1, a2, GRIB_COMPARE_TYPES);
+}
