@@ -574,6 +574,7 @@ struct grib_accessor
 #define GRIB_ACCESSOR_FLAG_DOUBLE_TYPE      (1 << 16)
 #define GRIB_ACCESSOR_FLAG_LOWERCASE        (1 << 17)
 #define GRIB_ACCESSOR_FLAG_BUFR_COORD       (1 << 18)
+#define GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION (1 << 19)
 
 /**
 *  a section accessor
