@@ -122,6 +122,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->value_first    = grib_arguments_get_name(hand, c, n++);
     self->pressure_units = grib_arguments_get_name(hand, c, n++);
 
+    // See ECC-1644
     a->flags |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
 }
 
