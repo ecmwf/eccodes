@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
     while ((h1 = grib_handle_new_from_file(0, f1, &err)) != NULL && (h2 = grib_handle_new_from_file(0, f2, &err)) != NULL) {
         grib_keys_iterator* kiter = NULL;
 
-        /* Use namespace of NULL to get ALL keys */
-        /* Set flags to 0 to not filter any keys */
+        // Use namespace of NULL to get ALL keys
+        // Set flags to 0 to not filter any keys
         //kiter = grib_keys_iterator_new(h1, /*flags=*/0, /*namespace=*/NULL);
         kiter = grib_keys_iterator_new(h1, /*flags=*/GRIB_KEYS_ITERATOR_SKIP_COMPUTED, /*namespace=*/NULL);
         Assert(kiter);
@@ -36,10 +36,9 @@ int main(int argc, char* argv[])
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             Assert(name);
-            //printf("Comparing key '%s' ...\n", name);
             err = codes_compare_key(h1, h2, name, 0);
             if (err) {
-                printf("key: %s  (%s)\n", name, grib_get_error_message(err));
+                fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
                 failed = 1;
             }
         }
@@ -51,7 +50,7 @@ int main(int argc, char* argv[])
     fclose(f1);
     fclose(f2);
     if (failed) {
-        fprintf(stderr, "\nComparison failed: One or more keys different\n");
+        fprintf(stderr, "\nComparison failed: One or more keys are different\n");
     }
-    return err;
+    return failed;
 }

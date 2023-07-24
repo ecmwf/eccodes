@@ -282,6 +282,7 @@ if( HAVE_BUILD_TOOLS )
         read_any
         codes_new_from_samples
         codes_set_samples_path
+        codes_compare_keys
         grib_dump
         grib_dump_debug
         grib_dump_json
