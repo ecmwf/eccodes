@@ -1,15 +1,15 @@
 # Vertical Coordinate Template Component 5.0 - Vertical level
 
 #  Type of first fixed surface
-codetable[1] typeOfFirstFixedSurface ('5.1.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
+codetable[1] typeOfFirstFixedSurface ('5.1.table',masterDir,localDir) : dump,edition_specific,string_type;
 meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
 meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
 
 #  Scale factor of first fixed surface
-signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,edition_specific;
 
 #  Scaled value of first fixed surface
-unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,edition_specific;
 
 ####
 transient pressureUnits="hPa";
