@@ -38,7 +38,7 @@ key: minutesAfterDataCutoff  (Long values are different)
 key: numberOfValues  (Long values are different)
 key: referenceValue  (Double values are different)
 
-Comparison failed: 13 key(s) are different
+Comparison failed: 13 differences
 EOF
 
 diff $tempRef $tempLog
@@ -58,7 +58,7 @@ cat > $tempRef <<EOF
 key: referenceValue  (Double values are different)
 key: codedValues  (Double values are different)
 
-Comparison failed: 2 key(s) are different
+Comparison failed: 2 differences
 EOF
 
 diff $tempRef $tempLog

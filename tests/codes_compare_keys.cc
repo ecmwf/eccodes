@@ -17,7 +17,6 @@ int main(int argc, char* argv[])
     grib_handle* h1 = NULL;
     grib_handle* h2 = NULL;
     int err       = 0;
-    int failed    = 0;
     size_t count  = 0;
 
     Assert(argc == 3);
@@ -40,7 +39,6 @@ int main(int argc, char* argv[])
             err = codes_compare_key(h1, h2, name, 0);
             if (err) {
                 fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
-                failed = 1;
                 ++count;
             }
         }
@@ -51,8 +49,9 @@ int main(int argc, char* argv[])
     }
     fclose(f1);
     fclose(f2);
-    if (failed) {
-        fprintf(stderr, "\nComparison failed: %zu key(s) are different\n", count);
+    if (count > 0) {
+        fprintf(stderr, "\nComparison failed: %zu differences\n", count);
+        return 1;
     }
-    return failed;
+    return 0;
 }
