@@ -662,6 +662,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
+    alen = MAX_CONCEPT_STRING_LENGTH;
+    blen = MAX_CONCEPT_STRING_LENGTH;
 
     aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
     bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
