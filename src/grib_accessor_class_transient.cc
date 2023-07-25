@@ -37,6 +37,7 @@ typedef struct grib_accessor_transient
     /* Members defined in gen */
     /* Members defined in variable */
     double dval;
+    float  fval;
     char*  cval;
     char*  cname;
     int    type;

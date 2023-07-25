@@ -59,5 +59,22 @@ val=`${tools_dir}/bufr_get -s unpack=1 -p heightOfStationGroundAboveMeanSeaLevel
 val=`${tools_dir}/bufr_get -s unpack=1 -p heightOfBarometerAboveMeanSeaLevel $tempBufr`
 [ "$val" = "-417" ]
 
+# Add another instance but outside the 203YYY block. Should fail
+# --------------------------------------------------------------
+cat > $tempFilt <<EOF
+  set inputOverriddenReferenceValues = { -5000 };
+  set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
+  set #1#heightOfStationGroundAboveMeanSeaLevel = -415;
+  set #2#heightOfStationGroundAboveMeanSeaLevel = -416; # ref val not overridden
+  set pack = 1;
+  write;
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 2>$tempText
+status=$?
+[ $status -ne 0 ]
+set -e
+fgrep -q "Value (-416) out of range" $tempText
 
+# Clean up
 rm -f $tempBufr $tempFilt $tempText

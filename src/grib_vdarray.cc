@@ -111,17 +111,17 @@ void grib_vdarray_delete_content(grib_context* c, grib_vdarray* v)
     v->n = 0;
 }
 
-grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v)
-{
-    grib_darray** ret;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// grib_darray** grib_vdarray_get_array(grib_context* c, grib_vdarray* v)
+// {
+//     grib_darray** ret;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (grib_darray**)grib_context_malloc_clear(c, sizeof(grib_darray*) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
 size_t grib_vdarray_used_size(grib_vdarray* v)
 {

@@ -9,8 +9,6 @@ include "grib2/template.3.bf.def"
 
 include "grib2/template.3.shape_of_the_earth.def";
 
-transient oneThousand=1000;
-
 #  La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint : edition_specific ;
 meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,oneConstant,grib2divider,truncateDegrees) : dump;

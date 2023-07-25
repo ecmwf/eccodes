@@ -686,16 +686,14 @@ int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_fla
     return ret;
 }
 
-/*
-int grib_accessor_clear_attributes(grib_accessor* a)
-{
-    int id;
-    for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
-        a->attributes[id]=NULL;
-    }
-    return 0;
-}
- */
+// int grib_accessor_clear_attributes(grib_accessor* a)
+// {
+//     int id;
+//     for (id=0;id<MAX_ACCESSOR_ATTRIBUTES;id++) {
+//         a->attributes[id]=NULL;
+//     }
+//     return 0;
+// }
 
 int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash)
 {

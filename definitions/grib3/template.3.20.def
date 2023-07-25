@@ -1,10 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
-
 # START 2/template.3.20 ----------------------------------------------------------------------
 # TEMPLATE 3.20, Polar stereographic projection
 include "grib3/template.3.shape_of_the_earth.def";
-transient oneThousand=1000;
 
 #  Nx - number of points along X-axis
 unsigned[4] Nx  : dump;

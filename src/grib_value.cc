@@ -1055,6 +1055,29 @@ int grib_get_double(const grib_handle* h, const char* name, double* val)
     return ret;
 }
 
+int grib_get_float(const grib_handle* h, const char* name, float* val)
+{
+    size_t length           = 1;
+    grib_accessor* a        = NULL;
+    grib_accessors_list* al = NULL;
+    int ret                 = 0;
+
+    if (name[0] == '/') {
+        al = grib_find_accessors_list(h, name);
+        if (!al)
+            return GRIB_NOT_FOUND;
+        ret = grib_unpack_float(al->accessor, val, &length);
+        grib_context_free(h->context, al);
+    }
+    else {
+        a = grib_find_accessor(h, name);
+        if (!a)
+            return GRIB_NOT_FOUND;
+        ret = grib_unpack_float(a, val, &length);
+    }
+    return ret;
+}
+
 int grib_get_double_element_internal(grib_handle* h, const char* name, int i, double* val)
 {
     int ret = grib_get_double_element(h, name, i, val);
@@ -2059,4 +2082,20 @@ int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
         default:
             return GRIB_INVALID_TYPE;
     }
+}
+
+int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags)
+{
+    grib_accessor* a1 = grib_find_accessor(h1, key);
+    if (!a1) {
+        grib_context_log(h1->context, GRIB_LOG_ERROR, "Key %s not found in first message", key);
+        return GRIB_NOT_FOUND;
+    }
+    grib_accessor* a2 = grib_find_accessor(h2, key);
+    if (!a2) {
+        grib_context_log(h1->context, GRIB_LOG_ERROR, "Key %s not found in second message", key);
+        return GRIB_NOT_FOUND;
+    }
+
+    return grib_compare_accessors(a1, a2, GRIB_COMPARE_TYPES);
 }
