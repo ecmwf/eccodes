@@ -12,36 +12,31 @@
 
 #pragma once
 
-#include <string>
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
+#include "mir/util/Log.h"
 
 
-namespace mir::repres::other {
+namespace mir::repres::proxygrid {
 
 
-class ORCA : public Gridded {
+class ProxyGrid : public Gridded {
 public:
     // -- Exceptions
     // None
 
     // -- Constructors
-
-    ORCA(const std::string& uid);
-    ORCA(const param::MIRParametrisation&);
-    ORCA(const ORCA&) = delete;
+    ProxyGrid(const ProxyGrid&) = delete;
 
     // -- Destructor
-
-    ~ORCA() override;
+    ~ProxyGrid() = default;
 
     // -- Convertors
     // None
 
     // -- Operators
-
-    ORCA& operator=(const ORCA&) = delete;
+    ProxyGrid& operator=(const ProxyGrid&) = delete;
 
     // -- Methods
     // None
@@ -54,18 +49,20 @@ public:
 
     // -- Class methods
     // None
-
 protected:
+    // -- Constructors
+
+    ProxyGrid();
+
     // -- Members
     // None
 
     // -- Methods
-    // None
 
+    virtual const ::atlas::Grid& atlasGridRef() const = 0;
+    ::atlas::Grid atlasGrid() const;
     // -- Overridden methods
-
-    // from Representation
-    void print(std::ostream&) const override;
+    // None
 
     // -- Class members
     // None
@@ -75,31 +72,23 @@ protected:
 
 private:
     // -- Members
-
-    const atlas::Grid::Spec spec_;
-    mutable atlas::Grid grid_;
+    // None
 
     // -- Methods
-
-    const atlas::Grid& atlasGridRef() const;
+    // None
 
     // -- Overridden methods
 
     // from Representation
-    bool sameAs(const Representation&) const override;
-    void validate(const MIRValuesVector&) const override;
-    size_t numberOfPoints() const override;
-    void makeName(std::ostream&) const override;
+    void validate(const MIRValuesVector& values) const override;
 
-    void fillGrib(grib_info&) const override;
-    void fillMeshGen(util::MeshGeneratorParameters&) const override;
+    size_t numberOfPoints() const override;
 
     bool includesNorthPole() const override { return true; }
     bool includesSouthPole() const override { return true; }
     bool isPeriodicWestEast() const override { return true; }
 
     Iterator* iterator() const override;
-    atlas::Grid atlasGrid() const override;
 
     // -- Class members
     // None
@@ -112,4 +101,4 @@ private:
 };
 
 
-}  // namespace mir::repres::other
+}  // namespace mir::repres::proxygrid
