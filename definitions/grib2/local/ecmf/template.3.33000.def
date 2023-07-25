@@ -6,10 +6,10 @@ include "grib2/template.3.shape_of_the_earth.def";
 include "grib2/template.3.resolution_flags.def"
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
-unsigned[4] nside: dump;
-alias N=nside;
-alias numberOfSides=nside;
-alias geography.nside=nside;
+unsigned[4] Nside: dump;
+alias N=Nside;
+alias numberOfPointsAlongASide=Nside;
+alias geography.Nside=Nside;
 
 # Ordering convention of points. Default = ring
 unsigned[1] ordering = 0: dump;
