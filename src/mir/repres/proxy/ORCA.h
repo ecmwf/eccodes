@@ -20,7 +20,7 @@
 #include "mir/util/MeshGeneratorParameters.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
 class ORCA final : public ProxyGrid {
@@ -89,4 +89,4 @@ private:
 };
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy

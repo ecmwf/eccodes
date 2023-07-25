@@ -24,7 +24,7 @@
 #include "mir/util/MeshGeneratorParameters.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
 // order is important for makeName()
@@ -92,4 +92,4 @@ void ORCA::fillGrib(grib_info& info) const {
 static const RepresentationBuilder<ORCA> orca_grid("orca");
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy

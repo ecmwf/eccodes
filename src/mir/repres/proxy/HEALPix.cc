@@ -24,18 +24,19 @@
 #include "mir/util/MeshGeneratorParameters.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
-HEALPix::HEALPix(size_t N, const std::string& orderingConvention) : N_(N), orderingConvention_(orderingConvention) {
-    ASSERT(N_ > 0);
+HEALPix::HEALPix(size_t Nside, const std::string& orderingConvention) :
+    Nside_(Nside), orderingConvention_(orderingConvention) {
+    ASSERT(Nside_ > 0);
     ASSERT(orderingConvention_ == "ring");
 }
 
 
-HEALPix::HEALPix(const param::MIRParametrisation& param) : N_(0), orderingConvention_("none") {
-    param.get("N", N_);
-    ASSERT(N_ > 0);
+HEALPix::HEALPix(const param::MIRParametrisation& param) : Nside_(0), orderingConvention_("none") {
+    param.get("Nside", Nside_);
+    ASSERT(Nside_ > 0);
     ASSERT(param.get("orderingConvention", orderingConvention_));
     ASSERT(orderingConvention_ == "ring");
 }
@@ -45,20 +46,20 @@ HEALPix::~HEALPix() = default;
 
 
 const ::atlas::Grid& HEALPix::atlasGridRef() const {
-    // TODO: In some way we should pass orderingConvention to atlas when atlas will support
-    //       this feature
-    return grid_ ? grid_ : (grid_ = ::atlas::grid::detail::grid::Grid::create(name()));
+    ::atlas::grid::detail::grid::Grid::Config atlasGridConfig;
+    atlasGridConfig.set("orderingConvention", orderingConvention_);
+    return grid_ ? grid_ : (grid_ = ::atlas::grid::detail::grid::Grid::create(name(), atlasGridConfig));
 }
 
 
 bool HEALPix::sameAs(const Representation& other) const {
     const auto* o = dynamic_cast<const HEALPix*>(&other);
-    return (o != nullptr) && N_ == o->N_ && orderingConvention_ == o->orderingConvention_;
+    return (o != nullptr) && Nside_ == o->Nside_ && orderingConvention_ == o->orderingConvention_;
 }
 
 
 std::string HEALPix::name() const {
-    return "H" + std::to_string(N_);
+    return "H" + std::to_string(Nside_);
 }
 
 
@@ -68,11 +69,11 @@ void HEALPix::makeName(std::ostream& out) const {
 
 
 void HEALPix::fillGrib(grib_info& info) const {
-    // TODO: This a temporary hack while waiting for eccode fully support
+    // TODO: This is a temporary hack while waiting for eccode fully support
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_GG;
 
     info.extra_set("gridType", "healpix");
-    info.extra_set("N", static_cast<long>(N_));
+    info.extra_set("Nside", static_cast<long>(Nside_));
     info.extra_set("orderingConvention", orderingConvention_.c_str());
 }
 
@@ -95,4 +96,4 @@ void HEALPix::print(std::ostream& out) const {
 static const RepresentationBuilder<HEALPix> HEALPix_grid("healpix");
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy

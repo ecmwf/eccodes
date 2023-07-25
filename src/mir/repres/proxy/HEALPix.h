@@ -19,7 +19,7 @@
 #include "mir/repres/proxy/ProxyGrid.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
 class HEALPix final : public ProxyGrid {
@@ -29,7 +29,7 @@ public:
 
     // -- Constructors
 
-    HEALPix(size_t N, const std::string& orderingConvention = "ring");
+    HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
     HEALPix(const param::MIRParametrisation&);
     HEALPix(const HEALPix&) = delete;
 
@@ -61,7 +61,7 @@ private:
 
     const ::atlas::Grid::Spec spec_;
     mutable ::atlas::Grid grid_;
-    size_t N_;
+    size_t Nside_;
     std::string orderingConvention_;
 
     // -- Methods
@@ -92,4 +92,4 @@ private:
 };
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy

@@ -18,7 +18,7 @@
 #include "mir/util/Log.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
 ProxyGrid::ProxyGrid() : Gridded(util::BoundingBox() /*Assumed globabl*/){};
@@ -107,4 +107,4 @@ Iterator* ProxyGrid::iterator() const {
 }
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy

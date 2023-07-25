@@ -55,7 +55,7 @@ Representation* RepresentationBuilder<other::UnstructuredGrid>::make(const param
     std::string grid;
     if (param.get("grid", grid)) {
         if (!key::grid::ORCAPattern::match(grid, param).empty()) {
-            return new proxygrid::ORCA(param);
+            return new proxy::ORCA(param);
         }
     }
 #endif

@@ -18,7 +18,7 @@
 #include "mir/util/Log.h"
 
 
-namespace mir::repres::proxygrid {
+namespace mir::repres::proxy {
 
 
 class ProxyGrid : public Gridded {
@@ -101,4 +101,4 @@ private:
 };
 
 
-}  // namespace mir::repres::proxygrid
+}  // namespace mir::repres::proxy
