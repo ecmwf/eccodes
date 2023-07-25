@@ -3,11 +3,11 @@
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
-# The number of data points should be = 12 * nside * nside
-unsigned[4] nside : edition_specific,dump;
-alias N = nside;
-alias numberOfSides = nside;
-alias geography.nside = nside;
+# The number of data points should be = 12 * Nside * Nside
+unsigned[4] Nside : edition_specific,dump;
+alias N = Nside;
+alias numberOfPointsAlongASide = Nside;
+alias geography.Nside = Nside;
 
 # Longitude of first points from first of 12 rhomboids
 unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
@@ -28,4 +28,3 @@ alias geography.pointsOrdering = orderingConvention;
 
 # No scanning mode needed; healpix is a standardized way of ordering points
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
-

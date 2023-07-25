@@ -21,7 +21,7 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 cat > $tempFilter <<EOF
   set tablesVersion = 32;
   set gridType = "healpix";
-  set numberOfSides = 1200;
+  set numberOfPointsAlongASide = 1200;
   write;
 EOF
 
@@ -32,7 +32,7 @@ if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
 fi
-grib_check_key_equals $tempGrib gridType,orderingConvention,N,nside 'healpix ring 1200 1200'
+grib_check_key_equals $tempGrib gridType,orderingConvention,N,Nside 'healpix ring 1200 1200'
 grib_check_key_equals $tempGrib gridDefinitionTemplateNumber '150'
 grib_check_key_equals $tempGrib gridDefinitionDescription    'Hierarchical Equal Area isoLatitude Pixelization grid'
 
