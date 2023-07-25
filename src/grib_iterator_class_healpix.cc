@@ -123,6 +123,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS)
         return err;
 
+    if (!STR_EQUAL(ordering, "ring")) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ring ordering is supported", ITER);
+        return GRIB_WRONG_GRID;
+    }
+
     is_oblate = grib_is_earth_oblate(h);
     Assert(!is_oblate);
 
