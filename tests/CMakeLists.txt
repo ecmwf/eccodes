@@ -95,6 +95,7 @@ if( HAVE_BUILD_TOOLS )
         grib_suppressed
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-530
         grib_ecc-922
         grib_ecc-966
         grib_ecc-967
