@@ -28,3 +28,5 @@ alias geography.pointsOrdering = orderingConvention;
 
 # No scanning mode needed; healpix is a standardized way of ordering points
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
+
+iterator healpix(numberOfPoints,missingValue,values, Nside, orderingConvention);
