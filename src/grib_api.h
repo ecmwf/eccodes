@@ -1399,6 +1399,7 @@ int grib_get_message_size(const grib_handle* h, size_t* size);
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA 10
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 #define GRIB_UTIL_GRID_SPEC_UNSTRUCTURED                 12
+#define GRIB_UTIL_GRID_SPEC_HEALPIX                      13
 
 
 typedef struct grib_util_grid_spec
@@ -1427,7 +1428,7 @@ typedef struct grib_util_grid_spec
     long iScansNegatively;
     long jScansPositively;
 
-    /* Gaussian number */
+    /* Gaussian number or HEALPIX Nside */
     long N;
 
     /* Bitmap */
@@ -1476,7 +1477,7 @@ typedef struct grib_util_grid_spec2
     long iScansNegatively;
     long jScansPositively;
 
-    /* Gaussian number */
+    /* Gaussian number or HEALPIX Nside */
     long N;
 
     /* Bitmap */

@@ -798,6 +798,9 @@ static const char* get_grid_type_name(const int spec_grid_type)
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
         return "lambert";
 
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX)
+        return "healpix";
+
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED)
         return "unstructured_grid";
 
@@ -1037,6 +1040,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                 snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
                 break;
             case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            case GRIB_UTIL_GRID_SPEC_HEALPIX:
                 snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
                 break;
             default:
@@ -1192,6 +1196,11 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
             // TODO(masn): Add other keys like Latin1, LoV etc
 
+            break;
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            COPY_SPEC_LONG(N); // Nside
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
