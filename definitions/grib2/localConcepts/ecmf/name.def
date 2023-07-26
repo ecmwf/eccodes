@@ -2804,42 +2804,6 @@
 	 parameterNumber = 194 ;
 	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component (climatological)
-'UV visible albedo for diffuse radiation, isotropic component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 192 ;
-	}
-#UV visible albedo for diffuse radiation, volumetric component (climatological)
-'UV visible albedo for diffuse radiation, volumetric component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 193 ;
-	}
-#UV visible albedo for diffuse radiation, geometric component (climatological)
-'UV visible albedo for diffuse radiation, geometric component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 194 ;
-	}
-#Near IR albedo for diffuse radiation, isotropic component (climatological)
-'Near IR albedo for diffuse radiation, isotropic component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 195 ;
-	}
-#Near IR albedo for diffuse radiation, volumetric component (climatological)
-'Near IR albedo for diffuse radiation, volumetric component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 196 ;
-	}
-#Near IR albedo for diffuse radiation, geometric component (climatological)
-'Near IR albedo for diffuse radiation, geometric component (climatological)' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 197 ;
-	}
 #Total aerosol optical depth at 340 nm
 'Total aerosol optical depth at 340 nm' = {
 	 discipline = 192 ;
