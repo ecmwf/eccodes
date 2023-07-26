@@ -162,6 +162,11 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
+    if ((ga->flags & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name);
+        return GRIB_SUCCESS;
+    }
+
     switch (grib_accessor_get_native_type(ga)) {
         case GRIB_TYPE_STRING:
 
