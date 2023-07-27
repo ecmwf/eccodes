@@ -135,5 +135,24 @@ ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempDir > $tempText
 grep -q "Processing input file .*/subdir/regular_latlon_surface.grib2" $tempText
 rm -rf $tempDir
 
+echo "Enable/Disable Checks ..."
+# ---------------------------------
+rm -f $tempNetcdf
+input=${data_dir}/regular_latlon_surface.grib2
+cat $input $input > $tempGrib
+# By default checks are enabled. So this should fail
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong number of fields" $tempText
+
+export GRIB_TO_NETCDF_CHECKVALIDTIME=0
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+[ -f "$tempNetcdf" ]
+unset GRIB_TO_NETCDF_CHECKVALIDTIME
+
+
 # Clean up
 rm -f $tempNetcdf $tempGrib $tempText
