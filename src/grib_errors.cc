@@ -91,7 +91,7 @@ static const char *errors[] = {
 "Type mismatch",		/* -76 GRIB_TYPE_MISMATCH */
 "Type and value mismatch",		/* -77 GRIB_TYPE_AND_VALUE_MISMATCH */
 "Unable to compare accessors",		/* -78 GRIB_UNABLE_TO_COMPARE_ACCESSORS */
-"Assertion failure",		/* 2 GRIB_ASSERTION_FAILURE */
+"Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
 };
 
 #define NUMBER(a) sizeof(a)/sizeof(a[0])

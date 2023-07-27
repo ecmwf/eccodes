@@ -1618,5 +1618,7 @@ Error codes returned by the eccodes functions.
 #define CODES_TYPE_AND_VALUE_MISMATCH		GRIB_TYPE_AND_VALUE_MISMATCH
 /** Unable to compare accessors */
 #define CODES_UNABLE_TO_COMPARE_ACCESSORS		GRIB_UNABLE_TO_COMPARE_ACCESSORS
+/** Assertion failure */
+#define CODES_ASSERTION_FAILURE		GRIB_ASSERTION_FAILURE
 /*! @}*/
 #endif
