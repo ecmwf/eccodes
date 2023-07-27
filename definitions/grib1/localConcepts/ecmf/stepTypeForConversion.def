@@ -11,10 +11,8 @@
 "accum" = {indicatorOfParameter=146;gribTablesVersionNo=128;centre=98;}
 # slhf
 "accum" = {indicatorOfParameter=147;gribTablesVersionNo=128;centre=98;}
-
 # ssrd
 "accum" = {indicatorOfParameter=169;gribTablesVersionNo=128;centre=98;}
-
 # strd
 "accum" = {indicatorOfParameter=175;gribTablesVersionNo=128;centre=98;}
 # ssr
@@ -23,9 +21,17 @@
 "accum" = {indicatorOfParameter=177;gribTablesVersionNo=128;centre=98;}
 # ttr
 "accum" = {indicatorOfParameter=179;gribTablesVersionNo=128;centre=98;}
-
 # sund
 "accum" = {indicatorOfParameter=189;gribTablesVersionNo=128;centre=98;}
-
 # runoff
 "accum" = {indicatorOfParameter=205;gribTablesVersionNo=128;centre=98;}
+# sro
+"accum" = {indicatorOfParameter=8;gribTablesVersionNo=128;centre=98;}
+# e
+"accum" = {indicatorOfParameter=182;gribTablesVersionNo=128;centre=98;}
+# lsp
+"accum" = {indicatorOfParameter=142;gribTablesVersionNo=128;centre=98;}
+# pev
+"accum" = {indicatorOfParameter=251;gribTablesVersionNo=228;centre=98;}
+# uvb
+"accum" = {indicatorOfParameter=57;gribTablesVersionNo=128;centre=98;}

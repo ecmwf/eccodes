@@ -1,1 +1,0 @@
-GRIB_ASSERTION_FAILURE              Assertion failure

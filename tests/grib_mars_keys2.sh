@@ -17,16 +17,16 @@ grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 
 # Check all combinations
 # ------------------------
-for cfg in $ECCODES_DEFINITION_PATH/mars/grib.*.def; do
+i=0
+for cfg in $ECCODES_DEFINITION_PATH/mars/grib.*.*.def; do
   b=$(basename $cfg)
-  num=$(echo $b | awk -F. '{print NF}')
-  if [ $num -eq 4 ]; then
-    # Each file should be of the form grib.$stream.$type.def
-    stream=$(echo $b | awk -F. '{print $2}')
-    type=$(echo $b | awk -F. '{print $3}')
-    ${tools_dir}/grib_set -s stream=$stream,type=$type $grib2_sample $tempGrib
-    ${tools_dir}/grib_ls -m $tempGrib
-  fi
+  # Each file should be of the form grib.$stream.$type.def
+  stream=$(echo $b | awk -F. '{print $2}')
+  type=$(echo $b | awk -F. '{print $3}')
+  ${tools_dir}/grib_set -s stream=$stream,type=$type $grib2_sample $tempGrib
+  ${tools_dir}/grib_ls -m $tempGrib > /dev/null
+  i=$((i + 1))
 done
+echo "Checked $i files"
 
 rm -f $tempGrib

@@ -432,6 +432,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 165 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
 #Instantaneous eastward turbulent surface stress
@@ -7017,6 +7019,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 165 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Surface runoff
 'kg m**-2' = {

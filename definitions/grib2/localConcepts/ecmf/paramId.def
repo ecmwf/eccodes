@@ -2804,42 +2804,6 @@
 	 parameterNumber = 194 ;
 	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component
-'210192' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 192 ;
-	}
-#UV visible albedo for diffuse radiation, volumetric component
-'210193' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 193 ;
-	}
-#UV visible albedo for diffuse radiation, geometric component
-'210194' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 194 ;
-	}
-#Near IR albedo for diffuse radiation, isotropic component
-'210195' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 195 ;
-	}
-#Near IR albedo for diffuse radiation, volumetric component
-'210196' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 196 ;
-	}
-#Near IR albedo for diffuse radiation, geometric component
-'210197' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 197 ;
-	}
 #Total aerosol optical depth at 340 nm
 '210217' = {
 	 discipline = 192 ;

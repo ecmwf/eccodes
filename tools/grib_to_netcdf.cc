@@ -2107,8 +2107,12 @@ static void get_nc_options(const request* user_r)
     setup.history   = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
 
+    setup.checkvalidtime   = true;
     checkvalidtime_env     = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
-    setup.checkvalidtime   = checkvalidtime_env ? atol(checkvalidtime_env) : 1;
+    if (checkvalidtime_env) {
+        const long v = atol(checkvalidtime_env);
+        if (v == 0) setup.checkvalidtime = false;
+    }
     setup.mars_description = empty_request("MARS");
 }
 
