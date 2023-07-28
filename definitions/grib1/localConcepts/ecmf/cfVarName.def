@@ -13834,73 +13834,73 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Tendency of short wave radiation
-'p100.162' = {
+#Time-integrated temperature tendency due to short-wave radiation
+'srta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Tendency of long wave radiation
-'p101.162' = {
+#Time-integrated temperature tendency due to long-wave radiation
+'trta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 101 ;
 	}
-#Tendency of clear sky short wave radiation
-'p102.162' = {
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'srtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 102 ;
 	}
-#Tendency of clear sky long wave radiation
-'p103.162' = {
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'trtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 103 ;
 	}
-#Updraught mass flux
-'p104.162' = {
+#Time-integrated updraught mass flux
+'umfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 104 ;
 	}
-#Downdraught mass flux
-'p105.162' = {
+#Time-integrated downdraught mass flux
+'dmfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 105 ;
 	}
-#Updraught detrainment rate
-'p106.162' = {
+#Time-integrated updraught detrainment rate
+'udra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 106 ;
 	}
-#Downdraught detrainment rate
-'p107.162' = {
+#Time-integrated downdraught detrainment rate
+'ddra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 107 ;
 	}
-#Total precipitation flux
-'p108.162' = {
+#Time-integrated total precipitation flux
+'tpfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 108 ;
 	}
-#Turbulent diffusion coefficient for heat
-'p109.162' = {
+#Time-integrated turbulent diffusion coefficient for heat
+'tdcha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 109 ;
 	}
-#Tendency of temperature due to physics
-'p110.162' = {
+#Time-integrated temperature tendency due to parametrisations
+'ttpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 110 ;
 	}
-#Tendency of specific humidity due to physics
-'p111.162' = {
+#Time-integrated specific humidity tendency due to parametrisations
+'qtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 111 ;
 	}
-#Tendency of u component due to physics
-'p112.162' = {
+#Time-integrated eastward wind tendency due to parametrisations
+'utpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Tendency of v component due to physics
-'p113.162' = {
+#Time-integrated northward wind tendency due to parametrisations
+'vtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 113 ;
 	}

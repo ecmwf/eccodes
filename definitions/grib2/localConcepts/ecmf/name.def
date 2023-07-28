@@ -17677,86 +17677,86 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 87 ;
 	}
-#Tendency of short wave radiation
-'Tendency of short wave radiation' = {
+#Time-integrated temperature tendency due to short-wave radiation
+'Time-integrated temperature tendency due to short-wave radiation' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 100 ;
 	}
-#Tendency of long wave radiation
-'Tendency of long wave radiation' = {
+#Time-integrated temperature tendency due to long-wave radiation
+'Time-integrated temperature tendency due to long-wave radiation' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 101 ;
 	}
-#Tendency of clear sky short wave radiation
-'Tendency of clear sky short wave radiation' = {
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'Time-integrated temperature tendency due to short wave radiation, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 102 ;
 	}
-#Tendency of clear sky long wave radiation
-'Tendency of clear sky long wave radiation' = {
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'Time-integrated temperature tendency due to long-wave radiation, clear sky' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 103 ;
 	}
-#Updraught mass flux
-'Updraught mass flux' = {
+#Time-integrated updraught mass flux
+'Time-integrated updraught mass flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 104 ;
 	}
-#Downdraught mass flux
-'Downdraught mass flux' = {
+#Time-integrated downdraught mass flux
+'Time-integrated downdraught mass flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 105 ;
 	}
-#Updraught detrainment rate
-'Updraught detrainment rate' = {
+#Time-integrated updraught detrainment rate
+'Time-integrated updraught detrainment rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 106 ;
 	}
-#Downdraught detrainment rate
-'Downdraught detrainment rate' = {
+#Time-integrated downdraught detrainment rate
+'Time-integrated downdraught detrainment rate' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 107 ;
 	}
-#Total precipitation flux
-'Total precipitation flux' = {
+#Time-integrated total precipitation flux
+'Time-integrated total precipitation flux' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 108 ;
 	}
-#Turbulent diffusion coefficient for heat
-'Turbulent diffusion coefficient for heat' = {
+#Time-integrated turbulent diffusion coefficient for heat
+'Time-integrated turbulent diffusion coefficient for heat' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 109 ;
 	}
-#Tendency of temperature due to physics
-'Tendency of temperature due to physics' = {
+#Time-integrated temperature tendency due to parametrisations
+'Time-integrated temperature tendency due to parametrisations' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 110 ;
 	}
-#Tendency of specific humidity due to physics
-'Tendency of specific humidity due to physics' = {
+#Time-integrated specific humidity tendency due to parametrisations
+'Time-integrated specific humidity tendency due to parametrisations' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 111 ;
 	}
-#Tendency of u component due to physics
-'Tendency of u component due to physics' = {
+#Time-integrated eastward wind tendency due to parametrisations
+'Time-integrated eastward wind tendency due to parametrisations' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 112 ;
 	}
-#Tendency of v component due to physics
-'Tendency of v component due to physics' = {
+#Time-integrated northward wind tendency due to parametrisations
+'Time-integrated northward wind tendency due to parametrisations' = {
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 113 ;
