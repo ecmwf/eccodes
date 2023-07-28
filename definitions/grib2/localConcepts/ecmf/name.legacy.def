@@ -1003,3 +1003,87 @@
  parameterCategory = 210 ;
  parameterNumber = 197 ;
 }
+#Time-integrated temperature tendency due to short-wave radiation
+'Time-integrated temperature tendency due to short-wave radiation' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 100 ;
+}
+#Time-integrated temperature tendency due to long-wave radiation
+'Time-integrated temperature tendency due to long-wave radiation' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 101 ;
+}
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'Time-integrated temperature tendency due to short wave radiation, clear sky' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 102 ;
+}
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'Time-integrated temperature tendency due to long-wave radiation, clear sky' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 103 ;
+}
+#Time-integrated updraught mass flux
+'Time-integrated updraught mass flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 104 ;
+}
+#Time-integrated downdraught mass flux
+'Time-integrated downdraught mass flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 105 ;
+}
+#Time-integrated updraught detrainment rate
+'Time-integrated updraught detrainment rate' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 106 ;
+}
+#Time-integrated downdraught detrainment rate
+'Time-integrated downdraught detrainment rate' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 107 ;
+}
+#Time-integrated total precipitation flux
+'Time-integrated total precipitation flux' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 108 ;
+}
+#Time-integrated turbulent diffusion coefficient for heat
+'Time-integrated turbulent diffusion coefficient for heat' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 109 ;
+}
+#Time-integrated temperature tendency due to parametrisations
+'Time-integrated temperature tendency due to parametrisations' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 110 ;
+}
+#Time-integrated specific humidity tendency due to parametrisations
+'Time-integrated specific humidity tendency due to parametrisations' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 111 ;
+}
+#Time-integrated eastward wind tendency due to parametrisations
+'Time-integrated eastward wind tendency due to parametrisations' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 112 ;
+}
+#Time-integrated northward wind tendency due to parametrisations
+'Time-integrated northward wind tendency due to parametrisations' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 113 ;
+}
