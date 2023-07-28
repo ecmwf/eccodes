@@ -684,6 +684,42 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 92 ;
 	}
+#Wave directional width of first swell partition
+'wdw1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 56 ;
+	}
+#Wave frequency width of first swell partition
+'wfw1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 59 ;
+	}
+#Wave directional width of second swell partition
+'wdw2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 57 ;
+	}
+#Wave frequency width of second swell partition
+'wfw2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 60 ;
+	}
+#Wave directional width of third swell partition
+'wdw3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 58 ;
+	}
+#Wave frequency width of third swell partition
+'wfw3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 61 ;
+	}
 #Wave energy flux magnitude
 'wefxm' = {
 	 discipline = 10 ;
@@ -695,6 +731,126 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 79 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 10 to 12 seconds
+'h1012' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 10 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 12 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 12 to 14 seconds
+'h1214' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 12 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 14 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 14 to 17 seconds
+'h1417' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 14 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 17 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 17 to 21 seconds
+'h1721' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 17 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 21 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 21 to 25 seconds
+'h2125' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 21 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 25 ;
+	}
+#Significant wave height of all waves with periods within the inclusive range from 25 to 30 seconds
+'h2530' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 3 ;
+	 typeOfWavePeriodInterval = 7 ;
+	 scaleFactorOfLowerWavePeriodLimit = 0 ;
+	 scaledValueOfLowerWavePeriodLimit = 25 ;
+	 scaleFactorOfUpperWavePeriodLimit = 0 ;
+	 scaledValueOfUpperWavePeriodLimit = 30 ;
+	}
+#Significant wave height of first swell partition
+'swh1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 47 ;
+	}
+#Mean wave direction of first swell partition
+'mwd1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 53 ;
+	}
+#Mean wave period of first swell partition
+'mwp1' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 50 ;
+	}
+#Significant wave height of second swell partition
+'swh2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 48 ;
+	}
+#Mean wave direction of second swell partition
+'mwd2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 54 ;
+	}
+#Mean wave period of second swell partition
+'mwp2' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 51 ;
+	}
+#Significant wave height of third swell partition
+'swh3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 49 ;
+	}
+#Mean wave direction of third swell partition
+'mwd3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 55 ;
+	}
+#Mean wave period of third swell partition
+'mwp3' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 52 ;
 	}
 #Wave Spectral Skewness
 'wss' = {
