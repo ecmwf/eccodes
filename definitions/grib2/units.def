@@ -7022,6 +7022,104 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Time-integrated temperature tendency due to short-wave radiation
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to long-wave radiation
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated updraught mass flux
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated downdraught mass flux
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated updraught detrainment rate
+'kg m**-3' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated downdraught detrainment rate
+'kg m**-3' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total precipitation flux
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated turbulent diffusion coefficient for heat
+'m**2' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to parametrisations
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated specific humidity tendency due to parametrisations
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated eastward wind tendency due to parametrisations
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 39 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated northward wind tendency due to parametrisations
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 40 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface runoff
 'kg m**-2' = {
 	 discipline = 2 ;

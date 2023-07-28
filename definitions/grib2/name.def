@@ -7022,6 +7022,104 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Time-integrated temperature tendency due to short-wave radiation
+'Time-integrated temperature tendency due to short-wave radiation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to long-wave radiation
+'Time-integrated temperature tendency due to long-wave radiation' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'Time-integrated temperature tendency due to short wave radiation, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'Time-integrated temperature tendency due to long-wave radiation, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated updraught mass flux
+'Time-integrated updraught mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 27 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated downdraught mass flux
+'Time-integrated downdraught mass flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 28 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated updraught detrainment rate
+'Time-integrated updraught detrainment rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 29 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated downdraught detrainment rate
+'Time-integrated downdraught detrainment rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 30 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated total precipitation flux
+'Time-integrated total precipitation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated turbulent diffusion coefficient for heat
+'Time-integrated turbulent diffusion coefficient for heat' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated temperature tendency due to parametrisations
+'Time-integrated temperature tendency due to parametrisations' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated specific humidity tendency due to parametrisations
+'Time-integrated specific humidity tendency due to parametrisations' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 108 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated eastward wind tendency due to parametrisations
+'Time-integrated eastward wind tendency due to parametrisations' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 39 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated northward wind tendency due to parametrisations
+'Time-integrated northward wind tendency due to parametrisations' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 40 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface runoff
 'Surface runoff' = {
 	 discipline = 2 ;
