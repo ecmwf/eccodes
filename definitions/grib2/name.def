@@ -9448,18 +9448,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 7 ;
 	}
-#Significant height of swell waves
-'Significant height of swell waves' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 8 ;
-	}
-#Mean period of swell waves
-'Mean period of swell waves' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 9 ;
-	}
 #Secondary wave direction
 'Secondary wave direction' = {
 	 discipline = 10 ;
