@@ -15,6 +15,7 @@
 
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
+#include "mir/util/GridBox.h"
 #include "mir/util/Log.h"
 
 
@@ -89,6 +90,8 @@ private:
     bool isPeriodicWestEast() const override { return true; }
 
     Iterator* iterator() const override;
+
+    std::vector<util::GridBox> gridBoxes() const override;
 
     // -- Class members
     // None

@@ -75,6 +75,7 @@ private:
 
     void fillGrib(grib_info&) const override;
     void fillMeshGen(util::MeshGeneratorParameters&) const override;
+    void fillJob(api::MIRJob&) const override;
 
     void print(std::ostream&) const override;
 

@@ -46,9 +46,11 @@ HEALPix::~HEALPix() = default;
 
 
 const ::atlas::Grid& HEALPix::atlasGridRef() const {
-    ::atlas::grid::detail::grid::Grid::Config atlasGridConfig;
-    atlasGridConfig.set("orderingConvention", orderingConvention_);
-    return grid_ ? grid_ : (grid_ = ::atlas::grid::detail::grid::Grid::create(name(), atlasGridConfig));
+    ::atlas::util::Config config;
+    config.set("name", name());
+    config.set("Nside", Nside_);
+    config.set("orderingConvention", orderingConvention_);
+    return grid_ ? grid_ : (grid_ = ::atlas::grid::detail::grid::Grid::create(config));
 }
 
 
@@ -69,22 +71,23 @@ void HEALPix::makeName(std::ostream& out) const {
 
 
 void HEALPix::fillGrib(grib_info& info) const {
-    // TODO: This is a temporary hack while waiting for eccode fully support
-    info.grid.grid_type = CODES_UTIL_GRID_SPEC_REGULAR_GG;
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
+    info.grid.N         = static_cast<long>(Nside_);
 
-    info.extra_set("gridType", "healpix");
-    info.extra_set("Nside", static_cast<long>(Nside_));
     info.extra_set("orderingConvention", orderingConvention_.c_str());
 }
 
 
 void HEALPix::fillMeshGen(util::MeshGeneratorParameters& params) const {
     if (params.meshGenerator_.empty()) {
-        // TODO: should be healpix. Still to be clarified if the
-        //       healpix mesh  generator is ready and which is
-        //       the ordering strategy (0-based or 1-based )
         params.meshGenerator_ = "structured";
     }
+}
+
+
+void HEALPix::fillJob(api::MIRJob&) const {
+    // Nothing to do. Just declare the method to avoid
+    // a call to the default one
 }
 
 
