@@ -16441,90 +16441,6 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Period corresponding to maximum individual wave height
-'Period corresponding to maximum individual wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 217 ;
-	}
-#Maximum individual wave height
-'Maximum individual wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 218 ;
-	}
-#Model bathymetry
-'Model bathymetry' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 219 ;
-	}
-#Mean wave period based on first moment
-'Mean wave period based on first moment' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 220 ;
-	}
-#Wave spectral directional width
-'Wave spectral directional width' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 222 ;
-	}
-#Mean wave period based on first moment for wind waves
-'Mean wave period based on first moment for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 223 ;
-	}
-#Mean wave period based on second moment for wind waves
-'Mean wave period based on second moment for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 224 ;
-	}
-#Wave spectral directional width for wind waves
-'Wave spectral directional width for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 225 ;
-	}
-#Mean wave period based on first moment for swell
-'Mean wave period based on first moment for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 226 ;
-	}
-#Mean wave period based on second moment for swell
-'Mean wave period based on second moment for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 227 ;
-	}
-#Wave spectral directional width for swell
-'Wave spectral directional width for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 228 ;
-	}
-#Coefficient of drag with waves
-'Coefficient of drag with waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 233 ;
-	}
-#Significant height of total swell
-'Significant height of total swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 237 ;
-	}
-#Mean period of total swell
-'Mean period of total swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 239 ;
-	}
 #Standard deviation wave height
 'Standard deviation wave height' = {
 	 discipline = 192 ;
@@ -16548,12 +16464,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
-	}
-#Mean square slope of waves
-'Mean square slope of waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 244 ;
 	}
 #10 metre wind speed
 '10 metre wind speed' = {
@@ -16596,12 +16506,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 252 ;
-	}
-#Benjamin-Feir index
-'Benjamin-Feir index' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 253 ;
 	}
 #Wave spectral peakedness
 'Wave spectral peakedness' = {

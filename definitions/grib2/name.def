@@ -7010,11 +7010,77 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Period corresponding to maximum individual wave height
+'Period corresponding to maximum individual wave height' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 23 ;
+	}
+#Maximum individual wave height
+'Maximum individual wave height' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 24 ;
+	}
+#Model bathymetry
+'Model bathymetry' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 7 ;
+	}
+#Mean wave period based on first moment
+'Mean wave period based on first moment' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	}
 #Mean zero-crossing wave period
 'Mean zero-crossing wave period' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 28 ;
+	}
+#Wave spectral directional width
+'Wave spectral directional width' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 31 ;
+	}
+#Mean wave period based on first moment for wind waves
+'Mean wave period based on first moment for wind waves' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 26 ;
+	}
+#Mean wave period based on second moment for wind waves
+'Mean wave period based on second moment for wind waves' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 29 ;
+	}
+#Wave spectral directional width for wind waves
+'Wave spectral directional width for wind waves' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 32 ;
+	}
+#Mean wave period based on first moment for swell
+'Mean wave period based on first moment for swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 27 ;
+	}
+#Mean wave period based on second moment for swell
+'Mean wave period based on second moment for swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 30 ;
+	}
+#Wave spectral directional width for swell
+'Wave spectral directional width for swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 33 ;
 	}
 #Significant height of combined wind waves and swell
 'Significant height of combined wind waves and swell' = {
@@ -7040,6 +7106,12 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 15 ;
 	}
+#Coefficient of drag with waves
+'Coefficient of drag with waves' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 16 ;
+	}
 #Significant height of wind waves
 'Significant height of wind waves' = {
 	 discipline = 10 ;
@@ -7058,17 +7130,41 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
 	}
+#Significant height of total swell
+'Significant height of total swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 8 ;
+	}
 #Mean direction of total swell
 'Mean direction of total swell' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 74 ;
 	}
+#Mean period of total swell
+'Mean period of total swell' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 9 ;
+	}
+#Mean square slope of waves
+'Mean square slope of waves' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 20 ;
+	}
 #2D wave spectra (single)
 '2D wave spectra (single)' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 86 ;
+	}
+#Benjamin-Feir index
+'Benjamin-Feir index' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 44 ;
 	}
 #Eastward sea water velocity
 'Eastward sea water velocity' = {
