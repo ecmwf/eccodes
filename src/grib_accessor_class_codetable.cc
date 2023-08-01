@@ -636,11 +636,8 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
     size_t size = 1;
 
     typedef int (*cmpproc)(const char*, const char*);
-#ifndef ECCODES_ON_WINDOWS
+
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
-#else
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
-#endif
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -699,6 +696,19 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
             return GRIB_SUCCESS;
         }
     }
+
+    // ECC-1652: Failed. Now do a case-insensitive compare to give the user a hint
+    for (i = 0; i < table->size; i++) {
+        if (table->entries[i].abbreviation) {
+            if (strcmp_nocase(table->entries[i].abbreviation, buffer) == 0) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "%s: No such code table entry: '%s' "
+                                 "(Did you mean '%s'?)",
+                                 a->name, buffer, table->entries[i].abbreviation);
+            }
+        }
+    }
+
     return GRIB_ENCODING_ERROR;
 }
 
