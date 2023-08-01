@@ -1087,3 +1087,99 @@
  parameterCategory = 162 ;
  parameterNumber = 113 ;
 }
+#Period corresponding to maximum individual wave height
+'tmax' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 217 ;
+}
+#Maximum individual wave height
+'hmax' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 218 ;
+}
+#Model bathymetry
+'wmb' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 219 ;
+}
+#Mean wave period based on first moment
+'mp1' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 220 ;
+}
+#Wave spectral directional width
+'wdw' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 222 ;
+}
+#Mean wave period based on first moment for wind waves
+'p1ww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 223 ;
+}
+#Mean wave period based on second moment for wind waves
+'p2ww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 224 ;
+}
+#Wave spectral directional width for wind waves
+'dwww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 225 ;
+}
+#Mean wave period based on first moment for swell
+'p1ps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 226 ;
+}
+#Mean wave period based on second moment for swell
+'p2ps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 227 ;
+}
+#Wave spectral directional width for swell
+'dwps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 228 ;
+}
+#Coefficient of drag with waves
+'cdww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 233 ;
+}
+#Significant height of total swell
+'shts' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 237 ;
+}
+#Mean period of total swell
+'mpts' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 239 ;
+}
+#Mean square slope of waves
+'msqs' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 244 ;
+}
+#Benjamin-Feir index
+'bfi' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 253 ;
+}
