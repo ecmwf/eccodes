@@ -12,7 +12,6 @@
 
 #include "mir/repres/proxy/ProxyGrid.h"
 
-#include "atlas/interpolation/method/knn/GridBox.h"
 
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
@@ -106,16 +105,6 @@ Iterator* ProxyGrid::iterator() const {
     };
 
     return new AtlasIterator(atlasGridRef());
-}
-
-
-std::vector<util::GridBox> ProxyGrid::gridBoxes() const {
-    atlas::interpolation::method::GridBoxes atlasBoxes(atlasGridRef(), false);
-    std::vector<util::GridBox> mirBoxes(atlasBoxes.size());
-    std::transform(
-        atlasBoxes.cbegin(), atlasBoxes.cend(), mirBoxes.begin(),
-        [](const atlas::interpolation::method::GridBox& v) { return *reinterpret_cast<const util::GridBox*>(&v); });
-    return mirBoxes;
 }
 
 }  // namespace mir::repres::proxy

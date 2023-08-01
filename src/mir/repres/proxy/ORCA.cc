@@ -94,7 +94,7 @@ void ORCA::fillJob(api::MIRJob& job) const {
 }
 
 
-static const RepresentationBuilder<ORCA> orca_grid("orca");
+static const RepresentationBuilder<ORCA> __grid("orca");
 
 
 }  // namespace mir::repres::proxy

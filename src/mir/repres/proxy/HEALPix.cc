@@ -16,6 +16,8 @@
 #include <utility>
 #include <vector>
 
+#include "atlas/interpolation/method/knn/GridBox.h"
+
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Exceptions.h"
@@ -96,7 +98,17 @@ void HEALPix::print(std::ostream& out) const {
 }
 
 
-static const RepresentationBuilder<HEALPix> HEALPix_grid("healpix");
+std::vector<util::GridBox> HEALPix::gridBoxes() const {
+    ::atlas::interpolation::method::GridBoxes boxes(atlasGridRef(), false);
+    std::vector<util::GridBox> mirBoxes(boxes.size());
+    std::transform(boxes.cbegin(), boxes.cend(), mirBoxes.begin(), [](const auto& other) {
+        return util::GridBox{other.north(), other.west(), other.south(), other.east()};
+    });
+    return mirBoxes;
+}
+
+
+static const RepresentationBuilder<HEALPix> __grid("healpix");
 
 
 }  // namespace mir::repres::proxy

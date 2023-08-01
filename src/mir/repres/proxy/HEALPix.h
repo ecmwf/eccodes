@@ -17,6 +17,7 @@
 
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/proxy/ProxyGrid.h"
+#include "mir/util/GridBox.h"
 
 
 namespace mir::repres::proxy {
@@ -81,6 +82,8 @@ private:
     void fillJob(api::MIRJob&) const override;
 
     void print(std::ostream&) const override;
+
+    std::vector<util::GridBox> gridBoxes() const override;
 
 
     // -- Class members
