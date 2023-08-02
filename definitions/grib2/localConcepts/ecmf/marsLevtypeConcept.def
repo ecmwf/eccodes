@@ -1,0 +1,5 @@
+# Concept marsLevtype
+'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101,numberOfGridUsed=1}
+'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101,numberOfGridUsed=2}
+'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101,numberOfGridUsed=3}
+'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101,numberOfGridUsed=4}
