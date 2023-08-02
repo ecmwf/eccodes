@@ -12,7 +12,6 @@
 
 #include "mir/repres/proxy/ProxyGrid.h"
 
-
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Exceptions.h"
@@ -22,7 +21,7 @@
 namespace mir::repres::proxy {
 
 
-ProxyGrid::ProxyGrid() : Gridded(util::BoundingBox() /*Assumed globabl*/){};
+ProxyGrid::ProxyGrid() : Gridded(util::BoundingBox()) {}
 
 
 void ProxyGrid::validate(const MIRValuesVector& values) const {

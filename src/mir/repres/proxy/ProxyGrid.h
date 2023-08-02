@@ -12,7 +12,6 @@
 
 #pragma once
 
-
 #include "mir/repres/Gridded.h"
 #include "mir/util/Atlas.h"
 #include "mir/util/Log.h"
@@ -27,15 +26,18 @@ public:
     // None
 
     // -- Constructors
+
     ProxyGrid(const ProxyGrid&) = delete;
 
     // -- Destructor
+
     ~ProxyGrid() = default;
 
     // -- Convertors
     // None
 
     // -- Operators
+
     ProxyGrid& operator=(const ProxyGrid&) = delete;
 
     // -- Methods
@@ -49,6 +51,7 @@ public:
 
     // -- Class methods
     // None
+
 protected:
     // -- Constructors
 
@@ -60,7 +63,8 @@ protected:
     // -- Methods
 
     virtual const ::atlas::Grid& atlasGridRef() const = 0;
-    ::atlas::Grid atlasGrid() const;
+    ::atlas::Grid atlasGrid() const override;
+
     // -- Overridden methods
     // None
 

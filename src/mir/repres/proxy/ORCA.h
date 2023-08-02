@@ -14,6 +14,7 @@
 
 
 #include "atlas/grid/SpecRegistry.h"
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/proxy/ProxyGrid.h"
 #include "mir/util/Grib.h"
@@ -64,8 +65,7 @@ private:
     mutable ::atlas::Grid grid_;
 
     // -- Methods
-
-    const ::atlas::Grid& atlasGridRef() const override;
+    // None
 
     // -- Overridden methods
 
@@ -78,6 +78,8 @@ private:
     void fillJob(api::MIRJob&) const override;
 
     void print(std::ostream&) const override;
+
+    const ::atlas::Grid& atlasGridRef() const override;
 
     // -- Class members
     // None

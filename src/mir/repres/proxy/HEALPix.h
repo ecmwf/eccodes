@@ -67,14 +67,12 @@ private:
 
     // -- Methods
 
-    const ::atlas::Grid& atlasGridRef() const;
+    std::string name() const;
 
     // -- Overridden methods
 
     // from Representation
     bool sameAs(const Representation&) const override;
-
-    std::string name() const;
     void makeName(std::ostream&) const override;
 
     void fillGrib(grib_info&) const override;
@@ -83,8 +81,9 @@ private:
 
     void print(std::ostream&) const override;
 
-    std::vector<util::GridBox> gridBoxes() const override;
+    const ::atlas::Grid& atlasGridRef() const override;
 
+    std::vector<util::GridBox> gridBoxes() const override;
 
     // -- Class members
     // None

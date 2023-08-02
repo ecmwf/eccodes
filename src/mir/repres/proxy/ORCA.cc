@@ -12,7 +12,6 @@
 
 #include "mir/repres/proxy/ORCA.h"
 
-
 #include <ostream>
 #include <utility>
 #include <vector>
