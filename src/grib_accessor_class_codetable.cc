@@ -627,11 +627,27 @@ static int value_count(grib_accessor* a, long* count)
     return 0;
 }
 
+static bool is_number(const char* input, size_t len)
+{
+    size_t i = 0;
+    for (i=0; i<len; ++i) {
+        char c = input[i];
+        if (c && !isdigit(c))
+            return false;
+    }
+    return true;
+}
 static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
+    long lValue = 0;
+    if (is_number(buffer, *len) && string_to_long(buffer, &lValue) == GRIB_SUCCESS) {
+        // ECC-1654: If value is a pure number, just pack as long
+        size_t l = 1;
+        return grib_pack_long(a, &lValue, &l);
+    }
+
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     grib_codetable* table;
-
     long i;
     size_t size = 1;
 
