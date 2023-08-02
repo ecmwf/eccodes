@@ -548,8 +548,6 @@ struct grib_accessor
 
     grib_accessor* same;        /** < accessors with the same name */
     long loop;                  /** < used in lists */
-    long bufr_subset_number;    /** < bufr subset (bufr data accessors belong to different subsets)*/
-    long bufr_group_number;     /** < used in bufr */
     grib_virtual_value* vvalue; /** < virtual value used when transient flag on **/
     const char* set;
     grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
@@ -884,8 +882,6 @@ struct grib_handle
     char* section_length[MAX_NUM_SECTIONS];
     int sections_count;
     off_t offset;
-    long bufr_subset_number; /* bufr subset number */
-    long bufr_group_number;  /* used in bufr */
     /* grib_accessor* groups[MAX_NUM_GROUPS]; */
     long missingValueLong;
     double missingValueDouble;
