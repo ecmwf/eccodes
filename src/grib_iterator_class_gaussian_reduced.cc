@@ -207,8 +207,15 @@ static int iterate_reduced_gaussian_subarea_legacy(grib_iterator* iter, grib_han
     return err;
 }
 
-/* ECC-747 */
-static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib_handle* h,
+// ECC-747
+// Try legacy approach, if that fails try the next algorithm
+//     int err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
+//     if (err == GRIB_WRONG_GRID) {
+//         /* ECC-445: First attempt failed. Try again with a different algorithm */
+//         err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
+//     }
+//     return err;
+static int iterate_reduced_gaussian_subarea(grib_iterator* iter, grib_handle* h,
                                                        double lat_first, double lon_first,
                                                        double lat_last, double lon_last,
                                                        double* lats, long* pl, size_t plsize, size_t numlats)
@@ -271,22 +278,6 @@ static int iterate_reduced_gaussian_subarea_algorithm2(grib_iterator* iter, grib
         }
     }
     return err;
-}
-
-static int iterate_reduced_gaussian_subarea_wrapper(grib_iterator* iter, grib_handle* h,
-                                                    double lat_first, double lon_first,
-                                                    double lat_last, double lon_last,
-                                                    double* lats, long* pl, size_t plsize, size_t numlats)
-{
-    return iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
-
-    // Try legacy approach, if that fails try the next algorithm
-    //     int err = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, 0);
-    //     if (err == GRIB_WRONG_GRID) {
-    //         /* ECC-445: First attempt failed. Try again with a different algorithm */
-    //         err = iterate_reduced_gaussian_subarea_algorithm2(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize);
-    //     }
-    //     return err;
 }
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
@@ -375,7 +366,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     is_global = is_gaussian_global(lat_first, lat_last, lon_first, lon_last, max_pl, lats, angular_precision);
     if (!is_global) {
         /*sub area*/
-        ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+        ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
     }
     else {
         /*global*/
@@ -392,7 +383,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
                     /*grib_context_log(h->context,GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");*/
                     /*return GRIB_WRONG_GRID;*/
                     /*Try now as NON-global*/
-                    ret = iterate_reduced_gaussian_subarea_wrapper(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
+                    ret = iterate_reduced_gaussian_subarea(iter, h, lat_first, lon_first, lat_last, lon_last, lats, pl, plsize, numlats);
                     if (ret != GRIB_SUCCESS)
                         grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to initialise reduced Gaussian iterator (global)");
                     goto finalise;

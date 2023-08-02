@@ -57,7 +57,6 @@ list( APPEND eccodes_src_files
     grib_iarray.cc
     grib_viarray.cc
     codes_memfs.cc
-    grib_accessor_class_array.cc
     grib_accessor_class_assert.cc
     grib_accessor_class_ascii.cc
     grib_accessor_class_bit.cc
