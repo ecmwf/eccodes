@@ -85,3 +85,5 @@ padtoeven padding_sec2_3(offsetSection2,section2Length);
 
 meta md5Section2 md5(offsetSection2,section2Length);
 alias md5GridSection = md5Section2;
+
+constant isSpectral = !isGridded : constraint;
