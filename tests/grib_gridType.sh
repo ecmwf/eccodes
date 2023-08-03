@@ -167,6 +167,9 @@ for gt in $grib2_spectral_types; do
     grib_check_key_equals $tempGrib gridType $gt
 done
 
+grib_check_key_equals $data_dir/reduced_latlon_surface.grib1 'isGridded,isSpectral' '1 0'
+grib_check_key_equals $data_dir/reduced_latlon_surface.grib2 'isGridded,isSpectral' '1 0'
+grib_check_key_equals $data_dir/mercator.grib2 'isGridded,isSpectral' '1 0'
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempText
