@@ -1,8 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.12, Transverse Mercator
-
 include "grib2/template.3.shape_of_the_earth.def";
+
+constant isGridded = one;
 
 unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel=Ni;
