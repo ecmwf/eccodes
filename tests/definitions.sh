@@ -8,10 +8,11 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-
 . ./include.ctest.sh
 
+label="definitions_test"
 REDIRECT=/dev/null
+tempOut=temp.$label.txt
 
 [ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
@@ -19,3 +20,13 @@ for file in `find ${ECCODES_DEFINITION_PATH}/ -name '*.def' -print | grep -v gri
 do
   ${tools_dir}/codes_parser $file > $REDIRECT
 done
+
+# Try an invalid input
+set +e
+echo 'transient xx=1' | ${tools_dir}/codes_parser - 2>$tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Parser: syntax error" $tempOut
+
+rm -f $tempOut

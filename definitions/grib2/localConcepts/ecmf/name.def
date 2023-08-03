@@ -2804,42 +2804,6 @@
 	 parameterNumber = 194 ;
 	 typeOfGeneratingProcess = 9 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component
-'UV visible albedo for diffuse radiation, isotropic component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 192 ;
-	}
-#UV visible albedo for diffuse radiation, volumetric component
-'UV visible albedo for diffuse radiation, volumetric component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 193 ;
-	}
-#UV visible albedo for diffuse radiation, geometric component
-'UV visible albedo for diffuse radiation, geometric component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 194 ;
-	}
-#Near IR albedo for diffuse radiation, isotropic component
-'Near IR albedo for diffuse radiation, isotropic component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 195 ;
-	}
-#Near IR albedo for diffuse radiation, volumetric component
-'Near IR albedo for diffuse radiation, volumetric component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 196 ;
-	}
-#Near IR albedo for diffuse radiation, geometric component
-'Near IR albedo for diffuse radiation, geometric component' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 197 ;
-	}
 #Total aerosol optical depth at 340 nm
 'Total aerosol optical depth at 340 nm' = {
 	 discipline = 192 ;
@@ -16477,90 +16441,6 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Period corresponding to maximum individual wave height
-'Period corresponding to maximum individual wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 217 ;
-	}
-#Maximum individual wave height
-'Maximum individual wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 218 ;
-	}
-#Model bathymetry
-'Model bathymetry' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 219 ;
-	}
-#Mean wave period based on first moment
-'Mean wave period based on first moment' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 220 ;
-	}
-#Wave spectral directional width
-'Wave spectral directional width' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 222 ;
-	}
-#Mean wave period based on first moment for wind waves
-'Mean wave period based on first moment for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 223 ;
-	}
-#Mean wave period based on second moment for wind waves
-'Mean wave period based on second moment for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 224 ;
-	}
-#Wave spectral directional width for wind waves
-'Wave spectral directional width for wind waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 225 ;
-	}
-#Mean wave period based on first moment for swell
-'Mean wave period based on first moment for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 226 ;
-	}
-#Mean wave period based on second moment for swell
-'Mean wave period based on second moment for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 227 ;
-	}
-#Wave spectral directional width for swell
-'Wave spectral directional width for swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 228 ;
-	}
-#Coefficient of drag with waves
-'Coefficient of drag with waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 233 ;
-	}
-#Significant height of total swell
-'Significant height of total swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 237 ;
-	}
-#Mean period of total swell
-'Mean period of total swell' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 239 ;
-	}
 #Standard deviation wave height
 'Standard deviation wave height' = {
 	 discipline = 192 ;
@@ -16584,12 +16464,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
-	}
-#Mean square slope of waves
-'Mean square slope of waves' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 244 ;
 	}
 #10 metre wind speed
 '10 metre wind speed' = {
@@ -16632,12 +16506,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 252 ;
-	}
-#Benjamin-Feir index
-'Benjamin-Feir index' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 253 ;
 	}
 #Wave spectral peakedness
 'Wave spectral peakedness' = {
@@ -17712,90 +17580,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 87 ;
-	}
-#Tendency of short wave radiation
-'Tendency of short wave radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 100 ;
-	}
-#Tendency of long wave radiation
-'Tendency of long wave radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 101 ;
-	}
-#Tendency of clear sky short wave radiation
-'Tendency of clear sky short wave radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 102 ;
-	}
-#Tendency of clear sky long wave radiation
-'Tendency of clear sky long wave radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 103 ;
-	}
-#Updraught mass flux
-'Updraught mass flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 104 ;
-	}
-#Downdraught mass flux
-'Downdraught mass flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 105 ;
-	}
-#Updraught detrainment rate
-'Updraught detrainment rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 106 ;
-	}
-#Downdraught detrainment rate
-'Downdraught detrainment rate' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 107 ;
-	}
-#Total precipitation flux
-'Total precipitation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 108 ;
-	}
-#Turbulent diffusion coefficient for heat
-'Turbulent diffusion coefficient for heat' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 109 ;
-	}
-#Tendency of temperature due to physics
-'Tendency of temperature due to physics' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 110 ;
-	}
-#Tendency of specific humidity due to physics
-'Tendency of specific humidity due to physics' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 111 ;
-	}
-#Tendency of u component due to physics
-'Tendency of u component due to physics' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 112 ;
-	}
-#Tendency of v component due to physics
-'Tendency of v component due to physics' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 113 ;
 	}
 #Variance of geopotential
 'Variance of geopotential' = {

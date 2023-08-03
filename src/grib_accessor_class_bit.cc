@@ -107,9 +107,9 @@ grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_bit* self = (grib_accessor_bit*)a;
-    a->length               = 0;
-    self->owner             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    self->bit_index         = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
+    a->length             = 0;
+    self->owner           = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
+    self->bit_index       = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)

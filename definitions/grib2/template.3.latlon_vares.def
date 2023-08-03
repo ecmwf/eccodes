@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
-
-unsigned[4] Ni : can_be_missing,dump;
+# Variable resolution latitude/longitude
+unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel=Ni;
 alias Nx = Ni;
 
@@ -39,9 +39,9 @@ include "grib2/template.3.resolution_flags.def"
 include "grib2/template.3.scanning_mode.def";
 
 longitudesList list(Ni) {
-    unsigned[4] longitudes;
+    unsigned[4] longitude;
 }
 
 latitudesList list(Nj) {
-    signed[4] latitudes;
+    signed[4] latitude;
 }

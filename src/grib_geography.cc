@@ -4003,6 +4003,8 @@ static int ecc_grib_get_gaussian_latitudes(long trunc, double* lats)
 
 int grib_get_gaussian_latitudes(long trunc, double* lats)
 {
+    if (trunc == 0)
+        return GRIB_GEOCALCULUS_PROBLEM;
     if (trunc == 1280)
         return get_precomputed_latitudes_N1280(lats);
     if (trunc == 640)

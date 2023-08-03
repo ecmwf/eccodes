@@ -2491,7 +2491,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     groupNumber = 1;
 
     gaGroup                    = grib_accessor_factory(self->dataKeys, &creatorGroup, 0, NULL);
-    gaGroup->bufr_group_number = groupNumber;
+    //gaGroup->bufr_group_number = groupNumber;
     gaGroup->sub_section       = grib_section_create(hand, gaGroup);
     section                    = gaGroup->sub_section;
     /*rootSection=section;*/
@@ -2557,7 +2557,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
 
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
-                gaGroup->bufr_group_number = groupNumber;
+                //gaGroup->bufr_group_number = groupNumber;
 
                 //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 //accessor_constant_set_dval(gaGroup, groupNumber);
@@ -2602,7 +2602,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 }
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
-                gaGroup->bufr_group_number = groupNumber;
+                // gaGroup->bufr_group_number = groupNumber;
                 //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 //accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);

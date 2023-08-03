@@ -80,19 +80,18 @@ static const char *errors[] = {
 "Value out of coding range",		/* -65 GRIB_OUT_OF_RANGE */
 "Size of bitmap is incorrect",		/* -66 GRIB_WRONG_BITMAP_SIZE */
 "Functionality not enabled",		/* -67 GRIB_FUNCTIONALITY_NOT_ENABLED */
-"Value mismatch",		/* 1 GRIB_VALUE_MISMATCH */
-"double values are different",		/* 2 GRIB_DOUBLE_VALUE_MISMATCH */
-"long values are different",		/* 3 GRIB_LONG_VALUE_MISMATCH */
-"byte values are different",		/* 4 GRIB_BYTE_VALUE_MISMATCH */
-"string values are different",		/* 5 GRIB_STRING_VALUE_MISMATCH */
-"Offset mismatch",		/* 6 GRIB_OFFSET_MISMATCH */
-"Count mismatch",		/* 7 GRIB_COUNT_MISMATCH */
-"Name mismatch",		/* 8 GRIB_NAME_MISMATCH */
-"Type mismatch",		/* 9 GRIB_TYPE_MISMATCH */
-"Type and value mismatch",		/* 10 GRIB_TYPE_AND_VALUE_MISMATCH */
-"Unable to compare accessors",		/* 11 GRIB_UNABLE_TO_COMPARE_ACCESSORS */
-"Unable to reset iterator",		/* 12 GRIB_UNABLE_TO_RESET_ITERATOR */
-"Assertion failure",		/* 13 GRIB_ASSERTION_FAILURE */
+"Value mismatch",		/* -68 GRIB_VALUE_MISMATCH */
+"Double values are different",		/* -69 GRIB_DOUBLE_VALUE_MISMATCH */
+"Long values are different",		/* -70 GRIB_LONG_VALUE_MISMATCH */
+"Byte values are different",		/* -71 GRIB_BYTE_VALUE_MISMATCH */
+"String values are different",		/* -72 GRIB_STRING_VALUE_MISMATCH */
+"Offset mismatch",		/* -73 GRIB_OFFSET_MISMATCH */
+"Count mismatch",		/* -74 GRIB_COUNT_MISMATCH */
+"Name mismatch",		/* -75 GRIB_NAME_MISMATCH */
+"Type mismatch",		/* -76 GRIB_TYPE_MISMATCH */
+"Type and value mismatch",		/* -77 GRIB_TYPE_AND_VALUE_MISMATCH */
+"Unable to compare accessors",		/* -78 GRIB_UNABLE_TO_COMPARE_ACCESSORS */
+"Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
 };
 
 #define NUMBER(a) sizeof(a)/sizeof(a[0])

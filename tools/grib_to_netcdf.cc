@@ -2107,8 +2107,12 @@ static void get_nc_options(const request* user_r)
     setup.history   = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
 
+    setup.checkvalidtime   = true;
     checkvalidtime_env     = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
-    setup.checkvalidtime   = checkvalidtime_env ? atol(checkvalidtime_env) : 1;
+    if (checkvalidtime_env) {
+        const long v = atol(checkvalidtime_env);
+        if (v == 0) setup.checkvalidtime = false;
+    }
     setup.mars_description = empty_request("MARS");
 }
 
@@ -2332,7 +2336,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
-    Assert(n == ni);
+    if (n != ni) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)",n,ni);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2349,8 +2356,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
-
-    Assert(n == nj);
+    if (n != nj) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)",n,nj);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2639,7 +2648,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_BYTE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2653,7 +2665,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
                     double d = 0;
                     Assert(scale_factor > 0);
                     d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_SHORT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2665,7 +2680,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_INT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2677,7 +2695,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_FLOAT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2689,7 +2710,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if(!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_DOUBLE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -3241,6 +3265,7 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     }
     return result;
 }
+
 static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
 {
     const request* cube = h->cube;

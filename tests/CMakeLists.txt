@@ -45,6 +45,7 @@ list(APPEND test_c_bins
     bufr_coordinate_descriptors
     codes_new_from_samples
     codes_set_samples_path
+    codes_compare_keys
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -94,6 +95,7 @@ if( HAVE_BUILD_TOOLS )
         grib_suppressed
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-530
         grib_ecc-922
         grib_ecc-966
         grib_ecc-967
@@ -115,6 +117,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1406
         grib_ecc-1560
         grib_ecc-1571
+        grib_ecc-1654
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -163,6 +166,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
+        bufr_operators
         bufr_filter_misc
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -181,6 +185,8 @@ if( HAVE_BUILD_TOOLS )
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_ecc-147
+        bufr_ecc-389
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286
@@ -278,6 +284,7 @@ if( HAVE_BUILD_TOOLS )
         read_any
         codes_new_from_samples
         codes_set_samples_path
+        codes_compare_keys
         grib_dump
         grib_dump_debug
         grib_dump_json
@@ -285,7 +292,8 @@ if( HAVE_BUILD_TOOLS )
         grib_local_NCEP
         grib_neg_fctime
         codes_split_file
-        grib_mars_keys)
+        grib_mars_keys1
+        grib_mars_keys2)
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
