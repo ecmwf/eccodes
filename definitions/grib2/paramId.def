@@ -5227,14 +5227,14 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Wind stress at 10m above sea surface
+#Wind stress at sea surface
 '262901' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 102 ;
+	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
@@ -6324,14 +6324,14 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean wind stress at 10m above sea surface
+#Time-mean wind stress at sea surface
 '263901' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 102 ;
+	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
