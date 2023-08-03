@@ -17594,13 +17594,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#U-component of neutral wind
-'U-component of neutral wind' = {
+#10 metre u-component of neutral wind
+'10 metre u-component of neutral wind' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#V-component of neutral wind
-'V-component of neutral wind' = {
+#10 metre v-component of neutral wind
+'10 metre v-component of neutral wind' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
 	}
