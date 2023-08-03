@@ -70,6 +70,56 @@ set -e
 [ $status -ne 0 ]
 grep -q "Nearest neighbour functionality is not supported for grid: Variable resolution latitude/longitude" $tempText
 
+# Check the keys isSpectral and isGridded
+# ----------------------------------------
+grib2_grid_types="
+ regular_ll
+ reduced_ll
+ rotated_ll
+ stretched_ll
+ stretched_rotated_ll
+ mercator
+ transverse_mercator
+ polar_stereographic
+ lambert
+ albers
+ regular_gg
+ reduced_gg
+ rotated_gg
+ reduced_rotated_gg
+ stretched_gg
+ reduced_stretched_gg
+ stretched_rotated_gg
+ reduced_stretched_rotated_gg
+ regular_rotated_gg
+ regular_stretched_gg
+ regular_stretched_rotated_gg
+ sh
+ rotated_sh
+ stretched_sh
+ stretched_rotated_sh
+ space_view
+ triangular_grid
+ unstructured_grid
+ equatorial_azimuthal_equidistant
+ azimuth_range
+ irregular_latlon
+ lambert_azimuthal_equal_area
+ lambert_lam
+ mercator_lam
+ polar_stereographic_lam
+ lambert_bf
+ mercator_bf
+ polar_stereographic_bf
+"
+
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+for gt in $grib2_grid_types; do
+    ${tools_dir}/grib_set -s gridType=$gt $sample2 $tempGrib
+    ${tools_dir}/grib_get -p isGridded,isSpectral $tempGrib
+done
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempText
