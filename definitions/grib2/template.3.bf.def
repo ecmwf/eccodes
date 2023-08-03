@@ -1,5 +1,6 @@
 label "BiFourier coefficients";
 constant biFourierCoefficients=1;
+constant isGridded = one;
 
 codetable[1]  spectralType ('3.6.table',masterDir,localDir) = 2 : no_copy;
 alias spectralDataRepresentationType=spectralType;
