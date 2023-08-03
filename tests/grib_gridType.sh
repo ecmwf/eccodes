@@ -135,6 +135,7 @@ grib2_gridded_types="
   lambert_bf
   mercator_bf
   polar_stereographic_bf
+  healpix
 "
 grib2_spectral_types="
   sh
