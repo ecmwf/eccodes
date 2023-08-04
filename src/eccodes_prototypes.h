@@ -478,8 +478,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_from_scale_factor_scaled_value.cc*/
 
-/* grib_accessor_class_times.cc*/
-
 /* grib_accessor_class_g2bitmap_present.cc*/
 
 /* grib_accessor_class_ibmfloat.cc*/

@@ -190,7 +190,6 @@
 { "sum", &grib_accessor_class_sum, },
 { "suppressed", &grib_accessor_class_suppressed, },
 { "time", &grib_accessor_class_time, },
-{ "times", &grib_accessor_class_times, },
 { "to_double", &grib_accessor_class_to_double, },
 { "to_integer", &grib_accessor_class_to_integer, },
 { "to_string", &grib_accessor_class_to_string, },
