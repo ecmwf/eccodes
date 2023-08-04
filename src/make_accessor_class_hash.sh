@@ -18,5 +18,6 @@ gperf --version
 echo
 
 gperf -C -W classes -t -G -H grib_accessor_classes_get_id -N grib_accessor_classes_hash -m 1 -j 1 accessor_class_list.gperf |\
-    sed s/__inline//g | sed s/inline//g > grib_accessor_classes_hash.cc
+    sed s/__inline//g | sed s/inline//g | sed 's/register //g' > grib_accessor_classes_hash.cc
 
+rm -f accessor_class_list.gperf
