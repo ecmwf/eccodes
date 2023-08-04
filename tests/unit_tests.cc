@@ -235,13 +235,13 @@ static void test_logging_proc()
 
     /* Override default behaviour */
     grib_context_set_logging_proc(context, my_logging_proc);
-    grib_context_log(context, GRIB_LOG_ERROR, "This error will be handled by me");
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_proc: This error will be handled by me");
     Assert(logging_caught == 1);
 
     /* Restore the logging proc */
     logging_caught = 0;
     grib_context_set_logging_proc(context, NULL);
-    grib_context_log(context, GRIB_LOG_ERROR, "This will come out as normal");
+    grib_context_log(context, GRIB_LOG_ERROR, "test_logging_proc: This error will come out as normal");
     Assert(logging_caught == 0);
 }
 
@@ -273,7 +273,7 @@ static void test_concept_condition_strings()
     grib_handle_delete(h);
 }
 
-static void test_trimming()
+static void test_string_trimming()
 {
     char a[] = " Standing  ";
     char b[] = "  Weeping ";
@@ -286,7 +286,7 @@ static void test_trimming()
     char* pD = d;
     char* pE = e;
 
-    printf("Testing: test_trimming...\n");
+    printf("Testing: test_string_trimming...\n");
 
     string_lrtrim(&pA, 0, 1); /*right only*/
     Assert( strcmp(pA, " Standing")==0 );
@@ -342,6 +342,24 @@ static void test_string_to_long()
     Assert( string_to_long("XY", &lVal, 1) == GRIB_INVALID_ARGUMENT);
     Assert( string_to_long("A6", &lVal, 1) == GRIB_INVALID_ARGUMENT);
     Assert( string_to_long("5K", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+}
+
+static void test_string_replace_char()
+{
+    printf("Testing: test_string_replace_char...\n");
+    char input[32] = {0,};
+
+    strncpy(input, "Mask Of Zoro", sizeof(input));
+    string_replace_char(input, ' ', '-');
+    Assert(STR_EQUAL(input, "Mask-Of-Zoro"));
+}
+
+static void test_string_remove_char()
+{
+    printf("Testing: test_string_remove_char...\n");
+    char input[64] = "a:b:c";
+    string_remove_char(input, ':');
+    Assert(STR_EQUAL(input, "abc"));
 }
 
 static void test_gribex_mode()
@@ -520,10 +538,6 @@ int main(int argc, char** argv)
     test_grib_binary_search();
     test_parse_keyval_string();
 
-    test_trimming();
-    test_string_ends_with();
-    test_string_to_long();
-
     test_get_git_sha1();
     test_get_build_date();
     test_gribex_mode();
@@ -553,6 +567,11 @@ int main(int argc, char** argv)
     test_grib_nearest_smaller_ieeefloat();
 
     test_string_splitting();
+    test_string_ends_with();
+    test_string_to_long();
+    test_string_trimming();
+    test_string_replace_char();
+    test_string_remove_char();
 
     return 0;
 }
