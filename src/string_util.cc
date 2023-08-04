@@ -124,8 +124,10 @@ char** string_split(char* inputString, const char* delimiter)
     return result;
 }
 
-/* Return GRIB_SUCCESS if can convert input to an integer, GRIB_INVALID_ARGUMENT otherwise */
-int string_to_long(const char* input, long* output)
+// Return GRIB_SUCCESS if we can convert 'input' to an integer, GRIB_INVALID_ARGUMENT otherwise.
+// If 'strict' is 1 then disallow characters at the end which are not valid digits.
+// E.g., in strict mode, "4i" will be rejected. Otherwise it will convert it to 4
+int string_to_long(const char* input, long* output, int strict)
 {
     const int base = 10;
     char* endptr;
@@ -138,11 +140,15 @@ int string_to_long(const char* input, long* output)
     val   = strtol(input, &endptr, base);
     if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
         (errno != 0 && val == 0)) {
-        /*perror("strtol");*/
+        // perror("strtol");
         return GRIB_INVALID_ARGUMENT;
     }
     if (endptr == input) {
-        /*fprintf(stderr, "No digits were found. EXIT_FAILURE\n");*/
+        // fprintf(stderr, "No digits were found\n");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (strict && *endptr != 0) {
+        // fprintf(stderr, "Left over characters at the end; not a pure number\n");
         return GRIB_INVALID_ARGUMENT;
     }
     *output = val;

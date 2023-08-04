@@ -257,7 +257,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     //    return pack_missing(a);
     //}
 
-    if (string_to_long(val, &v) != GRIB_SUCCESS) {
+    if (string_to_long(val, &v, 1) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                 "Trying to pack \"%s\" as long. String cannot be converted to an integer", val);
         return GRIB_WRONG_TYPE;

@@ -642,7 +642,7 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
     long lValue = 0;
     Assert(buffer);
-    if (is_number(buffer) && string_to_long(buffer, &lValue) == GRIB_SUCCESS) {
+    if (is_number(buffer) && string_to_long(buffer, &lValue, 1) == GRIB_SUCCESS) {
         // ECC-1654: If value is a pure number, just pack as long
         size_t l = 1;
         return grib_pack_long(a, &lValue, &l);

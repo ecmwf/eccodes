@@ -144,7 +144,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             char* env = getenv(p);
             if (env) {
                 long lval = 0;
-                if (string_to_long(env, &lval) == GRIB_SUCCESS) {
+                if (string_to_long(env, &lval, 1) == GRIB_SUCCESS) {
                     *lres = lval;
                     return GRIB_SUCCESS;
                 }
