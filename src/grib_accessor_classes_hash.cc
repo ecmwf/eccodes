@@ -37,7 +37,7 @@
 #line 6 "accessor_class_list.gperf"
 struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
 
-#define TOTAL_KEYWORDS 215
+#define TOTAL_KEYWORDS 214
 #define MIN_WORD_LENGTH 1
 #define MAX_WORD_LENGTH 44
 #define MIN_HASH_VALUE 1
@@ -117,17 +117,17 @@ static const struct accessor_class_hash classes[] =
 #line 9 "accessor_class_list.gperf"
     {" "},
     {""}, {""}, {""}, {""},
-#line 188 "accessor_class_list.gperf"
+#line 187 "accessor_class_list.gperf"
     {"size", &grib_accessor_class_size},
 #line 12 "accessor_class_list.gperf"
     {"ascii", &grib_accessor_class_ascii},
-#line 185 "accessor_class_list.gperf"
+#line 184 "accessor_class_list.gperf"
     {"signed", &grib_accessor_class_signed},
     {""},
 #line 78 "accessor_class_list.gperf"
     {"dirty", &grib_accessor_class_dirty},
     {""}, {""}, {""},
-#line 186 "accessor_class_list.gperf"
+#line 185 "accessor_class_list.gperf"
     {"signed_bits", &grib_accessor_class_signed_bits},
     {""},
 #line 69 "accessor_class_list.gperf"
@@ -140,11 +140,11 @@ static const struct accessor_class_hash classes[] =
     {"data_simple_packing", &grib_accessor_class_data_simple_packing},
 #line 71 "accessor_class_list.gperf"
     {"data_secondary_bitmap", &grib_accessor_class_data_secondary_bitmap},
-#line 179 "accessor_class_list.gperf"
+#line 178 "accessor_class_list.gperf"
     {"section", &grib_accessor_class_section},
-#line 165 "accessor_class_list.gperf"
+#line 164 "accessor_class_list.gperf"
     {"pad", &grib_accessor_class_pad},
-#line 191 "accessor_class_list.gperf"
+#line 190 "accessor_class_list.gperf"
     {"spd", &grib_accessor_class_spd},
 #line 77 "accessor_class_list.gperf"
     {"dictionary", &grib_accessor_class_dictionary},
@@ -154,9 +154,9 @@ static const struct accessor_class_hash classes[] =
     {""},
 #line 68 "accessor_class_list.gperf"
     {"data_png_packing", &grib_accessor_class_data_png_packing},
-#line 181 "accessor_class_list.gperf"
+#line 180 "accessor_class_list.gperf"
     {"section_padding", &grib_accessor_class_section_padding},
-#line 182 "accessor_class_list.gperf"
+#line 181 "accessor_class_list.gperf"
     {"section_pointer", &grib_accessor_class_section_pointer},
 #line 115 "accessor_class_list.gperf"
     {"gen", &grib_accessor_class_gen},
@@ -174,9 +174,9 @@ static const struct accessor_class_hash classes[] =
     {""},
 #line 125 "accessor_class_list.gperf"
     {"int16", &grib_accessor_class_int16},
-#line 178 "accessor_class_list.gperf"
+#line 177 "accessor_class_list.gperf"
     {"second_order_bits_per_value", &grib_accessor_class_second_order_bits_per_value},
-#line 180 "accessor_class_list.gperf"
+#line 179 "accessor_class_list.gperf"
     {"section_length", &grib_accessor_class_section_length},
 #line 67 "accessor_class_list.gperf"
     {"data_jpeg2000_packing", &grib_accessor_class_data_jpeg2000_packing},
@@ -186,7 +186,7 @@ static const struct accessor_class_hash classes[] =
     {"gds_is_present", &grib_accessor_class_gds_is_present},
 #line 46 "accessor_class_list.gperf"
     {"data_apply_boustrophedonic", &grib_accessor_class_data_apply_boustrophedonic},
-#line 200 "accessor_class_list.gperf"
+#line 199 "accessor_class_list.gperf"
     {"time", &grib_accessor_class_time},
 #line 116 "accessor_class_list.gperf"
     {"getenv", &grib_accessor_class_getenv},
@@ -202,23 +202,23 @@ static const struct accessor_class_hash classes[] =
     {"data_g2simple_packing", &grib_accessor_class_data_g2simple_packing},
 #line 62 "accessor_class_list.gperf"
     {"data_g2complex_packing", &grib_accessor_class_data_g2complex_packing},
-#line 166 "accessor_class_list.gperf"
+#line 165 "accessor_class_list.gperf"
     {"padding", &grib_accessor_class_padding},
     {""}, {""}, {""},
 #line 110 "accessor_class_list.gperf"
     {"g2lon", &grib_accessor_class_g2lon},
-#line 153 "accessor_class_list.gperf"
+#line 152 "accessor_class_list.gperf"
     {"nearest", &grib_accessor_class_nearest},
 #line 137 "accessor_class_list.gperf"
     {"laplacian", &grib_accessor_class_laplacian},
-#line 172 "accessor_class_list.gperf"
+#line 171 "accessor_class_list.gperf"
     {"raw", &grib_accessor_class_raw},
     {""}, {""}, {""},
 #line 13 "accessor_class_list.gperf"
     {"assert", &grib_accessor_class_assert},
 #line 101 "accessor_class_list.gperf"
     {"g2_eps", &grib_accessor_class_g2_eps},
-#line 197 "accessor_class_list.gperf"
+#line 196 "accessor_class_list.gperf"
     {"step_in_units", &grib_accessor_class_step_in_units},
     {""},
 #line 14 "accessor_class_list.gperf"
@@ -234,12 +234,12 @@ static const struct accessor_class_hash classes[] =
     {"data_complex_packing", &grib_accessor_class_data_complex_packing},
 #line 30 "accessor_class_list.gperf"
     {"bytes", &grib_accessor_class_bytes},
-#line 187 "accessor_class_list.gperf"
+#line 186 "accessor_class_list.gperf"
     {"simple_packing_error", &grib_accessor_class_simple_packing_error},
-#line 173 "accessor_class_list.gperf"
+#line 172 "accessor_class_list.gperf"
     {"rdbtime_guess_date", &grib_accessor_class_rdbtime_guess_date},
     {""},
-#line 167 "accessor_class_list.gperf"
+#line 166 "accessor_class_list.gperf"
     {"padto", &grib_accessor_class_padto},
 #line 17 "accessor_class_list.gperf"
     {"bits_per_value", &grib_accessor_class_bits_per_value},
@@ -255,27 +255,27 @@ static const struct accessor_class_hash classes[] =
     {"data_g2secondary_bitmap", &grib_accessor_class_data_g2secondary_bitmap},
 #line 61 "accessor_class_list.gperf"
     {"data_g2bifourier_packing", &grib_accessor_class_data_g2bifourier_packing},
-#line 194 "accessor_class_list.gperf"
+#line 193 "accessor_class_list.gperf"
     {"statistics", &grib_accessor_class_statistics},
     {""},
 #line 117 "accessor_class_list.gperf"
     {"global_gaussian", &grib_accessor_class_global_gaussian},
-#line 154 "accessor_class_list.gperf"
+#line 153 "accessor_class_list.gperf"
     {"non_alpha", &grib_accessor_class_non_alpha},
-#line 198 "accessor_class_list.gperf"
+#line 197 "accessor_class_list.gperf"
     {"sum", &grib_accessor_class_sum},
     {""},
 #line 81 "accessor_class_list.gperf"
     {"element", &grib_accessor_class_element},
-#line 184 "accessor_class_list.gperf"
+#line 183 "accessor_class_list.gperf"
     {"sexagesimal2decimal", &grib_accessor_class_sexagesimal2decimal},
 #line 138 "accessor_class_list.gperf"
     {"latitudes", &grib_accessor_class_latitudes},
-#line 195 "accessor_class_list.gperf"
+#line 194 "accessor_class_list.gperf"
     {"statistics_spectral", &grib_accessor_class_statistics_spectral},
 #line 114 "accessor_class_list.gperf"
     {"gds_not_present_bitmap", &grib_accessor_class_gds_not_present_bitmap},
-#line 206 "accessor_class_list.gperf"
+#line 205 "accessor_class_list.gperf"
     {"trim", &grib_accessor_class_trim},
 #line 132 "accessor_class_list.gperf"
     {"iterator", &grib_accessor_class_iterator},
@@ -287,7 +287,7 @@ static const struct accessor_class_hash classes[] =
     {"label", &grib_accessor_class_label},
 #line 51 "accessor_class_list.gperf"
     {"data_dummy_field", &grib_accessor_class_data_dummy_field},
-#line 204 "accessor_class_list.gperf"
+#line 203 "accessor_class_list.gperf"
     {"transient", &grib_accessor_class_transient},
 #line 143 "accessor_class_list.gperf"
     {"long", &grib_accessor_class_long},
@@ -301,19 +301,19 @@ static const struct accessor_class_hash classes[] =
     {"julian_date", &grib_accessor_class_julian_date},
 #line 70 "accessor_class_list.gperf"
     {"data_run_length_packing", &grib_accessor_class_data_run_length_packing},
-#line 205 "accessor_class_list.gperf"
+#line 204 "accessor_class_list.gperf"
     {"transient_darray", &grib_accessor_class_transient_darray},
-#line 209 "accessor_class_list.gperf"
+#line 208 "accessor_class_list.gperf"
     {"uint32", &grib_accessor_class_uint32},
-#line 202 "accessor_class_list.gperf"
+#line 201 "accessor_class_list.gperf"
     {"to_integer", &grib_accessor_class_to_integer},
-#line 175 "accessor_class_list.gperf"
+#line 174 "accessor_class_list.gperf"
     {"round", &grib_accessor_class_round},
-#line 211 "accessor_class_list.gperf"
+#line 210 "accessor_class_list.gperf"
     {"uint64", &grib_accessor_class_uint64},
 #line 18 "accessor_class_list.gperf"
     {"blob", &grib_accessor_class_blob},
-#line 213 "accessor_class_list.gperf"
+#line 212 "accessor_class_list.gperf"
     {"uint8", &grib_accessor_class_uint8},
     {""},
 #line 102 "accessor_class_list.gperf"
@@ -322,7 +322,7 @@ static const struct accessor_class_hash classes[] =
 #line 122 "accessor_class_list.gperf"
     {"ibmfloat", &grib_accessor_class_ibmfloat},
     {""},
-#line 176 "accessor_class_list.gperf"
+#line 175 "accessor_class_list.gperf"
     {"scale", &grib_accessor_class_scale},
     {""},
 #line 141 "accessor_class_list.gperf"
@@ -333,37 +333,37 @@ static const struct accessor_class_hash classes[] =
 #line 44 "accessor_class_list.gperf"
     {"data_2order_packing", &grib_accessor_class_data_2order_packing},
     {""}, {""},
-#line 220 "accessor_class_list.gperf"
+#line 219 "accessor_class_list.gperf"
     {"values", &grib_accessor_class_values},
     {""}, {""},
-#line 192 "accessor_class_list.gperf"
+#line 191 "accessor_class_list.gperf"
     {"spectral_truncation", &grib_accessor_class_spectral_truncation},
 #line 49 "accessor_class_list.gperf"
     {"data_ccsds_packing", &grib_accessor_class_data_ccsds_packing},
-#line 156 "accessor_class_list.gperf"
+#line 155 "accessor_class_list.gperf"
     {"number_of_points", &grib_accessor_class_number_of_points},
-#line 216 "accessor_class_list.gperf"
+#line 215 "accessor_class_list.gperf"
     {"unsigned", &grib_accessor_class_unsigned},
 #line 130 "accessor_class_list.gperf"
     {"int64_little_endian", &grib_accessor_class_int64_little_endian},
 #line 58 "accessor_class_list.gperf"
     {"data_g1shsimple_packing", &grib_accessor_class_data_g1shsimple_packing},
-#line 193 "accessor_class_list.gperf"
+#line 192 "accessor_class_list.gperf"
     {"sprintf", &grib_accessor_class_sprintf},
 #line 108 "accessor_class_list.gperf"
     {"g2latlon", &grib_accessor_class_g2latlon},
-#line 203 "accessor_class_list.gperf"
+#line 202 "accessor_class_list.gperf"
     {"to_string", &grib_accessor_class_to_string},
-#line 217 "accessor_class_list.gperf"
+#line 216 "accessor_class_list.gperf"
     {"unsigned_bits", &grib_accessor_class_unsigned_bits},
 #line 128 "accessor_class_list.gperf"
     {"int32_little_endian", &grib_accessor_class_int32_little_endian},
-#line 157 "accessor_class_list.gperf"
+#line 156 "accessor_class_list.gperf"
     {"number_of_points_gaussian", &grib_accessor_class_number_of_points_gaussian},
-#line 223 "accessor_class_list.gperf"
+#line 222 "accessor_class_list.gperf"
     {"when", &grib_accessor_class_when},
     {""}, {""},
-#line 196 "accessor_class_list.gperf"
+#line 195 "accessor_class_list.gperf"
     {"step_human_readable", &grib_accessor_class_step_human_readable},
     {""},
 #line 126 "accessor_class_list.gperf"
@@ -371,18 +371,18 @@ static const struct accessor_class_hash classes[] =
     {""},
 #line 104 "accessor_class_list.gperf"
     {"g2bitmap_present", &grib_accessor_class_g2bitmap_present},
-#line 171 "accessor_class_list.gperf"
+#line 170 "accessor_class_list.gperf"
     {"proj_string", &grib_accessor_class_proj_string},
-#line 214 "accessor_class_list.gperf"
+#line 213 "accessor_class_list.gperf"
     {"unexpanded_descriptors", &grib_accessor_class_unexpanded_descriptors},
 #line 59 "accessor_class_list.gperf"
     {"data_g1simple_packing", &grib_accessor_class_data_g1simple_packing},
 #line 52 "accessor_class_list.gperf"
     {"data_g1complex_packing", &grib_accessor_class_data_g1complex_packing},
-#line 183 "accessor_class_list.gperf"
+#line 182 "accessor_class_list.gperf"
     {"select_step_template", &grib_accessor_class_select_step_template},
     {""},
-#line 199 "accessor_class_list.gperf"
+#line 198 "accessor_class_list.gperf"
     {"suppressed", &grib_accessor_class_suppressed},
     {""},
 #line 86 "accessor_class_list.gperf"
@@ -390,14 +390,14 @@ static const struct accessor_class_hash classes[] =
     {""}, {""}, {""},
 #line 123 "accessor_class_list.gperf"
     {"ieeefloat", &grib_accessor_class_ieeefloat},
-#line 162 "accessor_class_list.gperf"
+#line 161 "accessor_class_list.gperf"
     {"offset_file", &grib_accessor_class_offset_file},
-#line 210 "accessor_class_list.gperf"
+#line 209 "accessor_class_list.gperf"
     {"uint32_little_endian", &grib_accessor_class_uint32_little_endian},
     {""},
 #line 20 "accessor_class_list.gperf"
     {"bufr_data_array", &grib_accessor_class_bufr_data_array},
-#line 212 "accessor_class_list.gperf"
+#line 211 "accessor_class_list.gperf"
     {"uint64_little_endian", &grib_accessor_class_uint64_little_endian},
 #line 21 "accessor_class_list.gperf"
     {"bufr_data_element", &grib_accessor_class_bufr_data_element},
@@ -405,7 +405,7 @@ static const struct accessor_class_hash classes[] =
     {"long_vector", &grib_accessor_class_long_vector},
 #line 73 "accessor_class_list.gperf"
     {"data_sh_unpacked", &grib_accessor_class_data_sh_unpacked},
-#line 170 "accessor_class_list.gperf"
+#line 169 "accessor_class_list.gperf"
     {"position", &grib_accessor_class_position},
 #line 27 "accessor_class_list.gperf"
     {"bufr_simple_thinning", &grib_accessor_class_bufr_simple_thinning},
@@ -414,9 +414,9 @@ static const struct accessor_class_hash classes[] =
     {"latlon_increment", &grib_accessor_class_latlon_increment},
 #line 74 "accessor_class_list.gperf"
     {"data_shsimple_packing", &grib_accessor_class_data_shsimple_packing},
-#line 218 "accessor_class_list.gperf"
+#line 217 "accessor_class_list.gperf"
     {"validity_date", &grib_accessor_class_validity_date},
-#line 219 "accessor_class_list.gperf"
+#line 218 "accessor_class_list.gperf"
     {"validity_time", &grib_accessor_class_validity_time},
 #line 29 "accessor_class_list.gperf"
     {"bufrdc_expanded_descriptors", &grib_accessor_class_bufrdc_expanded_descriptors},
@@ -425,10 +425,10 @@ static const struct accessor_class_hash classes[] =
     {""},
 #line 97 "accessor_class_list.gperf"
     {"g1step_range", &grib_accessor_class_g1step_range},
-#line 221 "accessor_class_list.gperf"
+#line 220 "accessor_class_list.gperf"
     {"variable", &grib_accessor_class_variable},
     {""},
-#line 222 "accessor_class_list.gperf"
+#line 221 "accessor_class_list.gperf"
     {"vector", &grib_accessor_class_vector},
     {""},
 #line 124 "accessor_class_list.gperf"
@@ -443,7 +443,7 @@ static const struct accessor_class_hash classes[] =
 #line 57 "accessor_class_list.gperf"
     {"data_g1secondary_bitmap", &grib_accessor_class_data_g1secondary_bitmap},
     {""},
-#line 169 "accessor_class_list.gperf"
+#line 168 "accessor_class_list.gperf"
     {"padtomultiple", &grib_accessor_class_padtomultiple},
     {""}, {""}, {""}, {""}, {""},
 #line 146 "accessor_class_list.gperf"
@@ -461,7 +461,7 @@ static const struct accessor_class_hash classes[] =
     {"hash_array", &grib_accessor_class_hash_array},
 #line 56 "accessor_class_list.gperf"
     {"data_g1second_order_row_by_row_packing", &grib_accessor_class_data_g1second_order_row_by_row_packing},
-#line 168 "accessor_class_list.gperf"
+#line 167 "accessor_class_list.gperf"
     {"padtoeven", &grib_accessor_class_padtoeven},
 #line 87 "accessor_class_list.gperf"
     {"g1_section4_length", &grib_accessor_class_g1_section4_length},
@@ -472,14 +472,14 @@ static const struct accessor_class_hash classes[] =
 #line 54 "accessor_class_list.gperf"
     {"data_g1second_order_general_extended_packing", &grib_accessor_class_data_g1second_order_general_extended_packing},
     {""},
-#line 207 "accessor_class_list.gperf"
+#line 206 "accessor_class_list.gperf"
     {"uint16", &grib_accessor_class_uint16},
 #line 119 "accessor_class_list.gperf"
     {"gts_header", &grib_accessor_class_gts_header},
     {""}, {""}, {""},
 #line 39 "accessor_class_list.gperf"
     {"concept", &grib_accessor_class_concept},
-#line 201 "accessor_class_list.gperf"
+#line 200 "accessor_class_list.gperf"
     {"to_double", &grib_accessor_class_to_double},
 #line 149 "accessor_class_list.gperf"
     {"md5", &grib_accessor_class_md5},
@@ -504,7 +504,7 @@ static const struct accessor_class_hash classes[] =
     {"g1end_of_interval_monthly", &grib_accessor_class_g1end_of_interval_monthly},
 #line 22 "accessor_class_list.gperf"
     {"bufr_elements_table", &grib_accessor_class_bufr_elements_table},
-#line 161 "accessor_class_list.gperf"
+#line 160 "accessor_class_list.gperf"
     {"octet_number", &grib_accessor_class_octet_number},
     {""}, {""},
 #line 28 "accessor_class_list.gperf"
@@ -512,30 +512,28 @@ static const struct accessor_class_hash classes[] =
     {""}, {""},
 #line 140 "accessor_class_list.gperf"
     {"latlonvalues", &grib_accessor_class_latlonvalues},
-#line 155 "accessor_class_list.gperf"
+#line 154 "accessor_class_list.gperf"
     {"number_of_coded_values", &grib_accessor_class_number_of_coded_values},
     {""},
-#line 158 "accessor_class_list.gperf"
+#line 157 "accessor_class_list.gperf"
     {"number_of_values", &grib_accessor_class_number_of_values},
     {""}, {""}, {""},
 #line 151 "accessor_class_list.gperf"
     {"message_copy", &grib_accessor_class_message_copy},
     {""}, {""},
-#line 164 "accessor_class_list.gperf"
+#line 163 "accessor_class_list.gperf"
     {"pack_bufr_values", &grib_accessor_class_pack_bufr_values},
-    {""}, {""},
-#line 152 "accessor_class_list.gperf"
-    {"missing", &grib_accessor_class_missing},
+    {""}, {""}, {""},
 #line 11 "accessor_class_list.gperf"
     {"abstract_vector", &grib_accessor_class_abstract_vector},
     {""}, {""},
-#line 177 "accessor_class_list.gperf"
+#line 176 "accessor_class_list.gperf"
     {"scale_values", &grib_accessor_class_scale_values},
-#line 163 "accessor_class_list.gperf"
+#line 162 "accessor_class_list.gperf"
     {"offset_values", &grib_accessor_class_offset_values},
 #line 34 "accessor_class_list.gperf"
     {"closest_date", &grib_accessor_class_closest_date},
-#line 159 "accessor_class_list.gperf"
+#line 158 "accessor_class_list.gperf"
     {"number_of_values_data_raw_packing", &grib_accessor_class_number_of_values_data_raw_packing},
     {""}, {""}, {""},
 #line 82 "accessor_class_list.gperf"
@@ -543,13 +541,13 @@ static const struct accessor_class_hash classes[] =
     {""},
 #line 148 "accessor_class_list.gperf"
     {"mars_step", &grib_accessor_class_mars_step},
-#line 208 "accessor_class_list.gperf"
+#line 207 "accessor_class_list.gperf"
     {"uint16_little_endian", &grib_accessor_class_uint16_little_endian},
     {""}, {""}, {""},
 #line 72 "accessor_class_list.gperf"
     {"data_sh_packed", &grib_accessor_class_data_sh_packed},
     {""}, {""},
-#line 174 "accessor_class_list.gperf"
+#line 173 "accessor_class_list.gperf"
     {"reference_value_error", &grib_accessor_class_reference_value_error},
     {""}, {""}, {""}, {""}, {""}, {""}, {""}, {""},
 #line 35 "accessor_class_list.gperf"
@@ -563,7 +561,7 @@ static const struct accessor_class_hash classes[] =
 #line 25 "accessor_class_list.gperf"
     {"bufr_extract_subsets", &grib_accessor_class_bufr_extract_subsets},
     {""}, {""},
-#line 215 "accessor_class_list.gperf"
+#line 214 "accessor_class_list.gperf"
     {"unpack_bufr_values", &grib_accessor_class_unpack_bufr_values},
     {""},
 #line 23 "accessor_class_list.gperf"
@@ -578,7 +576,7 @@ static const struct accessor_class_hash classes[] =
     {"from_scale_factor_scaled_value", &grib_accessor_class_from_scale_factor_scaled_value},
 #line 94 "accessor_class_list.gperf"
     {"g1monthlydate", &grib_accessor_class_g1monthlydate},
-#line 189 "accessor_class_list.gperf"
+#line 188 "accessor_class_list.gperf"
     {"smart_table", &grib_accessor_class_smart_table},
     {""}, {""}, {""},
 #line 43 "accessor_class_list.gperf"
@@ -587,7 +585,7 @@ static const struct accessor_class_hash classes[] =
     {"abstract_long_vector", &grib_accessor_class_abstract_long_vector},
 #line 31 "accessor_class_list.gperf"
     {"change_alternative_row_scanning", &grib_accessor_class_change_alternative_row_scanning},
-#line 190 "accessor_class_list.gperf"
+#line 189 "accessor_class_list.gperf"
     {"smart_table_column", &grib_accessor_class_smart_table_column},
     {""}, {""}, {""}, {""}, {""},
 #line 32 "accessor_class_list.gperf"
@@ -596,7 +594,7 @@ static const struct accessor_class_hash classes[] =
 #line 41 "accessor_class_list.gperf"
     {"count_file", &grib_accessor_class_count_file},
     {""}, {""}, {""}, {""}, {""},
-#line 160 "accessor_class_list.gperf"
+#line 159 "accessor_class_list.gperf"
     {"octahedral_gaussian", &grib_accessor_class_octahedral_gaussian},
 #line 37 "accessor_class_list.gperf"
     {"codetable_title", &grib_accessor_class_codetable_title},
@@ -655,7 +653,7 @@ static const struct accessor_class_hash* grib_accessor_classes_hash (const char 
     unsigned int key = grib_accessor_classes_get_id (str, len);
 
 #ifdef DEBUG
-        {
+    {
         const char *s;
         Assert( len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH );
         Assert( key <= MAX_HASH_VALUE );
@@ -664,5 +662,5 @@ static const struct accessor_class_hash* grib_accessor_classes_hash (const char 
     }
 #endif
 
-            return &classes[key];
+    return &classes[key];
 }

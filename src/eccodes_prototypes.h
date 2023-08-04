@@ -466,8 +466,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_longitudes.cc*/
 
-/* grib_accessor_class_missing.cc*/
-
 /* grib_accessor_class_octahedral_gaussian.cc*/
 
 /* grib_accessor_class_offset_file.cc*/

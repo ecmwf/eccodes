@@ -130,7 +130,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_latlonvalues.cc
     grib_accessor_class_latitudes.cc
     grib_accessor_class_longitudes.cc
-    grib_accessor_class_missing.cc
     grib_accessor_class_offset_file.cc
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
