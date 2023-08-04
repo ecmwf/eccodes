@@ -319,6 +319,31 @@ static void test_string_ends_with()
     Assert( string_ends_with("GRIB2.tmpl", " ") == 0 );
 }
 
+static void test_string_to_long()
+{
+    printf("Testing: test_string_to_long...\n");
+    long lVal = 0;
+    Assert( string_to_long("0", &lVal, 1) == GRIB_SUCCESS);
+    Assert( lVal == 0 );
+
+    Assert( string_to_long("42", &lVal, 1) == GRIB_SUCCESS);
+    Assert( lVal == 42 );
+
+    Assert( string_to_long("-1", &lVal, 1) == GRIB_SUCCESS);
+    Assert( lVal == -1 );
+    Assert( string_to_long("+999", &lVal, 1) == GRIB_SUCCESS);
+    Assert( lVal == 999 );
+
+    Assert( string_to_long("15MB", &lVal, 0) == GRIB_SUCCESS);
+    Assert( lVal == 15 );
+
+    // illegal cases
+    Assert( string_to_long("4000000000000000000000", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    Assert( string_to_long("XY", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    Assert( string_to_long("A6", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+    Assert( string_to_long("5K", &lVal, 1) == GRIB_INVALID_ARGUMENT);
+}
+
 static void test_gribex_mode()
 {
     grib_context* c = grib_context_get_default();
@@ -497,6 +522,7 @@ int main(int argc, char** argv)
 
     test_trimming();
     test_string_ends_with();
+    test_string_to_long();
 
     test_get_git_sha1();
     test_get_build_date();
