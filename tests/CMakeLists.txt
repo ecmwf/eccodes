@@ -236,6 +236,7 @@ if( HAVE_BUILD_TOOLS )
         metar_compare
         bufr_set
         grib_ieee
+        grib1_gds_not_present
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh
