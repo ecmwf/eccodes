@@ -78,7 +78,6 @@ from_scale_factor_scaled_value, &grib_accessor_class_from_scale_factor_scaled_va
 g1_half_byte_codeflag, &grib_accessor_class_g1_half_byte_codeflag
 g1_message_length, &grib_accessor_class_g1_message_length
 g1_section4_length, &grib_accessor_class_g1_section4_length
-g1area, &grib_accessor_class_g1area
 g1bitmap, &grib_accessor_class_g1bitmap
 g1date, &grib_accessor_class_g1date
 g1day_of_the_year_date, &grib_accessor_class_g1day_of_the_year_date

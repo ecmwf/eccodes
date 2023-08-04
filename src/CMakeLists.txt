@@ -98,7 +98,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_double.cc
     grib_accessor_class_element.cc
     grib_accessor_class_evaluate.cc
-    grib_accessor_class_g1area.cc
     grib_accessor_class_g1date.cc
     grib_accessor_class_g1monthlydate.cc
     grib_accessor_class_library_version.cc

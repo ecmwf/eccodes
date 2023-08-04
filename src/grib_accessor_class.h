@@ -77,7 +77,6 @@ extern grib_accessor_class* grib_accessor_class_from_scale_factor_scaled_value;
 extern grib_accessor_class* grib_accessor_class_g1_half_byte_codeflag;
 extern grib_accessor_class* grib_accessor_class_g1_message_length;
 extern grib_accessor_class* grib_accessor_class_g1_section4_length;
-extern grib_accessor_class* grib_accessor_class_g1area;
 extern grib_accessor_class* grib_accessor_class_g1bitmap;
 extern grib_accessor_class* grib_accessor_class_g1date;
 extern grib_accessor_class* grib_accessor_class_g1day_of_the_year_date;

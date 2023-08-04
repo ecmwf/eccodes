@@ -375,8 +375,6 @@ void grib_codetable_delete(grib_context* c);
 
 /* grib_accessor_class_evaluate.cc*/
 
-/* grib_accessor_class_g1area.cc*/
-
 /* grib_accessor_class_g1date.cc*/
 
 /* grib_accessor_class_g1monthlydate.cc*/
