@@ -149,6 +149,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
