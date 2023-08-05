@@ -42,23 +42,26 @@ static void check_float_representation(const double val, const double expected, 
 
 static void test_get_git_sha1()
 {
+    printf("Running %s ...\n", __func__);
+
     const char* sha1 = grib_get_git_sha1();
     Assert(sha1 != NULL);
-    printf("Testing: test_get_git_sha1... %s\n", sha1);
 }
 
 static void test_get_build_date()
 {
+    printf("Running %s ...\n", __func__);
+
     const char* bdate = codes_get_build_date();
     Assert(bdate != NULL);
     /* Should be of the format YYYY.MM.DD or empty (not implemented) */
     Assert( strlen(bdate) == 0 || isdigit(bdate[0]) );
-    printf("Testing: test_get_build_date... %s\n", bdate);
 }
 
 static void test_grib_nearest_smaller_ibmfloat()
 {
-    printf("Testing: test_grib_nearest_smaller_ibmfloat...\n");
+    printf("Running %s ...\n", __func__);
+
     check_float_representation(-1.0, -1.0, IBM_FLOAT);
     check_float_representation(0.0, 0.0, IBM_FLOAT);
     check_float_representation(1.0, 1.0, IBM_FLOAT);
@@ -69,7 +72,8 @@ static void test_grib_nearest_smaller_ibmfloat()
 
 static void test_grib_nearest_smaller_ieeefloat()
 {
-    printf("Testing: test_grib_nearest_smaller_ieeefloat...\n");
+    printf("Running %s ...\n", __func__);
+
     check_float_representation(-1.0, -1.0, IEEE_FLOAT);
     check_float_representation(0.0, 0.0, IEEE_FLOAT);
     check_float_representation(1.0, 1.0, IEEE_FLOAT);
@@ -80,11 +84,13 @@ static void test_grib_nearest_smaller_ieeefloat()
 
 static void test_gaussian_latitudes(int order)
 {
+    printf("Running %s ...\n", __func__);
+
     int ret       = 0;
     const int num = 2 * order;
     double lat1 = 0, lat2 = 0;
     double* lats = (double*)malloc(sizeof(double) * num);
-    printf("Testing: test_gaussian_latitudes order=%d...\n", order);
+
     ret = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
@@ -98,7 +104,9 @@ static void test_gaussian_latitudes(int order)
 
 static void test_gaussian_latitude_640()
 {
-    /* Test all latitudes for one specific Gaussian number */
+    printf("Running %s ...\n", __func__);
+
+    /* Test latitudes for one specific Gaussian number */
     const int order        = 640;
     const int num          = 2 * order;
     int ret                = 0;
@@ -106,7 +114,6 @@ static void test_gaussian_latitude_640()
     double* lats           = (double*)malloc(sizeof(double) * num);
     ret                    = grib_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
-    printf("Testing: test_gaussian_latitude_640...\n");
 
     compare_doubles(lats[0], 89.892396, tolerance);
     compare_doubles(lats[1], 89.753005, tolerance);
@@ -149,10 +156,11 @@ static void test_gaussian_latitude_640()
 
 static void test_string_splitting()
 {
+    printf("Running %s ...\n", __func__);
+
     int i          = 0;
     char input[80] = "Born|To|Be|Wild";
     char** list    = 0;
-    printf("Testing: test_string_splitting...\n");
 
     list           = string_split(input, "|");
     if (!list) { Assert(!"List is NULL"); return; }
@@ -201,13 +209,13 @@ static void my_assertion_proc(const char* message)
 
 static void test_assertion_catching()
 {
+    printf("Running %s ...\n", __func__);
+
     char empty[] = "";
     char** list  = 0;
     int i        = 0;
     Assert(assertion_caught == 0);
     codes_set_codes_assertion_failed_proc(&my_assertion_proc);
-
-    printf("Testing: test_assertion_catching...\n");
 
     /* Do something illegal */
     list = string_split(empty, " ");
@@ -222,7 +230,6 @@ static void test_assertion_catching()
         free(list[i]);
     free(list);
 }
-
 
 static void my_logging_proc(const grib_context* c, int level, const char* mesg)
 {
@@ -247,12 +254,12 @@ static void test_logging_proc()
 
 static void test_concept_condition_strings()
 {
+    printf("Running %s ...\n", __func__);
+
     int err           = 0;
     char result[1024] = {0,};
     grib_context* context = NULL;
     grib_handle* h = grib_handle_new_from_samples(context, "GRIB2");
-
-    printf("Testing: test_concept_condition_strings...\n");
 
     err = get_concept_condition_string(h, "typeOfLevel", NULL, result);
     Assert(!err);
@@ -275,6 +282,8 @@ static void test_concept_condition_strings()
 
 static void test_string_trimming()
 {
+    printf("Running %s ...\n", __func__);
+
     char a[] = " Standing  ";
     char b[] = "  Weeping ";
     char c[] = "  Silhouette ";
@@ -285,8 +294,6 @@ static void test_string_trimming()
     char* pC = c;
     char* pD = d;
     char* pE = e;
-
-    printf("Testing: test_string_trimming...\n");
 
     string_lrtrim(&pA, 0, 1); /*right only*/
     Assert( strcmp(pA, " Standing")==0 );
@@ -306,7 +313,8 @@ static void test_string_trimming()
 
 static void test_string_ends_with()
 {
-    printf("Testing: test_string_ends_with...\n");
+    printf("Running %s ...\n", __func__);
+
     Assert( string_ends_with("GRIB2.tmpl", "tmpl") == 1 );
     Assert( string_ends_with("GRIB2.tmpl", ".tmpl") == 1 );
     Assert( string_ends_with("", "") == 1 );
@@ -321,7 +329,8 @@ static void test_string_ends_with()
 
 static void test_string_to_long()
 {
-    printf("Testing: test_string_to_long...\n");
+    printf("Running %s ...\n", __func__);
+
     long lVal = 0;
     Assert( string_to_long("0", &lVal, 1) == GRIB_SUCCESS);
     Assert( lVal == 0 );
@@ -346,9 +355,9 @@ static void test_string_to_long()
 
 static void test_string_replace_char()
 {
-    printf("Testing: test_string_replace_char...\n");
-    char input[32] = {0,};
+    printf("Running %s ...\n", __func__);
 
+    char input[32] = {0,};
     strncpy(input, "Mask Of Zoro", sizeof(input));
     string_replace_char(input, ' ', '-');
     Assert(STR_EQUAL(input, "Mask-Of-Zoro"));
@@ -356,7 +365,7 @@ static void test_string_replace_char()
 
 static void test_string_remove_char()
 {
-    printf("Testing: test_string_remove_char...\n");
+    printf("Running %s ...\n", __func__);
     char input[64] = "a:b:c";
     string_remove_char(input, ':');
     Assert(STR_EQUAL(input, "abc"));
@@ -365,7 +374,7 @@ static void test_string_remove_char()
 static void test_gribex_mode()
 {
     grib_context* c = grib_context_get_default();
-    printf("Testing: test_gribex_mode...\n");
+    printf("Running %s ...\n", __func__);
 
     Assert( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
     grib_gribex_mode_on(c);
@@ -376,13 +385,13 @@ static void test_gribex_mode()
 
 static void test_grib_binary_search()
 {
+    printf("Running %s ...\n", __func__);
+
     double array_asc[] = {-0.1, 33.4, 56.1, 101.8};
     double array_desc[] = {88, 78, 0, -88};
     const size_t idx_asc_max = NUMBER(array_asc) - 1;
     const size_t idx_desc_max = NUMBER(array_desc) - 1;
     size_t idx_upper=0, idx_lower = 0;
-
-    printf("Testing: test_grib_binary_search...\n");
 
     grib_binary_search(array_asc, idx_asc_max, 56.0, &idx_upper, &idx_lower);
     Assert(idx_lower == 1 && idx_upper == 2);
@@ -401,6 +410,8 @@ static void test_grib_binary_search()
 
 static void test_parse_keyval_string()
 {
+    printf("Running %s ...\n", __func__);
+
     int err = 0;
     int values_required = 1;
     int count = 0;
@@ -411,8 +422,6 @@ static void test_parse_keyval_string()
     char input1[] = "key1=value1,key2!=value2";
     char input2[] = "x=14";
     char input3[] = "mars.level=0.978";
-
-    printf("Testing: parse_keyval_string...\n");
 
     count = max_count;
     err = parse_keyval_string(NULL, input1,
@@ -453,7 +462,8 @@ static void test_parse_keyval_string()
 
 static void test_dates()
 {
-    printf("Testing: dates...\n");
+    printf("Running %s ...\n", __func__);
+
     Assert( is_date_valid(1979,12, 1, 0,0,0) );
     Assert( is_date_valid(1900, 1, 1, 0,0,0) );
     Assert( is_date_valid(1964, 4, 6, 0,0,0) );
@@ -486,11 +496,12 @@ static void test_dates()
 
 void test_scale_factor_scaled_values()
 {
+    printf("Running %s ...\n", __func__);
+
     int err =0;
     int64_t value, factor;
     const int64_t scaled_value_max = 4294967295; // usually 4 octets
     const int64_t scale_factor_max = 255; // usually 1 octet
-    printf("Testing: scaled values and scale factors...\n");
 
     err = compute_scaled_value_and_scale_factor(0, scaled_value_max, scale_factor_max, &value, &factor);
     Assert(!err);
