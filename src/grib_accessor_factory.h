@@ -2,7 +2,6 @@
 { "abstract_long_vector", &grib_accessor_class_abstract_long_vector, },
 { "abstract_vector", &grib_accessor_class_abstract_vector, },
 { "ascii", &grib_accessor_class_ascii, },
-{ "assert", &grib_accessor_class_assert, },
 { "bit", &grib_accessor_class_bit, },
 { "bitmap", &grib_accessor_class_bitmap, },
 { "bits", &grib_accessor_class_bits, },

@@ -2,7 +2,6 @@
 extern grib_accessor_class* grib_accessor_class_abstract_long_vector;
 extern grib_accessor_class* grib_accessor_class_abstract_vector;
 extern grib_accessor_class* grib_accessor_class_ascii;
-extern grib_accessor_class* grib_accessor_class_assert;
 extern grib_accessor_class* grib_accessor_class_bit;
 extern grib_accessor_class* grib_accessor_class_bitmap;
 extern grib_accessor_class* grib_accessor_class_bits;

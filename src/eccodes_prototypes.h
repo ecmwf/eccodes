@@ -266,8 +266,6 @@ grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* v
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 
-/* grib_accessor_class_assert.cc*/
-
 /* grib_accessor_class_ascii.cc*/
 
 /* grib_accessor_class_bit.cc*/
