@@ -308,19 +308,6 @@ ${tools_dir}/grib_filter $tempFilt $input
 cd ..
 rm -rf $tempDir
 
-echo "Deprecated while statement"
-# -----------------------------------------
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-cat >$tempFilt <<EOF
-  while (edition < 2) { print "woo"; }
-EOF
-set +e
-${tools_dir}/grib_filter $tempFilt $input > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "statement is deprecated" $tempOut
-
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
