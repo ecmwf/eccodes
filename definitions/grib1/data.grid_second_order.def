@@ -16,8 +16,7 @@ unsigned [2] NL : dump;
 if (orderOfSPD) {
 	 unsigned[1] widthOfSPD ;
 	 meta SPD spd(widthOfSPD,orderOfSPD) : read_only;
-} 
-
+}
 
 meta groupWidths unsigned_bits(widthOfWidths,numberOfGroups) : read_only;
 meta groupLengths unsigned_bits(widthOfLengths,numberOfGroups) : read_only;
@@ -41,7 +40,7 @@ if(bitmapPresent) {
      unitsBias,
      changingPrecision,
      numberOfCodedValues,
-     bitsPerValue, 
+     bitsPerValue,
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
@@ -70,7 +69,7 @@ if(bitmapPresent) {
 	 numberOfPoints
 
    ): read_only;
-   alias data.packedValues = codedValues; 
+   alias data.packedValues = codedValues;
 
    if (boustrophedonicOrdering)
    {
@@ -100,7 +99,7 @@ if(bitmapPresent) {
 		 unitsBias,
 		 changingPrecision,
 		 numberOfCodedValues,
-		 bitsPerValue, 
+		 bitsPerValue,
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,
@@ -139,7 +138,7 @@ if(bitmapPresent) {
 		 unitsBias,
 		 changingPrecision,
 		 numberOfCodedValues,
-		 bitsPerValue, 
+		 bitsPerValue,
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,

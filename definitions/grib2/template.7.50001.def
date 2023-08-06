@@ -22,7 +22,7 @@ if(bitmapPresent)   {
      unitsBias,
      changingPrecision,
      numberOfCodedValues,
-     bitsPerValue, 
+     bitsPerValue,
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
@@ -51,7 +51,7 @@ if(bitmapPresent)   {
 	 numberOfPoints
 
    ): read_only;
-   alias data.packedValues = codedValues; 
+   alias data.packedValues = codedValues;
 
    meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
 } else {
@@ -64,7 +64,7 @@ if(bitmapPresent)   {
 		 unitsBias,
 		 changingPrecision,
 		 numberOfCodedValues,
-		 bitsPerValue, 
+		 bitsPerValue,
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,
