@@ -94,9 +94,9 @@ size_t HEALPix_nj(size_t N, size_t i) {
                               : HEALPix_nj(N, ni - 1 - i);
 }
 
-std::vector<double> HEALPix_longitudes(size_t N, size_t i)
+static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 {
-    std::vector<double> lons_;
+    std::vector<double> longitudes;
     size_t Ni = 4 * N - 1;
     Assert(i < Ni);
 
@@ -105,49 +105,91 @@ std::vector<double> HEALPix_longitudes(size_t N, size_t i)
     const auto ring = i >= N * 3 ? Ni - i : i >= N ? 1 + N - i % 2
                                          : 1 + i;
 
-    const auto step  = 360. / static_cast<double>(Nj);
-    const auto start = static_cast<bool>(i % 2) ? 180. / static_cast<double>(Nj) : ring == 1 ? 45.
-                                                                             : 0.;
+    const auto step  = 360.0 / static_cast<double>(Nj);
+    const auto start = static_cast<bool>(i % 2) ?
+        180.0 / static_cast<double>(Nj)
+        : ring == 1 ? 45.0 : 0.0;
 
-    lons_.reserve(N * 4);
-    lons_.resize(Nj);
-    std::generate_n(lons_.begin(), Nj, [start, step, n = 0ULL]() mutable
+    longitudes.reserve(N * 4);
+    longitudes.resize(Nj);
+    std::generate_n(longitudes.begin(), Nj, [start, step, n = 0ULL]() mutable
         { return start + static_cast<double>(n++) * step; });
 
-    return lons_;
+    return longitudes;
 }
+
+#ifdef DEBUG
+static std::vector<double> HEALPix_latitudes(size_t N)
+{
+    const auto Ni = 4 * N - 1;
+    std::vector<double> lats_;
+
+    lats_.resize(Ni);
+
+    auto i = lats_.begin();
+    auto j = lats_.rbegin();
+    for (int ring = 1; ring < 2 * N; ++ring, ++i, ++j) {
+        const auto f = ring < N ?
+            1.0 - static_cast<double>(ring * ring) / (3 * static_cast<double>(N * N)) :
+            4.0 / 3.0 - 2 * static_cast<double>(ring) / (3 * static_cast<double>(N));
+
+        *i = 90.0 - RAD2DEG * std::acos(f);
+        *j = -*i;
+    }
+    *i = 0.0;
+
+    return lats_;
+
+    Assert(lats_.size() == Ni);
+    return lats_;
+}
+#endif
 
 static int iterate_healpix(grib_iterator_healpix* self, long N)
 {
     size_t ny, nx, k;
     ny = nx = 4*N - 1;
-    std::vector<double> y(ny);
+    std::vector<double> latitudes(ny);
 
     for (long r = 1; r < N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
-        y[4 * N - 1 - r] = -y[r - 1];
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - r * r / (3.0 * N * N));
+        latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
     // Polar caps
     for (long r = 1; r < N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
-        y[4 * N - 1 - r] = -y[r - 1];
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - r * r / (3.0 * N * N));
+        latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
     // Equatorial belt
     for (long r = N; r < 2 * N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos((4. * N - 2. * r) / (3. * N));
-        y[4 * N - 1 - r] = -y[r - 1];
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos((4.0 * N - 2.0 * r) / (3.0 * N));
+        latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
 
     // Equator
-    y[2 * N - 1] = 0.;
-    
+    latitudes[2 * N - 1] = 0.0;
+
+#ifdef DEBUG
+    {
+        std::vector<double> lats1 = HEALPix_latitudes(N);
+        Assert( latitudes.size() == lats1.size() );
+        for (size_t ii=0; ii<latitudes.size(); ++ii) {
+            double diff = latitudes[ii] - lats1[ii];
+            diff = fabs(diff);
+            if ( diff > 1e-12) {
+                printf("i=%zu  l=%10.10g p=%10.10g (diff=%10.10g)\n", ii, latitudes[ii], lats1[ii], diff);
+            }
+        }
+    }
+#endif
+
     k = 0;
     for (size_t i = 0; i < ny; i++) {
-        // lat is y[i]
+        // Compute the longitudes at a given latitude
         std::vector<double> longitudes = HEALPix_longitudes(N, i);
         for (size_t j = 0; j < longitudes.size(); j++) {
             self->lons[k] = longitudes[j];
-            self->lats[k] = y[i];
+            self->lats[k] = latitudes[i];
             ++k;
         }
     }
