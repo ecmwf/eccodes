@@ -11,6 +11,7 @@
 #include "grib_api_internal.h"
 #include <cmath>
 #include <vector>
+#include <algorithm>
 
 /*
    This is used by make_class.pl
@@ -82,64 +83,81 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
+
 #define ITER "HEALPix Geoiterator"
-#define EPSILON 1.0e-10
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846 /* Whole pie */
-#endif
-
-#ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 /* Half a pie */
-#endif
-
-#ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
-#endif
-
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
-#define DEG2RAD 0.01745329251994329576  /* pi over 180 */
 
-// Adjust longitude (in radians) to range -180 to 180
-// static double adjust_lon_radians(double lon)
-// {
-//     if (lon > M_PI)  lon -= 2 * M_PI;
-//     if (lon < -M_PI) lon += 2 * M_PI;
-//     return lon;
-// }
+size_t HEALPix_nj(size_t N, size_t i) {
+    size_t ni = 4 * N - 1;
+    Assert(i < ni);
+    return i < N ? 4 * (i + 1) : i < 3 * N ? 4 * N
+                              : HEALPix_nj(N, ni - 1 - i);
+}
+
+std::vector<double> HEALPix_longitudes(size_t N, size_t i)
+{
+    std::vector<double> lons_;
+    size_t Ni = 4 * N - 1;
+    Assert(i < Ni);
+
+    // ring index: 1-based, symmetric, in range [1, Nside_ + 1]
+    const auto Nj   = HEALPix_nj(N, i);
+    const auto ring = i >= N * 3 ? Ni - i : i >= N ? 1 + N - i % 2
+                                         : 1 + i;
+
+    const auto step  = 360. / static_cast<double>(Nj);
+    const auto start = static_cast<bool>(i % 2) ? 180. / static_cast<double>(Nj) : ring == 1 ? 45.
+                                                                             : 0.;
+
+    lons_.reserve(N * 4);
+    lons_.resize(Nj);
+    std::generate_n(lons_.begin(), Nj, [start, step, n = 0ULL]() mutable
+        { return start + static_cast<double>(n++) * step; });
+
+    return lons_;
+}
 
 static int iterate_healpix(grib_iterator_healpix* self, long N)
 {
-    size_t ny, nx;
+    size_t ny, nx, k;
     ny = nx = 4*N - 1;
     std::vector<double> y(ny);
-    std::vector<double> x(nx);
-    for (int r = 1; r < N; r++) {
+
+    for (long r = 1; r < N; r++) {
         y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
         y[4 * N - 1 - r] = -y[r - 1];
     }
     // Polar caps
-    for (int r = 1; r < N; r++) {
+    for (long r = 1; r < N; r++) {
         y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
         y[4 * N - 1 - r] = -y[r - 1];
     }
     // Equatorial belt
-    for (int r = N; r < 2 * N; r++) {
+    for (long r = N; r < 2 * N; r++) {
         y[r - 1]         = 90. - RAD2DEG * std::acos((4. * N - 2. * r) / (3. * N));
         y[4 * N - 1 - r] = -y[r - 1];
     }
 
     // Equator
     y[2 * N - 1] = 0.;
-    // for (auto i: y) printf("%g\n",i);
-    (void)ny;
+    
+    k = 0;
+    for (size_t i = 0; i < ny; i++) {
+        // lat is y[i]
+        std::vector<double> longitudes = HEALPix_longitudes(N, i);
+        for (size_t j = 0; j < longitudes.size(); j++) {
+            self->lons[k] = longitudes[j];
+            self->lats[k] = y[i];
+            ++k;
+        }
+    }
 
     return GRIB_SUCCESS;
 }
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    int err = 0, is_oblate = 0;
+    int err = 0;
     long N = 0;
     char ordering[32] = {0,};
     size_t slen = sizeof(ordering);
@@ -158,8 +176,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    is_oblate = grib_is_earth_oblate(h);
-    Assert(!is_oblate);
+    if (grib_is_earth_oblate(h)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only spherical earth is supported", ITER);
+        return GRIB_WRONG_GRID;
+    }
 
     if (iter->nv != 12 * N * N) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%ld!=12x%ldx%ld)",
@@ -167,13 +187,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Not implemented! Be patient :)", ITER);
-        return GRIB_INTERNAL_ERROR;
-    }
-
-    //self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    //self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
 
     try {
         err = iterate_healpix(self, N);
@@ -181,20 +196,6 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     catch (...) {
         return GRIB_INTERNAL_ERROR;
     }
-
-//     latFirstInRadians = latFirstInDegrees * DEG2RAD;
-//     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
-//     Latin1InRadians   = Latin1InDegrees * DEG2RAD;
-//     Latin2InRadians   = Latin2InDegrees * DEG2RAD;
-//     LaDInRadians      = LaDInDegrees * DEG2RAD;
-//     LoVInRadians      = LoVInDegrees * DEG2RAD;
-// 
-//     err = init_sphere(h, self, iter->nv, nx, ny,
-//                           LoVInDegrees,
-//                           Dx, Dy, radius,
-//                           latFirstInRadians, lonFirstInRadians,
-//                           LoVInRadians, Latin1InRadians, Latin2InRadians, LaDInRadians);
-//     if (err) return err;
 
     iter->e = -1;
 
