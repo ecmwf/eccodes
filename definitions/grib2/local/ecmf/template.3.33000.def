@@ -23,4 +23,4 @@ concept orderingConvention(unknown) {
 # No scanning mode needed; healpix is a standardized way of ordering points
 # include "grib2/template.3.scanning_mode.def";
 
-meta gridName sprintf("HEALPix%d", N) : no_copy;
+meta gridName sprintf("H%d", N) : no_copy;

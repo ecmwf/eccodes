@@ -33,4 +33,4 @@ flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
 
 iterator healpix(numberOfPoints,missingValue,values, Nside, orderingConvention);
 
-meta gridName sprintf("HEALPix%d", N) : no_copy;
+meta gridName sprintf("H%d", N) : no_copy;

@@ -33,7 +33,7 @@ if [ ! -f "$tempGrib" ]; then
    exit 1
 fi
 grib_check_key_equals $tempGrib gridType,orderingConvention,N,Nside 'healpix ring 32 32'
-grib_check_key_equals $tempGrib gridDefinitionTemplateNumber,gridName '150 HEALPix32'
+grib_check_key_equals $tempGrib gridDefinitionTemplateNumber,gridName '150 H32'
 grib_check_key_equals $tempGrib gridDefinitionDescription 'Hierarchical Equal Area isoLatitude Pixelization grid'
 
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
