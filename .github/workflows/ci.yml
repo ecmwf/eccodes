@@ -10,98 +10,18 @@ on:
   workflow_dispatch: ~
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      eccodes: ${{ steps.setup.outputs.eccodes }}
-      dep_tree: ${{ steps.setup.outputs.build_package_dep_tree }}
-    steps:
-      - name: Run setup script
-        id: setup
-        env:
-          TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
-          CONFIG: |
-            ${{ 'raineallday/eccodes@develop' }}:
-              path: .github/ci-config.yml
-          PYTHON_VERSIONS: |
-            - "3.10"
-          MATRIX: |
-            name:
-            - gnu@debian-11
-            - gnu-7@centos-7.9
-            - gnu-8@centos-7.9
-            - gnu@rocky-8.6
-            - clang@rocky-8.6
-            - gnu@ubuntu-22.04
-            - gnu@fedora-37
-            include:
-            - name: gnu@debian-11
-              labels: [self-hosted, platform-builder-debian-11]
-              os: debian-11
-              compiler: gnu
-              compiler_cc: gcc
-              compiler_cxx: g++
-              compiler_fc: gfortran
-            - name: gnu-7@centos-7.9
-              labels: [self-hosted, platform-builder-centos-7.9]
-              os: centos-7.9
-              compiler: gnu-7
-              compiler_cc: gcc-7
-              compiler_cxx: g++-7
-              compiler_fc: gfortran-7
-            - name: gnu-8@centos-7.9
-              labels: [self-hosted, platform-builder-centos-7.9]
-              os: centos-7.9
-              compiler: gnu-8
-              compiler_cc: gcc-8
-              compiler_cxx: g++-8
-              compiler_fc: gfortran-8
-            - name: gnu@rocky-8.6
-              labels: [self-hosted, platform-builder-rocky-8.6]
-              os: rocky-8.6
-              compiler: gnu
-              compiler_cc: gcc
-              compiler_cxx: g++
-              compiler_fc: gfortran
-            - name: clang@rocky-8.6
-              labels: [self-hosted, platform-builder-rocky-8.6]
-              os: rocky-8.6
-              compiler: clang
-              compiler_cc: clang
-              compiler_cxx: clang++
-              compiler_fc: gfortran
-              toolchain_file: /opt/actions-runner/files/toolchain-clang-rocky-8.6.cmake
-            - name: gnu@ubuntu-22.04
-              labels: [self-hosted, platform-builder-ubuntu-22.04]
-              os: ubuntu-22.04
-              compiler: gnu
-              compiler_cc: gcc
-              compiler_cxx: g++
-              compiler_fc: gfortran
-            - name: gnu@fedora-37
-              labels: [self-hosted, platform-builder-fedora-37]
-              os: fedora-37
-              compiler: gnu
-              compiler_cc: gcc
-              compiler_cxx: g++
-              compiler_fc: gfortran
-        run: python setup_downstream_ci.py
 
-  eccodes:
-    name: eccodes
-    needs: [setup]
-    if: ${{ inputs.eccodes && needs.setup.outputs.eccodes }}
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.setup.outputs.eccodes) }}
-    runs-on: ${{ matrix.labels }}
-    env:
-      DEP_TREE: ${{ needs.setup.outputs.dep_tree }}
-    steps:
-      - uses: ecmwf-actions/reusable-workflows/build-package-with-config@v2
-        with:
-          repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
-          codecov_upload: ${{ needs.setup.outputs.trigger_repo == github.job && inputs.codecov_upload }}
-          build_package_inputs: |
-            repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
-          build_config: .github/ci-config.yml
+  # Calls a reusable CI workflow to build & test current repository.
+  #   It will pull in all needed dependencies and produce a code coverage report on success.
+  #   In case the job fails, a message will be posted to a Microsoft Teams channel.
+  ci:
+    name: ci
+    uses: ecmwf-actions/reusable-workflows/.github/workflows/ci.yml@v1
+    with:
+      codecov_upload: false
+      notify_teams: false
+      build_package_inputs: |
+        dependencies: |
+          ecmwf/ecbuild
+          ecmwf/eckit
+        dependency_branch: develop
