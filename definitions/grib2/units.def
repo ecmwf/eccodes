@@ -323,7 +323,7 @@
 	 parameterNumber = 18 ;
 	}
 #Anisotropy of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 24 ;

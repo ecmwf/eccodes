@@ -1170,12 +1170,12 @@
 	 indicatorOfParameter = 159 ;
 	}
 #Standard deviation of orography
-'Numeric' = {
+'~' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
 #Anisotropy of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 161 ;
 	}
