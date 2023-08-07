@@ -25,5 +25,5 @@ jobs:
         dependencies: |
           ecmwf/ecbuild
           ecmwf/eckit
+          MathisRosenhauer/libaec@master
         dependency_branch: develop
-        cmake_options: -DENABLE_AEC=OFF
