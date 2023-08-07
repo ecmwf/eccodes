@@ -108,13 +108,41 @@ static void init_class(grib_iterator_class* c)
 //     return lon;
 // }
 
+static int iterate_healpix(grib_iterator_healpix* self, long N)
+{
+    size_t ny, nx;
+    ny = nx = 4*N - 1;
+    std::vector<double> y(ny);
+    std::vector<double> x(nx);
+    for (int r = 1; r < N; r++) {
+        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
+        y[4 * N - 1 - r] = -y[r - 1];
+    }
+    // Polar caps
+    for (int r = 1; r < N; r++) {
+        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
+        y[4 * N - 1 - r] = -y[r - 1];
+    }
+    // Equatorial belt
+    for (int r = N; r < 2 * N; r++) {
+        y[r - 1]         = 90. - RAD2DEG * std::acos((4. * N - 2. * r) / (3. * N));
+        y[4 * N - 1 - r] = -y[r - 1];
+    }
+
+    // Equator
+    y[2 * N - 1] = 0.;
+    // for (auto i: y) printf("%g\n",i);
+    (void)ny;
+
+    return GRIB_SUCCESS;
+}
+
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     int err = 0, is_oblate = 0;
     long N = 0;
     char ordering[32] = {0,};
     size_t slen = sizeof(ordering);
-    size_t ny, nx;
 
     grib_iterator_healpix* self = (grib_iterator_healpix*)iter;
 
@@ -144,31 +172,15 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_INTERNAL_ERROR;
     }
 
-    ny = nx = 4*N - 1;
     //self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     //self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
 
-    std::vector<double> y(ny);
-    std::vector<double> x(nx);
-    for (int r = 1; r < N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
-        y[4 * N - 1 - r] = -y[r - 1];
+    try {
+        err = iterate_healpix(self, N);
     }
-    // Polar caps
-    for (int r = 1; r < N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos(1. - r * r / (3. * N * N));
-        y[4 * N - 1 - r] = -y[r - 1];
+    catch (...) {
+        return GRIB_INTERNAL_ERROR;
     }
-    // Equatorial belt
-    for (int r = N; r < 2 * N; r++) {
-        y[r - 1]         = 90. - RAD2DEG * std::acos((4. * N - 2. * r) / (3. * N));
-        y[4 * N - 1 - r] = -y[r - 1];
-    }
-
-    // Equator
-    y[2 * N - 1] = 0.;
-    //for (auto i: y) printf("%g\n",i);
-
 
 //     latFirstInRadians = latFirstInDegrees * DEG2RAD;
 //     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
