@@ -1,5 +1,12 @@
 name: downstream ci
 
+on:
+  workflow_call:
+    inputs:
+      eccodes:
+        required: false
+        type: string
+
 jobs:
   setup:
     runs-on: ubuntu-latest
