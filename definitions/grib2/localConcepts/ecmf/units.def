@@ -656,7 +656,7 @@
 	 parameterNumber = 158 ;
 	}
 #Standard deviation of orography
-'~' = {
+'m' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 160 ;
