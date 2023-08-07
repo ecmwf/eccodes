@@ -27,4 +27,4 @@ jobs:
           ecmwf/eckit
           MathisRosenhauer/libaec@master
         dependency_branch: develop
-        cmake_options: -DENABLE_MEMFS=ON
+        cmake_options: -DENABLE_MEMFS=ON -DBUILD_SHARED_LIBS=OFF -DENABLE_FORTRAN=OFF
