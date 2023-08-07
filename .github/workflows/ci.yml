@@ -27,3 +27,4 @@ jobs:
           ecmwf/eckit
           MathisRosenhauer/libaec@master
         dependency_branch: develop
+        cmake_options: -DENABLE_MEMFS=ON
