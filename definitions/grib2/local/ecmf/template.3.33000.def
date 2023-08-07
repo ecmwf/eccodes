@@ -2,6 +2,7 @@
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
 include "grib2/template.3.shape_of_the_earth.def";
+constant isGridded = one;
 
 include "grib2/template.3.resolution_flags.def"
 
@@ -21,3 +22,5 @@ concept orderingConvention(unknown) {
 
 # No scanning mode needed; healpix is a standardized way of ordering points
 # include "grib2/template.3.scanning_mode.def";
+
+meta gridName sprintf("HEALPix%d", N) : no_copy;
