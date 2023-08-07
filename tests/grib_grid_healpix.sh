@@ -39,5 +39,18 @@ grib_check_key_equals $tempGrib gridDefinitionDescription 'Hierarchical Equal Ar
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
 ${tools_dir}/grib_ls -jn geography $tempGrib
 
+# Geoiterator
+# -------------
+rm -f $tempGrib
+cat > $tempFilter <<EOF
+  set tablesVersion = 32;
+  set gridType = "healpix";
+  set numberOfPointsAlongASide = 1;
+  set values = {1,2,3,4,5,6,7,8,9,10,11,12}; # 12*N*N
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_get_data $tempGrib
+
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut
