@@ -20,9 +20,10 @@ jobs:
     with:
       codecov_upload: false
       notify_teams: false
+      
       build_package_inputs: |
         dependencies: |
           ecmwf/ecbuild
           ecmwf/eckit
-          MathisRosenhauer/libaec
         dependency_branch: develop
+        cmake_options: -DENABLE_AEC=OFF
