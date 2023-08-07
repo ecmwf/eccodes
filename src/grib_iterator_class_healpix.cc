@@ -102,7 +102,7 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 
     // ring index: 1-based, symmetric, in range [1, Nside_ + 1]
     const auto Nj   = HEALPix_nj(N, i);
-    const auto ring = i >= N * 3 ? Ni - i : i >= N ? 1 + N - i % 2
+    const auto ring = i >= N * 3 - 1 ? Ni - i : i > N ? 1 + N - i % 2
                                          : 1 + i;
 
     const auto step  = 360.0 / static_cast<double>(Nj);
