@@ -139,6 +139,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'26' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
 #Low vegetation cover
 '27' = {
 	 discipline = 2 ;
@@ -213,6 +219,12 @@
 	 parameterNumber = 36 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Montgomery potential
+'53' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
 	}
 #Downward UV radiation at the surface
 '57' = {
@@ -309,6 +321,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
+	}
+#Anisotropy of sub-gridscale orography
+'161' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 24 ;
+	}
+#Angle of sub-gridscale orography
+'162' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 21 ;
+	}
+#Slope of sub-gridscale orography
+'163' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
 	}
 #Surface short-wave (solar) radiation downwards
 '169' = {
@@ -7904,6 +7934,18 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#U-component surface stokes drift
+'140215' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#V-component surface stokes drift
+'140216' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
 	}
 #100 metre U wind component
 '228246' = {

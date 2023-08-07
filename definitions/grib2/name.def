@@ -139,6 +139,12 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
+#Lake cover
+'Lake cover' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	}
 #Low vegetation cover
 'Low vegetation cover' = {
 	 discipline = 2 ;
@@ -213,6 +219,12 @@
 	 parameterNumber = 36 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Montgomery potential
+'Montgomery potential' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 6 ;
 	}
 #Downward UV radiation at the surface
 'Downward UV radiation at the surface' = {
@@ -309,6 +321,24 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
+	}
+#Anisotropy of sub-gridscale orography
+'Anisotropy of sub-gridscale orography' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 24 ;
+	}
+#Angle of sub-gridscale orography
+'Angle of sub-gridscale orography' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 21 ;
+	}
+#Slope of sub-gridscale orography
+'Slope of sub-gridscale orography' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 22 ;
 	}
 #Surface short-wave (solar) radiation downwards
 'Surface short-wave (solar) radiation downwards' = {
@@ -7904,6 +7934,18 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 10 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#U-component surface stokes drift
+'U-component surface stokes drift' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 21 ;
+	}
+#V-component surface stokes drift
+'V-component surface stokes drift' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 22 ;
 	}
 #100 metre U wind component
 '100 metre U wind component' = {

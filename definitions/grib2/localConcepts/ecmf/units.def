@@ -115,12 +115,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 25 ;
 	}
-#Lake cover
-'(0 - 1)' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 26 ;
-	}
 #Snow albedo
 '(0 - 1)' = {
 	 localTablesVersion = 1 ;
@@ -223,12 +217,6 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
-	}
-#Montgomery potential
-'m**2 s**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 53 ;
 	}
 #Mean temperature at 2 metres in the last 24 hours
 'K' = {
@@ -668,28 +656,10 @@
 	 parameterNumber = 158 ;
 	}
 #Standard deviation of orography
-'m' = {
+'Numeric' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 160 ;
-	}
-#Anisotropy of sub-gridscale orography
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 161 ;
-	}
-#Angle of sub-gridscale orography
-'radians' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 162 ;
-	}
-#Slope of sub-gridscale orography
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 163 ;
 	}
 #Total cloud cover
 '(0 - 1)' = {
@@ -21819,18 +21789,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 234 ;
 	 parameterNumber = 228 ;
-	}
-#U-component stokes drift
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 215 ;
-	}
-#V-component stokes drift
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 216 ;
 	}
 #Wildfire radiative power maximum
 'W' = {
