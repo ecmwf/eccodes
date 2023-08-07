@@ -1,5 +1,36 @@
 ecCodes
 =======
+## RaineAllDay's Changes:
+Updated grib_dump's JSON output to output traditional JSON. 
+grib_dump would previously output message data as:
+```
+{ "messages" : [
+  [
+      {
+        "key" : "discipline",
+        "value" : 0
+      },
+      {
+        "key" : "editionNumber",
+        "value" : 2
+      },
+      {
+        "key" : "centre",
+        "value" : 7
+      }....
+  ]
+]}
+```
+With my update the output is:
+```
+{ "messages" : [
+  {
+    "discipline":0,
+    "editionNumber":2,
+    "centre":7,...
+  }
+]}
+```
 
 [![Linux & macOS: master](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=master&label=Linux%20%26%20MacOS%3A%20master)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Amaster)
 [![Linux & macOS: develop](https://img.shields.io/github/actions/workflow/status/ecmwf/eccodes/ci.yml?branch=develop&label=Linux%20%26%20MacOS%3A%20develop)](https://github.com/ecmwf/eccodes/actions/workflows/ci.yml?query=branch%3Adevelop)
