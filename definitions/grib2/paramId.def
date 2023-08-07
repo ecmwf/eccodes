@@ -4545,6 +4545,30 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#X-component of sea ice velocity
+'262021' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Y-component of sea ice velocity
+'262022' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Sea surface practical salinity
 '262100' = {
 	 discipline = 10 ;
@@ -5227,14 +5251,14 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Wind stress at 10m above sea surface
+#Wind stress at sea surface
 '262901' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 102 ;
+	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
@@ -5589,6 +5613,32 @@
 	 parameterNumber = 23 ;
 	 typeOfFirstFixedSurface = 174 ;
 	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean X-component of sea ice velocity
+'263021' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 24 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Y-component of sea ice velocity
+'263022' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 25 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
@@ -6324,14 +6374,14 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean wind stress at 10m above sea surface
+#Time-mean wind stress at sea surface
 '263901' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 49 ;
-	 typeOfFirstFixedSurface = 102 ;
+	 typeOfFirstFixedSurface = 160 ;
 	 typeOfSecondFixedSurface = 255 ;
-	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaledValueOfFirstFixedSurface = 0 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
@@ -7198,17 +7248,23 @@
 	 parameterCategory = 19 ;
 	 parameterNumber = 43 ;
 	}
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 '228131' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 56 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#V-component of neutral wind
+#10 metre v-component of neutral wind
 '228132' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 57 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
 #100 metre U wind component
 '228246' = {
