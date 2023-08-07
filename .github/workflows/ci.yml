@@ -1,11 +1,13 @@
-name: downstream ci
+name: ci
 
 on:
-  workflow_call:
-    inputs:
-      eccodes:
-        required: false
-        type: string
+  push:
+    branches:
+      - "develop"
+    tags-ignore:
+      - "*"
+  pull_request: ~
+  workflow_dispatch: ~
 
 jobs:
   setup:
