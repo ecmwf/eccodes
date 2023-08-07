@@ -24,4 +24,5 @@ jobs:
         dependencies: |
           ecmwf/ecbuild
           ecmwf/eckit
+          MathisRosenhauer/libaec
         dependency_branch: develop
