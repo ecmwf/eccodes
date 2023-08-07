@@ -1,100 +1,98 @@
-name: ci
-
-on:
-  # Trigger the workflow on push to master or develop, except tag creation
-  push:
-    branches:
-      - "master"
-      - "develop"
-    tags-ignore:
-      - "**"
-
-  # Trigger the workflow on pull request
-  pull_request: ~
-
-  # Trigger the workflow manually
-  workflow_dispatch: ~
-
-  # Trigger after public PR approved for CI
-  pull_request_target:
-    types: [labeled]
+name: downstream ci
 
 jobs:
-  # Run CI including downstream packages on self-hosted runners
-  downstream-ci:
-    name: downstream-ci
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci.yml@main
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-    secrets: inherit
-
-  # Run CI of private downstream packages on self-hosted runners
-  private-downstream-ci:
-    name: private-downstream-ci
-    needs: [downstream-ci]
-    if: (success() || failure()) && ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
+  setup:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    outputs:
+      eccodes: ${{ steps.setup.outputs.eccodes }}
+      dep_tree: ${{ steps.setup.outputs.build_package_dep_tree }}
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf-actions/dispatch-private-downstream-ci@v1
-        with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf-actions
-          repository: private-downstream-ci
-          event_type: downstream-ci
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
+      - name: Run setup script
+        id: setup
+        env:
+          TOKEN: ${{ secrets.GH_REPO_READ_TOKEN }}
+          CONFIG: |
+            ${{ 'raineallday/eccodes@develop' }}:
+              path: .github/ci-config.yml
+          PYTHON_VERSIONS: |
+            - "3.10"
+          MATRIX: |
+            name:
+            - gnu@debian-11
+            - gnu-7@centos-7.9
+            - gnu-8@centos-7.9
+            - gnu@rocky-8.6
+            - clang@rocky-8.6
+            - gnu@ubuntu-22.04
+            - gnu@fedora-37
+            include:
+            - name: gnu@debian-11
+              labels: [self-hosted, platform-builder-debian-11]
+              os: debian-11
+              compiler: gnu
+              compiler_cc: gcc
+              compiler_cxx: g++
+              compiler_fc: gfortran
+            - name: gnu-7@centos-7.9
+              labels: [self-hosted, platform-builder-centos-7.9]
+              os: centos-7.9
+              compiler: gnu-7
+              compiler_cc: gcc-7
+              compiler_cxx: g++-7
+              compiler_fc: gfortran-7
+            - name: gnu-8@centos-7.9
+              labels: [self-hosted, platform-builder-centos-7.9]
+              os: centos-7.9
+              compiler: gnu-8
+              compiler_cc: gcc-8
+              compiler_cxx: g++-8
+              compiler_fc: gfortran-8
+            - name: gnu@rocky-8.6
+              labels: [self-hosted, platform-builder-rocky-8.6]
+              os: rocky-8.6
+              compiler: gnu
+              compiler_cc: gcc
+              compiler_cxx: g++
+              compiler_fc: gfortran
+            - name: clang@rocky-8.6
+              labels: [self-hosted, platform-builder-rocky-8.6]
+              os: rocky-8.6
+              compiler: clang
+              compiler_cc: clang
+              compiler_cxx: clang++
+              compiler_fc: gfortran
+              toolchain_file: /opt/actions-runner/files/toolchain-clang-rocky-8.6.cmake
+            - name: gnu@ubuntu-22.04
+              labels: [self-hosted, platform-builder-ubuntu-22.04]
+              os: ubuntu-22.04
+              compiler: gnu
+              compiler_cc: gcc
+              compiler_cxx: g++
+              compiler_fc: gfortran
+            - name: gnu@fedora-37
+              labels: [self-hosted, platform-builder-fedora-37]
+              os: fedora-37
+              compiler: gnu
+              compiler_cc: gcc
+              compiler_cxx: g++
+              compiler_fc: gfortran
+        run: python setup_downstream_ci.py
 
-  # Build downstream packages on HPC
-  downstream-ci-hpc:
-    name: downstream-ci-hpc
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ecmwf-actions/downstream-ci/.github/workflows/downstream-ci-hpc.yml@main
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-    secrets: inherit
-
-  # Run CI of private downstream packages on HPC
-  private-downstream-ci-hpc:
-    name: private-downstream-ci-hpc
-    needs: [downstream-ci-hpc]
-    if: (success() || failure()) && ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+  eccodes:
+    name: eccodes
+    needs: [setup]
+    if: ${{ inputs.eccodes && needs.setup.outputs.eccodes }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.eccodes) }}
+    runs-on: ${{ matrix.labels }}
+    env:
+      DEP_TREE: ${{ needs.setup.outputs.dep_tree }}
     steps:
-      - name: Dispatch private downstream CI
-        uses: ecmwf-actions/dispatch-private-downstream-ci@v1
+      - uses: ecmwf-actions/reusable-workflows/build-package-with-config@v2
         with:
-          token: ${{ secrets.GH_REPO_READ_TOKEN }}
-          owner: ecmwf-actions
-          repository: private-downstream-ci
-          event_type: downstream-ci-hpc
-          payload: '{"eccodes": "ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}"}'
-
-  codecov:
-    name: code-coverage
-    if: ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      eccodes: ecmwf/eccodes@${{ github.event.pull_request.head.sha || github.sha }}
-      codecov: true
-    secrets: inherit
-
-  notify:
-    runs-on: ubuntu-latest
-    needs:
-      - downstream-ci
-      - private-downstream-ci
-      - downstream-ci-hpc
-      - private-downstream-ci-hpc
-      - codecov
-    if: always() && ${{ !github.event.pull_request.head.repo.fork && github.event.action != 'labeled' || github.event.label.name == 'approved-for-ci' }}
-    steps:
-      - name: Trigger Teams notification
-        uses: ecmwf-actions/notify-teams@v1
-        with:
-          incoming_webhook: ${{ secrets.MS_TEAMS_INCOMING_WEBHOOK }}
-          needs_context: ${{ toJSON(needs) }}
+          repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
+          codecov_upload: ${{ needs.setup.outputs.trigger_repo == github.job && inputs.codecov_upload }}
+          build_package_inputs: |
+            repository: ${{ inputs.eccodes || 'ecmwf/eccodes@develop' }}
+          build_config: .github/ci-config.yml
