@@ -343,8 +343,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
-                /*fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);*/
-                perror("Invalid file offset");
+                fprintf(stderr, "%s: Invalid file offset: %lld\n", tool_name, options->infile_offset);
                 exit(1);
             }
         }
