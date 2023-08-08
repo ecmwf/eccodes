@@ -345,7 +345,7 @@ int grib_nearest_find_generic(
 
         /* Note: If this is being called for a REDUCED grid, its Ni will be missing */
 
-        if (grib_is_missing(h, Nj_keyname, &ret)) {
+        if (grib_is_defined(h, Nj_keyname) && grib_is_missing(h, Nj_keyname, &ret)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", Nj_keyname);
             return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
         }

@@ -324,6 +324,7 @@ list( APPEND eccodes_src_files
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
+    grib_nearest_class_healpix.cc
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
