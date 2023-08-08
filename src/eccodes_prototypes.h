@@ -1330,7 +1330,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-                              const char* values_keyname, const char* Ni_keyname, const char* Nj_keyname,
+                              const char* values_keyname,
                               double** out_lats,
                               int* out_lats_count,
                               double** out_lons,
