@@ -51,6 +51,8 @@ cat > $tempFilter <<EOF
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
 ${tools_dir}/grib_get_data $tempGrib
+val=$(${tools_dir}/grib_get -l 0,0,1 $tempGrib | tr -d ' ')
+[ "$val" = 5 ]
 
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut
