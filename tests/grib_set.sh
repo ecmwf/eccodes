@@ -50,10 +50,20 @@ centre=`${tools_dir}/grib_get -p centre:l $outfile`
 # Set without -s. Expected to fail
 # ----------------------------------------------------
 set +e
-${tools_dir}/grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_set -p levtype $infile $outfile > $temp 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
+grep -q "provide some keys to set" $temp
+
+# Set with empty -s. Expected to fail
+# ----------------------------------------------------
+set +e
+${tools_dir}/grib_set -s '' $infile $outfile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "provide some keys to set" $temp
 
 # Out-of-bounds value. Expected to fail
 # ----------------------------------------------------

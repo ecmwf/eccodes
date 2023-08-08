@@ -65,28 +65,28 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        printf("ERROR: please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "ERROR: Please provide some keys to set through the -s option or use the -r/-d options\n");
         exit(1);
     }
     if (options->verbose)
         options->print_header = 1;
-    /*if (grib_options_on("n:")) {
-    noise=atof(grib_options_get_option("n:"));
-    options->repack=1;
-  }*/
+    //  if (grib_options_on("n:")) {
+    //     noise=atof(grib_options_get_option("n:"));
+    //     options->repack=1;
+    //   }
 
-    if (grib_options_on("n:") && grib_options_on("d:")) {
-        printf("Error: -n and -d options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
+    // if (grib_options_on("n:") && grib_options_on("d:")) {
+    //     fprintf(stderr, "Error: -n and -d options are incompatible. Choose one of the two please.\n");
+    //     exit(1);
+    // }
 
-//     if (options->outfile && options->outfile->name) {
-//         options->outfile->file = fopen(options->outfile->name,"w");
-//         if(!options->outfile->file) {
-//             perror(options->outfile->name);
-//             exit(1);
-//         }
-//     }
+    //     if (options->outfile && options->outfile->name) {
+    //         options->outfile->file = fopen(options->outfile->name,"w");
+    //         if(!options->outfile->file) {
+    //             perror(options->outfile->name);
+    //             exit(1);
+    //         }
+    //     }
     return 0;
 }
 
