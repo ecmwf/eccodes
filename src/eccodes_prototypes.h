@@ -266,8 +266,6 @@ grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* v
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 
-/* grib_accessor_class_assert.cc*/
-
 /* grib_accessor_class_ascii.cc*/
 
 /* grib_accessor_class_bit.cc*/
@@ -375,8 +373,6 @@ void grib_codetable_delete(grib_context* c);
 
 /* grib_accessor_class_evaluate.cc*/
 
-/* grib_accessor_class_g1area.cc*/
-
 /* grib_accessor_class_g1date.cc*/
 
 /* grib_accessor_class_g1monthlydate.cc*/
@@ -468,8 +464,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_longitudes.cc*/
 
-/* grib_accessor_class_missing.cc*/
-
 /* grib_accessor_class_octahedral_gaussian.cc*/
 
 /* grib_accessor_class_offset_file.cc*/
@@ -479,8 +473,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 /* grib_accessor_class_rdbtime_guess_date.cc*/
 
 /* grib_accessor_class_from_scale_factor_scaled_value.cc*/
-
-/* grib_accessor_class_times.cc*/
 
 /* grib_accessor_class_g2bitmap_present.cc*/
 
@@ -1338,7 +1330,7 @@ int grib_nearest_get_radius(grib_handle* h, double* radiusInKm);
 void grib_binary_search(const double xx[], const size_t n, double x, size_t* ju, size_t* jl);
 int grib_nearest_find_multiple(const grib_handle* h, int is_lsm, const double* inlats, const double* inlons, long npoints, double* outlats, double* outlons, double* values, double* distances, int* indexes);
 int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inlat, double inlon, unsigned long flags,
-                              const char* values_keyname, const char* Ni_keyname, const char* Nj_keyname,
+                              const char* values_keyname,
                               double** out_lats,
                               int* out_lats_count,
                               double** out_lons,
@@ -1462,7 +1454,7 @@ void string_rtrim(char* s);
 void string_lrtrim(char** x, int do_left, int do_right);
 const char* extract_filename(const char* filepath);
 char** string_split(char* inputString, const char* delimiter);
-int string_to_long(const char* input, long* output);
+int string_to_long(const char* input, long* output, int strict);
 int string_ends_with(const char* str1, const char* str2);
 int string_count_char(const char* str, char c);
 const char* codes_get_product_name(ProductKind product);

@@ -24,6 +24,7 @@
    IMPLEMENTS = unpack_double
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
+   IMPLEMENTS = get_native_type
    MEMBERS=const char*  missing_value
    MEMBERS=const char*  number_of_values
    MEMBERS=const char*  number_of_points
@@ -43,6 +44,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
@@ -77,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_gds_not_present_bitmap = {
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
-    0,            /* get native type */
+    &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
@@ -132,7 +134,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 static int value_count(grib_accessor* a, long* number_of_points)
 {
     grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
-    *number_of_points                          = 0;
+    *number_of_points = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
 }
 
@@ -206,4 +208,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     // See deprecated/grib_accessor_class_gds_not_present_bitmap.cc for
     // a possible implementation
     return GRIB_NOT_IMPLEMENTED;
+}
+
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
 }

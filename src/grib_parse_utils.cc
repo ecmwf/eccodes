@@ -473,7 +473,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     break;
                 case '!':
                     pp = (char*)uname;
-                    if (string_to_long(uname + i + 1, &numcols) == GRIB_SUCCESS) {
+                    // Turn off strict as the input string will have a final ']' suffix
+                    if (string_to_long(uname + i + 1, &numcols, /*strict=*/0) == GRIB_SUCCESS) {
                         maxcols = (int)numcols;
                     }
                     else {

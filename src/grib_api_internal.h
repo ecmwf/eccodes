@@ -860,9 +860,8 @@ struct grib_handle
 {
     grib_context* context;         /** < context attached to this handle    */
     grib_buffer* buffer;           /** < buffer attached to the handle      */
-    grib_section* root;            /**  the root      section*/
-    grib_section* asserts;         /** the assertion section*/
-    grib_section* rules;           /** the rules     section*/
+    grib_section* root;            /**  the root section*/
+    grib_section* rules;           /** the rules section*/
     grib_dependency* dependencies; /** List of dependencies */
     grib_handle* main;             /** Used during reparsing */
     grib_handle* kid;              /** Used during reparsing */
@@ -870,7 +869,6 @@ struct grib_handle
     int values_stack;
     const grib_values* values[MAX_SET_VALUES]; /** Used when setting multiple values at once */
     size_t values_count[MAX_SET_VALUES];       /** Used when setting multiple values at once */
-    int dont_trigger;                          /** Don't notify triggers */
     int partial;                               /** Not a complete message (just headers) */
     int header_mode;                           /** Header not jet complete */
     char* gts_header;
@@ -883,8 +881,6 @@ struct grib_handle
     int sections_count;
     off_t offset;
     /* grib_accessor* groups[MAX_NUM_GROUPS]; */
-    long missingValueLong;
-    double missingValueDouble;
     ProductKind product_kind;
     /* grib_trie* bufr_elements_table; */
 };

@@ -13,7 +13,7 @@ constant PUnset = -32767;
 # N is a pointer to the start of the packed data (i.e. gives octet number)
 unsigned[2] N : read_only,dump;
 signed[2] P  = PUnset;
- 
+
 unsigned[1] JS=0  : dump;
 unsigned[1] KS=0  : dump;
 unsigned[1] MS=0  : dump;
@@ -24,7 +24,7 @@ alias subSetM=MS;
 
 constant GRIBEXShBugPresent = 1;
 transient computeLaplacianOperator=0;
- 
+
 meta data.laplacianOperator    scale(P,oneConstant,grib1divider,truncateLaplacian) : dump;
 meta laplacianOperatorIsSet evaluate(P != PUnset &&  !computeLaplacianOperator );
 

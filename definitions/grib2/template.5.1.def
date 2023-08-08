@@ -11,7 +11,7 @@ unsigned[1] matrixBitmapsPresent;
 alias secondaryBitmapPresent=matrixBitmapsPresent;
 
 # Number of data values encoded in Section 7
-unsigned[4] numberOfCodedValues; 
+unsigned[4] numberOfCodedValues;
 
 # NR - first dimension (rows)
 unsigned[2] firstDimension;

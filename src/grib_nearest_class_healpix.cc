@@ -111,8 +111,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
         nearest, h, inlat, inlon, flags, /* inputs */
 
         self->values_key,  /* outputs to set the 'self' object */
-        self->Ni, /*not used*/
-        self->Nj, /*not used*/
         &(self->lats),
         &(self->lats_count),
         &(self->lons),

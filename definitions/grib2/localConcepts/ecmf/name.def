@@ -224,12 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Montgomery potential
-'Montgomery potential' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 53 ;
-	}
 #Mean temperature at 2 metres in the last 24 hours
 'Mean temperature at 2 metres in the last 24 hours' = {
 	 discipline = 192 ;
@@ -672,24 +666,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 160 ;
-	}
-#Anisotropy of sub-gridscale orography
-'Anisotropy of sub-gridscale orography' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 161 ;
-	}
-#Angle of sub-gridscale orography
-'Angle of sub-gridscale orography' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 162 ;
-	}
-#Slope of sub-gridscale orography
-'Slope of sub-gridscale orography' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 163 ;
 	}
 #Total cloud cover
 'Total cloud cover' = {
@@ -13908,6 +13884,19 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea ice salinity
+'Sea ice salinity' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Time-mean snow thickness over sea ice
 'Time-mean snow thickness over sea ice' = {
 	 localTablesVersion = 1 ;
@@ -13916,6 +13905,20 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 173 ;
 	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Sea ice salinity
+'Time-mean Sea ice salinity' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
@@ -21792,18 +21795,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 234 ;
 	 parameterNumber = 228 ;
-	}
-#U-component stokes drift
-'U-component stokes drift' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 215 ;
-	}
-#V-component stokes drift
-'V-component stokes drift' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 216 ;
 	}
 #Wildfire radiative power maximum
 'Wildfire radiative power maximum' = {

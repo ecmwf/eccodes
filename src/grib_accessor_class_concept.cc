@@ -382,7 +382,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
             if (strcmp(act->name, "paramId") == 0) {
-                if (string_to_long(name, &dummy) == GRIB_SUCCESS) {
+                if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
                     // The paramId value is an integer. Show them the param DB
                     grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);

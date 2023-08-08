@@ -74,6 +74,7 @@ if( HAVE_BUILD_TOOLS )
     # and are generally quick
     list(APPEND tests_basic
         codes_info
+        codes_deprecated
         unit_tests
         julian
         grib_dump_samples
@@ -150,6 +151,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
@@ -237,6 +239,7 @@ if( HAVE_BUILD_TOOLS )
         metar_compare
         bufr_set
         grib_ieee
+        grib1_gds_not_present
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh

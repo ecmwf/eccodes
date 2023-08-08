@@ -52,7 +52,7 @@ include "grib2/template.3.scanning_mode.def";
 # of the sub-satellite point in the direction of increasing latitude
 signed[4] orientationOfTheGrid : edition_specific;
 meta geography.orientationOfTheGridInDegrees
-    scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump; 
+    scale(orientationOfTheGrid,oneConstant,grib2divider,truncateDegrees) : dump;
 
 # Nr - altitude of the camera from the Earth's centre, measured in units of the Earth's
 # (equatorial) radius multiplied by a scale factor of 10^6

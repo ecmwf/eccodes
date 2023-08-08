@@ -57,7 +57,6 @@ list( APPEND eccodes_src_files
     grib_iarray.cc
     grib_viarray.cc
     codes_memfs.cc
-    grib_accessor_class_assert.cc
     grib_accessor_class_ascii.cc
     grib_accessor_class_bit.cc
     grib_accessor_class_bitmap.cc
@@ -98,7 +97,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_double.cc
     grib_accessor_class_element.cc
     grib_accessor_class_evaluate.cc
-    grib_accessor_class_g1area.cc
     grib_accessor_class_g1date.cc
     grib_accessor_class_g1monthlydate.cc
     grib_accessor_class_library_version.cc
@@ -131,11 +129,9 @@ list( APPEND eccodes_src_files
     grib_accessor_class_latlonvalues.cc
     grib_accessor_class_latitudes.cc
     grib_accessor_class_longitudes.cc
-    grib_accessor_class_missing.cc
     grib_accessor_class_offset_file.cc
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
-    grib_accessor_class_times.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc

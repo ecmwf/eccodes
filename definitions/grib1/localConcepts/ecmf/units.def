@@ -1175,7 +1175,7 @@
 	 indicatorOfParameter = 160 ;
 	}
 #Anisotropy of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 161 ;
 	}
@@ -1185,7 +1185,7 @@
 	 indicatorOfParameter = 162 ;
 	}
 #Slope of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 163 ;
 	}
@@ -17814,12 +17814,12 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
+#U-component surface stokes drift
 'm s**-1' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
+#V-component surface stokes drift
 'm s**-1' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;
