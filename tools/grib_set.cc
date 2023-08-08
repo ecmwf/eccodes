@@ -65,7 +65,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        fprintf(stderr, "ERROR: Please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "%s: Please provide some keys to set through the -s option or use the -r/-d options\n", tool_name);
         exit(1);
     }
     if (options->verbose)
@@ -114,7 +114,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
             v = (double*)calloc(size, sizeof(double));
             if (!v) {
-                fprintf(stderr, "failed to allocate %d bytes\n", (int)(size * sizeof(double)));
+                fprintf(stderr, "%s: Failed to allocate %zu bytes\n", tool_name, size * sizeof(double));
                 exit(1);
             }
 
