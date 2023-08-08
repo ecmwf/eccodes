@@ -22,6 +22,7 @@ static int verbose                         = 0;
 static const char* OUTPUT_FILENAME_DEFAULT = "split_rdbSubtype.undef.bufr";
 static const char* OUTPUT_FILENAME_SUBTYPE = "split_rdbSubtype.%ld.bufr";
 
+const char* tool_name = "bufr_split_by_rdbSubtype";
 
 static void usage(const char* prog)
 {
@@ -56,7 +57,7 @@ static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 
     edition = (long)grib_decode_unsigned_long(message, &pos_edition, nbits_edition);
     if (edition != 2 && edition != 3 && edition != 4) {
-        fprintf(stderr, "ERROR: Unsupported BUFR edition: %ld", edition);
+        fprintf(stderr, "%s: Unsupported BUFR edition: %ld", tool_name, edition);
         return GRIB_DECODING_ERROR;
     }
     section1Length = (long)grib_decode_unsigned_long(message, &pos_section1Length, nbits_section1Length);
@@ -73,7 +74,7 @@ static int decode_rdbSubtype(const void* msg, long* rdbSubtype)
 
     section1Flags = (long)grib_decode_unsigned_long(message, &pos_section1Flags, nbits_section1Flags);
     if (section1Flags != 0 && section1Flags != 128) {
-        fprintf(stderr, "ERROR: Invalid BUFR section1 flags: %ld", section1Flags);
+        fprintf(stderr, "%s: Invalid BUFR section1 flags: %ld\n", tool_name, section1Flags);
         return GRIB_DECODING_ERROR;
     }
     ecmwfLocalSectionPresent = (bufrHeaderCentre == 98 && section1Flags != 0);
@@ -121,7 +122,7 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
             long rdbSubtype = 0;
             int status      = decode_rdbSubtype(mesg, &rdbSubtype);
             if (status != GRIB_SUCCESS) {
-                fprintf(stderr, "ERROR: Failed to decode rdbSubtype from message %lu\n", *count);
+                fprintf(stderr, "%s: Failed to decode rdbSubtype from message %lu\n", tool_name, *count);
                 return status;
             }
 
@@ -135,12 +136,12 @@ static int split_file_by_subtype(FILE* in, const char* filename, unsigned long* 
             }
             out = fopen(ofilename, "ab");
             if (!out) {
-                fprintf(stderr, "ERROR: Failed to open output file '%s'\n", ofilename);
+                fprintf(stderr, "%s: Failed to open output file '%s'\n", tool_name, ofilename);
                 perror(ofilename);
                 return GRIB_IO_PROBLEM;
             }
             if (fwrite(mesg, 1, size, out) != size) {
-                fprintf(stderr, "ERROR: Failed to append to file '%s'\n", ofilename);
+                fprintf(stderr, "%s: Failed to append to file '%s'\n", tool_name, ofilename);
                 perror(ofilename);
                 fclose(out);
                 return GRIB_IO_PROBLEM;
@@ -178,7 +179,7 @@ int main(int argc, char* argv[])
 
     filename = argv[i];
     if (path_is_directory(filename)) {
-        fprintf(stderr, "ERROR: %s: Is a directory\n", filename);
+        fprintf(stderr, "%s: %s: Is a directory\n", tool_name, filename);
         return 1;
     }
     infh = fopen(filename, "rb");
@@ -190,8 +191,7 @@ int main(int argc, char* argv[])
     count = 0;
     err   = split_file_by_subtype(infh, filename, &count);
     if (err) {
-        fprintf(stderr, "ERROR: Failed to split BUFR file %s", filename);
-        fprintf(stderr, "\n");
+        fprintf(stderr, "%s: Failed to split BUFR file %s\n", tool_name, filename);
         status = 1;
     }
     else {
