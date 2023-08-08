@@ -139,12 +139,6 @@
 	 parameterCategory = 2 ;
 	 parameterNumber = 45 ;
 	}
-#Lake cover
-'cl' = {
-	 discipline = 1 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 2 ;
-	}
 #Low vegetation cover
 'cvl' = {
 	 discipline = 2 ;
