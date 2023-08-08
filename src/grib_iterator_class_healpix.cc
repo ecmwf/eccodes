@@ -87,33 +87,23 @@ static void init_class(grib_iterator_class* c)
 #define ITER "HEALPix Geoiterator"
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
 
-size_t HEALPix_nj(size_t N, size_t i) {
+size_t HEALPix_nj(size_t N, size_t i)
+{
+    Assert(0 < N);
     size_t ni = 4 * N - 1;
     Assert(i < ni);
     return i < N ? 4 * (i + 1) : i < 3 * N ? 4 * N
-                              : HEALPix_nj(N, ni - 1 - i);
+                                           : HEALPix_nj(N, ni - 1 - i);
 }
 
 static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 {
-    std::vector<double> longitudes;
-    size_t Ni = 4 * N - 1;
-    Assert(i < Ni);
+    const auto Nj    = HEALPix_nj(N, i);
+    const auto step  = 360. / static_cast<double>(Nj);
+    const auto start = i < N || 3 * N - 1 < i || static_cast<bool>((i + N) % 2) ? step / 2. : 0.;
 
-    // ring index: 1-based, symmetric, in range [1, Nside_ + 1]
-    const auto Nj   = HEALPix_nj(N, i);
-    const auto ring = i >= N * 3 - 1 ? Ni - i : i > N ? 1 + N - i % 2
-                                         : 1 + i;
-
-    const auto step  = 360.0 / static_cast<double>(Nj);
-    const auto start = static_cast<bool>(i % 2) ?
-        180.0 / static_cast<double>(Nj)
-        : ring == 1 ? 45.0 : 0.0;
-
-    longitudes.reserve(N * 4);
-    longitudes.resize(Nj);
-    std::generate_n(longitudes.begin(), Nj, [start, step, n = 0ULL]() mutable
-        { return start + static_cast<double>(n++) * step; });
+    std::vector<double> longitudes(Nj);
+    std::generate_n(longitudes.begin(), Nj, [start, step, n = 0ULL]() mutable { return start + static_cast<double>(n++) * step; });
 
     return longitudes;
 }
