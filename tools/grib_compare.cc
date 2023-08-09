@@ -268,8 +268,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx     = grib_fieldset_new_from_files(context, filename,
                                                     nfiles, 0, 0, 0, orderby, &ret);
         if (ret) {
-            fprintf(stderr, "Unable to create index for input file %s (%s)",
-                    options->infile_extra->name, grib_get_error_message(ret));
+            fprintf(stderr, "%s: Unable to create index for input file %s (%s)",
+                    tool_name, options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }
     }
@@ -307,7 +307,7 @@ int grib_tool_init(grib_runtime_options* options)
         if (grib_options_on("R:")) {
             maxAbsoluteError = strtod(absTolStr, &endPtr);
             if (*endPtr) {
-                fprintf(stderr, "Invalid absolute error: '%s'\n", absTolStr);
+                fprintf(stderr, "%s: Invalid absolute error: '%s'\n", tool_name, absTolStr);
                 exit(1);
             }
         }
@@ -315,7 +315,7 @@ int grib_tool_init(grib_runtime_options* options)
             compare_double   = &compare_double_absolute;
             global_tolerance = strtod(absTolStr, &endPtr);
             if (*endPtr) {
-                fprintf(stderr, "Invalid absolute error: '%s'\n", absTolStr);
+                fprintf(stderr, "%s: Invalid absolute error: '%s'\n",tool_name, absTolStr);
                 exit(1);
             }
         }

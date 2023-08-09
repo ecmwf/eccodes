@@ -104,7 +104,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         v = (double*)calloc(size, sizeof(double));
         if (!v) {
-            fprintf(stderr, "failed to allocate %ld bytes\n", (long)(size * sizeof(double)));
+            fprintf(stderr, "%s: Failed to allocate %zu bytes\n", tool_name, size * sizeof(double));
             exit(1);
         }
 
