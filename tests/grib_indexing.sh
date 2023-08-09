@@ -106,7 +106,7 @@ cat ${data_dir}/sample.grib2         ${data_dir}/high_level_api.grib2  > $tempGr
 
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $tempGribFile1
 ${tools_dir}/grib_index_build -N -o $tempIndex2 $tempGribFile2
-${tools_dir}/grib_compare $tempIndex1 $tempIndex2
+${tools_dir}/grib_compare -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
 
 # ECC-1516
