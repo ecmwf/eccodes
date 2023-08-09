@@ -8,13 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * Implementation: grib_ls
- *
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
- *
- *
- */
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -24,7 +17,7 @@ grib_option grib_options[] = {
     { "F:", 0, 0, 1, 1, "%g" },
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "j", 0, "json output\n", 0, 1, 0 },
+    // { "j", 0, "json output\n", 0, 1, 0 },
     { "B:", 0, 0, 0, 1, 0 },
     /* {"l:",0,0,0,1,0}, */
     { "s:", 0, 0, 0, 1, 0 },
@@ -55,7 +48,6 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 double lat             = 0;
 double lon             = 0;
 int mode               = 0;
-static int json        = 0;
 
 int main(int argc, char* argv[])
 {
@@ -79,14 +71,6 @@ Initialization and startup can be done here
  */
 int grib_tool_init(grib_runtime_options* options)
 {
-    if (grib_options_on("j")) {
-        options->verbose = 0;
-        json             = 1;
-    }
-
-    if (json)
-        printf("[\n");
-
     return 0;
 }
 
@@ -101,6 +85,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file)
 {
+    exit_if_input_is_directory(tool_name, file->name);
     return 0;
 }
 
@@ -140,9 +125,6 @@ void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
 /* this is executed after the last message in the last file is processed */
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
-    if (json)
-        printf("\n]\n");
-
     return 0;
 }
 

@@ -76,7 +76,7 @@ int grib_tool_init(grib_runtime_options* options)
     //   }
 
     // if (grib_options_on("n:") && grib_options_on("d:")) {
-    //     fprintf(stderr, "Error: -n and -d options are incompatible. Choose one of the two please.\n");
+    //     fprintf(stderr, "%s: -n and -d options are incompatible. Choose one of the two please.\n",tool_name);
     //     exit(1);
     // }
 
