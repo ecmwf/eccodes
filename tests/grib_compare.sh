@@ -13,7 +13,7 @@
 label="grib_compare_test"
 REDIRECT=/dev/null
 
-outfile=temp.$label.$$
+outfile=temp.$label.grib
 rm -f $outfile
 
 
@@ -101,6 +101,20 @@ ${tools_dir}/grib_compare -b totalLength $temp1 $temp2 >/dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
+
+# ----------------------------------------
+# Test -A switch
+# ----------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $infile $temp1
+# max absolute diff. = 3.11
+set +e
+${tools_dir}/grib_compare -b referenceValue -A 3.1  $infile $temp1
+status=$?
+set -e
+[ $status -eq 1 ]
+# Raise the tolerance
+${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
 
 
 # ----------------------------------------
