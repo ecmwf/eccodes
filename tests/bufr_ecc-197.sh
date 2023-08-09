@@ -29,7 +29,7 @@ decode_bufr()
     # Ensure output JSON has all the expected contents
     # After calling 'wc' and 'set', $1 will be the line count
     set `wc -l $TEMP`
-    [ $1 -gt 35700 ]
+    [ $1 -gt 33700 ]
     grep -q encryptedShipOrMobileLandStationIdentifier $TEMP
 }
 
