@@ -177,11 +177,24 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# ----------------------------------------
+# Keys with value='Missing'
+# ----------------------------------------
+${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
+set +e
+${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
+${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $outfile
+
 
 # ----------------------------------------
 # Test -R overriding "referenceValueError"
 # ----------------------------------------
-sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
 echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
 # Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical
