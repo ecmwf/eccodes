@@ -179,9 +179,9 @@ rm -f $reffile
 
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# ----------------------------------------
-# Keys with value='Missing'
-# ----------------------------------------
+# --------------------------------------------
+# Key='Missing' in one field and not the other
+# --------------------------------------------
 ${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
 set +e
 ${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
@@ -189,6 +189,14 @@ status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
+
+set +e
+${tools_dir}/grib_compare $temp1 $sample_g2 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 2nd field but is not missing in 1st field" $outfile
+
 ${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $outfile
 
 
