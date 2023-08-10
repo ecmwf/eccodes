@@ -36,6 +36,8 @@ concept datasetForLocal(unknown) {
   "uerra"   = {productionStatusOfProcessedData=9;} # UERRA
   "uerra"   = {productionStatusOfProcessedData=10;} # CARRA/CERRA
   "uerra"   = {productionStatusOfProcessedData=11;} # CARRA/CERRA
+  "destine"   = {productionStatusOfProcessedData=12;} # DestinE
+  "destine"   = {productionStatusOfProcessedData=13;} # DestinE
   "unknown" = { dummy=1; }
 }
 

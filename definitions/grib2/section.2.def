@@ -34,6 +34,12 @@ if ( addEmptySection2 == 0 ) {
             template  crraSection "grib2/local.crra.[crraLocalVersion:l].def";
         }
 
+        if(productionStatusOfProcessedData == 12 || productionStatusOfProcessedData == 13) {
+            # destine = Destination Earth
+            codetable[2] destineLocalVersion 'grib2/destineLocalVersion.table' = 1 : dump;
+            template  destineSection "grib2/local.destine.[destineLocalVersion:l].def";
+        }
+
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;
 
         if (grib2LocalSectionNumber!=0) {
