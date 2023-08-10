@@ -1,0 +1,7 @@
+# (C) Copyright 2005- ECMWF.
+
+# Destination Earth (DestinE)
+
+constant marsClass = 'd1';
+
+include "grib2/products_destine.def"
