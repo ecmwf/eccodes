@@ -2765,6 +2765,22 @@
 	 parameterNumber = 56 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Maximum total precipitation rate
+'Maximum total precipitation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	}
+#Minimum total precipitation rate
+'Minimum total precipitation rate' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	}
 #Mixed-layer CAPE in the lowest 50 hPa
 'Mixed-layer CAPE in the lowest 50 hPa' = {
 	 discipline = 0 ;
@@ -3524,6 +3540,14 @@
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean magnitude of turbulent surface stress
+'Mean magnitude of turbulent surface stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 58 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
@@ -9674,12 +9698,6 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
-	}
-#Montgomery stream Function
-'Montgomery stream Function' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 6 ;
 	}
 #Sigma coordinate vertical velocity
 'Sigma coordinate vertical velocity' = {
