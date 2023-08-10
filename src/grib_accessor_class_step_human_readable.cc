@@ -122,7 +122,7 @@ static int get_native_type(grib_accessor* a)
 static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 {
     int err = 0;
-    size_t slen = 2;
+    //size_t slen = 2;
     long step;
 
     /* Change units to seconds (highest resolution)

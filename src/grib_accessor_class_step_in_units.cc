@@ -219,7 +219,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    //grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
@@ -285,7 +285,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len) {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    //grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
@@ -302,7 +302,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len) {
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len) {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    //grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 

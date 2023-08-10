@@ -221,7 +221,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+    //grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
