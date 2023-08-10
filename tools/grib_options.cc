@@ -39,6 +39,7 @@ static grib_options_help grib_options_help_list[] = {
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
     { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
+    { "y", "future", "\n\t\tFuture output format.\n" },
     { "g", 0, "Copy GTS header. \n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",
@@ -249,6 +250,10 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
     if (grib_options_on("X:"))
         options->infile_offset = atol(grib_options_get_option("X:"));
+
+    if (grib_options_on("y")) {
+        options->step_output_format = strdup("future");
+    }
 
 #ifndef ECCODES_ON_WINDOWS
     /* Check at compile time to ensure our file offset is at least 64 bits */

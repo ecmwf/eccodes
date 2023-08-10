@@ -137,7 +137,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     auto stepOptimizer = Step(step, indicator);
     stepOptimizer.optimizeUnit();
 
-    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_str());
+    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_as_str().c_str());
 
     *length = strlen(result);
     return GRIB_SUCCESS;
