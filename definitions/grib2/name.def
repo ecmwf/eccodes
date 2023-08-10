@@ -9675,12 +9675,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 2 ;
 	}
-#Montgomery stream Function
-'Montgomery stream Function' = {
-	 discipline = 0 ;
-	 parameterCategory = 2 ;
-	 parameterNumber = 6 ;
-	}
 #Sigma coordinate vertical velocity
 'Sigma coordinate vertical velocity' = {
 	 discipline = 0 ;
