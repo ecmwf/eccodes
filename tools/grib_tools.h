@@ -16,6 +16,7 @@
 #endif
 
 #include "grib_api_internal.h"
+#include <string>
 #include <stdio.h>
 #ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
@@ -174,6 +175,7 @@ typedef struct grib_runtime_options
     grib_values tolerance[MAX_KEYS];
     off_t infile_offset;
     int json_output;
+    char* step_output_format;
 } grib_runtime_options;
 
 extern grib_option grib_options[];
