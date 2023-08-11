@@ -177,22 +177,7 @@ private:
     long unit() const { return unit_; }
     Step& setUnit(Unit new_unit);
     Step(int value, Unit unit);
-    std::vector<std::pair<Unit, long>> unitMap_ = {
-        {Unit::SECOND, 1},
-        {Unit::MINUTE, 60},
-        //{Unit::MINUTES15, 900},
-        //{Unit::MINUTES30, 1800},
-        {Unit::HOUR, 3600},
-        //{Unit::HOURS3, 10800},
-        //{Unit::HOURS6, 21600},
-        //{Unit::HOURS12, 43200},
-        {Unit::DAY, 86400},
-        {Unit::MONTH, 2592000},
-        //{Unit::YEAR, 31536000},
-        //{Unit::YEARS10, 315360000},
-        //{Unit::YEARS30, 946080000},
-        //{Unit::CENTURY, 3153600000},
-    };
+    static std::vector<std::pair<Unit, long>> unitOrder;
     int value_;
     Unit unit_;
     Unit default_unit_ = Unit::HOUR;

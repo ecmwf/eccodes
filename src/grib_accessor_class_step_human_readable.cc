@@ -125,20 +125,52 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     size_t slen = 2;
     long step;
 
-    /* Change units to seconds (highest resolution)
+    //size_t stepOutputFormatSize = 128;
+    //char stepOutputFormat[stepOutputFormatSize];
+    //if ((err = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS) {
+    //    printf("ERROR: unable to get stepOutputFormat stepOutputFormat=%s\n", stepOutputFormat);
+    //    return err;
+    //}
+
+    //if (strcmp(stepOutputFormat, "future") == 0) {
+        /* Change units to seconds (highest resolution)
      * before computing the step value
      */
-    //err = grib_set_string(h, "stepUnits", "s", &slen);
-    //if (err) return err;
-    err = grib_get_long(h, "step", &step);
-    if (err) return err;
+    //    //err = grib_set_string(h, "stepUnits", "s", &slen);
+    //    //if (err) return err;
+    //    err = grib_get_long(h, "step", &step);
+    //    if (err) return err;
 
-    long indicator = grib_get_long(h, "indicatorOfUnitOfTimeRange", &indicator);
-    auto stepOptimizer = Step(step, indicator);
-    stepOptimizer.optimizeUnit();
+    //    long indicator = grib_get_long(h, "indicatorOfUnitOfTimeRange", &indicator);
+    //    auto stepOptimizer = Step(step, indicator);
+    //    stepOptimizer.optimizeUnit();
 
-    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_as_str().c_str());
+    //    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_as_str().c_str());
+    //}
+    //else {
+        long hour, minute, second;
 
+        /* Change units to seconds (highest resolution)
+     * before computing the step value
+     */
+        err = grib_set_string(h, "stepUnits", "s", &slen);
+        if (err) return err;
+        err = grib_get_long(h, "step", &step);
+        if (err) return err;
+
+        hour = step/3600;
+        minute = step/60 % 60;
+        second = step % 60;
+        /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
+
+        if (second) {
+            snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
+        } else {
+            if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
+            else snprintf(result, 1024, "%ldh", hour);
+        }
+
+    //}
     *length = strlen(result);
     return GRIB_SUCCESS;
 }

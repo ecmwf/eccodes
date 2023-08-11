@@ -3,9 +3,27 @@
 #include <utility>
 #include <limits>
 #include <iostream>
+#include <algorithm>
+#include <cassert>
 
 #include "step_optimizer.h"
 
+std::vector<std::pair<Unit, long>> Step::unitOrder = {
+        {Unit::SECOND, 1},
+        {Unit::MINUTE, 60},
+        //{Unit::MINUTES15, 900},
+        //{Unit::MINUTES30, 1800},
+        {Unit::HOUR, 3600},
+        //{Unit::HOURS3, 10800},
+        //{Unit::HOURS6, 21600},
+        //{Unit::HOURS12, 43200},
+        {Unit::DAY, 86400},
+        {Unit::MONTH, 2592000},
+        //{Unit::YEAR, 31536000},
+        //{Unit::YEARS10, 315360000},
+        //{Unit::YEARS30, 946080000},
+        //{Unit::CENTURY, 3153600000},
+    };
 
 std::string parse_step(std::string step) {
     if (step.find_first_of("smhdMYC") == std::string::npos) {
@@ -103,15 +121,17 @@ Step& Step::optimizeUnit() {
             throw std::runtime_error(msg);
     }
 
-    for (auto it = unitMap_.end(); it != unitMap_.begin();) {
-        --it;
+    Seconds d = std::chrono::duration_cast<Seconds>(duration);
+
+    for (auto it = unitOrder.rbegin(); it != unitOrder.rend(); ++it) {
         int multiplier = it->second;
-        if (duration.count() % multiplier == 0) {
+        if (d.count() % multiplier == 0) {
             value_ = duration.count() / multiplier;
             unit_ = it->first;
             return *this;
         }
     }
+
     return *this;
 }
 
@@ -240,7 +260,6 @@ Step operator+(const Step step1, const Step step2) {
     return Step(a.value_ + b.value_, a.unit_);
 }
 
-
 std::pair<Step, Step> findCommonUnits(Step startStep, Step endStep) {
     if (startStep.value_ == 0 || endStep.value_ == 0) {
         if (startStep.value_ == 0 && endStep.value_ == 0) {
@@ -257,9 +276,14 @@ std::pair<Step, Step> findCommonUnits(Step startStep, Step endStep) {
         return {startStep, endStep};
     }
 
-    Unit unit = std::min(startStep.optimizeUnit().unit_, endStep.optimizeUnit().unit_);
-    startStep.setUnit(unit);
-    endStep.setUnit(unit);
+    auto it = std::find_if(Step::unitOrder.begin(), Step::unitOrder.end(), [&](const auto& e) {
+        return e.first == startStep.unit_ || e.first == endStep.unit_;
+    });
+
+    assert(it != Step::unitOrder.end());
+
+    startStep.setUnit(it->first);
+    endStep.setUnit(it->first);
 
     return {startStep, endStep};
 }

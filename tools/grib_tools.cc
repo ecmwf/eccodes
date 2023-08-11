@@ -1201,17 +1201,18 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         break;
                     case GRIB_TYPE_LONG:
                         ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                        if (
-                            (strcmp(options->print_keys[i].name, "indicatorOfUnitOfTimeRange") == 0) ||
-                            (strcmp(options->print_keys[i].name, "indicatorOfUnitForTimeRange") == 0)
-                        )
-                        {
-                            snprintf(value, 32, "%s", StepUnitsTable::to_str(lvalue).c_str());
-                        }
-                        else
-                        {
+                        //if (
+                        //    (strcmp(options->print_keys[i].name, "indicatorOfUnitOfTimeRange") == 0) ||
+                        //    (strcmp(options->print_keys[i].name, "indicatorOfUnitForTimeRange") == 0) && 
+                        //    (strcmp(options->step_output_format, "future") == 0)
+                        //)
+                        //{
+                        //    snprintf(value, 32, "%s", StepUnitsTable::to_str(lvalue).c_str());
+                        //}
+                        //else
+                        //{
                             snprintf(value, 32, "%ld", lvalue);
-                        }
+                        //}
                         break;
                     case GRIB_TYPE_BYTES:
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);

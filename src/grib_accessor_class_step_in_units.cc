@@ -84,12 +84,12 @@ static grib_accessor_class _grib_accessor_class_step_in_units = {
     0,                 /* is_missing */
     &pack_long,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0, //&pack_double,                /* pack_double */
     0,                 /* pack_float */
-    &unpack_double,              /* unpack_double */
+    0, //&unpack_double,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
-    &unpack_string,              /* unpack_string */
+    0, //&pack_string,                /* pack_string */
+    0, //&unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
     0,                 /* pack_bytes */
@@ -306,6 +306,11 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len) {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
+    size_t stepOutputFormatSize = 128;
+    char stepOutputFormat[stepOutputFormatSize];
+    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
+        return ret;
+
     long unit;
     ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &unit);
     if (ret)
@@ -317,7 +322,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len) {
         return ret;
 
     Step step{(int) value, unit};
-    sprintf(val, "%d%s", step.value(), step.unit_as_str().c_str());
+    if (strcmp(stepOutputFormat, "future") == 0) {
+        sprintf(val, "%d%s", step.value(), step.unit_as_str().c_str());
+    }
+    else {
+        sprintf(val, "%d", step.value());
+    }
 
     return GRIB_SUCCESS;
 }
