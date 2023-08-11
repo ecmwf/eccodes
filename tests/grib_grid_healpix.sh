@@ -54,5 +54,17 @@ ${tools_dir}/grib_get_data $tempGrib
 val=$(${tools_dir}/grib_get -l 0,0,1 $tempGrib | tr -d ' ')
 [ "$val" = 5 ]
 
+# Check other iterator-related keys
+cat > $tempFilter <<EOF
+ print "latLonValues=[latLonValues]";
+ print "latitudes=[latitudes]";
+ print "longitudes=[longitudes]";
+ print "distinctLatitudes=[distinctLatitudes]";
+ print "distinctLongitudes=[distinctLongitudes]";
+EOF
+
+${tools_dir}/grib_filter $tempFilter $tempGrib
+
+
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut

@@ -28,10 +28,22 @@ concept orderingConvention(unknown) {
 } : dump;
 alias geography.pointsOrdering = orderingConvention;
 
-# No scanning mode needed; healpix is a standardized way of ordering points
+
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
+flagbit iScansNegatively(scanningMode,7) : dump; # WMO bit 1
+flagbit jScansPositively(scanningMode,6) : dump; # WMO bit 2
+transient iScansPositively = !iScansNegatively : constraint;
+transient jScansNegatively = !jScansPositively : constraint;
+
 
 iterator healpix(numberOfPoints,missingValue,values,Nside,orderingConvention);
 nearest healpix(values,radius,Nx,Ny);
+
+meta latLonValues latlonvalues(values);
+alias latitudeLongitudeValues=latLonValues;
+meta latitudes latitudes(values,0);
+meta longitudes longitudes(values,0);
+meta distinctLatitudes latitudes(values,1);
+meta distinctLongitudes longitudes(values,1);
 
 meta gridName sprintf("H%d", N) : no_copy;
