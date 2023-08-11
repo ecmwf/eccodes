@@ -136,6 +136,13 @@ if [ $HAVE_AEC -eq 0 ]; then
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
 
+# grid_simple_log_preprocessing
+# -----------------------------
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_set -r -s packingType=grid_simple_log_preprocessing $input $temp
+grib_check_key_equals $temp packingType 'grid_simple_log_preprocessing'
+${tools_dir}/grib_compare -c data:n -R packedValues=2e-6 $input $temp
+
 # Large constant fields
 # -----------------------
 input=${data_dir}/sample.grib2
