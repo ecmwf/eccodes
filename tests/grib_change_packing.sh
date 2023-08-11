@@ -168,5 +168,16 @@ set -e
 grep -q "ECCODES ERROR.*no match for packingType=xxxxx" $temp_err
 cat $temp_err
 
+# Set packingType when it is disabled
+# -----------------------------------
+if [ $HAVE_PNG -eq 0 ]; then
+    set +e
+    ${tools_dir}/grib_set -s packingType=grid_png $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp > $temp_err 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "ECCODES ERROR.*PNG support not enabled" $temp_err
+fi
+
 # Clean up
 rm -f $temp $temp_err
