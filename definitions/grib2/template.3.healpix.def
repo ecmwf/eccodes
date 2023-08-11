@@ -11,10 +11,10 @@ alias N = Nside;
 alias numberOfPointsAlongASide = Nside;
 alias geography.Nside = Nside;
 
-# Longitude of first points from first of 12 rhomboids
+# Longitude of the centre line of the first rhomboid
 unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
-alias Lo  = longitudeOfFirstGridPoint;
-alias geography.Lo = Lo;
+alias Lo = longitudeOfFirstGridPoint;
+alias geography.longitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
 
 # Position of the points. Default = Grid points at centres of shape
 codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) = 4 : edition_specific,dump;
@@ -28,13 +28,11 @@ concept orderingConvention(unknown) {
 } : dump;
 alias geography.pointsOrdering = orderingConvention;
 
-
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
 flagbit iScansNegatively(scanningMode,7) : dump; # WMO bit 1
 flagbit jScansPositively(scanningMode,6) : dump; # WMO bit 2
 transient iScansPositively = !iScansNegatively : constraint;
 transient jScansNegatively = !jScansPositively : constraint;
-
 
 iterator healpix(numberOfPoints,missingValue,values,Nside,orderingConvention);
 nearest healpix(values,radius,Nx,Ny);
