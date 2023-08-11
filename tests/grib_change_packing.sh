@@ -136,6 +136,13 @@ if [ $HAVE_AEC -eq 0 ]; then
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
 
+# grid_simple_log_preprocessing
+# -----------------------------
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_set -r -s packingType=grid_simple_log_preprocessing $input $temp
+grib_check_key_equals $temp packingType 'grid_simple_log_preprocessing'
+${tools_dir}/grib_compare -c data:n -R packedValues=2e-6 $input $temp
+
 # Large constant fields
 # -----------------------
 input=${data_dir}/sample.grib2
@@ -167,6 +174,17 @@ set -e
 [ $status -ne 0 ]
 grep -q "ECCODES ERROR.*no match for packingType=xxxxx" $temp_err
 cat $temp_err
+
+# Set packingType when it is disabled
+# -----------------------------------
+if [ $HAVE_PNG -eq 0 ]; then
+    set +e
+    ${tools_dir}/grib_set -s packingType=grid_png $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp > $temp_err 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "ECCODES ERROR.*PNG support not enabled" $temp_err
+fi
 
 # Clean up
 rm -f $temp $temp_err
