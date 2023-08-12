@@ -826,6 +826,28 @@ static int is_constant_field(const double missingValue, const double* data_value
     return constant;
 }
 
+static int write_out_error_data_file(const double* data_values, size_t data_values_count)
+{
+    FILE* ferror;
+    size_t ii, lcount;
+
+    ferror = fopen("error.data", "w");
+    lcount = 0;
+    fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
+    fprintf(ferror, "set values={ ");
+    for (ii = 0; ii < data_values_count - 1; ii++) {
+        fprintf(ferror, "%g, ", data_values[ii]);
+        if (lcount > 10) {
+            fprintf(ferror, "\n");
+            lcount = 0;
+        }
+        lcount++;
+    }
+    fprintf(ferror, "%g }", data_values[data_values_count - 1]);
+    fclose(ferror);
+    return GRIB_SUCCESS;
+}
+
 grib_handle* grib_util_set_spec(grib_handle* h,
                                 const grib_util_grid_spec* spec,
                                 const grib_util_packing_spec* packing_spec,
@@ -927,26 +949,19 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     } while (0)
 
     grib_values values[1024] = {{0,},};
-    size_t count = 0;
-    int i;
-    long editionNumber;
+    grib_context* c = grib_context_get_default();
     grib_handle* h_out    = NULL;
     grib_handle* h_sample = NULL;
     const char* grid_type = NULL;
-    char sample_name[1024]; /* name of sample file */
+    char sample_name[1024]; /* name of the GRIB sample file */
     char input_grid_type[100];
     char input_packing_type[100];
-    long input_bits_per_value       = 0;
-    long input_decimal_scale_factor = 0;
-    size_t len                      = 100;
+    long input_bits_per_value = 0, editionNumber = 0, input_decimal_scale_factor = 0;
+    size_t count = 0, len = 100, slen = 20;
     size_t input_grid_type_len      = 100;
     double laplacianOperator;
-    int packingTypeIsSet          = 0;
-    int setSecondOrder            = 0;
-    int setJpegPacking            = 0;
-    int setCcsdsPacking           = 0;
+    int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
     int convertEditionEarlier     = 0; /* For cases when we cannot set some keys without converting */
-    size_t slen                   = 17;
     int grib1_high_resolution_fix = 0; /* boolean: See GRIB-863 */
     int global_grid               = 0; /* boolean */
     int expandBoundingBox         = 0;
@@ -960,7 +975,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* Get edition number from input handle */
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
-        grib_context* c = grib_context_get_default();
         if (c->write_on_fail) grib_write_message(h, "error.grib", "w");
         return NULL;
     }
@@ -978,8 +992,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
     }
 
-    /* ECC-1201, ECC-1529, ECC-1530
-       Make sure input packing type is preserved */
+    /* ECC-1201, ECC-1529, ECC-1530: Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
         packing_spec->packing_type == GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT)
     {
@@ -1001,7 +1014,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
 
     /* ECC-1269:
      *  Code that was here was moved to "deprecated" directory
-     *  See grib_util.GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING.c
+     *  See grib_util.GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING.
      *  Dealing with obsolete option GRIB_UTIL_SET_SPEC_FLAGS_ONLY_PACKING
     */
 
@@ -1053,7 +1066,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         }
     }
 
-    /* TODO: recycle h_sample handle */
     h_sample = grib_handle_new_from_samples(NULL, sample_name);
     if (!h_sample) {
         *err = GRIB_INVALID_FILE;
@@ -1111,7 +1123,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             COPY_SPEC_LONG(Nj);
             COPY_SPEC_LONG(N);
 
-            /* TODO: Compute here ... */
             COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             COPY_SPEC_DOUBLE(longitudeOfLastGridPointInDegrees);
 
@@ -1191,7 +1202,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
             // Note: DxInMetres and DyInMetres
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
             // TODO(masn): Add other keys like Latin1, LoV etc
-
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
@@ -1243,7 +1253,6 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
                     }
                 }
             }
-
             break;
     }
 
@@ -1469,25 +1478,8 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
         goto cleanup;
     }
 
-    if ((*err = grib_set_double_array(h_out, "values", data_values, data_values_count)) != 0) {
-        FILE* ferror;
-        size_t ii, lcount;
-        grib_context* c = grib_context_get_default();
-
-        ferror = fopen("error.data", "w");
-        lcount = 0;
-        fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
-        fprintf(ferror, "set values={ ");
-        for (ii = 0; ii < data_values_count - 1; ii++) {
-            fprintf(ferror, "%g, ", data_values[ii]);
-            if (lcount > 10) {
-                fprintf(ferror, "\n");
-                lcount = 0;
-            }
-            lcount++;
-        }
-        fprintf(ferror, "%g }", data_values[data_values_count - 1]);
-        fclose(ferror);
+    if ((*err = grib_set_double_array(h_out, "values", data_values, data_values_count)) != GRIB_SUCCESS) {
+        write_out_error_data_file(data_values, data_values_count);
         if (c->write_on_fail) grib_write_message(h_out, "error.grib", "w");
         goto cleanup;
     }
@@ -1610,9 +1602,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     }
 
     /* Disable check: need to re-examine GRIB-864 */
-
 //     if ( (*err = check_handle_against_spec(h_out, editionNumber, spec, global_grid)) != GRIB_SUCCESS) {
-//         grib_context* c=grib_context_get_default();
 //         fprintf(stderr,"GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
 //         if (editionNumber == 1) {
 //             fprintf(stderr,"Note: in GRIB edition 1 latitude and longitude values cannot be represented with sub-millidegree precision.\n");
