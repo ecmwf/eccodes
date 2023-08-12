@@ -826,16 +826,16 @@ static int is_constant_field(const double missingValue, const double* data_value
     return constant;
 }
 
+// Utility function for when we fail to set the GRIB data values.
+// Write out a text file called error.data containing the count of values
+// and the actual values as doubles
 static int write_out_error_data_file(const double* data_values, size_t data_values_count)
 {
-    FILE* ferror;
-    size_t ii, lcount;
-
-    ferror = fopen("error.data", "w");
-    lcount = 0;
+    FILE* ferror = fopen("error.data", "w");
+    size_t lcount = 0;
     fprintf(ferror, "# data_values_count=%zu\n", data_values_count);
     fprintf(ferror, "set values={ ");
-    for (ii = 0; ii < data_values_count - 1; ii++) {
+    for (size_t ii = 0; ii < data_values_count - 1; ii++) {
         fprintf(ferror, "%g, ", data_values[ii]);
         if (lcount > 10) {
             fprintf(ferror, "\n");
@@ -845,6 +845,41 @@ static int write_out_error_data_file(const double* data_values, size_t data_valu
     }
     fprintf(ferror, "%g }", data_values[data_values_count - 1]);
     fclose(ferror);
+    return GRIB_SUCCESS;
+}
+
+static int get_grib_sample_name(grib_handle* h, long editionNumber,
+                                const grib_util_grid_spec2* spec, const char* grid_type, char* sample_name)
+{
+    const size_t sample_name_len = 1024;
+    switch (spec->grid_type) {
+        case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
+        case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
+            /* Choose a sample with the right Gaussian number and edition */
+            snprintf(sample_name, sample_name_len, "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
+            if (spec->pl && spec->pl_size) {
+                /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
+                snprintf(sample_name, sample_name_len, "%s_pl_grib%ld", grid_type, editionNumber);
+            }
+            break;
+        case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
+        case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
+        case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+            snprintf(sample_name, sample_name_len, "GRIB%ld", editionNumber);
+            break;
+        default:
+            snprintf(sample_name, sample_name_len, "%s_pl_grib%ld", grid_type, editionNumber);
+    }
+
+    if (spec->pl && spec->grid_name) {
+        /* Cannot have BOTH pl and grid name specified */
+        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set BOTH spec.pl and spec.grid_name!\n");
+        return GRIB_INTERNAL_ERROR;
+    }
+    if (spec->grid_name) {
+        snprintf(sample_name, sample_name_len, "%s_grib%ld", spec->grid_name, editionNumber);
+    }
+
     return GRIB_SUCCESS;
 }
 
@@ -957,8 +992,7 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     char input_grid_type[100];
     char input_packing_type[100];
     long input_bits_per_value = 0, editionNumber = 0, input_decimal_scale_factor = 0;
-    size_t count = 0, len = 100, slen = 20;
-    size_t input_grid_type_len      = 100;
+    size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
     int convertEditionEarlier     = 0; /* For cases when we cannot set some keys without converting */
@@ -1027,42 +1061,19 @@ grib_handle* grib_util_set_spec2(grib_handle* h,
     SET_STRING_VALUE("gridType", grid_type);
 
     /* The "pl" is given from the template, but "section_copy" will take care of setting the right headers */
-    {
-        switch (spec->grid_type) {
-            case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
-            case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
-                /* Choose a sample with the right Gaussian number and edition */
-                snprintf(sample_name, sizeof(sample_name), "%s_pl_%ld_grib%ld", grid_type, spec->N, editionNumber);
-                if (spec->pl && spec->pl_size) {
-                    /* GRIB-834: pl is given so can use any of the reduced_gg_pl samples */
-                    snprintf(sample_name, sizeof(sample_name), "%s_pl_grib%ld", grid_type, editionNumber);
-                }
-                break;
-            case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
-            case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
-                if (editionNumber == 1) { /* This grid type is not available in edition 1 */
-                    if (h->context->debug == -1)
-                        fprintf(stderr, "ECCODES DEBUG grib_util: '%s' specified "
-                                    "but input is GRIB1. Output must be a higher edition!\n",
-                                    grid_type);
-                    convertEditionEarlier = 1;
-                }
-                snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
-                break;
-            case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
-                snprintf(sample_name, sizeof(sample_name), "GRIB%ld", editionNumber);
-                break;
-            default:
-                snprintf(sample_name, sizeof(sample_name), "%s_pl_grib%ld", grid_type, editionNumber);
-        }
+    if (get_grib_sample_name(h, editionNumber, spec, grid_type, sample_name) != GRIB_SUCCESS) {
+        goto cleanup;
+    }
 
-        if (spec->pl && spec->grid_name) {
-            /* Cannot have BOTH pl and grid name specified */
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set BOTH spec.pl and spec.grid_name!\n");
-            goto cleanup;
-        }
-        if (spec->grid_name) {
-            snprintf(sample_name,sizeof(sample_name), "%s_grib%ld", spec->grid_name, editionNumber);
+    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
+        spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
+        if (editionNumber == 1) { /* These grid types are not available in edition 1 */
+            if (h->context->debug == -1)
+                fprintf(stderr,
+                        "ECCODES DEBUG grib_util: '%s' specified "
+                        "but input is GRIB1. Output must be a higher edition!\n",
+                        grid_type);
+            convertEditionEarlier = 1;
         }
     }
 
