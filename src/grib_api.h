@@ -1231,7 +1231,7 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 
 /**
- *  Reset file handle in multi-field support mode
+ *  Reset file handle in GRIB multi-field support mode
  *
  * @param c            : the context to be modified
  * @param f            : the file pointer
@@ -1334,27 +1334,30 @@ void grib_update_sections_lengths(grib_handle* h);
  * @return           the error message
  */
 const char* grib_get_error_message(int code);
+
 const char* grib_get_type_name(int type);
-
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
-
 void grib_check(const char* call, const char* file, int line, int e, const char* msg);
+
 #define GRIB_CHECK(a, msg)        grib_check(#a, __FILE__, __LINE__, a, msg)
 #define GRIB_CHECK_NOLINE(a, msg) grib_check(#a, 0, 0, a, msg)
-
 
 int grib_set_values(grib_handle* h, grib_values* grib_values, size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Check whether the given key has the value 'missing'.
+   Returns a bool i.e. 0 or 1. The error code is an argument */
 int grib_is_missing(const grib_handle* h, const char* key, int* err);
 
-/* Returns a bool i.e. 0 or 1 */
+/* Check whether the given key is defined (exists).
+   Returns a bool i.e. 0 or 1 */
 int grib_is_defined(const grib_handle* h, const char* key);
 
+/* Set the given key to have the value 'missing' */
 int grib_set_missing(grib_handle* h, const char* key);
-/* The truncation is the Gaussian number (or order) */
+
+/* The truncation is the Gaussian number (also called order) */
 int grib_get_gaussian_latitudes(long truncation, double* latitudes);
 
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day, long* hour, long* minute, long* second);
