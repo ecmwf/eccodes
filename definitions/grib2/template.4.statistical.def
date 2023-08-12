@@ -125,3 +125,4 @@ meta time.validityDate validity_date(date,dataTime,step,stepUnits,yearOfEndOfOve
     monthOfEndOfOverallTimeInterval,dayOfEndOfOverallTimeInterval) : no_copy;
 meta time.validityTime validity_time(date,dataTime,step,stepUnits,hourOfEndOfOverallTimeInterval,
     minuteOfEndOfOverallTimeInterval) : no_copy;
+meta validityDateTime julian_date(validityDate, validityTime) : no_copy;

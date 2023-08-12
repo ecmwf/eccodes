@@ -5,7 +5,6 @@
 #endif
 
 /* action.cc */
-void grib_dump(grib_action* a, FILE* f, int l);
 void grib_xref(grib_action* a, FILE* f, const char* path);
 void grib_action_delete(grib_context* context, grib_action* a);
 int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
@@ -1424,7 +1423,6 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
 grib_string_list* grib_util_get_param_id(const char* mars_param);
 grib_string_list* grib_util_get_mars_param(const char* param_id);
 grib_handle* grib_util_set_spec(grib_handle* h, const grib_util_grid_spec* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
-grib_handle* grib_util_set_spec2(grib_handle* h, const grib_util_grid_spec2* spec, const grib_util_packing_spec* packing_spec, int flags, const double* data_values, size_t data_values_count, int* err);
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 int grib2_is_PDTN_EPS(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_Chemical(long productDefinitionTemplateNumber);

@@ -44,6 +44,7 @@ list(APPEND test_c_bins
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
+    codes_dump_action_tree
     codes_set_samples_path
     codes_compare_keys
     grib_sh_ieee64
@@ -287,6 +288,7 @@ if( HAVE_BUILD_TOOLS )
         grib_statistics
         read_any
         codes_new_from_samples
+        codes_dump_action_tree
         codes_set_samples_path
         codes_compare_keys
         grib_dump

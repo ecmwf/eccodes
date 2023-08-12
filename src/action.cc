@@ -83,7 +83,7 @@ static void init(grib_action_class* c)
 //     GRIB_MUTEX_UNLOCK(&mutex1);
 // }
 
-void grib_dump(grib_action* a, FILE* f, int l)
+static void grib_dump(grib_action* a, FILE* f, int l)
 {
     grib_action_class* c = a->cclass;
     init(c);
@@ -207,6 +207,10 @@ void grib_dump_action_branch(FILE* out, grib_action* a, int decay)
 
 void grib_dump_action_tree(grib_context* ctx, FILE* out)
 {
+    Assert(ctx);
+    Assert(ctx->grib_reader);
+    Assert(ctx->grib_reader->first);
+    Assert(out);
     grib_dump_action_branch(out, ctx->grib_reader->first->root, 0);
 }
 

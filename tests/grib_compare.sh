@@ -13,7 +13,7 @@
 label="grib_compare_test"
 REDIRECT=/dev/null
 
-outfile=temp.$label.$$
+outfile=temp.$label.grib
 rm -f $outfile
 
 
@@ -102,6 +102,20 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+# ----------------------------------------
+# Test -A switch
+# ----------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $infile $temp1
+# max absolute diff. = 3.11
+set +e
+${tools_dir}/grib_compare -b referenceValue -A 3.1  $infile $temp1
+status=$?
+set -e
+[ $status -eq 1 ]
+# Raise the tolerance
+${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
+
 
 # ----------------------------------------
 # ECC-355: -R with "all" option
@@ -163,11 +177,32 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# --------------------------------------------
+# Key='Missing' in one field and not the other
+# --------------------------------------------
+${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
+set +e
+${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
+
+set +e
+${tools_dir}/grib_compare $temp1 $sample_g2 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 2nd field but is not missing in 1st field" $outfile
+
+${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $outfile
+
 
 # ----------------------------------------
 # Test -R overriding "referenceValueError"
 # ----------------------------------------
-sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
 echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
 # Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical

@@ -10149,23 +10149,23 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 225 ;
 	}
-#Maximum total precipitation rate since previous post-processing
+#Maximum total precipitation rate
 'mxtpr' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 226 ;
 	}
-#Minimum total precipitation rate since previous post-processing
+#Minimum total precipitation rate
 'mntpr' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
-'p228229' = {
+'smos_tb_cdfa' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 229 ;
 	}
 #SMOS second Brightness Temperature Bias Correction parameter
-'p228230' = {
+'smos_tb_cdfb' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
 	}
