@@ -7,5 +7,4 @@ extern grib_nearest_class* grib_nearest_class_mercator;
 extern grib_nearest_class* grib_nearest_class_polar_stereographic;
 extern grib_nearest_class* grib_nearest_class_reduced;
 extern grib_nearest_class* grib_nearest_class_regular;
-extern grib_nearest_class* grib_nearest_class_sh;
 extern grib_nearest_class* grib_nearest_class_space_view;

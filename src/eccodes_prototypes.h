@@ -1348,8 +1348,6 @@ grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
 
 /* grib_nearest_class_latlon_reduced.cc*/
 
-/* grib_nearest_class_sh.cc*/
-
 /* grib_nearest_class_lambert_conformal.cc*/
 
 /* grib_nearest_class_polar_stereographic.cc*/

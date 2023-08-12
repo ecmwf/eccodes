@@ -323,7 +323,6 @@ list( APPEND eccodes_src_files
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
-    grib_nearest_class_sh.cc
     grib_nearest_class_lambert_conformal.cc
     grib_nearest_class_lambert_azimuthal_equal_area.cc
     grib_nearest_class_mercator.cc
