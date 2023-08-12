@@ -1403,55 +1403,7 @@ int grib_get_message_size(const grib_handle* h, size_t* size);
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 #define GRIB_UTIL_GRID_SPEC_UNSTRUCTURED                 12
 
-
 typedef struct grib_util_grid_spec
-{
-    int grid_type; /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
-
-    /* Grid */
-    long Ni;
-    long Nj;
-
-    double iDirectionIncrementInDegrees;
-    double jDirectionIncrementInDegrees;
-
-    double longitudeOfFirstGridPointInDegrees;
-    double longitudeOfLastGridPointInDegrees;
-
-    double latitudeOfFirstGridPointInDegrees;
-    double latitudeOfLastGridPointInDegrees;
-
-    /* Rotation */
-    long uvRelativeToGrid;
-    double latitudeOfSouthernPoleInDegrees;
-    double longitudeOfSouthernPoleInDegrees;
-
-    /* Scanning mode */
-    long iScansNegatively;
-    long jScansPositively;
-
-    /* Gaussian number */
-    long N;
-
-    /* Bitmap */
-    long bitmapPresent;
-    double missingValue; /* 0 means use the default */
-
-    /* 'pl' array for reduced Gaussian grids */
-    const long* pl;
-    long pl_size;
-
-    /* Spherical harmonics */
-    long truncation;
-
-    /* Polar stereographic */
-    double orientationOfTheGridInDegrees;
-    long DyInMetres;
-    long DxInMetres;
-
-} grib_util_grid_spec;
-
-typedef struct grib_util_grid_spec2
 {
     int grid_type;         /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
     const char* grid_name; /* e.g. N320 */
@@ -1498,7 +1450,7 @@ typedef struct grib_util_grid_spec2
     long DyInMetres;
     long DxInMetres;
 
-} grib_util_grid_spec2;
+} grib_util_grid_spec;
 
 #define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   1
@@ -1553,14 +1505,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                                 const double* data_values,
                                 size_t data_values_count,
                                 int* err);
-
-grib_handle* grib_util_set_spec2(grib_handle* h,
-                                 const grib_util_grid_spec2* grid_spec,
-                                 const grib_util_packing_spec* packing_spec, /* NULL for defaults (same as input) */
-                                 int flags,
-                                 const double* data_values,
-                                 size_t data_values_count,
-                                 int* err);
 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 grib_handle* grib_new_from_file(grib_context* c, FILE* f, int headers_only, int* error);

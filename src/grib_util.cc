@@ -374,7 +374,7 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
 
 /* For debugging purposes */
 static void print_values(grib_context* c,
-                         const grib_util_grid_spec2* spec,
+                         const grib_util_grid_spec* spec,
                          const grib_util_packing_spec* packing_spec,
                          const double* data_values, const size_t data_values_count, /* the data pay load */
                          const grib_values* keyval_pairs, const size_t count)       /* keys and their values */
@@ -612,7 +612,7 @@ static int check_values(const double* data_values, size_t data_values_count)
     return GRIB_SUCCESS;
 }*/
 
-static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
+static int check_geometry(grib_handle* handle, const grib_util_grid_spec* spec,
                           size_t data_values_count, int specified_as_global)
 {
     int err = 0;
@@ -634,11 +634,12 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec2* spec,
     return err;
 }
 
+
 #if defined(CHECK_HANDLE_AGAINST_SPEC)
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
 static int check_handle_against_spec(grib_handle* handle, const long edition,
-        const grib_util_grid_spec2* spec, int global_grid)
+        const grib_util_grid_spec* spec, int global_grid)
 {
     int err = 0;
     int check_latitudes = 1;
@@ -849,7 +850,7 @@ static int write_out_error_data_file(const double* data_values, size_t data_valu
 }
 
 static int get_grib_sample_name(grib_handle* h, long editionNumber,
-                                const grib_util_grid_spec2* spec, const char* grid_type, char* sample_name)
+                                const grib_util_grid_spec* spec, const char* grid_type, char* sample_name)
 {
     const size_t sample_name_len = 1024;
     switch (spec->grid_type) {
@@ -884,57 +885,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
 }
 
 grib_handle* grib_util_set_spec(grib_handle* h,
-                                const grib_util_grid_spec* spec,
-                                const grib_util_packing_spec* packing_spec,
-                                int flags,
-                                const double* data_values,
-                                size_t data_values_count,
-                                int* err)
-{
-    /* Create a spec v2 from spec v1 */
-    grib_util_grid_spec2 spec2;
-    Assert(h);
-
-    spec2.grid_type                          = spec->grid_type;
-    spec2.Ni                                 = spec->Ni;
-    spec2.Nj                                 = spec->Nj;
-    spec2.iDirectionIncrementInDegrees       = spec->iDirectionIncrementInDegrees;
-    spec2.jDirectionIncrementInDegrees       = spec->jDirectionIncrementInDegrees;
-    spec2.longitudeOfFirstGridPointInDegrees = spec->longitudeOfFirstGridPointInDegrees;
-    spec2.longitudeOfLastGridPointInDegrees  = spec->longitudeOfLastGridPointInDegrees;
-    spec2.latitudeOfFirstGridPointInDegrees  = spec->latitudeOfFirstGridPointInDegrees;
-    spec2.latitudeOfLastGridPointInDegrees   = spec->latitudeOfLastGridPointInDegrees;
-    spec2.uvRelativeToGrid                   = spec->uvRelativeToGrid;
-    spec2.latitudeOfSouthernPoleInDegrees    = spec->latitudeOfSouthernPoleInDegrees;
-    spec2.longitudeOfSouthernPoleInDegrees   = spec->longitudeOfSouthernPoleInDegrees;
-    spec2.iScansNegatively                   = spec->iScansNegatively;
-    spec2.jScansPositively                   = spec->jScansPositively;
-    spec2.N                                  = spec->N;
-    spec2.bitmapPresent                      = spec->bitmapPresent;
-    spec2.missingValue                       = spec->missingValue;
-    spec2.pl                                 = spec->pl;
-    spec2.pl_size                            = spec->pl_size;
-    spec2.truncation                         = spec->truncation;
-    spec2.orientationOfTheGridInDegrees      = spec->orientationOfTheGridInDegrees;
-    spec2.DyInMetres                         = spec->DyInMetres;
-    spec2.DxInMetres                         = spec->DxInMetres;
-
-    /* New data members of spec2 take default values */
-    spec2.angleOfRotationInDegrees = 0;
-    spec2.grid_name                = NULL;
-
-    return grib_util_set_spec2(
-        h,
-        &spec2,
-        packing_spec,
-        flags,
-        data_values,
-        data_values_count,
-        err);
-}
-
-grib_handle* grib_util_set_spec2(grib_handle* h,
-                                 const grib_util_grid_spec2* spec,
+                                 const grib_util_grid_spec* spec,
                                  const grib_util_packing_spec* packing_spec,
                                  int flags,
                                  const double* data_values,
