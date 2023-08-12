@@ -5,7 +5,6 @@
 #endif
 
 /* action.cc */
-void grib_dump(grib_action* a, FILE* f, int l);
 void grib_xref(grib_action* a, FILE* f, const char* path);
 void grib_action_delete(grib_context* context, grib_action* a);
 int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
