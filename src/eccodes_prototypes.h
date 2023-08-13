@@ -491,8 +491,6 @@ grib_nearest* grib_nearest_new(const grib_handle* h, int* error);
 
 /* grib_accessor_class_ksec1expver.cc*/
 
-/* grib_accessor_class_laplacian.cc*/
-
 /* grib_accessor_class_label.cc*/
 
 /* grib_accessor_class_long.cc*/

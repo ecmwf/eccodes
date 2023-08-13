@@ -126,7 +126,6 @@ extern grib_accessor_class* grib_accessor_class_julian_date;
 extern grib_accessor_class* grib_accessor_class_julian_day;
 extern grib_accessor_class* grib_accessor_class_ksec1expver;
 extern grib_accessor_class* grib_accessor_class_label;
-extern grib_accessor_class* grib_accessor_class_laplacian;
 extern grib_accessor_class* grib_accessor_class_latitudes;
 extern grib_accessor_class* grib_accessor_class_latlon_increment;
 extern grib_accessor_class* grib_accessor_class_latlonvalues;

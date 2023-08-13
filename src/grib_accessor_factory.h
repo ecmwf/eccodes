@@ -125,7 +125,6 @@
 { "julian_day", &grib_accessor_class_julian_day, },
 { "ksec1expver", &grib_accessor_class_ksec1expver, },
 { "label", &grib_accessor_class_label, },
-{ "laplacian", &grib_accessor_class_laplacian, },
 { "latitudes", &grib_accessor_class_latitudes, },
 { "latlon_increment", &grib_accessor_class_latlon_increment, },
 { "latlonvalues", &grib_accessor_class_latlonvalues, },
