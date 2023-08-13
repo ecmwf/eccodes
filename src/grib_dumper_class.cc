@@ -81,6 +81,16 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
 {
     grib_dumper* dumper;
     dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    if (!dumper) {
+        fprintf(stderr, "Here are some possible values for the dumper mode:\n");
+        for (size_t i = 0; i < NUMBER(table); i++) {
+            const char* t = table[i].type;
+            if (strstr(t, "bufr") == NULL && strstr(t, "grib") == NULL) {
+                fprintf(stderr, "\t%s\n", t);
+            }
+        }
+        return;
+    }
     grib_dump_header(dumper, h);
     grib_dump_accessors_block(dumper, h->root->block);
     grib_dump_footer(dumper, h);
@@ -92,6 +102,7 @@ void grib_dump_keys(grib_handle* h, FILE* f, const char* mode, unsigned long fla
     size_t i;
     grib_accessor* acc  = NULL;
     grib_dumper* dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    if (!dumper) return;
     for (i = 0; i < num_keys; ++i) {
         acc = grib_find_accessor(h, keys[i]);
         if (acc)
@@ -125,6 +136,7 @@ void codes_dump_bufr_flat(grib_accessors_list* al, grib_handle* h, FILE* f, cons
     grib_dumper* dumper = NULL;
     Assert(h->product_kind == PRODUCT_BUFR);
     dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
+    if (!dumper) return;
     grib_dump_header(dumper, h);
     grib_dump_accessors_list(dumper, al);
     grib_dump_footer(dumper, h);
