@@ -47,6 +47,7 @@ list(APPEND test_c_bins
     codes_dump_action_tree
     codes_set_samples_path
     codes_compare_keys
+    codes_dump_content
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -290,6 +291,7 @@ if( HAVE_BUILD_TOOLS )
         codes_dump_action_tree
         codes_set_samples_path
         codes_compare_keys
+        codes_dump_content
         grib_dump
         grib_dump_debug
         grib_dump_json
