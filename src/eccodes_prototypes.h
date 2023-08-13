@@ -997,7 +997,6 @@ int is_gaussian_global(double lat1, double lat2, double lon1, double lon2, long 
 void rotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 void unrotate(const double inlat, const double inlon, const double angleOfRot, const double southPoleLat, const double southPoleLon, double* outlat, double* outlon);
 double geographic_distance_spherical(double radius, double lon1, double lat1, double lon2, double lat2);
-double geographic_distance_ellipsoid(double major, double minor, double lon1, double lat1, double lon2, double lat2);
 
 /* grib_handle.cc*/
 grib_section* grib_section_create(grib_handle* h, grib_accessor* owner);
