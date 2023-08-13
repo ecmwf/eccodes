@@ -190,7 +190,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g2simple_packing_with_preprocessing.cc
     grib_accessor_class_data_g2shsimple_packing.cc
     grib_accessor_class_data_g2complex_packing.cc
-    grib_accessor_class_data_2order_packing.cc
     grib_accessor_class_data_g1second_order_row_by_row_packing.cc
     grib_accessor_class_data_g1second_order_constant_width_packing.cc
     grib_accessor_class_data_g1second_order_general_packing.cc

@@ -32,7 +32,6 @@ extern grib_accessor_class* grib_accessor_class_constant;
 extern grib_accessor_class* grib_accessor_class_count_file;
 extern grib_accessor_class* grib_accessor_class_count_missing;
 extern grib_accessor_class* grib_accessor_class_count_total;
-extern grib_accessor_class* grib_accessor_class_data_2order_packing;
 extern grib_accessor_class* grib_accessor_class_data_apply_bitmap;
 extern grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic;
 extern grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic_bitmap;

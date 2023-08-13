@@ -591,8 +591,6 @@ void accessor_variable_set_type(grib_accessor* a, int type);
 
 /* grib_accessor_class_data_g2complex_packing.cc*/
 
-/* grib_accessor_class_data_2order_packing.cc*/
-
 /* grib_accessor_class_data_g1second_order_row_by_row_packing.cc*/
 
 /* grib_accessor_class_data_g1second_order_constant_width_packing.cc*/

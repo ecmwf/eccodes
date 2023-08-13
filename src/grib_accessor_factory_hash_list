@@ -33,7 +33,6 @@ constant, &grib_accessor_class_constant
 count_file, &grib_accessor_class_count_file
 count_missing, &grib_accessor_class_count_missing
 count_total, &grib_accessor_class_count_total
-data_2order_packing, &grib_accessor_class_data_2order_packing
 data_apply_bitmap, &grib_accessor_class_data_apply_bitmap
 data_apply_boustrophedonic, &grib_accessor_class_data_apply_boustrophedonic
 data_apply_boustrophedonic_bitmap, &grib_accessor_class_data_apply_boustrophedonic_bitmap
