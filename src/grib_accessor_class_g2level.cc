@@ -309,9 +309,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     // Not sure if this is necessary
     //   if (value_first == GRIB_MISSING_LONG) {
-    //       if ((ret=grib_set_missing_internal(hand, self->scale_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->scale_first)) != GRIB_SUCCESS)
     //           return ret;
-    //       if ((ret=grib_set_missing_internal(hand, self->value_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->value_first)) != GRIB_SUCCESS)
     //           return ret;
     //       return GRIB_SUCCESS;
     //   }

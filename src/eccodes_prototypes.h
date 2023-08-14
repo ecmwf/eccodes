@@ -1179,7 +1179,6 @@ void grib_dependency_observe_arguments(grib_accessor* observer, grib_arguments* 
 
 /* grib_value.cc*/
 int grib_set_expression(grib_handle* h, const char* name, grib_expression* e);
-int grib_set_expression_internal(grib_handle* h, const char* name, grib_expression* e);
 int grib_set_long_internal(grib_handle* h, const char* name, long val);
 int grib_set_long(grib_handle* h, const char* name, long val);
 int grib_set_double_internal(grib_handle* h, const char* name, double val);
@@ -1191,7 +1190,6 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
 int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t* length);
 int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length);
 int grib_clear(grib_handle* h, const char* name);
-int grib_set_missing_internal(grib_handle* h, const char* name);
 int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);

@@ -73,21 +73,6 @@ int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_expression_internal(grib_handle* h, const char* name, grib_expression* e)
-{
-    grib_accessor* a = grib_find_accessor(h, name);
-
-    int ret = GRIB_SUCCESS;
-    if (a) {
-        ret = grib_pack_expression(a, e);
-        if (ret == GRIB_SUCCESS) {
-            return grib_dependency_notify_change(a);
-        }
-        return ret;
-    }
-    return GRIB_NOT_FOUND;
-}
-
 int grib_set_long_internal(grib_handle* h, const char* name, long val)
 {
     grib_context* c  = h->context;
@@ -569,31 +554,6 @@ int grib_clear(grib_handle* h, const char* name)
     }
 
     /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
-    return GRIB_NOT_FOUND;
-}
-
-int grib_set_missing_internal(grib_handle* h, const char* name)
-{
-    int ret          = 0;
-    grib_accessor* a = NULL;
-
-    a = grib_find_accessor(h, name);
-
-    if (a) {
-        if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
-            ret = grib_pack_missing(a);
-            if (ret == GRIB_SUCCESS)
-                return grib_dependency_notify_change(a);
-        }
-        else
-            ret = GRIB_VALUE_CANNOT_BE_MISSING;
-
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=missing (%s)",
-                         name, grib_get_error_message(ret));
-        return ret;
-    }
-
-    grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
