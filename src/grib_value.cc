@@ -1245,11 +1245,11 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
     return GRIB_SUCCESS;
 }
 
-const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
-{
-    grib_accessor* act = grib_find_accessor(h, name);
-    return act ? act->cclass->name : NULL;
-}
+// const char* grib_get_accessor_class_name(grib_handle* h, const char* name)
+// {
+//     grib_accessor* act = grib_find_accessor(h, name);
+//     return act ? act->cclass->name : NULL;
+// }
 
 template <typename T>
 static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
@@ -1434,19 +1434,18 @@ int grib_get_length(const grib_handle* h, const char* name, size_t* length)
     return grib_get_string_length(h, name, length);
 }
 
-int grib_get_count(grib_handle* h, const char* name, size_t* size)
-{
-    grib_accessor* a = grib_find_accessor(h, name);
-    if (!a)
-        return GRIB_NOT_FOUND;
-
-    *size = 0;
-    while (a) {
-        (*size)++;
-        a = a->same;
-    }
-    return GRIB_SUCCESS;
-}
+// int grib_get_count(grib_handle* h, const char* name, size_t* size)
+// {
+//     grib_accessor* a = grib_find_accessor(h, name);
+//     if (!a)
+//         return GRIB_NOT_FOUND;
+//     *size = 0;
+//     while (a) {
+//         (*size)++;
+//         a = a->same;
+//     }
+//     return GRIB_SUCCESS;
+// }
 
 int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 {
