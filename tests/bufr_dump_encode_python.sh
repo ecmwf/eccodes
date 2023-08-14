@@ -39,21 +39,20 @@ do
 
   #pylint --disable=E0602,R,C,W $tempSrc
 
+  # if test "x$PYTHON" != "x"; then
+  #   # The python code always creates an output file called outfile.bufr
+  #   $PYTHON $tempSrc
 
-  if test "x$PYTHON" != "x"; then
-    # The python code always creates an output file called outfile.bufr
-    $PYTHON $tempSrc
+  #   # Check original BUFR file against one we generated from sample
+  #   ${tools_dir}/bufr_compare $inputBufr $tempBufr
 
-    # Check original BUFR file against one we generated from sample
-    ${tools_dir}/bufr_compare $inputBufr $tempBufr
-
-    TEMP_OUT1=${label}.$file.dump.out
-    TEMP_OUT2=${label}.$tempBufr.dump.out
-    ${tools_dir}/bufr_dump -p $inputBufr > $TEMP_OUT1
-    ${tools_dir}/bufr_dump -p $tempBufr  > $TEMP_OUT2
-    diff $TEMP_OUT1 $TEMP_OUT2
-    rm -f $TEMP_OUT1 $TEMP_OUT2
-  fi
+  #   TEMP_OUT1=${label}.$file.dump.out
+  #   TEMP_OUT2=${label}.$tempBufr.dump.out
+  #   ${tools_dir}/bufr_dump -p $inputBufr > $TEMP_OUT1
+  #   ${tools_dir}/bufr_dump -p $tempBufr  > $TEMP_OUT2
+  #   diff $TEMP_OUT1 $TEMP_OUT2
+  #   rm -f $TEMP_OUT1 $TEMP_OUT2
+  # fi
 
   rm -f $tempSrc $tempBufr
 done

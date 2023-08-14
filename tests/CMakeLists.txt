@@ -318,6 +318,8 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_extra grib_tigge_conversions2)
         list(APPEND tests_extra bufr_dump_encode_C)
         list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra bufr_dump_encode_python)
+        list(APPEND tests_extra bufr_dump_decode_python)
         list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 

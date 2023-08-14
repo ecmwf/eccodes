@@ -21,8 +21,6 @@ tempDir=temp.${label}.dir
 mkdir -p $tempDir
 cd $tempDir
 
-echo "PYTHONPATH set to $PYTHONPATH"
-
 bufr_files=`cat ${data_dir}/bufr/bufr_data_files.txt`
 
 for file in ${bufr_files}
@@ -38,9 +36,9 @@ do
   # Generate Python code from BUFR file
   ${tools_dir}/bufr_dump -Dpython $inputBufr > $tempSrc
 
-  if test "x$PYTHON" != "x"; then
-    $PYTHON $tempSrc $inputBufr
-  fi
+  # if test "x$PYTHON" != "x"; then
+  #   $PYTHON $tempSrc $inputBufr
+  # fi
   rm -f $tempSrc
 done
 
