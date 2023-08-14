@@ -2765,16 +2765,16 @@
 	 parameterNumber = 56 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
-#Maximum total precipitation rate
-'Maximum total precipitation rate' = {
+#Maximum total precipitation rate since previous post-processing
+'Maximum total precipitation rate since previous post-processing' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
 	}
-#Minimum total precipitation rate
-'Minimum total precipitation rate' = {
+#Minimum total precipitation rate since previous post-processing
+'Minimum total precipitation rate since previous post-processing' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 52 ;
