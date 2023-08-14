@@ -1393,38 +1393,32 @@ int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
     return err;
 }
 
-grib_handle* grib_handle_new(grib_context* c)
-{
-    grib_handle* h;
-
-    if (!c)
-        c = grib_context_get_default();
-    h         = grib_new_handle(c);
-    h->buffer = grib_create_growable_buffer(c);
-    if (h->buffer == NULL) {
-        grib_handle_delete(h);
-        return NULL;
-    }
-    h->root = grib_create_root_section(h->context, h);
-
-    if (!h->root) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create root section");
-        grib_handle_delete(h);
-        return NULL;
-    }
-
-    if (!h->context->grib_reader || !h->context->grib_reader->first) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create handle, no definitions found");
-        grib_handle_delete(h);
-        return NULL;
-    }
-
-    h->buffer->property = GRIB_USER_BUFFER;
-
-    h->header_mode = 1;
-
-    return h;
-}
+// grib_handle* grib_handle_new(grib_context* c)
+// {
+//     grib_handle* h;
+//     if (!c)
+//         c = grib_context_get_default();
+//     h         = grib_new_handle(c);
+//     h->buffer = grib_create_growable_buffer(c);
+//     if (h->buffer == NULL) {
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     h->root = grib_create_root_section(h->context, h);
+//     if (!h->root) {
+//         grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create root section");
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     if (!h->context->grib_reader || !h->context->grib_reader->first) {
+//         grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create handle, no definitions found");
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     h->buffer->property = GRIB_USER_BUFFER;
+//     h->header_mode = 1;
+//     return h;
+// }
 
 grib_action* grib_action_from_filter(const char* filter)
 {
@@ -1459,22 +1453,22 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
     return GRIB_SUCCESS;
 }
 
-int grib_handle_prepare_action(grib_handle* h, grib_action* a)
-{
-    int err;
+// int grib_handle_prepare_action(grib_handle* h, grib_action* a)
+// {
+//     int err;
 
-    if (!a)
-        return GRIB_SUCCESS; /* TODO: return error */
+//     if (!a)
+//         return GRIB_SUCCESS; /* TODO: return error */
 
-    while (a) {
-        err = grib_action_execute(a, h);
-        if (err != GRIB_SUCCESS)
-            return err;
-        a = a->next;
-    }
+//     while (a) {
+//         err = grib_action_execute(a, h);
+//         if (err != GRIB_SUCCESS)
+//             return err;
+//         a = a->next;
+//     }
 
-    return GRIB_SUCCESS;
-}
+//     return GRIB_SUCCESS;
+// }
 
 static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
 {
