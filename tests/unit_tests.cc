@@ -428,6 +428,8 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_UNDEFINED, values1, &count);
     Assert( !err );
     Assert( count == 2 );
+    grib_print_values("print values test: values1", values1);
+
     Assert( strcmp(values1[0].name, "key1")==0 );
     Assert( strcmp(values1[0].string_value, "value1")==0 );
     Assert( values1[0].equal == 1 );
@@ -446,6 +448,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_LONG, values2, &count);
     Assert( !err );
     Assert( count == 1 );
+    grib_print_values("print values test: values2", values2);
     Assert( strcmp(values2[0].name, "x")==0 );
     Assert( values2[0].long_value == 14 );
     Assert( values2[0].equal == 1 );
@@ -456,6 +459,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_DOUBLE, values3, &count);
     Assert( !err );
     Assert( count == 1 );
+    grib_print_values("print values test: values3", values3);
     Assert( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
 }
