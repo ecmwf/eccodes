@@ -177,6 +177,11 @@ infile=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -r -s packingType=grid_second_order $infile $temp1
 grib_check_key_equals $temp1 packingType grid_simple
 
+export ECCODES_GRIBEX_BOUSTROPHEDONIC=1
+${tools_dir}/grib_get -n statistics boustrophedonic.grib1
+${tools_dir}/grib_set -s scaleValuesBy=1.1 boustrophedonic.grib1 $temp1
+unset ECCODES_GRIBEX_BOUSTROPHEDONIC
+
 
 # Clean up
 rm -f $temp_stat1 $temp_stat2

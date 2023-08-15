@@ -1231,7 +1231,7 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 
 /**
- *  Reset file handle in multi-field support mode
+ *  Reset file handle in GRIB multi-field support mode
  *
  * @param c            : the context to be modified
  * @param f            : the file pointer
@@ -1334,27 +1334,30 @@ void grib_update_sections_lengths(grib_handle* h);
  * @return           the error message
  */
 const char* grib_get_error_message(int code);
+
 const char* grib_get_type_name(int type);
-
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
-
 void grib_check(const char* call, const char* file, int line, int e, const char* msg);
+
 #define GRIB_CHECK(a, msg)        grib_check(#a, __FILE__, __LINE__, a, msg)
 #define GRIB_CHECK_NOLINE(a, msg) grib_check(#a, 0, 0, a, msg)
-
 
 int grib_set_values(grib_handle* h, grib_values* grib_values, size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Check whether the given key has the value 'missing'.
+   Returns a bool i.e. 0 or 1. The error code is an argument */
 int grib_is_missing(const grib_handle* h, const char* key, int* err);
 
-/* Returns a bool i.e. 0 or 1 */
+/* Check whether the given key is defined (exists).
+   Returns a bool i.e. 0 or 1 */
 int grib_is_defined(const grib_handle* h, const char* key);
 
+/* Set the given key to have the value 'missing' */
 int grib_set_missing(grib_handle* h, const char* key);
-/* The truncation is the Gaussian number (or order) */
+
+/* The truncation is the Gaussian number (also called order) */
 int grib_get_gaussian_latitudes(long truncation, double* latitudes);
 
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day, long* hour, long* minute, long* second);
@@ -1400,55 +1403,7 @@ int grib_get_message_size(const grib_handle* h, size_t* size);
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 #define GRIB_UTIL_GRID_SPEC_UNSTRUCTURED                 12
 
-
 typedef struct grib_util_grid_spec
-{
-    int grid_type; /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
-
-    /* Grid */
-    long Ni;
-    long Nj;
-
-    double iDirectionIncrementInDegrees;
-    double jDirectionIncrementInDegrees;
-
-    double longitudeOfFirstGridPointInDegrees;
-    double longitudeOfLastGridPointInDegrees;
-
-    double latitudeOfFirstGridPointInDegrees;
-    double latitudeOfLastGridPointInDegrees;
-
-    /* Rotation */
-    long uvRelativeToGrid;
-    double latitudeOfSouthernPoleInDegrees;
-    double longitudeOfSouthernPoleInDegrees;
-
-    /* Scanning mode */
-    long iScansNegatively;
-    long jScansPositively;
-
-    /* Gaussian number */
-    long N;
-
-    /* Bitmap */
-    long bitmapPresent;
-    double missingValue; /* 0 means use the default */
-
-    /* 'pl' array for reduced Gaussian grids */
-    const long* pl;
-    long pl_size;
-
-    /* Spherical harmonics */
-    long truncation;
-
-    /* Polar stereographic */
-    double orientationOfTheGridInDegrees;
-    long DyInMetres;
-    long DxInMetres;
-
-} grib_util_grid_spec;
-
-typedef struct grib_util_grid_spec2
 {
     int grid_type;         /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
     const char* grid_name; /* e.g. N320 */
@@ -1495,7 +1450,7 @@ typedef struct grib_util_grid_spec2
     long DyInMetres;
     long DxInMetres;
 
-} grib_util_grid_spec2;
+} grib_util_grid_spec;
 
 #define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   1
@@ -1550,14 +1505,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                                 const double* data_values,
                                 size_t data_values_count,
                                 int* err);
-
-grib_handle* grib_util_set_spec2(grib_handle* h,
-                                 const grib_util_grid_spec2* grid_spec,
-                                 const grib_util_packing_spec* packing_spec, /* NULL for defaults (same as input) */
-                                 int flags,
-                                 const double* data_values,
-                                 size_t data_values_count,
-                                 int* err);
 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 grib_handle* grib_new_from_file(grib_context* c, FILE* f, int headers_only, int* error);

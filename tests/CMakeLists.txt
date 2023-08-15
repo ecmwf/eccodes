@@ -44,8 +44,10 @@ list(APPEND test_c_bins
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
+    codes_dump_action_tree
     codes_set_samples_path
     codes_compare_keys
+    codes_dump_content
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -74,6 +76,7 @@ if( HAVE_BUILD_TOOLS )
     # and are generally quick
     list(APPEND tests_basic
         codes_info
+        codes_deprecated
         unit_tests
         julian
         grib_dump_samples
@@ -149,6 +152,7 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
@@ -236,6 +240,7 @@ if( HAVE_BUILD_TOOLS )
         metar_compare
         bufr_set
         grib_ieee
+        grib1_gds_not_present
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh
@@ -283,8 +288,11 @@ if( HAVE_BUILD_TOOLS )
         grib_statistics
         read_any
         codes_new_from_samples
+        codes_dump_action_tree
         codes_set_samples_path
         codes_compare_keys
+        codes_dump_content
+        codes_to_double
         grib_dump
         grib_dump_debug
         grib_dump_json
@@ -310,6 +318,8 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_extra grib_tigge_conversions2)
         list(APPEND tests_extra bufr_dump_encode_C)
         list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra bufr_dump_encode_python)
+        list(APPEND tests_extra bufr_dump_decode_python)
         list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 

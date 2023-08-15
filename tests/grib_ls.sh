@@ -191,5 +191,16 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid type for key=shortName" $tempText
 
+# Do list after an offset
+file=tigge_pf_ecmwf.grib2
+${tools_dir}/grib_ls -X 62414 $file
+set +e
+${tools_dir}/grib_ls -X -1 $file > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid file offset" $tempText
+
+
 # Clean up
 rm -f $temp1 $temp2 $tempText $tempLog

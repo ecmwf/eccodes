@@ -1,3 +1,5 @@
+constant isGridded = one;
+
 #  Scanning mode
 flags[1] scanningMode 'grib1/8.table' : edition_specific,no_copy;
 

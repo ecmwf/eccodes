@@ -1,134 +1,117 @@
-/*
- * (C) Copyright 2005- ECMWF.
- *
- * This software is licensed under the terms of the Apache Licence Version 2.0
- * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
- */
+#include "Accessor.h"
 
-#include "cpp/eccodes/accessor/Accessor.h"
-#include <map>
-#include <sstream>
+#include "grib_api_internal.h"
 
-namespace eccodes
+namespace eccodes::accessor {
+
+Accessor::Accessor(std::unique_ptr<AccessorData> data, grib_section* p, grib_action* creator)
+    : data_{std::move(data)}
+    , name_{creator->name}
+    , nameSpace_{creator->name_space}
+    , context_{p->h->context}
+    , handle_{p->h} // for now!
+    , creator_{creator}
+    , allNames_{{name_}}
+    , allNameSpaces_{{nameSpace_}}
 {
-namespace accessor
-{
-
-
-#if CODE_USING_ECKIT
-
-int Accessor::pack_bytes(const unsigned char* val, size_t* len)
-{
-    std::ostringstream os;
-    os << "Accessor::pack_bytes() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    // TODO
+    // Finish "Gen" Init;
 }
 
-int Accessor::pack_double(const double* v, size_t* len)
+void Accessor::dump(grib_dumper const& dumper) const
 {
-    std::ostringstream os;
-    os << "Accessor::pack_double() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return data_->dump(dumper);
 }
 
-int Accessor::pack_expression(grib_expression* e)
+long Accessor::nextOffset() const
 {
-    std::ostringstream os;
-    os << "Accessor::pack_expression() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return GRIB_NOT_IMPLEMENTED; // TO DO
 }
 
-int Accessor::pack_long(const long* v, size_t* len)
+std::size_t Accessor::stringLength() const
 {
-    std::ostringstream os;
-    os << "Accessor::pack_long() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return data_->stringLength();
 }
 
-int Accessor::pack_string(const char* v, size_t* len)
+int Accessor::valueCount(long& count) const
 {
-    std::ostringstream os;
-    os << "Accessor::pack_string() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return data_->valueCount(count);
 }
 
-int Accessor::pack_string_array(const char** v, size_t* len)
+long Accessor::byteCount() const
 {
-    std::ostringstream os;
-    os << "Accessor::pack_string() not implemented for " << *this;
-    throw exception::SeriousBug(os.str());
+    return data_->byteCount();
 }
 
-
-
-static util::once_flag once;
-static util::recursive_mutex* local_mutex         = nullptr;
-static std::map<std::string, AccessorFactory*>* m = nullptr;
-
-static void init()
+long Accessor::byteOffset() const
 {
-    local_mutex = new util::recursive_mutex();
-    m           = new std::map<std::string, AccessorFactory*>();
+    return data_->byteOffset();
 }
 
-
-AccessorFactory::AccessorFactory(const std::string& name) :
-    name_(name)
+int Accessor::nativeType() const
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    if (m->find(name) != m->end()) {
-        throw exception::SeriousBug("AccessorFactory: duplicate '" + name + "'");
-    }
-
-    ASSERT(m->find(name) == m->end());
-    (*m)[name] = this;
+    return data_->nativeType();
 }
 
-AccessorFactory::~AccessorFactory()
+grib_section* Accessor::subSection() const
 {
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    m->erase(name_);
+    return subSection_;
 }
 
-
-Accessor* AccessorFactory::build(std::string& name, long length, grib_arguments* args)
+int Accessor::notify_change(AccessorPtr const observed) const
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-    std::string name;
-    if (!params.get("gridType", name)) {
-        throw exception::SeriousBug("AccessorFactory: cannot get 'gridType'");
-    }
-
-    Log::debug() << "AccessorFactory: looking for '" << name << "'" << std::endl;
-
-    auto j = m->find(name);
-    if (j == m->end()) {
-        list(Log::error() << "AccessorFactory: unknown '" << name << "', choices are: ");
-        throw exception::SeriousBug("AccessorFactory: unknown '" + name + "'");
-    }
-
-    return j->second->make(length, args);
+    return GRIB_NOT_IMPLEMENTED; // TO DO
 }
 
-
-void AccessorFactory::list(std::ostream& out)
+void Accessor::updateSize(std::size_t s) const
 {
-    util::call_once(once, init);
-    util::lock_guard<util::recursive_mutex> lock(*local_mutex);
-
-    const char* sep = "";
-    for (const auto& j : *m) {
-        out << sep << j.first;
-        sep = ", ";
-    }
+    return data_->updateSize(s);
 }
-#endif
 
+std::size_t Accessor::preferredSize(int fromHandle) const
+{
+    return data_->preferredSize(fromHandle);
+}
 
-}  // namespace accessor
-}  // namespace eccodes
+void Accessor::resize(size_t newSize) const
+{
+    return data_->resize(newSize);
+}
+
+int Accessor::nearestSmallerValue(double val, double& nearest) const
+{
+    return data_->nearestSmallerValue(val, nearest);
+}
+
+AccessorPtr Accessor::next(int mod)
+{
+    return nullptr; // TO DO
+}
+
+int Accessor::compare(AccessorPtr const rhs) const
+{
+    return data_->compare(*rhs->data_);
+}
+
+int Accessor::packMissing() const
+{
+    return data_->packMissing();
+}
+
+int Accessor::isMissing() const
+{
+    return data_->isMissing();
+}
+
+int Accessor::pack(grib_expression const& expression)
+{
+    return data_->pack(expression);
+}
+
+int Accessor::unpackSubarray(std::vector<double> &values, std::size_t start) const
+{
+    return data_->unpackSubarray(values, start);
+}
+
+}
+

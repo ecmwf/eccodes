@@ -127,3 +127,5 @@ alias md5GridSection = md5Section3;
 meta  projSourceString proj_string(gridType, 0): hidden;
 meta  projTargetString proj_string(gridType, 1): hidden;
 alias projString = projTargetString : hidden;
+
+constant isSpectral = !isGridded : constraint;

@@ -118,7 +118,7 @@ static void new_keys_list()
     grib_context* c = grib_context_get_default();
     keys_list       = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!keys_list) {
-        fprintf(stderr, "Failed to allocate memory for keys list");
+        fprintf(stderr, "%s: Failed to allocate memory for keys list", tool_name);
         exit(1);
     }
 }
@@ -281,11 +281,11 @@ int grib_tool_init(grib_runtime_options* options)
         headerMode = 0;
 
     if (grib_options_on("H") && grib_options_on("c:")) {
-        fprintf(stderr, "Error: -H and -c options are incompatible. Choose one of the two please.\n");
+        fprintf(stderr, "%s: -H and -c options are incompatible. Choose one of the two please.\n",tool_name);
         exit(1);
     }
     if (grib_options_on("a") && !grib_options_on("c:")) {
-        fprintf(stderr, "Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
+        fprintf(stderr, "%s: -a option requires -c option. Please define a list of keys with the -c option.\n",tool_name);
         exit(1);
     }
 
@@ -314,8 +314,8 @@ int grib_tool_init(grib_runtime_options* options)
         options->idx     = grib_fieldset_new_from_files(context, filename,
                                                     nfiles, 0, 0, 0, orderby, &ret);
         if (ret) {
-            fprintf(stderr, "unable to create index for input file %s (%s)",
-                    options->infile_extra->name, grib_get_error_message(ret));
+            fprintf(stderr, "%s: Unable to create index for input file %s (%s)",
+                    tool_name, options->infile_extra->name, grib_get_error_message(ret));
             exit(ret);
         }
     }

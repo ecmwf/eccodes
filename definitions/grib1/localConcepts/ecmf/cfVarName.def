@@ -10160,12 +10160,12 @@
 	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
-'p228229' = {
+'smos_tb_cdfa' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 229 ;
 	}
 #SMOS second Brightness Temperature Bias Correction parameter
-'p228230' = {
+'smos_tb_cdfb' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
 	}
@@ -17814,12 +17814,12 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
+#U-component surface stokes drift
 'ust' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
+#V-component surface stokes drift
 'vst' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;

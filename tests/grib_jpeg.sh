@@ -124,4 +124,11 @@ stats=`${tools_dir}/grib_get -M -F%.2f -p min,max $tempGrib`
 [ "$stats" = "-0.01 98.99" ]
 
 
+# Constant field
+${tools_dir}/grib_set -d1 ${data_dir}/jpeg.grib2 $tempGrib
+grib_check_key_equals $tempGrib isConstant 1
+${tools_dir}/grib_ls -n statistics $tempGrib
+
+
+# Clean up
 rm -f $tempFilt $tempGrib

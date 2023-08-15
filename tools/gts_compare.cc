@@ -42,9 +42,7 @@ const char* tool_description =
 
 const char* tool_name = "gts_compare";
 const char* tool_online_doc = NULL;
-const char* tool_usage =
-    "[options] "
-    "file file";
+const char* tool_usage = "[options] file file";
 
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -157,9 +155,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret               = 0;
-    int nfiles            = 1;
-    char orderby[]        = "md5Headers";
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
@@ -218,27 +213,12 @@ int grib_tool_init(grib_runtime_options* options)
         context->blocklist = blocklist;
     }
 
-    if (grib_options_on("r")) {
-        const char* filename[1];
-        filename[0]      = options->infile_extra->name;
-        options->random  = 1;
-        options->orderby = strdup(orderby);
-        options->idx     = grib_fieldset_new_from_files(context, filename,
-                                                    nfiles, 0, 0, 0, orderby, &ret);
-        if (ret) {
-            printf("unable to create index for input file %s (%s)",
-                   options->infile_extra->name, grib_get_error_message(ret));
-            exit(ret);
-        }
-    }
-    else {
-        options->random             = 0;
-        options->infile_extra->file = fopen(options->infile_extra->name, "r");
+    options->random             = 0;
+    options->infile_extra->file = fopen(options->infile_extra->name, "r");
 
-        if (!options->infile_extra->file) {
-            perror(options->infile_extra->name);
-            exit(1);
-        }
+    if (!options->infile_extra->file) {
+        perror(options->infile_extra->name);
+        exit(1);
     }
 
     if (grib_options_on("t:"))
@@ -279,19 +259,6 @@ static void printInfo(grib_handle* h)
     lastPrint = count;
 }
 
-static void print_index_key_values(grib_index* index, int cnt, const char* error_message)
-{
-    grib_index_key* keys = index->keys;
-    printf("== %d == ", cnt);
-    if (error_message)
-        printf("%s == ", error_message);
-    while (keys) {
-        printf("%s=%s ", keys->name, keys->value);
-        keys = keys->next;
-    }
-    printf("\n");
-}
-
 static grib_handle* gts_handle_new_from_file_x(
     grib_context* c, FILE* f, int mode, int headers_only, int* err)
 {
@@ -303,51 +270,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int err = 0;
     count++;
 
-    if (options->through_index) {
-        grib_index* idx1 = options->index1;
-        verbose          = 0;
-        counter++;
-
-        if (start > 0 && counter < start)
-            return 0;
-        if (end > 0 && counter > end) {
-            options->stop = 1;
-            return 0;
-        }
-
-        grib_index_search_same(idx1, h);
-        global_handle = codes_new_from_index(idx1, CODES_GTS, &err);
-        if (options->verbose) {
-            off_t offset   = 0;
-            char* filename = grib_get_field_file(options->index2, &offset);
-            printf("file1=\"%s\" ", filename);
-            filename = grib_get_field_file(options->index1, &offset);
-            printf("file2=\"%s\" \n", filename);
-            print_index_key_values(options->index1, counter, NULL);
-        }
-
-        if (!global_handle) {
-            if (!options->verbose)
-                print_index_key_values(idx1, counter, "NOT FOUND ");
-        }
-
-        if (!global_handle || err != GRIB_SUCCESS) {
-            morein1++;
-            grib_handle_delete(global_handle);
-            return 0;
-        }
-
-        if (compare_handles(h, global_handle, options)) {
-            error++;
-            if (!force)
-                exit(1);
-        }
-
-        grib_handle_delete(global_handle);
-
-        return 0;
-    }
-    else if (options->random)
+    if (options->random)
         global_handle = grib_fieldset_next_handle(options->idx, &err);
     else
         global_handle = gts_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
@@ -429,10 +352,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
         }
 
         printf("##\n## %d different messages out of %d\n\n", error, count);
-    }
-    if (options->through_index) {
-        grib_index_delete(options->index1);
-        grib_index_delete(options->index2);
     }
 
     if (error != 0)

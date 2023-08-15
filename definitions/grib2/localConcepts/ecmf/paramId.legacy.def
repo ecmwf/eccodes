@@ -1183,3 +1183,45 @@
  parameterCategory = 140 ;
  parameterNumber = 253 ;
 }
+#Montgomery stream Function
+'53' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 53 ;
+}
+#Water fraction
+'26' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 26 ;
+}
+#Anisotropy of sub-gridscale orography
+'161' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 161 ;
+}
+#Angle of sub-gridscale orography
+'162' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 162 ;
+}
+#Slope of sub-gridscale orography
+'163' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 163 ;
+}
+#U-component surface stokes drift
+'140215' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 215 ;
+}
+#V-component surface stokes drift
+'140216' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 216 ;
+}

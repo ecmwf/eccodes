@@ -57,7 +57,6 @@ list( APPEND eccodes_src_files
     grib_iarray.cc
     grib_viarray.cc
     codes_memfs.cc
-    grib_accessor_class_assert.cc
     grib_accessor_class_ascii.cc
     grib_accessor_class_bit.cc
     grib_accessor_class_bitmap.cc
@@ -98,7 +97,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_double.cc
     grib_accessor_class_element.cc
     grib_accessor_class_evaluate.cc
-    grib_accessor_class_g1area.cc
     grib_accessor_class_g1date.cc
     grib_accessor_class_g1monthlydate.cc
     grib_accessor_class_library_version.cc
@@ -131,11 +129,9 @@ list( APPEND eccodes_src_files
     grib_accessor_class_latlonvalues.cc
     grib_accessor_class_latitudes.cc
     grib_accessor_class_longitudes.cc
-    grib_accessor_class_missing.cc
     grib_accessor_class_offset_file.cc
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
-    grib_accessor_class_times.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc
@@ -144,7 +140,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
     grib_accessor_class_ksec1expver.cc
-    grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
     grib_accessor_class_long.cc
     grib_accessor_class_lookup.cc
@@ -195,7 +190,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g2simple_packing_with_preprocessing.cc
     grib_accessor_class_data_g2shsimple_packing.cc
     grib_accessor_class_data_g2complex_packing.cc
-    grib_accessor_class_data_2order_packing.cc
     grib_accessor_class_data_g1second_order_row_by_row_packing.cc
     grib_accessor_class_data_g1second_order_constant_width_packing.cc
     grib_accessor_class_data_g1second_order_general_packing.cc
@@ -327,7 +321,6 @@ list( APPEND eccodes_src_files
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
-    grib_nearest_class_sh.cc
     grib_nearest_class_lambert_conformal.cc
     grib_nearest_class_lambert_azimuthal_equal_area.cc
     grib_nearest_class_mercator.cc
@@ -396,6 +389,14 @@ list( APPEND eccodes_extra_src_files
     encode_double_array.cc
     grib_bits_ibmpow.cc
     grib_bits_ibmpow_opt.cc )
+
+# C++ Support
+add_subdirectory(cpp)
+#add_subdirectory(converted)
+list( APPEND eccodes_src_files
+    ${eccodes_accessor_cplusplus_files}
+#    ${eccodes_accessor_converted_cplusplus_files}
+    )
 
 if(UNIX)
     ecbuild_get_date(eccodes_BUILD_DATE)

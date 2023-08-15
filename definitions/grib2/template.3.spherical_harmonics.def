@@ -26,3 +26,5 @@ alias spectralDataRepresentationType=spectralType;
 #  Representation mode indicating the order of the coefficients
 codetable[1] spectralMode ('3.7.table',masterDir,localDir) = 1 : no_copy;
 alias spectralDataRepresentationMode=spectralMode;
+
+constant isGridded = zero;

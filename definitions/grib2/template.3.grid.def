@@ -1,5 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
+constant isGridded = one;
+
 unsigned[4] Ni : can_be_missing,dump;
 alias numberOfPointsAlongAParallel=Ni;
 alias Nx = Ni;

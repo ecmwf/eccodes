@@ -265,7 +265,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         const char* optionStr = grib_options_get_option("d:");
         options->constant     = strtod(optionStr, &endPtr);
         if (*endPtr) {
-            fprintf(stderr, "Invalid number for -d option: '%s'\n", optionStr);
+            fprintf(stderr, "%s: Invalid number for -d option: '%s'\n", tool_name, optionStr);
             exit(1);
         }
         options->repack = 1;

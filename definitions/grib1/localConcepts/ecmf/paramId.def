@@ -17814,12 +17814,12 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
+#U-component surface stokes drift
 '140215' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
+#V-component surface stokes drift
 '140216' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;
