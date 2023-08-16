@@ -1287,10 +1287,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             keep_matrix = 0; /* ECC-911 */
         }
         if (keep_matrix) {
-            int ret;
             SET_STRING_VALUE("packingType", "grid_simple_matrix");
-            ret = grib_get_long(h, "numberOfDirections", &numberOfDirections);
-            if (ret == GRIB_SUCCESS) {
+            if (GRIB_SUCCESS == grib_get_long(h, "numberOfDirections", &numberOfDirections)) {
                 grib_get_long(h, "numberOfDirections", &numberOfDirections);
                 SET_LONG_VALUE("NC1", numberOfDirections);
                 grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
