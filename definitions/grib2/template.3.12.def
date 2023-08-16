@@ -11,8 +11,9 @@ alias Nx = Ni;
 alias geography.Ni=Ni;
 
 unsigned[4] Nj : dump;
-alias numberOfPointsAlongAMeridian=Nj;
-alias Ny = Nj ;
+alias numberOfPointsAlongAMeridian = Nj;
+alias numberOfPointsAlongYAxis = Nj;
+alias Ny = Nj;
 alias geography.Nj=Nj;
 
 # LaR - geographic latitude of reference point
