@@ -1521,7 +1521,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     if (editionNumber > 1 || packing_spec->editionNumber > 1) { /* ECC-353 */
-        /* JPEG packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
+        /* JPEG or CCSDS packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
         if (setJpegPacking == 1) {
             *err = grib_set_string(h_out, "packingType", "grid_jpeg", &slen);
             if (*err != GRIB_SUCCESS) {
