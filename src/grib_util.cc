@@ -951,12 +951,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     int global_grid               = 0; /* boolean */
     int expandBoundingBox         = 0;
 
-    static grib_util_packing_spec default_packing_spec = {0,};
     Assert(h);
-
-    if (!packing_spec) {
-        packing_spec = &default_packing_spec;
-    }
 
     /* Get edition number from input handle */
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
