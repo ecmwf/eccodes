@@ -1,4 +1,4 @@
-#  Resolution and component flags
+# Resolution and component flags
 flags[1] resolutionAndComponentFlags 'grib1/7.table' : edition_specific,no_copy ;
 
 # Note our flagbit numbers run from 7 to 0, while WMO convention uses 1 to 8
@@ -20,7 +20,6 @@ if (earthIsOblate) {
   alias earthMajorAxisInMetres=earthMajorAxis;
   alias earthMinorAxisInMetres=earthMinorAxis;
 }
-
 
 flagbit resolutionAndComponentFlags3(resolutionAndComponentFlags,5) = 0: read_only;
 flagbit resolutionAndComponentFlags4(resolutionAndComponentFlags,4) = 0: read_only;
