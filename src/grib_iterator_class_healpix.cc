@@ -93,7 +93,7 @@ size_t HEALPix_nj(size_t N, size_t i)
     size_t ni = 4 * N - 1;
     Assert(i < ni);
     return i < N ? 4 * (i + 1) : i < 3 * N ? 4 * N
-                                           : HEALPix_nj(N, ni - 1 - i);
+                               : HEALPix_nj(N, ni - 1 - i);
 }
 
 static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
@@ -107,33 +107,6 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 
     return longitudes;
 }
-
-#ifdef DEBUG
-static std::vector<double> HEALPix_latitudes(size_t N)
-{
-    const auto Ni = 4 * N - 1;
-    std::vector<double> lats_;
-
-    lats_.resize(Ni);
-
-    auto i = lats_.begin();
-    auto j = lats_.rbegin();
-    for (int ring = 1; ring < 2 * N; ++ring, ++i, ++j) {
-        const auto f = ring < N ?
-            1.0 - static_cast<double>(ring * ring) / (3 * static_cast<double>(N * N)) :
-            4.0 / 3.0 - 2 * static_cast<double>(ring) / (3 * static_cast<double>(N));
-
-        *i = 90.0 - RAD2DEG * std::acos(f);
-        *j = -*i;
-    }
-    *i = 0.0;
-
-    return lats_;
-
-    Assert(lats_.size() == Ni);
-    return lats_;
-}
-#endif
 
 static int iterate_healpix(grib_iterator_healpix* self, long N)
 {
@@ -158,20 +131,6 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
 
     // Equator
     latitudes[2 * N - 1] = 0.0;
-
-#ifdef DEBUG
-    {
-        std::vector<double> lats1 = HEALPix_latitudes(N);
-        Assert( latitudes.size() == lats1.size() );
-        for (size_t ii=0; ii<latitudes.size(); ++ii) {
-            double diff = latitudes[ii] - lats1[ii];
-            diff = fabs(diff);
-            if ( diff > 1e-12) {
-                printf("i=%zu  l=%10.10g p=%10.10g (diff=%10.10g)\n", ii, latitudes[ii], lats1[ii], diff);
-            }
-        }
-    }
-#endif
 
     k = 0;
     for (size_t i = 0; i < ny; i++) {
