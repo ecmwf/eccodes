@@ -118,8 +118,8 @@ static grib_accessor_class _grib_accessor_class_g2end_step = {
     0,                 /* pack_float */
     0, //&unpack_double,              /* unpack_double */
     0,               /* unpack_float */
-    0, //&pack_string,                /* pack_string */
-    0, //&unpack_string,              /* unpack_string */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
     0,                 /* pack_bytes */
@@ -420,8 +420,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return ret;
 
     if (strcmp(stepOutputFormat, "future") == 0) {
-        Step step{(int) *val, StepUnitsTable::to_long("h")};
-        ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", step.unit_as_long());
+        Step<long> step{*val, "h"};
+        ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", step.unit().to_long());
         if (ret)
             return ret;
 
@@ -543,9 +543,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len) {
     grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
 
-    Step step = Step(parse_step(std::string(val)));
+    Step<long> step = Step<long>(parse_step(std::string(val)));
 
-    ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", step.unit_as_long());
+    ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", step.unit().to_long());
     if (ret)
         return ret;
 
@@ -557,57 +557,79 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len) {
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len) {
-    //grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    long unit;
-    if ((ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &unit)))
+    size_t stepOutputFormatSize = 128;
+    char stepOutputFormat[stepOutputFormatSize];
+    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
         return ret;
 
-    long value;
-    if ((ret = grib_get_long_internal(h, "lengthOfTimeRange", &value)))
+    /* point in time */
+    if (self->year == NULL) {
+        long value;
+        if ((ret = grib_get_long_internal(h, self->start_step, &value)))
+            return ret;
+        long unit;
+        if ((ret = grib_get_long_internal(h, self->unit, &unit)))
+            return ret;
+
+        Step<long> start_step = Step<long>(value, unit);
+        if (strcmp(stepOutputFormat, "future") == 0) {
+            start_step.optimizeUnit();
+            snprintf(val, *len, "%ld%s", start_step.value(), start_step.unit().to_string().c_str());
+        }
+        else {
+            snprintf(val, *len, "%ld", start_step.value());
+        }
+        return 0;
+    }
+
+
+    long numberOfTimeRange;
+    Assert(self->numberOfTimeRange);
+    if ((ret = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
         return ret;
+    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 
-    Step step{(int) value, unit};
+    if (numberOfTimeRange == 1) {
+        long unit;
+        long value;
 
-    sprintf(val, "%d%s", step.value(), step.unit_as_str().c_str());
+        if ((ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &unit)))
+            return ret;
+        if ((ret = grib_get_long_internal(h, "lengthOfTimeRange", &value)))
+            return ret;
+
+        Step<long> start_step{value, unit};
+        start_step.hide_hour_unit();
+        start_step.optimizeUnit();
+
+        if ((ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &unit)) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_get_long_internal(h, "forecastTime", &value)) != GRIB_SUCCESS)
+            return ret;
+
+        Step<long> step{value, unit};
+        Step<long> end_step = start_step + step;
+        end_step.optimizeUnit();
+        end_step.hide_hour_unit();
+
+        if (strcmp(stepOutputFormat, "future") == 0) {
+            snprintf(val, *len, "%ld%s", end_step.value(), end_step.unit().to_string().c_str());
+        }
+        else {
+            snprintf(val, *len, "%ld", end_step.value());
+        }
+    }
 
     return GRIB_SUCCESS;
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len) {
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
-
-    long unit;
-    ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &unit);
-    if (ret)
-        return ret;
-
-
-    long stepUnits;
-    ret = grib_get_long_internal(h, "stepUnits", &stepUnits);
-    if (ret)
-        return ret;
-
-    Step step;
-    if (stepUnits != 255) {
-        step = Step((int) *val, stepUnits);
-    }
-    else {
-        step = Step((int) *val, unit);
-    }
-
-    ret = grib_set_long_internal(h, "lengthOfTimeRange", step.value());
-    if (ret)
-        return ret;
-    ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", step.unit_as_long());
-    if (ret)
-        return ret;
-
-    return ret;
+    // not implemented
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len) {
@@ -630,14 +652,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len) {
     if (ret)
         return ret;
 
-    if (stepUnits != 255) {
-        Step step = Step(value, unit);
-        *val = step.getDoubleValue(stepUnits);
-    }
-    else {
-        Step step = Step(value, unit);
-        *val = step.value();
-    }
+    Step<double> step = Step<double>(value, unit);
+    *val = step.setUnit(stepUnits).value();
 
     return GRIB_SUCCESS;
 }

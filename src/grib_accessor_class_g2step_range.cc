@@ -139,15 +139,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     char buf[100];
     int ret     = 0;
     size_t size = 0;
-    //long start = 0, theEnd = 0;
-
-    //ret = grib_get_long_internal(h, self->startStep, &start);
-    //
-    //
-    //
-    //
-    //if (ret)
-        //return ret;
 
     size_t stepOutputFormatSize = 128;
     char stepOutputFormat[stepOutputFormatSize];
@@ -156,37 +147,24 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (strcmp(stepOutputFormat, "future") == 0) {
         long indicatorOfUnitOfTimeRange;
-        long forecastTime;
-        ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange);
-        if (ret)
-            return ret;
-        ret = grib_get_long_internal(h, "forecastTime", &forecastTime);
-        if (ret)
+        if ((ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &indicatorOfUnitOfTimeRange)) != GRIB_SUCCESS)
             return ret;
 
+        long forecastTime;
+        if ((ret = grib_get_long_internal(h, "forecastTime", &forecastTime)) != GRIB_SUCCESS)
+            return ret;
 
         size_t stepUnitsSize = 128;
         char stepUnits[stepUnitsSize];
-        ret = grib_get_string_internal(h, "stepUnits", stepUnits, &stepUnitsSize);
-        if (ret)
+        if ((ret = grib_get_string_internal(h, "stepUnits", stepUnits, &stepUnitsSize)) != GRIB_SUCCESS)
             return ret;
-        //printf("stepUnits=%s\n", stepUnits);
 
-        size_t stepOutputFormatSize = 128;
-        char stepOutputFormat[stepOutputFormatSize];
-        if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize) != GRIB_SUCCESS))
-            return ret;
-        //printf("stepOutputFormat=%s\n", stepOutputFormat);
-
-        Step step_a{(int) forecastTime, indicatorOfUnitOfTimeRange};
+        Step<long> step_a{forecastTime, indicatorOfUnitOfTimeRange};
         step_a.optimizeUnit();
-
-        if (strcmp(stepOutputFormat, "future") != 0) {
-            step_a.hide_hour_unit();
-        }
+        step_a.hide_hour_unit();
 
         if (self->endStep == NULL) {
-            snprintf(buf, sizeof(buf), "%d%s", step_a.value(), step_a.unit_as_str().c_str());
+            snprintf(buf, sizeof(buf), "%ld%s", step_a.value(), step_a.unit().to_string().c_str());
         }
         else {
             long indicatorOfUnitForTimeRange;
@@ -198,21 +176,20 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             if (ret)
                 return ret;
 
-            Step length{(int) lengthOfTimeRange, indicatorOfUnitForTimeRange};
-            Step step_b = step_a + length;
+            Step<long> length{lengthOfTimeRange, indicatorOfUnitForTimeRange};
+            Step<long> step_b = step_a + length;
             step_b.optimizeUnit();
             auto [a, b] = findCommonUnits(step_a, step_b);
 
-            if (strcmp(stepOutputFormat, "future") != 0) {
-                step_b.hide_hour_unit();
-                a.hide_hour_unit();
-                b.hide_hour_unit();
-            }
+            step_b.hide_hour_unit();
+            a.hide_hour_unit();
+            b.hide_hour_unit();
+
             if (a.value() == 0) {
-                snprintf(buf, sizeof(buf), "0-%d%s", step_b.value(), step_b.unit_as_str().c_str());
+                snprintf(buf, sizeof(buf), "0%s-%ld%s", step_b.unit().to_string().c_str(), step_b.value(), step_b.unit().to_string().c_str());
             }
             else {
-                snprintf(buf, sizeof(buf), "%d-%d%s", a.value(), b.value(), b.unit_as_str().c_str());
+                snprintf(buf, sizeof(buf), "%ld%s-%ld%s", a.value(), a.unit().to_string().c_str(), b.value(), b.unit().to_string().c_str());
             }
         }
     }
@@ -231,8 +208,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             snprintf(buf, sizeof(buf), "%ld", start);
         }
         else {
-            ret = grib_get_long_internal(h, self->endStep, &theEnd);
-            if (ret)
+            if ((ret = grib_get_long_internal(h, self->endStep, &theEnd)) != GRIB_SUCCESS)
                 return ret;
 
             if (start == theEnd) {
@@ -269,13 +245,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return ret;
 
     if (strcmp(stepOutputFormat, "future") == 0) {
-        std::vector<Step> steps = parse_range(val);
+        std::vector<Step<long>> steps = parse_range<long>(val);
         if (steps.size() == 0) {
             return GRIB_INVALID_ARGUMENT;
         }
         if (steps.size() == 1) {
             steps[0].optimizeUnit();
-            if ((ret = grib_set_long_internal(h, "indicatorOfUnitOfTimeRange", steps[0].unit_as_long())))
+            if ((ret = grib_set_long_internal(h, "indicatorOfUnitOfTimeRange", steps[0].unit().to_long())))
                 return ret;
             if ((ret = grib_set_long_internal(h, "forecastTime", steps[0].value())))
                 return ret;
@@ -283,16 +259,16 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         else if (steps.size() == 2) {
             steps[0].optimizeUnit();
             steps[1].optimizeUnit();
-            auto [a, b] = findCommonUnits(steps[0], steps[1]);
+            auto [s0, s1] = findCommonUnits(steps[0], steps[1]);
 
-            if ((ret = grib_set_long_internal(h, "indicatorOfUnitOfTimeRange", a.unit_as_long())))
+            if ((ret = grib_set_long_internal(h, "indicatorOfUnitOfTimeRange", s0.unit().to_long())))
                 return ret;
-            if ((ret = grib_set_long_internal(h, "forecastTime", a.value())))
+            if ((ret = grib_set_long_internal(h, "forecastTime", s0.value())))
                 return ret;
 
-            if ((ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", b.unit_as_long())))
+            if ((ret = grib_set_long_internal(h, "indicatorOfUnitForTimeRange", s1.unit().to_long())))
                 return ret;
-            if ((ret = grib_set_long_internal(h, "lengthOfTimeRange", b.value())))
+            if ((ret = grib_set_long_internal(h, "lengthOfTimeRange", s1.value())))
                 return ret;
         }
         else {
@@ -343,23 +319,54 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    char buff[100];
-    size_t bufflen = 100;
-    long start, theEnd;
-    char* p = buff;
-    char* q = NULL;
-    int err = 0;
+    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+    grib_handle* h                   = grib_handle_of_accessor(a);
+    int ret = 0;
 
+    size_t stepOutputFormatSize = 128;
+    char stepOutputFormat[stepOutputFormatSize];
+    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
+        return ret;
 
-    if ((err = unpack_string(a, buff, &bufflen)) != GRIB_SUCCESS)
-        return err;
+    if (strcmp(stepOutputFormat, "future") == 0) {
+        long unit = 0;
+        long value = 0;
 
-    start  = strtol(buff, &p, 10);
-    theEnd = start;
-    if (*p != 0)
-        theEnd = strtol(++p, &q, 10);
+        if ((ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &unit)) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_get_long_internal(h, "forecastTime", &value)) != GRIB_SUCCESS)
+            return ret;
+        Step<long> start_step(value, unit);
+        Step<long> step = start_step;
 
-    *val = theEnd;
+        if (self->endStep != NULL) {
+            if ((ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &unit)) != GRIB_SUCCESS)
+                return ret;
+            if ((ret = grib_get_long_internal(h, "lengthOfTimeRange", &value)) != GRIB_SUCCESS)
+                return ret;
+            Step<long> end_step(value, unit);
+            step = start_step + end_step;
+        }
+
+        step.optimizeUnit();
+        *val = step.value();
+    }
+    else {
+        char buff[100];
+        size_t bufflen = 100;
+        long start, theEnd;
+        char* p = buff;
+        char* q = NULL;
+        if ((ret = unpack_string(a, buff, &bufflen)) != GRIB_SUCCESS)
+            return ret;
+
+        start  = strtol(buff, &p, 10);
+        theEnd = start;
+        if (*p != 0)
+            theEnd = strtol(++p, &q, 10);
+
+        *val = theEnd;
+    }
 
     return 0;
 }
