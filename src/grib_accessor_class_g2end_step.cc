@@ -410,7 +410,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 // TODO(maee): Re-implement calendar-based stepRange using std::chrono
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    //grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
@@ -633,7 +633,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len) {
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len) {
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
+    //grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
