@@ -7,7 +7,6 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
 ! Description: how to process a file containing a mix of messages
 !              and print the kind of product (e.g. GRIB, BUFR etc)
 !
@@ -37,11 +36,9 @@ program get_product_kind
    write (*, *) '  ECCODES_SETTINGS_PNG:   ', ECCODES_SETTINGS_PNG
    write (*, *) '  ECCODES_SETTINGS_AEC:   ', ECCODES_SETTINGS_AEC
 
-! the first message is loaded from file
-! ihandle is the message id to be used in subsequent calls
-   call codes_new_from_file(ifile, ihandle, CODES_PRODUCT_ANY, iret)
-
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      call codes_new_from_file(ifile, ihandle, CODES_PRODUCT_ANY, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       write (*, *) 'message: ', count
 
@@ -52,11 +49,7 @@ program get_product_kind
       ! release the message
       call codes_release(ihandle)
 
-      ! load the next message
-      call codes_new_from_file(ifile, ihandle, CODES_PRODUCT_ANY, iret)
-
       count = count + 1
-
    end do
 
    ! close file

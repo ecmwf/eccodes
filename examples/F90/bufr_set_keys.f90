@@ -9,15 +9,14 @@
 !
 !  Description: How to set different type of keys in BUFR messages.
 !
-!
 program bufr_set_keys
    use eccodes
    implicit none
-   integer                                       :: iret
-   integer                                       :: infile, outfile
-   integer                                       :: ibufr
-   integer                                       :: count = 0
-   integer(kind=4)                               :: centre, centreNew
+   integer                 :: iret
+   integer                 :: infile, outfile
+   integer                 :: ibufr
+   integer                 :: count = 0
+   integer(kind=4)         :: centre, centreNew
 
    ! Open input file
    call codes_open_file(infile, '../../data/bufr/syno_multi.bufr', 'r')
@@ -25,16 +24,14 @@ program bufr_set_keys
    ! Open output file
    call codes_open_file(outfile, 'bufr_set_keys_test_f.tmp.bufr', 'w')
 
-   ! The first bufr message is loaded from file,
-   ! ibufr is the bufr id to be used in subsequent calls
-   call codes_bufr_new_from_file(infile, ibufr, iret)
-
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      call codes_bufr_new_from_file(infile, ibufr, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       write (*, *) 'message: ', count
 
       ! This is the place where you may wish to modify the message
-      ! E.g. we change the centre
+      ! E.g. change the centre
 
       ! Set centre
       centre = 222
@@ -52,11 +49,7 @@ program bufr_set_keys
       ! Release the handle
       call codes_release(ibufr)
 
-      ! Next message from source
-      call codes_bufr_new_from_file(infile, ibufr, iret)
-
       count = count + 1
-
    end do
 
    call codes_close_file(infile)
