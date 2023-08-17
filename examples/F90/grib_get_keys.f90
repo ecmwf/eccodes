@@ -31,13 +31,12 @@ program grib_get_keys
 
    call codes_open_file(ifile, '../../data/reduced_latlon_surface.grib1', open_mode)
 
-   ! loop on all the messages in a file.
-
-   ! a new GRIB message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
-   call codes_grib_new_from_file(ifile, igrib, iret)
-
-   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
+   ! loop on all the messages in a file
+   LOOP: DO WHILE (.true.)
+      ! a new GRIB message is loaded from file.
+      ! igrib is the grib id to be used in subsequent calls
+      call codes_grib_new_from_file(ifile, igrib, iret)
+      if (iret == CODES_END_OF_FILE) exit LOOP
 
       ! check if the value of the key is MISSING
       is_missing = 0;
@@ -99,8 +98,6 @@ program grib_get_keys
          ' max is ', max_val
 
       call codes_release(igrib)
-
-      call codes_grib_new_from_file(ifile, igrib, iret)
 
    end do LOOP
 
