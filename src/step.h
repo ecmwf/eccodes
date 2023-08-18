@@ -68,6 +68,7 @@ public:
 
         bool operator>(const Unit& other) const {return map_.unit_to_duration(value_) > map_.unit_to_duration(other.value_);}
         bool operator==(const Value value) const {return map_.unit_to_duration(value_) == map_.unit_to_duration(value);}
+        bool operator==(const Unit& unit) const {return map_.unit_to_duration(value_) == map_.unit_to_duration(unit.value_);}
         Unit& operator=(const Value value) {
             value_ = value;
             return *this;
@@ -164,7 +165,7 @@ public:
     };
 
     // Constructors
-    Step() : value_(0), unit_(Unit::SECOND) {}
+    Step() : value_(0), unit_(Unit::Value::SECOND) {}
     Step(T value, const Unit& unit);
     Step(T value, long unit);
     Step(T value, const std::string& unit);
@@ -223,7 +224,7 @@ std::string parse_step(std::string step);
 
 template <typename T>
 bool Step<T>::operator==(const Step<T>& other) const {
-    if (value_ == other.value_ && unit_ == other.unit_) {
+    if ((value_ == other.value_) && (unit_ == other.unit_)) {
         return true;
     }
     return false;

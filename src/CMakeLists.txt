@@ -9,7 +9,8 @@
 # nor does it submit to any jurisdiction.
 #
 list( APPEND eccodes_src_files
-    step_optimizer.cc
+    step.cc
+    step_utilities.cc
     grib_api.h
     grib_timer.cc
     eccodes.h

@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include "step_optimizer.h"
+#include "step.h"
 
 /*
    This is used by make_class.pl

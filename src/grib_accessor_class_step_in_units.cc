@@ -9,7 +9,8 @@
  */
 
 #include "grib_api_internal.h"
-#include "step_optimizer.h"
+#include "step.h"
+#include "step_utilities.h"
 #include <stdexcept>
 /*
   This is used by make_class.pl
@@ -306,22 +307,26 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len) {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    size_t stepOutputFormatSize = 128;
-    char stepOutputFormat[stepOutputFormatSize];
-    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
-        return ret;
+    //size_t stepOutputFormatSize = 128;
+    //char stepOutputFormat[stepOutputFormatSize];
+    //if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
+    //    return ret;
 
-    long unit;
-    if ((ret = grib_get_long_internal(h, self->codedUnits, &unit)) != GRIB_SUCCESS)
-        return ret;
+    //long unit;
+    //if ((ret = grib_get_long_internal(h, self->codedUnits, &unit)) != GRIB_SUCCESS)
+    //    return ret;
 
-    long value;
-    if ((ret = grib_get_long_internal(h, self->codedStep, &value)) != GRIB_SUCCESS)
-        return ret;
+    //long value;
+    //if ((ret = grib_get_long_internal(h, self->codedStep, &value)) != GRIB_SUCCESS)
+    //    return ret;
 
-    Step<long> step{value, unit};
-    step.optimizeUnit();
-    if (strcmp(stepOutputFormat, "future") == 0) {
+    //Step<long> step{value, unit};
+    //step.optimizeUnit();
+
+    auto [forcastTime, lengthOfTimeRange] = getTimeRange(h);
+    auto [step, step_b] = findCommonUnits(forcastTime.optimizeUnit(), lengthOfTimeRange.optimizeUnit());
+
+    if (futureOutputEnabled(h)) {
         step.hide_hour_unit();
         snprintf(val, *len, "%ld%s", step.value(), step.unit().to_string().c_str());
     }

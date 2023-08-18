@@ -9,7 +9,8 @@
  */
 
 #include "grib_api_internal.h"
-#include "step_optimizer.h"
+#include "step.h"
+#include "step_utilities.h"
 #include <stdexcept>
 
 /*
@@ -561,69 +562,17 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len) {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    size_t stepOutputFormatSize = 128;
-    char stepOutputFormat[stepOutputFormatSize];
-    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
-        return ret;
+    auto [start, stop] = getTimeRange(h);
+    auto [step_a, step_b] = findCommonUnits(start.optimizeUnit(), stop.optimizeUnit());
+    step_a.hide_hour_unit();
+    step_b.hide_hour_unit();
 
-    /* point in time */
-    if (self->year == NULL) {
-        long value;
-        if ((ret = grib_get_long_internal(h, self->start_step, &value)))
-            return ret;
-        long unit;
-        if ((ret = grib_get_long_internal(h, self->unit, &unit)))
-            return ret;
-
-        Step<long> start_step = Step<long>(value, unit);
-        if (strcmp(stepOutputFormat, "future") == 0) {
-            start_step.optimizeUnit();
-            snprintf(val, *len, "%ld%s", start_step.value(), start_step.unit().to_string().c_str());
-        }
-        else {
-            snprintf(val, *len, "%ld", start_step.value());
-        }
-        return 0;
+    if (futureOutputEnabled(h)) {
+        snprintf(val, *len, "%ld%s", step_b.value(), step_b.unit().to_string().c_str());
     }
-
-
-    long numberOfTimeRange;
-    Assert(self->numberOfTimeRange);
-    if ((ret = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
-        return ret;
-    Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
-
-    if (numberOfTimeRange == 1) {
-        long unit;
-        long value;
-
-        if ((ret = grib_get_long_internal(h, "indicatorOfUnitForTimeRange", &unit)))
-            return ret;
-        if ((ret = grib_get_long_internal(h, "lengthOfTimeRange", &value)))
-            return ret;
-
-        Step<long> start_step{value, unit};
-        start_step.hide_hour_unit();
-        start_step.optimizeUnit();
-
-        if ((ret = grib_get_long_internal(h, "indicatorOfUnitOfTimeRange", &unit)) != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_get_long_internal(h, "forecastTime", &value)) != GRIB_SUCCESS)
-            return ret;
-
-        Step<long> step{value, unit};
-        Step<long> end_step = start_step + step;
-        end_step.optimizeUnit();
-        end_step.hide_hour_unit();
-
-        if (strcmp(stepOutputFormat, "future") == 0) {
-            snprintf(val, *len, "%ld%s", end_step.value(), end_step.unit().to_string().c_str());
-        }
-        else {
-            snprintf(val, *len, "%ld", end_step.value());
-        }
+    else {
+        snprintf(val, *len, "%ld", step_b.value());
     }
-
     return GRIB_SUCCESS;
 }
 

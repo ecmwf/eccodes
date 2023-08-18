@@ -9,7 +9,7 @@
  */
 
 #include "grib_tools.h"
-#include "step_optimizer.h"
+//#include "step_optimizer.h"
 #include <stdlib.h>
 
 #if HAVE_LIBJASPER
