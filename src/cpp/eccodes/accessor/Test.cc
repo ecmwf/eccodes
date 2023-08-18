@@ -1,26 +1,15 @@
+#include "GribFileTests.h"
 #include <iostream>
-#include <vector>
-#include "AccessorFactory.h"
-#include "Accessor.h"
-#include "grib_api_internal.h"
 
 int main()
 {
-    std::cout << "Creating Uint8 Accessor...";
+    std::filesystem::path gribLayoutFile("/home/kev/cpp_demo/grib_layout");
+    std::filesystem::path gribFile("/home/kev/cpp_demo/demo.grib");
 
-    grib_section gs;
-    grib_action creator{.name="Test888", .op="uint8"};
-    long len{1};
-    grib_arguments arg;
+    std::cout << "Running GRIB file tests...\n\n";
 
-    auto uint8Accessor = eccodes::accessor::makeAccessor(&gs, &creator, len, &arg);
+    eccodes::accessor::runTests(gribFile, gribLayoutFile);
 
-    std::vector<long> data;
-
-    std::cout << (uint8Accessor ? "SUCCESS!\n" : "FAILED!\n");
-    uint8Accessor->pack(data);
-    uint8Accessor->unpack(data);
-
-    std::cout << '\n';
+    std::cout << "\nFinished running GRIB file tests\n";
 
 }

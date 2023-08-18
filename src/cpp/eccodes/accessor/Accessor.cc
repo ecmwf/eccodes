@@ -1,16 +1,27 @@
 #include "Accessor.h"
+#include "AccessorMakerRegistry.h"
+#include "AccessorMaker.h"
 
 #include "grib_api_internal.h"
 
 namespace eccodes::accessor {
 
-Accessor::Accessor(std::unique_ptr<AccessorData> data, grib_section* p, grib_action* creator)
+AccessorPtr makeAccessor(AccessorType const& type, AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorInitData const& initData)
+{
+   if(type.get().empty()) { return {}; }
+
+   if(auto maker = getMaker(type))
+   {
+      return maker->pimpl->makeAccessorImpl(name, nameSpace, initData);
+   }
+
+   return {};
+}
+
+Accessor::Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, std::unique_ptr<AccessorData> data)
     : data_{std::move(data)}
-    , name_{creator->name}
-    , nameSpace_{creator->name_space}
-    , context_{p->h->context}
-    , handle_{p->h} // for now!
-    , creator_{creator}
+    , name_{name}
+    , nameSpace_{nameSpace}
     , allNames_{{name_}}
     , allNameSpaces_{{nameSpace_}}
 {
@@ -18,14 +29,9 @@ Accessor::Accessor(std::unique_ptr<AccessorData> data, grib_section* p, grib_act
     // Finish "Gen" Init;
 }
 
-void Accessor::dump(grib_dumper const& dumper) const
+AccessorName Accessor::name() const
 {
-    return data_->dump(dumper);
-}
-
-long Accessor::nextOffset() const
-{
-    return GRIB_NOT_IMPLEMENTED; // TO DO
+    return name_;
 }
 
 std::size_t Accessor::stringLength() const
@@ -33,19 +39,9 @@ std::size_t Accessor::stringLength() const
     return data_->stringLength();
 }
 
-int Accessor::valueCount(long& count) const
+long Accessor::valueCount() const
 {
-    return data_->valueCount(count);
-}
-
-long Accessor::byteCount() const
-{
-    return data_->byteCount();
-}
-
-long Accessor::byteOffset() const
-{
-    return data_->byteOffset();
+    return data_->valueCount();
 }
 
 int Accessor::nativeType() const
@@ -53,39 +49,9 @@ int Accessor::nativeType() const
     return data_->nativeType();
 }
 
-grib_section* Accessor::subSection() const
+double Accessor::nearestSmallerValue(double val) const
 {
-    return subSection_;
-}
-
-int Accessor::notify_change(AccessorPtr const observed) const
-{
-    return GRIB_NOT_IMPLEMENTED; // TO DO
-}
-
-void Accessor::updateSize(std::size_t s) const
-{
-    return data_->updateSize(s);
-}
-
-std::size_t Accessor::preferredSize(int fromHandle) const
-{
-    return data_->preferredSize(fromHandle);
-}
-
-void Accessor::resize(size_t newSize) const
-{
-    return data_->resize(newSize);
-}
-
-int Accessor::nearestSmallerValue(double val, double& nearest) const
-{
-    return data_->nearestSmallerValue(val, nearest);
-}
-
-AccessorPtr Accessor::next(int mod)
-{
-    return nullptr; // TO DO
+    return data_->nearestSmallerValue(val);
 }
 
 int Accessor::compare(AccessorPtr const rhs) const
@@ -93,24 +59,35 @@ int Accessor::compare(AccessorPtr const rhs) const
     return data_->compare(*rhs->data_);
 }
 
-int Accessor::packMissing() const
-{
-    return data_->packMissing();
-}
-
 int Accessor::isMissing() const
 {
     return data_->isMissing();
 }
 
-int Accessor::pack(grib_expression const& expression)
+bool Accessor::newBuffer(AccessorBuffer const& accBuffer)
+{
+    return data_->newBuffer(accBuffer);
+}
+
+AccessorBuffer Accessor::currentBuffer() const
+{
+    return data_->currentBuffer();
+}
+
+bool Accessor::pack(grib_expression const& expression)
 {
     return data_->pack(expression);
 }
 
-int Accessor::unpackSubarray(std::vector<double> &values, std::size_t start) const
+bool Accessor::packMissing() const
 {
-    return data_->unpackSubarray(values, start);
+    return data_->packMissing();
+}
+
+std::vector<double> Accessor::unpackSubarray(std::size_t start) const
+{
+    std::vector<double> values{};
+    return data_->unpackSubarray(values, start) ? values : std::vector<double>{};
 }
 
 }

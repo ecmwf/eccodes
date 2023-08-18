@@ -13,35 +13,38 @@
 # Note the PARENT_SCOPE option sets the variable in the calling CMakeLists.txt
 # file - it remains undefined in this file: https://cmake.org/cmake/help/latest/command/set.html
 set(eccodes_accessor_cplusplus_files
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.h
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.h
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMaker.h
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.h
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DataUint8.h
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMaker.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDataImpl.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DataUint8.cc
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test.cc
+    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDefs.h
     PARENT_SCOPE
 )
 
 ecbuild_add_executable( TARGET cpp_accessor_test
     NOINSTALL
     SOURCES     ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMaker.h
                 ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DataUint8.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDefs.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMaker.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMakerRegistry.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorStore.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DateData.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DoubleData.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/LongData.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/StringData.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/NamedType.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribLayout.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribFile.h
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribFileTests.h
                 ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMaker.cc
                 ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDataImpl.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DataUint8.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorMakerRegistry.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorStore.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DateData.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/DoubleData.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/LongData.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/StringData.cc
                 ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribLayout.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribFile.cc
+                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/GribFileTests.cc
 
     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
 

@@ -1,3 +1,4 @@
+#include "AccessorMakerRegistry.h"
 #include "AccessorMaker.h"
 
 #include <mutex>
@@ -8,36 +9,36 @@
 namespace eccodes::accessor {  
 
 std::mutex makers_mutex;
-auto getMakers()
+auto& getMakers()
 {
    static auto makers = [](){
-      std::map<std::string, eccodes::accessor::AccessorMaker const*> makers_;
+      std::map<AccessorType, AccessorMaker const*> makers_;
       return makers_;
    }();
 
    return makers;
 }
 
-void registerMaker(std::string const& name, AccessorMaker const* maker)
+void registerMaker(AccessorType const& type, AccessorMaker const* maker)
 {
    std::lock_guard<std::mutex> guard(makers_mutex);
 
-   auto makers = getMakers();
-   if(auto it = makers.find(name); it != makers.end())
+   auto& makers = getMakers();
+   if(auto it = makers.find(type); it != makers.end())
    {
       Assert(false);
    }
 
-   makers[name] = maker;
+   makers[type] = maker;
 }
 
-AccessorMaker const* getMaker(std::string const& name)
+AccessorMaker const* getMaker(AccessorType const& type)
 {
    std::lock_guard<std::mutex> guard(makers_mutex);
 
-   auto makers = getMakers();
+   auto& makers = getMakers();
 
-   if(auto it = makers.find(name); it != makers.end())
+   if(auto it = makers.find(type); it != makers.end())
    {
       return it->second;
    }

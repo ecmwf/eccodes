@@ -8,166 +8,177 @@
 
 namespace eccodes::accessor {
 
-AccessorData::AccessorData(const long len, grib_arguments* arg)
+AccessorData::AccessorData(AccessorInitData const& initData)
 {
     // TO DO - FULL INIT()
 }
 
 AccessorData::~AccessorData() = default;
 
-void AccessorData::dump(grib_dumper const& dumper) const
+bool AccessorData::newBuffer(AccessorBuffer const& accBuffer)
 {
-    return dumpImpl(dumper);
+    buffer_ = accBuffer;
+    return true;
+}
+
+AccessorBuffer AccessorData::currentBuffer() const
+{
+    return buffer_;
 }
 
 std::size_t AccessorData::stringLength() const
 {
-    return stringLengthImpl();
+    return 1024;
 }
 
-int AccessorData::valueCount(long& count) const
+long AccessorData::valueCount() const
 {
-    return valueCountImpl(count);
+    return 1;
 }
 
 long AccessorData::byteCount() const
 {
-    return byteCountImpl();
+    return length_;
 }
 
 long AccessorData::byteOffset() const
 {
-    return byteOffsetImpl();
+    return offset_;
 }
 
 int AccessorData::nativeType() const
 {
-    return nativeTypeImpl();
+    return GRIB_TYPE_UNDEFINED;
 }
 
 void AccessorData::updateSize(std::size_t s)
 {
-    return updateSizeImpl(s);
+    Assert(0);
 }
 
 std::size_t AccessorData::preferredSize(int fromHandle) const
 {
-    return preferredSizeImpl(fromHandle);
+    return length_;
 }
 
 void AccessorData::resize(size_t newSize)
 {
-    return resizeImpl(newSize);
+    Assert(0);
 }
 
-int AccessorData::nearestSmallerValue(double val, double& nearest) const
+double AccessorData::nearestSmallerValue(double val) const
 {
-    return nearestSmallerValueImpl(val, nearest);
+    Assert(0);
+    return 0.0;
 }
 
-int AccessorData::compare(AccessorData const& rhs)
+bool AccessorData::compare(AccessorData const& rhs)
 {
-    return compareImpl(rhs);
+    Assert(0);
+    return false;
 }
 
-int AccessorData::packMissing()
+bool AccessorData::isMissing() const
 {
-    return packMissingImpl();
+    Assert(0); // TO DO
+    return false;
 }
 
-int AccessorData::isMissing() const
+// Pack support
+bool AccessorData::pack(std::vector<long> const& values)
 {
-    return isMissingImpl();
+    return false;
 }
 
-int AccessorData::pack(std::vector<long> const& values)
+bool AccessorData::pack(std::vector<double> const& values)
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<long> &values) const
+bool AccessorData::pack(std::vector<float> const& values)
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(std::vector<double> const& values)
+bool AccessorData::pack(std::vector<char> const& values)
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<double> &values) const
+bool AccessorData::pack(std::vector<StringArray> const& values)
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(std::vector<float> const& values)
+bool AccessorData::pack(std::vector<std::byte> const& values)
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<float> &values) const
+bool AccessorData::pack(grib_expression const& expression)
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(std::vector<std::string> const& values)
+bool AccessorData::packMissing()
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<std::string> &values) const
+// Unpack support
+bool AccessorData::unpack(std::vector<long> &values) const
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(std::vector<stringArray> const& values)
+bool AccessorData::unpack(std::vector<double> &values) const
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<stringArray> &values) const
+bool AccessorData::unpack(std::vector<float> &values) const
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(std::vector<std::byte> const& values)
+bool AccessorData::unpack(std::vector<char> &values) const
 {
-    return packImpl(values);
+    return false;
 }
 
-int AccessorData::unpack(std::vector<std::byte> &values) const
+bool AccessorData::unpack(std::vector<StringArray> &values) const
 {
-    return unpackImpl(values);
+    return false;
 }
 
-int AccessorData::pack(grib_expression const& expression)
+bool AccessorData::unpack(std::vector<std::byte> &values) const
 {
-    return packImpl(expression);
+    return false;
 }
 
-int AccessorData::unpackElement(std::size_t index, double& val) const
+bool AccessorData::unpackElement(std::size_t index, double& val) const
 {
-    return unpackElementImpl(index, val);
+    return false;
 }
 
-int AccessorData::unpackElement(std::size_t index, float& val) const
+bool AccessorData::unpackElement(std::size_t index, float& val) const
 {
-    return unpackElementImpl(index, val);
+    return false;
 }
 
-int AccessorData::unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<double> &valArray) const
+bool AccessorData::unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<double> &valArray) const
 {
-    return unpackElementSetImpl(indexArray, valArray);
+    return false;
 }
 
-int AccessorData::unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<float> &valArray) const
+bool AccessorData::unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<float> &valArray) const
 {
-    return unpackElementSetImpl(indexArray, valArray);
+    return false;
 }
 
-int AccessorData::unpackSubarray(std::vector<double> &values, std::size_t start) const
+bool AccessorData::unpackSubarray(std::vector<double> &values, std::size_t start) const
 {
-    return unpackSubarrayImpl(values, start);
+    return false;
 }
 
 }

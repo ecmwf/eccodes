@@ -1,104 +1,101 @@
 #ifndef _ACCESSOR_H_20230630_
 #define _ACCESSOR_H_20230630_
 
+#include "AccessorDefs.h"
 #include "AccessorData.h"
 #include <memory>
 #include <string>
 #include <vector>
 
-struct grib_context;
-struct grib_handle;
-struct grib_action;
-struct grib_section;
-struct grib_dumper;
 struct grib_expression;
-struct grib_arguments;
 
 namespace eccodes::accessor {
 
-class Accessor;
-using AccessorPtr = std::shared_ptr<Accessor>;
-using stringArray = std::vector<std::string>;
+AccessorPtr makeAccessor(AccessorType const& type, AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorInitData const& initData);
 
 class Accessor
 {
 public:
-    Accessor(std::unique_ptr<AccessorData> data, grib_section* p, grib_action* creator);
+    Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, std::unique_ptr<AccessorData> data);
 
-    void dump(grib_dumper const& dumper) const;
-    long nextOffset() const;
+    AccessorName name() const;
+
+    //void dump(grib_dumper const& dumper) const;
     std::size_t stringLength() const;
-    int valueCount(long& count) const;
-    long byteCount() const;
-    long byteOffset() const;
+    long valueCount() const;
     int nativeType() const;
-    grib_section* subSection() const;
-    int notify_change(AccessorPtr const observed) const;
-    void updateSize(std::size_t s) const;
-    std::size_t preferredSize(int fromHandle) const;
-    void resize(size_t newSize) const;
-    int nearestSmallerValue(double val, double& nearest) const;
-    AccessorPtr next(int mod);
+    double nearestSmallerValue(double val) const;
     int compare(AccessorPtr const rhs) const;
-    int packMissing() const;
     int isMissing() const;
-    int pack(grib_expression const& expression);
-    int unpackSubarray(std::vector<double> &values, std::size_t start) const;
+
+    bool newBuffer(AccessorBuffer const& accBuffer);
+    AccessorBuffer currentBuffer() const;
+
+    // Pack support
+    template<typename T>
+    bool pack(std::vector<T> const& values);
+
+    bool pack(grib_expression const& expression);
+    bool packMissing() const;
+
+    // Unpack support
+    template<typename T>
+    std::vector<T> unpack() const;
 
     template<typename T>
-    int pack(std::vector<T> const& values);
+    bool unpack(std::vector<T>& values) const;
 
     template<typename T>
-    int unpack(std::vector<T> &values) const;
+    std::enable_if_t<std::is_floating_point_v<T>, T>
+    unpackElement(std::size_t index) const;
 
     template<typename T>
-    int unpackElement(std::size_t index, T& val) const;
+    std::enable_if_t<std::is_floating_point_v<T>, std::vector<T>>
+    unpackElementSet(std::vector<std::size_t> const& indexArray) const;
 
-    template<typename T>
-    int unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<T> &valArray) const;
+    std::vector<double> unpackSubarray(std::size_t start) const;
 
 private:
     std::unique_ptr<AccessorData> data_{};
-    std::string name_{};
-    std::string nameSpace_{};
-    grib_context* context_{};   // Conversion helper - will change later...
-    grib_handle* handle_{};     // Conversion helper - will change later...
-    grib_action* creator_{};    // Conversion helper - will change later...
-    std::weak_ptr<Accessor> parent_{};
-    std::weak_ptr<Accessor> next_{};
-    std::weak_ptr<Accessor> previous_{};
-    grib_section* subSection_{}; // Conversion helper - will change later...
-    std::vector<std::string> allNames_{};
-    std::vector<std::string> allNameSpaces_{};
+    AccessorName name_;
+    AccessorNameSpace nameSpace_;
+    std::vector<AccessorName> allNames_{};
+    std::vector<AccessorNameSpace> allNameSpaces_{};
     bool dirty_{};
-    std::vector<std::weak_ptr<Accessor>> same_;
     long loop_;
     std::vector<std::weak_ptr<Accessor>> attributes_;
     std::vector<std::weak_ptr<Accessor>> parentAsAttribute_;
 };
 
+// Pack support
 template<typename T>
-int Accessor::pack(std::vector<T> const& values)
+bool Accessor::pack(std::vector<T> const& values)
 {
     return data_->pack(values);
 }
 
+// Unpack support
 template<typename T>
-int Accessor::unpack(std::vector<T> &values) const
+std::vector<T> Accessor::unpack() const
 {
-    return data_->unpack(values);
+    std::vector<T> values;
+    return data_->unpack(values) ? values : std::vector<T>{};
 }
 
 template<typename T>
-int Accessor::unpackElement(std::size_t index, T& val) const
+std::enable_if_t<std::is_floating_point_v<T>, T>
+Accessor::unpackElement(std::size_t index) const
 {
-    return data_->unpackElement(index, val);
+    T val{};
+    return data_->unpackElement(index, val) ? val : T{};
 }
 
 template<typename T>
-int Accessor::unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<T> &valArray) const
+std::enable_if_t<std::is_floating_point_v<T>, std::vector<T>>
+Accessor::unpackElementSet(std::vector<std::size_t> const& indexArray) const
 {
-    return data_->unpackElementSet(indexArray, valArray);
+    std::vector<T> valArray;
+    return data_->unpackElementSet(indexArray, valArray) ? valArray : std::vector<T>{};
 }
 
 }
