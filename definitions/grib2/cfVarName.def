@@ -4910,8 +4910,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea ice temperature
-'sitemp' = {
+#Vertically averaged sea ice temperature
+'vasit' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -5065,6 +5065,12 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice temperature
+'sit' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	}
 #Sea surface practical salinity
 'sos' = {
@@ -5973,8 +5979,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea ice temperature
-'avg_sitemp' = {
+#Time-mean vertically averaged sea ice temperature
+'avg_vasit' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -6140,6 +6146,13 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice temperature
+'avg_sit' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
