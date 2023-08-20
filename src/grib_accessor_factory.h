@@ -147,6 +147,7 @@
 { "offset_file", &grib_accessor_class_offset_file, },
 { "offset_values", &grib_accessor_class_offset_values, },
 { "pack_bufr_values", &grib_accessor_class_pack_bufr_values, },
+{ "packing_type", &grib_accessor_class_packing_type, },
 { "pad", &grib_accessor_class_pad, },
 { "padding", &grib_accessor_class_padding, },
 { "padto", &grib_accessor_class_padto, },

@@ -148,6 +148,7 @@ extern grib_accessor_class* grib_accessor_class_octet_number;
 extern grib_accessor_class* grib_accessor_class_offset_file;
 extern grib_accessor_class* grib_accessor_class_offset_values;
 extern grib_accessor_class* grib_accessor_class_pack_bufr_values;
+extern grib_accessor_class* grib_accessor_class_packing_type;
 extern grib_accessor_class* grib_accessor_class_pad;
 extern grib_accessor_class* grib_accessor_class_padding;
 extern grib_accessor_class* grib_accessor_class_padto;

@@ -152,6 +152,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_padtoeven.cc
     grib_accessor_class_padtomultiple.cc
     grib_accessor_class_section_padding.cc
+    grib_accessor_class_packing_type.cc
     grib_accessor_class_section_pointer.cc
     grib_accessor_class_position.cc
     grib_accessor_class_signed.cc
