@@ -114,7 +114,6 @@ extern grib_accessor_class* grib_accessor_class_ibmfloat;
 extern grib_accessor_class* grib_accessor_class_ieeefloat;
 extern grib_accessor_class* grib_accessor_class_ifs_param;
 extern grib_accessor_class* grib_accessor_class_int16_little_endian;
-extern grib_accessor_class* grib_accessor_class_int32;
 extern grib_accessor_class* grib_accessor_class_int32_little_endian;
 extern grib_accessor_class* grib_accessor_class_int64;
 extern grib_accessor_class* grib_accessor_class_int64_little_endian;

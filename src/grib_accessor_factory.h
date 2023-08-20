@@ -113,7 +113,6 @@
 { "ieeefloat", &grib_accessor_class_ieeefloat, },
 { "ifs_param", &grib_accessor_class_ifs_param, },
 { "int16_little_endian", &grib_accessor_class_int16_little_endian, },
-{ "int32", &grib_accessor_class_int32, },
 { "int32_little_endian", &grib_accessor_class_int32_little_endian, },
 { "int64", &grib_accessor_class_int64, },
 { "int64_little_endian", &grib_accessor_class_int64_little_endian, },
