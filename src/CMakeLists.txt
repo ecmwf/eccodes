@@ -363,7 +363,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_int16_little_endian.cc
     grib_accessor_class_int32_little_endian.cc
     grib_accessor_class_int64_little_endian.cc
-    grib_accessor_class_int8.cc
     grib_accessor_class_uint16.cc
     grib_accessor_class_uint16_little_endian.cc
     grib_accessor_class_uint32.cc

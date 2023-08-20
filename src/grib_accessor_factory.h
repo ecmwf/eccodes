@@ -115,7 +115,6 @@
 { "int16_little_endian", &grib_accessor_class_int16_little_endian, },
 { "int32_little_endian", &grib_accessor_class_int32_little_endian, },
 { "int64_little_endian", &grib_accessor_class_int64_little_endian, },
-{ "int8", &grib_accessor_class_int8, },
 { "iterator", &grib_accessor_class_iterator, },
 { "julian_date", &grib_accessor_class_julian_date, },
 { "julian_day", &grib_accessor_class_julian_day, },

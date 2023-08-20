@@ -116,7 +116,6 @@ extern grib_accessor_class* grib_accessor_class_ifs_param;
 extern grib_accessor_class* grib_accessor_class_int16_little_endian;
 extern grib_accessor_class* grib_accessor_class_int32_little_endian;
 extern grib_accessor_class* grib_accessor_class_int64_little_endian;
-extern grib_accessor_class* grib_accessor_class_int8;
 extern grib_accessor_class* grib_accessor_class_iterator;
 extern grib_accessor_class* grib_accessor_class_julian_date;
 extern grib_accessor_class* grib_accessor_class_julian_day;
