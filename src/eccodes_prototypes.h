@@ -566,10 +566,6 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
 
 /* grib_accessor_class_data_dummy_field.cc*/
 
-/* grib_2order_packer_simple.cc*/
-void grib_free_second_order_groups(grib_context* c, second_order_packed* sp);
-second_order_packed* grib_get_second_order_groups(grib_context* c, const unsigned long* vals, size_t len);
-
 /* grib_accessor_class_variable.cc*/
 void accessor_variable_set_type(grib_accessor* a, int type);
 

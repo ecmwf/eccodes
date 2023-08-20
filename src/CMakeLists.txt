@@ -184,7 +184,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g1shsimple_packing.cc
     grib_accessor_class_data_shsimple_packing.cc
     grib_accessor_class_data_dummy_field.cc
-    grib_2order_packer_simple.cc
     grib_accessor_class_variable.cc
     grib_accessor_class_second_order_bits_per_value.cc
     grib_accessor_class_data_g2simple_packing.cc
