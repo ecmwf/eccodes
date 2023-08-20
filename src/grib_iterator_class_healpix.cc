@@ -159,6 +159,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* sorder = grib_arguments_get_name(h, args, self->carg++);
 
     if ((err = grib_get_long_internal(h, snside, &N)) != GRIB_SUCCESS) return err;
+    if (N <= 0) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s must be greater than zero", ITER, snside);
+        return GRIB_WRONG_GRID;
+    }
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS)
         return err;
 
