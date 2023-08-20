@@ -376,12 +376,14 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
 static void print_values(grib_context* c,
                          const grib_util_grid_spec* spec,
                          const grib_util_packing_spec* packing_spec,
+                         const char* input_packing_type,
                          const double* data_values, const size_t data_values_count, /* the data pay load */
                          const grib_values* keyval_pairs, const size_t count)       /* keys and their values */
 {
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
+    fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
     fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
 
     for (i = 0; i < count; i++) {
@@ -942,7 +944,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     char sample_name[1024]; /* name of the GRIB sample file */
     char input_grid_type[100];
     char input_packing_type[100];
-    long input_bits_per_value = 0, editionNumber = 0, input_decimal_scale_factor = 0;
+    long editionNumber = 0;
     size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
@@ -964,13 +966,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     grib_get_string(h, "packingType", input_packing_type, &len);
-    grib_get_long(h, "bitsPerValue", &input_bits_per_value);
-    grib_get_long(h, "decimalScaleFactor", &input_decimal_scale_factor);
-    if (h->context->debug == -1) {
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_bits_per_value = %ld\n", input_bits_per_value);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
-    }
 
     /* ECC-1201, ECC-1529, ECC-1530: Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
@@ -1405,7 +1400,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (h->context->debug == -1) {
         fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
         fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
-        print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
+        print_values(h->context, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
     }
 
     /* Apply adjustments to bounding box if needed */
