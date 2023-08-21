@@ -53,6 +53,7 @@ list(APPEND test_c_bins
     grib_set_bytes
     grib_copy_message
     grib_packing_order
+    grib_unpack_subarray
     grib_sh_imag
     grib_spectral
     grib_lam_bf
@@ -156,6 +157,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
+        grib_unpack_subarray
         grib_count
         bufr_templates
         bufr_dump_data
