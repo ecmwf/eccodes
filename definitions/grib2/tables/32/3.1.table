@@ -17,7 +17,7 @@
 # 24-29 Reserved 
 30 30 Lambert conformal (Can be secant or tangent, conical or bipolar)
 31 31 Albers equal area 
-32 32 Reserved 
+# 32 Reserved
 33 33 Lambert conformal with modelling subdomains definition 
 # 34-39 Reserved 
 40 40 Gaussian latitude/longitude 
