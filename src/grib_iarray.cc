@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico Fucile
- ***************************************************************************/
-
 #include "grib_api_internal.h"
 
 /* For debugging purposes */
@@ -142,48 +138,45 @@ grib_iarray* grib_iarray_push(grib_iarray* v, long val)
     return v;
 }
 
-grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
-{
-    size_t start_size    = 100;
-    size_t start_incsize = 100;
-    size_t i;
-    if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
+// grib_iarray* grib_iarray_push_front(grib_iarray* v, long val)
+// {
+//     size_t start_size    = 100;
+//     size_t start_incsize = 100;
+//     size_t i;
+//     if (!v)
+//         v = grib_iarray_new(0, start_size, start_incsize);
+//     if (v->number_of_pop_front) {
+//         v->v--;
+//         v->number_of_pop_front--;
+//     }
+//     else {
+//         if (v->n >= v->size)
+//             v = grib_iarray_resize(v);
+//         for (i = v->n; i > 0; i--)
+//             v[i] = v[i - 1];
+//     }
+//     v->v[0] = val;
+//     v->n++;
+//     return v;
+// }
 
-    if (v->number_of_pop_front) {
-        v->v--;
-        v->number_of_pop_front--;
-    }
-    else {
-        if (v->n >= v->size)
-            v = grib_iarray_resize(v);
-        for (i = v->n; i > 0; i--)
-            v[i] = v[i - 1];
-    }
-    v->v[0] = val;
-    v->n++;
-
-    return v;
-}
-
-grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
-{
-    size_t start_size    = size;
-    size_t start_incsize = 100;
-    long* vp             = 0;
-    long* valp           = val;
-    if (!v)
-        v = grib_iarray_new(0, start_size, start_incsize);
-
-    v  = grib_iarray_resize_to(v, size + v->n);
-    vp = v->v + v->n + v->number_of_pop_front;
-    v->n += size;
-    while (size) {
-        *(vp++) = *(valp++);
-        size--;
-    }
-    return v;
-}
+// grib_iarray* grib_iarray_push_array(grib_iarray* v, long* val, size_t size)
+// {
+//     size_t start_size    = size;
+//     size_t start_incsize = 100;
+//     long* vp             = 0;
+//     long* valp           = val;
+//     if (!v)
+//         v = grib_iarray_new(0, start_size, start_incsize);
+//     v  = grib_iarray_resize_to(v, size + v->n);
+//     vp = v->v + v->n + v->number_of_pop_front;
+//     v->n += size;
+//     while (size) {
+//         *(vp++) = *(valp++);
+//         size--;
+//     }
+//     return v;
+// }
 
 void grib_iarray_delete(grib_iarray* v)
 {

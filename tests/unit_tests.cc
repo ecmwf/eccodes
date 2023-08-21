@@ -543,9 +543,43 @@ void test_scale_factor_scaled_values()
     Assert(factor == 5);
 }
 
+void test_iarray()
+{
+    grib_context* c = grib_context_get_default();
+    grib_iarray* a = grib_iarray_new(c, 10, 10);
+    grib_iarray_push(a, 42);
+    grib_iarray_print("test_iarray", a);
+    grib_iarray_delete(a);
+}
+
+void test_darray()
+{
+    grib_context* c = grib_context_get_default();
+    grib_darray* a = grib_darray_new(c, 10, 10);
+    grib_darray_push(c, a, 42.009);
+    grib_darray_push(c, a, -1.11);
+    grib_darray_push(c, a, 5099);
+    grib_darray_print("test_darray", a);
+    grib_darray_delete(c, a);
+}
+
+void test_sarray()
+{
+    grib_context* c = grib_context_get_default();
+    grib_sarray* a = grib_sarray_new(c, 10, 10);
+    grib_sarray_push(c, a, "ants");
+    grib_sarray_push(c, a, "bugs");
+    grib_sarray_print("test_sarray", a);
+    grib_sarray_delete(c, a);
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_iarray();
+    test_darray();
+    test_sarray();
 
     test_scale_factor_scaled_values();
     test_dates();
