@@ -11,7 +11,6 @@
 
 
 #include "mir/repres/gauss/reduced/FromPL.h"
-#include "eckit/log/JSON.h"
 
 #include "eckit/utils/MD5.h"
 
@@ -61,9 +60,5 @@ atlas::Grid FromPL::atlasGrid() const {
     return atlas::ReducedGaussianGrid(pls(), domain());
 }
 
-void FromPL::json(eckit::JSON& s) const {
-    s << "pl" << pls();
-    Reduced::json(s);
-}
 
 }  // namespace mir::repres::gauss::reduced

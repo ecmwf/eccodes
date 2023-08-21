@@ -12,6 +12,7 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
+#include "eckit/parser/JSON.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/api/MIRJob.h"
@@ -149,6 +150,16 @@ bool Regular::getLongestElementDiagonal(double& d) const {
     d = TWO * util::Earth::distance({0., 0.}, {weHalf, snHalf});
     return true;
 }
+
+
+void Regular::json(eckit::JSON& s) const {
+    s.startObject();
+    s << "type"
+      << "regular_gg";
+    Gaussian::json(s);
+    s.endObject();
+}
+
 
 util::BoundingBox Regular::extendBoundingBox(const util::BoundingBox& bbox) const {
 

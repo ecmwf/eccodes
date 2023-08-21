@@ -16,6 +16,7 @@
 #include <ostream>
 #include <sstream>
 
+#include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 #include "eckit/types/Fraction.h"
 
@@ -80,11 +81,12 @@ void LatLon::print(std::ostream& out) const {
         << "bbox=" << bbox_ << ",increments=" << increments_ << ",ni=" << ni_ << ",nj=" << nj_ << "]";
 }
 
-void LatLon::json(eckit::JSON& out) const {
-    out << "bbox" << bbox_;
-    out << "increments" << increments_;
-    out << "ni" << ni_;
-    out << "nj" << nj_;
+
+void LatLon::json(eckit::JSON& s) const {
+    s << "bbox" << bbox_;
+    s << "increments" << increments_;
+    s << "ni" << ni_;
+    s << "nj" << nj_;
 }
 
 
