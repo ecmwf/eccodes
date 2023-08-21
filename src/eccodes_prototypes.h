@@ -192,9 +192,7 @@ bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t 
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a);
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v, bufr_descriptors_array* ar);
-bufr_descriptors_array* grib_bufr_descriptors_array_push_front(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptor* grib_bufr_descriptors_array_get(bufr_descriptors_array* a, size_t i);
-void grib_bufr_descriptors_array_set(bufr_descriptors_array* a, size_t i, bufr_descriptor* v);
 void grib_bufr_descriptors_array_delete(bufr_descriptors_array* v);
 void grib_bufr_descriptors_array_delete_array(bufr_descriptors_array* v);
 bufr_descriptor** grib_bufr_descriptors_array_get_array(bufr_descriptors_array* v);
