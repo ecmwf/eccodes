@@ -539,5 +539,9 @@ std::string Reduced::factory() const {
     return "reduced_gg";
 }
 
+void Reduced::json(eckit::JSON& s) const {
+    Gaussian::json(s);
+    // s << "pl" << pl_;
+}
 
 }  // namespace mir::repres::gauss::reduced

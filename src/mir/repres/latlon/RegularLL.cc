@@ -14,6 +14,8 @@
 
 #include <ostream>
 
+#include "eckit/log/JSON.h"
+
 #include "mir/iterator/detail/RegularIterator.h"
 #include "mir/repres/Iterator.h"
 #include "mir/util/Atlas.h"
@@ -57,6 +59,14 @@ void RegularLL::print(std::ostream& out) const {
     out << "RegularLL[";
     LatLon::print(out);
     out << "]";
+}
+
+void RegularLL::json(eckit::JSON& json) const {
+    json.startObject();
+    json << "type"
+        << "regular_ll";
+    LatLon::json(json);
+    json.endObject();
 }
 
 atlas::Grid RegularLL::atlasGrid() const {

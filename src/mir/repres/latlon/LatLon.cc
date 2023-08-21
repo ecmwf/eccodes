@@ -80,6 +80,13 @@ void LatLon::print(std::ostream& out) const {
         << "bbox=" << bbox_ << ",increments=" << increments_ << ",ni=" << ni_ << ",nj=" << nj_ << "]";
 }
 
+void LatLon::json(eckit::JSON& out) const {
+    out << "bbox" << bbox_;
+    out << "increments" << increments_;
+    out << "ni" << ni_;
+    out << "nj" << nj_;
+}
+
 
 void LatLon::fillGrib(grib_info& info) const {
     // See copy_spec_from_ksec.c in libemos for info

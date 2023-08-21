@@ -157,6 +157,13 @@ void Representation::makeName(std::ostream& /*unused*/) const {
     throw exception::SeriousBug(os.str());
 }
 
+void Representation::json(eckit::JSON& /*unused*/) const {
+    std::ostringstream os;
+    os << "Representation::json(eckit::JSON& out) not implemented for " << *this;
+    throw exception::SeriousBug(os.str());
+}
+
+
 
 bool Representation::sameAs(const Representation& /*unused*/) const {
     std::ostringstream os;
