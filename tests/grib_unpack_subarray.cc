@@ -28,18 +28,25 @@ int main(int argc, char** argv)
     grib_accessor* a = grib_find_accessor(h, "codedValues");
     Assert(a);
     GRIB_CHECK(grib_get_size(h, "codedValues", &nvalues), 0);
-    double* values = (double*)grib_context_malloc(c, sizeof(double) * nvalues);
-    Assert(values);
+    double* all_values = (double*)grib_context_malloc(c, sizeof(double) * nvalues);
+    double* sub_values = (double*)grib_context_malloc(c, sizeof(double) * nvalues);
+    Assert(all_values);
+    Assert(sub_values);
+
+    size_t len = nvalues;
+    GRIB_CHECK(grib_unpack_double(a, all_values, &len), 0);
 
     size_t start = nvalues / 10;
-    size_t len   = nvalues / 5;
+    len   = nvalues / 5;
     printf("nvalues=%zu, start=%zu, len=%zu\n", nvalues, start, len);
-    GRIB_CHECK(grib_unpack_double_subarray(a, values, start, len), 0);
+    GRIB_CHECK(grib_unpack_double_subarray(a, sub_values, start, len), 0);
     for (size_t i = 0; i < len; ++i) {
-        printf("v[%zu]=%.10e\n", start + i, values[i]);
+        //printf("sub[%zu]=%.10e\n", start + i, sub_values[i]);
+        Assert(all_values[start+i] == sub_values[i]);
     }
 
-    grib_context_free(c, values);
+    grib_context_free(c, all_values);
+    grib_context_free(c, sub_values);
     grib_handle_delete(h);
     fclose(fin);
 
