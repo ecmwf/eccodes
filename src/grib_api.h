@@ -614,9 +614,9 @@ int grib_get_data(const grib_handle* h, double* lats, double* lons, double* valu
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
@@ -625,9 +625,9 @@ int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
