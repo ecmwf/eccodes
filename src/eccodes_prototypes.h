@@ -195,7 +195,6 @@ bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_arra
 bufr_descriptor* grib_bufr_descriptors_array_get(bufr_descriptors_array* a, size_t i);
 void grib_bufr_descriptors_array_delete(bufr_descriptors_array* v);
 void grib_bufr_descriptors_array_delete_array(bufr_descriptors_array* v);
-bufr_descriptor** grib_bufr_descriptors_array_get_array(bufr_descriptors_array* v);
 size_t grib_bufr_descriptors_array_used_size(bufr_descriptors_array* v);
 
 /* grib_darray.cc*/
