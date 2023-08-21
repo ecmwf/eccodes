@@ -176,7 +176,6 @@ void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.cc*/
 grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array);
-grib_hash_array_value* grib_double_hash_array_value_new(grib_context* c, const char* name, grib_darray* array);
 void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 
 /* grib_bufr_descriptor.cc*/
@@ -1139,8 +1138,6 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name);
 /* grib_scaling.cc*/
 double grib_power(long s, long n);
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret);
-long grib_get_bits_per_value(double max, double min, long binary_scale_factor);
-long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale);
 
 /* grib_templates.cc*/
 grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
