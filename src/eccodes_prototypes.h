@@ -183,8 +183,6 @@ void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
 int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v);
-void grib_bufr_descriptor_set_reference(bufr_descriptor* v, long reference);
-void grib_bufr_descriptor_set_width(bufr_descriptor* v, long width);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
 int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
