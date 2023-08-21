@@ -164,7 +164,6 @@ void Representation::json(eckit::JSON& /*unused*/) const {
 }
 
 
-
 bool Representation::sameAs(const Representation& /*unused*/) const {
     std::ostringstream os;
     os << "Representation::sameAs() not implemented for " << *this;
