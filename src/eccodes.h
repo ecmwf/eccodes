@@ -606,9 +606,9 @@ int codes_grib_get_data(const codes_handle* h, double* lats, double* lons, doubl
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double* value);
@@ -617,9 +617,9 @@ int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, double* value);
@@ -628,7 +628,7 @@ int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, do
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the iterator still has next values, 0 otherwise
  */
 int codes_grib_iterator_has_next(codes_iterator* i);
 
@@ -685,7 +685,7 @@ int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, doubl
 /**
  *  Frees a nearest object from memory
  *
- * @param nearest           : the nearest
+ * @param nearest           : the nearest neighbour object
  * @return            0 if OK, integer value on error
  */
 int codes_grib_nearest_delete(codes_nearest* nearest);

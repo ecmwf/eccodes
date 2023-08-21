@@ -599,7 +599,7 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 
 /**
  * Get latitude/longitude and data values.
- * The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+ * The latitudes, longitudes and values arrays must be properly allocated by the caller.
  * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
  *
  * @param h           : handle from which geography and data values are taken
@@ -636,7 +636,7 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the geoiterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the geoiterator still has next values, 0 otherwise
  */
 int grib_iterator_has_next(grib_iterator* i);
 
