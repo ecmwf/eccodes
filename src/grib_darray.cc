@@ -104,17 +104,17 @@ void grib_darray_delete(grib_context* c, grib_darray* v)
     grib_context_free(c, v);
 }
 
-double* grib_darray_get_array(grib_context* c, grib_darray* v)
-{
-    double* ret = NULL;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (double*)grib_context_malloc_clear(c, sizeof(double) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// double* grib_darray_get_array(grib_context* c, grib_darray* v)
+// {
+//     double* ret = NULL;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (double*)grib_context_malloc_clear(c, sizeof(double) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
 int grib_darray_is_constant(grib_darray* v, double epsilon)
 {

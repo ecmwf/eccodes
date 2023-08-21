@@ -40,11 +40,11 @@ bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t 
     return v;
 }
 
-bufr_descriptor* grib_bufr_descriptors_array_pop(bufr_descriptors_array* a)
-{
-    a->n -= 1;
-    return a->v[a->n];
-}
+// bufr_descriptor* grib_bufr_descriptors_array_pop(bufr_descriptors_array* a)
+// {
+//     a->n -= 1;
+//     return a->v[a->n];
+// }
 
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a)
 {

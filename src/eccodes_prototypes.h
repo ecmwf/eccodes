@@ -189,7 +189,6 @@ void grib_bufr_descriptor_delete(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.cc*/
 bufr_descriptors_array* grib_bufr_descriptors_array_new(grib_context* c, size_t size, size_t incsize);
-bufr_descriptor* grib_bufr_descriptors_array_pop(bufr_descriptors_array* a);
 bufr_descriptor* grib_bufr_descriptors_array_pop_front(bufr_descriptors_array* a);
 bufr_descriptors_array* grib_bufr_descriptors_array_push(bufr_descriptors_array* v, bufr_descriptor* val);
 bufr_descriptors_array* grib_bufr_descriptors_array_append(bufr_descriptors_array* v, bufr_descriptors_array* ar);
@@ -206,7 +205,6 @@ void grib_darray_print(const char* title, const grib_darray* darray);
 grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize);
 grib_darray* grib_darray_push(grib_context* c, grib_darray* v, double val);
 void grib_darray_delete(grib_context* c, grib_darray* v);
-double* grib_darray_get_array(grib_context* c, grib_darray* v);
 int grib_darray_is_constant(grib_darray* v, double epsilon);
 size_t grib_darray_used_size(grib_darray* v);
 
