@@ -21,7 +21,7 @@ rm -f $outfile
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ${tools_dir}/grib_set -d4 $infile $outfile
 set +e
-${tools_dir}/grib_compare $infile $outfile
+${tools_dir}/grib_compare -v $infile $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -222,6 +222,20 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+
+# Failing cases
+# -----------------
+set +e
+${tools_dir}/grib_compare -H -c data:n $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/grib_compare -a $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
 
 
 # Clean up
