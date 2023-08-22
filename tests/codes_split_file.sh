@@ -68,6 +68,12 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+set +e
+${tools_dir}/codes_split_file 4 $data_dir
+status=$?
+set -e
+[ $status -eq 1 ]
+
 
 # Clean up
 cd $test_dir
