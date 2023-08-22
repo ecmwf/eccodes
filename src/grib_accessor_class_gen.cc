@@ -301,7 +301,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", a->name);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
@@ -336,7 +336,7 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as %s", a->name, Tname);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name, Tname);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
