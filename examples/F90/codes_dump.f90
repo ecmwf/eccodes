@@ -13,7 +13,7 @@ program grib_dump_test
    integer            :: ifile, iret, msgid
    integer            :: product_kind
    character(len=10)  :: product_string
-   character(len=100) :: infile_name
+   character(len=512) :: infile_name
 
    call getarg(1, product_string)
    product_kind = CODES_PRODUCT_GRIB
