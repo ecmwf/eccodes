@@ -88,6 +88,7 @@ if( HAVE_BUILD_TOOLS )
         grib_calendar
         grib_md5
         grib_cfNames
+        grib_ifsParam
         grib_packing_order
         filter_substr
         grib_uerra
