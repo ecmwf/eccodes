@@ -18,6 +18,7 @@ if( HAVE_BUILD_TOOLS )
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
+          codes_dump
           grib_copy_message
           bufr_copy_message
           grib_get_keys
