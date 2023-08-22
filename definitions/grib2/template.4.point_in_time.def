@@ -30,3 +30,5 @@ meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits) : no_copy
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits) : no_copy;
 meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
 
+constant timepropstring = "inst" : no_copy ;
+alias mars.timeprop = timepropstring ;
