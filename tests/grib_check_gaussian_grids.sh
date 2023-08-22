@@ -14,6 +14,9 @@ tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 
 
+${tools_dir}/grib_check_gaussian_grid -V
+
+
 # Check all sample GRIBs with a Gaussian grid
 samples_dir=$ECCODES_SAMPLES_PATH
 for gg in ${samples_dir}/reduced_gg_* ${samples_dir}/regular_gg_*; do
@@ -53,12 +56,21 @@ grep -q "Error: Sum of pl array 50662 does not match numberOfDataPoints 44" $tem
 input=$samples_dir/reduced_gg_pl_96_grib2.tmpl
 ${tools_dir}/grib_set -s numberOfValues=44 $input $tempGrib
 set +e
-${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+${tools_dir}/grib_check_gaussian_grid -f -v $tempGrib 2> $tempText
 status=$?
 set -e
 [ $status -eq 1 ]
 cat $tempText
 grep -q "Error: Sum of pl array 50662 does not match numberOfValues 44" $tempText
 
+# Failing cases
+# ----------------
+set +e
+${tools_dir}/grib_check_gaussian_grid
+status=$?
+set -e
+[ $status -eq 1 ]
 
+
+# Clean up
 rm -f $tempGrib $tempText
