@@ -391,8 +391,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
-    err = grib_unpack_string(a, v[0], &length);
-    if (err) return err;
+    grib_unpack_string(a, v[0], &length); // TODO(masn): check return value
     *len = 1;
 
     return GRIB_SUCCESS;
