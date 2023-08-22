@@ -71,6 +71,9 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+${tools_dir}/grib_check_gaussian_grid -v $data_dir > $tempText
+grep -q "not a regular file" $tempText
+
 
 # Clean up
 rm -f $tempGrib $tempText
