@@ -102,3 +102,75 @@ else {
 }
 
 meta md5Section4 md5(offsetSection4,section4Length);
+
+if (stepType is "instant") {
+ constant timepropstring = "inst" : no_copy;
+} else {
+ template timeprop "grib2/timeprop.def";
+ if(numberOfTimeRange == 1){
+  constant tloop = typeOfStatisticalProcessing : no_copy ;
+  constant iloop = indicatorOfUnitForTimeRange : no_copy ;
+  constant lloop = lengthOfTimeRange : no_copy ;
+  constant timepropstring = timeprop : no_copy;
+ }
+
+ if(numberOfTimeRange == 2){
+  meta tloop element(typeOfStatisticalProcessing, 0);
+  meta iloop element(indicatorOfUnitForTimeRange, 0);
+  meta lloop element(lengthOfTimeRange, 0);
+  constant timeprop0 = timeprop : no_copy;
+  #
+  meta tloop element(typeOfStatisticalProcessing, 1);
+  meta iloop element(indicatorOfUnitForTimeRange, 1);
+  meta lloop element(lengthOfTimeRange, 1);
+  constant timeprop1 = timeprop : no_copy;
+
+  meta timepropstring sprintf("%s_%s",timeprop0,timeprop1);
+ }
+
+ if(numberOfTimeRange == 3){
+  meta tloop element(typeOfStatisticalProcessing, 0);
+  meta iloop element(indicatorOfUnitForTimeRange, 0);
+  meta lloop element(lengthOfTimeRange, 0);
+  constant timeprop0 = timeprop : no_copy;
+  #
+  meta tloop element(typeOfStatisticalProcessing, 1);
+  meta iloop element(indicatorOfUnitForTimeRange, 1);
+  meta lloop element(lengthOfTimeRange, 1);
+  constant timeprop1 = timeprop : no_copy;
+  #
+  meta tloop element(typeOfStatisticalProcessing, 2);
+  meta iloop element(indicatorOfUnitForTimeRange, 2);
+  meta lloop element(lengthOfTimeRange, 2);
+  constant timeprop2 = timeprop : no_copy;
+
+  meta timepropstring sprintf("%s_%s_%s",timeprop0,timeprop1,timeprop2);
+ }
+
+ if(numberOfTimeRange == 4){
+  meta tloop element(typeOfStatisticalProcessing, 0);
+  meta iloop element(indicatorOfUnitForTimeRange, 0);
+  meta lloop element(lengthOfTimeRange, 0);
+  constant timeprop0 = timeprop : no_copy;
+  #
+  meta tloop element(typeOfStatisticalProcessing, 1);
+  meta iloop element(indicatorOfUnitForTimeRange, 1);
+  meta lloop element(lengthOfTimeRange, 1);
+  constant timeprop1 = timeprop : no_copy;
+  #
+  meta tloop element(typeOfStatisticalProcessing, 2);
+  meta iloop element(indicatorOfUnitForTimeRange, 2);
+  meta lloop element(lengthOfTimeRange, 2);
+  constant timeprop2 = timeprop : no_copy;
+
+  meta tloop element(typeOfStatisticalProcessing, 3);
+  meta iloop element(indicatorOfUnitForTimeRange, 3);
+  meta lloop element(lengthOfTimeRange, 3);
+  constant timeprop3 = timeprop : no_copy;
+
+  meta timepropstring sprintf("%s_%s_%s_%s",timeprop0,timeprop1,timeprop2,timeprop3);
+ }
+
+}
+
+alias mars.timeprop = timepropstring ;
