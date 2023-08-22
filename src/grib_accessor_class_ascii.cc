@@ -229,7 +229,8 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     size_t l   = sizeof(val);
     char* last = NULL;
 
-    grib_unpack_string(a, val, &l);
+    int err = grib_unpack_string(a, val, &l);
+    if (err) return err;
 
     *v = strtod(val, &last);
 
