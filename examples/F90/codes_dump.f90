@@ -10,21 +10,24 @@
 program grib_dump_test
    use eccodes
    implicit none
-   integer            :: ifile
-   integer            :: iret
-   integer            :: count1 = 0
-   integer            :: msgid
+   integer            :: ifile, iret, msgid
+   integer            :: product_kind
+   character(len=10)  :: product_string
    character(len=100) :: infile_name
 
-   call getarg(1, infile_name)
+   call getarg(1, product_string)
+   product_kind = CODES_PRODUCT_GRIB
+   if (product_string == "bufr") product_kind = CODES_PRODUCT_BUFR
+
+   call getarg(2, infile_name)
+
    call codes_open_file(ifile, infile_name, 'r')
 
+   print *, "===== FILE:", infile_name
    do while (.true.)
-      call codes_any_new_from_file(ifile, msgid, iret)
+      call codes_new_from_file(ifile, msgid, product_kind, iret)
+      !call codes_any_new_from_file(ifile, msgid, iret)
       if (iret == CODES_END_OF_FILE) exit
-
-      count1 = count1 + 1
-      print *, "===== Message #", count1
 
       call codes_dump(msgid)
 

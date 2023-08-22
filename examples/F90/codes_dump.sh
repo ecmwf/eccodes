@@ -9,5 +9,5 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_codes_dump ${data_dir}/sample.grib2
-${examples_dir}/eccodes_f_codes_dump ${data_dir}/bufr/airs_57.bufr
+${examples_dir}/eccodes_f_codes_dump grib ${data_dir}/sample.grib2
+${examples_dir}/eccodes_f_codes_dump bufr ${data_dir}/bufr/airs_57.bufr
