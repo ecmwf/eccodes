@@ -11,12 +11,11 @@ program grib_dump_test
    use eccodes
    implicit none
    integer            :: ifile
-   integer            :: iret, i
+   integer            :: iret
    integer            :: count1 = 0
-   integer            :: msgid  ! message identifier
-   character(len=100)  :: infile_name
+   integer            :: msgid
+   character(len=100) :: infile_name
 
-   ifile = 5
    call getarg(1, infile_name)
    call codes_open_file(ifile, infile_name, 'r')
 
