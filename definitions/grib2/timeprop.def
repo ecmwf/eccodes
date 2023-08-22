@@ -1,4 +1,7 @@
 concept timeprop {
+# tloop = typeOfStatisticalProcessing
+# iloop = indicatorOfUnitForTimeRange 
+# lloop = lengthOfTimeRange
  "inst"    = {stepType="instant";}
  "avgd" = {tloop = 0; iloop=1; lloop = 24;}
  "avgw" = {tloop = 0; iloop=1; lloop = 168;}
