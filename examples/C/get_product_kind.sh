@@ -15,6 +15,12 @@ fTmp=${label}.tmp
 fOut=${label}.tmp.out
 fRef=${label}.tmp.ref
 
+set +e
+${examples_dir}/c_get_product_kind
+status=$?
+set -e
+[ $status -eq 1 ]
+
 # Create a file containing one GRIB and three BUFR messages
 cat ${data_dir}/sample.grib2 ${data_dir}/bufr/syno_multi.bufr >$fTmp
 
