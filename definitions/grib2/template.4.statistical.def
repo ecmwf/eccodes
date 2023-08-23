@@ -127,14 +127,14 @@ meta time.validityTime validity_time(date,dataTime,step,stepUnits,hourOfEndOfOve
 meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
 
 template timeprop "grib2/timeprop.def";
-if(numberOfTimeRange == 1){
+if(numberOfTimeRange == 1 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
 constant tloop = typeOfStatisticalProcessing : no_copy ;
 constant iloop = indicatorOfUnitForTimeRange : no_copy ;
 constant lloop = lengthOfTimeRange : no_copy ;
 constant timepropstring = timeprop : no_copy;
 }
 
-if(numberOfTimeRange == 2){
+if(numberOfTimeRange == 2 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
 meta tloop element(typeOfStatisticalProcessing, 0);
 meta iloop element(indicatorOfUnitForTimeRange, 0);
 meta lloop element(lengthOfTimeRange, 0);
@@ -148,7 +148,7 @@ constant timeprop1 = timeprop : no_copy;
 meta timepropstring sprintf("%s_%s",timeprop0,timeprop1);
 }
 
-if(numberOfTimeRange == 3){
+if(numberOfTimeRange == 3 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
 meta tloop element(typeOfStatisticalProcessing, 0);
 meta iloop element(indicatorOfUnitForTimeRange, 0);
 meta lloop element(lengthOfTimeRange, 0);
@@ -167,7 +167,7 @@ constant timeprop2 = timeprop : no_copy;
 meta timepropstring sprintf("%s_%s_%s",timeprop0,timeprop1,timeprop2);
 }
 
-if(numberOfTimeRange == 4){
+if(numberOfTimeRange == 4 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
 meta tloop element(typeOfStatisticalProcessing, 0);
 meta iloop element(indicatorOfUnitForTimeRange, 0);
 meta lloop element(lengthOfTimeRange, 0);

@@ -4,29 +4,41 @@ concept timeprop {
 # lloop = lengthOfTimeRange
  "inst"    = {stepType="instant";}
  "avgd" = {tloop = 0; iloop=1; lloop = 24;}
+ "avgd" = {tloop = 0; iloop=2; lloop = 1;}
  "avgw" = {tloop = 0; iloop=1; lloop = 168;}
  "avgm" = {tloop = 0; iloop=1; lloop = 672;}
  "avgm" = {tloop = 0; iloop=1; lloop = 696;}
  "avgm" = {tloop = 0; iloop=1; lloop = 720;}
  "avgm" = {tloop = 0; iloop=1; lloop = 744;}
+ "avgm" = {tloop = 0; iloop=3; lloop = 1;}
  "maxd" = {tloop = 2; iloop=1; lloop = 24;}
+ "maxd" = {tloop = 2; iloop=2; lloop = 1;}
  "maxw" = {tloop = 2; iloop=1; lloop = 168;}
  "maxm" = {tloop = 2; iloop=1; lloop = 672;}
  "maxm" = {tloop = 2; iloop=1; lloop = 696;}
  "maxm" = {tloop = 2; iloop=1; lloop = 720;}
  "maxm" = {tloop = 2; iloop=1; lloop = 744;}
+ "maxm" = {tloop = 2; iloop=3; lloop = 1;}
  "mind" = {tloop = 3; iloop=1; lloop = 24;}
+ "mind" = {tloop = 3; iloop=2; lloop = 1;}
  "minw" = {tloop = 3; iloop=1; lloop = 168;}
  "minm" = {tloop = 3; iloop=1; lloop = 672;}
  "minm" = {tloop = 3; iloop=1; lloop = 696;}
  "minm" = {tloop = 3; iloop=1; lloop = 720;}
  "minm" = {tloop = 3; iloop=1; lloop = 744;}
+ "minm" = {tloop = 3; iloop=3; lloop = 1;}
  "avg" = {tloop = 0;}
  "accum" = {tloop = 1;}
  "max" = {tloop = 2;}
  "min" = {tloop = 3;}
+ "stdanom" = {tloop = 10;}
+ "sev" = {tloop = 100;}
+ "mode" = {tloop = 101;}
  "1h"   = {iloop=1; lloop = 1;}
  "3h"   = {iloop=1; lloop = 3;}
+ "3h"   = {iloop=10; lloop = 1;}
  "6h"   = {iloop=1; lloop = 6;}
+ "6h"   = {iloop=11; lloop = 1;}
  "12h"   = {iloop=1; lloop = 12;}
+ "12h"   = {iloop=12; lloop = 1;}
 }
