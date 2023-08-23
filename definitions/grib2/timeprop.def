@@ -3,6 +3,7 @@ concept timeprop {
 # iloop = indicatorOfUnitForTimeRange 
 # lloop = lengthOfTimeRange
  "inst"    = {stepType="instant";}
+ "avg" = {tloop = 0; iloop=1; numberOfTimeRange = 1;}
  "avgd" = {tloop = 0; iloop=1; lloop = 24;}
  "avgd" = {tloop = 0; iloop=2; lloop = 1;}
  "avgw" = {tloop = 0; iloop=1; lloop = 168;}
@@ -11,6 +12,7 @@ concept timeprop {
  "avgm" = {tloop = 0; iloop=1; lloop = 720;}
  "avgm" = {tloop = 0; iloop=1; lloop = 744;}
  "avgm" = {tloop = 0; iloop=3; lloop = 1;}
+ "max" = {tloop = 2; iloop=1; numberOfTimeRange = 1;}
  "maxd" = {tloop = 2; iloop=1; lloop = 24;}
  "maxd" = {tloop = 2; iloop=2; lloop = 1;}
  "maxw" = {tloop = 2; iloop=1; lloop = 168;}
@@ -19,6 +21,7 @@ concept timeprop {
  "maxm" = {tloop = 2; iloop=1; lloop = 720;}
  "maxm" = {tloop = 2; iloop=1; lloop = 744;}
  "maxm" = {tloop = 2; iloop=3; lloop = 1;}
+ "min" = {tloop = 3; iloop=1; numberOfTimeRange = 1;}
  "mind" = {tloop = 3; iloop=1; lloop = 24;}
  "mind" = {tloop = 3; iloop=2; lloop = 1;}
  "minw" = {tloop = 3; iloop=1; lloop = 168;}
@@ -29,7 +32,33 @@ concept timeprop {
  "minm" = {tloop = 3; iloop=3; lloop = 1;}
  "avg" = {tloop = 0;}
  "accum" = {tloop = 1;}
- "accum" = {tloop = 1; numberOfTimeRange = 1 ;}
+ "accum" = {tloop = 1; numberOfTimeRange = 1;}
+ "accum" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 1;}
+ "accum" = {tloop = 1; iloop=2; lloop = 1; numberOfTimeRange = 1;}
+ "accumd" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 2;}
+ "accumd" = {tloop = 1; iloop=2; lloop = 1; numberOfTimeRange = 2;}
+ "accumd" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 3;}
+ "accumd" = {tloop = 1; iloop=2; lloop = 1; numberOfTimeRange = 3;}
+ "accumd" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 4;}
+ "accumd" = {tloop = 1; iloop=2; lloop = 1; numberOfTimeRange = 4;}
+ "accumw" = {tloop = 1; iloop=1; lloop = 168; numberOfTimeRange = 2;}
+ "accumw" = {tloop = 1; iloop=1; lloop = 168; numberOfTimeRange = 3;}
+ "accumw" = {tloop = 1; iloop=1; lloop = 168; numberOfTimeRange = 4;}
+ "accumm" = {tloop = 1; iloop=3; lloop = 1; numberOfTimeRange = 2;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 672; numberOfTimeRange = 2;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 696; numberOfTimeRange = 2;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 720; numberOfTimeRange = 2;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 744; numberOfTimeRange = 2;}
+ "accumm" = {tloop = 1; iloop=3; lloop = 1; numberOfTimeRange = 3;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 672; numberOfTimeRange = 3;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 696; numberOfTimeRange = 3;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 720; numberOfTimeRange = 3;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 744; numberOfTimeRange = 3;}
+ "accumm" = {tloop = 1; iloop=3; lloop = 1; numberOfTimeRange = 4;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 672; numberOfTimeRange = 4;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 696; numberOfTimeRange = 4;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 720; numberOfTimeRange = 4;}
+ "accumm" = {tloop = 1; iloop=1; lloop = 744; numberOfTimeRange = 4;}
  "max" = {tloop = 2;}
  "min" = {tloop = 3;}
  "stdanom" = {tloop = 10;}
