@@ -73,11 +73,97 @@ concept timeprop {
  "stdanom" = {tloop = 10;}
  "sev" = {tloop = 100;}
  "mode" = {tloop = 101;}
+ "sev" = {tloop = 100; iloop=1;}
+ "mode" = {tloop = 101; iloop=1;}
+ "mean1h"   = {tloop = 0; iloop=1; lloop = 1; numberOfTimeRange = 2;}
+ "accum1h"   = {tloop = 1; iloop=1; lloop = 1; numberOfTimeRange = 2;}
+ "max1h"   = {tloop = 2; iloop=1; lloop = 1; numberOfTimeRange = 2;}
+ "min1h"   = {tloop = 3; iloop=1; lloop = 1; numberOfTimeRange = 2;}
+ "mean1h"   = {tloop = 0; iloop=1; lloop = 1; numberOfTimeRange = 3;}
+ "accum1h"   = {tloop = 1; iloop=1; lloop = 1; numberOfTimeRange = 3;}
+ "max1h"   = {tloop = 2; iloop=1; lloop = 1; numberOfTimeRange = 3;}
+ "min1h"   = {tloop = 3; iloop=1; lloop = 1; numberOfTimeRange = 3;}
+ "mean1h"   = {tloop = 0; iloop=1; lloop = 1; numberOfTimeRange = 4;}
+ "accum1h"   = {tloop = 1; iloop=1; lloop = 1; numberOfTimeRange = 4;}
+ "max1h"   = {tloop = 2; iloop=1; lloop = 1; numberOfTimeRange = 4;}
+ "min1h"   = {tloop = 3; iloop=1; lloop = 1; numberOfTimeRange = 4;}
  "1h"   = {iloop=1; lloop = 1;}
+ "mean3h"   = {tloop = 0; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "accum3h"   = {tloop = 1; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "max3h"   = {tloop = 2; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "min3h"   = {tloop = 3; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "mean3h"   = {tloop = 0; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "accum3h"   = {tloop = 1; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "max3h"   = {tloop = 2; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "min3h"   = {tloop = 3; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "mean3h"   = {tloop = 0; iloop=1; lloop = 3; numberOfTimeRange = 4;}
+ "accum3h"   = {tloop = 1; iloop=1; lloop = 3; numberOfTimeRange = 4;}
+ "max3h"   = {tloop = 2; iloop=1; lloop = 3; numberOfTimeRange = 4;}
+ "min3h"   = {tloop = 3; iloop=1; lloop = 3; numberOfTimeRange = 4;}
+ "mean3h"   = {tloop = 0; iloop=10; lloop = 1; numberOfTimeRange = 2;}
+ "accum3h"   = {tloop = 1; iloop=10; lloop = 1; numberOfTimeRange = 2;}
+ "max3h"   = {tloop = 2; iloop=10; lloop = 1; numberOfTimeRange = 2;}
+ "min3h"   = {tloop = 3; iloop=10; lloop = 1; numberOfTimeRange = 2;}
+ "mean3h"   = {tloop = 0; iloop=10; lloop = 1; numberOfTimeRange = 3;}
+ "accum3h"   = {tloop = 1; iloop=10; lloop = 1; numberOfTimeRange = 3;}
+ "max3h"   = {tloop = 2; iloop=10; lloop = 1; numberOfTimeRange = 3;}
+ "min3h"   = {tloop = 3; iloop=10; lloop = 1; numberOfTimeRange = 3;}
+ "mean3h"   = {tloop = 0; iloop=10; lloop = 1; numberOfTimeRange = 4;}
+ "accum3h"   = {tloop = 1; iloop=10; lloop = 1; numberOfTimeRange = 4;}
+ "max3h"   = {tloop = 2; iloop=10; lloop = 1; numberOfTimeRange = 4;}
+ "min3h"   = {tloop = 3; iloop=10; lloop = 1; numberOfTimeRange = 4;}
  "3h"   = {iloop=1; lloop = 3;}
  "3h"   = {iloop=10; lloop = 1;}
+ "mean6h"   = {tloop = 0; iloop=1; lloop = 6; numberOfTimeRange = 2;}
+ "accum6h"   = {tloop = 1; iloop=1; lloop = 6; numberOfTimeRange = 2;}
+ "max6h"   = {tloop = 2; iloop=1; lloop = 6; numberOfTimeRange = 2;}
+ "min6h"   = {tloop = 3; iloop=1; lloop = 6; numberOfTimeRange = 2;}
+ "mean6h"   = {tloop = 0; iloop=1; lloop = 6; numberOfTimeRange = 3;}
+ "accum6h"   = {tloop = 1; iloop=1; lloop = 6; numberOfTimeRange = 3;}
+ "max6h"   = {tloop = 2; iloop=1; lloop = 6; numberOfTimeRange = 3;}
+ "min6h"   = {tloop = 3; iloop=1; lloop = 6; numberOfTimeRange = 3;}
+ "mean6h"   = {tloop = 0; iloop=1; lloop = 6; numberOfTimeRange = 4;}
+ "accum6h"   = {tloop = 1; iloop=1; lloop = 6; numberOfTimeRange = 4;}
+ "max6h"   = {tloop = 2; iloop=1; lloop = 6; numberOfTimeRange = 4;}
+ "min6h"   = {tloop = 3; iloop=1; lloop = 6; numberOfTimeRange = 4;}
+ "mean6h"   = {tloop = 0; iloop=11; lloop = 1; numberOfTimeRange = 2;}
+ "accum6h"   = {tloop = 1; iloop=11; lloop = 1; numberOfTimeRange = 2;}
+ "max6h"   = {tloop = 2; iloop=11; lloop = 1; numberOfTimeRange = 2;}
+ "min6h"   = {tloop = 3; iloop=11; lloop = 1; numberOfTimeRange = 2;}
+ "mean6h"   = {tloop = 0; iloop=11; lloop = 1; numberOfTimeRange = 3;}
+ "accum6h"   = {tloop = 1; iloop=11; lloop = 1; numberOfTimeRange = 3;}
+ "max6h"   = {tloop = 2; iloop=11; lloop = 1; numberOfTimeRange = 3;}
+ "min6h"   = {tloop = 3; iloop=11; lloop = 1; numberOfTimeRange = 3;}
+ "mean6h"   = {tloop = 0; iloop=11; lloop = 1; numberOfTimeRange = 4;}
+ "accum6h"   = {tloop = 1; iloop=11; lloop = 1; numberOfTimeRange = 4;}
+ "max6h"   = {tloop = 2; iloop=11; lloop = 1; numberOfTimeRange = 4;}
+ "min6h"   = {tloop = 3; iloop=11; lloop = 1; numberOfTimeRange = 4;}
  "6h"   = {iloop=1; lloop = 6;}
  "6h"   = {iloop=11; lloop = 1;}
+ "mean12h"   = {tloop = 0; iloop=1; lloop = 12; numberOfTimeRange = 2;}
+ "accum12h"   = {tloop = 1; iloop=1; lloop = 12; numberOfTimeRange = 2;}
+ "max12h"   = {tloop = 2; iloop=1; lloop = 12; numberOfTimeRange = 2;}
+ "min12h"   = {tloop = 3; iloop=1; lloop = 12; numberOfTimeRange = 2;}
+ "mean12h"   = {tloop = 0; iloop=1; lloop = 12; numberOfTimeRange = 3;}
+ "accum12h"   = {tloop = 1; iloop=1; lloop = 12; numberOfTimeRange = 3;}
+ "max12h"   = {tloop = 2; iloop=1; lloop = 12; numberOfTimeRange = 3;}
+ "min12h"   = {tloop = 3; iloop=1; lloop = 12; numberOfTimeRange = 3;}
+ "mean12h"   = {tloop = 0; iloop=1; lloop = 12; numberOfTimeRange = 4;}
+ "accum12h"   = {tloop = 1; iloop=1; lloop = 12; numberOfTimeRange = 4;}
+ "max12h"   = {tloop = 2; iloop=1; lloop = 12; numberOfTimeRange = 4;}
+ "min12h"   = {tloop = 3; iloop=1; lloop = 12; numberOfTimeRange = 4;}
+ "mean12h"   = {tloop = 0; iloop=12; lloop = 1; numberOfTimeRange = 2;}
+ "accum12h"   = {tloop = 1; iloop=12; lloop = 1; numberOfTimeRange = 2;}
+ "max12h"   = {tloop = 2; iloop=12; lloop = 1; numberOfTimeRange = 2;}
+ "min12h"   = {tloop = 3; iloop=12; lloop = 1; numberOfTimeRange = 2;}
+ "mean12h"   = {tloop = 0; iloop=12; lloop = 1; numberOfTimeRange = 3;}
+ "accum12h"   = {tloop = 1; iloop=12; lloop = 1; numberOfTimeRange = 3;}
+ "max12h"   = {tloop = 2; iloop=12; lloop = 1; numberOfTimeRange = 3;}
+ "min12h"   = {tloop = 3; iloop=12; lloop = 1; numberOfTimeRange = 3;}
+ "mean12h"   = {tloop = 0; iloop=12; lloop = 1; numberOfTimeRange = 4;}
+ "accum12h"   = {tloop = 1; iloop=12; lloop = 1; numberOfTimeRange = 4;}
+ "max12h"   = {tloop = 2; iloop=12; lloop = 1; numberOfTimeRange = 4;}
+ "min12h"   = {tloop = 3; iloop=12; lloop = 1; numberOfTimeRange = 4;}
  "12h"   = {iloop=1; lloop = 12;}
  "12h"   = {iloop=12; lloop = 1;}
 }
