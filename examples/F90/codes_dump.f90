@@ -7,7 +7,7 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-program grib_dump_test
+program codes_dump_test
    use eccodes
    implicit none
    integer            :: ifile, iret, msgid
