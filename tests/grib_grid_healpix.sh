@@ -13,7 +13,7 @@
 label="grib_healpix_test"
 tempFilter="temp.${label}.filt"
 tempGrib="temp.${label}.grib"
-tempOut="temp.${label}.out"
+tempLog="temp.${label}.log"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
@@ -46,7 +46,7 @@ cat > $tempFilter <<EOF
   set tablesVersion = 32;
   set gridType = "healpix";
   set numberOfPointsAlongASide = 1;
-  set values = {1,2,3,4,5,6,7,8,9,10,11,12}; # 12*N*N
+  set values = {1,2,3,4,5,6,7,8,9,10,11,12}; # count=12*N*N
   write;
 EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
@@ -65,6 +65,22 @@ EOF
 
 ${tools_dir}/grib_filter $tempFilter $tempGrib
 
+# Invalid cases
+# --------------
+set +e
+${tools_dir}/grib_get_data -sN=0 $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Nside must be greater than zero" $tempLog
+
+set +e
+${tools_dir}/grib_get_data -s orderingConvention=nested $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Only ring ordering is supported" $tempLog
+
 
 # Clean up
-rm -f $tempFilter $tempGrib $tempOut
+rm -f $tempFilter $tempGrib $tempLog
