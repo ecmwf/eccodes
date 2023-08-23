@@ -332,6 +332,18 @@ ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
 grep -q "No args: false" $tempOut
 
 
+# Use of dummy expression (=true)
+cat >$tempFilt <<EOF
+  if (~) { print "case 1"; }
+  if (!~) { assert(0); }
+  else    { print "case 2"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+cat $tempOut
+grep -q "case 1" $tempOut
+grep -q "case 2" $tempOut
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
