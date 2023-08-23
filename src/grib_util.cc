@@ -114,7 +114,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
     /*to allow free of buffer*/
-    h->buffer->property = GRIB_MY_BUFFER;
+    h->buffer->property = CODES_MY_BUFFER;
 
     switch (edition) {
         case 1:
@@ -1810,7 +1810,7 @@ int parse_keyval_string(const char* grib_tool,
         if (*p == ':') {
             values[i].type = grib_type_to_int(*(p + 1));
             if (*(p + 1) == 'n')
-                values[i].type = GRIB_NAMESPACE;
+                values[i].type = CODES_NAMESPACE;
             *p = '\0';
             p++;
         }

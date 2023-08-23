@@ -1623,7 +1623,7 @@ static int grib_get_key_value(grib_handle* h, grib_key_value_list* kv)
             err              = grib_get_bytes(h, kv->name, (unsigned char*)kv->string_value, &size);
             kv->error        = err;
             break;
-        case GRIB_NAMESPACE:
+        case CODES_NAMESPACE:
             iter                = grib_keys_iterator_new(h, 0, kv->name);
             list                = (grib_key_value_list*)grib_context_malloc_clear(h->context, sizeof(grib_key_value_list));
             kv->namespace_value = list;
@@ -1672,7 +1672,7 @@ void grib_key_value_list_delete(grib_context* c, grib_key_value_list* kvl)
     grib_key_value_list* p    = NULL;
     while (next) {
         p = next->next;
-        if (next->type == GRIB_NAMESPACE)
+        if (next->type == CODES_NAMESPACE)
             grib_key_value_list_delete(c, next->namespace_value);
 
         grib_clean_key_value(c, next);

@@ -292,7 +292,7 @@ static grib_context default_grib_context = {
     0,               /* grib_concept_path          */
     0,               /* grib_reader                */
     0,               /* user data                  */
-    GRIB_REAL_MODE8, /* real mode for fortran      */
+    CODES_REAL_MODE8, /* real mode for fortran     */
 
 #if MANAGE_MEM
     &grib_transient_free,    /* free_mem                   */

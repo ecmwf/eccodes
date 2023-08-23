@@ -919,7 +919,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         for (i = 0; i < options->compare_count; i++) {
             if (blocklisted((char*)options->compare[i].name))
                 continue;
-            if (options->compare[i].type == GRIB_NAMESPACE) {
+            if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
                     printf("ERROR: unable to get iterator\n");
@@ -960,7 +960,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             for (i = 0; i < options->compare_count; i++) {
                 if (blocklisted(name))
                     continue;
-                if (options->compare[i].type == GRIB_NAMESPACE) {
+                if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                     if (!iter) {
                         printf("ERROR: unable to get iterator for %s\n", options->compare[i].name);

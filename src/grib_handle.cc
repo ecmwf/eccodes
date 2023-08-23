@@ -196,7 +196,7 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
         return NULL;
     }
 
-    gl->buffer->property = GRIB_USER_BUFFER;
+    gl->buffer->property = CODES_USER_BUFFER;
 
     next = gl->context->grib_reader->first->root;
     while (next) {
@@ -401,7 +401,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
     memcpy(copy, data, size);
 
     g                   = grib_handle_new_from_message(c, copy, size);
-    g->buffer->property = GRIB_MY_BUFFER;
+    g->buffer->property = CODES_MY_BUFFER;
 
     return g;
 }
@@ -421,7 +421,7 @@ grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const vo
     memcpy(copy, data, size);
 
     g                   = grib_handle_new_from_partial_message(c, copy, size);
-    g->buffer->property = GRIB_MY_BUFFER;
+    g->buffer->property = CODES_MY_BUFFER;
 
     return g;
 }
@@ -607,7 +607,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         return NULL;
     }
 
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
@@ -764,7 +764,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     }
 
     gl->offset           = gm->offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
@@ -844,7 +844,7 @@ grib_handle* gts_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_GTS;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -885,7 +885,7 @@ grib_handle* taf_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_TAF;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -926,7 +926,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_METAR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -994,7 +994,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_BUFR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1046,7 +1046,7 @@ grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_ANY;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1119,7 +1119,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
 
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1415,7 +1415,7 @@ int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
 //         grib_handle_delete(h);
 //         return NULL;
 //     }
-//     h->buffer->property = GRIB_USER_BUFFER;
+//     h->buffer->property = CODES_USER_BUFFER;
 //     h->header_mode = 1;
 //     return h;
 // }

@@ -1344,7 +1344,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
         for (i = 0; i < options->compare_count; i++) {
             if (blocklisted(options->compare[i].name))
                 continue;
-            if (options->compare[i].type == GRIB_NAMESPACE) {
+            if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                 if (!iter) {
                     grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
@@ -1406,7 +1406,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             for (i = 0; i < options->compare_count; i++) {
                 if (blocklisted(name))
                     continue;
-                if (options->compare[i].type == GRIB_NAMESPACE) {
+                if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                     if (!iter) {
                         grib_context_log(handle1->context, GRIB_LOG_ERROR,
