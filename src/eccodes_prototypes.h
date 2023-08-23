@@ -83,9 +83,6 @@ grib_action* grib_action_create_set(grib_context* context, const char* name, gri
 /* action_class_set_darray.cc*/
 grib_action* grib_action_create_set_darray(grib_context* context, const char* name, grib_darray* darray);
 
-/* action_class_set_iarray.cc*/
-grib_action* grib_action_create_set_iarray(grib_context* context, const char* name, grib_iarray* iarray);
-
 /* action_class_set_sarray.cc*/
 grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray);
 

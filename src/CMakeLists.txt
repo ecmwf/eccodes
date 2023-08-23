@@ -35,7 +35,6 @@ list( APPEND eccodes_src_files
     action_class_set.cc
     action_class_set_sarray.cc
     action_class_set_darray.cc
-    action_class_set_iarray.cc
     action_class_noop.cc
     action_class_write.cc
     action_class_print.cc
