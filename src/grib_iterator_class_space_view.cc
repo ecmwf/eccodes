@@ -81,6 +81,8 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
+#define ITER "Space view Geoiterator"
+
 static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
     grib_iterator_space_view* self = (grib_iterator_space_view*)iter;
@@ -178,7 +180,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* sXpInGridLengths                 = grib_arguments_get_name(h, args, self->carg++);
     const char* sYpInGridLengths                 = grib_arguments_get_name(h, args, self->carg++);
     const char* sOrientationInDegrees            = grib_arguments_get_name(h, args, self->carg++);
-    const char* sNrInRadiusOfEarth               = grib_arguments_get_name(h, args, self->carg++);
+    const char* sNrInRadiusOfEarthScaled         = grib_arguments_get_name(h, args, self->carg++);
     const char* sXo                              = grib_arguments_get_name(h, args, self->carg++);
     const char* sYo                              = grib_arguments_get_name(h, args, self->carg++);
 
@@ -206,7 +208,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Wrong number of points (%ld!=%ldx%ld)", iter->nv, nx, ny);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, sLatOfSubSatellitePointInDegrees, &latOfSubSatellitePointInDegrees)) != GRIB_SUCCESS)
@@ -225,11 +227,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
 
     /* Orthographic not supported. This happens when Nr (camera altitude) is missing */
-    if (grib_is_missing(h, sNrInRadiusOfEarth, &ret)) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Orthographic view (Nr missing) not supported");
-        return GRIB_NOT_IMPLEMENTED;
+    if (grib_is_missing(h, "Nr", &ret)) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Orthographic view (Nr missing) not supported", ITER);
+        return GRIB_GEOCALCULUS_PROBLEM;
     }
-    if ((ret = grib_get_double_internal(h, sNrInRadiusOfEarth, &nrInRadiusOfEarth)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, sNrInRadiusOfEarthScaled, &nrInRadiusOfEarth)) != GRIB_SUCCESS)
         return ret;
 
     if ((ret = grib_get_long_internal(h, sXo, &Xo)) != GRIB_SUCCESS)
@@ -254,7 +256,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (nrInRadiusOfEarth == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Key %s must be greater than zero", sNrInRadiusOfEarth);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s must be greater than zero", ITER, sNrInRadiusOfEarthScaled);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -265,8 +267,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     lop = lonOfSubSatellitePointInDegrees;
     if (lap != 0.0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Space View: Key '%s' must be 0 (satellite must be located in the equator plane)",
-                         sLatOfSubSatellitePointInDegrees);
+                         "%s: Key %s must be 0 (satellite must be located in the equator plane)",
+                         ITER, sLatOfSubSatellitePointInDegrees);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
@@ -280,7 +282,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     /* adjustBadlyEncodedEcmwfGribs(h, &nx, &ny, &dx, &dy, &xp, &yp); */
     if (dx == 0 || dy == 0) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Space View: Keys %s and %s must be greater than zero", sDx, sDy);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Keys %s and %s must be greater than zero", ITER, sDx, sDy);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
     rx = angular_size / dx;
@@ -288,12 +290,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     self->lats = (double*)grib_context_malloc(h->context, array_size);
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", array_size);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, array_size);
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", array_size);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, array_size);
         return GRIB_OUT_OF_MEMORY;
     }
     lats = self->lats;
@@ -318,12 +320,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     /* Store array of sin and cosine values to avoid recalculation */
     s_x = (double*)grib_context_malloc(h->context, nx * sizeof(double));
     if (!s_x) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nx * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nx * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     c_x = (double*)grib_context_malloc(h->context, nx * sizeof(double));
     if (!c_x) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Error allocating %ld bytes", nx * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nx * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
