@@ -545,36 +545,66 @@ void test_scale_factor_scaled_values()
 
 void test_iarray()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
     grib_iarray* a = grib_iarray_new(c, 10, 10);
     grib_iarray_push(a, 42);
-    grib_iarray_print("test_iarray", a);
+    grib_iarray_push(a, 10000);
+    grib_iarray_print("iarray", a);
+
+    grib_iarray* b = grib_iarray_new(c, 1, 1);
+    grib_iarray_push(b, 0);
+    grib_iarray_push(b, -1);
+    grib_iarray_push(b, +1);
+
+    grib_viarray* va = grib_viarray_new(c, 1, 1);
+    grib_viarray_push(c, va, a);
+    grib_viarray_push(c, va, b);
+    grib_viarray_print("viarray", va);
+
     grib_iarray_delete(a);
+    grib_iarray_delete(b);
+    grib_viarray_delete(c, va);
 }
 
 void test_darray()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
     grib_darray* a = grib_darray_new(c, 10, 10);
     grib_darray_push(c, a, 42.009);
     grib_darray_push(c, a, -1.11);
     grib_darray_push(c, a, 5099);
-    grib_darray_print("test_darray", a);
+    grib_darray_print("darray", a);
+
+    grib_darray* b = grib_darray_new(c, 5, 1);
+    grib_darray_push(c, b, 8);
+    grib_darray_push(c, b, 12);
+
+    grib_vdarray* va = grib_vdarray_new(c, 1, 1);
+    grib_vdarray_push(c, va, a);
+    grib_vdarray_push(c, va, b);
+    grib_vdarray_print("vdarray", va);
+
     grib_darray_delete(c, a);
+    grib_darray_delete(c, b);
+    grib_vdarray_delete(c, va);
 }
 
 void test_sarray()
 {
+    printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
     grib_sarray* a = grib_sarray_new(c, 10, 10);
     grib_sarray_push(c, a, "ants");
     grib_sarray_push(c, a, "bugs");
-    grib_sarray_print("test_sarray", a);
+    grib_sarray_print("sarray", a);
     grib_sarray_delete(c, a);
 }
 
 void test_codes_get_product_name()
 {
+    printf("Running %s ...\n", __func__);
     Assert( STR_EQUAL("ANY",   codes_get_product_name(PRODUCT_ANY)) );
     Assert( STR_EQUAL("GRIB",  codes_get_product_name(PRODUCT_GRIB)) );
     Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
@@ -584,6 +614,7 @@ void test_codes_get_product_name()
 
 void test_codes_get_type_name()
 {
+    printf("Running %s ...\n", __func__);
     Assert( STR_EQUAL("long",    grib_get_type_name(GRIB_TYPE_LONG)) );
     Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
     Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
