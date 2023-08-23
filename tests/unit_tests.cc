@@ -573,6 +573,15 @@ void test_sarray()
     grib_sarray_delete(c, a);
 }
 
+void test_codes_get_product_name()
+{
+    Assert( STR_EQUAL("ANY", codes_get_product_name(PRODUCT_ANY)) );
+    Assert( STR_EQUAL("GRIB", codes_get_product_name(PRODUCT_GRIB)) );
+    Assert( STR_EQUAL("BUFR", codes_get_product_name(PRODUCT_BUFR)) );
+    Assert( STR_EQUAL("GTS", codes_get_product_name(PRODUCT_GTS)) );
+    Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
@@ -580,6 +589,8 @@ int main(int argc, char** argv)
     test_iarray();
     test_darray();
     test_sarray();
+
+    test_codes_get_product_name();
 
     test_scale_factor_scaled_values();
     test_dates();
