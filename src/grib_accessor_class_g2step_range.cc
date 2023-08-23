@@ -141,21 +141,19 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     int ret     = 0;
     size_t size = 0;
 
-    size_t stepOutputFormatSize = 128;
-    char stepOutputFormat[stepOutputFormatSize];
-    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
-        return ret;
+    if (futureOutputEnabled(h)) {
+        Step<double> step_a;
+        Step<double> step_b;
+        if ((ret = getOptTimeRange(h, step_a, step_b)) != GRIB_SUCCESS)
+            return ret;
 
-    if (strcmp(stepOutputFormat, "future") == 0) {
-        auto [forcastTime, lengthOfTimeRange] = getTimeRange(h);
-        auto [step_a, step_b] = findCommonUnits(forcastTime.optimizeUnit(), lengthOfTimeRange.optimizeUnit());
-        step_a.hide_hour_unit();
-        step_b.hide_hour_unit();
         if (step_a == step_b) {
-            snprintf(buf, sizeof(buf), "%ld%s", step_a.value(), step_a.unit().to_string().c_str());
+            //snprintf(buf, sizeof(buf), "%ld%s", step_a.value(), step_a.unit().to_string().c_str());
+            snprintf(buf, sizeof(buf), "%0.2f%s", step_a.value(), step_a.unit().to_string().c_str());
         }
         else {
-            snprintf(buf, sizeof(buf), "%ld%s-%ld%s", step_a.value(), step_a.unit().to_string().c_str(), step_b.value(), step_b.unit().to_string().c_str());
+            //snprintf(buf, sizeof(buf), "%ld%s-%ld%s", step_a.value(), step_a.unit().to_string().c_str(), step_b.value(), step_b.unit().to_string().c_str());
+            snprintf(buf, sizeof(buf), "%0.2f%s-%0.2f%s", step_a.value(), step_a.unit().to_string().c_str(), step_b.value(), step_b.unit().to_string().c_str());
         }
     }
     else {

@@ -306,32 +306,19 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len) {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
+    //auto [step, step_b] = getOptTimeRange(h);
+    Step<double> step_a;
+    Step<double> step_b;
+    if ((ret = getOptTimeRange(h, step_a, step_b)) != GRIB_SUCCESS)
+        return ret;
 
-    //size_t stepOutputFormatSize = 128;
-    //char stepOutputFormat[stepOutputFormatSize];
-    //if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
-    //    return ret;
-
-    //long unit;
-    //if ((ret = grib_get_long_internal(h, self->codedUnits, &unit)) != GRIB_SUCCESS)
-    //    return ret;
-
-    //long value;
-    //if ((ret = grib_get_long_internal(h, self->codedStep, &value)) != GRIB_SUCCESS)
-    //    return ret;
-
-    //Step<long> step{value, unit};
-    //step.optimizeUnit();
-
-    auto [forcastTime, lengthOfTimeRange] = getTimeRange(h);
-    auto [step, step_b] = findCommonUnits(forcastTime.optimizeUnit(), lengthOfTimeRange.optimizeUnit());
+    snprintf(val, *len, "%f%s", step_a.value(), step_a.unit().to_string().c_str());
 
     if (futureOutputEnabled(h)) {
-        step.hide_hour_unit();
-        snprintf(val, *len, "%ld%s", step.value(), step.unit().to_string().c_str());
+        snprintf(val, *len, "%f%s", step_a.value(), step_a.unit().to_string().c_str());
     }
     else {
-        snprintf(val, *len, "%ld", step.value());
+        snprintf(val, *len, "%f", step_a.value());
     }
 
     return GRIB_SUCCESS;

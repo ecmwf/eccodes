@@ -9,6 +9,13 @@
 #include "step.h"
 
 
+UnitType::Map UnitType::map_{};
+
+std::vector<Unit> UnitType::unitOrder = {
+            Unit::SECOND,
+            Unit::MINUTE,
+            Unit::HOUR,
+        };
 
 
 std::string parse_step(std::string step) {
@@ -25,7 +32,7 @@ std::pair<Step<long>, Step<long>> findCommonUnits(const Step<long>& startStep, c
 
     if (a.value_ == 0 || b.value_ == 0) {
         if (a.value_ == 0 && b.value_ == 0) {
-            Step<long>::Unit unit = a.unit_ > b.unit_ ? a.unit_ : b.unit_;
+            UnitType unit = a.unit_ > b.unit_ ? a.unit_ : b.unit_;
             a.setUnit(unit);
             b.setUnit(unit);
         }
@@ -38,11 +45,11 @@ std::pair<Step<long>, Step<long>> findCommonUnits(const Step<long>& startStep, c
         return {a, b};
     }
 
-    auto it = std::find_if(Step<long>::Unit::unitOrder.begin(), Step<long>::Unit::unitOrder.end(), [&](const auto& e) {
+    auto it = std::find_if(UnitType::unitOrder.begin(), UnitType::unitOrder.end(), [&](const auto& e) {
         return e == a.unit().to_value() || e == b.unit().to_value();
     });
 
-    assert(it != Step<long>::Unit::unitOrder.end());
+    assert(it != UnitType::unitOrder.end());
 
     a.setUnit(*it);
     b.setUnit(*it);

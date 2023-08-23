@@ -18,19 +18,24 @@ std::optional<Step<long>> getStep(grib_handle* h, const std::string& value_key, 
     }
 }
 
+
 std::optional<Step<long>> getForecastTime(grib_handle* h) {
     return getStep(h, "forecastTime", "indicatorOfUnitOfTimeRange");
 }
 
+
 std::optional<Step<long>> getLengthOfTimeRange(grib_handle* h) {
     return getStep(h, "lengthOfTimeRange", "indicatorOfUnitForTimeRange");
 }
+
 
 std::pair<Step<long>, Step<long>> getTimeRange(grib_handle* h) {
     auto forecast_time = getForecastTime(h);
     auto length_of_time_range = getLengthOfTimeRange(h);
     return {forecast_time.value(), forecast_time.value() + length_of_time_range.value_or(Step<long>())};
 }
+
+
 
 bool futureOutputEnabled(grib_handle* h) {
     int ret = 0;
