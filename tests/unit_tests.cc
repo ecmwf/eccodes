@@ -575,11 +575,21 @@ void test_sarray()
 
 void test_codes_get_product_name()
 {
-    Assert( STR_EQUAL("ANY", codes_get_product_name(PRODUCT_ANY)) );
-    Assert( STR_EQUAL("GRIB", codes_get_product_name(PRODUCT_GRIB)) );
-    Assert( STR_EQUAL("BUFR", codes_get_product_name(PRODUCT_BUFR)) );
-    Assert( STR_EQUAL("GTS", codes_get_product_name(PRODUCT_GTS)) );
+    Assert( STR_EQUAL("ANY",   codes_get_product_name(PRODUCT_ANY)) );
+    Assert( STR_EQUAL("GRIB",  codes_get_product_name(PRODUCT_GRIB)) );
+    Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
+    Assert( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
     Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+}
+
+void test_codes_get_type_name()
+{
+    Assert( STR_EQUAL("long",    grib_get_type_name(GRIB_TYPE_LONG)) );
+    Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
+    Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
+    Assert( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
+    Assert( STR_EQUAL("label",   grib_get_type_name(GRIB_TYPE_LABEL)) );
+    Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
 int main(int argc, char** argv)
@@ -591,6 +601,7 @@ int main(int argc, char** argv)
     test_sarray();
 
     test_codes_get_product_name();
+    test_codes_get_type_name();
 
     test_scale_factor_scaled_values();
     test_dates();
