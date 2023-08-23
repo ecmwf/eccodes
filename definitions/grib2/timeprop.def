@@ -29,6 +29,7 @@ concept timeprop {
  "minm" = {tloop = 3; iloop=3; lloop = 1;}
  "avg" = {tloop = 0;}
  "accum" = {tloop = 1;}
+ "accum" = {tloop = 1; numberOfTimeRange = 1 ;}
  "max" = {tloop = 2;}
  "min" = {tloop = 3;}
  "stdanom" = {tloop = 10;}
