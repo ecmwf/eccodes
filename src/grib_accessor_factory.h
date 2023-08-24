@@ -35,7 +35,6 @@
 { "data_apply_bitmap", &grib_accessor_class_data_apply_bitmap, },
 { "data_apply_boustrophedonic", &grib_accessor_class_data_apply_boustrophedonic, },
 { "data_apply_boustrophedonic_bitmap", &grib_accessor_class_data_apply_boustrophedonic_bitmap, },
-{ "data_apply_gdsnotpresent", &grib_accessor_class_data_apply_gdsnotpresent, },
 { "data_ccsds_packing", &grib_accessor_class_data_ccsds_packing, },
 { "data_complex_packing", &grib_accessor_class_data_complex_packing, },
 { "data_dummy_field", &grib_accessor_class_data_dummy_field, },

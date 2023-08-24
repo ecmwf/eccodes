@@ -604,8 +604,6 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
 
 /* grib_accessor_class_gds_not_present_bitmap.cc*/
 
-/* grib_accessor_class_data_apply_gdsnotpresent.cc*/
-
 /* grib_accessor_class_gds_is_present.cc*/
 
 /* grib_accessor_class_select_step_template.cc*/
