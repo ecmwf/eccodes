@@ -85,7 +85,7 @@ static void init_class(grib_iterator_class* c)
 
 
 #define ITER "HEALPix Geoiterator"
-#define RAD2DEG 57.29577951308232087684 /* 180 over pi */
+#define RAD2DEG 57.29577951308232087684 // 180 over pi
 
 size_t HEALPix_nj(size_t N, size_t i)
 {
@@ -96,7 +96,7 @@ size_t HEALPix_nj(size_t N, size_t i)
                                : HEALPix_nj(N, ni - 1 - i);
 }
 
-// Thanks to Willem Deconinck
+// Thanks to Willem Deconinck and Pedro Maciel
 //
 // y[] = { y0, y1, y2, y3, ... };   // the latitude values
 // PL[] = { 4, ...  } ; // the number of values on each latitude

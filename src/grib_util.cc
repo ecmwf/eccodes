@@ -1024,9 +1024,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         spec->grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX ||
         spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
         if (editionNumber == 1) { /* These grid types are not available in edition 1 */
-            if (h->context->debug == -1)
-                fprintf(stderr, "ECCODES DEBUG grib_util: '%s' specified "
-                                "but input is GRIB1. Output must be a higher edition!\n", grid_type);
+            fprintf(stderr, "ECCODES WARNING %s: '%s' specified "
+                            "but input is GRIB1. Output must be a higher edition!\n", __func__, grid_type);
             convertEditionEarlier = 1;
         }
     }
