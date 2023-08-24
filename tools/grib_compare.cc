@@ -14,6 +14,7 @@ grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
     { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
     { "b:", 0, 0, 0, 1, 0 },
+    { "d", 0, "Write different messages on files.\n", 0, 1, 0 },
     { "e", 0, "Edition independent compare. It is used to compare GRIB edition 1 and 2.\n", 0, 1, 0 },
     { "2", 0, "Enable two-way comparison.\n", 0, 1, 0 },
     { "c:", 0, 0, 0, 1, 0 },
@@ -64,7 +65,6 @@ static double global_tolerance     = 0;
 static int packingCompare          = 0;
 static grib_string_list* blocklist = 0;
 static int compareAbsolute         = 1;
-
 static int error     = 0;
 static int count     = 0;
 static int lastPrint = 0;
@@ -87,6 +87,8 @@ static int listFromCommandLine = 0;
 static int editionIndependent  = 0;
 static int verbose             = 0;
 static double tolerance_factor = 1;
+static int write_error         = 0;
+static int write_count         = 0;
 
 static grib_handle* handle1 = NULL;
 static int global_counter   = 0;
@@ -152,6 +154,42 @@ static double compare_double_relative(const double* a, const double* b, double t
     return relativeError > tolerance ? relativeError : 0;
 }
 
+static void write_message(grib_handle* h, const char* str)
+{
+    const void* m;
+    size_t s;
+    char fname[1024] = {0,};
+    FILE* fh;
+
+    grib_get_message(h, &m, &s);
+    snprintf(fname, sizeof(fname), "%s_%d.grib", str, write_count);
+
+    fh = fopen(fname, "w");
+    if (!fh) {
+        grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+                         "Error opening %s", fname);
+        exit(GRIB_IO_PROBLEM);
+    }
+
+    if (fwrite(m, 1, s, fh) != s) {
+        grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
+                         "Error writing to %s", fname);
+        exit(GRIB_IO_PROBLEM);
+    }
+
+    fclose(fh);
+}
+
+static void write_messages(grib_handle* handle1, grib_handle* handle2)
+{
+    if (!write_error)
+        return;
+    write_count++;
+
+    write_message(handle1, "error1");
+    write_message(handle2, "error2");
+}
+
 static int blocklisted(const char* name)
 {
     grib_string_list* b = blocklist;
@@ -211,6 +249,11 @@ int grib_tool_init(grib_runtime_options* options)
         two_way = 1;
     else
         two_way = 0;
+
+    if (grib_options_on("d"))
+        write_error = 1;
+    else
+        write_error = 0;
 
     verbose = grib_options_on("v");
 
@@ -460,6 +503,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* hand
 
         if (compare_handles(handle2, handle1, options)) {
             error++;
+            write_messages(handle2, handle1);
             if (!force) exit(1);
         }
 
@@ -481,6 +525,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* hand
 
     if (compare_handles(handle1, handle2, options)) {
         error++;
+        write_messages(handle1, handle2);
         if (!two_way) {
             /* If two_way mode: Don't exit yet. Show further differences */
             if (!force) exit(1);
@@ -491,6 +536,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* hand
         handles_swapped = 1;
         if (compare_handles(handle2, handle1, options)) {
             error++;
+            write_messages(handle2, handle1);
             if (!force) exit(1);
         }
         else {
@@ -1192,8 +1238,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
             if (blocklisted(name))
                 continue;
-            if (compare_values(options, h11, h22, name, GRIB_TYPE_UNDEFINED))
+            if (compare_values(options, h11, h22, name, GRIB_TYPE_UNDEFINED)) {
                 err++;
+            }
         }
 
         grib_keys_iterator_delete(iter);
@@ -1219,8 +1266,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
                     if (blocklisted(name))
                         continue;
-                    if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED))
+                    if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
                         err++;
+                    }
                 }
                 grib_keys_iterator_delete(iter);
                 if (num_keys_in_namespace == 0 && !editionIndependent) {
@@ -1228,8 +1276,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                 }
             }
             else {
-                if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type))
+                if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type)) {
                     err++;
+                }
             }
         }
     }
@@ -1254,8 +1303,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
             if (blocklisted(name))
                 continue;
-            if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED))
+            if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
                 err++;
+            }
         }
 
         grib_keys_iterator_delete(iter);
@@ -1276,14 +1326,16 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
                         if (blocklisted(name))
                             continue;
-                        if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED))
+                        if (compare_values(options, h1, h2, name, GRIB_TYPE_UNDEFINED)) {
                             err++;
+                        }
                     }
                     grib_keys_iterator_delete(iter);
                 }
                 else {
-                    if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type))
+                    if (compare_values(options, h1, h2, options->compare[i].name, options->compare[i].type)) {
                         err++;
+                    }
                 }
             }
         }

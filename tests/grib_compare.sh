@@ -46,6 +46,20 @@ cat temp.$label.3 temp.$label.2 temp.$label.1 > temp.$label.321
 # Compare files in which the messages are not in the same order
 ${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
+# Make a change in the data values of 2nd file
+${tools_dir}/grib_set -s scaleValuesBy=1.1 temp.$label.2 temp.$label.2.changed
+cat temp.$label.2 temp.$label.1 temp.$label.3 > temp.$label.213
+cat temp.$label.3 temp.$label.2.changed temp.$label.1 > temp.$label.321
+set +e
+${tools_dir}/grib_compare -d -r temp.$label.213 temp.$label.321
+status=$?
+set -e
+[ $status -eq 1 ]
+
+cmp temp.$label.2.changed error2_1.grib
+cmp temp.$label.2         error1_1.grib
+rm -f error1_1.grib error2_1.grib
+rm -f temp.$label.2.changed
 rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
 # ----------------------------------------------
