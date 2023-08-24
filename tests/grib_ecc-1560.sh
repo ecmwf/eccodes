@@ -63,3 +63,4 @@ grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface 3456
 
 # Clean up
 rm -f $temp_PDTN08_Grib $temp_PDTN11_Grib $tempGrib
+rm -f $temp_PDTN00_Grib
