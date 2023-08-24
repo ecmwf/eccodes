@@ -10,24 +10,18 @@
 
 . ./include.ctest.sh
 
-#set -x
-
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/gts
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="gts_compare_test"
 
-#Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp GTS file
 fGtsTmp=${label}".gts.tmp"
 fRules=${label}".filt"
-fBufrInput1=${label}".bufr.input1"
-fBufrInput2=${label}".bufr.input2"
 
 #----------------------------------------------------
 # Test: comparing same files
@@ -61,7 +55,14 @@ rm -f error1_1.gts error2_1.gts
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
 #----------------------------------------------------
-${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp >> $fLog
+# Add wrong blocklist. Should still fail
+set +e
+${tools_dir}/gts_compare -b CCCC $gts_file $fGtsTmp
+status=$?
+set -e
+[ $status -eq 1 ]
+# Add correct blocklist
+${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
 
-#Clean up
+# Clean up
 rm -f $fLog $fGtsTmp $fRules

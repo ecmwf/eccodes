@@ -53,6 +53,13 @@ rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
 #----------------------------------------------------
+# Add wrong blocklist. Should still fail
+set +e
+${tools_dir}/metar_compare -b CCCC $metar_file $fMetarTmp
+status=$?
+set -e
+[ $status -eq 1 ]
+# Add correct blocklist
 ${tools_dir}/metar_compare -b minute,theMessage $metar_file $fMetarTmp
 
 #Clean up
