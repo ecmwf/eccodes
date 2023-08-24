@@ -1328,18 +1328,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     grib_keys_iterator* iter = NULL;
     const char* name         = NULL;
 
-    /* mask only if no -c option or headerMode (-H)*/
-    if (blocklist && (!listFromCommandLine || headerMode)) {
-        /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
-        /*
-        grib_string_list* nextb=blocklist;
-        while (nextb) {
-            grib_clear(handle1,nextb->value);
-            grib_clear(handle2,nextb->value);
-            nextb=nextb->next;
-        }*/
-    }
-
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
             if (blocklisted(options->compare[i].name))

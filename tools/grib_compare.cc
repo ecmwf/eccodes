@@ -1143,16 +1143,15 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     grib_keys_iterator* iter = NULL;
     grib_context* context    = handle1->context;
 
-    /* mask only if no -c option or headerMode (-H)*/
-    if (blocklist && (!listFromCommandLine || headerMode)) {
-        /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
-        /* grib_string_list* nextb=blocklist;
-        while (nextb) {
-            grib_clear(h1,nextb->value);
-            grib_clear(h2,nextb->value);
-            nextb=nextb->next;
-        } */
-    }
+    //if (blocklist && (!listFromCommandLine || headerMode)) {
+        // See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory!
+        // grib_string_list* nextb=blocklist;
+        // while (nextb) {
+        //    grib_clear(h1,nextb->value);
+        //    grib_clear(h2,nextb->value);
+        //    nextb=nextb->next;
+        // }
+    //}
 
     if (headerMode) {
         // An alternative implementation:

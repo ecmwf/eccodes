@@ -264,10 +264,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int err = 0;
     count++;
 
-    if (options->random)
-        global_handle = grib_fieldset_next_handle(options->idx, &err);
-    else
-        global_handle = gts_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
+    global_handle = gts_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
@@ -290,7 +287,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
-    if (!options->through_index && !options->random) {
+    if (!options->through_index) {
         global_handle = gts_new_from_file(h->context, options->infile_extra->file, &err);
 
         if (!global_handle || err != GRIB_SUCCESS)
@@ -723,16 +720,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     int i                    = 0;
     grib_keys_iterator* iter = NULL;
     const char* name         = NULL;
-
-    /* mask only if no -c option */
-    if (blocklist && !listFromCommandLine) {
-        grib_string_list* nextb = blocklist;
-        while (nextb) {
-            grib_clear(h1, nextb->value);
-            grib_clear(h2, nextb->value);
-            nextb = nextb->next;
-        }
-    }
 
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
