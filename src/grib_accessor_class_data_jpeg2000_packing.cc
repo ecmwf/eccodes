@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 /*
@@ -49,7 +50,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -138,12 +138,6 @@ static grib_accessor_class _grib_accessor_class_data_jpeg2000_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_jpeg2000_packing = &_grib_accessor_class_data_jpeg2000_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -271,8 +265,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     self->dirty = 0;
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
+    bscale = codes_power<double>(binary_scale_factor, 2);
+    dscale = codes_power<double>(-decimal_scale_factor, 10);
 
     /* TODO: This should be called upstream */
     if (*len < n_vals)
@@ -411,8 +405,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return ret;
 
-    decimal = grib_power(decimal_scale_factor, 10);
-    divisor = grib_power(-binary_scale_factor, 2);
+    decimal = codes_power<double>(decimal_scale_factor, 10);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
     simple_packing_size = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
     buf                 = (unsigned char*)grib_context_malloc_clear(a->context, simple_packing_size + EXTRA_BUFFER_SIZE);

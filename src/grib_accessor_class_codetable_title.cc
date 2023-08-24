@@ -35,7 +35,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int get_native_type(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_codetable_title
 {
@@ -98,12 +97,6 @@ static grib_accessor_class _grib_accessor_class_codetable_title = {
 
 grib_accessor_class* grib_accessor_class_codetable_title = &_grib_accessor_class_codetable_title;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef struct grib_accessor_codetable
@@ -157,11 +150,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         strcpy(tmp, table->entries[value].title);
     }
     else {
-#if 1
         snprintf(tmp, sizeof(tmp), "%d", (int)value);
-#else
-        return GRIB_DECODING_ERROR;
-#endif
     }
 
     l = strlen(tmp) + 1;

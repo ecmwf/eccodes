@@ -10,12 +10,12 @@ alias Ny=Nj;
 # Resolution and component flags
 include "grib1/grid_first_last_resandcomp.def";
 
-#  Di - i direction increment
+# Di - i direction increment
 unsigned[2] iDirectionIncrement : can_be_missing,dump,edition_specific;
 meta geography.iDirectionIncrementInDegrees scale(iDirectionIncrement,oneConstant,grib1divider,truncateDegrees) : can_be_missing,dump;
 alias Di = iDirectionIncrement;
 
-#  N - number of parallels between a pole and the equator
+# N - number of parallels between a pole and the equator
 unsigned[2] N : dump ;
 alias numberOfParallelsBetweenAPoleAndTheEquator=N;
 alias geography.N=N;

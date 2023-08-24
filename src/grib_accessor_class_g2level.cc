@@ -43,7 +43,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g2level
 {
@@ -110,12 +109,6 @@ static grib_accessor_class _grib_accessor_class_g2level = {
 
 grib_accessor_class* grib_accessor_class_g2level = &_grib_accessor_class_g2level;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -128,6 +121,9 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->scale_first    = grib_arguments_get_name(hand, c, n++);
     self->value_first    = grib_arguments_get_name(hand, c, n++);
     self->pressure_units = grib_arguments_get_name(hand, c, n++);
+
+    // See ECC-1644
+    a->flags |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -313,9 +309,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     // Not sure if this is necessary
     //   if (value_first == GRIB_MISSING_LONG) {
-    //       if ((ret=grib_set_missing_internal(hand, self->scale_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->scale_first)) != GRIB_SUCCESS)
     //           return ret;
-    //       if ((ret=grib_set_missing_internal(hand, self->value_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->value_first)) != GRIB_SUCCESS)
     //           return ret;
     //       return GRIB_SUCCESS;
     //   }
@@ -353,11 +349,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     // In this scenario we do not want to change the scale/value.
     // However when the user directly sets the level or when we are changing edition, then
     // we do want to change the scale/value.
-#if 0
-    if (hand->loader && hand->loader->changing_edition==0) {
-        change_scale_and_value = 0;
-    }
-#endif
+    // if (hand->loader && hand->loader->changing_edition==0) {
+    //    change_scale_and_value = 0;
+    // }
+
     if (change_scale_and_value) {
         if (type_first > 9) {
             if ((ret = grib_set_long_internal(hand, self->scale_first, scale_first)) != GRIB_SUCCESS)

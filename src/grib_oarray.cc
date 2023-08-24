@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *
- *   Enrico Fucile
- *
- ***************************************************************************/
-
 #include "grib_api_internal.h"
 
 grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
@@ -24,7 +18,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_oarray*)grib_context_malloc_clear(c, sizeof(grib_oarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %lu bytes\n", sizeof(grib_oarray));
+                         "grib_oarray_new unable to allocate %zu bytes", sizeof(grib_oarray));
         return NULL;
     }
     v->size    = size;
@@ -34,7 +28,7 @@ grib_oarray* grib_oarray_new(grib_context* c, size_t size, size_t incsize)
     v->context = c;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_new unable to allocate %lu bytes\n", sizeof(char*) * size);
+                         "grib_oarray_new unable to allocate %zu bytes", sizeof(char*) * size);
         return NULL;
     }
     return v;
@@ -51,7 +45,7 @@ static grib_oarray* grib_oarray_resize(grib_oarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_oarray_resize unable to allocate %lu bytes\n", sizeof(char*) * newsize);
+                         "grib_oarray_resize unable to allocate %zu bytes", sizeof(char*) * newsize);
         return NULL;
     }
     return v;
@@ -82,45 +76,38 @@ void grib_oarray_delete(grib_context* c, grib_oarray* v)
     grib_context_free(c, v);
 }
 
-#if 0
-void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
-{
-    int i;
-    if (!v || !v->v)
-        return;
-    if (!c)
-        c = grib_context_get_default();
-    for (i = 0; i < v->n; i++) {
-        if (v->v[i]) {
-            grib_context_free(c, v->v[i]);
-            v->v[i] = 0;
-        }
-    }
-    v->n = 0;
-}
-#endif
+// void grib_oarray_delete_content(grib_context* c, grib_oarray* v)
+// {
+//     int i;
+//     if (!v || !v->v)
+//         return;
+//     if (!c)
+//         c = grib_context_get_default();
+//     for (i = 0; i < v->n; i++) {
+//         if (v->v[i]) {
+//             grib_context_free(c, v->v[i]);
+//             v->v[i] = 0;
+//         }
+//     }
+//     v->n = 0;
+// }
 
-void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
-{
-    void** ret = NULL;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (void**)grib_context_malloc_clear(c, sizeof(char*) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// void** grib_oarray_get_array(grib_context* c, grib_oarray* v)
+// {
+//     void** ret = NULL;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (void**)grib_context_malloc_clear(c, sizeof(char*) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
 void* grib_oarray_get(grib_oarray* v, int i)
 {
-    DebugAssert(i >= 0);
+    DEBUG_ASSERT(i >= 0);
     if (v == NULL || (size_t)i > v->n - 1)
         return NULL;
     return v->v[i];
-}
-
-size_t grib_oarray_used_size(grib_oarray* v)
-{
-    return v->n;
 }

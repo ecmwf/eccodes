@@ -30,7 +30,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_transient
 {
@@ -38,6 +37,7 @@ typedef struct grib_accessor_transient
     /* Members defined in gen */
     /* Members defined in variable */
     double dval;
+    float  fval;
     char*  cval;
     char*  cname;
     int    type;
@@ -96,11 +96,5 @@ static grib_accessor_class _grib_accessor_class_transient = {
 
 
 grib_accessor_class* grib_accessor_class_transient = &_grib_accessor_class_transient;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */

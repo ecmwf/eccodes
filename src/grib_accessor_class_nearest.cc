@@ -33,7 +33,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_nearest
 {
@@ -95,12 +94,6 @@ static grib_accessor_class _grib_accessor_class_nearest = {
 
 
 grib_accessor_class* grib_accessor_class_nearest = &_grib_accessor_class_nearest;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

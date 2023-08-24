@@ -2,16 +2,12 @@
  
 abstract_long_vector, &grib_accessor_class_abstract_long_vector
 abstract_vector, &grib_accessor_class_abstract_vector
-apply_operators, &grib_accessor_class_apply_operators
-array, &grib_accessor_class_array
 ascii, &grib_accessor_class_ascii
-assert, &grib_accessor_class_assert
 bit, &grib_accessor_class_bit
 bitmap, &grib_accessor_class_bitmap
 bits, &grib_accessor_class_bits
 bits_per_value, &grib_accessor_class_bits_per_value
 blob, &grib_accessor_class_blob
-box, &grib_accessor_class_box
 budgdate, &grib_accessor_class_budgdate
 bufr_data_array, &grib_accessor_class_bufr_data_array
 bufr_data_element, &grib_accessor_class_bufr_data_element
@@ -37,7 +33,6 @@ constant, &grib_accessor_class_constant
 count_file, &grib_accessor_class_count_file
 count_missing, &grib_accessor_class_count_missing
 count_total, &grib_accessor_class_count_total
-data_2order_packing, &grib_accessor_class_data_2order_packing
 data_apply_bitmap, &grib_accessor_class_data_apply_bitmap
 data_apply_boustrophedonic, &grib_accessor_class_data_apply_boustrophedonic
 data_apply_boustrophedonic_bitmap, &grib_accessor_class_data_apply_boustrophedonic_bitmap
@@ -77,12 +72,10 @@ double, &grib_accessor_class_double
 element, &grib_accessor_class_element
 evaluate, &grib_accessor_class_evaluate
 expanded_descriptors, &grib_accessor_class_expanded_descriptors
-forward, &grib_accessor_class_forward
 from_scale_factor_scaled_value, &grib_accessor_class_from_scale_factor_scaled_value
 g1_half_byte_codeflag, &grib_accessor_class_g1_half_byte_codeflag
 g1_message_length, &grib_accessor_class_g1_message_length
 g1_section4_length, &grib_accessor_class_g1_section4_length
-g1area, &grib_accessor_class_g1area
 g1bitmap, &grib_accessor_class_g1bitmap
 g1date, &grib_accessor_class_g1date
 g1day_of_the_year_date, &grib_accessor_class_g1day_of_the_year_date
@@ -120,19 +113,13 @@ headers_only, &grib_accessor_class_headers_only
 ibmfloat, &grib_accessor_class_ibmfloat
 ieeefloat, &grib_accessor_class_ieeefloat
 ifs_param, &grib_accessor_class_ifs_param
-int16, &grib_accessor_class_int16
 int16_little_endian, &grib_accessor_class_int16_little_endian
-int32, &grib_accessor_class_int32
-int32_little_endian, &grib_accessor_class_int32_little_endian
-int64, &grib_accessor_class_int64
 int64_little_endian, &grib_accessor_class_int64_little_endian
-int8, &grib_accessor_class_int8
 iterator, &grib_accessor_class_iterator
 julian_date, &grib_accessor_class_julian_date
 julian_day, &grib_accessor_class_julian_day
 ksec1expver, &grib_accessor_class_ksec1expver
 label, &grib_accessor_class_label
-laplacian, &grib_accessor_class_laplacian
 latitudes, &grib_accessor_class_latitudes
 latlon_increment, &grib_accessor_class_latlon_increment
 latlonvalues, &grib_accessor_class_latlonvalues
@@ -147,7 +134,6 @@ mars_step, &grib_accessor_class_mars_step
 md5, &grib_accessor_class_md5
 message, &grib_accessor_class_message
 message_copy, &grib_accessor_class_message_copy
-missing, &grib_accessor_class_missing
 nearest, &grib_accessor_class_nearest
 non_alpha, &grib_accessor_class_non_alpha
 number_of_coded_values, &grib_accessor_class_number_of_coded_values
@@ -160,6 +146,7 @@ octet_number, &grib_accessor_class_octet_number
 offset_file, &grib_accessor_class_offset_file
 offset_values, &grib_accessor_class_offset_values
 pack_bufr_values, &grib_accessor_class_pack_bufr_values
+packing_type, &grib_accessor_class_packing_type
 pad, &grib_accessor_class_pad
 padding, &grib_accessor_class_padding
 padto, &grib_accessor_class_padto
@@ -196,7 +183,6 @@ step_in_units, &grib_accessor_class_step_in_units
 sum, &grib_accessor_class_sum
 suppressed, &grib_accessor_class_suppressed
 time, &grib_accessor_class_time
-times, &grib_accessor_class_times
 to_double, &grib_accessor_class_to_double
 to_integer, &grib_accessor_class_to_integer
 to_string, &grib_accessor_class_to_string

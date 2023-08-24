@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- *
- * Description: file pool
- *
- */
-
 #include "grib_api_internal.h"
 #define GRIB_MAX_OPENED_FILES 200
 
@@ -296,7 +290,7 @@ void grib_file_pool_delete_file(grib_file* file)
                 break;
             prev = prev->next;
         }
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = file->next;
         }
@@ -436,21 +430,19 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
 
 void grib_file_delete(grib_file* file)
 {
-    {
-        if (!file)
-            return;
-    }
+    if (!file) return;
+
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex1);
     /* GRIB-803: cannot call fclose yet! Causes crash */
     /* TODO: Set handle to NULL in filepool too */
-#if 0
-    if (file->handle) {
-        if (fclose(file->handle) != 0) {
-            perror(file->name);
-        }
-    }
-#endif
+
+    //if (file->handle) {
+    //    if (fclose(file->handle) != 0) {
+    //        perror(file->name);
+    //    }
+    //}
+
     if (file->name)
         free(file->name);
     if (file->mode)

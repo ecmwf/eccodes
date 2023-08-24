@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 /*
@@ -57,7 +58,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -153,12 +153,6 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_constant_wid
 
 
 grib_accessor_class* grib_accessor_class_data_g1second_order_constant_width_packing = &_grib_accessor_class_data_g1second_order_constant_width_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -298,8 +292,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         printf("XXXXXXX extrabits=%ld pos=%ld\n",extrabits,pos);
     }*/
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
     for (i = 0; i < numberOfSecondOrderPackedValues; i++) {
         values[i] = (double)(((X[i] * s) + reference_value) * d);
     }

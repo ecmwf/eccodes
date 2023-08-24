@@ -10,8 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005
- *   Enrico Fucile
- *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -28,7 +26,7 @@ grib_handle* grib_handle_of_accessor(const grib_accessor* a)
 static grib_handle* handle_of(grib_accessor* observed)
 {
     grib_handle* h = NULL;
-    DebugAssert(observed);
+    DEBUG_ASSERT(observed);
     /* printf("+++++ %s->parent = %p\n",observed->name,observed->parent); */
     /* printf("+++++ %s = %p\n",observed->name,observed); */
     /* printf("+++++       h=%p\n",observed->h); */
@@ -69,15 +67,12 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
         d    = d->next;
     }
 
-#if 0
-    d = h->dependencies;
-    while(d)
-    {
-        last = d;
-        d = d->next;
-    }
-
-#endif
+//     d = h->dependencies;
+//     while(d)
+//     {
+//         last = d;
+//         d = d->next;
+//     }
 
     d = (grib_dependency*)grib_context_malloc_clear(h->context, sizeof(grib_dependency));
     Assert(d);
@@ -86,11 +81,9 @@ void grib_dependency_add(grib_accessor* observer, grib_accessor* observed)
     d->observer = observer;
     d->next     = 0;
 
-    /*printf("observe %p %p %s %s\n",(void*)observed,(void*)observer, observed->name,observer->name);*/
-#if 0
-    d->next     = h->dependencies;
-    h->dependencies = d;
-#endif
+    //printf("observe %p %p %s %s\n",(void*)observed,(void*)observer, observed->name,observer->name);
+//     d->next     = h->dependencies;
+//     h->dependencies = d;
 
     if (last)
         last->next = d;

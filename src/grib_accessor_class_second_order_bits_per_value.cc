@@ -12,6 +12,7 @@
  *  Enrico Fucile
  **********************************/
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -42,7 +43,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_second_order_bits_per_value
 {
@@ -109,24 +109,8 @@ static grib_accessor_class _grib_accessor_class_second_order_bits_per_value = {
 
 grib_accessor_class* grib_accessor_class_second_order_bits_per_value = &_grib_accessor_class_second_order_bits_per_value;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
-/*
-static const size_t nbits[32]={
-        0x1, 0x2, 0x4, 0x8, 0x10, 0x20,
-        0x40, 0x80, 0x100, 0x200, 0x400, 0x800,
-        0x1000, 0x2000, 0x4000, 0x8000, 0x10000, 0x20000,
-        0x40000, 0x80000, 0x100000, 0x200000, 0x400000, 0x800000,
-        0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000,
-        0x40000000, 0x80000000
-};
-*/
 static const size_t nbits[64] = {
     0x1, 0x2, 0x4, 0x8,
     0x10, 0x20, 0x40, 0x80,
@@ -225,8 +209,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             min = values[i];
     }
 
-    d = grib_power(decimalScaleFactor, 10);
-    b = grib_power(-binaryScaleFactor, 2);
+    d = codes_power<double>(decimalScaleFactor, 10);
+    b = codes_power<double>(-binaryScaleFactor, 2);
 
     /* self->bitsPerValue=(long)ceil(log((double)((max-min)*d+1))/log(2.0))-binaryScaleFactor; */
     /* See GRIB-540 for why we use ceil */

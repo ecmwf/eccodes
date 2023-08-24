@@ -20,6 +20,6 @@
 18 18 Heat flux correction (W m-2)
 19 19 Sea surface height tendency due to parameterization (m s-1)
 20 20 Deviation of sea level from mean with inverse barometer correction (m)
-# 21-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 21-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

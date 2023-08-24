@@ -7,7 +7,7 @@
 5 5 Ocean vertical salt diffusivity (m2/s)
 6 6 Ocean vertical momentum diffusivity (m2/s)
 7 7 Bathymetry (m)
-# 8-10 Reserved 
+# 8-10 Reserved
 11 11 Shape factor with respect to salinity profile (-)
 12 12 Shape factor with respect to temperature profile in thermocline (-)
 13 13 Attenuation coefficient of water with respect to solar radiation (/m)
@@ -27,5 +27,5 @@
 27 27 Upward water velocity (m s-1)
 28 28 Vertical eddy diffusivity (m2 s-1)
 # 29-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

@@ -50,10 +50,20 @@ centre=`${tools_dir}/grib_get -p centre:l $outfile`
 # Set without -s. Expected to fail
 # ----------------------------------------------------
 set +e
-${tools_dir}/grib_set -p levtype $infile $outfile 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_set -p levtype $infile $outfile > $temp 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
+grep -q "provide some keys to set" $temp
+
+# Set with empty -s. Expected to fail
+# ----------------------------------------------------
+set +e
+${tools_dir}/grib_set -s '' $infile $outfile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "provide some keys to set" $temp
 
 # Out-of-bounds value. Expected to fail
 # ----------------------------------------------------
@@ -75,6 +85,23 @@ set -e
 [ $status -ne 0 ]
 grep -q "Trying to encode a negative value of -1 for key of type unsigned" $temp
 
+# ECC-1605: Out-of-bounds value for signed keys
+# ----------------------------------------------------
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+    set +e
+    ${tools_dir}/grib_set -s forecastTime=2147483648 $input $outfile 2>$temp
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "Trying to encode value of 2147483648 but the allowable range is -2147483647 to 2147483647" $temp
+
+    set +e
+    ${tools_dir}/grib_set -s forecastTime=-2147483650 $input $outfile 2>$temp
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+fi
 
 # GRIB-941: encoding of GRIB2 angles
 # -----------------------------------
@@ -136,6 +163,23 @@ set -e
 [ $status -ne 0 ]
 grep -q "String cannot be converted to a double" $temp
 
+
+# Set ascii key via double or long
+# --------------------------------
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=21 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile
+${tools_dir}/grib_set -s marsDomain=x $outfile $temp
+grib_check_key_equals $temp 'marsDomain' 'x'
+set +e
+${tools_dir}/grib_set -s marsDomain=9 $outfile $temp
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_set -s marsDomain=1.2 $outfile $temp
+status=$?
+set -e
+[ $status -ne 0 ]
 
 # Strict option
 # ---------------

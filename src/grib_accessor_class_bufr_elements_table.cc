@@ -12,6 +12,7 @@
  *  Enrico Fucile
  ****************************************/
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 #if GRIB_PTHREADS
@@ -73,7 +74,6 @@ static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_bufr_elements_table
 {
@@ -137,12 +137,6 @@ static grib_accessor_class _grib_accessor_class_bufr_elements_table = {
 
 
 grib_accessor_class* grib_accessor_class_bufr_elements_table = &_grib_accessor_class_bufr_elements_table;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -240,7 +234,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     dictionary = grib_trie_new(c);
 
     while (fgets(line, sizeof(line) - 1, f)) {
-        DebugAssert( strlen(line) > 0 );
+        DEBUG_ASSERT( strlen(line) > 0 );
         if (line[0] == '#') continue; /* Ignore first line with column titles */
         list = string_split(line, "|");
         grib_trie_insert(dictionary, list[0], list);
@@ -257,7 +251,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
         }
 
         while (fgets(line, sizeof(line) - 1, f)) {
-            DebugAssert( strlen(line) > 0 );
+            DEBUG_ASSERT( strlen(line) > 0 );
             if (line[0] == '#') continue;  /* Ignore first line with column titles */
             list = string_split(line, "|");
             /* Look for the descriptor code in the trie. It might be there from before */
@@ -350,7 +344,7 @@ static int bufr_get_from_table(grib_accessor* a, bufr_descriptor* v)
 
     /* ECC-985: Scale and reference are often 0 so we can reduce calls to atol */
     v->scale  = atol_fast(list[5]);
-    v->factor = grib_power(-v->scale, 10);
+    v->factor = codes_power<double>(-v->scale, 10);
 
     v->reference = atol_fast(list[6]);
     v->width     = atol(list[7]);
@@ -382,7 +376,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
         return NULL;
 
     c = a->context;
-    DebugAssert(c);
+    DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,

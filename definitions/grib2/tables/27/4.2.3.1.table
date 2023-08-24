@@ -22,7 +22,7 @@
 20 20 Aerosol optical thickness at 0.635 um
 21 21 Aerosol optical thickness at 0.810 um
 22 22 Aerosol optical thickness at 1.640 um
-23 23 Angstrom coefficient 
+23 23 Angstrom coefficient
 # 24-26 Reserved
 27 27 Bidirectional reflectance factor (numeric)
 28 28 Brightness temperature (K)
@@ -31,5 +31,5 @@
 98 98 Correlation coefficient between MPE rain-rates for the co-located IR data and the microwave data rain-rates (Numeric)
 99 99 Standard deviation between MPE rain-rates for the co-located IR data and the microwave data rain-rates (kg m-2 s-1)
 # 100-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

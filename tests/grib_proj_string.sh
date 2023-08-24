@@ -80,5 +80,23 @@ ${tools_dir}/grib_set -s gridType=polar_stereographic $grib2_sample $tempGrib
 ${tools_dir}/grib_get -p projString $tempGrib > $tempText
 grep -q "proj=stere" $tempText
 
+# Test invalid decode
+set +e
+${tools_dir}/grib_get -p projString:i $grib2_sample > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ERROR.*Cannot unpack.*projTargetString.* as long" $tempText
+grep -q "Hint: Try unpacking as string" $tempText
 
+set +e
+${tools_dir}/grib_get -p projString:d $grib2_sample > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ERROR.*Cannot unpack.*projTargetString.* as double" $tempText
+grep -q "Hint: Try unpacking as string" $tempText
+
+
+# Clean up
 rm -f $tempGrib $tempText

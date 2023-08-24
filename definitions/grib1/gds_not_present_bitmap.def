@@ -5,10 +5,8 @@ position offsetSection3;
 transient section3Length=1;
 meta section3Pointer section_pointer(offsetSection3,section3Length,3);
 
-#  Number of unused bits at end of Section 3
 transient numberOfUnusedBitsAtEndOfSection3 = 0 : read_only;
 
-#  Table reference:
 transient tableReference = 0;
 
 #position offsetBeforeBitmap;
@@ -18,6 +16,5 @@ meta bitmap gds_not_present_bitmap( missingValue,numberOfValues,
                                     Ni,numberOfUnusedBitsAtEndOfSection3) : read_only;
 
 #position offsetAfterBitmap;
-
 #padtoeven padding_sec3_1(offsetSection3,section3Length);
 #section_padding section3Padding;

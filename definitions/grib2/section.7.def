@@ -21,6 +21,7 @@ meta decimalPrecision decimal_precision(bitsPerValue,decimalScaleFactor,changing
 alias setDecimalPrecision=changeDecimalPrecision;
 
 meta setBitsPerValue bits_per_value(values,bitsPerValue) : edition_specific;
+meta setPackingType packing_type(values, packingType) : edition_specific;
 
 meta getNumberOfValues size(values) : edition_specific,dump ;
 

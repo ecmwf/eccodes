@@ -12,7 +12,6 @@
  *  Enrico Fucile
  **************************************/
 
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -38,7 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static size_t preferred_size(grib_accessor*, int);
 
 typedef struct grib_accessor_padtoeven
@@ -105,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_padtoeven = {
 
 grib_accessor_class* grib_accessor_class_padtoeven = &_grib_accessor_class_padtoeven;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static size_t preferred_size(grib_accessor* a, int from_handle)
@@ -124,11 +116,9 @@ static size_t preferred_size(grib_accessor* a, int from_handle)
     grib_get_long_internal(grib_handle_of_accessor(a), self->section_length, &length);
 
     if ((length % 2) && from_handle) {
-#if 0
-        grib_context_log(a->context,
-                GRIB_LOG_ERROR,"GRIB message has an odd length section (%ld, %s)",
-                (long)length,a->name);
-#endif
+        //  grib_context_log(a->context,
+        //       GRIB_LOG_ERROR,"GRIB message has an odd length section (%ld, %s)",
+        //       (long)length,a->name);
         return 0;
     }
 

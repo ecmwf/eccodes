@@ -158,15 +158,15 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
         else if (uname[i] == '[')
             mode = 0;
         else {
-#if 0
-            int llen=strlen(fname);  /* The strlen cost is too high */
-            fname[llen]=uname[i];
-            fname[llen+1]='\0';
-#else
-            /* Performance: faster to avoid call to strlen. Append to end */
+            // Old way: Slow; The strlen cost is too high
+            //int llen=strlen(fname);
+            //fname[llen]=uname[i];
+            //fname[llen+1]='\0';
+
+            // Faster to avoid call to strlen. Append to end
             *ptrEnd_fname++ = uname[i];
             *ptrEnd_fname   = '\0';
-#endif
+
             type = GRIB_TYPE_STRING;
         }
         i++;
@@ -175,131 +175,129 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
     return GRIB_SUCCESS;
 }
 
-#if 0
-int grib_accessor_print(grib_accessor* a, const char* name, int type, const char* format,
-                        const char* separator, int maxcols, int* newline, FILE* out)
-{
-    size_t size     = 0;
-    char* sval      = NULL;
-    char* p         = NULL;
-    double* dval    = 0;
-    long* lval      = 0;
-    char sbuf[1024] = {0,};
-    size_t replen            = 0;
-    int ret                  = 0;
-    char* myformat           = NULL;
-    char* myseparator        = NULL;
-    char double_format[]     = "%.12g"; /* default format for printing double keys */
-    char long_format[]       = "%ld";   /* default format for printing integer keys */
-    char default_separator[] = " ";
-    grib_handle* h           = grib_handle_of_accessor(a);
+// int grib_accessor_print(grib_accessor* a, const char* name, int type, const char* format,
+//                         const char* separator, int maxcols, int* newline, FILE* out)
+// {
+//     size_t size     = 0;
+//     char* sval      = NULL;
+//     char* p         = NULL;
+//     double* dval    = 0;
+//     long* lval      = 0;
+//     char sbuf[1024] = {0,};
+//     size_t replen            = 0;
+//     int ret                  = 0;
+//     char* myformat           = NULL;
+//     char* myseparator        = NULL;
+//     char double_format[]     = "%.12g"; /* default format for printing double keys */
+//     char long_format[]       = "%ld";   /* default format for printing integer keys */
+//     char default_separator[] = " ";
+//     grib_handle* h           = grib_handle_of_accessor(a);
 
-    if (type == -1)
-        type = grib_accessor_get_native_type(a);
-    switch (type) {
-        case GRIB_TYPE_STRING:
-            replen = sizeof(sbuf) / sizeof(*sbuf);
-            ret    = grib_unpack_string(a, sbuf, &replen);
-            fprintf(out, "%s", sbuf);
-            break;
-        case GRIB_TYPE_DOUBLE:
-            myformat    = format ? (char*)format : double_format;
-            myseparator = separator ? (char*)separator : default_separator;
-            if (name[0] == '/' || name[0] == '#') {
-                long count;
-                ret  = grib_value_count(a, &count);
-                size = count;
-            }
-            else {
-                ret = ecc__grib_get_size(h, a, &size);
-            }
-            if (ret) return ret;
-            dval = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
-            if (name[0] == '/' || name[0] == '#') {
-                replen = size;
-                ret    = grib_unpack_double(a, dval, &replen);
-            }
-            else {
-                replen = 0;
-                ret    = ecc__grib_get_double_array_internal(h, a, dval, size, &replen);
-            }
-            if (replen == 1)
-                fprintf(out, myformat, dval[0]);
-            else {
-                int i    = 0;
-                int cols = 0;
-                for (i = 0; i < replen; i++) {
-                    *newline = 1;
-                    fprintf(out, myformat, dval[i]);
-                    if (i < replen - 1)
-                        fprintf(out, "%s", myseparator);
-                    cols++;
-                    if (cols >= maxcols) {
-                        fprintf(out, "\n");
-                        *newline = 1;
-                        cols     = 0;
-                    }
-                }
-            }
-            grib_context_free(h->context, dval);
-            break;
-        case GRIB_TYPE_LONG:
-            myformat    = format ? (char*)format : long_format;
-            myseparator = separator ? (char*)separator : default_separator;
-            if (name[0] == '/' || name[0] == '#') {
-                long count;
-                ret  = grib_value_count(a, &count);
-                size = count;
-            }
-            else {
-                ret = ecc__grib_get_size(h, a, &size);
-            }
-            if (ret) return ret;
-            lval = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
-            if (name[0] == '/' || name[0] == '#') {
-                replen = size;
-                ret    = grib_unpack_long(a, lval, &replen);
-            }
-            else {
-                replen = 0;
-                ret    = ecc__grib_get_long_array_internal(h, a, lval, size, &replen);
-            }
-            if (replen == 1)
-                fprintf(out, myformat, lval[0]);
-            else {
-                int i    = 0;
-                int cols = 0;
-                for (i = 0; i < replen; i++) {
-                    *newline = 1;
-                    fprintf(out, myformat, lval[i]);
-                    if (i < replen - 1)
-                        fprintf(out, "%s", myseparator);
-                    cols++;
-                    if (cols >= maxcols) {
-                        fprintf(out, "\n");
-                        *newline = 1;
-                        cols     = 0;
-                    }
-                }
-            }
-            grib_context_free(h->context, lval);
-            break;
-        case GRIB_TYPE_BYTES:
-            replen = a->length;
-            sval   = (char*)grib_context_malloc(h->context, replen * sizeof(char));
-            ret    = grib_unpack_string(a, sval, &replen);
-            p      = sval;
-            while ((replen--) > 0)
-                fprintf(out, "%c", *(p++));
-            grib_context_free(h->context, sval);
-            *newline = 0;
-            break;
-        default:
-            grib_context_log(h->context, GRIB_LOG_WARNING, "grib_accessor_print: Problem to print \"%s\", invalid type %d", a->name, type);
-    }
-    return ret;
-}
-#endif
+//     if (type == -1)
+//         type = grib_accessor_get_native_type(a);
+//     switch (type) {
+//         case GRIB_TYPE_STRING:
+//             replen = sizeof(sbuf) / sizeof(*sbuf);
+//             ret    = grib_unpack_string(a, sbuf, &replen);
+//             fprintf(out, "%s", sbuf);
+//             break;
+//         case GRIB_TYPE_DOUBLE:
+//             myformat    = format ? (char*)format : double_format;
+//             myseparator = separator ? (char*)separator : default_separator;
+//             if (name[0] == '/' || name[0] == '#') {
+//                 long count;
+//                 ret  = grib_value_count(a, &count);
+//                 size = count;
+//             }
+//             else {
+//                 ret = ecc__grib_get_size(h, a, &size);
+//             }
+//             if (ret) return ret;
+//             dval = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
+//             if (name[0] == '/' || name[0] == '#') {
+//                 replen = size;
+//                 ret    = grib_unpack_double(a, dval, &replen);
+//             }
+//             else {
+//                 replen = 0;
+//                 ret    = ecc__grib_get_double_array_internal(h, a, dval, size, &replen);
+//             }
+//             if (replen == 1)
+//                 fprintf(out, myformat, dval[0]);
+//             else {
+//                 int i    = 0;
+//                 int cols = 0;
+//                 for (i = 0; i < replen; i++) {
+//                     *newline = 1;
+//                     fprintf(out, myformat, dval[i]);
+//                     if (i < replen - 1)
+//                         fprintf(out, "%s", myseparator);
+//                     cols++;
+//                     if (cols >= maxcols) {
+//                         fprintf(out, "\n");
+//                         *newline = 1;
+//                         cols     = 0;
+//                     }
+//                 }
+//             }
+//             grib_context_free(h->context, dval);
+//             break;
+//         case GRIB_TYPE_LONG:
+//             myformat    = format ? (char*)format : long_format;
+//             myseparator = separator ? (char*)separator : default_separator;
+//             if (name[0] == '/' || name[0] == '#') {
+//                 long count;
+//                 ret  = grib_value_count(a, &count);
+//                 size = count;
+//             }
+//             else {
+//                 ret = ecc__grib_get_size(h, a, &size);
+//             }
+//             if (ret) return ret;
+//             lval = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);
+//             if (name[0] == '/' || name[0] == '#') {
+//                 replen = size;
+//                 ret    = grib_unpack_long(a, lval, &replen);
+//             }
+//             else {
+//                 replen = 0;
+//                 ret    = ecc__grib_get_long_array_internal(h, a, lval, size, &replen);
+//             }
+//             if (replen == 1)
+//                 fprintf(out, myformat, lval[0]);
+//             else {
+//                 int i    = 0;
+//                 int cols = 0;
+//                 for (i = 0; i < replen; i++) {
+//                     *newline = 1;
+//                     fprintf(out, myformat, lval[i]);
+//                     if (i < replen - 1)
+//                         fprintf(out, "%s", myseparator);
+//                     cols++;
+//                     if (cols >= maxcols) {
+//                         fprintf(out, "\n");
+//                         *newline = 1;
+//                         cols     = 0;
+//                     }
+//                 }
+//             }
+//             grib_context_free(h->context, lval);
+//             break;
+//         case GRIB_TYPE_BYTES:
+//             replen = a->length;
+//             sval   = (char*)grib_context_malloc(h->context, replen * sizeof(char));
+//             ret    = grib_unpack_string(a, sval, &replen);
+//             p      = sval;
+//             while ((replen--) > 0)
+//                 fprintf(out, "%c", *(p++));
+//             grib_context_free(h->context, sval);
+//             *newline = 0;
+//             break;
+//         default:
+//             grib_context_log(h->context, GRIB_LOG_WARNING, "grib_accessor_print: Problem to print \"%s\", invalid type %d", a->name, type);
+//     }
+//     return ret;
+// }
 
 int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const char* name,
                               int type, const char* format, const char* separator, int maxcols, int* newline, FILE* out)
@@ -316,7 +314,7 @@ int grib_accessors_list_print(grib_handle* h, grib_accessors_list* al, const cha
     char long_format[]       = "%ld";   /* default format for printing integer keys */
     char default_separator[] = " ";
     grib_accessor* a         = al->accessor;
-    DebugAssert(a);
+    DEBUG_ASSERT(a);
 
     /* Number of columns specified as 0 means print on ONE line i.e. num cols = infinity */
     if (maxcols == 0)
@@ -475,7 +473,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     break;
                 case '!':
                     pp = (char*)uname;
-                    if (string_to_long(uname + i + 1, &numcols) == GRIB_SUCCESS) {
+                    // Turn off strict as the input string will have a final ']' suffix
+                    if (string_to_long(uname + i + 1, &numcols, /*strict=*/0) == GRIB_SUCCESS) {
                         maxcols = (int)numcols;
                     }
                     else {
@@ -754,12 +753,12 @@ static grib_action* grib_parse_stream(grib_context* gc, const char* filename)
 
     if (parse(gc, filename) == 0) {
         if (grib_parser_all_actions) {
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return grib_parser_all_actions;
         }
         else {
             grib_action* ret = grib_action_create_noop(gc, filename);
-            GRIB_MUTEX_UNLOCK(&mutex_stream)
+            GRIB_MUTEX_UNLOCK(&mutex_stream);
             return ret;
         }
     }

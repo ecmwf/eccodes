@@ -34,7 +34,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g1_message_length
 {
@@ -101,12 +100,6 @@ static grib_accessor_class _grib_accessor_class_g1_message_length = {
 
 
 grib_accessor_class* grib_accessor_class_g1_message_length = &_grib_accessor_class_g1_message_length;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -200,10 +193,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     /* Do not do the length checks in this special case */
     if ((ret = pack_long_unsigned_helper(a, &tlen, len, /*check=*/0)) != GRIB_SUCCESS)
         return ret;
-    /*
-    if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS)
-      return ret;
-    */
+
+    // if((ret = super->pack_long(a,&tlen,len)) != GRIB_SUCCESS) return ret;
 
     {
         long total_length = -1, sec4_length = -1;

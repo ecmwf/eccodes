@@ -1,4 +1,6 @@
-#  Scanning mode
+constant isGridded = one;
+
+# Scanning mode
 flags[1] scanningMode 'grib1/8.table' : edition_specific,no_copy;
 
 # Not flagbit numbers 7 to 0, while wmo is 1 to 8

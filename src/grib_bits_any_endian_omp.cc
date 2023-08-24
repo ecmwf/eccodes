@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Enrico Fucile  - 19.06.2007                                           *
- *                                                                         *
  ***************************************************************************/
 /**
  * decode an array of n_vals values from a octet-stream
@@ -81,20 +80,19 @@ int grib_decode_double_array(const unsigned char* p, long* bitp, long bitsPerVal
     unsigned long lvalue = 0;
     double x;
 
-#if 0
-    /* slow reference code */
-    int j=0;
-    for(i=0;i < n_vals;i++) {
-        lvalue=0;
-        for(j=0; j< bitsPerValue;j++){
-            lvalue <<= 1;
-            if(grib_get_bit( p, *bitp)) lvalue += 1;
-            *bitp += 1;
-        }
-        x=((lvalue*s)+reference_value)*d;
-        val[i] = (double)x;
-    }
-#endif
+//  Slow reference code
+//     int j=0;
+//     for(i=0;i < n_vals;i++) {
+//         lvalue=0;
+//         for(j=0; j< bitsPerValue;j++){
+//             lvalue <<= 1;
+//             if(grib_get_bit( p, *bitp)) lvalue += 1;
+//             *bitp += 1;
+//         }
+//         x=((lvalue*s)+reference_value)*d;
+//         val[i] = (double)x;
+//     }
+
     unsigned long mask = BIT_MASK(bitsPerValue);
 
     /* pi: position of bitp in p[]. >>3 == /8 */

@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 /*
@@ -40,7 +41,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g1simple_packing
 {
@@ -122,12 +122,6 @@ static grib_accessor_class _grib_accessor_class_data_g1simple_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_g1simple_packing = &_grib_accessor_class_data_g1simple_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -290,8 +284,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection)) != GRIB_SUCCESS)
         return ret;
 
-    decimal = grib_power(decimal_scale_factor, 10);
-    divisor = grib_power(-binary_scale_factor, 2);
+    decimal = codes_power<double>(decimal_scale_factor, 10);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
 
     buflen = (((bits_per_value * n_vals) + 7) / 8) * sizeof(unsigned char);
     if ((buflen + (offsetdata - offsetsection)) % 2) {

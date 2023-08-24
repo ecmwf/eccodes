@@ -40,7 +40,6 @@ static int unpack_string(grib_accessor*, char*, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_md5
@@ -105,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_md5 = {
 
 
 grib_accessor_class* grib_accessor_class_md5 = &_grib_accessor_class_md5;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

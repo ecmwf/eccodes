@@ -39,7 +39,6 @@ static size_t string_length(grib_accessor*);
 static long byte_count(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_message_copy
 {
@@ -100,12 +99,6 @@ static grib_accessor_class _grib_accessor_class_message_copy = {
 
 
 grib_accessor_class* grib_accessor_class_message_copy = &_grib_accessor_class_message_copy;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

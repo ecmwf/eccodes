@@ -124,22 +124,22 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 14 ;
 	}
-#UV visible albedo for direct radiation
+#UV visible albedo for direct radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 15 ;
 	}
-#UV visible albedo for diffuse radiation
+#UV visible albedo for diffuse radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 16 ;
 	}
-#Near IR albedo for direct radiation
+#Near IR albedo for direct radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 17 ;
 	}
-#Near IR albedo for diffuse radiation
+#Near IR albedo for diffuse radiation (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 18 ;
@@ -149,7 +149,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 19 ;
 	}
-#Clear sky surface photosynthetically active radiation
+#Surface photosynthetically active radiation, clear sky
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 20 ;
@@ -195,12 +195,12 @@
 	 indicatorOfParameter = 28 ;
 	}
 #Type of low vegetation
-'~' = {
+'(code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 29 ;
 	}
 #Type of high vegetation
-'~' = {
+'(code table 4.234)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 30 ;
 	}
@@ -414,7 +414,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 73 ;
 	}
-#Standard deviation of filtered subgrid orography
+#Standard deviation of filtered subgrid orography (climatological)
 'm' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 74 ;
@@ -1050,7 +1050,7 @@
 	 indicatorOfParameter = 147 ;
 	}
 #Charnock
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
@@ -1175,7 +1175,7 @@
 	 indicatorOfParameter = 160 ;
 	}
 #Anisotropy of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 161 ;
 	}
@@ -1185,7 +1185,7 @@
 	 indicatorOfParameter = 162 ;
 	}
 #Slope of sub-gridscale orography
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 163 ;
 	}
@@ -1354,27 +1354,27 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 172 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'm' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Surface roughness
+#Surface roughness (climatological)
 'm' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 173 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Albedo
+#Albedo (climatological)
 '(0 - 1)' = {
 	 table2Version = 190 ;
 	 indicatorOfParameter = 174 ;
@@ -1919,13 +1919,13 @@
 	 table2Version = 160 ;
 	 indicatorOfParameter = 233 ;
 	}
-#Logarithm of surface roughness length for heat
-'~' = {
+#Logarithm of surface roughness length for heat (climatological)
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 234 ;
 	}
-#Logarithm of surface roughness length for heat
-'~' = {
+#Logarithm of surface roughness length for heat (climatological)
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 234 ;
 	}
@@ -2005,12 +2005,12 @@
 	 indicatorOfParameter = 244 ;
 	}
 #Forecast logarithm of surface roughness for heat
-'~' = {
+'Numeric' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 245 ;
 	}
 #Forecast logarithm of surface roughness for heat
-'~' = {
+'Numeric' = {
 	 table2Version = 160 ;
 	 indicatorOfParameter = 245 ;
 	}
@@ -3380,12 +3380,12 @@
 	 indicatorOfParameter = 98 ;
 	}
 #Ratio of wave angular and frequency width
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 99 ;
 	}
 #Number of events in freak waves statistics
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 100 ;
 	}
@@ -3535,7 +3535,7 @@
 	 indicatorOfParameter = 129 ;
 	}
 #Wave Spectral Skewness
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 207 ;
 	}
@@ -3555,12 +3555,12 @@
 	 indicatorOfParameter = 210 ;
 	}
 #Normalized energy flux into waves
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 211 ;
 	}
 #Normalized energy flux into ocean
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 212 ;
 	}
@@ -3570,7 +3570,7 @@
 	 indicatorOfParameter = 213 ;
 	}
 #Normalized stress into ocean
-'dimensionless' = {
+'Numeric' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 214 ;
 	}
@@ -4024,62 +4024,62 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 120 ;
 	}
-#UV visible albedo for direct radiation, isotropic component 
+#UV visible albedo for direct radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 186 ;
 	}
-#UV visible albedo for direct radiation, volumetric component 
+#UV visible albedo for direct radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 187 ;
 	}
-#UV visible albedo for direct radiation, geometric component 
+#UV visible albedo for direct radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 188 ;
 	}
-#Near IR albedo for direct radiation, isotropic component 
+#Near IR albedo for direct radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 189 ;
 	}
-#Near IR albedo for direct radiation, volumetric component
+#Near IR albedo for direct radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 190 ;
 	}
-#Near IR albedo for direct radiation, geometric component 
+#Near IR albedo for direct radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component (climatological)
 '(0 - 1)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;
@@ -9884,7 +9884,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
-#Clear-sky direct solar radiation at surface
+#Surface direct short-wave radiation, clear sky
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 22 ;
@@ -13699,17 +13699,17 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
+#Total column vertically-integrated kinetic energy
 'J m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
+#Total column vertically-integrated enthalpy
 'J m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
+#Total column vertically-integrated potential + internal energy
 'J m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
@@ -13719,7 +13719,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
+#Total column vertically-integrated total energy
 'J m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
@@ -13814,7 +13814,7 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 83 ;
 	}
-#Vertical integral of divergence of moisture flux
+#Vertically integrated moisture divergence flux
 'kg m**-2 s**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 84 ;
@@ -13834,72 +13834,72 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Tendency of short wave radiation
+#Time-integrated temperature tendency due to short-wave radiation
 'K' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Tendency of long wave radiation
+#Time-integrated temperature tendency due to long-wave radiation
 'K' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 101 ;
 	}
-#Tendency of clear sky short wave radiation
+#Time-integrated temperature tendency due to short wave radiation, clear sky
 'K' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 102 ;
 	}
-#Tendency of clear sky long wave radiation
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
 'K' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 103 ;
 	}
-#Updraught mass flux
+#Time-integrated updraught mass flux
 'kg m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 104 ;
 	}
-#Downdraught mass flux
+#Time-integrated downdraught mass flux
 'kg m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 105 ;
 	}
-#Updraught detrainment rate
+#Time-integrated updraught detrainment rate
 'kg m**-3' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 106 ;
 	}
-#Downdraught detrainment rate
+#Time-integrated downdraught detrainment rate
 'kg m**-3' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 107 ;
 	}
-#Total precipitation flux
+#Time-integrated total precipitation flux
 'kg m**-2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 108 ;
 	}
-#Turbulent diffusion coefficient for heat
+#Time-integrated turbulent diffusion coefficient for heat
 'm**2' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 109 ;
 	}
-#Tendency of temperature due to physics
+#Time-integrated temperature tendency due to parametrisations
 'K' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 110 ;
 	}
-#Tendency of specific humidity due to physics
+#Time-integrated specific humidity tendency due to parametrisations
 'kg kg**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 111 ;
 	}
-#Tendency of u component due to physics
+#Time-integrated eastward wind tendency due to parametrisations
 'm s**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Tendency of v component due to physics
+#Time-integrated northward wind tendency due to parametrisations
 'm s**-1' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 113 ;
@@ -17594,12 +17594,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#Neutral wind at 10 m u-component
+#10 metre u-component of neutral wind
 'm s**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Neutral wind at 10 m v-component
+#10 metre v-component of neutral wind
 'm s**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
@@ -17614,7 +17614,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 'kg m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 144 ;
@@ -17814,12 +17814,12 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
+#U-component surface stokes drift
 'm s**-1' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
+#V-component surface stokes drift
 'm s**-1' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;

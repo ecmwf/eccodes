@@ -35,7 +35,6 @@ list( APPEND eccodes_src_files
     action_class_set.cc
     action_class_set_sarray.cc
     action_class_set_darray.cc
-    action_class_set_iarray.cc
     action_class_noop.cc
     action_class_write.cc
     action_class_print.cc
@@ -57,8 +56,6 @@ list( APPEND eccodes_src_files
     grib_iarray.cc
     grib_viarray.cc
     codes_memfs.cc
-    grib_accessor_class_array.cc
-    grib_accessor_class_assert.cc
     grib_accessor_class_ascii.cc
     grib_accessor_class_bit.cc
     grib_accessor_class_bitmap.cc
@@ -71,7 +68,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_bufr_string_values.cc
     grib_accessor_class_pack_bufr_values.cc
     grib_accessor_class_unpack_bufr_values.cc
-    grib_accessor_class_apply_operators.cc
     grib_accessor_class_group.cc
     grib_accessor_class_non_alpha.cc
     grib_accessor_class_g1bitmap.cc
@@ -100,7 +96,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_double.cc
     grib_accessor_class_element.cc
     grib_accessor_class_evaluate.cc
-    grib_accessor_class_g1area.cc
     grib_accessor_class_g1date.cc
     grib_accessor_class_g1monthlydate.cc
     grib_accessor_class_library_version.cc
@@ -133,12 +128,9 @@ list( APPEND eccodes_src_files
     grib_accessor_class_latlonvalues.cc
     grib_accessor_class_latitudes.cc
     grib_accessor_class_longitudes.cc
-    grib_accessor_class_missing.cc
     grib_accessor_class_offset_file.cc
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
-    grib_accessor_class_times.cc
-    grib_accessor_class_forward.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc
@@ -146,9 +138,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_iterator.cc
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
-    grib_accessor_class_box.cc
     grib_accessor_class_ksec1expver.cc
-    grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
     grib_accessor_class_long.cc
     grib_accessor_class_lookup.cc
@@ -161,6 +151,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_padtoeven.cc
     grib_accessor_class_padtomultiple.cc
     grib_accessor_class_section_padding.cc
+    grib_accessor_class_packing_type.cc
     grib_accessor_class_section_pointer.cc
     grib_accessor_class_position.cc
     grib_accessor_class_signed.cc
@@ -192,14 +183,12 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g1shsimple_packing.cc
     grib_accessor_class_data_shsimple_packing.cc
     grib_accessor_class_data_dummy_field.cc
-    grib_2order_packer_simple.cc
     grib_accessor_class_variable.cc
     grib_accessor_class_second_order_bits_per_value.cc
     grib_accessor_class_data_g2simple_packing.cc
     grib_accessor_class_data_g2simple_packing_with_preprocessing.cc
     grib_accessor_class_data_g2shsimple_packing.cc
     grib_accessor_class_data_g2complex_packing.cc
-    grib_accessor_class_data_2order_packing.cc
     grib_accessor_class_data_g1second_order_row_by_row_packing.cc
     grib_accessor_class_data_g1second_order_constant_width_packing.cc
     grib_accessor_class_data_g1second_order_general_packing.cc
@@ -275,7 +264,6 @@ list( APPEND eccodes_src_files
     grib_dumper_class_serialize.cc
     grib_dumper_class_debug.cc
     grib_dumper_class_default.cc
-    grib_dumper_class_keys.cc
     grib_dumper_class_bufr_encode_C.cc
     grib_dumper_class_bufr_encode_filter.cc
     grib_dumper_class_bufr_encode_fortran.cc
@@ -295,7 +283,6 @@ list( APPEND eccodes_src_files
     grib_filepool.cc
     grib_geography.cc
     grib_handle.cc
-    grib_header_compute.cc
     grib_hash_keys.cc
     grib_io.cc
     grib_trie.cc
@@ -327,16 +314,12 @@ list( APPEND eccodes_src_files
     grib_expression_class_double.cc
     grib_expression_class_string.cc
     grib_expression_class_sub_string.cc
-    grib_box.cc
-    grib_box_class.cc
-    grib_box_class_gen.cc
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
-    grib_nearest_class_sh.cc
     grib_nearest_class_lambert_conformal.cc
     grib_nearest_class_lambert_azimuthal_equal_area.cc
     grib_nearest_class_mercator.cc
@@ -365,8 +348,6 @@ list( APPEND eccodes_src_files
     grib_accessor_factory.h
     grib_api_internal.h
     eccodes_prototypes.h
-    grib_box_class.h
-    grib_box_factory.h
     grib_dumper_class.h
     grib_dumper_factory.h
     grib_emoslib.h
@@ -377,13 +358,8 @@ list( APPEND eccodes_src_files
     grib_yacc.h
     md5.h
     md5.cc
-    grib_accessor_class_int16.cc
     grib_accessor_class_int16_little_endian.cc
-    grib_accessor_class_int32.cc
-    grib_accessor_class_int32_little_endian.cc
-    grib_accessor_class_int64.cc
     grib_accessor_class_int64_little_endian.cc
-    grib_accessor_class_int8.cc
     grib_accessor_class_uint16.cc
     grib_accessor_class_uint16_little_endian.cc
     grib_accessor_class_uint32.cc
@@ -406,8 +382,7 @@ list( APPEND eccodes_extra_src_files
     grib_bits_fast_big_endian_omp.cc grib_bits_any_endian_omp.cc
     encode_double_array.cc
     grib_bits_ibmpow.cc
-    grib_bits_ibmpow_opt.cc
-    minmax_val.cc )
+    grib_bits_ibmpow_opt.cc )
 
 if(UNIX)
     ecbuild_get_date(eccodes_BUILD_DATE)

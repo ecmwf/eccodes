@@ -15,6 +15,7 @@
    can appear
 */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
 This is used by make_class.pl
@@ -24,6 +25,7 @@ CLASS      = accessor
 SUPER      = grib_accessor_class_long
 IMPLEMENTS = unpack_long;pack_long
 IMPLEMENTS = unpack_double
+IMPLEMENTS = unpack_string_array
 IMPLEMENTS = init;dump;destroy
 IMPLEMENTS = value_count; get_native_type
 MEMBERS    = const char* unexpandedDescriptors
@@ -54,11 +56,11 @@ static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_expanded_descriptors
 {
@@ -107,7 +109,7 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
     0,                /* pack_string */
     0,              /* unpack_string */
     0,          /* pack_string_array */
-    0,        /* unpack_string_array */
+    &unpack_string_array,        /* unpack_string_array */
     0,                 /* pack_bytes */
     0,               /* unpack_bytes */
     0,            /* pack_expression */
@@ -129,12 +131,6 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
 
 
 grib_accessor_class* grib_accessor_class_expanded_descriptors = &_grib_accessor_class_expanded_descriptors;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -215,8 +211,7 @@ static char* descriptor_type_name(int dtype)
 }
 #endif
 
-static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
-                     change_coding_params* ccp, int* err)
+static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
 {
     int k, j, i;
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -483,7 +478,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                 case 7:
                     if (us->Y) {
                         ccp->extraScale      = us->Y;
-                        ccp->referenceFactor = grib_power(us->Y, 10);
+                        ccp->referenceFactor = codes_power<double>(us->Y, 10);
                         ccp->extraWidth      = ((10 * us->Y) + 2) / 3;
                     }
                     else {
@@ -678,11 +673,11 @@ static int expand(grib_accessor* a)
         if (aDescriptor1->F == 2 && aDescriptor1->X == 6) {
             Assert(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
             operator206yyy_width = aDescriptor1->Y; /* Store the width for the following descriptor */
-            DebugAssert(operator206yyy_width > 0);
+            DEBUG_ASSERT(operator206yyy_width > 0);
         }
         else if (operator206yyy_width > 0) {
             if (err == GRIB_NOT_FOUND) {
-                DebugAssert(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_UNKNOWN);
+                DEBUG_ASSERT(aDescriptor1->type == BUFR_DESCRIPTOR_TYPE_UNKNOWN);
                 err                 = 0;                       /* Clear any error generated due to local descriptor */
                 aDescriptor1->nokey = aDescriptor2->nokey = 1; /* Do not show this descriptor in dump */
             }
@@ -811,6 +806,33 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+{
+    int err = 0;
+    long* v = NULL;
+    char buf[25] = {0,};
+    long llen = 0;
+    size_t i = 0, size = 0;
+    grib_context* c = a->context;
+
+    err = grib_value_count(a, &llen);
+    if (err) return err;
+
+    size = llen;
+    v = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
+    err = grib_unpack_long(a, v, &size);
+    if (err) return err;
+
+    for (i = 0; i < size; i++) {
+        snprintf(buf, sizeof(buf), "%06ld", v[i]);
+        buffer[i] = grib_context_strdup(c, buf);
+    }
+    *len = size;
+    grib_context_free(c,v);
+
+    return GRIB_NOT_IMPLEMENTED;
+}
+
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -836,10 +858,9 @@ static int value_count(grib_accessor* a, long* rlen)
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
-    /* grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a; */
-    /* if (self->rank==0 && self->expanded) { */
-    /* grib_bufr_descriptors_array_delete(self->expanded); */
-    /* } */
+    // grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+    // if (self->rank==0 && self->expanded)
+    //  grib_bufr_descriptors_array_delete(self->expanded);
 }
 
 static int get_native_type(grib_accessor* a)

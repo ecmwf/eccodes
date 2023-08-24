@@ -14,7 +14,7 @@
 
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -466,77 +466,75 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 
 static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 {
-#if 0
-    grib_dumper_default *self = (grib_dumper_default*)d;
-    int i,k,err =0;
-    size_t more = 0;
-    size_t size = a->length;
-    unsigned char* buf = grib_context_malloc(d->context,size);
+//     grib_dumper_default *self = (grib_dumper_default*)d;
+//     int i,k,err =0;
+//     size_t more = 0;
+//     size_t size = a->length;
+//     unsigned char* buf = grib_context_malloc(d->context,size);
 
-    if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
-        return;
+//     if ( (a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
+//         return;
 
 
-    if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
-        fprintf(self->dumper.out,"-READ ONLY- ");
+//     if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
+//         fprintf(self->dumper.out,"-READ ONLY- ");
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-    /*print_offset(self->dumper.out,self->begin,self->theEnd);*/
-    if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
-        fprintf(self->dumper.out,"%s ",a->creator->op);
+//     /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
+//     /*print_offset(self->dumper.out,self->begin,self->theEnd);*/
+//     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
+//         fprintf(self->dumper.out,"%s ",a->creator->op);
 
-    fprintf(self->dumper.out,"%s = %ld",a->name,a->length);
-    aliases(d,a);
-    fprintf(self->dumper.out," {");
+//     fprintf(self->dumper.out,"%s = %ld",a->name,a->length);
+//     aliases(d,a);
+//     fprintf(self->dumper.out," {");
 
-    if(!buf)
-    {
-        if(size == 0)
-            fprintf(self->dumper.out,"}\n");
-        else
-            fprintf(self->dumper.out," *** ERR cannot malloc(%ld) }\n",(long)size);
-        return;
-    }
+//     if(!buf)
+//     {
+//         if(size == 0)
+//             fprintf(self->dumper.out,"}\n");
+//         else
+//             fprintf(self->dumper.out," *** ERR cannot malloc(%ld) }\n",(long)size);
+//         return;
+//     }
 
-    fprintf(self->dumper.out,"\n");
+//     fprintf(self->dumper.out,"\n");
 
-    err = grib_unpack_bytes(a,buf,&size);
-    if(err){
-        grib_context_free(d->context,buf);
-        fprintf(self->dumper.out," *** ERR=%d (%s)  [grib_dumper_default::dump_bytes]\n}",err,grib_get_error_message(err));
-        return ;
-    }
+//     err = grib_unpack_bytes(a,buf,&size);
+//     if(err){
+//         grib_context_free(d->context,buf);
+//         fprintf(self->dumper.out," *** ERR=%d (%s)  [grib_dumper_default::dump_bytes]\n}",err,grib_get_error_message(err));
+//         return ;
+//     }
 
-    if(size > 100) {
-        more = size - 100;
-        size = 100;
-    }
+//     if(size > 100) {
+//         more = size - 100;
+//         size = 100;
+//     }
 
-    k = 0;
-    /* if(size > 100) size = 100;  */
-    while(k < size)
-    {
-        int j;
-        for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-        for(j = 0; j < 16 && k < size; j++, k++)
-        {
-            fprintf(self->dumper.out,"%02x",buf[k]);
-            if(k != size-1)
-                fprintf(self->dumper.out,", ");
-        }
-        fprintf(self->dumper.out,"\n");
-    }
+//     k = 0;
+//     /* if(size > 100) size = 100;  */
+//     while(k < size)
+//     {
+//         int j;
+//         for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+//         for(j = 0; j < 16 && k < size; j++, k++)
+//         {
+//             fprintf(self->dumper.out,"%02x",buf[k]);
+//             if(k != size-1)
+//                 fprintf(self->dumper.out,", ");
+//         }
+//         fprintf(self->dumper.out,"\n");
+//     }
 
-    if(more)
-    {
-        for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
-        fprintf(self->dumper.out,"... %lu more values\n", (unsigned long)more);
-    }
+//     if(more)
+//     {
+//         for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
+//         fprintf(self->dumper.out,"... %lu more values\n", (unsigned long)more);
+//     }
 
-    for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-    fprintf(self->dumper.out,"} # %s %s \n",a->creator->op, a->name);
-    grib_context_free(d->context,buf);
-#endif
+//     for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+//     fprintf(self->dumper.out,"} # %s %s \n",a->creator->op, a->name);
+//     grib_context_free(d->context,buf);
 }
 
 static void dump_values(grib_dumper* d, grib_accessor* a)
@@ -613,7 +611,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
         fprintf(self->dumper.out, "  ");
         for (j = 0; j < 5 && k < size; j++, k++) {
@@ -622,11 +619,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
     }
     if (more) {
         fprintf(self->dumper.out, "  ");

@@ -3,8 +3,8 @@
 1 1 Rotated latitude/longitude
 2 2 Stretched latitude/longitude
 3 3 Stretched and rotated latitude/longitude
-4 4 Variable resolution latitude/longitude 
-5 5 Variable resolution rotated latitude/longitude 
+4 4 Variable resolution latitude/longitude
+5 5 Variable resolution rotated latitude/longitude
 # 6-9 Reserved
 10 10 Mercator
 12 12 Transverse Mercator
@@ -32,9 +32,7 @@
 110 110 Equatorial azimuthal equidistant projection
 # 111-119 Reserved
 120 120 Azimuth-range projection
-# 121-129 Reserved
-130 130 Irregular latitude/longitude grid
-# 131-139 Reserved
+# 121-139 Reserved
 140 140 Lambert azimuthal equal area projection
 # 141-999 Reserved
 1000 1000 Cross-section grid with points equally spaced on the horizontal

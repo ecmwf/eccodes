@@ -199,9 +199,6 @@ int grib_f_release(int *hid);
 int grib_f_dump_(int *gid);
 int grib_f_dump__(int *gid);
 int grib_f_dump(int *gid);
-int grib_f_print_(int *gid, char *key, int len);
-int grib_f_print__(int *gid, char *key, int len);
-int grib_f_print(int *gid, char *key, int len);
 
 int grib_f_get_api_version_(int* apiVersion,int len);
 int grib_f_get_api_version__(int* apiVersion,int len);

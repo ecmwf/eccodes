@@ -41,7 +41,6 @@ static int get_native_type(grib_accessor*);
 static int pack_missing(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_double
@@ -103,12 +102,6 @@ static grib_accessor_class _grib_accessor_class_double = {
 
 
 grib_accessor_class* grib_accessor_class_double = &_grib_accessor_class_double;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -203,17 +196,3 @@ static int pack_missing(grib_accessor* a)
         return grib_pack_double(a, &value, &len);
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
-/*
-static int is_missing(grib_accessor* a){
-    size_t one = 1;
-    double value = GRIB_MISSING_DOUBLE;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        int e=grib_unpack_double(a,&value,&one);
-        Assert(e == 0);
-        return value == GRIB_MISSING_DOUBLE;
-    }
-    return 0;
-}
-*/

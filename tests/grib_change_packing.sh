@@ -7,7 +7,8 @@
 
 label="grib_change_packing_test"
 temp=temp.$label.grib
-rm -f $temp
+temp_err=temp.$label.err
+rm -f $temp $temp_err
 
 grib1=${data_dir}/reduced_latlon_surface_constant.grib1
 grib2=${data_dir}/reduced_latlon_surface_constant.grib2
@@ -53,6 +54,11 @@ test_packing() {
 
         result=`${tools_dir}/grib_get -p accuracy $temp`
         [ $result -eq 0 -o $result -eq 32 -o $result -eq 64 ]
+
+        temp1=$temp.1
+        ${tools_dir}/grib_set -s setPackingType=$packing $grib $temp1
+        ${tools_dir}/grib_compare $temp $temp1
+        rm -f $temp1
 
         shift
     done
@@ -124,7 +130,6 @@ stats=`${tools_dir}/grib_get -F%.1f -p average,standardDeviation $temp`
 
 # ECC-1352: Check CCSDS
 # ----------------------------
-temp_err=temp.$label.err
 if [ $HAVE_AEC -eq 0 ]; then
     # Check we get an error if we try to decode this packing
     [ -f "${data_dir}/ccsds.grib2" ]
@@ -135,6 +140,13 @@ if [ $HAVE_AEC -eq 0 ]; then
     [ $status -ne 0 ]
     grep -q "CCSDS support not enabled. Please rebuild with -DENABLE_AEC=ON" $temp_err
 fi
+
+# grid_simple_log_preprocessing
+# -----------------------------
+input=${data_dir}/sample.grib2
+${tools_dir}/grib_set -r -s packingType=grid_simple_log_preprocessing $input $temp
+grib_check_key_equals $temp packingType 'grid_simple_log_preprocessing'
+${tools_dir}/grib_compare -c data:n -R packedValues=2e-6 $input $temp
 
 # Large constant fields
 # -----------------------
@@ -158,5 +170,26 @@ grib_check_key_equals $temp const,bitsPerValue,section4Length '1 0 12'
 ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -d1 $input $temp
 grib_check_key_equals $temp const,bitsPerValue,section4Length '1 12 8966'
 
+# Error in packingType value
+# ---------------------------
+set +e
+${tools_dir}/grib_set -s packingType="xxxxx" $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp > $temp_err 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ECCODES ERROR.*no match for packingType=xxxxx" $temp_err
+cat $temp_err
 
+# Set packingType when it is disabled
+# -----------------------------------
+if [ $HAVE_PNG -eq 0 ]; then
+    set +e
+    ${tools_dir}/grib_set -s packingType=grid_png $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp > $temp_err 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "ECCODES ERROR.*PNG support not enabled" $temp_err
+fi
+
+# Clean up
 rm -f $temp $temp_err

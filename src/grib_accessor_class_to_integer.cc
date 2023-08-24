@@ -22,7 +22,7 @@
    IMPLEMENTS = unpack_long;pack_long
    IMPLEMENTS = unpack_double;pack_double
    IMPLEMENTS = init;dump;string_length
-   IMPLEMENTS = post_init;value_count
+   IMPLEMENTS = value_count
    IMPLEMENTS = next_offset
    IMPLEMENTS = get_native_type
    IMPLEMENTS = compare
@@ -55,8 +55,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void post_init(grib_accessor*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_to_integer
@@ -78,7 +76,7 @@ static grib_accessor_class _grib_accessor_class_to_integer = {
     0,                           /* inited */
     0,                           /* init_class */
     &init,                       /* init */
-    &post_init,                  /* post_init */
+    0,                  /* post_init */
     0,                    /* destroy */
     &dump,                       /* dump */
     &next_offset,                /* next_offset */
@@ -122,12 +120,6 @@ static grib_accessor_class _grib_accessor_class_to_integer = {
 
 grib_accessor_class* grib_accessor_class_to_integer = &_grib_accessor_class_to_integer;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
@@ -140,11 +132,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
-}
-
-static void post_init(grib_accessor* a)
-{
-    return;
 }
 
 static int value_count(grib_accessor* a, long* count)

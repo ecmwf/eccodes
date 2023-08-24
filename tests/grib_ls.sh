@@ -191,5 +191,21 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid type for key=shortName" $tempText
 
+# Do list after an offset
+file=tigge_pf_ecmwf.grib2
+${tools_dir}/grib_ls -X 62414 $file
+set +e
+${tools_dir}/grib_ls -X -1 $file > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid file offset" $tempText
+
+# Decode an ascii key as double
+file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+grib_check_key_equals $file 'expver:d' 1
+grib_check_key_equals $file 'expver:s' '0001'
+
+
 # Clean up
 rm -f $temp1 $temp2 $tempText $tempLog

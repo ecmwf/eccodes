@@ -10,20 +10,18 @@
 
 . ./include.ctest.sh
 
-#set -x
-
-#Enter data dir
+# Enter data dir
 cd ${data_dir}/metar
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="metar_compare_test"
 
-#Create log file
+# Create log file
 fLog=${label}".log"
 rm -f $fLog
 touch $fLog
 
-#Define tmp METAR file
+# Define tmp METAR file
 fMetarTmp=${label}".metar.tmp"
 
 #----------------------------------------------------
@@ -39,7 +37,7 @@ ${tools_dir}/metar_compare $metar_file $metar_file
 #----------------------------------------------------
 sed -e 's:^METAR VECC 022350Z 00000KT 1600 BR NSC 15/13 Q1013 NOSIG:METAR VECC 022349Z 00000KT 1600 BR NSC 15/13 Q1013 NOSIG:' < metar.txt > $fMetarTmp
 set +e
-${tools_dir}/metar_compare $metar_file $fMetarTmp
+${tools_dir}/metar_compare -v -d $metar_file $fMetarTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
@@ -47,10 +45,22 @@ if [ $status -eq 0 ]; then
    exit 1
 fi
 
+# The -d option should have created these files
+rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
+
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
 #----------------------------------------------------
-# ${tools_dir}/metar_compare -b GG $metar_file $fMetarTmp >> $fLog
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+   # Add wrong blocklist. Should still fail
+   set +e
+   ${tools_dir}/metar_compare -b CCCC $metar_file $fMetarTmp
+   status=$?
+   set -e
+   [ $status -eq 1 ]
+   # Add correct blocklist
+   ${tools_dir}/metar_compare -b minute,theMessage $metar_file $fMetarTmp
+fi
 
-#Clean up
+# Clean up
 rm -f $fLog $fMetarTmp

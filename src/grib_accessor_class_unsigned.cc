@@ -48,7 +48,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 
 typedef struct grib_accessor_unsigned
@@ -113,12 +112,6 @@ static grib_accessor_class _grib_accessor_class_unsigned = {
 
 
 grib_accessor_class* grib_accessor_class_unsigned = &_grib_accessor_class_unsigned;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -220,7 +213,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
         if (check) {
             if (val[0] < 0) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                                "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned\n", a->name, val[0]);
+                        "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned", a->name, val[0]);
                 return GRIB_ENCODING_ERROR;
             }
             /* See GRIB-23 and GRIB-262 */
@@ -230,8 +223,8 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
                     unsigned long maxval = (1UL << nbits) - 1;
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
                         grib_context_log(a->context, GRIB_LOG_ERROR,
-                                         "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %ld (number of bits=%ld)\n",
-                                         a->name, v, maxval, nbits);
+                                "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
+                                 a->name, v, maxval, nbits);
                         return GRIB_ENCODING_ERROR;
                     }
                 }

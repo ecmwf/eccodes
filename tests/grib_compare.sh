@@ -13,18 +13,30 @@
 label="grib_compare_test"
 REDIRECT=/dev/null
 
-infile="${data_dir}/regular_latlon_surface.grib1"
-outfile=${infile}.compare.$$
-
+outfile=temp.$label.grib
 rm -f $outfile
 
+
+# Header (meta-data) keys
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -d4 $infile $outfile
+set +e
+${tools_dir}/grib_compare -v $infile $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+${tools_dir}/grib_compare -b referenceValue $infile $outfile
+${tools_dir}/grib_compare -H $infile $outfile
+
+
+infile="${data_dir}/regular_latlon_surface.grib1"
 ${tools_dir}/grib_set -s shortName=2d $infile $outfile
 ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $outfile > $REDIRECT
 
 # ----------------------------------------
 # Test the -r switch
 # ----------------------------------------
-infile=${data_dir}/v.grib2
+infile=${data_dir}/tigge_cf_ecmwf.grib2
 for i in 1 2 3; do
   ${tools_dir}/grib_copy -wcount=$i $infile temp.$label.$i
 done
@@ -34,6 +46,20 @@ cat temp.$label.3 temp.$label.2 temp.$label.1 > temp.$label.321
 # Compare files in which the messages are not in the same order
 ${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
+# Make a change in the data values of 2nd file
+${tools_dir}/grib_set -s scaleValuesBy=1.1 temp.$label.2 temp.$label.2.changed
+cat temp.$label.2 temp.$label.1 temp.$label.3 > temp.$label.213
+cat temp.$label.3 temp.$label.2.changed temp.$label.1 > temp.$label.321
+set +e
+${tools_dir}/grib_compare -d -r temp.$label.213 temp.$label.321
+status=$?
+set -e
+[ $status -eq 1 ]
+
+cmp temp.$label.2.changed error2_1.grib
+cmp temp.$label.2         error1_1.grib
+rm -f error1_1.grib error2_1.grib
+rm -f temp.$label.2.changed
 rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
 # ----------------------------------------------
@@ -89,6 +115,20 @@ ${tools_dir}/grib_compare -b totalLength $temp1 $temp2 >/dev/null
 status=$?
 set -e
 [ $status -eq 1 ]
+
+# ----------------------------------------
+# Test -A switch
+# ----------------------------------------
+infile=${data_dir}/sample.grib2
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $infile $temp1
+# max absolute diff. = 3.11
+set +e
+${tools_dir}/grib_compare -b referenceValue -A 3.1  $infile $temp1
+status=$?
+set -e
+[ $status -eq 1 ]
+# Raise the tolerance
+${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
 
 
 # ----------------------------------------
@@ -151,11 +191,32 @@ EOF
 diff $reffile $outfile
 rm -f $reffile
 
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# --------------------------------------------
+# Key='Missing' in one field and not the other
+# --------------------------------------------
+${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
+set +e
+${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
+
+set +e
+${tools_dir}/grib_compare $temp1 $sample_g2 > $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "scaleFactorOfFirstFixedSurface is set to missing in 2nd field but is not missing in 1st field" $outfile
+
+${tools_dir}/grib_compare -b scaleFactorOfFirstFixedSurface $sample_g2 $temp1 > $outfile
+
 
 # ----------------------------------------
 # Test -R overriding "referenceValueError"
 # ----------------------------------------
-sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 echo 'set values = { 9.99999957911723157871e-26 }; write;' | ${tools_dir}/grib_filter -o $temp1 - $sample_g2
 echo 'set values = { 1.00000001954148137826e-25 }; write;' | ${tools_dir}/grib_filter -o $temp2 - $sample_g2
 # Plain grib_compare uses the referenceValueError as tolerance and will see the files as identical
@@ -175,6 +236,20 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+
+# Failing cases
+# -----------------
+set +e
+${tools_dir}/grib_compare -H -c data:n $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/grib_compare -a $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
 
 
 # Clean up

@@ -51,7 +51,6 @@ static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int compare(grib_accessor*, grib_accessor*);
 
@@ -119,12 +118,6 @@ static grib_accessor_class _grib_accessor_class_values = {
 
 
 grib_accessor_class* grib_accessor_class_values = &_grib_accessor_class_values;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 static long init_length(grib_accessor* a)

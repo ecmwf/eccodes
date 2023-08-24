@@ -29,6 +29,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Surface roughness (climatological)
+'surface_roughness_length' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfGeneratingProcess = 9 ;
+	}
 #Top net short-wave (solar) radiation
 'toa_net_upward_shortwave_flux' = {
 	 discipline = 0 ;
@@ -142,7 +150,7 @@
 	 constituentType = 11 ;
 	 is_chemical = 1 ;
 	}
-#Sea surface salinity
+#Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
@@ -344,12 +352,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
-	}
-#Surface roughness
-'surface_roughness_length' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 1 ;
 	}
 #Surface net short-wave (solar) radiation
 'surface_net_downward_shortwave_flux' = {

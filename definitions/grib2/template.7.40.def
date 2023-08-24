@@ -1,9 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 7.40, Grid point data - jpeg2000
-# Octets 6-xx : NG  group reference values
-# (XI in the decoding formula)
-# ????          ng_group_reference_values
+# TEMPLATE 7.40, Grid point data - JPEG2000
 
 meta   codedValues data_jpeg2000_packing(
 
@@ -28,7 +25,6 @@ meta   codedValues data_jpeg2000_packing(
               #bitsPerValue,
 
               # For encoding
-
               typeOfCompressionUsed,
               targetCompressionRatio,
               Nx,

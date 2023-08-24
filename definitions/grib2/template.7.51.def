@@ -1,9 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.51, Spherical harmonics - complex packing
-# Octets 6-(5+I*TS) : Data values from the unpacked subset
-# (IEEE floating-point values on I octets)
-# ????          data_values_from_the_unpacked_subset
 
 constant GRIBEXShBugPresent = 0;
 constant sphericalHarmonics = 1;

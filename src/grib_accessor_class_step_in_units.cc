@@ -41,7 +41,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_step_in_units
 {
@@ -108,12 +107,6 @@ static grib_accessor_class _grib_accessor_class_step_in_units = {
 
 
 grib_accessor_class* grib_accessor_class_step_in_units = &_grib_accessor_class_step_in_units;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

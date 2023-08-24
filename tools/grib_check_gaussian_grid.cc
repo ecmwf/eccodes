@@ -126,7 +126,6 @@ static int process_file(const char* filename)
         GRIB_CHECK(grib_get_long(h, "angleSubdivisions", &angleSubdivisions), 0);
         Assert(angleSubdivisions > 0);
         angular_tolerance = 1.0/angleSubdivisions;
-        printf(" angular_tolerance=%g\n",angular_tolerance);
 
         if (N <= 0) {
             error(filename, msg_num, "N should be > 0\n", N);

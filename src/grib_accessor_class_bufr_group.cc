@@ -32,7 +32,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static grib_accessor* next(grib_accessor*, int);
 
 typedef struct grib_accessor_bufr_group
@@ -41,6 +40,7 @@ typedef struct grib_accessor_bufr_group
     /* Members defined in gen */
     /* Members defined in variable */
     double dval;
+    float  fval;
     char*  cval;
     char*  cname;
     int    type;
@@ -99,12 +99,6 @@ static grib_accessor_class _grib_accessor_class_bufr_group = {
 
 
 grib_accessor_class* grib_accessor_class_bufr_group = &_grib_accessor_class_bufr_group;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
