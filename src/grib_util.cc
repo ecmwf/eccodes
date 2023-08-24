@@ -766,6 +766,19 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
 }
 #endif
 
+static bool grid_type_is_supported_in_edition(const int spec_grid_type, const long edition)
+{
+    if (edition == 1) {
+        if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 static const char* get_grid_type_name(const int spec_grid_type)
 {
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
@@ -1010,14 +1023,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         goto cleanup;
     }
 
-    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
-        spec->grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX ||
-        spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
-        if (editionNumber == 1) { /* These grid types are not available in edition 1 */
-            fprintf(stderr, "ECCODES WARNING %s: '%s' specified "
-                            "but input is GRIB1. Output must be a higher edition!\n", __func__, grid_type);
-            convertEditionEarlier = 1;
-        }
+    if (!grid_type_is_supported_in_edition(spec->grid_type, editionNumber)) {
+        fprintf(stderr, "ECCODES WARNING %s: '%s' specified "
+                        "but input is GRIB edition %ld. Output must be a higher edition!\n",
+                        __func__, grid_type, editionNumber);
+        convertEditionEarlier = 1;
     }
 
     h_sample = grib_handle_new_from_samples(NULL, sample_name);
