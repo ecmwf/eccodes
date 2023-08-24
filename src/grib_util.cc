@@ -766,6 +766,19 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
 }
 #endif
 
+static bool grid_type_is_supported_in_edition(const int spec_grid_type, const long edition)
+{
+    if (edition == 1) {
+        if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 static const char* get_grid_type_name(const int spec_grid_type)
 {
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
@@ -800,6 +813,9 @@ static const char* get_grid_type_name(const int spec_grid_type)
 
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
         return "lambert";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX)
+        return "healpix";
 
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED)
         return "unstructured_grid";
@@ -868,6 +884,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
             snprintf(sample_name, sample_name_len, "GRIB%ld", editionNumber);
             break;
         default:
@@ -1006,16 +1023,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         goto cleanup;
     }
 
-    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
-        spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
-        if (editionNumber == 1) { /* These grid types are not available in edition 1 */
-            if (h->context->debug == -1)
-                fprintf(stderr,
-                        "ECCODES DEBUG grib_util: '%s' specified "
-                        "but input is GRIB1. Output must be a higher edition!\n",
-                        grid_type);
-            convertEditionEarlier = 1;
-        }
+    if (!grid_type_is_supported_in_edition(spec->grid_type, editionNumber)) {
+        fprintf(stderr, "ECCODES WARNING %s: '%s' specified "
+                        "but input is GRIB edition %ld. Output must be a higher edition!\n",
+                        __func__, grid_type, editionNumber);
+        convertEditionEarlier = 1;
     }
 
     h_sample = grib_handle_new_from_samples(NULL, sample_name);
@@ -1154,6 +1166,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             // Note: DxInMetres and DyInMetres
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
             // TODO(masn): Add other keys like Latin1, LoV etc
+            break;
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            COPY_SPEC_LONG(N); // Nside
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
