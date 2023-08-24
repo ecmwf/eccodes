@@ -36,7 +36,7 @@ ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $out
 # ----------------------------------------
 # Test the -r switch
 # ----------------------------------------
-infile=${data_dir}/v.grib2
+infile=${data_dir}/tigge_cf_ecmwf.grib2
 for i in 1 2 3; do
   ${tools_dir}/grib_copy -wcount=$i $infile temp.$label.$i
 done
