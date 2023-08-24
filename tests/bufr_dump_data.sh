@@ -13,8 +13,8 @@
 # Define a common label for all the tmp files
 label="bufr_dump_data_test"
 
-fLog=${label}".log"
-fJsonTmp=${label}".json.tmp"
+fLog=temp.$label.log
+fJsonTmp=temp.$label.json
 
 if [ $HAVE_MEMFS -eq 1 ]; then
     unset ECCODES_DEFINITION_PATH
@@ -57,6 +57,26 @@ grep -q "parsing include file" $fLog
 
 unset ECCODES_DEBUG
 unset ECCODES_LOG_STREAM
+
+# This one should fail
+file=${data_dir}/bufr/vos308014_v3_26.bufr
+set +e
+${tools_dir}/bufr_dump -ja $file
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/bufr_dump $file
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/bufr_dump -p $file
+status=$?
+set -e
+[ $status -ne 0 ]
 
 #==============================================
 # Testing a malformed bufr file (see ECC-110)
