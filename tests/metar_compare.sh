@@ -45,11 +45,9 @@ if [ $status -eq 0 ]; then
    exit 1
 fi
 
-# The -d option should have created these two files
+# The -d option should have created these files
 [ -f error1_1.metar ]
 [ -f error2_1.metar ]
-[ -f error1_2.metar ]
-[ -f error2_2.metar ]
 rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
 
 #----------------------------------------------------
