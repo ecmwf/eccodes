@@ -6,13 +6,14 @@ include "grib2/template.3.shape_of_the_earth.def";
 constant isGridded = one;
 
 unsigned[4] Nx : dump;
-alias Ni  = Nx;
+alias Ni = Nx;
 alias numberOfPointsAlongXAxis = Nx;
 alias geography.Nx=Nx;
 
-unsigned[4] Ny  : dump;
-alias Nj  = Ny;
-alias numberOfPointsAlongYAxis = Ny;
+unsigned[4] Ny : dump;
+alias Nj = Ny;
+alias numberOfPointsAlongYAxis = Nj;
+alias numberOfPointsAlongAMeridian = Nj;
 alias geography.Ny=Ny;
 
 # La1 - latitude of first grid point

@@ -44,6 +44,12 @@ cmp $ECCODES_DEFINITION_PATH/$f $temp
 # Failing cases
 # ----------------
 set +e
+${tools_dir}/codes_export_resource
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
 ${tools_dir}/codes_export_resource -d nonexistent $temp
 status=$?
 set -e
@@ -55,6 +61,11 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+set +e
+${tools_dir}/codes_export_resource -z A B
+status=$?
+set -e
+[ $status -eq 1 ]
 
 
 # Clean up

@@ -114,7 +114,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
     /*to allow free of buffer*/
-    h->buffer->property = GRIB_MY_BUFFER;
+    h->buffer->property = CODES_MY_BUFFER;
 
     switch (edition) {
         case 1:
@@ -376,12 +376,14 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
 static void print_values(grib_context* c,
                          const grib_util_grid_spec* spec,
                          const grib_util_packing_spec* packing_spec,
+                         const char* input_packing_type,
                          const double* data_values, const size_t data_values_count, /* the data pay load */
                          const grib_values* keyval_pairs, const size_t count)       /* keys and their values */
 {
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
+    fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
     fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
 
     for (i = 0; i < count; i++) {
@@ -625,8 +627,8 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec* spec,
             strcpy(msg, "Specified to be global (in spec)");
             sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (sum != data_values_count) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%zu!=%zu)\n",
-                        msg, data_values_count, sum);
+                fprintf(stderr, "%s: Invalid reduced gaussian grid: %s but data_values_count != sum_of_pl_array (%zu!=%zu)\n",
+                        __func__, msg, data_values_count, sum);
                 return GRIB_WRONG_GRID;
             }
         }
@@ -878,7 +880,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
 
     if (spec->pl && spec->grid_name) {
         /* Cannot have BOTH pl and grid name specified */
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set BOTH spec.pl and spec.grid_name!\n");
+        fprintf(stderr, "%s: Cannot set BOTH spec.pl and spec.grid_name!\n", __func__);
         return GRIB_INTERNAL_ERROR;
     }
     if (spec->grid_name) {
@@ -946,7 +948,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     char sample_name[1024]; /* name of the GRIB sample file */
     char input_grid_type[100];
     char input_packing_type[100];
-    long input_bits_per_value = 0, editionNumber = 0, input_decimal_scale_factor = 0;
+    long editionNumber = 0;
     size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
@@ -955,12 +957,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     int global_grid               = 0; /* boolean */
     int expandBoundingBox         = 0;
 
-    static grib_util_packing_spec default_packing_spec = {0,};
     Assert(h);
-
-    if (!packing_spec) {
-        packing_spec = &default_packing_spec;
-    }
 
     /* Get edition number from input handle */
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
@@ -973,13 +970,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     grib_get_string(h, "packingType", input_packing_type, &len);
-    grib_get_long(h, "bitsPerValue", &input_bits_per_value);
-    grib_get_long(h, "decimalScaleFactor", &input_decimal_scale_factor);
-    if (h->context->debug == -1) {
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_bits_per_value = %ld\n", input_bits_per_value);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
-    }
 
     /* ECC-1201, ECC-1529, ECC-1530: Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
@@ -1009,7 +999,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 
     grid_type = get_grid_type_name(spec->grid_type);
     if (!grid_type) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Unknown spec.grid_type (%d)\n", spec->grid_type);
+        fprintf(stderr, "%s: Unknown spec.grid_type (%d)\n", __func__, spec->grid_type);
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
     }
@@ -1286,7 +1276,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 setSecondOrder = 1;
                 break;
             default:
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.packing_type (%ld)\n", packing_spec->packing_type);
+                fprintf(stderr, "%s: invalid packing_spec.packing_type (%ld)\n", __func__, packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
                 break;
@@ -1299,10 +1289,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             keep_matrix = 0; /* ECC-911 */
         }
         if (keep_matrix) {
-            int ret;
             SET_STRING_VALUE("packingType", "grid_simple_matrix");
-            ret = grib_get_long(h, "numberOfDirections", &numberOfDirections);
-            if (ret == GRIB_SUCCESS) {
+            if (GRIB_SUCCESS == grib_get_long(h, "numberOfDirections", &numberOfDirections)) {
                 grib_get_long(h, "numberOfDirections", &numberOfDirections);
                 SET_LONG_VALUE("NC1", numberOfDirections);
                 grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
@@ -1349,7 +1337,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             break;
 
         default:
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid packing_spec.accuracy (%ld)\n", packing_spec->accuracy);
+            fprintf(stderr, "%s: invalid packing_spec.accuracy (%ld)\n", __func__, packing_spec->accuracy);
             grib_handle_delete(h_sample);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
@@ -1390,26 +1378,26 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     /* GRIB-857: Set "pl" array if provided (For reduced Gaussian grids) */
     Assert(spec->pl_size >= 0);
     if (spec->pl && spec->pl_size == 0) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: pl array not NULL but pl_size == 0!\n");
+        fprintf(stderr, "%s: pl array not NULL but pl_size == 0!\n", __func__);
         goto cleanup;
     }
     if (spec->pl_size > 0 && spec->pl == NULL) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: pl_size not zero but pl array == NULL!\n");
+        fprintf(stderr, "%s: pl_size not zero but pl array == NULL!\n", __func__);
         goto cleanup;
     }
 
     if (spec->pl_size != 0 && (spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_GG || spec->grid_type == GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG)) {
         *err = grib_set_long_array(h_out, "pl", spec->pl, spec->pl_size);
         if (*err) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set pl: %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "%s: Cannot set pl: %s\n", __func__, grib_get_error_message(*err));
             goto cleanup;
         }
         if (global_grid) {
             size_t sum = sum_of_pl_array(spec->pl, spec->pl_size);
             if (data_values_count != sum) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: invalid reduced gaussian grid: "
+                fprintf(stderr, "%s: invalid reduced gaussian grid: "
                         "specified as global, data_values_count=%zu but sum of pl array=%zu\n",
-                        data_values_count, sum);
+                        __func__, data_values_count, sum);
                 *err = GRIB_WRONG_GRID;
                 goto cleanup;
             }
@@ -1419,13 +1407,13 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (h->context->debug == -1) {
         fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
         fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
-        print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
+        print_values(h->context, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
     }
 
     /* Apply adjustments to bounding box if needed */
     if (expandBoundingBox) {
         if ((*err = expand_bounding_box(h_out, values, count)) != 0) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot expand bounding box: %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "%s: Cannot expand bounding box: %s\n", __func__, grib_get_error_message(*err));
             if (h->context->write_on_fail)
                 grib_write_message(h_out, "error.grib", "w");
             goto cleanup;
@@ -1435,13 +1423,13 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (convertEditionEarlier && packing_spec->editionNumber > 1) {
         *err = grib_set_long(h_out, "edition", packing_spec->editionNumber);
         if (*err) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot convert to edition %ld.\n", packing_spec->editionNumber);
+            fprintf(stderr, "%s: Cannot convert to edition %ld.\n", __func__, packing_spec->editionNumber);
             goto cleanup;
         }
     }
 
     if ((*err = grib_set_values(h_out, values, count)) != 0) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set key values: %s\n", grib_get_error_message(*err));
+        fprintf(stderr, "%s: Cannot set key values: %s\n", __func__, grib_get_error_message(*err));
         for (i = 0; i < count; i++)
             if (values[i].error) fprintf(stderr, " %s %s\n", values[i].name, grib_get_error_message(values[i].error));
         goto cleanup;
@@ -1468,11 +1456,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         /* GRIB-863: must set increments to MISSING */
         /* increments are not coded in message but computed */
         if ((*err = grib_set_missing(h_out, "iDirectionIncrement")) != 0) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set Di to missing: %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "%s: Cannot set Di to missing: %s\n", __func__, grib_get_error_message(*err));
             goto cleanup;
         }
         if ((*err = grib_set_missing(h_out, "jDirectionIncrement")) != 0) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Cannot set Dj to missing: %s\n", grib_get_error_message(*err));
+            fprintf(stderr, "%s: Cannot set Dj to missing: %s\n", __func__, grib_get_error_message(*err));
             goto cleanup;
         }
     }
@@ -1509,7 +1497,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 grib_set_string(h_out, "packingType", "grid_second_order", &slen);
                 *err = grib_set_double_array(h_out, "values", data_values, data_values_count);
                 if (*err != GRIB_SUCCESS) {
-                    fprintf(stderr, "GRIB_UTIL_SET_SPEC: setting data values failed: %s\n", grib_get_error_message(*err));
+                    fprintf(stderr, "%s: setting data values failed: %s\n", __func__, grib_get_error_message(*err));
                     goto cleanup;
                 }
             }
@@ -1526,8 +1514,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (packing_spec->editionNumber && packing_spec->editionNumber != editionNumber) {
         *err = grib_set_long(h_out, "edition", packing_spec->editionNumber);
         if (*err != GRIB_SUCCESS) {
-            fprintf(stderr, "GRIB_UTIL_SET_SPEC: Failed to change edition to %ld: %s\n",
-                    packing_spec->editionNumber, grib_get_error_message(*err));
+            fprintf(stderr, "%s: Failed to change edition to %ld: %s\n",
+                    __func__, packing_spec->editionNumber, grib_get_error_message(*err));
             if (h->context->write_on_fail)
                 grib_write_message(h_out, "error.grib", "w");
             goto cleanup;
@@ -1535,20 +1523,20 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     if (editionNumber > 1 || packing_spec->editionNumber > 1) { /* ECC-353 */
-        /* JPEG packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
+        /* Some packing types are not available in GRIB1 and have to be done AFTER we set data values */
         if (setJpegPacking == 1) {
             *err = grib_set_string(h_out, "packingType", "grid_jpeg", &slen);
             if (*err != GRIB_SUCCESS) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Failed to change packingType to JPEG: %s\n",
-                        grib_get_error_message(*err));
+                fprintf(stderr, "%s: Failed to change packingType to JPEG: %s\n",
+                        __func__, grib_get_error_message(*err));
                 goto cleanup;
             }
         }
         if (setCcsdsPacking == 1) {
             *err = grib_set_string(h_out, "packingType", "grid_ccsds", &slen);
             if (*err != GRIB_SUCCESS) {
-                fprintf(stderr, "GRIB_UTIL_SET_SPEC: Failed to change packingType to CCSDS: %s\n",
-                        grib_get_error_message(*err));
+                fprintf(stderr, "%s: Failed to change packingType to CCSDS: %s\n",
+                        __func__, grib_get_error_message(*err));
                 goto cleanup;
             }
         }
@@ -1564,7 +1552,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     if ((*err = check_geometry(h_out, spec, data_values_count, global_grid)) != GRIB_SUCCESS) {
-        fprintf(stderr, "GRIB_UTIL_SET_SPEC: Geometry check failed: %s\n", grib_get_error_message(*err));
+        fprintf(stderr, "%s: Geometry check failed: %s\n", __func__, grib_get_error_message(*err));
         if (h->context->write_on_fail)
             grib_write_message(h_out, "error.grib", "w");
         goto cleanup;
@@ -1580,13 +1568,12 @@ grib_handle* grib_util_set_spec(grib_handle* h,
 //         goto cleanup;
 //     }
 
-    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: grib_util_set_spec end\n");
+    if (h->context->debug == -1) fprintf(stderr, "ECCODES DEBUG grib_util: %s end\n",__func__);
 
     return h_out;
 
 cleanup:
-    if (h_out)
-        grib_handle_delete(h_out);
+    grib_handle_delete(h_out);
     return NULL;
 }
 
@@ -1830,7 +1817,7 @@ int parse_keyval_string(const char* grib_tool,
         if (*p == ':') {
             values[i].type = grib_type_to_int(*(p + 1));
             if (*(p + 1) == 'n')
-                values[i].type = GRIB_NAMESPACE;
+                values[i].type = CODES_NAMESPACE;
             *p = '\0';
             p++;
         }

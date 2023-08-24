@@ -301,7 +301,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", a->name);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
@@ -336,7 +336,7 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as %s", a->name, Tname);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name, Tname);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
@@ -356,10 +356,12 @@ static int unpack_float(grib_accessor* a, float* v, size_t* len)
 
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
+    int err = 0;
     if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
         double val = 0.0;
         size_t l   = 1;
-        grib_unpack_double(a, &val, &l);
+        err = grib_unpack_double(a, &val, &l);
+        if (err) return err;
         snprintf(v, 64, "%g", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
@@ -369,7 +371,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
-        grib_unpack_long(a, &val, &l);
+        err = grib_unpack_long(a, &val, &l);
+        if (err) return err;
         snprintf(v, 64, "%ld", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string\n", a->name);
@@ -388,7 +391,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
-    grib_unpack_string(a, v[0], &length);
+    grib_unpack_string(a, v[0], &length); // TODO(masn): check return value
     *len = 1;
 
     return GRIB_SUCCESS;

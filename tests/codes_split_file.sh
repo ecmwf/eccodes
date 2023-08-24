@@ -16,6 +16,7 @@ temp=$label.temp.grib
 
 # Do all the work in a temporary directory
 temp_dir=tempdir.${label}
+rm -rf $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
@@ -58,6 +59,20 @@ total=`${tools_dir}/codes_count tigge_ecmwf.grib2_[0-9]*`
 
 cat tigge_ecmwf.grib2_[0-9][0-9][0-9] > $temp
 ${tools_dir}/grib_compare $input $temp
+
+# Failing cases
+# ----------------
+set +e
+${tools_dir}/codes_split_file
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/codes_split_file 4 $data_dir
+status=$?
+set -e
+[ $status -eq 1 ]
 
 
 # Clean up

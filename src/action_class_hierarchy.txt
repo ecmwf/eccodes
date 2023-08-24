@@ -23,7 +23,6 @@ Action Class Hierarchy
    |---action_class_template
    |-action_class_set
    |-action_class_set_darray
-   |-action_class_set_iarray
    |-action_class_set_missing
    |-action_class_set_sarray
    |-action_class_when

@@ -238,8 +238,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     int ret               = 0, i;
-    int nfiles            = 1;
-    char orderby[]        = "md5Headers";
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
@@ -306,27 +304,12 @@ int grib_tool_init(grib_runtime_options* options)
     /* Check 1st file is not a directory */
     exit_if_input_is_directory(tool_name, options->infile_extra->name);
 
-    if (grib_options_on("r")) {
-        const char* filename[1];
-        filename[0]      = options->infile_extra->name;
-        options->random  = 1;
-        options->orderby = strdup(orderby);
-        options->idx     = grib_fieldset_new_from_files(context, filename,
-                                                    nfiles, 0, 0, 0, orderby, &ret);
-        if (ret) {
-            fprintf(stderr, "%s: Unable to create index for input file %s (%s)",
-                    tool_name, options->infile_extra->name, grib_get_error_message(ret));
-            exit(ret);
-        }
-    }
-    else {
-        options->random             = 0;
-        options->infile_extra->file = fopen(options->infile_extra->name, "r");
+    options->random             = 0;
+    options->infile_extra->file = fopen(options->infile_extra->name, "r");
 
-        if (!options->infile_extra->file) {
-            perror(options->infile_extra->name);
-            exit(1);
-        }
+    if (!options->infile_extra->file) {
+        perror(options->infile_extra->name);
+        exit(1);
     }
 
     global_tolerance = 0;
@@ -483,10 +466,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         return 0;
     }
-    else if (options->random)
-        global_handle = grib_fieldset_next_handle(options->idx, &err);
-    else
+    else {
         global_handle = bufr_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
+    }
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
@@ -530,7 +512,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
-    if (!options->through_index && !options->random) {
+    if (!options->through_index) {
         global_handle = codes_bufr_handle_new_from_file(h->context, options->infile_extra->file, &err);
 
         if (!global_handle || err != GRIB_SUCCESS)
@@ -1346,23 +1328,11 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     grib_keys_iterator* iter = NULL;
     const char* name         = NULL;
 
-    /* mask only if no -c option or headerMode (-H)*/
-    if (blocklist && (!listFromCommandLine || headerMode)) {
-        /* See ECC-245, GRIB-573, GRIB-915: Do not change handles in memory */
-        /*
-        grib_string_list* nextb=blocklist;
-        while (nextb) {
-            grib_clear(handle1,nextb->value);
-            grib_clear(handle2,nextb->value);
-            nextb=nextb->next;
-        }*/
-    }
-
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
             if (blocklisted(options->compare[i].name))
                 continue;
-            if (options->compare[i].type == GRIB_NAMESPACE) {
+            if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                 if (!iter) {
                     grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
@@ -1424,7 +1394,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             for (i = 0; i < options->compare_count; i++) {
                 if (blocklisted(name))
                     continue;
-                if (options->compare[i].type == GRIB_NAMESPACE) {
+                if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                     if (!iter) {
                         grib_context_log(handle1->context, GRIB_LOG_ERROR,

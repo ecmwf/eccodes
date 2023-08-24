@@ -7,14 +7,11 @@
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
 !
-!
 ! Description: How to read SYNOP BUFR messages.
-
+!
 ! Please note that SYNOP reports can be encoded in various ways in BUFR. Therefore the code
 ! below might not work directly for other types of SYNOP messages than the one used in the
 ! example. It is advised to use bufr_dump first to understand the structure of these messages.
-
-!
 !
 program bufr_read_synop
    use eccodes
@@ -29,11 +26,9 @@ program bufr_read_synop
 
    call codes_open_file(ifile, '../../data/bufr/syno_multi.bufr', 'r')
 
-   ! The first bufr message is loaded from file,
-   ! ibufr is the bufr id to be used in subsequent calls
-   call codes_bufr_new_from_file(ifile, ibufr, iret)
-
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      call codes_bufr_new_from_file(ifile, ibufr, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       write (*, *) 'message: ', count
 
@@ -104,9 +99,6 @@ program bufr_read_synop
 
       ! Release the bufr message
       call codes_release(ibufr)
-
-      ! Load the next bufr message
-      call codes_bufr_new_from_file(ifile, ibufr, iret)
 
       count = count + 1
 

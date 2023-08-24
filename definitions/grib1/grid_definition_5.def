@@ -1,15 +1,15 @@
 # GRID DEFINITION Polar stereographic
 # grib 1 -> 2
-constant gridDefinitionTemplateNumber     = 20;
+constant gridDefinitionTemplateNumber = 20;
 
 unsigned[2] Nx  : dump;
 alias Ni =  Nx;
-alias numberOfPointsAlongXAxis =  Nx;
+alias numberOfPointsAlongXAxis = Nx;
 alias geography.Nx=Nx;
 
 unsigned[2] Ny  : dump;
 alias Nj =  Ny;
-alias numberOfPointsAlongYAxis =  Ny;
+alias numberOfPointsAlongYAxis = Ny;
 alias geography.Ny=Ny;
 
 signed[3] latitudeOfFirstGridPoint : edition_specific ;
@@ -22,19 +22,19 @@ alias Lo1 = longitudeOfFirstGridPoint;
 
 include "grib1/resolution_flags.def";
 
-#  LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
+# LoV - orientation of the grid; i.e.  the longitude value of the meridian which is parallel to the Y-axis
 signed[3] orientationOfTheGrid : edition_specific, no_copy ;
 meta geography.orientationOfTheGridInDegrees scale(orientationOfTheGrid,oneConstant,grib1divider,truncateDegrees) : dump;
 alias LoV = orientationOfTheGrid ;
 
-#  Dx - X-direction grid length
+# Dx - X-direction grid length
 unsigned[3] DxInMetres  : dump;
 alias xDirectionGridLengthInMetres=DxInMetres;
 alias Dx=DxInMetres;
 alias geography.DxInMetres=DxInMetres;
 alias Di = DxInMetres;
 
-#  Dy - Y-direction grid length
+# Dy - Y-direction grid length
 unsigned[3] DyInMetres  : dump;
 alias yDirectionGridLengthInMetres=DyInMetres;
 alias Dy = DyInMetres;
@@ -45,14 +45,13 @@ constant latitudeWhereDxAndDyAreSpecifiedInDegrees=60;
 constant LaDInDegrees=60;
 alias geography.LaDInDegrees=LaDInDegrees;
 
-#  Projection centre flag
+# Projection centre flag
 unsigned[1] projectionCentreFlag : dump ;
 alias projectionCenterFlag=projectionCentreFlag;
 # Note our flagbit numbers go from 7 to 0, while WMO convention is from 1 to 8
 # If bit 1 is 0, then the North Pole is on the projection plane
 # If bit 1 is 1, then the South Pole is on the projection plane
 flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump; # WMO bit 1
-
 
 # for change_scanning_direction
 alias yFirst=latitudeOfFirstGridPointInDegrees;

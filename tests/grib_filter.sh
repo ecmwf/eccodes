@@ -308,6 +308,41 @@ ${tools_dir}/grib_filter $tempFilt $input
 cd ..
 rm -rf $tempDir
 
+# Use of 'defined' functor
+cat >$tempFilt <<EOF
+  if (defined(Ni)) { print "Ni defined: true"; }
+  else             { print "Ni defined: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "Ni defined: true" $tempOut
+
+
+cat >$tempFilt <<EOF
+  if (defined(N)) { print "N defined: true"; }
+  else            { print "N defined: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "N defined: false" $tempOut
+
+cat >$tempFilt <<EOF
+  if (defined()) { print "No args: true"; }
+  else           { print "No args: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "No args: false" $tempOut
+
+
+# Use of dummy expression (=true)
+cat >$tempFilt <<EOF
+  if (~) { print "case 1"; }
+  if (!~) { assert(0); }
+  else    { print "case 2"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+cat $tempOut
+grep -q "case 1" $tempOut
+grep -q "case 2" $tempOut
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef

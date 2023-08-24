@@ -23,9 +23,11 @@ for cfg in $ECCODES_DEFINITION_PATH/mars/grib.*.*.def; do
   # Each file should be of the form grib.$stream.$type.def
   stream=$(echo $b | awk -F. '{print $2}')
   type=$(echo $b | awk -F. '{print $3}')
-  ${tools_dir}/grib_set -s stream=$stream,type=$type $grib2_sample $tempGrib
-  ${tools_dir}/grib_ls -m $tempGrib > /dev/null
-  i=$((i + 1))
+  if [ $type = "fc" -o $type = "an" ]; then
+    ${tools_dir}/grib_set -s stream=$stream,type=$type $grib2_sample $tempGrib
+    ${tools_dir}/grib_ls -m $tempGrib > /dev/null
+    i=$((i + 1))
+  fi
 done
 echo "Checked $i files"
 

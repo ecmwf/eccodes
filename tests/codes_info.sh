@@ -29,6 +29,26 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+# Verbose debug output
+ECCODES_DEBUG=1 ${tools_dir}/codes_info
+
+# Test legacy environment variables
+unset ECCODES_DEFINITION_PATH
+unset ECCODES_SAMPLES_PATH
+export GRIB_DEFINITION_PATH=/tmp/dtest
+export GRIB_SAMPLES_PATH=/tmp/stest
+${tools_dir}/codes_info > $tempLog
+grep -q "This is for backward compatibility" $tempLog
+unset GRIB_DEFINITION_PATH
+unset GRIB_SAMPLES_PATH
+
+# Obscure environment variables
+export _ECCODES_ECMWF_TEST_DEFINITION_PATH=abc
+export _ECCODES_ECMWF_TEST_SAMPLES_PATH=def
+ECCODES_DEBUG=1 ${tools_dir}/codes_info
+unset _ECCODES_ECMWF_TEST_DEFINITION_PATH
+unset _ECCODES_ECMWF_TEST_SAMPLES_PATH
+
 
 # Clean up
 rm -f $tempLog

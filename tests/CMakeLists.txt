@@ -47,11 +47,13 @@ list(APPEND test_c_bins
     codes_dump_action_tree
     codes_set_samples_path
     codes_compare_keys
+    codes_dump_content
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
     grib_copy_message
     grib_packing_order
+    grib_unpack_subarray
     grib_sh_imag
     grib_spectral
     grib_lam_bf
@@ -86,6 +88,7 @@ if( HAVE_BUILD_TOOLS )
         grib_calendar
         grib_md5
         grib_cfNames
+        grib_ifsParam
         grib_packing_order
         filter_substr
         grib_uerra
@@ -156,6 +159,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
+        grib_unpack_subarray
         grib_count
         bufr_templates
         bufr_dump_data
@@ -291,6 +295,8 @@ if( HAVE_BUILD_TOOLS )
         codes_dump_action_tree
         codes_set_samples_path
         codes_compare_keys
+        codes_dump_content
+        codes_to_double
         grib_dump
         grib_dump_debug
         grib_dump_json
@@ -316,6 +322,8 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_extra grib_tigge_conversions2)
         list(APPEND tests_extra bufr_dump_encode_C)
         list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra bufr_dump_encode_python)
+        list(APPEND tests_extra bufr_dump_decode_python)
         list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 
@@ -452,7 +460,7 @@ if( HAVE_BUILD_TOOLS )
     # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_TIMER
+                      CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                       TEST_DEPENDS eccodes_download_gribs )
 else()

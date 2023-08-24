@@ -201,6 +201,11 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid file offset" $tempText
 
+# Decode an ascii key as double
+file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+grib_check_key_equals $file 'expver:d' 1
+grib_check_key_equals $file 'expver:s' '0001'
+
 
 # Clean up
 rm -f $temp1 $temp2 $tempText $tempLog

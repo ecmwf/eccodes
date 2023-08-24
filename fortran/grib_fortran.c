@@ -2129,11 +2129,12 @@ static void do_the_dump(grib_handle* h)
                 |  GRIB_DUMP_FLAG_READ_ONLY
                 |  GRIB_DUMP_FLAG_ALIASES
                 |  GRIB_DUMP_FLAG_TYPE;
-        grib_dump_content(h,stdout,"debug", dump_flags, NULL);
+        grib_dump_content(h,stdout, "debug", dump_flags, NULL);
     }
     else
     {
-        grib_dump_content(h,stdout,"wmo",0,NULL);
+        const int dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
+        grib_dump_content(h,stdout, "wmo", dump_flags, NULL);
     }
 }
 int grib_f_dump_(int* gid){
