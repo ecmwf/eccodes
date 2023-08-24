@@ -1158,7 +1158,6 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
 int grib_set_string_array(grib_handle* h, const char* name, const char** val, size_t length);
 int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t* length);
 int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length);
-int grib_clear(grib_handle* h, const char* name);
 int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);

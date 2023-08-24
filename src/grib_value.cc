@@ -537,25 +537,22 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
     return GRIB_NOT_FOUND;
 }
 
-int grib_clear(grib_handle* h, const char* name)
-{
-    int ret          = 0;
-    grib_accessor* a = NULL;
-
-    a = grib_find_accessor(h, name);
-
-    if (a) {
-        if (a->length == 0)
-            return 0;
-        if ((ret = grib_pack_zero(a)) != GRIB_SUCCESS)
-            grib_context_log(h->context, GRIB_LOG_ERROR, "unable to clear %s (%s)",
-                             name, grib_get_error_message(ret));
-        return ret;
-    }
-
-    /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
-    return GRIB_NOT_FOUND;
-}
+// int grib_clear(grib_handle* h, const char* name)
+// {
+//     int ret          = 0;
+//     grib_accessor* a = NULL;
+//     a = grib_find_accessor(h, name);
+//     if (a) {
+//         if (a->length == 0)
+//             return 0;
+//         if ((ret = grib_pack_zero(a)) != GRIB_SUCCESS)
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "unable to clear %s (%s)",
+//                              name, grib_get_error_message(ret));
+//         return ret;
+//     }
+//     /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
+//     return GRIB_NOT_FOUND;
+// }
 
 int grib_set_missing(grib_handle* h, const char* name)
 {
