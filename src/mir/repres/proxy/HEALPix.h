@@ -12,60 +12,44 @@
 
 #pragma once
 
+
 #include <string>
 
-#include "mir/repres/Gridded.h"
-#include "mir/util/Atlas.h"
+#include "mir/param/MIRParametrisation.h"
+#include "mir/repres/proxy/ProxyGrid.h"
+#include "mir/util/GridBox.h"
 
 
-namespace mir::repres::other {
+namespace mir::repres::proxy {
 
 
-class ORCA : public Gridded {
+class HEALPix final : public ProxyGrid {
 public:
     // -- Exceptions
     // None
 
     // -- Constructors
 
-    ORCA(const std::string& uid);
-    ORCA(const param::MIRParametrisation&);
-    ORCA(const ORCA&) = delete;
+    HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
+    HEALPix(const param::MIRParametrisation&);
+    HEALPix(const HEALPix&) = delete;
 
     // -- Destructor
 
-    ~ORCA() override;
+    ~HEALPix() override;
 
     // -- Convertors
     // None
 
     // -- Operators
 
-    ORCA& operator=(const ORCA&) = delete;
+    HEALPix& operator=(const HEALPix&) = delete;
 
     // -- Methods
     // None
 
     // -- Overridden methods
     // None
-
-    // -- Class members
-    // None
-
-    // -- Class methods
-    // None
-
-protected:
-    // -- Members
-    // None
-
-    // -- Methods
-    // None
-
-    // -- Overridden methods
-
-    // from Representation
-    void print(std::ostream&) const override;
 
     // -- Class members
     // None
@@ -76,30 +60,30 @@ protected:
 private:
     // -- Members
 
-    const atlas::Grid::Spec spec_;
-    mutable atlas::Grid grid_;
+    const ::atlas::Grid::Spec spec_;
+    mutable ::atlas::Grid grid_;
+    size_t Nside_;
+    std::string orderingConvention_;
 
     // -- Methods
 
-    const atlas::Grid& atlasGridRef() const;
+    std::string name() const;
 
     // -- Overridden methods
 
     // from Representation
     bool sameAs(const Representation&) const override;
-    void validate(const MIRValuesVector&) const override;
-    size_t numberOfPoints() const override;
     void makeName(std::ostream&) const override;
 
     void fillGrib(grib_info&) const override;
     void fillMeshGen(util::MeshGeneratorParameters&) const override;
+    void fillJob(api::MIRJob&) const override;
 
-    bool includesNorthPole() const override { return true; }
-    bool includesSouthPole() const override { return true; }
-    bool isPeriodicWestEast() const override { return true; }
+    void print(std::ostream&) const override;
 
-    Iterator* iterator() const override;
-    atlas::Grid atlasGrid() const override;
+    const ::atlas::Grid& atlasGridRef() const override;
+
+    std::vector<util::GridBox> gridBoxes() const override;
 
     // -- Class members
     // None
@@ -112,4 +96,4 @@ private:
 };
 
 
-}  // namespace mir::repres::other
+}  // namespace mir::repres::proxy
