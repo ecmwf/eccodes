@@ -166,21 +166,20 @@ Step& Step::optimize_unit() {
     unit_ = internal_unit_;
     Seconds<long> duration(0);
     switch (internal_unit_.to_value()) {
-        case Unit::SECOND:
-            duration = Seconds<long>(internal_value_);
-            break;
-        case Unit::MINUTE:
-            duration = Minutes<long>(internal_value_);
-            break;
-        case Unit::HOUR:
-            duration = Hours<long>(internal_value_);
-            break;
-        case Unit::DAY:
-            duration = Days<long>(internal_value_);
-            break;
-        case Unit::MONTH:
-            duration = Months<long>(internal_value_);
-            break;
+        case Unit::SECOND: duration = Seconds<long>(internal_value_); break;
+        case Unit::MINUTE: duration = Minutes<long>(internal_value_); break;
+        case Unit::MINUTES15: duration = Minutes15<long>(internal_value_); break;
+        case Unit::MINUTES30: duration = Minutes30<long>(internal_value_); break;
+        case Unit::HOUR: duration = Hours<long>(internal_value_); break;
+        case Unit::HOURS3: duration = Hours3<long>(internal_value_); break;
+        case Unit::HOURS6: duration = Hours6<long>(internal_value_); break;
+        case Unit::HOURS12: duration = Hours12<long>(internal_value_); break;
+        case Unit::DAY: duration = Days<long>(internal_value_); break;
+        case Unit::MONTH: duration = Months<long>(internal_value_); break;
+        case Unit::YEAR: duration = Years<long>(internal_value_); break;
+        case Unit::YEARS10: duration = Years10<long>(internal_value_); break;
+        case Unit::YEARS30: duration = Years30<long>(internal_value_); break;
+        case Unit::CENTURY: duration = Centuries<long>(internal_value_); break;
         default:
             std::string msg = "Unknown unit: " + internal_unit_.to_string();
             throw std::runtime_error(msg);
