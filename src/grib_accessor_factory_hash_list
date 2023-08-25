@@ -156,6 +156,7 @@ octahedral_gaussian, &grib_accessor_class_octahedral_gaussian
 octet_number, &grib_accessor_class_octet_number
 offset_file, &grib_accessor_class_offset_file
 offset_values, &grib_accessor_class_offset_values
+optimal_step_units, &grib_accessor_class_optimal_step_units
 pack_bufr_values, &grib_accessor_class_pack_bufr_values
 pad, &grib_accessor_class_pad
 padding, &grib_accessor_class_padding

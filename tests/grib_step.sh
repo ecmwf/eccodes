@@ -137,8 +137,9 @@ grib_check_key_equals $temp "stepRange:d" "28"
 ${tools_dir}/grib_set -s stepRange:i=24 $grib2_sample $temp
 grib_check_key_equals $temp "stepRange,startStep,endStep" "24 24 24"
 # Should this be an error? currently this gets cast from double to int
-${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
-grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
+# In ECC-1620 this behaviour changes
+#${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
+#grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 
 
 # Clean up

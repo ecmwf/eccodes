@@ -167,6 +167,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_signed_bits.cc
     grib_accessor_class_section.cc
     grib_accessor_class_step_in_units.cc
+    grib_accessor_class_optimal_step_units.cc
     grib_accessor_class_section_length.cc
     grib_accessor_class_g1_message_length.cc
     grib_accessor_class_g1_section4_length.cc

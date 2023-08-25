@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <unordered_map>
 #include <cassert>
+#include <sstream>
+#include <optional>
 
 
 template <typename T> using Minutes = std::chrono::duration<T, std::ratio<60>>;
@@ -52,31 +54,34 @@ enum class Unit {
 
 class UnitType {
 public:
-    explicit UnitType() : value_(Unit::HOUR) {}
-    explicit UnitType(Unit unit_value) : value_(unit_value) {}
-    explicit UnitType(const std::string& unit_value) {value_ = map_.name_to_unit(unit_value);}
-    explicit UnitType(long unit_value) {value_ = map_.long_to_unit(unit_value);}
+    explicit UnitType() : internal_value_(Unit::HOUR) {}
+    explicit UnitType(Unit unit_value) : internal_value_(unit_value) {}
+    explicit UnitType(const std::string& unit_value) {internal_value_ = map_.name_to_unit(unit_value);}
+    explicit UnitType(long unit_value) {internal_value_ = map_.long_to_unit(unit_value);}
 
-    bool operator>(const UnitType& other) const {return map_.unit_to_duration(value_) > map_.unit_to_duration(other.value_);}
-    bool operator==(const Unit value) const {return map_.unit_to_duration(value_) == map_.unit_to_duration(value);}
-    bool operator==(const UnitType& unit) const {return map_.unit_to_duration(value_) == map_.unit_to_duration(unit.value_);}
+    bool operator>(const UnitType& other) const {return map_.unit_to_duration(internal_value_) > map_.unit_to_duration(other.internal_value_);}
+    bool operator==(const Unit value) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(value);}
+    bool operator==(const UnitType& unit) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(unit.internal_value_);}
+    bool operator!=(const UnitType& unit) const {return !(*this == unit);}
+    bool operator!=(const Unit value) const {return !(*this == value);}
+
     UnitType& operator=(const Unit value) {
-        value_ = value;
+        internal_value_ = value;
         return *this;
     }
 
-    std::string to_string() const {
-        if ((value_ == Unit::HOUR) && hide_hour_unit_) {
+    std::string toString() const {
+        if ((internal_value_ == Unit::HOUR) && hide_hour_unit_) {
             return "";
         }
         else {
-            return map_.unit_to_name(value_);
+            return map_.unit_to_name(internal_value_);
         }
     }
-    long to_long() const {return map_.unit_to_long(value_);}
-    Unit to_value() const {return value_;}
-    void hide_hour_unit() {hide_hour_unit_ = true;}
-    void show_hour_unit() {hide_hour_unit_ = false;}
+    long toLong() const {return map_.unit_to_long(internal_value_);}
+    Unit toValue() const {return internal_value_;}
+    void hideHourUnit() {hide_hour_unit_ = true;}
+    void showHourUnit() {hide_hour_unit_ = false;}
     static std::vector<Unit> unitOrder;
 
 private:
@@ -147,257 +152,166 @@ private:
     };
 
 
-    Unit value_;
+    Unit internal_value_;
     static Map map_;
 public:
-    static Map& get_converter() {return map_;}
+    static Map& getConverter() {return map_;}
 };
 
 
-
-
-
-template <typename T>
 class Step {
 public:
-
     // Constructors
-    Step() : value_(0), unit_(Unit::SECOND) {}
-    Step(T value, Unit unit);
-    Step(T value, const UnitType& unit);
-    Step(T value, long unit);
-    Step(T value, const std::string& unit);
+    Step() : internal_value_(0), internal_unit_(Unit::SECOND) {}
+    Step(double value, const UnitType& unit);
+    Step(double value, Unit unit);
+    Step(double value, long unit);
+    Step(double value, const std::string& unit);
+
+    Step(long value, const UnitType& unit);
+    Step(long value, Unit unit);
+    Step(long value, long unit);
+    Step(long value, const std::string& unit);
     explicit Step(const std::string& str);
 
     // Getters
-    T value() const { return value_; }
+    template <typename T> T value() const;
     UnitType unit() const { return unit_; }
 
     // Setters
-    Step<T>& setUnit(long new_unit);
-    Step<T>& setUnit(const std::string& new_unit);
-    Step<T>& setUnit(const Unit new_unit);
-    Step<T>& setUnit(const UnitType& new_unit);
+    Step& setUnit(long new_unit);
+    Step& setUnit(const std::string& new_unit);
+    Step& setUnit(const Unit new_unit);
+    Step& setUnit(const UnitType& new_unit);
 
     // Operators
-    bool operator==(const Step<T>& other) const;
-    Step<T> operator+(const Step<T>& step);
-    operator Step<double>() const {return Step<double>{static_cast<double>(value_), unit_};}
+    bool operator==(const Step& other) const;
+    bool operator!=(const Step& other) const;
+    Step operator+(const Step& step);
+    Step operator-(const Step& step);
 
     // Methods
-    Step<T>& optimizeUnit();
-    friend std::pair<Step<long>, Step<long>> findCommonUnits(const Step<long>& startStep, const Step<long>& endStep);
-    void hide_hour_unit() {unit_.hide_hour_unit();}
-    void show_hour_unit() {unit_.show_hour_unit();}
+    Step& optimizeUnit();
+    friend std::pair<Step, Step> findCommonUnits(const Step& startStep, const Step& endStep);
+    void hideHourUnit() {
+        internal_unit_.hideHourUnit(); 
+        unit_.hideHourUnit();
+    }
+    void showHourUnit() {
+        internal_unit_.showHourUnit(); 
+        unit_.showHourUnit();
+    }
+
+    std::string toString() const {
+        std::stringstream ss;
+        if (value<long>() == value<double>()) {
+            ss << value<long>() << unit_.toString();
+        } else {
+            ss << value<double>() << unit_.toString();
+        }
+        return ss.str();
+    }
 
 private:
-    T value_;
+    void initLong(long value, const UnitType& unit);
+    void initDouble(double value, const UnitType& unit);
+    void sanityCheck() const;
+    Step& recalculateValue() {
+        if (internal_value_ == 0) {
+            internal_unit_ = unit_;
+            return *this;
+        }
+
+        Seconds<long> secs(0);
+        switch (internal_unit_.toValue()) {
+            case Unit::SECOND:
+                secs = Seconds<long>(internal_value_);
+                break;
+            case Unit::MINUTE:
+                secs = Minutes<long>(internal_value_);
+                break;
+            case Unit::HOUR:
+                secs = Hours<long>(internal_value_);
+                break;
+            case Unit::DAY:
+                secs = Days<long>(internal_value_);
+                break;
+            case Unit::MONTH:
+                secs = Months<long>(internal_value_);
+                break;
+            default:
+                std::string msg = "Unknown unit: " + internal_unit_.toString();
+                throw std::runtime_error(msg);
+        }
+
+        long multiplier = UnitType::getConverter().unit_to_duration(unit_.toValue());
+        internal_value_ = secs.count() / multiplier;
+        internal_unit_ = unit_;
+
+        return *this;
+    }
+
+    long internal_value_;
+    UnitType internal_unit_;
     UnitType unit_;
 };
 
 
+Step step_from_string(std::string step);
+std::vector<Step> parseRange(const std::string& range_str);
+std::pair<Step, Step> findCommonUnits(const Step& startStep, const Step& endStep);
 
 
-std::string parse_step(std::string step);
-
-template <typename T>
-bool Step<T>::operator==(const Step<T>& other) const {
-    if ((value_ == other.value_) && (unit_ == other.unit_)) {
-        return true;
+template <typename T> T Step::value() const {
+    if (internal_value_ == 0) {
+        return internal_value_;
     }
-    return false;
-}
-
-template <typename T>
-Step<T> Step<T>::operator+(const Step<T>& step) {
-    auto [a, b] = findCommonUnits(*this, step);
-    return Step(a.value_ + b.value_, a.unit_);
-}
-
-std::pair<Step<long>, Step<long>> findCommonUnits(const Step<long>& startStep, const Step<long>& endStep);
-
-
-template <typename T> std::vector<Step<T>> parse_range(const std::string& range_str) {
-    std::vector<Step<T>> steps;
-    std::string::size_type pos = 0;
-    std::string::size_type prev = 0;
-    while ((pos = range_str.find("-", prev)) != std::string::npos) {
-        std::string token = parse_step(range_str.substr(prev, pos - prev));
-        if (token.size() > 0) {
-            steps.push_back(Step<T>(token));
-        }
-        prev = pos + 1;
-    }
-    std::string token = parse_step(range_str.substr(prev));
-    if (token.size() > 0) {
-        steps.push_back(Step<T>(token));
-    }
-    return steps;
-}
-
-
-template <typename T>
-Step<T>::Step(T value, Unit unit) : value_{value}, unit_{UnitType{unit}} {
-    static_assert(sizeof(int) == 4, "int is not 4 bytes");
-    if (!(value >= 0 && value <= std::numeric_limits<int>::max())) {
-        throw std::out_of_range("Step is out of range.");
-    }
-}
-
-
-template <typename T>
-Step<T>::Step(T value, long unit) : value_{value}, unit_{UnitType{unit}} {
-    static_assert(sizeof(int) == 4, "int is not 4 bytes");
-    if (!(value >= 0 && value <= std::numeric_limits<int>::max())) {
-        throw std::out_of_range("Step is out of range.");
-    }
-}
-
-template <typename T>
-Step<T>::Step(T value, const std::string& unit) : value_{value}, unit_{UnitType{unit}} {
-    static_assert(sizeof(int) == 4, "int is not 4 bytes");
-    if (!(value >= 0 && value <= std::numeric_limits<int>::max())) {
-        throw std::out_of_range("Step is out of range.");
-    }
-}
-
-template <typename T>
-Step<T>::Step(const std::string& str) {
-    size_t pos = str.find_first_of("smhdMYC");
-    if (pos == std::string::npos) {
-        throw std::runtime_error("Unknown unit.");
-    }
-    std::string v_str = str.substr(0, pos);
-    std::string u_str = str.substr(pos);
-    int v = std::stoi(v_str);
-    value_ = v;
-    unit_ = UnitType{u_str};
-}
-
-template <typename T>
-Step<T>::Step(T value, const UnitType& u) {
-    static_assert(sizeof(int) == 4, "int is not 4 bytes");
-    if (!(value >= 0 && value <= std::numeric_limits<int>::max())) {
-        throw std::out_of_range("Step is out of range.");
-    }
-    value_ = value;
-    unit_ = u;
-}
-
-template <typename T>
-Step<T>& Step<T>::optimizeUnit() {
-    if (value_ == 0) {
-        return *this;
-    }
-
-    Seconds<T> duration(0);
-    switch (unit_.to_value()) {
-        case Unit::SECOND:
-            duration = Seconds<T>(value_);
-            break;
-        case Unit::MINUTE:
-            duration = Minutes<T>(value_);
-            break;
-        case Unit::HOUR:
-            duration = Hours<T>(value_);
-            break;
-        case Unit::DAY:
-            duration = Days<T>(value_);
-            break;
-        case Unit::MONTH:
-            duration = Months<T>(value_);
-            break;
-        default:
-            std::string msg = "Unknown unit: " + unit_.to_string();
-            throw std::runtime_error(msg);
-    }
-
-    Seconds<T> d = std::chrono::duration_cast<Seconds<T>>(duration);
-
-    for (auto it = UnitType::unitOrder.rbegin(); it != UnitType::unitOrder.rend(); ++it) {
-        long multiplier = UnitType::get_converter().unit_to_duration(*it);
-        if (d.count() % multiplier == 0) {
-            value_ = duration.count() / multiplier;
-            unit_ = *it;
-            return *this;
-        }
-    }
-
-    return *this;
-}
-
-template <typename T>
-Step<T>& Step<T>::setUnit(const std::string& unit_name) {
-    setUnit(UnitType{unit_name}); 
-    return *this;
-}
-
-template <typename T>
-Step<T>& Step<T>::setUnit(long unit_code) {
-    setUnit(UnitType{unit_code});
-    return *this;
-}
-
-template <typename T>
-Step<T>& Step<T>::setUnit(const UnitType& new_unit) {
-    setUnit(new_unit.to_value());
-    return *this;
-}
-
-
-template <typename T>
-Step<T>& Step<T>::setUnit(const Unit new_unit) {
-    if (value_ == 0) {
-        unit_ = new_unit;
-        return *this;
-    }
-    if (unit_ == new_unit) {
-        return *this;
+    if (internal_unit_ == unit_) {
+        return internal_value_;
     }
     Seconds<T> duration(0);
-    switch (unit_.to_value()) {
+    switch (internal_unit_.toValue()) {
         case Unit::SECOND:
-            duration = Seconds<T>(value_);
+            duration = Seconds<T>(internal_value_);
             break;
         case Unit::MINUTE:
-            duration = Minutes<T>(value_);
+            duration = Minutes<T>(internal_value_);
             break;
         case Unit::HOUR:
-            duration = Hours<T>(value_);
+            duration = Hours<T>(internal_value_);
             break;
         case Unit::DAY:
-            duration = Days<T>(value_);
+            duration = Days<T>(internal_value_);
             break;
         case Unit::MONTH:
-            duration = Months<T>(value_);
+            duration = Months<T>(internal_value_);
             break;
         default:
-            std::string msg = "Unknown unit: " + unit_.to_string();
+            std::string msg = "Unknown unit: " + internal_unit_.toString();
             throw std::runtime_error(msg);
     }
 
-    switch (new_unit) {
+    T value = 0;
+    switch (unit_.toValue()) {
         case Unit::SECOND:
-            value_ = duration.count();
+            value = duration.count();
             break;
         case Unit::MINUTE:
-            value_ = std::chrono::duration_cast<Minutes<T>>(duration).count();
+            value = std::chrono::duration_cast<Minutes<T>>(duration).count();
             break;
         case Unit::HOUR:
-            value_ = std::chrono::duration_cast<Hours<T>>(duration).count();
+            value = std::chrono::duration_cast<Hours<T>>(duration).count();
             break;
         case Unit::DAY:
-            value_ = std::chrono::duration_cast<Days<T>>(duration).count();
+            value = std::chrono::duration_cast<Days<T>>(duration).count();
             break;
         case Unit::MONTH:
-            value_ = std::chrono::duration_cast<Months<T>>(duration).count();
+            value = std::chrono::duration_cast<Months<T>>(duration).count();
             break;
         default:
-            std::string msg = "Unknown unit: " + UnitType{new_unit}.to_string();
+            std::string msg = "Unknown unit: " + UnitType{unit_}.toString();
             throw std::runtime_error(msg);
     }
-    unit_ = new_unit;
-
-    return *this;
+    return value;
 }
 
