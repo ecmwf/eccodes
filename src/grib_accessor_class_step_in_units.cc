@@ -375,5 +375,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     Step step(value_secs, Unit::SECOND);
     step.set_unit(step_units_old);
     *val = step.value<double>();
+    if ((ret = grib_set_long_internal(h, "stepUnits", step_units_old)) != GRIB_SUCCESS)
+        return ret;
     return GRIB_SUCCESS;
 }
