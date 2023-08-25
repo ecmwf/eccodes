@@ -1115,7 +1115,6 @@ int grib_yyerror(const char* msg);
 void grib_parser_include(const char* included_fname);
 grib_concept_value* grib_parse_concept_file(grib_context* gc, const char* filename);
 grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* filename);
-grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename);
 grib_action* grib_parse_file(grib_context* gc, const char* filename);
 int grib_type_to_int(char id);
 
