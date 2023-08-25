@@ -14,7 +14,6 @@
 
 #include "grib_api_internal.h"
 #include "step.h"
-#include "step_range.h"
 #include "step_utilities.h"
 #include <vector>
 /*
@@ -155,10 +154,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 
     Step start_step = Step(start_value, step_units_value);
-    start_step.hideHourUnit();
+    start_step.hide_hour_unit();
     if (self->endStep == NULL) {
-        if (futureOutputEnabled(h)) {
-            snprintf(buf, sizeof(buf), "%s", start_step.toString().c_str());
+        if (is_future_output_enabled(h)) {
+            snprintf(buf, sizeof(buf), "%s", start_step.to_string().c_str());
         }
         else {
             snprintf(buf, sizeof(buf), "%ld", start_value);
@@ -168,14 +167,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         if ((ret = grib_get_long_internal(h, self->endStep, &end_value)) != GRIB_SUCCESS)
             return ret;
 
-        if (futureOutputEnabled(h)) {
+        if (is_future_output_enabled(h)) {
             Step end_step = Step(end_value, step_units_value);
-            end_step.hideHourUnit();
+            end_step.hide_hour_unit();
             if (start_value == end_value) {
-                snprintf(buf, sizeof(buf), "%s", end_step.toString().c_str());
+                snprintf(buf, sizeof(buf), "%s", end_step.to_string().c_str());
             }
             else {
-                snprintf(buf, sizeof(buf), "%s-%s", start_step.toString().c_str(), end_step.toString().c_str());
+                snprintf(buf, sizeof(buf), "%s-%s", start_step.to_string().c_str(), end_step.to_string().c_str());
             }
         }
         else {
@@ -208,15 +207,15 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    std::vector<Step> steps = parseRange(val);
+    std::vector<Step> steps = parse_range(val);
     if (steps.size() == 0)
         return GRIB_INVALID_ARGUMENT;
 
     Step step_0 = steps[0];
     Step step_1;
     if (steps.size() > 1) {
-        std::tie(step_0, step_1) = findCommonUnits(steps[0].optimizeUnit(), steps[1].optimizeUnit());
-        if ((ret = grib_set_long_internal(h, "stepUnits", step_0.unit().toLong())))
+        std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
+        if ((ret = grib_set_long_internal(h, "stepUnits", step_0.unit().to_long())))
             return ret;
     }
 
@@ -273,7 +272,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
 
     Step start_step = Step(start_value, step_units_value);
-    start_step.hideHourUnit();
+    start_step.hide_hour_unit();
     if (self->endStep == NULL) {
         *val = start_step.value<double>();
     }
@@ -285,18 +284,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
     return GRIB_SUCCESS;
-
-    ////grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-    //grib_handle* h                   = grib_handle_of_accessor(a);
-    //int ret = 0;
-
-    //StepRange range;
-    //if ((ret = getOptTimeRange(h, range)) != GRIB_SUCCESS)
-    //    return ret;
-
-    //*val = range.endStep().value<double>();
-
-    //return 0;
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -316,7 +303,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
 
     Step start_step = Step(start_value, step_units_value);
-    start_step.hideHourUnit();
+    start_step.hide_hour_unit();
     if (self->endStep == NULL) {
         *val = start_step.value<long>();
     }
@@ -328,18 +315,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     return GRIB_SUCCESS;
-
-    ////grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
-    //grib_handle* h                   = grib_handle_of_accessor(a);
-    //int ret = 0;
-
-    //StepRange range;
-    //if ((ret = getOptTimeRange(h, range)) != GRIB_SUCCESS)
-    //    return ret;
-
-    //*val = range.endStep().value<long>();
-
-    //return 0;
 }
 
 static int get_native_type(grib_accessor* a)

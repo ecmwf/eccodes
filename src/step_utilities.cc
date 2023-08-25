@@ -1,7 +1,8 @@
 //#include "step_range.h"
 #include "step_utilities.h"
 
-std::optional<Step> getStep(grib_handle* h, const std::string& value_key, const std::string& unit_key){
+
+std::optional<Step> get_step(grib_handle* h, const std::string& value_key, const std::string& unit_key){
     if (grib_is_defined(h, unit_key.c_str()) && grib_is_defined(h, value_key.c_str())) {
         long unit = 0;
         if (grib_get_long_internal(h, unit_key.c_str(), &unit) != GRIB_SUCCESS)
@@ -19,28 +20,11 @@ std::optional<Step> getStep(grib_handle* h, const std::string& value_key, const 
 }
 
 
-//std::optional<Step> getForecastTime(grib_handle* h) {
-//    return getStep(h, "forecastTime", "indicatorOfUnitOfTimeRange");
-//}
-
-
-//std::optional<Step> getLengthOfTimeRange(grib_handle* h) {
-//    return getStep(h, "lengthOfTimeRange", "indicatorOfUnitForTimeRange");
-//}
-
-
-//StepRange getTimeRange(grib_handle* h) {
-//    auto forecast_time = getForecastTime(h);
-//    auto length_of_time_range = getLengthOfTimeRange(h);
-//    return StepRange{forecast_time.value_or(Step{}), forecast_time.value_or(Step{}) + length_of_time_range.value_or(Step{})};
-//}
-
-
-bool futureOutputEnabled(grib_handle* h) {
-    size_t stepOutputFormatSize = 128;
-    char stepOutputFormat[stepOutputFormatSize];
+bool is_future_output_enabled(grib_handle* h) {
+    size_t step_output_format_size = 128;
+    char step_output_format[step_output_format_size];
     int ret = 0;
-    if ((ret = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string_internal(h, "step_output_format", step_output_format, &step_output_format_size)) != GRIB_SUCCESS)
         return ret;
-    return strcmp(stepOutputFormat, "future") == 0;
+    return strcmp(step_output_format, "future") == 0;
 }

@@ -148,31 +148,10 @@ static size_t string_length(grib_accessor* a)
     return 255;
 }
 
-static long staticStepUnits = UnitType{Unit::MISSING}.toLong();
+static long staticStepUnits = UnitType{Unit::MISSING}.to_long();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    //grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
-    //grib_handle* h                   = grib_handle_of_accessor(a);
-    //int ret = 0;
-
-    //auto range = getTimeRange(h);
-    //Step startStep = range.startStep();
-    //Step endStep = range.endStep();
-    //startStep.setUnit(UnitType{*val});
-    //endStep.setUnit(UnitType{*val});
-
-    //if ((ret = grib_set_long_internal(h, "forecastTime", startStep.value<long>())) != GRIB_SUCCESS)
-    //    return ret;
-    //if ((ret = grib_set_long_internal(h, self->indicatorOfUnitOfTimeRange, startStep.unit().toLong())) != GRIB_SUCCESS)
-    //    return ret;
-
-    //if (grib_is_defined(h, "lengthOfTimeRange")) {
-    //    if ((ret = grib_set_long_internal(h, "lengthOfTimeRange", (endStep - startStep).value<long>())) != GRIB_SUCCESS)
-    //        return ret;
-    //    if ((ret = grib_set_long_internal(h, self->indicatorOfUnitForTimeRange, (endStep - startStep).unit().toLong())) != GRIB_SUCCESS)
-    //        return ret;
-    //}
     staticStepUnits = *val;
 
     return GRIB_SUCCESS;
@@ -188,49 +167,25 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    auto start_step_opt = getStep(h, self->forecastTime, self->indicatorOfUnitOfTimeRange);
-    auto end_step_opt = getStep(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange);
+    auto start_step_opt = get_step(h, self->forecastTime, self->indicatorOfUnitOfTimeRange);
+    auto end_step_opt = get_step(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange);
 
     if (!(start_step_opt && end_step_opt)) {
-        *val = UnitType{Unit::HOUR}.toLong();
+        *val = UnitType{Unit::HOUR}.to_long();
     }
 
     Step start_step = start_step_opt.value_or(Step{});
     Step end_step = end_step_opt.value_or(Step{});
 
-    auto [step_a, step_b] = findCommonUnits(start_step.optimizeUnit(), end_step.optimizeUnit());
-    *val = step_a.unit().toLong();
+    auto [step_a, step_b] = find_common_units(start_step.optimize_unit(), end_step.optimize_unit());
+    *val = step_a.unit().to_long();
     return GRIB_SUCCESS;
 }
 
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    //grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
-    //grib_handle* h                   = grib_handle_of_accessor(a);
-    //int ret = 0;
-
-    //auto range = getTimeRange(h);
-    //Step startStep = range.startStep();
-    //Step endStep = range.endStep();
-    //UnitType unit{val};
-    //startStep.setUnit(unit);
-    //endStep.setUnit(unit);
-
-
-    //if ((ret = grib_set_long_internal(h, "forecastTime", startStep.value<long>())) != GRIB_SUCCESS)
-    //    return ret;
-    //if ((ret = grib_set_long_internal(h, self->indicatorOfUnitOfTimeRange, startStep.unit().toLong())) != GRIB_SUCCESS)
-    //    return ret;
-
-    //if (grib_is_defined(h, "lengthOfTimeRange")) {
-    //    if ((ret = grib_set_long_internal(h, "lengthOfTimeRange", (endStep - startStep).value<long>())) != GRIB_SUCCESS)
-    //        return ret;
-    //    if ((ret = grib_set_long_internal(h, self->indicatorOfUnitForTimeRange, (endStep - startStep).unit().toLong())) != GRIB_SUCCESS)
-    //        return ret;
-    //}
-    staticStepUnits = UnitType{val}.toLong();
-
+    staticStepUnits = UnitType{val}.to_long();
     return GRIB_SUCCESS;
 }
 
@@ -241,7 +196,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t unit_len = 0;
     if ((ret = unpack_long(a, &unit, &unit_len)) != GRIB_SUCCESS)
         return ret;
-    *len = snprintf(val, *len, "%s", UnitType{unit}.toString().c_str());
+    *len = snprintf(val, *len, "%s", UnitType{unit}.to_string().c_str());
     return GRIB_SUCCESS;
 }
 

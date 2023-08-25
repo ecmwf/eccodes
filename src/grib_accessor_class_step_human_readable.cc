@@ -125,14 +125,14 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     size_t slen = 2;
     long step;
 
-    //size_t stepOutputFormatSize = 128;
-    //char stepOutputFormat[stepOutputFormatSize];
-    //if ((err = grib_get_string_internal(h, "stepOutputFormat", stepOutputFormat, &stepOutputFormatSize)) != GRIB_SUCCESS) {
-    //    printf("ERROR: unable to get stepOutputFormat stepOutputFormat=%s\n", stepOutputFormat);
+    //size_t step_output_format_size = 128;
+    //char step_output_format[step_output_format_size];
+    //if ((err = grib_get_string_internal(h, "step_output_format", step_output_format, &step_output_format_size)) != GRIB_SUCCESS) {
+    //    printf("ERROR: unable to get step_output_format step_output_format=%s\n", step_output_format);
     //    return err;
     //}
 
-    //if (strcmp(stepOutputFormat, "future") == 0) {
+    //if (strcmp(step_output_format, "future") == 0) {
         /* Change units to seconds (highest resolution)
      * before computing the step value
      */
@@ -143,7 +143,7 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 
     //    long indicator = grib_get_long(h, "indicatorOfUnitOfTimeRange", &indicator);
     //    auto stepOptimizer = Step(step, indicator);
-    //    stepOptimizer.optimizeUnit();
+    //    stepOptimizer.optimize_unit();
 
     //    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_as_str().c_str());
     //}

@@ -70,7 +70,7 @@ public:
         return *this;
     }
 
-    std::string toString() const {
+    std::string to_string() const {
         if ((internal_value_ == Unit::HOUR) && hide_hour_unit_) {
             return "";
         }
@@ -78,10 +78,10 @@ public:
             return map_.unit_to_name(internal_value_);
         }
     }
-    long toLong() const {return map_.unit_to_long(internal_value_);}
-    Unit toValue() const {return internal_value_;}
-    void hideHourUnit() {hide_hour_unit_ = true;}
-    void showHourUnit() {hide_hour_unit_ = false;}
+    long to_long() const {return map_.unit_to_long(internal_value_);}
+    Unit to_value() const {return internal_value_;}
+    void hide_hour_unit() {hide_hour_unit_ = true;}
+    void show_hour_unit() {hide_hour_unit_ = false;}
     static std::vector<Unit> unitOrder;
 
 private:
@@ -155,7 +155,7 @@ private:
     Unit internal_value_;
     static Map map_;
 public:
-    static Map& getConverter() {return map_;}
+    static Map& get_converter() {return map_;}
 };
 
 
@@ -179,10 +179,10 @@ public:
     UnitType unit() const { return unit_; }
 
     // Setters
-    Step& setUnit(long new_unit);
-    Step& setUnit(const std::string& new_unit);
-    Step& setUnit(const Unit new_unit);
-    Step& setUnit(const UnitType& new_unit);
+    Step& set_unit(long new_unit);
+    Step& set_unit(const std::string& new_unit);
+    Step& set_unit(const Unit new_unit);
+    Step& set_unit(const UnitType& new_unit);
 
     // Operators
     bool operator==(const Step& other) const;
@@ -191,31 +191,31 @@ public:
     Step operator-(const Step& step);
 
     // Methods
-    Step& optimizeUnit();
-    friend std::pair<Step, Step> findCommonUnits(const Step& startStep, const Step& endStep);
-    void hideHourUnit() {
-        internal_unit_.hideHourUnit(); 
-        unit_.hideHourUnit();
+    Step& optimize_unit();
+    friend std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
+    void hide_hour_unit() {
+        internal_unit_.hide_hour_unit(); 
+        unit_.hide_hour_unit();
     }
-    void showHourUnit() {
-        internal_unit_.showHourUnit(); 
-        unit_.showHourUnit();
+    void show_hour_unit() {
+        internal_unit_.show_hour_unit(); 
+        unit_.show_hour_unit();
     }
 
-    std::string toString() const {
+    std::string to_string() const {
         std::stringstream ss;
         if (value<long>() == value<double>()) {
-            ss << value<long>() << unit_.toString();
+            ss << value<long>() << unit_.to_string();
         } else {
-            ss << value<double>() << unit_.toString();
+            ss << value<double>() << unit_.to_string();
         }
         return ss.str();
     }
 
 private:
-    void initLong(long value, const UnitType& unit);
-    void initDouble(double value, const UnitType& unit);
-    void sanityCheck() const;
+    void init_long(long value, const UnitType& unit);
+    void init_double(double value, const UnitType& unit);
+    void sanity_check() const;
     Step& recalculateValue() {
         if (internal_value_ == 0) {
             internal_unit_ = unit_;
@@ -223,7 +223,7 @@ private:
         }
 
         Seconds<long> secs(0);
-        switch (internal_unit_.toValue()) {
+        switch (internal_unit_.to_value()) {
             case Unit::SECOND:
                 secs = Seconds<long>(internal_value_);
                 break;
@@ -240,11 +240,11 @@ private:
                 secs = Months<long>(internal_value_);
                 break;
             default:
-                std::string msg = "Unknown unit: " + internal_unit_.toString();
+                std::string msg = "Unknown unit: " + internal_unit_.to_string();
                 throw std::runtime_error(msg);
         }
 
-        long multiplier = UnitType::getConverter().unit_to_duration(unit_.toValue());
+        long multiplier = UnitType::get_converter().unit_to_duration(unit_.to_value());
         internal_value_ = secs.count() / multiplier;
         internal_unit_ = unit_;
 
@@ -258,8 +258,8 @@ private:
 
 
 Step step_from_string(std::string step);
-std::vector<Step> parseRange(const std::string& range_str);
-std::pair<Step, Step> findCommonUnits(const Step& startStep, const Step& endStep);
+std::vector<Step> parse_range(const std::string& range_str);
+std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
 
 
 template <typename T> T Step::value() const {
@@ -270,7 +270,7 @@ template <typename T> T Step::value() const {
         return internal_value_;
     }
     Seconds<T> duration(0);
-    switch (internal_unit_.toValue()) {
+    switch (internal_unit_.to_value()) {
         case Unit::SECOND:
             duration = Seconds<T>(internal_value_);
             break;
@@ -287,12 +287,12 @@ template <typename T> T Step::value() const {
             duration = Months<T>(internal_value_);
             break;
         default:
-            std::string msg = "Unknown unit: " + internal_unit_.toString();
+            std::string msg = "Unknown unit: " + internal_unit_.to_string();
             throw std::runtime_error(msg);
     }
 
     T value = 0;
-    switch (unit_.toValue()) {
+    switch (unit_.to_value()) {
         case Unit::SECOND:
             value = duration.count();
             break;
@@ -309,7 +309,7 @@ template <typename T> T Step::value() const {
             value = std::chrono::duration_cast<Months<T>>(duration).count();
             break;
         default:
-            std::string msg = "Unknown unit: " + UnitType{unit_}.toString();
+            std::string msg = "Unknown unit: " + UnitType{unit_}.to_string();
             throw std::runtime_error(msg);
     }
     return value;
