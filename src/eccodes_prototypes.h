@@ -604,8 +604,6 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
 
 /* grib_accessor_class_gds_not_present_bitmap.cc*/
 
-/* grib_accessor_class_data_apply_gdsnotpresent.cc*/
-
 /* grib_accessor_class_gds_is_present.cc*/
 
 /* grib_accessor_class_select_step_template.cc*/
@@ -1117,7 +1115,6 @@ int grib_yyerror(const char* msg);
 void grib_parser_include(const char* included_fname);
 grib_concept_value* grib_parse_concept_file(grib_context* gc, const char* filename);
 grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* filename);
-grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename);
 grib_action* grib_parse_file(grib_context* gc, const char* filename);
 int grib_type_to_int(char id);
 

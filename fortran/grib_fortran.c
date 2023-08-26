@@ -164,7 +164,7 @@ static l_grib_handle* handle_set = NULL;
 static l_grib_index* index_set = NULL;
 static l_grib_multi_handle* multi_handle_set = NULL;
 static l_grib_file*   file_set   = NULL;
-static l_grib_iterator* iterator_set = NULL;
+/*static l_grib_iterator* iterator_set = NULL;*/
 static l_grib_keys_iterator* keys_iterator_set = NULL;
 static l_bufr_keys_iterator* bufr_keys_iterator_set = NULL;
 static grib_oarray* binary_messages = NULL;
@@ -474,55 +474,6 @@ static void push_multi_handle(grib_multi_handle *h,int *gid)
     return;
 }
 
-static int _push_iterator(grib_iterator *i)
-{
-    l_grib_iterator* current  = iterator_set;
-    l_grib_iterator* previous = iterator_set;
-    l_grib_iterator* the_new      = NULL;
-    int myindex = 1;
-
-    if(!iterator_set){
-        iterator_set = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
-        Assert(iterator_set);
-        iterator_set->id   = myindex;
-        iterator_set->i    = i;
-        iterator_set->next = NULL;
-        return myindex;
-    }
-
-    while(current){
-        if(current->id < 0){
-            current->id = -(current->id);
-            current->i  = i;
-            return current->id;
-        }
-        else{
-            myindex++;
-            previous = current;
-            current = current->next;
-        }
-    }
-
-    the_new = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
-    Assert(the_new);
-    the_new->id   = myindex;
-    the_new->i    = i;
-    the_new->next = current;
-    previous->next = the_new;
-
-    return myindex;
-}
-
-static int push_iterator(grib_iterator *i)
-{
-    int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&iterator_mutex);
-    ret=_push_iterator(i);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex);
-    return ret;
-}
-
 static int _push_keys_iterator(grib_keys_iterator *i)
 {
     l_grib_keys_iterator* current  = keys_iterator_set;
@@ -700,27 +651,6 @@ static FILE* get_file(int file_id)
     return NULL;
 }
 
-static grib_iterator* _get_iterator(int iterator_id)
-{
-    l_grib_iterator* current  = iterator_set;
-
-    while(current){
-        if(current->id == iterator_id) return current->i;
-        current = current->next;
-    }
-    return NULL;
-}
-
-static grib_iterator* get_iterator(int iterator_id)
-{
-    grib_iterator* i=NULL;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&iterator_mutex);
-    i=_get_iterator(iterator_id);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex);
-    return i;
-}
-
 static grib_keys_iterator* _get_keys_iterator(int keys_iterator_id)
 {
     l_grib_keys_iterator* current  = keys_iterator_set;
@@ -862,30 +792,6 @@ static int clear_multi_handle(int multi_handle_id)
     GRIB_MUTEX_LOCK(&multi_handle_mutex);
     ret=_clear_multi_handle(multi_handle_id);
     GRIB_MUTEX_UNLOCK(&multi_handle_mutex);
-    return ret;
-}
-
-static int _clear_iterator(int iterator_id)
-{
-    l_grib_iterator* current  = iterator_set;
-
-    while(current){
-        if(current->id == iterator_id){
-            current->id = -(current->id);
-            return grib_iterator_delete(current->i);
-        }
-        current = current->next;
-    }
-    return GRIB_INVALID_ITERATOR;
-}
-
-static int clear_iterator(int iterator_id)
-{
-    int ret=0;
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&iterator_mutex);
-    ret=_clear_iterator(iterator_id);
-    GRIB_MUTEX_UNLOCK(&iterator_mutex);
     return ret;
 }
 
@@ -1143,8 +1049,96 @@ int grib_f_multi_support_off(){
     return grib_f_multi_support_off_();
 }
 
-
 /*****************************************************************************/
+#ifdef FORTRAN_GEOITERATOR_SUPPORT
+static int _push_iterator(grib_iterator *i)
+{
+    l_grib_iterator* current  = iterator_set;
+    l_grib_iterator* previous = iterator_set;
+    l_grib_iterator* the_new      = NULL;
+    int myindex = 1;
+
+    if(!iterator_set){
+        iterator_set = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
+        Assert(iterator_set);
+        iterator_set->id   = myindex;
+        iterator_set->i    = i;
+        iterator_set->next = NULL;
+        return myindex;
+    }
+
+    while(current){
+        if(current->id < 0){
+            current->id = -(current->id);
+            current->i  = i;
+            return current->id;
+        }
+        else{
+            myindex++;
+            previous = current;
+            current = current->next;
+        }
+    }
+
+    the_new = (l_grib_iterator*)malloc(sizeof(l_grib_iterator));
+    Assert(the_new);
+    the_new->id   = myindex;
+    the_new->i    = i;
+    the_new->next = current;
+    previous->next = the_new;
+
+    return myindex;
+}
+static int push_iterator(grib_iterator *i)
+{
+    int ret=0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
+    ret=_push_iterator(i);
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
+    return ret;
+}
+static grib_iterator* _get_iterator(int iterator_id)
+{
+    l_grib_iterator* current  = iterator_set;
+
+    while(current){
+        if(current->id == iterator_id) return current->i;
+        current = current->next;
+    }
+    return NULL;
+}
+static grib_iterator* get_iterator(int iterator_id)
+{
+    grib_iterator* i=NULL;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
+    i=_get_iterator(iterator_id);
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
+    return i;
+}
+static int _clear_iterator(int iterator_id)
+{
+    l_grib_iterator* current  = iterator_set;
+
+    while(current){
+        if(current->id == iterator_id){
+            current->id = -(current->id);
+            return grib_iterator_delete(current->i);
+        }
+        current = current->next;
+    }
+    return GRIB_INVALID_ITERATOR;
+}
+static int clear_iterator(int iterator_id)
+{
+    int ret=0;
+    GRIB_MUTEX_INIT_ONCE(&once,&init);
+    GRIB_MUTEX_LOCK(&iterator_mutex);
+    ret=_clear_iterator(iterator_id);
+    GRIB_MUTEX_UNLOCK(&iterator_mutex);
+    return ret;
+}
 static int _grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
     int err=0;
     grib_handle* h;
@@ -1176,32 +1170,29 @@ int grib_f_iterator_new__(int* gid,int* iterid,int* mode) {
 int grib_f_iterator_new(int* gid,int* iterid,int* mode) {
     return grib_f_iterator_new_(gid,iterid,mode);
 }
-
 /*****************************************************************************/
 int grib_f_iterator_next_(int* iterid,double* lat,double* lon,double* value) {
     grib_iterator* iter=get_iterator(*iterid);
     if (!iter) return GRIB_INVALID_ITERATOR;
     return grib_iterator_next(iter,lat,lon,value);
 }
-
 int grib_f_iterator_next__(int* iterid,double* lat,double* lon,double* value) {
     return grib_f_iterator_next_(iterid,lat,lon,value);
 }
 int grib_f_iterator_next(int* iterid,double* lat,double* lon,double* value) {
     return grib_f_iterator_next_(iterid,lat,lon,value);
 }
-
 /*****************************************************************************/
 int grib_f_iterator_delete_(int* iterid) {
     return clear_iterator(*iterid);
 }
-
 int grib_f_iterator_delete__(int* iterid) {
     return grib_f_iterator_delete_(iterid);
 }
 int grib_f_iterator_delete(int* iterid) {
     return grib_f_iterator_delete_(iterid);
 }
+#endif /*FORTRAN_GEOITERATOR_SUPPORT*/
 
 /*****************************************************************************/
 static int _grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
@@ -1230,7 +1221,6 @@ int grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
     GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
     return ret;
 }
-
 int grib_f_keys_iterator_new__(int* gid,int* iterid,char* name_space,int len) {
     return grib_f_keys_iterator_new_(gid,iterid,name_space,len);
 }
@@ -1405,7 +1395,7 @@ int grib_f_keys_iterator_rewind(int* kiter) {
     return grib_f_keys_iterator_rewind_(kiter);
 }
 
-/*BUFR keys iterator*/
+/* BUFR keys iterator */
 /*****************************************************************************/
 static int _codes_f_bufr_keys_iterator_new_(int* gid,int* iterid) {
     int err=0;
@@ -1502,7 +1492,6 @@ int codes_f_bufr_keys_iterator_delete__(int* iterid) {
 int codes_f_bufr_keys_iterator_delete(int* iterid) {
     return codes_f_bufr_keys_iterator_delete_(iterid);
 }
-
 
 /*****************************************************************************/
 int grib_f_new_from_message_(int* gid, void* buffer , size_t* bufsize){

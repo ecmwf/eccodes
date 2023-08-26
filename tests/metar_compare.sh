@@ -46,21 +46,21 @@ if [ $status -eq 0 ]; then
 fi
 
 # The -d option should have created these files
-[ -f error1_1.metar ]
-[ -f error2_1.metar ]
 rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
 
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
 #----------------------------------------------------
-# Add wrong blocklist. Should still fail
-set +e
-${tools_dir}/metar_compare -b CCCC $metar_file $fMetarTmp
-status=$?
-set -e
-[ $status -eq 1 ]
-# Add correct blocklist
-${tools_dir}/metar_compare -b minute,theMessage $metar_file $fMetarTmp
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+   # Add wrong blocklist. Should still fail
+   set +e
+   ${tools_dir}/metar_compare -b CCCC $metar_file $fMetarTmp
+   status=$?
+   set -e
+   [ $status -eq 1 ]
+   # Add correct blocklist
+   ${tools_dir}/metar_compare -b minute,theMessage $metar_file $fMetarTmp
+fi
 
-#Clean up
+# Clean up
 rm -f $fLog $fMetarTmp

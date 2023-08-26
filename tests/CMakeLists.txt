@@ -21,6 +21,7 @@ list(APPEND test_c_bins
     unit_tests
     bufr_keys_iter
     grib_keys_iter
+    grib_keys_iter_skip
     grib_geo_iter
     gauss_sub
     grib_nearest_test
@@ -188,6 +189,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_change_edition
         bufr_keys_iter
         grib_keys_iter
+        grib_keys_iter_skip
         grib_geo_iter
         bufr_get_element
         bufr_wmo_tables
@@ -237,6 +239,7 @@ if( HAVE_BUILD_TOOLS )
         gts_count
         gts_compare
         wrap
+        taf
         pseudo_diag
         metar_ls
         metar_get

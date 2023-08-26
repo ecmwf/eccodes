@@ -16,6 +16,21 @@ REDIRECT=/dev/null
 outfile=temp.$label.grib
 rm -f $outfile
 
+# Use of -a/-c
+set +e
+infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+infile2=$ECCODES_SAMPLES_PATH/reduced_gg_pl_48_grib2.tmpl
+${tools_dir}/grib_compare -a -c longitudeOfLastGridPoint $infile1 $infile2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+
+# Use of -c namespace
+infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s year=2019 $infile1 $outfile
+${tools_dir}/grib_compare -c data:n $infile1 $outfile
+
 
 # Header (meta-data) keys
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
@@ -36,7 +51,7 @@ ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $out
 # ----------------------------------------
 # Test the -r switch
 # ----------------------------------------
-infile=${data_dir}/v.grib2
+infile=${data_dir}/tigge_cf_ecmwf.grib2
 for i in 1 2 3; do
   ${tools_dir}/grib_copy -wcount=$i $infile temp.$label.$i
 done
@@ -46,6 +61,20 @@ cat temp.$label.3 temp.$label.2 temp.$label.1 > temp.$label.321
 # Compare files in which the messages are not in the same order
 ${tools_dir}/grib_compare -r temp.$label.213 temp.$label.321
 
+# Make a change in the data values of 2nd file
+${tools_dir}/grib_set -s scaleValuesBy=1.1 temp.$label.2 temp.$label.2.changed
+cat temp.$label.2 temp.$label.1 temp.$label.3 > temp.$label.213
+cat temp.$label.3 temp.$label.2.changed temp.$label.1 > temp.$label.321
+set +e
+${tools_dir}/grib_compare -d -r temp.$label.213 temp.$label.321
+status=$?
+set -e
+[ $status -eq 1 ]
+
+cmp temp.$label.2.changed error2_1.grib
+cmp temp.$label.2         error1_1.grib
+rm -f error1_1.grib error2_1.grib
+rm -f temp.$label.2.changed
 rm -f temp.$label.1 temp.$label.2 temp.$label.3 temp.$label.213 temp.$label.321
 
 # ----------------------------------------------

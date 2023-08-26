@@ -16,27 +16,29 @@ program multi
    use eccodes
    implicit none
 
-   integer          :: iret
+   integer          :: iret, counter
    integer(kind=4)  :: step
    integer          :: ifile, igrib
 
    call codes_open_file(ifile, '../../data/multi_created.grib2', 'r')
 
-   ! turn on support for multi-field messages */
-   call codes_grib_multi_support_on()
+   ! Turn off support for multi-field messages
+   call codes_grib_multi_support_off()
 
-   ! turn off support for multi-field messages */
-   !call codes_grib_multi_support_off()
+   ! Turn on support for multi-field messages
+   call codes_grib_multi_support_on()
 
    ! Loop on all the messages in a file
    write (*, *) 'step'
    do while (.true.)
       call codes_grib_new_from_file(ifile, igrib, iret)
       if (iret == CODES_END_OF_FILE) exit
+      counter = counter + 1
 
       call codes_get(igrib, 'step', step)
       write (*, '(i3)') step
    end do
    call codes_close_file(ifile)
+   !write(*,*) 'Message count =', counter
 
 end program multi

@@ -339,9 +339,18 @@ cat >$tempFilt <<EOF
   else    { print "case 2"; }
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
-cat $tempOut
 grep -q "case 1" $tempOut
 grep -q "case 2" $tempOut
+
+# Rules
+cat >$tempFilt <<EOF
+ x = 8;
+ y = (edition == 1);
+ z = (edition == 2);
+ skip;
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+cat $tempOut
 
 
 # Clean up

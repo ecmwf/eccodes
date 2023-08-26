@@ -61,6 +61,8 @@ grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridL
 # Nearest
 ${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
 
+# jPointsAreConsecutive
+${tools_dir}/grib_get_data -s jPointsAreConsecutive=1 $GRIB_OUTFILE > $DATA_OUTFILE
 
 # Oblate spheroid
 # --------------------
@@ -89,7 +91,7 @@ EOF
 rm -f "$GRIB_OUTFILE"
 ${tools_dir}/grib_filter -o $GRIB_OUTFILE $FILTER_FILE $GRIB_INFILE
 
-${tools_dir}/grib_get_data $GRIB_OUTFILE
+${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
 
 
 # Clean up
