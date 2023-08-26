@@ -65,5 +65,11 @@ set +e
 grep -q "Grid description is wrong or inconsistent" $tempText
 
 
+${tools_dir}/grib_ls -s Ni=missing  -j -p latLonValues $data_dir/sample.grib2 > $tempText 2>&1
+cat $tempText
+grep -q "Key Ni cannot be 'missing' for a regular grid" $tempText
+grep -q "latlonvalues: Unable to create iterator" $tempText
+
+
 # Clean up
 rm -f $tempText $tempGrib
