@@ -24,7 +24,7 @@ cd $temp_dir
 # -----------------------------
 cp ${data_dir}/mixed.grib ./
 input=mixed.grib
-${tools_dir}/codes_split_file 3 $input
+${tools_dir}/codes_split_file -v 3 $input
 # There should now be 3 new files. Make sure they are valid
 ${tools_dir}/grib_ls mixed.grib_001
 ${tools_dir}/grib_ls mixed.grib_002
@@ -70,6 +70,18 @@ set -e
 
 set +e
 ${tools_dir}/codes_split_file 4 $data_dir
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/codes_split_file 9 /dev/null
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/codes_split_file 0 $input
 status=$?
 set -e
 [ $status -eq 1 ]
