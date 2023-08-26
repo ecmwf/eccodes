@@ -238,6 +238,7 @@ if( HAVE_BUILD_TOOLS )
         gts_count
         gts_compare
         wrap
+        taf
         pseudo_diag
         metar_ls
         metar_get
