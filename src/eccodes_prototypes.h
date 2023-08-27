@@ -408,8 +408,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_ifs_param.cc*/
 
-/* grib_accessor_class_int16_little_endian.cc*/
-
 /* grib_accessor_class_int64_little_endian.cc*/
 
 /* grib_accessor_class_uint16.cc*/
