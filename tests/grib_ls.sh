@@ -115,6 +115,14 @@ echo "ECC-278: grib_ls -n namespace..."
 ${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
 ${tools_dir}/grib_ls -n data      $sample_g1
 
+set +e
+${tools_dir}/grib_ls -n nosuchnamespace $sample_g1 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "does not contain any key" $tempText
+
+
 # Angle subdivisions
 grib_check_key_equals $sample_g1 angleSubdivisions 1000
 grib_check_key_equals $sample_g2 angleSubdivisions 1000000
