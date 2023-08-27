@@ -151,6 +151,10 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+tempDump=temp.$label.jpg
+ECCODES_GRIB_DUMP_JPG_FILE=$tempDump  ${tools_dir}/grib_copy -r $data_dir/jpeg.grib2 $tempGrib
+[ -f $tempDump ]
+rm -f $tempDump
 
 # Clean up
 rm -f $tempFilt $tempGrib
