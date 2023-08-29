@@ -1,0 +1,6 @@
+concept timeprop {
+# tloop = typeOfStatisticalProcessing
+# iloop = indicatorOfUnitForTimeRange 
+# lloop = lengthOfTimeRange
+ "avgd" = {tloop = 0; iloop=1; lloop = 21; numberOfTimeRange = 1; indicatorOfUnitForTimeIncrement = 1; typeOfTimeIncrement = 1; timeIncrement = 3;}
+}

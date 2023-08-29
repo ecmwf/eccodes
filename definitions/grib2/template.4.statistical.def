@@ -127,6 +127,13 @@ meta time.validityTime validity_time(date,dataTime,step,stepUnits,hourOfEndOfOve
 meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
 
 template timeprop "grib2/timeprop.def";
+
+# crra = Copernicus Regional ReAnalysis
+if (productionStatusOfProcessedData== 10 || productionStatusOfProcessedData == 11){
+ template timeprop "grib2/localConcepts/uerra/timeprop.def";
+}
+
+
 if(numberOfTimeRange == 1 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
 constant tloop = typeOfStatisticalProcessing : no_copy ;
 constant iloop = indicatorOfUnitForTimeRange : no_copy ;
