@@ -40,7 +40,7 @@ cat > $fRules<<EOF
 EOF
 ${tools_dir}/gts_filter -o $fGtsTmp $fRules $gts_file
 set +e
-${tools_dir}/gts_compare -v -d $gts_file $fGtsTmp
+${tools_dir}/gts_compare -v -d -f $gts_file $fGtsTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then
@@ -63,6 +63,14 @@ set -e
 [ $status -eq 1 ]
 # Add correct blocklist
 ${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
+
+# Test with file of the same name in a dir
+tempDir=temp.$label.dir
+rm -fr $tempDir
+mkdir $tempDir
+cp $gts_file $tempDir
+${tools_dir}/gts_compare $gts_file $tempDir
+rm -r $tempDir
 
 # Clean up
 rm -f $fLog $fGtsTmp $fRules
