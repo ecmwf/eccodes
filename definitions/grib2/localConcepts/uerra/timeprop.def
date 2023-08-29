@@ -2,5 +2,36 @@ concept timeprop {
 # tloop = typeOfStatisticalProcessing
 # iloop = indicatorOfUnitForTimeRange 
 # lloop = lengthOfTimeRange
+# iloopti = indicatorOfUnitForTimeIncrement
+# tloopti = typeOfTimeIncrement
+# lloopti = timeIncrement
  "avgd" = {tloop = 0; iloop=1; lloop = 21; numberOfTimeRange = 1; indicatorOfUnitForTimeIncrement = 1; typeOfTimeIncrement = 1; timeIncrement = 3;}
+ "avgm" = {tloop = 0; iloop=1; lloop = 741; numberOfTimeRange = 2; iloopti = 1; tloopti= 1; lloopti = 3;}
+ "minm" = {tloop = 3; iloop=1; lloop = 741; numberOfTimeRange = 2; iloopti = 1; tloopti= 1; lloopti = 3;}
+ "maxm" = {tloop = 2; iloop=1; lloop = 741; numberOfTimeRange = 2; iloopti = 1; tloopti = 1; lloopti = 3;}
+ "avgm" = {tloop = 0; iloop=1; lloop = 648; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "minm" = {tloop = 3; iloop=1; lloop = 648; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "maxm" = {tloop = 2; iloop=1; lloop = 648; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "avgm" = {tloop = 0; iloop=1; lloop = 720; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "minm" = {tloop = 3; iloop=1; lloop = 720; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "maxm" = {tloop = 2; iloop=1; lloop = 720; numberOfTimeRange = 3; iloopti = 1; tloopti = 1; lloopti = 24;}
+ "avgm3h" = {tloop = 0; iloop=1; lloop = 741; numberOfTimeRange = 1; indicatorOfUnitForTimeIncrement = 1; typeOfTimeIncrement = 1; timeIncrement = 3;}
+ "accumd" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 2;}
+ "accumd" = {tloop = 1; iloop=1; lloop = 24; numberOfTimeRange = 3;}
+ "accum12h" = {tloop = 1; iloop=1; lloop = 12; numberOfTimeRange = 2;}
+ "accum12h" = {tloop = 1; iloop=1; lloop = 12; numberOfTimeRange = 3;}
+ "mind" = {tloop = 3; iloop=1; lloop = 21; iloopti = 1; tloopti = 1; lloopti = 3;}
+ "maxd" = {tloop = 2; iloop=1; lloop = 21; iloopti = 1; tloopti = 1; lloopti = 3;}
+ "avg3h" = {tloop = 0; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "accum3h" = {tloop = 1; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "max3h" = {tloop = 2; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "min3h" = {tloop = 3; iloop=1; lloop = 3; numberOfTimeRange = 2;}
+ "avg3h" = {tloop = 0; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "accum3h" = {tloop = 1; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "max3h" = {tloop = 2; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "min3h" = {tloop = 3; iloop=1; lloop = 3; numberOfTimeRange = 3;}
+ "avg" = {tloop = 0;}
+ "accum" = {tloop = 1;}
+ "max" = {tloop = 2;}
+ "min" = {tloop = 3;}
 }
