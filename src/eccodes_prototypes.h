@@ -408,13 +408,9 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_ifs_param.cc*/
 
-/* grib_accessor_class_int16_little_endian.cc*/
-
 /* grib_accessor_class_int64_little_endian.cc*/
 
 /* grib_accessor_class_uint16.cc*/
-
-/* grib_accessor_class_uint16_little_endian.cc*/
 
 /* grib_accessor_class_uint32.cc*/
 
@@ -949,15 +945,11 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 /* grib_filepool.cc*/
 void grib_file_pool_clean(void);
 grib_file* grib_file_pool_get_files(void);
-int grib_file_pool_read(grib_context* c, FILE* fh);
-int grib_file_pool_write(FILE* fh);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
 void grib_file_close(const char* filename, int force, int* err);
 void grib_file_close_all(int* err);
 grib_file* grib_get_file(const char* filename, int* err);
-grib_file* grib_find_file(short id);
-grib_file* grib_file_new(grib_context* c, const char* name, int* err);
 void grib_file_delete(grib_file* file);
 
 /* grib_geography.cc*/

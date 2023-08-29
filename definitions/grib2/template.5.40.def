@@ -5,8 +5,8 @@
 include "grib2/template.5.packing.def";
 include "grib2/template.5.original_values.def";
 
-codetable[1] typeOfCompressionUsed  ('5.40.table',masterDir,localDir) ;
+codetable[1] typeOfCompressionUsed ('5.40.table',masterDir,localDir) ;
 
-# Octets 23 Target compression ratio, M:1 (with respect to the bit-depth specified in octet 20),
-# when octet 22 indicates Lossy Compression.   Otherwise, set to missing.
+# Target compression ratio, M:1 (with respect to the bit-depth specified in octet 20),
+# when typeOfCompressionUsed indicates Lossy Compression. Otherwise, set to missing.
 unsigned[1] targetCompressionRatio = 255;

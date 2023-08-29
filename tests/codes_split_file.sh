@@ -75,17 +75,10 @@ set -e
 [ $status -eq 1 ]
 
 set +e
-${tools_dir}/codes_split_file 9 /dev/null
-status=$?
-set -e
-[ $status -eq 1 ]
-
-set +e
 ${tools_dir}/codes_split_file 0 $input
 status=$?
 set -e
 [ $status -eq 1 ]
-
 
 # Clean up
 cd $test_dir

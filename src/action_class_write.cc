@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile                                                          *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -114,7 +111,7 @@ static int execute(grib_action* act, grib_handle* h)
     grib_file* of = NULL;
 
     if ((err = grib_get_message(h, &buffer, &size)) != GRIB_SUCCESS) {
-        grib_context_log(act->context, GRIB_LOG_ERROR, "unable to get message\n");
+        grib_context_log(act->context, GRIB_LOG_ERROR, "unable to get message");
         return err;
     }
 
@@ -141,21 +138,22 @@ static int execute(grib_action* act, grib_handle* h)
         of = grib_file_open(filename, "w", &err);
 
     if (!of || !of->handle) {
-        grib_context_log(act->context, GRIB_LOG_ERROR, "unable to open file %s\n", filename);
+        grib_context_log(act->context, GRIB_LOG_ERROR, "Unable to open file '%s' for %s",
+                        filename, (a->append ? "appending":"writing"));
         return GRIB_IO_PROBLEM;
     }
 
     if (h->gts_header) {
         if (fwrite(h->gts_header, 1, h->gts_header_len, of->handle) != h->gts_header_len) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                             "Error writing GTS header to %s", filename);
+                             "Error writing GTS header to '%s'", filename);
             return GRIB_IO_PROBLEM;
         }
     }
 
     if (fwrite(buffer, 1, size, of->handle) != size) {
         grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                         "Error writing to %s", filename);
+                         "Error writing to '%s'", filename);
         return GRIB_IO_PROBLEM;
     }
 
@@ -186,7 +184,7 @@ static int execute(grib_action* act, grib_handle* h)
 
     grib_file_close(filename, 0, &err);
     if (err != GRIB_SUCCESS) {
-        grib_context_log(act->context, GRIB_LOG_ERROR, "unable to write message\n");
+        grib_context_log(act->context, GRIB_LOG_ERROR, "Unable to write message");
         return err;
     }
 
