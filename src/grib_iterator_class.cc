@@ -52,7 +52,7 @@ grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsig
             return NULL;
         }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s for iterator", type);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s", type);
 
     return NULL;
 }

@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- *
- */
-
-
 #include "grib_api_internal.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
@@ -45,12 +40,13 @@ grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args)
             ret                   = grib_nearest_init(it, h, args);
             if (ret == GRIB_SUCCESS)
                 return it;
-            grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory: error %d instantiating nearest %s", ret, table[i].type);
+            grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory: Error instantiating nearest %s (%s)",
+                             table[i].type, grib_get_error_message(ret));
             grib_nearest_delete(it);
             return NULL;
         }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory : Unknown type : %s for nearest", type);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory: Unknown type: %s", type);
 
     return NULL;
 }
