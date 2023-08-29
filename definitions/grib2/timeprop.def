@@ -14,6 +14,18 @@ concept timeprop {
  "avgm" = {tloop = 0; iloop=1; lloop = 720;}
  "avgm" = {tloop = 0; iloop=1; lloop = 744;}
  "avgm" = {tloop = 0; iloop=3; lloop = 1;}
+ # synoptic means
+ # we can use indicatorOfUnitForTimeIncrement and timeIncrement directly as it is a simple integer, not a list
+ # numberOfTimeRange = 1
+ "avgs" = {tloop = 0; iloop=1; lloop = 672; indicatorOfUnitForTimeIncrement = 1; timeIncrement = 24; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 696; indicatorOfUnitForTimeIncrement = 1; timeIncrement = 24; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 720; indicatorOfUnitForTimeIncrement = 1; timeIncrement = 24; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 744; indicatorOfUnitForTimeIncrement = 1; timeIncrement = 24; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 672; indicatorOfUnitForTimeIncrement = 2; timeIncrement = 1; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 696; indicatorOfUnitForTimeIncrement = 2; timeIncrement = 1; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 720; indicatorOfUnitForTimeIncrement = 2; timeIncrement = 1; numberOfTimeRange = 1;}
+ "avgs" = {tloop = 0; iloop=1; lloop = 744; indicatorOfUnitForTimeIncrement = 2; timeIncrement = 1; numberOfTimeRange = 1;}
+ #
  "max" = {tloop = 2; iloop=1; numberOfTimeRange = 1;}
  "max" = {tloop = 2; iloop=2; numberOfTimeRange = 1;}
  "max" = {tloop = 2; iloop=3; numberOfTimeRange = 1;}
