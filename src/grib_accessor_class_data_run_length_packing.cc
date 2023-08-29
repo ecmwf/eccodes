@@ -149,8 +149,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values = NULL;
     size_t level_values_size = 0;
-    int i = 0;
-    long number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
+    long i = 0, number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
     long v, n, factor, k, j;
     long* compressed_values = NULL;
     double level_scale_factor = 0;
@@ -214,7 +213,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     while (i < number_of_compressed_values) {
         if (compressed_values[i] > max_level_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                            "%s: numberOfValues mismatch: i=%d, "
+                            "%s: numberOfValues mismatch: i=%ld, "
                             "compressed_values[i]=%ld, max_level_value=%ld",
                             cclass_name, i, compressed_values[i], max_level_value);
             break;
@@ -256,8 +255,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values = NULL;
     size_t level_values_size = 0;
-    int i = 0;
-    long range = 0, pos = 0, n = 0, j = 0, k = 0, l = 0, missingValueLong = 0;
+    long i = 0, range = 0, pos = 0, n = 0, j = 0, k = 0, l = 0, missingValueLong = 0;
     double level_scale_factor = 0;
     unsigned char* buf = NULL;
     double missingValue = 9999.0;
@@ -292,7 +290,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     missingValueLong = (long)(round(missingValue / level_scale_factor));
     for (i = 0; i < number_of_level_values; i++) {
         if (missingValueLong == level_values[i]) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%d]=%ld, missingValueLong=%ld",
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%ld]=%ld, missingValueLong=%ld",
                              cclass_name, i, level_values[i], missingValueLong);
             return GRIB_ENCODING_ERROR;
         }
