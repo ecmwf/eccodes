@@ -521,24 +521,18 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    long step_units_old;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units_old)) != GRIB_SUCCESS)
-        return ret;
-
-    if ((ret = grib_set_long_internal(h, "stepUnits", UnitType{Unit::SECOND}.to_long())) != GRIB_SUCCESS)
-        return ret;
 
     long step_value;
     size_t step_len = 0;
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
 
-
-    Step step(step_value, Unit::SECOND);
-    step.set_unit(step_units_old);
-
-    if ((ret = grib_set_long_internal(h, "stepUnits", step_units_old)) != GRIB_SUCCESS)
+    long step_units_old;
+    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units_old)) != GRIB_SUCCESS)
         return ret;
+
+    Step step(step_value, step_units_old);
+    step.set_unit(step_units_old);
 
     step.hide_hour_unit();
     if (is_future_output_enabled(h)) {
