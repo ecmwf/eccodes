@@ -1155,6 +1155,19 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     }
 
     if (headerMode) {
+        // An alternative implementation:
+        // Instead of forming two partial handles (only meta-data) and comparing
+        // the keys in those, we can instead get all the keys in the original handles
+        // and check their offset and only process those which are before the "endOfHeadersMarker"
+        // i.e., only compare keys that come before the bitmap/data sections
+        //
+        //  GRIB_CHECK_NOLINE(grib_get_offset(h1, "endOfHeadersMarker", &endOfHeadersOffset), 0);
+        //  create iterator
+        //  foreach key in iter
+        //     GRIB_CHECK_NOLINE(grib_get_offset(h1, name, &keyOffset), 0);
+        //     if (keyOffset < endOfHeadersOffset) {
+        //       compare_values...
+        //
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
         grib_handle *h11, *h22;

@@ -448,6 +448,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
     gl               = grib_new_handle(c);
     gl->product_kind = PRODUCT_GRIB; /* See ECC-480 */
     h                = grib_handle_create(gl, c, data, buflen);
+    if (!h) return NULL;
 
     /* See ECC-448 */
     if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {

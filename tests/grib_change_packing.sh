@@ -7,7 +7,8 @@
 
 label="grib_change_packing_test"
 temp=temp.$label.grib
-rm -f $temp
+temp_err=temp.$label.err
+rm -f $temp $temp_err
 
 grib1=${data_dir}/reduced_latlon_surface_constant.grib1
 grib2=${data_dir}/reduced_latlon_surface_constant.grib2
@@ -124,7 +125,6 @@ stats=`${tools_dir}/grib_get -F%.1f -p average,standardDeviation $temp`
 
 # ECC-1352: Check CCSDS
 # ----------------------------
-temp_err=temp.$label.err
 if [ $HAVE_AEC -eq 0 ]; then
     # Check we get an error if we try to decode this packing
     [ -f "${data_dir}/ccsds.grib2" ]
@@ -158,5 +158,15 @@ grib_check_key_equals $temp const,bitsPerValue,section4Length '1 0 12'
 ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -d1 $input $temp
 grib_check_key_equals $temp const,bitsPerValue,section4Length '1 12 8966'
 
+# Error in packingType value
+# ---------------------------
+set +e
+${tools_dir}/grib_set -s packingType="xxxxx" $ECCODES_SAMPLES_PATH/GRIB2.tmpl $temp > $temp_err 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ECCODES ERROR.*no match for packingType=xxxxx" $temp_err
+cat $temp_err
 
+# Clean up
 rm -f $temp $temp_err

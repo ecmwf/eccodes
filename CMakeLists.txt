@@ -419,7 +419,6 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 if( HAVE_BUILD_TOOLS )
     add_subdirectory( tools )
-    add_subdirectory( tigge )
 endif()
 add_subdirectory( fortran )
 
@@ -435,7 +434,7 @@ ecbuild_dont_pack( DIRS
     experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
     src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
     examples/examples.dev examples/extra examples/deprecated bamboo
-    fortran/fortranCtypes tigge/tools share/eccodes  .settings )
+    fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

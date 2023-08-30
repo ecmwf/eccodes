@@ -282,15 +282,12 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         if (!nearest)
             nearest = grib_nearest_new(h, &err);
         if (err == GRIB_NOT_IMPLEMENTED) {
-            char grid_type[100], grid_desc[200];
-            size_t g_len = sizeof(grid_type);
-            int err1 = 0, err2 = 0;
-            err1 = grib_get_string(h, "gridType", grid_type, &g_len);
-            g_len = sizeof(grid_desc);
-            err2 = grib_get_string(h, "gridDefinitionDescription", grid_desc, &g_len);
-            if (!err1 && !err2) {
-                fprintf(stderr, "Nearest neighbour functionality is not supported for grid type: %s (%s)\n",
-                        grid_type, grid_desc);
+            char grid_desc[200];
+            int err1 = 0;
+            size_t g_len = sizeof(grid_desc);
+            err1 = grib_get_string(h, "gridDefinitionDescription", grid_desc, &g_len);
+            if (!err1) {
+                fprintf(stderr, "Nearest neighbour functionality is not supported for grid: %s\n", grid_desc);
             } else {
                 fprintf(stderr, "Nearest neighbour functionality is not supported for this grid type\n");
             }

@@ -177,6 +177,11 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
+    if (Ni*Nj != iter->nv) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", Ni,Nj,iter->nv);
+        return GRIB_WRONG_GRID;
+    }
+
     if ((ret = grib_get_long_internal(h, s_iScansNeg, &self->iScansNegatively)))
         return ret;
 

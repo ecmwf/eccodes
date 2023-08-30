@@ -1,4 +1,4 @@
-# Concept typeOfLevel 
+# Concept typeOfLevel
 'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
@@ -13,6 +13,11 @@
 'seaBottom'                    = {typeOfFirstFixedSurface=9;   typeOfSecondFixedSurface=255;}
 # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
 'atmosphere'                   = {typeOfFirstFixedSurface=10;  typeOfSecondFixedSurface=255;}
+'cumulonimbusBase'             = {typeOfFirstFixedSurface=11;  typeOfSecondFixedSurface=255;}
+'cumulonimbusTop'              = {typeOfFirstFixedSurface=12;  typeOfSecondFixedSurface=255;}
+'freeConvection'               = {typeOfFirstFixedSurface=14;  typeOfSecondFixedSurface=255;}
+'convectiveCondensation'       = {typeOfFirstFixedSurface=15;  typeOfSecondFixedSurface=255;}
+'neutralBuoyancy'              = {typeOfFirstFixedSurface=16;  typeOfSecondFixedSurface=255;}
 'mostUnstableParcel'           = {typeOfFirstFixedSurface=17;  typeOfSecondFixedSurface=255;}
 'mixedLayerParcel'             = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}

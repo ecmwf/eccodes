@@ -13,11 +13,23 @@
 label="grib_compare_test"
 REDIRECT=/dev/null
 
-infile="${data_dir}/regular_latlon_surface.grib1"
-outfile=${infile}.compare.$$
-
+outfile=temp.$label.$$
 rm -f $outfile
 
+
+# Header (meta-data) keys
+infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -d4 $infile $outfile
+set +e
+${tools_dir}/grib_compare $infile $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
+${tools_dir}/grib_compare -b referenceValue $infile $outfile
+${tools_dir}/grib_compare -H $infile $outfile
+
+
+infile="${data_dir}/regular_latlon_surface.grib1"
 ${tools_dir}/grib_set -s shortName=2d $infile $outfile
 ${tools_dir}/grib_compare -b indicatorOfParameter,paramId,shortName $infile $outfile > $REDIRECT
 

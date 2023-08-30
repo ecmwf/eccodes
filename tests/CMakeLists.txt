@@ -276,7 +276,6 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        grib_tigge_check
         read_any
         codes_new_from_samples
         codes_set_samples_path

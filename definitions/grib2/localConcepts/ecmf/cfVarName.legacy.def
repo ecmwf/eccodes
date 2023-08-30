@@ -769,7 +769,7 @@
  parameterCategory = 128 ;
  parameterNumber = 245 ;
 }
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 'u10n' = {
  discipline = 192 ;
  parameterCategory = 228 ;
