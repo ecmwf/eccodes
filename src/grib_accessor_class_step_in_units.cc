@@ -19,7 +19,6 @@
   CLASS      = accessor
   SUPER      = grib_accessor_class_long
   IMPLEMENTS = unpack_long;pack_long
-  IMPLEMENTS = unpack_double;pack_double
   IMPLEMENTS = unpack_string;pack_string
   IMPLEMENTS = init;dump
   MEMBERS = const char* codedStep
@@ -42,10 +41,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
-static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
@@ -87,9 +84,9 @@ static grib_accessor_class _grib_accessor_class_step_in_units = {
     0,                 /* is_missing */
     &pack_long,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
-    &unpack_double,              /* unpack_double */
+    0,              /* unpack_double */
     0,               /* unpack_float */
     &pack_string,                /* pack_string */
     &unpack_string,              /* unpack_string */
@@ -174,23 +171,23 @@ static const int u2s[] = {
     1800     /* (15) 30 minutes */
 };
 
+
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    int ret;
-
+    int err                           = 0;
     long codedStep, codedUnits, stepUnits;
+    grib_handle* h = grib_handle_of_accessor(a);
     int factor     = 0;
     long u2sf, u2sf_step_unit;
 
 
-    if ((ret = grib_get_long_internal(h, self->codedUnits, &codedUnits)))
-        return ret;
-    if ((ret = grib_get_long_internal(h, self->stepUnits, &stepUnits)))
-        return ret;
-    if ((ret = grib_get_long_internal(h, self->codedStep, &codedStep)))
-        return ret;
+    if ((err = grib_get_long_internal(h, self->codedUnits, &codedUnits)))
+        return err;
+    if ((err = grib_get_long_internal(h, self->stepUnits, &stepUnits)))
+        return err;
+    if ((err = grib_get_long_internal(h, self->codedStep, &codedStep)))
+        return err;
 
     if (stepUnits != codedUnits) {
         *val = codedStep * u2s2[codedUnits];
@@ -209,9 +206,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         }
 
         if (*val % u2sf_step_unit != 0) {
-            ret  = grib_set_long_internal(h, self->stepUnits, codedUnits);
+            err  = grib_set_long_internal(h, self->stepUnits, codedUnits);
             *val = codedStep;
-            return ret;
+            return err;
         }
         *val = *val / u2sf_step_unit;
     }
@@ -221,11 +218,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                    = grib_handle_of_accessor(a);
-
     int err                           = 0;
     long codedStep, codedUnits, stepUnits;
     long oldStep = 0;
@@ -275,20 +272,35 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     return grib_set_long_internal(grib_handle_of_accessor(a), self->codedStep, codedStep);
 }
 
+
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
+    size_t value_len = 0;
 
     Step step = step_from_string(val);
-    step.optimize_unit();
+    long step_units;
+    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+        return ret;
 
-    if ((ret = grib_set_long_internal(h, self->stepUnits, step.unit().to_long())))
+    long end_step_value;
+    if ((ret = grib_get_long_internal(h, "endStep", &end_step_value)) != GRIB_SUCCESS)
         return ret;
-    long step_value = step.value<long>();
-    if ((ret = pack_long(a, &step_value, len)) != GRIB_SUCCESS)
+    Step end_step{end_step_value, UnitType{step_units}};
+
+    auto [step_a, step_b] = find_common_units(step, end_step);
+    if ((ret = grib_set_long_internal(h, "stepUnits", step_a.unit().to_long())) != GRIB_SUCCESS)
         return ret;
+
+    long value = step.value<long>(step_a.unit());
+
+    if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
+        return ret;
+
+    //if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
+        //return ret;
 
     return GRIB_SUCCESS;
 }
@@ -298,84 +310,26 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-
-    long step_units_old;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units_old)) != GRIB_SUCCESS)
+    long value;
+    size_t value_len;
+    if ((ret = unpack_long(a, &value, &value_len)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_set_long_internal(h, "stepUnits", UnitType{Unit::SECOND}.to_long())) != GRIB_SUCCESS)
+    long step_units;
+    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
 
-    long step_value;
-    size_t step_len = 0;
-    if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
-        return ret;
-
-
-    Step step(step_value, Unit::SECOND);
-    step.set_unit(step_units_old);
-
-    if ((ret = grib_set_long_internal(h, "stepUnits", step_units_old)) != GRIB_SUCCESS)
-        return ret;
-
+    Step step{value, step_units};
     step.hide_hour_unit();
+    //snprintf(val, *len, "%ld", value);
+
     if (is_future_output_enabled(h)) {
         snprintf(val, *len, "%s", step.to_string().c_str());
     }
     else {
         snprintf(val, *len, "%ld", step.value<long>());
     }
-
     return GRIB_SUCCESS;
 }
 
 
-static int pack_double(grib_accessor* a, const double* val, size_t* len)
-{
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
-
-    long step_units;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        return ret;
-    Step start_step{*val, step_units};
-
-    start_step.optimize_unit();
-    if ((ret = grib_set_long_internal(h, "stepUnits", start_step.unit().to_long())) != GRIB_SUCCESS)
-        return ret;
-    long start_step_value = start_step.value<long>();
-
-    if ((ret = pack_long(a, &start_step_value, len)) != GRIB_SUCCESS)
-        return ret;
-
-    return GRIB_SUCCESS;
-}
-
-
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    int ret;
-
-    long step_units_old;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units_old)) != GRIB_SUCCESS)
-        return ret;
-    UnitType step_units{step_units_old};
-
-    if ((ret = grib_set_long_internal(h, "stepUnits", UnitType{Unit::SECOND}.to_long())) != GRIB_SUCCESS)
-        return ret;
-
-    long value_secs;
-    size_t value_secs_len = 0;
-    if ((ret = unpack_long(a, &value_secs, &value_secs_len)) != GRIB_SUCCESS)
-        return ret;
-
-    Step step(value_secs, Unit::SECOND);
-    step.set_unit(step_units_old);
-    *val = step.value<double>();
-    if ((ret = grib_set_long_internal(h, "stepUnits", step_units_old)) != GRIB_SUCCESS)
-        return ret;
-    return GRIB_SUCCESS;
-}

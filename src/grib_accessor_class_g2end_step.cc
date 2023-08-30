@@ -20,7 +20,6 @@
   CLASS      = accessor
   SUPER      = grib_accessor_class_long
   IMPLEMENTS = unpack_long;pack_long
-  IMPLEMENTS = unpack_double;pack_double
   IMPLEMENTS = unpack_string;pack_string
   IMPLEMENTS = init;dump
   MEMBERS = const char* start_step
@@ -59,10 +58,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
-static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
@@ -117,9 +114,9 @@ static grib_accessor_class _grib_accessor_class_g2end_step = {
     0,                 /* is_missing */
     &pack_long,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
-    &unpack_double,              /* unpack_double */
+    0,              /* unpack_double */
     0,               /* unpack_float */
     &pack_string,                /* pack_string */
     &unpack_string,              /* unpack_string */
@@ -233,7 +230,7 @@ static int is_special_expver(grib_handle* h)
     return 0;
 }
 
-static int convert_time_range(
+static int convert_time_range_long_(
     grib_handle* h,
     long stepUnits,                   /* unit */
     long indicatorOfUnitForTimeRange, /* coded_unit */
@@ -269,7 +266,8 @@ static int convert_time_range(
     return GRIB_SUCCESS;
 }
 
-static int unpack_one_time_range(grib_accessor* a, long* val, size_t* len)
+
+static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     int err                        = 0;
@@ -292,7 +290,7 @@ static int unpack_one_time_range(grib_accessor* a, long* val, size_t* len)
     if ((err = grib_get_long_internal(h, self->typeOfTimeIncrement, &typeOfTimeIncrement)))
         return err;
 
-    err = convert_time_range(h, unit, coded_unit, &coded_time_range);
+    err = convert_time_range_long_(h, unit, coded_unit, &coded_time_range);
     if (err != GRIB_SUCCESS)
         return err;
 
@@ -314,8 +312,9 @@ static int unpack_one_time_range(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+
 #define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
-static int unpack_multiple_time_ranges(grib_accessor* a, long* val, size_t* len)
+static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     int i = 0, err = 0;
@@ -354,7 +353,7 @@ static int unpack_multiple_time_ranges(grib_accessor* a, long* val, size_t* len)
             long the_coded_unit       = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
-            err = convert_time_range(h, unit, the_coded_unit, &the_coded_time_range);
+            err = convert_time_range_long_(h, unit, the_coded_unit, &the_coded_time_range);
             if (err != GRIB_SUCCESS)
                 return err;
 
@@ -367,6 +366,7 @@ static int unpack_multiple_time_ranges(grib_accessor* a, long* val, size_t* len)
                      "Cannot calculate endStep. No time range specification with typeOfTimeIncrement = 2");
     return GRIB_DECODING_ERROR;
 }
+
 
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_class_g2end_step.unpack_long.cc
@@ -394,18 +394,19 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 
     if (numberOfTimeRange == 1) {
-        ret =  unpack_one_time_range(a, val, len);
+        ret =  unpack_one_time_range_long_(a, val, len);
         return ret;
     }
     else {
-        ret = unpack_multiple_time_ranges(a, val, len);
+        ret = unpack_multiple_time_ranges_long_(a, val, len);
         return ret;
     }
 
     return GRIB_SUCCESS;
 }
 
-// TODO(maee): Re-implement calendar-based stepRange using std::chrono
+
+
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
@@ -513,6 +514,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
@@ -550,29 +552,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 }
 
 
-static int pack_double(grib_accessor* a, const double* val, size_t* len)
-{
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
-
-    long step_units;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        return ret;
-    Step end_step{*val, step_units};
-
-    end_step.optimize_unit();
-    if ((ret = grib_set_long_internal(h, "stepUnits", end_step.unit().to_long())) != GRIB_SUCCESS)
-        return ret;
-    long end_step_value = end_step.value<long>();
-
-    if ((ret = pack_long(a, &end_step_value, len)) != GRIB_SUCCESS)
-        return ret;
-
-    return GRIB_SUCCESS;
-}
-
-
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     //grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
@@ -583,29 +562,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     if ((ret = grib_set_long_internal(h, "stepUnits", end_step.unit().to_long())) != GRIB_SUCCESS)
         return ret;
 
-    double end_step_value = end_step.value<double>();
+    long end_step_value = end_step.value<long>();
     size_t end_step_len = 0;
 
-    if ((ret = pack_double(a, &end_step_value, &end_step_len)) != GRIB_SUCCESS)
+    if ((ret = pack_long(a, &end_step_value, &end_step_len)) != GRIB_SUCCESS)
         return ret;
-    return GRIB_SUCCESS;
-}
-
-
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
-{
-    //grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
-
-    long a_val;
-    if ((ret = unpack_long(a, &a_val, len)) != GRIB_SUCCESS)
-        return ret;
-    long step_units;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        return ret;
-
-    Step end_step{a_val, step_units};
-    *val = end_step.value<double>();
     return GRIB_SUCCESS;
 }

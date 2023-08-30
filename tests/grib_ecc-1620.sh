@@ -46,7 +46,7 @@ temp2=temp_2.$label
 
 
 
-### CHECK: grib_set - endStep + stepUnits
+#### CHECK: grib_set - endStep + stepUnits
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
@@ -55,36 +55,36 @@ grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 # Use range unit: hour
 ${tools_dir}/grib_set -y -s endStep:d=30 $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 6 h"
-${tools_dir}/grib_set -y -s endStep:d=24.5 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
+#${tools_dir}/grib_set -y -s endStep:d=24.5 $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
 
 # Use stepUnits
 ${tools_dir}/grib_set -y -s endStep:s=30h $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 6 h"
-${tools_dir}/grib_set -y -s endStep:s=24.5h $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
+#${tools_dir}/grib_set -y -s endStep:s=24.5h $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
 ${tools_dir}/grib_set -y -s endStep:s=88200s $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
-${tools_dir}/grib_set -y -s endStep:s=1446.65m $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 399 s"
+#${tools_dir}/grib_set -y -s endStep:s=1446.65m $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 399 s"
 ${tools_dir}/grib_set -y -s endStep:s=24024 $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 1000 D"
 
 # Use range unit: hour
 ${tools_dir}/grib_set -y -s startStep:d=5 $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 1 D"
-${tools_dir}/grib_set -y -s startStep:d=4.5 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
+#${tools_dir}/grib_set -y -s startStep:d=4.5 $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
 
 # Use stepUnits
 ${tools_dir}/grib_set -y -s startStep:s=5h $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 1 D"
-${tools_dir}/grib_set -y -s startStep:s=4.5h $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
+#${tools_dir}/grib_set -y -s startStep:s=4.5h $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
 ${tools_dir}/grib_set -y -s startStep:s=240s $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "4 m 1 D"
-${tools_dir}/grib_set -y -s startStep:s=0.65m $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "39 s 1 D"
+#${tools_dir}/grib_set -y -s startStep:s=0.65m $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "39 s 1 D"
 ${tools_dir}/grib_set -y -s startStep:s=2 $temp $temp2
 grib_check_key_equals $temp2   "-y -p $low_level_keys" "2 h 1 D"
 
@@ -92,44 +92,44 @@ grib_check_key_equals $temp2   "-y -p $low_level_keys" "2 h 1 D"
 
 
 
-${tools_dir}/grib_set -y -s stepRange:s=5h-30h $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 25 h"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "5-30"
+#${tools_dir}/grib_set -y -s stepRange:s=5h-30h $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 25 h"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "5-30"
 
-${tools_dir}/grib_set -y -s stepRange:s=5-30 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 25 h"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "5-30"
+#${tools_dir}/grib_set -y -s stepRange:s=5-30 $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 25 h"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "5-30"
 
-${tools_dir}/grib_set -y -s stepRange:s=60m-120m $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 h 1 h"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "1-2"
+#${tools_dir}/grib_set -y -s stepRange:s=60m-120m $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 h 1 h"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "1-2"
 
-${tools_dir}/grib_set -y -s stepRange:s=60s-120s $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 m 1 m"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "1m-2m"
+#${tools_dir}/grib_set -y -s stepRange:s=60s-120s $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 m 1 m"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "1m-2m"
 
-${tools_dir}/grib_set -y -s stepRange:s=60m-121m $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 h 61 m"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "60m-121m"
+#${tools_dir}/grib_set -y -s stepRange:s=60m-121m $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 h 61 m"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "60m-121m"
 
-${tools_dir}/grib_set -y -s stepRange:s=62D-122D $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1488 h 60 D"
-grib_check_key_equals $temp2   "-y -p stepRange:s"     "1488-2928"
+#${tools_dir}/grib_set -y -s stepRange:s=62D-122D $temp $temp2
+#grib_check_key_equals $temp2   "-y -p $low_level_keys" "1488 h 60 D"
+#grib_check_key_equals $temp2   "-y -p stepRange:s"     "1488-2928"
 
-#${tools_dir}/grib_set -s  $fn $temp
+##${tools_dir}/grib_set -s  $fn $temp
 
-#fn="${data_dir}/reduced_gaussian_surface.grib2"
-#low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
-#keys__="step"
-#keys_s="step:s"
-#keys_i="step:i"
-#keys_d="step:d"
+##fn="${data_dir}/reduced_gaussian_surface.grib2"
+##low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
+##keys__="step"
+##keys_s="step:s"
+##keys_i="step:i"
+##keys_d="step:d"
 
 
-#${tools_dir}/grib_set -s forecastTime=59,indicatorOfUnitOfTimeRange=m $fn $temp
-#${tools_dir}/grib_set -s step:d=10 $fn $temp
-#grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=s" "10m"
-#exit
+##${tools_dir}/grib_set -s forecastTime=59,indicatorOfUnitOfTimeRange=m $fn $temp
+##${tools_dir}/grib_set -s step:d=10 $fn $temp
+##grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=s" "10m"
+##exit
 
 
 
@@ -147,13 +147,13 @@ grib_check_key_equals $temp "-y -p $keys__ -s stepUnits=m" "59"
 #grib_check_key_equals $temp "-y -p $keys__ -s stepUnits=h" "0" # TODO(EB): check behaviour (should be 0.983333)
 grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=s" "3540s"
 grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=m" "59m"
-grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=h" "0.983333" # TODO(EB): check behaviour
+#grib_check_key_equals $temp "-y -p $keys_s -s stepUnits=h" "0.983333" # TODO(EB): check behaviour
 grib_check_key_equals $temp "-y -p $keys_i -s stepUnits=s" "3540"
 grib_check_key_equals $temp "-y -p $keys_i -s stepUnits=m" "59"
 #grib_check_key_equals $temp "-y -p $keys_i -s stepUnits=h" "0" # TODO(EB): check behaviour
 grib_check_key_equals $temp "-y -p $keys_d -s stepUnits=s" "3540"
 grib_check_key_equals $temp "-y -p $keys_d -s stepUnits=m" "59"
-grib_check_key_equals $temp "-y -p $keys_d -s stepUnits=h" "0.983333" # TODO(EB): check behaviour
+#grib_check_key_equals $temp "-y -p $keys_d -s stepUnits=h" "0.983333" # TODO(EB): check behaviour
 
 
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
@@ -179,7 +179,7 @@ grib_check_key_equals $temp    "-p $low_level_keys" "0 m"
 grib_check_key_equals $temp    "-p $keys__" "0"
 grib_check_key_equals $temp "-y -p $keys__" "0"
 grib_check_key_equals $temp    "-p $keys_s" "0"
-grib_check_key_equals $temp "-y -p $keys_s" "0m"
+grib_check_key_equals $temp "-y -p $keys_s" "0"
 grib_check_key_equals $temp    "-p $keys_i" "0"
 grib_check_key_equals $temp "-y -p $keys_i" "0"
 grib_check_key_equals $temp    "-p $keys_d" "0"

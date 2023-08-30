@@ -32,7 +32,6 @@ template <typename T> using Minutes15 = std::chrono::duration<T, std::ratio<900>
 template <typename T> using Minutes30 = std::chrono::duration<T, std::ratio<1800>>;
 template <typename T> using Missing = std::chrono::duration<T, std::ratio<0>>;
 
-
 enum class Unit {
     MINUTE = 0,
     HOUR = 1,
@@ -51,10 +50,13 @@ enum class Unit {
     MISSING = 255,
 };
 
+class UnitType;
+template <typename T> Seconds<T> to_seconds(long value, const UnitType& unit);
+template <typename T> T from_seconds(Seconds<T> seconds, const UnitType& unit);
 
 class UnitType {
 public:
-    explicit UnitType() : internal_value_(Unit::HOUR) {}
+    UnitType() : internal_value_(Unit::HOUR) {}
     explicit UnitType(Unit unit_value) : internal_value_(unit_value) {}
     explicit UnitType(const std::string& unit_value) {internal_value_ = map_.name_to_unit(unit_value);}
     explicit UnitType(long unit_value) {internal_value_ = map_.long_to_unit(unit_value);}
@@ -82,7 +84,8 @@ public:
     Unit to_value() const {return internal_value_;}
     void hide_hour_unit() {hide_hour_unit_ = true;}
     void show_hour_unit() {hide_hour_unit_ = false;}
-    static std::vector<Unit> unitOrder;
+    static std::vector<Unit> unit_order_;
+    static std::vector<Unit> complete_unit_order_;
 
 private:
     bool hide_hour_unit_ = false;
@@ -163,42 +166,46 @@ class Step {
 public:
     // Constructors
     Step() : internal_value_(0), internal_unit_(Unit::SECOND) {}
-    Step(double value, const UnitType& unit);
-    Step(double value, Unit unit);
-    Step(double value, long unit);
-    Step(double value, const std::string& unit);
 
-    Step(long value, const UnitType& unit);
-    Step(long value, Unit unit);
-    Step(long value, long unit);
-    Step(long value, const std::string& unit);
-    explicit Step(const std::string& str);
+    Step(double value, const UnitType& unit) : internal_unit_{unit}, unit_{internal_unit_} {init_double(value, unit);}
+    Step(double value, Unit unit) {init_double(value, UnitType{unit});}
+    Step(double value, long unit) {init_double(value, UnitType{unit});}
+    Step(double value, const std::string& unit) {init_double(value, UnitType{unit});}
+
+    Step(long value, const UnitType& unit) { init_long(value, unit);}
+    Step(long value, Unit unit) {init_long(value, UnitType{unit});}
+    Step(long value, long unit) {init_long(value, UnitType{unit});}
+    Step(long value, const std::string& unit) {init_long(value, UnitType{unit});}
 
     // Getters
     template <typename T> T value() const;
+    template <typename T> T value(const UnitType& unit) const;
     UnitType unit() const { return unit_; }
 
     // Setters
-    Step& set_unit(long new_unit);
-    Step& set_unit(const std::string& new_unit);
-    Step& set_unit(const Unit new_unit);
-    Step& set_unit(const UnitType& new_unit);
+    Step& set_unit(const std::string& unit_name) {unit_ = UnitType{unit_name}; return *this;}
+    Step& set_unit(long unit_code) {unit_ = UnitType{unit_code}; return *this;}
+    Step& set_unit(const UnitType& new_unit) {unit_ = new_unit; return *this;}
+    Step& set_unit(const Unit new_unit) {unit_ = new_unit; return *this;}
 
     // Operators
     bool operator==(const Step& other) const;
     bool operator!=(const Step& other) const;
-    Step operator+(const Step& step);
-    Step operator-(const Step& step);
+    Step operator+(const Step& step) const;
+    Step operator-(const Step& step) const;
+    bool operator>(const Step& step) const;
+    bool operator<(const Step& step) const;
+    Step copy() const {return Step{internal_value_, internal_unit_};}
 
     // Methods
     Step& optimize_unit();
     friend std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
     void hide_hour_unit() {
-        internal_unit_.hide_hour_unit(); 
+        internal_unit_.hide_hour_unit();
         unit_.hide_hour_unit();
     }
     void show_hour_unit() {
-        internal_unit_.show_hour_unit(); 
+        internal_unit_.show_hour_unit();
         unit_.show_hour_unit();
     }
 
@@ -222,29 +229,9 @@ private:
             return *this;
         }
 
-        Seconds<long> secs(0);
-        switch (internal_unit_.to_value()) {
-            case Unit::SECOND: secs = Seconds<long>(internal_value_); break;
-            case Unit::MINUTE: secs = Minutes<long>(internal_value_); break;
-            case Unit::MINUTES15: secs = Minutes15<long>(internal_value_); break;
-            case Unit::MINUTES30: secs = Minutes30<long>(internal_value_); break;
-            case Unit::HOUR: secs = Hours<long>(internal_value_); break;
-            case Unit::HOURS3: secs = Hours3<long>(internal_value_); break;
-            case Unit::HOURS6: secs = Hours6<long>(internal_value_); break;
-            case Unit::HOURS12: secs = Hours12<long>(internal_value_); break;
-            case Unit::DAY: secs = Days<long>(internal_value_); break;
-            case Unit::MONTH: secs = Months<long>(internal_value_); break;
-            case Unit::YEAR: secs = Years<long>(internal_value_); break;
-            case Unit::YEARS10: secs = Years10<long>(internal_value_); break;
-            case Unit::YEARS30: secs = Years30<long>(internal_value_); break;
-            case Unit::CENTURY: secs = Centuries<long>(internal_value_); break;
-            default:
-                std::string msg = "Unknown unit: " + internal_unit_.to_string();
-                throw std::runtime_error(msg);
-        }
-
+        Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
         long multiplier = UnitType::get_converter().unit_to_duration(unit_.to_value());
-        internal_value_ = secs.count() / multiplier;
+        internal_value_ = seconds.count() / multiplier;
         internal_unit_ = unit_;
 
         return *this;
@@ -263,50 +250,75 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
 
 template <typename T> T Step::value() const {
     if (internal_value_ == 0) {
-        return internal_value_;
+        return 0;
     }
     if (internal_unit_ == unit_) {
         return internal_value_;
     }
-    Seconds<T> duration(0);
-    switch (internal_unit_.to_value()) {
-        case Unit::SECOND: duration = Seconds<T>(internal_value_); break;
-        case Unit::MINUTE: duration = Minutes<T>(internal_value_); break;
-        case Unit::MINUTES15: duration = Minutes15<T>(internal_value_); break;
-        case Unit::MINUTES30: duration = Minutes30<T>(internal_value_); break;
-        case Unit::HOUR: duration = Hours<T>(internal_value_); break;
-        case Unit::HOURS3: duration = Hours3<T>(internal_value_); break;
-        case Unit::HOURS6: duration = Hours6<T>(internal_value_); break;
-        case Unit::HOURS12: duration = Hours12<T>(internal_value_); break;
-        case Unit::DAY: duration = Days<T>(internal_value_); break;
-        case Unit::MONTH: duration = Months<T>(internal_value_); break;
-        case Unit::YEAR: duration = Years<T>(internal_value_); break;
-        case Unit::YEARS10: duration = Years10<T>(internal_value_); break;
-        case Unit::YEARS30: duration = Years30<T>(internal_value_); break;
-        case Unit::CENTURY: duration = Centuries<T>(internal_value_); break;
+    Seconds<T> seconds = to_seconds<T>(internal_value_, internal_unit_);
+    T value = from_seconds<T>(seconds, unit_);
+    return value;
+}
+
+template <typename T> T Step::value(const UnitType& unit) const {
+    if (internal_value_ == 0) {
+        return 0;
+    }
+    if (internal_unit_ == unit) {
+        return internal_value_;
+    }
+    Seconds<T> seconds = to_seconds<T>(internal_value_, internal_unit_);
+    T value = from_seconds<T>(seconds, unit);
+    return value;
+}
+
+
+template <typename T>
+Seconds<T> to_seconds(long value, const UnitType& unit) {
+    Seconds<T> seconds;
+    switch (unit.to_value()) {
+        case Unit::SECOND: seconds = Seconds<T>(value); break;
+        case Unit::MINUTE: seconds = Minutes<T>(value); break;
+        case Unit::MINUTES15: seconds = Minutes15<T>(value); break;
+        case Unit::MINUTES30: seconds = Minutes30<T>(value); break;
+        case Unit::HOUR: seconds = Hours<T>(value); break;
+        case Unit::HOURS3: seconds = Hours3<T>(value); break;
+        case Unit::HOURS6: seconds = Hours6<T>(value); break;
+        case Unit::HOURS12: seconds = Hours12<T>(value); break;
+        case Unit::DAY: seconds = Days<T>(value); break;
+        case Unit::MONTH: seconds = Months<T>(value); break;
+        case Unit::YEAR: seconds = Years<T>(value); break;
+        case Unit::YEARS10: seconds = Years10<T>(value); break;
+        case Unit::YEARS30: seconds = Years30<T>(value); break;
+        case Unit::CENTURY: seconds = Centuries<T>(value); break;
         default:
-            std::string msg = "Unknown unit: " + internal_unit_.to_string();
+            std::string msg = "Unknown unit: " + unit.to_string();
             throw std::runtime_error(msg);
     }
+    return seconds;
+}
 
+
+template <typename T>
+T from_seconds(Seconds<T> seconds, const UnitType& unit) {
     T value = 0;
-    switch (unit_.to_value()) {
-        case Unit::SECOND: value = duration.count(); break;
-        case Unit::MINUTE: value = std::chrono::duration_cast<Minutes<T>>(duration).count(); break;
-        case Unit::MINUTES15: value = std::chrono::duration_cast<Minutes15<T>>(duration).count(); break;
-        case Unit::MINUTES30: value = std::chrono::duration_cast<Minutes30<T>>(duration).count(); break;
-        case Unit::HOUR: value = std::chrono::duration_cast<Hours<T>>(duration).count(); break;
-        case Unit::HOURS3: value = std::chrono::duration_cast<Hours3<T>>(duration).count(); break;
-        case Unit::HOURS6: value = std::chrono::duration_cast<Hours6<T>>(duration).count(); break;
-        case Unit::HOURS12: value = std::chrono::duration_cast<Hours12<T>>(duration).count(); break;
-        case Unit::DAY: value = std::chrono::duration_cast<Days<T>>(duration).count(); break;
-        case Unit::MONTH: value = std::chrono::duration_cast<Months<T>>(duration).count(); break;
-        case Unit::YEAR: value = std::chrono::duration_cast<Years<T>>(duration).count(); break;
-        case Unit::YEARS10: value = std::chrono::duration_cast<Years10<T>>(duration).count(); break;
-        case Unit::YEARS30: value = std::chrono::duration_cast<Years30<T>>(duration).count(); break;
-        case Unit::CENTURY: value = std::chrono::duration_cast<Centuries<T>>(duration).count(); break;
+    switch (unit.to_value()) {
+        case Unit::SECOND: value = std::chrono::duration_cast<Seconds<T>>(seconds).count(); break;
+        case Unit::MINUTE: value = std::chrono::duration_cast<Minutes<T>>(seconds).count(); break;
+        case Unit::MINUTES15: value = std::chrono::duration_cast<Minutes15<T>>(seconds).count(); break;
+        case Unit::MINUTES30: value = std::chrono::duration_cast<Minutes30<T>>(seconds).count(); break;
+        case Unit::HOUR: value = std::chrono::duration_cast<Hours<T>>(seconds).count(); break;
+        case Unit::HOURS3: value = std::chrono::duration_cast<Hours3<T>>(seconds).count(); break;
+        case Unit::HOURS6: value = std::chrono::duration_cast<Hours6<T>>(seconds).count(); break;
+        case Unit::HOURS12: value = std::chrono::duration_cast<Hours12<T>>(seconds).count(); break;
+        case Unit::DAY: value = std::chrono::duration_cast<Days<T>>(seconds).count(); break;
+        case Unit::MONTH: value = std::chrono::duration_cast<Months<T>>(seconds).count(); break;
+        case Unit::YEAR: value = std::chrono::duration_cast<Years<T>>(seconds).count(); break;
+        case Unit::YEARS10: value = std::chrono::duration_cast<Years10<T>>(seconds).count(); break;
+        case Unit::YEARS30: value = std::chrono::duration_cast<Years30<T>>(seconds).count(); break;
+        case Unit::CENTURY: value = std::chrono::duration_cast<Centuries<T>>(seconds).count(); break;
         default:
-            std::string msg = "Unknown unit: " + UnitType{unit_}.to_string();
+            std::string msg = "Unknown unit: " + unit.to_string();
             throw std::runtime_error(msg);
     }
     return value;

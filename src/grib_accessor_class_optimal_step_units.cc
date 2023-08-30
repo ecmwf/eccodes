@@ -167,17 +167,18 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    auto start_step_opt = get_step(h, self->forecastTime, self->indicatorOfUnitOfTimeRange);
-    auto end_step_opt = get_step(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange);
+    auto forecast_time_opt = get_step(h, self->forecastTime, self->indicatorOfUnitOfTimeRange);
+    auto lenght_of_time_range_opt = get_step(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange);
 
-    if (!(start_step_opt && end_step_opt)) {
+    if (!(forecast_time_opt && lenght_of_time_range_opt)) {
         *val = UnitType{Unit::HOUR}.to_long();
+        return GRIB_SUCCESS;
     }
 
-    Step start_step = start_step_opt.value_or(Step{});
-    Step end_step = end_step_opt.value_or(Step{});
+    Step forecast_time = forecast_time_opt.value_or(Step{});
+    Step length_of_time_range = lenght_of_time_range_opt.value_or(Step{});
 
-    auto [step_a, step_b] = find_common_units(start_step.optimize_unit(), end_step.optimize_unit());
+    auto [step_a, step_b] = find_common_units(forecast_time.optimize_unit(), (forecast_time + length_of_time_range).optimize_unit());
     *val = step_a.unit().to_long();
     return GRIB_SUCCESS;
 }
