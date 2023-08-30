@@ -429,7 +429,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long minute_of_end_of_interval = 0;
     long second_of_end_of_interval = 0;
 
-    long time_range_value, time_range, typeOfTimeIncrement;
+    long time_range_value, time_range_v, typeOfTimeIncrement;
 
     double dend, dstep;
 
@@ -461,9 +461,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_get_long_internal(h, self->typeOfTimeIncrement, &typeOfTimeIncrement)))
         return err;
 
-    time_range = *val - start_step_value;
+    time_range_v = *val - start_step_value;
 
-    if (time_range < 0) {
+    if (time_range_v < 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "endStep < startStep (%ld < %ld)", *val, start_step_value);
         return GRIB_WRONG_STEP;
@@ -495,21 +495,55 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_set_long_internal(h, self->second_of_end_of_interval, second_of_end_of_interval)))
         return err;
 
-    if (time_range * u2s[step_units] % u2s2[time_range_unit]) {
+    if (time_range_v * u2s[step_units] % u2s2[time_range_unit]) {
         time_range_unit = step_units;
         if ((err = grib_set_long_internal(h, self->time_range_unit, time_range_unit)))
             return err;
-        time_range_value = time_range;
+        time_range_value = time_range_v;
     }
     else
-        time_range_value = (time_range * u2s[step_units]) / u2s2[time_range_unit];
+        time_range_value = (time_range_v * u2s[step_units]) / u2s2[time_range_unit];
 
-    if (typeOfTimeIncrement != 1) {
-        /* 1 means "Successive times processed have same forecast time, start time of forecast is incremented" */
-        /* Note: For this case, length of timeRange is not related to step and so should NOT be used to calculate step */
-        if ((err = grib_set_long_internal(h, self->time_range_value, time_range_value)))
-            return err;
-    }
+
+    time_range_value = time_range_value * u2s[time_range_unit] / u2s2[step_units];
+    time_range_unit  = step_units;
+    if ((err = grib_set_long_internal(h, self->time_range_value, time_range_value)))
+        return err;
+    if ((err = grib_set_long_internal(h, self->time_range_unit, time_range_unit)))
+        return err;
+
+
+    
+    const char* forecast_time_value_key = "forecastTime";
+    const char* forecast_time_unit_key = "indicatorOfUnitOfTimeRange";
+    long forecast_time_value;
+    long forecast_time_unit;
+    if ((err = grib_get_long_internal(h, forecast_time_value_key, &forecast_time_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, forecast_time_unit_key, &forecast_time_unit)) != GRIB_SUCCESS)
+        return err;
+
+
+    //auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
+    auto [forecast_time, time_range] = find_common_units(Step{start_step_value, step_units}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
+
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range.value<long>())) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range.unit().to_long())) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_value_key, forecast_time.value<long>())) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_unit_key, forecast_time.unit().to_long())) != GRIB_SUCCESS)
+        return err;
+
+    
+
+    //if (typeOfTimeIncrement != 1) {
+    //    [> 1 means "Successive times processed have same forecast time, start time of forecast is incremented" <]
+    //    [> Note: For this case, length of timeRange is not related to step and so should NOT be used to calculate step <]
+    //    if ((err = grib_set_long_internal(h, self->time_range_value, time_range_value)))
+    //        return err;
+    //}
 
     return GRIB_SUCCESS;
 }

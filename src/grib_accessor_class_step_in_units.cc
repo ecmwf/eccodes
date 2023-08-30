@@ -225,7 +225,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_handle* h                    = grib_handle_of_accessor(a);
     int err                           = 0;
     long forecast_time_value, forecast_time_unit, step_units;
-    long oldStep = 0;
+    long forecast_time_value_old = 0;
     long time_range_unit, time_range_value;
 
     if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
@@ -235,13 +235,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 
 
-    unpack_long(a, &oldStep, len);
+    unpack_long(a, &forecast_time_value_old, len);
 
     if (step_units != forecast_time_unit) {
         forecast_time_value = *val * u2s[step_units];
         if (forecast_time_value % u2s2[forecast_time_unit] != 0) {
             forecast_time_unit = step_units;
-            err        = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
+            err = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
             if (err != GRIB_SUCCESS)
                 return err;
             forecast_time_value = *val;
@@ -255,29 +255,28 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     if (self->time_range_unit) {
-        if ((err = grib_get_long_internal(h,
-                                          self->time_range_unit, &time_range_unit)))
+        if ((err = grib_get_long_internal(h, self->time_range_unit, &time_range_unit)))
             return err;
-        if ((err = grib_get_long_internal(h,
-                                          self->time_range_value, &time_range_value)))
+        if ((err = grib_get_long_internal(h, self->time_range_value, &time_range_value)))
             return err;
         if (forecast_time_unit == time_range_unit)
-            time_range_value -= forecast_time_value - oldStep;
+            time_range_value -= forecast_time_value - forecast_time_value_old;
         else
             time_range_value -= forecast_time_value * u2s2[forecast_time_unit] / u2s2[time_range_unit];
         time_range_value = time_range_value > 0 ? time_range_value : 0;
 
-        //time_range_value = time_range_value * u2s2[time_range_unit] / u2s2[step_units];
-        forecast_time_unit        = step_units;
-        err               = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_value);
-        if (err != GRIB_SUCCESS)
+        time_range_value = time_range_value * u2s2[time_range_unit] / u2s2[forecast_time_unit];
+        time_range_unit  = forecast_time_unit;
+        auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
+
+        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range.value<long>())) != GRIB_SUCCESS)
             return err;
-        //err               = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, forecast_time_unit);
-        //if (err != GRIB_SUCCESS)
-        //    return err;
-        //err               = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_unit, forecast_time_unit);
-        //if (err != GRIB_SUCCESS)
-        //    return err;
+        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range.unit().to_long())) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time.value<long>())) != GRIB_SUCCESS)
+            return err;
+        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_unit, forecast_time.unit().to_long())) != GRIB_SUCCESS)
+            return err;
     }
 
     return grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time_value);
@@ -297,33 +296,39 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return ret;
 
 
+    long value = step.value<long>();
 
-    long value;
-    if (self->time_range_unit != NULL) {
-
-        long end_step_value;
-        if ((ret = grib_get_long_internal(h, "endStep", &end_step_value)) != GRIB_SUCCESS)
-            return ret;
-        Step end_step{end_step_value, UnitType{step_units}};
-
-        auto [step_a, step_b] = find_common_units(step, end_step);
-        if ((ret = grib_set_long_internal(h, self->step_units, step_b.unit().to_long())) != GRIB_SUCCESS)
-            return ret;
-
-        if ((ret = grib_set_long_internal(h, "endStep", step_b.value<long>())) != GRIB_SUCCESS)
-            return ret;
-
-        //if ((ret = set_step(h, self->time_range_value, self->time_range_unit, step_b)) != GRIB_SUCCESS)
-            //return ret;
-
-        value = step.value<long>(step_a.unit());
-    }
-    else {
-        value = step.value<long>(UnitType{step_units});
-    }
-
+    if ((ret = grib_set_long_internal(h, "stepUnits", step.unit().to_long())) != GRIB_SUCCESS)
+        return ret;
     if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
         return ret;
+
+    //long value;
+    //if (self->time_range_unit != NULL) {
+
+    //    long end_step_value;
+    //    if ((ret = grib_get_long_internal(h, "endStep", &end_step_value)) != GRIB_SUCCESS)
+    //        return ret;
+    //    Step end_step{end_step_value, UnitType{step_units}};
+
+    //    auto [step_a, step_b] = find_common_units(step, end_step);
+    //    if ((ret = grib_set_long_internal(h, self->step_units, step_b.unit().to_long())) != GRIB_SUCCESS)
+    //        return ret;
+
+    //    if ((ret = grib_set_long_internal(h, "endStep", step_b.value<long>())) != GRIB_SUCCESS)
+    //        return ret;
+
+    //    //if ((ret = set_step(h, self->time_range_value, self->time_range_unit, step_b)) != GRIB_SUCCESS)
+    //        //return ret;
+
+    //    value = step.value<long>(step_a.unit());
+    //}
+    //else {
+    //    value = step.value<long>(UnitType{step_units});
+    //}
+
+    //if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
+    //    return ret;
 
     //if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
         //return ret;

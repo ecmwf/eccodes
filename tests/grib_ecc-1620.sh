@@ -64,29 +64,29 @@ grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 6 h"
 #${tools_dir}/grib_set -y -s endStep:s=24.5h $temp $temp2
 #grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
 ${tools_dir}/grib_set -y -s endStep:s=88200s $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 30 m"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "1440 m 30 m"
 #${tools_dir}/grib_set -y -s endStep:s=1446.65m $temp $temp2
 #grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 399 s"
 ${tools_dir}/grib_set -y -s endStep:s=24024 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 1000 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "24 h 24000 h"
 
 # Use range unit: hour
 ${tools_dir}/grib_set -y -s startStep:d=5 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 1 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 24 h"
 #${tools_dir}/grib_set -y -s startStep:d=4.5 $temp $temp2
 #grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
 
 # Use stepUnits
 ${tools_dir}/grib_set -y -s startStep:s=5h $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 1 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "5 h 24 h"
 #${tools_dir}/grib_set -y -s startStep:s=4.5h $temp $temp2
 #grib_check_key_equals $temp2   "-y -p $low_level_keys" "270 m 1 D"
 ${tools_dir}/grib_set -y -s startStep:s=240s $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "4 m 1 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "4 m 1440 m"
 #${tools_dir}/grib_set -y -s startStep:s=0.65m $temp $temp2
 #grib_check_key_equals $temp2   "-y -p $low_level_keys" "39 s 1 D"
 ${tools_dir}/grib_set -y -s startStep:s=2 $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "2 h 1 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "2 h 24 h"
 
 
 
@@ -109,11 +109,11 @@ grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 m 1 m"
 grib_check_key_equals $temp2   "-y -p stepRange:s"     "1m-2m"
 
 ${tools_dir}/grib_set -y -s stepRange:s=60m-121m $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1 h 61 m"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "60 m 61 m"
 grib_check_key_equals $temp2   "-y -p stepRange:s"     "60m-121m"
 
 ${tools_dir}/grib_set -y -s stepRange:s=62D-122D $temp $temp2
-grib_check_key_equals $temp2   "-y -p $low_level_keys" "1488 h 60 D"
+grib_check_key_equals $temp2   "-y -p $low_level_keys" "1488 h 1440 h"
 grib_check_key_equals $temp2   "-y -p stepRange:s"     "1488-2928"
 
 #${tools_dir}/grib_set -s  $fn $temp
