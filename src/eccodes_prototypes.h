@@ -1284,7 +1284,7 @@ int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inla
                               double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.cc*/
-grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
+grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
 
 /* grib_nearest_class_gen.cc*/
 
