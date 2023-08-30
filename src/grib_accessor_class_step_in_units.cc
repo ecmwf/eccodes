@@ -233,6 +233,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_get_long_internal(h, self->stepUnits, &stepUnits)))
         return err;
 
+
+
     unpack_long(a, &oldStep, len);
 
     if (stepUnits != codedUnits) {
@@ -264,9 +266,18 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         else
             lengthOfTimeRange -= codedStep * u2s2[codedUnits] / u2s2[indicatorOfUnitForTimeRange];
         lengthOfTimeRange = lengthOfTimeRange > 0 ? lengthOfTimeRange : 0;
+
+        //lengthOfTimeRange = lengthOfTimeRange * u2s2[indicatorOfUnitForTimeRange] / u2s2[stepUnits];
+        codedUnits        = stepUnits;
         err               = grib_set_long_internal(grib_handle_of_accessor(a), self->lengthOfTimeRange, lengthOfTimeRange);
         if (err != GRIB_SUCCESS)
             return err;
+        //err               = grib_set_long_internal(grib_handle_of_accessor(a), self->indicatorOfUnitForTimeRange, codedUnits);
+        //if (err != GRIB_SUCCESS)
+        //    return err;
+        //err               = grib_set_long_internal(grib_handle_of_accessor(a), self->codedUnits, codedUnits);
+        //if (err != GRIB_SUCCESS)
+        //    return err;
     }
 
     return grib_set_long_internal(grib_handle_of_accessor(a), self->codedStep, codedStep);
@@ -285,16 +296,31 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
 
-    long end_step_value;
-    if ((ret = grib_get_long_internal(h, "endStep", &end_step_value)) != GRIB_SUCCESS)
-        return ret;
-    Step end_step{end_step_value, UnitType{step_units}};
 
-    auto [step_a, step_b] = find_common_units(step, end_step);
-    if ((ret = grib_set_long_internal(h, "stepUnits", step_a.unit().to_long())) != GRIB_SUCCESS)
-        return ret;
 
-    long value = step.value<long>(step_a.unit());
+    long value;
+    if (self->indicatorOfUnitForTimeRange != NULL) {
+
+        long end_step_value;
+        if ((ret = grib_get_long_internal(h, "endStep", &end_step_value)) != GRIB_SUCCESS)
+            return ret;
+        Step end_step{end_step_value, UnitType{step_units}};
+
+        auto [step_a, step_b] = find_common_units(step, end_step);
+        if ((ret = grib_set_long_internal(h, "stepUnits", step_b.unit().to_long())) != GRIB_SUCCESS)
+            return ret;
+
+        if ((ret = grib_set_long_internal(h, "endStep", step_b.value<long>())) != GRIB_SUCCESS)
+            return ret;
+
+        //if ((ret = set_step(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange, step_b)) != GRIB_SUCCESS)
+            //return ret;
+
+        value = step.value<long>(step_a.unit());
+    }
+    else {
+        value = step.value<long>(UnitType{step_units});
+    }
 
     if ((ret = pack_long(a, &value, &value_len)) != GRIB_SUCCESS)
         return ret;
