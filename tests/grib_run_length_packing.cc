@@ -12,6 +12,8 @@
 #undef NDEBUG
 #include <assert.h>
 
+// Provided by Tatsuya Noyori
+
 int main(int argc, char* argv[])
 {
     size_t str_len        = 0;
@@ -34,12 +36,13 @@ int main(int argc, char* argv[])
     CODES_CHECK(codes_set_long(h, "Ni", sqrt(number_of_values)), 0);
     CODES_CHECK(codes_set_long(h, "Nj", sqrt(number_of_values)), 0);
 
-    CODES_CHECK(codes_set_long(h, "latitudeOfFirstGridPointInDegrees", 35.000000), 0);
-    CODES_CHECK(codes_set_long(h, "longitudeOfFirstGridPointInDegrees", 135.000000), 0);
-    CODES_CHECK(codes_set_long(h, "latitudeOfLastGridPointInDegrees", 35.000000 + (0.012500 * sqrt(number_of_values))), 0);
-    CODES_CHECK(codes_set_long(h, "longitudeOfLastGridPointInDegrees", 135.000000 + (0.008333 * sqrt(number_of_values))), 0);
+    CODES_CHECK(codes_set_double(h, "latitudeOfFirstGridPointInDegrees", 35.000000), 0);
+    CODES_CHECK(codes_set_double(h, "longitudeOfFirstGridPointInDegrees", 135.000000), 0);
+    CODES_CHECK(codes_set_double(h, "latitudeOfLastGridPointInDegrees", 35.000000 + (0.012500 * sqrt(number_of_values))), 0);
+    CODES_CHECK(codes_set_double(h, "longitudeOfLastGridPointInDegrees", 135.000000 + (0.008333 * sqrt(number_of_values))), 0);
     CODES_CHECK(codes_set_double(h, "iDirectionIncrementInDegrees", 0.012500), 0);
     CODES_CHECK(codes_set_double(h, "jDirectionIncrementInDegrees", 0.008333), 0);
+    CODES_CHECK(codes_set_long(h, "jScansPositively", 1), 0);
 
     CODES_CHECK(codes_set_string(h, "shortName", "t", &str_len), 0);
     CODES_CHECK(codes_set_long(h, "numberOfValues", 1), 0);
