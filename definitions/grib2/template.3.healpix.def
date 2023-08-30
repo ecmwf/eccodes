@@ -12,9 +12,10 @@ alias numberOfPointsAlongASide = Nside;
 alias geography.Nside = Nside;
 
 # Longitude of the centre line of the first rhomboid
-unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
+unsigned[4] longitudeOfFirstGridPoint = 45000000 : edition_specific,dump;
 alias Lo = longitudeOfFirstGridPoint;
-alias geography.longitudeOfFirstGridPoint = longitudeOfFirstGridPoint;
+meta geography.longitudeOfFirstGridPointInDegrees
+    scale(longitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) : dump;
 
 # Position of the points. Default = Grid points at centres of shape
 codetable[1] gridPointPosition ('3.8.table',masterDir,localDir) = 4 : edition_specific,dump;

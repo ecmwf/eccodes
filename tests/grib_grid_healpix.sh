@@ -21,6 +21,7 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 cat > $tempFilter <<EOF
   set tablesVersion = 32;
   set gridType = "healpix";
+  set longitudeOfFirstGridPointInDegrees = 45;
   set numberOfPointsAlongASide = 32;
   write;
 EOF
@@ -45,6 +46,7 @@ rm -f $tempGrib
 cat > $tempFilter <<EOF
   set tablesVersion = 32;
   set gridType = "healpix";
+  set longitudeOfFirstGridPointInDegrees = 45;
   set numberOfPointsAlongASide = 1;
   set values = {1,2,3,4,5,6,7,8,9,10,11,12}; # count=12*N*N
   write;
