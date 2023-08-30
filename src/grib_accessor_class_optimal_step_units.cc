@@ -25,10 +25,10 @@
    IMPLEMENTS = pack_string;unpack_string;dump
    IMPLEMENTS = get_native_type;string_length
    IMPLEMENTS = init
-   MEMBERS    = const char* forecastTime
-   MEMBERS    = const char* indicatorOfUnitOfTimeRange
-   MEMBERS    = const char* lengthOfTimeRange 
-   MEMBERS    = const char* indicatorOfUnitForTimeRange
+   MEMBERS    = const char* forecast_time_value
+   MEMBERS    = const char* forecast_time_unit
+   MEMBERS    = const char* time_range_value 
+   MEMBERS    = const char* time_range_unit
    END_CLASS_DEF
 
  */
@@ -57,10 +57,10 @@ typedef struct grib_accessor_optimal_step_units
     grib_accessor att;
     /* Members defined in gen */
     /* Members defined in optimal_step_units */
-    const char* forecastTime;
-    const char* indicatorOfUnitOfTimeRange;
-    const char* lengthOfTimeRange;
-    const char* indicatorOfUnitForTimeRange;
+    const char* forecast_time_value;
+    const char* forecast_time_unit;
+    const char* time_range_value;
+    const char* time_range_unit;
 } grib_accessor_optimal_step_units;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -124,10 +124,10 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
     int n = 0;
 
-    self->forecastTime = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->indicatorOfUnitOfTimeRange = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->lengthOfTimeRange = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->indicatorOfUnitForTimeRange= grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_unit = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->time_range_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->time_range_unit= grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     a->length = 0;
 }
 
@@ -167,18 +167,18 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    auto forecast_time_opt = get_step(h, self->forecastTime, self->indicatorOfUnitOfTimeRange);
-    auto lenght_of_time_range_opt = get_step(h, self->lengthOfTimeRange, self->indicatorOfUnitForTimeRange);
+    auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
+    auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
 
-    if (!(forecast_time_opt && lenght_of_time_range_opt)) {
+    if (!(forecast_time_opt && time_range_opt)) {
         *val = UnitType{Unit::HOUR}.to_long();
         return GRIB_SUCCESS;
     }
 
     Step forecast_time = forecast_time_opt.value_or(Step{});
-    Step length_of_time_range = lenght_of_time_range_opt.value_or(Step{});
+    Step time_range = time_range_opt.value_or(Step{});
 
-    auto [step_a, step_b] = find_common_units(forecast_time.optimize_unit(), (forecast_time + length_of_time_range).optimize_unit());
+    auto [step_a, step_b] = find_common_units(forecast_time.optimize_unit(), (forecast_time + time_range).optimize_unit());
     *val = step_a.unit().to_long();
     return GRIB_SUCCESS;
 }
