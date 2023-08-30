@@ -35,7 +35,8 @@ grib_check_key_equals $input missingValuesPresent 1
 # Encoding
 # -----------------
 $EXEC ${test_dir}/grib_run_length_packing $tempGrib
-${tools_dir}/grib_dump  $tempGrib
+${tools_dir}/grib_dump -O $tempGrib
+${tools_dir}/grib_get_data -mXXX $tempGrib
 grib_check_key_equals $tempGrib packingType grid_run_length
 
 stats=`${tools_dir}/grib_get -M -F%.1f -p min,max,avg $tempGrib`
