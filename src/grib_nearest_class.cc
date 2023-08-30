@@ -26,25 +26,26 @@ static const struct table_entry table[] = {
 #include "grib_nearest_factory.h"
 };
 
-grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args)
+grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error)
 {
     size_t i   = 0;
-    int ret    = GRIB_SUCCESS;
+    *error     = GRIB_NOT_IMPLEMENTED;
     char* type = (char*)grib_arguments_get_name(h, args, 0);
 
-    for (i = 0; i < NUMBER(table); i++)
+    for (i = 0; i < NUMBER(table); i++) {
         if (strcmp(type, table[i].type) == 0) {
             grib_nearest_class* c = *(table[i].cclass);
             grib_nearest* it      = (grib_nearest*)grib_context_malloc_clear(h->context, c->size);
             it->cclass            = c;
-            ret                   = grib_nearest_init(it, h, args);
-            if (ret == GRIB_SUCCESS)
+            *error                = grib_nearest_init(it, h, args);
+            if (*error == GRIB_SUCCESS)
                 return it;
             grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory: Error instantiating nearest %s (%s)",
-                             table[i].type, grib_get_error_message(ret));
+                             table[i].type, grib_get_error_message(*error));
             grib_nearest_delete(it);
             return NULL;
         }
+    }
 
     grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_factory: Unknown type: %s", type);
 
