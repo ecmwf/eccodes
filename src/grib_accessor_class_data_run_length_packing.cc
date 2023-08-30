@@ -279,6 +279,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                          cclass_name, n_vals, number_of_values);
         return GRIB_ENCODING_ERROR;
     }
+
+    if (bits_per_value == 0) {
+        // TODO(masn): What are we meant to do with constant fields?
+        return GRIB_SUCCESS;
+    }
+
     level_values       = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_level_values);
     level_values_size = number_of_level_values;
     if ((err = grib_get_long_array_internal(gh, self->level_values, level_values, &level_values_size)) != GRIB_SUCCESS)
