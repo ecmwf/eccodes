@@ -1225,3 +1225,21 @@
  parameterCategory = 140 ;
  parameterNumber = 216 ;
 }
+#Total column ozone
+'206' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 206 ;
+}
+#Convective snowfall
+'239' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 239 ;
+}
+#Large-scale snowfall
+'240' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 240 ;
+}
