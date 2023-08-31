@@ -137,11 +137,11 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 
-static int value_count(grib_accessor* a, long* count)
-{
-    *count = 1;
-    return 0;
-}
+//static int value_count(grib_accessor* a, long* count)
+//{
+    //*count = 1;
+    //return 0;
+//}
 
 static size_t string_length(grib_accessor* a)
 {
@@ -165,7 +165,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
     grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
 
     auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
     auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);

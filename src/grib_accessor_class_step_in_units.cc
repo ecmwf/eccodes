@@ -279,8 +279,8 @@ int pack_long_new_(grib_accessor* a, const long* val, size_t* len) {
     long forecast_time_unit;
     long step_units;
     long start_step_value_old= 0;
-    long time_range_unit;
-    long time_range_value;
+    //long time_range_unit;
+    //long time_range_value;
 
     if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)) != GRIB_SUCCESS)
         return err;
@@ -382,7 +382,6 @@ int pack_long_new_(grib_accessor* a, const long* val, size_t* len) {
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret;
     if (is_future_output_enabled(h)) {
