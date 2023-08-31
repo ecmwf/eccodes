@@ -4449,6 +4449,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
 	}
+#Cloudy reflectance
+'260512' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 31 ;
+	}
+#Clear reflectance
+'260513' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 32 ;
+	}
 #Scaled radiance
 '260530' = {
 	 discipline = 3 ;
