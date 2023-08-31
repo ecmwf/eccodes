@@ -37,7 +37,7 @@ int set_step(grib_handle* h, const std::string& value_key, const std::string& un
 bool is_future_output_enabled(grib_handle* h)
 {
     size_t step_output_format_size = 128;
-    char step_output_format[step_output_format_size];
+    char step_output_format[128];
     int ret = 0;
     if ((ret = grib_get_string_internal(h, "stepOutputFormat", step_output_format, &step_output_format_size)) != GRIB_SUCCESS)
         return ret;
