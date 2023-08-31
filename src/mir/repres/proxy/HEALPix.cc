@@ -16,6 +16,8 @@
 #include <utility>
 #include <vector>
 
+#include "eckit/types/FloatCompare.h"
+
 #include "atlas/interpolation/method/knn/GridBox.h"
 
 #include "mir/repres/Iterator.h"
@@ -41,6 +43,10 @@ HEALPix::HEALPix(const param::MIRParametrisation& param) : Nside_(0), orderingCo
     ASSERT(Nside_ > 0);
     ASSERT(param.get("orderingConvention", orderingConvention_));
     ASSERT(orderingConvention_ == "ring");
+
+    double lon1 = 0.;
+    ASSERT(param.get("longitudeOfFirstGridPointInDegrees", lon1));
+    ASSERT(eckit::types::is_approximately_equal(lon1, 45.));
 }
 
 
@@ -75,7 +81,8 @@ void HEALPix::makeName(std::ostream& out) const {
 void HEALPix::fillGrib(grib_info& info) const {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
     info.grid.N         = static_cast<long>(Nside_);
-    info.grid.longitudeOfFirstGridPointInDegrees = 45.0;
+
+    info.grid.longitudeOfFirstGridPointInDegrees = 45.;
 
     info.extra_set("orderingConvention", orderingConvention_.c_str());
 }
