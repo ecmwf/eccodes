@@ -75,6 +75,7 @@ void HEALPix::makeName(std::ostream& out) const {
 void HEALPix::fillGrib(grib_info& info) const {
     info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
     info.grid.N         = static_cast<long>(Nside_);
+    info.grid.longitudeOfFirstGridPointInDegrees = 45.0;
 
     info.extra_set("orderingConvention", orderingConvention_.c_str());
 }
