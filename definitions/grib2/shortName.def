@@ -3936,6 +3936,18 @@
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
 	}
+#Cloudy reflectance
+'cdrfl' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 31 ;
+	}
+#Clear reflectance
+'crrfl' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 32 ;
+	}
 #Scaled radiance
 '~' = {
 	 discipline = 3 ;
