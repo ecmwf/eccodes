@@ -342,7 +342,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     fprintf(self->dumper.out, "    size = %zu;\n", size);
     fprintf(self->dumper.out, "    v%s    = (%s*)calloc(size,sizeof(%s));\n", stype, stype, stype);
     fprintf(self->dumper.out, "    if(!v%s) {\n", stype);
-    fprintf(self->dumper.out, "        fprintf(stderr,\"failed to allocate %%d bytes\\n\",size*sizeof(%s));\n", stype);
+    fprintf(self->dumper.out, "        fprintf(stderr,\"failed to allocate %%zu bytes\\n\",size*sizeof(%s));\n", stype);
     fprintf(self->dumper.out, "        exit(1);\n");
     fprintf(self->dumper.out, "    }\n");
 
