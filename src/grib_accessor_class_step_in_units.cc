@@ -219,13 +219,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 }
 
 
-static int pack_long(grib_accessor* a, const long* val, size_t* len)
-{
+int pack_long_old_(grib_accessor* a, const long* val, size_t* len) {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                    = grib_handle_of_accessor(a);
     int err                           = 0;
     long forecast_time_value, forecast_time_unit, step_units;
-    long forecast_time_value_old = 0;
+    long oldStep = 0;
     long time_range_unit, time_range_value;
 
     if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
@@ -233,15 +232,13 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
         return err;
 
-
-
-    unpack_long(a, &forecast_time_value_old, len);
+    unpack_long(a, &oldStep, len);
 
     if (step_units != forecast_time_unit) {
         forecast_time_value = *val * u2s[step_units];
         if (forecast_time_value % u2s2[forecast_time_unit] != 0) {
             forecast_time_unit = step_units;
-            err = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
+            err        = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
             if (err != GRIB_SUCCESS)
                 return err;
             forecast_time_value = *val;
@@ -255,31 +252,147 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     if (self->time_range_unit) {
-        if ((err = grib_get_long_internal(h, self->time_range_unit, &time_range_unit)))
+        if ((err = grib_get_long_internal(h,
+                                          self->time_range_unit, &time_range_unit)))
             return err;
-        if ((err = grib_get_long_internal(h, self->time_range_value, &time_range_value)))
+        if ((err = grib_get_long_internal(h,
+                                          self->time_range_value, &time_range_value)))
             return err;
         if (forecast_time_unit == time_range_unit)
-            time_range_value -= forecast_time_value - forecast_time_value_old;
+            time_range_value -= forecast_time_value - oldStep;
         else
             time_range_value -= forecast_time_value * u2s2[forecast_time_unit] / u2s2[time_range_unit];
         time_range_value = time_range_value > 0 ? time_range_value : 0;
-
-        time_range_value = time_range_value * u2s2[time_range_unit] / u2s2[forecast_time_unit];
-        time_range_unit  = forecast_time_unit;
-        auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
-
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range.value<long>())) != GRIB_SUCCESS)
-            return err;
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range.unit().to_long())) != GRIB_SUCCESS)
-            return err;
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time.value<long>())) != GRIB_SUCCESS)
-            return err;
-        if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_unit, forecast_time.unit().to_long())) != GRIB_SUCCESS)
+        err               = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_value);
+        if (err != GRIB_SUCCESS)
             return err;
     }
 
     return grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time_value);
+}
+
+int pack_long_new_(grib_accessor* a, const long* val, size_t* len) {
+    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    grib_handle* h                    = grib_handle_of_accessor(a);
+    int err                           = 0;
+    //long forecast_time_value;
+    long forecast_time_unit;
+    long step_units;
+    long start_step_value_old= 0;
+    long time_range_unit;
+    long time_range_value;
+
+    if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)) != GRIB_SUCCESS)
+        return err;
+    if ((err = unpack_long(a, &start_step_value_old, len)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
+        return err;
+    Step start_step_old(start_step_value_old, step_units);
+    Step forecast_time(*val, step_units);
+    Step time_range_new{};
+
+    auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
+    if (time_range_opt) {
+        auto time_range = time_range_opt.value();
+        time_range = time_range - (forecast_time - start_step_old);
+        auto [sa, sb] = find_common_units(forecast_time.optimize_unit(), time_range.optimize_unit());
+        if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, sa)) != GRIB_SUCCESS)
+            return err;
+        if ((err = set_step(h, self->time_range_value, self->time_range_unit, sb)) != GRIB_SUCCESS)
+            return err;
+        return GRIB_SUCCESS;
+    }
+    
+    forecast_time.optimize_unit();
+    if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, forecast_time)) != GRIB_SUCCESS)
+        return err;
+
+    //    if ((err = grib_get_long_internal(h, self->time_range_unit, &time_range_unit)))
+    //        return err;
+    //    if ((err = grib_get_long_internal(h, self->time_range_value, &time_range_value)))
+    //        return err;
+    //    if (forecast_time_unit == time_range_unit)
+    //        time_range_value -= forecast_time_value - forecast_time_value_old;
+    //    else
+    //        time_range_value -= forecast_time_value * u2s2[forecast_time_unit] / u2s2[time_range_unit];
+    //    time_range_value = time_range_value > 0 ? time_range_value : 0;
+
+    return GRIB_SUCCESS;
+
+    //grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    //grib_handle* h                    = grib_handle_of_accessor(a);
+    //int err                           = 0;
+    //long forecast_time_value, forecast_time_unit, step_units;
+    //long forecast_time_value_old = 0;
+    //long time_range_unit, time_range_value;
+
+    //if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
+    //    return err;
+    //if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
+    //    return err;
+
+    //unpack_long(a, &forecast_time_value_old, len);
+
+    //if (step_units != forecast_time_unit) {
+    //    forecast_time_value = *val * u2s[step_units];
+    //    if (forecast_time_value % u2s2[forecast_time_unit] != 0) {
+    //        forecast_time_unit = step_units;
+    //        err = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
+    //        if (err != GRIB_SUCCESS)
+    //            return err;
+    //        forecast_time_value = *val;
+    //    }
+    //    else {
+    //        forecast_time_value = forecast_time_value / u2s2[forecast_time_unit];
+    //    }
+    //}
+    //else {
+    //    forecast_time_value = *val;
+    //}
+
+    //if (self->time_range_unit) {
+    //    if ((err = grib_get_long_internal(h, self->time_range_unit, &time_range_unit)))
+    //        return err;
+    //    if ((err = grib_get_long_internal(h, self->time_range_value, &time_range_value)))
+    //        return err;
+    //    if (forecast_time_unit == time_range_unit)
+    //        time_range_value -= forecast_time_value - forecast_time_value_old;
+    //    else
+    //        time_range_value -= forecast_time_value * u2s2[forecast_time_unit] / u2s2[time_range_unit];
+    //    time_range_value = time_range_value > 0 ? time_range_value : 0;
+
+    //    time_range_value = time_range_value * u2s2[time_range_unit] / u2s2[forecast_time_unit];
+    //    time_range_unit  = forecast_time_unit;
+    //    auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
+
+    //    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range.value<long>())) != GRIB_SUCCESS)
+    //        return err;
+    //    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range.unit().to_long())) != GRIB_SUCCESS)
+    //        return err;
+    //    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time.value<long>())) != GRIB_SUCCESS)
+    //        return err;
+    //    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_unit, forecast_time.unit().to_long())) != GRIB_SUCCESS)
+    //        return err;
+    //}
+
+    //return grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time_value);
+
+}
+
+static int pack_long(grib_accessor* a, const long* val, size_t* len)
+{
+    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    grib_handle* h                   = grib_handle_of_accessor(a);
+    int ret;
+    if (is_future_output_enabled(h)) {
+        ret = pack_long_new_(a, val, len);
+    }
+    else {
+        ret = pack_long_old_(a, val, len);
+    }
+
+    return ret;
 }
 
 

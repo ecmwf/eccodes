@@ -39,8 +39,8 @@
   MEMBERS = const char* minute_of_end_of_interval
   MEMBERS = const char* second_of_end_of_interval
 
-  MEMBERS = const char* time_range_unit // indicatorOfUnitForTimeRange
-  MEMBERS = const char* time_range_value // lengthOfTimeRange
+  MEMBERS = const char* time_range_unit
+  MEMBERS = const char* time_range_value
   MEMBERS = const char* typeOfTimeIncrement
   MEMBERS = const char* numberOfTimeRange
 
