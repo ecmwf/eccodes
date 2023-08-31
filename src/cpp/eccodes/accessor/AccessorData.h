@@ -1,5 +1,4 @@
-#ifndef _ACCESSOR_DATA_H_20230803_
-#define _ACCESSOR_DATA_H_20230803_
+#pragma once
 
 #include "AccessorDefs.h"
 #include "AccessorBuffer.h"
@@ -69,5 +68,3 @@ private:
 };
 
 }
-
-#endif // _ACCESSOR_DATA_H_20230803_

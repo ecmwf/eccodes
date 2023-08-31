@@ -1,5 +1,5 @@
 #include "LongData.h"
-#include "AccessorMaker.h"
+#include "../AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -34,7 +34,8 @@ bool LongData::unpack(std::vector<long> &values) const
     return true;
 }
 
-
-static AccessorMaker& longMaker = createMaker<LongData>(AccessorType("long"));
+namespace {
+AccessorBuilder<LongData> LongDataBuilder(AccessorType("long"));
+}
 
 }

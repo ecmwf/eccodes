@@ -1,5 +1,4 @@
-#ifndef _NAMED_TYPE_H_20230817_
-#define _NAMED_TYPE_H_20230817_
+#pragma once
 
 // https://www.fluentcpp.com/2016/12/08/strong-types-for-strong-interfaces/
 
@@ -23,5 +22,3 @@ private:
 };
 
 }
-
-#endif // _NAMED_TYPE_H_20230817_

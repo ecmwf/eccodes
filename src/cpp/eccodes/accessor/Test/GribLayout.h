@@ -1,5 +1,4 @@
-#ifndef _GRIB_LAYOUT_H_20230817_
-#define _GRIB_LAYOUT_H_20230817_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -22,4 +21,3 @@ LayoutEntries parse_grib_layout(std::filesystem::path layoutFile);
 
 }
 
-#endif // _GRIB_LAYOUT_H_20230817_

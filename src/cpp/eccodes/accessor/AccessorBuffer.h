@@ -1,5 +1,4 @@
-#ifndef _ACCESSOR_BUFFER_H_20230817_
-#define _ACCESSOR_BUFFER_H_20230817_
+#pragma once
 
 #include <string>
 #include <memory>
@@ -53,5 +52,3 @@ private:
 };
 
 }
-
-#endif // _ACCESSOR_BUFFER_H_20230817_

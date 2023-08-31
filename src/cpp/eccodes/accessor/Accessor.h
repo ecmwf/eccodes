@@ -1,5 +1,4 @@
-#ifndef _ACCESSOR_H_20230630_
-#define _ACCESSOR_H_20230630_
+#pragma once
 
 #include "AccessorDefs.h"
 #include "AccessorData.h"
@@ -11,12 +10,10 @@ struct grib_expression;
 
 namespace eccodes::accessor {
 
-AccessorPtr makeAccessor(AccessorType const& type, AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorInitData const& initData);
-
 class Accessor
 {
 public:
-    Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, std::unique_ptr<AccessorData> data);
+    Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorDataPtr data);
 
     AccessorName name() const;
 
@@ -56,7 +53,7 @@ public:
     std::vector<double> unpackSubarray(std::size_t start) const;
 
 private:
-    std::unique_ptr<AccessorData> data_{};
+    AccessorDataPtr data_{};
     AccessorName name_;
     AccessorNameSpace nameSpace_;
     std::vector<AccessorName> allNames_{};
@@ -99,5 +96,3 @@ Accessor::unpackElementSet(std::vector<std::size_t> const& indexArray) const
 }
 
 }
-
-#endif // _ACCESSOR_H_20230630_

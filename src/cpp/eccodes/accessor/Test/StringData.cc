@@ -1,5 +1,5 @@
 #include "StringData.h"
-#include "AccessorMaker.h"
+#include "../AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -33,6 +33,8 @@ bool StringData::unpack(std::vector<char> &values) const
 }
 
 
-static AccessorMaker& stringMaker = createMaker<StringData>(AccessorType("string"));
+namespace {
+AccessorBuilder<StringData> StringDataBuilder(AccessorType("string"));
+}
 
 }

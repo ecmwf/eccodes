@@ -1,5 +1,4 @@
-#ifndef _DATE_DATA_H_20230818_
-#define _DATE_DATA_H_20230818_
+#pragma once
 
 #include "LongData.h"
 
@@ -18,4 +17,3 @@ private:
 
 }
 
-#endif // _DATE_DATA_H_20230818_

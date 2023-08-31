@@ -1,5 +1,5 @@
 #include "DoubleData.h"
-#include "AccessorMaker.h"
+#include "../AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -35,6 +35,8 @@ bool DoubleData::unpack(std::vector<double> &values) const
 }
 
 
-static AccessorMaker& doubleMaker = createMaker<DoubleData>(AccessorType("double"));
+namespace {
+AccessorBuilder<DoubleData> DoubleDataBuilder(AccessorType("double"));
+}
 
 }

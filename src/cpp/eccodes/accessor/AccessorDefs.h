@@ -1,5 +1,4 @@
-#ifndef _ACCESSOR_DEFS_H_20230817_
-#define _ACCESSOR_DEFS_H_20230817_
+#pragma once
 
 #include "NamedType.h"
 #include <string>
@@ -12,6 +11,9 @@ namespace eccodes::accessor {
 class Accessor;
 using AccessorPtr = std::shared_ptr<Accessor>;
 
+class AccessorData;
+using AccessorDataPtr = std::unique_ptr<AccessorData>;
+
 using AccessorName = NamedType<std::string, struct AccessorNameTag>;
 using AccessorType = NamedType<std::string, struct AccessorTypeTag>;
 using AccessorNameSpace = NamedType<std::string, struct AccessorNameSpaceTag>;
@@ -23,5 +25,3 @@ using AccessorInitData = std::vector<AccessorInitDataEntry>;
 using StringArray = std::vector<std::string>;
 
 }
-
-#endif // _ACCESSOR_DEFS_H_20230817_

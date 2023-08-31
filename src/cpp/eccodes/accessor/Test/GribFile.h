@@ -1,5 +1,4 @@
-#ifndef _GRIB_FILE_H_20230817_
-#define _GRIB_FILE_H_20230817_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -17,4 +16,3 @@ GribBuffer parseGribFile(std::filesystem::path gribFile);
 
 }
 
-#endif // _GRIB_FILE_H_20230817_

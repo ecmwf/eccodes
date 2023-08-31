@@ -1,24 +1,10 @@
 #include "Accessor.h"
-#include "AccessorMakerRegistry.h"
-#include "AccessorMaker.h"
 
 #include "grib_api_internal.h"
 
 namespace eccodes::accessor {
 
-AccessorPtr makeAccessor(AccessorType const& type, AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorInitData const& initData)
-{
-   if(type.get().empty()) { return {}; }
-
-   if(auto maker = getMaker(type))
-   {
-      return maker->pimpl->makeAccessorImpl(name, nameSpace, initData);
-   }
-
-   return {};
-}
-
-Accessor::Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, std::unique_ptr<AccessorData> data)
+Accessor::Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorDataPtr data)
     : data_{std::move(data)}
     , name_{name}
     , nameSpace_{nameSpace}

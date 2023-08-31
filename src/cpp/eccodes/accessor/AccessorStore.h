@@ -1,16 +1,24 @@
-#ifndef _ACCESSOR_STORE_H_20230817_
-#define _ACCESSOR_STORE_H_20230817_
+#pragma once
 
 #include "AccessorDefs.h"
-#include <memory>
-#include <string>
+#include <vector>
+#include <mutex>
 
 namespace eccodes::accessor {
 
-bool addAccessor(AccessorPtr accessor);
-AccessorPtr getAccessor(AccessorName const& name);
-bool destroyAccessor(AccessorName const& name);
+using AccessorEntry = std::pair<eccodes::accessor::AccessorName, eccodes::accessor::AccessorPtr>;
+
+class AccessorStore {
+    std::vector<AccessorEntry> store_{};
+    std::recursive_mutex mutex_;
+    AccessorStore() {}
+
+public:
+    static AccessorStore& instance();
+
+    bool addAccessor(AccessorPtr accessor);
+    AccessorPtr getAccessor(AccessorName const& name);
+    bool destroyAccessor(AccessorName const& name);
+};
 
 }
-
-#endif // _ACCESSOR_STORE_H_20230817_

@@ -1,7 +1,6 @@
-#ifndef _DOUBLE_DATA_H_20230818_
-#define _DOUBLE_DATA_H_20230818_
+#pragma once
 
-#include "AccessorData.h"
+#include "../AccessorData.h"
 
 namespace eccodes::accessor {
 
@@ -19,5 +18,3 @@ private:
 };
 
 }
-
-#endif // _DOUBLE_DATA_H_20230818_

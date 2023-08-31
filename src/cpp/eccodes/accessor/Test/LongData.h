@@ -1,7 +1,6 @@
-#ifndef _LONG_DATA_H_20230817_
-#define _LONG_DATA_H_20230817_
+#pragma once
 
-#include "AccessorData.h"
+#include "../AccessorData.h"
 
 namespace eccodes::accessor {
 
@@ -19,5 +18,3 @@ private:
 };
 
 }
-
-#endif // _LONG_DATA_H_20230817_

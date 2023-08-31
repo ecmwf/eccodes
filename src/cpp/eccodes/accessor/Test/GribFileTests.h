@@ -1,5 +1,4 @@
-#ifndef _GRIB_FILE_TESTS_H_20230818_
-#define _GRIB_FILE_TESTS_H_20230818_
+#pragma once
 
 #include <filesystem>
 
@@ -9,4 +8,3 @@ void runTests(std::filesystem::path gribFile, std::filesystem::path gribLayoutFi
 
 }
 
-#endif // _GRIB_FILE_TESTS_H_20230818_

@@ -1,5 +1,5 @@
 #include "DateData.h"
-#include "AccessorMaker.h"
+#include "../AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -47,7 +47,8 @@ bool DateData::unpack(std::vector<char> &values) const
     return true;
 }
 
-
-static AccessorMaker& dateMaker = createMaker<DateData>(AccessorType("date"));
+namespace {
+AccessorBuilder<DateData> DateDataBuilder(AccessorType("date"));
+}
 
 }

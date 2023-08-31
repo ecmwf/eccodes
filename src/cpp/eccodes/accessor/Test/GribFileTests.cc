@@ -1,8 +1,8 @@
 #include "GribFileTests.h"
-#include "AccessorMaker.h"
-#include "Accessor.h"
-#include "AccessorBuffer.h"
-#include "AccessorStore.h"
+#include "../AccessorFactory.h"
+#include "../Accessor.h"
+#include "../AccessorBuffer.h"
+#include "../AccessorStore.h"
 #include "GribLayout.h"
 #include "GribFile.h"
 #include "grib_api_internal.h"
@@ -38,7 +38,7 @@ void createAccessors(LayoutEntries const& entries, GribBuffer& buffer)
 
     for(auto const& entry : entries)
     {
-        auto accessor = makeAccessor(AccessorType(entry.type_), AccessorName(entry.name_), AccessorNameSpace(""), AccessorInitData{});
+        auto accessor = AccessorFactory::instance().build(AccessorType(entry.type_), AccessorName(entry.name_), AccessorNameSpace(""), AccessorInitData{});
 
         AccessorBuffer accBuffer{buffer.data() + offset, static_cast<std::size_t>(entry.byteCount_)};
         offset += entry.byteCount_;
@@ -48,7 +48,7 @@ void createAccessors(LayoutEntries const& entries, GribBuffer& buffer)
         std::cout << " [" << n++ << "] Type: " << std::setw(15) << entry.type_ << " Name: " << std::setw(15) << entry.name_;
         std::cout << " Buffer start: 0x" << std::hex << static_cast<void*>(accBuffer.data()) << " Buffer size: " << std::dec << accBuffer.size_bytes() << '\n';
 
-        addAccessor(accessor);
+        AccessorStore::instance().addAccessor(accessor);
     }
 
 }
@@ -70,7 +70,7 @@ bool unpack_test(AccessorName const& name)
     std::cout << "GOOD type    : " << typeString<GOOD_TYPE>() << '\n';
     std::cout << "BAD type     : " << typeString<BAD_TYPE>() << '\n';
 
-    auto accessor = getAccessor(name);
+    auto accessor = AccessorStore::instance().getAccessor(name);
     if(!accessor) { 
         std::cout << "ERROR: Failed to get accessor\n";
         return false; 
