@@ -178,4 +178,8 @@ concept timeprop {
  "min12h"   = {tloop = 3; iloop=12; lloop = 1; numberOfTimeRange = 4;}
  "12h"   = {iloop=1; lloop = 12;}
  "12h"   = {iloop=12; lloop = 1;}
+ "anom"  = {typeOfRelationToReferenceDataset = 0;}
+ "sign"  = {typeOfRelationToReferenceDataset = 2;}
+ "efi_sot"  = {typeOfRelationToReferenceDataset = 20;}
+ "efi_sot"  = {typeOfRelationToReferenceDataset = 21;}
 }
