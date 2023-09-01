@@ -140,6 +140,21 @@ grib_check_key_equals $temp "stepRange,startStep,endStep" "24 24 24"
 ${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
 grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 
+# Key validityDateTime
+# -----------------------------------------------
+input=${data_dir}/constant_field.grib2
+grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
+grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+
+# Key julianDay
+# -----------------------------------------------
+input=${data_dir}/sample.grib2
+grib_check_key_equals $input 'julianDay:i' '2454503'
+${tools_dir}/grib_set -s julianDay=2454504 $input $temp
+grib_check_key_equals $input day 6
+grib_check_key_equals $temp day  7
+
 
 # Clean up
 rm -f $temp
