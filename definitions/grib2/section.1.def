@@ -14,7 +14,7 @@ alias parameter.centre=centre;
 alias ls.centre=centre;
 alias originatingCentre=centre;
 
-unsigned[2] subCentre  : dump;
+codetable[2] subCentre "common/c-12.[centre].def" : dump;
 
 _if (subCentre==98 ) {
   alias centreForLocal=subCentre;
