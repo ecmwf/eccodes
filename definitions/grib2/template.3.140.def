@@ -7,24 +7,25 @@ constant isGridded = one;
 
 # Nx - number of points along X-axis
 unsigned[4] numberOfPointsAlongXAxis : dump;
-alias Nx  = numberOfPointsAlongXAxis;
-alias Ni  = Nx;
+alias Nx = numberOfPointsAlongXAxis;
+alias Ni = Nx;
 
 # Ny - number of points along Y-axis
 unsigned[4] numberOfPointsAlongYAxis : dump;
-alias Ny =  numberOfPointsAlongYAxis;
-alias Nj  = Ny;
+alias Ny = numberOfPointsAlongYAxis;
+alias numberOfPointsAlongAMeridian = Ny;
+alias Nj = Ny;
 
 # La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint: edition_specific;
-alias La1 =  latitudeOfFirstGridPoint;
+alias La1 = latitudeOfFirstGridPoint;
 meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,
                                                  one,grib2divider,truncateDegrees) : dump;
 #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor): no_copy;
 
 # Lo1 - longitude of first grid point
 signed[4] longitudeOfFirstGridPoint: edition_specific ;
-alias La1 =  longitudeOfFirstGridPoint;
+alias La1 = longitudeOfFirstGridPoint;
 meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,
                                                  one,grib2divider,truncateDegrees) : dump;
 #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;

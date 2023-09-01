@@ -155,7 +155,14 @@ ${tools_dir}/grib_set -s julianDay=2454504 $input $temp
 grib_check_key_equals $input day 6
 grib_check_key_equals $temp day  7
 
+# Seconds (ignored)
+# -----------------------------------------------
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$templog
+# Something should have been written to stderr
+[ -s $templog ]
+grep -q "Truncating time: non-zero seconds.* ignored" $templog
 
 # Clean up
-rm -f $temp
+rm -f $temp $templog
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

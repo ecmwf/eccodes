@@ -178,7 +178,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
         }
     }
 
-    if (a->context->debug == -1) {
+    if (a->context->debug) {
         switch (self->jpeg_lib) {
             case 0:
                 fprintf(stderr, "ECCODES DEBUG jpeg2000_packing: jpeg_lib not set!\n");
@@ -347,6 +347,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     double units_factor = 1.0;
     double units_bias   = 0.0;
     double* val         = (double*)cval;
+    const char* cclass_name = a->cclass->name;
 
     self->dirty = 1;
 
@@ -387,8 +388,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
         case GRIB_SUCCESS:
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "grib_accessor_class_data_jpeg2000_packing pack_double: unable to compute packing parameters");
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: Unable to compute packing parameters", cclass_name, __func__);
             return ret;
     }
 
@@ -453,9 +453,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 
     if (width * height != *len) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_accessor_class_data_jpeg2000_packing pack_double: width=%ld height=%ld len=%ld."
-                         " width*height should equal len!",
-                         (long)width, (long)height, (long)*len);
+                         "%s %s: width=%ld height=%ld len=%zu. width*height should equal len!",
+                         cclass_name, __func__, width, height, *len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -466,12 +465,23 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     }
 
     switch (type_of_compression_used) {
-        case 0:
-            Assert(target_compression_ratio == 255);
+        case 0: // Lossless
+            if (target_compression_ratio != 255) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                    "%s %s: When %s=0 (Lossless), %s must be set to 255",
+                    cclass_name, __func__, self->type_of_compression_used, self->target_compression_ratio);
+                return GRIB_ENCODING_ERROR;
+            }
             helper.compression = 0;
             break;
 
-        case 1:
+        case 1: // Lossy
+            if (target_compression_ratio == 255 || target_compression_ratio == 0) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                    "%s %s: When %s=1 (Lossy), %s must be specified",
+                    cclass_name, __func__, self->type_of_compression_used, self->target_compression_ratio);
+                return GRIB_ENCODING_ERROR;
+            }
             Assert(target_compression_ratio != 255);
             Assert(target_compression_ratio != 0);
             helper.compression = target_compression_ratio;
@@ -490,8 +500,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     if (bits_per_value == 0) {
         const long bits_per_value_adjusted = 1;
         grib_context_log(a->context, GRIB_LOG_DEBUG,
-                         "grib_accessor_class_data_jpeg2000_packing(%s) : bits per value was zero, changed to %d",
-                         self->jpeg_lib == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
+                         "%s (%s) : bits per value was zero, changed to %ld",
+                         cclass_name, self->jpeg_lib == OPENJPEG_LIB ? "openjpeg" : "jasper", bits_per_value_adjusted);
         bits_per_value = bits_per_value_adjusted;
     }
     helper.bits_per_value = bits_per_value;
@@ -517,8 +527,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 
     if (helper.jpeg_length > simple_packing_size)
         grib_context_log(a->context, GRIB_LOG_WARNING,
-                         "grib_accessor_data_jpeg2000_packing(%s) : jpeg data (%ld) larger than input data (%ld)",
-                         self->jpeg_lib == OPENJPEG_LIB ? "openjpeg" : "jasper",
+                         "%s (%s) : jpeg data (%ld) larger than input data (%ld)",
+                         cclass_name, self->jpeg_lib == OPENJPEG_LIB ? "openjpeg" : "jasper",
                          helper.jpeg_length, simple_packing_size);
 
     Assert(helper.jpeg_length <= helper.buffer_size);

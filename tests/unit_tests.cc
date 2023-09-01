@@ -428,6 +428,8 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_UNDEFINED, values1, &count);
     Assert( !err );
     Assert( count == 2 );
+    grib_print_values("print values test: values1", values1);
+
     Assert( strcmp(values1[0].name, "key1")==0 );
     Assert( strcmp(values1[0].string_value, "value1")==0 );
     Assert( values1[0].equal == 1 );
@@ -446,6 +448,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_LONG, values2, &count);
     Assert( !err );
     Assert( count == 1 );
+    grib_print_values("print values test: values2", values2);
     Assert( strcmp(values2[0].name, "x")==0 );
     Assert( values2[0].long_value == 14 );
     Assert( values2[0].equal == 1 );
@@ -456,6 +459,7 @@ static void test_parse_keyval_string()
                               values_required, GRIB_TYPE_DOUBLE, values3, &count);
     Assert( !err );
     Assert( count == 1 );
+    grib_print_values("print values test: values3", values3);
     Assert( strcmp(values3[0].name, "mars.level")==0 );
     free( (void*)values3[0].name );
 }
@@ -539,9 +543,96 @@ void test_scale_factor_scaled_values()
     Assert(factor == 5);
 }
 
+void test_iarray()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+    grib_iarray* a = grib_iarray_new(c, 10, 10);
+    grib_iarray_push(a, 42);
+    grib_iarray_push(a, 10000);
+    grib_iarray_print("iarray", a);
+
+    grib_iarray* b = grib_iarray_new(c, 1, 1);
+    grib_iarray_push(b, 0);
+    grib_iarray_push(b, -1);
+    grib_iarray_push(b, +1);
+
+    grib_viarray* va = grib_viarray_new(c, 1, 1);
+    grib_viarray_push(c, va, a);
+    grib_viarray_push(c, va, b);
+    grib_viarray_print("viarray", va);
+
+    grib_iarray_delete(a);
+    grib_iarray_delete(b);
+    grib_viarray_delete(c, va);
+}
+
+void test_darray()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+    grib_darray* a = grib_darray_new(c, 10, 10);
+    grib_darray_push(c, a, 42.009);
+    grib_darray_push(c, a, -1.11);
+    grib_darray_push(c, a, 5099);
+    grib_darray_print("darray", a);
+
+    grib_darray* b = grib_darray_new(c, 5, 1);
+    grib_darray_push(c, b, 8);
+    grib_darray_push(c, b, 12);
+
+    grib_vdarray* va = grib_vdarray_new(c, 1, 1);
+    grib_vdarray_push(c, va, a);
+    grib_vdarray_push(c, va, b);
+    grib_vdarray_print("vdarray", va);
+
+    grib_darray_delete(c, a);
+    grib_darray_delete(c, b);
+    grib_vdarray_delete(c, va);
+}
+
+void test_sarray()
+{
+    printf("Running %s ...\n", __func__);
+    grib_context* c = grib_context_get_default();
+    grib_sarray* a = grib_sarray_new(c, 10, 10);
+    grib_sarray_push(c, a, "ants");
+    grib_sarray_push(c, a, "bugs");
+    grib_sarray_print("sarray", a);
+    grib_sarray_delete(c, a);
+}
+
+void test_codes_get_product_name()
+{
+    printf("Running %s ...\n", __func__);
+    Assert( STR_EQUAL("ANY",   codes_get_product_name(PRODUCT_ANY)) );
+    Assert( STR_EQUAL("GRIB",  codes_get_product_name(PRODUCT_GRIB)) );
+    Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
+    Assert( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
+    Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+}
+
+void test_codes_get_type_name()
+{
+    printf("Running %s ...\n", __func__);
+    Assert( STR_EQUAL("long",    grib_get_type_name(GRIB_TYPE_LONG)) );
+    Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
+    Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
+    Assert( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
+    Assert( STR_EQUAL("label",   grib_get_type_name(GRIB_TYPE_LABEL)) );
+    Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_iarray();
+    test_darray();
+    test_sarray();
+
+    test_codes_get_product_name();
+    test_codes_get_type_name();
 
     test_scale_factor_scaled_values();
     test_dates();

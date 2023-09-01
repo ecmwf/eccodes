@@ -447,6 +447,10 @@ void codes_dump_content(const grib_handle* h, FILE* out, const char* mode, unsig
 {
     grib_dump_content(h, out, mode, option_flags, arg);
 }
+void codes_dump_action_tree(codes_context* c, FILE* f)
+{
+    grib_dump_action_tree(c, f);
+}
 /* GTS, GRIBEX */
 /******************************************************************************/
 void codes_gts_header_off(grib_context* c)

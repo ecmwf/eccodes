@@ -433,7 +433,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, 
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
  *  The message will be copied as soon as a modification is needed.
- *  This function works also with GRIB multi-field messages.
+ *  This function also works with GRIB multi-field messages.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
  * @param data        : the actual message
@@ -606,9 +606,9 @@ int codes_grib_get_data(const codes_handle* h, double* lats, double* lons, doubl
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double* value);
@@ -617,9 +617,9 @@ int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, double* value);
@@ -628,7 +628,7 @@ int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, do
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the iterator still has next values, 0 otherwise
  */
 int codes_grib_iterator_has_next(codes_iterator* i);
 
@@ -685,7 +685,7 @@ int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, doubl
 /**
  *  Frees a nearest object from memory
  *
- * @param nearest           : the nearest
+ * @param nearest           : the nearest neighbour object
  * @return            0 if OK, integer value on error
  */
 int codes_grib_nearest_delete(codes_nearest* nearest);
@@ -1229,7 +1229,7 @@ void codes_grib_multi_support_on(codes_context* c);
 void codes_grib_multi_support_off(codes_context* c);
 
 /**
- *  Reset file handle in multiple GRIB field support mode
+ *  Reset file handle in GRIB multi-field support mode
  *
  * @param c            : the context to be modified
  * @param f            : the file pointer
@@ -1351,9 +1351,12 @@ int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_cou
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
 codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is the final argument */
+/* Check whether the given key has the value 'missing'.
+   Returns a bool i.e. 0 or 1. The error code is an argument */
 int codes_is_missing(const codes_handle* h, const char* key, int* err);
-/* Returns a bool i.e. 0 or 1 */
+
+/* Check whether the given key is defined (exists).
+   Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
 
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
@@ -1364,8 +1367,10 @@ int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
    The error code is the final argument */
 int codes_bufr_key_is_coordinate(const codes_handle* h, const char* key, int* err);
 
+/* Set the given key to have the value 'missing' */
 int codes_set_missing(codes_handle* h, const char* key);
-/* The truncation is the Gaussian number (or order) */
+
+/* The truncation is the Gaussian number (also called order) */
 int codes_get_gaussian_latitudes(long truncation, double* latitudes);
 
 int codes_julian_to_datetime(double jd, long* year, long* month, long* day, long* hour, long* minute, long* second);
@@ -1386,7 +1391,6 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 
 
 /* --------------------------------------- */
-
 #define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL
 #define CODES_UTIL_GRID_SPEC_ROTATED_LL                   GRIB_UTIL_GRID_SPEC_ROTATED_LL
 #define CODES_UTIL_GRID_SPEC_REGULAR_GG                   GRIB_UTIL_GRID_SPEC_REGULAR_GG
@@ -1399,6 +1403,7 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 #define CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA
 #define CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL
 #define CODES_UTIL_GRID_SPEC_UNSTRUCTURED                 GRIB_UTIL_GRID_SPEC_UNSTRUCTURED
+#define CODES_UTIL_GRID_SPEC_HEALPIX                      GRIB_UTIL_GRID_SPEC_HEALPIX
 
 #define CODES_UTIL_PACKING_TYPE_SAME_AS_INPUT      GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT
 #define CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX
@@ -1417,7 +1422,6 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 #define CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES       GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES
 #define CODES_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT
 #define CODES_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR  GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR
-
 
 codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        const codes_util_grid_spec* grid_spec,

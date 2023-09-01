@@ -10149,13 +10149,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 225 ;
 	}
-#Maximum total precipitation rate
-'Maximum total precipitation rate' = {
+#Maximum total precipitation rate since previous post-processing
+'Maximum total precipitation rate since previous post-processing' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 226 ;
 	}
-#Minimum total precipitation rate
-'Minimum total precipitation rate' = {
+#Minimum total precipitation rate since previous post-processing
+'Minimum total precipitation rate since previous post-processing' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 227 ;
 	}

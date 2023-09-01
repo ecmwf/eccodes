@@ -803,9 +803,12 @@
 	}
 #Total column ozone
 '206' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 206 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Diabatic heating by radiation
 '214' = {
@@ -921,15 +924,21 @@
 	}
 #Convective snowfall
 '239' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 239 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Large-scale snowfall
 '240' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 240 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Accumulated cloud fraction tendency
 '241' = {

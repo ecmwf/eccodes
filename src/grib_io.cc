@@ -180,7 +180,7 @@ static int read_GRIB(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = GRIB_MY_BUFFER;
+    buf->property = CODES_MY_BUFFER;
 
     tmp[i++] = 'G';
     tmp[i++] = 'R';
@@ -721,7 +721,7 @@ static int read_BUFR(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = GRIB_MY_BUFFER;
+    buf->property = CODES_MY_BUFFER;
     r->offset     = r->tell(r->read_data) - 4;
 
     tmp[i++] = 'B';
@@ -1008,7 +1008,7 @@ static int read_any_taf(reader* r)
     int err                 = 0;
     unsigned char* buffer   = NULL;
     unsigned long magic     = 0;
-    unsigned long start     = 0x54414620;
+    unsigned long start     = 0x54414620; // 4 chars: TAF plus a space
     unsigned char tmp[1000] = {0,}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
@@ -1020,10 +1020,10 @@ static int read_any_taf(reader* r)
         magic &= 0xffffffff;
 
         if (magic == start) {
-            tmp[i++] = 0x54;
-            tmp[i++] = 0x41;
-            tmp[i++] = 0x46;
-            tmp[i++] = 0x20;
+            tmp[i++] = 0x54; //T
+            tmp[i++] = 0x41; //A
+            tmp[i++] = 0x46; //F
+            tmp[i++] = 0x20; //space
 
             r->offset = r->tell(r->read_data) - 4;
 
@@ -1056,7 +1056,7 @@ static int read_any_metar(reader* r)
     int err               = 0;
     unsigned char* buffer = NULL;
     unsigned long magic   = 0;
-    unsigned long start   = 0x4d455441;
+    unsigned long start   = 0x4d455441; // 4 chars: META
     unsigned char tmp[32] = {0,}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
@@ -1071,10 +1071,10 @@ static int read_any_metar(reader* r)
             if (r->read(r->read_data, &c, 1, &err) != 1 || err != 0)
                 break;
             if (c == 'R') {
-                tmp[i++] = 0x4d;
-                tmp[i++] = 0x45;
-                tmp[i++] = 0x54;
-                tmp[i++] = 0x41;
+                tmp[i++] = 0x4d; // M
+                tmp[i++] = 0x45; // E
+                tmp[i++] = 0x54; // T
+                tmp[i++] = 0x41; // A
                 tmp[i++] = 'R';
 
                 r->offset = r->tell(r->read_data) - 4;

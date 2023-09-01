@@ -42,16 +42,16 @@ contains
     call codes_open_file(ifile, input_grib_file, 'r')
 
     len1 = size
-    call codes_read_from_file(ifile, buffer, len1, iret)
 
-    do while (iret == CODES_SUCCESS)
+    do while (.true.)
+      call codes_read_from_file(ifile, buffer, len1, iret)
+      if (iret /= CODES_SUCCESS) exit
       count1 = count1 + 1
       if (len1 /= message_lengths(count1)) then
         write (*, '(a,i3,a,i8,a,i8)') 'Error: Message #', count1, ' length=', len1, '. Expected=', message_lengths(count1)
         stop
       end if
       len1 = size
-      call codes_read_from_file(ifile, buffer, len1, iret)
     end do
 
     if (iret /= CODES_END_OF_FILE) then

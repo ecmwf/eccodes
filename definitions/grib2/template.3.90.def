@@ -5,14 +5,15 @@ include "grib2/template.3.shape_of_the_earth.def";
 
 constant isGridded = one;
 
-unsigned[4] Nx  : dump;
-alias Ni  = Nx;
-alias numberOfPointsAlongXAxis  = Nx;
+unsigned[4] Nx : dump;
+alias Ni = Nx;
+alias numberOfPointsAlongXAxis = Nx;
 alias geography.Nx=Nx;
 
-unsigned[4] Ny  : dump;
-alias Nj  = Ny;
-alias numberOfPointsAlongYAxis  = Ny;
+unsigned[4] Ny : dump;
+alias Nj = Ny;
+alias numberOfPointsAlongYAxis  = Nj;
+alias numberOfPointsAlongAMeridian = Nj;
 alias geography.Ny=Ny;
 
 # Lap - latitude of sub-satellite point
@@ -27,22 +28,22 @@ meta geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatel
 include "grib2/template.3.resolution_flags.def";
 
 # dx - apparent diameter of Earth in grid lengths, in X-direction
-unsigned[4]  dx : dump;
+unsigned[4] dx : dump;
 alias geography.dx=dx;
 
 # dy - apparent diameter of Earth in grid lengths, in Y-direction
-unsigned[4] dy  : dump;
+unsigned[4] dy : dump;
 alias geography.dy=dy;
 
 # Xp - X-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
-unsigned[4] Xp  : no_copy;
+unsigned[4] Xp : no_copy;
 meta geography.XpInGridLengths scale(Xp,one,thousand) : dump;
 alias xCoordinateOfSubSatellitePoint=XpInGridLengths;
 
 # Yp - Y-coordinate of sub-satellite point
 # (in units of 10^-3 grid length expressed as an integer)
-unsigned[4] Yp  : no_copy;
+unsigned[4] Yp : no_copy;
 meta geography.YpInGridLengths scale(Yp,one,thousand) : dump;
 alias yCoordinateOfSubSatellitePoint=YpInGridLengths;
 

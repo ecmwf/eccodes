@@ -55,6 +55,11 @@ test_packing() {
         result=`${tools_dir}/grib_get -p accuracy $temp`
         [ $result -eq 0 -o $result -eq 32 -o $result -eq 64 ]
 
+        temp1=$temp.1
+        ${tools_dir}/grib_set -s setPackingType=$packing $grib $temp1
+        ${tools_dir}/grib_compare $temp $temp1
+        rm -f $temp1
+
         shift
     done
 

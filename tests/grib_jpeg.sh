@@ -129,6 +129,32 @@ ${tools_dir}/grib_set -d1 ${data_dir}/jpeg.grib2 $tempGrib
 grib_check_key_equals $tempGrib isConstant 1
 ${tools_dir}/grib_ls -n statistics $tempGrib
 
+ECCODES_DEBUG=-1 ${tools_dir}/grib_ls -n statistics $data_dir/jpeg.grib2
+${tools_dir}/grib_set -r -s unitsBias=2,unitsFactor=3 $data_dir/jpeg.grib2 $tempGrib
+
+# typeOfCompressionUsed and targetCompressionRatio
+set +e
+${tools_dir}/grib_set -r -s typeOfCompressionUsed=1,targetCompressionRatio=255 $data_dir/jpeg.grib2 $tempGrib
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_set -r -s typeOfCompressionUsed=1,targetCompressionRatio=0 $data_dir/jpeg.grib2 $tempGrib
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_set -r -s typeOfCompressionUsed=0,targetCompressionRatio=1 $data_dir/jpeg.grib2 $tempGrib
+status=$?
+set -e
+[ $status -ne 0 ]
+
+tempDump=temp.$label.jpg
+ECCODES_GRIB_DUMP_JPG_FILE=$tempDump  ${tools_dir}/grib_copy -r $data_dir/jpeg.grib2 $tempGrib
+[ -f $tempDump ]
+rm -f $tempDump
 
 # Clean up
 rm -f $tempFilt $tempGrib

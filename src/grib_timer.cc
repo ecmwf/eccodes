@@ -338,7 +338,7 @@ grib_timer* grib_get_timer(grib_context* c, const char* name, const char* statna
 {
     if (!c)
         c = grib_context_get_default();
-    grib_context_log(c, GRIB_LOG_FATAL, "grib_get_timer function not available");
+    grib_context_log(c, GRIB_LOG_ERROR, "%s function not available", __func__);
     return NULL;
 }
 
@@ -359,24 +359,18 @@ double grib_timer_value(grib_timer* t)
 
 void grib_timer_print(grib_timer* t)
 {
-    return;
 }
-
 
 void grib_timer_partial_rate(grib_timer* t, double start, long total)
 {
-    return;
 }
 
 void grib_print_all_timers()
 {
-    return;
 }
 
 void grib_reset_all_timers()
 {
-    return;
 }
-
 
 #endif

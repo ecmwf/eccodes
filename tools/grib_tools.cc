@@ -179,10 +179,11 @@ int grib_tool(int argc, char** argv)
         dump_file = stdout;
     }
 
-    /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
-    if (global_options.mode == MODE_GRIB &&
+    /* ECC-926: Currently only GRIB and BUFR indexing work. Disable the through_index if GTS etc */
+    if ((global_options.mode == MODE_GRIB || global_options.mode == MODE_BUFR) &&
         is_index_file(global_options.infile->name) &&
-        (global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
+        (global_options.infile_extra && is_index_file(global_options.infile_extra->name)))
+    {
         global_options.through_index = 1;
         return grib_tool_index(&global_options);
     }

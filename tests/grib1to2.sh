@@ -111,6 +111,12 @@ for sn in e lsp pev sro uvb; do
     ${tools_dir}/grib_compare -e -b param $temp1 $temp2
 done
 
+# Turn on (brief) DEBUGGING messages
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+output=temp.grib1to2.grib
+ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s edition=2 $sample_g1 $output
+
 
 # Clean up
 rm -f $output
+rm -f $temp1 $temp2

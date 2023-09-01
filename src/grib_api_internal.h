@@ -204,30 +204,21 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 #include "grib_api.h"
 
-#define GRIB_UNKNOWN_VALUE -9999.999
-#define GRIB_KEY_UNDEF "undef"
-
-#define GRIB_HANDLE_BIG_ECMWF_GRIB1 1
-
 #define MAX_ACCESSOR_ATTRIBUTES 20
 #define MAX_FILE_HANDLES_WITH_MULTI 10
 #define ACCESSORS_ARRAY_SIZE 5000
 #define MAX_NUM_CONCEPTS 2000
 #define MAX_NUM_HASH_ARRAY 2000
 
-#define GRIB_NAMESPACE 10
+#define CODES_NAMESPACE   10
 #define MAX_NAMESPACE_LEN 64
 
-#define GRIB_MY_BUFFER 0
-#define GRIB_USER_BUFFER 1
+#define CODES_MY_BUFFER   0
+#define CODES_USER_BUFFER 1
 
-#define GRIB_REAL_MODE4 4
-#define GRIB_REAL_MODE8 8
+#define CODES_REAL_MODE8 8
 
 #define MAX_NUM_SECTIONS 12
-
-#define GRIB_DISPOSABLE_MEMORY 0
-#define GRIB_LONG_LASTING_MEMORY 1
 
 #define GRIB_LOG_PERROR (1 << 10)
 
@@ -236,17 +227,17 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 #define GRIB_HASH_ARRAY_TYPE_DOUBLE 2
 #define GRIB_HASH_ARRAY_TYPE_STRING 3
 
-#define CODES_GRIB 1
-#define CODES_BUFR 2
+#define CODES_GRIB  1
+#define CODES_BUFR  2
 #define CODES_METAR 3
-#define CODES_GTS 4
+#define CODES_GTS   4
 
 #define CODES_BUFR_UNPACK_STRUCTURE 0
-#define CODES_BUFR_UNPACK_FLAT 1
-#define CODES_BUFR_NEW_DATA 2
+#define CODES_BUFR_UNPACK_FLAT      1
+#define CODES_BUFR_NEW_DATA         2
 
 #define MAX_SMART_TABLE_COLUMNS 20
-#define MAX_CODETABLE_ENTRIES 65536
+#define MAX_CODETABLE_ENTRIES   65536
 
 /* ACCESSOR COMPARE FLAGS */
 #define GRIB_COMPARE_NAMES (1 << 0)
@@ -327,7 +318,6 @@ typedef void (*accessor_resize_proc)(grib_accessor*, size_t);
 typedef grib_accessor* (*accessor_next_proc)(grib_accessor*, int);
 typedef grib_section* (*accessor_sub_section_proc)(grib_accessor*);
 
-
 typedef int (*accessor_pack_missing_proc)(grib_accessor*);
 typedef int (*accessor_pack_is_missing_proc)(grib_accessor*);
 typedef int (*accessor_pack_long_proc)(grib_accessor*, const long*, size_t* len);
@@ -363,7 +353,6 @@ typedef int (*grib_binop_string_proc)(char*, char*);
 typedef struct second_order_packed second_order_packed;
 typedef void grib_expression_visit_proc(void* udata, grib_expression* e);
 
-
 struct grib_key_value_list
 {
     const char* name;
@@ -377,7 +366,6 @@ struct grib_key_value_list
     int error;
     grib_key_value_list* next;
 };
-
 
 struct second_order_packed
 {
@@ -403,9 +391,7 @@ struct grib_packer
     grib_unpack_proc unpack; /** < unpacking procedure                    */
 };
 
-
 /* --------------- */
-
 typedef struct grib_loader grib_loader;
 typedef int (*grib_loader_init_accessor_proc)(grib_loader*, grib_accessor*, grib_arguments*);
 typedef int (*grib_loader_lookup_long_proc)(grib_context*, grib_loader*, const char* name, long* value);
@@ -451,7 +437,6 @@ struct grib_accessors_list
     grib_accessors_list* last;
 };
 
-
 typedef int (*action_create_accessors_handle_proc)(grib_section* p, grib_action* a, grib_loader* h);
 typedef int (*action_notify_change_proc)(grib_action* a, grib_accessor* observer, grib_accessor* observed);
 
@@ -489,7 +474,6 @@ struct grib_action_class
     action_reparse_proc reparse;
     action_execute_proc execute;
 };
-
 
 /**
 *  a buffer
@@ -590,7 +574,6 @@ struct grib_section
     size_t padding;
 };
 
-
 struct grib_iterator_class
 {
     grib_iterator_class** super;
@@ -625,10 +608,6 @@ struct grib_nearest_class
 };
 
 /* --------------- */
-/* --------------- */
-typedef void (*search_all_callback_proc)(grib_accessor*, void* data);
-/* --------------- */
-
 typedef int (*dumper_init_proc)(grib_dumper*);
 typedef void (*dumper_dump_proc)(grib_dumper*, grib_accessor*, const char* comment);
 typedef void (*dumper_dump_section_proc)(grib_dumper*, grib_accessor*, grib_block_of_accessors* block);
@@ -712,7 +691,6 @@ typedef struct grib_trie grib_trie;
 typedef struct grib_trie_with_rank_list grib_trie_with_rank_list;
 typedef struct grib_trie_with_rank grib_trie_with_rank;
 typedef struct grib_itrie grib_itrie;
-
 
 /* Dynamic array of strings */
 struct grib_sarray
@@ -849,7 +827,6 @@ struct codes_condition
     long rightLong;
     double rightDouble;
 };
-
 
 void codes_assertion_failed(const char* message, const char* file, int line);
 

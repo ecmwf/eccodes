@@ -186,12 +186,12 @@ static int init_mercator(grib_handle* h,
     /* Allocate latitude and longitude arrays */
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -270,7 +270,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     if (iter->nv != ni * nj) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%ld!=%ldx%ld)", ITER, iter->nv, ni, nj);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, ni, nj);
         return GRIB_WRONG_GRID;
     }
 

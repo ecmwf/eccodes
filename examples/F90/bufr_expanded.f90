@@ -6,8 +6,6 @@
 ! In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 ! virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 !
-!
-!
 ! Description: How to read all the expanded data values from BUFR messages.
 !
 !
@@ -20,15 +18,13 @@ program bufr_expanded
    integer            :: i
    integer            :: count = 0
    integer(kind=4)    :: numberOfValues
-   real(kind=8), dimension(:), allocatable       :: values
+   real(kind=8), dimension(:), allocatable :: values
 
    call codes_open_file(ifile, '../../data/bufr/syno_1.bufr', 'r')
 
-   ! The first bufr message is loaded from file,
-   ! ibufr is the bufr id to be used in subsequent calls
-   call codes_bufr_new_from_file(ifile, ibufr, iret)
-
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      call codes_bufr_new_from_file(ifile, ibufr, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       write (*, *) 'message: ', count
 
@@ -47,9 +43,6 @@ program bufr_expanded
       ! Release the bufr message
       call codes_release(ibufr)
 
-      ! Load the next bufr message
-      call codes_bufr_new_from_file(ifile, ibufr, iret)
-
       ! Free array
       deallocate (values)
 
@@ -57,7 +50,6 @@ program bufr_expanded
 
    end do
 
-   ! Close file
    call codes_close_file(ifile)
 
 end program bufr_expanded
