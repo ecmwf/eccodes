@@ -77,9 +77,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_modify(grib_context* context,
-                                       const char* name,
-                                       long flags)
+grib_action* grib_action_create_modify(grib_context* context, const char* name, long flags)
 {
     grib_action_modify* a;
     grib_action_class* c = grib_action_class_modify;
@@ -110,11 +108,13 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
     ga = grib_find_accessor(p->h, a->name);
 
-    if (ga)
+    if (ga) {
         ga->flags = a->flags;
-
+    }
     else {
-        grib_context_log(act->context, GRIB_LOG_DEBUG, "action_class_modify: create_accessor_buffer : No accessor named %s to modify.", a->name);
+        grib_context_log(act->context, GRIB_LOG_ERROR, "action_class_modify: %s: No accessor named %s to modify",
+                         __func__, a->name);
+        return GRIB_INTERNAL_ERROR;
     }
     return GRIB_SUCCESS;
 }

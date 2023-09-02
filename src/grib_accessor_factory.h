@@ -111,7 +111,6 @@
 { "ibmfloat", &grib_accessor_class_ibmfloat, },
 { "ieeefloat", &grib_accessor_class_ieeefloat, },
 { "ifs_param", &grib_accessor_class_ifs_param, },
-{ "int64_little_endian", &grib_accessor_class_int64_little_endian, },
 { "iterator", &grib_accessor_class_iterator, },
 { "julian_date", &grib_accessor_class_julian_date, },
 { "julian_day", &grib_accessor_class_julian_day, },

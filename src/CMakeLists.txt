@@ -359,7 +359,6 @@ list( APPEND eccodes_src_files
     grib_yacc.h
     md5.h
     md5.cc
-    grib_accessor_class_int64_little_endian.cc
     grib_accessor_class_uint16.cc
     grib_accessor_class_uint32.cc
     grib_accessor_class_uint32_little_endian.cc
