@@ -20,10 +20,9 @@ REDIRECT=/dev/null
 # Expect failure as the key does not exist
 set +e
 ${tools_dir}/grib_get -p boomerang ${data_dir}/regular_latlon_surface.grib1 2> $REDIRECT > $REDIRECT
-if [ $? -eq 0 ] ; then
-  exit 1;  # Should not have succeeded
-fi
+status=$?
 set -e
+[ $status -ne 0 ]
 
 # ECC-1551: Print which key does not exist
 set +e
@@ -45,7 +44,9 @@ echo "uint32 key_uint32: transient;"    >> $bootfile
 echo "uint64 key_uint64: transient;"    >> $bootfile
 echo "uint32_little_endian key_uint32_le: transient;"    >> $bootfile
 echo "uint64_little_endian key_uint64_le: transient;"    >> $bootfile
-export ECCODES_DEFINITION_PATH=$tempDir/definitions
+curr_defs=$ECCODES_DEFINITION_PATH
+export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$curr_defs
+
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 set +e
 ${tools_dir}/grib_get -p key_uint16    $input > $tempText 2>&1
@@ -54,7 +55,7 @@ ${tools_dir}/grib_get -p key_uint64    $input >> $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint64_le $input >> $tempText 2>&1
 set -e
-# cat $tempText
+cat $tempText
 
 # Clean up
 cd $test_dir
