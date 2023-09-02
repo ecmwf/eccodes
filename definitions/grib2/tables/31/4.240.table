@@ -1,5 +1,5 @@
 # Code table 4.240 - Type of distribution function
-0 0 No specific distribution function given 
+0 0 No specific distribution function given
 1 1 Delta functions with spatially variable concentration and fixed diameters Dl (p1) in metre
 2 2 Delta functions with spatially variable concentration and fixed masses Ml (p1) in kg
 3 3 Gaussian (normal) distribution with spatially variable concentration and fixed mean diameter Dl(p1) and variance(p2)

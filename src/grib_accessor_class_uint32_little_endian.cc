@@ -36,7 +36,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_uint32_little_endian
 {
@@ -97,12 +96,6 @@ static grib_accessor_class _grib_accessor_class_uint32_little_endian = {
 
 
 grib_accessor_class* grib_accessor_class_uint32_little_endian = &_grib_accessor_class_uint32_little_endian;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

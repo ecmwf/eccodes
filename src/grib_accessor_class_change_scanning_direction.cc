@@ -44,7 +44,6 @@ static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_change_scanning_direction
 {
@@ -114,12 +113,6 @@ static grib_accessor_class _grib_accessor_class_change_scanning_direction = {
 
 grib_accessor_class* grib_accessor_class_change_scanning_direction = &_grib_accessor_class_change_scanning_direction;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* args)
@@ -154,17 +147,18 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_change_scanning_direction* self = (grib_accessor_change_scanning_direction*)a;
     grib_context* c                               = a->context;
     grib_handle* h                                = grib_handle_of_accessor(a);
+    const char* cclass_name                       = a->cclass->name;
 
     if (*val == 0)
         return 0;
 
     /* Make sure Ni / Nj are not missing */
     if (grib_is_missing(h, self->Ni, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: Key %s cannot be 'missing'!", self->Ni);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, self->Ni);
         return GRIB_WRONG_GRID;
     }
     if (grib_is_missing(h, self->Nj, &err) && !err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: Key %s cannot be 'missing'!", self->Nj);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing'!", cclass_name, self->Nj);
         return GRIB_WRONG_GRID;
     }
 
@@ -187,7 +181,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return err;
 
     if (size > Ni * Nj) {
-        grib_context_log(c, GRIB_LOG_ERROR, "change_scanning_direction: wrong values size!=Ni*Nj (%ld!=%ld*%ld)", size, Ni, Nj);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Wrong values size!=Ni*Nj (%ld!=%ld*%ld)", cclass_name, size, Ni, Nj);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 

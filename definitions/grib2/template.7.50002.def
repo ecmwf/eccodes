@@ -1,5 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
+# TEMPLATE 7.50002, grid_second_order, grid_second_order_boustrophedonic
+
 meta groupWidths unsigned_bits(widthOfWidths,numberOfGroups) : read_only;
 meta groupLengths unsigned_bits(widthOfLengths,numberOfGroups) : read_only;
 meta firstOrderValues unsigned_bits(widthOfFirstOrderValues,numberOfGroups) : read_only;
@@ -18,7 +20,7 @@ if(bitmapPresent)   {
      unitsBias,
      changingPrecision,
      numberOfCodedValues,
-     bitsPerValue, 
+     bitsPerValue,
      referenceValue,
      binaryScaleFactor,
      decimalScaleFactor,
@@ -47,7 +49,7 @@ if(bitmapPresent)   {
 	 numberOfPoints
 
    ): read_only;
-   alias data.packedValues = codedValues; 
+   alias data.packedValues = codedValues;
 
    if (boustrophedonicOrdering) {
        meta preBitmapValues data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : read_only;
@@ -67,7 +69,7 @@ if(bitmapPresent)   {
 		 unitsBias,
 		 changingPrecision,
 		 numberOfCodedValues,
-		 bitsPerValue, 
+		 bitsPerValue,
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,
@@ -109,7 +111,7 @@ if(bitmapPresent)   {
 		 unitsBias,
 		 changingPrecision,
 		 numberOfCodedValues,
-		 bitsPerValue, 
+		 bitsPerValue,
 		 referenceValue,
 		 binaryScaleFactor,
 		 decimalScaleFactor,

@@ -20,7 +20,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_variable
-  IMPLEMENTS = init;pack_double;pack_long;pack_string;pack_bytes
+  IMPLEMENTS = init
    END_CLASS_DEF
 
  */
@@ -35,12 +35,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_bytes(grib_accessor*, const unsigned char*, size_t* len);
-static int pack_double(grib_accessor*, const double* val, size_t* len);
-static int pack_long(grib_accessor*, const long* val, size_t* len);
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_constant
 {
@@ -48,6 +43,7 @@ typedef struct grib_accessor_constant
     /* Members defined in gen */
     /* Members defined in variable */
     double dval;
+    float  fval;
     char*  cval;
     char*  cname;
     int    type;
@@ -75,17 +71,17 @@ static grib_accessor_class _grib_accessor_class_constant = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    &pack_long,                  /* pack_long */
+    0,                  /* pack_long */
     0,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     0,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
-    &pack_bytes,                 /* pack_bytes */
+    0,                 /* pack_bytes */
     0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
@@ -107,47 +103,9 @@ static grib_accessor_class _grib_accessor_class_constant = {
 
 grib_accessor_class* grib_accessor_class_constant = &_grib_accessor_class_constant;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
-
-void accessor_constant_set_type(grib_accessor* a, int type)
-{
-    grib_accessor_constant* self = (grib_accessor_constant*)a;
-    self->type                   = type;
-}
-
-void accessor_constant_set_dval(grib_accessor* a, double dval)
-{
-    grib_accessor_constant* self = (grib_accessor_constant*)a;
-    self->dval                   = dval;
-}
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-}
-
-static int pack_bytes(grib_accessor* a, const unsigned char* val, size_t* len)
-{
-    return GRIB_READ_ONLY;
-}
-
-static int pack_double(grib_accessor* a, const double* val, size_t* len)
-{
-    return GRIB_READ_ONLY;
-}
-
-static int pack_long(grib_accessor* a, const long* val, size_t* len)
-{
-    return GRIB_READ_ONLY;
-}
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_READ_ONLY;
 }

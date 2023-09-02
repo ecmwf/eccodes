@@ -74,5 +74,5 @@
 72 72 Peak direction of total swell (degree true)
 73 73 Whitecap fraction (fraction)
 # 74-191 Reserved
-# 192-254 Reserved for local use 
+# 192-254 Reserved for local use
 255 255 Missing

@@ -204,12 +204,6 @@ typedef struct grib_iterator grib_iterator;
 */
 typedef struct grib_nearest grib_nearest;
 
-/*! Grib box, structure used to crop a box given north/west/south/east boundaries.
-    \ingroup grib_box
-*/
-typedef struct grib_box grib_box;
-typedef struct grib_points grib_points;
-
 /*! Grib keys iterator. Iterator over keys.
     \ingroup keys_iterator
 */
@@ -605,7 +599,7 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 
 /**
  * Get latitude/longitude and data values.
- * The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+ * The latitudes, longitudes and values arrays must be properly allocated by the caller.
  * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
  *
  * @param h           : handle from which geography and data values are taken
@@ -620,9 +614,9 @@ int grib_get_data(const grib_handle* h, double* lats, double* lons, double* valu
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
@@ -631,9 +625,9 @@ int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
@@ -642,7 +636,7 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the geoiterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the geoiterator still has next values, 0 otherwise
  */
 int grib_iterator_has_next(grib_iterator* i);
 
@@ -789,6 +783,7 @@ int grib_get_long(const grib_handle* h, const char* key, long* value);
  * @return            0 if OK, integer value on error
  */
 int grib_get_double(const grib_handle* h, const char* key, double* value);
+int grib_get_float(const grib_handle* h, const char* key, float* value);
 
 /**
  *  Get as double the i-th element of the "key" array
@@ -1236,7 +1231,7 @@ void grib_multi_support_on(grib_context* c);
 void grib_multi_support_off(grib_context* c);
 
 /**
- *  Reset file handle in multi-field support mode
+ *  Reset file handle in GRIB multi-field support mode
  *
  * @param c            : the context to be modified
  * @param f            : the file pointer
@@ -1339,27 +1334,30 @@ void grib_update_sections_lengths(grib_handle* h);
  * @return           the error message
  */
 const char* grib_get_error_message(int code);
+
 const char* grib_get_type_name(int type);
-
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
-
 void grib_check(const char* call, const char* file, int line, int e, const char* msg);
+
 #define GRIB_CHECK(a, msg)        grib_check(#a, __FILE__, __LINE__, a, msg)
 #define GRIB_CHECK_NOLINE(a, msg) grib_check(#a, 0, 0, a, msg)
-
 
 int grib_set_values(grib_handle* h, grib_values* grib_values, size_t arg_count);
 grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const void* data, size_t size);
 grib_handle* grib_handle_new_from_partial_message(grib_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is an argument */
+/* Check whether the given key has the value 'missing'.
+   Returns a bool i.e. 0 or 1. The error code is an argument */
 int grib_is_missing(const grib_handle* h, const char* key, int* err);
 
-/* Returns a bool i.e. 0 or 1 */
+/* Check whether the given key is defined (exists).
+   Returns a bool i.e. 0 or 1 */
 int grib_is_defined(const grib_handle* h, const char* key);
 
+/* Set the given key to have the value 'missing' */
 int grib_set_missing(grib_handle* h, const char* key);
-/* The truncation is the Gaussian number (or order) */
+
+/* The truncation is the Gaussian number (also called order) */
 int grib_get_gaussian_latitudes(long truncation, double* latitudes);
 
 int grib_julian_to_datetime(double jd, long* year, long* month, long* day, long* hour, long* minute, long* second);
@@ -1388,19 +1386,6 @@ int grib_read_any_from_file(grib_context* ctx, FILE* f, void* buffer, size_t* le
 int grib_get_message_offset(const grib_handle* h, off_t* offset);
 int grib_get_message_size(const grib_handle* h, size_t* size);
 
-struct grib_points
-{
-    grib_context* context;
-    double* latitudes;
-    double* longitudes;
-    size_t* indexes;
-    size_t* group_start;
-    size_t* group_len;
-    size_t n_groups;
-    size_t n;
-    size_t size;
-};
-
 
 /* --------------------------------------- */
 #define GRIB_UTIL_GRID_SPEC_REGULAR_LL 1
@@ -1417,56 +1402,9 @@ struct grib_points
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA 10
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 #define GRIB_UTIL_GRID_SPEC_UNSTRUCTURED                 12
-
+#define GRIB_UTIL_GRID_SPEC_HEALPIX                      13
 
 typedef struct grib_util_grid_spec
-{
-    int grid_type; /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
-
-    /* Grid */
-    long Ni;
-    long Nj;
-
-    double iDirectionIncrementInDegrees;
-    double jDirectionIncrementInDegrees;
-
-    double longitudeOfFirstGridPointInDegrees;
-    double longitudeOfLastGridPointInDegrees;
-
-    double latitudeOfFirstGridPointInDegrees;
-    double latitudeOfLastGridPointInDegrees;
-
-    /* Rotation */
-    long uvRelativeToGrid;
-    double latitudeOfSouthernPoleInDegrees;
-    double longitudeOfSouthernPoleInDegrees;
-
-    /* Scanning mode */
-    long iScansNegatively;
-    long jScansPositively;
-
-    /* Gaussian number */
-    long N;
-
-    /* Bitmap */
-    long bitmapPresent;
-    double missingValue; /* 0 means use the default */
-
-    /* 'pl' array for reduced Gaussian grids */
-    const long* pl;
-    long pl_size;
-
-    /* Spherical harmonics */
-    long truncation;
-
-    /* Polar stereographic */
-    double orientationOfTheGridInDegrees;
-    long DyInMetres;
-    long DxInMetres;
-
-} grib_util_grid_spec;
-
-typedef struct grib_util_grid_spec2
 {
     int grid_type;         /* e.g. GRIB_UTIL_GRID_SPEC_REGULAR_LL etc */
     const char* grid_name; /* e.g. N320 */
@@ -1494,7 +1432,7 @@ typedef struct grib_util_grid_spec2
     long iScansNegatively;
     long jScansPositively;
 
-    /* Gaussian number */
+    /* Gaussian number or HEALPIX Nside */
     long N;
 
     /* Bitmap */
@@ -1513,7 +1451,7 @@ typedef struct grib_util_grid_spec2
     long DyInMetres;
     long DxInMetres;
 
-} grib_util_grid_spec2;
+} grib_util_grid_spec;
 
 #define GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT      0
 #define GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   1
@@ -1568,14 +1506,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                                 const double* data_values,
                                 size_t data_values_count,
                                 int* err);
-
-grib_handle* grib_util_set_spec2(grib_handle* h,
-                                 const grib_util_grid_spec2* grid_spec,
-                                 const grib_util_packing_spec* packing_spec, /* NULL for defaults (same as input) */
-                                 int flags,
-                                 const double* data_values,
-                                 size_t data_values_count,
-                                 int* err);
 
 int parse_keyval_string(const char* grib_tool, char* arg, int values_required, int default_type, grib_values values[], int* count);
 grib_handle* grib_new_from_file(grib_context* c, FILE* f, int headers_only, int* error);
@@ -1673,140 +1603,164 @@ Error codes returned by the grib_api functions.
 */
 /*! @{*/
 /** No error */
-#define GRIB_SUCCESS 0
+#define GRIB_SUCCESS		0
 /** End of resource reached */
-#define GRIB_END_OF_FILE -1
+#define GRIB_END_OF_FILE		-1
 /** Internal error */
-#define GRIB_INTERNAL_ERROR -2
+#define GRIB_INTERNAL_ERROR		-2
 /** Passed buffer is too small */
-#define GRIB_BUFFER_TOO_SMALL -3
+#define GRIB_BUFFER_TOO_SMALL		-3
 /** Function not yet implemented */
-#define GRIB_NOT_IMPLEMENTED -4
+#define GRIB_NOT_IMPLEMENTED		-4
 /** Missing 7777 at end of message */
-#define GRIB_7777_NOT_FOUND -5
+#define GRIB_7777_NOT_FOUND		-5
 /** Passed array is too small */
-#define GRIB_ARRAY_TOO_SMALL -6
+#define GRIB_ARRAY_TOO_SMALL		-6
 /** File not found */
-#define GRIB_FILE_NOT_FOUND -7
+#define GRIB_FILE_NOT_FOUND		-7
 /** Code not found in code table */
-#define GRIB_CODE_NOT_FOUND_IN_TABLE -8
+#define GRIB_CODE_NOT_FOUND_IN_TABLE		-8
 /** Array size mismatch */
-#define GRIB_WRONG_ARRAY_SIZE -9
+#define GRIB_WRONG_ARRAY_SIZE		-9
 /** Key/value not found */
-#define GRIB_NOT_FOUND -10
+#define GRIB_NOT_FOUND		-10
 /** Input output problem */
-#define GRIB_IO_PROBLEM -11
+#define GRIB_IO_PROBLEM		-11
 /** Message invalid */
-#define GRIB_INVALID_MESSAGE -12
+#define GRIB_INVALID_MESSAGE		-12
 /** Decoding invalid */
-#define GRIB_DECODING_ERROR -13
+#define GRIB_DECODING_ERROR		-13
 /** Encoding invalid */
-#define GRIB_ENCODING_ERROR -14
+#define GRIB_ENCODING_ERROR		-14
 /** Code cannot unpack because of string too small */
-#define GRIB_NO_MORE_IN_SET -15
+#define GRIB_NO_MORE_IN_SET		-15
 /** Problem with calculation of geographic attributes */
-#define GRIB_GEOCALCULUS_PROBLEM -16
+#define GRIB_GEOCALCULUS_PROBLEM		-16
 /** Memory allocation error */
-#define GRIB_OUT_OF_MEMORY -17
+#define GRIB_OUT_OF_MEMORY		-17
 /** Value is read only */
-#define GRIB_READ_ONLY -18
+#define GRIB_READ_ONLY		-18
 /** Invalid argument */
-#define GRIB_INVALID_ARGUMENT -19
+#define GRIB_INVALID_ARGUMENT		-19
 /** Null handle */
-#define GRIB_NULL_HANDLE -20
+#define GRIB_NULL_HANDLE		-20
 /** Invalid section number */
-#define GRIB_INVALID_SECTION_NUMBER -21
+#define GRIB_INVALID_SECTION_NUMBER		-21
 /** Value cannot be missing */
-#define GRIB_VALUE_CANNOT_BE_MISSING -22
+#define GRIB_VALUE_CANNOT_BE_MISSING		-22
 /** Wrong message length */
-#define GRIB_WRONG_LENGTH -23
+#define GRIB_WRONG_LENGTH		-23
 /** Invalid key type */
-#define GRIB_INVALID_TYPE -24
+#define GRIB_INVALID_TYPE		-24
 /** Unable to set step */
-#define GRIB_WRONG_STEP -25
+#define GRIB_WRONG_STEP		-25
 /** Wrong units for step (step must be integer) */
-#define GRIB_WRONG_STEP_UNIT -26
+#define GRIB_WRONG_STEP_UNIT		-26
 /** Invalid file id */
-#define GRIB_INVALID_FILE -27
+#define GRIB_INVALID_FILE		-27
 /** Invalid grib id */
-#define GRIB_INVALID_GRIB -28
+#define GRIB_INVALID_GRIB		-28
 /** Invalid index id */
-#define GRIB_INVALID_INDEX -29
+#define GRIB_INVALID_INDEX		-29
 /** Invalid iterator id */
-#define GRIB_INVALID_ITERATOR -30
+#define GRIB_INVALID_ITERATOR		-30
 /** Invalid keys iterator id */
-#define GRIB_INVALID_KEYS_ITERATOR -31
+#define GRIB_INVALID_KEYS_ITERATOR		-31
 /** Invalid nearest id */
-#define GRIB_INVALID_NEAREST -32
+#define GRIB_INVALID_NEAREST		-32
 /** Invalid order by */
-#define GRIB_INVALID_ORDERBY -33
+#define GRIB_INVALID_ORDERBY		-33
 /** Missing a key from the fieldset */
-#define GRIB_MISSING_KEY -34
+#define GRIB_MISSING_KEY		-34
 /** The point is out of the grid area */
-#define GRIB_OUT_OF_AREA -35
+#define GRIB_OUT_OF_AREA		-35
 /** Concept no match */
-#define GRIB_CONCEPT_NO_MATCH -36
+#define GRIB_CONCEPT_NO_MATCH		-36
 /** Hash array no match */
-#define GRIB_HASH_ARRAY_NO_MATCH -37
+#define GRIB_HASH_ARRAY_NO_MATCH		-37
 /** Definitions files not found */
-#define GRIB_NO_DEFINITIONS -38
+#define GRIB_NO_DEFINITIONS		-38
 /** Wrong type while packing */
-#define GRIB_WRONG_TYPE -39
+#define GRIB_WRONG_TYPE		-39
 /** End of resource */
-#define GRIB_END -40
+#define GRIB_END		-40
 /** Unable to code a field without values */
-#define GRIB_NO_VALUES -41
+#define GRIB_NO_VALUES		-41
 /** Grid description is wrong or inconsistent */
-#define GRIB_WRONG_GRID -42
+#define GRIB_WRONG_GRID		-42
 /** End of index reached */
-#define GRIB_END_OF_INDEX -43
+#define GRIB_END_OF_INDEX		-43
 /** Null index */
-#define GRIB_NULL_INDEX -44
+#define GRIB_NULL_INDEX		-44
 /** End of resource reached when reading message */
-#define GRIB_PREMATURE_END_OF_FILE -45
+#define GRIB_PREMATURE_END_OF_FILE		-45
 /** An internal array is too small */
-#define GRIB_INTERNAL_ARRAY_TOO_SMALL -46
+#define GRIB_INTERNAL_ARRAY_TOO_SMALL		-46
 /** Message is too large for the current architecture */
-#define GRIB_MESSAGE_TOO_LARGE -47
+#define GRIB_MESSAGE_TOO_LARGE		-47
 /** Constant field */
-#define GRIB_CONSTANT_FIELD -48
+#define GRIB_CONSTANT_FIELD		-48
 /** Switch unable to find a matching case */
-#define GRIB_SWITCH_NO_MATCH -49
+#define GRIB_SWITCH_NO_MATCH		-49
 /** Underflow */
-#define GRIB_UNDERFLOW -50
+#define GRIB_UNDERFLOW		-50
 /** Message malformed */
-#define GRIB_MESSAGE_MALFORMED -51
+#define GRIB_MESSAGE_MALFORMED		-51
 /** Index is corrupted */
-#define GRIB_CORRUPTED_INDEX -52
+#define GRIB_CORRUPTED_INDEX		-52
 /** Invalid number of bits per value */
-#define GRIB_INVALID_BPV -53
+#define GRIB_INVALID_BPV		-53
 /** Edition of two messages is different */
-#define GRIB_DIFFERENT_EDITION -54
+#define GRIB_DIFFERENT_EDITION		-54
 /** Value is different */
-#define GRIB_VALUE_DIFFERENT -55
+#define GRIB_VALUE_DIFFERENT		-55
 /** Invalid key value */
-#define GRIB_INVALID_KEY_VALUE -56
+#define GRIB_INVALID_KEY_VALUE		-56
 /** String is smaller than requested */
-#define GRIB_STRING_TOO_SMALL -57
+#define GRIB_STRING_TOO_SMALL		-57
 /** Wrong type conversion */
-#define GRIB_WRONG_CONVERSION -58
+#define GRIB_WRONG_CONVERSION		-58
 /** Missing BUFR table entry for descriptor */
-#define GRIB_MISSING_BUFR_ENTRY -59
+#define GRIB_MISSING_BUFR_ENTRY		-59
 /** Null pointer */
-#define GRIB_NULL_POINTER -60
+#define GRIB_NULL_POINTER		-60
 /** Attribute is already present, cannot add */
-#define GRIB_ATTRIBUTE_CLASH -61
+#define GRIB_ATTRIBUTE_CLASH		-61
 /** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
-#define GRIB_TOO_MANY_ATTRIBUTES -62
+#define GRIB_TOO_MANY_ATTRIBUTES		-62
 /** Attribute not found. */
-#define GRIB_ATTRIBUTE_NOT_FOUND -63
+#define GRIB_ATTRIBUTE_NOT_FOUND		-63
 /** Edition not supported. */
-#define GRIB_UNSUPPORTED_EDITION -64
+#define GRIB_UNSUPPORTED_EDITION		-64
 /** Value out of coding range */
-#define GRIB_OUT_OF_RANGE -65
+#define GRIB_OUT_OF_RANGE		-65
 /** Size of bitmap is incorrect */
-#define GRIB_WRONG_BITMAP_SIZE -66
+#define GRIB_WRONG_BITMAP_SIZE		-66
 /** Functionality not enabled */
-#define GRIB_FUNCTIONALITY_NOT_ENABLED -67
+#define GRIB_FUNCTIONALITY_NOT_ENABLED		-67
+/** Value mismatch */
+#define GRIB_VALUE_MISMATCH		-68
+/** Double values are different */
+#define GRIB_DOUBLE_VALUE_MISMATCH		-69
+/** Long values are different */
+#define GRIB_LONG_VALUE_MISMATCH		-70
+/** Byte values are different */
+#define GRIB_BYTE_VALUE_MISMATCH		-71
+/** String values are different */
+#define GRIB_STRING_VALUE_MISMATCH		-72
+/** Offset mismatch */
+#define GRIB_OFFSET_MISMATCH		-73
+/** Count mismatch */
+#define GRIB_COUNT_MISMATCH		-74
+/** Name mismatch */
+#define GRIB_NAME_MISMATCH		-75
+/** Type mismatch */
+#define GRIB_TYPE_MISMATCH		-76
+/** Type and value mismatch */
+#define GRIB_TYPE_AND_VALUE_MISMATCH		-77
+/** Unable to compare accessors */
+#define GRIB_UNABLE_TO_COMPARE_ACCESSORS		-78
+/** Assertion failure */
+#define GRIB_ASSERTION_FAILURE		-79
 /*! @}*/
 #endif

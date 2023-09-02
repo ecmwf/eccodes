@@ -66,7 +66,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 */
 int grib_tool_init(grib_runtime_options* options)
 {
-    DebugAssert(!options->latlon);
+    DEBUG_ASSERT(!options->latlon);
     return 0;
 }
 

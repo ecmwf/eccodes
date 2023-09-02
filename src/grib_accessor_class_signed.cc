@@ -48,7 +48,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 
 typedef struct grib_accessor_signed
@@ -113,12 +112,6 @@ static grib_accessor_class _grib_accessor_class_signed = {
 
 
 grib_accessor_class* grib_accessor_class_signed = &_grib_accessor_class_signed;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -210,7 +203,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     rlen = count;
 
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", a->name, 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -222,9 +215,22 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     if (rlen == 1) {
         long v = val[0];
-        if (missing)
+        if (missing) {
             if (v == GRIB_MISSING_LONG)
                 v = missing;
+        } else {
+            // ECC-1605: Check overflow/underflow
+            const int nbits = self->nbytes * 8;
+            const long minval = -(1L << (nbits-1)) + 1;
+            const long maxval = (1L << (nbits-1)) - 1;
+            //printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", a->name, v, minval, maxval);
+            if (v > maxval || v < minval) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                     "Key \"%s\": Trying to encode value of %ld but the allowable range is %ld to %ld (number of bits=%d)",
+                     a->name, v, minval, maxval, nbits);
+                return GRIB_ENCODING_ERROR;
+            }
+        }
 
         off = a->offset;
         ret = grib_encode_signed_long(grib_handle_of_accessor(a)->buffer->data, v, off, a->length);

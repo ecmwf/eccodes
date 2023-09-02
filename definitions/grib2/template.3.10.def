@@ -3,14 +3,16 @@
 # TEMPLATE 3.10, Mercator
 include "grib2/template.3.shape_of_the_earth.def";
 
+constant isGridded = one;
+
 unsigned[4] Ni : dump;
-alias numberOfPointsAlongAParallel=Ni;
+alias numberOfPointsAlongAParallel = Ni;
 alias Nx = Ni;
 alias numberOfPointsAlongXAxis = Ni;
 alias geography.Ni=Ni;
 
 unsigned[4] Nj : dump;
-alias numberOfPointsAlongAMeridian=Nj;
+alias numberOfPointsAlongAMeridian = Nj;
 alias Ny = Nj;
 alias numberOfPointsAlongYAxis = Nj;
 alias geography.Nj=Nj;

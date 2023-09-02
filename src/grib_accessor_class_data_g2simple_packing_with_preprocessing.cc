@@ -42,7 +42,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g2simple_packing_with_preprocessing
 {
@@ -124,12 +123,6 @@ static grib_accessor_class _grib_accessor_class_data_g2simple_packing_with_prepr
 
 grib_accessor_class* grib_accessor_class_data_g2simple_packing_with_preprocessing = &_grib_accessor_class_data_g2simple_packing_with_preprocessing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
@@ -176,7 +169,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                 if (min > 0) {
                     *pre_processing_parameter = 0;
                     for (i = 0; i < length; i++) {
-                        DebugAssert(values[i] > 0);
+                        DEBUG_ASSERT(values[i] > 0);
                         values[i] = log(values[i]);
                     }
                 }
@@ -187,7 +180,7 @@ static int pre_processing_func(double* values, long length, long pre_processing,
                         return ret;
                     ppp = *pre_processing_parameter;
                     for (i = 0; i < length; i++) {
-                        DebugAssert((values[i] + ppp) > 0);
+                        DEBUG_ASSERT((values[i] + ppp) > 0);
                         values[i] = log(values[i] + ppp);
                     }
                 }

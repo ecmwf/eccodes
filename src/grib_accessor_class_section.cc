@@ -42,7 +42,6 @@ static long next_offset(grib_accessor*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static grib_accessor* next(grib_accessor*, int);
 
@@ -105,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_section = {
 
 
 grib_accessor_class* grib_accessor_class_section = &_grib_accessor_class_section;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

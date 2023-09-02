@@ -162,11 +162,11 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 
     if (p->block->last) {
         a->offset = grib_get_next_position_offset(p->block->last);
-#if 0
-        printf("offset: p->block->last %s %s %ld %ld\n",
-                p->block->last->cclass->name,
-                p->block->last->name,(long)p->block->last->offset,(long)p->block->last->length);
-#endif
+
+        //printf("offset: p->block->last %s %s %ld %ld\n",
+        //        p->block->last->cclass->name,
+        //        p->block->last->name,(long)p->block->last->offset,(long)p->block->last->length);
+
     }
     else {
         if (p->owner) {
@@ -248,11 +248,11 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     l->last = a;
 
     if (hand->use_trie) {
-        DebugAssert( a->all_names[0] );
+        DEBUG_ASSERT( a->all_names[0] );
         if (*(a->all_names[0]) != '_') {
             id = grib_hash_keys_get_id(a->context->keys, a->all_names[0]);
 
-            DebugAssert(id >= 0 && id < ACCESSORS_ARRAY_SIZE);
+            DEBUG_ASSERT(id >= 0 && id < ACCESSORS_ARRAY_SIZE);
 
             a->same = hand->accessors[id];
             link_same_attributes(a, a->same);
@@ -354,54 +354,38 @@ int grib_get_block_length(grib_section* s, size_t* l)
 {
     *l = s->length;
     return GRIB_SUCCESS;
-#if 0
 
-    /* TODO: Because grib_pack_long takes a SIGNED value, we may have problems */
+// TODO(masn): Because grib_pack_long takes a SIGNED value, we may have problems
+//     if(s->aclength) {
+//         size_t  len = 1;
+//         long plen = 0;
+//         int ret = grib_unpack_long(s->aclength, &plen, &len);
+//         if(ret == GRIB_SUCCESS && plen != 0)
+//         {
+//             *l = plen;
+//             return GRIB_SUCCESS;
+//         }
+//     }
+//     // empty block
+//     if(s->block->first == NULL) {
+//         *l = 0;
+//         return GRIB_SUCCESS;
+//     }
+//     // no accessor for block length
+//     if(s->owner) *l = grib_get_next_position_offset(s->block->last) - s->owner->offset;
+//     else         *l = grib_get_next_position_offset(s->block->last);
 
-    if(s->aclength)
-    {
-        size_t  len = 1;
-        long plen = 0;
-
-        int ret = grib_unpack_long(s->aclength, &plen, &len);
-        if(ret == GRIB_SUCCESS && plen != 0)
-        {
-            *l = plen;
-            return GRIB_SUCCESS;
-        }
-    }
-
-    /* empty block */
-    if(s->block->first == NULL)
-    {
-        *l = 0;
-        return GRIB_SUCCESS;
-    }
-    /* no accessor for block length */
-    if(s->owner)
-        *l = grib_get_next_position_offset(s->block->last) - s->owner->offset;
-    else
-        *l = grib_get_next_position_offset(s->block->last);
-
-
-    if(s->aclength)
-    {
-        size_t  len = 1;
-        long plen = *l;
-
-        int ret = grib_pack_long(s->aclength, &plen, &len);
-        if(ret != GRIB_SUCCESS)
-            ;
-        if(s->h->context->debug)
-            printf("SECTION updating length %ld %s\n",plen,s->owner->name);
-    }
-
-    /*
-     if(s->aclength)
-     Assert(*l == plen);*/
-
-    return GRIB_SUCCESS;
-#endif
+//     if(s->aclength) {
+//         size_t  len = 1;
+//         long plen = *l;
+//         int ret = grib_pack_long(s->aclength, &plen, &len);
+//         if(ret != GRIB_SUCCESS)
+//             ;
+//         if(s->h->context->debug)
+//             printf("SECTION updating length %ld %s\n",plen,s->owner->name);
+//     }
+//     // if(s->aclength) Assert(*l == plen);
+//     return GRIB_SUCCESS;
 }
 
 grib_accessor* find_paddings(grib_section* s)

@@ -37,7 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static size_t preferred_size(grib_accessor*, int);
 
 typedef struct grib_accessor_padto
@@ -102,12 +101,6 @@ static grib_accessor_class _grib_accessor_class_padto = {
 
 
 grib_accessor_class* grib_accessor_class_padto = &_grib_accessor_class_padto;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

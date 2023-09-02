@@ -39,6 +39,6 @@
 37 37 Tile percentage (%)
 38 38 Soil volumetric ice content (water equivalent) (m3 m-3)
 39 39 Evapotranspiration rate (kg m-2 s-1)
-# 40-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 40-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

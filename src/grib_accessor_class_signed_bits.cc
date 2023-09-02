@@ -47,7 +47,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 
 typedef struct grib_accessor_signed_bits
@@ -112,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_signed_bits = {
 
 
 grib_accessor_class* grib_accessor_class_signed_bits = &_grib_accessor_class_signed_bits;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

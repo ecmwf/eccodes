@@ -3,5 +3,5 @@
 1 1 Mean radiant temperature (K)
 2 2 Wet-bulb globe temperature (K)
 # 3-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

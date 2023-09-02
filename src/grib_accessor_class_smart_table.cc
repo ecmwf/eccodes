@@ -13,7 +13,7 @@
  ****************************************/
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 
 /*
    This is used by make_class.pl
@@ -55,7 +55,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_smart_table
 {
@@ -132,12 +131,6 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
 
 grib_accessor_class* grib_accessor_class_smart_table = &_grib_accessor_class_smart_table;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 #if GRIB_PTHREADS
@@ -168,8 +161,7 @@ static void thread_init()
 }
 #endif
 
-static int grib_load_smart_table(grib_context* c, const char* filename,
-                                 const char* recomposed_name, size_t size, grib_smart_table* t);
+static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
@@ -192,8 +184,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     self->tableCodes     = 0;
 }
 
-static grib_smart_table* load_table(grib_accessor_smart_table* self)
+static grib_smart_table* load_table(grib_accessor* a)
 {
+    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
     size_t size            = 0;
     grib_handle* h         = ((grib_accessor*)self)->parent->h;
     grib_context* c        = h->context;
@@ -306,10 +299,10 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
         t->next               = c->smart_table;
         t->numberOfEntries    = size;
-        GRIB_MUTEX_INIT_ONCE(&once, &thread_init)
-        GRIB_MUTEX_LOCK(&mutex)
+        GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
+        GRIB_MUTEX_LOCK(&mutex);
         c->smart_table = t;
-        GRIB_MUTEX_UNLOCK(&mutex)
+        GRIB_MUTEX_UNLOCK(&mutex);
     }
     else if (t->filename[1] == NULL) {
         t->filename[1]        = grib_context_strdup_persistent(c, filename);
@@ -351,13 +344,13 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 
         numberOfColumns = 0;
         /* The highest possible descriptor code must fit into t->numberOfEntries */
-        DebugAssert(code < t->numberOfEntries);
+        DEBUG_ASSERT(code < t->numberOfEntries);
         while (*s) {
             char* tcol = t->entries[code].column[numberOfColumns];
             if ( tcol ) grib_context_free_persistent(c, tcol);
             t->entries[code].column[numberOfColumns] = grib_context_strdup_persistent(c, s);
             numberOfColumns++;
-            DebugAssert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
+            DEBUG_ASSERT(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
 
             p++;
             s = p;
@@ -423,7 +416,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         return err;
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
     table = self->table;
 
     if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
@@ -464,7 +457,7 @@ static int get_table_codes(grib_accessor* a)
     table_size = (1 << self->widthOfCode); /* 2 ^ self->widthOfCode */
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
 
     err = grib_get_size(grib_handle_of_accessor(a), self->values, &size);
     if (err) {

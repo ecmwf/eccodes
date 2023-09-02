@@ -19,6 +19,19 @@ tempFilt=temp.$label.filt
 tempText=temp.$label.txt
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+# Go thru all templates listed in the most recent Code Table 4.0
+# and ensure each has a template in section 4
+# -----------------------------------------------
+latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
+
+latest_codetable_file=$ECCODES_DEFINITION_PATH/grib2/tables/$latestOfficial/4.0.table
+awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file | while read pdtn; do
+    if [ ! -f "$ECCODES_DEFINITION_PATH/grib2/template.4.$pdtn.def" ]; then
+        echo "GRIB2 template for product definition $pdtn does not exist!"
+        exit 1
+    fi
+done
+
 
 # Template 4.86
 # -------------

@@ -44,7 +44,6 @@ static int is_missing(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_latlon_increment
 {
@@ -115,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_latlon_increment = {
 
 
 grib_accessor_class* grib_accessor_class_latlon_increment = &_grib_accessor_class_latlon_increment;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -222,15 +215,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *val = (double)directionIncrement / angleDivisor * angleMultiplier;
     }
 
-#if 0
-    printf("unpack -- %s=%ld %s=%ld %s=%f %s=%f %s=%ld %s=%f\n",
-            self->directionIncrementGiven,directionIncrementGiven,
-            self->directionIncrement,directionIncrement,
-            self->last,last,
-            self->first,first,
-            self->numberOfPoints,numberOfPoints,
-            a->name,*val);
-#endif
     if (ret == GRIB_SUCCESS)
         *len = 1;
 
@@ -302,10 +286,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         }
     }
 
-    /*ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
-      if(ret)
-          grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
-     */
+    //ret = grib_set_long_internal(hand, self->numberOfPoints,numberOfPoints);
+    //if(ret) grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot pack value for %s error %d \n", a->name, self->numberOfPoints, ret);
 
     grib_get_long_internal(hand, self->numberOfPoints, &codedNumberOfPoints);
 
@@ -317,16 +299,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (ret)
         return ret;
 
-#if 0
-    printf("pack -- %s=%ld %s=%ld \n ------- %s=%f %s=%f \n ------- %s=%ld codedNumberOfPoints=%ld %s=%f\n",
-            self->directionIncrementGiven,directionIncrementGiven,
-            self->directionIncrement,directionIncrement,
-            self->last,last,
-            self->first,first,
-            self->numberOfPoints,numberOfPoints,
-            codedNumberOfPoints,
-            a->name,*val);
-#endif
     if (ret == GRIB_SUCCESS)
         *len = 1;
 

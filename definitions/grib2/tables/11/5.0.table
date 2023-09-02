@@ -4,7 +4,6 @@
 2 2 Grid point data - complex packing
 3 3 Grid point data - complex packing and spatial differencing
 4 4 Grid point data - IEEE floating point data
-6 6 Grid point data - simple packing with pre-processing
 40 40 Grid point data - JPEG 2000 code stream format
 41 41 Grid point data - Portable Network Graphics (PNG)
 #42-49 Reserved

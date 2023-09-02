@@ -17,7 +17,7 @@
 label="grib_ecc-967_test"
 temp=temp.${label}.grib
 
-# Pick a master tables version number way to big!
+# Pick a master tables version number way too big!
 # But one day we will actually get to it.
 input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_160_grib2.tmpl
 ${tools_dir}/grib_set -s tablesVersion=253 $input $temp

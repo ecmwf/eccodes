@@ -68,20 +68,18 @@ typedef struct grib_expression_length{
 static grib_expression_class _grib_expression_class_length = {
     0,                    /* super                     */
     "length",                    /* name                      */
-    sizeof(grib_expression_length),/* size of instance          */
+    sizeof(grib_expression_length),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	&get_name,
-
-	&evaluate_long,
-	&evaluate_double,
-	&evaluate_string,
+    &native_type,
+    &get_name,
+    &evaluate_long,
+    &evaluate_double,
+    &evaluate_string,
 };
 
 grib_expression_class* grib_expression_class_length = &_grib_expression_class_length;

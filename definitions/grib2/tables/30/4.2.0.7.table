@@ -13,13 +13,13 @@
 11 11 Best (4-layer) lifted index (K)
 12 12 Richardson number (Numeric)
 13 13 Showalter index (K)
-14 14 Reserved 
+14 14 Reserved
 15 15 Updraught helicity (m2 s-2)
 16 16 Bulk Richardson number (Numeric)
 17 17 Gradient Richardson number (Numeric)
 18 18 Flux Richardson number (Numeric)
 19 19 Convective available potential energy - shear (m2 s-2)
 20 20 Thunderstorm intensity index (Code table 4.246)
-# 21-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 21-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

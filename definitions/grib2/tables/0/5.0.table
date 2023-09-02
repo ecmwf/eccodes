@@ -3,7 +3,6 @@
 2 2 Grid point data - complex packing
 3 3 Grid point data - complex packing and spatial differencing
 4 4 Grid point data - ieee packing
-6 6 Grid point data - simple packing with pre-processing
 40 40 JPEG2000 Packing
 41 41 PNG pacling
 50 50 Spectral data -simple packing

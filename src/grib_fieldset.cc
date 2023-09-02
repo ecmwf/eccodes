@@ -411,21 +411,16 @@ static grib_fieldset* grib_fieldset_create_from_order_by(grib_context* c, grib_o
     return set;
 }
 
-/* Experimental: Needs more work */
+// Experimental: Needs more work
 int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
 {
-    int err      = GRIB_NOT_IMPLEMENTED;
-    grib_math* m = NULL;
+    // grib_math* m = NULL;
+    // m = grib_math_new(set->context, where_string, &err);
+    // if (err || !m) return err;
 
-    if (!set)
-        return GRIB_INVALID_ARGUMENT;
-
-    m = grib_math_new(set->context, where_string, &err);
-    if (err || !m) return err;
-
-    print_math(m);
-    printf("\n");
-    grib_math_delete(set->context, m);
+    // print_math(m);
+    // printf("\n");
+    // grib_math_delete(set->context, m);
     return GRIB_NOT_IMPLEMENTED;
 }
 

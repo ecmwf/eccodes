@@ -1,6 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 7.41, Grid point data - png
+# TEMPLATE 7.41, Grid point data - PNG
+
 meta codedValues data_png_packing(
               section7Length,
               offsetBeforeData,
@@ -10,11 +11,9 @@ meta codedValues data_png_packing(
               binaryScaleFactor,
               decimalScaleFactor,
               bitsPerValue,
-
-               # For encoding
+              # For encoding
               Nx,
               Ny,
-
               interpretationOfNumberOfPoints,
               numberOfDataPoints,
               scanningMode

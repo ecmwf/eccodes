@@ -68,7 +68,7 @@ int main(int argc, char** argv)
             return 1;
         }
         str_code = list[0];
-        if (string_to_long(str_code, &lValue) != GRIB_SUCCESS) {
+        if (string_to_long(str_code, &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor code '%s' (column 1) is not numeric.\n",
                     line_number, str_code);
             return 1;
@@ -103,17 +103,18 @@ int main(int argc, char** argv)
         str_scale = list[5];
         str_ref   = list[6];
         str_width = list[7];
-        if (string_to_long(str_scale, &lValue) != GRIB_SUCCESS) {
+        if (string_to_long(str_scale, &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor scale '%s' (column 6) is not numeric.\n",
                     line_number, str_scale);
             return 1;
         }
-        if (string_to_long(str_ref, &lValue) != GRIB_SUCCESS) {
+        if (string_to_long(str_ref, &lValue, 1) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor reference '%s' (column 7) is not numeric.\n",
                     line_number, str_ref);
             return 1;
         }
-        if (string_to_long(str_width, &lValue) != GRIB_SUCCESS) {
+        // The final width column can have spaces etc at the end. So turn off strict mode
+        if (string_to_long(str_width, &lValue, /*strict=*/0) != GRIB_SUCCESS) {
             fprintf(stderr, "Error on line %zu: descriptor width '%s' (column 8) is not numeric.\n",
                     line_number, str_width);
             return 1;

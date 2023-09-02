@@ -7,6 +7,6 @@
 5 5 White light coronagraph radiance (W sr-1 m-2)
 6 6 Heliospheric radiance (W sr-1 m-2)
 7 7 Thematic mask (Numeric)
-# 8-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 8-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

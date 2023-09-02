@@ -35,7 +35,6 @@ static int get_native_type(grib_accessor*);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_bytes
@@ -97,12 +96,6 @@ static grib_accessor_class _grib_accessor_class_bytes = {
 
 
 grib_accessor_class* grib_accessor_class_bytes = &_grib_accessor_class_bytes;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

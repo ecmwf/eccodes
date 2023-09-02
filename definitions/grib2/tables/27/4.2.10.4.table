@@ -26,5 +26,5 @@
 26 26 y-component water velocity (m s-1)
 27 27 Upward water velocity (m s-1)
 # 28-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

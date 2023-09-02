@@ -38,7 +38,6 @@ static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_mars_param
 {
@@ -104,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_mars_param = {
 
 grib_accessor_class* grib_accessor_class_mars_param = &_grib_accessor_class_mars_param;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -121,28 +114,12 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->param                    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
+// For an alternative implementation of pack_string and unpack_string, see
+//   src/deprecated/grib_accessor_class_mars_param.cc
+//
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-#if 1
     return GRIB_NOT_IMPLEMENTED;
-#else
-    grib_accessor_mars_param* self = (grib_accessor_mars_param*)a;
-    long paramId                   = 0;
-    long param                     = 0;
-    long table                     = 0;
-    char* p                        = (char*)val;
-    char* q                        = NULL;
-
-    param = strtol(val, &p, 10);
-    if (*p != 0)
-        table = strtol(++p, &q, 10);
-    else
-        table = 128;
-
-    paramId = table * 1000 + param;
-
-    return grib_set_long_internal(grib_handle_of_accessor(a), self->paramId, paramId);
-#endif
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
@@ -152,32 +129,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long table                     = 0;
     int ret                        = 0;
 
-#if 1
     if (self->table != NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a), self->table, &table)) != GRIB_SUCCESS)
         return ret;
     if (self->param != NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a), self->param, &param)) != GRIB_SUCCESS)
         return ret;
-#else
-    {
-        long paramId = 0;
-        grib_get_long(grib_handle_of_accessor(a), self->paramId, &paramId);
-
-        if (paramId == 0 || (paramId < 4000 && paramId > 1000)) {
-            if (self->table != NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a), self->table, &table)) != GRIB_SUCCESS)
-                return ret;
-            if (self->param != NULL && (ret = grib_get_long_internal(grib_handle_of_accessor(a), self->param, &param)) != GRIB_SUCCESS)
-                return ret;
-        }
-        else if (paramId < 1000) {
-            table = 128;
-            param = paramId;
-        }
-        else {
-            table = paramId / 1000;
-            param = paramId - table * 1000;
-        }
-    }
-#endif
 
     /*if (table==200) table=128;*/
     snprintf(val, 32, "%ld.%ld", param, table);

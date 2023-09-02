@@ -38,7 +38,6 @@ static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_trim
 {
@@ -104,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_trim = {
 
 grib_accessor_class* grib_accessor_class_trim = &_grib_accessor_class_trim;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* arg)
@@ -121,8 +114,8 @@ static void init(grib_accessor* a, const long l, grib_arguments* arg)
     self->input     = grib_arguments_get_name(h, arg, n++);
     self->trim_left = grib_arguments_get_long(h, arg, n++);
     self->trim_right= grib_arguments_get_long(h, arg, n++);
-    DebugAssert(self->trim_left == 0 || self->trim_left == 1);
-    DebugAssert(self->trim_right == 0 || self->trim_right == 1);
+    DEBUG_ASSERT(self->trim_left == 0 || self->trim_left == 1);
+    DEBUG_ASSERT(self->trim_right == 0 || self->trim_right == 1);
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)

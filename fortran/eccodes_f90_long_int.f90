@@ -16,7 +16,7 @@
   !> \b Examples: \ref grib_index.f90 "grib_index.f90"
   !>
   !> @param  indexid   id of an index created from a file. The index must have been created with the key in argument.
-  !> @param key        key for wich the values are returned
+  !> @param key        key for which the values are returned
   !> @param values     array of values. The array must be allocated before entering this function and its size must be enough to contain all the values.
   !> @param status      CODES_SUCCESS if OK, integer value on error
   interface codes_index_get
@@ -101,6 +101,7 @@
       codes_get_string, &
       codes_get_byte_array, &
       codes_get_int_array, &
+      codes_get_long_array, &
       codes_get_real4_array, &
       codes_get_real8_array
   end interface codes_get

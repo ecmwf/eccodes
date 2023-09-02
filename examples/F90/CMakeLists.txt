@@ -9,6 +9,8 @@ configure_file( include.ctest.sh.in  include.ctest.sh  @ONLY )
 if( HAVE_BUILD_TOOLS )
     list( APPEND tests_sanity
           codes_ecc-1392
+          codes_datetime_julian
+          codes_set_paths
           grib_set_pv
           grib_set_data
           bufr_ecc-1284
@@ -17,6 +19,7 @@ if( HAVE_BUILD_TOOLS )
           grib_ecc-671 )
     list( APPEND tests_extra
           grib_index
+          codes_dump
           grib_copy_message
           bufr_copy_message
           grib_get_keys
@@ -63,6 +66,7 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          codes_set_paths
           get_native_type
           grib_ecc-671 )
     list( APPEND tests_extra

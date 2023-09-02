@@ -35,4 +35,9 @@ do
   rm -f $res_desc $diff_desc
 done
 
+# ECC-1631: Segmentation fault: Decode bufrdcExpandedDescriptors as string
+echo 'print "[bufrdcExpandedDescriptors:s]";' |  ${tools_dir}/codes_bufr_filter - $ECCODES_SAMPLES_PATH/BUFR4.tmpl
+
+
+# Clean up
 rm -f bufrdc_desc_ref.filter
