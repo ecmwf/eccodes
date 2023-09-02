@@ -5,7 +5,7 @@
 // May be replaced with ECKit or other code at a later date
 
 #include <exception>
-#include <fstream>
+#include <string>
 
 namespace eccodes::accessor {
 
@@ -21,9 +21,6 @@ const char* what() const noexcept override { return what_.c_str(); }
 int code() const { return code_; }
 
 };
-
-std::ofstream& debugLog();
-std::ofstream& errorLog();
 
 }
 

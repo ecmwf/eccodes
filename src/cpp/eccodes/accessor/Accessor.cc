@@ -30,7 +30,7 @@ long Accessor::valueCount() const
     return data_->valueCount();
 }
 
-int Accessor::nativeType() const
+GribType Accessor::nativeType() const
 {
     return data_->nativeType();
 }
@@ -60,12 +60,12 @@ AccessorBuffer Accessor::currentBuffer() const
     return data_->currentBuffer();
 }
 
-bool Accessor::pack(grib_expression const& expression)
+GribStatus Accessor::pack(grib_expression const& expression)
 {
     return data_->pack(expression);
 }
 
-bool Accessor::packMissing() const
+GribStatus Accessor::packMissing() const
 {
     return data_->packMissing();
 }
@@ -73,7 +73,7 @@ bool Accessor::packMissing() const
 std::vector<double> Accessor::unpackSubarray(std::size_t start) const
 {
     std::vector<double> values{};
-    return data_->unpackSubarray(values, start) ? values : std::vector<double>{};
+    return data_->unpackSubarray(values, start) == GribStatus::SUCCESS ? values : std::vector<double>{};
 }
 
 }

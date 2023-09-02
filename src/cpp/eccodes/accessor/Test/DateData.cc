@@ -1,5 +1,5 @@
 #include "DateData.h"
-#include "../AccessorFactory.h"
+#include "AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -15,14 +15,14 @@ DateData::DateData(AccessorInitData const& initData)
     // TO DO
 }
 
-bool DateData::pack(std::vector<char> const& values)
+GribStatus DateData::pack(std::vector<char> const& values)
 {
     Assert(!values.empty());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
-bool DateData::unpack(std::vector<char> &values) const
+GribStatus DateData::unpack(std::vector<char> &values) const
 {
     std::int64_t timestamp{0};
     memcpy(&timestamp, currentBuffer().data(), sizeof(std::int64_t));
@@ -44,7 +44,7 @@ bool DateData::unpack(std::vector<char> &values) const
     values.clear();
     values.insert(values.end(), timeString.data(), timeString.data() + timeString.size());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
 namespace {

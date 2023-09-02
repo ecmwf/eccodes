@@ -1,5 +1,5 @@
 #include "DoubleData.h"
-#include "../AccessorFactory.h"
+#include "AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -11,19 +11,19 @@ DoubleData::DoubleData(AccessorInitData const& initData)
     // TO DO
 }
 
-int DoubleData::nativeType() const
+GribType DoubleData::nativeType() const
 {
-    return GRIB_TYPE_DOUBLE;
+    return GribType::DOUBLE;
 }
 
-bool DoubleData::pack(std::vector<double> const& values)
+GribStatus DoubleData::pack(std::vector<double> const& values)
 {
     Assert(!values.empty());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
-bool DoubleData::unpack(std::vector<double> &values) const
+GribStatus DoubleData::unpack(std::vector<double> &values) const
 {
     std::size_t numDoubles = currentBuffer().size_bytes() / sizeof(double);
     values.resize(numDoubles);
@@ -31,7 +31,7 @@ bool DoubleData::unpack(std::vector<double> &values) const
     // Use memcpy() for now...
     memcpy(values.data(), currentBuffer().data(), currentBuffer().size_bytes());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
 

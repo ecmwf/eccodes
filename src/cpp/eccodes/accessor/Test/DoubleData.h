@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AccessorData.h"
+#include "AccessorData/AccessorData.h"
 
 namespace eccodes::accessor {
 
@@ -11,10 +11,10 @@ public:
     ~DoubleData() = default;
 
 private:
-    int nativeType() const override;
+    GribType nativeType() const override;
 
-    bool pack(std::vector<double> const& values) override;
-    bool unpack(std::vector<double> &values) const override;
+    GribStatus pack(std::vector<double> const& values) override;
+    GribStatus unpack(std::vector<double> &values) const override;
 };
 
 }

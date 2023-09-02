@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AccessorDefs.h"
-
+#include "AccessorData/AccessorInitData.h"
 #include <map>
 #include <mutex>
 
@@ -25,12 +25,13 @@ class AccessorBuilder : public AccessorBuilderBase {
 public:
     AccessorBuilder(AccessorType const& type) :
         AccessorBuilderBase(type) {}
-    ~AccessorBuilder() override = default;
 };
 
 class AccessorFactory {
 public:
     static AccessorFactory& instance();
+
+    ~AccessorFactory();
 
     void add(AccessorType const& type, AccessorBuilderBase* builder);
     void remove(AccessorType const& type);
@@ -41,7 +42,7 @@ public:
     AccessorPtr build(AccessorType const& type, AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorInitData const& initData);
 
 private:
-    AccessorFactory();
+    AccessorFactory() {}
 
     std::map<AccessorType, AccessorBuilderBase*> builders_;
     std::recursive_mutex mutex_;

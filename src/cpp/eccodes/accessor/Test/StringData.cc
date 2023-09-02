@@ -1,5 +1,5 @@
 #include "StringData.h"
-#include "../AccessorFactory.h"
+#include "AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -11,25 +11,25 @@ StringData::StringData(AccessorInitData const& initData)
     // TO DO
 }
 
-int StringData::nativeType() const
+GribType StringData::nativeType() const
 {
-    return GRIB_TYPE_STRING;
+    return GribType::STRING;
 }
 
-bool StringData::pack(std::vector<char> const& values)
+GribStatus StringData::pack(std::vector<char> const& values)
 {
     Assert(!values.empty());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
-bool StringData::unpack(std::vector<char> &values) const
+GribStatus StringData::unpack(std::vector<char> &values) const
 {
     values.clear();
 
     values.insert(values.end(), currentBuffer().data(), currentBuffer().data() + currentBuffer().size_bytes());
  
-    return true;
+    return GribStatus::SUCCESS;
 }
 
 

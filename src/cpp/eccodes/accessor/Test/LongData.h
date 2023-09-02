@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AccessorData.h"
+#include "AccessorData/AccessorData.h"
 
 namespace eccodes::accessor {
 
@@ -11,10 +11,10 @@ public:
     ~LongData() = default;
 
 private:
-    int nativeType() const override;
+    GribType nativeType() const override;
 
-    bool pack(std::vector<long> const& values) override;
-    bool unpack(std::vector<long> &values) const override;
+    GribStatus pack(std::vector<long> const& values) override;
+    GribStatus unpack(std::vector<long> &values) const override;
 };
 
 }

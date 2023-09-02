@@ -1,5 +1,5 @@
 #include "LongData.h"
-#include "../AccessorFactory.h"
+#include "AccessorFactory.h"
 
 #include "grib_api_internal.h"
 
@@ -11,19 +11,19 @@ LongData::LongData(AccessorInitData const& initData)
     // TO DO
 }
 
-int LongData::nativeType() const
+GribType LongData::nativeType() const
 {
-    return GRIB_TYPE_LONG;
+    return GribType::LONG;
 }
 
-bool LongData::pack(std::vector<long> const& values)
+GribStatus LongData::pack(std::vector<long> const& values)
 {
     Assert(!values.empty());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
-bool LongData::unpack(std::vector<long> &values) const
+GribStatus LongData::unpack(std::vector<long> &values) const
 {
     std::size_t numLongs = currentBuffer().size_bytes() / sizeof(long);
     values.resize(numLongs);
@@ -31,7 +31,7 @@ bool LongData::unpack(std::vector<long> &values) const
     // Use memcpy() for now...
     memcpy(values.data(), currentBuffer().data(), currentBuffer().size_bytes());
 
-    return true;
+    return GribStatus::SUCCESS;
 }
 
 namespace {

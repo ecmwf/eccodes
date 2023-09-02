@@ -1,7 +1,10 @@
 #pragma once
 
 #include "AccessorDefs.h"
-#include "AccessorData.h"
+#include "AccessorBuffer.h"
+#include "AccessorData/AccessorData.h"
+#include "AccessorUtils/GribType.h"
+#include "AccessorUtils/GribStatus.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -20,7 +23,7 @@ public:
     //void dump(grib_dumper const& dumper) const;
     std::size_t stringLength() const;
     long valueCount() const;
-    int nativeType() const;
+    GribType nativeType() const;
     double nearestSmallerValue(double val) const;
     int compare(AccessorPtr const rhs) const;
     int isMissing() const;
@@ -30,17 +33,18 @@ public:
 
     // Pack support
     template<typename T>
-    bool pack(std::vector<T> const& values);
+    GribStatus pack(std::vector<T> const& values);
 
-    bool pack(grib_expression const& expression);
-    bool packMissing() const;
+    GribStatus pack(grib_expression const& expression);
+    GribStatus packMissing() const;
 
     // Unpack support
     template<typename T>
     std::vector<T> unpack() const;
 
+    // Support for user supplied buffer, which MUST be the correct size!
     template<typename T>
-    bool unpack(std::vector<T>& values) const;
+    GribStatus unpack(std::vector<T>& values) const;
 
     template<typename T>
     std::enable_if_t<std::is_floating_point_v<T>, T>
@@ -66,7 +70,7 @@ private:
 
 // Pack support
 template<typename T>
-bool Accessor::pack(std::vector<T> const& values)
+GribStatus Accessor::pack(std::vector<T> const& values)
 {
     return data_->pack(values);
 }
@@ -76,7 +80,18 @@ template<typename T>
 std::vector<T> Accessor::unpack() const
 {
     std::vector<T> values;
-    return data_->unpack(values) ? values : std::vector<T>{};
+    return data_->unpack(values) == GribStatus::SUCCESS ? values : std::vector<T>{};
+}
+
+template<typename T>
+GribStatus Accessor::unpack(std::vector<T>& values) const
+{
+    if(auto tempValues = unpack<T>(); tempValues.size() <= values.size())
+    {
+        values = std::move(tempValues);
+        return GribStatus::SUCCESS;
+    }
+    return GribStatus::BUFFER_TOO_SMALL;
 }
 
 template<typename T>

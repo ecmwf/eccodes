@@ -1,6 +1,7 @@
 #include "AccessorFactory.h"
-#include "AccessorUtils.h"
 #include "Accessor.h"
+#include "AccessorUtils/AccessorLogger.h"
+#include "AccessorUtils/AccessorException.h"
 
 #include "grib_api_internal.h"
 
@@ -10,7 +11,18 @@ namespace eccodes::accessor {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-AccessorFactory::AccessorFactory() {}
+AccessorFactory::~AccessorFactory() {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+    if(!builders_.empty())
+    {
+        debugLog() << "WARNING: AccessorFactory being destroyed but it still contains builders! [Size = " << builders_.size() << "] - Cleaning up...\n";
+        for(auto it = builders_.begin(); it != builders_.end();)
+        {
+            debugLog() << "-> Erasing " << it->first.get() << '\n';
+            it = builders_.erase(it);
+        }
+    }
+}
 
 AccessorFactory& AccessorFactory::instance() {
     static AccessorFactory theOne;
@@ -21,6 +33,8 @@ void AccessorFactory::add(AccessorType const& type, AccessorBuilderBase* builder
 
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
+    debugLog() << "Adding AccessorBuilder [" << type.get() << "]\n";
+
     if (has(type)) {
         throw AccessorException("AccessorFactory::add - duplicate entry: " + type.get());
     }
@@ -30,6 +44,9 @@ void AccessorFactory::add(AccessorType const& type, AccessorBuilderBase* builder
 void AccessorFactory::remove(AccessorType const& type) {
 
     std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    debugLog() << "Removing AccessorBuilder [" << type.get() << "]\n";
+
     builders_.erase(type);
 }
 
@@ -52,13 +69,13 @@ AccessorPtr AccessorFactory::build(AccessorType const& type, AccessorName const&
 
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
-    debugLog() << "Looking for AccessorBuilder [" << type.get() << "]" << std::endl;
+    debugLog() << "Looking for AccessorBuilder [" << type.get() << "]\n";
 
     if (auto builder_ = builders_.find(type); builder_ == builders_.end()) {
-        errorLog() << "No AccessorBuilder for [" << type.get() << "]" << std::endl;
-        errorLog() << "AccessorBuilders are:" << std::endl;
+        errorLog() << "No AccessorBuilder for [" << type.get() << "]\n";
+        errorLog() << "AccessorBuilders are:\n";
         for (auto const& entry : builders_) {
-            errorLog() << "   " << entry.first.get() << std::endl;
+            errorLog() << "   " << entry.first.get() << '\n';
         }
         throw AccessorException(std::string("No AccessorBuilder called ") + type.get());
     }

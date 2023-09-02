@@ -390,13 +390,12 @@ list( APPEND eccodes_extra_src_files
     grib_bits_ibmpow.cc
     grib_bits_ibmpow_opt.cc )
 
-# C++ Support
+# C++ Accessor Support
 add_subdirectory(cpp)
+list(APPEND eccodes_src_files ${cpp_accessor_src_files})
+include_directories(${cpp_accessor_include_dir})
+
 #add_subdirectory(converted)
-list( APPEND eccodes_src_files
-    ${eccodes_accessor_cplusplus_files}
-#    ${eccodes_accessor_converted_cplusplus_files}
-    )
 
 if(UNIX)
     ecbuild_get_date(eccodes_BUILD_DATE)

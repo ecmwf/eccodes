@@ -11,8 +11,8 @@ public:
     ~DateData() = default;
 
 private:
-    bool pack(std::vector<char> const& values) override;
-    bool unpack(std::vector<char> &values) const override;
+    GribStatus pack(std::vector<char> const& values) override;
+    GribStatus unpack(std::vector<char> &values) const override;
 };
 
 }

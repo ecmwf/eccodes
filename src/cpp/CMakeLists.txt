@@ -9,45 +9,82 @@
 # nor does it submit to any jurisdiction.
 #
 
-# Define all the source files to build for the C++ accessors
-# Note the PARENT_SCOPE option sets the variable in the calling CMakeLists.txt
-# file - it remains undefined in this file: https://cmake.org/cmake/help/latest/command/set.html
-set(eccodes_accessor_cplusplus_files
-    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDefs.h
-    PARENT_SCOPE
+set(eccodes_dir				${CMAKE_CURRENT_LIST_DIR}/eccodes)
+set(accessor_dir			${eccodes_dir}/accessor)
+set(accessor_data_dir		${accessor_dir}/AccessorData)
+set(accessor_data_funcs_dir	${accessor_data_dir}/AccessorDataFuncs)
+set(accessor_utils_dir		${accessor_dir}/AccessorUtils)
+set(accessor_test_dir		${accessor_dir}/Test)
+
+include_directories(${accessor_dir})
+
+set(accessor_src_files
+	${accessor_dir}/Accessor.cc
+	${accessor_dir}/Accessor.h
+	${accessor_dir}/AccessorBuffer.h
+	${accessor_dir}/AccessorDefs.h
+	${accessor_dir}/AccessorFactory.cc
+	${accessor_dir}/AccessorFactory.h
+	${accessor_dir}/AccessorStore.cc
+	${accessor_dir}/AccessorStore.h
 )
+
+set(accessor_data_src_files
+	${accessor_data_dir}/AccessorData.cc
+	${accessor_data_dir}/AccessorData.h
+	${accessor_data_dir}/AccessorInitData.cc
+	${accessor_data_dir}/AccessorInitData.h
+	${accessor_data_dir}/ProjStringData.cc
+	${accessor_data_dir}/ProjStringData.h
+)
+
+set(accessor_data_funcs_src_files
+	${accessor_data_funcs_dir}/ProjStringFuncs.cc
+	${accessor_data_funcs_dir}/ProjStringFuncs.h
+)
+
+set(accessor_utils_src_files
+	${accessor_utils_dir}/AccessorException.h
+	${accessor_utils_dir}/AccessorLogger.cc
+	${accessor_utils_dir}/AccessorLogger.h
+	${accessor_utils_dir}/AccessorProxy.cc
+	${accessor_utils_dir}/AccessorProxy.h
+	${accessor_utils_dir}/GribStatus.h
+	${accessor_utils_dir}/GribType.cc
+	${accessor_utils_dir}/GribType.h
+	${accessor_utils_dir}/NamedType.h
+	${accessor_utils_dir}/TypeString.h
+)
+
+# Variables to be used in the parent CMakeLists.txt
+set(cpp_accessor_src_files
+	${accessor_src_files}
+	${accessor_data_src_files}
+	${accessor_data_funcs_src_files}
+	${accessor_utils_src_files}
+	PARENT_SCOPE
+)
+
+set(cpp_accessor_include_dir ${accessor_dir} PARENT_SCOPE)
 
 ecbuild_add_executable( TARGET cpp_accessor_test
     NOINSTALL
-    SOURCES     ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorDefs.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorStore.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorUtils.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/NamedType.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Accessor.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorFactory.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorStore.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/AccessorUtils.cc
-		# Accessor test CLI
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/DateData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/DoubleData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/LongData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/StringData.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribLayout.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribFile.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribFileTests.h
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/DateData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/DoubleData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/LongData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/StringData.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/Test.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribLayout.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribFile.cc
-                ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/Test/GribFileTests.cc
-#    INCLUDES    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor
+    SOURCES		${all_accessor_src_files}
+				${accessor_test_dir}/DateData.h
+				${accessor_test_dir}/DoubleData.h
+				${accessor_test_dir}/LongData.h
+				${accessor_test_dir}/StringData.h
+				${accessor_test_dir}/GribLayout.h
+				${accessor_test_dir}/GribFile.h
+				${accessor_test_dir}/GribFileTests.h
+				${accessor_test_dir}/DateData.cc
+				${accessor_test_dir}/DoubleData.cc
+				${accessor_test_dir}/LongData.cc
+				${accessor_test_dir}/StringData.cc
+				${accessor_test_dir}/Test.cc
+				${accessor_test_dir}/GribLayout.cc
+				${accessor_test_dir}/GribFile.cc
+				${accessor_test_dir}/GribFileTests.cc
     LIBS        eccodes ${CMAKE_THREAD_LIBS_INIT} )
 
 #add_executable(cpp_accessor_test)
