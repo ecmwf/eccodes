@@ -682,10 +682,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         if (act->default_value != NULL) {
             const char* p = 0;
             size_t s_len  = 1;
-            long l;
+            long l = 0;
             int ret = 0;
-            double d;
-            char tmp[1024];
+            double d = 0;
+            char tmp[1024] = {0,};
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(a), act->default_value, 0);
             int type                    = grib_expression_native_type(grib_handle_of_accessor(a), expression);
             switch (type) {
@@ -703,8 +703,8 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
                     s_len = sizeof(tmp);
                     p     = grib_expression_evaluate_string(grib_handle_of_accessor(a), expression, tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
-                        grib_context_log(a->context, GRIB_LOG_FATAL,
-                                         "unable to evaluate %s as string", a->name);
+                        grib_context_log(a->context, GRIB_LOG_ERROR,
+                                         "%s: Unable to evaluate default value of %s as string expression", __func__, a->name);
                         return ret;
                     }
                     s_len = strlen(p) + 1;
