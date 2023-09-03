@@ -186,7 +186,7 @@ unset ECCODES_GRIBEX_BOUSTROPHEDONIC
 # data_g1second_order_constant_width_packing
 # ------------------------------------------
 input=second_ord_rbr.grib1
-${tools_dir}/grib_set -s secondOrderOfDifferentWidth=0,secondaryBitmapPresent=1 $input $temp1
+${tools_dir}/grib_set -s Ni=2,Nj=74,secondOrderOfDifferentWidth=0,secondaryBitmapPresent=1 $input $temp1
 grib_check_key_equals $temp1 packingType grid_second_order_constant_width
 ${tools_dir}/grib_dump -O $temp1 > $REDIRECT
 set +e
@@ -195,6 +195,10 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Not implemented" $tempText
+
+${tools_dir}/grib_get_data $temp1 > $REDIRECT
+${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
+${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
 
 
 # Clean up
