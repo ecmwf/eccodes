@@ -12,19 +12,19 @@
 
 label="grib_get_fail_test"
 tempText=temp.$label.txt
-REDIRECT=/dev/null
 
 # Check input file has been downloaded
 [ -f ${data_dir}/regular_latlon_surface.grib1 ]
 
 # Expect failure as the key does not exist
 set +e
-${tools_dir}/grib_get -p boomerang ${data_dir}/regular_latlon_surface.grib1 2> $REDIRECT > $REDIRECT
+${tools_dir}/grib_get -p boomerang ${data_dir}/regular_latlon_surface.grib1
 status=$?
 set -e
 [ $status -ne 0 ]
 
 # ECC-1551: Print which key does not exist
+# -----------------------------------------
 set +e
 ${tools_dir}/grib_get -p Ni,Nh,Nj $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempText 2>&1
 status=$?
@@ -32,8 +32,8 @@ set -e
 [ $status -ne 0 ]
 grep -q "Nh (Key/value not found)" $tempText
 
-# Types like uint16 etc
-# Create a temporary directory which holds the tables etc
+# Types like uint16, uint32 etc
+# -------------------------------
 tempDir=${label}.temp.dir
 rm -rf $tempDir
 mkdir -p $tempDir/definitions/grib2
@@ -51,11 +51,12 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 set +e
 ${tools_dir}/grib_get -p key_uint16    $input > $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint32    $input >> $tempText 2>&1
-${tools_dir}/grib_get -p key_uint64    $input >> $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
-${tools_dir}/grib_get -p key_uint64_le $input >> $tempText 2>&1
 set -e
 cat $tempText
+
+${tools_dir}/grib_get -p key_uint64    $input
+${tools_dir}/grib_get -p key_uint64_le $input
 
 # Clean up
 cd $test_dir
