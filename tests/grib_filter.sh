@@ -362,6 +362,14 @@ set -e
 [ $status -ne 0 ]
 grep "Assertion failure" $tempOut
 
+# Use of the "length" expression
+cat >$tempFilt <<EOF
+ assert( length(identifier) == 4 );
+ if (length(edition) == referenceValue) { print "matched"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl #> $tempOut
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
