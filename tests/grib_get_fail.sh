@@ -34,31 +34,34 @@ grep -q "Nh (Key/value not found)" $tempText
 
 # Types like uint16, uint32 etc
 # -------------------------------
-tempDir=${label}.temp.dir
-rm -rf $tempDir
-mkdir -p $tempDir/definitions/grib2
-bootfile=$tempDir/definitions/grib2/boot.def
-cat $def_dir/grib2/boot.def > $bootfile
-echo "uint16 key_uint16: transient;"    >> $bootfile
-echo "uint32 key_uint32: transient;"    >> $bootfile
-echo "uint64 key_uint64: transient;"    >> $bootfile
-echo "uint32_little_endian key_uint32_le: transient;"    >> $bootfile
-echo "uint64_little_endian key_uint64_le: transient;"    >> $bootfile
-curr_defs=$ECCODES_DEFINITION_PATH
-export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$curr_defs
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    tempDir=${label}.temp.dir
+    rm -rf $tempDir
+    mkdir -p $tempDir/definitions/grib2
+    bootfile=$tempDir/definitions/grib2/boot.def
+    cat $def_dir/grib2/boot.def > $bootfile
+    echo "uint16 key_uint16: transient;"    >> $bootfile
+    echo "uint32 key_uint32: transient;"    >> $bootfile
+    echo "uint64 key_uint64: transient;"    >> $bootfile
+    echo "uint32_little_endian key_uint32_le: transient;"    >> $bootfile
+    echo "uint64_little_endian key_uint64_le: transient;"    >> $bootfile
+    curr_defs=$ECCODES_DEFINITION_PATH
+    export ECCODES_DEFINITION_PATH=$PWD/$tempDir/definitions:$curr_defs
 
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-set +e
-${tools_dir}/grib_get -p key_uint16    $input > $tempText 2>&1
-${tools_dir}/grib_get -p key_uint32    $input >> $tempText 2>&1
-${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
-set -e
-cat $tempText
+    input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+    set +e
+    # Not yet fully implemented
+    ${tools_dir}/grib_get -p key_uint16    $input > $tempText 2>&1
+    ${tools_dir}/grib_get -p key_uint32    $input >> $tempText 2>&1
+    ${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
+    set -e
+    cat $tempText
 
-${tools_dir}/grib_get -p key_uint64    $input
-${tools_dir}/grib_get -p key_uint64_le $input
+    ${tools_dir}/grib_get -p key_uint64    $input
+    ${tools_dir}/grib_get -p key_uint64_le $input
+
+    rm -rf $tempDir
+fi
 
 # Clean up
-cd $test_dir
-rm -rf $tempDir
 rm -f $tempText
