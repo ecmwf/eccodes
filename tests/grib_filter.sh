@@ -214,6 +214,15 @@ switch (packingType) {
 EOF
 ${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2 ${data_dir}/ccsds.grib2 $data_dir/spherical_model_level.grib2
 
+cat >$tempFilt <<EOF
+switch (length(packingType)) {
+  # Expression 'length' evaluated as a string. Length of grid_simple is 11
+  case "11": print "ok";
+  default: print "[file]: bad length?"; assert(0);
+}
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2
+
 echo "Test MISSING"
 # -----------------
 input="${data_dir}/reduced_gaussian_pressure_level.grib2"
