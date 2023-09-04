@@ -277,6 +277,7 @@ if( HAVE_BUILD_TOOLS )
         grib_copy_message
         grib_decimalPrecision
         grib_bitsPerValue
+        grib_accessors
         grib_get_fail
         grib_missing
         grib_local
