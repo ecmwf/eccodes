@@ -245,6 +245,13 @@ grib_check_key_equals $temp "-p $keys_d" "24"
 
 
 
+
+fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s stepRange=60m-2h $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "1 h 1 h"
+
+
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 keys__="stepRange,startStep,endStep"
