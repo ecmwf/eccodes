@@ -1,4 +1,4 @@
-# DestinE MARS CMIP keywords
+# DestinE MARS ClimateDT keywords
 
 codetable[2] datasetVersion "grib2/destine_datasetVersion.table" : dump;
 alias mars.datasetVersion = datasetVersion;

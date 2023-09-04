@@ -1,3 +1,9 @@
-# DestinE MARS base keywords
+# DestinE MARS layout
 
-include "grib2/local.destine.base.def";
+include "grib2/local.destine.base.def"
+
+# <-- this adds mars.dataset keyword
+
+# Keywords based on dataset
+
+# include "grib2/local.destine.[dataset:s].def": no_fail

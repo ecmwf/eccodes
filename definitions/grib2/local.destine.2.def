@@ -1,4 +1,0 @@
-# DestinE MARS ClimateDT keywords
-
-include "grib2/local.destine.base.def";
-include "grib2/local.destine.cmip.def";
