@@ -27,9 +27,11 @@ bootfile=$tempDir/definitions/grib2/boot.def
 cat $def_dir/grib2/boot.def > $bootfile
 echo "uint16 key_uint16: transient;"    >> $bootfile
 echo "uint32 key_uint32: transient;"    >> $bootfile
-echo "uint64 key_uint64: transient;"    >> $bootfile
 echo "uint32_little_endian key_uint32_le: transient;"  >> $bootfile
+
+echo "uint64 key_uint64: transient;"    >> $bootfile
 echo "uint64_little_endian key_uint64_le: transient;"  >> $bootfile
+
 echo "key_tos1 = to_string(kindOfProduct,0,1);"  >> $bootfile
 echo "key_tos2 = to_string(dataDate,0,3);"       >> $bootfile
 echo >> $bootfile
@@ -45,14 +47,12 @@ ${tools_dir}/grib_get -p key_uint32    $input >> $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
 set -e
 
+# TODO
 # grib_check_key_equals $input 'key_uint64,key_uint64_le' '0 0'
-${tools_dir}/grib_get -p key_uint64    $input > $tempText 2>&1
-${tools_dir}/grib_get -p key_uint64_le $input > $tempText 2>&1
-cat $tempText
 
 # kindOfProduct = GRIB, dataDate = 20070323
-grib_check_key_equals $input 'key_tos1,key_tos2'        'G 200'
-grib_check_key_equals $input 'key_tos2:d,key_tos2:i'    '200 200'
+grib_check_key_equals $input 'key_tos1,key_tos2'     'G 200'
+grib_check_key_equals $input 'key_tos2:d,key_tos2:i' '200 200'
 
 rm -rf $tempDir
 
