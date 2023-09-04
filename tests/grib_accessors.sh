@@ -45,8 +45,12 @@ ${tools_dir}/grib_get -p key_uint32    $input >> $tempText 2>&1
 ${tools_dir}/grib_get -p key_uint32_le $input >> $tempText 2>&1
 set -e
 
+# grib_check_key_equals $input 'key_uint64,key_uint64_le' '0 0'
+${tools_dir}/grib_get -p key_uint64    $input > $tempText 2>&1
+${tools_dir}/grib_get -p key_uint64_le $input > $tempText 2>&1
+cat $tempText
+
 # kindOfProduct = GRIB, dataDate = 20070323
-grib_check_key_equals $input 'key_uint64,key_uint64_le' '0 0'
 grib_check_key_equals $input 'key_tos1,key_tos2'        'G 200'
 grib_check_key_equals $input 'key_tos2:d,key_tos2:i'    '200 200'
 

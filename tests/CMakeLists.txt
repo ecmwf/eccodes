@@ -87,6 +87,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_check_descriptors
         definitions
         grib2_version
+        grib_accessors
         grib_calendar
         grib_md5
         grib_cfNames
@@ -277,7 +278,6 @@ if( HAVE_BUILD_TOOLS )
         grib_copy_message
         grib_decimalPrecision
         grib_bitsPerValue
-        grib_accessors
         grib_get_fail
         grib_missing
         grib_local
