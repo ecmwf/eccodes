@@ -28,7 +28,7 @@ GribType ProjStringData::nativeType() const
 
 constexpr static int endpointSource{0};
 constexpr static int endpointTarget{1};
-GribStatus ProjStringData::unpack(std::vector<char> &values) const
+GribStatus ProjStringData::unpack(std::string &values) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 

@@ -12,6 +12,11 @@
 
 namespace eccodes::accessor {
 
+std::string getValues(std::string const& values)
+{
+    return values;
+}
+
 template<typename T>
 std::string getValues(std::vector<T> const& values)
 {
@@ -58,7 +63,9 @@ std::string typeString()
 {
     if constexpr (std::is_same_v<T, long>) { return "long"; }
     if constexpr (std::is_same_v<T, double>) { return "double"; }
-    if constexpr (std::is_same_v<T, char>) { return "char"; }
+    if constexpr (std::is_same_v<T, std::string>) { return "std::string"; }
+    if constexpr (std::is_same_v<T, std::vector<long>>) { return "std::vector<long>"; }
+    if constexpr (std::is_same_v<T, std::vector<double>>) { return "std::vector<double>"; }
 
     return "[Unknown]";
 }
@@ -66,6 +73,9 @@ std::string typeString()
 template<typename GOOD_TYPE, typename BAD_TYPE>
 bool unpack_test(AccessorName const& name)
 {
+    static_assert(isAllowedUnpackType<GOOD_TYPE>::value, "Unsupported unpack() type supplied");
+    static_assert(isAllowedUnpackType<BAD_TYPE>::value, "Unsupported unpack() type supplied");
+
     std::cout << "\nUnpack test: " << name.get() << '\n';
     std::cout << "GOOD type    : " << typeString<GOOD_TYPE>() << '\n';
     std::cout << "BAD type     : " << typeString<BAD_TYPE>() << '\n';
@@ -122,15 +132,15 @@ void runTests(std::filesystem::path gribFile, std::filesystem::path gribLayoutFi
     createAccessors(entries, buffer);
 
     std::cout << "\n***** Accessor Tests - native unpack *****\n";
-    unpack_test<char,double>(AccessorName("greeting"));
-    unpack_test<long,double>(AccessorName("data1"));
-    unpack_test<long,double>(AccessorName("timestamp"));
-    unpack_test<long,double>(AccessorName("data2"));
-    unpack_test<double,long>(AccessorName("pi"));
-    unpack_test<long,double>(AccessorName("data3"));
+    unpack_test<std::string,std::vector<double>>(AccessorName("greeting"));
+    unpack_test<std::vector<long>,std::vector<double>>(AccessorName("data1"));
+    unpack_test<std::vector<long>,std::vector<double>>(AccessorName("timestamp"));
+    unpack_test<std::vector<long>,std::vector<double>>(AccessorName("data2"));
+    unpack_test<std::vector<double>,std::vector<long>>(AccessorName("pi"));
+    unpack_test<std::vector<long>,std::vector<double>>(AccessorName("data3"));
 
     std::cout << "\n***** Accessor Tests - non-native unpack *****\n";
-    unpack_test<char,double>(AccessorName("timestamp"));
+    unpack_test<std::string,std::vector<double>>(AccessorName("timestamp"));
 
 
 }

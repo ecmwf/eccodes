@@ -2,11 +2,12 @@
 
 #include "AccessorDefs.h"
 
-// Provides a lightweight interface to an Accessor, for example when using as a member variable
+// Provides lightweight access an Accessor, for example when using as a member variable
 
 namespace eccodes::accessor {
 
-    double getDouble(AccessorName const& name);
-    long getLong(AccessorName const& name);
+// Helpers
+double unpackDouble(AccessorName const& name);
+long unpackLong(AccessorName const& name);
 
 }

@@ -1,10 +1,9 @@
 #include "ProjStringFuncs.h"
 #include "AccessorUtils/AccessorProxy.h"
+#include "AccessorUtils/GribStatus.h"
 #include "grib_api_internal.h"
 
 namespace eccodes::accessor {
-
-#if 0
 
 // -------------------------------------------------------------------------------------------
 
@@ -18,23 +17,24 @@ struct proj_mapping
 typedef struct proj_mapping proj_mapping;
 
 // This should only be called for GRID POINT data (not spherical harmonics etc)
-GribStatus getMajorMinorAxes(grib_handle* h, double* pMajor, double* pMinor)
+GribStatus getMajorMinorAxes(grib_handle* h, double& major, double& minor)
 {
-    int err = 0;
     if (grib_is_earth_oblate(h)) {
-        if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", pMinor)) != GRIB_SUCCESS) return err;
-        if ((err = grib_get_double_internal(h, "earthMajorAxisInMetres", pMajor)) != GRIB_SUCCESS) return err;
+        minor = unpackDouble(AccessorName("earthMinorAxisInMetres"));
+        major = unpackDouble(AccessorName("earthMajorAxisInMetres"));
     }
     else {
         double radius = 0;
-        if ((err = grib_get_double_internal(h, "radius", &radius)) != GRIB_SUCCESS) return err;
-        *pMajor = *pMinor = radius;
+        radius = unpackDouble(AccessorName("radius"));
+        major = minor = radius;
     }
-    return err;
+    return GribStatus::SUCCESS;
 }
 
+#if 0
+
 // Caller must have allocated enough space in the 'result' argument
-static int get_earth_shape(grib_handle* h, char* result)
+GribStatus getEarthShape(grib_handle* h, char* result)
 {
     int err      = 0;
     double major = 0, minor = 0;

@@ -13,8 +13,8 @@ public:
 private:
     GribType nativeType() const override;
 
-    GribStatus pack(std::vector<char> const& values) override;
-    GribStatus unpack(std::vector<char> &values) const override;
+    GribStatus pack(std::string const& values) override;
+    GribStatus unpack(std::string &values) const override;
 };
 
 }

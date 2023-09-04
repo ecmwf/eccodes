@@ -84,7 +84,38 @@ bool AccessorData::isMissing() const
     return false;
 }
 
-// Pack support
+// Pack - single value
+GribStatus AccessorData::pack(long const& value)
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus AccessorData::pack(double const& value)
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus AccessorData::pack(float const& value)
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus AccessorData::pack(grib_expression const& expression)
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus AccessorData::packMissing()
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+// Pack - buffer
+GribStatus AccessorData::pack(std::string const& values)
+{
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
 GribStatus AccessorData::pack(std::vector<long> const& values)
 {
     return GribStatus::NOT_IMPLEMENTED;
@@ -100,11 +131,6 @@ GribStatus AccessorData::pack(std::vector<float> const& values)
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<char> const& values)
-{
-    return GribStatus::NOT_IMPLEMENTED;
-}
-
 GribStatus AccessorData::pack(std::vector<StringArray> const& values)
 {
     return GribStatus::NOT_IMPLEMENTED;
@@ -115,17 +141,12 @@ GribStatus AccessorData::pack(std::vector<std::byte> const& values)
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(grib_expression const& expression)
+// Unpack - buffer
+GribStatus AccessorData::unpack(std::string &values) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::packMissing()
-{
-    return GribStatus::NOT_IMPLEMENTED;
-}
-
-// Unpack support
 GribStatus AccessorData::unpack(std::vector<long> &values) const
 {
     return GribStatus::NOT_IMPLEMENTED;
@@ -141,11 +162,6 @@ GribStatus AccessorData::unpack(std::vector<float> &values) const
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<char> &values) const
-{
-    return GribStatus::NOT_IMPLEMENTED;
-}
-
 GribStatus AccessorData::unpack(std::vector<StringArray> &values) const
 {
     return GribStatus::NOT_IMPLEMENTED;
@@ -156,6 +172,7 @@ GribStatus AccessorData::unpack(std::vector<std::byte> &values) const
     return GribStatus::NOT_IMPLEMENTED;
 }
 
+// Unpack - multiple values
 GribStatus AccessorData::unpackElement(std::size_t index, double& val) const
 {
     return GribStatus::NOT_IMPLEMENTED;

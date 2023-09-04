@@ -16,14 +16,14 @@ GribType StringData::nativeType() const
     return GribType::STRING;
 }
 
-GribStatus StringData::pack(std::vector<char> const& values)
+GribStatus StringData::pack(std::string const& values)
 {
     Assert(!values.empty());
 
     return GribStatus::SUCCESS;
 }
 
-GribStatus StringData::unpack(std::vector<char> &values) const
+GribStatus StringData::unpack(std::string &values) const
 {
     values.clear();
 

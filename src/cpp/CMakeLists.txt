@@ -27,6 +27,7 @@ set(accessor_src_files
 	${accessor_dir}/AccessorFactory.h
 	${accessor_dir}/AccessorStore.cc
 	${accessor_dir}/AccessorStore.h
+	${accessor_dir}/AccessorTraits.h
 )
 
 set(accessor_data_src_files

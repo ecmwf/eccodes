@@ -8,7 +8,7 @@ enum class GribStatus{
     INTERNAL_ERROR = -2,
     BUFFER_TOO_SMALL = -3,
     NOT_IMPLEMENTED = -4,
-    GRIB_7777_NOT_FOUND = -5,
+    VALUE_7777_NOT_FOUND = -5,
     ARRAY_TOO_SMALL = -6,
     FILE_NOT_FOUND = -7,
     CODE_NOT_FOUND_IN_TABLE = -8,

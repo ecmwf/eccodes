@@ -60,10 +60,17 @@ AccessorBuffer Accessor::currentBuffer() const
     return data_->currentBuffer();
 }
 
+/* 
+GribStatus Accessor::pack(std::string const& values)
+{
+    return data_->pack(values);
+}
+
 GribStatus Accessor::pack(grib_expression const& expression)
 {
     return data_->pack(expression);
-}
+} 
+*/
 
 GribStatus Accessor::packMissing() const
 {

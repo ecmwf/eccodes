@@ -15,14 +15,14 @@ DateData::DateData(AccessorInitData const& initData)
     // TO DO
 }
 
-GribStatus DateData::pack(std::vector<char> const& values)
+GribStatus DateData::pack(std::string const& values)
 {
     Assert(!values.empty());
 
     return GribStatus::SUCCESS;
 }
 
-GribStatus DateData::unpack(std::vector<char> &values) const
+GribStatus DateData::unpack(std::string &values) const
 {
     std::int64_t timestamp{0};
     memcpy(&timestamp, currentBuffer().data(), sizeof(std::int64_t));
@@ -39,10 +39,7 @@ GribStatus DateData::unpack(std::vector<char> &values) const
     std::stringstream ss;
     ss << std::put_time(std::localtime(&tt), "%F %T");
 
-    std::string timeString = ss.str();
-
-    values.clear();
-    values.insert(values.end(), timeString.data(), timeString.data() + timeString.size());
+    values = ss.str();
 
     return GribStatus::SUCCESS;
 }

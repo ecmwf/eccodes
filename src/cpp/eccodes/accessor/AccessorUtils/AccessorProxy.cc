@@ -2,33 +2,29 @@
 #include "Accessor.h"
 #include "AccessorStore.h"
 #include "AccessorUtils/AccessorException.h"
-#include "AccessorUtils/TypeString.h"
 
 namespace eccodes::accessor {
 
-template<typename T>
-T get(AccessorName const& name)
-{
-    if(auto accessor = AccessorStore::instance().getAccessor(name); accessor)
-    {
-        if(auto values = accessor->unpack<T>(); !values.empty())
+namespace {
+    auto getAccessor = [](AccessorName const& name) -> AccessorPtr {
+        if(auto accessorPtr = AccessorStore::instance().getAccessor(name); accessorPtr)
         {
-            return values[0];
+            return accessorPtr;
         }
-    }
 
-    throw AccessorException("AccessorProxy - couldn't get " + typeString<T>() + " for accessor [" + name.get() + ']');
-    return T{};
+        throw AccessorException("AccessorProxy - couldn't get accessor [" + name.get() + ']');
+        return nullptr;
+    };
 }
 
-double getDouble(AccessorName const& name)
+double unpackDouble(AccessorName const& name)
 {
-    return get<double>(name);
+    return getAccessor(name)->unpack<double>();
 }
 
-long getLong(AccessorName const& name)
+long unpackLong(AccessorName const& name)
 {
-    return get<long>(name);
+    return getAccessor(name)->unpack<long>();
 }
 
 }
