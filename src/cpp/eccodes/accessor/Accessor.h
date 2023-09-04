@@ -36,20 +36,17 @@ public:
     GribStatus pack(T const& values);
     GribStatus packMissing() const;
 
-    template<typename T>//,
-//             typename = std::enable_if_t<isAllowedUnpackType<T>::value> >
+    template<typename T>
     T unpack() const;
 
-    // Unpack to user supplied buffer, which MUST be the correct size!
+    // Unpack to user-supplied buffer, which MUST be the correct size!
     template<typename T>
     GribStatus unpack(T& values) const;
 
-    template<typename T,
-             typename=std::enable_if_t<std::is_floating_point_v<T>> >
+    template<typename T>
     T unpackElement(std::size_t index) const;
 
-    template<typename T,
-             typename=std::enable_if_t<std::is_floating_point_v<T>> >
+    template<typename T>
     std::vector<T> unpackElementSet(std::vector<std::size_t> const& indexArray) const;
 
     std::vector<double> unpackSubarray(std::size_t start) const;
@@ -70,6 +67,8 @@ private:
 template<typename T>
 GribStatus Accessor::pack(T const& values)
 {
+    static_assert(isAllowedPackType<T>::value, "Unsupported pack() type supplied");
+
     return data_->pack(values);
 }
 
@@ -86,6 +85,8 @@ T Accessor::unpack() const
 template<typename T>
 GribStatus Accessor::unpack(T& values) const
 {
+    static_assert(isAllowedUnpackType<T>::value, "Unsupported unpack() type supplied");
+
     if(auto tempValues = unpack<T>(); tempValues.size() <= values.size())
     {
         values = std::move(tempValues);
@@ -94,18 +95,20 @@ GribStatus Accessor::unpack(T& values) const
     return GribStatus::BUFFER_TOO_SMALL;
 }
 
-template<typename T,
-         typename=std::enable_if_t<std::is_floating_point_v<T>> >
+template<typename T>
 T Accessor::unpackElement(std::size_t index) const
 {
+    static_assert(isAllowedUnpackElementType<T>::value, "Unsupported unpackElement() type supplied");
+
     T val{};
     return data_->unpackElement(index, val) ? val : T{};
 }
 
-template<typename T,
-         typename=std::enable_if_t<std::is_floating_point_v<T>> >
+template<typename T>
 std::vector<T> Accessor::unpackElementSet(std::vector<std::size_t> const& indexArray) const
 {
+    static_assert(isAllowedUnpackElementType<T>::value, "Unsupported unpackElementSet() type supplied");
+
     std::vector<T> valArray;
     return data_->unpackElementSet(indexArray, valArray) ? valArray : std::vector<T>{};
 }
