@@ -47,3 +47,7 @@ referencePeriodList list(numberOfReferencePeriodTimeRanges)
   # Length of reference period, in units defined by the previous octet [referencePeriodIndicatorOfUnitForTimeIncrement]
   unsigned[4] lengthOfTimeRangeForReferencePeriod=0 ;
 }
+
+constant timepropstring = timeprop ;
+
+alias mars.timeprop = timepropstring ;

@@ -125,3 +125,101 @@ meta time.validityDate validity_date(date,dataTime,step,stepUnits,yearOfEndOfOve
 meta time.validityTime validity_time(date,dataTime,step,stepUnits,hourOfEndOfOverallTimeInterval,
     minuteOfEndOfOverallTimeInterval) : no_copy;
 meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
+
+if(numberOfTimeRange == 1 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
+ constant tloop = typeOfStatisticalProcessing : no_copy ;
+ constant iloop = indicatorOfUnitForTimeRange : no_copy ;
+ constant lloop = lengthOfTimeRange : no_copy ;
+
+ constant iloopti = indicatorOfUnitForTimeIncrement;
+ constant tloopti = typeOfTimeIncrement;
+ constant lloopti = timeIncrement;
+
+ constant timepropstring = timeprop : no_copy;
+}
+
+if(numberOfTimeRange == 2 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
+ meta tloop element(typeOfStatisticalProcessing, 0);
+ meta iloop element(indicatorOfUnitForTimeRange, 0);
+ meta lloop element(lengthOfTimeRange, 0);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 0);
+ meta tloopti element(typeOfTimeIncrement, 0);
+ meta lloopti element(timeIncrement, 0);
+ constant timeprop0 = timeprop : no_copy;
+#
+ meta tloop element(typeOfStatisticalProcessing, 1);
+ meta iloop element(indicatorOfUnitForTimeRange, 1);
+ meta lloop element(lengthOfTimeRange, 1);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 1);
+ meta tloopti element(typeOfTimeIncrement, 1);
+ meta lloopti element(timeIncrement, 1);
+ constant timeprop1 = timeprop : no_copy;
+
+ meta timepropstring sprintf("%s_%s",timeprop0,timeprop1);
+}
+
+if(numberOfTimeRange == 3 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
+ meta tloop element(typeOfStatisticalProcessing, 0);
+ meta iloop element(indicatorOfUnitForTimeRange, 0);
+ meta lloop element(lengthOfTimeRange, 0);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 0);
+ meta tloopti element(typeOfTimeIncrement, 0);
+ meta lloopti element(timeIncrement, 0);
+ constant timeprop0 = timeprop : no_copy;
+#
+ meta tloop element(typeOfStatisticalProcessing, 1);
+ meta iloop element(indicatorOfUnitForTimeRange, 1);
+ meta lloop element(lengthOfTimeRange, 1);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 1);
+ meta tloopti element(typeOfTimeIncrement, 1);
+ meta lloopti element(timeIncrement, 1);
+ constant timeprop1 = timeprop : no_copy;
+ #
+ meta tloop element(typeOfStatisticalProcessing, 2);
+ meta iloop element(indicatorOfUnitForTimeRange, 2);
+ meta lloop element(lengthOfTimeRange, 2);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 2);
+ meta tloopti element(typeOfTimeIncrement, 2);
+ meta lloopti element(timeIncrement, 2);
+ constant timeprop2 = timeprop : no_copy;
+
+ meta timepropstring sprintf("%s_%s_%s",timeprop0,timeprop1,timeprop2);
+}
+
+if(numberOfTimeRange == 4 and productDefinitionTemplateNumber != 105 and productDefinitionTemplateNumber != 106 and productDefinitionTemplateNumber != 107 and productDefinitionTemplateNumber != 112){
+ meta tloop element(typeOfStatisticalProcessing, 0);
+ meta iloop element(indicatorOfUnitForTimeRange, 0);
+ meta lloop element(lengthOfTimeRange, 0);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 0);
+ meta tloopti element(typeOfTimeIncrement, 0);
+ meta lloopti element(timeIncrement, 0);
+ constant timeprop0 = timeprop : no_copy;
+#
+ meta tloop element(typeOfStatisticalProcessing, 1);
+ meta iloop element(indicatorOfUnitForTimeRange, 1);
+ meta lloop element(lengthOfTimeRange, 1);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 1);
+ meta tloopti element(typeOfTimeIncrement, 1);
+ meta lloopti element(timeIncrement, 1);
+ constant timeprop1 = timeprop : no_copy;
+#
+ meta tloop element(typeOfStatisticalProcessing, 2);
+ meta iloop element(indicatorOfUnitForTimeRange, 2);
+ meta lloop element(lengthOfTimeRange, 2);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 2);
+ meta tloopti element(typeOfTimeIncrement, 2);
+ meta lloopti element(timeIncrement, 2);
+ constant timeprop2 = timeprop : no_copy;
+
+ meta tloop element(typeOfStatisticalProcessing, 3);
+ meta iloop element(indicatorOfUnitForTimeRange, 3);
+ meta lloop element(lengthOfTimeRange, 3);
+ meta iloopti element(indicatorOfUnitForTimeIncrement, 3);
+ meta tloopti element(typeOfTimeIncrement, 3);
+ meta lloopti element(timeIncrement, 3);
+ constant timeprop3 = timeprop : no_copy;
+
+ meta timepropstring sprintf("%s_%s_%s_%s",timeprop0,timeprop1,timeprop2,timeprop3);
+}
+
+alias mars.timeprop = timepropstring ;
