@@ -43,3 +43,18 @@ bool is_future_output_enabled(grib_handle* h)
         return ret;
     return strcmp(step_output_format, "future") == 0;
 }
+
+
+long get_step_units(grib_handle* h)
+{
+    int ret = 0;
+    long step_units = 0;
+    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+        throw std::runtime_error("Failed to get stepUnits");
+
+    if (step_units == 255) {
+        if((ret = grib_get_long_internal(h, "optimalStepUnits", &step_units)) != GRIB_SUCCESS)
+            throw std::runtime_error("Failed to get optimalStepUnits");
+    }
+    return step_units;
+}

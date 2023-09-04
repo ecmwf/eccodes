@@ -146,25 +146,26 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if ((ret = grib_get_long_internal(h, self->start_step, &end_start_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        return ret;
+    //if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+    //    return ret;
+    step_units = get_step_units(h);
 
 
     Step start_step{end_start_value, step_units};
     start_step.hide_hour_unit();
     if (self->end_step == NULL) {
-        if (is_future_output_enabled(h)) {
+        //if (is_future_output_enabled(h)) {
             snprintf(buf, sizeof(buf), "%s", start_step.to_string().c_str());
-        }
-        else {
-            snprintf(buf, sizeof(buf), "%ld", end_start_value);
-        }
+        //}
+        //else {
+        //    snprintf(buf, sizeof(buf), "%ld", end_start_value);
+        //}
     }
     else {
         if ((ret = grib_get_long_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
             return ret;
 
-        if (is_future_output_enabled(h)) {
+        //if (is_future_output_enabled(h)) {
             Step end_step{end_step_value, step_units};
             end_step.hide_hour_unit();
             if (end_start_value == end_step_value) {
@@ -173,15 +174,15 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             else {
                 snprintf(buf, sizeof(buf), "%s-%s", start_step.to_string().c_str(), end_step.to_string().c_str());
             }
-        }
-        else {
-            if (end_start_value == end_step_value) {
-                snprintf(buf, sizeof(buf), "%ld", end_step_value);
-            }
-            else {
-                snprintf(buf, sizeof(buf), "%ld-%ld", end_start_value, end_step_value);
-            }
-        }
+        //}
+        //else {
+        //    if (end_start_value == end_step_value) {
+        //        snprintf(buf, sizeof(buf), "%ld", end_step_value);
+        //    }
+        //    else {
+        //        snprintf(buf, sizeof(buf), "%ld-%ld", end_start_value, end_step_value);
+        //    }
+        //}
 
     }
 
@@ -259,13 +260,13 @@ static int pack_string_new(grib_accessor* a, const char* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    if (is_future_output_enabled(h)) {
+    //grib_handle* h                   = grib_handle_of_accessor(a);
+    //if (is_future_output_enabled(h)) {
         return pack_string_new(a, val, len);
-    }
-    else {
-        return pack_string_old(a, val, len);
-    }
+    //}
+    //else {
+    //    return pack_string_old(a, val, len);
+    //}
 }
 
 static int value_count(grib_accessor* a, long* count)
@@ -300,8 +301,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if ((ret = grib_get_long_internal(h, self->start_step, &end_start_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        return ret;
+    //if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+    //    return ret;
+    step_units = get_step_units(h);
 
     Step start_step{end_start_value, step_units};
     start_step.hide_hour_unit();
