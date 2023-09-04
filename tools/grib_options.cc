@@ -39,7 +39,6 @@ static grib_options_help grib_options_help_list[] = {
     { "e:", "tolerance", "\n\t\tOnly values whose difference is more than tolerance are considered different.\n" },
     { "f", 0, "Force. Force the execution not to fail on error.\n" },
     { "F:", "format", "\n\t\tC style format for floating-point values.\n" },
-    { "y", "future", "\n\t\tFuture output format.\n" },
     { "g", 0, "Copy GTS header. \n" },
     { "G", 0, "GRIBEX compatibility mode.\n" },
     { "i:", "index",

@@ -366,7 +366,8 @@ static grib_context default_grib_context = {
     0,              /* classes                    */
     0,              /* lists                      */
     0,              /* expanded_descriptors       */
-    DEFAULT_FILE_POOL_MAX_OPENED_FILES /* file_pool_max_opened_files */
+    DEFAULT_FILE_POOL_MAX_OPENED_FILES, /* file_pool_max_opened_files */
+    0
 #if GRIB_PTHREADS
     ,
     PTHREAD_MUTEX_INITIALIZER /* mutex */
@@ -399,6 +400,7 @@ grib_context* grib_context_get_default()
         const char* grib_data_quality_checks            = NULL;
         const char* single_precision                    = NULL;
         const char* file_pool_max_opened_files          = NULL;
+        const char* is_future_step_format               = NULL;
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
         feenableexcept(FE_ALL_EXCEPT & ~FE_INEXACT);
@@ -421,6 +423,7 @@ grib_context* grib_context_get_default()
         no_spd                              = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix                         = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
         file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
+        is_future_step_format               = getenv("ECCODES_GRIB_IS_FUTURE_STEP_FORMAT");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
          * But on Windows a file can be opened in binary or text mode. In binary mode the system behaves exactly as in UNIX.
@@ -555,6 +558,7 @@ grib_context* grib_context_get_default()
         default_grib_context.grib_data_quality_checks = grib_data_quality_checks ? atoi(grib_data_quality_checks) : 0;
         default_grib_context.single_precision = single_precision ? atoi(single_precision) : 0;
         default_grib_context.file_pool_max_opened_files = file_pool_max_opened_files ? atoi(file_pool_max_opened_files) : DEFAULT_FILE_POOL_MAX_OPENED_FILES;
+        default_grib_context.is_future_step_format = is_future_step_format ? atoi(is_future_step_format) : 0;
     }
 
     GRIB_MUTEX_UNLOCK(&mutex_c);
