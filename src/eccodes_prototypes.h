@@ -408,8 +408,6 @@ int grib_g1_step_get_steps(grib_accessor* a, long* start, long* theEnd);
 
 /* grib_accessor_class_ifs_param.cc*/
 
-/* grib_accessor_class_int64_little_endian.cc*/
-
 /* grib_accessor_class_uint16.cc*/
 
 /* grib_accessor_class_uint32.cc*/
@@ -1119,7 +1117,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name);
 
 /* grib_scaling.cc*/
 double grib_power(long s, long n);
-long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret);
+long grib_get_binary_scale_fact(double max, double min, long bpval, int* error);
 
 /* grib_templates.cc*/
 grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
@@ -1284,7 +1282,7 @@ int grib_nearest_find_generic(grib_nearest* nearest, grib_handle* h, double inla
                               double* outlats, double* outlons, double* values, double* distances, int* indexes, size_t* len);
 
 /* grib_nearest_class.cc*/
-grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args);
+grib_nearest* grib_nearest_factory(grib_handle* h, grib_arguments* args, int* error);
 
 /* grib_nearest_class_gen.cc*/
 
@@ -1314,7 +1312,7 @@ int grib_iterator_init(grib_iterator* i, grib_handle* h, grib_arguments* args);
 int grib_iterator_delete(grib_iterator* i);
 
 /* grib_iterator_class.cc*/
-grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* ret);
+grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error);
 
 /* grib_iterator_class_gaussian.cc*/
 

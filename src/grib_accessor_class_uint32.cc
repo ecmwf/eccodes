@@ -116,12 +116,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }
-
 
 static int get_native_type(grib_accessor* a)
 {

@@ -17,9 +17,11 @@ tempLog="temp.${label}.log"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+latest=`${tools_dir}/grib_get -p tablesVersionLatest $input`
+
 # Create a filter
 cat > $tempFilter <<EOF
-  set tablesVersion = 32;
+  set tablesVersion = $latest;
   set gridType = "healpix";
   set longitudeOfFirstGridPointInDegrees = 45;
   set numberOfPointsAlongASide = 32;
@@ -35,7 +37,9 @@ if [ ! -f "$tempGrib" ]; then
 fi
 grib_check_key_equals $tempGrib gridType,orderingConvention,N,Nside 'healpix ring 32 32'
 grib_check_key_equals $tempGrib gridDefinitionTemplateNumber,gridName '150 H32'
-grib_check_key_equals $tempGrib gridDefinitionDescription 'Hierarchical Equal Area isoLatitude Pixelization grid'
+if [ $latest -gt 31 ]; then
+  grib_check_key_equals $tempGrib gridDefinitionDescription 'Hierarchical Equal Area isoLatitude Pixelization grid'
+fi
 
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
 ${tools_dir}/grib_ls -jn geography $tempGrib
@@ -44,7 +48,7 @@ ${tools_dir}/grib_ls -jn geography $tempGrib
 # -------------
 rm -f $tempGrib
 cat > $tempFilter <<EOF
-  set tablesVersion = 32;
+  set tablesVersion = $latest;
   set gridType = "healpix";
   set longitudeOfFirstGridPointInDegrees = 45;
   set numberOfPointsAlongASide = 1;

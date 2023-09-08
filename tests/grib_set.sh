@@ -208,6 +208,22 @@ count=`${tools_dir}/grib_count $outfile`
 [ $count -eq 1 ]
 grib_check_key_equals $outfile shortName '2t'
 
+# Key with no_fail flag
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+grib_check_key_equals $input 'typeOfProcessedData:i' '2'
+${tools_dir}/grib_set -s typeOfProcessedData=rubbish $input $outfile
+grib_check_key_equals $outfile 'typeOfProcessedData:i' '255' # set to default
+
+# Codetable mismatch
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+set +e
+${tools_dir}/grib_set -s stepUnits=d $input $outfile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "stepUnits: No such code table entry.*Did you mean" $temp
 
 # ------------------------
 # Unreadable message

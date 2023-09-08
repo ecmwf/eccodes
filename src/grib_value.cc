@@ -37,7 +37,12 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     size_t N = 7, i = 0;
     T minVal = std::numeric_limits<T>::max();
     T maxVal = -std::numeric_limits<T>::max();
+    double missingValue = 0;
     Assert( h->context->debug );
+
+    if (grib_get_double(h, "missingValue", &missingValue)!=GRIB_SUCCESS) {
+        missingValue = 9999.0;
+    }
 
     if (length <= N)
         N = length;
@@ -49,6 +54,7 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
     for (i = 0; i < length; ++i) {
+        if (val[i] == (T)missingValue) continue;
         if (val[i] < minVal) minVal = val[i];
         if (val[i] > maxVal) maxVal = val[i];
     }
