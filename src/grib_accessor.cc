@@ -14,6 +14,8 @@
  ***************************************************************************/
 
 #include "grib_accessor.h"
+#include "Accessor.h"
+#include "AccessorStore.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -307,7 +309,17 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
     /* grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (string)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
     while (c) {
         if (c->unpack_string) {
+#ifdef USE_CPP_ACCESSORS
+            int ret = c->unpack_string(a, v, len);
+            if(auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name)); accessorPtr)
+            {
+                std::string value = accessorPtr->unpack<std::string>();
+                if(value != std::string{v}) { Assert(false); }
+            }
+            return ret;
+#else
             return c->unpack_string(a, v, len);
+#endif
         }
         c = c->super ? *(c->super) : NULL;
     }

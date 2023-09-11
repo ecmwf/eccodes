@@ -9,10 +9,9 @@
 # nor does it submit to any jurisdiction.
 #
 
-set(eccodes_dir				${CMAKE_CURRENT_LIST_DIR}/eccodes)
-set(accessor_dir			${eccodes_dir}/accessor)
+set(eccodes_dir			${CMAKE_CURRENT_LIST_DIR}/eccodes)
+set(accessor_dir		${eccodes_dir}/accessor)
 set(accessor_data_dir		${accessor_dir}/AccessorData)
-set(accessor_data_funcs_dir	${accessor_data_dir}/AccessorDataFuncs)
 set(accessor_utils_dir		${accessor_dir}/AccessorUtils)
 set(accessor_test_dir		${accessor_dir}/Test)
 
@@ -39,11 +38,6 @@ set(accessor_data_src_files
 	${accessor_data_dir}/ProjStringData.h
 )
 
-set(accessor_data_funcs_src_files
-	${accessor_data_funcs_dir}/ProjStringFuncs.cc
-	${accessor_data_funcs_dir}/ProjStringFuncs.h
-)
-
 set(accessor_utils_src_files
 	${accessor_utils_dir}/AccessorException.h
 	${accessor_utils_dir}/AccessorLogger.cc
@@ -53,6 +47,8 @@ set(accessor_utils_src_files
 	${accessor_utils_dir}/GribStatus.h
 	${accessor_utils_dir}/GribType.cc
 	${accessor_utils_dir}/GribType.h
+	${accessor_utils_dir}/GribUtils.cc
+	${accessor_utils_dir}/GribUtils.h
 	${accessor_utils_dir}/NamedType.h
 	${accessor_utils_dir}/TypeString.h
 )

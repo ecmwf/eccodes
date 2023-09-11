@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#define USE_CPP_ACCESSORS
+
 namespace eccodes::accessor {
 
 class Accessor;

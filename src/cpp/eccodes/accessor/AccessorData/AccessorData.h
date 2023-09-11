@@ -46,7 +46,7 @@ public:
     virtual GribStatus packMissing();
 
     // Pack - buffer
-    virtual GribStatus pack(std::string const& values);
+    virtual GribStatus pack(std::string const& value);
     virtual GribStatus pack(std::vector<long> const& values);
     virtual GribStatus pack(std::vector<double> const& values);
     virtual GribStatus pack(std::vector<float> const& values);
@@ -58,7 +58,7 @@ public:
     GribStatus unpack(T &value) const;
 
     // Unpack - buffer
-    virtual GribStatus unpack(std::string &values) const;
+    virtual GribStatus unpack(std::string &value) const;
     virtual GribStatus unpack(std::vector<long>& values) const;
     virtual GribStatus unpack(std::vector<double>& values) const;
     virtual GribStatus unpack(std::vector<float>& values) const;

@@ -53,4 +53,21 @@ bool AccessorStore::destroyAccessor(AccessorName const& name)
    return false;
 }
 
+AccessorPtr get(AccessorName const& name)
+{
+   return AccessorStore::instance().getAccessor(name);
+}
+
+// C-Support
+void add_grib_accessor(AccessorName const& name, grib_accessor* a)
+{
+   AccessorStore::instance().grib_accessors_[name] = a;
+}
+
+grib_accessor* get_grib_accessor(AccessorName const& name)
+{
+   // Will throw if accessor not found...
+   return AccessorStore::instance().grib_accessors_.at(name);
+}
+
 }

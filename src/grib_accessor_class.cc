@@ -19,6 +19,7 @@
 
 // C++ Support
 #include "cpp/eccodes/accessor/AccessorFactory.h"
+#include "cpp/eccodes/accessor/AccessorStore.h"
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
@@ -137,7 +138,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a       = NULL;
     size_t size            = 0;
 
-    // C++
+    // C++ Accessors
+#ifdef USE_CPP_ACCESSORS
     using namespace eccodes::accessor;
     auto accessorType = AccessorType(creator->op);
     if(auto& factory = AccessorFactory::instance(); factory.has(accessorType))
@@ -148,6 +150,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
         auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
         Assert(accessorPtr);
     }
+#endif // USE_CPP_ACCESSORS
 
 #ifdef ACCESSOR_FACTORY_USE_TRIE
     c = get_class(p->h->context, creator->op);
@@ -157,6 +160,11 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 #endif
 
     a = (grib_accessor*)grib_context_malloc_clear(p->h->context, c->size);
+
+    // C++ - we'll keep a copy of the grib_accessor pointer for any accessors not yet implemented
+#ifdef USE_CPP_ACCESSORS
+    add_grib_accessor(AccessorName(creator->name), a);
+#endif // USE_CPP_ACCESSORS
 
     a->name       = creator->name;
     a->name_space = creator->name_space;

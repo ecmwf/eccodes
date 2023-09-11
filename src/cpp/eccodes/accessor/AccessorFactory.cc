@@ -2,7 +2,7 @@
 #include "Accessor.h"
 #include "AccessorUtils/AccessorLogger.h"
 #include "AccessorUtils/AccessorException.h"
-
+#include "AccessorStore.h"
 #include "grib_api_internal.h"
 
 #include <map>
@@ -79,7 +79,11 @@ AccessorPtr AccessorFactory::build(AccessorType const& type, AccessorName const&
         }
         throw AccessorException(std::string("No AccessorBuilder called ") + type.get());
     }
-    else return builder_->second->make(name, nameSpace, initData);
+    else {
+        AccessorPtr ptr = builder_->second->make(name, nameSpace, initData);
+        AccessorStore::instance().addAccessor(ptr);
+        return ptr;
+    }  
 }
 
 //----------------------------------------------------------------------------------------------------------------------

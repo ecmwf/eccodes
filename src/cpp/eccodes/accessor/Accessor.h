@@ -19,18 +19,16 @@ class Accessor
 public:
     Accessor(AccessorName const& name, AccessorNameSpace const& nameSpace, AccessorDataPtr data);
 
-    AccessorName name() const;
+    AccessorName    name() const;
+    std::size_t     stringLength() const;
+    long            valueCount() const;
+    GribType        nativeType() const;
+    double          nearestSmallerValue(double val) const;
+    int             compare(AccessorPtr const rhs) const;
+    int             isMissing() const;
 
-    //void dump(grib_dumper const& dumper) const;
-    std::size_t stringLength() const;
-    long valueCount() const;
-    GribType nativeType() const;
-    double nearestSmallerValue(double val) const;
-    int compare(AccessorPtr const rhs) const;
-    int isMissing() const;
-
-    bool newBuffer(AccessorBuffer const& accBuffer);
-    AccessorBuffer currentBuffer() const;
+    bool            newBuffer(AccessorBuffer const& accBuffer);
+    AccessorBuffer  currentBuffer() const;
 
     template<typename T>
     GribStatus pack(T const& values);

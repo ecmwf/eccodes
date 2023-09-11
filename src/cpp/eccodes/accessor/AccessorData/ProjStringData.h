@@ -13,7 +13,7 @@ public:
 
 private:
     GribType nativeType() const override;
-    GribStatus unpack(std::string &values) const override;
+    GribStatus unpack(std::string &value) const override;
 
     AccessorName gridType_{""};
     int endpoint_;

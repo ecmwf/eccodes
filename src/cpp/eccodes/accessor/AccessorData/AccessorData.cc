@@ -111,7 +111,7 @@ GribStatus AccessorData::packMissing()
 }
 
 // Pack - buffer
-GribStatus AccessorData::pack(std::string const& values)
+GribStatus AccessorData::pack(std::string const& value)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
@@ -142,7 +142,7 @@ GribStatus AccessorData::pack(std::vector<std::byte> const& values)
 }
 
 // Unpack - buffer
-GribStatus AccessorData::unpack(std::string &values) const
+GribStatus AccessorData::unpack(std::string &value) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
