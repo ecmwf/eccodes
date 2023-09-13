@@ -10,7 +10,7 @@ alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.origin = centre;
 
-# Special UERRA rule for level type 103 'Specified height level above ground (m)'
+# Special rule for level type 103 'Specified height level above ground (m)'
 if(typeOfFirstFixedSurface == 103) {
     # only the parameters above 10m
     if (level > 10) {
@@ -20,6 +20,8 @@ if(typeOfFirstFixedSurface == 103) {
         alias mars.levelist = level;
     }
 }
+
+# Define marsType based on type of processed data
 
 concept marsType(unknown) {
 

@@ -1,13 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 # Hooks after section 6 for DestinE (productionStatusOfProcessedData=12)
 
-
 # conceptsDir2 --> datasetForLocal
-concept gridSpecification("unknown", "gridXYZConcept.def",conceptsDir2,conceptsDir1): no_copy;
-alias mars.gridSpecification = gridSpecification
+concept gridSpecification(unknown, "gridSpecificationConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
 
-concept destineOrigin("unknown", "destineOriginConcept.def",conceptsDir2,conceptsDir1): no_copy;
-alias mars.origin = destineOrigin
+concept destineOrigin (unknown, "destineOriginConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
+alias mars.origin = destineOrigin;
 
-concept modelVersion("unknown", "modelVersionConcept.def",conceptsDir2,conceptsDir1): no_copy;
-alias mars.modelVersion = modelVersion
+concept modelVersion (unknown, "modelVersionConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
+

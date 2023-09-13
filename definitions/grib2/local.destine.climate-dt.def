@@ -2,3 +2,12 @@
 
 codetable[2] datasetVersion "grib2/destine_datasetVersion.table" : dump;
 alias mars.datasetVersion = datasetVersion;
+
+codetable[2] CMIPActivity "grib2/destine_CMIPActivity.table" : dump;
+alias mars.CMIPActivity = CMIPActivity;
+
+codetable[2] CMIPExperiment "grib2/destine_CMIPExperiment.table" : dump;
+alias mars.CMIPExperiment = CMIPExperiment;
+
+codetable[2] CMIPGridLabel "grib2/destine_CMIPGridLabel.table" : dump;
+alias mars.CMIPGridLabel = CMIPGridLabel;
