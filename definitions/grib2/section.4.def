@@ -33,11 +33,11 @@ concept datasetForLocal(unknown) {
   "hydro"   = {marsClass="ul";} # ULYSSES
   "fire"    = {marsClass="gw";} # Global Wildfire awareness system
   "uerra"   = {productionStatusOfProcessedData=8;} # UERRA
-  "uerra"   = {productionStatusOfProcessedData=9;} # UERRA
+  "uerra"   = {productionStatusOfProcessedData=9;}
   "uerra"   = {productionStatusOfProcessedData=10;} # CARRA/CERRA
-  "uerra"   = {productionStatusOfProcessedData=11;} # CARRA/CERRA
-  "destine"   = {productionStatusOfProcessedData=12;} # DestinE
-  "destine"   = {productionStatusOfProcessedData=13;} # DestinE Test
+  "uerra"   = {productionStatusOfProcessedData=11;}
+  "destine" = {productionStatusOfProcessedData=12;} # Destination Earth
+  "destine" = {productionStatusOfProcessedData=13;}
   "unknown" = { dummy=1; }
 }
 

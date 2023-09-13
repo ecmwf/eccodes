@@ -87,6 +87,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_check_descriptors
         definitions
         grib2_version
+        grib_accessors
         grib_calendar
         grib_md5
         grib_cfNames
