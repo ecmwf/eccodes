@@ -1,2 +1,3 @@
 # Concept modelVersion
-# '48r1' = {backgroundProcess = 255, generatingProcessIdentifier = ...} # TODO: Need to work out proper mapping and make those keys local
+# TODO: Need to work out proper mapping and make those keys local
+'48r1' = {backgroundProcess = 255, generatingProcessIdentifier = 255}
