@@ -21,8 +21,8 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = unpack_long;dump
-   IMPLEMENTS = unpack_string;dump
+   IMPLEMENTS = pack_long,unpack_long;dump
+   IMPLEMENTS = unpack_string,unpack_string;dump
    IMPLEMENTS = string_length
    IMPLEMENTS = init
    MEMBERS    = const char* forecast_time_value
@@ -84,13 +84,13 @@ static grib_accessor_class _grib_accessor_class_optimal_step_units = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    0,                  /* pack_long */
+    &pack_long,                  /* pack_long */
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    0,                /* pack_string */
+    &pack_string,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -150,44 +150,48 @@ static size_t string_length(grib_accessor* a)
 
 static long staticStepUnits = UnitType{Unit::MISSING}.to_long();
 
-//static int pack_long(grib_accessor* a, const long* val, size_t* len)
-//{
-//    staticStepUnits = *val;
+static int pack_long(grib_accessor* a, const long* val, size_t* len)
+{
+    staticStepUnits = *val;
 
-//    return GRIB_SUCCESS;
-//}
+    return GRIB_SUCCESS;
+}
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    //if (staticStepUnits != 255) {
-    //    *val = staticStepUnits;
-    //    return GRIB_SUCCESS;
-    //}
+    if (staticStepUnits != 255) {
+        *val = staticStepUnits;
+        return GRIB_SUCCESS;
+    }
+
     grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
 
     auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
     auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
 
-    if (!(forecast_time_opt && time_range_opt)) {
+    if (forecast_time_opt && time_range_opt) {
+        auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(), (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
+        *val = step_a.unit().to_long();
+    }
+    else if (forecast_time_opt && !time_range_opt) {
+        *val = forecast_time_opt.value().optimize_unit().unit().to_long();
+    }
+    else if (!forecast_time_opt && time_range_opt) {
+        *val = time_range_opt.value().optimize_unit().unit().to_long();
+    }
+    else if (!forecast_time_opt && !time_range_opt) {
         *val = UnitType{Unit::HOUR}.to_long();
-        return GRIB_SUCCESS;
     }
 
-    Step forecast_time = forecast_time_opt.value_or(Step{});
-    Step time_range = time_range_opt.value_or(Step{});
-
-    auto [step_a, step_b] = find_common_units(forecast_time.optimize_unit(), (forecast_time + time_range).optimize_unit());
-    *val = step_a.unit().to_long();
     return GRIB_SUCCESS;
 }
 
-
-//static int pack_string(grib_accessor* a, const char* val, size_t* len)
-//{
-//    staticStepUnits = UnitType{val}.to_long();
-//    return GRIB_SUCCESS;
-//}
+static int pack_string(grib_accessor* a, const char* val, size_t* len)
+{
+    staticStepUnits = UnitType{val}.to_long();
+    return GRIB_SUCCESS;
+}
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {

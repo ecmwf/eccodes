@@ -114,7 +114,6 @@ Step Step::operator-(const Step& step) const
 }
 
 
-//std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep)
 std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep)
 {
     Step a = startStep;
@@ -140,7 +139,6 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
         b.recalculateValue();
     }
     else {
-        // Find the highest common unit
         auto it = std::find_if(UnitType::unit_order_.begin(), UnitType::unit_order_.end(), [&](const auto& e) {
             return e == a.unit().to_value() || e == b.unit().to_value();
         });

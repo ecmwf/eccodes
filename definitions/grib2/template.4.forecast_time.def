@@ -14,9 +14,9 @@ codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump
 #alias forecastTimeUnit = indicatorOfUnitOfTimeRange;
 #template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
 #codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
-codetable[1] stepUnits 'stepUnits.table' = 255 : transient,dump,no_copy;
-#transient useOptimalStepUnits = 0;
-meta optimalStepUnits optimal_step_units(forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange) : dump;
+meta stepUnits optimal_step_units(forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange) : dump;
+transient startStepUnit = 255;
+transient endStepUnit = 255;
 
 # Forecast time in units defined by previous octet (GRIB-29: supports negative forecast time)
 signed[4] forecastTime  : dump;
