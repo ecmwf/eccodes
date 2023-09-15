@@ -191,7 +191,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     Step step{forecast_time_value, forecast_time_unit};
 
     if ((err = grib_set_long_internal(h, "startStepUnit", UnitType{step_units}.to_long())) != GRIB_SUCCESS)
-        return err; 
+        return err;
 
     *val = step.value<long>(UnitType{step_units});
 
@@ -279,9 +279,12 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     Step time_range_new{};
 
     auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
+    
     if (time_range_opt) {
         auto time_range = time_range_opt.value();
         time_range = time_range - (forecast_time - start_step_old);
+        if (time_range.value<long>() < 0)
+            time_range = Step{0l, time_range.unit()};
         auto [sa, sb] = find_common_units(forecast_time.optimize_unit(), time_range.optimize_unit());
         if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, sa)) != GRIB_SUCCESS)
             return err;

@@ -46,6 +46,19 @@ temp2=temp_2.$label
 
 
 
+#### CHECK: check optimal units are set correctly in GRIB files
+fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
+grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
+
+${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=m $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "1 h 2 h"
+${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=h $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 180 h"
+
 
 #fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 #low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"

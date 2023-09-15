@@ -195,7 +195,13 @@ public:
     Step operator-(const Step& step) const;
     bool operator>(const Step& step) const;
     bool operator<(const Step& step) const;
-    Step copy() const {return Step{internal_value_, internal_unit_};}
+    Step copy() const {
+        Step ret{};
+        ret.internal_value_ = internal_value_;
+        ret.internal_unit_ = internal_unit_;
+        ret.unit_ = unit_;
+        return ret;
+    }
 
     // Methods
     Step& optimize_unit();

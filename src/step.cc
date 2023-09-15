@@ -50,7 +50,8 @@ Step step_from_string(std::string step)
             if (unit.size() == 0) {
                 unit = "h";
             }
-            return Step{std::stod(value), UnitType{unit}};
+            Step ret{std::stod(value), UnitType{unit}};
+            return ret;
         }
     }
     throw std::runtime_error("Could not parse step: " + step);
@@ -176,7 +177,7 @@ void Step::init_double(double value, const UnitType& unit)
 {
     long seconds = UnitType::get_converter().unit_to_duration(unit.to_value());
     init_long(static_cast<long>(value * seconds), UnitType{Unit::SECOND});
-    optimize_unit();
+    unit_ = unit;
 }
 
 Step& Step::optimize_unit()
