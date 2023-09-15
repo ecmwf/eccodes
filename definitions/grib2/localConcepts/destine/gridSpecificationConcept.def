@@ -1,2 +1,4 @@
 # Concept gridSpecification
-'O1280' = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
+'CARRA-East' = {numberOfDataPoints = 780321; gridDefinitionTemplateNumber=30; Nx=789; Ny=989;}
+'O1280' = {numberOfDataPoints=6599680; gridDefinitionTemplateNumber=40; Nj=2560;}
+'O8000' = {numberOfDataPoints=256288000; gridDefinitionTemplateNumber=40; Nj=16000;}
