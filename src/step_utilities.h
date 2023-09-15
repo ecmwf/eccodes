@@ -7,4 +7,3 @@
 std::optional<Step> get_step(grib_handle* h, const std::string& value_key, const std::string& unit_key);
 bool is_future_output_enabled(grib_handle* h);
 int set_step(grib_handle* h, const std::string& value_key, const std::string& unit_key, const Step& step);
-long get_step_units(grib_handle* h);

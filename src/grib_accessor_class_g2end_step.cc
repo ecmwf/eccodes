@@ -281,9 +281,8 @@ static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 
     if ((err = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
         return err;
-    //if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
-        //return err;
-    step_units = get_step_units(h);
+    if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
+        return err;
     if ((err = grib_get_long_internal(h, self->time_range_unit, &time_range_unit)))
         return err;
     if ((err = grib_get_long_internal(h, self->time_range_value, &time_range_value)))
@@ -329,9 +328,8 @@ static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t
 
     if ((err = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
         return err;
-    //if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
-        //return err;
-    step_units = get_step_units(h);
+    if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
+        return err;
     if ((err = grib_get_long_internal(h, self->numberOfTimeRange, &numberOfTimeRange)))
         return err;
     if (numberOfTimeRange > MAX_NUM_TIME_RANGES) {
@@ -576,9 +574,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
     long step_units;
-    //if ((ret = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
-        //return ret;
-    step_units = get_step_units(h);
+    if ((ret = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
+        return ret;
 
     Step step(step_value, step_units);
     step.set_unit(step_units);

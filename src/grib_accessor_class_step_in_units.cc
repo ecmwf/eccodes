@@ -209,9 +209,8 @@ int pack_long_old_(grib_accessor* a, const long* val, size_t* len) {
 
     if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
         return err;
-    //if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
-    //    return err;
-    step_units = get_step_units(h);
+    if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
+        return err;
 
     unpack_long(a, &oldStep, len);
 
@@ -347,7 +346,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
     long step_units;
-    step_units = get_step_units(h);
+    if ((ret = grib_get_long_internal(h, self->step_units, &step_units)))
+        return ret;
 
     Step step{value, step_units};
     step.hide_hour_unit();
