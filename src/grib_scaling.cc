@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 
@@ -21,7 +17,7 @@ double grib_power(long s, long n) {
     return codes_power<double>(s, n);
 }
 
-long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
+long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 {
     double range         = max - min;
     double zs            = 1;
@@ -35,20 +31,19 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
       double dmaxint=(double)maxint;
     */
     if (bpval >= ulong_size) {
-        *ret = GRIB_OUT_OF_RANGE; /*overflow*/
+        *error = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;
     }
     const double dmaxint = codes_power<double>(bpval, 2) - 1;
     maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
-    *ret = 0;
+    *error = 0;
     if (bpval < 1) {
-        *ret = GRIB_ENCODING_ERROR; /* constant field */
+        *error = GRIB_ENCODING_ERROR; /* constant field */
         return 0;
     }
 
     Assert(bpval >= 1);
-    /*   printf("---- Maxint %ld range=%g\n",maxint,range);    */
     if (range == 0)
         return 0;
 
@@ -74,8 +69,7 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
     }
 
     if (scale < -last) {
-        *ret = GRIB_UNDERFLOW;
-        /*printf("grib_get_binary_scale_fact: max=%g min=%g\n",max,min);*/
+        *error = GRIB_UNDERFLOW;
         scale = -last;
     }
     Assert(scale <= last);

@@ -41,7 +41,7 @@ program precision
 
    allocate (values1(size1), stat=iret)
    allocate (values2(size1), stat=iret)
-   ! get data values before changing the packing parameters*/
+   ! get data values before changing the packing parameters
    call codes_get(igrib, "values", values1)
 
    ! setting decimal precision=2 means that 2 decimal digits

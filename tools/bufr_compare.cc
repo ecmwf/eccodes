@@ -458,6 +458,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         if (compare_handles(h, global_handle, options)) {
             error++;
+            write_messages(h, global_handle);
             if (!force)
                 exit(1);
         }
@@ -479,6 +480,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     if (compare_handles(global_handle, h, options)) {
         error++;
+        write_messages(global_handle, h);
         if (!two_way) {
             /* If two_way mode: Don't exit yet. Show further differences */
             if (!force)
@@ -492,6 +494,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             printf("  Swapping handles (two-way mode)\n");
         if (compare_handles(h, global_handle, options)) {
             error++;
+            write_messages(h, global_handle);
             if (!force)
                 exit(1);
         }
@@ -1205,7 +1208,6 @@ static int compare_attributes(grib_handle* handle1, grib_handle* handle2, grib_r
 
         if (compare_attribute(handle1, handle2, options, aa, prefix, err)) {
             (*err)++;
-            write_messages(handle1, handle2);
             ret = 1;
         }
 
@@ -1225,7 +1227,6 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
     snprintf(fullname, fullnameMaxLen, "%s->%s", prefix, a->name);
     if (compare_values(options, handle1, handle2, fullname, GRIB_TYPE_UNDEFINED)) {
         (*err)++;
-        write_messages(handle1, handle2);
         ret = 1;
     }
     /* Recurse if this key has children */
@@ -1303,13 +1304,11 @@ static int compare_all_dump_keys(grib_handle* handle1, grib_handle* handle2, gri
         /* Compare the key itself */
         if (compare_values(options, handle1, handle2, prefix, GRIB_TYPE_UNDEFINED)) {
             (*pErr)++;
-            write_messages(handle1, handle2);
             ret = 1;
         }
         /* Now compare the key attributes (if any) */
         if (compare_attributes(handle1, handle2, options, xa, prefix, pErr)) {
             (*pErr)++;
-            write_messages(handle1, handle2);
             ret = 1;
         }
         if (dofree)
@@ -1346,7 +1345,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                         continue;
                     if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                         err++;
-                        write_messages(handle1, handle2);
                     }
                 }
                 grib_keys_iterator_delete(iter);
@@ -1354,7 +1352,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             else {
                 if (compare_values(options, handle1, handle2, options->compare[i].name, options->compare[i].type))
                     err++;
-                write_messages(handle1, handle2);
             }
         }
     }
@@ -1409,7 +1406,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                             continue;
                         if (compare_values(options, handle1, handle2, name, GRIB_TYPE_UNDEFINED)) {
                             err++;
-                            write_messages(handle1, handle2);
                             if (compare_all_dump_keys(handle1, handle2, options, &err)) {
                                 err++;
                             }
@@ -1420,7 +1416,6 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                 else {
                     if (compare_values(options, handle1, handle2, options->compare[i].name, options->compare[i].type)) {
                         err++;
-                        write_messages(handle1, handle2);
                         if (compare_all_dump_keys(handle1, handle2, options, &err)) {
                             err++;
                         }

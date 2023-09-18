@@ -18,6 +18,8 @@ temp=temp.grib_set.out
 
 rm -f $outfile
 
+${tools_dir}/grib_set -V
+
 ${tools_dir}/grib_set -v -p levtype,centre,levtype,centre:l -s levtype=pl,centre=80 $infile $outfile >$REDIRECT
 
 levtype=`${tools_dir}/grib_get -p levtype $outfile`
@@ -84,6 +86,17 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Trying to encode a negative value of -1 for key of type unsigned" $temp
+
+# Bad value for -d
+# ----------------
+input=${data_dir}/reduced_gaussian_sub_area.grib2
+set +e
+${tools_dir}/grib_set -d hello $input $outfile 2>$temp
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid number" $temp
+
 
 # ECC-1605: Out-of-bounds value for signed keys
 # ----------------------------------------------------
@@ -194,6 +207,34 @@ ${tools_dir}/grib_set -w shortName=2t -S -s offsetValuesBy=0.5  $input $outfile
 count=`${tools_dir}/grib_count $outfile`
 [ $count -eq 1 ]
 grib_check_key_equals $outfile shortName '2t'
+
+# Key with no_fail flag
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+grib_check_key_equals $input 'typeOfProcessedData:i' '2'
+${tools_dir}/grib_set -s typeOfProcessedData=rubbish $input $outfile
+grib_check_key_equals $outfile 'typeOfProcessedData:i' '255' # set to default
+
+# Codetable mismatch
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+set +e
+${tools_dir}/grib_set -s stepUnits=d $input $outfile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "stepUnits: No such code table entry.*Did you mean" $temp
+
+# ------------------------
+# Unreadable message
+# ------------------------
+echo GRIB > $outfile
+set +e
+${tools_dir}/grib_set -s edition=2 $outfile /dev/null > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $temp
 
 
 # Clean up

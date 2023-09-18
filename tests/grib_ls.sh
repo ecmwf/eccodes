@@ -40,6 +40,7 @@ ${tools_dir}/grib_ls -l 0,0,1 $infile       >> $tempLog
 ${tools_dir}/grib_get -l 0,0,1 $infile      >> $tempLog
 ${tools_dir}/grib_get -p count,step $infile >> $tempLog
 ${tools_dir}/grib_get -P count $infile      >> $tempLog
+${tools_dir}/grib_get -i 0 $infile
 
 files=" reduced_gaussian_lsm.grib1
 reduced_gaussian_model_level.grib1
@@ -113,6 +114,14 @@ echo "ECC-278: grib_ls -n namespace..."
 # ----------------------------------------------------------
 ${tools_dir}/grib_ls -n geography $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib2.tmpl
 ${tools_dir}/grib_ls -n data      $sample_g1
+
+set +e
+${tools_dir}/grib_ls -n nosuchnamespace $sample_g1 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "does not contain any key" $tempText
+
 
 # Angle subdivisions
 grib_check_key_equals $sample_g1 angleSubdivisions 1000
@@ -205,6 +214,17 @@ grep -q "Invalid file offset" $tempText
 file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $file 'expver:d' 1
 grib_check_key_equals $file 'expver:s' '0001'
+
+
+${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
+${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
+
+set +e
+${tools_dir}/grib_ls -l0,0,666 $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong mode given" $tempText
 
 
 # Clean up

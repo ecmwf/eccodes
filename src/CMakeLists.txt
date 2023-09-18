@@ -210,7 +210,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_complex_packing.cc
     grib_accessor_class_data_g1complex_packing.cc
     grib_accessor_class_gds_not_present_bitmap.cc
-    grib_accessor_class_data_apply_gdsnotpresent.cc
     grib_accessor_class_gds_is_present.cc
     grib_accessor_class_select_step_template.cc
     grib_accessor_class_local_definition.cc
@@ -317,6 +316,7 @@ list( APPEND eccodes_src_files
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
+    grib_nearest_class_healpix.cc
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
@@ -338,6 +338,7 @@ list( APPEND eccodes_src_files
     grib_iterator_class_latlon.cc
     grib_iterator_class_regular.cc
     grib_iterator_class_space_view.cc
+    grib_iterator_class_healpix.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
@@ -358,10 +359,7 @@ list( APPEND eccodes_src_files
     grib_yacc.h
     md5.h
     md5.cc
-    grib_accessor_class_int16_little_endian.cc
-    grib_accessor_class_int64_little_endian.cc
     grib_accessor_class_uint16.cc
-    grib_accessor_class_uint16_little_endian.cc
     grib_accessor_class_uint32.cc
     grib_accessor_class_uint32_little_endian.cc
     grib_accessor_class_uint64.cc

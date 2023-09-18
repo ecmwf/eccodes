@@ -85,9 +85,12 @@
 	}
 #Total column ozone
 'atmosphere_mass_content_of_ozone' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 206 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Hydrogen peroxide
 'mass_fraction_of_hydrogen_peroxide_in_air' = {

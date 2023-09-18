@@ -37,7 +37,7 @@ ${tools_dir}/metar_compare $metar_file $metar_file
 #----------------------------------------------------
 sed -e 's:^METAR VECC 022350Z 00000KT 1600 BR NSC 15/13 Q1013 NOSIG:METAR VECC 022349Z 00000KT 1600 BR NSC 15/13 Q1013 NOSIG:' < metar.txt > $fMetarTmp
 set +e
-${tools_dir}/metar_compare -v -d $metar_file $fMetarTmp
+${tools_dir}/metar_compare -v -d -f $metar_file $fMetarTmp
 status=$?
 set -e
 if [ $status -eq 0 ]; then

@@ -1171,6 +1171,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             COPY_SPEC_LONG(bitmapPresent);
             if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
             COPY_SPEC_LONG(N); // Nside
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
             break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:

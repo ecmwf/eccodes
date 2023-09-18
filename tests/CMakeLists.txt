@@ -21,6 +21,7 @@ list(APPEND test_c_bins
     unit_tests
     bufr_keys_iter
     grib_keys_iter
+    grib_keys_iter_skip
     grib_geo_iter
     gauss_sub
     grib_nearest_test
@@ -31,6 +32,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling
     grib_optimize_scaling_sh
     grib_set_force
+    grib_run_length_packing
     grib_partial_message
     grib_ecc-386
     grib_ecc-1467
@@ -85,6 +87,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_check_descriptors
         definitions
         grib2_version
+        grib_accessors
         grib_calendar
         grib_md5
         grib_cfNames
@@ -142,6 +145,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
+        grib_grid_healpix
         grib_g1monthlydate
         grib_g1day_of_the_year_date
         grib_g1fcperiod)
@@ -187,6 +191,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_change_edition
         bufr_keys_iter
         grib_keys_iter
+        grib_keys_iter_skip
         grib_geo_iter
         bufr_get_element
         bufr_wmo_tables
@@ -236,6 +241,7 @@ if( HAVE_BUILD_TOOLS )
         gts_count
         gts_compare
         wrap
+        taf
         pseudo_diag
         metar_ls
         metar_get
