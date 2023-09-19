@@ -542,8 +542,8 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
 	}
-#10 metre wind gust in the last 6 hours
-'10 metre wind gust in the last 6 hours' = {
+#Maximum 10 metre wind gust in the last 6 hours
+'Maximum 10 metre wind gust in the last 6 hours' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 123 ;

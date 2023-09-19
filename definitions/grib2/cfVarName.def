@@ -206,7 +206,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 'fg10' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -2441,7 +2441,7 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#10 metre wind gust in the last 3 hours
+#Maximum 10 metre wind gust in the last 3 hours
 'fg310' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
