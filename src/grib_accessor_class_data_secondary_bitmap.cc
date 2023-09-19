@@ -40,7 +40,6 @@ static int get_native_type(grib_accessor*);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_secondary_bitmap
 {
@@ -105,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_data_secondary_bitmap = {
 
 
 grib_accessor_class* grib_accessor_class_data_secondary_bitmap = &_grib_accessor_class_data_secondary_bitmap;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -215,8 +208,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_secondary_bitmap* self =  (grib_accessor_data_secondary_bitmap*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
-
+    // grib_accessor_data_secondary_bitmap* self =  (grib_accessor_data_secondary_bitmap*)a;
+    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
     return GRIB_TYPE_DOUBLE;
 }

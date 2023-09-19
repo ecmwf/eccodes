@@ -224,12 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Montgomery potential
-'mont' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 53 ;
-	}
 #Mean temperature at 2 metres in the last 24 hours
 'mean2t24' = {
 	 discipline = 192 ;
@@ -673,24 +667,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 160 ;
 	}
-#Anisotropy of sub-gridscale orography
-'isor' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 161 ;
-	}
-#Angle of sub-gridscale orography
-'anor' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 162 ;
-	}
-#Slope of sub-gridscale orography
-'slor' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 163 ;
-	}
 #Total cloud cover
 'tcc' = {
 	 localTablesVersion = 1 ;
@@ -827,9 +803,12 @@
 	}
 #Total column ozone
 'tco3' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 206 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Diabatic heating by radiation
 'dhr' = {
@@ -945,15 +924,21 @@
 	}
 #Convective snowfall
 'csf' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 239 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Large-scale snowfall
 'lsf' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 240 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Accumulated cloud fraction tendency
 'acf' = {
@@ -2803,42 +2788,6 @@
 	 parameterCategory = 5 ;
 	 parameterNumber = 194 ;
 	 typeOfGeneratingProcess = 9 ;
-	}
-#UV visible albedo for diffuse radiation, isotropic component 
-'aluvdi' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 192 ;
-	}
-#UV visible albedo for diffuse radiation, volumetric component 
-'aluvdv' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 193 ;
-	}
-#UV visible albedo for diffuse radiation, geometric component 
-'aluvdg' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 194 ;
-	}
-#Near IR albedo for diffuse radiation, isotropic component 
-'alnidi' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 195 ;
-	}
-#Near IR albedo for diffuse radiation, volumetric component 
-'alnidv' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 196 ;
-	}
-#Near IR albedo for diffuse radiation, geometric component 
-'alnidg' = {
-	 discipline = 192 ;
-	 parameterCategory = 210 ;
-	 parameterNumber = 197 ;
 	}
 #Total aerosol optical depth at 340 nm
 'aod340' = {
@@ -10996,7 +10945,7 @@
 	 parameterCategory = 218 ;
 	 parameterNumber = 206 ;
 	}
-#Column integrated mass density of Anthropogenic volatile organic compounds 
+#Column integrated mass density of Anthropogenic volatile organic compounds
 'tc_VOCA' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -11005,7 +10954,7 @@
 	 constituentType = 65532 ;
 	 is_chemical = 1 ;
 	}
-#Column integrated mass density of Biomass burning volatile organic compounds 
+#Column integrated mass density of Biomass burning volatile organic compounds
 'tc_VOCBB' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -12334,7 +12283,7 @@
 	 parameterCategory = 219 ;
 	 parameterNumber = 220 ;
 	}
-#Atmosphere emission mass flux of Anthropogenic volatile organic compounds 
+#Atmosphere emission mass flux of Anthropogenic volatile organic compounds
 'e_VOCA' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -12343,7 +12292,7 @@
 	 constituentType = 65532 ;
 	 is_chemical = 1 ;
 	}
-#Atmosphere emission mass flux of Biomass burning volatile organic compounds 
+#Atmosphere emission mass flux of Biomass burning volatile organic compounds
 'e_VOCBB' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13588,7 +13537,7 @@
 	 parameterCategory = 221 ;
 	 parameterNumber = 206 ;
 	}
-#Dry deposition velocity of Anthropogenic volatile organic compounds 
+#Dry deposition velocity of Anthropogenic volatile organic compounds
 'dv_VOCA' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13597,7 +13546,7 @@
 	 constituentType = 65532 ;
 	 is_chemical = 1 ;
 	}
-#Dry deposition velocity of Biomass burning volatile organic compounds 
+#Dry deposition velocity of Biomass burning volatile organic compounds
 'dv_VOCBB' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13656,7 +13605,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated wet deposition mass flux of Condensable gas type 1 
+#Time-integrated wet deposition mass flux of Condensable gas type 1
 'acc_wet_depm_SOG1' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13666,7 +13615,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated wet deposition mass flux of Condensable gas type 2a  
+#Time-integrated wet deposition mass flux of Condensable gas type 2a
 'acc_wet_depm_SOG2A' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13676,7 +13625,7 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Time-integrated wet deposition mass flux of Condensable gas type 2b 
+#Time-integrated wet deposition mass flux of Condensable gas type 2b
 'acc_wet_depm_SOG2B' = {
 	 localTablesVersion = 1 ;
 	 discipline = 0 ;
@@ -13944,6 +13893,19 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
+#Sea ice salinity
+'icesalt' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
 #Time-mean snow thickness over sea ice
 'avg_sisnthick' = {
 	 localTablesVersion = 1 ;
@@ -13952,6 +13914,20 @@
 	 parameterNumber = 192 ;
 	 typeOfFirstFixedSurface = 173 ;
 	 typeOfSecondFixedSurface = 175 ;
+	 scaledValueOfFirstFixedSurface = missing() ;
+	 scaleFactorOfFirstFixedSurface = missing() ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean Sea ice salinity
+'avg_icesalt' = {
+	 localTablesVersion = 1 ;
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 174 ;
+	 typeOfSecondFixedSurface = 176 ;
 	 scaledValueOfFirstFixedSurface = missing() ;
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
@@ -13991,6 +13967,24 @@
 	 parameterNumber = 77 ;
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 194 ;
+	}
+#Emission mass flux from soil
+'emi_mflx_soil' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 195 ;
+	}
+#Emission mass flux from wild animals
+'emi_mflx_wildanim' = {
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 77 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 196 ;
 	}
 #Aerosol negative fixer mass flux
 'aer_negfix_mflx' = {
@@ -16459,90 +16453,6 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
 	}
-#Period corresponding to maximum individual wave height
-'tmax' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 217 ;
-	}
-#Maximum individual wave height
-'hmax' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 218 ;
-	}
-#Model bathymetry
-'wmb' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 219 ;
-	}
-#Mean wave period based on first moment
-'mp1' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 220 ;
-	}
-#Wave spectral directional width
-'wdw' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 222 ;
-	}
-#Mean wave period based on first moment for wind waves
-'p1ww' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 223 ;
-	}
-#Mean wave period based on second moment for wind waves
-'p2ww' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 224 ;
-	}
-#Wave spectral directional width for wind waves
-'dwww' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 225 ;
-	}
-#Mean wave period based on first moment for swell
-'p1ps' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 226 ;
-	}
-#Mean wave period based on second moment for swell
-'p2ps' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 227 ;
-	}
-#Wave spectral directional width for swell
-'dwps' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 228 ;
-	}
-#Coefficient of drag with waves
-'cdww' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 233 ;
-	}
-#Significant height of total swell
-'shts' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 237 ;
-	}
-#Mean period of total swell
-'mpts' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 239 ;
-	}
 #Standard deviation wave height
 'sdhs' = {
 	 discipline = 192 ;
@@ -16566,12 +16476,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
-	}
-#Mean square slope of waves
-'msqs' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 244 ;
 	}
 #10 metre wind speed
 'wind' = {
@@ -16614,12 +16518,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 252 ;
-	}
-#Benjamin-Feir index
-'bfi' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 253 ;
 	}
 #Wave spectral peakedness
 'wsp' = {
@@ -17593,30 +17491,6 @@
 	 parameterCategory = 162 ;
 	 parameterNumber = 58 ;
 	}
-#Vertical integral of kinetic energy
-'vike' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 59 ;
-	}
-#Vertical integral of thermal energy
-'vithe' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 60 ;
-	}
-#Vertical integral of potential+internal energy
-'vipie' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 61 ;
-	}
-#Vertical integral of total energy
-'vitoe' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 63 ;
-	}
 #Vertical integral of energy conversion
 'viec' = {
 	 discipline = 192 ;
@@ -17718,90 +17592,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 162 ;
 	 parameterNumber = 87 ;
-	}
-#Tendency of short wave radiation
-'srta' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 100 ;
-	}
-#Tendency of long wave radiation
-'trta' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 101 ;
-	}
-#Tendency of clear sky short wave radiation
-'srtca' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 102 ;
-	}
-#Tendency of clear sky long wave radiation
-'trtca' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 103 ;
-	}
-#Updraught mass flux
-'umfa' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 104 ;
-	}
-#Downdraught mass flux
-'dmfa' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 105 ;
-	}
-#Updraught detrainment rate
-'udra' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 106 ;
-	}
-#Downdraught detrainment rate
-'ddra' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 107 ;
-	}
-#Total precipitation flux
-'tpfa' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 108 ;
-	}
-#Turbulent diffusion coefficient for heat
-'tdcha' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 109 ;
-	}
-#Tendency of temperature due to physics
-'ttpha' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 110 ;
-	}
-#Tendency of specific humidity due to physics
-'qtpha' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 111 ;
-	}
-#Tendency of u component due to physics
-'utpha' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 112 ;
-	}
-#Tendency of v component due to physics
-'vtpha' = {
-	 discipline = 192 ;
-	 parameterCategory = 162 ;
-	 parameterNumber = 113 ;
 	}
 #Variance of geopotential
 '~' = {
@@ -22014,18 +21804,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 234 ;
 	 parameterNumber = 228 ;
-	}
-#U-component stokes drift
-'ust' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 215 ;
-	}
-#V-component stokes drift
-'vst' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 216 ;
 	}
 #Wildfire radiative power maximum
 'maxfrpfire' = {

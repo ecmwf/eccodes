@@ -19,7 +19,8 @@ static void usage(const char* prog)
     exit(1);
 }
 
-static int count_messages(FILE* in, int message_type, unsigned long* count)
+// This version uses malloc and reads the whole contents of each message
+static int count_messages_slow(FILE* in, int message_type, unsigned long* count)
 {
     void* mesg   = NULL;
     size_t size  = 0;
@@ -29,9 +30,6 @@ static int count_messages(FILE* in, int message_type, unsigned long* count)
     wmo_read_proc wmo_read = NULL;
     grib_context* c        = grib_context_get_default();
 
-    if (!in)
-        return 1;
-    /* printf("message_type=%d\n", message_type); */
     if (message_type == CODES_GRIB)
         wmo_read = wmo_read_grib_from_file_malloc;
     else if (message_type == CODES_BUFR)
@@ -51,10 +49,10 @@ static int count_messages(FILE* in, int message_type, unsigned long* count)
         int done = 0;
         while (!done) {
             mesg = wmo_read(in, 0, &size, &offset, &err);
-            /*printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));*/
+            // printf("Count so far=%ld, mesg=%x, err=%d (%s)\n", *count, mesg, err, grib_get_error_message(err));
             if (!mesg) {
                 if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
-                    done = 1; /* reached the end */
+                    done = 1; // reached the end
                 }
             }
             if (mesg && !err) {
@@ -72,6 +70,52 @@ static int count_messages(FILE* in, int message_type, unsigned long* count)
     return err;
 }
 
+// This version does not store the message contents (no malloc). Much faster
+static int count_messages_fast(FILE* in, int message_type, unsigned long* count)
+{
+    int err      = GRIB_SUCCESS;
+    // Signature: FILE* f, size_t* msg_len, off_t* msg_offset
+    typedef int (*wmo_read_proc)(FILE* , size_t*, off_t*);
+    wmo_read_proc wmo_read = NULL;
+    size_t msg_len = 0;
+    off_t msg_offset = 0;
+
+    if (message_type == CODES_GRIB)
+        wmo_read = wmo_read_grib_from_file_fast;
+    else if (message_type == CODES_BUFR)
+        wmo_read = wmo_read_bufr_from_file_fast;
+    else if (message_type == CODES_GTS)
+        wmo_read = wmo_read_gts_from_file_fast;
+    else
+        wmo_read = wmo_read_any_from_file_fast;
+
+    if (fail_on_error) {
+        while ((err = wmo_read(in, &msg_len, &msg_offset)) == GRIB_SUCCESS) {
+            //printf("%zu %ld\n", msg_len,msg_offset);
+            (*count)++;
+        }
+    }
+    else {
+        int done = 0;
+        while (!done) {
+            err = wmo_read(in, &msg_len, &msg_offset);
+            if (err) {
+                if (err == GRIB_END_OF_FILE || err == GRIB_PREMATURE_END_OF_FILE) {
+                    done = 1; // reached the end
+                }
+            }
+            else {
+                (*count)++;
+            }
+        }
+    }
+
+    if (err == GRIB_END_OF_FILE)
+        err = GRIB_SUCCESS;
+
+    return err;
+}
+
 int main(int argc, char* argv[])
 {
     FILE* infh = NULL;
@@ -79,7 +123,9 @@ int main(int argc, char* argv[])
     int i, verbose = 0;
     int err = 0, files_processed = 0;
     unsigned long count_total = 0, count_curr = 0;
-    int message_type = 0; /* GRIB, BUFR etc */
+    int message_type = 0; // GRIB, BUFR etc
+    typedef int (*count_proc)(FILE*, int, unsigned long*);
+    count_proc do_count = count_messages_fast;
 
     toolname = argv[0];
     if (argc < 2)
@@ -108,17 +154,20 @@ int main(int argc, char* argv[])
             continue;
         }
 
-        if (strcmp(filename, "-") == 0)
+        if (strcmp(filename, "-") == 0) {
             infh = stdin;
-        else
+            do_count = count_messages_slow; // cannot do fseek on stdin
+        } else {
             infh = fopen(filename, "rb");
+        }
         if (!infh) {
             perror(filename);
             exit(1);
         }
-        files_processed = 1; /* At least one file processed */
+
+        files_processed = 1; // At least one file processed
         count_curr      = 0;
-        err             = count_messages(infh, message_type, &count_curr);
+        err             = do_count(infh, message_type, &count_curr);
         if (err && fail_on_error) {
             fprintf(stderr, "Invalid message(s) found in %s", filename);
             if (count_curr > 0)
@@ -126,7 +175,7 @@ int main(int argc, char* argv[])
             fprintf(stderr, "\n");
             exit(err);
 #ifdef DONT_EXIT_ON_BAD_APPLE
-            /* If we did not want to fail but warn and continue */
+            // If we did not want to fail but warn and continue
             fclose(infh);
             continue;
 #endif

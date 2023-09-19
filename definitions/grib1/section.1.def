@@ -246,6 +246,7 @@ if (centre == 34 && subCentre == 241)
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits);
+meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
 
 transient deleteLocalDefinition=0;
 

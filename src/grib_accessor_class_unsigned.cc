@@ -48,7 +48,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 
 typedef struct grib_accessor_unsigned
@@ -113,12 +112,6 @@ static grib_accessor_class _grib_accessor_class_unsigned = {
 
 
 grib_accessor_class* grib_accessor_class_unsigned = &_grib_accessor_class_unsigned;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

@@ -250,64 +250,55 @@ static int grib_db_column_copy_from_handle(grib_handle* h, grib_db* db, int i)
     return err;
 }
 
-/* --------------- grib_db functions ------------------*/
-#if 0
-grib_db* grib_db_new_from_files(grib_context* c, char* filenames[],
-                                int nfiles, char** keys, int nkeys, int* err)
-{
-    int i   = 0;
-    int ret = GRIB_SUCCESS;
+// grib_db* grib_db_new_from_files(grib_context* c, char* filenames[],
+//                                 int nfiles, char** keys, int nkeys, int* err)
+// {
+//     int i   = 0;
+//     int ret = GRIB_SUCCESS;
+//     grib_db* db = 0;
+//     if (!c) c = grib_context_get_default();
 
-    grib_db* db = 0;
+//     if (((!keys || nkeys == 0)) || !filenames) {
+//         *err = GRIB_INVALID_ARGUMENT;
+//         return NULL;
+//     }
 
-    if (!c)
-        c = grib_context_get_default();
+//     db = grib_db_new_from_file(c, filenames[0], keys, nkeys, err);
+//     if (!db || *err != GRIB_SUCCESS)
+//         return db;
 
-    if (((!keys || nkeys == 0)) || !filenames) {
-        *err = GRIB_INVALID_ARGUMENT;
-        return NULL;
-    }
+//     *err = GRIB_SUCCESS;
+//     for (i = 1; i < nfiles; i++) {
+//         ret = grib_db_load(db, filenames[i]);
+//         if (ret != GRIB_SUCCESS)
+//             *err = ret;
+//     }
+//     return db;
+// }
 
-    db = grib_db_new_from_file(c, filenames[0], keys, nkeys, err);
-    if (!db || *err != GRIB_SUCCESS)
-        return db;
+// grib_db* grib_db_new_from_file(grib_context* c, char* filename,
+//                                char** keys, int nkeys, int* err)
+// {
+//     int i   = 0;
+//     int ret = GRIB_SUCCESS;
+//     grib_db* db = 0;
 
-    *err = GRIB_SUCCESS;
-    for (i = 1; i < nfiles; i++) {
-        ret = grib_db_load(db, filenames[i]);
-        if (ret != GRIB_SUCCESS)
-            *err = ret;
-    }
+//     if (!c)
+//         c = grib_context_get_default();
 
-    return db;
-}
+//     if (((!keys || nkeys == 0)) || !filename) {
+//         *err = GRIB_INVALID_ARGUMENT;
+//         return NULL;
+//     }
 
-grib_db* grib_db_new_from_file(grib_context* c, char* filename,
-                               char** keys, int nkeys, int* err)
-{
-    int i   = 0;
-    int ret = GRIB_SUCCESS;
+//     db = grib_db_create_from_keys(c, keys, nkeys, err);
+//     *err = GRIB_SUCCESS;
+//     ret  = grib_db_load(db, filename);
+//     if (ret != GRIB_SUCCESS)
+//         *err = ret;
+//     return db;
+// }
 
-    grib_db* db = 0;
-
-    if (!c)
-        c = grib_context_get_default();
-
-    if (((!keys || nkeys == 0)) || !filename) {
-        *err = GRIB_INVALID_ARGUMENT;
-        return NULL;
-    }
-
-    db = grib_db_create_from_keys(c, keys, nkeys, err);
-
-    *err = GRIB_SUCCESS;
-    ret  = grib_db_load(db, filename);
-    if (ret != GRIB_SUCCESS)
-        *err = ret;
-
-    return db;
-}
-#endif
 
 static grib_db* grib_db_create_from_keys(grib_context* c, char** keys, int nkeys, int* err)
 {
@@ -458,12 +449,9 @@ int grib_db_apply_where(grib_fieldset* set)
     if (!set)
         return GRIB_INVALID_ARGUMENT;
 
-    /*
-  m=grib_math_new(set->context,where_string,&err);
-
-  print_math(m);
-  printf("\n");
-  */
+    // m=grib_math_new(set->context,where_string,&err);
+    // print_math(m);
+    // printf("\n");
 
     if (set->filter)
         grib_db_delete_int_array(set->filter);
@@ -495,61 +483,59 @@ int grib_db_apply_order_by(grib_fieldset* set)
     return err;
 }
 
-#if 0
-static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
-{
-    int ret           = 0;
-    double d          = 0;
-    int idkey         = 0;
-    grib_order_by* ob = 0;
-    int ii = 0, jj = 0;
-    int *order = 0, *filter = 0;
+// static int grib_fieldset_compare(grib_fieldset* set, int* i, int* j)
+// {
+//     int ret           = 0;
+//     double d          = 0;
+//     int idkey         = 0;
+//     grib_order_by* ob = 0;
+//     int ii = 0, jj = 0;
+//     int *order = 0, *filter = 0;
 
-    if (!set || !set->order_by)
-        return GRIB_INVALID_ARGUMENT;
-    ob     = set->query->order_by;
-    order  = set->order->el;
-    filter = set->filter->el;
+//     if (!set || !set->order_by)
+//         return GRIB_INVALID_ARGUMENT;
+//     ob     = set->query->order_by;
+//     order  = set->order->el;
+//     filter = set->filter->el;
 
-    ii = *(set->filter->el + *(order + *i));
-    jj = *(set->filter->el + *(order + *j));
+//     ii = *(set->filter->el + *(order + *i));
+//     jj = *(set->filter->el + *(order + *j));
 
-    while (ob) {
-        idkey = ob->idkey;
-        switch (set->db->columns[idkey].type) {
-            case GRIB_TYPE_STRING:
-                ret = grib_inline_strcmp(set->db->columns[idkey].string_values[ii],
-                                         set->db->columns[idkey].string_values[jj]);
-                break;
+//     while (ob) {
+//         idkey = ob->idkey;
+//         switch (set->db->columns[idkey].type) {
+//             case GRIB_TYPE_STRING:
+//                 ret = grib_inline_strcmp(set->db->columns[idkey].string_values[ii],
+//                                          set->db->columns[idkey].string_values[jj]);
+//                 break;
 
-            case GRIB_TYPE_DOUBLE:
-                d = set->db->columns[idkey].double_values[ii] -
-                    set->db->columns[idkey].double_values[jj];
-                if (d > 0)
-                    ret = 1;
-                else if (d == 0)
-                    ret = 0;
-                else
-                    ret = -1;
-                break;
+//             case GRIB_TYPE_DOUBLE:
+//                 d = set->db->columns[idkey].double_values[ii] -
+//                     set->db->columns[idkey].double_values[jj];
+//                 if (d > 0)
+//                     ret = 1;
+//                 else if (d == 0)
+//                     ret = 0;
+//                 else
+//                     ret = -1;
+//                 break;
 
-            case GRIB_TYPE_LONG:
-                ret = set->db->columns[idkey].long_values[ii] -
-                      set->db->columns[idkey].long_values[jj];
-                break;
-            default:
-                return GRIB_INVALID_TYPE;
-        }
-        if (ret != 0) {
-            ret *= ob->mode;
-            break;
-        }
-        ob = ob->next;
-    }
+//             case GRIB_TYPE_LONG:
+//                 ret = set->db->columns[idkey].long_values[ii] -
+//                       set->db->columns[idkey].long_values[jj];
+//                 break;
+//             default:
+//                 return GRIB_INVALID_TYPE;
+//         }
+//         if (ret != 0) {
+//             ret *= ob->mode;
+//             break;
+//         }
+//         ob = ob->next;
+//     }
 
-    return ret;
-}
-#endif
+//     return ret;
+// }
 
 static void grib_db_sort(grib_set* set, int beg, int theEnd)
 {

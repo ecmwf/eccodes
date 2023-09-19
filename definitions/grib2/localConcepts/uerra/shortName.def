@@ -148,6 +148,18 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standard deviation of sub-grid scale orography
+'sdsgso' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
+	}
+#Cloud base
+'cdcb' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	}
 #2 metre relative humidity
 '2r' = {
 	 discipline = 0 ;
@@ -177,6 +189,30 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
+#Time-integrated surface direct short wave radiation flux
+'tidirswrf' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward short-wave radiation flux, clear sky
+'adswrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward long-wave radiation flux, clear sky
+'adlwrf_cs' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Sea ice surface temperature
 'sist' = {
 	 discipline = 10 ;
@@ -201,7 +237,7 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Snow melt
+#Snowmelt
 'snom' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;

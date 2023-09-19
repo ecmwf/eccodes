@@ -49,7 +49,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_bufrdc_expanded_descriptors
 {
@@ -114,12 +113,6 @@ static grib_accessor_class _grib_accessor_class_bufrdc_expanded_descriptors = {
 
 grib_accessor_class* grib_accessor_class_bufrdc_expanded_descriptors = &_grib_accessor_class_bufrdc_expanded_descriptors;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* args)
@@ -149,15 +142,14 @@ static grib_accessor* get_accessor(grib_accessor* a)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor* descriptors = 0;
-    size_t rlen                = 0, l;
-    long lenall                = 0;
-    size_t i;
-    long* v         = 0;
+    size_t rlen  = 0, l;
+    long lenall  = 0;
+    size_t i     = 0;
+    long* v      = 0;
     grib_context* c = a->context;
 
     descriptors = get_accessor(a);
-    if (!descriptors)
-        return GRIB_NOT_FOUND;
+    if (!descriptors) return GRIB_NOT_FOUND;
 
     grib_value_count(a, &lenall);
     v = (long*)grib_context_malloc_clear(c, sizeof(long) * lenall);
@@ -177,30 +169,33 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 {
+    int err = 0;
     grib_accessor* descriptors = 0;
-    grib_context* c            = a->context;
-    long l                     = 0;
-    size_t size, i;
+    size_t l     = 0;
+    long lenall  = 0;
+    size_t i     = 0;
+    long* v      = 0;
     char buf[25] = {0,};
-    long* v = 0;
+    grib_context* c = a->context;
 
     descriptors = get_accessor(a);
-    if (!descriptors)
-        return GRIB_NOT_FOUND;
+    if (!descriptors) return GRIB_NOT_FOUND;
 
-    value_count(descriptors, &l);
-    if (l > *len)
-        return GRIB_ARRAY_TOO_SMALL;
+    err = grib_value_count(a, &lenall);
+    if (err) return err;
+    l = lenall;
+    if (l > *len) return GRIB_ARRAY_TOO_SMALL;
 
-    v    = (long*)grib_context_malloc_clear(c, sizeof(long) * l);
-    size = l;
-    unpack_long(a, v, &size);
+    v = (long*)grib_context_malloc_clear(c, sizeof(long) * l);
+    err = grib_unpack_long(descriptors, v, &l);
+    if (err) return err;
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < l; i++) {
         snprintf(buf, sizeof(buf), "%06ld", v[i]);
         buffer[i] = grib_context_strdup(c, buf);
     }
     *len = l;
+    grib_context_free(c,v);
 
     return GRIB_SUCCESS;
 }

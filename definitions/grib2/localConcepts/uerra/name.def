@@ -148,6 +148,18 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standard deviation of sub-grid scale orography
+'Standard deviation of sub-grid scale orography' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
+	}
+#Cloud base
+'Cloud base' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	}
 #2 metre relative humidity
 '2 metre relative humidity' = {
 	 discipline = 0 ;
@@ -177,6 +189,30 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
 	}
+#Time-integrated surface direct short wave radiation flux
+'Time-integrated surface direct short wave radiation flux' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward short-wave radiation flux, clear sky
+'Accumulated surface downward short-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward long-wave radiation flux, clear sky
+'Accumulated surface downward long-wave radiation flux, clear sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Sea ice surface temperature
 'Sea ice surface temperature' = {
 	 discipline = 10 ;
@@ -201,8 +237,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Snow melt
-'Snow melt' = {
+#Snowmelt
+'Snowmelt' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 16 ;

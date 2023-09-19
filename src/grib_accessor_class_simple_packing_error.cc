@@ -13,6 +13,7 @@
  **************************************/
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -43,7 +44,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_simple_packing_error
 {
@@ -111,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_simple_packing_error = {
 
 grib_accessor_class* grib_accessor_class_simple_packing_error = &_grib_accessor_class_simple_packing_error;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -166,7 +160,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         Assert(1 == 0);
 
     if (bitsPerValue != 0)
-        *val = (*val + grib_power(binaryScaleFactor, 2)) * grib_power(-decimalScaleFactor, 10) * 0.5;
+        *val = (*val + codes_power<double>(binaryScaleFactor, 2)) * codes_power<double>(-decimalScaleFactor, 10) * 0.5;
 
     if (ret == GRIB_SUCCESS)
         *len = 1;

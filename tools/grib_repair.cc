@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     sMaxNumMessages = getenv(ENV_VAR);
     if (sMaxNumMessages) {
         long lmax = 0;
-        if (string_to_long(sMaxNumMessages, &lmax) == GRIB_SUCCESS) {
+        if (string_to_long(sMaxNumMessages, &lmax, 1) == GRIB_SUCCESS) {
             MAX_NUM_MESSAGES = lmax;
         }
     }

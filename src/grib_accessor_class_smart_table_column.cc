@@ -41,7 +41,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_smart_table_column
 {
@@ -104,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_smart_table_column = {
 
 
 grib_accessor_class* grib_accessor_class_smart_table_column = &_grib_accessor_class_smart_table_column;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

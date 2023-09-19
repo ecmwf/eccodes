@@ -15,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
-   IMPLEMENTS = pack_string;unpack_string;value_count
+   IMPLEMENTS = unpack_string;value_count
    IMPLEMENTS = init;string_length
    MEMBERS= grib_arguments* args
    END_CLASS_DEF
@@ -32,12 +32,10 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_sprintf
 {
@@ -75,7 +73,7 @@ static grib_accessor_class _grib_accessor_class_sprintf = {
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -101,12 +99,6 @@ static grib_accessor_class _grib_accessor_class_sprintf = {
 
 grib_accessor_class* grib_accessor_class_sprintf = &_grib_accessor_class_sprintf;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -114,11 +106,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     grib_accessor_sprintf* self = (grib_accessor_sprintf*)a;
     self->args                  = c;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-}
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)

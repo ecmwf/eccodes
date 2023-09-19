@@ -8,9 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal_cpp.h"
+#include "grib_scaling.h"
+#include "grib_bits_any_endian_simple.h"
 #include "grib_optimize_decimal_factor.h"
 #include <float.h>
+#include <type_traits>
 
 /*
    This is used by make_class.pl
@@ -53,7 +55,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 static int unpack_double_subarray(grib_accessor*, double* val, size_t start, size_t len);
@@ -133,12 +134,6 @@ static grib_accessor_class _grib_accessor_class_data_simple_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_simple_packing = &_grib_accessor_class_data_simple_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -235,8 +230,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
     }
 
     Assert(idx < n_vals);
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s: %s: creating %s, %ld values (idx=%zu)",
@@ -368,8 +363,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<T>(binary_scale_factor, 2);
+    d = codes_power<T>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
@@ -394,15 +389,13 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
                 return GRIB_DECODING_ERROR;
             }
         }
-#if 0
-        if (offsetBeforeData == offsetAfterData) {
-            /* Crazy case: Constant field with bitsPerValue > 0 */
-            for (i = 0; i < n_vals; i++)
-                val[i] = reference_value;
-            *len = n_vals;
-            return GRIB_SUCCESS;
-        }
-#endif
+        //         if (offsetBeforeData == offsetAfterData) {
+        //             /* Crazy case: Constant field with bitsPerValue > 0 */
+        //             for (i = 0; i < n_vals; i++)
+        //                 val[i] = reference_value;
+        //             *len = n_vals;
+        //             return GRIB_SUCCESS;
+        //         }
     }
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
@@ -506,8 +499,8 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
         return GRIB_SUCCESS;
     }
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
@@ -531,15 +524,14 @@ static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned c
                 return GRIB_DECODING_ERROR;
             }
         }
-#if 0
-        if (offsetBeforeData == offsetAfterData) {
-            /* Crazy case: Constant field with bitsPerValue > 0 */
-            for (i = 0; i < n_vals; i++)
-                val[i] = reference_value;
-            *len = n_vals;
-            return GRIB_SUCCESS;
-        }
-#endif
+
+        //         if (offsetBeforeData == offsetAfterData) {
+        //             /* Crazy case: Constant field with bitsPerValue > 0 */
+        //             for (i = 0; i < n_vals; i++)
+        //                 val[i] = reference_value;
+        //             *len = n_vals;
+        //             return GRIB_SUCCESS;
+        //         }
     }
 
     grib_context_log(a->context, GRIB_LOG_DEBUG,
@@ -582,34 +574,6 @@ static int unpack_double_subarray(grib_accessor* a, double* val, size_t start, s
     pos = start * bits_per_value % 8;
     return _unpack_double(a, val, plen, buf, pos, nvals);
 }
-
-#if GRIB_IBMPOWER67_OPT
-#define restrict
-#include "minmax_val.cc"
-#undef restrict
-#endif
-
-#if 0
-static int grib_producing_large_constant_fields(const grib_context* c, grib_handle* h, int edition)
-{
-    /* GRIB-802: If override key is set, ignore env. var and produce compressed fields */
-    if (c->large_constant_fields) {  /* This is set by the environment variable */
-        /* check the override key */
-        int err = 0;
-        long override_large_constant_fields = 0;
-        err = grib_get_long_internal(h, "override_large_constant_fields", &override_large_constant_fields);
-        if (err == GRIB_SUCCESS && override_large_constant_fields) {
-            return 0;
-        }
-        return 1;
-    }
-    if (c->gribex_mode_on==1 && edition==1) {
-        return 1;
-    }
-
-    return 0;
-}
-#endif
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
@@ -663,14 +627,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     max = val[0];
     min = max;
-#if GRIB_IBMPOWER67_OPT
-    minmax_val(val + 1, n_vals - 1, &min, &max);
-#else
     for (i = 1; i < n_vals; i++) {
         if (val[i] > max)      max = val[i];
         else if (val[i] < min) min = val[i];
     }
-#endif
+
     if ((err = grib_check_data_values_range(gh, min, max)) != GRIB_SUCCESS) {
         return err;
     }
@@ -690,8 +651,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             double ref = 1e-100;
             grib_get_double_internal(gh, self->reference_value, &ref);
             if (ref != reference_value) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: (ref=%.10e != reference_value=%.10e)",
-                cclass_name, __func__, ref, reference_value);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                                 cclass_name, __func__, self->reference_value, ref, reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -743,7 +704,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         /* decimal_scale_factor is given, binary_scale_factor=0 and bits_per_value is computed */
         binary_scale_factor  = 0;
         decimal_scale_factor = decimal_scale_factor_get;
-        decimal              = grib_power(decimal_scale_factor, 10);
+        decimal              = codes_power<double>(decimal_scale_factor, 10);
         min *= decimal;
         max *= decimal;
 
@@ -789,14 +750,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                 return err;
         }
         else {
-            /* printf("max=%g reference_value=%g grib_power(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
-               max,reference_value,grib_power(-last,2),decimal_scale_factor,bits_per_value);*/
+            /* printf("max=%g reference_value=%g codes_power<double>(-last,2)=%g decimal_scale_factor=%ld bits_per_value=%ld\n",
+               max,reference_value,codes_power<double>(-last,2),decimal_scale_factor,bits_per_value);*/
             range        = (max - min);
             unscaled_min = min;
             unscaled_max = max;
-            f            = (grib_power(bits_per_value, 2) - 1);
-            minrange     = grib_power(-last, 2) * f;
-            maxrange     = grib_power(last, 2) * f;
+            f            = (codes_power<double>(bits_per_value, 2) - 1);
+            minrange     = codes_power<double>(-last, 2) * f;
+            maxrange     = codes_power<double>(last, 2) * f;
 
             while (range < minrange) {
                 decimal_scale_factor += 1;

@@ -47,7 +47,6 @@ static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -115,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_data_apply_boustrophedonic = {
 
 
 grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic = &_grib_accessor_class_data_apply_boustrophedonic;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

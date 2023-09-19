@@ -8,8 +8,10 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal_cpp.h"
+#include "grib_bits_any_endian_simple.h"
+#include "grib_scaling.h"
 #include <cstdint>
+#include <type_traits>
 
 /*
    This is used by make_class.pl
@@ -27,10 +29,9 @@
    MEMBERS=const char*   reference_value
    MEMBERS=const char*   binary_scale_factor
    MEMBERS=const char*   decimal_scale_factor
+   MEMBERS=const char*   optimize_scaling_factor
    MEMBERS=const char*   bits_per_value
-
    MEMBERS=const char*   number_of_data_points
-
    MEMBERS=const char*   ccsds_flags
    MEMBERS=const char*   ccsds_block_size
    MEMBERS=const char*   ccsds_rsi
@@ -54,7 +55,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -73,6 +73,7 @@ typedef struct grib_accessor_data_ccsds_packing
     const char*   reference_value;
     const char*   binary_scale_factor;
     const char*   decimal_scale_factor;
+    const char*   optimize_scaling_factor;
     const char*   bits_per_value;
     const char*   number_of_data_points;
     const char*   ccsds_flags;
@@ -133,28 +134,23 @@ static grib_accessor_class _grib_accessor_class_data_ccsds_packing = {
 
 grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_class_data_ccsds_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
+    grib_handle* h                         = grib_handle_of_accessor(a);
 
-    self->number_of_values     = grib_arguments_get_name(h, args, self->carg++);
-    self->reference_value      = grib_arguments_get_name(h, args, self->carg++);
-    self->binary_scale_factor  = grib_arguments_get_name(h, args, self->carg++);
-    self->decimal_scale_factor = grib_arguments_get_name(h, args, self->carg++);
-    self->bits_per_value       = grib_arguments_get_name(h, args, self->carg++);
-    self->number_of_data_points = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_flags      = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_block_size = grib_arguments_get_name(h, args, self->carg++);
-    self->ccsds_rsi        = grib_arguments_get_name(h, args, self->carg++);
+    self->number_of_values        = grib_arguments_get_name(h, args, self->carg++);
+    self->reference_value         = grib_arguments_get_name(h, args, self->carg++);
+    self->binary_scale_factor     = grib_arguments_get_name(h, args, self->carg++);
+    self->decimal_scale_factor    = grib_arguments_get_name(h, args, self->carg++);
+    self->optimize_scaling_factor = grib_arguments_get_name(h, args, self->carg++);
+    self->bits_per_value          = grib_arguments_get_name(h, args, self->carg++);
+    self->number_of_data_points   = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_flags             = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_block_size        = grib_arguments_get_name(h, args, self->carg++);
+    self->ccsds_rsi               = grib_arguments_get_name(h, args, self->carg++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
@@ -227,6 +223,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
+    //long optimize_scaling_factor  = 0;
     double reference_value    = 0;
     long bits_per_value       = 0;
     double max, min, d, divisor;
@@ -251,6 +248,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
     if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
+
+    //if ((err = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
+    //    return err;
+
     if ((err = grib_get_long_internal(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
@@ -315,7 +316,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return err;
 
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor != 0)) {
-        d = grib_power(decimal_scale_factor, 10);
+        d = codes_power<double>(decimal_scale_factor, 10);
         min *= d;
         max *= d;
 
@@ -328,7 +329,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if (reference_value > min) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
                 "%s %s: reference_value=%g min_value=%g diff=%g", cclass_name, __func__, reference_value, min, reference_value - min);
-            DebugAssert(reference_value <= min);
+            DEBUG_ASSERT(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
     }
@@ -345,9 +346,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         range                = (max - min);
         unscaled_min         = min;
         unscaled_max         = max;
-        f                    = (grib_power(bits_per_value, 2) - 1);
-        minrange             = grib_power(-last, 2) * f;
-        maxrange             = grib_power(last, 2) * f;
+        f                    = (codes_power<double>(bits_per_value, 2) - 1);
+        minrange             = codes_power<double>(-last, 2) * f;
+        maxrange             = codes_power<double>(last, 2) * f;
 
         while (range < minrange) {
             decimal_scale_factor += 1;
@@ -369,11 +370,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
                              "%s %s: unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
-        d = grib_power(decimal_scale_factor, 10);
+        d = codes_power<double>(decimal_scale_factor, 10);
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = grib_power(-binary_scale_factor, 2);
+    divisor             = codes_power<double>(-binary_scale_factor, 2);
 
     size_t nbytes = (bits_per_value + 7) / 8;
     // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
@@ -565,8 +566,8 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
+    bscale = codes_power<T>(binary_scale_factor, 2);
+    dscale = codes_power<T>(-decimal_scale_factor, 10);
 
     buflen = grib_byte_count(a);
     buf = (unsigned char*)hand->buffer->data;

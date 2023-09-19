@@ -5,6 +5,6 @@
 3 3 Ion temperature (K)
 4 4 Parallel temperature (K)
 5 5 Perpendicular temperature (K)
-# 6-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 6-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

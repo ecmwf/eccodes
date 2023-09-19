@@ -1,5 +1,6 @@
 # (C) Copyright 2005- ECMWF.
-# spectral_ieee
+
+# TEMPLATE 7.50000, spectral_ieee
 
 constant GRIBEXShBugPresent = 0;
 constant sphericalHarmonics = 1;

@@ -49,7 +49,6 @@ static int unpack_string(grib_accessor*, char*, size_t* len);
 static long next_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
@@ -118,12 +117,6 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
 
 
 grib_accessor_class* grib_accessor_class_bitmap = &_grib_accessor_class_bitmap;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -220,7 +213,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 }
 
 template <typename T>
-int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;

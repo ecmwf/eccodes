@@ -4054,32 +4054,32 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component 
+#UV visible albedo for diffuse radiation, isotropic component (climatological)
 'aluvdi' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component 
+#UV visible albedo for diffuse radiation, volumetric component (climatological)
 'aluvdv' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component 
+#UV visible albedo for diffuse radiation, geometric component (climatological)
 'aluvdg' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component 
+#Near IR albedo for diffuse radiation, isotropic component (climatological)
 'alnidi' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component 
+#Near IR albedo for diffuse radiation, volumetric component (climatological)
 'alnidv' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component 
+#Near IR albedo for diffuse radiation, geometric component (climatological)
 'alnidg' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;
@@ -10160,12 +10160,12 @@
 	 indicatorOfParameter = 227 ;
 	}
 #SMOS first Brightness Temperature Bias Correction parameter
-'p228229' = {
+'smos_tb_cdfa' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 229 ;
 	}
 #SMOS second Brightness Temperature Bias Correction parameter
-'p228230' = {
+'smos_tb_cdfb' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 230 ;
 	}
@@ -13699,43 +13699,43 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 58 ;
 	}
-#Vertical integral of kinetic energy
-'p59.162' = {
+#Total column vertically-integrated kinetic energy
+'vike' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 59 ;
 	}
-#Vertical integral of thermal energy
-'p60.162' = {
+#Total column vertically-integrated enthalpy
+'vithe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 60 ;
 	}
-#Vertical integral of potential+internal energy
-'p61.162' = {
+#Total column vertically-integrated potential + internal energy
+'vipie' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 61 ;
 	}
 #Vertical integral of potential+internal+latent energy
-'p62.162' = {
+'vipile' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 62 ;
 	}
-#Vertical integral of total energy
-'p63.162' = {
+#Total column vertically-integrated total energy
+'vitoe' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 63 ;
 	}
 #Vertical integral of energy conversion
-'p64.162' = {
+'viec' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 64 ;
 	}
 #Vertical integral of eastward mass flux
-'p65.162' = {
+'vimae' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 65 ;
 	}
 #Vertical integral of northward mass flux
-'p66.162' = {
+'viman' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 66 ;
 	}
@@ -13834,73 +13834,73 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Tendency of short wave radiation
-'p100.162' = {
+#Time-integrated temperature tendency due to short-wave radiation
+'srta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Tendency of long wave radiation
-'p101.162' = {
+#Time-integrated temperature tendency due to long-wave radiation
+'trta' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 101 ;
 	}
-#Tendency of clear sky short wave radiation
-'p102.162' = {
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'srtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 102 ;
 	}
-#Tendency of clear sky long wave radiation
-'p103.162' = {
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'trtca' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 103 ;
 	}
-#Updraught mass flux
-'p104.162' = {
+#Time-integrated updraught mass flux
+'umfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 104 ;
 	}
-#Downdraught mass flux
-'p105.162' = {
+#Time-integrated downdraught mass flux
+'dmfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 105 ;
 	}
-#Updraught detrainment rate
-'p106.162' = {
+#Time-integrated updraught detrainment rate
+'udra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 106 ;
 	}
-#Downdraught detrainment rate
-'p107.162' = {
+#Time-integrated downdraught detrainment rate
+'ddra' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 107 ;
 	}
-#Total precipitation flux
-'p108.162' = {
+#Time-integrated total precipitation flux
+'tpfa' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 108 ;
 	}
-#Turbulent diffusion coefficient for heat
-'p109.162' = {
+#Time-integrated turbulent diffusion coefficient for heat
+'tdcha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 109 ;
 	}
-#Tendency of temperature due to physics
-'p110.162' = {
+#Time-integrated temperature tendency due to parametrisations
+'ttpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 110 ;
 	}
-#Tendency of specific humidity due to physics
-'p111.162' = {
+#Time-integrated specific humidity tendency due to parametrisations
+'qtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 111 ;
 	}
-#Tendency of u component due to physics
-'p112.162' = {
+#Time-integrated eastward wind tendency due to parametrisations
+'utpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Tendency of v component due to physics
-'p113.162' = {
+#Time-integrated northward wind tendency due to parametrisations
+'vtpha' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -17594,12 +17594,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 39 ;
 	}
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 'u10n' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 131 ;
 	}
-#V-component of neutral wind
+#10 metre v-component of neutral wind
 'v10n' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 132 ;
@@ -17614,7 +17614,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 141 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 'sf' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 144 ;
@@ -17814,12 +17814,12 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
+#U-component surface stokes drift
 'ust' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
+#V-component surface stokes drift
 'vst' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;

@@ -64,6 +64,18 @@ ${tools_dir}/bufr_ls -s satelliteID=313 -p satelliteID aaen_55.bufr > $fTmp
 grep -q "313" $fTmp
 
 
+# ------------------------
+# Test corner cases
+# ------------------------
+echo BUFR > $fTmp
+set +e
+${tools_dir}/bufr_ls $fTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -w "unreadable message" $fLog
+
+
 # Clean up
 rm -f $fLog $res_ls 
 rm -f $fTmp

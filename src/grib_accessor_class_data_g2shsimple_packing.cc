@@ -39,7 +39,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g2shsimple_packing
 {
@@ -107,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_data_g2shsimple_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g2shsimple_packing = &_grib_accessor_class_data_g2shsimple_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
@@ -178,16 +171,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->real_part, *val)) != GRIB_SUCCESS)
         return err;
-    {
-        /* Make sure we can decode it again */
-        double ref = 1e-100;
-        grib_get_double_internal(grib_handle_of_accessor(a), self->real_part, &ref);
-        if (ref != *val) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "data_g2shsimple_packing %s: %s (ref=%.10e != *val=%.10e)",
-                            __func__, self->real_part, ref, *val);
-            return GRIB_INTERNAL_ERROR;
-        }
-    }
 
     val++;
 

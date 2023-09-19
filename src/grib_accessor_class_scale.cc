@@ -46,7 +46,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_scale
 {
@@ -113,12 +112,6 @@ static grib_accessor_class _grib_accessor_class_scale = {
 
 grib_accessor_class* grib_accessor_class_scale = &_grib_accessor_class_scale;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -143,8 +136,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Accessor %s cannot gather value for %s and/or %s error %d",
-                         a->name, self->multiplier, self->divisor, ret);
+                         "Accessor %s cannot gather value for %s and/or %s",
+                         a->name, self->multiplier, self->divisor);
         return ret;
     }
 
@@ -161,7 +154,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         *val = GRIB_MISSING_DOUBLE;
     else
         *val = ((double)(value * multiplier)) / divisor;
-    /*printf("unpack_double: divisor=%ld multiplier=%ld long_value=%ld scaled_value=%.30f\n",(double)divisor,(double)multiplier,value,*val);*/
 
     if (ret == GRIB_SUCCESS)
         *len = 1;
@@ -187,25 +179,19 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     double x;
 
     ret = grib_get_long_internal(grib_handle_of_accessor(a), self->divisor, &divisor);
-    if (ret != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot gather value for %s error %d \n", a->name, self->divisor, ret);
-        return ret;
-    }
+    if (ret != GRIB_SUCCESS) return ret;
+
     ret = grib_get_long_internal(grib_handle_of_accessor(a), self->multiplier, &multiplier);
-    if (ret != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot gather value for %s error %d \n", a->name, self->divisor, ret);
-        return ret;
-    }
+    if (ret != GRIB_SUCCESS) return ret;
+
     if (self->truncating) {
         ret = grib_get_long_internal(grib_handle_of_accessor(a), self->truncating, &truncating);
-        if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot gather value for %s error %d \n", a->name, self->truncating, ret);
-            return ret;
-        }
+        if (ret != GRIB_SUCCESS) return ret;
     }
 
     if (multiplier == 0) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s cannot divide by a zero multiplier %s error %d  \n", a->name, self->multiplier, ret);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Accessor %s: cannot divide by a zero multiplier %s",
+                         a->name, self->multiplier);
         return GRIB_ENCODING_ERROR;
     }
 
@@ -239,17 +225,13 @@ static int is_missing(grib_accessor* a)
     if (!av)
         return GRIB_NOT_FOUND;
     return grib_is_missing_internal(av);
-#if 0
-    int ret=0;
-    long value=0;
-
-    if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->value, &value))!= GRIB_SUCCESS){
-        grib_context_log(a->context, GRIB_LOG_ERROR,
-        "Accessor %s cannot gather value for %s error %d \n", a->name,
-        self->value, ret);
-        return 0;
-    }
-
-    return (value == GRIB_MISSING_LONG);
-#endif
+    //     int ret=0;
+    //     long value=0;
+    //     if((ret = grib_get_long_internal(grib_handle_of_accessor(a),self->value, &value))!= GRIB_SUCCESS){
+    //         grib_context_log(a->context, GRIB_LOG_ERROR,
+    //         "Accessor %s cannot gather value for %s error %d \n", a->name,
+    //         self->value, ret);
+    //         return 0;
+    //     }
+    //     return (value == GRIB_MISSING_LONG);
 }

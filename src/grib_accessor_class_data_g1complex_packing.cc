@@ -40,7 +40,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g1complex_packing
 {
@@ -135,12 +134,6 @@ static grib_accessor_class _grib_accessor_class_data_g1complex_packing = {
 
 grib_accessor_class* grib_accessor_class_data_g1complex_packing = &_grib_accessor_class_data_g1complex_packing;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
@@ -157,8 +150,7 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_accessor_data_g1complex_packing* self =
-        (grib_accessor_data_g1complex_packing*)a;
+    grib_accessor_data_g1complex_packing* self = (grib_accessor_data_g1complex_packing*)a;
     int ret              = GRIB_SUCCESS;
     long seclen          = 0;
     long sub_j           = 0;
@@ -173,29 +165,27 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (*len == 0)
         return GRIB_NO_VALUES;
 
-#if 0
-    /* TODO: spectral_ieee does not work */
-    if (c->ieee_packing && self->ieee_packing) {
-        grib_handle* h       = grib_handle_of_accessor(a);
-        grib_context* c      = a->context;
-        char* packingType_s  = NULL;
-        char* ieee_packing_s = NULL;
-        long precision = c->ieee_packing == 32 ? 1 : 2;
-        size_t lenstr  = strlen(self->ieee_packing);
+//     /* TODO: spectral_ieee does not work */
+//     if (c->ieee_packing && self->ieee_packing) {
+//         grib_handle* h       = grib_handle_of_accessor(a);
+//         grib_context* c      = a->context;
+//         char* packingType_s  = NULL;
+//         char* ieee_packing_s = NULL;
+//         long precision = c->ieee_packing == 32 ? 1 : 2;
+//         size_t lenstr  = strlen(self->ieee_packing);
 
-        packingType_s  = grib_context_strdup(c, self->packingType);
-        ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
-        precision_s    = grib_context_strdup(c, self->precision);
+//         packingType_s  = grib_context_strdup(c, self->packingType);
+//         ieee_packing_s = grib_context_strdup(c, self->ieee_packing);
+//         precision_s    = grib_context_strdup(c, self->precision);
 
-        grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
-        grib_set_long(h, precision_s, precision);
+//         grib_set_string(h, packingType_s, ieee_packing_s, &lenstr);
+//         grib_set_long(h, precision_s, precision);
 
-        grib_context_free(c, packingType_s);
-        grib_context_free(c, ieee_packing_s);
-        grib_context_free(c, precision_s);
-        return grib_set_double_array(h, "values", val, *len);
-    }
-#endif
+//         grib_context_free(c, packingType_s);
+//         grib_context_free(c, ieee_packing_s);
+//         grib_context_free(c, precision_s);
+//         return grib_set_double_array(h, "values", val, *len);
+//     }
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->sub_j, &sub_j)) != GRIB_SUCCESS)
         return ret;
@@ -212,17 +202,17 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (ret == GRIB_SUCCESS) {
         n = a->offset + 4 * ((sub_k + 1) * (sub_k + 2));
-#if 1
+
         /*     Octet number starts from beginning of message but shouldn't     */
         if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n)) != GRIB_SUCCESS)
             return ret;
-#else
-        ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection);
-        if (ret != GRIB_SUCCESS)
-            return ret;
-        if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n - offsetsection)) != GRIB_SUCCESS)
-            return ret;
-#endif
+
+        // ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offsetsection, &offsetsection);
+        // if (ret != GRIB_SUCCESS)
+        //     return ret;
+        // if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->N, n - offsetsection)) != GRIB_SUCCESS)
+        //     return ret;
+
         ret = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value);
         if (ret != GRIB_SUCCESS)
             return ret;

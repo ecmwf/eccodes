@@ -665,12 +665,12 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 'ucurr' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 'vcurr' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 50 ;
@@ -785,7 +785,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
+#Snowmelt
 'snom' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 99 ;

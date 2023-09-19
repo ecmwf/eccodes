@@ -115,7 +115,7 @@ static Fraction_type fraction_construct_from_double(double x)
 
         x = 1.0 / (x - a);
 
-        if (x > LLONG_MAX) {
+        if (x > (double)LLONG_MAX) {
             break;
         }
 

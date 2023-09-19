@@ -13,6 +13,7 @@ label="grib_check_gaussian_grids_test"
 tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 
+${tools_dir}/grib_check_gaussian_grid -V
 
 # Check all sample GRIBs with a Gaussian grid
 samples_dir=$ECCODES_SAMPLES_PATH
@@ -27,7 +28,17 @@ for gg in ${samples_dir}/reduced_gg_*tmpl; do
 done
 
 
-# Set wrong angle and re-test. Should fail
+# Set wrong N. Should fail
+input=$samples_dir/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s N=0 $input $tempGrib
+set +e
+${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Error: N should be > 0" $tempText
+
+# Set wrong angle. Should fail
 input=$samples_dir/reduced_gg_pl_1280_grib2.tmpl
 ${tools_dir}/grib_set -s longitudeOfLastGridPoint=359929680 $input $tempGrib
 set +e
@@ -38,7 +49,7 @@ set -e
 grep -q "Error: longitudeOfLastGridPointInDegrees.*but should be" $tempText
 
 
-# Set wrong numberOfDataPoints and re-test. Should fail
+# Set wrong numberOfDataPoints. Should fail
 input=$samples_dir/reduced_gg_pl_96_grib2.tmpl
 ${tools_dir}/grib_set -s numberOfDataPoints=44 $input $tempGrib
 set +e
@@ -49,11 +60,11 @@ set -e
 grep -q "Error: Sum of pl array 50662 does not match numberOfDataPoints 44" $tempText
 
 
-# Set wrong numberOfValues and re-test. Should fail
+# Set wrong numberOfValues. Should fail
 input=$samples_dir/reduced_gg_pl_96_grib2.tmpl
 ${tools_dir}/grib_set -s numberOfValues=44 $input $tempGrib
 set +e
-${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+${tools_dir}/grib_check_gaussian_grid -f -v $tempGrib 2> $tempText
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -61,4 +72,20 @@ cat $tempText
 grep -q "Error: Sum of pl array 50662 does not match numberOfValues 44" $tempText
 
 
+# Other errors/warnings
+# ----------------------
+set +e
+${tools_dir}/grib_check_gaussian_grid
+status=$?
+set -e
+[ $status -eq 1 ]
+
+${tools_dir}/grib_check_gaussian_grid -v $data_dir > $tempText
+grep -q "not a regular file" $tempText
+
+${tools_dir}/grib_check_gaussian_grid -v $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempText
+grep -q "ignoring" $tempText
+
+
+# Clean up
 rm -f $tempGrib $tempText

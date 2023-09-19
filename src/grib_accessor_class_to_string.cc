@@ -7,9 +7,6 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-/***********************************************************
- *  Enrico Fucile
- ***********************************************************/
 
 #include "grib_api_internal.h"
 /*
@@ -18,11 +15,11 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = unpack_string;pack_string
-   IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = unpack_double;pack_double
+   IMPLEMENTS = unpack_string
+   IMPLEMENTS = unpack_long
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = init;dump;string_length
-   IMPLEMENTS = post_init;value_count
+   IMPLEMENTS = value_count
    IMPLEMENTS = next_offset
    IMPLEMENTS = get_native_type
    IMPLEMENTS = compare
@@ -44,9 +41,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
-static int pack_double(grib_accessor*, const double* val, size_t* len);
-static int pack_long(grib_accessor*, const long* val, size_t* len);
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
@@ -55,8 +49,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void post_init(grib_accessor*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_to_string
@@ -78,7 +70,7 @@ static grib_accessor_class _grib_accessor_class_to_string = {
     0,                           /* inited */
     0,                           /* init_class */
     &init,                       /* init */
-    &post_init,                  /* post_init */
+    0,                  /* post_init */
     0,                    /* destroy */
     &dump,                       /* dump */
     &next_offset,                /* next_offset */
@@ -90,13 +82,13 @@ static grib_accessor_class _grib_accessor_class_to_string = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    &pack_long,                  /* pack_long */
+    0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
     &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -122,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_to_string = {
 
 grib_accessor_class* grib_accessor_class_to_string = &_grib_accessor_class_to_string;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
@@ -140,11 +126,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
-}
-
-static void post_init(grib_accessor* a)
-{
-    return;
 }
 
 static int value_count(grib_accessor* a, long* count)
@@ -161,11 +142,11 @@ static int value_count(grib_accessor* a, long* count)
 static size_t string_length(grib_accessor* a)
 {
     grib_accessor_to_string* self = (grib_accessor_to_string*)a;
-    size_t size                   = 0;
 
     if (self->length)
         return self->length;
 
+    size_t size = 0;
     grib_get_string_length(grib_handle_of_accessor(a), self->key, &size);
     return size;
 }
@@ -182,21 +163,21 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int err                       = 0;
     grib_accessor_to_string* self = (grib_accessor_to_string*)a;
-    char buff[512]                = {0,};
-    size_t length;
-    size_t size = 512;
 
-    length = string_length(a);
+    int err        = 0;
+    char buff[512] = {0,};
+
+    size_t length = string_length(a);
 
     if (len[0] < length + 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
+                         len[0], a->name, a->length + 1);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
+    size_t size = sizeof(buff);
     err = grib_get_string(grib_handle_of_accessor(a), self->key, buff, &size);
     if (err)
         return err;
@@ -210,23 +191,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     val[length] = 0;
     len[0]      = length;
     return GRIB_SUCCESS;
-}
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int pack_long(grib_accessor* a, const long* v, size_t* len)
-{
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int pack_double(grib_accessor* a, const double* v, size_t* len)
-{
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
-    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int unpack_long(grib_accessor* a, long* v, size_t* len)

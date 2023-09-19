@@ -12,7 +12,6 @@
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
-    { "r", 0, "Compare files in which the messages are not in the same order. This option is time expensive.\n", 0, 1, 0 },
     { "b:", 0, 0, 0, 1, 0 },
     { "d", 0, "Write different messages on files\n", 0, 1, 0 },
     { "T:", 0, 0, 1, 0, "M" }, /* METAR */
@@ -20,7 +19,6 @@ grib_option grib_options[] = {
     { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
     { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    { "H", 0, "Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
     { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
@@ -45,9 +43,7 @@ const char* tool_description =
 
 const char* tool_name = "metar_compare";
 const char* tool_online_doc = NULL;
-const char* tool_usage =
-    "[options] "
-    "file file";
+const char* tool_usage = "[options] file file";
 
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -85,7 +81,6 @@ static int lastPrint           = 0;
 static int force               = 0;
 static double maxAbsoluteError = 1e-19;
 static int onlyListed          = 1;
-static int headerMode          = 0;
 static int morein1             = 0;
 static int morein2             = 0;
 static int listFromCommandLine;
@@ -93,7 +88,6 @@ static int verbose                = 0;
 static double tolerance_factor    = 1;
 static int write_error            = 0;
 static grib_handle* global_handle = NULL;
-static int global_counter         = 0;
 static int start                  = -1;
 static int end                    = -1;
 static int write_count            = 0;
@@ -198,9 +192,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret               = 0, i;
-    int nfiles            = 1;
-    char orderby[]        = "md5Headers";
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
@@ -231,11 +222,6 @@ int grib_tool_init(grib_runtime_options* options)
     else
         onlyListed = 1;
 
-    if (grib_options_on("H"))
-        headerMode = 1;
-    else
-        headerMode = 0;
-
     if (grib_options_on("H") && grib_options_on("c:")) {
         printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
         exit(1);
@@ -250,7 +236,7 @@ int grib_tool_init(grib_runtime_options* options)
         blocklist              = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
         blocklist->value       = grib_context_strdup(context, options->set_values[0].name);
         next                   = blocklist;
-        for (i = 1; i < options->set_values_count; i++) {
+        for (int i = 1; i < options->set_values_count; i++) {
             next->next        = (grib_string_list*)grib_context_malloc_clear(context, sizeof(grib_string_list));
             next->next->value = grib_context_strdup(context, options->set_values[i].name);
             next              = next->next;
@@ -258,34 +244,19 @@ int grib_tool_init(grib_runtime_options* options)
         context->blocklist = blocklist;
     }
 
-    if (grib_options_on("r")) {
-        const char* filename[1];
-        filename[0]      = options->infile_extra->name;
-        options->random  = 1;
-        options->orderby = strdup(orderby);
-        options->idx     = grib_fieldset_new_from_files(context, filename,
-                                                    nfiles, 0, 0, 0, orderby, &ret);
-        if (ret) {
-            printf("unable to create index for input file %s (%s)",
-                   options->infile_extra->name, grib_get_error_message(ret));
-            exit(ret);
-        }
-    }
-    else {
-        options->random             = 0;
-        options->infile_extra->file = fopen(options->infile_extra->name, "r");
+    options->random             = 0;
+    options->infile_extra->file = fopen(options->infile_extra->name, "r");
 
-        if (!options->infile_extra->file) {
-            perror(options->infile_extra->name);
-            exit(1);
-        }
+    if (!options->infile_extra->file) {
+        perror(options->infile_extra->name);
+        exit(1);
     }
 
     global_tolerance = 0;
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
         global_tolerance = 0;
-        for (i = 0; i < options->tolerance_count; i++) {
+        for (int i = 0; i < options->tolerance_count; i++) {
             if (!strcmp((options->tolerance[i]).name, "all")) {
                 global_tolerance = (options->tolerance[i]).double_value;
                 break;
@@ -351,21 +322,7 @@ static void printInfo(grib_handle* h)
     lastPrint = count;
 }
 
-static void print_index_key_values(grib_index* index, int counter, const char* error_message)
-{
-    grib_index_key* keys = index->keys;
-    printf("== %d == ", counter);
-    if (error_message)
-        printf("%s == ", error_message);
-    while (keys) {
-        printf("%s=%s ", keys->name, keys->value);
-        keys = keys->next;
-    }
-    printf("\n");
-}
-
-static grib_handle* metar_handle_new_from_file_x(
-    grib_context* c, FILE* f, int mode, int headers_only, int* err)
+static grib_handle* metar_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
 {
     return codes_handle_new_from_file(c, f, PRODUCT_METAR, err);
 }
@@ -375,55 +332,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     int err = 0;
     count++;
 
-    if (options->through_index) {
-        grib_index* idx1 = options->index1;
-        verbose          = 0;
-        global_counter++;
-
-        if (start > 0 && global_counter < start)
-            return 0;
-        if (end > 0 && global_counter > end) {
-            options->stop = 1;
-            return 0;
-        }
-
-        grib_index_search_same(idx1, h);
-        global_handle = codes_new_from_index(idx1, CODES_METAR, &err);
-        if (options->verbose) {
-            off_t offset   = 0;
-            char* filename = grib_get_field_file(options->index2, &offset);
-            printf("file1=\"%s\" ", filename);
-            filename = grib_get_field_file(options->index1, &offset);
-            printf("file2=\"%s\" \n", filename);
-            print_index_key_values(options->index1, global_counter, NULL);
-        }
-
-        if (!global_handle) {
-            if (!options->verbose)
-                print_index_key_values(idx1, global_counter, "NOT FOUND ");
-        }
-
-        if (!global_handle || err != GRIB_SUCCESS) {
-            morein1++;
-            if (global_handle)
-                grib_handle_delete(global_handle);
-            return 0;
-        }
-
-        if (compare_handles(h, global_handle, options)) {
-            error++;
-            if (!force)
-                exit(1);
-        }
-
-        grib_handle_delete(global_handle);
-
-        return 0;
-    }
-    else if (options->random)
-        global_handle = grib_fieldset_next_handle(options->idx, &err);
-    else
-        global_handle = metar_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
+    global_handle = metar_handle_new_from_file_x(h->context, options->infile_extra->file, options->mode, 0, &err);
 
     if (!global_handle || err != GRIB_SUCCESS) {
         morein2++;
@@ -446,7 +355,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     int err = 0;
-    if (!options->through_index && !options->random) {
+    if (!options->through_index) {
         global_handle = metar_new_from_file(h->context, options->infile_extra->file, &err);
 
         if (!global_handle || err != GRIB_SUCCESS)
@@ -503,10 +412,6 @@ int grib_tool_finalise_action(grib_runtime_options* options)
 
         printf("##\n## %d different messages out of %d\n\n", error, count);
     }
-    if (options->through_index) {
-        grib_index_delete(options->index1);
-        grib_index_delete(options->index2);
-    }
 
     if (error != 0)
         exit(1);
@@ -555,7 +460,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     int err2;
     int type1, type2;
     int countdiff;
-    int isangle    = 0;
     int isMissing1 = 0, isMissing2 = 0;
 
     char *sval1 = NULL, *sval2 = NULL;
@@ -592,16 +496,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         return err;
     }
 
-    /*
-  if(type1 != type2)
-  {
-    printInfo(h1);
-    printf("Warning, [%s] has different types: 1st field: [%s], 2nd field: [%s]\n",
-        name,grib_get_type_name(type1),grib_get_type_name(type2));
-    return GRIB_TYPE_MISMATCH;
-  }
-     */
-
     if (type1 == GRIB_TYPE_LABEL)
         return err;
 
@@ -629,16 +523,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         save_error(c, name);
         return err;
     }
-
-    /*
-  if(len1 != len2 && type1 != GRIB_TYPE_STRING)
-  {
-    printInfo(h1);
-    printf("[%s] has different size: 1st field: %ld, 2nd field: %ld\n",name,(long)len1,(long)len2);
-    save_error(c,name);
-    return GRIB_COUNT_MISMATCH;
-  }
-     */
 
     if (options->mode != MODE_METAR) {
         /* TODO: Ignore missing values for keys in METAR. Not yet implemented */
@@ -777,7 +661,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             dval1 = (double*)grib_context_malloc(h1->context, len1 * sizeof(double));
             dval2 = (double*)grib_context_malloc(h2->context, len2 * sizeof(double));
 
-            isangle         = 0;
             value_tolerance = global_tolerance;
             if (!grib_inline_strcmp(name, "packedValues") || !grib_inline_strcmp(name, "values") || !grib_inline_strcmp(name, "codedValues")) {
                 packingError1 = 0;
@@ -842,26 +725,12 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
                 int imaxdiff;
                 double diff;
-                double *pv1, *pv2, dnew1, dnew2;
+                double *pv1, *pv2;
                 maxdiff   = 0;
                 imaxdiff  = 0;
                 countdiff = 0;
                 pv1       = dval1;
                 pv2       = dval2;
-                if (isangle) {
-                    dnew1 = *dval1;
-                    dnew2 = *dval2;
-                    pv1   = &dnew1;
-                    pv2   = &dnew2;
-                    if (*dval1 < 0)
-                        dnew1 += 360.0;
-                    if (*dval2 < 0)
-                        dnew2 += 360.0;
-                    if (*dval1 > 360)
-                        dnew1 -= 360.0;
-                    if (*dval2 > 360)
-                        dnew2 -= 360.0;
-                }
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
@@ -1033,60 +902,11 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     grib_keys_iterator* iter = NULL;
     const char* name         = NULL;
 
-    /* mask only if no -c option or headerMode (-H)*/
-    if (blocklist && (!listFromCommandLine || headerMode)) {
-        grib_string_list* nextb = blocklist;
-        while (nextb) {
-            grib_clear(h1, nextb->value);
-            grib_clear(h2, nextb->value);
-            nextb = nextb->next;
-        }
-    }
-
-    if (headerMode) {
-        const void *msg1 = NULL, *msg2 = NULL;
-        size_t size1 = 0, size2 = 0;
-        grib_handle *h11, *h22;
-        GRIB_CHECK_NOLINE(grib_get_message_headers(h1, &msg1, &size1), 0);
-        GRIB_CHECK_NOLINE(grib_get_message_headers(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
-            return 0;
-
-        err = 0;
-        h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
-        h22 = grib_handle_new_from_partial_message(h1->context, msg2, size2);
-
-        iter = grib_keys_iterator_new(h11,
-                                      GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
-
-        if (!iter) {
-            printf("ERROR: unable to get iterator\n");
-            exit(1);
-        }
-
-        while (grib_keys_iterator_next(iter)) {
-            name = grib_keys_iterator_get_name(iter);
-            /*printf("----- comparing %s\n",name);*/
-
-            if (blocklisted(name))
-                continue;
-            if (compare_values(options, h11, h22, name, GRIB_TYPE_UNDEFINED)) {
-                err++;
-                write_messages(h11, h22);
-            }
-        }
-
-        grib_keys_iterator_delete(iter);
-        grib_handle_delete(h11);
-        grib_handle_delete(h22);
-        return err;
-    }
-
     if (listFromCommandLine && onlyListed) {
         for (i = 0; i < options->compare_count; i++) {
             if (blocklisted((char*)options->compare[i].name))
                 continue;
-            if (options->compare[i].type == GRIB_NAMESPACE) {
+            if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
                     printf("ERROR: unable to get iterator\n");
@@ -1122,34 +942,12 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
             return 0;
         }
-#if 0
-        else {
-            int lcount=count,ii;
-            if (options->current_infile) lcount=options->current_infile->filter_handle_count;
-            if (size1 != size2) {
-                printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
-            }
-            if (memcmp_ret) {
-                unsigned char *m1=(unsigned char*)msg1;
-                unsigned char *m2=(unsigned char*)msg2;
-                printf("=== list of different bytes for message %d\n",lcount);
-                for (ii=0;ii<size1;ii++) {
-                    if (memcmp(m1,m2,1)) {
-                        printf("  %d 0x%.2X != 0x%.2X\n",ii,*m1,*m2);
-                    }
-                    m1++; m2++;
-                }
-            }
-            return err;
-        }
-#endif
-
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {
                 if (blocklisted(name))
                     continue;
-                if (options->compare[i].type == GRIB_NAMESPACE) {
+                if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                     if (!iter) {
                         printf("ERROR: unable to get iterator for %s\n", options->compare[i].name);

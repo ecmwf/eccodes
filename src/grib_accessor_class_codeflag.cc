@@ -39,7 +39,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_codeflag
 {
@@ -106,12 +105,6 @@ static grib_accessor_class _grib_accessor_class_codeflag = {
 
 grib_accessor_class* grib_accessor_class_codeflag = &_grib_accessor_class_codeflag;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* param)
@@ -124,7 +117,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* param)
 
 static int test_bit(long a, long b)
 {
-    DebugAssert(b>=0);
+    DEBUG_ASSERT(b>=0);
     return a & (1 << b);
 }
 
@@ -160,11 +153,9 @@ static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
         return GRIB_FILE_NOT_FOUND;
     }
 
-#if 0
-    strcpy(codename, self->tablename);
-    strcat(codename,": ");
-    j = strlen(codename);
-#endif
+    // strcpy(codename, self->tablename);
+    // strcat(codename,": ");
+    // j = strlen(codename);
 
     while (fgets(line, sizeof(line) - 1, f)) {
         sscanf(line, "%49s %49s", num, bval);

@@ -33,7 +33,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g1shsimple_packing
 {
@@ -98,12 +97,6 @@ static grib_accessor_class _grib_accessor_class_data_g1shsimple_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_g1shsimple_packing = &_grib_accessor_class_data_g1shsimple_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

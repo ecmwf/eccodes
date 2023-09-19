@@ -26,10 +26,11 @@ program iterator
    call codes_open_file(ifile, &
                         '../../data/regular_latlon_surface_constant.grib1', 'R')
 
-   ! Loop on all the messages in a file.
-   call codes_grib_new_from_file(ifile, igrib, iret)
+   ! Loop on all the messages in a file
+   LOOP: DO WHILE (.true.)
+      call codes_grib_new_from_file(ifile, igrib, iret)
+      if (iret == CODES_END_OF_FILE) exit LOOP
 
-   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
       ! get as a real8
       call codes_get(igrib, &
                      'missingValue', missingValue)
@@ -60,8 +61,6 @@ program iterator
       ! At the end the iterator is deleted to free memory.
       call grib_iterator_delete(iter)
       call codes_release(igrib)
-
-      call codes_grib_new_from_file(ifile, igrib, iret)
 
    end do LOOP
 

@@ -35,7 +35,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int get_native_type(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_codetable_units
 {
@@ -97,12 +96,6 @@ static grib_accessor_class _grib_accessor_class_codetable_units = {
 
 
 grib_accessor_class* grib_accessor_class_codetable_units = &_grib_accessor_class_codetable_units;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

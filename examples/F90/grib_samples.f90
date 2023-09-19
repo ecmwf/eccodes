@@ -9,7 +9,6 @@
 !
 !  Description: How to create a new GRIB message from a sample.
 !
-!
 program sample
    use eccodes
    implicit none
@@ -29,7 +28,7 @@ program sample
    indicatorOfParameter = 61
    decimalPrecision = 2
 
-   ! a new GRIB message is loaded from an existing sample.
+   ! A new GRIB message is loaded from an existing sample.
    ! Samples are searched in a default sample path (use codes_info
    ! to see where that is). The default sample path can be changed by
    ! setting the environment variable ECCODES_SAMPLES_PATH

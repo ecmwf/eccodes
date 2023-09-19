@@ -45,6 +45,6 @@
 43 43 Column integrated divergence of geopotential flux (W m-2)
 44 44 Height of zero-degree wet-bulb temperature (m)
 45 45 Height of one-degree wet-bulb temperature (m)
-# 46-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 46-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

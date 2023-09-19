@@ -44,7 +44,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_long_vector
 {
@@ -112,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_long_vector = {
 
 grib_accessor_class* grib_accessor_class_long_vector = &_grib_accessor_class_long_vector;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 typedef struct grib_accessor_abstract_long_vector
@@ -164,7 +157,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /*TODO implement the dirty mechanism to avoid to unpack every time */
     err = grib_get_size(grib_handle_of_accessor(a), self->vector, &size);
     if (err) return err;
-    DebugAssert(size > 0);
+    DEBUG_ASSERT(size > 0);
     vector = (long*)grib_context_malloc(a->context, sizeof(long) * size);
     err = grib_unpack_long(va, vector, &size);
     grib_context_free(a->context, vector);

@@ -83,8 +83,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -99,8 +98,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -110,8 +108,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -126,8 +123,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -137,8 +133,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -297,7 +292,7 @@ static grib_context default_grib_context = {
     0,               /* grib_concept_path          */
     0,               /* grib_reader                */
     0,               /* user data                  */
-    GRIB_REAL_MODE8, /* real mode for fortran      */
+    CODES_REAL_MODE8, /* real mode for fortran     */
 
 #if MANAGE_MEM
     &grib_transient_free,    /* free_mem                   */
@@ -561,52 +556,52 @@ grib_context* grib_context_get_default()
     return &default_grib_context;
 }
 
-#if 0 /* function removed */
-grib_context* grib_context_new(grib_context* parent)
-{
-    grib_context* c;
-#if GRIB_PTHREADS
-    pthread_mutexattr_t attr;
-#endif
+// Do we really need this?
+// grib_context* grib_context_new(grib_context* parent)
+// {
+//     grib_context* c;
+// #if GRIB_PTHREADS
+//     pthread_mutexattr_t attr;
+// #endif
 
-    if (!parent) parent=grib_context_get_default();
+//     if (!parent) parent=grib_context_get_default();
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init);
-    GRIB_MUTEX_LOCK(&(parent->mutex));
+//     GRIB_MUTEX_INIT_ONCE(&once,&init);
+//     GRIB_MUTEX_LOCK(&(parent->mutex));
 
-    c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
+//     c = (grib_context*)grib_context_malloc_clear_persistent(&default_grib_context,sizeof(grib_context));
 
-    c->inited              = default_grib_context.inited;
-    c->debug               = default_grib_context.debug;
+//     c->inited              = default_grib_context.inited;
+//     c->debug               = default_grib_context.debug;
 
-    c->real_mode           = default_grib_context.real_mode;
+//     c->real_mode           = default_grib_context.real_mode;
 
-    c->free_mem            = default_grib_context.free_mem;
-    c->alloc_mem           = default_grib_context.alloc_mem;
+//     c->free_mem            = default_grib_context.free_mem;
+//     c->alloc_mem           = default_grib_context.alloc_mem;
 
-    c->free_persistent_mem = default_grib_context.free_persistent_mem;
-    c->alloc_persistent_mem= default_grib_context.alloc_persistent_mem;
+//     c->free_persistent_mem = default_grib_context.free_persistent_mem;
+//     c->alloc_persistent_mem= default_grib_context.alloc_persistent_mem;
 
-    c->read                = default_grib_context.read;
-    c->write               = default_grib_context.write;
-    c->tell                = default_grib_context.tell;
+//     c->read                = default_grib_context.read;
+//     c->write               = default_grib_context.write;
+//     c->tell                = default_grib_context.tell;
 
-    c->output_log          = default_grib_context.output_log;
-    c->print               = default_grib_context.print    ;
-    c->user_data           = default_grib_context.user_data;
-    c->def_files           = default_grib_context.def_files;
-    c->lists               = default_grib_context.lists;
+//     c->output_log          = default_grib_context.output_log;
+//     c->print               = default_grib_context.print    ;
+//     c->user_data           = default_grib_context.user_data;
+//     c->def_files           = default_grib_context.def_files;
+//     c->lists               = default_grib_context.lists;
 
-#if GRIB_PTHREADS
-    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex_c,&attr);
-    pthread_mutexattr_destroy(&attr);
-#endif
+// #if GRIB_PTHREADS
+//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+//     pthread_mutex_init(&mutex_c,&attr);
+//     pthread_mutexattr_destroy(&attr);
+// #endif
 
-    GRIB_MUTEX_UNLOCK(&(parent->mutex));
-    return c;
-}
-#endif /* function removed */
+//     GRIB_MUTEX_UNLOCK(&(parent->mutex));
+//     return c;
+// }
+
 
 /* GRIB-235: Resolve path to expand symbolic links etc */
 /* Note: return value is allocated. Client has to free */
@@ -908,9 +903,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p = c->alloc_persistent_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL,
-                         "grib_context_malloc_persistent: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return p;
 }
@@ -941,8 +934,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return p;
 }
@@ -954,7 +946,7 @@ void* grib_context_realloc(const grib_context* c, void* p, size_t size)
         c = grib_context_get_default();
     q = c->realloc_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return q;
@@ -989,7 +981,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_buffer_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return p;
@@ -1007,7 +999,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* q = c->realloc_buffer_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return q;
@@ -1069,17 +1061,15 @@ void grib_context_log(const grib_context* c, int level, const char* fmt, ...)
             level = level & ~GRIB_LOG_PERROR;
 
             /* #if HAS_STRERROR */
-#if 1
             strcat(msg, " (");
             strcat(msg, strerror(errsv));
             strcat(msg, ")");
-#else
-            if (errsv > 0 && errsv < sys_nerr) {
-                strcat(msg, " (");
-                strcat(msg, sys_errlist[errsv]);
-                strcat(msg, " )");
-            }
-#endif
+
+            // if (errsv > 0 && errsv < sys_nerr) {
+            //     strcat(msg, " (");
+            //     strcat(msg, sys_errlist[errsv]);
+            //     strcat(msg, " )");
+            // }
         }
 
         if (c->output_log)

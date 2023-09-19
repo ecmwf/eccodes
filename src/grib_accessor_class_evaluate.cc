@@ -15,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_long;pack_long
+   IMPLEMENTS = unpack_long
    IMPLEMENTS = init
    MEMBERS= grib_arguments* arg
    END_CLASS_DEF
@@ -32,10 +32,8 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_evaluate
 {
@@ -67,7 +65,7 @@ static grib_accessor_class _grib_accessor_class_evaluate = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    &pack_long,                  /* pack_long */
+    0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
     0,                 /* pack_float */
@@ -99,12 +97,6 @@ static grib_accessor_class _grib_accessor_class_evaluate = {
 
 grib_accessor_class* grib_accessor_class_evaluate = &_grib_accessor_class_evaluate;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -114,18 +106,12 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-static int pack_long(grib_accessor* a, const long* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                      = 0;
     grib_accessor_evaluate* self = (grib_accessor_evaluate*)a;
-    grib_expression* e           = grib_arguments_get_expression(grib_handle_of_accessor(a), self->arg, 0);
+    grib_expression* e = grib_arguments_get_expression(grib_handle_of_accessor(a), self->arg, 0);
 
-    ret  = grib_expression_evaluate_long(grib_handle_of_accessor(a), e, val);
+    int ret  = grib_expression_evaluate_long(grib_handle_of_accessor(a), e, val);
     *len = 1;
 
     return ret;

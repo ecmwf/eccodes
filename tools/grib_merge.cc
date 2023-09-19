@@ -9,7 +9,7 @@
  */
 
 /*
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
+ * Author: Enrico Fucile
  * Description:
  * In Observations team we need a tool to merge the GRIB messages coming from GTS.
  * They come with compatible grid (lat/lon) but they are split in different quadrants.

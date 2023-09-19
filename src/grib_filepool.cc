@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- *
- * Description: file pool
- *
- */
-
 #include "grib_api_internal.h"
 #define GRIB_MAX_OPENED_FILES 200
 
@@ -46,6 +40,8 @@ static void init()
 #endif
 
 static short next_id = 0;
+
+static grib_file* grib_file_new(grib_context* c, const char* name, int* err);
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -84,115 +80,95 @@ void grib_file_pool_clean()
     }
 }
 
-static void grib_file_pool_change_id()
-{
-    grib_file* file;
+// static void grib_file_pool_change_id()
+// {
+//     grib_file* file;
+//     if (!file_pool.first)
+//         return;
+//     file = file_pool.first;
+//     while (file) {
+//         file->id += 1000;
+//         file = file->next;
+//     }
+// }
 
-    if (!file_pool.first)
-        return;
+// static grib_file* grib_read_file(grib_context* c, FILE* fh, int* err)
+// {
+//     short marker = 0;
+//     short id     = 0;
+//     grib_file* file;
+//     *err = grib_read_short(fh, &marker);
+//     if (!marker)
+//         return NULL;
+//     file         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
+//     file->buffer = 0;
+//     file->name   = grib_read_string(c, fh, err);
+//     if (*err)
+//         return NULL;
+//     *err     = grib_read_short(fh, &id);
+//     file->id = id;
+//     if (*err)
+//         return NULL;
+//     file->next = grib_read_file(c, fh, err);
+//     if (*err)
+//         return NULL;
+//     return file;
+// }
 
-    file = file_pool.first;
-    while (file) {
-        file->id += 1000;
-        file = file->next;
-    }
-}
-
-static grib_file* grib_read_file(grib_context* c, FILE* fh, int* err)
-{
-    short marker = 0;
-    short id     = 0;
-    grib_file* file;
-    *err = grib_read_short(fh, &marker);
-    if (!marker)
-        return NULL;
-
-    file         = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-    file->buffer = 0;
-    file->name   = grib_read_string(c, fh, err);
-    if (*err)
-        return NULL;
-
-    *err     = grib_read_short(fh, &id);
-    file->id = id;
-    if (*err)
-        return NULL;
-
-    file->next = grib_read_file(c, fh, err);
-    if (*err)
-        return NULL;
-
-    return file;
-}
-
-static int grib_write_file(FILE* fh, grib_file* file)
-{
-    int err = 0;
-
-    if (!file)
-        return grib_write_null_marker(fh);
-
-    err = grib_write_not_null_marker(fh);
-    if (err)
-        return err;
-
-    err = grib_write_string(fh, file->name);
-    if (err)
-        return err;
-
-    err = grib_write_short(fh, (short)file->id);
-    if (err)
-        return err;
-
-    return grib_write_file(fh, file->next);
-}
+// static int grib_write_file(FILE* fh, grib_file* file)
+// {
+//     int err = 0;
+//     if (!file)
+//         return grib_write_null_marker(fh);
+//     err = grib_write_not_null_marker(fh);
+//     if (err)
+//         return err;
+//     err = grib_write_string(fh, file->name);
+//     if (err)
+//         return err;
+//     err = grib_write_short(fh, (short)file->id);
+//     if (err)
+//         return err;
+//     return grib_write_file(fh, file->next);
+// }
 
 grib_file* grib_file_pool_get_files()
 {
     return file_pool.first;
 }
 
-int grib_file_pool_read(grib_context* c, FILE* fh)
-{
-    int err      = 0;
-    short marker = 0;
-    grib_file* file;
+// int grib_file_pool_read(grib_context* c, FILE* fh)
+// {
+//     int err      = 0;
+//     short marker = 0;
+//     grib_file* file;
+//     if (!c) c = grib_context_get_default();
+//     err = grib_read_short(fh, &marker);
+//     if (!marker) {
+//         grib_context_log(c, GRIB_LOG_ERROR,
+//                          "Unable to find file information in index file");
+//         return GRIB_INVALID_FILE;
+//     }
+//     grib_file_pool_change_id();
+//     file = file_pool.first;
+//     while (file->next)
+//         file = file->next;
+//     file->next = grib_read_file(c, fh, &err);
+//     if (err)
+//         return err;
+//     return GRIB_SUCCESS;
+// }
 
-    if (!c)
-        c = grib_context_get_default();
-
-    err = grib_read_short(fh, &marker);
-    if (!marker) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "Unable to find file information in index file\n");
-        return GRIB_INVALID_FILE;
-    }
-
-    grib_file_pool_change_id();
-    file = file_pool.first;
-
-    while (file->next)
-        file = file->next;
-
-    file->next = grib_read_file(c, fh, &err);
-    if (err)
-        return err;
-
-    return GRIB_SUCCESS;
-}
-
-int grib_file_pool_write(FILE* fh)
-{
-    int err = 0;
-    if (!file_pool.first)
-        return grib_write_null_marker(fh);
-
-    err = grib_write_not_null_marker(fh);
-    if (err)
-        return err;
-
-    return grib_write_file(fh, file_pool.first);
-}
+// int grib_file_pool_write(FILE* fh)
+// {
+//     int err = 0;
+//     if (!file_pool.first)
+//         return grib_write_null_marker(fh);
+//     err = grib_write_not_null_marker(fh);
+//     if (err)
+//         return err;
+//     return grib_write_file(fh, file_pool.first);
+// }
 
 grib_file* grib_file_open(const char* filename, const char* mode, int* err)
 {
@@ -250,7 +226,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         }
 
         if (!file->handle) {
-            grib_context_log(file->context, GRIB_LOG_PERROR, "grib_file_open: cannot open file %s", file->name);
+            grib_context_log(file->context, GRIB_LOG_PERROR, "%s: Cannot open file '%s'", __func__, file->name);
             *err = GRIB_IO_PROBLEM;
             GRIB_MUTEX_UNLOCK(&mutex1);
             return NULL;
@@ -260,7 +236,7 @@ grib_file* grib_file_open(const char* filename, const char* mode, int* err)
         if (file_pool.context->io_buffer_size) {
 #ifdef POSIX_MEMALIGN
             if (posix_memalign((void**)&(file->buffer), sysconf(_SC_PAGESIZE), file_pool.context->io_buffer_size)) {
-                grib_context_log(file->context, GRIB_LOG_FATAL, "posix_memalign unable to allocate io_buffer\n");
+                grib_context_log(file->context, GRIB_LOG_FATAL, "posix_memalign unable to allocate io_buffer");
             }
 #else
             file->buffer = (char*)malloc(file_pool.context->io_buffer_size);
@@ -296,7 +272,7 @@ void grib_file_pool_delete_file(grib_file* file)
                 break;
             prev = prev->next;
         }
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = file->next;
         }
@@ -384,35 +360,28 @@ grib_file* grib_get_file(const char* filename, int* err)
     return file;
 }
 
-grib_file* grib_find_file(short id)
+// grib_file* grib_find_file(short id)
+// {
+//     grib_file* file = NULL;
+//     if (file_pool.current->name && id == file_pool.current->id) {
+//         return file_pool.current;
+//     }
+//     file = file_pool.first;
+//     while (file) {
+//         if (id == file->id)
+//             break;
+//         file = file->next;
+//     }
+//     return file;
+// }
+
+static grib_file* grib_file_new(grib_context* c, const char* name, int* err)
 {
-    grib_file* file = NULL;
+    if (!c) c = grib_context_get_default();
 
-    if (file_pool.current->name && id == file_pool.current->id) {
-        return file_pool.current;
-    }
-
-    file = file_pool.first;
-    while (file) {
-        if (id == file->id)
-            break;
-        file = file->next;
-    }
-
-    return file;
-}
-
-grib_file* grib_file_new(grib_context* c, const char* name, int* err)
-{
-    grib_file* file;
-
-    if (!c)
-        c = grib_context_get_default();
-
-    file = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
-
+    grib_file* file = (grib_file*)grib_context_malloc_clear(c, sizeof(grib_file));
     if (!file) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_file_new: unable to allocate memory");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate memory", __func__);
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -436,21 +405,19 @@ grib_file* grib_file_new(grib_context* c, const char* name, int* err)
 
 void grib_file_delete(grib_file* file)
 {
-    {
-        if (!file)
-            return;
-    }
+    if (!file) return;
+
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex1);
     /* GRIB-803: cannot call fclose yet! Causes crash */
     /* TODO: Set handle to NULL in filepool too */
-#if 0
-    if (file->handle) {
-        if (fclose(file->handle) != 0) {
-            perror(file->name);
-        }
-    }
-#endif
+
+    //if (file->handle) {
+    //    if (fclose(file->handle) != 0) {
+    //        perror(file->name);
+    //    }
+    //}
+
     if (file->name)
         free(file->name);
     if (file->mode)

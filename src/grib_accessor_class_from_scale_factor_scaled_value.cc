@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 #ifdef ECCODES_ON_WINDOWS
  #include <stdint.h>
 #endif
@@ -44,7 +44,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_from_scale_factor_scaled_value
 {
@@ -108,12 +107,6 @@ static grib_accessor_class _grib_accessor_class_from_scale_factor_scaled_value =
 
 
 grib_accessor_class* grib_accessor_class_from_scale_factor_scaled_value = &_grib_accessor_class_from_scale_factor_scaled_value;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

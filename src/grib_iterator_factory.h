@@ -2,6 +2,7 @@
 { "gaussian", &grib_iterator_class_gaussian, },
 { "gaussian_reduced", &grib_iterator_class_gaussian_reduced, },
 { "gen", &grib_iterator_class_gen, },
+{ "healpix", &grib_iterator_class_healpix, },
 { "lambert_azimuthal_equal_area", &grib_iterator_class_lambert_azimuthal_equal_area, },
 { "lambert_conformal", &grib_iterator_class_lambert_conformal, },
 { "latlon", &grib_iterator_class_latlon, },

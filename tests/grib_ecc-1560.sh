@@ -11,12 +11,29 @@
 . ./include.ctest.sh
 
 label="grib_ecc-1560_test"
+temp_PDTN00_Grib=temp.$label.PDTN00.grib
 temp_PDTN08_Grib=temp.$label.PDTN08.grib
 temp_PDTN11_Grib=temp.$label.PDTN11.grib
 tempGrib=temp.$label.grib
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-# We set PDTN=8 and level to 1.5 metres above ground
+# ECC-1644
+# --------------
+${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=0,scaledValueOfFirstFixedSurface=0 \
+  $sample_grib2 $temp_PDTN00_Grib
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=11 $temp_PDTN00_Grib $temp_PDTN11_Grib
+${tools_dir}/grib_compare -b totalLength,section4Length,productDefinitionTemplateNumber $temp_PDTN00_Grib $temp_PDTN11_Grib
+
+
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=100,scaleFactorOfFirstFixedSurface=-2,scaledValueOfFirstFixedSurface=10 \
+  $sample_grib2 $temp_PDTN00_Grib
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=11 $temp_PDTN00_Grib $temp_PDTN11_Grib
+${tools_dir}/grib_compare -b totalLength,section4Length,productDefinitionTemplateNumber $temp_PDTN00_Grib $temp_PDTN11_Grib
+
+
+
+# Set PDTN=8 and level to 1.5 metres above ground
+# --------------------------------------------------
 ${tools_dir}/grib_set -s \
   productDefinitionTemplateNumber=8,typeOfFirstFixedSurface=103,scaledValueOfFirstFixedSurface=15,scaleFactorOfFirstFixedSurface=1 \
   $sample_grib2 $temp_PDTN08_Grib
@@ -46,3 +63,4 @@ grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface 3456
 
 # Clean up
 rm -f $temp_PDTN08_Grib $temp_PDTN11_Grib $tempGrib
+rm -f $temp_PDTN00_Grib

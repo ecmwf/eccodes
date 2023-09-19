@@ -41,7 +41,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_validity_time
 {
@@ -109,12 +108,6 @@ static grib_accessor_class _grib_accessor_class_validity_time = {
 
 
 grib_accessor_class* grib_accessor_class_validity_time = &_grib_accessor_class_validity_time;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

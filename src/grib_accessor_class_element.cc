@@ -41,7 +41,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_element
 {
@@ -105,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_element = {
 
 
 grib_accessor_class* grib_accessor_class_element = &_grib_accessor_class_element;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

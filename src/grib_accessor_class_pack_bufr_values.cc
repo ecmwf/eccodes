@@ -47,7 +47,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_pack_bufr_values
 {
@@ -109,12 +108,6 @@ static grib_accessor_class _grib_accessor_class_pack_bufr_values = {
 
 
 grib_accessor_class* grib_accessor_class_pack_bufr_values = &_grib_accessor_class_pack_bufr_values;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

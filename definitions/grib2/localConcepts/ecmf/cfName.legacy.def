@@ -142,3 +142,9 @@
  parameterCategory = 128 ;
  parameterNumber = 174 ;
 }
+#Total column ozone
+'atmosphere_mass_content_of_ozone' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 206 ;
+}
