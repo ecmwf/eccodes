@@ -19,6 +19,7 @@
   CLASS      = accessor
   SUPER      = grib_accessor_class_long
   IMPLEMENTS = unpack_long;pack_long
+  IMPLEMENTS = unpack_double
   IMPLEMENTS = unpack_string;pack_string
   IMPLEMENTS = init;dump
   MEMBERS = const char* forecast_time_value
@@ -44,6 +45,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -86,7 +88,7 @@ static grib_accessor_class _grib_accessor_class_step_in_units = {
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
     0,                 /* pack_float */
-    0,              /* unpack_double */
+    &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
     &pack_string,                /* pack_string */
     &unpack_string,              /* unpack_string */
@@ -194,6 +196,34 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return err;
 
     *val = step.value<long>(UnitType{step_units});
+
+    return GRIB_SUCCESS;
+}
+
+
+
+static int unpack_double(grib_accessor* a, double * val, size_t* len)
+{
+    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    int err                           = 0;
+    long forecast_time_value, forecast_time_unit, step_units;
+    grib_handle* h = grib_handle_of_accessor(a);
+    int factor     = 0;
+    long u2sf, u2sf_step_unit;
+
+    if ((err= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
+        return err;
+    if ((err = grib_get_long_internal(h, self->forecast_time_value, &forecast_time_value)))
+        return err;
+
+    Step step{forecast_time_value, forecast_time_unit};
+
+    if ((err = grib_set_long_internal(h, "startStepUnit", UnitType{step_units}.to_long())) != GRIB_SUCCESS)
+        return err;
+
+    *val = step.value<double>(UnitType{step_units});
 
     return GRIB_SUCCESS;
 }
