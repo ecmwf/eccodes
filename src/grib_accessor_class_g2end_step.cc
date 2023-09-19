@@ -536,7 +536,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     //auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
     //auto [forecast_time, time_range] = find_common_units(Step{start_step_value, step_units}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
-    auto [forecast_time_opt, time_range_opt] = find_common_units(start_step, time_range);
+    auto [forecast_time_opt, time_range_opt] = find_common_units(start_step.optimize_unit(), time_range.optimize_unit());
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_opt.value<long>())) != GRIB_SUCCESS)
         return err;
@@ -592,12 +592,21 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret;
 
-    long end_step_unit;
-    if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
+    long force_step_units;
+    if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
-    if (end_step_unit == 255)
-        end_step_unit = UnitType{Unit::HOUR}.to_long();
+    long end_step_unit;
+    if (force_step_units == 255) {
+        if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
+            return ret;
+
+        if (end_step_unit == 255)
+            end_step_unit = UnitType{Unit::HOUR}.to_long();
+    }
+    else {
+        end_step_unit = force_step_units;
+    }
 
     return pack_long_(a, *val, end_step_unit);
 }

@@ -279,7 +279,7 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     Step time_range_new{};
 
     auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
-    
+
     if (time_range_opt) {
         auto time_range = time_range_opt.value();
         time_range = time_range - (forecast_time - start_step_old);
@@ -308,15 +308,22 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret;
-    //long step_units = UnitType{Unit::HOUR}.to_long();
 
-
-    long start_step_unit;
-    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
+    long force_step_units;
+    if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
-    if (start_step_unit == 255)
-        start_step_unit = UnitType{Unit::HOUR}.to_long();
+    long start_step_unit;
+    if (force_step_units == 255) {
+        if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
+            return ret;
+
+        if (start_step_unit == 255)
+            start_step_unit = UnitType{Unit::HOUR}.to_long();
+    }
+    else {
+        start_step_unit = force_step_units;
+    }
 
     ret = pack_long_new_(a, *val, start_step_unit);
 

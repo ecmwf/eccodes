@@ -22,7 +22,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = pack_long,unpack_long;dump
-   IMPLEMENTS = unpack_string,unpack_string;dump
+   IMPLEMENTS = pack_string,unpack_string;dump
    IMPLEMENTS = string_length
    IMPLEMENTS = init
    MEMBERS    = const char* forecast_time_value
@@ -137,22 +137,24 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 
-//static int value_count(grib_accessor* a, long* count)
-//{
-    //*count = 1;
-    //return 0;
-//}
-
 static size_t string_length(grib_accessor* a)
 {
     return 255;
 }
 
 static long staticStepUnits = UnitType{Unit::MISSING}.to_long();
+static long staticForceStepUnits = UnitType{Unit::MISSING}.to_long();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
+    grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
+    grib_handle* h                   = grib_handle_of_accessor(a);
+
+    int ret;
     staticStepUnits = *val;
+    if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS) {
+        return ret;
+    }
 
     return GRIB_SUCCESS;
 }
@@ -189,7 +191,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    staticStepUnits = UnitType{val}.to_long();
+    long unit = UnitType{val}.to_long();
+    pack_long(a, &unit, len);
     return GRIB_SUCCESS;
 }
 

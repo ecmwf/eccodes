@@ -52,12 +52,20 @@ low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indi
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 
-${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
+${tools_dir}/grib_set -s stepUnits:i=13,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
-${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=m $temp $temp2
+${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+
+${tools_dir}/grib_set -s stepUnits:i=0,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 h 2 h"
-${tools}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=h $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 180 h"
+${tools_dir}/grib_set -s stepUnits:s=m,startStep:i=60,endStep:i=180 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "1 h 2 h"
+
+${tools_dir}/grib_set -s stepUnits:i=1,startStep:i=60,endStep:i=180 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
+${tools_dir}/grib_set -s stepUnits:s=h,startStep:i=60,endStep:i=180 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 
 
 #fn="${data_dir}/reduced_gaussian_sub_area.grib2"
