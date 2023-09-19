@@ -7584,6 +7584,24 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
+#Altimeter wave height
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
+#Altimeter corrected wave height
+'m' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Altimeter range relative correction
+'~' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	}
 #2D wave spectra (single)
 'm**2 s radian**-1' = {
 	 discipline = 10 ;

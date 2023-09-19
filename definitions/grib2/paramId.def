@@ -7584,6 +7584,24 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
+#Altimeter wave height
+'140246' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
+#Altimeter corrected wave height
+'140247' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Altimeter range relative correction
+'140248' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	}
 #2D wave spectra (single)
 '140251' = {
 	 discipline = 10 ;
