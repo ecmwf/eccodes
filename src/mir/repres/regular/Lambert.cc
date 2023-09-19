@@ -35,6 +35,13 @@ Lambert::Lambert(const param::MIRParametrisation& param) : RegularGrid(param, ma
     // GRIB2 cannot write negative longitude values
     writeLonPositive_ = edition == 2;
     param.get("writeLonPositive", writeLonPositive_);
+
+    // Details
+    param.get("latitudeOfSouthernPoleInDegrees", latitudeOfSouthernPoleInDegrees_ = -90.);
+    param.get("longitudeOfSouthernPoleInDegrees", longitudeOfSouthernPoleInDegrees_ = 0.);
+
+    long uvRelativeToGrid = 0;
+    uvRelativeToGrid_     = param.get("uvRelativeToGrid", uvRelativeToGrid) && uvRelativeToGrid != 0;
 }
 
 
@@ -79,6 +86,10 @@ void Lambert::fillGrib(grib_info& info) const {
 
     info.grid.Ni = long(x_.size());
     info.grid.Nj = long(y_.size());
+
+    info.grid.latitudeOfSouthernPoleInDegrees  = latitudeOfSouthernPoleInDegrees_;
+    info.grid.longitudeOfSouthernPoleInDegrees = longitudeOfSouthernPoleInDegrees_;
+    info.grid.uvRelativeToGrid                 = uvRelativeToGrid_ ? 1 : 0;
 
     info.extra_set("DxInMetres", Dx);
     info.extra_set("DyInMetres", Dy);

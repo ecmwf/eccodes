@@ -156,7 +156,7 @@ std::pair<RegularGrid::ij_t, RegularGrid::ij_t> RegularGrid::minmax_ij(const uti
         }
     }
 
-    ASSERT_NONEMPTY_AREA_CROP("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
+    ASSERT_NONEMPTY_AREA("RegularGrid::minmax_ij", min.i <= max.i && min.j <= max.j);
     return {min, max};
 }
 
@@ -172,7 +172,7 @@ bool RegularGrid::extendBoundingBoxOnIntersect() const {
 }
 
 
-bool RegularGrid::crop(util::BoundingBox& bbox, util::AreaCropperMapping& mapping) const {
+bool RegularGrid::crop(util::BoundingBox& bbox, util::IndexMapping& mapping) const {
     auto mm = minmax_ij(bbox);
     auto Ni = x_.size();
     auto N  = (mm.second.i - mm.first.i + 1) * (mm.second.j - mm.first.j + 1);
@@ -208,10 +208,8 @@ bool RegularGrid::isPeriodicWestEast() const {
 
 
 void RegularGrid::fillGrib(grib_info& info) const {
-    // GRIB2 encoding of user-provided shape
-    if (info.packing.editionNumber == 2) {
-        shape_.fillGrib(info, grid_.projection().spec());
-    }
+    // shape of the reference object
+    shape_.fillGrib(info, grid_.projection().spec());
 
     // scanningMode
     info.grid.iScansNegatively = x_.back() < x_.front() ? 1 : 0;
