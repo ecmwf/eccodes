@@ -7,6 +7,7 @@ alias step=startStep;
 alias marsStep=startStep;
 
 alias mars.step=startStep;
+alias mars.stepUnits=stepUnits;
 
 alias marsStartStep = startStep;
 alias marsEndStep   = endStep;

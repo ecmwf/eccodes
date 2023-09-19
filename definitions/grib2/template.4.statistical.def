@@ -112,6 +112,7 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
 
 alias ls.stepRange=stepRange;
 alias mars.step=endStep;
+alias mars.stepUnits=stepUnits;
 
 alias time.stepType=stepType;
 alias time.stepRange=stepRange;
