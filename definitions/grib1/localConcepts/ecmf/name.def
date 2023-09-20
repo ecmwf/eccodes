@@ -294,8 +294,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}
-#10 metre wind gust since previous post-processing
-'10 metre wind gust since previous post-processing' = {
+#Maximum 10 metre wind gust since previous post-processing
+'Maximum 10 metre wind gust since previous post-processing' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -659,8 +659,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 122 ;
 	}
-#10 metre wind gust in the last 6 hours
-'10 metre wind gust in the last 6 hours' = {
+#Maximum 10 metre wind gust in the last 6 hours
+'Maximum 10 metre wind gust in the last 6 hours' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -9914,8 +9914,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 27 ;
 	}
-#10 metre wind gust in the last 3 hours
-'10 metre wind gust in the last 3 hours' = {
+#Maximum 10 metre wind gust in the last 3 hours
+'Maximum 10 metre wind gust in the last 3 hours' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}

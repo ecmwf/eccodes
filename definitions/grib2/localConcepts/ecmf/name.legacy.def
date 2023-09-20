@@ -1243,3 +1243,21 @@
  parameterCategory = 128 ;
  parameterNumber = 240 ;
 }
+#Altimeter wave height
+'Altimeter wave height' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 246 ;
+}
+#Altimeter corrected wave height
+'Altimeter corrected wave height' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 247 ;
+}
+#Altimeter range relative correction
+'Altimeter range relative correction' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 248 ;
+}
