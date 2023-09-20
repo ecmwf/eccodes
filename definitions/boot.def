@@ -52,6 +52,7 @@ transient unitsFactor=1 : hidden;
 transient unitsBias=0 : hidden;
 constant globalDomain = "g";
 transient timeRangeIndicatorFromStepRange=-1 : hidden;
+transient format = "%g" : hidden;
 
 # ECC-868
 transient produceLargeConstantFields = 0 : hidden;

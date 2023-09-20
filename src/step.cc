@@ -170,6 +170,7 @@ void Step::init_long(long value, const UnitType& unit)
     internal_value_ = value;
     internal_unit_ = unit;
     unit_ = internal_unit_;
+    //unit_.hide_hour_unit();
     sanity_check();
 }
 
@@ -178,6 +179,7 @@ void Step::init_double(double value, const UnitType& unit)
     long seconds = UnitType::get_converter().unit_to_duration(unit.to_value());
     init_long(static_cast<long>(value * seconds), UnitType{Unit::SECOND});
     unit_ = unit;
+    //unit_.hide_hour_unit();
 }
 
 Step& Step::optimize_unit()

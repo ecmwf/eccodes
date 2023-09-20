@@ -363,6 +363,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         while (!options->skip_all && ((h = grib_handle_new_from_file_x(c, infile->file, options->mode,
                                                                        options->headers_only, &err)) != NULL ||
                                       err != GRIB_SUCCESS)) {
+
             infile->handle_count++;
             options->handle_count++;
 
@@ -410,6 +411,19 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             if (options->step_output_format) {
                 size_t step_output_format_size = strlen(options->step_output_format);
                 grib_set_string(h, "stepOutputFormat", options->step_output_format, &step_output_format_size);
+            }
+
+            if (options->format != NULL) {
+                size_t format_len = strlen(options->format);
+                if ((err = grib_set_string_internal(h, "format", options->format, &format_len)) != GRIB_SUCCESS)
+                    return err;
+            }
+            else {
+                char format[1024];
+                size_t format_len = sizeof(format);
+                if ((err = grib_get_string_internal(h, "format", format, &format_len)) != GRIB_SUCCESS)
+                    return err;
+                options->format = strdup(format);
             }
 
             grib_tool_new_handle_action(options, h);
@@ -1201,18 +1215,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
                         break;
                     case GRIB_TYPE_LONG:
                         ret = grib_get_long(h, options->print_keys[i].name, &lvalue);
-                        //if (
-                        //    (strcmp(options->print_keys[i].name, "indicatorOfUnitOfTimeRange") == 0) ||
-                        //    (strcmp(options->print_keys[i].name, "indicatorOfUnitForTimeRange") == 0) && 
-                        //    (strcmp(options->step_output_format, "future") == 0)
-                        //)
-                        //{
-                        //    snprintf(value, 32, "%s", StepUnitsTable::to_str(lvalue).c_str());
-                        //}
-                        //else
-                        //{
-                            snprintf(value, 32, "%ld", lvalue);
-                        //}
+                        snprintf(value, 32, "%ld", lvalue);
                         break;
                     case GRIB_TYPE_BYTES:
                         ret = grib_get_string(h, options->print_keys[i].name, value, &len);

@@ -380,25 +380,35 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-    long value;
-    size_t value_len;
-    if ((ret = unpack_long(a, &value, &value_len)) != GRIB_SUCCESS)
-        return ret;
-
+    long start_step_value;
+    long start_step_unit;
     long step_units;
+    size_t fp_format_len = 128;
+    char fp_format[128];
+
+    if ((ret = grib_get_long_internal(h, "startStep", &start_step_value)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
+        return ret;
     if ((ret = grib_get_long_internal(h, self->step_units, &step_units)))
         return ret;
+    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
+        return ret;
 
-    Step step{value, step_units};
-    step.hide_hour_unit();
-    //snprintf(val, *len, "%ld", value);
+    Step step{start_step_value, start_step_unit};
+    std::stringstream ss;
 
-    //if (is_future_output_enabled(h)) {
-        snprintf(val, *len, "%s", step.to_string().c_str());
-    //}
-    //else {
-    //    snprintf(val, *len, "%ld", step.value<long>());
-    //}
+    ss << step.to_string(fp_format);
+
+    size_t size = ss.str().size() + 1;
+
+    if (*len < size)
+        return GRIB_ARRAY_TOO_SMALL;
+
+    *len = size;
+
+    memcpy(val, ss.str().c_str(), size);
+
     return GRIB_SUCCESS;
 }
 

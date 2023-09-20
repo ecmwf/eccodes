@@ -625,7 +625,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     if (time_range.value<double>() < 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "endStep < startStep (%s < %s)", end_step.to_string().c_str(), start_step.to_string().c_str());
+                         "endStep < startStep (%s < %s)", end_step.to_string("%g").c_str(), start_step.to_string("%g").c_str());
         return GRIB_WRONG_STEP;
     }
 
@@ -716,22 +716,35 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-
-
-    long step_value;
+    size_t fp_format_len = 128;
+    char fp_format[128];
     size_t step_len = 0;
+    long step_value;
+    long step_units;
+
+
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
-
-    long step_units;
     if ((ret = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
         return ret;
 
     Step step(step_value, step_units);
     step.set_unit(step_units);
 
-    step.hide_hour_unit();
-    snprintf(val, *len, "%s", step.to_string().c_str());
+    std::stringstream ss;
+
+    ss << step.to_string(fp_format);
+
+    size_t size = ss.str().size() + 1;
+
+    if (*len < size)
+        return GRIB_ARRAY_TOO_SMALL;
+
+    *len = size;
+
+    memcpy(val, ss.str().c_str(), size);
 
     return GRIB_SUCCESS;
 }

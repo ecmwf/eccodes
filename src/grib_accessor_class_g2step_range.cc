@@ -16,6 +16,7 @@
 #include "step.h"
 #include "step_utilities.h"
 #include <vector>
+#include <sstream>
 /*
    This is used by make_class.pl
 
@@ -154,33 +155,38 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
 
+    size_t fp_format_len = 128;
+    char fp_format[128];
+    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
+        return ret;
+    std::stringstream ss;
+
     Step start_step{start_step_value, step_units};
-    start_step.hide_hour_unit();
     if (self->end_step == NULL) {
-        snprintf(buf, sizeof(buf), "%s", start_step.to_string().c_str());
+        ss << start_step.to_string(fp_format);
     }
     else {
         if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
             return ret;
 
         Step end_step{end_step_value, step_units};
-        end_step.hide_hour_unit();
+
         if (start_step_value == end_step_value) {
-            snprintf(buf, sizeof(buf), "%s", end_step.to_string().c_str());
+            ss << end_step.to_string(fp_format);
         }
         else {
-            snprintf(buf, sizeof(buf), "%s-%s", start_step.to_string().c_str(), end_step.to_string().c_str());
+            ss << start_step.to_string(fp_format) << "-" << end_step.to_string(fp_format);
         }
     }
 
-    size = strlen(buf) + 1;
+    size = ss.str().size() + 1;
 
     if (*len < size)
         return GRIB_ARRAY_TOO_SMALL;
 
     *len = size;
 
-    memcpy(val, buf, size);
+    memcpy(val, ss.str().c_str(), size);
 
     return GRIB_SUCCESS;
 }
@@ -290,7 +296,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     Step start_step{end_start_value, step_units};
-    start_step.hide_hour_unit();
     if (self->end_step == NULL) {
         *val = start_step.value<long>();
     }
@@ -324,7 +329,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     }
 
     Step start_step{end_start_value, step_units};
-    start_step.hide_hour_unit();
     if (self->end_step == NULL) {
         *val = start_step.value<long>();
     }

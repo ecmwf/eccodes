@@ -232,7 +232,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("F:"))
         options->format = grib_options_get_option("F:");
     else
-        options->format = strdup("%g");
+        options->format = NULL;
 
     if (grib_options_on("i:")) {
         options->index_on = 1;

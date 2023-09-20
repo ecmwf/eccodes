@@ -73,22 +73,15 @@ public:
     }
 
     std::string to_string() const {
-        if ((internal_value_ == Unit::HOUR) && hide_hour_unit_) {
-            return "";
-        }
-        else {
-            return map_.unit_to_name(internal_value_);
-        }
+        return map_.unit_to_name(internal_value_);
     }
+
     long to_long() const {return map_.unit_to_long(internal_value_);}
     Unit to_value() const {return internal_value_;}
-    void hide_hour_unit() {hide_hour_unit_ = true;}
-    void show_hour_unit() {hide_hour_unit_ = false;}
     static std::vector<Unit> unit_order_;
     static std::vector<Unit> complete_unit_order_;
 
 private:
-    bool hide_hour_unit_ = false;
     class Map {
     public:
         Map() {
@@ -206,23 +199,22 @@ public:
     // Methods
     Step& optimize_unit();
     friend std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
-    void hide_hour_unit() {
-        internal_unit_.hide_hour_unit();
-        unit_.hide_hour_unit();
-    }
-    void show_hour_unit() {
-        internal_unit_.show_hour_unit();
-        unit_.show_hour_unit();
-    }
 
-    std::string to_string() const {
-        std::stringstream ss;
-        if (value<long>() == value<double>()) {
-            ss << value<long>() << unit_.to_string();
-        } else {
-            ss << value<double>() << unit_.to_string();
+    std::string to_string(const std::string& format) const {
+        constexpr int max_size = 128;
+        char output[max_size];
+        std::string u;
+
+        if (unit_ == Unit::HOUR)
+            u = "";
+        else
+            u =  unit_.to_string();
+
+        int err = snprintf(output, max_size, (format + "%s").c_str(), value<double>(), u.c_str());
+        if (err < 0 || err >= max_size) {
+            throw std::runtime_error("Error while formatting Step to string");
         }
-        return ss.str();
+        return output;
     }
 
 private:
