@@ -192,7 +192,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     Step step{forecast_time_value, forecast_time_unit};
 
-    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.value<long>())) != GRIB_SUCCESS)
         return err;
 
     *val = step.value<long>(Unit{step_units});
@@ -220,7 +220,7 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
 
     Step step{forecast_time_value, forecast_time_unit};
 
-    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.value<long>())) != GRIB_SUCCESS)
         return err;
 
     *val = step.value<double>(Unit{step_units});
@@ -318,7 +318,7 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
         auto [sa, sb] = find_common_units(forecast_time.optimize_unit(), time_range.optimize_unit());
         if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, sa)) != GRIB_SUCCESS)
             return err;
-        if ((err = grib_set_long_internal(h, "startStepUnit", forecast_time.unit().to_long())) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(h, "startStepUnit", forecast_time.unit().value<long>())) != GRIB_SUCCESS)
             return err;
         if ((err = set_step(h, self->time_range_value, self->time_range_unit, sb)) != GRIB_SUCCESS)
             return err;
@@ -326,7 +326,7 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     }
 
     forecast_time.optimize_unit();
-    if ((err = grib_set_long_internal(h, "startStepUnit", forecast_time.unit().to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, "startStepUnit", forecast_time.unit().value<long>())) != GRIB_SUCCESS)
         return err;
     if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, forecast_time)) != GRIB_SUCCESS)
         return err;
@@ -349,7 +349,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             return ret;
 
         if (start_step_unit == 255)
-            start_step_unit = Unit{Unit::Value::HOUR}.to_long();
+            start_step_unit = Unit{Unit::Value::HOUR}.value<long>();
     }
     else {
         start_step_unit = force_step_units;
@@ -369,7 +369,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
     Step step = step_from_string(val);
 
-    if ((ret = pack_long_new_(a, step.value<long>(), step.unit().to_long())) != GRIB_SUCCESS)
+    if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>())) != GRIB_SUCCESS)
         return ret;
 
     return GRIB_SUCCESS;

@@ -113,7 +113,7 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
     }
     else {
         auto it = std::find_if(Unit::unit_order_.begin(), Unit::unit_order_.end(), [&](const auto& e) {
-            return e == a.unit().to_value() || e == b.unit().to_value();
+            return e == a.unit().value<Unit::Value>() || e == b.unit().value<Unit::Value>();
         });
 
         assert(it != Unit::unit_order_.end());
@@ -147,7 +147,7 @@ void Step::init_long(long value, const Unit& unit)
 
 void Step::init_double(double value, const Unit& unit)
 {
-    long seconds = Unit::get_converter().unit_to_duration(unit.to_value());
+    long seconds = Unit::get_converter().unit_to_duration(unit.value<Unit::Value>());
     init_long(static_cast<long>(value * seconds), Unit{Unit::Value::SECOND});
     unit_ = unit;
 }

@@ -237,13 +237,13 @@ static int pack_string_new(grib_accessor* a, const char* val, size_t* len)
         std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
     }
 
-    if ((ret = grib_set_long_internal(h, "startStepUnit", step_0.unit().to_long())))
+    if ((ret = grib_set_long_internal(h, "startStepUnit", step_0.unit().value<long>())))
         return ret;
     if ((ret = set_step(h, "forecastTime" , "indicatorOfUnitOfTimeRange", step_0)) != GRIB_SUCCESS)
         return ret;
 
     if ((self->end_step != NULL) && (steps.size() > 1)) {
-        if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().to_long())))
+        if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().value<long>())))
             return ret;
         if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
             return ret;

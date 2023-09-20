@@ -27,3 +27,14 @@ std::vector<Unit::Value> Unit::complete_unit_order_ = {
     Unit::Value::CENTURY
 };
 
+template <> long Unit::value<long>() const {
+    return map_.unit_to_long(internal_value_);
+}
+
+template <> Unit::Value Unit::value<Unit::Value>() const {
+    return internal_value_;
+}
+
+template <> std::string Unit::value<std::string>() const {
+    return map_.unit_to_name(internal_value_);
+}

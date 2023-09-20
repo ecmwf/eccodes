@@ -28,7 +28,7 @@ int set_step(grib_handle* h, const std::string& value_key, const std::string& un
     //step_copy.optimize_unit();
     if ((err = grib_set_long_internal(h, value_key.c_str(), step_copy.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(h, unit_key.c_str(), step_copy.unit().to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, unit_key.c_str(), step_copy.unit().value<long>())) != GRIB_SUCCESS)
         return err;
     return GRIB_SUCCESS;
 }

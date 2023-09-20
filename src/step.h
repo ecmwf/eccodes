@@ -68,7 +68,7 @@ public:
         if (unit_ == Unit::Value::HOUR)
             u = "";
         else
-            u =  unit_.to_string();
+            u =  unit_.value<std::string>();
 
         int err = snprintf(output, max_size, (format + "%s").c_str(), value<double>(), u.c_str());
         if (err < 0 || err >= max_size) {
@@ -88,7 +88,7 @@ private:
         }
 
         Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
-        long multiplier = Unit::get_converter().unit_to_duration(unit_.to_value());
+        long multiplier = Unit::get_converter().unit_to_duration(unit_.value<Unit::Value>());
         internal_value_ = seconds.count() / multiplier;
         internal_unit_ = unit_;
 
@@ -134,7 +134,7 @@ template <typename T> T Step::value(const Unit& unit) const {
 template <typename T>
 Seconds<T> to_seconds(long value, const Unit& unit) {
     Seconds<T> seconds;
-    switch (unit.to_value()) {
+    switch (unit.value<Unit::Value>()) {
         case Unit::Value::SECOND: seconds = Seconds<T>(value); break;
         case Unit::Value::MINUTE: seconds = Minutes<T>(value); break;
         case Unit::Value::MINUTES15: seconds = Minutes15<T>(value); break;
@@ -150,7 +150,7 @@ Seconds<T> to_seconds(long value, const Unit& unit) {
         case Unit::Value::YEARS30: seconds = Years30<T>(value); break;
         case Unit::Value::CENTURY: seconds = Centuries<T>(value); break;
         default:
-            std::string msg = "Unknown unit: " + unit.to_string();
+            std::string msg = "Unknown unit: " + unit.value<std::string>();
             throw std::runtime_error(msg);
     }
     return seconds;
@@ -159,8 +159,8 @@ Seconds<T> to_seconds(long value, const Unit& unit) {
 
 template <typename T>
 T from_seconds(Seconds<T> seconds, const Unit& unit) {
-    T value = 0;
-    switch (unit.to_value()) {
+    T value;
+    switch (unit.value<Unit::Value>()) {
         case Unit::Value::SECOND: value = std::chrono::duration_cast<Seconds<T>>(seconds).count(); break;
         case Unit::Value::MINUTE: value = std::chrono::duration_cast<Minutes<T>>(seconds).count(); break;
         case Unit::Value::MINUTES15: value = std::chrono::duration_cast<Minutes15<T>>(seconds).count(); break;
@@ -176,7 +176,7 @@ T from_seconds(Seconds<T> seconds, const Unit& unit) {
         case Unit::Value::YEARS30: value = std::chrono::duration_cast<Years30<T>>(seconds).count(); break;
         case Unit::Value::CENTURY: value = std::chrono::duration_cast<Centuries<T>>(seconds).count(); break;
         default:
-            std::string msg = "Unknown unit: " + unit.to_string();
+            std::string msg = "Unknown unit: " + unit.value<std::string>();
             throw std::runtime_error(msg);
     }
     return value;

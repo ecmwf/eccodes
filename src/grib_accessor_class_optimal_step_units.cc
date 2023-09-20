@@ -142,8 +142,8 @@ static size_t string_length(grib_accessor* a)
     return 255;
 }
 
-static long staticStepUnits = Unit{Unit::Value::MISSING}.to_long();
-static long staticForceStepUnits = Unit{Unit::Value::MISSING}.to_long();
+static long staticStepUnits = Unit{Unit::Value::MISSING}.value<long>();
+static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
@@ -174,16 +174,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (forecast_time_opt && time_range_opt) {
         auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(), (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
-        *val = step_a.unit().to_long();
+        *val = step_a.unit().value<long>();
     }
     else if (forecast_time_opt && !time_range_opt) {
-        *val = forecast_time_opt.value().optimize_unit().unit().to_long();
+        *val = forecast_time_opt.value().optimize_unit().unit().value<long>();
     }
     else if (!forecast_time_opt && time_range_opt) {
-        *val = time_range_opt.value().optimize_unit().unit().to_long();
+        *val = time_range_opt.value().optimize_unit().unit().value<long>();
     }
     else if (!forecast_time_opt && !time_range_opt) {
-        *val = Unit{Unit::Value::HOUR}.to_long();
+        *val = Unit{Unit::Value::HOUR}.value<long>();
     }
 
     return GRIB_SUCCESS;
@@ -191,7 +191,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    long unit = Unit{val}.to_long();
+    long unit = Unit{val}.value<long>();
     pack_long(a, &unit, len);
     return GRIB_SUCCESS;
 }
@@ -203,7 +203,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t unit_len = 0;
     if ((ret = unpack_long(a, &unit, &unit_len)) != GRIB_SUCCESS)
         return ret;
-    *len = snprintf(val, *len, "%s", Unit{unit}.to_string().c_str());
+    *len = snprintf(val, *len, "%s", Unit{unit}.value<std::string>().c_str());
     return GRIB_SUCCESS;
 }
 

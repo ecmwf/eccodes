@@ -64,12 +64,12 @@ public:
         return *this;
     }
 
-    std::string to_string() const {
-        return map_.unit_to_name(internal_value_);
-    }
-
-    long to_long() const {return map_.unit_to_long(internal_value_);}
-    Value to_value() const {return internal_value_;}
+    //std::string to_string() const {
+    //    return map_.unit_to_name(internal_value_);
+    //}
+    //long to_long() const {return map_.unit_to_long(internal_value_);}
+    //Value to_value() const {return internal_value_;}
+    template <typename T> T value() const;
     static std::vector<Value> unit_order_;
     static std::vector<Value> complete_unit_order_;
 

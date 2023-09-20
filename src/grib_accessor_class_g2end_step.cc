@@ -690,11 +690,11 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_opt.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range_opt.unit().to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_unit, time_range_opt.unit().value<long>())) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_value_key, forecast_time_opt.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_unit_key, forecast_time_opt.unit().to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_unit_key, forecast_time_opt.unit().value<long>())) != GRIB_SUCCESS)
         return err;
 
     
@@ -765,7 +765,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             return ret;
 
         if (end_step_unit == 255)
-            end_step_unit = Unit{Unit::Value::HOUR}.to_long();
+            end_step_unit = Unit{Unit::Value::HOUR}.value<long>();
     }
     else {
         end_step_unit = force_step_units;
@@ -783,10 +783,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     Step end_step = step_from_string(val);
     end_step.optimize_unit();
 
-    if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().to_long())) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = pack_long_(a, end_step.value<long>(), end_step.unit().to_long())) != GRIB_SUCCESS)
+    if ((ret = pack_long_(a, end_step.value<long>(), end_step.unit().value<long>())) != GRIB_SUCCESS)
         return ret;
     return GRIB_SUCCESS;
 }
