@@ -142,8 +142,8 @@ static size_t string_length(grib_accessor* a)
     return 255;
 }
 
-static long staticStepUnits = UnitType{Unit::MISSING}.to_long();
-static long staticForceStepUnits = UnitType{Unit::MISSING}.to_long();
+static long staticStepUnits = Unit{Unit::Value::MISSING}.to_long();
+static long staticForceStepUnits = Unit{Unit::Value::MISSING}.to_long();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
@@ -183,7 +183,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         *val = time_range_opt.value().optimize_unit().unit().to_long();
     }
     else if (!forecast_time_opt && !time_range_opt) {
-        *val = UnitType{Unit::HOUR}.to_long();
+        *val = Unit{Unit::Value::HOUR}.to_long();
     }
 
     return GRIB_SUCCESS;
@@ -191,7 +191,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    long unit = UnitType{val}.to_long();
+    long unit = Unit{val}.to_long();
     pack_long(a, &unit, len);
     return GRIB_SUCCESS;
 }
@@ -203,10 +203,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t unit_len = 0;
     if ((ret = unpack_long(a, &unit, &unit_len)) != GRIB_SUCCESS)
         return ret;
-    *len = snprintf(val, *len, "%s", UnitType{unit}.to_string().c_str());
+    *len = snprintf(val, *len, "%s", Unit{unit}.to_string().c_str());
     return GRIB_SUCCESS;
 }
-
 
 static int get_native_type(grib_accessor* a)
 {

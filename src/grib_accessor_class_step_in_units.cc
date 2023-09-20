@@ -192,10 +192,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     Step step{forecast_time_value, forecast_time_unit};
 
-    if ((err = grib_set_long_internal(h, "startStepUnit", UnitType{step_units}.to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.to_long())) != GRIB_SUCCESS)
         return err;
 
-    *val = step.value<long>(UnitType{step_units});
+    *val = step.value<long>(Unit{step_units});
 
     return GRIB_SUCCESS;
 }
@@ -220,10 +220,10 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
 
     Step step{forecast_time_value, forecast_time_unit};
 
-    if ((err = grib_set_long_internal(h, "startStepUnit", UnitType{step_units}.to_long())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.to_long())) != GRIB_SUCCESS)
         return err;
 
-    *val = step.value<double>(UnitType{step_units});
+    *val = step.value<double>(Unit{step_units});
 
     return GRIB_SUCCESS;
 }
@@ -349,7 +349,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             return ret;
 
         if (start_step_unit == 255)
-            start_step_unit = UnitType{Unit::HOUR}.to_long();
+            start_step_unit = Unit{Unit::Value::HOUR}.to_long();
     }
     else {
         start_step_unit = force_step_units;

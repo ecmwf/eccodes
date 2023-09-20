@@ -22,7 +22,7 @@ Step step_from_string(std::string step)
             if (unit.size() == 0) {
                 unit = "h";
             }
-            Step ret{std::stod(value), UnitType{unit}};
+            Step ret{std::stod(value), Unit{unit}};
             return ret;
         }
     }
@@ -93,7 +93,7 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
     Step b = endStep;
 
     if (a.internal_value_ == 0 && b.internal_value_ == 0) {
-        UnitType unit = a.internal_unit_ > b.internal_unit_ ? a.internal_unit_ : b.internal_unit_;
+        Unit unit = a.internal_unit_ > b.internal_unit_ ? a.internal_unit_ : b.internal_unit_;
         b.internal_unit_ = unit;
         b.unit_ = unit;
         a.internal_unit_ = unit;
@@ -112,11 +112,11 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
         b.recalculateValue();
     }
     else {
-        auto it = std::find_if(UnitType::unit_order_.begin(), UnitType::unit_order_.end(), [&](const auto& e) {
+        auto it = std::find_if(Unit::unit_order_.begin(), Unit::unit_order_.end(), [&](const auto& e) {
             return e == a.unit().to_value() || e == b.unit().to_value();
         });
 
-        assert(it != UnitType::unit_order_.end());
+        assert(it != Unit::unit_order_.end());
 
         a.set_unit(*it);
         b.set_unit(*it);
@@ -137,7 +137,7 @@ void Step::sanity_check() const
 }
 
 
-void Step::init_long(long value, const UnitType& unit)
+void Step::init_long(long value, const Unit& unit)
 {
     internal_value_ = value;
     internal_unit_ = unit;
@@ -145,10 +145,10 @@ void Step::init_long(long value, const UnitType& unit)
     sanity_check();
 }
 
-void Step::init_double(double value, const UnitType& unit)
+void Step::init_double(double value, const Unit& unit)
 {
-    long seconds = UnitType::get_converter().unit_to_duration(unit.to_value());
-    init_long(static_cast<long>(value * seconds), UnitType{Unit::SECOND});
+    long seconds = Unit::get_converter().unit_to_duration(unit.to_value());
+    init_long(static_cast<long>(value * seconds), Unit{Unit::Value::SECOND});
     unit_ = unit;
 }
 
@@ -161,8 +161,8 @@ Step& Step::optimize_unit()
     unit_ = internal_unit_;
     Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
 
-    for (auto it = UnitType::unit_order_.rbegin(); it != UnitType::unit_order_.rend(); ++it) {
-        long multiplier = UnitType::get_converter().unit_to_duration(*it);
+    for (auto it = Unit::unit_order_.rbegin(); it != Unit::unit_order_.rend(); ++it) {
+        long multiplier = Unit::get_converter().unit_to_duration(*it);
         if (seconds.count() % multiplier == 0) {
             internal_value_ = seconds.count() / multiplier;
             internal_unit_ = *it;

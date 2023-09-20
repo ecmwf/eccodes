@@ -355,10 +355,10 @@ static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t*
         }
     }
     if (add_time_range) {
-        *val = (start_step + time_range).value<double>(UnitType(step_units));
+        *val = (start_step + time_range).value<double>(Unit(step_units));
     }
     else {
-        *val = start_step.value<double>(UnitType(start_step_unit));
+        *val = start_step.value<double>(Unit(start_step_unit));
     }
 
     return GRIB_SUCCESS;
@@ -470,7 +470,7 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
             long the_coded_time_range = arr_coded_time_range[i];
 
             Step time_range{the_coded_unit, the_coded_time_range};
-            *val = (start_step + time_range).value<double>(UnitType(step_units));
+            *val = (start_step + time_range).value<double>(Unit(step_units));
 
             return GRIB_SUCCESS;
         }
@@ -633,7 +633,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if (err != GRIB_SUCCESS)
         return err;
 
-    dstep = end_step.value<double>(UnitType{Unit::DAY});
+    dstep = end_step.value<double>(Unit{Unit::Value::DAY});
     dend += dstep;
 
     err = grib_julian_to_datetime(dend, &year_of_end_of_interval, &month_of_end_of_interval,
@@ -765,7 +765,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             return ret;
 
         if (end_step_unit == 255)
-            end_step_unit = UnitType{Unit::HOUR}.to_long();
+            end_step_unit = Unit{Unit::Value::HOUR}.to_long();
     }
     else {
         end_step_unit = force_step_units;

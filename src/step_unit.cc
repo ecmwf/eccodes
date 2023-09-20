@@ -1,29 +1,29 @@
 #include "step_unit.h"
 
-UnitType::Map UnitType::map_{};
+Unit::Map Unit::map_{};
 
-std::vector<Unit> UnitType::unit_order_ = {
-    Unit::SECOND,
-    Unit::MINUTE,
-    Unit::HOUR,
-    //Unit::DAY,
+std::vector<Unit::Value> Unit::unit_order_ = {
+    Unit::Value::SECOND,
+    Unit::Value::MINUTE,
+    Unit::Value::HOUR,
+    //Unit::Value::DAY,
 };
 
-std::vector<Unit> UnitType::complete_unit_order_ = {
-    Unit::MISSING   ,
-    Unit::SECOND    ,
-    Unit::MINUTE    ,
-    Unit::MINUTES15 ,
-    Unit::MINUTES30 ,
-    Unit::HOUR      ,
-    Unit::HOURS3    ,
-    Unit::HOURS6    ,
-    Unit::HOURS12   ,
-    Unit::DAY       ,
-    Unit::MONTH     ,
-    Unit::YEAR      ,
-    Unit::YEARS10   ,
-    Unit::YEARS30   ,
-    Unit::CENTURY
+std::vector<Unit::Value> Unit::complete_unit_order_ = {
+    Unit::Value::MISSING   ,
+    Unit::Value::SECOND    ,
+    Unit::Value::MINUTE    ,
+    Unit::Value::MINUTES15 ,
+    Unit::Value::MINUTES30 ,
+    Unit::Value::HOUR      ,
+    Unit::Value::HOURS3    ,
+    Unit::Value::HOURS6    ,
+    Unit::Value::HOURS12   ,
+    Unit::Value::DAY       ,
+    Unit::Value::MONTH     ,
+    Unit::Value::YEAR      ,
+    Unit::Value::YEARS10   ,
+    Unit::Value::YEARS30   ,
+    Unit::Value::CENTURY
 };
 

@@ -23,42 +23,43 @@ template <typename T> using Minutes30 = std::chrono::duration<T, std::ratio<1800
 template <typename T> using Missing = std::chrono::duration<T, std::ratio<0>>;
 
 
-enum class Unit {
-    MINUTE = 0,
-    HOUR = 1,
-    DAY = 2,
-    MONTH = 3,
-    YEAR = 4,
-    YEARS10 = 5,
-    YEARS30 = 6,
-    CENTURY = 7,
-    HOURS3 = 10,
-    HOURS6 = 11,
-    HOURS12 = 12,
-    SECOND = 13,
-    MINUTES15 = 14,
-    MINUTES30 = 15,
-    MISSING = 255,
-};
 
-class UnitType;
-template <typename T> Seconds<T> to_seconds(long value, const UnitType& unit);
-template <typename T> T from_seconds(Seconds<T> seconds, const UnitType& unit);
+class Unit;
+template <typename T> Seconds<T> to_seconds(long value, const Unit& unit);
+template <typename T> T from_seconds(Seconds<T> seconds, const Unit& unit);
 
-class UnitType {
+class Unit {
 public:
-    UnitType() : internal_value_(Unit::HOUR) {}
-    explicit UnitType(Unit unit_value) : internal_value_(unit_value) {}
-    explicit UnitType(const std::string& unit_value) {internal_value_ = map_.name_to_unit(unit_value);}
-    explicit UnitType(long unit_value) {internal_value_ = map_.long_to_unit(unit_value);}
+    enum class Value {
+        MINUTE = 0,
+        HOUR = 1,
+        DAY = 2,
+        MONTH = 3,
+        YEAR = 4,
+        YEARS10 = 5,
+        YEARS30 = 6,
+        CENTURY = 7,
+        HOURS3 = 10,
+        HOURS6 = 11,
+        HOURS12 = 12,
+        SECOND = 13,
+        MINUTES15 = 14,
+        MINUTES30 = 15,
+        MISSING = 255,
+    };
 
-    bool operator>(const UnitType& other) const {return map_.unit_to_duration(internal_value_) > map_.unit_to_duration(other.internal_value_);}
-    bool operator==(const Unit value) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(value);}
-    bool operator==(const UnitType& unit) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(unit.internal_value_);}
-    bool operator!=(const UnitType& unit) const {return !(*this == unit);}
-    bool operator!=(const Unit value) const {return !(*this == value);}
+    Unit() : internal_value_(Value::HOUR) {}
+    explicit Unit(Value unit_value) : internal_value_(unit_value) {}
+    explicit Unit(const std::string& unit_value) {internal_value_ = map_.name_to_unit(unit_value);}
+    explicit Unit(long unit_value) {internal_value_ = map_.long_to_unit(unit_value);}
 
-    UnitType& operator=(const Unit value) {
+    bool operator>(const Unit& other) const {return map_.unit_to_duration(internal_value_) > map_.unit_to_duration(other.internal_value_);}
+    bool operator==(const Value value) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(value);}
+    bool operator==(const Unit& unit) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(unit.internal_value_);}
+    bool operator!=(const Unit& unit) const {return !(*this == unit);}
+    bool operator!=(const Value value) const {return !(*this == value);}
+
+    Unit& operator=(const Value value) {
         internal_value_ = value;
         return *this;
     }
@@ -68,9 +69,9 @@ public:
     }
 
     long to_long() const {return map_.unit_to_long(internal_value_);}
-    Unit to_value() const {return internal_value_;}
-    static std::vector<Unit> unit_order_;
-    static std::vector<Unit> complete_unit_order_;
+    Value to_value() const {return internal_value_;}
+    static std::vector<Value> unit_order_;
+    static std::vector<Value> complete_unit_order_;
 
 private:
     class Map {
@@ -92,54 +93,54 @@ private:
         }
 
         // wmo_code <-> unit_name
-        std::string unit_to_name(const Unit& unit_value) const {return value_to_name_.at(unit_value);}
-        Unit name_to_unit(const std::string& name) const {return name_to_value_.at(name);}
+        std::string unit_to_name(const Value& unit_value) const {return value_to_name_.at(unit_value);}
+        Value name_to_unit(const std::string& name) const {return name_to_value_.at(name);}
 
         // unit_value <-> duration
-        long unit_to_duration(const Unit& unit_value) const {return value_to_duration_.at(unit_value);}
-        Unit duration_to_unit(long duration) const {return duration_to_value_.at(duration);}
+        long unit_to_duration(const Value& unit_value) const {return value_to_duration_.at(unit_value);}
+        Value duration_to_unit(long duration) const {return duration_to_value_.at(duration);}
 
         // wmo_code <-> unit_name
-        long unit_to_long(const Unit& unit_value) const {return value_to_long_.at(unit_value);}
-        Unit long_to_unit(long wmo_code) const {return long_to_value_.at(wmo_code);}
+        long unit_to_long(const Value& unit_value) const {return value_to_long_.at(unit_value);}
+        Value long_to_unit(long wmo_code) const {return long_to_value_.at(wmo_code);}
 
     private:
         struct Entry {
-            Unit unit_value;
+            Value unit_value;
             std::string unit_name;
             long duration;
         };
 
         const std::array<Entry, 15> tab_ = {
-            Entry{Unit::MISSING   , "MISSING" , 0},
-            Entry{Unit::SECOND    , "s"       , 1},
-            Entry{Unit::MINUTE    , "m"       , 60},
-            Entry{Unit::MINUTES15 , "15m"     , 900},
-            Entry{Unit::MINUTES30 , "30m"     , 1800},
-            Entry{Unit::HOUR      , "h"       , 3600},
-            Entry{Unit::HOURS3    , "3h"      , 10800},
-            Entry{Unit::HOURS6    , "6h"      , 21600},
-            Entry{Unit::HOURS12   , "12h"     , 43200},
-            Entry{Unit::DAY       , "D"       , 86400},
-            Entry{Unit::MONTH     , "M"       , 2592000},
-            Entry{Unit::YEAR      , "Y"       , 31536000},
-            Entry{Unit::YEARS10   , "10Y"     , 315360000},
-            Entry{Unit::YEARS30   , "30Y"     , 946080000},
-            Entry{Unit::CENTURY   , "C"       , 3153600000},
+            Entry{Value::MISSING   , "MISSING" , 0},
+            Entry{Value::SECOND    , "s"       , 1},
+            Entry{Value::MINUTE    , "m"       , 60},
+            Entry{Value::MINUTES15 , "15m"     , 900},
+            Entry{Value::MINUTES30 , "30m"     , 1800},
+            Entry{Value::HOUR      , "h"       , 3600},
+            Entry{Value::HOURS3    , "3h"      , 10800},
+            Entry{Value::HOURS6    , "6h"      , 21600},
+            Entry{Value::HOURS12   , "12h"     , 43200},
+            Entry{Value::DAY       , "D"       , 86400},
+            Entry{Value::MONTH     , "M"       , 2592000},
+            Entry{Value::YEAR      , "Y"       , 31536000},
+            Entry{Value::YEARS10   , "10Y"     , 315360000},
+            Entry{Value::YEARS30   , "30Y"     , 946080000},
+            Entry{Value::CENTURY   , "C"       , 3153600000},
         };
 
-        std::unordered_map<std::string, Unit> name_to_value_;
-        std::unordered_map<Unit, std::string> value_to_name_;
+        std::unordered_map<std::string, Value> name_to_value_;
+        std::unordered_map<Value, std::string> value_to_name_;
 
-        std::unordered_map<Unit, long> value_to_long_;
-        std::unordered_map<long, Unit> long_to_value_;
+        std::unordered_map<Value, long> value_to_long_;
+        std::unordered_map<long, Value> long_to_value_;
 
-        std::unordered_map<Unit, long> value_to_duration_;
-        std::unordered_map<long, Unit> duration_to_value_;
+        std::unordered_map<Value, long> value_to_duration_;
+        std::unordered_map<long, Value> duration_to_value_;
     };
 
 
-    Unit internal_value_;
+    Value internal_value_;
     static Map map_;
 public:
     static Map& get_converter() {return map_;}
