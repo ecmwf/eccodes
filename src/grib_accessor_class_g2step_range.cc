@@ -163,7 +163,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     Step start_step{start_step_value, step_units};
     if (self->end_step == NULL) {
-        ss << start_step.to_string(fp_format);
+        ss << start_step.value<std::string>(fp_format);
     }
     else {
         if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
@@ -172,10 +172,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         Step end_step{end_step_value, step_units};
 
         if (start_step_value == end_step_value) {
-            ss << end_step.to_string(fp_format);
+            ss << end_step.value<std::string>(fp_format);
         }
         else {
-            ss << start_step.to_string(fp_format) << "-" << end_step.to_string(fp_format);
+            ss << start_step.value<std::string>(fp_format) << "-" << end_step.value<std::string>(fp_format);
         }
     }
 

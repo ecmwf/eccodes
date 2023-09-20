@@ -33,6 +33,7 @@ public:
     // Getters
     template <typename T> T value() const;
     template <typename T> T value(const Unit& unit) const;
+    template <typename T> T value(const std::string& format) const;
     Unit unit() const { return unit_; }
 
     // Setters
@@ -60,22 +61,6 @@ public:
     Step& optimize_unit();
     friend std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
 
-    std::string to_string(const std::string& format) const {
-        constexpr int max_size = 128;
-        char output[max_size];
-        std::string u;
-
-        if (unit_ == Unit::Value::HOUR)
-            u = "";
-        else
-            u =  unit_.value<std::string>();
-
-        int err = snprintf(output, max_size, (format + "%s").c_str(), value<double>(), u.c_str());
-        if (err < 0 || err >= max_size) {
-            throw std::runtime_error("Error while formatting Step to string");
-        }
-        return output;
-    }
 
 private:
     void init_long(long value, const Unit& unit);

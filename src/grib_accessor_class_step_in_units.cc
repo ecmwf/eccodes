@@ -398,7 +398,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     Step step{start_step_value, start_step_unit};
     std::stringstream ss;
 
-    ss << step.to_string(fp_format);
+    ss << step.value<std::string>(fp_format);
 
     size_t size = ss.str().size() + 1;
 
