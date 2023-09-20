@@ -10,34 +10,6 @@
 #include "step.h"
 
 
-UnitType::Map UnitType::map_{};
-
-
-std::vector<Unit> UnitType::unit_order_ = {
-    Unit::SECOND,
-    Unit::MINUTE,
-    Unit::HOUR,
-    //Unit::DAY,
-};
-
-std::vector<Unit> UnitType::complete_unit_order_ = {
-    Unit::MISSING   , 
-    Unit::SECOND    , 
-    Unit::MINUTE    , 
-    Unit::MINUTES15 , 
-    Unit::MINUTES30 , 
-    Unit::HOUR      , 
-    Unit::HOURS3    , 
-    Unit::HOURS6    , 
-    Unit::HOURS12   , 
-    Unit::DAY       , 
-    Unit::MONTH     , 
-    Unit::YEAR      , 
-    Unit::YEARS10   , 
-    Unit::YEARS30   , 
-    Unit::CENTURY
-};
-
 
 Step step_from_string(std::string step)
 {
@@ -170,7 +142,6 @@ void Step::init_long(long value, const UnitType& unit)
     internal_value_ = value;
     internal_unit_ = unit;
     unit_ = internal_unit_;
-    //unit_.hide_hour_unit();
     sanity_check();
 }
 
@@ -179,7 +150,6 @@ void Step::init_double(double value, const UnitType& unit)
     long seconds = UnitType::get_converter().unit_to_duration(unit.to_value());
     init_long(static_cast<long>(value * seconds), UnitType{Unit::SECOND});
     unit_ = unit;
-    //unit_.hide_hour_unit();
 }
 
 Step& Step::optimize_unit()
