@@ -170,8 +170,6 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
     int err                           = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
-    int factor     = 0;
-    long u2sf, u2sf_step_unit;
 
     if ((err= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return err;
