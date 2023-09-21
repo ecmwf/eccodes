@@ -20449,7 +20449,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 54 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 '210061' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

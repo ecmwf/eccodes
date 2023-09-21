@@ -16314,8 +16314,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Carbon Dioxide
-'Carbon Dioxide' = {
+#Carbon dioxide mass mixing ratio
+'Carbon dioxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 61 ;
 	}
