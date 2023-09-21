@@ -4,7 +4,7 @@
 'H64' = {numberOfDataPoints=49152; gridDefinitionTemplateNumber=150;}
 'H128' = {numberOfDataPoints=196608; gridDefinitionTemplateNumber=150;}
 'H256' = {numberOfDataPoints=786432; gridDefinitionTemplateNumber=150;}
-'H512 = {numberOfDataPoints=3145728; gridDefinitionTemplateNumber=150;}
+'H512' = {numberOfDataPoints=3145728; gridDefinitionTemplateNumber=150;}
 'H1024' = {numberOfDataPoints=12582912; gridDefinitionTemplateNumber=150;}
 'O1280' = {numberOfDataPoints=6599680; gridDefinitionTemplateNumber=40; Nj=2560;}
 'O8000' = {numberOfDataPoints=256288000; gridDefinitionTemplateNumber=40; Nj=16000;}
