@@ -191,8 +191,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    long unit = Unit{val}.value<long>();
-    pack_long(a, &unit, len);
+    try {
+        long unit = Unit{val}.value<long>();
+        pack_long(a, &unit, len);
+    }
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid unit: %s", val);
+        return GRIB_INVALID_ARGUMENT;
+    }
     return GRIB_SUCCESS;
 }
 
