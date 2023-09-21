@@ -542,7 +542,7 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
 	}
-#10 metre wind gust in the last 6 hours
+#Maximum 10 metre wind gust in the last 6 hours
 '123' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
@@ -16482,24 +16482,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 245 ;
-	}
-#Altimeter wave height
-'140246' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 246 ;
-	}
-#Altimeter corrected wave height
-'140247' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 247 ;
-	}
-#Altimeter range relative correction
-'140248' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 248 ;
 	}
 #10 metre wind direction
 '140249' = {

@@ -206,7 +206,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '10fg' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -2441,7 +2441,7 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#10 metre wind gust in the last 3 hours
+#Maximum 10 metre wind gust in the last 3 hours
 '10fg3' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -7583,6 +7583,24 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
+	}
+#Altimeter wave height
+'awh' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
+#Altimeter corrected wave height
+'acwh' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Altimeter range relative correction
+'arrc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
 	}
 #2D wave spectra (single)
 '2dfd' = {
