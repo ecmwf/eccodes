@@ -68,4 +68,3 @@ if (stepType is "avg" || stepType is "accum") {
 else {
    alias mars.step = step;
 }
-
