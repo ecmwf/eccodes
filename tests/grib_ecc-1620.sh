@@ -52,6 +52,13 @@ low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indi
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 
+### TODO(EB): @Shahram: how to make parameters position independent
+${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+#${tools_dir}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
+#grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+
+
 ${tools_dir}/grib_set -s stepUnits:i=13,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
 ${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
@@ -101,43 +108,31 @@ ${tools_dir}/grib_set -s endStep:d=30 $temp $temp2 # TODO(EB) remove in the futu
 #${tools_dir}/grib_set -s endStep:s=30h $temp $temp2
 #${tools_dir}/grib_set -s endStep=30h $temp $temp2 # TODO(EB) add to tests
 grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 6 h"
-#${tools_dir}/grib_set -s endStep:d=24.5 $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 30 m"
 
 # Use stepUnits
 ${tools_dir}/grib_set -s endStep:s=30 $temp $temp2
+grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 6 h"
+
 ${tools_dir}/grib_set -s endStep:s=30h $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 6 h"
-#${tools_dir}/grib_set -s endStep:s=24.5h $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 30 m"
+
 ${tools_dir}/grib_set -s endStep:s=88200s $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1440 m 30 m"
-#${tools_dir}/grib_set -s endStep:s=1446.65m $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 399 s"
+
 ${tools_dir}/grib_set -s endStep:s=24024 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 24000 h"
 
-# Use range unit: hour
 ${tools_dir}/grib_set -s startStep:d=5 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "5 h 43 h"
-#${tools_dir}/grib_set -s startStep:d=4.5 $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "270 m 1 D"
 
-# Use stepUnits
 ${tools_dir}/grib_set -s startStep:s=5h $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "5 h 43 h"
-#${tools_dir}/grib_set -s startStep:s=4.5h $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "270 m 1 D"
+
 ${tools_dir}/grib_set -s startStep:s=240s $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "4 m 2876 m"
-#${tools_dir}/grib_set -s startStep:s=0.65m $temp $temp2
-#grib_check_key_equals $temp2   "-p $low_level_keys" "39 s 1 D"
+
 ${tools_dir}/grib_set -s startStep:s=2 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "2 h 46 h"
-
-
-
-
 
 ${tools_dir}/grib_set -s stepRange:s=5h-30h $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "5 h 25 h"
