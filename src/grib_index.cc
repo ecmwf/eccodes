@@ -16,6 +16,8 @@
 #define NULL_MARKER 0
 #define NOT_NULL_MARKER 255
 
+#define GRIB_KEY_UNDEF "undef"
+
 /* #if GRIB_PTHREADS */
 // static pthread_once_t once  = PTHREAD_ONCE_INIT;
 // static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;

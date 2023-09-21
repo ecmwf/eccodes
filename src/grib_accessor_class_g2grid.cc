@@ -142,6 +142,9 @@ static int value_count(grib_accessor* a, long* count)
     return 0;
 }
 
+// GRIB edition 2 uses microdegrees
+#define ANGLE_SUBDIVISIONS (1000 * 1000)
+
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g2grid* self = (grib_accessor_g2grid*)a;
@@ -167,7 +170,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 
     if (sub_division == GRIB_MISSING_LONG || sub_division == 0)
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
 
     if (basic_angle == 0)
         basic_angle = 1;
@@ -292,21 +295,21 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     /* printf("pack_double %g %g %g %g %g %g\n",val[0],val[1],val[2],val[3],val[4],val[5]);*/
 
-    if (is_ok(val, v, 1, 1000000)) {
+    if (is_ok(val, v, 1, ANGLE_SUBDIVISIONS)) {
         basic_angle  = 1;
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
     }
     else if (trial(val, v, &basic_angle, &sub_division)) {
     }
     else {
         basic_angle  = 1;
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
 
         if (!is_ok(val, v, basic_angle, sub_division))
             grib_context_log(a->context, GRIB_LOG_DEBUG, "Grid cannot be coded with any loss of precision");
     }
 
-    if (basic_angle == 1 && sub_division == 1000000) {
+    if (basic_angle == 1 && sub_division == ANGLE_SUBDIVISIONS) {
         basic_angle  = 0;
         sub_division = GRIB_MISSING_LONG;
     }

@@ -294,8 +294,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}
-#10 metre wind gust since previous post-processing
-'10 metre wind gust since previous post-processing' = {
+#Maximum 10 metre wind gust since previous post-processing
+'Maximum 10 metre wind gust since previous post-processing' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -659,8 +659,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 122 ;
 	}
-#10 metre wind gust in the last 6 hours
-'10 metre wind gust in the last 6 hours' = {
+#Maximum 10 metre wind gust in the last 6 hours
+'Maximum 10 metre wind gust in the last 6 hours' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -4054,33 +4054,33 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 191 ;
 	}
-#UV visible albedo for diffuse radiation, isotropic component
-'UV visible albedo for diffuse radiation, isotropic component' = {
+#UV visible albedo for diffuse radiation, isotropic component (climatological)
+'UV visible albedo for diffuse radiation, isotropic component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 192 ;
 	}
-#UV visible albedo for diffuse radiation, volumetric component
-'UV visible albedo for diffuse radiation, volumetric component' = {
+#UV visible albedo for diffuse radiation, volumetric component (climatological)
+'UV visible albedo for diffuse radiation, volumetric component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 193 ;
 	}
-#UV visible albedo for diffuse radiation, geometric component
-'UV visible albedo for diffuse radiation, geometric component' = {
+#UV visible albedo for diffuse radiation, geometric component (climatological)
+'UV visible albedo for diffuse radiation, geometric component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 194 ;
 	}
-#Near IR albedo for diffuse radiation, isotropic component
-'Near IR albedo for diffuse radiation, isotropic component' = {
+#Near IR albedo for diffuse radiation, isotropic component (climatological)
+'Near IR albedo for diffuse radiation, isotropic component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 195 ;
 	}
-#Near IR albedo for diffuse radiation, volumetric component
-'Near IR albedo for diffuse radiation, volumetric component' = {
+#Near IR albedo for diffuse radiation, volumetric component (climatological)
+'Near IR albedo for diffuse radiation, volumetric component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 196 ;
 	}
-#Near IR albedo for diffuse radiation, geometric component
-'Near IR albedo for diffuse radiation, geometric component' = {
+#Near IR albedo for diffuse radiation, geometric component (climatological)
+'Near IR albedo for diffuse radiation, geometric component (climatological)' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 197 ;
 	}
@@ -9914,8 +9914,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 27 ;
 	}
-#10 metre wind gust in the last 3 hours
-'10 metre wind gust in the last 3 hours' = {
+#Maximum 10 metre wind gust in the last 3 hours
+'Maximum 10 metre wind gust in the last 3 hours' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
@@ -13834,73 +13834,73 @@
 	 table2Version = 162 ;
 	 indicatorOfParameter = 87 ;
 	}
-#Tendency of short wave radiation
-'Tendency of short wave radiation' = {
+#Time-integrated temperature tendency due to short-wave radiation
+'Time-integrated temperature tendency due to short-wave radiation' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 100 ;
 	}
-#Tendency of long wave radiation
-'Tendency of long wave radiation' = {
+#Time-integrated temperature tendency due to long-wave radiation
+'Time-integrated temperature tendency due to long-wave radiation' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 101 ;
 	}
-#Tendency of clear sky short wave radiation
-'Tendency of clear sky short wave radiation' = {
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'Time-integrated temperature tendency due to short wave radiation, clear sky' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 102 ;
 	}
-#Tendency of clear sky long wave radiation
-'Tendency of clear sky long wave radiation' = {
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'Time-integrated temperature tendency due to long-wave radiation, clear sky' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 103 ;
 	}
-#Updraught mass flux
-'Updraught mass flux' = {
+#Time-integrated updraught mass flux
+'Time-integrated updraught mass flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 104 ;
 	}
-#Downdraught mass flux
-'Downdraught mass flux' = {
+#Time-integrated downdraught mass flux
+'Time-integrated downdraught mass flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 105 ;
 	}
-#Updraught detrainment rate
-'Updraught detrainment rate' = {
+#Time-integrated updraught detrainment rate
+'Time-integrated updraught detrainment rate' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 106 ;
 	}
-#Downdraught detrainment rate
-'Downdraught detrainment rate' = {
+#Time-integrated downdraught detrainment rate
+'Time-integrated downdraught detrainment rate' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 107 ;
 	}
-#Total precipitation flux
-'Total precipitation flux' = {
+#Time-integrated total precipitation flux
+'Time-integrated total precipitation flux' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 108 ;
 	}
-#Turbulent diffusion coefficient for heat
-'Turbulent diffusion coefficient for heat' = {
+#Time-integrated turbulent diffusion coefficient for heat
+'Time-integrated turbulent diffusion coefficient for heat' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 109 ;
 	}
-#Tendency of temperature due to physics
-'Tendency of temperature due to physics' = {
+#Time-integrated temperature tendency due to parametrisations
+'Time-integrated temperature tendency due to parametrisations' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 110 ;
 	}
-#Tendency of specific humidity due to physics
-'Tendency of specific humidity due to physics' = {
+#Time-integrated specific humidity tendency due to parametrisations
+'Time-integrated specific humidity tendency due to parametrisations' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 111 ;
 	}
-#Tendency of u component due to physics
-'Tendency of u component due to physics' = {
+#Time-integrated eastward wind tendency due to parametrisations
+'Time-integrated eastward wind tendency due to parametrisations' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 112 ;
 	}
-#Tendency of v component due to physics
-'Tendency of v component due to physics' = {
+#Time-integrated northward wind tendency due to parametrisations
+'Time-integrated northward wind tendency due to parametrisations' = {
 	 table2Version = 162 ;
 	 indicatorOfParameter = 113 ;
 	}
@@ -16314,8 +16314,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Carbon Dioxide
-'Carbon Dioxide' = {
+#Carbon dioxide mass mixing ratio
+'Carbon dioxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 61 ;
 	}
@@ -17814,13 +17814,13 @@
 	 table2Version = 234 ;
 	 indicatorOfParameter = 228 ;
 	}
-#U-component stokes drift
-'U-component stokes drift' = {
+#U-component surface stokes drift
+'U-component surface stokes drift' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 215 ;
 	}
-#V-component stokes drift
-'V-component stokes drift' = {
+#V-component surface stokes drift
+'V-component surface stokes drift' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 216 ;
 	}

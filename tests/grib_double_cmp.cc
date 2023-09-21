@@ -10,18 +10,14 @@
 
 /*
  * Description: compare values retrieved with grib_get_double_array and
- *               grib_get_double_element
+ *              grib_get_double_element
  *
  * Author: Cristian D. Codorean
  *
  */
-#include "grib_api.h"
-
-static void usage(const char* prog)
-{
-    printf("usage: %s filename\n", prog);
-    exit(1);
-}
+#include "grib_api_internal.h"
+#undef NDEBUG
+#include <assert.h>
 
 int main(int argc, char** argv)
 {
@@ -34,14 +30,11 @@ int main(int argc, char** argv)
     char* filename = NULL;
     grib_handle* h = NULL;
 
-    if (argc < 2) usage(argv[0]);
+    assert(argc == 2);
     filename = argv[1];
 
     in = fopen(filename, "rb");
-    if (!in) {
-        printf("ERROR: unable to open file %s\n", filename);
-        return 1;
-    }
+    assert(in);
 
     /* create new handle from a message in a file*/
     h = grib_handle_new_from_file(0, in, &err);

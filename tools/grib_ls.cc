@@ -98,7 +98,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
+            fprintf(stderr, "%s: Wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -118,7 +118,7 @@ int grib_tool_init(grib_runtime_options* options)
                     options->latlon_mode = 1;
                 }
                 else {
-                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", tool_name);
+                    fprintf(stderr, "%s: Wrong mode given for the '-l' option (Please use 1 or 4)\n", tool_name);
                     exit(1);
                 }
             }
@@ -287,9 +287,9 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             size_t g_len = sizeof(grid_desc);
             err1 = grib_get_string(h, "gridDefinitionDescription", grid_desc, &g_len);
             if (!err1) {
-                fprintf(stderr, "Nearest neighbour functionality is not supported for grid: %s\n", grid_desc);
+                fprintf(stderr, "%s: Nearest neighbour functionality is not supported for grid: %s\n", tool_name, grid_desc);
             } else {
-                fprintf(stderr, "Nearest neighbour functionality is not supported for this grid type\n");
+                fprintf(stderr, "%s: Nearest neighbour functionality is not supported for this grid type\n", tool_name);
             }
         }
         GRIB_CHECK_NOLINE(err, 0);

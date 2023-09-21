@@ -15,7 +15,6 @@ static grib_values* get_key_values(grib_runtime_options* options, grib_handle* h
 
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value */
-    { "q", 0, 0, 1, 0, 0 },
     { "S", 0, 0, 1, 0, 0 },
     { "M", 0, 0, 0, 1, 0 },
     { "m:", "missingValue",
@@ -183,8 +182,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             exit(1);
         }
         if (size != (size_t)numberOfPoints) {
-            if (!grib_options_on("q"))
-                fprintf(stderr, "ERROR: Wrong number of points %ld\n", numberOfPoints);
+            fprintf(stderr, "ERROR: Wrong number of points %ld\n", numberOfPoints);
             if (grib_options_on("f"))
                 exit(1);
         }

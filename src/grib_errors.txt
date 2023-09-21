@@ -73,3 +73,15 @@ GRIB_UNSUPPORTED_EDITION            Edition not supported.
 GRIB_OUT_OF_RANGE                   Value out of coding range
 GRIB_WRONG_BITMAP_SIZE              Size of bitmap is incorrect
 GRIB_FUNCTIONALITY_NOT_ENABLED      Functionality not enabled
+GRIB_VALUE_MISMATCH                 Value mismatch
+GRIB_DOUBLE_VALUE_MISMATCH          Double values are different
+GRIB_LONG_VALUE_MISMATCH            Long values are different
+GRIB_BYTE_VALUE_MISMATCH            Byte values are different
+GRIB_STRING_VALUE_MISMATCH          String values are different
+GRIB_OFFSET_MISMATCH                Offset mismatch
+GRIB_COUNT_MISMATCH                 Count mismatch
+GRIB_NAME_MISMATCH                  Name mismatch
+GRIB_TYPE_MISMATCH                  Type mismatch
+GRIB_TYPE_AND_VALUE_MISMATCH        Type and value mismatch
+GRIB_UNABLE_TO_COMPARE_ACCESSORS    Unable to compare accessors
+GRIB_ASSERTION_FAILURE              Assertion failure

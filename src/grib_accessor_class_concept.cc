@@ -382,7 +382,7 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
             if (strcmp(act->name, "paramId") == 0) {
-                if (string_to_long(name, &dummy) == GRIB_SUCCESS) {
+                if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
                     // The paramId value is an integer. Show them the param DB
                     grib_context_log(h->context, GRIB_LOG_ERROR,
                                  "Please check the Parameter Database 'https://codes.ecmwf.int/grib/param-db/?id=%s'", name);
@@ -492,58 +492,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return ret;
 }
 
-static long guess_paramId(grib_handle* h)
-{
-    int err = 0;
-    long discipline, category, number;
-    err = grib_get_long(h, "discipline", &discipline);
-    if (err || discipline != 192)
-        return -1;
-    err = grib_get_long(h, "parameterCategory", &category);
-    if (err)
-        return -1;
-    err = grib_get_long(h, "parameterNumber", &number);
-    if (err)
-        return -1;
-
-    if (category == 128)
-        return number;
-    else
-        return (category * 1000 + number);
-}
-
-/* Return -1 if cannot match */
-static long get_ECMWF_local_paramId(grib_accessor* a, grib_handle* h)
-{
-    int err = 0;
-    long edition, centre;
-    if (h->product_kind != PRODUCT_GRIB)
-        return -1;
-    err = grib_get_long(h, "centre", &centre);
-    if (err)
-        return -1;
-    err = grib_get_long(h, "edition", &edition);
-    if (err)
-        return -1;
-    if (edition == 2 && centre == 98 && strncmp(a->name, "paramId", 7) == 0) {
-        return guess_paramId(h);
-    }
-    return -1;
-}
-
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     const char* p = concept_evaluate(a);
 
     if (!p) {
         grib_handle* h = grib_handle_of_accessor(a);
-        const long pid = get_ECMWF_local_paramId(a, h);
-        if (pid != -1) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "ECMWF local grib2: paramId guessed to be %ld", pid);
-            *val = pid;
-            *len = 1;
-            return GRIB_SUCCESS;
-        }
         if (a->creator->defaultkey)
             return grib_get_long_internal(h, a->creator->defaultkey, val);
 
@@ -651,23 +605,25 @@ static int compare(grib_accessor* a, grib_accessor* b)
     long count  = 0;
 
     err = grib_value_count(a, &count);
-    if (err)
-        return err;
+    if (err) return err;
     alen = count;
 
     err = grib_value_count(b, &count);
-    if (err)
-        return err;
+    if (err) return err;
     blen = count;
 
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
+    alen = MAX_CONCEPT_STRING_LENGTH;
+    blen = MAX_CONCEPT_STRING_LENGTH;
 
     aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
     bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
 
-    grib_unpack_string(a, aval, &alen);
-    grib_unpack_string(b, bval, &blen);
+    err = grib_unpack_string(a, aval, &alen);
+    if (err) return err;
+    err = grib_unpack_string(b, bval, &blen);
+    if (err) return err;
 
     retval = GRIB_SUCCESS;
     if (!aval || !bval || grib_inline_strcmp(aval, bval))

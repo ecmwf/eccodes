@@ -83,8 +83,7 @@ static void* default_long_lasting_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_long_lasting_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -99,8 +98,7 @@ static void* default_buffer_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -110,8 +108,7 @@ static void* default_buffer_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_buffer_realloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -126,8 +123,7 @@ static void* default_malloc(const grib_context* c, size_t size)
     void* ret;
     ret = malloc(size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -137,8 +133,7 @@ static void* default_realloc(const grib_context* c, void* p, size_t size)
     void* ret;
     ret = realloc(p, size);
     if (!ret) {
-        grib_context_log(c, GRIB_LOG_FATAL, "default_realloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return ret;
 }
@@ -297,7 +292,7 @@ static grib_context default_grib_context = {
     0,               /* grib_concept_path          */
     0,               /* grib_reader                */
     0,               /* user data                  */
-    GRIB_REAL_MODE8, /* real mode for fortran      */
+    CODES_REAL_MODE8, /* real mode for fortran     */
 
 #if MANAGE_MEM
     &grib_transient_free,    /* free_mem                   */
@@ -912,9 +907,7 @@ void* grib_context_malloc_persistent(const grib_context* c, size_t size)
 {
     void* p = c->alloc_persistent_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL,
-                         "grib_context_malloc_persistent: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return p;
 }
@@ -945,8 +938,7 @@ void* grib_context_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_malloc: error allocating %zu bytes", size);
-        Assert(0);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
     }
     return p;
 }
@@ -958,7 +950,7 @@ void* grib_context_realloc(const grib_context* c, void* p, size_t size)
         c = grib_context_get_default();
     q = c->realloc_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_realloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return q;
@@ -993,7 +985,7 @@ void* grib_context_buffer_malloc(const grib_context* c, size_t size)
     else
         p = c->alloc_buffer_mem(c, size);
     if (!p) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_malloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return p;
@@ -1011,7 +1003,7 @@ void* grib_context_buffer_realloc(const grib_context* c, void* p, size_t size)
 {
     void* q = c->realloc_buffer_mem(c, p, size);
     if (!q) {
-        grib_context_log(c, GRIB_LOG_FATAL, "grib_context_buffer_realloc: error allocating %zu bytes", size);
+        grib_context_log(c, GRIB_LOG_FATAL, "%s: error allocating %zu bytes", __func__, size);
         return NULL;
     }
     return q;

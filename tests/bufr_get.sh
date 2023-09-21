@@ -36,6 +36,11 @@ id=`${tools_dir}/bufr_get -p edition,identifier avhn_87.bufr`
 id=`${tools_dir}/bufr_get -p edition,identifier aaen_55.bufr`
 [ "$id" = "4 BUFR" ]
 
+set +e
+${tools_dir}/bufr_get -p identifier:d avhn_87.bufr
+status=$?
+set -e
+[ $status -ne 0 ]
 
 #-------------------------------------------
 # Test "-p" switch

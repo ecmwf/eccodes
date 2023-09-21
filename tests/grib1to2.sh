@@ -91,7 +91,7 @@ grib_check_key_equals $sample_g1 shapeOfTheEarth 0
 grib_check_key_equals $output    shapeOfTheEarth 0
 
 
-echo "ECC-1329: GRIB: Cannot convert runoff (paramId=205)"
+echo "ECC-1329: Cannot convert runoff (paramId=205)"
 # --------------------------------------------------------
 temp1="temp1.grib1to2.grib1"
 temp2="temp2.grib1to2.grib2"
@@ -103,4 +103,20 @@ ${tools_dir}/grib_set -s edition=2,startStep=0 $temp1 $temp2
 grib_check_key_equals $temp2 stepType,stepRange 'accum 0-240'
 rm -f $temp1 $temp2
 
+echo "ECC-1646: Cannot convert sro, uvb, lsp, e, and pev"
+# --------------------------------------------------------
+for sn in e lsp pev sro uvb; do
+    ${tools_dir}/grib_set -s shortName=$sn,typeOfLevel=surface,level=0 $sample_g1 $temp1
+    ${tools_dir}/grib_set -s edition=2 $temp1 $temp2
+    ${tools_dir}/grib_compare -e -b param $temp1 $temp2
+done
+
+# Turn on (brief) DEBUGGING messages
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+output=temp.grib1to2.grib
+ECCODES_DEBUG=-1 ${tools_dir}/grib_set -s edition=2 $sample_g1 $output
+
+
+# Clean up
 rm -f $output
+rm -f $temp1 $temp2

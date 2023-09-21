@@ -627,20 +627,35 @@ static int value_count(grib_accessor* a, long* count)
     return 0;
 }
 
+// Return true if the input is an integer (non-negative)
+static bool is_number(const char* s)
+{
+    while (*s) {
+        if (!isdigit(*s))
+            return false;
+        s++;
+    }
+    return true;
+}
+
 static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
+    long lValue = 0;
+    Assert(buffer);
+    if (is_number(buffer) && string_to_long(buffer, &lValue, 1) == GRIB_SUCCESS) {
+        // ECC-1654: If value is a pure number, just pack as long
+        size_t l = 1;
+        return grib_pack_long(a, &lValue, &l);
+    }
+
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     grib_codetable* table;
-
     long i;
     size_t size = 1;
 
     typedef int (*cmpproc)(const char*, const char*);
-#ifndef ECCODES_ON_WINDOWS
+
     cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
-#else
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? stricmp : strcmp;
-#endif
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -667,10 +682,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         if (act->default_value != NULL) {
             const char* p = 0;
             size_t s_len  = 1;
-            long l;
+            long l = 0;
             int ret = 0;
-            double d;
-            char tmp[1024];
+            double d = 0;
+            char tmp[1024] = {0,};
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(a), act->default_value, 0);
             int type                    = grib_expression_native_type(grib_handle_of_accessor(a), expression);
             switch (type) {
@@ -688,8 +703,8 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
                     s_len = sizeof(tmp);
                     p     = grib_expression_evaluate_string(grib_handle_of_accessor(a), expression, tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
-                        grib_context_log(a->context, GRIB_LOG_FATAL,
-                                         "unable to evaluate %s as string", a->name);
+                        grib_context_log(a->context, GRIB_LOG_ERROR,
+                                         "%s: Unable to evaluate default value of %s as string expression", __func__, a->name);
                         return ret;
                     }
                     s_len = strlen(p) + 1;
@@ -699,6 +714,19 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
             return GRIB_SUCCESS;
         }
     }
+
+    // ECC-1652: Failed. Now do a case-insensitive compare to give the user a hint
+    for (i = 0; i < table->size; i++) {
+        if (table->entries[i].abbreviation) {
+            if (strcmp_nocase(table->entries[i].abbreviation, buffer) == 0) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "%s: No such code table entry: '%s' "
+                                 "(Did you mean '%s'?)",
+                                 a->name, buffer, table->entries[i].abbreviation);
+            }
+        }
+    }
+
     return GRIB_ENCODING_ERROR;
 }
 

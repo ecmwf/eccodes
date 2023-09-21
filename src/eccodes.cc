@@ -337,6 +337,10 @@ int codes_get_double(const grib_handle* h, const char* key, double* value)
 {
     return grib_get_double(h, key, value);
 }
+int codes_get_float(const grib_handle* h, const char* key, float* value)
+{
+    return grib_get_float(h, key, value);
+}
 
 int codes_get_double_element(const grib_handle* h, const char* key, int i, double* value)
 {
@@ -442,6 +446,10 @@ int codes_get_message_size(const grib_handle* h, size_t* size)
 void codes_dump_content(const grib_handle* h, FILE* out, const char* mode, unsigned long option_flags, void* arg)
 {
     grib_dump_content(h, out, mode, option_flags, arg);
+}
+void codes_dump_action_tree(codes_context* c, FILE* f)
+{
+    grib_dump_action_tree(c, f);
 }
 /* GTS, GRIBEX */
 /******************************************************************************/

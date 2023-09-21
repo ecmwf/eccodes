@@ -2,17 +2,15 @@
 
 include "grib2/template.3.grid.def";
 
-#  Di - i direction increment
-
+# Di - i direction increment
 unsigned[4] iDirectionIncrement : can_be_missing,edition_specific;
-alias Di =  iDirectionIncrement;
-alias Dx =  iDirectionIncrement;
+alias Di = iDirectionIncrement;
+alias Dx = iDirectionIncrement;
 
-#  Dj - j direction increment
-
+# Dj - j direction increment
 unsigned[4] jDirectionIncrement : can_be_missing,edition_specific;
-alias Dj =  jDirectionIncrement;
-alias Dy =  jDirectionIncrement;
+alias Dj = jDirectionIncrement;
+alias Dy = jDirectionIncrement;
 
 include "grib2/template.3.scanning_mode.def";
 

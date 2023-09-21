@@ -269,7 +269,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         const char* optionStr = grib_options_get_option("d:");
         options->constant     = strtod(optionStr, &endPtr);
         if (*endPtr) {
-            fprintf(stderr, "Invalid number for -d option: '%s'\n", optionStr);
+            fprintf(stderr, "%s: Invalid number for -d option: '%s'\n", tool_name, optionStr);
             exit(1);
         }
         options->repack = 1;
@@ -390,7 +390,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("e")) {
         for (i = 0; i < names_count; i++) {
             options->compare[i + options->compare_count].name = names[i];
-            options->compare[i + options->compare_count].type = GRIB_NAMESPACE;
+            options->compare[i + options->compare_count].type = CODES_NAMESPACE;
         }
         options->compare_count += names_count;
     }

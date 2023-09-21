@@ -10,7 +10,7 @@
 
 #include "grib_api_internal.h"
 
-/* For debugging purposes */
+// For debugging purposes
 void grib_darray_print(const char* title, const grib_darray* darray)
 {
     size_t i;
@@ -46,7 +46,7 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_darray*)grib_context_malloc_clear(c, sizeof(grib_darray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %lu bytes\n", sizeof(grib_darray));
+                         "grib_darray_new unable to allocate %zu bytes", sizeof(grib_darray));
         return NULL;
     }
     v->size    = size;
@@ -56,7 +56,7 @@ grib_darray* grib_darray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_new unable to allocate %lu bytes\n", sizeof(double) * size);
+                         "grib_darray_new unable to allocate %zu bytes", sizeof(double) * size);
         return NULL;
     }
     return v;
@@ -73,7 +73,7 @@ static grib_darray* grib_darray_resize(grib_darray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_darray_resize unable to allocate %lu bytes\n", sizeof(double) * newsize);
+                         "grib_darray_resize unable to allocate %zu bytes", sizeof(double) * newsize);
         return NULL;
     }
     return v;
@@ -104,17 +104,17 @@ void grib_darray_delete(grib_context* c, grib_darray* v)
     grib_context_free(c, v);
 }
 
-double* grib_darray_get_array(grib_context* c, grib_darray* v)
-{
-    double* ret = NULL;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (double*)grib_context_malloc_clear(c, sizeof(double) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// double* grib_darray_get_array(grib_context* c, grib_darray* v)
+// {
+//     double* ret = NULL;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (double*)grib_context_malloc_clear(c, sizeof(double) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
 int grib_darray_is_constant(grib_darray* v, double epsilon)
 {
