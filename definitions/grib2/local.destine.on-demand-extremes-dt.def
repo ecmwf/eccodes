@@ -1,4 +1,0 @@
-# DestinE MARS ClimateDT keywords
-
-codetable[2] zoomRegion "grib2/destine_zoomRegion.table" : dump;
-alias mars.zoomRegion = zoomRegion;

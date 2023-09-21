@@ -9,5 +9,5 @@ alias mars.CMIPActivity = CMIPActivity;
 codetable[2] CMIPExperiment "grib2/destine_CMIPExperiment.table" : dump;
 alias mars.CMIPExperiment = CMIPExperiment;
 
-codetable[2] CMIPGridLabel "grib2/destine_CMIPGridLabel.table" : dump;
-alias mars.CMIPGridLabel = CMIPGridLabel;
+codetable[2] model "grib2/destine_model.table" : dump;
+alias mars.model = model;
