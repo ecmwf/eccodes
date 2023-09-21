@@ -123,55 +123,17 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     int n                             = 0;
 
-    self->forecast_time_value                   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->forecast_time_unit                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->step_units                   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_unit = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_value           = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_unit  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->step_units          = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->time_range_unit     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->time_range_value    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_double(dumper, a, NULL);
 }
-
-/* Conversion of to seconds - Grib edition 2 table 4.4 */
-static const int u2s2[] = {
-    60,      /* (0)  minutes   */
-    3600,    /* (1)  hour      */
-    86400,   /* (2)  day       */
-    2592000, /* (3)  month     */
-    -1,      /* (4)  year      */
-    -1,      /* (5)  decade    */
-    -1,      /* (6)  30 years  */
-    -1,      /* (7)  century   */
-    -1,      /* (8)  RESERVED  */
-    -1,      /* (9)  RESERVED  */
-    10800,   /* (10) 3 hours   */
-    21600,   /* (11) 6 hours   */
-    43200,   /* (12) 12 hours  */
-    1        /* (13) seconds   */
-};
-
-/* Note: 'step_units' has a different table with extra entries e.g. 15 and 30 mins */
-static const int u2s[] = {
-    60,      /* (0)  minutes    */
-    3600,    /* (1)  hour       */
-    86400,   /* (2)  day        */
-    2592000, /* (3)  month      */
-    -1,      /* (4)  year       */
-    -1,      /* (5)  decade     */
-    -1,      /* (6)  30 years   */
-    -1,      /* (7)  century    */
-    -1,      /* (8)             */
-    -1,      /* (9)             */
-    10800,   /* (10) 3 hours    */
-    21600,   /* (11) 6 hours    */
-    43200,   /* (12) 12 hours   */
-    1,       /* (13) seconds    */
-    900,     /* (14) 15 minutes */
-    1800     /* (15) 30 minutes */
-};
 
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -229,70 +191,15 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
 }
 
 
-int pack_long_old_(grib_accessor* a, const long* val, size_t* len) {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h                    = grib_handle_of_accessor(a);
-    int err                           = 0;
-    long forecast_time_value, forecast_time_unit, step_units;
-    long oldStep = 0;
-    long time_range_unit, time_range_value;
-
-    if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)))
-        return err;
-    if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
-        return err;
-
-    unpack_long(a, &oldStep, len);
-
-    if (step_units != forecast_time_unit) {
-        forecast_time_value = *val * u2s[step_units];
-        if (forecast_time_value % u2s2[forecast_time_unit] != 0) {
-            forecast_time_unit = step_units;
-            err        = grib_set_long_internal(h, self->forecast_time_unit, forecast_time_unit);
-            if (err != GRIB_SUCCESS)
-                return err;
-            forecast_time_value = *val;
-        }
-        else {
-            forecast_time_value = forecast_time_value / u2s2[forecast_time_unit];
-        }
-    }
-    else {
-        forecast_time_value = *val;
-    }
-
-    if (self->time_range_unit) {
-        if ((err = grib_get_long_internal(h,
-                                          self->time_range_unit, &time_range_unit)))
-            return err;
-        if ((err = grib_get_long_internal(h,
-                                          self->time_range_value, &time_range_value)))
-            return err;
-        if (forecast_time_unit == time_range_unit)
-            time_range_value -= forecast_time_value - oldStep;
-        else
-            time_range_value -= forecast_time_value * u2s2[forecast_time_unit] / u2s2[time_range_unit];
-        time_range_value = time_range_value > 0 ? time_range_value : 0;
-        err               = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_value);
-        if (err != GRIB_SUCCESS)
-            return err;
-    }
-
-    return grib_set_long_internal(grib_handle_of_accessor(a), self->forecast_time_value, forecast_time_value);
-}
-
 int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit) {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                    = grib_handle_of_accessor(a);
     int err                           = 0;
-    //long forecast_time_value;
     long forecast_time_unit;
     long step_units;
     long start_step_value_old;
     long start_step_unit_old;
     size_t len = 0;
-    //long time_range_unit;
-    //long time_range_value;
 
     if ((err = grib_get_long_internal(h, self->forecast_time_unit, &forecast_time_unit)) != GRIB_SUCCESS)
         return err;
@@ -301,9 +208,6 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit_old)) != GRIB_SUCCESS)
         return err;
 
-    //if ((err = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
-        //return err;
-    //step_units = get_step_units(h);
     Step start_step_old(start_step_value_old, start_step_unit_old);
     Step forecast_time(start_step_value, start_step_unit);
     Step time_range_new{};
@@ -334,6 +238,7 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     return GRIB_SUCCESS;
 }
 
+
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
@@ -359,6 +264,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     return ret;
 }
+
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
@@ -411,5 +317,3 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
-
-
