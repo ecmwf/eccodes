@@ -95,6 +95,7 @@ typedef struct grib_accessor_g2end_step
 
 extern grib_accessor_class* grib_accessor_class_long;
 
+
 static grib_accessor_class _grib_accessor_class_g2end_step = {
     &grib_accessor_class_long,                      /* super */
     "g2end_step",                      /* name */
@@ -177,46 +178,12 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->numberOfTimeRange   = grib_arguments_get_name(h, c, n++);
 }
 
+
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_double(dumper, a, NULL);
 }
 
-static const int u2s2[] = {
-    60,      /* (0) minutes */
-    3600,    /* (1) hour    */
-    86400,   /* (2) day     */
-    2592000, /* (3) month     */
-    -1,      /* (4) */
-    -1,      /* (5) */
-    -1,      /* (6) */
-    -1,      /* (7) */
-    -1,      /* (8) */
-    -1,      /* (9) */
-    10800,   /* (10) 3 hours */
-    21600,   /* (11) 6 hours */
-    43200,   /* (12) 12 hours */
-    1        /* (13) seconds  */
-};
-
-static const int u2s[] = {
-    60,      /* (0) minutes */
-    3600,    /* (1) hour    */
-    86400,   /* (2) day     */
-    2592000, /* (3) month     */
-    -1,      /* (4) */
-    -1,      /* (5) */
-    -1,      /* (6) */
-    -1,      /* (7) */
-    -1,      /* (8) */
-    -1,      /* (9) */
-    10800,   /* (10) 3 hours */
-    21600,   /* (11) 6 hours */
-    43200,   /* (12) 12 hours */
-    1,       /* (13) seconds  */
-    900,     /* (14) 15 minutes  */
-    1800     /* (15) 30 minutes  */
-};
 
 /* See GRIB-488 */
 static int is_special_expver(grib_handle* h)
@@ -232,6 +199,7 @@ static int is_special_expver(grib_handle* h)
     return 0;
 }
 
+
 static int convert_time_range_long_(
     grib_handle* h,
     long stepUnits,                   /* step_units */
@@ -242,32 +210,16 @@ static int convert_time_range_long_(
     Assert(lengthOfTimeRange != NULL);
 
     if (indicatorOfUnitForTimeRange != stepUnits) {
-        long u2sf_step_unit;
-        long coded_time_range_sec = (*lengthOfTimeRange) * u2s2[indicatorOfUnitForTimeRange];
-        if (coded_time_range_sec < 0) {
-            long u2sf;
-            int factor = 60;
-            if (u2s2[indicatorOfUnitForTimeRange] % factor)
-                return GRIB_DECODING_ERROR;
-            if (u2s[stepUnits] % factor)
-                return GRIB_DECODING_ERROR;
-            u2sf                 = u2s2[indicatorOfUnitForTimeRange] / factor;
-            coded_time_range_sec = (*lengthOfTimeRange) * u2sf;
-            u2sf_step_unit       = u2s[stepUnits] / factor;
+        Step time_range{*lengthOfTimeRange, indicatorOfUnitForTimeRange};
+        time_range.set_unit(Unit{stepUnits});
+        if (time_range.value<long>() != time_range.value<double>()) {
+            return GRIB_DECODING_ERROR;
         }
-        else {
-            u2sf_step_unit = u2s[stepUnits];
-        }
-        if (coded_time_range_sec % u2sf_step_unit != 0) {
-            grib_context_log(h->context, GRIB_LOG_ERROR, "unable to convert endStep in stepUnits");
-            return GRIB_WRONG_STEP_UNIT;
-        }
-        *lengthOfTimeRange = coded_time_range_sec / u2sf_step_unit;
+        *lengthOfTimeRange = time_range.value<long>();
     }
 
     return GRIB_SUCCESS;
 }
-
 
 
 static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
@@ -482,7 +434,6 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
 }
 
 
-
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_class_g2end_step.unpack_long.cc
 //
@@ -611,16 +562,17 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
         return err;
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return err;
+
     if (start_step_unit == 255) {
-        throw std::runtime_error("startStepUnit == 255");
+        grib_context_log(h->context, GRIB_LOG_ERROR,
+                         "missing start step unit");
+        return GRIB_WRONG_STEP_UNIT;
     }
 
     if ((err = grib_get_long_internal(h, self->typeOfTimeIncrement, &typeOfTimeIncrement)))
         return err;
 
     Step start_step{start_step_value, start_step_unit};
-
-    //time_range_v = *val - start_step_value;
     Step time_range = end_step - start_step;
 
     if (time_range.value<double>() < 0) {
@@ -655,37 +607,8 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if ((err = grib_set_long_internal(h, self->second_of_end_of_interval, second_of_end_of_interval)))
         return err;
 
-    //if (time_range_v * u2s[step_units] % u2s2[time_range_unit]) {
-    //    time_range_unit = step_units;
-    //    if ((err = grib_set_long_internal(h, self->time_range_unit, time_range_unit)))
-    //        return err;
-    //    time_range_value = time_range_v;
-    //}
-    //else
-    //    time_range_value = (time_range_v * u2s[step_units]) / u2s2[time_range_unit];
-
-
-    //time_range_value = time_range_value * u2s[time_range_unit] / u2s2[step_units];
-    //time_range_unit  = step_units;
-    //if ((err = grib_set_long_internal(h, self->time_range_value, time_range_value)))
-    //    return err;
-    //if ((err = grib_set_long_internal(h, self->time_range_unit, time_range_unit)))
-    //    return err;
-
-
-    
     const char* forecast_time_value_key = "forecastTime";
     const char* forecast_time_unit_key = "indicatorOfUnitOfTimeRange";
-    //long forecast_time_value;
-    //long forecast_time_unit;
-    //if ((err = grib_get_long_internal(h, forecast_time_value_key, &forecast_time_value)) != GRIB_SUCCESS)
-    //    return err;
-    //if ((err = grib_get_long_internal(h, forecast_time_unit_key, &forecast_time_unit)) != GRIB_SUCCESS)
-    //    return err;
-
-
-    //auto [forecast_time, time_range] = find_common_units(Step{forecast_time_value, forecast_time_unit}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
-    //auto [forecast_time, time_range] = find_common_units(Step{start_step_value, step_units}.optimize_unit(), Step{time_range_value, time_range_unit}.optimize_unit());
     auto [forecast_time_opt, time_range_opt] = find_common_units(start_step.optimize_unit(), time_range.optimize_unit());
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_opt.value<long>())) != GRIB_SUCCESS)
@@ -696,15 +619,6 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
         return err;
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), forecast_time_unit_key, forecast_time_opt.unit().value<long>())) != GRIB_SUCCESS)
         return err;
-
-    
-
-    //if (typeOfTimeIncrement != 1) {
-    //    [> 1 means "Successive times processed have same forecast time, start time of forecast is incremented" <]
-    //    [> Note: For this case, length of timeRange is not related to step and so should NOT be used to calculate step <]
-    //    if ((err = grib_set_long_internal(h, self->time_range_value, time_range_value)))
-    //        return err;
-    //}
 
     return GRIB_SUCCESS;
 }
@@ -748,6 +662,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
+
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {

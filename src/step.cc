@@ -7,9 +7,8 @@
 #include <cassert>
 #include <regex>
 
+#include "step_unit.h"
 #include "step.h"
-
-
 
 Step step_from_string(std::string step)
 {
@@ -174,6 +173,13 @@ Step& Step::optimize_unit()
     return *this;
 }
 
+//Step Step::copy() const {
+//    Step ret{};
+//    ret.internal_value_ = internal_value_;
+//    ret.internal_unit_ = internal_unit_;
+//    ret.unit_ = unit_;
+//    return ret;
+//}
 
 template <>
 std::string Step::value<std::string>(const std::string& format) const {
