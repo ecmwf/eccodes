@@ -8,26 +8,28 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
- #include "{{ c.include_header }}"
+#include "{{ c.include_header }}"
+{%- for i in c.common_includes %}
+#include "{{ i }}"
+{%- endfor %}
 
- // converted from {{ c.cname }}.cc
+// converted from {{ c.cname }}.cc
 
-{% for i in c.body_includes %}
+{%- for i in c.body_includes %}
 #include {{ i }}
-{% endfor %}
+{%- endfor %}
 
-{% for n in c.namespaces %}namespace {{ n }} {
-{% endfor %}
+namespace {{ c.nested_namespaces }} {
 
 // start top level code '-start-'
 {% for line in c.top_level_code['-start-'] %}{{ line }}
 {% endfor %}
 
 {% for m in c.static_functions %}
-// start top level code '{{ m.name }}'
+// start top level code '{{ m.transformed_name }}'
 {% for line in c.top_level_code[m.name] %}{{ line }}
 {% endfor %}
-static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
+static {{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }}) {
         {{ m.body }}
  }
  {% endfor %}
@@ -43,9 +45,7 @@ static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
 // top level code 'destroy'
 {% for line in c.top_level_code['destroy'] %}{{ line }}
 {% endfor %}
-{{ c.name }}::~{{ c.name }}() {
-       {{ c.destructor.body }}
-}
+// {{ c.name }}::~{{ c.name }}() { {{ c.destructor.body }} }
 
 {% for m in c.inherited_methods %}
 // top level code '{{ m.name }}'
@@ -54,7 +54,7 @@ static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
 
 // inherited methods {{ m.name }}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }}) {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.args_declaration }}) {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
@@ -69,21 +69,13 @@ static {{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) {
  }
  {% endfor %}
 
-void {{ c.name }}::print(std::ostream& s) const {
-    s << "{{ c.name }}["
-    {% for m in c.members %} << "{{ m.name }}="  << {{ m.name }} {% if not loop.last %}<< ',' {% endif %}
-    {% endfor %} << "]";
-}
-
-const char* {{ c.name }}::className() const {
-       return "{{ c.name }}";
-}
-
 // top level code '-end-'
 {% for line in c.top_level_code['-end-'] %}{{ line }}
 {% endfor %}
 
-static AccessorMaker<{{ c.name }}> maker("{{ c.factory_name }}");
+namespace {
+AccessorBuilder<{{ c.name }}> {{ c.name_camel_case }}Builder(AccessorType("{{ c.factory_name }}"));
+}
 
 {% for n in c.namespaces_reversed %}} // namespace {{ n }}
-{% endfor %}
+{%- endfor %}

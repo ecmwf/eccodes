@@ -1,0 +1,47 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+#pragma once
+
+#include "{{ c.include_super }}"
+
+{% for i in c.header_includes %}
+#include {{ i }}
+{%- endfor %}
+
+namespace {{ c.nested_namespaces }} {
+
+{%- for f in c.forward_declarations %}
+{{ f }};
+{%- endfor %}
+
+class {{ c.name }} : public {{ c.super }} {
+public:
+    {{ c.name }}({{c.constructor.args_declaration}});
+    ~{{ c.name }}() = default;
+
+private:
+    // Inherited functions
+    {%- for m in c.inherited_methods %}
+    {{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
+
+    // Members
+    {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }}{{ m.array }}{{ m.default_value }};
+    {%- endfor %}
+};
+
+
+// Private methods
+//{% for m in c.private_methods %}
+//{{ m.template }}
+//{{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
+
+{% for n in c.namespaces_reversed %}} // namespace {{ n }}
+{%- endfor %}

@@ -11,9 +11,9 @@
 
 set(eccodes_dir			${CMAKE_CURRENT_LIST_DIR}/eccodes)
 set(accessor_dir		${eccodes_dir}/accessor)
-set(accessor_data_dir		${accessor_dir}/AccessorData)
-set(accessor_utils_dir		${accessor_dir}/AccessorUtils)
-set(accessor_test_dir		${accessor_dir}/Test)
+set(accessor_data_dir	${accessor_dir}/AccessorData)
+set(accessor_utils_dir	${accessor_dir}/AccessorUtils)
+set(accessor_test_dir	${accessor_dir}/Test)
 
 include_directories(${accessor_dir})
 
@@ -29,13 +29,14 @@ set(accessor_src_files
 	${accessor_dir}/AccessorTraits.h
 )
 
+add_subdirectory(converted)
+
 set(accessor_data_src_files
 	${accessor_data_dir}/AccessorData.cc
 	${accessor_data_dir}/AccessorData.h
 	${accessor_data_dir}/AccessorInitData.cc
 	${accessor_data_dir}/AccessorInitData.h
-	${accessor_data_dir}/ProjStringData.cc
-	${accessor_data_dir}/ProjStringData.h
+	${converted_accessor_data_src_files}
 )
 
 set(accessor_utils_src_files

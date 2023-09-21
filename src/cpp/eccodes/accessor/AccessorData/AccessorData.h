@@ -33,7 +33,7 @@ public:
     virtual GribType nativeType() const;
     virtual void updateSize(std::size_t s);
     virtual std::size_t preferredSize(int fromHandle) const;
-    virtual void resize(size_t newSize);
+    virtual void resize(std::size_t newSize);
     virtual double nearestSmallerValue(double val) const;
     virtual bool compare(AccessorData const& rhs);
     virtual bool isMissing() const;

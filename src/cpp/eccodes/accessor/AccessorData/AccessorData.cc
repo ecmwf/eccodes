@@ -61,7 +61,7 @@ std::size_t AccessorData::preferredSize(int fromHandle) const
     return length_;
 }
 
-void AccessorData::resize(size_t newSize)
+void AccessorData::resize(std::size_t newSize)
 {
     Assert(0);
 }
