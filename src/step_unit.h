@@ -107,7 +107,7 @@ private:
             long duration;
         };
 
-        const std::array<Entry, 15> tab_ = {
+        const std::array<Entry, 15> tab_ = {{
             Entry{Value::MISSING   , "MISSING" , 0},
             Entry{Value::SECOND    , "s"       , 1},
             Entry{Value::MINUTE    , "m"       , 60},
@@ -123,7 +123,7 @@ private:
             Entry{Value::YEARS10   , "10Y"     , 315360000},
             Entry{Value::YEARS30   , "30Y"     , 946080000},
             Entry{Value::CENTURY   , "C"       , 3153600000},
-        };
+        }};
 
         std::unordered_map<std::string, Value> name_to_value_;
         std::unordered_map<Value, std::string> value_to_name_;

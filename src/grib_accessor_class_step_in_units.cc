@@ -142,8 +142,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     int err                           = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
-    int factor     = 0;
-    long u2sf, u2sf_step_unit;
 
     if ((err= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return err;
@@ -194,7 +192,6 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     grib_handle* h                    = grib_handle_of_accessor(a);
     int err                           = 0;
     long forecast_time_unit;
-    long step_units;
     long start_step_value_old;
     long start_step_unit_old;
     size_t len = 0;
@@ -266,11 +263,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-    size_t value_len = 0;
-
     Step step = step_from_string(val);
 
     if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>())) != GRIB_SUCCESS)

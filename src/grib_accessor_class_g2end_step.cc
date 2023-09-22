@@ -523,15 +523,14 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     long start_step_value;
     long start_step_unit;
-    long step_units, time_range_unit;
+    long time_range_unit;
     long year_of_end_of_interval;
     long month_of_end_of_interval;
     long day_of_end_of_interval;
     long hour_of_end_of_interval;
     long minute_of_end_of_interval = 0;
     long second_of_end_of_interval = 0;
-
-    long time_range_value, time_range_v, typeOfTimeIncrement;
+    long typeOfTimeIncrement;
 
     double dend, dstep;
 
@@ -636,7 +635,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long step_value;
     long step_units;
 
-
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
     if ((ret = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
@@ -666,7 +664,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret;
 
@@ -692,7 +689,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
     Step end_step = step_from_string(val);

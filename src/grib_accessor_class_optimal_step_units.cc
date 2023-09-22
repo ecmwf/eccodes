@@ -147,7 +147,6 @@ static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
 
     int ret;

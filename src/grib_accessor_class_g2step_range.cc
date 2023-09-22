@@ -25,6 +25,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = pack_string;unpack_string;value_count
    IMPLEMENTS = unpack_long;pack_long
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = unpack_string;pack_string
    IMPLEMENTS = get_native_type;string_length
    IMPLEMENTS = init
@@ -48,6 +49,7 @@ static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
@@ -87,7 +89,7 @@ static grib_accessor_class _grib_accessor_class_g2step_range = {
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
     0,                 /* pack_float */
-    0,              /* unpack_double */
+    &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
     &pack_string,                /* pack_string */
     &unpack_string,              /* unpack_string */
@@ -138,7 +140,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
-    char buf[100];
     int ret     = 0;
     size_t size = 0;
     double start_step_value = 0;
