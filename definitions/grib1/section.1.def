@@ -224,7 +224,7 @@ alias ls.stepRange = stepRange;
 alias ls.dataDate  = dataDate;
 
 alias mars.step    = endStep;
-alias mars.stepUnits = stepUnits;
+alias mars.stepunits = stepUnits;
 alias mars.date    = dataDate;
 alias mars.levtype = indicatorOfTypeOfLevel;
 alias mars.time    = dataTime;
