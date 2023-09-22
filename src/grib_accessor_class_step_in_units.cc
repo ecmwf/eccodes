@@ -151,6 +151,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return err;
 
     Step step{forecast_time_value, forecast_time_unit};
+    step.optimize_unit();
 
     if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.value<long>())) != GRIB_SUCCESS)
         return err;

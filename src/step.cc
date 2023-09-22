@@ -154,6 +154,9 @@ void Step::init_double(double value, const Unit& unit)
 Step& Step::optimize_unit()
 {
     if (internal_value_ == 0) {
+        if (unit() > Unit{Unit::Value::HOUR}) {
+            set_unit(Unit{Unit::Value::HOUR});
+        }
         return *this;
     }
 
