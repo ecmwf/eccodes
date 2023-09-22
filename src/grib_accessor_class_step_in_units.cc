@@ -245,11 +245,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return ret;
 
     long start_step_unit;
-    if (force_step_units == 255) {
+    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
         if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
             return ret;
 
-        if (start_step_unit == 255)
+        if (Unit{start_step_unit} == Unit{Unit::Value::MISSING})
             start_step_unit = Unit{Unit::Value::HOUR}.value<long>();
     }
     else {

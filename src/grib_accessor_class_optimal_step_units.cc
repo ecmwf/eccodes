@@ -160,7 +160,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    if (staticStepUnits != 255) {
+    if (Unit{staticStepUnits} != Unit{Unit::Value::MISSING}) {
         *val = staticStepUnits;
         return GRIB_SUCCESS;
     }

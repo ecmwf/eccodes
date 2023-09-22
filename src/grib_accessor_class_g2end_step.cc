@@ -562,7 +562,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return err;
 
-    if (start_step_unit == 255) {
+    if (Unit{start_step_unit} == Unit{Unit::Value::MISSING}) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "missing start step unit");
         return GRIB_WRONG_STEP_UNIT;
@@ -672,11 +672,11 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return ret;
 
     long end_step_unit;
-    if (force_step_units == 255) {
+    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
         if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
             return ret;
 
-        if (end_step_unit == 255)
+        if (Unit{end_step_unit} == Unit{Unit::Value::MISSING})
             end_step_unit = Unit{Unit::Value::HOUR}.value<long>();
     }
     else {

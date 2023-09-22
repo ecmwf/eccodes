@@ -150,7 +150,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
     if ((ret= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
-    if (step_units == 255) {
+    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
             return ret;
     }
@@ -291,7 +291,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         throw std::runtime_error("Failed to get stepUnits");
-    if (step_units == 255) {
+    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
             return ret;
     }
@@ -324,7 +324,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         throw std::runtime_error("Failed to get stepUnits");
-    if (step_units == 255) {
+
+    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
             return ret;
     }
