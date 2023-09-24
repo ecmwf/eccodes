@@ -24,13 +24,13 @@ namespace {{ c.nested_namespaces }} {
 
 class {{ c.name }} : public {{ c.super }} {
 public:
-    {{ c.name }}({{c.constructor.args_declaration}});
+    {{ c.name }}({{c.constructor.cpp_args}});
     ~{{ c.name }}() = default;
 
 private:
     // Inherited functions
     {%- for m in c.inherited_methods %}
-    {{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }}) {{ m.const }} override;{% endfor %}
+    {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) {{ m.const }} override;{% endfor %}
 
     // Members
     {% for m in c.members %}{{ m.mutable }} {{ m.type }} {{ m.name }}{{ m.array }}{{ m.default_value }};
@@ -41,7 +41,7 @@ private:
 // Private methods
 //{% for m in c.private_methods %}
 //{{ m.template }}
-//{{ m.return_type }} {{ m.name }}({{ m.args_declaration }}) const;{% endfor %}
+//{{ m.return_type }} {{ m.name }}({{ m.cpp_args }}) const;{% endfor %}
 
 {% for n in c.namespaces_reversed %}} // namespace {{ n }}
 {%- endfor %}

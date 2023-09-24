@@ -69,4 +69,23 @@ std::string toString(AccessorName const& name)
     return {buffer};
 }
 
+// Conversion helpers...
+GribStatus toDouble(AccessorName const& name, double& value)
+{
+    value = toDouble(name);
+    return GribStatus::SUCCESS;
+}
+
+GribStatus toLong(AccessorName const& name, long& value)
+{
+    value = toLong(name);
+    return GribStatus::SUCCESS;
+}
+
+GribStatus toString(AccessorName const& name, std::string& value)
+{
+    value = toString(name);
+    return GribStatus::SUCCESS;
+}
+
 }

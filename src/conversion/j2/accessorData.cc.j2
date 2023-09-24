@@ -21,57 +21,35 @@
 
 namespace {{ c.nested_namespaces }} {
 
-// start top level code '-start-'
-{% for line in c.top_level_code['-start-'] %}{{ line }}
-{% endfor %}
+// Global section - START
+{{ c.global_function.body }}
+// Global section - END
 
 {% for m in c.static_functions %}
-// start top level code '{{ m.transformed_name }}'
-{% for line in c.top_level_code[m.name] %}{{ line }}
-{% endfor %}
-static {{ m.return_type }} {{ m.transformed_name }}({{ m.args_declaration }}) {
+static {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) {
         {{ m.body }}
  }
  {% endfor %}
 
-// top level code 'init'
-
-{% for line in c.top_level_code['init'] %}{{ line }}
-{% endfor %}
-{{ c.name }}::{{ c.name }}({{c.constructor.args_declaration}}) : {{ c.super }}({{ c.constructor.call_args }}){
+{{ c.name }}::{{ c.name }}({{c.constructor.cpp_args}}) : {{ c.super }}({{ c.constructor.call_args }}){
        {{ c.constructor.body }}
 }
 
-// top level code 'destroy'
-{% for line in c.top_level_code['destroy'] %}{{ line }}
-{% endfor %}
 // {{ c.name }}::~{{ c.name }}() { {{ c.destructor.body }} }
 
 {% for m in c.inherited_methods %}
-// top level code '{{ m.name }}'
-{% for line in c.top_level_code[m.name] %}{{ line }}
-{% endfor %}
-
-// inherited methods {{ m.name }}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.args_declaration }}) {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.cpp_args }}) {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
 
 {% for m in c.private_methods %}
-// top level code '{{ m.name }}'
-{% for line in c.top_level_code[m.name] %}{{ line }}
-{% endfor %}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.args_declaration }})  {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.cpp_args }})  {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
-
-// top level code '-end-'
-{% for line in c.top_level_code['-end-'] %}{{ line }}
-{% endfor %}
 
 namespace {
 AccessorBuilder<{{ c.name }}> {{ c.name_camel_case }}Builder(AccessorType("{{ c.factory_name }}"));

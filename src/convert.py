@@ -9,10 +9,12 @@ import logging
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+import conversion.convert_data as convert_data
+
 LOG = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--templates", default="j2")
+parser.add_argument("--templates", default="conversion/j2")
 parser.add_argument("--target", default="cpp/converted")
 parser.add_argument("--debug", action="store_true")
 parser.add_argument("path", nargs="+")
@@ -30,6 +32,15 @@ env = Environment(
     undefined=StrictUndefined,
 )
 
+func_pad = 30
+def debug_line(func, text):
+    if len(func) > func_pad:
+        print(f">>>>>")
+        print(f">>>>> PADDING ({func_pad}) TOO SMALL FOR FUNC NAME: {func} - size={len(func)}")
+        print(f">>>>>")
+
+    print(f"{func:{func_pad}}: {text}")
+
 def snake_to_pascal(s):
     return "".join(x.capitalize() for x in s.lower().split("_"))
 
@@ -46,7 +57,14 @@ def transform_function_name(name):
 
     return name
 
-common_includes = ["AccessorUtils/AccessorProxy.h", "AccessorFactory.h"]
+global_function_name = "Global"
+
+common_includes = [
+    "AccessorUtils/AccessorProxy.h", 
+    "AccessorFactory.h", 
+    "AccessorUtils/ConversionHelper.h",
+    "AccessorUtils/GribUtils.h"
+    ]
 
 class Member:
     def __init__(self, s) -> None:
@@ -61,7 +79,7 @@ class Member:
             self._array = ""
 
         self.name = snake_to_camel(self.cname) + "_"
-        print(f"[Member] name={self.name} cname={self.cname}")
+        debug_line("Member", f"name={self.name} cname={self.cname}")
 
         if self.name[0] == "*":
             self.name = self.name[1:]
@@ -101,18 +119,18 @@ class Function:
         self._cargs = []
         self._lines = []
 
-        self._arg_mappings = {}
+        # args may be empty...
+        if isinstance(args, str):
+            for arg in [a.strip() for a in args.split(",")]:
+                if not arg:
+                    continue
+                bits = arg.split()
+                type = " ".join(bits[:-1])
+                name = bits[-1]
+                carg = Arg(name, type)
+                self._cargs.append(carg)
 
-        for arg in [a.strip() for a in args.split(",")]:
-            if not arg:
-                continue
-            bits = arg.split()
-            type = " ".join(bits[:-1])
-            name = bits[-1]
-            carg = Arg(name, type)
-            self._cargs.append(carg)
-
-        print(f"[Function] {self._name}(" + ", ".join([f"{a.type} {a.name}" for a in self._cargs]) + ")" )
+        debug_line("Function", f"{self._name}(" + ", ".join([f"{a.type} {a.name}" for a in self._cargs]) + ")" )
 
     def update_lines(self, lines):
         self._lines = lines
@@ -120,33 +138,15 @@ class Function:
     def is_empty(self):
         return len(self._lines) == 0
 
+    def clear_lines(self):
+        self._lines.clear()
+
     def add_line(self, line):
         self._lines.append(line)
 
     @property
     def name(self):
         return self._name
-
-    @property
-    def transformed_name(self):
-        return snake_to_camel(transform_function_name(self._name))
-
-    @property
-    def transformed_args(self):
-        args = []
-        for arg in self._cargs:
-            arg.name = snake_to_camel(arg.name)
-            args.append(arg)
-
-        return args
-
-    @property
-    def args_declaration(self):
-        return ", ".join([f"{a.type} {a.name}" for a in self.transformed_args])
-
-    @property
-    def call_args(self):
-        return ", ".join([a.name for a in self.transformed_args])
 
     @property
     def args(self):
@@ -177,96 +177,321 @@ class Function:
         if self._name != "destroy":
             self._lines.insert(-1, "throw AccessorException(GRIB_NOT_IMPLEMENTED);")
 
+
+# Note - these substitutions are applied in the order defined below, so dependencies
+#        can be used if required...
+basic_function_substitutions = {
+    # grib_ functions
+    # Note: 1. We treat e.g. grib_get_long and grib_get_long_internal the same...
+    #       2. The first argument (h) may already be stripped so we optionally match it
+    #       3. The second argument may be a string literal, which needs to convert to an AccessorName object
+    #
+    # First, let's convert the second argument to an AccessorName if required
+    r"\b(grib_get_\w+)(_internal)?\(\s*(h\s*,\s*)?\s*(\".*\")": r"\1\2(\3AccessorName(\4)",
+    # Now, complete the conversion - note we remove any references
+    r"\b([\w\s]+)\s*=\s*grib_get_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = toLong(\4, \5)",
+    r"\b([\w\s]+)\s*=\s*grib_get_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = toDouble(\4, \5)",
+    r"\b([\w\s]+)\s*=\s*grib_get_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = toString(\4, \5)",
+
+    # C functions
+    r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
+    r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
+    # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
+    r"\bsnprintf\(([\w\d]+),\s*\d+,\s*(\")": r"\1 = fmtString(\2"
+}
+
+# NOTE - Don't access this dictionary directly - use cpp_arg_type_for() below...
+carg_type_transforms = {
+    "grib_accessor*"    : None,
+    "grib_handle*"      : None,
+    "char*"             : "std::string"
+}
+
+# Returns the equivalent C++ type, which could be None
+def cpp_arg_type_for(ctype):
+    for k, v in carg_type_transforms.items():
+        if k == ctype:
+            return v
+    
+    # Return None for grib_accessor_*
+    m = re.match(r"grib_accessor_", ctype)
+    if m:
+        debug_line("cpp_arg_type_for", f"Type for {ctype} is None")
+        return None
+
+    # Pointer types
+    m = re.match(r"([\w\d]+)\*", ctype)
+    if m:
+        debug_line("cpp_arg_type_for", f"Type for {ctype} is {m.group(1)}")
+        return m.group(1)
+
+    debug_line("cpp_arg_type_for", f"Type for {ctype} is {ctype}")
+    return ctype
+
+
+# This class is the bridge between the Function class which holds the code
+# and the sub-classes which specialise behaviour for class methods and static procs
+# Behaviour that is common across all function types is defined here...
 class FunctionDelegate:
     def __init__(self, function):
         self._function = function
+        # maps carg to cpparg
+        self._arg_map = self.transform_args()
 
     def __getattr__(self, name):
         return getattr(self._function, name)
 
-GribStatusConverter = {
-    "GRIB_SUCCESS": "GribStatus::SUCCESS", 
-    "GRIB_END_OF_FILE": "GribStatus::END_OF_FILE", 
-    "GRIB_INTERNAL_ERROR": "GribStatus::INTERNAL_ERROR", 
-    "GRIB_BUFFER_TOO_SMALL": "GribStatus::BUFFER_TOO_SMALL", 
-    "GRIB_NOT_IMPLEMENTED": "GribStatus::NOT_IMPLEMENTED", 
-    "GRIB_7777_NOT_FOUND": "GribStatus::VALUE_7777_NOT_FOUND", 
-    "GRIB_ARRAY_TOO_SMALL": "GribStatus::ARRAY_TOO_SMALL", 
-    "GRIB_FILE_NOT_FOUND": "GribStatus::FILE_NOT_FOUND", 
-    "GRIB_CODE_NOT_FOUND_IN_TABLE": "GribStatus::CODE_NOT_FOUND_IN_TABLE", 
-    "GRIB_WRONG_ARRAY_SIZE": "GribStatus::WRONG_ARRAY_SIZE", 
-    "GRIB_NOT_FOUND": "GribStatus::NOT_FOUND", 
-    "GRIB_IO_PROBLEM": "GribStatus::IO_PROBLEM", 
-    "GRIB_INVALID_MESSAGE": "GribStatus::INVALID_MESSAGE", 
-    "GRIB_DECODING_ERROR": "GribStatus::DECODING_ERROR", 
-    "GRIB_ENCODING_ERROR": "GribStatus::ENCODING_ERROR", 
-    "GRIB_NO_MORE_IN_SET": "GribStatus::NO_MORE_IN_SET", 
-    "GRIB_GEOCALCULUS_PROBLEM": "GribStatus::GEOCALCULUS_PROBLEM", 
-    "GRIB_OUT_OF_MEMORY": "GribStatus::OUT_OF_MEMORY", 
-    "GRIB_READ_ONLY": "GribStatus::READ_ONLY", 
-    "GRIB_INVALID_ARGUMENT": "GribStatus::INVALID_ARGUMENT", 
-    "GRIB_NULL_HANDLE": "GribStatus::NULL_HANDLE", 
-    "GRIB_INVALID_SECTION_NUMBER": "GribStatus::INVALID_SECTION_NUMBER", 
-    "GRIB_VALUE_CANNOT_BE_MISSING": "GribStatus::VALUE_CANNOT_BE_MISSING", 
-    "GRIB_WRONG_LENGTH": "GribStatus::WRONG_LENGTH", 
-    "GRIB_INVALID_TYPE": "GribStatus::INVALID_TYPE", 
-    "GRIB_WRONG_STEP": "GribStatus::WRONG_STEP", 
-    "GRIB_WRONG_STEP_UNIT": "GribStatus::WRONG_STEP_UNIT", 
-    "GRIB_INVALID_FILE": "GribStatus::INVALID_FILE", 
-    "GRIB_INVALID_GRIB": "GribStatus::INVALID_GRIB", 
-    "GRIB_INVALID_INDEX": "GribStatus::INVALID_INDEX", 
-    "GRIB_INVALID_ITERATOR": "GribStatus::INVALID_ITERATOR", 
-    "GRIB_INVALID_KEYS_ITERATOR": "GribStatus::INVALID_KEYS_ITERATOR", 
-    "GRIB_INVALID_NEAREST": "GribStatus::INVALID_NEAREST", 
-    "GRIB_INVALID_ORDERBY": "GribStatus::INVALID_ORDERBY", 
-    "GRIB_MISSING_KEY": "GribStatus::MISSING_KEY", 
-    "GRIB_OUT_OF_AREA": "GribStatus::OUT_OF_AREA", 
-    "GRIB_CONCEPT_NO_MATCH": "GribStatus::CONCEPT_NO_MATCH", 
-    "GRIB_HASH_ARRAY_NO_MATCH": "GribStatus::HASH_ARRAY_NO_MATCH", 
-    "GRIB_NO_DEFINITIONS": "GribStatus::NO_DEFINITIONS", 
-    "GRIB_WRONG_TYPE": "GribStatus::WRONG_TYPE", 
-    "GRIB_END": "GribStatus::END", 
-    "GRIB_NO_VALUES": "GribStatus::NO_VALUES", 
-    "GRIB_WRONG_GRID": "GribStatus::WRONG_GRID", 
-    "GRIB_END_OF_INDEX": "GribStatus::END_OF_INDEX", 
-    "GRIB_NULL_INDEX": "GribStatus::NULL_INDEX", 
-    "GRIB_PREMATURE_END_OF_FILE": "GribStatus::PREMATURE_END_OF_FILE", 
-    "GRIB_INTERNAL_ARRAY_TOO_SMALL": "GribStatus::INTERNAL_ARRAY_TOO_SMALL", 
-    "GRIB_MESSAGE_TOO_LARGE": "GribStatus::MESSAGE_TOO_LARGE", 
-    "GRIB_CONSTANT_FIELD": "GribStatus::CONSTANT_FIELD", 
-    "GRIB_SWITCH_NO_MATCH": "GribStatus::SWITCH_NO_MATCH", 
-    "GRIB_UNDERFLOW": "GribStatus::UNDERFLOW", 
-    "GRIB_MESSAGE_MALFORMED": "GribStatus::MESSAGE_MALFORMED", 
-    "GRIB_CORRUPTED_INDEX": "GribStatus::CORRUPTED_INDEX", 
-    "GRIB_INVALID_BPV": "GribStatus::INVALID_BPV", 
-    "GRIB_DIFFERENT_EDITION": "GribStatus::DIFFERENT_EDITION", 
-    "GRIB_VALUE_DIFFERENT": "GribStatus::VALUE_DIFFERENT", 
-    "GRIB_INVALID_KEY_VALUE": "GribStatus::INVALID_KEY_VALUE", 
-    "GRIB_STRING_TOO_SMALL": "GribStatus::STRING_TOO_SMALL", 
-    "GRIB_WRONG_CONVERSION": "GribStatus::WRONG_CONVERSION", 
-    "GRIB_MISSING_BUFR_ENTRY": "GribStatus::MISSING_BUFR_ENTRY", 
-    "GRIB_NULL_POINTER": "GribStatus::NULL_POINTER", 
-    "GRIB_ATTRIBUTE_CLASH": "GribStatus::ATTRIBUTE_CLASH", 
-    "GRIB_TOO_MANY_ATTRIBUTES": "GribStatus::TOO_MANY_ATTRIBUTES", 
-    "GRIB_ATTRIBUTE_NOT_FOUND": "GribStatus::ATTRIBUTE_NOT_FOUND", 
-    "GRIB_UNSUPPORTED_EDITION": "GribStatus::UNSUPPORTED_EDITION", 
-    "GRIB_OUT_OF_RANGE": "GribStatus::OUT_OF_RANGE", 
-    "GRIB_WRONG_BITMAP_SIZE": "GribStatus::WRONG_BITMAP_SIZE", 
-    "GRIB_FUNCTIONALITY_NOT_ENABLED": "GribStatus::FUNCTIONALITY_NOT_ENABLED", 
-    "GRIB_VALUE_MISMATCH": "GribStatus::VALUE_MISMATCH", 
-    "GRIB_DOUBLE_VALUE_MISMATCH": "GribStatus::DOUBLE_VALUE_MISMATCH", 
-    "GRIB_LONG_VALUE_MISMATCH": "GribStatus::LONG_VALUE_MISMATCH", 
-    "GRIB_BYTE_VALUE_MISMATCH": "GribStatus::BYTE_VALUE_MISMATCH", 
-    "GRIB_STRING_VALUE_MISMATCH": "GribStatus::STRING_VALUE_MISMATCH", 
-    "GRIB_OFFSET_MISMATCH": "GribStatus::OFFSET_MISMATCH", 
-    "GRIB_COUNT_MISMATCH": "GribStatus::COUNT_MISMATCH", 
-    "GRIB_NAME_MISMATCH": "GribStatus::NAME_MISMATCH", 
-    "GRIB_TYPE_MISMATCH": "GribStatus::TYPE_MISMATCH", 
-    "GRIB_TYPE_AND_VALUE_MISMATCH": "GribStatus::TYPE_AND_VALUE_MISMATCH", 
-    "GRIB_UNABLE_TO_COMPARE_ACCESSORS": "GribStatus::UNABLE_TO_COMPARE_ACCESSORS", 
-    "GRIB_ASSERTION_FAILURE": "GribStatus::ASSERTION_FAILURE", 
-}
+    # We'll assume int means GribStatus
+    @property
+    def return_type(self):
+        if self._return_type == "int":
+            debug_line("return_type", f"Setting {self._name} return type to GribStatus")
+            return "GribStatus"
+        else:
+            return super().return_type()
 
+    @property
+    def cpp_args(self):
+        debug_line("cpp_args", f"FunctionDelegate {self._name}")
+        return ", ".join([f"{a.type} {a.name}" for a in self.transformed_args])
+
+    # This is called from __init__ to transform the args from C to C++ and store in the arg_map
+    # Override as required...
+    def transform_args(self):
+        arg_map = {}
+        for arg in self._cargs:
+            cpp_type = cpp_arg_type_for(arg.type)
+            cpp_name = snake_to_camel(arg.name)
+            if cpp_type:
+                arg_map[arg] = Arg(cpp_name, cpp_type)
+            else:
+                arg_map[arg] = None
+
+        return arg_map
+
+    @property
+    def transformed_name(self):
+        debug_line("transformed_name", f"FunctionDelegate {self._name} [IN]")
+        return snake_to_camel(transform_function_name(self._name))
+
+    @property
+    def transformed_args(self):
+        args = []
+        for arg in self._cargs:
+            if arg in self._arg_map:
+                cpp_arg = self._arg_map[arg]
+                if cpp_arg:
+                    debug_line("transformed_args", f"Added arg: {cpp_arg.type} {cpp_arg.name}")
+                    args.append(cpp_arg)
+
+        return args
+
+    def skip_line(self, line):
+        if not line:
+            debug_line("skip_line", f"[Empty]: {line}")
+            return True
+
+        if re.match(r"^\s*/[/\*]?", line):
+            debug_line("skip_line", f"[Comment]: {line}")
+            return True
+        
+        return False
+
+    # Override this to provide any initial conversions before the main update_line runs
+    def update_line_initial_pass(self, line):
+        return line
+
+    def process_return_variables(self, line):
+        # Update any well know return values
+        ret = "GribStatus"
+        if self.return_type == ret:
+            line_b4 = line
+            line,count = re.subn(r"\bint\b(\s+err\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
+            if count:
+                debug_line("process_return_variables", f"return values [before]: {line_b4}")
+                debug_line("process_return_variables", f"return values [after ]: {line}")
+            line_b4 = line
+            line,count = re.subn(r"(\(\s*err\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
+            if count:
+                debug_line("process_return_variables", f"return values [before]: {line_b4}")
+                debug_line("process_return_variables", f"return values [after ]: {line}")
+
+        return line
+                
+    # Find variable declarations with assignments, e.g. char* buf = "Data"; and then:
+    # 1. Update the type if required / delete the line if no longer valid
+    # 2. Store in the arg_map for future reference
+    def process_variable_declarations(self, line):
+        line = self.process_return_variables(line)
+
+        m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*=", line)
+        if m:
+            carg = Arg(m.group(2), m.group(1))
+            cpp_type = cpp_arg_type_for(carg.type)
+            if not cpp_type:
+                debug_line("process_variable_declarations", f"Found var declaration to delete - adding to dict: {carg.type} {carg.name}")
+                self._arg_map[carg] = None
+                debug_line("process_variable_declarations", f"--> deleting: {line}")
+                return "" #None
+            else:
+                cpp_arg = Arg(snake_to_camel(carg.name), cpp_type)
+                self._arg_map[carg] = cpp_arg
+                debug_line("process_variable_declarations", f"Found var declaration - adding to dict: carg: {carg.type} {carg.name} cpp_arg: {cpp_arg.type} {cpp_arg.name} ")
+        return line
+
+    # Find variable declarations for char[] types and convert to std::string
+    def process_string_declarations(self, line):
+        m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*(\[\d*\])\s*=", line)
+        if m:
+            carg = Arg(m.group(2), f"{m.group(1)}{m.group(3)}")
+            cpp_arg = Arg(snake_to_camel(carg.name), "std::string")
+            debug_line("process_string_declarations", f"Found string declaration to transform - adding to dict: {carg.type} {carg.name}")
+            self._arg_map[carg] = cpp_arg
+            debug_line("process_string_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [before]: {line}")
+            line = re.sub(r"([\w\d]+\**)\s+([\w\d]+)\s*(\[\d*\])\s*=", f"{cpp_arg.type} {cpp_arg.name} =", line)
+            debug_line("process_string_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
+        return line
+    
+    # Remove any variables that have been marked for deletion
+    def process_deleted_variables(self, line):
+        # Find any deleted variables that are being assigned to, and delete the line
+        m = re.match(r"^\s*\**([\w\d]+)\s*=", line)
+        if m:
+            debug_line("process_deleted_variables", f"(**)-(**)-(**)-(**)-(**) FOUND VAR ASSIGNMENT: var={m.group(1)}: {line}")
+            for carg, cpp_arg in self._arg_map.items():
+                if carg.name == m.group(1) and not cpp_arg:
+                    debug_line("process_deleted_variables", f"(**)-(**)-(**)-(**)-(**) VAR ASSIGNMENT marked for delete, var={m.group(1)} - deleting: {line}")
+                    line = f"/* {m.group(1)} removed */ // " + line
+                    return line
+        
+        # Remove any deleted vars that remain (i.e. as an argument to a function call)
+        for carg, cpp_arg in self._arg_map.items():
+            m = re.match(rf"^.*\b{carg.name}\b\s*,*", line)
+            if m and not cpp_arg:
+                line_b4 = line
+                line = re.sub(rf"[&\*]?\b{carg.name}(->)?\b\s*,*", "", line)
+                debug_line("process_deleted_variables", f"{self._name} removing arg={carg.name} [before]: {line_b4}")
+                debug_line("process_deleted_variables", f"{self._name} removing arg={carg.name} [after ]: {line}")
+
+        return line
+
+    def apply_variable_transforms(self, line):
+        # Assume sizeof(x)/sizeof(*x) is now a container with a size() member...
+        line_b4 = line
+        line, count = re.subn(r"\b(.*=\s+)sizeof\((.*)\)\s*/\s*sizeof\(\*\2\);", r"\1\2.size();", line)
+        if count:
+            debug_line("apply_variable_transforms", f"size transform [before]: {line_b4}")
+            debug_line("apply_variable_transforms", f"size transform [after ]: {line}")
+
+        return line
+
+    def process_remaining_cargs(self, line):
+        # Update any C Args that remain (i.e. as an argument to a function call)
+        # This will also remove any unnecessary pointers/refs
+        for carg, cpp_arg in self._arg_map.items():
+            m = re.search(rf"[&\*]?\b{carg.name}\b(\s*,*)", line)
+            if m and cpp_arg:
+                line = re.sub(m.re, rf"{cpp_arg.name}{m.group(1)}", line)
+                debug_line("process_remaining_cargs", f"{self._name} subbing \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
+
+        return line
+            
+    def convert_grib_values(self, line):
+        for k, v in convert_data.GribStatusConverter.items():
+            line, count = re.subn(rf"{k}", rf"{v}", line)
+            if count:
+                debug_line("convert_grib_values", f"{self._name} replaced {k} with {v} [after ]: {line}")
+        
+        for k, v in convert_data.GribTypeConverter.items():
+            line, count = re.subn(rf"{k}", rf"{v}", line)
+            if count:
+                debug_line("convert_grib_values", f"{self._name} replaced {k} with {v} [after ]: {line}")
+        
+        return line
+        
+    def convert_grib_utils(self, line):
+        for util in convert_data.GribUtilFuncs:
+            m = re.search(rf"\b{util}\b", line)
+            if m:
+                cpp_util = snake_to_camel(transform_function_name(util))
+                line = re.sub(m.re, f"{cpp_util}", line)
+                debug_line("convert_grib_utils", f"{self._name} replaced {util} with {cpp_util} [after ]: {line}")
+
+        return line
+    
+    def apply_function_substitutions(self, line):
+        for k, v in basic_function_substitutions.items():
+            line_b4 = line
+            line, count = re.subn(k, v, line)
+            if count:
+                debug_line("apply_function_substitutions", f"{self._name} [before]: {line_b4}")
+                debug_line("apply_function_substitutions", f"{self._name} [after ]: {line}")
+
+        return line
+
+    # Override this to provide any final conversions after the main update_line runs
+    def update_line_final_pass(self, line):
+        return line
+
+    def update_line(self, line):
+        if self.skip_line(line):
+            return line
+
+        # Note: These apply in order, be careful if re-arranging!
+        line = self.update_line_initial_pass(line)
+        line = self.process_variable_declarations(line)
+        line = self.process_string_declarations(line)
+        line = self.process_deleted_variables(line)
+        # process_deleted_variables may delete/comment the line...
+        if self.skip_line(line):
+            return line
+        line = self.apply_variable_transforms(line)
+        line = self.process_remaining_cargs(line)
+        line = self.convert_grib_values(line)
+        line = self.convert_grib_utils(line)
+        line = self.apply_function_substitutions(line)
+        line = self.update_line_final_pass(line)
+
+        return line
+
+    # This is the main entry point for updating the function body...        
+    # It can be called recursively to update split lines etc
+    def update_body(self, lines):
+        new_lines = []
+
+        for line in lines:
+            if not line:
+                # Assume this is a blank line in the input, so retain it for clarity...
+                new_lines.append(line)
+                continue
+            
+            # Split comma-separated variable definitions into separate lines
+            # We then call ourself recursively for each split line
+            m = re.match(r"^(\s*[\w\d]+\s+)[\w\d]+\s*=\s*[\w\d]+,", line)
+            if m:
+                debug_line("update_body", f"comma-separated vars [before]: {line}")
+                line = line.replace(",", f";\n{m.group(1)}")
+                split_lines = [l for l in line.split("\n")]
+                for line in split_lines:
+                    debug_line("update_body", f"comma-separated vars [after ]: {line}")
+                split_lines = self.update_body(split_lines)
+                new_lines.extend(split_lines)
+                continue
+            
+            line = self.update_line(line)
+            if line:
+                new_lines.append(line)
+
+        return new_lines
+    
+    @property
+    def body(self):
+        debug_line("body", f"-------------------- {self._name} --------------------")
+        lines = self.update_body(self.code)
+        return "\n".join(lines)
+        
+
+# Definition of a class method
 class Method(FunctionDelegate):
     def __init__(self, owner_class, function, const):
         super().__init__(function)
@@ -274,122 +499,16 @@ class Method(FunctionDelegate):
         self._const = const
         self._owner_arg_type = self._owner_class.name
         self._owner_arg_name = pascal_to_camel(self._owner_arg_type)
-        self._args_to_delete = []
-
-
-    @property
-    def args_declaration(self):
-        return ", ".join([f"{a.type} {a.name}" for a in self.transformed_args if a])
-
-    @property
-    def call_args(self):
-        return ", ".join([a.name for a in self.transformed_args if a])
 
     @property
     def const(self):
         return "const" if self._const else ""
 
-    # Whilst parsing, any variables with type defined here will be added to the
-    # associated list, which is then used to delete later instances
-    types_to_delete = {
-        "grib_handle*"
-    }
+    # Override this to provide any initial conversions before the main update_line runs
+    def update_line_initial_pass(self, line):
+        line = self._owner_class.update_class_members(line)
+        return line
 
-    def tidy_lines(self, lines):
-        new_lines = []
-
-        for line in lines:
-            # Split comma-separated variable definitions into separate lines
-            m = re.match(r"^(\s*[\w\d]+\s+)[\w\d]+\s*=\s*[\w\d]+,", line)
-            if m:
-                line_b4 = line
-                line = line.replace(",", f";\n{m.group(1)}")
-                print(f"[tidy_lines] comma-separated vars [before]: {line_b4} (*)---(*)---(*)")
-                print(f"[tidy_lines] comma-separated vars [after ]: {line} (*)---(*)---(*)")
-
-            # Look for variable assignments
-            m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*=", line)
-            if m:
-                # Find any types to delete
-                for type in self.types_to_delete:
-                    if type == m.group(1):
-                        if m.group(2) not in self._args_to_delete:
-                            print(f"[tidy_lines] Found var to delete - adding  : {m.group(1)} {m.group(2)}")
-                            self._args_to_delete.append(m.group(2))
-                            print(f"[tidy_lines] Found var to delete - deleting: {line}")
-                            line = ""
-                            #continue
-
-            # Update (or remove if no longer used) any renamed args
-            for index, carg in enumerate(self.args):
-                arg = self.transformed_args[index]
-                
-                m = re.match(rf"^.*\b{carg.name}\b", line)
-                if m:
-                    line_b4 = line
-                    if arg:
-                        line = re.sub(rf"\b{carg.name}\b", f"{arg.name}", line)
-                    else:
-                        line = f"/* {carg.name} removed */ // " + line
-                    print(f"[tidy_lines] transformed_args {self._name} [before]: {line_b4}")
-                    print(f"[tidy_lines] transformed_args {self._name} [after ]: {line}")
-
-            # Update any well know return values
-            ret = "GribStatus"
-            if self.return_type == ret:
-                line_b4 = line
-                line,count = re.subn(r"\bint\b(\s+err\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
-                if count:
-                    print(f"[tidy_lines] return values [before]: {line_b4}")
-                    print(f"[tidy_lines] return values [after ]: {line}")
-                line_b4 = line
-                line,count = re.subn(r"(\(\s*err\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
-                if count:
-                    print(f"[tidy_lines] return values [before]: {line_b4}")
-                    print(f"[tidy_lines] return values [after ]: {line}")
-
-            new_lines.append(line)
-
-        return new_lines
-
-    # Perform any final tidy up...
-    def final_tidy_lines(self, lines):
-        new_lines = []
-
-        for line in lines:
-            # Remove any remaining "vars_to_delete"
-            for arg in self._args_to_delete:
-                m = re.match(rf"^.*\b({arg}\s*,*\s*)", line)
-                if m:
-                    line_b4 = line
-                    line = line.replace(f"{m.group(1)}", "")
-                    print(f"[final_tidy_lines] deleted arg {arg} [before]: {line_b4}")
-                    print(f"[final_tidy_lines] deleted arg {arg} [after ]: {line}")
-
-            new_lines.append(line)
-
-        return new_lines
-
-
-    @property
-    def body(self):
-        this = [r"\bself\b"]
-
-        # Don't need to add the first arg (grib_accessor* a) as this is
-        # removed by the Inherited Method
-        '''
-        # Look for this-> or self-> or a->
-        ptr_type_name = self._owner_class.type_name + "*"
-        if len(self.args) > 0:
-            arg = self.args[0]
-            if arg.type == ptr_type_name:
-                this.append(rf"\b{arg.name}\b")
-        '''
-
-        lines = self.tidy_lines(self.code)
-        lines = [self._owner_class.tidy_line(n, this) for n in lines]
-        lines = self.final_tidy_lines(lines)
-        return "\n".join(lines)
 
 # Represent a function signature
 class FuncSig:
@@ -479,14 +598,20 @@ class InheritedMethod(Method):
             return self.func_sig_conversion[self._name].name
         else:
             return super().transformed_name()
-        
-    @property
-    def transformed_args(self):
+    
+    def transform_args(self):
         if self._name in self.func_sig_conversion:
-            return self.func_sig_conversion[self._name].args
-        else:
-            return super().transformed_args()
+            arg_map = {}
+            for index, arg in enumerate(self._cargs):
+                cpp_arg = self.func_sig_conversion[self._name].args[index]
+                if cpp_arg:
+                    arg_map[arg] = cpp_arg
+                else:
+                    arg_map[arg] = None
 
+            return arg_map
+        
+        return super().transform_args()
 
 class PrivateMethod(Method):
     pass
@@ -494,38 +619,44 @@ class PrivateMethod(Method):
 class DestructorMethod(Method):
     pass
 
-# Override to combine factory and constructor args
 class ConstructorMethod(Method):
 
+    # From: init(grib_accessor* a, const long len, grib_arguments* arg)
+    # To:   CONSTRUCTOR(AccessorInitData const& initData)
+    def transform_args(self):
+        arg_map = {}
+        for arg in self._cargs:
+            if arg.type == "grib_arguments*":
+                arg_map[arg] = Arg("initData", "AccessorInitData const&")
+            else:
+                arg_map[arg] = None
+
+        return arg_map
+        
     @property
-    def transformed_args(self):
-        return [Arg("initData", "AccessorInitData const&")]
+    def call_args(self):
+        return ", ".join([a.name for a in self.transformed_args if a])
 
-    def tidy_lines(self, lines):
-        result = []
-        for line in lines:
-            m = re.match(rf"\bself->(\w+)\b", line)
-            if m:
-                name = snake_to_camel(m.group(1))
-                line = re.sub(rf"\bself->(\w+)\b", rf"{name}_", line)
+    def update_line_initial_pass(self, line):
+        
+        line = re.sub(rf"\ba->(\w+)\b", rf"/* TO DO */ //\1", line)
+        line = re.sub(r"\ba\b", f"*this", line)
 
-            line = re.sub(rf"\ba->(\w+)\b", rf"/* TO DO */ //\1", line)
-            line = re.sub(r"\ba\b", f"*this", line)
+        # Now transform the argument getters
+        line = re.sub(rf"\bgrib_arguments_get_name\(h, arg, (\d+)\)", rf"AccessorName(std::get<std::string>(initData[\1].second))", line)
+        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(h, arg, (\d+)\)", rf"std::get<\1>(initData[\2].second)", line)
 
-            # Now transform the argument getters
-            line = re.sub(rf"\bgrib_arguments_get_name\(h, arg, (\d+)\)", rf"AccessorName(std::get<std::string>(initData[\1].second))", line)
-            line = re.sub(rf"\bgrib_arguments_get_(\w+)\(h, arg, (\d+)\)", rf"std::get<\1>(initData[\2].second)", line)
+        return super().update_line_initial_pass(line)
 
-            result.append(line)
-
-        return result
 
 class CompareMethod(Method):
-    @property
-    def args_declaration(self):
-        return "const Accessor* other"
+    pass
+    '''
+    def transform_args(self):
+        pass
+        #return "const Accessor* other"
 
-    def tidy_lines(self, lines):
+    def update_body(self, lines):
         args = self.args
         assert len(args) == 2
         assert args[0].type == "grib_accessor*"
@@ -541,6 +672,7 @@ class CompareMethod(Method):
             result.append(line)
 
         return result
+    '''
 
 class DumpMethod(Method):
     @property
@@ -556,15 +688,19 @@ class StaticProc(FunctionDelegate):
         super().__init__(function)
         self._owner_class = owner_class
 
-    def tidy_lines(self, lines):
-        return lines
+    def update_line_final_pass(self, line):
+        line = self._owner_class.update_static_function_calls(line)
+        return line
 
+class GlobalFunction(FunctionDelegate):
+    def __init__(self, owner_class, function):
+        super().__init__(function)
+        self._owner_class = owner_class
+
+    # Overridden as there's no opening and closing { } so don't want to assert!
     @property
-    def body(self):
-        # return "\n".join(self.code)
-        lines = self.tidy_lines(self.code)
-        lines = [self._owner_class.tidy_static_function_line(n) for n in lines]
-        return "\n".join(lines)
+    def code(self):
+        return self._lines
 
 SPECIALISED_METHODS = {
     ("accessor", "compare"): CompareMethod,
@@ -574,20 +710,12 @@ SPECIALISED_METHODS = {
 class Class:
     rename = {}
 
-    substitute_str_top_level = {}
-    substitute_re_top_level = {
-        r"^#define\s+(\w+)\s+(-?\d+)?!(\.|e|E)": r"const long \1 = \2;",
-        r"^#define\s+(\w+)\s+(-?\d+\.\d+([eE]-?\d+)?)": r"const double \1 = \2;",
-        r'\bgrib_inline_strcmp\b': 'strcmp',
-    }
-
     def __init__(
         self,
         *,
         path,
         class_,
         functions,
-        top_level_code,
         includes,
         factory_name,
         super,
@@ -599,7 +727,6 @@ class Class:
         self._class = class_
         # EG: name=ProjStringData, cname=grib_accessor_class_proj_string
         self._name, self._cname = self.tidy_class_name(path)
-        self._top_level_code = top_level_code
 
         self._factory_name = factory_name
         self._members = members
@@ -622,6 +749,14 @@ class Class:
                 self._include_dir = ARGS.target
                 self._top = False
 
+        # Load the patch if it exists
+        try:
+            m = importlib.import_module(f"conversion/patches.{self._cname}")
+            if "func_sig_conversion_patch" in dir(m):
+                self._func_sig_conversion_patch = m.func_sig_conversion_patch
+        except ModuleNotFoundError:
+            self._func_sig_conversion_patch = None
+
     def finalise(self, other_classes):
         self._other_classes = other_classes
 
@@ -634,7 +769,7 @@ class Class:
             if m.type == self.type_name + "*":
                 m.type = self.class_name + "*"
                 # Warn as this is probably NOT what we want!
-                print(f"[finalise] name={self._name} : ***WARNING*** member {m.name}'s type converted from {self.type_name}* to {m.type}")
+                debug_line("finalise", f"name={self._name} : ***WARNING*** member {m.name}'s type converted from {self.type_name}* to {m.type}")
 
         # Classify functions
         self._inherited_methods = []
@@ -686,6 +821,11 @@ class Class:
             if f._return_type == ptr_type_name:
                 f._return_type = self.class_name + "*"
 
+            if name == global_function_name:
+                self._global_function = GlobalFunction(self, f)
+                del self._functions[name]
+                continue
+
             # If first arg starts with ptr_type_name, then it's a private method (as we've already extracted inherited functions)
             if f.args[0].type == ptr_type_name:
                 self._private_methods.append(
@@ -701,7 +841,7 @@ class Class:
 
     def apply_patches(self):
         try:
-            m = importlib.import_module(f"patches.{self._cname}")
+            m = importlib.import_module(f"conversion/patches.{self._cname}")
         except ModuleNotFoundError:
             return
         LOG.info(f"Applying patches for {self._cname}")
@@ -732,14 +872,6 @@ class Class:
 
         if not ok:
             raise Exception(f"Cannot convert method {name}")
-
-    def cannot_convert_top_level(self, name):
-        if name not in self._top_level_code:
-            print(list(self._top_level_code.keys()))
-            raise Exception(f"Cannot convert top level {name}")
-        self._top_level_code[name] = (
-            ["#ifdef CANNOT_CONVERT_CODE"] + self._top_level_code[name] + ["#endif"]
-        )
 
     def mark_mutable(self, name):
         ok = False
@@ -773,14 +905,6 @@ class Class:
     @property
     def super(self):
         return self._super
-
-    @property
-    def top_level_code(self):
-        tidy_top_level_code = defaultdict(list)
-        for func_name in self._top_level_code:
-            tidy_top_level_code[func_name] = [self.tidy_top_level(line) for line in self._top_level_code[func_name]]
-        return tidy_top_level_code
-        #return self._top_level_code
 
     @property
     def members(self):
@@ -834,6 +958,10 @@ class Class:
     @property
     def namespaces_reversed(self):
         return reversed(self.namespaces)
+
+    @property
+    def global_function(self):
+        return self._global_function
 
     @property
     def constructor(self):
@@ -906,7 +1034,7 @@ class Class:
         print(f"\n[dump_header] [IN] {self._name}")
         template = env.get_template(f"{self._class}Data.h.j2")
         self.save("h", template.render(c=self))
-        print(f"[dump_header] [IN] {self._name}")
+        debug_line("dump_header", f"[IN] {self._name}")
 
     def dump_body(self):
         print(f"\n[dump_body] [IN] {self._name}")
@@ -926,97 +1054,64 @@ class Class:
             return text
 
         self.save("cc", tidy_more(template.render(c=self)))
-        print(f"[dump_body] [OUT] {self._name}")
+        debug_line("dump_body", f"[OUT] {self._name}")
 
-
-    def tidy_line(self, line, this=[]):
+    def update_class_members(self, line):
         line_b4 = line
         line,count = re.subn(r"\bsuper->\b", f"{self.super}::", line)
         if count:
-            print(f"[TIDY] begin [before]: {line_b4}")
-            print(f"[TIDY] begin [after ]: {line}")
+            debug_line("update_class_members", f"begin [before]: {line_b4}")
+            debug_line("update_class_members", f"begin [after ]: {line}")
 
         accessor_variable_name = pascal_to_camel(self._name)
 
-        for n in this:
+        for n in [r"\bself\b"]:
             line_b4 = line
             line,count = re.subn(n, f"{accessor_variable_name}", line)
             if count:
-                print(f"[TIDY] this [before]: {line_b4}")
-                print(f"[TIDY] this [after ]: {line}")
-
-        '''
-        if re.match(rf"\bgrib_handle\*", line):
-            print(f"[TIDY] deleting: {line}")
-            line = ""
-        '''
+                debug_line("update_class_members", f"this [before]: {line_b4}")
+                debug_line("update_class_members", f"this [after ]: {line}")
 
         if re.match(rf".*\b{accessor_variable_name}\s+=", line):
-            print(f"[TIDY] deleting: {line}")
+            debug_line("update_class_members", f"deleting: {line}")
             line = ""
 
         if re.match(rf".*\bsuper\s+=\s+\*\({accessor_variable_name}->cclass->super\)", line):
-            print(f"[TIDY] deleting: {line}")
+            debug_line("update_class_members", f"deleting: {line}")
             line = ""
-
-        # Convert all GRIB_ status values
-        for k, v in GribStatusConverter.items():
-            line_b4 = line
-            line, count = re.subn(k, v, line)
-            if count:
-                print(f"[TIDY] GRIB_STATUS [before]: {line_b4}")
-                print(f"[TIDY] GRIB_STATUS [after ]: {line}")
-
-        for k, v in self.substitute_re.items():
-            line_b4 = line
-            line, count = re.subn(k, v, line)
-            if count:
-                print(f"[TIDY] substitute_re [before]: {line_b4}")
-                print(f"[TIDY] substitute_re [after ]: {line}")
 
         for m in self.members_in_hierarchy:
             line_b4 = line
             line,count = re.subn(rf"\b{accessor_variable_name}->{m.cname}\b", rf"{m.name}", line)
             if(count):
-                print(f"[TIDY] members_in_hierarchy [before]: {line_b4}")
-                print(f"[TIDY] members_in_hierarchy [after ]: {line}")
+                debug_line("update_class_members", f"members_in_hierarchy [before]: {line_b4}")
+                debug_line("update_class_members", f"members_in_hierarchy [after ]: {line}")
 
         for m in self._private_methods:
             name = m.name
             line_b4 = line
             line,count = re.subn(rf"\b{name}\s*\(\s*([^,]+),", f"{accessor_variable_name}.{name}(", line)
             if(count):
-                print(f"[TIDY] _private_methods [before]: {line_b4}")
-                print(f"[TIDY] _private_methods [after ]: {line}")
-
-        m = re.match(r"\s*\breturn\s+(GRIB_\w*)\s*;", line)
-        if m:
-            if m.group(1).startswith("GRIB_TYPE_"):
-                # OK
-                pass
-            elif m.group(1) != "GRIB_SUCCESS":
-                line = f"throw AccessorException({m.group(1)});"
+                debug_line("update_class_members", f"_private_methods [before]: {line_b4}")
+                debug_line("update_class_members", f"_private_methods [after ]: {line}")
 
         return line
 
-    def tidy_static_function_line(self, line):
+    def update_static_function_calls(self, line):
         for m in self._static_functions:
             name = m.name
-            line = re.sub(rf"\b{name}\s*\(", f"{snake_to_camel(transform_function_name(name))}(", line)
+            line_b4 = line
+            line,count = re.subn(rf"\b{name}\s*\(", f"{snake_to_camel(transform_function_name(name))}(", line)
+            if(count):
+                debug_line("update_static_function_calls", f"name={name} [before]: {line_b4}")
+                debug_line("update_static_function_calls", f"name={name} [after ]: {line}")
 
         return line
 
     def tidy_top_level(self, line):
-        #for k, v in self.substitute_str_top_level.items():
-        #    line = line.replace(k, v)
-
-        #for k, v in self.substitute_re_top_level.items():
-        #    line = re.sub(k, v, line)
-
-        # Transform any function pointers in top level structs etc
         for m in self._static_functions:
             name = m.name
-            line = re.sub(rf"\b{name}\b", f"{snake_to_camel(transform_function_name(name))}", line)
+            line,count = re.subn(rf"\b{name}\b", f"{snake_to_camel(transform_function_name(name))}", line)
 
         return line
 
@@ -1056,93 +1151,6 @@ class Accessor(Class):
         "Assert": "Assertion", # Name clash with assert.h
     }
 
-    # Note - these substitutions are applied in the order defined below, so dependencies
-    #        can be used if required...
-    substitute_re = {
-        # r'\bgrib_inline_strcmp\b': 'strcmp',
-        # r"\bgrib_handle_of_accessor\(this\)": "this->handle()",
-
-        # grib_ functions
-        r"\S.*\bgrib_get_string\(.*,\s*(.*),\s*(.*),\s*(.*)\s*\)": r"\2 = toString(\1)",
-
-        # C functions
-        r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
-        r"\bsnprintf\((.*),\s*(.*),\s*(.*)\s*\)": r"\1 = \3",
-        r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
-
-        # Variable types
-        r"\bchar\s+(.*)\[.*;": r"std::string \1;",
-
-        # Assume sizeof(x)/sizeof(*x) is now a container with a size() member...
-        r"\b(.*=\s+)sizeof\((.*)\)\s*/\s*sizeof\(\*\2\);": r"\1\2.size();",
-
-        # Original substitutions - to review
-        r"\bGRIB_TYPE_(\w+)": r"GribType::\1",
-        r"\bget_accessors\(this\)": "this->get_accessors()",
-        r"\bselect_area\(this\)": "this->select_area()",
-        r"\bcompute_size\(this\)": "this->compute_size()",
-        r"\binit_length\(this\)": "this->init_length()",
-        r"\blog_message\(this\)": "this->log_message()",
-        r"\bstring_length\(this\)": "this->string_length()",
-        r"\bget_accessor\(this\)": "this->get_accessor()",
-        r"\bcompute_byte_count\(this\)": "this->compute_byte_count()",
-        r"\bselect_datetime\(this\)": "this->select_datetime()",
-        r"\bapply_thinning\(this\)": "this->apply_thinning()",
-        r"\bconcept_evaluate\(this\)": "this->concept_evaluate()",
-        r"\bnew_bif_trunc\(this\)": "this->new_bif_trunc()",
-        r"\bget_table_codes\(this\)": "this->get_table_codes()",
-
-        r"\bload_table\(this\)": "this->load_table()",
-        r"\bgrib_accessor_get_native_type\(this\)": "this->get_native_type()",
-        r"\bget_native_type\(this\)": "this->get_native_type()",
-        r"\bgrib_byte_offset\((\w+)\s*\)": r"\1->byte_offset()",
-        r"\bgrib_byte_count\((\w+)\s*\)": r"\1->byte_count()",
-        r"\bbyte_offset\((\w+)\s*\)": r"\1->byte_offset()",
-        r"\bbyte_count\((\w+)\s*\)": r"\1->byte_count()",
-        r"\bgrib_pack_string\((\w+)\s*,": r"\1->pack_string(",
-        r"\bgrib_pack_double\((\w+)\s*,": r"\1->pack_double(",
-        r"\bgrib_unpack_string\((\w+)\s*,": r"\1->unpack_string(",
-        r"\bgrib_unpack_double\((\w+)\s*,": r"\1->unpack_double(",
-        r"\bgrib_pack_long\((\w+)\s*,": r"\1->pack_long(",
-        r"\bgrib_unpack_long\((\w+)\s*,": r"\1->unpack_long(",
-        r"\bgrib_unpack_double\((\w+)\s*,": r"\1->unpack_double(",
-        r"\bgrib_unpack_bytes\((\w+)\s*,": r"\1->unpack_bytes(",
-        r"\bgrib_value_count\((\w+)\s*,": r"\1->value_count(",
-        r"\bgrib_update_size\((\w+)\s*,": r"\1->update_size(",
-        r"\bgrib_unpack_string_array\((\w+)\s*,": r"\1->unpack_string_array(",
-        r"\bgrib_is_missing_internal\((\w+)\)": r"\1->is_missing()",
-        r"\bpreferred_size\(this,": r"this->preferred_size(",
-        r"\bvalue_count\((\w+),": r"\1->value_count(",
-        r"\bDebugAssert\b": "DEBUG_ASSERT",
-        r"\bAssert\((.*)\)": r"if (\1) { Assert(false); }",
-        #r"\bAssert\b": "ASSERT",
-        r"\bpack_double\(this,": "this->pack_double(",
-        r"\bunpack_long\(this,": "this->unpack_long(",
-        r"\bunpack_double\(this,": "this->unpack_double(",
-        r"\bpack_string\(this,": "this->pack_string(",
-        r"\bpack_long\(this,": "this->pack_long(",
-        r"\bunpack_string\(this,": "this->unpack_string(",
-        r"\bpack_bytes\(this,": "this->pack_bytes(",
-        r"\bpack_double\(this,": "this->pack_double(",
-        r"\bunpack_double_element\(this,": "this->unpack_double_element(",
-        r"\bunpack<(\w+)>\(this,": r"this->unpack<\1>(",
-        r"\bDBL_MAX\b": "std::numeric_limits<double>::max()",
-        r"\bINT_MAX\b": "std::numeric_limits<int>::max()",
-        r"\b(\w+)::this->": r"\1::",
-        r"\b(\w+)->this->": r"\1::",
-        r"\bgrib_accessor\*": "Accessor*",
-        r"\bthis->cclass->name\b": "this->className()",
-        r"\bgrib_find_accessor\b": "Accessor::find",
-        r"\bgrib_pack_long\(this->(\w+),": r"this->\1->pack_long(",
-        r"\bgrib_value_count\(this->(\w+),": r"this->\1->value_count(",
-        r"\bgrib_pack_bytes\(this->(\w+),": r"this->\1->pack_bytes(",
-        r"\bAccessor::find\(this->handle\(\),": r"Accessor::find(",
-
-        # For now...
-        # r'\b(\w+)\(this,': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)),',
-        # r'\b(\w+)\(this\)': r'\1(const_cast<grib_accessor*>(dynamic_cast<const grib_accessor*>(this)))',
-    }
-
     def class_to_type(self):
         return self.cname.replace("_class_", "_")
 
@@ -1157,8 +1165,15 @@ def parse_file(path):
 
     definitions = {}
     functions = {}
-    top_level_lines = []
-    top_level_code = defaultdict(list)
+
+    # Create a global function for storing global vars etc
+    global_function = functions[global_function_name] = Function(
+        global_function_name,
+        None,
+        [],
+        template,
+    )
+
     LOG.info("Parsing %s", path)
 
     f = open(path, "r")
@@ -1209,8 +1224,6 @@ def parse_file(path):
 
             assert not in_function, line
             function_name = m.group(2)
-            top_level_code[function_name] = [x for x in top_level_lines]
-            top_level_lines = []
 
             in_function = True
             function = functions[function_name] = Function(
@@ -1239,7 +1252,7 @@ def parse_file(path):
         if stripped_line.startswith("#include"):
             if len(includes) == 0:
                 # Forget lines before the first include
-                top_level_lines = []
+                global_function.clear_lines()
             if 'minmax_val' not in line:
                 includes.append(line[9:])
             continue
@@ -1248,16 +1261,14 @@ def parse_file(path):
             template = stripped_line
             continue
 
-        top_level_lines.append(line)
+        global_function.add_line(line)
 
     if definitions:
-        top_level_code["-end-"] = top_level_lines
         class_ = definitions.pop("CLASS")[0]
         accessorImpl = Accessor(
             path=path,
             class_=class_,
             functions=functions,
-            top_level_code=top_level_code,
             includes=includes,
             factory_name=factory_name,
             super=definitions["SUPER"][0] if "SUPER" in definitions else None,
