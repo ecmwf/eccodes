@@ -469,7 +469,10 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
         grib_context_free(c, val);
         return ret;
     }
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not grib_pack %s as long", a->name);
+    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as an integer", a->name);
+    if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
+    }
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -507,7 +510,10 @@ static int pack_double(grib_accessor* a, const double* v, size_t* len)
     if (do_pack_as_long) {
         return pack_double_array_as_long(a, v, len);
     }
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not grib_pack %s as double", a->name);
+    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", a->name);
+    if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
+    }
     return GRIB_NOT_IMPLEMENTED;
 }
 
