@@ -518,7 +518,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 154 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'mass_fraction_of_carbon_dioxide_in_air' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
