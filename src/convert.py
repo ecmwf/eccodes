@@ -33,7 +33,13 @@ env = Environment(
 )
 
 func_pad = 30
+debug_filter = []
+#debug_filter = ["process_variable_declarations", "process_remaining_cargs"]
+
 def debug_line(func, text):
+    if debug_filter and not func in debug_filter:
+        return
+    
     if len(func) > func_pad:
         print(f">>>>>")
         print(f">>>>> PADDING ({func_pad}) TOO SMALL FOR FUNC NAME: {func} - size={len(func)}")
@@ -41,21 +47,22 @@ def debug_line(func, text):
 
     print(f"{func:{func_pad}}: {text}")
 
-def snake_to_pascal(s):
-    return "".join(x.capitalize() for x in s.lower().split("_"))
 
-def snake_to_camel(s):
-    s = snake_to_pascal(s)
-    return s[0].lower() + s[1:]
+def transform_variable_name(name):
+    name_parts = name.split("_")
 
-def pascal_to_camel(s):
-    return s[0].lower() + s[1:]
+    if len(name_parts) > 1:
+        name = name_parts[0] + "".join(x.capitalize() for x in name_parts[1:])
+    
+    return name[0].lower() + name[1:]
 
 def transform_function_name(name):
-    name = re.sub(rf"^get_", f"", name)
-    name = re.sub(rf"^set_", f"", name)
+    name = re.sub(rf"^[gs]et_", f"", name)
+    return transform_variable_name(name)
 
-    return name
+def transform_class_name(name):
+    name = transform_variable_name(name)
+    return name[0].upper() + name[1:]
 
 global_function_name = "Global"
 
@@ -78,7 +85,7 @@ class Member:
             self.cname = bits[-1]
             self._array = ""
 
-        self.name = snake_to_camel(self.cname) + "_"
+        self.name = transform_variable_name(self.cname) + "_"
         debug_line("Member", f"name={self.name} cname={self.cname}")
 
         if self.name[0] == "*":
@@ -197,18 +204,19 @@ basic_function_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
     r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
-    r"\bsnprintf\(([\w\d]+),\s*\d+,\s*(\")": r"\1 = fmtString(\2"
+    r"\bsnprintf\(([\w\d]+),\s*(\d+)\s*,\s*(\")": r"\1 = fmtString(\2,\3"
 }
 
-# NOTE - Don't access this dictionary directly - use cpp_arg_type_for() below...
+# NOTE - Don't access this dictionary directly - use cpp_func_body_arg_type_for() below...
 carg_type_transforms = {
     "grib_accessor*"    : None,
     "grib_handle*"      : None,
     "char*"             : "std::string"
 }
 
+
 # Returns the equivalent C++ type, which could be None
-def cpp_arg_type_for(ctype):
+def cpp_func_body_arg_type_for(ctype):
     for k, v in carg_type_transforms.items():
         if k == ctype:
             return v
@@ -216,25 +224,35 @@ def cpp_arg_type_for(ctype):
     # Return None for grib_accessor_*
     m = re.match(r"grib_accessor_", ctype)
     if m:
-        debug_line("cpp_arg_type_for", f"Type for {ctype} is None")
         return None
 
     # Pointer types
     m = re.match(r"([\w\d]+)\*", ctype)
     if m:
-        debug_line("cpp_arg_type_for", f"Type for {ctype} is {m.group(1)}")
         return m.group(1)
 
-    debug_line("cpp_arg_type_for", f"Type for {ctype} is {ctype}")
     return ctype
 
+# Returns the equivalent C++ type, which could be None
+def cpp_func_sig_arg_type_for(ctype):
+    # The type is almost the same as for the function body, with the 
+    # exception that pointers are converted to references
+    is_reference = ctype[-1] == "*"
+
+    ctype = cpp_func_body_arg_type_for(ctype)
+    if ctype and is_reference:
+        ctype += "&"
+
+    return ctype
 
 # This class is the bridge between the Function class which holds the code
 # and the sub-classes which specialise behaviour for class methods and static procs
 # Behaviour that is common across all function types is defined here...
 class FunctionDelegate:
-    def __init__(self, function):
+    def __init__(self, owner_class, function):
         self._function = function
+        self._owner_class = owner_class
+
         # maps carg to cpparg
         self._arg_map = self.transform_args()
 
@@ -260,8 +278,8 @@ class FunctionDelegate:
     def transform_args(self):
         arg_map = {}
         for arg in self._cargs:
-            cpp_type = cpp_arg_type_for(arg.type)
-            cpp_name = snake_to_camel(arg.name)
+            cpp_type = cpp_func_sig_arg_type_for(arg.type)
+            cpp_name = transform_variable_name(arg.name)
             if cpp_type:
                 arg_map[arg] = Arg(cpp_name, cpp_type)
             else:
@@ -272,7 +290,7 @@ class FunctionDelegate:
     @property
     def transformed_name(self):
         debug_line("transformed_name", f"FunctionDelegate {self._name} [IN]")
-        return snake_to_camel(transform_function_name(self._name))
+        return transform_function_name(self._name)
 
     @property
     def transformed_args(self):
@@ -281,7 +299,7 @@ class FunctionDelegate:
             if arg in self._arg_map:
                 cpp_arg = self._arg_map[arg]
                 if cpp_arg:
-                    debug_line("transformed_args", f"Added arg: {cpp_arg.type} {cpp_arg.name}")
+                    debug_line("transformed_args", f"Added function arg: {cpp_arg.type} {cpp_arg.name}")
                     args.append(cpp_arg)
 
         return args
@@ -324,19 +342,25 @@ class FunctionDelegate:
     def process_variable_declarations(self, line):
         line = self.process_return_variables(line)
 
-        m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*=", line)
+        # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
+        m = re.match(r"^\s*(?!return)(const)?\s*([\w\d]+\**)\s+([\w\d]+)\s*[=;]", line)
+
         if m:
-            carg = Arg(m.group(2), m.group(1))
-            cpp_type = cpp_arg_type_for(carg.type)
+            carg = Arg(m.group(3), m.group(2))
+            cpp_type = cpp_func_body_arg_type_for(carg.type)
             if not cpp_type:
                 debug_line("process_variable_declarations", f"Found var declaration to delete - adding to dict: {carg.type} {carg.name}")
                 self._arg_map[carg] = None
                 debug_line("process_variable_declarations", f"--> deleting: {line}")
                 return "" #None
             else:
-                cpp_arg = Arg(snake_to_camel(carg.name), cpp_type)
+                cpp_arg = Arg(transform_variable_name(carg.name), cpp_type)
+                debug_line("process_variable_declarations", f"Found var declaration - adding to dict: carg: {carg.type} {carg.name}")
                 self._arg_map[carg] = cpp_arg
-                debug_line("process_variable_declarations", f"Found var declaration - adding to dict: carg: {carg.type} {carg.name} cpp_arg: {cpp_arg.type} {cpp_arg.name} ")
+                debug_line("process_variable_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [before]: {line}")
+                line = re.sub(rf"{re.escape(carg.type)}\s*{re.escape(carg.name)}", f"{cpp_arg.type} {cpp_arg.name}", line)
+                debug_line("process_variable_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
+
         return line
 
     # Find variable declarations for char[] types and convert to std::string
@@ -344,7 +368,7 @@ class FunctionDelegate:
         m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*(\[\d*\])\s*=", line)
         if m:
             carg = Arg(m.group(2), f"{m.group(1)}{m.group(3)}")
-            cpp_arg = Arg(snake_to_camel(carg.name), "std::string")
+            cpp_arg = Arg(transform_variable_name(carg.name), "std::string")
             debug_line("process_string_declarations", f"Found string declaration to transform - adding to dict: {carg.type} {carg.name}")
             self._arg_map[carg] = cpp_arg
             debug_line("process_string_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [before]: {line}")
@@ -385,12 +409,48 @@ class FunctionDelegate:
 
         return line
 
+    # Special handling for function pointers: [typedef] RET (*PFUNC)(ARG1, ARG2, ..., ARGN);
+    def process_function_pointers(self, line):
+
+        m = re.match(r"^(?:typedef)\s*([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", line)
+        if m:
+            carg_type = m.group(1)
+            carg_name = m.group(2)
+            cpp_var_type = cpp_func_body_arg_type_for(carg_type)
+            cpp_var_name = transform_variable_name(carg_name)
+
+            # Assume functions returning int will now return GribStatus
+            if cpp_var_type == "int":
+                cpp_var_type = "GribStatus"
+
+            debug_line("process_function_pointers", f"Adding var to arg map: {carg_type} {carg_name} -> {cpp_var_type} {cpp_var_name} [before]: {line}")
+            self._arg_map[Arg(carg_name,carg_type)] = Arg(cpp_var_name,cpp_var_type)
+
+            # Parse the function arg types
+            cpp_arg_types = []
+            for arg_type in [a.strip() for a in m.group(3).split(",")]:
+                cpp_arg_type = cpp_func_sig_arg_type_for(arg_type)
+                if cpp_arg_type:
+                    cpp_arg_types.append(cpp_arg_type)
+            
+            # Apply the transform
+            line = re.sub(rf"([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", f"{cpp_var_type}(*{cpp_var_name})({','.join([a for a in cpp_arg_types])})", line)
+            debug_line("process_function_pointers", f"Transformed line: {line}")
+
+        return line
+    
     def process_remaining_cargs(self, line):
         # Update any C Args that remain (i.e. as an argument to a function call)
         # This will also remove any unnecessary pointers/refs
+        # Note: We ignore anything in quotes!
         for carg, cpp_arg in self._arg_map.items():
-            m = re.search(rf"[&\*]?\b{carg.name}\b(\s*,*)", line)
-            if m and cpp_arg:
+            if not cpp_arg:
+                continue
+
+            # Note: We assume *var and &var should be replaced with var
+            m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
+
+            if m and m.group(0) != cpp_arg.name:
                 line = re.sub(m.re, rf"{cpp_arg.name}{m.group(1)}", line)
                 debug_line("process_remaining_cargs", f"{self._name} subbing \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
 
@@ -413,7 +473,7 @@ class FunctionDelegate:
         for util in convert_data.GribUtilFuncs:
             m = re.search(rf"\b{util}\b", line)
             if m:
-                cpp_util = snake_to_camel(transform_function_name(util))
+                cpp_util = transform_function_name(util)
                 line = re.sub(m.re, f"{cpp_util}", line)
                 debug_line("convert_grib_utils", f"{self._name} replaced {util} with {cpp_util} [after ]: {line}")
 
@@ -426,6 +486,14 @@ class FunctionDelegate:
             if count:
                 debug_line("apply_function_substitutions", f"{self._name} [before]: {line_b4}")
                 debug_line("apply_function_substitutions", f"{self._name} [after ]: {line}")
+
+        # Static function substitutions
+        for f in self._owner_class._static_functions:
+            m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
+            if m:
+                prefix = m.group(1) if m.group(1) is not None else ""
+                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                debug_line("apply_function_substitutions", f"Updating static function {m.group(0)} [after ]: {line}")
 
         return line
 
@@ -446,6 +514,7 @@ class FunctionDelegate:
         if self.skip_line(line):
             return line
         line = self.apply_variable_transforms(line)
+        line = self.process_function_pointers(line)
         line = self.process_remaining_cargs(line)
         line = self.convert_grib_values(line)
         line = self.convert_grib_utils(line)
@@ -486,19 +555,19 @@ class FunctionDelegate:
     
     @property
     def body(self):
-        debug_line("body", f"-------------------- {self._name} --------------------")
+        debug_line("body", f"-------------------- {self._name} [IN] --------------------")
         lines = self.update_body(self.code)
+        debug_line("body", f"-------------------- {self._name} [OUT] -------------------")
         return "\n".join(lines)
         
 
 # Definition of a class method
 class Method(FunctionDelegate):
     def __init__(self, owner_class, function, const):
-        super().__init__(function)
-        self._owner_class = owner_class
+        super().__init__(owner_class, function)
         self._const = const
         self._owner_arg_type = self._owner_class.name
-        self._owner_arg_name = pascal_to_camel(self._owner_arg_type)
+        self._owner_arg_name = transform_variable_name(self._owner_arg_type)
 
     @property
     def const(self):
@@ -685,8 +754,7 @@ class DumpMethod(Method):
 
 class StaticProc(FunctionDelegate):
     def __init__(self, owner_class, function):
-        super().__init__(function)
-        self._owner_class = owner_class
+        super().__init__(owner_class, function)
 
     def update_line_final_pass(self, line):
         line = self._owner_class.update_static_function_calls(line)
@@ -694,8 +762,7 @@ class StaticProc(FunctionDelegate):
 
 class GlobalFunction(FunctionDelegate):
     def __init__(self, owner_class, function):
-        super().__init__(function)
-        self._owner_class = owner_class
+        super().__init__(owner_class, function)
 
     # Overridden as there's no opening and closing { } so don't want to assert!
     @property
@@ -892,7 +959,7 @@ class Class:
     
     @property
     def name_camel_case(self):
-        return pascal_to_camel(self._name)
+        return transform_variable_name(self._name)
 
     @property
     def cname(self):
@@ -997,9 +1064,7 @@ class Class:
 
         name = c_name.replace(self.prefix, "")
 
-        name = snake_to_pascal(name)
-
-        #name += "Data"
+        name = transform_class_name(name)
 
         return self.rename.get(name, name) + "Data", c_name
 
@@ -1063,7 +1128,7 @@ class Class:
             debug_line("update_class_members", f"begin [before]: {line_b4}")
             debug_line("update_class_members", f"begin [after ]: {line}")
 
-        accessor_variable_name = pascal_to_camel(self._name)
+        accessor_variable_name = transform_variable_name(self._name)
 
         for n in [r"\bself\b"]:
             line_b4 = line
@@ -1101,7 +1166,7 @@ class Class:
         for m in self._static_functions:
             name = m.name
             line_b4 = line
-            line,count = re.subn(rf"\b{name}\s*\(", f"{snake_to_camel(transform_function_name(name))}(", line)
+            line,count = re.subn(rf"\b{name}\s*\(", f"{transform_function_name(name)}(", line)
             if(count):
                 debug_line("update_static_function_calls", f"name={name} [before]: {line_b4}")
                 debug_line("update_static_function_calls", f"name={name} [after ]: {line}")
@@ -1111,7 +1176,7 @@ class Class:
     def tidy_top_level(self, line):
         for m in self._static_functions:
             name = m.name
-            line,count = re.subn(rf"\b{name}\b", f"{snake_to_camel(transform_function_name(name))}", line)
+            line,count = re.subn(rf"\b{name}\b", f"{transform_function_name(name)}", line)
 
         return line
 
