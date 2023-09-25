@@ -3,11 +3,11 @@
 codetable[2] datasetVersion "grib2/destine_datasetVersion.table" : dump;
 alias mars.datasetVersion = datasetVersion;
 
-codetable[2] CMIPActivity "grib2/destine_CMIPActivity.table" : dump;
-alias mars.CMIPActivity = CMIPActivity;
+codetable[2] datasetActivity "grib2/destine_datasetActivity.table" : dump;
+alias mars.datasetActivity = datasetActivity;
 
-codetable[2] CMIPExperiment "grib2/destine_CMIPExperiment.table" : dump;
-alias mars.CMIPExperiment = CMIPExperiment;
+codetable[2] datasetExperiment "grib2/destine_datasetExperiment.table" : dump;
+alias mars.datasetExperiment = datasetExperiment;
 
 codetable[2] model "grib2/destine_model.table" : dump;
 alias mars.model = model;
