@@ -33,10 +33,13 @@ env = Environment(
 )
 
 func_pad = 30
+debug_line_enabled = True
 debug_filter = []
-#debug_filter = ["process_variable_declarations", "process_remaining_cargs"]
 
 def debug_line(func, text):
+    if not debug_line_enabled:
+        return
+    
     if debug_filter and not func in debug_filter:
         return
     
@@ -86,7 +89,6 @@ class Member:
             self._array = ""
 
         self.name = transform_variable_name(self.cname) + "_"
-        debug_line("Member", f"name={self.name} cname={self.cname}")
 
         if self.name[0] == "*":
             self.name = self.name[1:]
@@ -136,8 +138,6 @@ class Function:
                 name = bits[-1]
                 carg = Arg(name, type)
                 self._cargs.append(carg)
-
-        debug_line("Function", f"{self._name}(" + ", ".join([f"{a.type} {a.name}" for a in self._cargs]) + ")" )
 
     def update_lines(self, lines):
         self._lines = lines
@@ -270,7 +270,6 @@ class FunctionDelegate:
 
     @property
     def cpp_args(self):
-        debug_line("cpp_args", f"FunctionDelegate {self._name}")
         return ", ".join([f"{a.type} {a.name}" for a in self.transformed_args])
 
     # This is called from __init__ to transform the args from C to C++ and store in the arg_map
@@ -289,7 +288,6 @@ class FunctionDelegate:
 
     @property
     def transformed_name(self):
-        debug_line("transformed_name", f"FunctionDelegate {self._name} [IN]")
         return transform_function_name(self._name)
 
     @property
@@ -299,7 +297,6 @@ class FunctionDelegate:
             if arg in self._arg_map:
                 cpp_arg = self._arg_map[arg]
                 if cpp_arg:
-                    debug_line("transformed_args", f"Added function arg: {cpp_arg.type} {cpp_arg.name}")
                     args.append(cpp_arg)
 
         return args
@@ -349,17 +346,17 @@ class FunctionDelegate:
             carg = Arg(m.group(3), m.group(2))
             cpp_type = cpp_func_body_arg_type_for(carg.type)
             if not cpp_type:
-                debug_line("process_variable_declarations", f"Found var declaration to delete - adding to dict: {carg.type} {carg.name}")
+                debug_line("process_variable_declarations", f"Found var declaration to delete: {carg.type} {carg.name}")
                 self._arg_map[carg] = None
                 debug_line("process_variable_declarations", f"--> deleting: {line}")
                 return "" #None
             else:
                 cpp_arg = Arg(transform_variable_name(carg.name), cpp_type)
-                debug_line("process_variable_declarations", f"Found var declaration - adding to dict: carg: {carg.type} {carg.name}")
+                debug_line("process_variable_declarations", f"Found var declaration to store: {carg.type} {carg.name} -> {cpp_arg.type} {cpp_arg.name}")
                 self._arg_map[carg] = cpp_arg
-                debug_line("process_variable_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [before]: {line}")
-                line = re.sub(rf"{re.escape(carg.type)}\s*{re.escape(carg.name)}", f"{cpp_arg.type} {cpp_arg.name}", line)
-                debug_line("process_variable_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
+                if carg.type != cpp_arg.type or carg.name != cpp_arg.name:
+                    line = re.sub(rf"{re.escape(carg.type)}\s*{re.escape(carg.name)}", f"{cpp_arg.type} {cpp_arg.name}", line)
+                    debug_line("process_variable_declarations", f"Transformed line: {line}")
 
         return line
 
@@ -381,10 +378,10 @@ class FunctionDelegate:
         # Find any deleted variables that are being assigned to, and delete the line
         m = re.match(r"^\s*\**([\w\d]+)\s*=", line)
         if m:
-            debug_line("process_deleted_variables", f"(**)-(**)-(**)-(**)-(**) FOUND VAR ASSIGNMENT: var={m.group(1)}: {line}")
+            debug_line("process_deleted_variables", f"Found var assignment: var={m.group(1)}: {line}")
             for carg, cpp_arg in self._arg_map.items():
                 if carg.name == m.group(1) and not cpp_arg:
-                    debug_line("process_deleted_variables", f"(**)-(**)-(**)-(**)-(**) VAR ASSIGNMENT marked for delete, var={m.group(1)} - deleting: {line}")
+                    debug_line("process_deleted_variables", f"Var assignment marked for delete, var={m.group(1)} - deleting: {line}")
                     line = f"/* {m.group(1)} removed */ // " + line
                     return line
         
@@ -394,8 +391,8 @@ class FunctionDelegate:
             if m and not cpp_arg:
                 line_b4 = line
                 line = re.sub(rf"[&\*]?\b{carg.name}(->)?\b\s*,*", "", line)
-                debug_line("process_deleted_variables", f"{self._name} removing arg={carg.name} [before]: {line_b4}")
-                debug_line("process_deleted_variables", f"{self._name} removing arg={carg.name} [after ]: {line}")
+                debug_line("process_deleted_variables", f"Removing arg={carg.name} [before]: {line_b4}")
+                debug_line("process_deleted_variables", f"Removing arg={carg.name} [after ]: {line}")
 
         return line
 
@@ -452,7 +449,7 @@ class FunctionDelegate:
 
             if m and m.group(0) != cpp_arg.name:
                 line = re.sub(m.re, rf"{cpp_arg.name}{m.group(1)}", line)
-                debug_line("process_remaining_cargs", f"{self._name} subbing \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
+                debug_line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
 
         return line
             
@@ -460,12 +457,12 @@ class FunctionDelegate:
         for k, v in convert_data.GribStatusConverter.items():
             line, count = re.subn(rf"{k}", rf"{v}", line)
             if count:
-                debug_line("convert_grib_values", f"{self._name} replaced {k} with {v} [after ]: {line}")
+                debug_line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
         
         for k, v in convert_data.GribTypeConverter.items():
             line, count = re.subn(rf"{k}", rf"{v}", line)
             if count:
-                debug_line("convert_grib_values", f"{self._name} replaced {k} with {v} [after ]: {line}")
+                debug_line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
         
         return line
         
@@ -1096,13 +1093,10 @@ class Class:
         os.rename(tmp, target)
 
     def dump_header(self):
-        print(f"\n[dump_header] [IN] {self._name}")
         template = env.get_template(f"{self._class}Data.h.j2")
         self.save("h", template.render(c=self))
-        debug_line("dump_header", f"[IN] {self._name}")
 
     def dump_body(self):
-        print(f"\n[dump_body] [IN] {self._name}")
         # Beware of this: https://github.com/pallets/jinja/issues/604
         template = env.get_template(f"{self._class}Data.cc.j2")
 
@@ -1119,7 +1113,6 @@ class Class:
             return text
 
         self.save("cc", tidy_more(template.render(c=self)))
-        debug_line("dump_body", f"[OUT] {self._name}")
 
     def update_class_members(self, line):
         line_b4 = line
