@@ -204,7 +204,7 @@ basic_function_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
     r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
-    r"\bsnprintf\(([\w\d]+),\s*(\d+)\s*,\s*(\")": r"\1 = fmtString(\2,\3"
+    r"\bsnprintf\(([\w\d]+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
 }
 
 # NOTE - Don't access this dictionary directly - use cpp_func_body_arg_type_for() below...

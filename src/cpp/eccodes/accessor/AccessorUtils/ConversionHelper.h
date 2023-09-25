@@ -15,7 +15,10 @@ namespace eccodes::accessor
 //   C++ code:  std::string result = fmtString(128, "+a=%lf +b=%lf", major, minor);
 //
 template <typename... Args>
-std::string fmtString(size_t formatSize, const char* format, Args... args) {
+std::string fmtString(const char* format, Args... args) {
+    // Determine buffer size
+    size_t formatSize = snprintf(nullptr, 0, format, args...);
+
     char buf[formatSize];
     snprintf(buf, formatSize, format, args...);
 
@@ -24,7 +27,7 @@ std::string fmtString(size_t formatSize, const char* format, Args... args) {
 
 // Overload for when the format string doesn't contain any format specifiers, 
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
-std::string fmtString(size_t /* formatSize */, const char* format) {
+std::string fmtString(const char* format) {
     return std::string(format);
 }
 
