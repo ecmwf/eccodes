@@ -326,6 +326,12 @@
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	}
+#Standard deviation of sub-gridscale orography
+'sdor' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
+	}
 #Anisotropy of sub-gridscale orography
 'isor' = {
 	 discipline = 0 ;
@@ -2424,6 +2430,14 @@
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Total sky direct short-wave (solar) radiation at surface
+'fdir' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface direct short-wave radiation, clear sky
 'cdir' = {
 	 discipline = 0 ;
@@ -2431,6 +2445,13 @@
 	 parameterNumber = 61 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Cloud base height
+'cbh' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 2 ;
 	}
 #0 degrees C isothermal level (atm)
 'deg0l' = {
@@ -2753,6 +2774,22 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Surface short-wave (solar) radiation downward clear-sky
+'ssrdc' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface long-wave (thermal) radiation downward clear-sky
+'strdc' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
 'cp' = {
@@ -7584,6 +7621,15 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
+#10 metre wind speed
+'wind' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #Altimeter wave height
 'awh' = {
 	 discipline = 10 ;
@@ -7602,11 +7648,26 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 39 ;
 	}
+#10 metre wind direction
+'dwi' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #2D wave spectra (single)
 'd2fd' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 86 ;
+	}
+#Wave spectral kurtosis
+'wsk' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 43 ;
 	}
 #Benjamin-Feir index
 'bfi' = {
