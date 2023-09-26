@@ -1261,3 +1261,51 @@
  parameterCategory = 140 ;
  parameterNumber = 248 ;
 }
+#Total sky direct solar radiation at surface
+'228021' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 21 ;
+}
+#Surface solar radiation downward clear-sky
+'228129' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 129 ;
+}
+#Surface thermal radiation downward clear-sky
+'228130' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 130 ;
+}
+#Standard deviation of orography
+'160' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 160 ;
+}
+#Cloud base height
+'228023' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 23 ;
+}
+#Wave spectral kurtosis
+'140252' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 252 ;
+}
+#10 metre wind speed
+'140245' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 245 ;
+}
+#10 metre wind direction
+'140249' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 249 ;
+}
