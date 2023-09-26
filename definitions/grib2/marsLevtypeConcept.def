@@ -3,6 +3,7 @@
 'sfc'  = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=8;}
 'o2d'  = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=9;}
 'sfc'  = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=162;}
+'sfc'  = {typeOfFirstFixedSurface=2; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=7; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=8; typeOfSecondFixedSurface=255;}
 'sfc'  = {typeOfFirstFixedSurface=17; typeOfSecondFixedSurface=255;}
