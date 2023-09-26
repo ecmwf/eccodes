@@ -1,0 +1,7 @@
+# Concept destineOrigin
+"DWD"         = { centre=98; subCentre=78; }
+"MeteoFrance" = { centre=98; subCentre=84; }
+"BSC"         = { centre=98; subCentre=1000; }
+"CSC"         = { centre=98; subCentre=1001; }
+"DKRZ"        = { centre=98; subCentre=1002; }
+

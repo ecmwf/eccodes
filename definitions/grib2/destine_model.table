@@ -1,0 +1,7 @@
+0 unknown unknown
+1 IFS IFS with no ocean model
+2 IFS-NEMO IFS with NEMO ocean model
+3 IFS-FESOM IFS with FESOM ocean model
+4 ICON ICON with no ocean model
+5 ICON-NEMO ICON with NEMO ocean model
+6 ICON-FESOM ICON with FESOM ocean model

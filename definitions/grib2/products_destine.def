@@ -1,0 +1,70 @@
+# (C) Copyright 2005- ECMWF.
+
+alias mars.expver = experimentVersionNumber;
+alias parameter.paramId=paramId;
+alias parameter.shortName=shortName;
+alias parameter.units=units;
+alias parameter.name=name;
+
+alias mars.class  = marsClass;
+alias mars.param = paramId;
+alias mars.origin = centre;
+
+# Special rule for level type 103 'Specified height level above ground (m)'
+if(typeOfFirstFixedSurface == 103) {
+    # only the parameters above 10m
+    if (level > 10) {
+        constant heightLevelName = 'hl';
+        alias mars.levtype = heightLevelName;
+        # levelist was unaliased in template.4.horizontal.def so we must have it back
+        alias mars.levelist = level;
+    }
+}
+
+# Define marsType based on type of processed data
+
+concept marsType(unknown) {
+
+   fc = {
+     typeOfProcessedData = 1;
+   }
+   "9" = {
+     typeOfProcessedData = 1;
+   }
+
+   an = {
+     typeOfProcessedData = 0;
+   }
+   "2" = {
+     typeOfProcessedData = 0;
+   }
+
+}
+
+alias mars.type   = marsType;
+
+concept marsStream(unknown) {
+
+    oper = {
+      productDefinitionTemplateNumber = 8;
+    }
+    oper = {
+      productDefinitionTemplateNumber = 0;
+    }
+
+    enda = {
+      productDefinitionTemplateNumber = 11;
+    }
+    enda = {
+      productDefinitionTemplateNumber = 1;
+    }
+} : no_copy;
+
+alias mars.stream = marsStream;
+
+if (stepType is "avg" || stepType is "accum") {
+   alias mars.step = stepRange;
+}
+else {
+   alias mars.step = step;
+}
