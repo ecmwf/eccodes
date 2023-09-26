@@ -207,7 +207,7 @@ basic_function_substitutions = {
     r"\bsnprintf\(([\w\d]+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
 }
 
-# NOTE - Don't access this dictionary directly - use cpp_func_body_arg_type_for() below...
+# NOTE - Don't access this dictionary directly - use cpp_func_body_arg_for() below...
 carg_type_transforms = {
     "grib_accessor*"    : None,
     "grib_handle*"      : None,
@@ -215,35 +215,39 @@ carg_type_transforms = {
 }
 
 
-# Returns the equivalent C++ type, which could be None
-def cpp_func_body_arg_type_for(ctype):
+# Returns the equivalent C++ arg (name and type), which could be None
+def cpp_func_body_arg_for(carg):
     for k, v in carg_type_transforms.items():
-        if k == ctype:
-            return v
-    
+        if k == carg.type:
+            if v is None:
+                return None
+            else:
+                return Arg(transform_variable_name(carg.name), v)
+
     # Return None for grib_accessor_*
-    m = re.match(r"grib_accessor_", ctype)
+    m = re.match(r"grib_accessor_", carg.type)
     if m:
         return None
 
     # Pointer types
-    m = re.match(r"([\w\d]+)\*", ctype)
+    m = re.match(r"([\w\d]+)\*", carg.type)
     if m:
-        return m.group(1)
+        return Arg(transform_variable_name(carg.name), m.group(1))
 
-    return ctype
+    return Arg(transform_variable_name(carg.name), carg.type)
 
-# Returns the equivalent C++ type, which could be None
-def cpp_func_sig_arg_type_for(ctype):
+# Returns the equivalent C++ arg (name and type), which could be None
+def cpp_func_sig_arg_for(carg):
     # The type is almost the same as for the function body, with the 
     # exception that pointers are converted to references
-    is_reference = ctype[-1] == "*"
+    is_reference = carg.type[-1] == "*"
 
-    ctype = cpp_func_body_arg_type_for(ctype)
-    if ctype and is_reference:
-        ctype += "&"
+    cpp_arg = cpp_func_body_arg_for(carg)
+    if cpp_arg and is_reference:
+        cpp_arg.type += "&"
 
-    return ctype
+    return cpp_arg
+
 
 # This class is the bridge between the Function class which holds the code
 # and the sub-classes which specialise behaviour for class methods and static procs
@@ -266,7 +270,7 @@ class FunctionDelegate:
             debug_line("return_type", f"Setting {self._name} return type to GribStatus")
             return "GribStatus"
         else:
-            return super().return_type()
+            return super().return_type
 
     @property
     def cpp_args(self):
@@ -277,12 +281,7 @@ class FunctionDelegate:
     def transform_args(self):
         arg_map = {}
         for arg in self._cargs:
-            cpp_type = cpp_func_sig_arg_type_for(arg.type)
-            cpp_name = transform_variable_name(arg.name)
-            if cpp_type:
-                arg_map[arg] = Arg(cpp_name, cpp_type)
-            else:
-                arg_map[arg] = None
+            arg_map[arg] = cpp_func_sig_arg_for(arg)
 
         return arg_map
 
@@ -344,14 +343,13 @@ class FunctionDelegate:
 
         if m:
             carg = Arg(m.group(3), m.group(2))
-            cpp_type = cpp_func_body_arg_type_for(carg.type)
-            if not cpp_type:
+            cpp_arg = cpp_func_body_arg_for(carg)
+            if not cpp_arg:
                 debug_line("process_variable_declarations", f"Found var declaration to delete: {carg.type} {carg.name}")
                 self._arg_map[carg] = None
                 debug_line("process_variable_declarations", f"--> deleting: {line}")
                 return "" #None
             else:
-                cpp_arg = Arg(transform_variable_name(carg.name), cpp_type)
                 debug_line("process_variable_declarations", f"Found var declaration to store: {carg.type} {carg.name} -> {cpp_arg.type} {cpp_arg.name}")
                 self._arg_map[carg] = cpp_arg
                 if carg.type != cpp_arg.type or carg.name != cpp_arg.name:
@@ -411,27 +409,25 @@ class FunctionDelegate:
 
         m = re.match(r"^(?:typedef)\s*([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", line)
         if m:
-            carg_type = m.group(1)
-            carg_name = m.group(2)
-            cpp_var_type = cpp_func_body_arg_type_for(carg_type)
-            cpp_var_name = transform_variable_name(carg_name)
+            carg = Arg(m.group(2), m.group(1))
+            cpp_arg = cpp_func_body_arg_for(carg)
 
             # Assume functions returning int will now return GribStatus
-            if cpp_var_type == "int":
-                cpp_var_type = "GribStatus"
+            if cpp_arg.type == "int":
+                cpp_arg.type = "GribStatus"
 
-            debug_line("process_function_pointers", f"Adding var to arg map: {carg_type} {carg_name} -> {cpp_var_type} {cpp_var_name} [before]: {line}")
-            self._arg_map[Arg(carg_name,carg_type)] = Arg(cpp_var_name,cpp_var_type)
+            debug_line("process_function_pointers", f"Adding var to arg map: {carg.type} {carg.name} -> {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
+            self._arg_map[carg] = cpp_arg
 
             # Parse the function arg types
             cpp_arg_types = []
             for arg_type in [a.strip() for a in m.group(3).split(",")]:
-                cpp_arg_type = cpp_func_sig_arg_type_for(arg_type)
-                if cpp_arg_type:
-                    cpp_arg_types.append(cpp_arg_type)
+                cpp_sig_arg = cpp_func_sig_arg_for(Arg("Dummy",arg_type))
+                if cpp_sig_arg:
+                    cpp_arg_types.append(cpp_sig_arg.type)
             
             # Apply the transform
-            line = re.sub(rf"([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", f"{cpp_var_type}(*{cpp_var_name})({','.join([a for a in cpp_arg_types])})", line)
+            line = re.sub(rf"([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", f"{cpp_arg.type}(*{cpp_arg.name})({','.join([a for a in cpp_arg_types])})", line)
             debug_line("process_function_pointers", f"Transformed line: {line}")
 
         return line
@@ -656,14 +652,15 @@ class InheritedMethod(Method):
         if self._name in self.func_sig_conversion:
             return self.func_sig_conversion[self._name].ret
         else:
-            return super().return_type()
+            return super().return_type
     
     @property
     def transformed_name(self):
         if self._name in self.func_sig_conversion:
             return self.func_sig_conversion[self._name].name
         else:
-            return super().transformed_name()
+            debug_line("transformed_name", f"Calling super...")
+            return super().transformed_name
     
     def transform_args(self):
         if self._name in self.func_sig_conversion:
@@ -812,6 +809,9 @@ class Class:
             else:
                 self._include_dir = ARGS.target
                 self._top = False
+
+        #debug_line("__init__", f"name={self._name} : super class={self._super}")
+
 
         # Load the patch if it exists
         try:
@@ -1093,10 +1093,12 @@ class Class:
         os.rename(tmp, target)
 
     def dump_header(self):
+        debug_line("dump_header", f"Class = {self._name}")
         template = env.get_template(f"{self._class}Data.h.j2")
         self.save("h", template.render(c=self))
 
     def dump_body(self):
+        debug_line("dump_body", f"Class = {self._name}")
         # Beware of this: https://github.com/pallets/jinja/issues/604
         template = env.get_template(f"{self._class}Data.cc.j2")
 
