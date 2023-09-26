@@ -5,11 +5,3 @@
 concept gridSpecification(unknown, "gridSpecificationConcept.def",conceptsDir2,conceptsDir1): no_copy, read_only, dump;
 
 concept destineOrigin (unknown, "destineOriginConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
-
-if(dataset is "climate-dt") {
-
-alias mars.date = validityDate;
-alias mars.time = validityTime;
-unalias mars.step;
-
-}
