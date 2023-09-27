@@ -34,13 +34,17 @@ env = Environment(
 
 func_pad = 30
 debug_line_enabled = True
-debug_filter = []
+debug_filter_include = []
+debug_filter_exclude = []
 
 def debug_line(func, text):
     if not debug_line_enabled:
         return
     
-    if debug_filter and not func in debug_filter:
+    if debug_filter_include and not func in debug_filter_include:
+        return
+    
+    if debug_filter_exclude and func in debug_filter_exclude:
         return
     
     if len(func) > func_pad:
@@ -111,7 +115,44 @@ class Member:
     def array(self):
         return self._array
 
+# Represent an argument in the form TYPE NAME
+# NAME can be "" to represent a type only
 class Arg:
+    def __init__(self, type, name="") -> None:
+        self.type = type
+        self.name = name
+
+    # Create Arg from an input string 
+    @classmethod
+    def from_string(cls, input):
+        # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
+        m = re.match(r"(\w+\**)\s+(\w+)\s*(\[\d*\])?", input)
+
+        if m:
+            arg_type = m.group(1)
+            arg_name = m.group(2)
+            if m.group(3):
+                # Handle array declaration e.g. char buf[10]
+                arg_type += m.group(3)
+
+            debug_line("Arg from_string", f"Creating Arg: {arg_type} {arg_name} from input: {input}")
+            return cls(arg_type, arg_name)
+        return None
+    
+    # Generate a string to represent the Arg's declaration
+    def as_declaration(self):
+        arg_type = self.type
+        arg_name = self.name
+        # need to switch e.g. int[5] foo to int foo[5]
+        m = re.match(r"(\w*)(\[\d*\])", arg_type)
+        if m and m.group(2):
+            arg_type = m.group(1)
+            arg_name += m.group(2)
+        
+        return f"{arg_type} {arg_name}"
+
+
+class DELET_THIS_CLASS_Arg:
     def __init__(self, name, type) -> None:
         self.name = name
         self.type = type
@@ -136,7 +177,7 @@ class Function:
                 bits = arg.split()
                 type = " ".join(bits[:-1])
                 name = bits[-1]
-                carg = Arg(name, type)
+                carg = Arg(type, name)
                 self._cargs.append(carg)
 
     def update_lines(self, lines):
@@ -204,25 +245,48 @@ basic_function_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
     r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
-    r"\bsnprintf\(([\w\d]+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
+    r"\bsnprintf\((\w+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
 }
 
-# NOTE - Don't access this dictionary directly - use cpp_func_body_arg_for() below...
-carg_type_transforms = {
+# Add any C to C++ type transforms required here
+# These are also added programmatically
+c_to_cpp_type_transforms = {
     "grib_accessor*"    : None,
     "grib_handle*"      : None,
-    "char*"             : "std::string"
+    "char*"             : "std::string",
+    "char[]"            : "std::string"
 }
 
-
 # Returns the equivalent C++ arg (name and type), which could be None
-def cpp_func_body_arg_for(carg):
-    for k, v in carg_type_transforms.items():
-        if k == carg.type:
+def to_cpp_arg(carg):
+
+    # [1] Transforms defined in c_to_cpp_type_transforms
+    ctype = carg.type
+    ctype_array_suffix = ""
+
+    # Array type check...
+    m = re.match(r"(\w*)(\[\d*\])", carg.type)
+    if m:
+        ctype = m.group(1)
+        ctype_array_suffix = m.group(2)
+
+        # Check for well-known array transforms...
+        for k, v in c_to_cpp_type_transforms.items():
+            if ctype+"[]" == k:
+                if v is None:
+                    return None
+                else:
+                    return Arg(v, transform_variable_name(carg.name))
+
+    # The other transform checks will use array type without array suffix, and add it back in last...
+    for k, v in c_to_cpp_type_transforms.items():
+        if ctype == k:
             if v is None:
                 return None
             else:
-                return Arg(transform_variable_name(carg.name), v)
+                return Arg(v+ctype_array_suffix, transform_variable_name(carg.name))
+
+    # [2] Other transforms
 
     # Return None for grib_accessor_*
     m = re.match(r"grib_accessor_", carg.type)
@@ -230,19 +294,19 @@ def cpp_func_body_arg_for(carg):
         return None
 
     # Pointer types
-    m = re.match(r"([\w\d]+)\*", carg.type)
+    m = re.match(r"(\w*)\*", carg.type)
     if m:
-        return Arg(transform_variable_name(carg.name), m.group(1))
+        return Arg(m.group(1), transform_variable_name(carg.name))
 
-    return Arg(transform_variable_name(carg.name), carg.type)
+    return Arg(carg.type, transform_variable_name(carg.name))
 
 # Returns the equivalent C++ arg (name and type), which could be None
 def cpp_func_sig_arg_for(carg):
     # The type is almost the same as for the function body, with the 
     # exception that pointers are converted to references
-    is_reference = carg.type[-1] == "*"
+    is_reference = carg.type[-1] == "*" or carg.type[-1] == "]"
 
-    cpp_arg = cpp_func_body_arg_for(carg)
+    cpp_arg = to_cpp_arg(carg)
     if cpp_arg and is_reference:
         cpp_arg.type += "&"
 
@@ -259,6 +323,8 @@ class FunctionDelegate:
 
         # maps carg to cpparg
         self._arg_map = self.transform_args()
+
+        self._in_comment_block = False
 
     def __getattr__(self, name):
         return getattr(self._function, name)
@@ -305,15 +371,55 @@ class FunctionDelegate:
             debug_line("skip_line", f"[Empty]: {line}")
             return True
 
-        if re.match(r"^\s*/[/\*]?", line):
-            debug_line("skip_line", f"[Comment]: {line}")
+        if re.match(r"^\s*//", line):
+            debug_line("skip_line", f"[C++ Comment]: {line}")
+            return True
+
+        m = re.match(r"^\s*(/\*)?.*?(\*/)?$", line)
+
+        if m and m.group(1):
+            if m.group(2):
+                self._in_comment_block = False
+                debug_line("skip_line", f"[C Comment]: {line}")
+            else:
+                debug_line("skip_line", f"[C Comment Start]: {line}")
+                self._in_comment_block = True
+            return True
+            
+        if m and m.group(2):
+            self._in_comment_block = False
+            debug_line("skip_line", f"[C Comment End  ]: {line}")
             return True
         
+        if self._in_comment_block:
+            debug_line("skip_line", f"[C Comment Block]: {line}")
+            return True
+
         return False
 
     # Override this to provide any initial conversions before the main update_line runs
     def update_line_initial_pass(self, line):
         return line
+
+    # Find type declarations and store in the c_to_cpp_type_transforms
+    def process_type_declarations(self, line):
+        # struct declaration
+        m = re.match(r"^\s*struct\s+(\w+)", line)
+        if m:
+            ctype = m.group(1)
+            cpptype = transform_class_name(ctype)
+
+            c_to_cpp_type_transforms[ctype] = cpptype
+            line = line.replace(f"{ctype}", f"{cpptype}")
+            debug_line("process_type_declarations", f"Added type transform: {ctype} -> {cpptype} [after ]: {line}")
+        
+        # For now, we'll comment out lines of the format "typedef struct X X"
+        m = re.match(r"^\s*typedef\s+struct\s+(\w+)\s+\1\s*;", line)
+        if m:
+            line = f"// [typedef removed] " + line
+
+        return line
+
 
     def process_return_variables(self, line):
         # Update any well know return values
@@ -338,49 +444,42 @@ class FunctionDelegate:
     def process_variable_declarations(self, line):
         line = self.process_return_variables(line)
 
-        # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
-        m = re.match(r"^\s*(?!return)(const)?\s*([\w\d]+\**)\s+([\w\d]+)\s*[=;]", line)
+        # Note: "return x;" looks like a variable declaration, so we explicitly exclude it
+        #       static and const are ignored
+        prefix = r"^\s*(?!return)(?:static)?(?:const)?"
+        m = re.match(rf"{prefix}\s*((\w+\**)\s+(\w+)\s*(\[\d*\])?)\s*[=;]", line)
 
         if m:
-            carg = Arg(m.group(3), m.group(2))
-            cpp_arg = cpp_func_body_arg_for(carg)
+            carg = Arg.from_string(m.group(1))
+            debug_line("process_variable_declarations", f"MATCH: {m.group(0)}: {line}")
+
+        if m and carg:
+            cpp_arg = to_cpp_arg(carg)
+
             if not cpp_arg:
                 debug_line("process_variable_declarations", f"Found var declaration to delete: {carg.type} {carg.name}")
                 self._arg_map[carg] = None
                 debug_line("process_variable_declarations", f"--> deleting: {line}")
-                return "" #None
+                return ""
             else:
                 debug_line("process_variable_declarations", f"Found var declaration to store: {carg.type} {carg.name} -> {cpp_arg.type} {cpp_arg.name}")
                 self._arg_map[carg] = cpp_arg
                 if carg.type != cpp_arg.type or carg.name != cpp_arg.name:
-                    line = re.sub(rf"{re.escape(carg.type)}\s*{re.escape(carg.name)}", f"{cpp_arg.type} {cpp_arg.name}", line)
+                    line = re.sub(rf"{re.escape(m.group(1))}", f"{cpp_arg.as_declaration()}", line)
                     debug_line("process_variable_declarations", f"Transformed line: {line}")
 
         return line
 
-    # Find variable declarations for char[] types and convert to std::string
-    def process_string_declarations(self, line):
-        m = re.match(r"^\s*([\w\d]+\**)\s+([\w\d]+)\s*(\[\d*\])\s*=", line)
-        if m:
-            carg = Arg(m.group(2), f"{m.group(1)}{m.group(3)}")
-            cpp_arg = Arg(transform_variable_name(carg.name), "std::string")
-            debug_line("process_string_declarations", f"Found string declaration to transform - adding to dict: {carg.type} {carg.name}")
-            self._arg_map[carg] = cpp_arg
-            debug_line("process_string_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [before]: {line}")
-            line = re.sub(r"([\w\d]+\**)\s+([\w\d]+)\s*(\[\d*\])\s*=", f"{cpp_arg.type} {cpp_arg.name} =", line)
-            debug_line("process_string_declarations", f"--> transforming to: {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
-        return line
-    
     # Remove any variables that have been marked for deletion
     def process_deleted_variables(self, line):
         # Find any deleted variables that are being assigned to, and delete the line
-        m = re.match(r"^\s*\**([\w\d]+)\s*=", line)
+        m = re.match(r"^\s*\**(\w+)\s*=", line)
         if m:
             debug_line("process_deleted_variables", f"Found var assignment: var={m.group(1)}: {line}")
             for carg, cpp_arg in self._arg_map.items():
                 if carg.name == m.group(1) and not cpp_arg:
                     debug_line("process_deleted_variables", f"Var assignment marked for delete, var={m.group(1)} - deleting: {line}")
-                    line = f"/* {m.group(1)} removed */ // " + line
+                    line = f"// [{m.group(1)} removed] " + line
                     return line
         
         # Remove any deleted vars that remain (i.e. as an argument to a function call)
@@ -407,10 +506,10 @@ class FunctionDelegate:
     # Special handling for function pointers: [typedef] RET (*PFUNC)(ARG1, ARG2, ..., ARGN);
     def process_function_pointers(self, line):
 
-        m = re.match(r"^(?:typedef)\s*([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", line)
+        m = re.match(r"^(?:typedef)\s*(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
         if m:
-            carg = Arg(m.group(2), m.group(1))
-            cpp_arg = cpp_func_body_arg_for(carg)
+            carg = Arg(m.group(1), m.group(2))
+            cpp_arg = to_cpp_arg(carg)
 
             # Assume functions returning int will now return GribStatus
             if cpp_arg.type == "int":
@@ -422,12 +521,12 @@ class FunctionDelegate:
             # Parse the function arg types
             cpp_arg_types = []
             for arg_type in [a.strip() for a in m.group(3).split(",")]:
-                cpp_sig_arg = cpp_func_sig_arg_for(Arg("Dummy",arg_type))
+                cpp_sig_arg = cpp_func_sig_arg_for(Arg(arg_type, "Dummy"))
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             
             # Apply the transform
-            line = re.sub(rf"([\w\d]+\**)\s*\(\s*\*(\s*[\w\d_]+)\s*\)\s*\((.*)\)", f"{cpp_arg.type}(*{cpp_arg.name})({','.join([a for a in cpp_arg_types])})", line)
+            line = re.sub(rf"(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", f"{cpp_arg.type}(*{cpp_arg.name})({','.join([a for a in cpp_arg_types])})", line)
             debug_line("process_function_pointers", f"Transformed line: {line}")
 
         return line
@@ -444,11 +543,29 @@ class FunctionDelegate:
             m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
 
             if m and m.group(0) != cpp_arg.name:
-                line = re.sub(m.re, rf"{cpp_arg.name}{m.group(1)}", line)
-                debug_line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpp_arg.name}{m.group(1)}", line)
+                debug_line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}\"{m.group(1)}\" [after ]: {line}")
 
         return line
-            
+
+    # Update any references to global args
+    def process_global_cargs(self, line):
+        # Update any global C args used (i.e. as an argument to a function call)
+        # This will also remove any unnecessary pointers/refs
+        # Note: We ignore anything in quotes!
+        for carg, cpp_arg in self._owner_class.global_arg_map.items():
+            if not cpp_arg:
+                continue
+
+            # Note: We assume *var and &var should be replaced with var
+            m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
+
+            if m and m.group(0) != cpp_arg.name:
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpp_arg.name}{m.group(1)}", line)
+                debug_line("process_global_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}\"{m.group(1)}\" [after ]: {line}")
+
+        return line
+
     def convert_grib_values(self, line):
         for k, v in convert_data.GribStatusConverter.items():
             line, count = re.subn(rf"{k}", rf"{v}", line)
@@ -500,8 +617,8 @@ class FunctionDelegate:
 
         # Note: These apply in order, be careful if re-arranging!
         line = self.update_line_initial_pass(line)
+        line = self.process_type_declarations(line)
         line = self.process_variable_declarations(line)
-        line = self.process_string_declarations(line)
         line = self.process_deleted_variables(line)
         # process_deleted_variables may delete/comment the line...
         if self.skip_line(line):
@@ -509,6 +626,7 @@ class FunctionDelegate:
         line = self.apply_variable_transforms(line)
         line = self.process_function_pointers(line)
         line = self.process_remaining_cargs(line)
+        line = self.process_global_cargs(line)
         line = self.convert_grib_values(line)
         line = self.convert_grib_utils(line)
         line = self.apply_function_substitutions(line)
@@ -529,7 +647,7 @@ class FunctionDelegate:
             
             # Split comma-separated variable definitions into separate lines
             # We then call ourself recursively for each split line
-            m = re.match(r"^(\s*[\w\d]+\s+)[\w\d]+\s*=\s*[\w\d]+,", line)
+            m = re.match(r"^(\s*\w+\s+)\w+\s*=\s*\w+,", line)
             if m:
                 debug_line("update_body", f"comma-separated vars [before]: {line}")
                 line = line.replace(",", f";\n{m.group(1)}")
@@ -594,45 +712,45 @@ class InheritedMethod(Method):
     #           Note: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
     func_sig_conversion = {
         # static int pack_TYPE(grib_accessor* a, const TYPE* v, size_t* len)
-        "pack_string"         : FuncSig("GribStatus", "pack",   [None, Arg("value",  "std::string const&"),              None]),
-        "pack_long"           : FuncSig("GribStatus", "pack",   [None, Arg("values", "std::vector<long> const&"),        None]),
-        "pack_double"         : FuncSig("GribStatus", "pack",   [None, Arg("values", "std::vector<double> const&"),      None]),
-        "pack_float"          : FuncSig("GribStatus", "pack",   [None, Arg("values", "std::vector<float> const&"),       None]),
-        "pack_string_array"   : FuncSig("GribStatus", "pack",   [None, Arg("values", "std::vector<StringArray> const&"), None]),
-        "pack_bytes"          : FuncSig("GribStatus", "pack",   [None, Arg("values", "std::vector<std::byte> const&"),   None]),
+        "pack_string"         : FuncSig("GribStatus", "pack",   [None, Arg("std::string const&",              "value"),  None]),
+        "pack_long"           : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<long> const&",        "values"), None]),
+        "pack_double"         : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<double> const&",      "values"), None]),
+        "pack_float"          : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<float> const&",       "values"), None]),
+        "pack_string_array"   : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<StringArray> const&", "values"), None]),
+        "pack_bytes"          : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<std::byte> const&",   "values"), None]),
 
         # static int unpack_TYPE(grib_accessor* a, TYPE* v, size_t* len)
-        "unpack_string"       : FuncSig("GribStatus", "unpack", [None, Arg("value",  "std::string&"),                    None]),
-        "unpack_long"         : FuncSig("GribStatus", "unpack", [None, Arg("values", "std::vector<long>&"),              None]),
-        "unpack_double"       : FuncSig("GribStatus", "unpack", [None, Arg("values", "std::vector<double>&"),            None]),
-        "unpack_float"        : FuncSig("GribStatus", "unpack", [None, Arg("values", "std::vector<float>&"),             None]),
-        "unpack_string_array" : FuncSig("GribStatus", "unpack", [None, Arg("values", "std::vector<StringArray>&"),       None]),
-        "unpack_bytes"        : FuncSig("GribStatus", "unpack", [None, Arg("values", "std::vector<std::byte>&"),         None]),
+        "unpack_string"       : FuncSig("GribStatus", "unpack", [None, Arg("std::string&",                    "value"),  None]),
+        "unpack_long"         : FuncSig("GribStatus", "unpack", [None, Arg("std::vector<long>&",              "values"), None]),
+        "unpack_double"       : FuncSig("GribStatus", "unpack", [None, Arg("std::vector<double>&",            "values"), None]),
+        "unpack_float"        : FuncSig("GribStatus", "unpack", [None, Arg("std::vector<float>&",             "values"), None]),
+        "unpack_string_array" : FuncSig("GribStatus", "unpack", [None, Arg("std::vector<StringArray>&",       "values"), None]),
+        "unpack_bytes"        : FuncSig("GribStatus", "unpack", [None, Arg("std::vector<std::byte>&",         "values"), None]),
 
         # static int unpack_TYPE_element(grib_accessor*, size_t i, TYPE* val);
-        "unpack_double_element"     : FuncSig("GribStatus", "unpackElement",    [None, Arg("index", "std::size_t"), Arg("val","double&")]),
-        "unpack_float_element"      : FuncSig("GribStatus", "unpackElement",    [None, Arg("index", "std::size_t"), Arg("val","float&")]),
+        "unpack_double_element"     : FuncSig("GribStatus", "unpackElement",    [None, Arg("std::size_t", "index"), Arg("double&", "val")]),
+        "unpack_float_element"      : FuncSig("GribStatus", "unpackElement",    [None, Arg("std::size_t", "index"), Arg("float&", "val")]),
         
         # static int unpack_TYPE_element_set(grib_accessor*, const size_t* index_array, size_t len, TYPE* val_array);
-        "unpack_double_element_set" : FuncSig("GribStatus", "unpackElementSet", [None, Arg("indexArray", "std::vector<std::size_t> const&"), None, Arg("valArray","std::vector<double>&")]),
-        "unpack_float_element_set"  : FuncSig("GribStatus", "unpackElementSet", [None, Arg("indexArray", "std::vector<std::size_t> const&"), None, Arg("valArray","std::vector<float>&")]),
+        "unpack_double_element_set" : FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<double>&", "valArray")]),
+        "unpack_float_element_set"  : FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<float>&", "valArray")]),
         
         # static int unpack_double_subarray(grib_accessor*, double* val, size_t start, size_t len);
-        "unpack_double_subarray"    : FuncSig("GribStatus", "unpackSubArray",   [None, Arg("values", "std::vector<double>&"), None, Arg("start","std::size_t")]),
+        "unpack_double_subarray"    : FuncSig("GribStatus", "unpackSubArray",   [None, Arg("std::vector<double>&", "values"), None, Arg("std::size_t", "start")]),
         
         # Double arg functions of the form: RET func_name(grib_accessor*, TYPE);
         # static int pack_expression(grib_accessor*, grib_expression*);
-        "pack_expression" : FuncSig("GribStatus", "pack",           [None, Arg("expression", "grib_expression const&")]),
+        "pack_expression" : FuncSig("GribStatus", "pack",           [None, Arg("grib_expression const&", "expression")]),
         # static int value_count(grib_accessor*, long*);
         "value_count"     : FuncSig("long", "valueCount",           [None, None]),
         # static void update_size(grib_accessor*, size_t);
-        "update_size"     : FuncSig("void", "updateSize",           [None, Arg("s", "std::size_t")]),
+        "update_size"     : FuncSig("void", "updateSize",           [None, Arg("std::size_t", "s")]),
         # static size_t preferred_size(grib_accessor*, int);
-        "preferred_size"  : FuncSig("std::size_t", "preferredSize", [None, Arg("fromHandle", "int")]),
+        "preferred_size"  : FuncSig("std::size_t", "preferredSize", [None, Arg("int", "fromHandle")]),
         # static int compare(grib_accessor*, grib_accessor*);
-        "compare"         : FuncSig("bool", "compare",              [None, Arg("rhs", "AccessorData const&")]),
+        "compare"         : FuncSig("bool", "compare",              [None, Arg("AccessorData const&", "rhs")]),
         # static void resize(grib_accessor*,size_t);
-        "resize"          : FuncSig("void", "resize",               [None, Arg("newSize", "std::size_t")]),
+        "resize"          : FuncSig("void", "resize",               [None, Arg("std::size_t", "newSize")]),
 
         # Single arg functions of the form: RET func_name(grib_accessor*);
         # static int get_native_type(grib_accessor*);
@@ -690,7 +808,7 @@ class ConstructorMethod(Method):
         arg_map = {}
         for arg in self._cargs:
             if arg.type == "grib_arguments*":
-                arg_map[arg] = Arg("initData", "AccessorInitData const&")
+                arg_map[arg] = Arg("AccessorInitData const&", "initData")
             else:
                 arg_map[arg] = None
 
@@ -702,7 +820,7 @@ class ConstructorMethod(Method):
 
     def update_line_initial_pass(self, line):
         
-        line = re.sub(rf"\ba->(\w+)\b", rf"/* TO DO */ //\1", line)
+        line = re.sub(rf"\ba->(\w+)\b", rf"// [TO DO] \1", line)
         line = re.sub(r"\ba\b", f"*this", line)
 
         # Now transform the argument getters
@@ -973,6 +1091,10 @@ class Class:
     @property
     def members(self):
         return self._members
+
+    @property
+    def global_arg_map(self):
+        return self._global_function._arg_map
 
     # Get members all the way up the hierarchy
     @property
