@@ -126,7 +126,8 @@ class Arg:
     @classmethod
     def from_string(cls, input):
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
-        m = re.match(r"(\w+\**)\s+(\w+)\s*(\[\d*\])?", input)
+        # Note: We ignore const for now...
+        m = re.match(r"(?:const)?\s*(\w+\**)\s+(\w+)\s*(\[\d*\])?", input)
 
         if m:
             arg_type = m.group(1)
@@ -152,15 +153,6 @@ class Arg:
         return f"{arg_type} {arg_name}"
 
 
-class DELET_THIS_CLASS_Arg:
-    def __init__(self, name, type) -> None:
-        self.name = name
-        self.type = type
-
-        if self.name[0] == "*":
-            self.name = self.name[1:]
-            self.type += "*"
-
 class Function:
     def __init__(self, name, return_type, args, template=None) -> None:
         self._name = name
@@ -174,10 +166,7 @@ class Function:
             for arg in [a.strip() for a in args.split(",")]:
                 if not arg:
                     continue
-                bits = arg.split()
-                type = " ".join(bits[:-1])
-                name = bits[-1]
-                carg = Arg(type, name)
+                carg = Arg.from_string(arg)
                 self._cargs.append(carg)
 
     def update_lines(self, lines):
@@ -254,7 +243,8 @@ c_to_cpp_type_transforms = {
     "grib_accessor*"    : None,
     "grib_handle*"      : None,
     "char*"             : "std::string",
-    "char[]"            : "std::string"
+    "char[]"            : "std::string",
+    "double[]"          : "std::vector<double>"
 }
 
 # Returns the equivalent C++ arg (name and type), which could be None
@@ -301,13 +291,15 @@ def to_cpp_arg(carg):
     return Arg(carg.type, transform_variable_name(carg.name))
 
 # Returns the equivalent C++ arg (name and type), which could be None
-def cpp_func_sig_arg_for(carg):
+def to_cpp_func_sig_arg(carg):
     # The type is almost the same as for the function body, with the 
     # exception that pointers are converted to references
     is_reference = carg.type[-1] == "*" or carg.type[-1] == "]"
 
     cpp_arg = to_cpp_arg(carg)
     if cpp_arg and is_reference:
+        # Strip off any array parts, and add an &
+        cpp_arg.type = re.sub(r"\[\w*\]", f"", cpp_arg.type)
         cpp_arg.type += "&"
 
     return cpp_arg
@@ -347,7 +339,7 @@ class FunctionDelegate:
     def transform_args(self):
         arg_map = {}
         for arg in self._cargs:
-            arg_map[arg] = cpp_func_sig_arg_for(arg)
+            arg_map[arg] = to_cpp_func_sig_arg(arg)
 
         return arg_map
 
@@ -484,10 +476,13 @@ class FunctionDelegate:
         
         # Remove any deleted vars that remain (i.e. as an argument to a function call)
         for carg, cpp_arg in self._arg_map.items():
+            
             m = re.match(rf"^.*\b{carg.name}\b\s*,*", line)
             if m and not cpp_arg:
                 line_b4 = line
                 line = re.sub(rf"[&\*]?\b{carg.name}(->)?\b\s*,*", "", line)
+                debug_line("process_deleted_variables", f"DEBUG CARG={carg.type} {carg.name}")
+
                 debug_line("process_deleted_variables", f"Removing arg={carg.name} [before]: {line_b4}")
                 debug_line("process_deleted_variables", f"Removing arg={carg.name} [after ]: {line}")
 
@@ -521,7 +516,7 @@ class FunctionDelegate:
             # Parse the function arg types
             cpp_arg_types = []
             for arg_type in [a.strip() for a in m.group(3).split(",")]:
-                cpp_sig_arg = cpp_func_sig_arg_for(Arg(arg_type, "Dummy"))
+                cpp_sig_arg = to_cpp_func_sig_arg(Arg(arg_type, "Dummy"))
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             
