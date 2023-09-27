@@ -12,11 +12,9 @@
 
 #pragma once
 
-
-#include "atlas/grid/SpecRegistry.h"
-
 #include "mir/param/MIRParametrisation.h"
 #include "mir/repres/proxy/ProxyGrid.h"
+#include "mir/util/Atlas.h"
 #include "mir/util/Grib.h"
 #include "mir/util/MeshGeneratorParameters.h"
 
@@ -77,8 +75,11 @@ private:
     void fillMeshGen(util::MeshGeneratorParameters&) const override;
     void fillJob(api::MIRJob&) const override;
 
+    size_t numberOfPoints() const override;
+
     void print(std::ostream&) const override;
 
+    // from ProxyGrid
     const ::atlas::Grid& atlasGridRef() const override;
 
     // -- Class members

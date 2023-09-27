@@ -93,6 +93,17 @@ void ORCA::fillJob(api::MIRJob& job) const {
 }
 
 
+size_t ORCA::numberOfPoints() const {
+    size_t n = 1;
+    for (auto d : spec_.getUnsignedVector("dimensions")) {
+        ASSERT(d > 0);
+        n *= d;
+    }
+
+    return n;
+}
+
+
 static const RepresentationBuilder<ORCA> __grid("orca");
 
 
