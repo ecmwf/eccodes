@@ -62,9 +62,10 @@ concept marsStream(unknown) {
 
 alias mars.stream = marsStream;
 
-if (stepType is "avg" || stepType is "accum") {
-   alias mars.step = stepRange;
-}
-else {
-   alias mars.step = step;
+if(dataset is "climate-dt") {
+
+alias mars.date = validityDate;
+alias mars.time = validityTime;
+unalias mars.step;
+
 }

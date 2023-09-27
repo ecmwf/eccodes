@@ -43,7 +43,7 @@ grib_check_key_equals $temp_grib_a "dataset,datasetVersion,datasetActivity,datas
 ${tools_dir}/grib_set -s dataset=1,datasetVersion=2,datasetActivity=1,datasetExperiment=1,model=2 $destine_sample $temp_grib_a
 
 grib_check_key_equals $temp_grib_a "dataset,datasetVersion,datasetActivity,datasetExperiment,model" "1 2 1 1 2"
-grib_check_key_equals $temp_grib_a "dataset:s,datasetVersion:s,datasetActivity:s,datasetExperiment:s,model:s" "climate-dt v20230801 CMIP6 hist IFS-NEMO"
+grib_check_key_equals $temp_grib_a "dataset:s,datasetVersion:s,datasetActivity:s,datasetExperiment:s,model:s" "climate-dt v20231015 CMIP6 hist IFS-NEMO"
 
 # Check mars.date and mars.time are equal to validityDate and validityTime, and that mars.step has been unaliased
 result1=$( ${tools_dir}/grib_get -p mars.date,mars.time $temp_grib_a )
