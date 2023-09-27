@@ -1169,8 +1169,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Standard deviation of orography
-'Standard deviation of orography' = {
+#Standard deviation of sub-gridscale orography
+'Standard deviation of sub-gridscale orography' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -9879,8 +9879,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Total sky direct solar radiation at surface
-'Total sky direct solar radiation at surface' = {
+#Total sky direct short-wave (solar) radiation at surface
+'Total sky direct short-wave (solar) radiation at surface' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
@@ -10089,13 +10089,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 94 ;
 	}
-#Surface solar radiation downward clear-sky
-'Surface solar radiation downward clear-sky' = {
+#Surface short-wave (solar) radiation downward clear-sky
+'Surface short-wave (solar) radiation downward clear-sky' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Surface thermal radiation downward clear-sky
-'Surface thermal radiation downward clear-sky' = {
+#Surface long-wave (thermal) radiation downward clear-sky
+'Surface long-wave (thermal) radiation downward clear-sky' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
 	}

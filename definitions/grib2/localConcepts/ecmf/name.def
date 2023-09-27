@@ -661,12 +661,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 158 ;
 	}
-#Standard deviation of orography
-'Standard deviation of orography' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 160 ;
-	}
 #Total cloud cover
 'Total cloud cover' = {
 	 localTablesVersion = 1 ;
@@ -13635,18 +13629,6 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Total sky direct solar radiation at surface
-'Total sky direct solar radiation at surface' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 21 ;
-	}
-#Cloud base height
-'Cloud base height' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 23 ;
-	}
 #Horizontal visibility
 'Horizontal visibility' = {
 	 discipline = 192 ;
@@ -13808,18 +13790,6 @@
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
-	}
-#Surface solar radiation downward clear-sky
-'Surface solar radiation downward clear-sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 129 ;
-	}
-#Surface thermal radiation downward clear-sky
-'Surface thermal radiation downward clear-sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 130 ;
 	}
 #Accumulated freezing rain
 'Accumulated freezing rain' = {
@@ -16477,29 +16447,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
 	}
-#10 metre wind speed
-'10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 245 ;
-	}
-#10 metre wind direction
-'10 metre wind direction' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 249 ;
-	}
 #2D wave spectra (multiple)
 '2D wave spectra (multiple)' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral kurtosis
-'Wave spectral kurtosis' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 252 ;
 	}
 #Wave spectral peakedness
 'Wave spectral peakedness' = {
