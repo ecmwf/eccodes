@@ -15,6 +15,10 @@ GribStatus unpackDouble(AccessorName const& name, double& value);
 GribStatus unpackLong(AccessorName const& name, long& value);
 GribStatus unpackString(AccessorName const& name, std::string& value);
 
+GribStatus packDouble(AccessorName const& name, double value);
+GribStatus packLong(AccessorName const& name, long value);
+GribStatus packString(AccessorName const& name, std::string value);
+
 // Create a string directly using format string args (e.g. snprintf)
 // For example:
 //   C code:    snprintf(result, 128, "+a=%lf +b=%lf", major, minor);

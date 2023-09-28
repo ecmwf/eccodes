@@ -13,6 +13,7 @@ from convert_debug import debug_line
 from convert_arg import *
 from type_transforms import *
 import convert_data as convert_data
+import function_transforms as function_transforms
 
 LOG = logging.getLogger(__name__)
 
@@ -140,32 +141,6 @@ class Function:
             self._lines.insert(-1, "throw AccessorException(GRIB_NOT_IMPLEMENTED);")
 
 
-# Note - these substitutions are applied in the order defined below, so dependencies
-#        can be used if required...
-basic_function_substitutions = {
-    # grib_ functions
-    # Note: 1. We treat e.g. grib_get_long and grib_get_long_internal the same...
-    #       2. The first argument (h) may already be stripped so we optionally match it
-    #       3. The second argument may be a string literal, which needs to convert to an AccessorName object
-    #
-    # First, let's convert the second argument to an AccessorName if required
-    r"\b(grib_[gs]et_\w+)(_internal)?\(\s*(h\s*,\s*)?\s*(\".*\")": r"\1\2(\3AccessorName(\4)",
-    # Now, complete the conversion - note we remove any references
-    r"\b([\w\s]+)\s*=\s*grib_get_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackLong(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackDouble(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = unpackString(\4, \5)",
-
-    # C functions
-    r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
-    r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
-    # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
-    # This version matches either an explicit size or sizeof(x)
-    r"\bsnprintf\((\w+),\s*(?:sizeof\(\w*\))?(?:\d+)?\s*,\s*(\")": r"\1 = fmtString(\2",
-}
-
-
-
-
 # This class is the bridge between the Function class which holds the code
 # and the sub-classes which specialise behaviour for class methods and static procs
 # Behaviour that is common across all function types is defined here...
@@ -279,15 +254,11 @@ class FunctionDelegate:
         ret = "GribStatus"
         if self.return_type == ret:
             for ret_var in ["err", "ret"]:
-                line_b4 = line
                 line,count = re.subn(rf"\bint\b(\s+{ret_var}\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
                 if count:
-                    debug_line("process_return_variables", f"return values [before]: {line_b4}")
                     debug_line("process_return_variables", f"return values [after ]: {line}")
-                line_b4 = line
                 line,count = re.subn(rf"(\(\s*{ret_var}\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
                 if count:
-                    debug_line("process_return_variables", f"return values [before]: {line_b4}")
                     debug_line("process_return_variables", f"return values [after ]: {line}")
 
         return line
@@ -341,11 +312,7 @@ class FunctionDelegate:
             
             m = re.match(rf"^.*\b{carg.name}\b\s*,*", line)
             if m and not cpp_arg:
-                line_b4 = line
                 line = re.sub(rf"[&\*]?\b{carg.name}(->)?\b\s*,*", "", line)
-                debug_line("process_deleted_variables", f"DEBUG CARG={carg.type} {carg.name}")
-
-                debug_line("process_deleted_variables", f"Removing arg={carg.name} [before]: {line_b4}")
                 debug_line("process_deleted_variables", f"Removing arg={carg.name} [after ]: {line}")
 
         return line
@@ -445,13 +412,8 @@ class FunctionDelegate:
 
         return line
     
-    def apply_function_substitutions(self, line):
-        for k, v in basic_function_substitutions.items():
-            line_b4 = line
-            line, count = re.subn(k, v, line)
-            if count:
-                debug_line("apply_function_substitutions", f"{self._name} [before]: {line_b4}")
-                debug_line("apply_function_substitutions", f"{self._name} [after ]: {line}")
+    def apply_function_transforms(self, line):
+        line = function_transforms.apply_all_func_transforms(line)
 
         # Static function substitutions
         for f in self._owner_class._static_functions:
@@ -459,7 +421,7 @@ class FunctionDelegate:
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
                 line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
-                debug_line("apply_function_substitutions", f"Updating static function {m.group(0)} [after ]: {line}")
+                debug_line("apply_function_transforms", f"Updating static function {m.group(0)} [after ]: {line}")
 
         return line
 
@@ -490,6 +452,9 @@ class FunctionDelegate:
         update_functions = [
             self.update_line_initial_pass,
             self.process_type_declarations,
+
+            # Note: Below this line, variables are renamed and deleted
+
             self.process_variable_declarations,
             self.process_deleted_variables,
             self.apply_variable_transforms,
@@ -498,10 +463,13 @@ class FunctionDelegate:
             self.process_global_cargs,
             self.convert_grib_values,
             self.convert_grib_utils,
-            self.apply_function_substitutions,
+            self.apply_function_transforms,
             self.validate_variable_assignments,
             self.update_line_final_pass
         ]
+
+        debug_line("update_line", f"--------------------------------------------------------------------------------")
+        debug_line("update_line", f"PROCESSING: [ {line} ]")
 
         # We need to run the skip_line() check after each function
         for update_func in update_functions:
@@ -544,9 +512,13 @@ class FunctionDelegate:
     
     @property
     def body(self):
-        debug_line("body", f"-------------------- {self._name} [IN] --------------------")
+        debug_line("body", f"")
+        debug_line("body", f"============================== {self._name} [IN]  ==============================")
+        debug_line("body", f"")
         lines = self.update_body(self.code)
-        debug_line("body", f"-------------------- {self._name} [OUT] -------------------")
+        debug_line("body", f"")
+        debug_line("body", f"============================== {self._name} [OUT] ==============================")
+        debug_line("body", f"")
         return "\n".join(lines)
         
 
@@ -568,22 +540,22 @@ class Method(FunctionDelegate):
         return line
 
     # Overridden to apply member function substitutions
-    def apply_function_substitutions(self, line):
+    def apply_function_transforms(self, line):
         for f in self._owner_class._inherited_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
                 line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
-                debug_line("apply_function_substitutions", f"Updating inherited method {m.group(0)} [after ]: {line}")
+                debug_line("apply_function_transforms", f"Updating inherited method {m.group(0)} [after ]: {line}")
 
         for f in self._owner_class._private_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
                 line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
-                debug_line("apply_function_substitutions", f"Updating private method {m.group(0)} [after ]: {line}")
+                debug_line("apply_function_transforms", f"Updating private method {m.group(0)} [after ]: {line}")
 
-        return super().apply_function_substitutions(line)
+        return super().apply_function_transforms(line)
 
 
 # Represent a function signature
@@ -1173,19 +1145,15 @@ class Class:
         self.save("cc", tidy_more(template.render(c=self)))
 
     def update_class_members(self, line):
-        line_b4 = line
         line,count = re.subn(r"\bsuper->\b", f"{self.super}::", line)
         if count:
-            debug_line("update_class_members", f"begin [before]: {line_b4}")
             debug_line("update_class_members", f"begin [after ]: {line}")
 
         accessor_variable_name = transform_variable_name(self._name)
 
         for n in [r"\bself\b"]:
-            line_b4 = line
             line,count = re.subn(n, f"{accessor_variable_name}", line)
             if count:
-                debug_line("update_class_members", f"this [before]: {line_b4}")
                 debug_line("update_class_members", f"this [after ]: {line}")
 
         if re.match(rf".*\b{accessor_variable_name}\s+=", line):
@@ -1197,18 +1165,14 @@ class Class:
             line = ""
 
         for m in self.members_in_hierarchy:
-            line_b4 = line
             line,count = re.subn(rf"\b{accessor_variable_name}->{m.cname}\b", rf"{m.name}", line)
             if(count):
-                debug_line("update_class_members", f"members_in_hierarchy [before]: {line_b4}")
                 debug_line("update_class_members", f"members_in_hierarchy [after ]: {line}")
 
         for m in self._private_methods:
             name = m.name
-            line_b4 = line
             line,count = re.subn(rf"\b{name}\s*\(\s*([^,]+),", f"{accessor_variable_name}.{name}(", line)
             if(count):
-                debug_line("update_class_members", f"_private_methods [before]: {line_b4}")
                 debug_line("update_class_members", f"_private_methods [after ]: {line}")
 
         return line
@@ -1216,10 +1180,8 @@ class Class:
     def update_static_function_calls(self, line):
         for m in self._static_functions:
             name = m.name
-            line_b4 = line
             line,count = re.subn(rf"\b{name}\s*\(", f"{transform_function_name(name)}(", line)
             if(count):
-                debug_line("update_static_function_calls", f"name={name} [before]: {line_b4}")
                 debug_line("update_static_function_calls", f"name={name} [after ]: {line}")
 
         return line

@@ -71,6 +71,49 @@ GribStatus unpackString(AccessorName const& name, std::string& value)
     return GribStatus{ret};
 }
 
+GribStatus packDouble(AccessorName const& name, double value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(value);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    int ret = grib_set_double_internal(grib_handle_of_accessor(a), name.get().c_str(), value);
+    return GribStatus{ret};
+}
+
+GribStatus packLong(AccessorName const& name, long value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(value);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    int ret = grib_set_long_internal(grib_handle_of_accessor(a), name.get().c_str(), value);
+    return GribStatus{ret};
+}
+
+GribStatus packString(AccessorName const& name, std::string value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(value);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    size_t len = value.length();
+    int ret = grib_set_string_internal(grib_handle_of_accessor(a), name.get().c_str(), value.c_str(), &len);
+    return GribStatus{ret};
+}
+
 // Overload for when the format string doesn't contain any format specifiers, 
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
 std::string fmtString(const char* format) {
