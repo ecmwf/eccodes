@@ -607,25 +607,28 @@ class FunctionDelegate:
         return line
 
     def update_line(self, line):
-        if self.skip_line(line):
-            return line
 
         # Note: These apply in order, be careful if re-arranging!
-        line = self.update_line_initial_pass(line)
-        line = self.process_type_declarations(line)
-        line = self.process_variable_declarations(line)
-        line = self.process_deleted_variables(line)
-        # process_deleted_variables may delete/comment the line...
-        if self.skip_line(line):
-            return line
-        line = self.apply_variable_transforms(line)
-        line = self.process_function_pointers(line)
-        line = self.process_remaining_cargs(line)
-        line = self.process_global_cargs(line)
-        line = self.convert_grib_values(line)
-        line = self.convert_grib_utils(line)
-        line = self.apply_function_substitutions(line)
-        line = self.update_line_final_pass(line)
+        update_functions = [
+            self.update_line_initial_pass,
+            self.process_type_declarations,
+            self.process_variable_declarations,
+            self.process_deleted_variables,
+            self.apply_variable_transforms,
+            self.process_function_pointers,
+            self.process_remaining_cargs,
+            self.process_global_cargs,
+            self.convert_grib_values,
+            self.convert_grib_utils,
+            self.apply_function_substitutions,
+            self.update_line_final_pass
+        ]
+
+        # We need to run the skip_line() check after each function
+        for update_func in update_functions:
+            if self.skip_line(line):
+                return line
+            line = update_func(line)
 
         return line
 
@@ -788,6 +791,44 @@ class InheritedMethod(Method):
             return arg_map
         
         return super().transform_args()
+    
+    # Special-handling for lengths. The len C param is removed because we use containers, however we need to
+    # deal with size-related code
+    def process_len_arg(self, line):
+        if len(self._cargs) < 3:
+            return line
+        
+        len_carg = self._cargs[2]
+        if len_carg.name != "len":
+            return line
+        
+        len_cpp_arg = self.func_sig_conversion[self._name].args[1]
+
+        # Replace *len == N with CONTAINER.size() == N
+        m = re.match(rf"(.*)?\*{len_carg.name}\s*==\s*(\w+)", line)
+        if m:
+            line = re.sub(rf"{re.escape(m.group(0))}", rf"{m.group(1)}{len_cpp_arg.name}.size() == {m.group(2)}", line)
+            debug_line("process_len_arg", f"Replaced *len with .size() [after]: {line}")
+
+        # Replace *len = N with CONTAINER.clear() if N=0, or delete the line if N is any other value
+        m = re.match(rf"(.*)?\*{len_carg.name}\s*=\s*(\w+).*?;", line)
+        if m:
+            if m.group(2) == "0":
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{m.group(1)}{len_cpp_arg.name}.clear();", line)
+                debug_line("process_len_arg", f"Replaced *len = 0 with .clear() [after]: {line}")
+            else:
+                line = f"// [len removed] " + line
+                debug_line("process_len_arg", f"Removed *len entry [after]: {line}")
+
+        return line
+
+    # Override this to provide any initial conversions before the main update_line runs
+    def update_line_initial_pass(self, line):
+
+        line = self.process_len_arg(line)
+
+        return super().update_line_initial_pass(line)
+
 
 class PrivateMethod(Method):
     pass
@@ -819,8 +860,8 @@ class ConstructorMethod(Method):
         line = re.sub(r"\ba\b", f"*this", line)
 
         # Now transform the argument getters
-        line = re.sub(rf"\bgrib_arguments_get_name\(h, arg, (\d+)\)", rf"AccessorName(std::get<std::string>(initData[\1].second))", line)
-        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(h, arg, (\d+)\)", rf"std::get<\1>(initData[\2].second)", line)
+        line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData[\1].second))", line)
+        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData[\2].second)", line)
 
         return super().update_line_initial_pass(line)
 
