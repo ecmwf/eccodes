@@ -1,13 +1,14 @@
 #include "GribUtils.h"
-#include "AccessorUtils/AccessorProxy.h"
+#include "ConversionHelper.h"
 
 namespace eccodes::accessor {
 
 bool gribIsEarthOblate()
 {
-    long oblate = toLong(AccessorName("earthIsOblate"));
+    long oblate{};
+    GribStatus ret = unpackLong(AccessorName("earthIsOblate"), oblate);
 
-    return (oblate == 1);
+    return (ret == GribStatus::SUCCESS && oblate == 1);
 }
 
 }

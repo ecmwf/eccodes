@@ -1,4 +1,4 @@
-#include "AccessorProxy.h"
+#include "ConversionHelper.h"
 #include "Accessor.h"
 #include "AccessorStore.h"
 #include "AccessorUtils/AccessorException.h"
@@ -20,44 +20,45 @@ namespace {
     };
 }
 
-double toDouble(AccessorName const& name)
+GribStatus unpackDouble(AccessorName const& name, double& value)
 {
 //    return getAccessor(name)->unpack<double>();
     if(auto accessorPtr = getAccessor(name); accessorPtr)
     {
-        return accessorPtr->unpack<double>();
+        value = accessorPtr->unpack<double>();
+        return GribStatus::SUCCESS;
     }
 
     // C++ Accessor not found - fall back to C (should be safe!)
     grib_accessor* a = get_grib_accessor(name);
     Assert(a);
-    double d{};
-    grib_get_double_internal(grib_handle_of_accessor(a), name.get().c_str(), &d);
-    return d;
+    int ret = grib_get_double_internal(grib_handle_of_accessor(a), name.get().c_str(), &value);
+    return GribStatus{ret};
 }
 
-long toLong(AccessorName const& name)
+GribStatus unpackLong(AccessorName const& name, long& value)
 {
 //    return getAccessor(name)->unpack<long>();
     if(auto accessorPtr = getAccessor(name); accessorPtr)
     {
-        return accessorPtr->unpack<long>();
+        value = accessorPtr->unpack<long>();
+        return GribStatus::SUCCESS;
     }
 
     // C++ Accessor not found - fall back to C (should be safe!)
     grib_accessor* a = get_grib_accessor(name);
     Assert(a);
-    long l{};
-    grib_get_long_internal(grib_handle_of_accessor(a), name.get().c_str(), &l);
-    return l;
+    int ret = grib_get_long_internal(grib_handle_of_accessor(a), name.get().c_str(), &value);
+    return GribStatus{ret};
 }
 
-std::string toString(AccessorName const& name)
+GribStatus unpackString(AccessorName const& name, std::string& value)
 {
 //    return getAccessor(name)->unpack<std::string>();
     if(auto accessorPtr = getAccessor(name); accessorPtr)
     {
-        return accessorPtr->unpack<std::string>();
+        value = accessorPtr->unpack<std::string>();
+        return GribStatus::SUCCESS;
     }
 
     // C++ Accessor not found - fall back to C (should be safe!)
@@ -65,27 +66,15 @@ std::string toString(AccessorName const& name)
     Assert(a);
     size_t len{512};
     char buffer[len] = {0,};
-    grib_get_string_internal(grib_handle_of_accessor(a), name.get().c_str(), buffer, &len);
-    return {buffer};
+    int ret = grib_get_string_internal(grib_handle_of_accessor(a), name.get().c_str(), buffer, &len);
+    value = buffer;
+    return GribStatus{ret};
 }
 
-// Conversion helpers...
-GribStatus toDouble(AccessorName const& name, double& value)
-{
-    value = toDouble(name);
-    return GribStatus::SUCCESS;
-}
-
-GribStatus toLong(AccessorName const& name, long& value)
-{
-    value = toLong(name);
-    return GribStatus::SUCCESS;
-}
-
-GribStatus toString(AccessorName const& name, std::string& value)
-{
-    value = toString(name);
-    return GribStatus::SUCCESS;
+// Overload for when the format string doesn't contain any format specifiers, 
+// to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
+std::string fmtString(const char* format) {
+    return std::string(format);
 }
 
 }

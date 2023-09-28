@@ -43,8 +43,7 @@ set(accessor_utils_src_files
 	${accessor_utils_dir}/AccessorException.h
 	${accessor_utils_dir}/AccessorLogger.cc
 	${accessor_utils_dir}/AccessorLogger.h
-	${accessor_utils_dir}/AccessorProxy.cc
-	${accessor_utils_dir}/AccessorProxy.h
+	${accessor_utils_dir}/ConversionHelper.cc
 	${accessor_utils_dir}/ConversionHelper.h
 	${accessor_utils_dir}/GribStatus.h
 	${accessor_utils_dir}/GribType.cc

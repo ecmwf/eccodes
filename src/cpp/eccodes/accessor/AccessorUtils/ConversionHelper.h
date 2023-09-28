@@ -2,12 +2,18 @@
 
 // Utils to help convert the accessor C code to C++
 
+#include "AccessorDefs.h"
+#include "GribStatus.h"
 #include <string>
 #include <cstdarg>
 #include <vector>
 
 namespace eccodes::accessor
 {
+
+GribStatus unpackDouble(AccessorName const& name, double& value);
+GribStatus unpackLong(AccessorName const& name, long& value);
+GribStatus unpackString(AccessorName const& name, std::string& value);
 
 // Create a string directly using format string args (e.g. snprintf)
 // For example:
@@ -27,8 +33,6 @@ std::string fmtString(const char* format, Args... args) {
 
 // Overload for when the format string doesn't contain any format specifiers, 
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
-std::string fmtString(const char* format) {
-    return std::string(format);
-}
+std::string fmtString(const char* format);
 
 }

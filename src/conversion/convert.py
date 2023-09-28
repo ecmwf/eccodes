@@ -38,7 +38,6 @@ env = Environment(
 global_function_name = "Global"
 
 common_includes = [
-    "AccessorUtils/AccessorProxy.h", 
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
     "AccessorUtils/GribUtils.h"
@@ -150,17 +149,18 @@ basic_function_substitutions = {
     #       3. The second argument may be a string literal, which needs to convert to an AccessorName object
     #
     # First, let's convert the second argument to an AccessorName if required
-    r"\b(grib_get_\w+)(_internal)?\(\s*(h\s*,\s*)?\s*(\".*\")": r"\1\2(\3AccessorName(\4)",
+    r"\b(grib_[gs]et_\w+)(_internal)?\(\s*(h\s*,\s*)?\s*(\".*\")": r"\1\2(\3AccessorName(\4)",
     # Now, complete the conversion - note we remove any references
-    r"\b([\w\s]+)\s*=\s*grib_get_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = toLong(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = toDouble(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = toString(\4, \5)",
+    r"\b([\w\s]+)\s*=\s*grib_get_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackLong(\4, \5)",
+    r"\b([\w\s]+)\s*=\s*grib_get_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackDouble(\4, \5)",
+    r"\b([\w\s]+)\s*=\s*grib_get_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = unpackString(\4, \5)",
 
     # C functions
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
     r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
-    r"\bsnprintf\((\w+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
+    # This version matches either an explicit size or sizeof(x)
+    r"\bsnprintf\((\w+),\s*(?:sizeof\(\w*\))?(?:\d+)?\s*,\s*(\")": r"\1 = fmtString(\2",
 }
 
 
