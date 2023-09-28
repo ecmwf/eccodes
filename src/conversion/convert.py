@@ -9,7 +9,10 @@ import logging
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
-import conversion.convert_data as convert_data
+from convert_debug import debug_line
+from convert_arg import *
+from type_transforms import *
+import convert_data as convert_data
 
 LOG = logging.getLogger(__name__)
 
@@ -31,45 +34,6 @@ env = Environment(
     loader=FileSystemLoader(ARGS.templates),
     undefined=StrictUndefined,
 )
-
-func_pad = 30
-debug_line_enabled = True
-debug_filter_include = []
-debug_filter_exclude = []
-
-def debug_line(func, text):
-    if not debug_line_enabled:
-        return
-    
-    if debug_filter_include and not func in debug_filter_include:
-        return
-    
-    if debug_filter_exclude and func in debug_filter_exclude:
-        return
-    
-    if len(func) > func_pad:
-        print(f">>>>>")
-        print(f">>>>> PADDING ({func_pad}) TOO SMALL FOR FUNC NAME: {func} - size={len(func)}")
-        print(f">>>>>")
-
-    print(f"{func:{func_pad}}: {text}")
-
-
-def transform_variable_name(name):
-    name_parts = name.split("_")
-
-    if len(name_parts) > 1:
-        name = name_parts[0] + "".join(x.capitalize() for x in name_parts[1:])
-    
-    return name[0].lower() + name[1:]
-
-def transform_function_name(name):
-    name = re.sub(rf"^[gs]et_", f"", name)
-    return transform_variable_name(name)
-
-def transform_class_name(name):
-    name = transform_variable_name(name)
-    return name[0].upper() + name[1:]
 
 global_function_name = "Global"
 
@@ -114,44 +78,6 @@ class Member:
     @property
     def array(self):
         return self._array
-
-# Represent an argument in the form TYPE NAME
-# NAME can be "" to represent a type only
-class Arg:
-    def __init__(self, type, name="") -> None:
-        self.type = type
-        self.name = name
-
-    # Create Arg from an input string 
-    @classmethod
-    def from_string(cls, input):
-        # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
-        # Note: We ignore const for now...
-        m = re.match(r"(?:const)?\s*(\w+\**)\s+(\w+)\s*(\[\d*\])?", input)
-
-        if m:
-            arg_type = m.group(1)
-            arg_name = m.group(2)
-            if m.group(3):
-                # Handle array declaration e.g. char buf[10]
-                arg_type += m.group(3)
-
-            debug_line("Arg from_string", f"Creating Arg: {arg_type} {arg_name} from input: {input}")
-            return cls(arg_type, arg_name)
-        return None
-    
-    # Generate a string to represent the Arg's declaration
-    def as_declaration(self):
-        arg_type = self.type
-        arg_name = self.name
-        # need to switch e.g. int[5] foo to int foo[5]
-        m = re.match(r"(\w*)(\[\d*\])", arg_type)
-        if m and m.group(2):
-            arg_type = m.group(1)
-            arg_name += m.group(2)
-        
-        return f"{arg_type} {arg_name}"
-
 
 class Function:
     def __init__(self, name, return_type, args, template=None) -> None:
@@ -237,72 +163,7 @@ basic_function_substitutions = {
     r"\bsnprintf\((\w+),\s*\d+\s*,\s*(\")": r"\1 = fmtString(\2"
 }
 
-# Add any C to C++ type transforms required here
-# These are also added programmatically
-c_to_cpp_type_transforms = {
-    "grib_accessor*"    : None,
-    "grib_handle*"      : None,
-    "char*"             : "std::string",
-    "char[]"            : "std::string",
-    "double[]"          : "std::vector<double>"
-}
 
-# Returns the equivalent C++ arg (name and type), which could be None
-def to_cpp_arg(carg):
-
-    # [1] Transforms defined in c_to_cpp_type_transforms
-    ctype = carg.type
-    ctype_array_suffix = ""
-
-    # Array type check...
-    m = re.match(r"(\w*)(\[\d*\])", carg.type)
-    if m:
-        ctype = m.group(1)
-        ctype_array_suffix = m.group(2)
-
-        # Check for well-known array transforms...
-        for k, v in c_to_cpp_type_transforms.items():
-            if ctype+"[]" == k:
-                if v is None:
-                    return None
-                else:
-                    return Arg(v, transform_variable_name(carg.name))
-
-    # The other transform checks will use array type without array suffix, and add it back in last...
-    for k, v in c_to_cpp_type_transforms.items():
-        if ctype == k:
-            if v is None:
-                return None
-            else:
-                return Arg(v+ctype_array_suffix, transform_variable_name(carg.name))
-
-    # [2] Other transforms
-
-    # Return None for grib_accessor_*
-    m = re.match(r"grib_accessor_", carg.type)
-    if m:
-        return None
-
-    # Pointer types
-    m = re.match(r"(\w*)\*", carg.type)
-    if m:
-        return Arg(m.group(1), transform_variable_name(carg.name))
-
-    return Arg(carg.type, transform_variable_name(carg.name))
-
-# Returns the equivalent C++ arg (name and type), which could be None
-def to_cpp_func_sig_arg(carg):
-    # The type is almost the same as for the function body, with the 
-    # exception that pointers are converted to references
-    is_reference = carg.type[-1] == "*" or carg.type[-1] == "]"
-
-    cpp_arg = to_cpp_arg(carg)
-    if cpp_arg and is_reference:
-        # Strip off any array parts, and add an &
-        cpp_arg.type = re.sub(r"\[\w*\]", f"", cpp_arg.type)
-        cpp_arg.type += "&"
-
-    return cpp_arg
 
 
 # This class is the bridge between the Function class which holds the code
@@ -401,7 +262,7 @@ class FunctionDelegate:
             ctype = m.group(1)
             cpptype = transform_class_name(ctype)
 
-            c_to_cpp_type_transforms[ctype] = cpptype
+            add_c_to_cpp_type_transform(ctype, cpptype)
             line = line.replace(f"{ctype}", f"{cpptype}")
             debug_line("process_type_declarations", f"Added type transform: {ctype} -> {cpptype} [after ]: {line}")
         
@@ -490,12 +351,11 @@ class FunctionDelegate:
         return line
 
     def apply_variable_transforms(self, line):
-        # Assume sizeof(x)/sizeof(*x) is now a container with a size() member...
-        line_b4 = line
-        line, count = re.subn(r"\b(.*=\s+)sizeof\((.*)\)\s*/\s*sizeof\(\*\2\);", r"\1\2.size();", line)
-        if count:
-            debug_line("apply_variable_transforms", f"size transform [before]: {line_b4}")
-            debug_line("apply_variable_transforms", f"size transform [after ]: {line}")
+        # Assume sizeof(x)/sizeof(*x) or sizeof(x)/sizeof(x[0]) refers to a container with a size() member...
+        m = re.search(r"\bsizeof\((.*?)\)\s*/\s*sizeof\(\s*(?:\*)?\1(?:\[0\])?\s*\)", line)
+        if m:
+            line = re.sub(m.re, f"{m.group(1)}.size()", line)
+            debug_line("apply_variable_transforms", f"sizeof transform [after ]: {line}")
 
         return line
 
@@ -603,6 +463,23 @@ class FunctionDelegate:
 
         return line
 
+    # Make sure all variables are being assigned sensible values after any transformations
+    def validate_variable_assignments(self, line):
+
+        # Find assignments
+        m = re.search(rf"\b(\w+)\s*=\s*(\"?\w+\"?).*?;", line)
+
+        if m:
+            for k, v in self._arg_map.items():
+                if v and v.name == m.group(1):
+                    if m.group(2) == "NULL" and v.type[-1] != "*":
+                        line = line.replace("NULL", "{}")
+                        debug_line("validate_variable_assignments", f"Updated NULL assigned value [after ]: {line}")
+
+
+
+        return line
+    
     # Override this to provide any final conversions after the main update_line runs
     def update_line_final_pass(self, line):
         return line
@@ -622,6 +499,7 @@ class FunctionDelegate:
             self.convert_grib_values,
             self.convert_grib_utils,
             self.apply_function_substitutions,
+            self.validate_variable_assignments,
             self.update_line_final_pass
         ]
 
@@ -646,7 +524,8 @@ class FunctionDelegate:
             
             # Split comma-separated variable definitions into separate lines
             # We then call ourself recursively for each split line
-            m = re.match(r"^(\s*\w+\s+)\w+\s*=\s*\w+,", line)
+            #m = re.match(r"^(\s*\w+\s+)\w+\s*=\s*\w+,", line)
+            m = re.match(r"^(\s*\w+\s+)\w+\s*=?\s*(\w+)?,", line)
             if m:
                 debug_line("update_body", f"comma-separated vars [before]: {line}")
                 line = line.replace(",", f";\n{m.group(1)}")
