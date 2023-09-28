@@ -22,7 +22,6 @@ if(typeOfFirstFixedSurface == 103) {
 }
 
 # Define marsType based on type of processed data
-
 concept marsType(unknown) {
 
    fc = {
@@ -38,7 +37,6 @@ concept marsType(unknown) {
    "2" = {
      typeOfProcessedData = 0;
    }
-
 }
 
 alias mars.type   = marsType;
@@ -62,10 +60,8 @@ concept marsStream(unknown) {
 
 alias mars.stream = marsStream;
 
-if(dataset is "climate-dt") {
-
-alias mars.date = validityDate;
-alias mars.time = validityTime;
-unalias mars.step;
-
+if (dataset is "climate-dt") {
+  alias mars.date = validityDate;
+  alias mars.time = validityTime;
+  unalias mars.step;
 }
