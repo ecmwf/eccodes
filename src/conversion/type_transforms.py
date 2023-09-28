@@ -68,22 +68,37 @@ def to_cpp_arg(carg):
     # [4] Pointer types
     m = re.match(r"(\w*)\*", carg.type)
     if m:
-        return Arg(m.group(1), transform_variable_name(carg.name))
+        return Arg(f"std::vector<{m.group(1)}>", transform_variable_name(updated_carg.name))
 
     # [5] Everything else
     return Arg(carg.type, transform_variable_name(carg.name))
 
 # Returns the equivalent C++ arg (name and type), which could be None
 # The type is almost the same as for the function body, with the 
-# exception that pointers are converted to references
-# and arrays are converted to std::vector references
+# following exceptions:
+# - pointers are converted to references (not std::vector)
+# - arrays are converted to std::vector references
 def to_cpp_func_sig_arg(carg):
     
+    # [1] Pointer types
+    if carg.type[-1]  == "*":
+        # Check for defined transforms
+        for k, v in c_to_cpp_type_transforms.items():
+            if k == carg.type:
+                if v is None:
+                    return None
+                else:
+                    return Arg(v+"&", transform_variable_name(carg.name))
+
+        # Other pointers: removing * to avoid getting std::vector type back
+        cpp_arg = to_cpp_arg(Arg(carg.type[:-1], carg.name))
+        cpp_arg.type += "&"
+        return cpp_arg
+
+    # [2] Everything else
     cpp_arg = to_cpp_arg(carg)
 
-    if cpp_arg and carg.type[-1] in ["*", "]"]:
+    if cpp_arg and carg.type[-1] == "]":
         cpp_arg.type += "&"
-
-    debug_line("to_cpp_func_sig_arg", f"{arg_string(carg)} -> {arg_string(cpp_arg)}")
 
     return cpp_arg

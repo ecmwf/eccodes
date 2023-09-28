@@ -11,43 +11,32 @@ c_lib_substitutions = {
     r"\bsnprintf\((\w+),\s*(?:sizeof\(\w*\))?(?:\d+)?\s*,\s*(\")": r"\1 = fmtString(\2",
 }
 
-# Note - these substitutions are applied in the order defined below, so dependencies
-#        can be used if required...
-grib_get_set_substitutions = {
-    # grib_ functions
-    # Note: 1. We treat e.g. grib_get_long and grib_get_long_internal the same...
-    #       2. The first argument (h) may already be stripped so we optionally match it
-    #       3. The second argument may be a string literal, which needs to convert to an AccessorName object
-    #
-    # First, let's convert the second argument to an AccessorName if required
-    r"\b(grib_[gs]et_\w+)(_internal)?\(\s*(h\s*,\s*)?\s*(\".*\")": r"\1\2(\3AccessorName(\4)",
-    # Now, complete the conversion - note we remove any references
-    r"\b([\w\s]+)\s*=\s*grib_get_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackLong(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = unpackDouble(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_get_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = unpackString(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_set_long(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = packLong(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_set_double(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*)\s*\)": r"\1 = packDouble(\4, \5)",
-    r"\b([\w\s]+)\s*=\s*grib_set_string(_internal)?\(\s*(h\s*,\s*)?\s*(.*),\s*&?(.*),\s*(.*)\s*\)": r"\1 = packString(\4, \5)",
+# grib_ functions that can be deleted - we'll comment them out for now!
+grib_deleted_function_substitutions = {
+    r"^\s*(.*?\bgrib_context_malloc_clear)": r"// [Removed grib_context_malloc_clear] \1",
+    r"^\s*(.*?\bgrib_context_free)": r"// [Removed grib_context_free] \1",
 }
 
 grib_iarray_substitutions = {
     r"\bgrib_iarray_new\(\s*(h\s*,\s*)?\s*(.*)?,\s*(.*)?\s*\)": r"std::vector<long>(\2)",
+    r"\bgrib_iarray_push\(\s*(.*)?,\s*(.*)?\s*\)": r"\1.push_back(\2)",
+    r"\bgrib_iarray_used_size\(\s*(.*)?\s*\)": r"\1.size()",
+    r"\bgrib_iarray_get_array\(\s*(.*)?\s*\)": r"\1",
+    r"^\s*(.*?\bgrib_iarray_delete)": r"// [Removed grib_iarray_delete] \1",
 }
     
 def apply_all_func_transforms(line):
-    for k, v in c_lib_substitutions.items():
-        line, count = re.subn(k, v, line)
-        if count:
-            debug_line("apply_all_func_transforms", f"c_lib substitutions [after ]: {line}")
 
-    for k, v in grib_get_set_substitutions.items():
-        line, count = re.subn(k, v, line)
-        if count:
-            debug_line("apply_all_func_transforms", f"grib get/set substitutions [after ]: {line}")
+    func_substitutions = [
+        c_lib_substitutions,
+        grib_deleted_function_substitutions,
+        grib_iarray_substitutions
+    ]
 
-    for k, v in grib_iarray_substitutions.items():
-        line, count = re.subn(k, v, line)
-        if count:
-            debug_line("apply_all_func_transforms", f"grib iarray substitutions [after ]: {line}")
+    for func_substitution_dict in func_substitutions:
+        for k, v in func_substitution_dict.items():
+            line, count = re.subn(k, v, line)
+            if count:
+                debug_line("apply_all_func_transforms", f"Updated line: {line}")
 
     return line

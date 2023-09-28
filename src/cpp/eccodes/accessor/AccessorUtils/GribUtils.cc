@@ -6,7 +6,7 @@ namespace eccodes::accessor {
 bool gribIsEarthOblate()
 {
     long oblate{};
-    GribStatus ret = unpackLong(AccessorName("earthIsOblate"), oblate);
+    GribStatus ret = unpackLongHelper(AccessorName("earthIsOblate"), oblate);
 
     return (ret == GribStatus::SUCCESS && oblate == 1);
 }

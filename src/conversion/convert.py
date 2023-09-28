@@ -539,8 +539,34 @@ class Method(FunctionDelegate):
         line = self._owner_class.update_class_members(line)
         return line
 
+    def apply_get_set_substitutions(self, line):
+        # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
+        # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
+        #       The (?:&)?([\(\w\[\]\)]*)? section is added to match this and strip off the & (and it appears twice!)
+        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)", line)
+        if m:
+            accessor_name = m.group(4)
+            if accessor_name[0] == "\"":
+                accessor_name = "AccessorName(" + accessor_name + ")"
+            else:
+                for k,v in self._arg_map.items():
+                    if v and v.name == accessor_name and v.type == "std::string":
+                        accessor_name = "AccessorName(" + accessor_name + ")"
+
+            if m.group(1) == "get":
+                if m.group(2) == "size":
+                    line = re.sub(m.re, f"getSizeHelper({accessor_name}, {m.group(5)})", line)
+                else:
+                    line = re.sub(m.re, f"unpack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
+            else:
+                line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
+
+        return line
+
     # Overridden to apply member function substitutions
     def apply_function_transforms(self, line):
+        line = self.apply_get_set_substitutions(line)
+        
         for f in self._owner_class._inherited_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
