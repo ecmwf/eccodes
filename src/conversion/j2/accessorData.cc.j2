@@ -52,7 +52,7 @@ static {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) {
 
 {% for m in c.private_methods %}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.cpp_args }})  {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.cpp_args }})  {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}

@@ -417,16 +417,17 @@ class FunctionDelegate:
         # Update any well know return values
         ret = "GribStatus"
         if self.return_type == ret:
-            line_b4 = line
-            line,count = re.subn(r"\bint\b(\s+err\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
-            if count:
-                debug_line("process_return_variables", f"return values [before]: {line_b4}")
-                debug_line("process_return_variables", f"return values [after ]: {line}")
-            line_b4 = line
-            line,count = re.subn(r"(\(\s*err\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
-            if count:
-                debug_line("process_return_variables", f"return values [before]: {line_b4}")
-                debug_line("process_return_variables", f"return values [after ]: {line}")
+            for ret_var in ["err", "ret"]:
+                line_b4 = line
+                line,count = re.subn(rf"\bint\b(\s+{ret_var}\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
+                if count:
+                    debug_line("process_return_variables", f"return values [before]: {line_b4}")
+                    debug_line("process_return_variables", f"return values [after ]: {line}")
+                line_b4 = line
+                line,count = re.subn(rf"(\(\s*{ret_var}\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
+                if count:
+                    debug_line("process_return_variables", f"return values [before]: {line_b4}")
+                    debug_line("process_return_variables", f"return values [after ]: {line}")
 
         return line
                 
@@ -686,6 +687,24 @@ class Method(FunctionDelegate):
     def update_line_initial_pass(self, line):
         line = self._owner_class.update_class_members(line)
         return line
+
+    # Overridden to apply member function substitutions
+    def apply_function_substitutions(self, line):
+        for f in self._owner_class._inherited_methods:
+            m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
+            if m:
+                prefix = m.group(1) if m.group(1) is not None else ""
+                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                debug_line("apply_function_substitutions", f"Updating inherited method {m.group(0)} [after ]: {line}")
+
+        for f in self._owner_class._private_methods:
+            m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
+            if m:
+                prefix = m.group(1) if m.group(1) is not None else ""
+                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                debug_line("apply_function_substitutions", f"Updating private method {m.group(0)} [after ]: {line}")
+
+        return super().apply_function_substitutions(line)
 
 
 # Represent a function signature
