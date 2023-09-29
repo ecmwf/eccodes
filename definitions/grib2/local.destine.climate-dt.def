@@ -1,13 +1,19 @@
 # DestinE MARS ClimateDT keywords
 
-codetable[2] datasetVersion "grib2/destine_datasetVersion.table" : dump;
-alias mars.datasetVersion = datasetVersion;
+codetable[2] activity "grib2/destine_activity.table" : dump;
+alias mars.activity = activity;
 
-codetable[2] datasetActivity "grib2/destine_datasetActivity.table" : dump;
-alias mars.datasetActivity = datasetActivity;
+codetable[2] experiment "grib2/destine_experiment.table" : dump;
+alias mars.study = experiment;
 
-codetable[2] datasetExperiment "grib2/destine_datasetExperiment.table" : dump;
-alias mars.datasetExperiment = datasetExperiment;
+unsigned[1] generation = 255 : dump;
+alias mars.generation = generation;
 
 codetable[2] model "grib2/destine_model.table" : dump;
 alias mars.model = model;
+
+unsigned[1] realisation = 255 : dump;
+alias mars.realisation = realisation;
+
+codetable[2] resolution "grib2/destine_resolution.table" : dump;
+alias mars.resolution = resolution;

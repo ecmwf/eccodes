@@ -6,4 +6,4 @@
 "BSC"         = { centre=98; subCentre=1000; }
 "CSC"         = { centre=98; subCentre=1001; }
 "DKRZ"        = { centre=98; subCentre=1002; }
-"Climate DT consortium (CSC,BSC,AWI,MPI-M)" = { centre=98; subCentre=1003; }
+"Climate DT consortium (CSC,AWI,BSC,MPI-M)" = { centre=98; subCentre=1003; }
