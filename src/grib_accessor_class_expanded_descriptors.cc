@@ -25,6 +25,7 @@ CLASS      = accessor
 SUPER      = grib_accessor_class_long
 IMPLEMENTS = unpack_long;pack_long
 IMPLEMENTS = unpack_double
+IMPLEMENTS = unpack_string_array
 IMPLEMENTS = init;dump;destroy
 IMPLEMENTS = value_count; get_native_type
 MEMBERS    = const char* unexpandedDescriptors
@@ -55,6 +56,7 @@ static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
@@ -107,7 +109,7 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
     0,                /* pack_string */
     0,              /* unpack_string */
     0,          /* pack_string_array */
-    0,        /* unpack_string_array */
+    &unpack_string_array,        /* unpack_string_array */
     0,                 /* pack_bytes */
     0,               /* unpack_bytes */
     0,            /* pack_expression */
@@ -209,8 +211,7 @@ static char* descriptor_type_name(int dtype)
 }
 #endif
 
-static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded,
-                     change_coding_params* ccp, int* err)
+static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
 {
     int k, j, i;
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -803,6 +804,33 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     return GRIB_SUCCESS;
+}
+
+static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+{
+    int err = 0;
+    long* v = NULL;
+    char buf[25] = {0,};
+    long llen = 0;
+    size_t i = 0, size = 0;
+    grib_context* c = a->context;
+
+    err = grib_value_count(a, &llen);
+    if (err) return err;
+
+    size = llen;
+    v = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
+    err = grib_unpack_long(a, v, &size);
+    if (err) return err;
+
+    for (i = 0; i < size; i++) {
+        snprintf(buf, sizeof(buf), "%06ld", v[i]);
+        buffer[i] = grib_context_strdup(c, buf);
+    }
+    *len = size;
+    grib_context_free(c,v);
+
+    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)

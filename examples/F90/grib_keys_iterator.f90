@@ -11,8 +11,6 @@
 !       How to use keys_iterator to get all the available
 !       keys in a GRIB message.
 !
-!
-!
 program keys_iterator
    use eccodes
    implicit none
@@ -26,35 +24,32 @@ program keys_iterator
    call codes_open_file(ifile, &
                         '../../data/regular_latlon_surface.grib1', 'r')
 
-   ! Loop on all the messages in a file.
-
-   call codes_grib_new_from_file(ifile, igrib, iret)
+   ! Loop on all the messages in a file
    grib_count = 0
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      call codes_grib_new_from_file(ifile, igrib, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       grib_count = grib_count + 1
       write (*, *) '-- GRIB N. ', grib_count, ' --'
 
-      ! valid name_spaces are ls and mars
+      ! Choose a namespace. E.g. "ls", "time", "parameter", "geography", "statistics"
       name_space = 'ls'
 
       call codes_keys_iterator_new(igrib, kiter, name_space)
 
       do
          call codes_keys_iterator_next(kiter, iret)
-
          if (iret .ne. CODES_SUCCESS) exit !terminate the loop
 
          call codes_keys_iterator_get_name(kiter, key)
          call codes_get(igrib, trim(key), value)
          all1 = trim(key)//' = '//trim(value)
          write (*, *) trim(all1)
-
       end do
 
       call codes_keys_iterator_delete(kiter)
       call codes_release(igrib)
-      call codes_grib_new_from_file(ifile, igrib, iret)
    end do
 
    call codes_close_file(ifile)

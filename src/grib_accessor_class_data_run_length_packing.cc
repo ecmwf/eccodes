@@ -149,8 +149,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long seclen, number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
     long* level_values = NULL;
     size_t level_values_size = 0;
-    int i = 0;
-    long number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
+    long i = 0, number_of_compressed_values = 0, range = 0, offsetBeforeData = 0, pos = 0;
     long v, n, factor, k, j;
     long* compressed_values = NULL;
     double level_scale_factor = 0;
@@ -214,7 +213,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     while (i < number_of_compressed_values) {
         if (compressed_values[i] > max_level_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                            "%s: numberOfValues mismatch: i=%d, "
+                            "%s: numberOfValues mismatch: i=%ld, "
                             "compressed_values[i]=%ld, max_level_value=%ld",
                             cclass_name, i, compressed_values[i], max_level_value);
             break;
@@ -249,7 +248,132 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
-                    "%s: Function '%s' is not implemented", a->cclass->name, __func__);
-    return GRIB_NOT_IMPLEMENTED;
+    grib_accessor_data_run_length_packing* self = (grib_accessor_data_run_length_packing*)a;
+    grib_handle* gh                             = grib_handle_of_accessor(a);
+    const char* cclass_name                     = a->cclass->name;
+    int err                                     = GRIB_SUCCESS;
+    long number_of_values, bits_per_value, max_level_value, number_of_level_values, decimal_scale_factor;
+    long* level_values = NULL;
+    size_t level_values_size = 0;
+    long i = 0, range = 0, pos = 0, n = 0, j = 0, k = 0, l = 0, missingValueLong = 0;
+    double level_scale_factor = 0;
+    unsigned char* buf = NULL;
+    double missingValue = 9999.0;
+    size_t n_vals = *len;
+
+    if ((err = grib_get_long_internal(gh, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->max_level_value, &max_level_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->number_of_level_values, &number_of_level_values)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double(gh, "missingValue", &missingValue)) != GRIB_SUCCESS)
+        return err;
+
+    if (n_vals != number_of_values) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Parameters are invalid: n_vals=%ld(==number_of_values), number_of_values=%ld(==n_vals)",
+                         cclass_name, n_vals, number_of_values);
+        return GRIB_ENCODING_ERROR;
+    }
+
+    if (bits_per_value == 0) {
+        // TODO(masn): What are we meant to do with constant fields?
+        return GRIB_SUCCESS;
+    }
+
+    level_values       = (long*)grib_context_malloc_clear(a->context, sizeof(long) * number_of_level_values);
+    level_values_size = number_of_level_values;
+    if ((err = grib_get_long_array_internal(gh, self->level_values, level_values, &level_values_size)) != GRIB_SUCCESS)
+        return err;
+    if (decimal_scale_factor > 127) {
+        decimal_scale_factor = -(decimal_scale_factor - 128);
+    }
+    level_scale_factor = grib_power(-decimal_scale_factor, 10.0);
+    missingValueLong = (long)(round(missingValue / level_scale_factor));
+    for (i = 0; i < number_of_level_values; i++) {
+        if (missingValueLong == level_values[i]) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Parameters are invalid: level_values[%ld]=%ld, missingValueLong=%ld",
+                             cclass_name, i, level_values[i], missingValueLong);
+            return GRIB_ENCODING_ERROR;
+        }
+    }
+    range = (1 << bits_per_value) - 1 - max_level_value;
+    if ((max_level_value <= 0) || (number_of_level_values <= 0) || (max_level_value > number_of_level_values) || (range <= 0)) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                    "%s: Parameters are invalid: max_level_value=%ld(>0, <=number_of_level_values), "
+                    "number_of_level_values=%ld(>0, >=max_level_value), range=%ld(>0)",
+                    cclass_name, max_level_value, number_of_level_values, range);
+        return GRIB_ENCODING_ERROR;
+    }
+    buf = (unsigned char*)grib_context_malloc(a->context, 2 * number_of_values);
+    for (i = 0; i < number_of_values; i++) {
+        k = (long)(round(val[i] / level_scale_factor));
+        err = GRIB_ENCODING_ERROR;
+        if (missingValueLong == k) {
+            k = 0;
+            err = GRIB_SUCCESS;
+        } else {
+            for (j = 0; j < max_level_value; j++) {
+                if (level_values[j] == k) {
+                    k = j + 1;
+                    err = GRIB_SUCCESS;
+                    break;
+                }
+            }
+        }
+        if (err != GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                            "%s: Values and/or parameters are invalid: val[%ld]=%lf, level_value=%ld, max_level_value=%ld",
+                            cclass_name, i, val[i], k, max_level_value);
+            return GRIB_ENCODING_ERROR;
+        }
+        if (i == 0) {
+            grib_encode_unsigned_longb(buf, k, &pos, bits_per_value);
+        } else if (i == number_of_values - 1) {
+            if (k != l) {
+                if (n == 0) {
+                    grib_encode_unsigned_longb(buf, k, &pos, bits_per_value);
+                } else {
+                    while (n >= range) {
+                        grib_encode_unsigned_longb(buf, (n % range) + max_level_value + 1, &pos, bits_per_value);
+                        n = n / range;
+                    }
+                    grib_encode_unsigned_longb(buf, n + max_level_value + 1, &pos, bits_per_value);
+                    grib_encode_unsigned_longb(buf, k, &pos, bits_per_value);
+                }
+            } else {
+                n = n + 1;
+                while (n >= range) {
+                    grib_encode_unsigned_longb(buf, (n % range) + max_level_value + 1, &pos, bits_per_value);
+                    n = n / range;
+                }
+                grib_encode_unsigned_longb(buf, n + max_level_value + 1, &pos, bits_per_value);
+            }
+        } else {
+            if (k != l) {
+                if ( n == 0 ) {
+                    grib_encode_unsigned_longb(buf, k, &pos, bits_per_value);
+                } else {
+                    while (n >= range) {
+                        grib_encode_unsigned_longb(buf, (n % range) + max_level_value + 1, &pos, bits_per_value);
+                        n = n / range;
+                    }
+                    grib_encode_unsigned_longb(buf, n + max_level_value + 1, &pos, bits_per_value);
+                    grib_encode_unsigned_longb(buf, k, &pos, bits_per_value);
+                    n = 0;
+                }
+            } else {
+                n = n + 1;
+            }
+        }
+        l = k;
+    }
+    grib_context_free(a->context, level_values);
+    grib_buffer_replace(a, buf, pos/8, 1, 1);
+    grib_context_buffer_free(a->context, buf);
+    return err;
 }

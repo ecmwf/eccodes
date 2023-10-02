@@ -1,9 +1,11 @@
-unsigned[2] Ni  : can_be_missing,dump;
+unsigned[2] Ni : can_be_missing,dump;
 alias numberOfPointsAlongAParallel=Ni;
+alias numberOfPointsAlongXAxis=Ni;
 alias Nx = Ni;
 
 unsigned[2] Nj : can_be_missing,dump;
 alias numberOfPointsAlongAMeridian=Nj;
+alias numberOfPointsAlongYAxis= Nj;
 alias Ny = Nj;
 
 # Latitudes and Longitudes of the first and the last points

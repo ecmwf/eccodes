@@ -1168,57 +1168,33 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    unsigned char* sec7;
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh = grib_handle_of_accessor(a);
     const char* cclass_name = a->cclass->name;
 
     int err = 0;
 
-    long bits_per_value = 0;
-
     // double reference_value = 0;
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    long binary_scale_factor;
-    long decimal_scale_factor;
-    long optimize_scale_factor;
-    long typeOfOriginalFieldValues;
+    long binary_scale_factor, decimal_scale_factor, optimize_scale_factor, typeOfOriginalFieldValues;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
-    long missingValueManagementUsed;
-    long primaryMissingValueSubstitute;
-    long secondaryMissingValueSubstitute;
-    long numberOfBitsUsedForTheGroupWidths;
-    long numberOfBitsUsedForTheScaledGroupLengths;
-    long orderOfSpatialDifferencing;
-    long numberOfOctetsExtraDescriptors;
+    long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
+    long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
+    long numberOfOctetsExtraDescriptors, bits_per_value = 0, bitmap_present = 0;
 
-    int dec_scale;
-    int bin_scale;
-    int wanted_bits;
-    int max_bits;
-    int use_bitmap;
-
-    int j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1;
-    size_t i, ii;
-    int vmn, vmx, vbits;
+    int dec_scale, bin_scale, wanted_bits, max_bits, use_bitmap,
+        j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1, vmn, vmx, vbits;
     // Sections
-    double max_val, min_val, ref, frange, dec_factor, scale;
-    double mn, mx;
+    double max_val, min_val, ref, frange, dec_factor, scale, mn, mx;
     struct section start, *list, *list_backup, *s;
     // Group
-    int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last;
-    int size_sec7;
+    int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last, size_sec7;
     int *refs, *lens, *widths, *itmp, *itmp2;
-    // int est_group_width = 12;
     int est_group_width = 6;
 
-    size_t ndef   = 0;
-    size_t nndata = 0;
-    size_t nstruct;
-
-    long bitmap_present = 0;
+    size_t ndef = 0, nndata = 0, nstruct, i, ii;
 
     int LEN_SEC_MAX = 127;
     int LEN_BITS    = 7;
@@ -1796,7 +1772,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
 
-    sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
+    unsigned char* sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
     if (sec7 == NULL) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: unable to allocate %d bytes", cclass_name, size_sec7);
         return GRIB_OUT_OF_MEMORY;

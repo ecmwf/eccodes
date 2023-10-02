@@ -13,5 +13,5 @@
 11 11 Steric change in sea surface height (m)
 12 12 Sea salt flux (kg m-2 s-1)
 # 13-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

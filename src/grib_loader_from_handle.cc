@@ -156,9 +156,12 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
-    long ga_type = grib_accessor_get_native_type(ga);
-    if (STR_EQUAL(name,"level")) { // See ECC-1560
-        ga_type = GRIB_TYPE_DOUBLE;
+    const long ga_type = grib_accessor_get_native_type(ga);
+
+    if ((ga->flags & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
+        // See ECC-1560 and ECC-1644
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name);
+        return GRIB_SUCCESS;
     }
 
     switch (ga_type) {

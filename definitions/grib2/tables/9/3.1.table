@@ -28,9 +28,7 @@
 110 110 Equatorial azimuthal equidistant projection
 # 111-119 Reserved
 120 120 Azimuth-range projection
-# 121-129 Reserved
-130 130 Irregular latitude/longitude grid
-# 131-139 Reserved
+# 121-139 Reserved
 140 140 Lambert azimuthal equal area projection
 # 141-999 Reserved
 1000 1000 Cross-section grid, with points equally spaced on the horizontal

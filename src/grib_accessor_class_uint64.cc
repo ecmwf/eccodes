@@ -132,7 +132,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;

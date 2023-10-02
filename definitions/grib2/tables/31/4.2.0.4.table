@@ -15,7 +15,7 @@
 13 13 Direct short-wave radiation flux (W m-2)
 14 14 Diffuse short-wave radiation flux (W m-2)
 15 15 Upward UV radiation emitted/reflected from the Earth's surface (W m-2)
-# 16-49 Reserved 
+# 16-49 Reserved
 50 50 UV index (under clear sky) (Numeric)
 51 51 UV index (Numeric)
 52 52 Downward short-wave radiation flux, clear sky (W m-2)
@@ -28,6 +28,6 @@
 59 59 UV visible albedo for direct radiation, volumetric component (%)
 60 60 Photosynthetically active radiation flux, clear sky (W m-2)
 61 61 Direct short-wave radiation flux, clear sky (W m-2)
-# 62-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 62-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

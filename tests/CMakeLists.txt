@@ -21,6 +21,7 @@ list(APPEND test_c_bins
     unit_tests
     bufr_keys_iter
     grib_keys_iter
+    grib_keys_iter_skip
     grib_geo_iter
     gauss_sub
     grib_nearest_test
@@ -31,6 +32,7 @@ list(APPEND test_c_bins
     grib_optimize_scaling
     grib_optimize_scaling_sh
     grib_set_force
+    grib_run_length_packing
     grib_partial_message
     grib_ecc-386
     grib_ecc-1467
@@ -44,12 +46,16 @@ list(APPEND test_c_bins
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
+    codes_dump_action_tree
     codes_set_samples_path
+    codes_compare_keys
+    codes_dump_content
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
     grib_copy_message
     grib_packing_order
+    grib_unpack_subarray
     grib_sh_imag
     grib_spectral
     grib_lam_bf
@@ -73,6 +79,7 @@ if( HAVE_BUILD_TOOLS )
     # and are generally quick
     list(APPEND tests_basic
         codes_info
+        codes_deprecated
         unit_tests
         julian
         grib_dump_samples
@@ -80,9 +87,11 @@ if( HAVE_BUILD_TOOLS )
         bufr_check_descriptors
         definitions
         grib2_version
+        grib_accessors
         grib_calendar
         grib_md5
         grib_cfNames
+        grib_ifsParam
         grib_packing_order
         filter_substr
         grib_uerra
@@ -94,6 +103,7 @@ if( HAVE_BUILD_TOOLS )
         grib_suppressed
         grib_2nd_order_numValues
         grib_ecc-136
+        grib_ecc-530
         grib_ecc-922
         grib_ecc-966
         grib_ecc-967
@@ -115,6 +125,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1406
         grib_ecc-1560
         grib_ecc-1571
+        grib_ecc-1654
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -134,6 +145,7 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_unstructured
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
+        grib_grid_healpix
         grib_g1monthlydate
         grib_g1day_of_the_year_date
         grib_g1fcperiod)
@@ -146,9 +158,11 @@ if( HAVE_BUILD_TOOLS )
         grib_complex
         grib_double_cmp
         grib_change_packing
+        grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
         grib_headers_only
+        grib_unpack_subarray
         grib_count
         bufr_templates
         bufr_dump_data
@@ -163,6 +177,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_copy
         bufr_count
         bufr_get
+        bufr_operators
         bufr_filter_misc
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
@@ -176,11 +191,14 @@ if( HAVE_BUILD_TOOLS )
         bufr_change_edition
         bufr_keys_iter
         grib_keys_iter
+        grib_keys_iter_skip
         grib_geo_iter
         bufr_get_element
         bufr_wmo_tables
         bufr_extract_headers
         extract_offsets
+        bufr_ecc-147
+        bufr_ecc-389
         bufr_ecc-673
         bufr_ecc-428
         bufr_ecc-286
@@ -223,6 +241,7 @@ if( HAVE_BUILD_TOOLS )
         gts_count
         gts_compare
         wrap
+        taf
         pseudo_diag
         metar_ls
         metar_get
@@ -230,6 +249,7 @@ if( HAVE_BUILD_TOOLS )
         metar_compare
         bufr_set
         grib_ieee
+        grib1_gds_not_present
         grib_sh_ieee64
         grib_optimize_scaling
         grib_optimize_scaling_sh
@@ -275,10 +295,13 @@ if( HAVE_BUILD_TOOLS )
         grib_multi_from_message
         grib_change_scanning
         grib_statistics
-        grib_tigge_check
         read_any
         codes_new_from_samples
+        codes_dump_action_tree
         codes_set_samples_path
+        codes_compare_keys
+        codes_dump_content
+        codes_to_double
         grib_dump
         grib_dump_debug
         grib_dump_json
@@ -286,7 +309,8 @@ if( HAVE_BUILD_TOOLS )
         grib_local_NCEP
         grib_neg_fctime
         codes_split_file
-        grib_mars_keys)
+        grib_mars_keys1
+        grib_mars_keys2)
 
     if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_ecc-1431)
@@ -303,6 +327,8 @@ if( HAVE_BUILD_TOOLS )
         list(APPEND tests_extra grib_tigge_conversions2)
         list(APPEND tests_extra bufr_dump_encode_C)
         list(APPEND tests_extra bufr_dump_decode_C)
+        list(APPEND tests_extra bufr_dump_encode_python)
+        list(APPEND tests_extra bufr_dump_decode_python)
         list(APPEND tests_extra list_codetable_flagtable_keys)
     endif()
 
@@ -439,7 +465,7 @@ if( HAVE_BUILD_TOOLS )
     # Performance test. Must have -DENABLE_TIMER=ON
     ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
                       TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ENABLE_TIMER
+                      CONDITION ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
                       TEST_DEPENDS eccodes_download_gribs )
 else()

@@ -493,9 +493,11 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-static bif_trunc_t* new_bif_trunc(grib_accessor* a, grib_accessor_data_g2bifourier_packing* self)
+static bif_trunc_t* new_bif_trunc(grib_accessor* a)
 {
     int ret;
+    grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
+
     grib_handle* gh = grib_handle_of_accessor(a);
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));
 
@@ -634,7 +636,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((ret = grib_value_count(a, &count)) != GRIB_SUCCESS)
         goto cleanup;
 
-    bt = new_bif_trunc(a, self);
+    bt = new_bif_trunc(a);
 
     if (bt == NULL) {
         ret = GRIB_INTERNAL_ERROR;
@@ -735,7 +737,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
-    bt = new_bif_trunc(a, self);
+    bt = new_bif_trunc(a);
 
     if (bt == NULL) {
         long makeTemplate = 0;

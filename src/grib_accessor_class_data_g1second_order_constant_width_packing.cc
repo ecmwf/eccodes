@@ -308,7 +308,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "constant width packing not implemented");
+    const char* cclass_name = a->cclass->name;
+    grib_context_log(a->context, GRIB_LOG_ERROR, "%s: %s: Not implemented", cclass_name, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 

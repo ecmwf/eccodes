@@ -18,6 +18,7 @@
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = unpack_long
    IMPLEMENTS = pack_long
+   IMPLEMENTS = get_native_type
    END_CLASS_DEF
 
 */
@@ -32,6 +33,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 
@@ -59,7 +61,7 @@ static grib_accessor_class _grib_accessor_class_uint16 = {
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
-    0,            /* get native type */
+    &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
@@ -104,7 +106,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /*unsigned char* data = grib_handle_of_accessor(a)->buffer->data;*/
 
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", a->name, 1);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -118,4 +120,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
+}
+
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_LONG;
 }

@@ -86,7 +86,7 @@ ${tools_dir}/grib_get -p projString:i $grib2_sample > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "ERROR.*Cannot unpack projTargetString as long" $tempText
+grep -q "ERROR.*Cannot unpack.*projTargetString.* as long" $tempText
 grep -q "Hint: Try unpacking as string" $tempText
 
 set +e
@@ -94,7 +94,7 @@ ${tools_dir}/grib_get -p projString:d $grib2_sample > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "ERROR.*Cannot unpack projTargetString as double" $tempText
+grep -q "ERROR.*Cannot unpack.*projTargetString.* as double" $tempText
 grep -q "Hint: Try unpacking as string" $tempText
 
 

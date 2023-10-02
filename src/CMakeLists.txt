@@ -35,7 +35,6 @@ list( APPEND eccodes_src_files
     action_class_set.cc
     action_class_set_sarray.cc
     action_class_set_darray.cc
-    action_class_set_iarray.cc
     action_class_noop.cc
     action_class_write.cc
     action_class_print.cc
@@ -57,8 +56,6 @@ list( APPEND eccodes_src_files
     grib_iarray.cc
     grib_viarray.cc
     codes_memfs.cc
-    grib_accessor_class_array.cc
-    grib_accessor_class_assert.cc
     grib_accessor_class_ascii.cc
     grib_accessor_class_bit.cc
     grib_accessor_class_bitmap.cc
@@ -99,7 +96,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_double.cc
     grib_accessor_class_element.cc
     grib_accessor_class_evaluate.cc
-    grib_accessor_class_g1area.cc
     grib_accessor_class_g1date.cc
     grib_accessor_class_g1monthlydate.cc
     grib_accessor_class_library_version.cc
@@ -132,11 +128,9 @@ list( APPEND eccodes_src_files
     grib_accessor_class_latlonvalues.cc
     grib_accessor_class_latitudes.cc
     grib_accessor_class_longitudes.cc
-    grib_accessor_class_missing.cc
     grib_accessor_class_offset_file.cc
     grib_accessor_class_scale.cc
     grib_accessor_class_from_scale_factor_scaled_value.cc
-    grib_accessor_class_times.cc
     grib_accessor_class_g2bitmap_present.cc
     grib_accessor_class_ibmfloat.cc
     grib_accessor_class_ieeefloat.cc
@@ -145,7 +139,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_message.cc
     grib_accessor_class_nearest.cc
     grib_accessor_class_ksec1expver.cc
-    grib_accessor_class_laplacian.cc
     grib_accessor_class_label.cc
     grib_accessor_class_long.cc
     grib_accessor_class_lookup.cc
@@ -158,6 +151,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_padtoeven.cc
     grib_accessor_class_padtomultiple.cc
     grib_accessor_class_section_padding.cc
+    grib_accessor_class_packing_type.cc
     grib_accessor_class_section_pointer.cc
     grib_accessor_class_position.cc
     grib_accessor_class_signed.cc
@@ -189,14 +183,12 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_g1shsimple_packing.cc
     grib_accessor_class_data_shsimple_packing.cc
     grib_accessor_class_data_dummy_field.cc
-    grib_2order_packer_simple.cc
     grib_accessor_class_variable.cc
     grib_accessor_class_second_order_bits_per_value.cc
     grib_accessor_class_data_g2simple_packing.cc
     grib_accessor_class_data_g2simple_packing_with_preprocessing.cc
     grib_accessor_class_data_g2shsimple_packing.cc
     grib_accessor_class_data_g2complex_packing.cc
-    grib_accessor_class_data_2order_packing.cc
     grib_accessor_class_data_g1second_order_row_by_row_packing.cc
     grib_accessor_class_data_g1second_order_constant_width_packing.cc
     grib_accessor_class_data_g1second_order_general_packing.cc
@@ -218,7 +210,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_data_complex_packing.cc
     grib_accessor_class_data_g1complex_packing.cc
     grib_accessor_class_gds_not_present_bitmap.cc
-    grib_accessor_class_data_apply_gdsnotpresent.cc
     grib_accessor_class_gds_is_present.cc
     grib_accessor_class_select_step_template.cc
     grib_accessor_class_local_definition.cc
@@ -325,10 +316,10 @@ list( APPEND eccodes_src_files
     grib_nearest.cc
     grib_nearest_class.cc
     grib_nearest_class_gen.cc
+    grib_nearest_class_healpix.cc
     grib_nearest_class_regular.cc
     grib_nearest_class_reduced.cc
     grib_nearest_class_latlon_reduced.cc
-    grib_nearest_class_sh.cc
     grib_nearest_class_lambert_conformal.cc
     grib_nearest_class_lambert_azimuthal_equal_area.cc
     grib_nearest_class_mercator.cc
@@ -347,6 +338,7 @@ list( APPEND eccodes_src_files
     grib_iterator_class_latlon.cc
     grib_iterator_class_regular.cc
     grib_iterator_class_space_view.cc
+    grib_iterator_class_healpix.cc
     grib_expression.cc
     codes_util.cc
     grib_util.cc
@@ -367,15 +359,7 @@ list( APPEND eccodes_src_files
     grib_yacc.h
     md5.h
     md5.cc
-    grib_accessor_class_int16.cc
-    grib_accessor_class_int16_little_endian.cc
-    grib_accessor_class_int32.cc
-    grib_accessor_class_int32_little_endian.cc
-    grib_accessor_class_int64.cc
-    grib_accessor_class_int64_little_endian.cc
-    grib_accessor_class_int8.cc
     grib_accessor_class_uint16.cc
-    grib_accessor_class_uint16_little_endian.cc
     grib_accessor_class_uint32.cc
     grib_accessor_class_uint32_little_endian.cc
     grib_accessor_class_uint64.cc

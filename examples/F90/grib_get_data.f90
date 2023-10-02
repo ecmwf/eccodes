@@ -26,10 +26,11 @@ program get_data
 
    call codes_open_file(ifile, '../../data/reduced_latlon_surface.grib1', 'r')
 
-   ! loop on all the messages in a file.
-   call codes_grib_new_from_file(ifile, igrib, iret)
+   ! loop on all the messages in the file
+   do while (.true.)
+      call codes_grib_new_from_file(ifile, igrib, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
-   do while (iret /= CODES_END_OF_FILE)
       count1 = count1 + 1
       print *, "===== Message #", count1
       call codes_get(igrib, 'numberOfPoints', numberOfPoints)
@@ -69,7 +70,6 @@ program get_data
       deallocate (values)
 
       call codes_release(igrib)
-      call codes_grib_new_from_file(ifile, igrib, iret)
 
    end do
 
