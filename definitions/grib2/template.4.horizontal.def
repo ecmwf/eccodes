@@ -1,26 +1,26 @@
 # (C) Copyright 2005- ECMWF.
 
-#  Type of first fixed surface
-codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,no_copy,edition_specific,string_type;
+# Type of first fixed surface
+codetable[1] typeOfFirstFixedSurface ('4.5.table',masterDir,localDir) : dump,edition_specific,string_type;
 meta unitsOfFirstFixedSurface codetable_units(typeOfFirstFixedSurface) : dump;
 meta nameOfFirstFixedSurface codetable_title(typeOfFirstFixedSurface) : dump;
 
-#  Scale factor of first fixed surface
-signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+# Scale factor of first fixed surface
+signed[1] scaleFactorOfFirstFixedSurface = missing()  : can_be_missing,dump,edition_specific;
 
-#  Scaled value of first fixed surface
-unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,no_copy,edition_specific;
+# Scaled value of first fixed surface
+unsigned[4] scaledValueOfFirstFixedSurface = missing()  : can_be_missing,dump,edition_specific;
 
-#  Type of second fixed surface
-codetable[1] typeOfSecondFixedSurface ('4.5.table',masterDir,localDir) = 255 : dump,no_copy,edition_specific;
+# Type of second fixed surface
+codetable[1] typeOfSecondFixedSurface ('4.5.table',masterDir,localDir) = 255 : dump,edition_specific;
 meta unitsOfSecondFixedSurface codetable_units(typeOfSecondFixedSurface) : dump;
 meta nameOfSecondFixedSurface codetable_title(typeOfSecondFixedSurface) : dump;
 
-#  Scale factor of second fixed surface
-signed[1] scaleFactorOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
+# Scale factor of second fixed surface
+signed[1] scaleFactorOfSecondFixedSurface = missing() : can_be_missing,dump,edition_specific;
 
-#  Scaled value of second fixed surface
-unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,no_copy,edition_specific;
+# Scaled value of second fixed surface
+unsigned[4] scaledValueOfSecondFixedSurface = missing() : can_be_missing,dump,edition_specific;
 
 transient pressureUnits="hPa";
 

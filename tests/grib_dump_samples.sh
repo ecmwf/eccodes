@@ -30,7 +30,8 @@ samples="
 
 for sfile in $samples; do
   sample="$ECCODES_SAMPLES_PATH/$sfile"
-  ${tools_dir}/grib_dump -O $sample >/dev/null
+  ${tools_dir}/grib_dump -Oa $sample >/dev/null
+  ${tools_dir}/grib_dump -atH $sample >/dev/null
 done
 
 # Test grib_dump with -t option

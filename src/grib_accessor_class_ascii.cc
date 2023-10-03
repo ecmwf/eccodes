@@ -50,7 +50,6 @@ static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_ascii
@@ -112,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_ascii = {
 
 
 grib_accessor_class* grib_accessor_class_ascii = &_grib_accessor_class_ascii;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -192,13 +185,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -236,7 +229,8 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     size_t l   = sizeof(val);
     char* last = NULL;
 
-    grib_unpack_string(a, val, &l);
+    int err = grib_unpack_string(a, val, &l);
+    if (err) return err;
 
     *v = strtod(val, &last);
 
@@ -257,19 +251,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
     char* bval = 0;
     int err    = 0;
 
-    size_t alen = 0;
-    size_t blen = 0;
-    long count  = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    alen = count;
-
-    err = grib_value_count(b, &count);
-    if (err)
-        return err;
-    blen = count;
+    size_t alen = a->length+1;
+    size_t blen = b->length+1;
 
     if (alen != blen)
         return GRIB_COUNT_MISMATCH;
@@ -277,11 +260,13 @@ static int compare(grib_accessor* a, grib_accessor* b)
     aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
     bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
 
-    grib_unpack_string(a, aval, &alen);
-    grib_unpack_string(b, bval, &blen);
+    err = grib_unpack_string(a, aval, &alen);
+    if (err) return err;
+    err = grib_unpack_string(b, bval, &blen);
+    if (err) return err;
 
     retval = GRIB_SUCCESS;
-    if (strcmp(aval, bval))
+    if (!STR_EQUAL(aval, bval))
         retval = GRIB_STRING_VALUE_MISMATCH;
 
     grib_context_free(a->context, aval);

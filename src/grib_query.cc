@@ -78,7 +78,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
         int i             = 0;
         int id            = -1;
         const char* p;
-        DebugAssert(h == grib_handle_of_accessor(a));
+        DEBUG_ASSERT(h == grib_handle_of_accessor(a));
 
         while (i < MAX_ACCESSOR_NAMES && ((p = a->all_names[i]) != NULL)) {
             if (*p != '_') {
@@ -88,7 +88,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
                     grib_handle* hand   = grib_handle_of_accessor(a);
                     a->same             = hand->accessors[id];
                     hand->accessors[id] = a;
-                    DebugAssert(a->same != a);
+                    DEBUG_ASSERT(a->same != a);
                 }
             }
             i++;
@@ -149,7 +149,7 @@ static char* get_rank(grib_context* c, const char* name, int* rank)
             *rank = -1;
         }
         else {
-            DebugAssert(c);
+            DEBUG_ASSERT(c);
             end++;
             ret = grib_context_strdup(c, end);
         }
@@ -521,7 +521,7 @@ static grib_accessor* _grib_find_accessor(const grib_handle* ch, const char* nam
     grib_handle* h   = (grib_handle*)ch;
     grib_accessor* a = NULL;
     char* p          = NULL;
-    DebugAssert(name);
+    DEBUG_ASSERT(name);
 
     p = strchr((char*)name, '.');
     if (p) {
@@ -614,7 +614,7 @@ grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)
 {
     grib_accessor* a = NULL;
     char* p          = NULL;
-    DebugAssert(name);
+    DEBUG_ASSERT(name);
 
     p = strchr((char*)name, '.');
     if (p) {

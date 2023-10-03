@@ -8,9 +8,10 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include "grib_optimize_decimal_factor.h"
-#include <math.h>
+#include <cmath>
 #include <float.h>
 #include <string.h>
 
@@ -50,9 +51,9 @@ static void factec(int* krep, const double pa, const int knbit, const long kdec,
     }
 
     /* Binary scale factor associated to kdec */
-    *ke = floor(log2((pa * grib_power(kdec, 10)) / (grib_power(knbit, 2) - 0.5))) + 1;
+    *ke = floor(log2((pa * codes_power<double>(kdec, 10)) / (codes_power<double>(knbit, 2) - 0.5))) + 1;
     /* Encoded value for pa = max - min       */
-    *knutil = floor(0.5 + pa * grib_power(kdec, 10) * grib_power(-*ke, 2));
+    *knutil = floor(0.5 + pa * codes_power<double>(kdec, 10) * codes_power<double>(-*ke, 2));
 
 end:
     return;
@@ -98,14 +99,14 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
     xtinyr4 = FLT_MIN;
     xhuger4 = FLT_MAX;
 
-    inbint = grib_power(knbit, 2) - 1;
+    inbint = codes_power<double>(knbit, 2) - 1;
     xnbint = (double)inbint;
 
     /* Test decimal scale factors; keep the most suitable */
     for (jdec = idecmin; jdec <= idecmax; jdec++) {
         /* Fix a problem in GRIBEX */
         if (compat_gribex)
-            if (pa * grib_power(jdec, 10) <= 1.E-12)
+            if (pa * codes_power<double>(jdec, 10) <= 1.E-12)
                 continue;
 
         /* Check it will be possible to decode reference value with 32bit floats */
@@ -125,7 +126,7 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
 
         /* Check it will be possible to decode the maximum value of the fields using 32bit floats */
         if (compat_32bit)
-            if (pmin * grib_power(jdec, 10) + xnbint * grib_power(ie, 2) >= xhuger4)
+            if (pmin * codes_power<double>(jdec, 10) + xnbint * codes_power<double>(ie, 2) >= xhuger4)
                 continue;
 
         /* GRIB1 demands that the binary scale factor be encoded in a single byte */
@@ -141,8 +142,8 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
     }
 
     if (inumax > 0) {
-        double decimal = grib_power(+*kdec, 10);
-        double divisor = grib_power(-*kbin, 2);
+        double decimal = codes_power<double>(+*kdec, 10);
+        double divisor = codes_power<double>(-*kbin, 2);
         double min     = pmin * decimal;
         long vmin, vmax;
         if (grib_get_nearest_smaller_value(gh, reference_value, min, ref) != GRIB_SUCCESS) {
@@ -164,9 +165,9 @@ int grib_optimize_decimal_factor(grib_accessor* a, const char* reference_value,
         int last   = compat_gribex ? 99 : 127;
         double min = pmin, max = pmax;
         double range    = max - min;
-        double f        = grib_power(knbit, 2) - 1;
-        double minrange = grib_power(-last, 2) * f;
-        double maxrange = grib_power(+last, 2) * f;
+        double f        = codes_power<double>(knbit, 2) - 1;
+        double minrange = codes_power<double>(-last, 2) * f;
+        double maxrange = codes_power<double>(+last, 2) * f;
         double decimal  = 1;
         int err;
 

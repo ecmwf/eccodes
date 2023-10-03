@@ -22,14 +22,15 @@
 #  libaec_DIR
 #  LIBAEC_PATH
 #  libaec_PATH
+#  libaec_ROOT
 
 find_path( AEC_INCLUDE_DIR libaec.h
-           PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH
+           PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ${libaec_ROOT} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH ENV libaec_ROOT
            PATH_SUFFIXES include include/aec NO_DEFAULT_PATH )
 find_path( AEC_INCLUDE_DIR libaec.h PATH_SUFFIXES include include/aec )
 
 find_library( AEC_LIBRARY  NAMES aec
-              PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH
+              PATHS ${AEC_DIR} ${AEC_PATH} ${LIBAEC_DIR} ${libaec_DIR} ${LIBAEC_PATH} ${libaec_PATH} ${libaec_ROOT} ENV AEC_DIR ENV AEC_PATH ENV LIBAEC_DIR ENV libaec_DIR ENV LIBAEC_PATH ENV libaec_PATH ENV libaec_ROOT
               PATH_SUFFIXES lib lib64 lib/aec lib64/aec NO_DEFAULT_PATH )
 find_library( AEC_LIBRARY NAMES aec PATH_SUFFIXES lib lib64 lib/aec lib64/aec )
 

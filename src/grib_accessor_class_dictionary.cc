@@ -44,7 +44,6 @@ static int unpack_string(grib_accessor*, char*, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_dictionary
 {
@@ -111,12 +110,6 @@ static grib_accessor_class _grib_accessor_class_dictionary = {
 
 grib_accessor_class* grib_accessor_class_dictionary = &_grib_accessor_class_dictionary;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
@@ -134,7 +127,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
+static grib_trie* load_dictionary(grib_accessor* a, int* err)
 {
     grib_accessor_dictionary* self = (grib_accessor_dictionary*)a;
 
@@ -151,6 +144,7 @@ static grib_trie* load_dictionary(grib_context* c, grib_accessor* a, int* err)
     FILE* f               = NULL;
     int i                 = 0;
     grib_handle* h        = grib_handle_of_accessor(a);
+    grib_context* c       = a->context;
 
     *err = GRIB_SUCCESS;
 
@@ -276,7 +270,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     size_t rsize = 0;
     int i        = 0;
 
-    grib_trie* dictionary = load_dictionary(a->context, a, &err);
+    grib_trie* dictionary = load_dictionary(a, &err);
     if (err)
         return err;
 

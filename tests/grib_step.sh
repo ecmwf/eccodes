@@ -128,7 +128,41 @@ grib_check_key_equals $temp stepType avg
 ${tools_dir}/grib_set -s stepType=avg $grib2_sample $temp
 grib_check_key_equals $temp typeOfTimeIncrement 3
 
+# Decode/Encode stepRange as an int and double
+${tools_dir}/grib_set -s stepType=accum,stepRange=23-28 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange:s" "23-28"
+grib_check_key_equals $temp "stepRange:i" "28"
+grib_check_key_equals $temp "stepRange:d" "28"
+
+${tools_dir}/grib_set -s stepRange:i=24 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "24 24 24"
+# Should this be an error? currently this gets cast from double to int
+${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
+grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
+
+# Key validityDateTime
+# -----------------------------------------------
+input=${data_dir}/constant_field.grib2
+grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
+grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
+grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
+
+# Key julianDay
+# -----------------------------------------------
+input=${data_dir}/sample.grib2
+grib_check_key_equals $input 'julianDay:i' '2454503'
+${tools_dir}/grib_set -s julianDay=2454504 $input $temp
+grib_check_key_equals $input day 6
+grib_check_key_equals $temp day  7
+
+# Seconds (ignored)
+# -----------------------------------------------
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$templog
+# Something should have been written to stderr
+[ -s $templog ]
+grep -q "Truncating time: non-zero seconds.* ignored" $templog
 
 # Clean up
-rm -f $temp
+rm -f $temp $templog
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib

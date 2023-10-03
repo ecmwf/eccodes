@@ -180,7 +180,7 @@ static int read_GRIB(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = GRIB_MY_BUFFER;
+    buf->property = CODES_MY_BUFFER;
 
     tmp[i++] = 'G';
     tmp[i++] = 'R';
@@ -434,7 +434,7 @@ static int read_GRIB(reader* r, int no_alloc)
     return err;
 }
 
-static int read_PSEUDO(reader* r, const char* type)
+static int read_PSEUDO(reader* r, const char* type, int no_alloc)
 {
     unsigned char tmp[32]; /* Should be enough */
     size_t sec1len = 0;
@@ -480,7 +480,7 @@ static int read_PSEUDO(reader* r, const char* type)
     /* fprintf(stderr,"%s sec4len=%d i=%d l=%d\n",type,sec4len,i,4+sec1len+sec4len+4); */
 
     Assert(i <= sizeof(tmp));
-    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, /*no_alloc=*/0);
+    return read_the_rest(r, 4 + sec1len + sec4len + 4, tmp, i, /*check7777=*/1, no_alloc);
 }
 
 static int read_HDF5_offset(reader* r, int length, unsigned long* v, unsigned char* tmp, int* i)
@@ -721,7 +721,7 @@ static int read_BUFR(reader* r, int no_alloc)
     if (!tmp)
         return GRIB_OUT_OF_MEMORY;
     buf           = grib_new_buffer(c, tmp, buflen);
-    buf->property = GRIB_MY_BUFFER;
+    buf->property = CODES_MY_BUFFER;
     r->offset     = r->tell(r->read_data) - 4;
 
     tmp[i++] = 'B';
@@ -899,19 +899,19 @@ static int ecc_read_any(reader* r, int no_alloc, int grib_ok, int bufr_ok, int h
 
             case BUDG:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "BUDG");
+                    err = read_PSEUDO(r, "BUDG", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case DIAG:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "DIAG");
+                    err = read_PSEUDO(r, "DIAG", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
             case TIDE:
                 if (grib_ok) {
-                    err = read_PSEUDO(r, "TIDE");
+                    err = read_PSEUDO(r, "TIDE", no_alloc);
                     return err == GRIB_END_OF_FILE ? GRIB_PREMATURE_END_OF_FILE : err; /* Premature EOF */
                 }
                 break;
@@ -1008,7 +1008,7 @@ static int read_any_taf(reader* r)
     int err                 = 0;
     unsigned char* buffer   = NULL;
     unsigned long magic     = 0;
-    unsigned long start     = 0x54414620;
+    unsigned long start     = 0x54414620; // 4 chars: TAF plus a space
     unsigned char tmp[1000] = {0,}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
@@ -1020,10 +1020,10 @@ static int read_any_taf(reader* r)
         magic &= 0xffffffff;
 
         if (magic == start) {
-            tmp[i++] = 0x54;
-            tmp[i++] = 0x41;
-            tmp[i++] = 0x46;
-            tmp[i++] = 0x20;
+            tmp[i++] = 0x54; //T
+            tmp[i++] = 0x41; //A
+            tmp[i++] = 0x46; //F
+            tmp[i++] = 0x20; //space
 
             r->offset = r->tell(r->read_data) - 4;
 
@@ -1056,7 +1056,7 @@ static int read_any_metar(reader* r)
     int err               = 0;
     unsigned char* buffer = NULL;
     unsigned long magic   = 0;
-    unsigned long start   = 0x4d455441;
+    unsigned long start   = 0x4d455441; // 4 chars: META
     unsigned char tmp[32] = {0,}; /* Should be enough */
     size_t message_size = 0;
     size_t already_read = 0;
@@ -1071,10 +1071,10 @@ static int read_any_metar(reader* r)
             if (r->read(r->read_data, &c, 1, &err) != 1 || err != 0)
                 break;
             if (c == 'R') {
-                tmp[i++] = 0x4d;
-                tmp[i++] = 0x45;
-                tmp[i++] = 0x54;
-                tmp[i++] = 0x41;
+                tmp[i++] = 0x4d; // M
+                tmp[i++] = 0x45; // E
+                tmp[i++] = 0x54; // T
+                tmp[i++] = 0x41; // A
                 tmp[i++] = 'R';
 
                 r->offset = r->tell(r->read_data) - 4;
@@ -1754,11 +1754,9 @@ int grib_count_in_file(grib_context* c, FILE* f, int* n)
         }
     }
     else {
-        void* mesg   = NULL;
         size_t size  = 0;
         off_t offset = 0;
-        while ((mesg = wmo_read_any_from_file_malloc(f, 0, &size, &offset, &err)) != NULL && err == GRIB_SUCCESS) {
-            grib_context_free(c, mesg);
+        while ((err = wmo_read_any_from_file_fast(f, &size, &offset)) == GRIB_SUCCESS) {
             (*n)++;
         }
     }
@@ -1785,15 +1783,15 @@ int grib_count_in_filename(grib_context* c, const char* filename, int* n)
     return err;
 }
 
-typedef void* (*decoder_proc)(FILE* f, int headers_only, size_t* size, off_t* offset, int* err);
+typedef int (*decoder_proc)(FILE* f, size_t* size, off_t* offset);
 
 static decoder_proc get_reader_for_product(ProductKind product)
 {
     decoder_proc decoder = NULL;
-    if      (product == PRODUCT_GRIB) decoder = &wmo_read_grib_from_file_malloc;
-    else if (product == PRODUCT_BUFR) decoder = &wmo_read_bufr_from_file_malloc;
-    else if (product == PRODUCT_GTS)  decoder = &wmo_read_gts_from_file_malloc;
-    else if (product == PRODUCT_ANY)  decoder = &wmo_read_any_from_file_malloc;
+    if      (product == PRODUCT_GRIB) decoder = &wmo_read_grib_from_file_fast;
+    else if (product == PRODUCT_BUFR) decoder = &wmo_read_bufr_from_file_fast;
+    else if (product == PRODUCT_GTS)  decoder = &wmo_read_gts_from_file_fast;
+    else if (product == PRODUCT_ANY)  decoder = &wmo_read_any_from_file_fast;
     return decoder;
 }
 
@@ -1807,20 +1805,18 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
     decoder = get_reader_for_product(product);
 
     if (!decoder) {
-        grib_context_log(c, GRIB_LOG_ERROR, "count_product_in_file: not supported for given product");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Not supported for given product", __func__);
         return GRIB_INVALID_ARGUMENT;
     }
 
     if (c->multi_support_on && product == PRODUCT_GRIB) {
-        grib_context_log(c, GRIB_LOG_ERROR, "count_product_in_file: Multi-field GRIBs not supported");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Multi-field GRIBs not supported", __func__);
         err = GRIB_NOT_IMPLEMENTED;
     }
     else {
-        void* mesg   = NULL;
         size_t size  = 0;
         off_t offset = 0;
-        while ((mesg = decoder(f, 0, &size, &offset, &err)) != NULL && err == GRIB_SUCCESS) {
-            grib_context_free(c, mesg);
+        while ((err = decoder(f, &size, &offset)) == GRIB_SUCCESS) {
             (*count)++;
         }
         rewind(f);
@@ -1832,7 +1828,6 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
 int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode)
 {
     int err      = 0;
-    void* mesg   = NULL;
     size_t size  = 0;
     off_t offset = 0;
     int num_messages = 0, i = 0;
@@ -1841,26 +1836,31 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
 
     decoder = get_reader_for_product(product);
     if (!decoder) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: not supported for given product");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Not supported for given product", __func__);
         return GRIB_INVALID_ARGUMENT;
     }
     if (!c) c = grib_context_get_default();
+
+    if (path_is_directory(filename)) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: \"%s\" is a directory", __func__, filename);
+        return GRIB_IO_PROBLEM;
+    }
     f = fopen(filename, "rb");
     if (!f) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read file \"%s\"", __func__, filename);
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
 
     err = count_product_in_file(c, f, product, &num_messages);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to count messages");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to count messages (%s)", __func__, grib_get_error_message(err));
         fclose(f);
         return err;
     }
     *length = num_messages;
     if (num_messages == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: No messages in file");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: No messages in file", __func__);
         fclose(f);
         return GRIB_INVALID_MESSAGE;
     }
@@ -1875,26 +1875,14 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
         if (i >= num_messages)
             break;
 
-        mesg = decoder(f, 0, &size, &offset, &err);
-        if (mesg != NULL && err == 0) {
+        err = decoder(f, &size, &offset);
+        if (!err) {
             (*offsets)[i] = offset;
-            grib_context_free(c, mesg);
         }
-        if (mesg && err) {
-            if (strict_mode) {
-                grib_context_free(c, mesg);
+        else {
+            if (strict_mode && (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE)) {
                 fclose(f);
                 return GRIB_DECODING_ERROR;
-            }
-        }
-        if (!mesg) {
-            if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
-                /* An error occurred */
-                grib_context_log(c, GRIB_LOG_ERROR, "codes_extract_offsets_malloc: Unable to read message");
-                if (strict_mode) {
-                    fclose(f);
-                    return GRIB_DECODING_ERROR;
-                }
             }
         }
         ++i;

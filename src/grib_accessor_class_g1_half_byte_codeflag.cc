@@ -39,7 +39,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_g1_half_byte_codeflag
@@ -101,12 +100,6 @@ static grib_accessor_class _grib_accessor_class_g1_half_byte_codeflag = {
 
 
 grib_accessor_class* grib_accessor_class_g1_half_byte_codeflag = &_grib_accessor_class_g1_half_byte_codeflag;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

@@ -40,16 +40,8 @@ int grib_f_multi_support_on(void);
 int grib_f_multi_support_off_(void);
 int grib_f_multi_support_off__(void);
 int grib_f_multi_support_off(void);
-int grib_f_iterator_new_(int *gid, int *iterid, int *mode);
-int grib_f_iterator_new__(int *gid, int *iterid, int *mode);
-int grib_f_iterator_new(int *gid, int *iterid, int *mode);
-int grib_f_iterator_next_(int *iterid, double *lat, double *lon, double *value);
-int grib_f_iterator_next__(int *iterid, double *lat, double *lon, double *value);
-int grib_f_iterator_next(int *iterid, double *lat, double *lon, double *value);
-int grib_f_iterator_delete_(int *iterid);
-int grib_f_iterator_delete__(int *iterid);
-int grib_f_iterator_delete(int *iterid);
 
+/* GRIB keys iterator */
 int grib_f_keys_iterator_new_(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new__(int *gid, int *iterid, char *name_space, int len);
 int grib_f_keys_iterator_new(int *gid, int *iterid, char *name_space, int len);
@@ -59,8 +51,14 @@ int grib_f_keys_iterator_next(int *iterid);
 int grib_f_keys_iterator_delete_(int *iterid);
 int grib_f_keys_iterator_delete__(int *iterid);
 int grib_f_keys_iterator_delete(int *iterid);
+int grib_f_keys_iterator_get_name_(int *iterid, char *name, int len);
+int grib_f_keys_iterator_get_name__(int *kiter, char *name, int len);
+int grib_f_keys_iterator_get_name(int *kiter, char *name, int len);
+int grib_f_keys_iterator_rewind_(int *kiter);
+int grib_f_keys_iterator_rewind__(int *kiter);
+int grib_f_keys_iterator_rewind(int *kiter);
 
-/*BUFR keys iterator*/
+/* BUFR keys iterator */
 int codes_f_bufr_keys_iterator_new_(int *gid, int *iterid);
 int codes_f_bufr_keys_iterator_new__(int *gid, int *iterid);
 int codes_f_bufr_keys_iterator_new(int *gid, int *iterid);
@@ -101,12 +99,6 @@ int grib_f_skip_read_only(int *iterid);
 int grib_f_skip_function_(int *iterid);
 int grib_f_skip_function__(int *iterid);
 int grib_f_skip_function(int *iterid);
-int grib_f_keys_iterator_get_name_(int *iterid, char *name, int len);
-int grib_f_keys_iterator_get_name__(int *kiter, char *name, int len);
-int grib_f_keys_iterator_get_name(int *kiter, char *name, int len);
-int grib_f_keys_iterator_rewind_(int *kiter);
-int grib_f_keys_iterator_rewind__(int *kiter);
-int grib_f_keys_iterator_rewind(int *kiter);
 int grib_f_new_from_message_(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message__(int *gid, void *buffer, size_t *bufsize);
 int grib_f_new_from_message(int *gid, void *buffer, size_t *bufsize);

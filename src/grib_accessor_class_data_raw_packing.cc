@@ -11,7 +11,7 @@
  *  Enrico Fucile
  ****************************/
 
-#include "grib_api_internal_cpp.h"
+#include "grib_ieeefloat.h"
 
 #define PRE_PROCESSING_NONE 0
 #define PRE_PROCESSING_DIFFERENCE 1
@@ -46,7 +46,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -117,12 +116,6 @@ static grib_accessor_class _grib_accessor_class_data_raw_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_raw_packing = &_grib_accessor_class_data_raw_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

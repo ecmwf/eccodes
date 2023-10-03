@@ -281,6 +281,24 @@ ${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
 unset ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS
 rm -f $fBufrTmp1 $fBufrTmp2
 
+# Through index
+# -------------
+tempIndex1=temp.$label.1.idx
+tempIndex2=temp.$label.2.idx
+f=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl
+${tools_dir}/bufr_set -s ident:s=66611 $f $fBufrTmp
+${tools_dir}/bufr_index_build -N -o $tempIndex1 $f
+${tools_dir}/bufr_index_build -N -o $tempIndex2 $fBufrTmp
+
+set +e
+${tools_dir}/bufr_compare  $tempIndex1 $tempIndex2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
+rm -f $tempIndex1 $tempIndex2
+
 
 # Clean up
 # -------------

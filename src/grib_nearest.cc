@@ -295,8 +295,6 @@ int grib_nearest_find_generic(
     double inlat, double inlon, unsigned long flags,
 
     const char* values_keyname,
-    const char* Ni_keyname,
-    const char* Nj_keyname,
     double** out_lats,
     int* out_lats_count,
     double** out_lons,
@@ -343,13 +341,6 @@ int grib_nearest_find_generic(
         double lat1 = 0, lat2 = 0;     /* inlat will be between these */
         const double LAT_DELTA = 10.0; /* in degrees */
 
-        /* Note: If this is being called for a REDUCED grid, its Ni will be missing */
-
-        if (grib_is_missing(h, Nj_keyname, &ret)) {
-            grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", Nj_keyname);
-            return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
-        }
-
         *out_lons_count = nvalues; /* Maybe overestimate but safe */
         *out_lats_count = nvalues;
 
@@ -366,8 +357,10 @@ int grib_nearest_find_generic(
             return GRIB_OUT_OF_MEMORY;
 
         iter = grib_iterator_new(h, 0, &ret);
-        if (ret)
+        if (ret) {
+            free(neighbours);
             return ret;
+        }
         /* First pass: collect all latitudes and longitudes */
         while (grib_iterator_next(iter, &lat, &lon, &the_value)) {
             ++the_index;

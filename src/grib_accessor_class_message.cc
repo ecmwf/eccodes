@@ -40,7 +40,6 @@ static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static void resize(grib_accessor*,size_t);
 static int compare(grib_accessor*, grib_accessor*);
@@ -106,12 +105,6 @@ static grib_accessor_class _grib_accessor_class_message = {
 
 grib_accessor_class* grib_accessor_class_message = &_grib_accessor_class_message;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 
@@ -141,7 +134,8 @@ static void resize(grib_accessor* a, size_t new_size)
 
     grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
     grib_context_free(a->context, zero);
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message.c %ld %ld %s %s\n", (long)new_size, (long)a->length, a->cclass->name, a->name);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message %ld %ld %s %s",
+                    (long)new_size, (long)a->length, a->cclass->name, a->name);
     Assert(new_size == a->length);
 }
 

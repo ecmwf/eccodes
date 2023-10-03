@@ -14,37 +14,6 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-#if 0
- /* #if GRIB_PTHREADS */
- static pthread_once_t once  = PTHREAD_ONCE_INIT;
- static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
- static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
- static void init() {
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1,&attr);
-    pthread_mutex_init(&mutex2,&attr);
-    pthread_mutexattr_destroy(&attr);
- }
- /* #elif GRIB_OMP_THREADS */
- static int once = 0;
- static omp_nest_lock_t mutex1;
- static omp_nest_lock_t mutex2;
- static void init()
- {
-    GRIB_OMP_CRITICAL(lock_grib_handle_c)
-    {
-        if (once == 0)
-        {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
- }
-#endif
-
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
 static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
@@ -227,7 +196,7 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
         return NULL;
     }
 
-    gl->buffer->property = GRIB_USER_BUFFER;
+    gl->buffer->property = CODES_USER_BUFFER;
 
     next = gl->context->grib_reader->first->root;
     while (next) {
@@ -432,7 +401,7 @@ grib_handle* grib_handle_new_from_message_copy(grib_context* c, const void* data
     memcpy(copy, data, size);
 
     g                   = grib_handle_new_from_message(c, copy, size);
-    g->buffer->property = GRIB_MY_BUFFER;
+    g->buffer->property = CODES_MY_BUFFER;
 
     return g;
 }
@@ -452,7 +421,7 @@ grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const vo
     memcpy(copy, data, size);
 
     g                   = grib_handle_new_from_partial_message(c, copy, size);
-    g->buffer->property = GRIB_MY_BUFFER;
+    g->buffer->property = CODES_MY_BUFFER;
 
     return g;
 }
@@ -479,6 +448,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
     gl               = grib_new_handle(c);
     gl->product_kind = PRODUCT_GRIB; /* See ECC-480 */
     h                = grib_handle_create(gl, c, data, buflen);
+    if (!h) return NULL;
 
     /* See ECC-448 */
     if (determine_product_kind(h, &product_kind) == GRIB_SUCCESS) {
@@ -637,7 +607,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         return NULL;
     }
 
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
@@ -794,13 +764,13 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     }
 
     gl->offset           = gm->offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc_clear(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
@@ -874,7 +844,7 @@ grib_handle* gts_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_GTS;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -915,7 +885,7 @@ grib_handle* taf_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_TAF;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -956,7 +926,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_METAR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1024,7 +994,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_BUFR;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1033,7 +1003,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
@@ -1076,7 +1046,7 @@ grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
     gl->product_kind     = PRODUCT_ANY;
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
@@ -1149,14 +1119,14 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
     }
 
     gl->offset           = offset;
-    gl->buffer->property = GRIB_MY_BUFFER;
+    gl->buffer->property = CODES_MY_BUFFER;
 
     grib_context_increment_handle_file_count(c);
     grib_context_increment_handle_total_count(c);
 
     if (c->gts_header_on && gtslen >= 8) {
         gl->gts_header = (char*)grib_context_malloc(c, sizeof(unsigned char) * gtslen);
-        DebugAssert(gts_header);
+        DEBUG_ASSERT(gts_header);
         if (gts_header) memcpy(gl->gts_header, gts_header, gtslen);
         gl->gts_header_len = gtslen;
         grib_context_free(c, save_gts_header);
@@ -1423,38 +1393,32 @@ int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
     return err;
 }
 
-grib_handle* grib_handle_new(grib_context* c)
-{
-    grib_handle* h;
-
-    if (!c)
-        c = grib_context_get_default();
-    h         = grib_new_handle(c);
-    h->buffer = grib_create_growable_buffer(c);
-    if (h->buffer == NULL) {
-        grib_handle_delete(h);
-        return NULL;
-    }
-    h->root = grib_create_root_section(h->context, h);
-
-    if (!h->root) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create root section");
-        grib_handle_delete(h);
-        return NULL;
-    }
-
-    if (!h->context->grib_reader || !h->context->grib_reader->first) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create handle, no definitions found");
-        grib_handle_delete(h);
-        return NULL;
-    }
-
-    h->buffer->property = GRIB_USER_BUFFER;
-
-    h->header_mode = 1;
-
-    return h;
-}
+// grib_handle* grib_handle_new(grib_context* c)
+// {
+//     grib_handle* h;
+//     if (!c)
+//         c = grib_context_get_default();
+//     h         = grib_new_handle(c);
+//     h->buffer = grib_create_growable_buffer(c);
+//     if (h->buffer == NULL) {
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     h->root = grib_create_root_section(h->context, h);
+//     if (!h->root) {
+//         grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create root section");
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     if (!h->context->grib_reader || !h->context->grib_reader->first) {
+//         grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new: cannot create handle, no definitions found");
+//         grib_handle_delete(h);
+//         return NULL;
+//     }
+//     h->buffer->property = CODES_USER_BUFFER;
+//     h->header_mode = 1;
+//     return h;
+// }
 
 grib_action* grib_action_from_filter(const char* filter)
 {
@@ -1489,22 +1453,22 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
     return GRIB_SUCCESS;
 }
 
-int grib_handle_prepare_action(grib_handle* h, grib_action* a)
-{
-    int err;
+// int grib_handle_prepare_action(grib_handle* h, grib_action* a)
+// {
+//     int err;
 
-    if (!a)
-        return GRIB_SUCCESS; /* TODO: return error */
+//     if (!a)
+//         return GRIB_SUCCESS; /* TODO: return error */
 
-    while (a) {
-        err = grib_action_execute(a, h);
-        if (err != GRIB_SUCCESS)
-            return err;
-        a = a->next;
-    }
+//     while (a) {
+//         err = grib_action_execute(a, h);
+//         if (err != GRIB_SUCCESS)
+//             return err;
+//         a = a->next;
+//     }
 
-    return GRIB_SUCCESS;
-}
+//     return GRIB_SUCCESS;
+// }
 
 static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
 {

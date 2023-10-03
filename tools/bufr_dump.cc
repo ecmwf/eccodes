@@ -307,7 +307,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_desc), 0);
     array_descriptors = (long*)malloc(size_desc * sizeof(long));
     if (!array_descriptors) {
-        fprintf(stderr, "%s: Memory allocation error", the_key);
+        fprintf(stderr, "%s: Memory allocation error. Key %s\n", tool_name, the_key);
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_long_array(h, the_key, array_descriptors, &size_desc), 0);
@@ -325,7 +325,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_abbrevs), 0);
     array_abbrevs = (char**)malloc(size_abbrevs * sizeof(char*));
     if (!array_abbrevs) {
-        fprintf(stderr, "%s: Memory allocation error", the_key);
+        fprintf(stderr, "%s: Memory allocation error. Key %s\n", tool_name, the_key);
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_abbrevs, &size_abbrevs), 0);
@@ -335,7 +335,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_names), 0);
     array_names = (char**)malloc(size_names * sizeof(char*));
     if (!array_names) {
-        fprintf(stderr, "%s: Memory allocation error", the_key);
+        fprintf(stderr, "%s: Memory allocation error. Key %s\n", tool_name, the_key);
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_names, &size_names), 0);
@@ -345,7 +345,7 @@ static void bufr_dump_descriptors(grib_handle* h)
     GRIB_CHECK_NOLINE(grib_get_size(h, the_key, &size_units), 0);
     array_units = (char**)malloc(size_units * sizeof(char*));
     if (!array_units) {
-        fprintf(stderr, "%s: Memory allocation error", the_key);
+        fprintf(stderr, "%s: Memory allocation error. Key %s\n", tool_name, the_key);
         exit(GRIB_OUT_OF_MEMORY);
     }
     GRIB_CHECK_NOLINE(grib_get_string_array(h, the_key, array_units, &size_units), 0);
@@ -423,7 +423,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         char* str = grib_options_get_option("S:");
         err       = grib_get_long(h, "numberOfSubsets", &numberOfSubsets);
         if (err) {
-            fprintf(stderr, "ERROR: Failed to get numberOfSubsets.\n");
+            fprintf(stderr, "%s: Failed to get numberOfSubsets.\n", tool_name);
             exit(1);
         }
 
@@ -451,7 +451,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             }
         }
         else {
-            fprintf(stderr, "ERROR: -S option: Please specify a subset number > 0 and < %ld\n", numberOfSubsets + 1);
+            fprintf(stderr, "%s: -S option: Please specify a subset number > 0 and < %ld\n", tool_name, numberOfSubsets + 1);
             exit(1);
         }
     }
@@ -470,8 +470,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 err = grib_set_long(h, "unpack", 2);
                 if (err) {
                     if (options->fail) {
-                        fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
-                                grib_get_error_message(err), options->handle_count);
+                        fprintf(stderr, "%s: Unable to unpack data section: %s (message=%d)\n",
+                                tool_name, grib_get_error_message(err), options->handle_count);
                         exit(err);
                     }
                     else {
@@ -489,8 +489,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 err = grib_set_long(h, "unpack", 1);
                 if (err) {
                     if (options->fail) {
-                        fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
-                                grib_get_error_message(err), options->handle_count);
+                        fprintf(stderr, "%s: Unable to unpack data section: %s (message=%d)\n",
+                                tool_name, grib_get_error_message(err), options->handle_count);
                         exit(err);
                     }
                     else {
@@ -505,8 +505,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 err = grib_set_long(h, "unpack", 1);
                 if (err) {
                     if (options->fail) {
-                        fprintf(stderr, "ERROR: unable to unpack data section: %s (message=%d)\n",
-                                grib_get_error_message(err), options->handle_count);
+                        fprintf(stderr, "%s: Unable to unpack data section: %s (message=%d)\n",
+                                tool_name, grib_get_error_message(err), options->handle_count);
                         exit(err);
                     }
                     else {
@@ -519,7 +519,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 grib_dump_content(h, stdout, options->dump_mode, options->dump_flags, 0);
                 break;
             default:
-                printf("Unknown JSON option %s\n", json_option);
+                fprintf(stderr, "%s: Unknown JSON option %s\n", tool_name, json_option);
                 exit(1);
         }
         if (!strcmp(options->dump_mode, "default")) {
@@ -546,7 +546,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         err = grib_set_long(h, "unpack", 1);
         if (err) {
             if (options->fail) {
-                fprintf(stderr, "ERROR: unable to unpack data section: %s\n", grib_get_error_message(err));
+                fprintf(stderr, "%s: unable to unpack data section: %s\n", tool_name, grib_get_error_message(err));
                 exit(err);
             }
             else {

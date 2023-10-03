@@ -4,6 +4,6 @@
 2 2 u-component of current (m/s)
 3 3 v-component of current (m/s)
 4 4 Rip current occurrence probability (%)
-# 5-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 5-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

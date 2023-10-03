@@ -65,15 +65,6 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-#if 0
-    if (options->outfile && options->outfile->name) {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-#endif
     /* ECC-657: If user supplied -p to print some keys, turn on verbose */
     if (grib_options_on("p:")) {
         if (grib_options_get_option("p:")) {
@@ -113,7 +104,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
         v = (double*)calloc(size, sizeof(double));
         if (!v) {
-            fprintf(stderr, "failed to allocate %ld bytes\n", (long)(size * sizeof(double)));
+            fprintf(stderr, "%s: Failed to allocate %zu bytes\n", tool_name, size * sizeof(double));
             exit(1);
         }
 

@@ -29,14 +29,14 @@
 27 27 Convective cloud layer top (m)
 # 28-29 Reserved
 30 30 Specified radius from the centre of the Sun (m)
-31 31 Solar photosphere 
-32 32 Ionospheric D-region level 
-33 33 Ionospheric E-region level 
-34 34 Ionospheric F1-region level 
-35 35 Ionospheric F2-region level 
+31 31 Solar photosphere
+32 32 Ionospheric D-region level
+33 33 Ionospheric E-region level
+34 34 Ionospheric F1-region level
+35 35 Ionospheric F2-region level
 # 36-99 Reserved
 100 pl Isobaric surface (Pa)
-101 sfc Mean sea level 
+101 sfc Mean sea level
 102 102 Specific altitude above mean sea level (m)
 103 sfc Specified height level above ground (m)
 104 104 Sigma level (sigma value)
@@ -45,10 +45,10 @@
 107 pt Isentropic (theta) level (K)
 108 108 Level at specified pressure difference from ground to level (Pa)
 109 pv Potential vorticity surface (K m2 kg-1 s-1)
-110 110 Reserved 
+110 110 Reserved
 111 111 Eta level (-)
-112 112 Reserved 
-113 113 Logarithmic hybrid level 
+112 112 Reserved
+113 113 Logarithmic hybrid level
 114 sol Snow level (Numeric)
 115 115 Sigma height level
 # 116 Reserved
@@ -56,7 +56,7 @@
 118 hhl Hybrid height level (-)
 119 hpl Hybrid pressure level (-)
 # 120-149 Reserved
-150 150 Generalized vertical height coordinate 
+150 150 Generalized vertical height coordinate
 151 sol Soil level (Numeric)
 152 sol Sea-ice level (Numeric)
 # 153-159 Reserved

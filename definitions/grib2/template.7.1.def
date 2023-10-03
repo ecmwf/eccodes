@@ -1,9 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 7.1, Matrix values at grid point -simple packing
-# Octets 6-nn : Binary data values - binary string, with each
-# (scaled)
-# ????          data_values__binary_string_with_each
 
 meta codedValues data_g2simple_packing(
         section7Length,

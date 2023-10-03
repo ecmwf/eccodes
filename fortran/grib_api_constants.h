@@ -1,3 +1,15 @@
+  integer, parameter,public :: GRIB_ASSERTION_FAILURE                             = -79
+  integer, parameter,public :: GRIB_UNABLE_TO_COMPARE_ACCESSORS                   = -78
+  integer, parameter,public :: GRIB_TYPE_AND_VALUE_MISMATCH                       = -77
+  integer, parameter,public :: GRIB_TYPE_MISMATCH                                 = -76
+  integer, parameter,public :: GRIB_NAME_MISMATCH                                 = -75
+  integer, parameter,public :: GRIB_COUNT_MISMATCH                                = -74
+  integer, parameter,public :: GRIB_OFFSET_MISMATCH                               = -73
+  integer, parameter,public :: GRIB_STRING_VALUE_MISMATCH                         = -72
+  integer, parameter,public :: GRIB_BYTE_VALUE_MISMATCH                           = -71
+  integer, parameter,public :: GRIB_LONG_VALUE_MISMATCH                           = -70
+  integer, parameter,public :: GRIB_DOUBLE_VALUE_MISMATCH                         = -69
+  integer, parameter,public :: GRIB_VALUE_MISMATCH                                = -68
   integer, parameter,public :: GRIB_FUNCTIONALITY_NOT_ENABLED                     = -67
   integer, parameter,public :: GRIB_WRONG_BITMAP_SIZE                             = -66
   integer, parameter,public :: GRIB_OUT_OF_RANGE                                  = -65

@@ -7,9 +7,6 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-/***********************************************************
- *  Enrico Fucile
- ***********************************************************/
 
 #include "grib_api_internal.h"
 /*
@@ -52,7 +49,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_non_alpha
@@ -114,12 +110,6 @@ static grib_accessor_class _grib_accessor_class_non_alpha = {
 
 
 grib_accessor_class* grib_accessor_class_non_alpha = &_grib_accessor_class_non_alpha;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -188,13 +178,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as an integer", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as a double", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 

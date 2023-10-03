@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -453,7 +453,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
         for (i = 0; i < d->depth + 3; i++)
             fprintf(self->dumper.out, " ");
@@ -463,11 +462,6 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
     }
     if (more) {
         for (i = 0; i < d->depth + 3; i++)
@@ -497,12 +491,11 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     /* grib_section* s = grib_get_sub_section(a); */
     grib_section* s = a->sub_section;
 
-#if 1
     if (a->name[0] == '_') {
         grib_dump_accessors_block(d, block);
         return;
     }
-#endif
+
     for (i = 0; i < d->depth; i++)
         fprintf(self->dumper.out, " ");
     fprintf(self->dumper.out, "======> %s %s (%ld,%ld,%ld)\n", a->creator->op,

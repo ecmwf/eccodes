@@ -8,12 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*************************************************
- * Enrico Fucile
- ***********************************************/
-
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 /*
    This is used by make_class.pl
 
@@ -48,7 +44,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g2grid
 {
@@ -119,12 +114,6 @@ static grib_accessor_class _grib_accessor_class_g2grid = {
 
 grib_accessor_class* grib_accessor_class_g2grid = &_grib_accessor_class_g2grid;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -153,6 +142,9 @@ static int value_count(grib_accessor* a, long* count)
     return 0;
 }
 
+// GRIB edition 2 uses microdegrees
+#define ANGLE_SUBDIVISIONS (1000 * 1000)
+
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g2grid* self = (grib_accessor_g2grid*)a;
@@ -178,7 +170,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
 
     if (sub_division == GRIB_MISSING_LONG || sub_division == 0)
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
 
     if (basic_angle == 0)
         basic_angle = 1;
@@ -275,11 +267,9 @@ static int trial(const double* val, long v[6], long* basic_angle, long* sub_divi
     *basic_angle  = 360;
     *sub_division = lcm(ni, nj);
 
-#if 0
-    printf("ni = %ld, nj = %ld , basic_angle=%ld sub_division = %ld\n",
-            ni,nj,
-            *basic_angle,*sub_division);
-#endif
+    // printf("ni = %ld, nj = %ld , basic_angle=%ld sub_division = %ld\n",
+    //        ni, nj, *basic_angle,*sub_division);
+
     if (*sub_division < 0)
         return 0;
 
@@ -305,21 +295,21 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     /* printf("pack_double %g %g %g %g %g %g\n",val[0],val[1],val[2],val[3],val[4],val[5]);*/
 
-    if (is_ok(val, v, 1, 1000000)) {
+    if (is_ok(val, v, 1, ANGLE_SUBDIVISIONS)) {
         basic_angle  = 1;
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
     }
     else if (trial(val, v, &basic_angle, &sub_division)) {
     }
     else {
         basic_angle  = 1;
-        sub_division = 1000000;
+        sub_division = ANGLE_SUBDIVISIONS;
 
         if (!is_ok(val, v, basic_angle, sub_division))
             grib_context_log(a->context, GRIB_LOG_DEBUG, "Grid cannot be coded with any loss of precision");
     }
 
-    if (basic_angle == 1 && sub_division == 1000000) {
+    if (basic_angle == 1 && sub_division == ANGLE_SUBDIVISIONS) {
         basic_angle  = 0;
         sub_division = GRIB_MISSING_LONG;
     }

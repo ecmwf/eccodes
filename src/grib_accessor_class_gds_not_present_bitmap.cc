@@ -24,6 +24,7 @@
    IMPLEMENTS = unpack_double
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
+   IMPLEMENTS = get_native_type
    MEMBERS=const char*  missing_value
    MEMBERS=const char*  number_of_values
    MEMBERS=const char*  number_of_points
@@ -43,11 +44,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_gds_not_present_bitmap
 {
@@ -78,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_gds_not_present_bitmap = {
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
-    0,            /* get native type */
+    &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
@@ -114,37 +115,33 @@ static grib_accessor_class _grib_accessor_class_gds_not_present_bitmap = {
 
 grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accessor_class_gds_not_present_bitmap;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     int n                                      = 0;
     grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    self->missing_value           = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->number_of_values        = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->number_of_points        = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->latitude_of_first_point = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->ni                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->missing_value           = grib_arguments_get_name(hand, args, n++);
+    self->number_of_values        = grib_arguments_get_name(hand, args, n++);
+    self->number_of_points        = grib_arguments_get_name(hand, args, n++);
+    self->latitude_of_first_point = grib_arguments_get_name(hand, args, n++);
+    self->ni                      = grib_arguments_get_name(hand, args, n++);
     a->length                     = 0;
 }
 
 static int value_count(grib_accessor* a, long* number_of_points)
 {
     grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
-    *number_of_points                          = 0;
+    *number_of_points = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_points, number_of_points);
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     long number_of_points = 0, number_of_values = 0, ni = 0;
     long latitude_of_first_point = 0;
@@ -160,19 +157,19 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (err)
         return err;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(a), self->number_of_points, &number_of_points)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, self->number_of_points, &number_of_points)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(a), self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, self->number_of_values, &number_of_values)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(a), self->latitude_of_first_point, &latitude_of_first_point)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, self->latitude_of_first_point, &latitude_of_first_point)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, self->missing_value, &missing_value)) != GRIB_SUCCESS)
         return err;
 
-    if ((err = grib_get_long(grib_handle_of_accessor(a), self->ni, &ni)) != GRIB_SUCCESS)
+    if ((err = grib_get_long(hand, self->ni, &ni)) != GRIB_SUCCESS)
         return err;
 
     if (*len < number_of_points) {
@@ -206,68 +203,14 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     return err;
 }
 
-#if 0
-
-static void grib_set_bit_on( unsigned char* p, long *bitp){
-    unsigned char o =  1;
-    p += (*bitp >> 3);
-    o <<= 7-((*bitp)%8);
-    *p |= o;
-    (*bitp)+=1;
-}
-
-static int pack_double(grib_accessor* a, const double* val,size_t *len){
-    grib_accessor_gds_not_present_bitmap* self = (grib_accessor_gds_not_present_bitmap*)a;
-
-    size_t tlen;
-
-    unsigned char* buf = NULL;
-    long i;
-    int err = 0;
-    long pos = 0;
-    long bmaplen = 0;
-    const int bit_padding = 16;
-    double miss_values = 0;
-    tlen = ((*len+bit_padding-1)/bit_padding*bit_padding)/8;
-
-    if((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &miss_values)) != GRIB_SUCCESS)
-    {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot unpack %s err=%d ",self->missing_value,err);
-        return err;
-    }
-
-    buf = grib_context_malloc_clear(a->context,tlen);
-    if(!buf) return GRIB_OUT_OF_MEMORY;
-    pos=0;
-    for(i=0;i<*len;i++)
-    {
-        if (val[i] == miss_values)
-            pos++;
-        else{
-            bmaplen++;
-            grib_set_bit_on(buf, &pos);
-        }
-    }
-
-    if((err = grib_set_long_internal(grib_handle_of_accessor(a), self->unusedBits,tlen*8 - *len )) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_bitmap : pack_double : Cannot pack %s err=%d ",self->unusedBits,err);
-        grib_context_free(a->context,buf);
-        return err;
-    }
-
-
-    grib_buffer_replace(a, buf, tlen,1,1);
-
-    grib_context_free(a->context,buf);
-
-    return GRIB_SUCCESS;
-}
-
-#else
-
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
+    // See deprecated/grib_accessor_class_gds_not_present_bitmap.cc for
+    // a possible implementation
     return GRIB_NOT_IMPLEMENTED;
 }
 
-#endif
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_DOUBLE;
+}

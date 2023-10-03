@@ -8,32 +8,16 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
-/* Return n to the power of s */
-double grib_power(long s, long n)
-{
-    double divisor = 1.0;
-    if (s == 0)
-        return 1.0;
-    if (s == 1)
-        return n;
-    while (s < 0) {
-        divisor /= n;
-        s++;
-    }
-    while (s > 0) {
-        divisor *= n;
-        s--;
-    }
-    return divisor;
+// Unfortunately, metkit uses grib_power() (illegal usage of private API)
+// As soon as it is fixed, the wrapper below can be deleted
+double grib_power(long s, long n) {
+    return codes_power<double>(s, n);
 }
 
-long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
+long grib_get_binary_scale_fact(double max, double min, long bpval, int* error)
 {
     double range         = max - min;
     double zs            = 1;
@@ -43,24 +27,23 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
     const size_t ulong_size = sizeof(maxint) * 8;
 
     /* See ECC-246
-      unsigned long maxint = grib_power(bpval,2) - 1;
+      unsigned long maxint = codes_power<double>(bpval,2) - 1;
       double dmaxint=(double)maxint;
     */
     if (bpval >= ulong_size) {
-        *ret = GRIB_OUT_OF_RANGE; /*overflow*/
+        *error = GRIB_OUT_OF_RANGE; /*overflow*/
         return 0;
     }
-    const double dmaxint = grib_power(bpval, 2) - 1;
+    const double dmaxint = codes_power<double>(bpval, 2) - 1;
     maxint = (unsigned long)dmaxint; /* Now it's safe to cast */
 
-    *ret = 0;
+    *error = 0;
     if (bpval < 1) {
-        *ret = GRIB_ENCODING_ERROR; /* constant field */
+        *error = GRIB_ENCODING_ERROR; /* constant field */
         return 0;
     }
 
     Assert(bpval >= 1);
-    /*   printf("---- Maxint %ld range=%g\n",maxint,range);    */
     if (range == 0)
         return 0;
 
@@ -86,95 +69,77 @@ long grib_get_binary_scale_fact(double max, double min, long bpval, int* ret)
     }
 
     if (scale < -last) {
-        *ret = GRIB_UNDERFLOW;
-        /*printf("grib_get_binary_scale_fact: max=%g min=%g\n",max,min);*/
+        *error = GRIB_UNDERFLOW;
         scale = -last;
     }
     Assert(scale <= last);
     return scale;
 }
 
-long grib_get_bits_per_value(double max, double min, long binary_scale_factor)
-{
-    double range    = max - min;
-    double zs       = 1;
-    long scale      = 0;
-    const long last = 127; /* Depends on edition, should be parameter */
+// long grib_get_bits_per_value(double max, double min, long binary_scale_factor)
+// {
+//     double range    = max - min;
+//     double zs       = 1;
+//     long scale      = 0;
+//     const long last = 127; /* Depends on edition, should be parameter */
+//     unsigned long maxint = codes_power<double>(binary_scale_factor, 2) - 1;
+//     double dmaxint       = (double)maxint;
+//     if (maxint == 0)
+//         maxint = 1;
+//     /*  printf("---- Maxint %ld range=%g\n",maxint,range);     */
+//     if (range == 0)
+//         return 0;
+//     /* range -= 1e-10; */
+//     while ((range * zs) <= dmaxint) {
+//         scale--;
+//         zs *= 2;
+//     }
+//     while ((range * zs) > dmaxint) {
+//         scale++;
+//         zs /= 2;
+//     }
+//     while ((unsigned long)(range * zs + 0.5) <= maxint) {
+//         scale--;
+//         zs *= 2;
+//     }
+//     while ((unsigned long)(range * zs + 0.5) > maxint) {
+//         scale++;
+//         zs /= 2;
+//     }
+//     Assert(scale >= -last && scale <= last);
+//     /* printf("---- scale=%ld\n",scale);*/
+//     return scale;
+// }
 
-    unsigned long maxint = grib_power(binary_scale_factor, 2) - 1;
-    double dmaxint       = (double)maxint;
-
-    if (maxint == 0)
-        maxint = 1;
-
-    /*  printf("---- Maxint %ld range=%g\n",maxint,range);     */
-    if (range == 0)
-        return 0;
-
-    /* range -= 1e-10; */
-    while ((range * zs) <= dmaxint) {
-        scale--;
-        zs *= 2;
-    }
-
-    while ((range * zs) > dmaxint) {
-        scale++;
-        zs /= 2;
-    }
-
-    while ((unsigned long)(range * zs + 0.5) <= maxint) {
-        scale--;
-        zs *= 2;
-    }
-
-    while ((unsigned long)(range * zs + 0.5) > maxint) {
-        scale++;
-        zs /= 2;
-    }
-
-    Assert(scale >= -last && scale <= last);
-    /* printf("---- scale=%ld\n",scale);*/
-
-    return scale;
-}
-
-long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale)
-{
-    double range    = max - min;
-    double zs       = 1;
-    long scale      = 0;
-    const long last = 127; /* Depends on edition, should be parameter */
-
-    unsigned long maxint = grib_power(bpval, 2) - 1;
-    double dmaxint       = (double)maxint;
-
-    range *= grib_power(-binary_scale, 2);
-
-    Assert(bpval >= 1);
-    if (range == 0)
-        return 0;
-
-    while ((range * zs) > dmaxint) {
-        scale--;
-        zs /= 10;
-    }
-    while ((range * zs) <= dmaxint) {
-        scale++;
-        zs *= 10;
-    }
-
-    while ((unsigned long)(range * zs + 0.5) > maxint) {
-        scale--;
-        zs /= 10;
-    }
-    while ((unsigned long)(range * zs + 0.5) <= maxint) {
-        scale++;
-        zs *= 10;
-    }
-
-    /* printf("grib_api: decimal_scale_fact=%ld max=%g min=%g bits_per_value=%ld binary_scale=%ld\n",scale,max,min,bpval,binary_scale); */
-
-    Assert(scale >= -last && scale <= last);
-
-    return scale;
-}
+// long grib_get_decimal_scale_fact(double max, double min, long bpval, long binary_scale)
+// {
+//     double range    = max - min;
+//     double zs       = 1;
+//     long scale      = 0;
+//     const long last = 127; /* Depends on edition, should be parameter */
+//     unsigned long maxint = codes_power<double>(bpval, 2) - 1;
+//     double dmaxint       = (double)maxint;
+//     range *= codes_power<double>(-binary_scale, 2);
+//     Assert(bpval >= 1);
+//     if (range == 0)
+//         return 0;
+//     while ((range * zs) > dmaxint) {
+//         scale--;
+//         zs /= 10;
+//     }
+//     while ((range * zs) <= dmaxint) {
+//         scale++;
+//         zs *= 10;
+//     }
+//     while ((unsigned long)(range * zs + 0.5) > maxint) {
+//         scale--;
+//         zs /= 10;
+//     }
+//     while ((unsigned long)(range * zs + 0.5) <= maxint) {
+//         scale++;
+//         zs *= 10;
+//     }
+//     /* printf("grib_api: decimal_scale_fact=%ld max=%g min=%g bits_per_value=%ld binary_scale=%ld\n",scale,max,min,bpval,binary_scale); */
+//     Assert(scale >= -last && scale <= last);
+//     return scale;
+// }

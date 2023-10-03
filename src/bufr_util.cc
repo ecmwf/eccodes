@@ -19,20 +19,20 @@ int compute_bufr_key_rank(grib_handle* h, grib_string_list* keys, const char* ke
     int theRank            = 0;
     size_t size            = 0;
     grib_context* c        = h->context;
-    DebugAssert(h->product_kind == PRODUCT_BUFR);
+    DEBUG_ASSERT(h->product_kind == PRODUCT_BUFR);
 
     while (next && next->value && strcmp(next->value, key)) {
         prev = next;
         next = next->next;
     }
     if (!next) {
-        DebugAssert(prev);
+        DEBUG_ASSERT(prev);
         if (prev) {
             prev->next = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
             next       = prev->next;
         }
     }
-    DebugAssert(next);
+    DEBUG_ASSERT(next);
     if (!next) return 0;
 
     if (!next->value) {
@@ -166,7 +166,7 @@ static int bufr_decode_rdb_keys(const void* message, long offset_section2, codes
 
     unsigned char* p = (unsigned char*)message + offset_keyData;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     hdr->rdbType    = (long)grib_decode_unsigned_long(pMessage, &pos_rdbType, nbits_rdbType);
     hdr->oldSubtype = (long)grib_decode_unsigned_long(pMessage, &pos_oldSubtype, nbits_oldSubtype);
@@ -218,7 +218,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
     unsigned char* pKeyData = (unsigned char*)message + offset_keyData;
     char* pKeyMore          = (char*)message + offset_keyMore;
 
-    DebugAssert(hdr->ecmwfLocalSectionPresent);
+    DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
     if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
         isSatelliteType = true;
@@ -619,25 +619,25 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
     if (!c)
         c = grib_context_get_default();
     if (path_is_directory(filename)) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: \"%s\" is a directory", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: \"%s\" is a directory", __func__, filename);
         return GRIB_IO_PROBLEM;
     }
     fp = fopen(filename, "rb");
     if (!fp) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read file \"%s\"", __func__, filename);
         perror(filename);
         return GRIB_IO_PROBLEM;
     }
     err = count_bufr_messages(c, fp, num_messages, strict_mode);
     if (err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to count BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to count BUFR messages in file \"%s\"", __func__, filename);
         fclose(fp);
         return err;
     }
 
     size = *num_messages;
     if (size == 0) {
-        grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: No BUFR messages in file \"%s\"", filename);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: No BUFR messages in file \"%s\"", __func__, filename);
         return GRIB_INVALID_MESSAGE;
     }
     *result = (codes_bufr_header*)calloc(size, sizeof(codes_bufr_header));
@@ -668,7 +668,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
         if (!mesg) {
             if (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE) {
                 // An error occurred
-                grib_context_log(c, GRIB_LOG_ERROR, "codes_bufr_extract_headers_malloc: Unable to read BUFR message");
+                grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to read BUFR message", __func__);
                 if (strict_mode) {
                     fclose(fp);
                     return GRIB_DECODING_ERROR;
@@ -783,8 +783,8 @@ static const char* codes_bufr_header_get_centre_name(long edition, long centre_c
     }
 }
 
-#if 0
-// TODO: Not efficient as it opens the code table every time
+#if defined(BUFR_PROCESS_CODE_TABLE)
+// TODO(masn): Not efficient as it opens the code table every time
 static char* codes_bufr_header_get_centre_name(long edition, long centre_code)
 {
     char full_path[2014] = {0,};

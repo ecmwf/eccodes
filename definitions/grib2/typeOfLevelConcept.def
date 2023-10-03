@@ -1,4 +1,4 @@
-# Concept typeOfLevel 
+# Concept typeOfLevel
 'surface'                      = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=255;}
 'entireAtmosphere'             = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=8;}
 'entireOcean'                  = {typeOfFirstFixedSurface=1;   typeOfSecondFixedSurface=9;}
@@ -13,12 +13,23 @@
 'seaBottom'                    = {typeOfFirstFixedSurface=9;   typeOfSecondFixedSurface=255;}
 # Note: We already had 'entireAtmosphere' mapped before adding this one so had to choose another name
 'atmosphere'                   = {typeOfFirstFixedSurface=10;  typeOfSecondFixedSurface=255;}
+'cumulonimbusBase'             = {typeOfFirstFixedSurface=11;  typeOfSecondFixedSurface=255;}
+'cumulonimbusTop'              = {typeOfFirstFixedSurface=12;  typeOfSecondFixedSurface=255;}
+'freeConvection'               = {typeOfFirstFixedSurface=14;  typeOfSecondFixedSurface=255;}
+'convectiveCondensation'       = {typeOfFirstFixedSurface=15;  typeOfSecondFixedSurface=255;}
+'neutralBuoyancy'              = {typeOfFirstFixedSurface=16;  typeOfSecondFixedSurface=255;}
 'mostUnstableParcel'           = {typeOfFirstFixedSurface=17;  typeOfSecondFixedSurface=255;}
 'mixedLayerParcel'             = {typeOfFirstFixedSurface=18;  typeOfSecondFixedSurface=255;}
 'isothermal'                   = {typeOfFirstFixedSurface=20;  typeOfSecondFixedSurface=255;}
 'isobaricInPa'                 = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=255; pressureUnits='Pa';}
 'isobaricInhPa'                = {typeOfFirstFixedSurface=100; pressureUnits='hPa'; typeOfSecondFixedSurface=255;}
 'isobaricLayer'                = {typeOfFirstFixedSurface=100; typeOfSecondFixedSurface=100;}
+'lowCloudLayer'                = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=100;
+                                  scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=80000;}
+'mediumCloudLayer'             = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0; scaledValueOfFirstFixedSurface=80000;
+                                  typeOfSecondFixedSurface=100; scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=45000;}
+'highCloudLayer'               = {typeOfFirstFixedSurface=100; scaleFactorOfFirstFixedSurface=0;
+                                  scaledValueOfFirstFixedSurface=45000; typeOfSecondFixedSurface=8;}
 'meanSea'                      = {typeOfFirstFixedSurface=101; typeOfSecondFixedSurface=255;}
 'heightAboveSea'               = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;}
 'heightAboveSeaLayer'          = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=102;}

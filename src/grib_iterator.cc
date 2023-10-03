@@ -11,7 +11,6 @@
 /***************************************************************************
  *   Enrico Fucile                                                         *
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -42,7 +41,6 @@ static void init_mutex()
     }
 }
 #endif
-
 
 int grib_get_data(const grib_handle* h, double* lats, double* lons, double* values)
 {

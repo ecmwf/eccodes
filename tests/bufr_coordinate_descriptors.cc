@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
     char* filename  = NULL;
     FILE* fin       = NULL;
     int is_coord    = 0;
+    int is_header   = 0;
 
     assert (argc == 2);
     filename = argv[1];
@@ -78,6 +79,10 @@ int main(int argc, char* argv[])
 
         is_coord = codes_bufr_key_is_coordinate(h, "nosuchkey", &err);
         assert(err == CODES_NOT_FOUND);
+        assert(is_coord == 0);
+        is_header = codes_bufr_key_is_header(h, "nosuchkey", &err);
+        assert(err == CODES_NOT_FOUND);
+        assert(is_header == 0);
 
         codes_bufr_keys_iterator_delete(kiter);
         codes_handle_delete(h);

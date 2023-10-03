@@ -8,13 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -225,7 +220,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_long(a, &value, &size);
     set_begin_end(d, a);
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
+    //for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out, "%s (int) ", a->creator->op);
@@ -239,7 +234,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     }
 
     if(comment) {
-        /* ECC-1186: Whole comment is too big, so pick the part that follows the ':' i.e. flag table file */
+        // ECC-1186: Whole comment is too big, so pick the part that follows the ':' i.e. flag table file
         const char* p = strchr(comment, ':');
         if (p) fprintf(self->dumper.out," (%s) ]", p+1);
         else   fprintf(self->dumper.out, "]");
@@ -271,7 +266,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     err = grib_unpack_double(a, &value, &size);
     set_begin_end(d, a);
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
+    //for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
 
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
@@ -281,7 +276,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
         fprintf(self->dumper.out, "%s = MISSING", a->name);
     else
         fprintf(self->dumper.out, "%s = %g", a->name, value);
-    /*if(comment) fprintf(self->dumper.out," [%s]",comment);*/
+    // if(comment) fprintf(self->dumper.out," [%s]",comment);
 
     if (err == 0)
         print_hexadecimal(self->dumper.out, d->option_flags, a);
@@ -322,7 +317,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         p++;
     }
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
+    //for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out, "%s (str) ", a->creator->op);
@@ -332,7 +327,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if (err == 0)
         print_hexadecimal(self->dumper.out, d->option_flags, a);
 
-    /*if(comment) fprintf(self->dumper.out," [%s]",comment);*/
+    // if(comment) fprintf(self->dumper.out," [%s]",comment);
     if (err)
         fprintf(self->dumper.out, " *** ERR=%d (%s) [grib_dumper_wmo::dump_string]", err, grib_get_error_message(err));
     aliases(d, a);
@@ -354,7 +349,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 
     set_begin_end(d, a);
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
+    // for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0)
         fprintf(self->dumper.out, "%s ", a->creator->op);
@@ -388,7 +383,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
     }
 
     k = 0;
-    /* if(size > 100) size = 100;  */
+    // if(size > 100) size = 100;
     while (k < size) {
         int j;
         for (i = 0; i < d->depth + 3; i++)
@@ -438,12 +433,11 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     set_begin_end(d, a);
 
-    /* For the DIAG pseudo GRIBs. Key charValues uses 1-byte integers to represent a character */
+    // For the DIAG pseudo GRIBs. Key charValues uses 1-byte integers to represent a character
     if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE) {
         is_char = 1;
     }
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     print_offset(self->dumper.out, self->begin, self->theEnd);
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         char type_name[32]     = "";
@@ -486,9 +480,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     k = 0;
     while (k < size) {
-#if 1
         int j;
-        /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
         for (j = 0; j < 8 && k < size; j++, k++) {
             if (is_char)
                 fprintf(self->dumper.out, "'%c'", (char)buf[k]);
@@ -498,31 +490,25 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
                 fprintf(self->dumper.out, ", ");
         }
         fprintf(self->dumper.out, "\n");
-#else
-
-        if (is_char)
-            fprintf(self->dumper.out, "%d '%c'\n", k, (char)buf[k]);
-        else
-            fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
-
-#endif
+        // if (is_char)
+        //     fprintf(self->dumper.out, "%d '%c'\n", k, (char)buf[k]);
+        // else
+        //     fprintf(self->dumper.out, "%d %g\n", k, buf[k]);
     }
     if (more) {
-        /*for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");*/
+        //for(i = 0; i < d->depth + 3 ; i++) fprintf(self->dumper.out," ");
         fprintf(self->dumper.out, "... %lu more values\n", (unsigned long)more);
     }
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     fprintf(self->dumper.out, "} # %s %s \n", a->creator->op, a->name);
     grib_context_free(d->context, buf);
 }
 
 static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 {
-    /*grib_dumper_wmo *self = (grib_dumper_wmo*)d;
-
-  for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
-  fprintf(self->dumper.out,"----> %s %s %s\n",a->creator->op, a->name,comment?comment:"");*/
+//  grib_dumper_wmo *self = (grib_dumper_wmo*)d;
+//  for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+//  fprintf(self->dumper.out,"----> %s %s %s\n",a->creator->op, a->name,comment?comment:"");
 }
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
@@ -536,7 +522,6 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     if (!strncmp(a->name, "section", 7))
         is_wmo_section = 1;
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
     if (is_wmo_section) {
         upper = (char*)malloc(strlen(a->name) + 1);
         Assert(upper);
@@ -556,13 +541,13 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
     else {
     }
 
-    /*printf("------------- section_offset = %ld\n",self->section_offset);*/
+    //printf("------------- section_offset = %ld\n",self->section_offset);
     d->depth += 3;
     grib_dump_accessors_block(d, block);
     d->depth -= 3;
 
-    /*for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");*/
-    /*fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);*/
+    //for(i = 0; i < d->depth ; i++) fprintf(self->dumper.out," ");
+    //fprintf(self->dumper.out,"<===== %s %s\n",a->creator->op, a->name);
 }
 
 static void set_begin_end(grib_dumper* d, grib_accessor* a)
@@ -636,7 +621,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 
     err = grib_unpack_string_array(a, values, &size);
 
-    /* print_offset(self->dumper.out,d,a); */
+    // print_offset(self->dumper.out,d,a);
     print_offset(self->dumper.out, self->begin, self->theEnd);
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {

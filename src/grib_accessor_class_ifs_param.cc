@@ -42,7 +42,6 @@ static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_ifs_param
 {
@@ -105,12 +104,6 @@ static grib_accessor_class _grib_accessor_class_ifs_param = {
 
 
 grib_accessor_class* grib_accessor_class_ifs_param = &_grib_accessor_class_ifs_param;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

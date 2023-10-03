@@ -60,20 +60,18 @@ typedef struct grib_expression_functor{
 static grib_expression_class _grib_expression_class_functor = {
     0,                    /* super                     */
     "functor",                    /* name                      */
-    sizeof(grib_expression_functor),/* size of instance          */
+    sizeof(grib_expression_functor),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	&evaluate_long,
-	0,
-	0,
+    &native_type,
+    0,
+    &evaluate_long,
+    0,
+    0,
 };
 
 grib_expression_class* grib_expression_class_functor = &_grib_expression_class_functor;
@@ -146,7 +144,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             char* env = getenv(p);
             if (env) {
                 long lval = 0;
-                if (string_to_long(env, &lval) == GRIB_SUCCESS) {
+                if (string_to_long(env, &lval, 1) == GRIB_SUCCESS) {
                     *lres = lval;
                     return GRIB_SUCCESS;
                 }

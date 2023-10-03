@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #define PNG_ANYBITS
 
@@ -51,7 +52,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -130,12 +130,6 @@ static grib_accessor_class _grib_accessor_class_data_png_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_class_data_png_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -248,8 +242,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
+    bscale = codes_power<double>(binary_scale_factor, 2);
+    dscale = codes_power<double>(-decimal_scale_factor, 10);
 
     /* TODO: This should be called upstream */
     if (*len < n_vals)
@@ -502,7 +496,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    d = grib_power(decimal_scale_factor, 10);
+    d = codes_power<double>(decimal_scale_factor, 10);
 
     max = val[0];
     min = max;
@@ -526,7 +520,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = grib_power(-binary_scale_factor, 2);
+    divisor             = codes_power<double>(-binary_scale_factor, 2);
 
 #ifndef PNG_ANYBITS
     Assert(bits_per_value % 8 == 0);

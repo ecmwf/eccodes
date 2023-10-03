@@ -42,7 +42,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_spectral_truncation
 {
@@ -108,12 +107,6 @@ static grib_accessor_class _grib_accessor_class_spectral_truncation = {
 
 
 grib_accessor_class* grib_accessor_class_spectral_truncation = &_grib_accessor_class_spectral_truncation;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

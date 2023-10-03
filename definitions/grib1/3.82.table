@@ -4,7 +4,7 @@
 ## created: 6 Oct 2011
 ## modified: 13 May 2013
 ##
-# CODE TABLE 3 Fixed levels or layers for wich the data are included
+# CODE TABLE 3 Fixed levels or layers for which the data are included
 0 0 Reserved
 1 surf Surface (of the Earth, which includes sea surface)
 2 bcld Cloud base level

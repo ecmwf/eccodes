@@ -14,9 +14,9 @@
  *   Shahram Najm                                                          *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "grib_value.h"
 #include <limits>
 #include <cassert>
-#include "grib_api_internal_cpp.h"
 
 /*
    This is used by make_class.pl
@@ -73,7 +73,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int notify_change(grib_accessor*, grib_accessor*);
 static void update_size(grib_accessor*, size_t);
 static size_t preferred_size(grib_accessor*, int);
@@ -142,12 +141,6 @@ static grib_accessor_class _grib_accessor_class_gen = {
 
 
 grib_accessor_class* grib_accessor_class_gen = &_grib_accessor_class_gen;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -308,7 +301,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", a->name);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
@@ -320,12 +313,13 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
+    const char* Tname = type_to_string<T>(*v);
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
         grib_unpack_long(a, &val, &l);
         *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, type_to_string<T>(*v));
+        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, Tname);
         return GRIB_SUCCESS;
     }
 
@@ -337,12 +331,12 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
 
         *v = strtod(val, &last);
         if (*last == 0) { /* conversion of string to double worked */
-            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to %s", a->name, Tname);
             return GRIB_SUCCESS;
         }
     }
 
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack as %s", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name, Tname);
     if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
     }
@@ -362,10 +356,12 @@ static int unpack_float(grib_accessor* a, float* v, size_t* len)
 
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
+    int err = 0;
     if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
         double val = 0.0;
         size_t l   = 1;
-        grib_unpack_double(a, &val, &l);
+        err = grib_unpack_double(a, &val, &l);
+        if (err) return err;
         snprintf(v, 64, "%g", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
@@ -375,7 +371,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
         long val = 0;
         size_t l = 1;
-        grib_unpack_long(a, &val, &l);
+        err = grib_unpack_long(a, &val, &l);
+        if (err) return err;
         snprintf(v, 64, "%ld", val);
         *len = strlen(v);
         grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string\n", a->name);
@@ -394,7 +391,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
-    grib_unpack_string(a, v[0], &length);
+    grib_unpack_string(a, v[0], &length); // TODO(masn): check return value
     *len = 1;
 
     return GRIB_SUCCESS;
@@ -472,7 +469,10 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
         grib_context_free(c, val);
         return ret;
     }
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not grib_pack %s as long", a->name);
+    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as an integer", a->name);
+    if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
+    }
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -510,7 +510,10 @@ static int pack_double(grib_accessor* a, const double* v, size_t* len)
     if (do_pack_as_long) {
         return pack_double_array_as_long(a, v, len);
     }
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not grib_pack %s as double", a->name);
+    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", a->name);
+    if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
+    }
     return GRIB_NOT_IMPLEMENTED;
 }
 
