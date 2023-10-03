@@ -281,8 +281,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long start_step_value;
     long start_step_unit;
     long step_units;
-    size_t fp_format_len = 128;
-    char fp_format[128];
+    char fp_format[128] = "%g";
+    size_t fp_format_len = sizeof(fp_format);
 
     if ((ret = grib_get_long_internal(h, "startStep", &start_step_value)) != GRIB_SUCCESS)
         return ret;
@@ -290,7 +290,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(h, self->step_units, &step_units)))
         return ret;
-    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string_internal(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
         return ret;
 
     Step step{start_step_value, start_step_unit};

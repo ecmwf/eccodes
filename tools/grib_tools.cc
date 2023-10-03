@@ -9,7 +9,6 @@
  */
 
 #include "grib_tools.h"
-//#include "step_optimizer.h"
 #include <stdlib.h>
 
 #if HAVE_LIBJASPER
@@ -415,13 +414,13 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
             if (options->format != NULL) {
                 size_t format_len = strlen(options->format);
-                if ((err = grib_set_string_internal(h, "format", options->format, &format_len)) != GRIB_SUCCESS)
+                if ((err = grib_set_string_internal(h, "formatForDoubles", options->format, &format_len)) != GRIB_SUCCESS)
                     return err;
             }
             else {
                 char format[1024];
                 size_t format_len = sizeof(format);
-                if ((err = grib_get_string_internal(h, "format", format, &format_len)) != GRIB_SUCCESS)
+                if ((err = grib_get_string_internal(h, "formatForDoubles", format, &format_len)) != GRIB_SUCCESS)
                     return err;
                 options->format = strdup(format);
             }

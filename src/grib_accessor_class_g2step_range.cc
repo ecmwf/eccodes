@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*********************************************
- *   Enrico Fucile
- *******************************************/
-
 #include "grib_api_internal.h"
 #include "step.h"
 #include "step_utilities.h"
@@ -155,10 +151,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             return ret;
     }
 
-
-    size_t fp_format_len = 128;
-    char fp_format[128];
-    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
+    char fp_format[128] = "%g";
+    size_t fp_format_len = sizeof(fp_format);
+    if ((ret = grib_get_string_internal(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
         return ret;
     std::stringstream ss;
 

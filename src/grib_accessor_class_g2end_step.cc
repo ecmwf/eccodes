@@ -629,8 +629,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-    size_t fp_format_len = 128;
-    char fp_format[128];
+    char fp_format[128] = "%g";
+    size_t fp_format_len = sizeof(fp_format);
     size_t step_len = 0;
     long step_value;
     long step_units;
@@ -639,7 +639,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
     if ((ret = grib_get_long_internal(h, self->step_units, &step_units)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_string_internal(h, "format", fp_format, &fp_format_len)) != GRIB_SUCCESS)
+    if ((ret = grib_get_string(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
         return ret;
 
     Step step(step_value, step_units);
