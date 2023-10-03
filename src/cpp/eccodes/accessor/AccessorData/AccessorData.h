@@ -25,7 +25,7 @@ public:
     bool newBuffer(AccessorBuffer const& accBuffer);
     AccessorBuffer currentBuffer() const;
 
-    //void dump(grib_dumper const& dumper) const;
+    virtual void dump() const;
     virtual std::size_t stringLength() const;
     virtual long valueCount() const;
     virtual long byteCount() const;
@@ -35,7 +35,7 @@ public:
     virtual std::size_t preferredSize(int fromHandle) const;
     virtual void resize(std::size_t newSize);
     virtual double nearestSmallerValue(double val) const;
-    virtual bool compare(AccessorData const& rhs);
+    virtual bool compare(AccessorData const& rhs) const;
     virtual bool isMissing() const;
 
     // Pack - single value
@@ -72,7 +72,9 @@ public:
     virtual GribStatus unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<float> &valArray) const;
     virtual GribStatus unpackSubarray(std::vector<double> &values, std::size_t start) const;
 
-private:
+// Ideally these would be private, but that makes the conversion much harder so they are protected instead
+// This will be revisited later...
+protected:
     AccessorBuffer buffer_{};
     long length_{};
     long offset_{};

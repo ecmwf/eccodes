@@ -43,4 +43,13 @@ std::string fmtString(const char* format, Args... args) {
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
 std::string fmtString(const char* format);
 
+// Placeholder for a new version of grib_context_log()
+// For now it just swallows all arguments, which allows the convert tool to only
+// need to match a single line, even for multi-line arguments
+template <typename... Args>
+void gribLog(Args... args) 
+{
+
+}
+
 }

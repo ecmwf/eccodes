@@ -41,6 +41,12 @@ class Arg:
             arg_name += m.group(2)
         
         return f"{arg_type} {arg_name}"
+    
+    def is_const(self):
+        if re.search(r"\bconst\b", self.type):
+            return True
+        return False
+        
 
 # print helper - can be called when Arg is None
 def arg_string(arg):

@@ -17,6 +17,10 @@ grib_deleted_function_substitutions = {
     r"^\s*(.*?\bgrib_context_free)": r"// [Removed grib_context_free] \1",
 }
 
+grib_context_substitutions = {
+    r"\bgrib_context_log\(.*?,": r"gribLog(",
+}
+
 grib_iarray_substitutions = {
     r"\bgrib_iarray_new\(\s*(h\s*,\s*)?\s*(.*)?,\s*(.*)?\s*\)": r"std::vector<long>(\2)",
     r"\bgrib_iarray_push\(\s*(.*)?,\s*(.*)?\s*\)": r"\1.push_back(\2)",
@@ -30,6 +34,7 @@ def apply_all_func_transforms(line):
     func_substitutions = [
         c_lib_substitutions,
         grib_deleted_function_substitutions,
+        grib_context_substitutions,
         grib_iarray_substitutions
     ]
 

@@ -1,5 +1,5 @@
 #include "AccessorData.h"
-
+#include "AccessorUtils/AccessorException.h"
 #include "grib_api_internal.h"
 
 // This file implements the public API for AccessorData
@@ -24,6 +24,11 @@ bool AccessorData::newBuffer(AccessorBuffer const& accBuffer)
 AccessorBuffer AccessorData::currentBuffer() const
 {
     return buffer_;
+}
+
+void AccessorData::dump() const
+{
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED);
 }
 
 std::size_t AccessorData::stringLength() const
@@ -53,7 +58,7 @@ GribType AccessorData::nativeType() const
 
 void AccessorData::updateSize(std::size_t s)
 {
-    Assert(0);
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED);
 }
 
 std::size_t AccessorData::preferredSize(int fromHandle) const
@@ -63,24 +68,24 @@ std::size_t AccessorData::preferredSize(int fromHandle) const
 
 void AccessorData::resize(std::size_t newSize)
 {
-    Assert(0);
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED);
 }
 
 double AccessorData::nearestSmallerValue(double val) const
 {
-    Assert(0);
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED);
     return 0.0;
 }
 
-bool AccessorData::compare(AccessorData const& rhs)
+bool AccessorData::compare(AccessorData const& rhs) const
 {
-    Assert(0);
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED);
     return false;
 }
 
 bool AccessorData::isMissing() const
 {
-    Assert(0); // TO DO
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED); // TO DO
     return false;
 }
 

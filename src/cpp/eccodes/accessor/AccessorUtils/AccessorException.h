@@ -4,6 +4,7 @@
 //
 // May be replaced with ECKit or other code at a later date
 
+#include "GribStatus.h"
 #include <exception>
 #include <string>
 
@@ -11,14 +12,14 @@ namespace eccodes::accessor {
 
 class AccessorException : public std::exception{
 std::string what_;
-int code_{};
+GribStatus code_{};
 
 public:
-    AccessorException(int code) : code_{code} {}
+    AccessorException(GribStatus code) : code_{code} {}
     AccessorException(std::string const& what) : what_{what} {}
 
 const char* what() const noexcept override { return what_.c_str(); }
-int code() const { return code_; }
+GribStatus code() const { return code_; }
 
 };
 

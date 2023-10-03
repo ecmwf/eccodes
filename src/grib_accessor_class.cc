@@ -146,7 +146,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     {
         auto accessorName = AccessorName(creator->name);
         auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
-        auto initData = makeInitData(p, params);
+        auto initData = makeInitData(p, len, params);
         auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
         Assert(accessorPtr);
     }

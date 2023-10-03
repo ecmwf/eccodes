@@ -93,6 +93,28 @@ GribTypeConverter = {
     "GRIB_TYPE_MISSING": "GribType::MISSING",
 }
 
+GribAccessorFlagConverter = {
+    "GRIB_ACCESSOR_FLAG_READ_ONLY" : "GribAccessorFlag::READ_ONLY",
+    "GRIB_ACCESSOR_FLAG_DUMP" : "GribAccessorFlag::DUMP",
+    "GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC" : "GribAccessorFlag::EDITION_SPECIFIC",
+    "GRIB_ACCESSOR_FLAG_CAN_BE_MISSING" : "GribAccessorFlag::CAN_BE_MISSING",
+    "GRIB_ACCESSOR_FLAG_HIDDEN" : "GribAccessorFlag::HIDDEN",
+    "GRIB_ACCESSOR_FLAG_CONSTRAINT" : "GribAccessorFlag::CONSTRAINT",
+    "GRIB_ACCESSOR_FLAG_BUFR_DATA" : "GribAccessorFlag::BUFR_DATA",
+    "GRIB_ACCESSOR_FLAG_NO_COPY" : "GribAccessorFlag::NO_COPY",
+    "GRIB_ACCESSOR_FLAG_COPY_OK" : "GribAccessorFlag::COPY_OK",
+    "GRIB_ACCESSOR_FLAG_FUNCTION" : "GribAccessorFlag::FUNCTION",
+    "GRIB_ACCESSOR_FLAG_DATA" : "GribAccessorFlag::DATA",
+    "GRIB_ACCESSOR_FLAG_NO_FAIL" : "GribAccessorFlag::NO_FAIL",
+    "GRIB_ACCESSOR_FLAG_TRANSIENT" : "GribAccessorFlag::TRANSIENT",
+    "GRIB_ACCESSOR_FLAG_STRING_TYPE" : "GribAccessorFlag::STRING_TYPE",
+    "GRIB_ACCESSOR_FLAG_LONG_TYPE" : "GribAccessorFlag::LONG_TYPE",
+    "GRIB_ACCESSOR_FLAG_DOUBLE_TYPE" : "GribAccessorFlag::DOUBLE_TYPE",
+    "GRIB_ACCESSOR_FLAG_LOWERCASE" : "GribAccessorFlag::LOWERCASE",
+    "GRIB_ACCESSOR_FLAG_BUFR_COORD" : "GribAccessorFlag::BUFR_COORD",
+    "GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION" : "GribAccessorFlag::COPY_IF_CHANGING_EDITION",
+}
+
 GribUtilFuncs = [
     "grib_is_earth_oblate",
 ]

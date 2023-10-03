@@ -11,10 +11,15 @@ struct grib_arguments;
 
 namespace eccodes::accessor {
 
-using AccessorInitDataType = std::variant<long,float,double,std::string>;
-using AccessorInitDataEntry = std::pair<std::string, AccessorInitDataType>;
-using AccessorInitData = std::vector<AccessorInitDataEntry>;
+using AccessorInitArgumentType = std::variant<long,float,double,std::string>;
+using AccessorInitArgumentEntry = std::pair<std::string, AccessorInitArgumentType>;
+using AccessorInitArguments = std::vector<AccessorInitArgumentEntry>;
 
-AccessorInitData makeInitData(grib_section* section, grib_arguments* args);
+struct AccessorInitData{
+    long length{};
+    AccessorInitArguments args;
+};
+
+AccessorInitData makeInitData(grib_section* section, long len, grib_arguments* args);
 
 }

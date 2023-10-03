@@ -41,7 +41,9 @@ global_function_name = "Global"
 common_includes = [
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
-    "AccessorUtils/GribUtils.h"
+    "AccessorUtils/GribUtils.h",
+    "AccessorUtils/GribAccessorFlag.h",
+    "AccessorUtils/AccessorException.h"
     ]
 
 class Member:
@@ -401,6 +403,11 @@ class FunctionDelegate:
             if count:
                 debug_line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
         
+        for k, v in convert_data.GribAccessorFlagConverter.items():
+            line, count = re.subn(rf"{k}", rf"toInt({v})", line)
+            if count:
+                debug_line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
+        
         return line
         
     def convert_grib_utils(self, line):
@@ -412,7 +419,31 @@ class FunctionDelegate:
                 debug_line("convert_grib_utils", f"{self._name} replaced {util} with {cpp_util} [after ]: {line}")
 
         return line
-    
+
+    def apply_get_set_substitutions(self, line):
+        # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
+        # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
+        #       The (?:&)?([\(\w\[\]\)]*)? section is added to match this and strip off the & (and it appears twice!)
+        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)", line)
+        if m:
+            accessor_name = m.group(4)
+            if accessor_name[0] == "\"":
+                accessor_name = "AccessorName(" + accessor_name + ")"
+            else:
+                for k,v in self._arg_map.items():
+                    if v and v.name == accessor_name and v.type == "std::string":
+                        accessor_name = "AccessorName(" + accessor_name + ")"
+
+            if m.group(1) == "get":
+                if m.group(2) == "size":
+                    line = re.sub(m.re, f"getSizeHelper({accessor_name}, {m.group(5)})", line)
+                else:
+                    line = re.sub(m.re, f"unpack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
+            else:
+                line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
+
+        return line
+
     def apply_function_transforms(self, line):
         line = function_transforms.apply_all_func_transforms(line)
 
@@ -464,6 +495,7 @@ class FunctionDelegate:
             self.process_global_cargs,
             self.convert_grib_values,
             self.convert_grib_utils,
+            self.apply_get_set_substitutions,
             self.apply_function_transforms,
             self.validate_variable_assignments,
             self.update_line_final_pass
@@ -540,34 +572,9 @@ class Method(FunctionDelegate):
         line = self._owner_class.update_class_members(line)
         return line
 
-    def apply_get_set_substitutions(self, line):
-        # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
-        # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
-        #       The (?:&)?([\(\w\[\]\)]*)? section is added to match this and strip off the & (and it appears twice!)
-        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)", line)
-        if m:
-            accessor_name = m.group(4)
-            if accessor_name[0] == "\"":
-                accessor_name = "AccessorName(" + accessor_name + ")"
-            else:
-                for k,v in self._arg_map.items():
-                    if v and v.name == accessor_name and v.type == "std::string":
-                        accessor_name = "AccessorName(" + accessor_name + ")"
-
-            if m.group(1) == "get":
-                if m.group(2) == "size":
-                    line = re.sub(m.re, f"getSizeHelper({accessor_name}, {m.group(5)})", line)
-                else:
-                    line = re.sub(m.re, f"unpack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
-            else:
-                line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
-
-        return line
-
     # Overridden to apply member function substitutions
     def apply_function_transforms(self, line):
-        line = self.apply_get_set_substitutions(line)
-        
+     
         for f in self._owner_class._inherited_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
@@ -642,8 +649,6 @@ class InheritedMethod(Method):
         "update_size"     : FuncSig("void", "updateSize",           [None, Arg("std::size_t", "s")]),
         # static size_t preferred_size(grib_accessor*, int);
         "preferred_size"  : FuncSig("std::size_t", "preferredSize", [None, Arg("int", "fromHandle")]),
-        # static int compare(grib_accessor*, grib_accessor*);
-        "compare"         : FuncSig("bool", "compare",              [None, Arg("AccessorData const&", "rhs")]),
         # static void resize(grib_accessor*,size_t);
         "resize"          : FuncSig("void", "resize",               [None, Arg("std::size_t", "newSize")]),
 
@@ -701,21 +706,37 @@ class InheritedMethod(Method):
         
         len_cpp_arg = self.func_sig_conversion[self._name].args[1]
 
-        # Replace *len == N with CONTAINER.size() == N
-        m = re.match(rf"(.*)?\*{len_carg.name}\s*==\s*(\w+)", line)
-        if m:
-            line = re.sub(rf"{re.escape(m.group(0))}", rf"{m.group(1)}{len_cpp_arg.name}.size() == {m.group(2)}", line)
-            debug_line("process_len_arg", f"Replaced *len with .size() [after]: {line}")
+        debug_line("process_len_arg", f"******************************************************************************")
+        debug_line("process_len_arg", f"     len_cpp_arg = {len_cpp_arg.type} {len_cpp_arg.name}")
+        debug_line("process_len_arg", f"     len_cpp_arg is const = {len_cpp_arg.is_const()}")
 
-        # Replace *len = N with CONTAINER.clear() if N=0, or delete the line if N is any other value
-        m = re.match(rf"(.*)?\*{len_carg.name}\s*=\s*(\w+).*?;", line)
+
+        # Note: Some code uses len[0] instead of *len, so we check for both...
+
+        # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*=\s*(\w+).*?;", line)
         if m:
-            if m.group(2) == "0":
-                line = re.sub(rf"{re.escape(m.group(0))}", rf"{m.group(1)}{len_cpp_arg.name}.clear();", line)
+            if len_cpp_arg.is_const():
+                line = re.sub(rf"^(\s*)", rf"// [length assignment removed - var is const] \1", line)
+                debug_line("process_len_arg", f"Removed len assignment for const variable [after]: {line}")
+            elif m.group(2) == "0":
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{len_cpp_arg.name}.clear();", line)
                 debug_line("process_len_arg", f"Replaced *len = 0 with .clear() [after]: {line}")
             else:
-                line = f"// [len removed] " + line
-                debug_line("process_len_arg", f"Removed *len entry [after]: {line}")
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{len_cpp_arg.name}.resize({m.group(2)});", line)
+                debug_line("process_len_arg", f"Replaced *len = N with .resize(N) [after]: {line}")
+
+        # Replace *len <=> N with CONTAINER.size() <=> N
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*([<>!=]=?)\s*(\w+)", line)
+        if m:
+            line = re.sub(rf"{re.escape(m.group(0))}", rf"{len_cpp_arg.name}.size() {m.group(2)} {m.group(3)}", line)
+            debug_line("process_len_arg", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
+
+        # Replace any other *len with CONTAINER.size() <=> N
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?", line)
+        if m:
+            line = re.sub(rf"{re.escape(m.group(0))}", rf"{len_cpp_arg.name}.size()", line)
+            debug_line("process_len_arg", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
 
         return line
 
@@ -752,50 +773,53 @@ class ConstructorMethod(Method):
         return ", ".join([a.name for a in self.transformed_args if a])
 
     def update_line_initial_pass(self, line):
-        
-        line = re.sub(rf"\ba->(\w+)\b", rf"// [TO DO] \1", line)
-        line = re.sub(r"\ba\b", f"*this", line)
 
-        # Now transform the argument getters
-        line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData[\1].second))", line)
-        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData[\2].second)", line)
+        # Transform the argument getters
+        line = re.sub(rf"\blen\b", "initData.length", line)
+        line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
+        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
 
         return super().update_line_initial_pass(line)
 
 
 class CompareMethod(Method):
-    pass
-    '''
+
+    @property
+    def return_type(self):
+        return "bool"
+
     def transform_args(self):
-        pass
-        #return "const Accessor* other"
+        cargs = self._cargs
+        assert len(cargs) == 2
+        assert cargs[0].type == "grib_accessor*"
+        assert cargs[1].type == "grib_accessor*"
 
-    def update_body(self, lines):
-        args = self.args
-        assert len(args) == 2
-        assert args[0].type == "grib_accessor*"
-        assert args[1].type == "grib_accessor*"
+        return { 
+            cargs[0] : None,
+            cargs[1] : Arg("AccessorData const&", "rhs")
+        }
 
-        a = args[0].name
-        b = args[1].name
-
-        result = []
-        for line in lines:
-            line = re.sub(rf"\b{a}\b", "this", line)
-            line = re.sub(rf"\b{b}\b", "other", line)
-            result.append(line)
-
-        return result
-    '''
-
-class DumpMethod(Method):
     @property
     def body(self):
-        return "\n".join(
+        return "throw AccessorException(GribStatus::NOT_IMPLEMENTED);"
+
+class DumpMethod(Method):
+  
+    def transform_args(self):
+        arg_map = {}
+        for arg in self._cargs:
+            arg_map[arg] = None
+
+        return arg_map
+        
+    @property
+    def body(self):
+        return "throw AccessorException(GribStatus::NOT_IMPLEMENTED);"
+        '''return "\n".join(
             ["#if 0"]
             + self.code
             + ["#endif", "throw AccessorException(GRIB_NOT_IMPLEMENTED);"]
-        )
+        )'''
 
 class StaticProc(FunctionDelegate):
     def __init__(self, owner_class, function):
@@ -861,9 +885,6 @@ class Class:
                 self._include_dir = ARGS.target
                 self._top = False
 
-        #debug_line("__init__", f"name={self._name} : super class={self._super}")
-
-
         # Load the patch if it exists
         try:
             m = importlib.import_module(f"conversion/patches.{self._cname}")
@@ -872,6 +893,16 @@ class Class:
         except ModuleNotFoundError:
             self._func_sig_conversion_patch = None
 
+    # Define base class member mapping
+    base_members_map = {
+        Arg("long","length") : Arg("long","length_"),
+        Arg("long","offset") : Arg("long","offset_"),
+        Arg("unsigned long","flags") : Arg("unsigned long","flags_"),
+        Arg("int","dirty") : Arg("int","dirty_"),
+        Arg("grib_virtual_value*","vvalue") : Arg("std::unique_ptr<grib_virtual_value>","vvalue_"),
+        Arg("const char*","set") : Arg("std::string","set_")
+        }
+    
     def finalise(self, other_classes):
         self._other_classes = other_classes
 
@@ -1184,7 +1215,13 @@ class Class:
 
         accessor_variable_name = transform_variable_name(self._name)
 
-        for n in [r"\bself\b"]:
+        # Replace name member with a string literal (it's only used in logging)
+        line,count = re.subn(r"\ba->name", f"\"{self._name}\"", line)
+        if count:
+            debug_line("update_class_members", f"Changed a->name to string literal [after ]: {line}")
+
+
+        for n in [r"\bself\b", r"\ba\b"]:
             line,count = re.subn(n, f"{accessor_variable_name}", line)
             if count:
                 debug_line("update_class_members", f"this [after ]: {line}")
@@ -1196,6 +1233,11 @@ class Class:
         if re.match(rf".*\bsuper\s+=\s+\*\({accessor_variable_name}->cclass->super\)", line):
             debug_line("update_class_members", f"deleting: {line}")
             line = ""
+
+        for k,v in self.base_members_map.items():
+            line,count = re.subn(rf"\b{accessor_variable_name}->{k.name}\b", rf"{v.name}", line)
+            if(count):
+                debug_line("update_class_members", f"base_members_map [after ]: {line}")
 
         for m in self.members_in_hierarchy:
             line,count = re.subn(rf"\b{accessor_variable_name}->{m.cname}\b", rf"{m.name}", line)
