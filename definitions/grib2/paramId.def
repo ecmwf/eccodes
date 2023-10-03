@@ -3029,7 +3029,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Runoff water equivalent
+#Runoff water equivalent (surface plus subsurface)
 '231002' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
