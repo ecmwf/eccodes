@@ -95,6 +95,7 @@ class Function:
                 carg = Arg.from_string(arg)
                 self._cargs.append(carg)
 
+
     def update_lines(self, lines):
         self._lines = lines
 
@@ -931,8 +932,13 @@ class Class:
 
         # Other functions
         ptr_type_name = self.type_name + "*" # grib_accessor*
+        ptr_derived_type_name = self.class_to_type() + "*" # grib_accessor_proj_string*
+        add_c_to_cpp_type_transform(ptr_derived_type_name, None)
+
+        ptr_type_names = [ptr_type_name, ptr_derived_type_name]
+
         for name, f in list(self._functions.items()):
-            if f._return_type == ptr_type_name:
+            if f._return_type in ptr_type_names:
                 f._return_type = self.class_name + "*"
 
             if name == global_function_name:
@@ -940,8 +946,9 @@ class Class:
                 del self._functions[name]
                 continue
 
-            # If first arg starts with ptr_type_name, then it's a private method (as we've already extracted inherited functions)
-            if f.args[0].type == ptr_type_name:
+            # If first arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
+            if f.args[0].type in ptr_type_names:
+                debug_line("finalise",f"Adding Private Method: {name}")
                 self._private_methods.append(
                     PrivateMethod(self, f, const=name not in self.non_const_methods)
                 )
@@ -1305,6 +1312,7 @@ def parse_file(path):
             m = re.match(r"\s*\"(\w+)\",\s+/\* name \*/", stripped_line)
             if m:
                 factory_name = m.group(1)
+
             continue
 
         if in_definition:

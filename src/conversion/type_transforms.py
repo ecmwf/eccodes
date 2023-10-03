@@ -92,6 +92,7 @@ def to_cpp_func_sig_arg(carg):
 
         # Other pointers: removing * to avoid getting std::vector type back
         cpp_arg = to_cpp_arg(Arg(carg.type[:-1], carg.name))
+
         cpp_arg.type += "&"
         return cpp_arg
 

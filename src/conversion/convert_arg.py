@@ -13,17 +13,21 @@ class Arg:
     def from_string(cls, input):
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
         # Note: We ignore const for now...
-        m = re.match(r"(?:const)?\s*(\w+\**)\s+(\w+)\s*(\[\d*\])?", input)
+        m = re.match(r"(?:const)?\s*(\w+)\s*(\*)?\s*(\w+)\s*(\[\d*\])?", input)
 
         if m:
             arg_type = m.group(1)
-            arg_name = m.group(2)
-            if m.group(3):
+            if m.group(2):
+                arg_type += m.group(2)  # Add * if present...
+            arg_name = m.group(3)
+            if m.group(4):
                 # Handle array declaration e.g. char buf[10]
-                arg_type += m.group(3)
+                arg_type += m.group(4)
 
             debug_line("Arg from_string", f"Creating Arg: {arg_type} {arg_name} from input: {input}")
             return cls(arg_type, arg_name)
+
+        debug_line("Arg from_string", f"Couldn't create arg from input: {input}")
         return None
     
     # Generate a string to represent the Arg's declaration
