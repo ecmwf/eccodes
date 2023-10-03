@@ -236,6 +236,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_ecc-1698
         gts_get
         gts_ls
         gts_count
