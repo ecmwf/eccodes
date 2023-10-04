@@ -189,7 +189,7 @@ Step& Step::optimize_unit()
 template <>
 std::string Step::value<std::string>(const std::string& format) const {
     constexpr int max_size = 128;
-    char output[max_size];
+    char output[128]; //Do not use variable-length arrays
     std::string u;
 
     if (unit_ == Unit::Value::HOUR)
