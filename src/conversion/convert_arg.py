@@ -8,6 +8,16 @@ class Arg:
         self.type = type
         self.name = name
 
+    # Support for Arg as a dict key
+    def __hash__(self):
+        return hash((self.type, self.name))
+
+    # Support for Arg as a dict key
+    def __eq__(self, other):
+        if isinstance(other, Arg):
+            return self.type == other.type and self.name == other.name
+        return False
+    
     # Create Arg from an input string 
     @classmethod
     def from_string(cls, input):
