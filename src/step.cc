@@ -1,3 +1,13 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
 #include <map>
 #include <stdexcept>
 #include <utility>
@@ -28,7 +38,6 @@ Step step_from_string(std::string step)
     throw std::runtime_error("Could not parse step: " + step);
 }
 
-
 std::vector<Step> parse_range(const std::string& range_str)
 {
     std::vector<Step> steps;
@@ -42,7 +51,6 @@ std::vector<Step> parse_range(const std::string& range_str)
     return steps;
 }
 
-
 bool Step::operator==(const Step& other) const
 {
     if ((internal_value_ == other.internal_value_) && (internal_unit_ == other.internal_unit_)) {
@@ -51,7 +59,6 @@ bool Step::operator==(const Step& other) const
     return false;
 }
 
-
 bool Step::operator>(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
@@ -59,14 +66,12 @@ bool Step::operator>(const Step& step) const
     return a.internal_value_ > b.internal_value_;
 }
 
-
 bool Step::operator<(const Step& step) const
 {
     auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
     assert(a.internal_unit_ == b.internal_unit_);
     return a.internal_value_ < b.internal_value_;
 }
-
 
 Step Step::operator+(const Step& step) const
 {
@@ -76,7 +81,6 @@ Step Step::operator+(const Step& step) const
     return Step(a.internal_value_ + b.internal_value_, a.internal_unit_);
 }
 
-
 Step Step::operator-(const Step& step) const
 {
     Step tmp = step;
@@ -84,7 +88,6 @@ Step Step::operator-(const Step& step) const
     assert(a.internal_unit_ == b.internal_unit_);
     return Step(a.internal_value_ - b.internal_value_, a.internal_unit_);
 }
-
 
 std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep)
 {
@@ -134,7 +137,6 @@ void Step::sanity_check() const
         //throw std::out_of_range("Step is out of range.");
     //}
 }
-
 
 void Step::init_long(long value, const Unit& unit)
 {
@@ -201,4 +203,3 @@ std::string Step::value<std::string>(const std::string& format) const {
     }
     return output;
 }
-
