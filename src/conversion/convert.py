@@ -370,7 +370,7 @@ class FunctionDelegate:
 
             if m and m.group(0) != cpp_arg.name:
                 line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpp_arg.name}{m.group(1)}", line)
-                debug_line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}\"{m.group(1)}\" [after ]: {line}")
+                debug_line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpp_arg.name}{m.group(1)}\" [after ]: {line}")
 
         return line
 
@@ -484,9 +484,6 @@ class FunctionDelegate:
         update_functions = [
             self.update_line_initial_pass,
             self.process_type_declarations,
-
-            # Note: Below this line, variables are renamed and deleted
-
             self.process_variable_declarations,
             self.process_deleted_variables,
             self.apply_variable_transforms,
@@ -567,9 +564,22 @@ class Method(FunctionDelegate):
     def const(self):
         return "const" if self._const else ""
 
+    # Extra processing required for grib_handle members that are referenced
+    def update_grib_handle_members(self, line):
+
+        for k, v in self._arg_map.items():
+            if k.type == "grib_handle*":
+                m = re.search(rf"\b{k.name}->buffer", line)
+                if m:
+                    line = re.sub(rf"{m.group(0)}->data", "buffer_.data()", line)
+                    debug_line("update_grib_handle_members", f"Updated buffer ref [after ]: {line}")     
+
+        return line
+
     # Override this to provide any initial conversions before the main update_line runs
     def update_line_initial_pass(self, line):
         line = self._owner_class.update_class_members(line)
+        line = self.update_grib_handle_members(line)
         return line
 
     # Overridden to apply member function substitutions
@@ -705,11 +715,6 @@ class InheritedMethod(Method):
             return line
         
         len_cpp_arg = self.func_sig_conversion[self._name].args[1]
-
-        debug_line("process_len_arg", f"******************************************************************************")
-        debug_line("process_len_arg", f"     len_cpp_arg = {len_cpp_arg.type} {len_cpp_arg.name}")
-        debug_line("process_len_arg", f"     len_cpp_arg is const = {len_cpp_arg.is_const()}")
-
 
         # Note: Some code uses len[0] instead of *len, so we check for both...
 
