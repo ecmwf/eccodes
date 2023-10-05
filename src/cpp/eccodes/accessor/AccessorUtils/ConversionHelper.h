@@ -43,6 +43,14 @@ std::string fmtString(const char* format, Args... args) {
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
 std::string fmtString(const char* format);
 
+// Container version of strtoX functions. 
+// 
+// In order to work correctly with the converted C++ types, these functions:
+//  - If successful:   return a vector with a single entry set to the converted value, and clears last
+//  - If unsuccessful: returns {0} and sets last = val
+std::vector<long> stringToLong(std::string val, std::string& last, int base);
+std::vector<double> stringToDouble(std::string val, std::string& last);
+
 // Placeholder for a new version of grib_context_log()
 // For now it just swallows all arguments, which allows the convert tool to only
 // need to match a single line, even for multi-line arguments

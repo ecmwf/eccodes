@@ -478,18 +478,38 @@ class FunctionDelegate:
 
         return line
 
-    # Make sure all variables are being assigned sensible values after any transformations
-    def validate_variable_assignments(self, line):
+    # Make sure all container variables have sensible assignments, comparisons etc after any transformations
+    def validate_container_variables(self, line):
 
-        # Find assignments
-        m = re.search(rf"\b(\w+)\s*=\s*(\"?\w+\"?).*?;", line)
+        for k, v in self._arg_map.items():
+            if not v or not arg_transforms.is_container(v):
+                continue
 
-        if m:
-            for k, v in self._arg_map.items():
-                if v and v.name == m.group(1):
-                    if m.group(2) == "NULL" and v.type[-1] != "*":
-                        line = line.replace("NULL", "{}")
-                        debug_line("validate_variable_assignments", f"Updated NULL assigned value [after ]: {line}")
+            # [1] Assignments
+            m = re.search(rf"\b{v.name}\s*=\s*(\"?\w+\"?).*?;", line)
+            if m:
+                if m.group(1) == "NULL":
+                    line = line.replace("NULL", "{}")
+                    debug_line("validate_container_variables", f"Updated NULL assigned value [after ]: {line}")
+                elif m.group(1) == "0":
+                    # Replace CONTAINER = 0 with CONTAINER.clear()
+                    line = re.sub(m.re, f"{v.name}.clear();", line)
+                    debug_line("validate_container_variables", f"Changed = 0 assignment to .clear() for container [after ]: {line}")
+
+            # [2] Empty comparisons (== 0)
+            m = re.search(rf"\b{v.name}(\s*==\s*0)\b", line)
+            if m:
+                line = re.sub(m.re, f"{v.name}.empty()", line)
+                debug_line("validate_container_variables", f"Changed == 0 comparison to .empty() for container [after ]: {line}")
+
+        return line
+    
+    # Anything else that's needed
+    def apply_final_checks(self, line):
+        m = re.search(rf"\breturn\s+(\d+)\s*;", line)
+        if m and self.return_type == "GribStatus":
+            line = re.sub(f"{m.group(1)}", f"GribStatus{{{m.group(1)}}}", line)
+            debug_line("apply_final_checks", f"Updated return value to GribStatus [after ]: {line}")
 
         return line
     
@@ -518,7 +538,8 @@ class FunctionDelegate:
             self.process_global_cargs,
             self.convert_grib_values,
             self.apply_get_set_substitutions,
-            self.validate_variable_assignments,
+            self.validate_container_variables,
+            self.apply_final_checks,
         ]
 
         debug_line("update_line", f"--------------------------------------------------------------------------------")
