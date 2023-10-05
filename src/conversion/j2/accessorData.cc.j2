@@ -22,12 +22,6 @@
 namespace {{ c.nested_namespaces }} {
 
 // Global section - START
-
-// static functions
-{% for m in c.static_functions -%}
-static {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }});
-{% endfor %}
-
 {{ c.global_function.body }}
 // Global section - END
 

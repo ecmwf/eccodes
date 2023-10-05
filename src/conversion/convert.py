@@ -514,7 +514,7 @@ class FunctionDelegate:
         return line
     
     # Override this to provide any function transforms specific to a class
-    def apply_special_function_transforms(self, line):
+    def special_function_transforms(self, line):
         return line
 
     def update_line(self, line):
@@ -524,7 +524,7 @@ class FunctionDelegate:
             # [1] function updates that expect the original C variable names
             self.convert_grib_utils,
             self.apply_function_transforms,
-            self.apply_special_function_transforms,
+            self.special_function_transforms,
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
             self.process_variables_initial_pass,
@@ -823,9 +823,9 @@ class StaticProc(FunctionDelegate):
     def __init__(self, owner_class, function):
         super().__init__(owner_class, function)
 
-    def apply_special_function_transforms(self, line):
+    def special_function_transforms(self, line):
         line = self._owner_class.update_static_function_calls(line)
-        return line
+        return super().special_function_transforms(line)
 
 class GlobalFunction(FunctionDelegate):
     def __init__(self, owner_class, function):
@@ -835,6 +835,20 @@ class GlobalFunction(FunctionDelegate):
     @property
     def code(self):
         return self._lines
+
+    # If the line starts [FORWARD_DECLARATION] then it is a placeholder from the file parser
+    # We need to change it to a forward declaration of the transformed function
+    def special_function_transforms(self, line):
+        m = re.match(rf"^\[FORWARD_DECLARATION\](\w+)", line)
+        if m:
+            debug_line("special_function_transforms",f"[FORWARD_DECLARATION] name={m.group(1)}")
+            for func in self._owner_class.static_functions:
+                if func.transformed_name == m.group(1):
+                    line = f"static {func.return_type} {func.transformed_name}({func.cpp_args});"
+                    debug_line("special_function_transforms",f"[FORWARD_DECLARATION] {line}")
+                    break
+
+        return super().special_function_transforms(line)
 
 SPECIALISED_METHODS = {
     ("accessor", "compare"): CompareMethod,
@@ -1378,6 +1392,16 @@ def parse_file(path):
             function_name = m.group(2)
 
             in_function = True
+
+            # If this is a global (non-member) function, add it to the global function body
+            # as a forward declaration so it is declared in the correct place for any other
+            # globals!
+            # Note: We just use the placeholder [FORWARD_DECLARATION]function_name here, it
+            #       will be updated to the correct function signature when required
+            if not m.group(3).startswith("grib_accessor*"):
+                forward_declaration = f"[FORWARD_DECLARATION]{function_name}"
+                global_function.add_line(forward_declaration)
+
             function = functions[function_name] = Function(
                 function_name,
                 m.group(1),
