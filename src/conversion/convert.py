@@ -846,7 +846,10 @@ class GlobalFunction(FunctionDelegate):
                 if func.transformed_name == m.group(1):
                     line = f"static {func.return_type} {func.transformed_name}({func.cpp_args});"
                     debug_line("special_function_transforms",f"[FORWARD_DECLARATION] {line}")
-                    break
+                    return line
+
+            line = ""
+            debug_line("special_function_transforms",f"Not a static function forward declaration - removing line: {m.group(0)}")
 
         return super().special_function_transforms(line)
 
@@ -989,14 +992,19 @@ class Class:
                 del self._functions[name]
                 continue
 
-            # If first arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
-            if f.args[0].type in ptr_type_names:
-                debug_line("finalise",f"Adding Private Method: {name}")
-                self._private_methods.append(
-                    PrivateMethod(self, f, const=name not in self.non_const_methods)
-                )
-                del self._functions[name]
-            else:
+            # If any arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
+            found_private_method = False
+            for arg in f.args:
+                if arg.type in ptr_type_names:
+                    self._private_methods.append(
+                        PrivateMethod(self, f, const=name not in self.non_const_methods)
+                    )
+                    del self._functions[name]
+                    found_private_method = True
+                    debug_line("finalise",f"Added Private Method: {name}")
+                    break
+
+            if not found_private_method:
                 self._static_functions.append(StaticProc(self, f))
                 del self._functions[name]
 
@@ -1341,8 +1349,23 @@ def parse_file(path):
 
     LOG.info("Parsing %s", path)
 
+    # Some code is split over multiple lines, so we combine lines that end with a ',' or '('
+    # into a single multi-line before parsing
+    multiline = ""
+
     f = open(path, "r")
     for line in f:
+
+        # Multiline support - start
+        if re.search(r"[,\(]\s*$", line):
+            multiline += line
+            continue
+
+        if multiline:
+            line = multiline + line
+            multiline = ""
+        # Multiline support - end
+
         stripped_line = line.strip()
         line = line.rstrip()
 
@@ -1382,8 +1405,12 @@ def parse_file(path):
                 raise
             continue
 
-        m = re.match(r"static\s+([^(]+)\s+(\w+)\s*\(([^(]+)\)", line)
+        #m = re.match(r"static\s+([^(]+)\s+(\w+)\s*\(([^(]+)\)", line, re.DOTALL)
+
+        m = re.match(r"(?:static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]+)\)", line, re.DOTALL)
+                       
         if m:
+            debug_line("parse_file", f"FUNCTION MATCH: {m.group(2)}")
             if line.rstrip().endswith(");"):
                 # Forward declaration
                 continue
@@ -1393,14 +1420,14 @@ def parse_file(path):
 
             in_function = True
 
-            # If this is a global (non-member) function, add it to the global function body
-            # as a forward declaration so it is declared in the correct place for any other
-            # globals!
-            # Note: We just use the placeholder [FORWARD_DECLARATION]function_name here, it
-            #       will be updated to the correct function signature when required
-            if not m.group(3).startswith("grib_accessor*"):
-                forward_declaration = f"[FORWARD_DECLARATION]{function_name}"
-                global_function.add_line(forward_declaration)
+            # Add function name to the global body as a forward declaration, so it is 
+            # declared in the correct place for any other globals!
+            #
+            # Note: We just use the placeholder [FORWARD_DECLARATION]function_name here,
+            #       when it is processed the placeholder will be used to check that it 
+            #       is a valid static function: if not it will be deleted
+            forward_declaration = f"[FORWARD_DECLARATION]{function_name}"
+            global_function.add_line(forward_declaration)
 
             function = functions[function_name] = Function(
                 function_name,

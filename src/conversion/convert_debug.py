@@ -1,7 +1,7 @@
 
 func_pad = 30
 debug_line_enabled = True
-debug_filter_include = []
+debug_filter_include = ["finalise", "parse_file"]
 debug_filter_exclude = []
 
 def debug_line(func, text):
