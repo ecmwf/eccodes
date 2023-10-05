@@ -231,7 +231,7 @@ class FunctionDelegate:
         return False
 
     # Override this to provide any initial conversions before the main update_line runs
-    def update_line_initial_pass(self, line):
+    def process_variables_initial_pass(self, line):
         return line
 
     # Find type declarations and store in the c_to_cpp_type_transforms
@@ -461,6 +461,8 @@ class FunctionDelegate:
             else:
                 line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
 
+            debug_line("apply_get_set_substitutions", f"Result of substitution: {line}")
+
         return line
 
     def apply_function_transforms(self, line):
@@ -489,19 +491,23 @@ class FunctionDelegate:
                         line = line.replace("NULL", "{}")
                         debug_line("validate_variable_assignments", f"Updated NULL assigned value [after ]: {line}")
 
-
-
         return line
     
-    # Override this to provide any final conversions after the main update_line runs
-    def update_line_final_pass(self, line):
+    # Override this to provide any function transforms specific to a class
+    def apply_special_function_transforms(self, line):
         return line
 
     def update_line(self, line):
 
         # Note: These apply in order, be careful if re-arranging!
         update_functions = [
-            self.update_line_initial_pass,
+            # [1] function updates that expect the original C variable names
+            self.convert_grib_utils,
+            self.apply_function_transforms,
+            self.apply_special_function_transforms,
+
+            # [2] The remaining updates must work with C variables that may have been renamed to C++
+            self.process_variables_initial_pass,
             self.process_type_declarations,
             self.process_return_variables,
             self.process_variable_declarations,
@@ -511,11 +517,8 @@ class FunctionDelegate:
             self.process_remaining_cargs,
             self.process_global_cargs,
             self.convert_grib_values,
-            self.convert_grib_utils,
             self.apply_get_set_substitutions,
-            self.apply_function_transforms,
             self.validate_variable_assignments,
-            self.update_line_final_pass
         ]
 
         debug_line("update_line", f"--------------------------------------------------------------------------------")
@@ -597,27 +600,24 @@ class Method(FunctionDelegate):
         return line
 
     # Override this to provide any initial conversions before the main update_line runs
-    def update_line_initial_pass(self, line):
+    def process_variables_initial_pass(self, line):
         line = self._owner_class.update_class_members(line)
         line = self.update_grib_handle_members(line)
         return line
 
     # Convert grib_(un)pack_TYPE calls to the equivalent member function
-    # Note: The args have already been converted to C++, so we just take those
-    #       that are not None in accessor_member_func_conversions (member_function_transforms.py)
+    # Note: We don't convert the vars here, but we do remove those not needed in the C++ function
+    #       We also add a call to explicitly set the size var as it may be used after this call...
     def convert_grib_un_pack_functions(self, line):
         m = re.search(rf"\bgrib_((?:un)?pack_\w+)\((.*)\)", line)
         if m:
-            cpp_args = member_function_transforms.transformed_args(m.group(1))
-            vars = []
-            for index, var in enumerate(m.group(2).split(",")):
-                if cpp_args[index]:
-                    vars.append(var)
-            
-            func_name = member_function_transforms.transformed_name(m.group(1))
+            buffer_index, size_index = member_function_transforms.c_buffer_and_size_index(m.group(1))
 
-            line = re.sub(m.re, rf"{func_name}({', '.join([var for var in vars])})", line)
-            debug_line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
+            if buffer_index and size_index:
+                func_name = member_function_transforms.transformed_name(m.group(1))
+                vars = m.group(2).split(",")
+                line = re.sub(m.re, rf"{func_name}({vars[buffer_index]}); {vars[size_index]} = {vars[buffer_index]}.size()", line)
+                debug_line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
 
         return line
 
@@ -718,11 +718,11 @@ class InheritedMethod(Method):
         return line
 
     # Override this to provide any initial conversions before the main update_line runs
-    def update_line_initial_pass(self, line):
+    def process_variables_initial_pass(self, line):
 
         line = self.process_len_arg(line)
 
-        return super().update_line_initial_pass(line)
+        return super().process_variables_initial_pass(line)
 
 
 class PrivateMethod(Method):
@@ -749,14 +749,14 @@ class ConstructorMethod(Method):
     def call_args(self):
         return ", ".join([a.name for a in self.transformed_args if a])
 
-    def update_line_initial_pass(self, line):
+    def process_variables_initial_pass(self, line):
 
         # Transform the argument getters
         line = re.sub(rf"\blen\b", "initData.length", line)
         line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
         line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
 
-        return super().update_line_initial_pass(line)
+        return super().process_variables_initial_pass(line)
 
 
 class CompareMethod(Method):
@@ -802,7 +802,7 @@ class StaticProc(FunctionDelegate):
     def __init__(self, owner_class, function):
         super().__init__(owner_class, function)
 
-    def update_line_final_pass(self, line):
+    def apply_special_function_transforms(self, line):
         line = self._owner_class.update_static_function_calls(line)
         return line
 

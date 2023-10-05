@@ -89,3 +89,17 @@ def transformed_args(func_name):
         return accessor_member_func_conversions[func_name].args
     else:
         return None
+
+# Helper function that will return the index of the C args corresponding
+# to the buffer and size vars
+# For example: "pack_string" would return 1 and 2 respectively
+# Will return None for indices that don't exist!
+def c_buffer_and_size_index(func_name):
+    # Currently only entries up to "unpack_bytes" have buffer and size args
+    for k,v in accessor_member_func_conversions.items():
+        if k == func_name:
+            return 1,2
+        if k == "unpack_bytes":
+            break
+
+    return None, None
