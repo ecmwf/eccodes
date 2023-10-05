@@ -56,7 +56,25 @@ class Arg:
         if re.search(r"\bconst\b", self.type):
             return True
         return False
-        
+
+container_types = [
+    "std::string",
+    "std::array",
+    "std::vector",
+    "std::map",
+]
+# Return True if Arg is a container (std::vector etc)
+# Will safely handle Arg that is None
+def is_container(arg):
+    if not arg:
+        return False
+    
+    for c in container_types:
+        if arg.type.startswith(c):
+            return True
+    
+    return False
+
 
 # print helper - can be called when Arg is None
 def arg_string(arg):

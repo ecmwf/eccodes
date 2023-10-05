@@ -10,7 +10,8 @@ import logging
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from convert_debug import debug_line
-from convert_arg import *
+import arg_transforms as arg_transforms
+from arg_transforms import Arg
 from type_transforms import *
 import convert_data as convert_data
 import function_transforms as function_transforms
@@ -59,7 +60,7 @@ class Member:
             self.cname = bits[-1]
             self._array = ""
 
-        self.name = transform_variable_name(self.cname) + "_"
+        self.name = arg_transforms.transform_variable_name(self.cname) + "_"
 
         if self.name[0] == "*":
             self.name = self.name[1:]
@@ -185,7 +186,7 @@ class FunctionDelegate:
 
     @property
     def transformed_name(self):
-        return transform_function_name(self._name)
+        return arg_transforms.transform_function_name(self._name)
 
     @property
     def transformed_args(self):
@@ -239,7 +240,7 @@ class FunctionDelegate:
         m = re.match(r"^\s*struct\s+(\w+)", line)
         if m:
             ctype = m.group(1)
-            cpptype = transform_class_name(ctype)
+            cpptype = arg_transforms.transform_class_name(ctype)
 
             add_c_to_cpp_type_transform(ctype, cpptype)
             line = line.replace(f"{ctype}", f"{cpptype}")
@@ -252,18 +253,26 @@ class FunctionDelegate:
 
         return line
 
-
+    # Update any well know return values
     def process_return_variables(self, line):
-        # Update any well know return values
         ret = "GribStatus"
         if self.return_type == ret:
             for ret_var in ["err", "ret"]:
-                line,count = re.subn(rf"\bint\b(\s+{ret_var}\s+=\s*)(\d+)[,;]", rf"{ret}\1{ret}{{\2}};", line)
-                if count:
-                    debug_line("process_return_variables", f"return values [after ]: {line}")
-                line,count = re.subn(rf"(\(\s*{ret_var}\s*)\)", rf"\1 != {ret}::SUCCESS)", line)
-                if count:
-                    debug_line("process_return_variables", f"return values [after ]: {line}")
+                # [1] Assigning to function result - we assume the function returns the correct type!
+                m = re.search(rf"\bint\s+{ret_var}\s*=\s*(.*)\(", line)
+                if m:
+                    line = re.sub(m.re, rf"{ret} {ret_var} = {m.group(1)}(", line)
+                    debug_line("process_return_variables", f"return value assigned via function [after ]: {line}")
+
+                m = re.search(rf"\bint\b(\s+{ret_var}\s+=\s*)(\d+)[,;]", line)
+                if m:
+                    line = re.sub(m.re, rf"{ret}\1{ret}{{\2}};", line)
+                    debug_line("process_return_variables", f"return value assigned to value [after ]: {line}")
+
+                m = re.search(rf"(\(\s*{ret_var}\s*)\)", line)
+                if m:
+                    line = re.sub(m.re, rf"\1 != {ret}::SUCCESS)", line)
+                    debug_line("process_return_variables", f"return value comparison updated [after ]: {line}")
 
         return line
                 
@@ -271,7 +280,6 @@ class FunctionDelegate:
     # 1. Update the type if required / delete the line if no longer valid
     # 2. Store in the arg_map for future reference
     def process_variable_declarations(self, line):
-        line = self.process_return_variables(line)
 
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude it
         #       static and const are ignored
@@ -327,6 +335,16 @@ class FunctionDelegate:
         if m:
             line = re.sub(m.re, f"{m.group(1)}.size()", line)
             debug_line("apply_variable_transforms", f"sizeof transform [after ]: {line}")
+
+        # See if sizeof(x) needs to be replaced by x.size()
+        m = re.search(r"\bsizeof\((.*?)\)", line)
+        if m:
+            for _, cpp_arg in self._arg_map.items():
+                if cpp_arg and cpp_arg.name == m.group(1):
+                    if arg_transforms.is_container(cpp_arg):
+                        line = re.sub(m.re, f"{m.group(1)}.size()", line)
+                        debug_line("apply_variable_transforms", f"sizeof(x) transform for container [after ]: {line}")
+                        break
 
         return line
 
@@ -415,7 +433,7 @@ class FunctionDelegate:
         for util in convert_data.GribUtilFuncs:
             m = re.search(rf"\b{util}\b", line)
             if m:
-                cpp_util = transform_function_name(util)
+                cpp_util = arg_transforms.transform_function_name(util)
                 line = re.sub(m.re, f"{cpp_util}", line)
                 debug_line("convert_grib_utils", f"{self._name} replaced {util} with {cpp_util} [after ]: {line}")
 
@@ -453,7 +471,7 @@ class FunctionDelegate:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
-                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                line = re.sub(m.re, rf"{prefix}{arg_transforms.transform_function_name(f.name)}", line)
                 debug_line("apply_function_transforms", f"Updating static function {m.group(0)} [after ]: {line}")
 
         return line
@@ -485,6 +503,7 @@ class FunctionDelegate:
         update_functions = [
             self.update_line_initial_pass,
             self.process_type_declarations,
+            self.process_return_variables,
             self.process_variable_declarations,
             self.process_deleted_variables,
             self.apply_variable_transforms,
@@ -559,7 +578,7 @@ class Method(FunctionDelegate):
         super().__init__(owner_class, function)
         self._const = const
         self._owner_arg_type = self._owner_class.name
-        self._owner_arg_name = transform_variable_name(self._owner_arg_type)
+        self._owner_arg_name = arg_transforms.transform_variable_name(self._owner_arg_type)
 
     @property
     def const(self):
@@ -583,21 +602,42 @@ class Method(FunctionDelegate):
         line = self.update_grib_handle_members(line)
         return line
 
+    # Convert grib_(un)pack_TYPE calls to the equivalent member function
+    # Note: The args have already been converted to C++, so we just take those
+    #       that are not None in accessor_member_func_conversions (member_function_transforms.py)
+    def convert_grib_un_pack_functions(self, line):
+        m = re.search(rf"\bgrib_((?:un)?pack_\w+)\((.*)\)", line)
+        if m:
+            cpp_args = member_function_transforms.transformed_args(m.group(1))
+            vars = []
+            for index, var in enumerate(m.group(2).split(",")):
+                if cpp_args[index]:
+                    vars.append(var)
+            
+            func_name = member_function_transforms.transformed_name(m.group(1))
+
+            line = re.sub(m.re, rf"{func_name}({', '.join([var for var in vars])})", line)
+            debug_line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
+
+        return line
+
     # Overridden to apply member function substitutions
     def apply_function_transforms(self, line):
      
+        line = self.convert_grib_un_pack_functions(line)
+
         for f in self._owner_class._inherited_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
-                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                line = re.sub(m.re, rf"{prefix}{arg_transforms.transform_function_name(f.name)}", line)
                 debug_line("apply_function_transforms", f"Updating inherited method {m.group(0)} [after ]: {line}")
 
         for f in self._owner_class._private_methods:
             m = re.search(rf"(?<!\")(&)?\b{f.name}\b(?!\")", line)
             if m:
                 prefix = m.group(1) if m.group(1) is not None else ""
-                line = re.sub(m.re, rf"{prefix}{transform_function_name(f.name)}", line)
+                line = re.sub(m.re, rf"{prefix}{arg_transforms.transform_function_name(f.name)}", line)
                 debug_line("apply_function_transforms", f"Updating private method {m.group(0)} [after ]: {line}")
 
         return super().apply_function_transforms(line)
@@ -981,7 +1021,7 @@ class Class:
     
     @property
     def name_camel_case(self):
-        return transform_variable_name(self._name)
+        return arg_transforms.transform_variable_name(self._name)
 
     @property
     def cname(self):
@@ -1090,7 +1130,7 @@ class Class:
 
         name = c_name.replace(self.prefix, "")
 
-        name = transform_class_name(name)
+        name = arg_transforms.transform_class_name(name)
 
         return self.rename.get(name, name) + "Data", c_name
 
@@ -1150,7 +1190,7 @@ class Class:
         if count:
             debug_line("update_class_members", f"begin [after ]: {line}")
 
-        accessor_variable_name = transform_variable_name(self._name)
+        accessor_variable_name = arg_transforms.transform_variable_name(self._name)
 
         # Replace name member with a string literal (it's only used in logging)
         line,count = re.subn(r"\ba->name", f"\"{self._name}\"", line)
@@ -1192,7 +1232,7 @@ class Class:
     def update_static_function_calls(self, line):
         for m in self._static_functions:
             name = m.name
-            line,count = re.subn(rf"\b{name}\s*\(", f"{transform_function_name(name)}(", line)
+            line,count = re.subn(rf"\b{name}\s*\(", f"{arg_transforms.transform_function_name(name)}(", line)
             if(count):
                 debug_line("update_static_function_calls", f"name={name} [after ]: {line}")
 
@@ -1201,7 +1241,7 @@ class Class:
     def tidy_top_level(self, line):
         for m in self._static_functions:
             name = m.name
-            line,count = re.subn(rf"\b{name}\b", f"{transform_function_name(name)}", line)
+            line,count = re.subn(rf"\b{name}\b", f"{arg_transforms.transform_function_name(name)}", line)
 
         return line
 

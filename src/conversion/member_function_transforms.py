@@ -2,7 +2,7 @@
 
 import re
 from convert_debug import debug_line
-from convert_arg import Arg
+from arg_transforms import Arg
 
 # Represent a function signature
 class FuncSig:
