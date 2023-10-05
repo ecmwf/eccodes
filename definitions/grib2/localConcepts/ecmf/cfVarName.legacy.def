@@ -1243,3 +1243,69 @@
  parameterCategory = 128 ;
  parameterNumber = 240 ;
 }
+#Altimeter wave height
+'awh' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 246 ;
+}
+#Altimeter corrected wave height
+'acwh' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 247 ;
+}
+#Altimeter range relative correction
+'arrc' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 248 ;
+}
+#Total sky direct solar radiation at surface
+'fdir' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 21 ;
+}
+#Surface solar radiation downward clear-sky
+'ssrdc' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 129 ;
+}
+#Surface thermal radiation downward clear-sky
+'strdc' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 130 ;
+}
+#Standard deviation of orography
+'sdor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 160 ;
+}
+#Cloud base height
+'cbh' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 23 ;
+}
+#Wave spectral kurtosis
+'wsk' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 252 ;
+}
+#10 metre wind speed
+'wind' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 245 ;
+}
+#10 metre wind direction
+'dwi' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 249 ;
+}
