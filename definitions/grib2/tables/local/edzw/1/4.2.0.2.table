@@ -19,3 +19,6 @@
 209 209 V-component of (vertical) wind shear vector between two levels (m s-1)
 210 210 Updraft duration(s)
 211 211 Updraft mask(Numeric)
+212 212 U-component of mean wind (vertical mean over specified layer) (m s-1)
+213 213 V-component of mean wind (vertical mean over specified layer) (m s-1)
+214 214 Extreme weather index (EWI) of wind speed (gust) (m s-1)
