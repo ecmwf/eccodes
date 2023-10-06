@@ -236,20 +236,29 @@ class FunctionDelegate:
 
     # Find type declarations and store in the c_to_cpp_type_transforms
     def process_type_declarations(self, line):
-        # struct declaration
-        m = re.match(r"^\s*struct\s+(\w+)", line)
+
+        # struct declaration [1]: [typedef] struct S [S]
+        m = re.match(r"^(?:typedef)?\s*struct\s+(\w+)\s*(\w*)?", line)
         if m:
             ctype = m.group(1)
             cpptype = arg_transforms.transform_class_name(ctype)
 
             add_c_to_cpp_type_transform(ctype, cpptype)
-            line = line.replace(f"{ctype}", f"{cpptype}")
-            debug_line("process_type_declarations", f"Added type transform: {ctype} -> {cpptype} [after ]: {line}")
+
+            line = re.sub(m.re, f"struct {cpptype}", line)
+            debug_line("process_type_declarations", f"Added struct type transform: {ctype} -> {cpptype} [after ]: {line}")
+
+            carg = Arg("struct", ctype)
+            cpp_arg = Arg("struct", cpptype)
+            self._arg_map[carg] = cpp_arg
+            debug_line("process_type_declarations", f"Adding struct to arg map: {carg.type} {carg.name} -> {cpp_arg.type} {cpp_arg.name} [after ]: {line}")
         
-        # For now, we'll comment out lines of the format "typedef struct X X"
-        m = re.match(r"^\s*typedef\s+struct\s+(\w+)\s+\1\s*;", line)
-        if m:
-            line = f"// [typedef removed] " + line
+        # struct declaration [2]: } S
+        m = re.match(r"^}\s*(\w+)", line)
+        if m and m.group(1) not in ["else"]:
+            # We'll assume this definition is covered by [1]
+            line = re.sub(m.re, "}", line)
+            debug_line("process_type_declarations", f"Removed extraneous struct definition: {m.group(1)} [after ]: {line}")
 
         return line
 
