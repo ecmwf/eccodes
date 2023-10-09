@@ -58,25 +58,33 @@ static ieee_table_t ieee_table = { 0, {0,}, {0,}, 0, 0 };
 
 
 /**
- * @brief Initializes the ieee_table with IEE754 single precision (32-bit) values.
- *
- * Nearest smaller values (e.g., reference values for grid_simple and grid_ccsds)
- * are taken from this table.
- *
- * @details The table layout is as follows:
- * 
- * | idx (i) | multiplier (e) | value (v = mmin * e) |
- * |---------|----------------|----------------------|
- * | 1       | 2^(-149)       | 0x800000 * 2^(-149)  |
- * | 2       | 2^(-148)       | 0x800000 * 2^(-148)  |
- * | ...     | ...            | ...                  |
- * | 253     | 2^103          | 0x800000 * 2^103     |
- * | 254     | 2^104          | 0x800000 * 2^104     |
- *
- * The vmin and vmax boundaries are defined as:
- * - vmin =  0x800000 * 2^(-149)
- * - vmax =  0xffffff * 2^104
- */
+.. _init_ieee_table:
+
+Init IEEE Table
+===============
+
+Initializes the ieee_table with IEEE754 single precision (32-bit) values. Nearest smaller values (e.g., reference values for grid_simple and grid_ccsds) are taken from this table.
+
+Details
+-------
+
+The table layout is as follows:
+
++-------+----------------+----------------------+
+| idx (i) | multiplier (e) | value (v = mmin * e) |
++-------+----------------+----------------------+
+| 1     | 2^(-149)       | 0x800000 * 2^(-149)  |
+| 2     | 2^(-148)       | 0x800000 * 2^(-148)  |
+| ...   | ...            | ...                  |
+| 253   | 2^103          | 0x800000 * 2^103     |
+| 254   | 2^104          | 0x800000 * 2^104     |
++-------+----------------+----------------------+
+
+The vmin and vmax boundaries are defined as:
+
+- vmin =  0x800000 * 2^(-149)
+- vmax =  0xffffff * 2^104
+*/
 
 static void init_ieee_table()
 {
