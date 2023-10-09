@@ -51,6 +51,11 @@ struct ibm_table_t
 
 static ibm_table_t ibm_table = { 0, {0,}, {0,}, 0, 0 };
 
+
+/**
+ * @brief (see the documentation for init_ieee_float() in grib_ieeefloat.cc)
+ */
+
 static void init_ibm_table()
 {
     if (!ibm_table.inited) {
