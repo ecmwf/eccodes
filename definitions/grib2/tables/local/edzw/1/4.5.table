@@ -3,7 +3,8 @@
 192 ML  ML start level of mixed layer parcel(CAPE/CIN)
 193 MU  MU start level of most unstable parcel(CAPE/CIN)
 194 LFC Level of free convection
-#195-198 reserved
+#195-197 reserved
+198 radarElev radarElev Radar antenna elevation angle (degree)
 199 radarElevComposite radarElevComposite radarElevComposite 
 #200 reserved
 201 hor Surface: horizontal plane

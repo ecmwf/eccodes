@@ -95,6 +95,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_ecpoint
         grib_s2s
         grib_fire
         # grib_true_imagery
@@ -237,6 +238,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_ecc-1698
         gts_get
         gts_ls
         gts_count
