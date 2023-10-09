@@ -4,7 +4,7 @@ codetable[2] activity "grib2/destine_activity.table" : dump;
 alias mars.activity = activity;
 
 codetable[2] experiment "grib2/destine_experiment.table" : dump;
-alias mars.study = experiment;
+alias mars.experiment = experiment;
 
 unsigned[1] generation = 255 : dump;
 alias mars.generation = generation;
