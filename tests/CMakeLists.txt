@@ -95,6 +95,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_ecpoint_dgov-242
         grib_s2s
         grib_fire
         # grib_true_imagery

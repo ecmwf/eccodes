@@ -69,3 +69,7 @@
 88 gsd Gridded satellite data
 89 ga GFAS analysis
 90 gai Gridded analysis input
+91 gbf Bias-corrected gridbox
+92 pfc Point values
+93 ppm Point value metrics
+94 gwt Weather types
