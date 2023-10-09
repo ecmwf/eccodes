@@ -40,8 +40,3 @@ int set_step(grib_handle* h, const std::string& value_key, const std::string& un
         return err;
     return GRIB_SUCCESS;
 }
-
-bool is_future_output_enabled(grib_handle* h)
-{
-    return h->context->is_future_step_format > 0;
-}
