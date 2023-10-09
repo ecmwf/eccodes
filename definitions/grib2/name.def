@@ -3029,8 +3029,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Runoff water equivalent
-'Runoff water equivalent' = {
+#Runoff water equivalent (surface plus subsurface)
+'Runoff water equivalent (surface plus subsurface)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;

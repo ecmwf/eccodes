@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/************************************************
- *  Enrico Fucile
- ***********************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -115,13 +111,18 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     double val = 0;
     size_t l   = 1;
     char repres[1024];
+    char format[32] = "%g";
+    grib_handle* h = grib_handle_of_accessor(a);
 
     grib_unpack_double(a, &val, &l);
 
-    if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
+    if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    else
-        snprintf(repres, sizeof(repres), "%g", val);
+    } else {
+        size_t size = sizeof(format);
+        grib_get_string(h, "formatForDoubles", format, &size);
+        snprintf(repres, sizeof(repres), format, val);
+    }
 
     l = strlen(repres) + 1;
 

@@ -9,3 +9,5 @@
 199 199 Swiss coordinate (west-east) (m)
 200 200 Swiss coordinate LV 95 (south-north) (m)
 201 201 Swiss coordinate LV 95 (west-east) (m)
+202 202 Solar elevation angle (degree)
+203 203 Solar azimuth angle (degree)
