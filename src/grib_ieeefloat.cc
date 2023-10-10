@@ -35,16 +35,6 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
     *j = jl;
 }
 
-double grib_ieee_table_e(unsigned long e)
-{
-    return ieee_table.e[e];
-}
-
-double grib_ieee_table_v(unsigned long e)
-{
-    return ieee_table.v[e];
-}
-
 unsigned long grib_ieee_to_long(double x)
 {
     unsigned long s    = 0;
