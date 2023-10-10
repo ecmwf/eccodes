@@ -17,15 +17,14 @@
 #include <type_traits>
 #include <cstdint>
 
-template <typename T> int grib_ieee_decode_array(grib_context* c, unsigned char* buf, size_t nvals, int bytes, T* val);
 
 /**
 .. _init_ieee_table:
 
-Init IEEE Table
+Init IBM Floats Table
 ===============
 
-Initializes the ieee_table with IEEE754 single precision (32-bit) values. Nearest smaller values (e.g., reference values for grid_simple and grid_ccsds) are taken from this table.
+Initializes the ibm_table with IBM Float values. Nearest smaller values (e.g., reference values for grid_simple) are taken from this table.
 
 Details
 -------
@@ -35,42 +34,41 @@ The table layout is as follows:
 +-------+----------------+----------------------+
 | idx (i) | multiplier (e) | value (v = mmin * e) |
 +-------+----------------+----------------------+
-| 1     | 2^(-149)       | 0x800000 * 2^(-149)  |
-| 2     | 2^(-148)       | 0x800000 * 2^(-148)  |
+| 0     | 16^(-70)       | 0x100000 * 2^(-70)  |
+| 1     | 16^(-69)       | 0x100000 * 2^(-69)  |
 | ...   | ...            | ...                  |
-| 253   | 2^103          | 0x800000 * 2^103     |
-| 254   | 2^104          | 0x800000 * 2^104     |
+| 126   | 16^56          | 0x100000 * 2^56     |
+| 127   | 16^57          | 0x100000 * 2^57     |
 +-------+----------------+----------------------+
 
 The vmin and vmax boundaries are defined as:
 
-- vmin =  0x800000 * 2^(-149)
-- vmax =  0xffffff * 2^104
+- vmin =  0x100000 * 2^(-70)
+- vmax =  0xffffff * 2^57
 */
 
-template <typename ValueType>
-struct IeeeTable {
+struct IbmTable {
 private:
-    static_assert(std::is_floating_point<ValueType>::value, "ValueType must be a floating point type");
-    static constexpr uint8_t TABLESIZE = 255;
-    static constexpr uint32_t mantissa_min = 0x800000;
+    using ValueType = double;
+    static constexpr uint8_t TABLESIZE = 128;
+    static constexpr uint32_t mantissa_min = 0x100000;
     static constexpr uint32_t mantissa_max = 0xffffff;
 
 public:
     static constexpr std::array<ValueType, TABLESIZE> e = []() {
         std::array<ValueType, TABLESIZE> multiplier{};
         for (uint8_t i = 1; i < TABLESIZE; ++i) {
-            multiplier[i] = codes_power<ValueType>(i - 150, 2);
+            multiplier[i] = codes_power<ValueType>(i - 70, 16);
         }
         return multiplier;
     }();
     static constexpr std::array<ValueType, TABLESIZE> v = []() {
         std::array<ValueType, TABLESIZE> values{};
-        for (uint8_t i = 1; i < TABLESIZE; ++i) {
+        for (uint8_t i = 0; i < TABLESIZE; ++i) {
             values[i] = e[i] * mantissa_min;
         }
         return values;
     }();
-    static constexpr ValueType vmin = e[1] * mantissa_min;
-    static constexpr ValueType vmax = e[254] * mantissa_max;
+    static constexpr ValueType vmin = e[0] * mantissa_min;
+    static constexpr ValueType vmax = e[127] * mantissa_max;
 };
