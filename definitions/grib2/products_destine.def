@@ -21,45 +21,6 @@ if(typeOfFirstFixedSurface == 103) {
     }
 }
 
-# Define marsType based on type of processed data
-concept marsType(unknown) {
-
-   fc = {
-     typeOfProcessedData = 1;
-   }
-   "9" = {
-     typeOfProcessedData = 1;
-   }
-
-   an = {
-     typeOfProcessedData = 0;
-   }
-   "2" = {
-     typeOfProcessedData = 0;
-   }
-}
-
-alias mars.type   = marsType;
-
-concept marsStream(unknown) {
-
-    oper = {
-      productDefinitionTemplateNumber = 8;
-    }
-    oper = {
-      productDefinitionTemplateNumber = 0;
-    }
-
-    enda = {
-      productDefinitionTemplateNumber = 11;
-    }
-    enda = {
-      productDefinitionTemplateNumber = 1;
-    }
-} : no_copy;
-
-alias mars.stream = marsStream;
-
 if (dataset is "climate-dt") {
   alias mars.date = validityDate;
   alias mars.time = validityTime;
