@@ -378,6 +378,14 @@ cat >$tempFilt <<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl #> $tempOut
 
+# Decode an integer key as string
+cat >$tempFilt <<EOF
+ print "[scaleFactorOfSecondFixedSurface:s]";
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+cat $tempOut
+grep "MISSING" $tempOut
+
 
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
