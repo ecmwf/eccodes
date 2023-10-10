@@ -62,7 +62,7 @@ platform:
   - x64
 
 before_build:
-  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+  - cmd: call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
 build_script:
   - cmd: cd %ECCODES_SRC%
