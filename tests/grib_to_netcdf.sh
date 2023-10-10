@@ -36,19 +36,19 @@ if command -v "ncdump" >/dev/null 2>&1; then
     NC_DUMPER="ncdump"
 fi
 
-echo "Test ECC-1041: One parameter with different expvers ..."
-# ------------------------------------------------------------
-# This has 5 messages, all 'tp'. Change the first message to have a different expver
-input=${data_dir}/tp_ecmwf.grib
-${tools_dir}/grib_set -w stepRange=12 -s experimentVersionNumber=0005 $input $tempGrib
-${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
-if test "x$NC_DUMPER" != "x"; then
-    $NC_DUMPER -h $tempNetcdf > $tempText
-    grep -q "short tp_0005" $tempText
-    grep -q "short tp_0001" $tempText
-fi
-
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+    echo "Test ECC-1041: One parameter with different expvers ..."
+    # ------------------------------------------------------------
+    # This has 5 messages, all 'tp'. Change the first message to have a different expver
+    input=${data_dir}/tp_ecmwf.grib
+    ${tools_dir}/grib_set -w stepRange=12 -s experimentVersionNumber=0005 $input $tempGrib
+    ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
+    if test "x$NC_DUMPER" != "x"; then
+        $NC_DUMPER -h $tempNetcdf > $tempText
+        grep -q "short tp_0005" $tempText
+        grep -q "short tp_0001" $tempText
+    fi
+
     echo "Test HDF5 decoding ..."
     # ---------------------------
     # Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
