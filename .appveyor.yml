@@ -30,6 +30,8 @@ init:
   - cmd: set PATH=%PATH%;%ECCODES_SRC%\build\bin
     # auto-yes for conda
   - cmd: conda config --set always_yes yes
+    # update conda
+  - cmd: conda update conda
 
 clone_folder: $(ECCODES_SRC)
 
