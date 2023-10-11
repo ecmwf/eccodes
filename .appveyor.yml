@@ -31,7 +31,7 @@ init:
     # auto-yes for conda
   - cmd: conda config --set always_yes yes
     # update conda
-  - cmd: conda update conda
+  - cmd: conda update -n base -c defaults conda
 
 clone_folder: $(ECCODES_SRC)
 
