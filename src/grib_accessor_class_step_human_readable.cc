@@ -123,54 +123,28 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 {
     int err = 0;
     size_t slen = 2;
-    long step;
+    long step, hour, minute, second;
 
-    //size_t step_output_format_size = 128;
-    //char step_output_format[step_output_format_size];
-    //if ((err = grib_get_string_internal(h, "step_output_format", step_output_format, &step_output_format_size)) != GRIB_SUCCESS) {
-    //    printf("ERROR: unable to get step_output_format step_output_format=%s\n", step_output_format);
-    //    return err;
-    //}
-
-    //if (strcmp(step_output_format, "future") == 0) {
-        /* Change units to seconds (highest resolution)
+    /* Change units to seconds (highest resolution)
      * before computing the step value
      */
-    //    //err = grib_set_string(h, "stepUnits", "s", &slen);
-    //    //if (err) return err;
-    //    err = grib_get_long(h, "step", &step);
-    //    if (err) return err;
+    if ((err = grib_set_string(h, "stepUnits", "s", &slen)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long(h, "step", &step)) != GRIB_SUCCESS) 
+        return err;
 
-    //    long indicator = grib_get_long(h, "indicatorOfUnitOfTimeRange", &indicator);
-    //    auto stepOptimizer = Step(step, indicator);
-    //    stepOptimizer.optimize_unit();
+    hour = step/3600;
+    minute = step/60 % 60;
+    second = step % 60;
+    /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
 
-    //    snprintf(result, 1024, "%d%s", stepOptimizer.value(), stepOptimizer.unit_as_str().c_str());
-    //}
-    //else {
-        long hour, minute, second;
+    if (second) {
+        snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
+    } else {
+        if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
+        else snprintf(result, 1024, "%ldh", hour);
+    }
 
-        /* Change units to seconds (highest resolution)
-     * before computing the step value
-     */
-        err = grib_set_string(h, "stepUnits", "s", &slen);
-        if (err) return err;
-        err = grib_get_long(h, "step", &step);
-        if (err) return err;
-
-        hour = step/3600;
-        minute = step/60 % 60;
-        second = step % 60;
-        /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
-
-        if (second) {
-            snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
-        } else {
-            if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
-            else snprintf(result, 1024, "%ldh", hour);
-        }
-
-    //}
     *length = strlen(result);
     return GRIB_SUCCESS;
 }
