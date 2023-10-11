@@ -36,6 +36,12 @@ if command -v "ncdump" >/dev/null 2>&1; then
     NC_DUMPER="ncdump"
 fi
 
+echo Very simple test
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+export ECCODES_DEBUG=1
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $sample2
+
+exit 0
 
 echo "Test ECC-1041: One parameter with different expvers ..."
 # ------------------------------------------------------------

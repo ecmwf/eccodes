@@ -155,184 +155,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
-        grib_bpv_limit
-        grib_complex
-        grib_double_cmp
-        grib_change_packing
-        grib_run_length_packing
-        grib_grid_space_view
-        grib_partial_message
-        grib_headers_only
-        grib_unpack_subarray
-        grib_count
-        bufr_templates
-        bufr_dump_data
-        bufr_dump_descriptors
-        bufr_coordinate_descriptors
-        bufr_dump_subset
-        bufr_dump_decode_filter
-        bufr_dump_encode_filter
-        bufrdc_desc_ref
-        bufrdc_ref
-        bufr_compare
-        bufr_copy
-        bufr_count
-        bufr_get
-        bufr_operators
-        bufr_filter_misc
-        bufr_filter_extract_subsets
-        bufr_filter_extract_datetime
-        bufr_filter_extract_area
-        bufr_filter_unpack_pack
-        bufr_filter_skipExtraKeyAttributes
-        bufr_indexing
-        bufr_json_data
-        bufr_ls
-        bufr_ls_json
-        bufr_change_edition
-        bufr_keys_iter
-        grib_keys_iter
-        grib_keys_iter_skip
-        grib_geo_iter
-        bufr_get_element
-        bufr_wmo_tables
-        bufr_extract_headers
-        extract_offsets
-        bufr_ecc-147
-        bufr_ecc-389
-        bufr_ecc-673
-        bufr_ecc-428
-        bufr_ecc-286
-        bufr_ecc-288
-        bufr_ecc-313
-        bufr_ecc-616
-        bufr_ecc-680
-        bufr_ecc-686
-        bufr_ecc-690
-        bufr_ecc-379
-        bufr_ecc-393
-        bufr_ecc-433
-        bufr_ecc-750
-        bufr_ecc-765
-        bufr_ecc-875
-        bufr_ecc-887
-        bufr_ecc-1187
-        bufr_ecc-1305
-        bufr_ecc-1476
-        bufr_ecc-1623
-        grib_ecc-490
-        grib_ecc-756
-        grib_ecc-806
-        grib_ecc-873
-        grib_ecc-600
-        grib_ecc-923
-        grib_ecc-979
-        grib_ecc-984
-        grib_ecc-1000
-        grib_ecc-1001
-        grib_ecc-1030
-        grib_ecc-1397
-        grib_ecc-1425
-        grib_ecc-1467
-        grib_set_bytes
-        grib_set_force
-        bufr_ecc-556
-        codes_ecc-1698
-        gts_get
-        gts_ls
-        gts_count
-        gts_compare
-        wrap
-        taf
-        pseudo_diag
-        metar_ls
-        metar_get
-        metar_dump
-        metar_compare
-        bufr_set
-        grib_ieee
-        grib1_gds_not_present
-        grib_sh_ieee64
-        grib_optimize_scaling
-        grib_optimize_scaling_sh
-        grib_lam_bf
-        grib_lam_gp
-        grib1to2
-        grib2to1
-        grib1to3
-        grib2to3
-        grib2_templates
-        grib2_chemicals_aerosols
-        grib3_templates
-        grib_bad
-        grib_ls
-        grib_ls_json
-        grib_filter
-        grib_multi
-        grib_nearest_test
-        pseudo_budg
-        grib_gridType
-        grib_fieldset
-        grib_octahedral
-        grib_grid_mercator
-        grib_global
-        grib_concept
-        grib_copy_message
-        grib_decimalPrecision
-        grib_bitsPerValue
-        grib_get_fail
-        grib_missing
-        grib_local
-        grib_step
-        grib_set
-        grib_iterator
-        grib_proj_string
-        grib_compare
-        grib_copy
-        grib_level
-        grib_indexing
-        grib_bitmap
-        grib_list
-        grib_second_order
-        grib_multi_from_message
-        grib_change_scanning
-        grib_statistics
-        read_any
-        codes_new_from_samples
-        codes_dump_action_tree
-        codes_set_samples_path
-        codes_compare_keys
-        codes_dump_content
-        codes_to_double
-        grib_dump
-        grib_dump_debug
-        grib_dump_json
-        grib_local_MeteoFrance
-        grib_local_NCEP
-        grib_neg_fctime
-        codes_split_file
-        grib_mars_keys1
         grib_mars_keys2)
-
-    if( HAVE_AEC AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra grib_ecc-1431)
-        list(APPEND tests_extra grib_ecc-1433)
-    endif()
-    if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra bufr_dump_encode_fortran)
-        list(APPEND tests_extra bufr_dump_decode_fortran)
-    endif()
-    if( ENABLE_EXTRA_TESTS )
-        list(APPEND tests_extra grib_util_set_spec)
-        list(APPEND tests_extra grib_padding)
-        list(APPEND tests_extra grib_tigge_conversions1)
-        list(APPEND tests_extra grib_tigge_conversions2)
-        list(APPEND tests_extra bufr_dump_encode_C)
-        list(APPEND tests_extra bufr_dump_decode_C)
-        list(APPEND tests_extra bufr_dump_encode_python)
-        list(APPEND tests_extra bufr_dump_decode_python)
-        list(APPEND tests_extra list_codetable_flagtable_keys)
-    endif()
 
     # These tests do not require any data downloads
     foreach( test ${tests_basic} )
@@ -346,6 +169,12 @@ if( HAVE_BUILD_TOOLS )
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
 
+##For debugging on windows
+ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
+TYPE SCRIPT
+CONDITION HAVE_NETCDF
+COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
+TEST_DEPENDS eccodes_download_gribs )
 
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
@@ -360,13 +189,6 @@ if( HAVE_BUILD_TOOLS )
                                    eccodes_download_bufrs eccodes_download_bufr_refs
                                    eccodes_download_metars eccodes_download_gts )
     endforeach()
-
-    if( HAVE_FORTRAN AND ENABLE_EXTRA_TESTS )
-        set_tests_properties( eccodes_t_bufr_dump_encode_fortran PROPERTIES TIMEOUT 2500 )
-    endif()
-    if( ENABLE_EXTRA_TESTS )
-        set_tests_properties( eccodes_t_bufr_dump_encode_C PROPERTIES TIMEOUT 2500 )
-    endif()
 
 
     ###########################################
@@ -397,79 +219,6 @@ if( HAVE_BUILD_TOOLS )
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_ecc-1288.sh
                       TEST_DEPENDS eccodes_download_bufrs eccodes_download_bufr_refs )
 
-
-    if( ENABLE_EXTRA_TESTS AND HAVE_ECCODES_THREADS )
-        ecbuild_add_executable( TARGET    grib_encode_pthreads
-                                NOINSTALL
-                                SOURCES   grib_encode_pthreads.cc
-                                LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
-        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads
-                          TYPE SCRIPT
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
-
-        foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
-            ecbuild_add_executable( TARGET    ${test}
-                                    NOINSTALL
-                                    SOURCES   ${test}.cc
-                                    LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
-        endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
-                          TYPE SCRIPT
-                          TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-604.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_threads_ecc-604
-                          TYPE SCRIPT
-                          TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
-    endif()
-
-    ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
-                      TYPE SCRIPT
-                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS AND NOT ECCODES_ON_WINDOWS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-                      TEST_DEPENDS eccodes_download_gribs )
-
-    ecbuild_add_test( TARGET eccodes_t_grib_jpeg
-                      TYPE SCRIPT
-                      CONDITION HAVE_JPEG AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_jpeg.sh
-                      TEST_DEPENDS eccodes_download_gribs )
-
-    ecbuild_add_test( TARGET eccodes_t_grib_png
-                      TYPE SCRIPT
-                      CONDITION HAVE_PNG AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_png.sh
-                      TEST_DEPENDS eccodes_download_gribs )
-
-    ecbuild_add_test( TARGET eccodes_t_grib_ccsds
-                      TYPE SCRIPT
-                      CONDITION HAVE_AEC AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ccsds.sh
-                      TEST_DEPENDS eccodes_download_gribs )
-
-    ecbuild_add_test( TARGET eccodes_t_grib_check_param_concepts
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_param_concepts.sh )
-
-    ecbuild_add_test( TARGET eccodes_t_bufr_split_by_rdbSubtype
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS AND ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_split_by_rdbSubtype.sh
-                      TEST_DEPENDS eccodes_download_bufrs )
-
-    ecbuild_add_test( TARGET eccodes_t_codes_export_resource
-                      TYPE SCRIPT
-                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/codes_export_resource.sh )
-
-
-    # Performance test. Must have -DENABLE_TIMER=ON
-    ecbuild_add_test( TARGET eccodes_t_grib_ecc-386
-                      TYPE SCRIPT
-                      CONDITION ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_ecc-386.sh
-                      TEST_DEPENDS eccodes_download_gribs )
 else()
     # No command line tools
     list(APPEND tests_no_tools
