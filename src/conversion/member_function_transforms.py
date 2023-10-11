@@ -1,15 +1,9 @@
 # Transforms that apply to AccessorData member functions
 
 import re
-from convert_debug import debug_line
-from arg_transforms import Arg
-
-# Represent a function signature
-class FuncSig:
-    def __init__(self, ret, name, args) -> None:
-        self.ret = ret
-        self.name = name
-        self.args = args
+import debug
+from arg import Arg
+from funcsig import FuncSig
 
 # The following static dictionary defines well-known conversions from C to the equivalent
 # AccessorData virtual functions
@@ -70,11 +64,21 @@ accessor_member_func_conversions = {
     "byte_count"      : FuncSig("long", "byteCount",            [None]),
     # static long byte_offset(grib_accessor*);
     "byte_offset"     : FuncSig("long", "byteOffset",           [None]),
+
+    # Other functions
+    # static void dump(grib_accessor*, grib_dumper*);
+    "dump"            : FuncSig("void", "dump",                 [None, None]),
+    # static int compare(grib_accessor*, grib_accessor*);
+    "compare"         : FuncSig("bool", "compare",              [None, Arg("AccessorData const&", "rhs")]),
+    # static grib_accessor* make_clone(grib_accessor*, grib_section*, int*);
+    "make_clone"      : FuncSig("AccessorDataPtr", "clone",     [None, None, None]),
+    # static int is_missing(grib_accessor* a)
+    "is_missing"      : FuncSig("bool", "isMissing",            [None]),
 }
 
 def return_type(func_name):
     if func_name in accessor_member_func_conversions:
-        return accessor_member_func_conversions[func_name].ret
+        return accessor_member_func_conversions[func_name].return_type
     else:
         return None
 

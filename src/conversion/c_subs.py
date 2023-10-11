@@ -1,7 +1,7 @@
-# Function transforms to apply to all converted C code
+# C code substitutions to apply
 
 import re
-from convert_debug import debug_line
+import debug
 
 c_lib_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
@@ -31,7 +31,7 @@ grib_iarray_substitutions = {
     r"^\s*(.*?\bgrib_iarray_delete)": r"// [Removed grib_iarray_delete] \1",
 }
     
-def apply_all_func_transforms(line):
+def apply_all_substitutions(line):
 
     func_substitutions = [
         c_lib_substitutions,
@@ -44,6 +44,6 @@ def apply_all_func_transforms(line):
         for k, v in func_substitution_dict.items():
             line, count = re.subn(k, v, line)
             if count:
-                debug_line("apply_all_func_transforms", f"Updated line: {line}")
+                debug.line("apply_all_substitutions", f"Updated line: {line}")
 
     return line

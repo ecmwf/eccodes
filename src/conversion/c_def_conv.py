@@ -1,3 +1,4 @@
+# Convert C definitions (e.g. to enums)
 
 GribStatusConverter = {
     "GRIB_SUCCESS": "GribStatus::SUCCESS", 

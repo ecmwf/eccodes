@@ -10,26 +10,27 @@
 
 #pragma once
 
-{% for i in c.header_includes -%}
-#include "{{ i }}"
+#include "{{ c.include_super }}"
+
+{% for i in c.header_includes %}
+#include {{ i }}
 {%- endfor %}
 
 namespace {{ c.nested_namespaces }} {
 
-// Forward declarations
 {%- for f in c.forward_declarations %}
-{{ f }}
+{{ f }};
 {%- endfor %}
 
 class {{ c.name }} : public {{ c.super }} {
 public:
-    {{ c.name }}({{c.constructor.arg_string}});
+    {{ c.name }}({{c.constructor.cpp_args}});
     ~{{ c.name }}() = default;
 
 private:
     // Inherited functions
     {%- for m in c.inherited_methods %}
-    {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {{ m.const }} override;{% endfor %}
+    {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) {{ m.const }} override;{% endfor %}
 
     // Members
     {% for m in c.members %} {{ m.as_declaration() }}{{ m.default_value }};
@@ -37,7 +38,10 @@ private:
 
 // Private methods
 {%- for m in c.private_methods %}
-{{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
+{{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) const;{% endfor %}
 };
 
-} // namespace {{ c.nested_namespaces }}
+
+
+{% for n in c.namespaces_reversed %}} // namespace {{ n }}
+{%- endfor %}

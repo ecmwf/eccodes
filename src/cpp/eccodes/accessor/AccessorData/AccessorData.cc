@@ -89,6 +89,12 @@ bool AccessorData::isMissing() const
     return false;
 }
 
+AccessorDataPtr AccessorData::clone() const
+{
+    throw AccessorException(GribStatus::NOT_IMPLEMENTED); // TO DO
+    return nullptr;
+}
+
 // Pack - single value
 GribStatus AccessorData::pack(long const& value)
 {

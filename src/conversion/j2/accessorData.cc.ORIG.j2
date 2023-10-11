@@ -8,8 +8,15 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-{%- for i in c.source_includes %}
+#include "{{ c.include_header }}"
+{%- for i in c.common_includes %}
 #include "{{ i }}"
+{%- endfor %}
+
+// converted from {{ c.cname }}.cc
+
+{%- for i in c.body_includes %}
+#include {{ i }}
 {%- endfor %}
 
 namespace {{ c.nested_namespaces }} {
@@ -19,12 +26,12 @@ namespace {{ c.nested_namespaces }} {
 // Global section - END
 
 {% for m in c.static_functions %}
-static {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {
+static {{ m.return_type }} {{ m.transformed_name }}({{ m.cpp_args }}) {
         {{ m.body }}
 }
 {% endfor %}
 
-{{ c.name }}::{{ c.name }}({{c.constructor.arg_string}}) : {{ c.super }}({{ c.constructor.arg_name_string }}){
+{{ c.name }}::{{ c.name }}({{c.constructor.cpp_args}}) : {{ c.super }}({{ c.constructor.call_args }}){
        {{ c.constructor.body }}
 }
 
@@ -32,20 +39,21 @@ static {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {
 
 {% for m in c.inherited_methods %}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.arg_string }}) {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.cpp_args }}) {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
 
 {% for m in c.private_methods %}
 {{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.arg_string }}) {{ m.const }} {
+{{ m.return_type }} {{ c.name }}::{{ m.transformed_name }}({{ m.cpp_args }})  {{ m.const }} {
         {{ m.body }}
  }
  {% endfor %}
 
 namespace {
-AccessorBuilder<{{ c.name }}> {{ c.camel_case_name }}Builder(AccessorType("{{ c.factory_name }}"));
+AccessorBuilder<{{ c.name }}> {{ c.name_camel_case }}Builder(AccessorType("{{ c.factory_name }}"));
 }
 
-} // namespace {{ c.nested_namespaces }}
+{% for n in c.namespaces_reversed %}} // namespace {{ n }}
+{%- endfor %}

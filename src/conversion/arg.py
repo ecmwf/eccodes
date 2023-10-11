@@ -1,4 +1,4 @@
-from convert_debug import debug_line
+import debug
 import re
 
 # Represent an argument in the form TYPE NAME
@@ -18,26 +18,41 @@ class Arg:
             return self.type == other.type and self.name == other.name
         return False
     
+    # Return the "raw" type, e.g. char for char* or int for const int&
+    @property
+    def underlying_type(self):
+        m = re.match(r"(?:const)?\s*(\w+)\s*[\*&]?\*?", self.type)
+        if m:
+            return m.group(1)
+        else:
+            return self.type
+
     # Create Arg from an input string 
     @classmethod
     def from_string(cls, input):
+
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
         # Note: We ignore const for now...
-        m = re.match(r"(?:const)?\s*(\w+)\s*(\*)?\s*(\w+)\s*(\[\d*\])?", input)
+        m = re.match(r"(const)?(struct)?\s*(\w+)\s*(\*+)?\s*(\w+)\s*(\[\d*\])?", input)
 
         if m:
-            arg_type = m.group(1)
+            arg_type = ""
+            if m.group(1):
+                arg_type += m.group(1) + " "
             if m.group(2):
-                arg_type += m.group(2)  # Add * if present...
-            arg_name = m.group(3)
+                arg_type += m.group(2) + " "
+            arg_type += m.group(3)
             if m.group(4):
-                # Handle array declaration e.g. char buf[10]
-                arg_type += m.group(4)
+                arg_type += m.group(4)  # Add * if present...
 
-            debug_line("Arg from_string", f"Creating Arg: {arg_type} {arg_name} from input: {input}")
+            arg_name = m.group(5)
+            if m.group(6):
+                # Handle array declaration e.g. char buf[10]
+                arg_type += m.group(6)
+
             return cls(arg_type, arg_name)
 
-        debug_line("Arg from_string", f"Couldn't create arg from input: {input}")
+        debug.line("Arg from_string", f"Couldn't create arg from input: {input}")
         return None
     
     # Generate a string to represent the Arg's declaration
@@ -82,19 +97,3 @@ def arg_string(arg):
         return arg.as_declaration()
     
     return "None"
-
-def transform_variable_name(name):
-    name_parts = name.split("_")
-
-    if len(name_parts) > 1:
-        name = name_parts[0] + "".join(x.capitalize() for x in name_parts[1:])
-    
-    return name[0].lower() + name[1:]
-
-def transform_function_name(name):
-    name = re.sub(rf"^[gs]et_", f"", name)
-    return transform_variable_name(name)
-
-def transform_class_name(name):
-    name = transform_variable_name(name)
-    return name[0].upper() + name[1:]

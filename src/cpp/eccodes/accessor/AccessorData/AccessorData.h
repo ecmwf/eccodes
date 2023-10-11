@@ -37,6 +37,7 @@ public:
     virtual double nearestSmallerValue(double val) const;
     virtual bool compare(AccessorData const& rhs) const;
     virtual bool isMissing() const;
+    virtual AccessorDataPtr clone() const;
 
     // Pack - single value
     virtual GribStatus pack(long const& value);
