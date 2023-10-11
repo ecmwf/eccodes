@@ -173,8 +173,7 @@ if( HAVE_BUILD_TOOLS )
 ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
 TYPE SCRIPT
 CONDITION HAVE_NETCDF
-COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
-TEST_DEPENDS eccodes_download_gribs )
+COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh )
 
     # Note: making the test dependent on the grib files (with DEPENDS)
     #       means they will be downloaded at "make" time
