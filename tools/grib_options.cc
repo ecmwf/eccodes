@@ -232,7 +232,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("F:"))
         options->format = grib_options_get_option("F:");
     else
-        options->format = NULL;
+        options->format = strdup("%g");
 
     if (grib_options_on("i:")) {
         options->index_on = 1;
@@ -249,10 +249,6 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
     if (grib_options_on("X:"))
         options->infile_offset = atol(grib_options_get_option("X:"));
-
-    if (grib_options_on("y")) {
-        options->step_output_format = strdup("future");
-    }
 
 #ifndef ECCODES_ON_WINDOWS
     /* Check at compile time to ensure our file offset is at least 64 bits */

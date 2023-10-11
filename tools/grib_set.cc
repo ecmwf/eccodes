@@ -15,7 +15,6 @@ grib_option grib_options[] = {
     { "s:", 0, 0, 1, 1, 0 },
     { "r", 0, 0, 0, 1, 0 },
     { "d:", 0, 0, 0, 1, 0 },
-    { "y", 0, 0, 0, 1, 0 },
     /*{"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
     { "p:", 0, 0, 1, 1, 0 },
     { "P:", 0, 0, 0, 1, 0 },

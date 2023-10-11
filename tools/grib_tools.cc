@@ -112,8 +112,7 @@ static grib_runtime_options global_options = {
     0, /* skip_all  */
     {{0,},}, /* grib_values tolerance[MAX_KEYS] */
     0, /* infile_offset */
-    0,  /* JSON output */
-    0, /* step output format */
+    0  /* JSON output */
 };
 
 static grib_handle* grib_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
@@ -362,7 +361,6 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         while (!options->skip_all && ((h = grib_handle_new_from_file_x(c, infile->file, options->mode,
                                                                        options->headers_only, &err)) != NULL ||
                                       err != GRIB_SUCCESS)) {
-
             infile->handle_count++;
             options->handle_count++;
 
@@ -405,11 +403,6 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             if (options->skip && options->strict) {
                 grib_tool_skip_handle(options, h);
                 continue;
-            }
-
-            if (options->step_output_format) {
-                size_t step_output_format_size = strlen(options->step_output_format);
-                grib_set_string(h, "stepOutputFormat", options->step_output_format, &step_output_format_size);
             }
 
             if (options->format != NULL) {
