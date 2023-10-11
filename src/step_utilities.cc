@@ -32,11 +32,9 @@ std::optional<Step> get_step(grib_handle* h, const char* value_key, const char* 
 int set_step(grib_handle* h, const std::string& value_key, const std::string& unit_key, const Step& step)
 {
     int err;
-    Step step_copy = step.copy();
-    //step_copy.optimize_unit();
-    if ((err = grib_set_long_internal(h, value_key.c_str(), step_copy.value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, value_key.c_str(), step.value<long>())) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_set_long_internal(h, unit_key.c_str(), step_copy.unit().value<long>())) != GRIB_SUCCESS)
+    if ((err = grib_set_long_internal(h, unit_key.c_str(), step.unit().value<long>())) != GRIB_SUCCESS)
         return err;
     return GRIB_SUCCESS;
 }
