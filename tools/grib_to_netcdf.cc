@@ -3997,11 +3997,13 @@ int main(int argc, char* argv[])
 
 int grib_tool_before_getopt(grib_runtime_options* options)
 {
+    printf(".. grib_tool_before_getopt\n");
     return 0;
 }
 
 int grib_tool_init(grib_runtime_options* options)
 {
+    printf(".. grib_tool_init\n");
     char* p            = NULL;
     char* list         = NULL;
     ctx                = grib_context_get_default();
@@ -4141,6 +4143,8 @@ int grib_tool_init(grib_runtime_options* options)
 
 int grib_tool_new_filename_action(grib_runtime_options* options, const char* filename)
 {
+    printf(".. grib_tool_new_filename_action\n");
+    
     char buf[1024] = {0,};
     int e           = 0;
     int i           = 0;
@@ -4279,6 +4283,8 @@ void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
 
 int grib_tool_finalise_action(grib_runtime_options* options)
 {
+    printf(".. grib_tool_finalise_action\n");
+
     request* config_r  = NULL;
     hypercube* dims    = NULL;
     dataset_t* subsets = NULL;
