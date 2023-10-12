@@ -44,8 +44,6 @@ label="grib_ecc-1620"
 temp=temp.$label
 temp2=temp_2.$label
 
-
-
 #### CHECK: check optimal units are set correctly in GRIB files
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
@@ -57,7 +55,6 @@ ${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
 #${tools_dir}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
 #grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
-
 
 ${tools_dir}/grib_set -s stepUnits:i=13,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
@@ -73,7 +70,6 @@ ${tools_dir}/grib_set -s stepUnits:i=1,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 ${tools_dir}/grib_set -s stepUnits:s=h,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
-
 
 #fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 #low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
@@ -93,7 +89,6 @@ grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 #grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 24 h"
 #grib_check_key_equals $temp2   "-p $high_level_keys" "24 48"
 #exit
-
 
 #### CHECK: grib_set - endStep + stepUnits
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
@@ -158,15 +153,12 @@ ${tools_dir}/grib_set -s stepRange:s=62D-122D $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1488 h 1440 h"
 grib_check_key_equals $temp2   "-p stepRange:s"     "1488-2928"
 
-
-
 fn="${data_dir}/reduced_gaussian_surface.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 keys__="step,stepUnits:s"
 keys_s="step:s"
 keys_i="step:i,stepUnits:s"
 keys_d="step:d,stepUnits:s"
-
 
 ${tools_dir}/grib_set -s forecastTime=59,indicatorOfUnitOfTimeRange=m $fn $temp
 grib_check_key_equals $temp "-p $keys__ -s stepUnits=s" "3540 s"
@@ -192,14 +184,12 @@ grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "0 m"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0 h"
 
 
-
 fn="${data_dir}/reduced_gaussian_surface.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 keys__="step,stepUnits:s"
 keys_s="step:s,stepUnits:s"
 keys_i="step:i,stepUnits:s"
 keys_d="step:d,stepUnits:s"
-
 
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "0 m"
@@ -258,8 +248,6 @@ grib_check_key_equals $temp "-p $keys__" "24 h"
 grib_check_key_equals $temp "-p $keys_s" "24 h"
 grib_check_key_equals $temp "-p $keys_i" "24 h"
 grib_check_key_equals $temp "-p $keys_d" "24 h"
-
-
 
 
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
@@ -333,10 +321,7 @@ grib_check_key_equals $temp "-p $keys_s" "18-24 18 24"
 grib_check_key_equals $temp "-p $keys_i" "24 18 24"
 grib_check_key_equals $temp "-p $keys_d" "24 18 24"
 
-rm -f $temp
+rm -f $temp $temp2
 
 #~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/151145_s2_enfo_cf_o2d_zos_2002_prod_ecmf_glob.grib2
 #~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/240023_ce_efas_fc_sfc_dis06_2022_0001_ecmf_lisflood.grib2
-
-
-
