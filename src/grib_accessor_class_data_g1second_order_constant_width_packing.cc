@@ -282,6 +282,7 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
             long fovi = 0;
+            // ECC-1703
             if ( i >=0 && i < numberOfGroups )
                 fovi = firstOrderValues[i];
             X[n] = fovi + X[n];
