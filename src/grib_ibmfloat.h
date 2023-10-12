@@ -48,21 +48,23 @@ The vmin and vmax boundaries are defined as:
 struct IbmTable {
 private:
     using ValueType = double;
-    static constexpr uint8_t TABLESIZE = 128;
+    static constexpr int TABLESIZE = 128;
     static constexpr uint32_t mantissa_min = 0x100000;
     static constexpr uint32_t mantissa_max = 0xffffff;
 
 public:
     static constexpr std::array<ValueType, TABLESIZE> e = []() {
         std::array<ValueType, TABLESIZE> multiplier{};
-        for (uint8_t i = 1; i < TABLESIZE; ++i) {
+        multiplier[0] = 0;
+        for (int i = 0; i < TABLESIZE; ++i) {
             multiplier[i] = codes_power<ValueType>(i - 70, 16);
         }
         return multiplier;
     }();
     static constexpr std::array<ValueType, TABLESIZE> v = []() {
         std::array<ValueType, TABLESIZE> values{};
-        for (uint8_t i = 0; i < TABLESIZE; ++i) {
+        values[0] = 0;
+        for (int i = 0; i < TABLESIZE; ++i) {
             values[i] = e[i] * mantissa_min;
         }
         return values;

@@ -35,6 +35,7 @@ The table layout is as follows:
 +-------+----------------+------------------------+
 | idx (i) | multiplier (e) | value (v = mmin * e) |
 +-------+----------------+------------------------+
+| 0     | 0              | 0                      |
 | 1     | 2^(-149)       | 0x800000 * 2^(-149)    |
 | 2     | 2^(-148)       | 0x800000 * 2^(-148)    |
 | ...   | ...            | ...                    |
@@ -52,21 +53,23 @@ template <typename ValueType>
 struct IeeeTable {
 private:
     static_assert(std::is_floating_point<ValueType>::value, "ValueType must be a floating point type");
-    static constexpr uint8_t TABLESIZE = 255;
+    static constexpr int TABLESIZE = 255;
     static constexpr uint32_t mantissa_min = 0x800000;
     static constexpr uint32_t mantissa_max = 0xffffff;
 
 public:
     static constexpr std::array<ValueType, TABLESIZE> e = []() {
         std::array<ValueType, TABLESIZE> multiplier{};
-        for (uint8_t i = 1; i < TABLESIZE; ++i) {
+        multiplier[0] = 0;
+        for (int i = 1; i < TABLESIZE; ++i) {
             multiplier[i] = codes_power<ValueType>(i - 150, 2);
         }
         return multiplier;
     }();
     static constexpr std::array<ValueType, TABLESIZE> v = []() {
         std::array<ValueType, TABLESIZE> values{};
-        for (uint8_t i = 1; i < TABLESIZE; ++i) {
+        values[0] = 0;
+        for (int i = 1; i < TABLESIZE; ++i) {
             values[i] = e[i] * mantissa_min;
         }
         return values;
