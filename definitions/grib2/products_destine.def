@@ -20,9 +20,3 @@ if(typeOfFirstFixedSurface == 103) {
         alias mars.levelist = level;
     }
 }
-
-if (dataset is "climate-dt") {
-  alias mars.date = validityDate;
-  alias mars.time = validityTime;
-  unalias mars.step;
-}

@@ -45,14 +45,6 @@ ${tools_dir}/grib_set -s dataset=1,generation=2,activity=1,experiment=1,model=2,
 grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realisation,resolution" "1 2 1 1 2 1 1"
 grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,model:s,resolution:s" "climate-dt CMIP6 hist IFS-NEMO standard"
 
-# Check mars.date and mars.time are equal to validityDate and validityTime, and that mars.step has been unaliased
-result1=$( ${tools_dir}/grib_get -p mars.date,mars.time $temp_grib_a )
-result2=$( ${tools_dir}/grib_get -p validityDate,validityTime $temp_grib_a )
-[ "$result1" = "$result2" ]
-
-${tools_dir}/grib_ls -jm $temp_grib_a
-[ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
-
 # Check setting dataset to extremes-dt (2). This time we will check string also
 ${tools_dir}/grib_set -s dataset=2 $destine_sample $temp_grib_a
 
@@ -71,6 +63,33 @@ grib_check_key_equals $temp_grib_a "destineOrigin" "MeteoFrance"
 ${tools_dir}/grib_set -s numberOfDataPoints=12582912,gridDefinitionTemplateNumber=150,Nside=1024 $destine_sample $temp_grib_a
 
 grib_check_key_equals $temp_grib_a "gridSpecification" "H1024"
+
+# Now check streams.
+# Setting stream clim and type fc should set mars.date and mars.time to validityDate and validityTime,
+# and mars.step should be unaliased
+
+${tools_dir}/grib_set -s stream=clim,type=fc $destine_sample $temp_grib_a
+
+result1=$( ${tools_dir}/grib_get -p mars.date,mars.time $temp_grib_a )
+result2=$( ${tools_dir}/grib_get -p validityDate,validityTime $temp_grib_a )
+[ "$result1" = "$result2" ]
+
+${tools_dir}/grib_ls -jm $temp_grib_a
+[ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
+
+# Setting stream clmn and type fc should set mars.year and mars.month to year and month,
+# and mars.date, mars.time, mars.step should be unaliased
+
+${tools_dir}/grib_set -s stream=clmn,type=fc $destine_sample $temp_grib_a
+
+result1=$( ${tools_dir}/grib_get -p mars.year,mars.month $temp_grib_a )
+result2=$( ${tools_dir}/grib_get -p year,month $temp_grib_a )
+[ "$result1" = "$result2" ]
+
+${tools_dir}/grib_ls -jm $temp_grib_a
+[ $( ${tools_dir}/grib_get -f -p mars.date $temp_grib_a ) = "not_found" ]
+[ $( ${tools_dir}/grib_get -f -p mars.time $temp_grib_a ) = "not_found" ]
+[ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
 
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample

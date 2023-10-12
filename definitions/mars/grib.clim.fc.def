@@ -1,0 +1,4 @@
+alias mars.date = validityDate;
+alias mars.time = validityTime;
+unalias mars.step;
+unalias mars.domain;
