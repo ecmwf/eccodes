@@ -148,6 +148,21 @@ static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
+    try {
+        if (!Unit::is_visible(Unit{*val}))
+            throw std::runtime_error("Unit masked");
+    }
+    catch (std::exception& e) {
+        auto visible_units = Unit::list_visible_units();
+        std::string visible_units_str;
+        for (auto& u : visible_units)
+            visible_units_str += Unit{u}.value<std::string>() + ",";
+        visible_units_str.pop_back();
+
+        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available units are: " + visible_units_str;
+        grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
+        return GRIB_INVALID_ARGUMENT;
+    }
 
     int ret;
     staticStepUnits = *val;
@@ -192,10 +207,21 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     try {
         long unit = Unit{val}.value<long>();
+
+        if (!Unit::is_visible(Unit{val}))
+            throw std::runtime_error("Unit masked");
+
         pack_long(a, &unit, len);
     }
     catch (std::exception& e) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid unit: %s", val);
+        auto visible_units = Unit::list_visible_units();
+        std::string visible_units_str;
+        for (auto& u : visible_units)
+            visible_units_str += Unit{u}.value<std::string>() + ",";
+        visible_units_str.pop_back();
+
+        std::string msg = "Invalid unit: " + std::string(val) + " (" + e.what() + ")" + ". Available units are: " + visible_units_str;
+        grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }
     return GRIB_SUCCESS;

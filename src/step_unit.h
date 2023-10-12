@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include <array>
 #include <unordered_map>
+#include <algorithm>
 
 template <typename T> using Minutes = std::chrono::duration<T, std::ratio<60>>;
 template <typename T> using Hours = std::chrono::duration<T, std::ratio<3600>>;
@@ -60,9 +61,24 @@ public:
     };
 
     Unit() : internal_value_(Value::HOUR) {}
+
     explicit Unit(Value unit_value) : internal_value_(unit_value) {}
-    explicit Unit(const std::string& unit_value) {internal_value_ = map_.name_to_unit(unit_value);}
-    explicit Unit(long unit_value) {internal_value_ = map_.long_to_unit(unit_value);}
+
+    explicit Unit(const std::string& unit_value) {
+        try {
+            internal_value_ = map_.name_to_unit(unit_value);
+        } catch (std::exception& e) {
+            throw std::runtime_error(std::string{"Unit not found"});
+        }
+    }
+
+    explicit Unit(long unit_value) {
+        try {
+            internal_value_ = map_.long_to_unit(unit_value);
+        } catch (std::exception& e) {
+            throw std::runtime_error(std::string{"Unit not found"});
+        }
+    }
 
     bool operator>(const Unit& other) const {return map_.unit_to_duration(internal_value_) > map_.unit_to_duration(other.internal_value_);}
     bool operator==(const Value value) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(value);}
@@ -75,8 +91,20 @@ public:
         return *this;
     }
 
+    static bool is_visible(Unit unit) {
+        return std::find(publicly_visible_units_.begin(), publicly_visible_units_.end(), unit.internal_value_) != publicly_visible_units_.end();
+    }
+
+    static std::vector<Unit> list_visible_units() {
+        std::vector<Unit> result;
+        for (const auto& value : publicly_visible_units_) {
+            result.push_back(Unit(value));
+        }
+        return result;
+    }
+
     template <typename T> T value() const;
-    static std::vector<Value> unit_order_;
+    static std::vector<Value> publicly_visible_units_;
     static std::vector<Value> complete_unit_order_;
 
 private:

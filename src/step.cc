@@ -114,11 +114,11 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
         b.recalculateValue();
     }
     else {
-        auto it = std::find_if(Unit::unit_order_.begin(), Unit::unit_order_.end(), [&](const auto& e) {
+        auto it = std::find_if(Unit::publicly_visible_units_.begin(), Unit::publicly_visible_units_.end(), [&](const auto& e) {
             return e == a.unit().value<Unit::Value>() || e == b.unit().value<Unit::Value>();
         });
 
-        assert(it != Unit::unit_order_.end());
+        assert(it != Unit::publicly_visible_units_.end());
 
         a.set_unit(*it);
         b.set_unit(*it);
@@ -165,7 +165,7 @@ Step& Step::optimize_unit()
     unit_ = internal_unit_;
     Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
 
-    for (auto it = Unit::unit_order_.rbegin(); it != Unit::unit_order_.rend(); ++it) {
+    for (auto it = Unit::publicly_visible_units_.rbegin(); it != Unit::publicly_visible_units_.rend(); ++it) {
         long multiplier = Unit::get_converter().unit_to_duration(*it);
         if (seconds.count() % multiplier == 0) {
             internal_value_ = seconds.count() / multiplier;
@@ -177,14 +177,6 @@ Step& Step::optimize_unit()
 
     return *this;
 }
-
-//Step Step::copy() const {
-//    Step ret{};
-//    ret.internal_value_ = internal_value_;
-//    ret.internal_unit_ = internal_unit_;
-//    ret.unit_ = unit_;
-//    return ret;
-//}
 
 template <>
 std::string Step::value<std::string>(const std::string& format) const {

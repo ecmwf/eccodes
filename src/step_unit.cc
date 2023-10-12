@@ -12,11 +12,10 @@
 
 Unit::Map Unit::map_{};
 
-std::vector<Unit::Value> Unit::unit_order_ = {
+std::vector<Unit::Value> Unit::publicly_visible_units_ = {
     Unit::Value::SECOND,
     Unit::Value::MINUTE,
     Unit::Value::HOUR,
-    //Unit::Value::DAY,
 };
 
 std::vector<Unit::Value> Unit::complete_unit_order_ = {
