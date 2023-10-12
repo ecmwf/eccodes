@@ -152,7 +152,6 @@ class FunctionConverter:
 
         if m:
             carg = arg.Arg.from_string(m.group(1))
-            debug.line("process_variable_declarations", f"MATCH: {m.group(0)} : {line}")
 
         if m and carg:
             arg_converter = arg_conv.ArgConverter(carg)
@@ -247,8 +246,6 @@ class FunctionConverter:
         # This will also remove any unnecessary pointers/refs
         # Note: We ignore anything in quotes!
         for carg, cpparg in self._transforms.all_args.items():
-            debug.line("process_remaining_cargs", f"carg={arg.arg_string(carg)} cpparg={arg.arg_string(cpparg)}")
-
             if not cpparg:
                 continue
 
@@ -411,7 +408,7 @@ class FunctionConverter:
         ]
 
         debug.line("update_cpp_line", f"--------------------------------------------------------------------------------")
-        debug.line("update_cpp_line", f"PROCESSING: [ {line} ]")
+        debug.line("update_cpp_line", f"[PROCESSING] {line}")
 
         # We need to run the skip_line() check after each function
         for update_func in update_functions:

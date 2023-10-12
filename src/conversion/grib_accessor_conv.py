@@ -123,7 +123,6 @@ class GribAccessorConverter:
             self._grib_accessor.destructor: destructor_method_funcsig_conv.DestructorMethodFuncSigConverter
         }
 
-        debug.line("DEBUG", f"name = {self._grib_accessor.name}")
         for func, conv in other_funcs.items():
             converter = conv(func.func_sig)
             cfuncsig, cppfuncsig = converter.to_cpp_funcsig()

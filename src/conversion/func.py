@@ -15,7 +15,9 @@ class Function:
         self._lines.clear()
 
     def add_line(self, line):
-        self._lines.append(line)
+        # We split multi-lines before adding...
+        for l in line.split("\n"):
+            self._lines.append(l)
 
     @property
     def func_sig(self):
