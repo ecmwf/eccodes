@@ -66,7 +66,7 @@ class GribAccessor:
 
     @property
     def destructor(self):
-        return self._destructor if self._destructor else ""
+        return self._destructor
 
     @property
     def inherited_methods(self):
@@ -108,6 +108,12 @@ class GribAccessor:
                 self._private_methods.append(functions.pop(name))
             elif type(f) is static_func.StaticFunction:
                 self._static_functions.append(functions.pop(name))
+
+        if not self._constructor:
+            self._constructor = constructor_method.ConstructorMethod()
+
+        if not self._destructor:
+            self._destructor = destructor_method.DestructorMethod()
 
         # Check we processed all functions!
         assert len(functions) == 0, sorted(functions.keys())

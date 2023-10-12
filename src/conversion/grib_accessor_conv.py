@@ -5,14 +5,20 @@ import arg
 import arg_conv
 import member_conv
 import global_func_conv
+import global_func_funcsig_conv
 import constructor_method
 import constructor_method_conv
+import constructor_method_funcsig_conv
 import funcsig
 import destructor_method
 import destructor_method_conv
+import destructor_method_funcsig_conv
 import inherited_method_conv
+import inherited_method_funcsig_conv
 import private_method_conv
+import private_method_funcsig_conv
 import static_func_conv
+import static_func_funcsig_conv
 import transforms
 import re
 
@@ -41,11 +47,6 @@ non_const_cmethods = [
     "pack_string_array",
     "update_size",
     "notify_change",
-]
-
-# These inherited methods will not be converted
-excluded_inherited_methods = [
-    "next_offset"
 ]
 
 # Convert GribAccessor to AccessorData
@@ -101,20 +102,32 @@ class GribAccessorConverter:
 
         # Create funcsig transforms for all C funcs
         for func in self._grib_accessor.inherited_methods:
-            if func.name not in excluded_inherited_methods:
-                converter = inherited_method_conv.InheritedMethodConverter()
-                cppfuncsig = converter.to_cpp_func_sig(func.func_sig)
-                self._transforms.add_to_inherited_funcsigs(func.func_sig, cppfuncsig)
+            converter = inherited_method_funcsig_conv.InheritedMethodFuncSigConverter(func.func_sig)
+            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
+            self._transforms.add_to_inherited_funcsigs(cfuncsig, cppfuncsig)
 
         for func in self._grib_accessor.private_methods:
-            converter = private_method_conv.PrivateMethodConverter()
-            cppfuncsig = converter.to_cpp_func_sig(func.func_sig)
-            self._transforms.add_to_private_funcsigs(func.func_sig, cppfuncsig)
+            converter = private_method_funcsig_conv.PrivateMethodFuncSigConverter(func.func_sig)
+            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
+            self._transforms.add_to_private_funcsigs(cfuncsig, cppfuncsig)
 
         for func in self._grib_accessor.static_functions:
-            converter = static_func_conv.StaticFunctionConverter()
-            cppfuncsig = converter.to_cpp_func_sig(func.func_sig)
-            self._transforms.add_to_static_funcsigs(func.func_sig, cppfuncsig)
+            converter = static_func_funcsig_conv.StaticFunctionFuncSigConverter(func.func_sig)
+            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
+            self._transforms.add_to_static_funcsigs(cfuncsig, cppfuncsig)
+
+        # Add "other" funcsigs
+        other_funcs = {
+            self._grib_accessor.global_function: global_func_funcsig_conv.GlobalFunctionFuncSigConverter,
+            self._grib_accessor.constructor: constructor_method_funcsig_conv.ConstructorMethodFuncSigConverter,
+            self._grib_accessor.destructor: destructor_method_funcsig_conv.DestructorMethodFuncSigConverter
+        }
+
+        debug.line("DEBUG", f"name = {self._grib_accessor.name}")
+        for func, conv in other_funcs.items():
+            converter = conv(func.func_sig)
+            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
+            self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
 
     def add_global_function(self):
         global_func_converter = global_func_conv.GlobalFunctionConverter()
@@ -164,11 +177,10 @@ class GribAccessorConverter:
 
     def add_inherited_methods(self):
         for cfunc in self._grib_accessor.inherited_methods:
-            if cfunc.name not in excluded_inherited_methods:
-                inherited_method_converter = inherited_method_conv.InheritedMethodConverter()
-                cppfunc = inherited_method_converter.to_cpp_function(cfunc, self._transforms)
-                cppfunc.const = cfunc.name not in non_const_cmethods
-                self._accessor_data.add_inherited_method(cppfunc)
+            inherited_method_converter = inherited_method_conv.InheritedMethodConverter()
+            cppfunc = inherited_method_converter.to_cpp_function(cfunc, self._transforms)
+            cppfunc.const = cfunc.name not in non_const_cmethods
+            self._accessor_data.add_inherited_method(cppfunc)
 
     def add_private_methods(self):
         for cfunc in self._grib_accessor.private_methods:

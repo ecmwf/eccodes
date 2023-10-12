@@ -1,19 +1,10 @@
-# Transforms that apply to AccessorData member functions
 
-import re
-import debug
-from arg import Arg
+from method_funcsig_conv import *
 from funcsig import FuncSig
+from arg import Arg
 
-# The following static dictionary defines well-known conversions from C to the equivalent
-# AccessorData virtual functions
-# [Key]     Name of an inherited function as defined in the C code (func_name in the functions below)
-# [Value]   Signature for the equivalent function in C++
-#           The argument list provides a 1:1 mapping from the C equivalent function - this map is also used 
-#           when replacing the use of these in the function body
-#           The C signature is shown in the comments to make it easier to identify which C arg maps to C++
-#           Note: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
-accessor_member_func_conversions = {
+class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
+    inherited_method_conversions = {
     # static int pack_TYPE(grib_accessor* a, const TYPE* v, size_t* len)
     "pack_string"         : FuncSig("GribStatus", "pack",   [None, Arg("std::string const&",              "value"),  None]),
     "pack_long"           : FuncSig("GribStatus", "pack",   [None, Arg("std::vector<long> const&",        "values"), None]),
@@ -74,36 +65,26 @@ accessor_member_func_conversions = {
     "make_clone"      : FuncSig("AccessorDataPtr", "clone",     [None, None, None]),
     # static int is_missing(grib_accessor* a)
     "is_missing"      : FuncSig("bool", "isMissing",            [None]),
-}
 
-def return_type(func_name):
-    if func_name in accessor_member_func_conversions:
-        return accessor_member_func_conversions[func_name].return_type
-    else:
-        return None
+    # Excluded functions
+    # static long next_offset(grib_accessor*);
+    "next_offset"     : FuncSig(None, None, [None]),
+    }
 
-def transformed_name(func_name):
-    if func_name in accessor_member_func_conversions:
-        return accessor_member_func_conversions[func_name].name
-    else:
-        return None
+    def __init__(self, cfuncsig):
+        super().__init__(cfuncsig)
+        self._conversions.update(self.inherited_method_conversions)
 
-def transformed_args(func_name):
-    if func_name in accessor_member_func_conversions:
-        return accessor_member_func_conversions[func_name].args
-    else:
-        return None
+    @property
+    def cmetadata(self):
+        # Currently only entries up to "unpack_bytes" have buffer and size args
+        for k,v in self.inherited_method_conversions.items():
+            if k == self._cfuncsig.name:
+                return {
+                    "buffer arg index": 1,
+                    "buffer len arg index": 2,
+                }
+            if k == "unpack_bytes":
+                break
 
-# Helper function that will return the index of the C args corresponding
-# to the buffer and size vars
-# For example: "pack_string" would return 1 and 2 respectively
-# Will return None for indices that don't exist!
-def c_buffer_and_size_index(func_name):
-    # Currently only entries up to "unpack_bytes" have buffer and size args
-    for k,v in accessor_member_func_conversions.items():
-        if k == func_name:
-            return 1,2
-        if k == "unpack_bytes":
-            break
-
-    return None, None
+        return super().cmetadata

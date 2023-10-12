@@ -25,36 +25,6 @@ class FunctionConverter:
     @property
     def transforms(self):
         return self._transforms
-
-    def to_cpp_func_sig(self, cfuncsig):
-        cppfuncsig = funcsig.FuncSig(
-            self.to_cpp_return_type(cfuncsig), 
-            self.to_cpp_name(cfuncsig), 
-            self.to_cpp_args(cfuncsig),
-            cfuncsig.template)
-        cppfuncsig.static = cfuncsig.static
-        
-        return cppfuncsig
-
-    def to_cpp_name(self, cfuncsig):
-        return transform_function_name(cfuncsig.name)
-
-    def to_cpp_return_type(self, cfuncsig):
-        # We'll assume int means GribStatus
-        if cfuncsig.return_type == "int":
-            return "GribStatus"
-        else:
-            return cfuncsig.return_type
-
-    # This should return the same number of cppargs as there are cargs (set unused cppargs to None)
-    def to_cpp_args(self, cfuncsig):
-        cppargs = []
-        for entry in cfuncsig.args:
-            arg_converter = arg_conv.ArgConverter(entry)
-            cpparg = arg_converter.to_cpp_func_sig_arg()
-            cppargs.append(cpparg)
-
-        return cppargs
     
     # Convert cfunction to cppfunction
     # This is the main entry point and should not be overridden - override
@@ -64,7 +34,8 @@ class FunctionConverter:
         self._transforms.clear_local_args()
 
         self._cfunction = cfunction
-        cppfuncsig = self.to_cpp_func_sig(self._cfunction.func_sig)
+        cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.func_sig)
+
         # Store the C to C++ function arg transforms
         for index, carg in enumerate(self._cfunction.func_sig.args):
             cpparg = cppfuncsig.args[index]

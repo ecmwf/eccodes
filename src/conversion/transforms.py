@@ -31,6 +31,7 @@ class Transforms:
         self._inherited_funcsigs = inherited_funcsigs
         self._private_funcsigs = private_funcsigs
         self._static_funcsigs = static_funcsigs
+        self._other_funcsigs = {}
         self._class_types = {}
 
     @property
@@ -81,6 +82,57 @@ class Transforms:
         else:
             self._members[cmember] = cppmember
 
+    # Helper to get the value of the args representing buffer and buffer len,
+    # if they exist, else None
+    def buffer_and_len_arg_indexes(self, cfunc_name):
+        buffer_arg_index = buffer_len_arg_index = None
+        cfuncsig = self.find_cfuncsig(cfunc_name)
+        if cfuncsig:
+            buffer_arg_index = cfuncsig.metadata("buffer arg index")
+            buffer_len_arg_index = cfuncsig.metadata("buffer len arg index")
+
+        return buffer_arg_index, buffer_len_arg_index
+
+    # Find the C++ funcsig that matches the C funcsig
+    def cppfuncsig_for(self, cfuncsig):
+        if cfuncsig in self.inherited_funcsigs:
+            return self.inherited_funcsigs[cfuncsig]
+        elif cfuncsig in self.private_funcsigs:
+            return self.private_funcsigs[cfuncsig]
+        elif cfuncsig in self.static_funcsigs:
+            return self.static_funcsigs[cfuncsig]
+        elif cfuncsig in self.other_funcsigs:
+            return self.other_funcsigs[cfuncsig]
+        else:
+            return None
+
+    # Search all the stored funcsigs, and return the one that
+    # matches func_name, or None
+    def find_cfuncsig(self, func_name):
+        for f in self.inherited_funcsigs.keys():
+            if f.name == func_name:
+                return f
+        for f in self.private_funcsigs.keys():
+            if f.name == func_name:
+                return f
+        for f in self.static_funcsigs.keys():
+            if f.name == func_name:
+                return f
+        for f in self.other_funcsigs.keys():
+            if f.name == func_name:
+                return f
+            
+        return None
+
+    # Finds the cfuncsig matching func_name, and returns the
+    # requested metadata, or None
+    def funcsig_cmetadata(self, func_name, meta_name):
+        cppfuncsig = self.find_cfuncsig(func_name)
+        if cppfuncsig:
+            return cppfuncsig.metadata(meta_name)
+        else:
+            return None
+
     @property
     def inherited_funcsigs(self):
         return self._inherited_funcsigs
@@ -104,6 +156,16 @@ class Transforms:
     def add_to_static_funcsigs(self, cfuncsig, cppfuncsig):
         assert cfuncsig not in self._static_funcsigs, f"Setting an existing static_funcsig transform: {cfuncsig.name} -> {cppfuncsig.name}"
         self._static_funcsigs[cfuncsig] = cppfuncsig
+
+    # Other funcsigs are for Global, Constructor and Destructor
+    # Making them available for reference via funcsig_for()
+    @property
+    def other_funcsigs(self):
+        return self._other_funcsigs
+
+    def add_to_other_funcsigs(self, cfuncsig, cppfuncsig):
+        assert cfuncsig not in self._other_funcsigs, f"Setting an existing other_funcsig transform: {cfuncsig.name} -> {cppfuncsig.name}"
+        self._other_funcsigs[cfuncsig] = cppfuncsig
 
     @property
     def class_types(self):

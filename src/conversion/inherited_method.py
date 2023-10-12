@@ -1,6 +1,5 @@
 
 from method import *
-import member_function_transforms
 
 # Specialisation of AccessorData method
 class InheritedMethod(Method):

@@ -10,6 +10,7 @@ class FuncSig:
         self._args = args
         self._template = template
         self._static = False
+        self._metadata = {}
 
     # Try and create a func sig from a string: will return None is unsuccessful...
     # Note: the sig_string can be multi-line...
@@ -63,6 +64,15 @@ class FuncSig:
     @template.setter
     def template(self, value):
         self._template = value
+    
+    def metadata(self, name):
+        if name in self._metadata:
+            return self._metadata[name]
+        else:
+            return None
+    
+    def add_metadata(self, name, value):
+        self._metadata[name] = value
 
     def as_string(self):
         return f"{'static ' if self.static else ''}{self.return_type} {self.name}({', '.join([a.type + ' ' + a.name for a in self.args if a])})"

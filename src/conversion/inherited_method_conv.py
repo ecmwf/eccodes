@@ -10,44 +10,27 @@ class InheritedMethodConverter(MethodConverter):
     def create_cpp_function(self, cppfuncsig):
         return inherited_method.InheritedMethod(cppfuncsig)
     
-    def to_cpp_name(self, cfuncsig):
-        name = member_function_transforms.transformed_name(cfuncsig.name)
-        if name:
-            return name
-        else:
-            debug.line("to_cpp_name", f"Calling super...")
-            return super().to_cpp_name(cfuncsig)
-
-    def to_cpp_return_type(self, cfuncsig):
-        ret = member_function_transforms.return_type(cfuncsig.name)
-        if ret:
-            return ret
-        else:
-            return super().to_cpp_return_type(cfuncsig)
-
-    def to_cpp_args(self, cfuncsig):
-        cppargs = member_function_transforms.transformed_args(cfuncsig.name)
-
-        if cppargs:
-            return cppargs
-        else:        
-            return super().to_cpp_args(cfuncsig)
-    
     # Special-handling for lengths. The len C param is removed because we use containers, however we need to
     # deal with size-related code
     def process_len_arg(self, line):
-        if len(self._cfunction.args) < 3:
-            return line
-        
-        len_carg = self._cfunction.args[2]
-        if len_carg.name != "len":
-            return line
-        
-        cppargs = member_function_transforms.transformed_args(self._cfunction.name)
-        if not cppargs:
-            return license
+        buffer_arg_index, buffer_len_arg_index = self._transforms.buffer_and_len_arg_indexes(self._cfunction.name)
 
-        len_cpparg = cppargs[1]
+        if not buffer_arg_index and not buffer_len_arg_index:
+            return line
+
+        len_carg = self._cfunction.args[buffer_len_arg_index]
+        if not len_carg.name:
+            return line
+        
+        cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.func_sig)
+        if not cppfuncsig:
+            return line
+        
+        cppargs = cppfuncsig.args
+        if not cppargs:
+            return line
+
+        len_cpparg = cppargs[1] # Need to check this!
 
         # Note: Some code uses len[0] instead of *len, so we check for both...
 

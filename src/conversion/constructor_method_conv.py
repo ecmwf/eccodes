@@ -12,9 +12,6 @@ class ConstructorMethodConverter(MethodConverter):
     def create_cpp_function(self, cppfuncsig):
         return constructor_method.ConstructorMethod(cppfuncsig)
 
-    def to_cpp_args(self, cfuncsig):
-        return [None, None, arg.Arg("AccessorInitData const&", "initData")]
-        
     def process_variables_initial_pass(self, line):
 
         # Transform the argument getters

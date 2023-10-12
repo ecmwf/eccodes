@@ -1,7 +1,6 @@
 
 from func_conv import *
 import method
-import member_function_transforms
 
 # Define base class member mapping
 base_members_map = {
@@ -94,16 +93,19 @@ class MethodConverter(FunctionConverter):
     def convert_grib_un_pack_functions(self, line):
         m = re.search(rf"\bgrib_((?:un)?pack_\w+)\((.*)\)", line)
         if m:
-            buffer_index, size_index = member_function_transforms.c_buffer_and_size_index(m.group(1))
-
-            if buffer_index and size_index:
-                func_name = member_function_transforms.transformed_name(m.group(1))
-                vars = m.group(2).split(",")
-                line = re.sub(m.re, rf"{func_name}({vars[buffer_index]}); {vars[size_index]} = {vars[buffer_index]}.size()", line)
-                debug.line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
+            cfuncsig = self._transforms.find_cfuncsig(m.group(1))
+            if cfuncsig:
+                buffer_arg_index, buffer_len_arg_index = self._transforms.buffer_and_len_arg_indexes(cfuncsig.name)
+                if buffer_arg_index and buffer_len_arg_index:
+                    cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.func_sig)
+                    if cppfuncsig:
+                        func_name = cppfuncsig.name
+                        vars = m.group(2).split(",")
+                        line = re.sub(m.re, rf"{func_name}({vars[buffer_arg_index]}); {vars[buffer_len_arg_index]} = {vars[buffer_arg_index]}.size()", line)
+                        debug.line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
 
         return line
-
+    
     # Overridden to apply member function substitutions
     def apply_function_transforms(self, line):
      
