@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico Fucile  - 06.01.2009                                           *
- ***************************************************************************/
 #include "grib_ieeefloat.h"
 
 /* See old implementation in src/deprecated/grib_ieeefloat.c */
@@ -100,8 +97,6 @@ double grib_ieeefloat_error(double x)
 {
     unsigned long e = 0;
 
-    //init_table_if_needed();
-
     if (x < 0)
         x = -x;
 
@@ -135,7 +130,6 @@ double grib_long_to_ieee(unsigned long x)
         Assert(0);
     }
 #endif
-    //init_table_if_needed();
 
     if (c == 0 && m == 0)
         return 0;
@@ -166,8 +160,6 @@ unsigned long grib_ieee_nearest_smaller_to_long(double x)
 
     if (x == 0)
         return 0;
-
-    //init_table_if_needed();
 
     l = grib_ieee_to_long(x);
     y = grib_long_to_ieee(l);
@@ -213,10 +205,8 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    //init_table_if_needed();
-
     if (a > ieee_table.vmax) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR,
                 "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;

@@ -10,19 +10,17 @@
 
 #pragma once
 
-#include "grib_api_internal.h"
 #include "grib_scaling.h"
 
 #include <array>
 #include <type_traits>
 #include <cstdint>
 
-
 /**
 .. _init_ieee_table:
 
 Init IBM Floats Table
-===============
+=====================
 
 Initializes the ibm_table with IBM Float values. Nearest smaller values (e.g., reference values for grid_simple) are taken from this table.
 
@@ -31,15 +29,15 @@ Details
 
 The table layout is as follows:
 
-+-------+----------------+----------------------+
++-------+----------------+------------------------+
 | idx (i) | multiplier (e) | value (v = mmin * e) |
-+-------+----------------+----------------------+
-| 0     | 16^(-70)       | 0x100000 * 2^(-70)  |
-| 1     | 16^(-69)       | 0x100000 * 2^(-69)  |
-| ...   | ...            | ...                  |
-| 126   | 16^56          | 0x100000 * 2^56     |
-| 127   | 16^57          | 0x100000 * 2^57     |
-+-------+----------------+----------------------+
++-------+----------------+------------------------+
+| 0     | 16^(-70)       | 0x100000 * 2^(-70)     |
+| 1     | 16^(-69)       | 0x100000 * 2^(-69)     |
+| ...   | ...            | ...                    |
+| 126   | 16^56          | 0x100000 * 2^56        |
+| 127   | 16^57          | 0x100000 * 2^57        |
++-------+----------------+------------------------+
 
 The vmin and vmax boundaries are defined as:
 
