@@ -425,7 +425,7 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                       TYPE SCRIPT
-                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS AND NOT ECCODES_ON_WINDOWS
+                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                       TEST_DEPENDS eccodes_download_gribs )
 
