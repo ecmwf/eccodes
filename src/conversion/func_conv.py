@@ -448,7 +448,7 @@ class FunctionConverter:
                 new_lines.append(line)
 
         return new_lines
-    
+
     # Takes the c function, converts the body to C++ code, and returns the lines
     def create_cpp_body(self):
         debug.line("create_cpp_body", f"\n============================== {self._cfunction.name} [IN]  ==============================\n")

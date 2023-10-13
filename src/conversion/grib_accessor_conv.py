@@ -60,10 +60,28 @@ class GribAccessorConverter:
     def to_accessor_data(self, other_grib_accessors):
         debug.line("to_accessor_data", f"\n===== [CONVERTING:BEGIN] {self._grib_accessor.name} ====================\n")
 
+        # Note: we have a chicken and egg scenario when converting the C code:
+        # - Some classes (e.g. bufr_data_array) need the global vars to be parsed BEFORE the funcsig transforms because
+        #   the converted vars (e.g. struct bitmap_s) need to be available for function arguments
+        # - Other classes (e.g. proj_string) need the funcsig transforms to be parsed BEFORE the global vars because 
+        #   the global proj_mappings[] array needs the C++ function names!
+        #
+        # The solution is to have a two-phase parse of the global object, using the following steps:
+        # 1. [add_global_function] Create transforms for just the static function names (ignoring the rest of the signature)
+        # 2. [add_global_function] Parse the global function to map all C-C++ global vars and substitute any C func calls with
+        #    their C++ equivalent
+        #    During this step, forward declarations are ignored
+        # 3. [add_funcsig_transforms] Create full funcsig transforms for all functions, using the global var transforms from
+        #    step 2 where required
+        # 4. [add_forward_declarations] Once everything else has been converted, run a second pass of the global function and
+        #    add all forward declarations in place of the placeholder text
+        # 5. [add_forward_declarations] Determine any global vars that are being used as function args in the new class member
+        #    functions and add a forward declaration of these in the header file
         self.other_grib_accessors = other_grib_accessors
         self.create_accessor_data()
         self.create_transforms()
         self.add_global_function()
+        self.add_funcsig_transforms()
         self.add_includes()
         self.add_members()
         self.add_constructor_method()
@@ -100,6 +118,22 @@ class GribAccessorConverter:
         self._transforms.add_to_class_types("self", self._grib_accessor.name, self._accessor_data.name)
         self._transforms.add_to_class_types("super", self._grib_accessor.super, self._accessor_data.super)
 
+    def add_global_function(self):
+        global_func_funcsig_converter = global_func_funcsig_conv.GlobalFunctionFuncSigConverter(self._grib_accessor.global_function.func_sig)
+        cfuncsig, cppfuncsig = global_func_funcsig_converter.to_cpp_funcsig()
+        self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
+
+        static_func_name_transforms = {}
+        for func in self._grib_accessor.static_functions:
+            converter = static_func_funcsig_conv.StaticFunctionFuncSigConverter(func.func_sig)
+            cppfuncname = converter.to_cpp_name()
+            static_func_name_transforms[func.name] = cppfuncname
+
+        self._global_func_converter = global_func_conv.GlobalFunctionConverter(static_func_name_transforms)
+        self._accessor_data.global_function = self._global_func_converter.to_cpp_function(self._grib_accessor.global_function, self._transforms)
+        self._transforms.make_global()
+
+    def add_funcsig_transforms(self):
         # Create funcsig transforms for all C funcs
         for func in self._grib_accessor.inherited_methods:
             converter = inherited_method_funcsig_conv.InheritedMethodFuncSigConverter(func.func_sig)
@@ -118,7 +152,6 @@ class GribAccessorConverter:
 
         # Add "other" funcsigs
         other_funcs = {
-            self._grib_accessor.global_function: global_func_funcsig_conv.GlobalFunctionFuncSigConverter,
             self._grib_accessor.constructor: constructor_method_funcsig_conv.ConstructorMethodFuncSigConverter,
             self._grib_accessor.destructor: destructor_method_funcsig_conv.DestructorMethodFuncSigConverter
         }
@@ -127,11 +160,6 @@ class GribAccessorConverter:
             converter = conv(func.func_sig)
             cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
             self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
-
-    def add_global_function(self):
-        global_func_converter = global_func_conv.GlobalFunctionConverter()
-        self._accessor_data.global_function = global_func_converter.to_cpp_function(self._grib_accessor.global_function, self._transforms)
-        self._transforms.make_global()
 
     def add_includes(self):
         # Header includes
@@ -162,8 +190,7 @@ class GribAccessorConverter:
             constructor_method_converter = constructor_method_conv.ConstructorMethodConverter()
             self._accessor_data._constructor = constructor_method_converter.to_cpp_function(self._grib_accessor.constructor, self._transforms)
         else:
-            constructor_sig = funcsig.FuncSig(None, "init", [])
-            self._accessor_data._constructor = constructor_method.ConstructorMethod(constructor_sig)
+            self._accessor_data._constructor = constructor_method.ConstructorMethod()
 
     def add_destructor_method(self):
         # Create a default destructor if none exists
@@ -171,41 +198,46 @@ class GribAccessorConverter:
             destructor_method_converter = destructor_method_conv.DestructorMethodConverter()
             self._accessor_data._destructor = destructor_method_converter.to_cpp_function(self._grib_accessor.destructor, self._transforms)
         else:
-            destructor_sig = funcsig.FuncSig(None, "destroy", [])
-            self._accessor_data._destructor = destructor_method.DestructorMethod(destructor_sig)
+            self._accessor_data._destructor = destructor_method.DestructorMethod()
 
     def add_inherited_methods(self):
         for cfunc in self._grib_accessor.inherited_methods:
             inherited_method_converter = inherited_method_conv.InheritedMethodConverter()
             cppfunc = inherited_method_converter.to_cpp_function(cfunc, self._transforms)
-            cppfunc.const = cfunc.name not in non_const_cmethods
-            self._accessor_data.add_inherited_method(cppfunc)
+            if cppfunc.name is not None:
+                cppfunc.const = cfunc.name not in non_const_cmethods
+                self._accessor_data.add_inherited_method(cppfunc)
 
     def add_private_methods(self):
         for cfunc in self._grib_accessor.private_methods:
             private_method_converter = private_method_conv.PrivateMethodConverter()
             cppfunc = private_method_converter.to_cpp_function(cfunc, self._transforms)
-            cppfunc.const = cfunc.name not in non_const_cmethods
-            self._accessor_data.add_private_method(cppfunc)
+            if cppfunc.name is not None:
+                cppfunc.const = cfunc.name not in non_const_cmethods
+                self._accessor_data.add_private_method(cppfunc)
 
     def add_static_functions(self):
         for cfunc in self._grib_accessor.static_functions:
             static_function_converter = static_func_conv.StaticFunctionConverter()
             cppfunc = static_function_converter.to_cpp_function(cfunc, self._transforms)
-            self._accessor_data.add_static_function(cppfunc)
+            if cppfunc.name is not None:
+                self._accessor_data.add_static_function(cppfunc)
 
     # Search for argument types used in private methods where the type is defined in the .cc
     # file and so needs a forward declaration in the header
     def add_forward_declarations(self):
-        for global_arg in self._transforms.global_args.values():
+        # [1] Update the placeholders in the global function
+        self._global_func_converter.process_forward_declarations(self._transforms.static_funcsigs)
 
+        # [2] Find and add forward declarations to the class header
+        for global_arg in self._transforms.global_args.values():
             if not global_arg:
                 continue
 
-            for cppfunc in self._accessor_data.private_methods:
-                for cpp_arg in cppfunc.args:
+            for cppfuncsig in self._transforms.private_funcsigs.values():
+                for cpp_arg in cppfuncsig.args:
                     if cpp_arg and cpp_arg.underlying_type == global_arg.name:
-                        debug.line("add_forward_declarations", f"Found a forward declaration: Method: {cppfunc.name} arg: {arg.arg_string(cpp_arg)} declaration: {arg.arg_string(global_arg)}")
+                        debug.line("add_forward_declarations", f"Found a forward declaration: Method: {cppfuncsig.name} arg: {arg.arg_string(cpp_arg)} declaration: {arg.arg_string(global_arg)}")
                         self._accessor_data.add_forward_declaration(arg.arg_string(global_arg)+";")
 
 

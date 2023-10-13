@@ -23,7 +23,9 @@ def transform_function_name(name):
 # [Value]   Signature for the equivalent function in C++
 #           The argument list provides a 1:1 mapping from the C equivalent function - this map is also used 
 #           when replacing the use of these in the function body
-#           Note: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
+#           Note 1: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
+#           Note 2: If there is no C++ equivalent function, then FuncSig(None, None, [None]) will be returned 
+#                   (where the number of args in the third parameter will match the C FuncSig)
 class FuncSigConverter:
     def __init__(self, cfuncsig):
         self._cfuncsig = cfuncsig
@@ -36,7 +38,7 @@ class FuncSigConverter:
             self.to_cpp_name(), 
             self.to_cpp_args(),
             self._cfuncsig.template)
-        
+
         cppfuncsig.static = self._cfuncsig.static
         cfuncsig = self._cfuncsig
 

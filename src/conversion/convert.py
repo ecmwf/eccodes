@@ -8,7 +8,7 @@ import logging
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 import debug
-import func
+from global_func_funcsig_conv import global_cfuncsig
 import funcsig
 import grib_accessor
 from grib_accessor_conv import GribAccessorConverter
@@ -50,9 +50,8 @@ def parse_file(path):
     functions = {}
 
     # Create a global function for storing global vars etc
-    global_funcsig = funcsig.FuncSig(None, func.global_function_name, [], template)
-    global_function = functions[func.global_function_name] = grib_accessor.create_cfunction(
-        global_funcsig,
+    global_function = functions[global_cfuncsig.name] = grib_accessor.create_cfunction(
+        global_cfuncsig,
         definitions
     )
 
@@ -88,6 +87,8 @@ def parse_file(path):
 
         if stripped_line.startswith("/* START_CLASS_IMP */"):
             in_implementation = True
+            # Discard any global lines captured before here...
+            global_function.clear_lines()
             continue
 
         if stripped_line.startswith("/* END_CLASS_IMP */"):
@@ -155,14 +156,6 @@ def parse_file(path):
                 in_function = False
                 template = None
                 del function
-            continue
-
-        if stripped_line.startswith("#include"):
-            if len(includes) == 0:
-                # Forget lines before the first include
-                global_function.clear_lines()
-            if 'minmax_val' not in line:
-                includes.append(line[9:])
             continue
 
         if stripped_line.startswith("template "):

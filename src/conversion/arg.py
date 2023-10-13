@@ -27,6 +27,15 @@ class Arg:
         else:
             return self.type
 
+    # Return the type with const, e.g. char for const char
+    @property
+    def non_const_type(self):
+        m = re.match(r"const\s*(.*)?", self.type)
+        if m:
+            return m.group(1)
+        else:
+            return self.type
+
     # Create Arg from an input string 
     @classmethod
     def from_string(cls, input):

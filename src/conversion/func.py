@@ -1,8 +1,6 @@
 import debug
 import arg
 
-global_function_name = "Global"
-
 class Function:
     def __init__(self, func_sig) -> None:
         self._func_sig = func_sig

@@ -1,6 +1,6 @@
 import debug
 import member
-import func
+from global_func_funcsig_conv import global_cfuncsig
 import global_func
 import static_func
 import constructor_method
@@ -122,7 +122,7 @@ class GribAccessor:
 def create_cfunction(func_sig, definitions):
     cfunction = None
 
-    if func_sig.name == func.global_function_name:
+    if func_sig.name == global_cfuncsig.name:
         cfunction = global_func.GlobalFunction(func_sig)
     elif func_sig.name == "init":
         cfunction = constructor_method.ConstructorMethod(func_sig)

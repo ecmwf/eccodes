@@ -25,14 +25,14 @@ class ArgConverter:
 
         # [1] Check for defined transforms
         for k, v in type_transforms.items():
-            if k == updated_carg.type:
+            if k == updated_carg.non_const_type:
                 if v is None:
                     return None
                 else:
                     return arg.Arg(v, transform_variable_name(updated_carg.name))
 
         # [2] Process any other array types
-        m = re.match(r"(\w*)(\[\d*\])", updated_carg.type)
+        m = re.search(r"(\w*)(\[\d*\])", updated_carg.type)
         if m:
             for k, v in type_transforms.items():
                 if k == m.group(1):
@@ -45,19 +45,19 @@ class ArgConverter:
 
         # [3] Process other mapped types
         for k, v in type_transforms.items():
-            if k == updated_carg.type:
+            if k == updated_carg.non_const_type:
                 if v is None:
                     return None
                 else:
                     return arg.Arg(v, transform_variable_name(updated_carg.name))
 
         # [3] Return None for grib_accessor_*
-        m = re.match(r"grib_accessor_", self._carg.type)
+        m = re.search(r"grib_accessor_", self._carg.type)
         if m:
             return None
 
         # [4] Pointer types
-        m = re.match(r"(\w*)(\*+)", self._carg.type)
+        m = re.search(r"(\w*)(\*+)", self._carg.type)
         if m:
             cpptype = f"std::vector<{m.group(1)}>"
             if m.group(2) == "**":
@@ -75,11 +75,11 @@ class ArgConverter:
     def to_cpp_func_sig_arg(self, type_transforms = common_type_transforms):
         
         # [1] Pointer types
-        m = re.match(r"(\w*)(\*+)", self._carg.type)
+        m = re.search(r"(\w*)(\*+)", self._carg.type)
         if m: #self._carg.type[-1]  == "*":
             # Check for defined transforms
             for k, v in type_transforms.items():
-                if k == self._carg.type:
+                if k == self._carg.non_const_type:
                     if v is None:
                         return None
                     else:
