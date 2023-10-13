@@ -17,6 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long
+   IMPLEMENTS = unpack_string
    IMPLEMENTS = init;dump
    MEMBERS=const char* date
    MEMBERS=const char* time
@@ -39,6 +40,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_long(grib_accessor*, long* val, size_t* len);
+static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
@@ -84,7 +86,7 @@ static grib_accessor_class _grib_accessor_class_validity_time = {
     0,              /* unpack_double */
     0,               /* unpack_float */
     0,                /* pack_string */
-    0,              /* unpack_string */
+    &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
     0,                 /* pack_bytes */
@@ -225,5 +227,26 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = time;
 
+    return GRIB_SUCCESS;
+}
+
+static int unpack_string(grib_accessor* a, char* val, size_t* len)
+{
+    int err = 0;
+    long v  = 0;
+    size_t lsize = 1;
+
+    err = unpack_long(a, &v, &lsize);
+    if (err) return err;
+
+    if (*len < 5) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Key %s (unpack_string): Buffer too small", a->name);
+        *len = 5;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+
+    snprintf(val, 64, "%04ld", v);
+
+    len[0] = 5;
     return GRIB_SUCCESS;
 }
