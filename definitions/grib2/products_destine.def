@@ -8,7 +8,6 @@ alias parameter.name=name;
 
 alias mars.class  = marsClass;
 alias mars.param = paramId;
-alias mars.origin = centre;
 
 # Special rule for level type 103 'Specified height level above ground (m)'
 if(typeOfFirstFixedSurface == 103) {
