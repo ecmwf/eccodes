@@ -36,13 +36,13 @@ grib_check_key_equals $destine_sample "marsClass,dataset,destineLocalVersion" "d
 # Check setting dataset to climate-dt (1). Check keys are present and equal defaults
 ${tools_dir}/grib_set -s dataset=1 $destine_sample $temp_grib_a
 
-grib_check_key_exists $temp_grib_a dataset,generation,activity,experiment,model,realisation,resolution
-grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realisation,resolution" "1 255 0 0 0 255 0"
+grib_check_key_exists $temp_grib_a dataset,generation,activity,experiment,model,realization,resolution
+grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "1 255 0 0 0 255 0"
 
 # Check an example where a few additional things are set in climate-dt
-${tools_dir}/grib_set -s dataset=1,generation=2,activity=1,experiment=1,model=2,realisation=1,resolution=1 $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s dataset=1,generation=2,activity=1,experiment=1,model=2,realization=1,resolution=1 $destine_sample $temp_grib_a
 
-grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realisation,resolution" "1 2 1 1 2 1 1"
+grib_check_key_equals $temp_grib_a "dataset,generation,activity,experiment,model,realization,resolution" "1 2 1 1 2 1 1"
 grib_check_key_equals $temp_grib_a "dataset:s,activity:s,experiment:s,model:s,resolution:s" "climate-dt CMIP6 hist IFS-NEMO standard"
 
 # Check setting dataset to extremes-dt (2). This time we will check string also
