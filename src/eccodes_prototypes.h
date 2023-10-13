@@ -765,8 +765,6 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ibm_float(double a, double* ret);
 
 /* grib_ieeefloat.cc*/
-double grib_ieee_table_e(unsigned long e);
-double grib_ieee_table_v(unsigned long e);
 unsigned long grib_ieee_to_long(double x);
 double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
