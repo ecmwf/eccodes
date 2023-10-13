@@ -1,4 +1,5 @@
 alias mars.date = validityDate;
-alias mars.time = validityTime;
+meta padded_vtime sprintf("%.4d", validityTime): no_copy;
+alias mars.time = padded_vtime;
 unalias mars.step;
 unalias mars.domain;
