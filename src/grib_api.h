@@ -599,7 +599,7 @@ grib_iterator* grib_iterator_new(const grib_handle* h, unsigned long flags, int*
 
 /**
  * Get latitude/longitude and data values.
- * The Latitudes, longitudes and values arrays must be properly allocated by the caller.
+ * The latitudes, longitudes and values arrays must be properly allocated by the caller.
  * Their required dimension can be obtained by getting the value of the integer key "numberOfPoints".
  *
  * @param h           : handle from which geography and data values are taken
@@ -614,9 +614,9 @@ int grib_get_data(const grib_handle* h, double* lats, double* lons, double* valu
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value);
@@ -625,9 +625,9 @@ int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* value);
@@ -636,7 +636,7 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the geoiterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the geoiterator still has next values, 0 otherwise
  */
 int grib_iterator_has_next(grib_iterator* i);
 
@@ -1402,6 +1402,7 @@ int grib_get_message_size(const grib_handle* h, size_t* size);
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA 10
 #define GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            11
 #define GRIB_UTIL_GRID_SPEC_UNSTRUCTURED                 12
+#define GRIB_UTIL_GRID_SPEC_HEALPIX                      13
 
 typedef struct grib_util_grid_spec
 {
@@ -1431,7 +1432,7 @@ typedef struct grib_util_grid_spec
     long iScansNegatively;
     long jScansPositively;
 
-    /* Gaussian number */
+    /* Gaussian number or HEALPIX Nside */
     long N;
 
     /* Bitmap */

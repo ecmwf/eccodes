@@ -114,7 +114,7 @@ static grib_handle* grib_sections_copy_internal(grib_handle* hfrom, grib_handle*
     h = grib_handle_new_from_message(hfrom->context, buffer, totalLength);
 
     /*to allow free of buffer*/
-    h->buffer->property = GRIB_MY_BUFFER;
+    h->buffer->property = CODES_MY_BUFFER;
 
     switch (edition) {
         case 1:
@@ -376,12 +376,14 @@ static const char* get_packing_spec_packing_type_name(long packing_spec_packing_
 static void print_values(grib_context* c,
                          const grib_util_grid_spec* spec,
                          const grib_util_packing_spec* packing_spec,
+                         const char* input_packing_type,
                          const double* data_values, const size_t data_values_count, /* the data pay load */
                          const grib_values* keyval_pairs, const size_t count)       /* keys and their values */
 {
     size_t i       = 0;
     int isConstant = 1;
     double v = 0, minVal = DBL_MAX, maxVal = -DBL_MAX;
+    fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
     fprintf(stderr, "ECCODES DEBUG grib_util: grib_set_values, setting %zu key/value pairs\n", count);
 
     for (i = 0; i < count; i++) {
@@ -764,6 +766,19 @@ static int check_handle_against_spec(grib_handle* handle, const long edition,
 }
 #endif
 
+static bool grid_type_is_supported_in_edition(const int spec_grid_type, const long edition)
+{
+    if (edition == 1) {
+        if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX ||
+            spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 static const char* get_grid_type_name(const int spec_grid_type)
 {
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_REGULAR_LL)
@@ -798,6 +813,9 @@ static const char* get_grid_type_name(const int spec_grid_type)
 
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL)
         return "lambert";
+
+    if (spec_grid_type == GRIB_UTIL_GRID_SPEC_HEALPIX)
+        return "healpix";
 
     if (spec_grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED)
         return "unstructured_grid";
@@ -866,6 +884,7 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
         case GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA:
         case GRIB_UTIL_GRID_SPEC_UNSTRUCTURED:
         case GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL:
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
             snprintf(sample_name, sample_name_len, "GRIB%ld", editionNumber);
             break;
         default:
@@ -942,7 +961,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     char sample_name[1024]; /* name of the GRIB sample file */
     char input_grid_type[100];
     char input_packing_type[100];
-    long input_bits_per_value = 0, editionNumber = 0, input_decimal_scale_factor = 0;
+    long editionNumber = 0;
     size_t count = 0, len = 100, slen = 20, input_grid_type_len = 100;
     double laplacianOperator;
     int i = 0, packingTypeIsSet = 0, setSecondOrder = 0, setJpegPacking = 0, setCcsdsPacking = 0;
@@ -951,12 +970,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     int global_grid               = 0; /* boolean */
     int expandBoundingBox         = 0;
 
-    static grib_util_packing_spec default_packing_spec = {0,};
     Assert(h);
-
-    if (!packing_spec) {
-        packing_spec = &default_packing_spec;
-    }
 
     /* Get edition number from input handle */
     if ((*err = grib_get_long(h, "edition", &editionNumber)) != 0) {
@@ -969,13 +983,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     grib_get_string(h, "packingType", input_packing_type, &len);
-    grib_get_long(h, "bitsPerValue", &input_bits_per_value);
-    grib_get_long(h, "decimalScaleFactor", &input_decimal_scale_factor);
-    if (h->context->debug == -1) {
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_packing_type = %s\n", input_packing_type);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_bits_per_value = %ld\n", input_bits_per_value);
-        fprintf(stderr, "ECCODES DEBUG grib_util: input_decimal_scale_factor = %ld\n", input_decimal_scale_factor);
-    }
 
     /* ECC-1201, ECC-1529, ECC-1530: Make sure input packing type is preserved */
     if (packing_spec->packing == GRIB_UTIL_PACKING_SAME_AS_INPUT &&
@@ -1016,16 +1023,11 @@ grib_handle* grib_util_set_spec(grib_handle* h,
         goto cleanup;
     }
 
-    if (spec->grid_type == GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA ||
-        spec->grid_type == GRIB_UTIL_GRID_SPEC_UNSTRUCTURED) {
-        if (editionNumber == 1) { /* These grid types are not available in edition 1 */
-            if (h->context->debug == -1)
-                fprintf(stderr,
-                        "ECCODES DEBUG grib_util: '%s' specified "
-                        "but input is GRIB1. Output must be a higher edition!\n",
-                        grid_type);
-            convertEditionEarlier = 1;
-        }
+    if (!grid_type_is_supported_in_edition(spec->grid_type, editionNumber)) {
+        fprintf(stderr, "ECCODES WARNING %s: '%s' specified "
+                        "but input is GRIB edition %ld. Output must be a higher edition!\n",
+                        __func__, grid_type, editionNumber);
+        convertEditionEarlier = 1;
     }
 
     h_sample = grib_handle_new_from_samples(NULL, sample_name);
@@ -1165,6 +1167,12 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             // should be 'double' and not integer. WMO GRIB2 uses millimetres!
             // TODO(masn): Add other keys like Latin1, LoV etc
             break;
+        case GRIB_UTIL_GRID_SPEC_HEALPIX:
+            COPY_SPEC_LONG(bitmapPresent);
+            if (spec->missingValue) COPY_SPEC_DOUBLE(missingValue);
+            COPY_SPEC_LONG(N); // Nside
+            COPY_SPEC_DOUBLE(longitudeOfFirstGridPointInDegrees);
+            break;
 
         case GRIB_UTIL_GRID_SPEC_REDUCED_GG:
         case GRIB_UTIL_GRID_SPEC_REDUCED_ROTATED_GG:
@@ -1292,10 +1300,8 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             keep_matrix = 0; /* ECC-911 */
         }
         if (keep_matrix) {
-            int ret;
             SET_STRING_VALUE("packingType", "grid_simple_matrix");
-            ret = grib_get_long(h, "numberOfDirections", &numberOfDirections);
-            if (ret == GRIB_SUCCESS) {
+            if (GRIB_SUCCESS == grib_get_long(h, "numberOfDirections", &numberOfDirections)) {
                 grib_get_long(h, "numberOfDirections", &numberOfDirections);
                 SET_LONG_VALUE("NC1", numberOfDirections);
                 grib_get_long(h, "numberOfFrequencies", &numberOfFrequencies);
@@ -1412,7 +1418,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     if (h->context->debug == -1) {
         fprintf(stderr, "ECCODES DEBUG grib_util: global_grid = %d\n", global_grid);
         fprintf(stderr, "ECCODES DEBUG grib_util: expandBoundingBox = %d\n", expandBoundingBox);
-        print_values(h->context, spec, packing_spec, data_values, data_values_count, values, count);
+        print_values(h->context, spec, packing_spec, input_packing_type, data_values, data_values_count, values, count);
     }
 
     /* Apply adjustments to bounding box if needed */
@@ -1528,7 +1534,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     }
 
     if (editionNumber > 1 || packing_spec->editionNumber > 1) { /* ECC-353 */
-        /* JPEG packing is not available in GRIB edition 1 and has to be done AFTER we set data values */
+        /* Some packing types are not available in GRIB1 and have to be done AFTER we set data values */
         if (setJpegPacking == 1) {
             *err = grib_set_string(h_out, "packingType", "grid_jpeg", &slen);
             if (*err != GRIB_SUCCESS) {
@@ -1578,8 +1584,7 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     return h_out;
 
 cleanup:
-    if (h_out)
-        grib_handle_delete(h_out);
+    grib_handle_delete(h_out);
     return NULL;
 }
 
@@ -1823,7 +1828,7 @@ int parse_keyval_string(const char* grib_tool,
         if (*p == ':') {
             values[i].type = grib_type_to_int(*(p + 1));
             if (*(p + 1) == 'n')
-                values[i].type = GRIB_NAMESPACE;
+                values[i].type = CODES_NAMESPACE;
             *p = '\0';
             p++;
         }

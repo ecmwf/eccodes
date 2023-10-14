@@ -6,3 +6,4 @@
 196 196 Radar quality information (Proportion)
 197 197 Radar blacklist (Numeric)
 198 198 Height of radar beam above ground (m)
+200 200 Reflectivity (dB)

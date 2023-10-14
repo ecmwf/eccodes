@@ -378,11 +378,10 @@ int grib_get_block_length(grib_section* s, size_t* l)
     *l = s->length;
     return GRIB_SUCCESS;
 
-// TODO: Because grib_pack_long takes a SIGNED value, we may have problems
+// TODO(masn): Because grib_pack_long takes a SIGNED value, we may have problems
 //     if(s->aclength) {
 //         size_t  len = 1;
 //         long plen = 0;
-
 //         int ret = grib_unpack_long(s->aclength, &plen, &len);
 //         if(ret == GRIB_SUCCESS && plen != 0)
 //         {
@@ -390,7 +389,6 @@ int grib_get_block_length(grib_section* s, size_t* l)
 //             return GRIB_SUCCESS;
 //         }
 //     }
-
 //     // empty block
 //     if(s->block->first == NULL) {
 //         *l = 0;
@@ -403,7 +401,6 @@ int grib_get_block_length(grib_section* s, size_t* l)
 //     if(s->aclength) {
 //         size_t  len = 1;
 //         long plen = *l;
-
 //         int ret = grib_pack_long(s->aclength, &plen, &len);
 //         if(ret != GRIB_SUCCESS)
 //             ;

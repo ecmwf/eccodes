@@ -179,6 +179,7 @@ alias setDecimalPrecision=changeDecimalPrecision;
 
 meta bitsPerValueAndRepack bits_per_value(values,bitsPerValue)  : edition_specific;
 alias setBitsPerValue=bitsPerValueAndRepack;
+meta setPackingType packing_type(values,packingType) : edition_specific;
 
 meta scaleValuesBy scale_values(values,missingValue) : edition_specific;
 meta offsetValuesBy offset_values(values,missingValue) : edition_specific;

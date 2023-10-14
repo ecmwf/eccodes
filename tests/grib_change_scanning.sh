@@ -121,6 +121,14 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Invalid Ni/Nj
+${tools_dir}/grib_set -s Ni=9 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $tempGribA
+set +e
+${tools_dir}/grib_set -s swapScanningAlternativeRows=1 $tempGribA $tempGribB
+status=$?
+set -e
+[ $status -ne 0 ]
+
 # ECC-1492
 grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB1.tmpl" iScansNegatively,iScansPositively '0 1'
 grib_check_key_equals "$ECCODES_SAMPLES_PATH/GRIB1.tmpl" jScansNegatively,jScansPositively '1 0'

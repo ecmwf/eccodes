@@ -9,85 +9,9 @@
  */
 
 #include "grib_api_internal.h"
+#include "grib_ibmfloat.h"
 
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init()
-{
-    GRIB_OMP_CRITICAL(lock_grib_ibmfloat_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
-
-typedef struct ibm_table_t ibm_table_t;
-
-struct ibm_table_t
-{
-    int inited;
-    double e[128];
-    double v[128];
-    double vmin;
-    double vmax;
-};
-
-static ibm_table_t ibm_table = { 0, {0,}, {0,}, 0, 0 };
-
-static void init_ibm_table()
-{
-    if (!ibm_table.inited) {
-        unsigned long i;
-        unsigned long mmin = 0x100000;
-        unsigned long mmax = 0xffffff;
-        double e           = 1;
-        for (i = 1; i <= 57; i++) {
-            e *= 16;
-            ibm_table.e[i + 70] = e;
-            ibm_table.v[i + 70] = e * mmin;
-        }
-        ibm_table.e[70] = 1;
-        ibm_table.v[70] = mmin;
-        e               = 1;
-        for (i = 1; i <= 70; i++) {
-            e /= 16;
-            ibm_table.e[70 - i] = e;
-            ibm_table.v[70 - i] = e * mmin;
-        }
-        ibm_table.vmin   = ibm_table.v[0];
-        ibm_table.vmax   = ibm_table.e[127] * mmax;
-        ibm_table.inited = 1;
-        /*for (i=0;i<128;i++) printf("++++ ibm_table.v[%d]=%g\n",i,ibm_table.v[i]);*/
-    }
-}
-
-static void init_table_if_needed()
-{
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-
-    if (!ibm_table.inited)
-        init_ibm_table();
-
-    GRIB_MUTEX_UNLOCK(&mutex);
-}
+constexpr auto ibm_table = IbmTable{};
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
 {
@@ -116,8 +40,6 @@ unsigned long grib_ibm_to_long(double x)
     unsigned long e    = 0;
     double rmmax       = mmax + 0.5;
 
-    init_table_if_needed();
-
     /* printf("\ngrib_ibm_to_long: x=%.20e\n",x); */
     if (x < 0) {
         s = 1;
@@ -137,7 +59,7 @@ unsigned long grib_ibm_to_long(double x)
         return 0;
     }
 
-    binary_search(ibm_table.v, 127, x, &e);
+    binary_search(ibm_table.v.data(), 127, x, &e);
 
     /* printf("grib_ibm_to_long: e=%ld\n",e); */
 
@@ -174,8 +96,6 @@ double grib_ibmfloat_error(double x)
 {
     unsigned long e = 0;
 
-    init_table_if_needed();
-
     if (x < 0)
         x = -x;
 
@@ -190,7 +110,7 @@ double grib_ibmfloat_error(double x)
         return 0;
     }
 
-    binary_search(ibm_table.v, 127, x, &e);
+    binary_search(ibm_table.v.data(), 127, x, &e);
 
     return ibm_table.e[e];
 }
@@ -202,8 +122,6 @@ double grib_long_to_ibm(unsigned long x)
     unsigned long m = (x & 0x00ffffff);
 
     double val = m;
-
-    init_table_if_needed();
 
     /*if(x == 0) return 0;*/
     if (c == 0 && m <= 1)
@@ -219,13 +137,11 @@ double grib_long_to_ibm(unsigned long x)
 
 double grib_ibm_table_e(unsigned long e)
 {
-    init_table_if_needed();
     return ibm_table.e[e];
 }
 
 double grib_ibm_table_v(unsigned long e)
 {
-    init_table_if_needed();
     return ibm_table.v[e];
 }
 
@@ -240,8 +156,6 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
 
     if (x == 0)
         return 0;
-
-    init_table_if_needed();
 
     l = grib_ibm_to_long(x);
     y = grib_long_to_ibm(l);
@@ -286,8 +200,6 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x)
 int grib_nearest_smaller_ibm_float(double a, double* ret)
 {
     unsigned long l = 0;
-
-    init_table_if_needed();
 
     if (a > ibm_table.vmax)
         return GRIB_INTERNAL_ERROR;

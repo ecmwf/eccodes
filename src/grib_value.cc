@@ -37,7 +37,12 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     size_t N = 7, i = 0;
     T minVal = std::numeric_limits<T>::max();
     T maxVal = -std::numeric_limits<T>::max();
+    double missingValue = 0;
     Assert( h->context->debug );
+
+    if (grib_get_double(h, "missingValue", &missingValue)!=GRIB_SUCCESS) {
+        missingValue = 9999.0;
+    }
 
     if (length <= N)
         N = length;
@@ -49,6 +54,7 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
     if (N >= length) fprintf(stderr, ") ");
     else fprintf(stderr, "...) ");
     for (i = 0; i < length; ++i) {
+        if (val[i] == (T)missingValue) continue;
         if (val[i] < minVal) minVal = val[i];
         if (val[i] > maxVal) maxVal = val[i];
     }
@@ -537,25 +543,22 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
     return GRIB_NOT_FOUND;
 }
 
-int grib_clear(grib_handle* h, const char* name)
-{
-    int ret          = 0;
-    grib_accessor* a = NULL;
-
-    a = grib_find_accessor(h, name);
-
-    if (a) {
-        if (a->length == 0)
-            return 0;
-        if ((ret = grib_pack_zero(a)) != GRIB_SUCCESS)
-            grib_context_log(h->context, GRIB_LOG_ERROR, "unable to clear %s (%s)",
-                             name, grib_get_error_message(ret));
-        return ret;
-    }
-
-    /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
-    return GRIB_NOT_FOUND;
-}
+// int grib_clear(grib_handle* h, const char* name)
+// {
+//     int ret          = 0;
+//     grib_accessor* a = NULL;
+//     a = grib_find_accessor(h, name);
+//     if (a) {
+//         if (a->length == 0)
+//             return 0;
+//         if ((ret = grib_pack_zero(a)) != GRIB_SUCCESS)
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "unable to clear %s (%s)",
+//                              name, grib_get_error_message(ret));
+//         return ret;
+//     }
+//     /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
+//     return GRIB_NOT_FOUND;
+// }
 
 int grib_set_missing(grib_handle* h, const char* name)
 {
@@ -1623,7 +1626,7 @@ static int grib_get_key_value(grib_handle* h, grib_key_value_list* kv)
             err              = grib_get_bytes(h, kv->name, (unsigned char*)kv->string_value, &size);
             kv->error        = err;
             break;
-        case GRIB_NAMESPACE:
+        case CODES_NAMESPACE:
             iter                = grib_keys_iterator_new(h, 0, kv->name);
             list                = (grib_key_value_list*)grib_context_malloc_clear(h->context, sizeof(grib_key_value_list));
             kv->namespace_value = list;
@@ -1672,7 +1675,7 @@ void grib_key_value_list_delete(grib_context* c, grib_key_value_list* kvl)
     grib_key_value_list* p    = NULL;
     while (next) {
         p = next->next;
-        if (next->type == GRIB_NAMESPACE)
+        if (next->type == CODES_NAMESPACE)
             grib_key_value_list_delete(c, next->namespace_value);
 
         grib_clean_key_value(c, next);

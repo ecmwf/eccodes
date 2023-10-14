@@ -206,7 +206,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '10fg' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -325,6 +325,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
+	}
+#Standard deviation of sub-gridscale orography
+'sdor' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
 	}
 #Anisotropy of sub-gridscale orography
 'isor' = {
@@ -2424,6 +2430,14 @@
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Total sky direct short-wave (solar) radiation at surface
+'fdir' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface direct short-wave radiation, clear sky
 'cdir' = {
 	 discipline = 0 ;
@@ -2431,6 +2445,13 @@
 	 parameterNumber = 61 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Cloud base height
+'cbh' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 2 ;
 	}
 #0 degrees C isothermal level (atm)
 'deg0l' = {
@@ -2441,7 +2462,7 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#10 metre wind gust in the last 3 hours
+#Maximum 10 metre wind gust in the last 3 hours
 '10fg3' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -2522,6 +2543,14 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 23 ;
+	}
+#Convective available potential energy shear
+'capes' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Tropopause pressure
 'trpp' = {
@@ -2745,6 +2774,22 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Surface short-wave (solar) radiation downward clear-sky
+'ssrdc' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface long-wave (thermal) radiation downward clear-sky
+'strdc' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
 'cp' = {
@@ -2984,7 +3029,7 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Runoff water equivalent
+#Runoff water equivalent (surface plus subsurface)
 'rowe' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
@@ -4086,6 +4131,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Total column integrated ozone
+'tcioz' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #2 metre relative humidity
 '2r' = {
 	 discipline = 0 ;
@@ -4432,6 +4485,18 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
+	}
+#Cloudy reflectance
+'cdrfl' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 31 ;
+	}
+#Clear reflectance
+'crrfl' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 32 ;
 	}
 #Scaled radiance
 '~' = {
@@ -4910,8 +4975,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea ice temperature
-'sitemp' = {
+#Vertically averaged sea ice temperature
+'vasit' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -5065,6 +5130,12 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice temperature
+'sit' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	}
 #Sea surface practical salinity
 'sos' = {
@@ -5973,8 +6044,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea ice temperature
-'avg_sitemp' = {
+#Time-mean vertically averaged sea ice temperature
+'avg_vasit' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -6140,6 +6211,13 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice temperature
+'avg_sit' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
@@ -7543,11 +7621,53 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
+#10 metre wind speed
+'wind' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Altimeter wave height
+'awh' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
+#Altimeter corrected wave height
+'acwh' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Altimeter range relative correction
+'arrc' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	}
+#10 metre wind direction
+'dwi' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #2D wave spectra (single)
 '2dfd' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 86 ;
+	}
+#Wave spectral kurtosis
+'wsk' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 43 ;
 	}
 #Benjamin-Feir index
 'bfi' = {
@@ -8984,12 +9104,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 0 ;
-	}
-#Total column integrated ozone
-'tcioz' = {
-	 discipline = 0 ;
-	 parameterCategory = 14 ;
-	 parameterNumber = 2 ;
 	}
 #Base spectrum width
 'bswid' = {

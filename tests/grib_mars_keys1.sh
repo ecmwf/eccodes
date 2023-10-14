@@ -21,6 +21,16 @@ types_table=$ECCODES_DEFINITION_PATH/mars/type.table
 classes_table=$ECCODES_DEFINITION_PATH/mars/class.table
 streams_table=$ECCODES_DEFINITION_PATH/mars/stream.table
 
+# Set as integers
+${tools_dir}/grib_set -s mars.type=11 $grib2_sample $tempGrib
+grib_check_key_equals $tempGrib type pf
+
+${tools_dir}/grib_set -s mars.class=11 $grib2_sample $tempGrib
+grib_check_key_equals $tempGrib class en
+
+${tools_dir}/grib_set -s mars.stream=1033 $grib2_sample $tempGrib
+grib_check_key_equals $tempGrib stream enfh
+
 # Check basic mars namespace keys
 # --------------------------------
 ${tools_dir}/grib_ls -jm $grib2_sample > $tempOut
@@ -103,5 +113,5 @@ for t in $mars_types; do
     grib_check_key_equals $tempGrib "mars.type:i" $t
 done
 
-
+# Clean up
 rm -f $tempGrib $tempOut $tempRef

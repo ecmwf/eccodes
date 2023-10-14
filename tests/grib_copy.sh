@@ -15,7 +15,8 @@ cd ${data_dir}
 
 # Define a common label for all the tmp files
 label="grib_copy_test"
-temp=${label}".grib.tmp"
+temp=temp.$label.grib
+fLog=temp.$label.log
 
 echo "Test: The -g option..."
 # -----------------------------------
@@ -49,7 +50,7 @@ echo "Test: ECC-1086 invalid message ..."
 # This file is 179 bytes long. We chop the last byte to create
 # an invalid GRIB message (Final 7777 is 777)
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-badGrib=${label}".bad.grib"
+badGrib=temp.$label.bad.grib
 head -c 178 $input > $badGrib
 set +e
 ${tools_dir}/grib_copy $badGrib /dev/null  # Only the bad GRIB
@@ -89,6 +90,17 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+#-------------------------------------------------------------------
+echo "Test: corner cases ..."
+#-------------------------------------------------------------------
+echo GRIB > $badGrib
+set +e
+${tools_dir}/grib_copy $badGrib /dev/null > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -w "unreadable message" $fLog
+
 
 #${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
 #r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
@@ -107,4 +119,4 @@ set -e
 
 # Clean up
 #-----------
-rm -f $temp $badGrib $combinedGrib
+rm -f $temp $badGrib $combinedGrib $fLog

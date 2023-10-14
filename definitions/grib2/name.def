@@ -206,8 +206,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#10 metre wind gust since previous post-processing
-'10 metre wind gust since previous post-processing' = {
+#Maximum 10 metre wind gust since previous post-processing
+'Maximum 10 metre wind gust since previous post-processing' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
@@ -325,6 +325,12 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
+	}
+#Standard deviation of sub-gridscale orography
+'Standard deviation of sub-gridscale orography' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
 	}
 #Anisotropy of sub-gridscale orography
 'Anisotropy of sub-gridscale orography' = {
@@ -2424,6 +2430,14 @@
 	 scaledValueOfFirstFixedSurface = 26315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
+#Total sky direct short-wave (solar) radiation at surface
+'Total sky direct short-wave (solar) radiation at surface' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Surface direct short-wave radiation, clear sky
 'Surface direct short-wave radiation, clear sky' = {
 	 discipline = 0 ;
@@ -2431,6 +2445,13 @@
 	 parameterNumber = 61 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Cloud base height
+'Cloud base height' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	 typeOfFirstFixedSurface = 2 ;
 	}
 #0 degrees C isothermal level (atm)
 '0 degrees C isothermal level (atm)' = {
@@ -2441,8 +2462,8 @@
 	 scaledValueOfFirstFixedSurface = 27315 ;
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	}
-#10 metre wind gust in the last 3 hours
-'10 metre wind gust in the last 3 hours' = {
+#Maximum 10 metre wind gust in the last 3 hours
+'Maximum 10 metre wind gust in the last 3 hours' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 22 ;
@@ -2522,6 +2543,14 @@
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 23 ;
+	}
+#Convective available potential energy shear
+'Convective available potential energy shear' = {
+	 discipline = 0 ;
+	 parameterCategory = 7 ;
+	 parameterNumber = 19 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Tropopause pressure
 'Tropopause pressure' = {
@@ -2745,6 +2774,22 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical_srcsink = 1 ;
 	 sourceSinkChemicalPhysicalProcess = 10 ;
+	}
+#Surface short-wave (solar) radiation downward clear-sky
+'Surface short-wave (solar) radiation downward clear-sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Surface long-wave (thermal) radiation downward clear-sky
+'Surface long-wave (thermal) radiation downward clear-sky' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Convective precipitation
 'Convective precipitation' = {
@@ -2984,8 +3029,8 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Runoff water equivalent
-'Runoff water equivalent' = {
+#Runoff water equivalent (surface plus subsurface)
+'Runoff water equivalent (surface plus subsurface)' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;
@@ -4086,6 +4131,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Total column integrated ozone
+'Total column integrated ozone' = {
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	}
 #2 metre relative humidity
 '2 metre relative humidity' = {
 	 discipline = 0 ;
@@ -4432,6 +4485,18 @@
 	 discipline = 3 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 15 ;
+	}
+#Cloudy reflectance
+'Cloudy reflectance' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 31 ;
+	}
+#Clear reflectance
+'Clear reflectance' = {
+	 discipline = 3 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 32 ;
 	}
 #Scaled radiance
 'Scaled radiance' = {
@@ -4910,8 +4975,8 @@
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
-#Sea ice temperature
-'Sea ice temperature' = {
+#Vertically averaged sea ice temperature
+'Vertically averaged sea ice temperature' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -5065,6 +5130,12 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Sea ice temperature
+'Sea ice temperature' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	}
 #Sea surface practical salinity
 'Sea surface practical salinity' = {
@@ -5973,8 +6044,8 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Time-mean sea ice temperature
-'Time-mean sea ice temperature' = {
+#Time-mean vertically averaged sea ice temperature
+'Time-mean vertically averaged sea ice temperature' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
@@ -6140,6 +6211,13 @@
 	 scaleFactorOfFirstFixedSurface = missing() ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean sea ice temperature
+'Time-mean sea ice temperature' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface practical salinity
@@ -7543,11 +7621,53 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 20 ;
 	}
+#10 metre wind speed
+'10 metre wind speed' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
+#Altimeter wave height
+'Altimeter wave height' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 37 ;
+	}
+#Altimeter corrected wave height
+'Altimeter corrected wave height' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 38 ;
+	}
+#Altimeter range relative correction
+'Altimeter range relative correction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	}
+#10 metre wind direction
+'10 metre wind direction' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 41 ;
+	 typeOfFirstFixedSurface = 102 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	}
 #2D wave spectra (single)
 '2D wave spectra (single)' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 86 ;
+	}
+#Wave spectral kurtosis
+'Wave spectral kurtosis' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 43 ;
 	}
 #Benjamin-Feir index
 'Benjamin-Feir index' = {
@@ -8984,12 +9104,6 @@
 	 discipline = 0 ;
 	 parameterCategory = 14 ;
 	 parameterNumber = 0 ;
-	}
-#Total column integrated ozone
-'Total column integrated ozone' = {
-	 discipline = 0 ;
-	 parameterCategory = 14 ;
-	 parameterNumber = 2 ;
 	}
 #Base spectrum width
 'Base spectrum width' = {

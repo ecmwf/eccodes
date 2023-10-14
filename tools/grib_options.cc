@@ -386,7 +386,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("e")) {
         for (i = 0; i < names_count; i++) {
             options->compare[i + options->compare_count].name = names[i];
-            options->compare[i + options->compare_count].type = GRIB_NAMESPACE;
+            options->compare[i + options->compare_count].type = CODES_NAMESPACE;
         }
         options->compare_count += names_count;
     }

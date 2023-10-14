@@ -2,6 +2,7 @@
 extern grib_iterator_class* grib_iterator_class_gaussian;
 extern grib_iterator_class* grib_iterator_class_gaussian_reduced;
 extern grib_iterator_class* grib_iterator_class_gen;
+extern grib_iterator_class* grib_iterator_class_healpix;
 extern grib_iterator_class* grib_iterator_class_lambert_azimuthal_equal_area;
 extern grib_iterator_class* grib_iterator_class_lambert_conformal;
 extern grib_iterator_class* grib_iterator_class_latlon;

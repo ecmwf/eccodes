@@ -183,6 +183,24 @@ ${tools_dir}/grib_set -s scaleValuesBy=1.1 boustrophedonic.grib1 $temp1
 unset ECCODES_GRIBEX_BOUSTROPHEDONIC
 
 
+# data_g1second_order_constant_width_packing
+# ------------------------------------------
+input=second_ord_rbr.grib1
+${tools_dir}/grib_set -s Ni=2,Nj=74,secondOrderOfDifferentWidth=0,secondaryBitmapPresent=1 $input $temp1
+grib_check_key_equals $temp1 packingType grid_second_order_constant_width
+${tools_dir}/grib_dump -O $temp1 > $REDIRECT
+set +e
+${tools_dir}/grib_set -s scaleValuesBy=2 $temp1 $temp2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Not implemented" $tempText
+
+${tools_dir}/grib_get_data $temp1 > $REDIRECT
+${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
+${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
+
+
 # Clean up
 rm -f $temp_stat1 $temp_stat2
 rm -f $temp1 $temp2 $temp3 $sec_ord_bmp

@@ -122,7 +122,7 @@ grib_nearest* grib_nearest_new(const grib_handle* ch, int* error)
     if (!a)
         return NULL;
 
-    n = grib_nearest_factory(h, na->args);
+    n = grib_nearest_factory(h, na->args, error);
 
     if (n)
         *error = GRIB_SUCCESS;

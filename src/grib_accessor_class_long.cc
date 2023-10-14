@@ -120,6 +120,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     long val = 0;
     size_t l = 1;
     char repres[1024];
+    char format[32] = "%ld";
+    grib_handle* h = grib_handle_of_accessor(a);
 
     err = grib_unpack_long(a, &val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -127,10 +129,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     /* if (err) return err; */
     (void)err;
 
-    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
+    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    else
-        snprintf(repres, sizeof(repres), "%ld", val);
+    } else {
+        size_t size = sizeof(format);
+        grib_get_string(h, "formatForLongs", format, &size);
+        snprintf(repres, sizeof(repres), format, val);
+    }
 
     l = strlen(repres) + 1;
 

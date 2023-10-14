@@ -9,6 +9,8 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_grib_multi > multi.out
-diff multi.out ${data_dir}/multi.ok
-rm -f multi.out
+temp='temp.eccodes_f_grib_multi.txt'
+
+${examples_dir}/eccodes_f_grib_multi > $temp
+diff $temp ${data_dir}/multi.ok
+rm -f $temp

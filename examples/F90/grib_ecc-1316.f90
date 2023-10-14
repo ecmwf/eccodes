@@ -24,8 +24,10 @@ program grib_ecc_1316
    call codes_index_select(idx, 'number', 0)
    call codes_index_select(idx, 'parameterName', 'Soil moisture')
 
-   call codes_new_from_index(idx, igrib, iret)
-   do while (iret /= CODES_END_OF_INDEX)
+   do while (.true.)
+      call codes_new_from_index(idx, igrib, iret)
+      if (iret == CODES_END_OF_INDEX) exit
+
       count1 = count1 + 1
       call codes_get(igrib, 'parameterName', parameterName)
       call codes_get(igrib, 'number', onumber)
@@ -36,7 +38,6 @@ program grib_ecc_1316
              '   level=',  olevel, &
              '    step=',  ostep
       call codes_release(igrib)
-      call codes_new_from_index(idx, igrib, iret)
    end do
    call codes_release(igrib)
 

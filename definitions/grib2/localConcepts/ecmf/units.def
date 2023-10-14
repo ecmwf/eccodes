@@ -542,7 +542,7 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
 	}
-#10 metre wind gust in the last 6 hours
+#Maximum 10 metre wind gust in the last 6 hours
 'm s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
@@ -660,12 +660,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 158 ;
-	}
-#Standard deviation of orography
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 160 ;
 	}
 #Total cloud cover
 '(0 - 1)' = {
@@ -803,9 +797,12 @@
 	}
 #Total column ozone
 'kg m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 206 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Diabatic heating by radiation
 'K' = {
@@ -921,15 +918,21 @@
 	}
 #Convective snowfall
 'm of water equivalent' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 239 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Large-scale snowfall
 'm of water equivalent' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 240 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Accumulated cloud fraction tendency
 '(-1 to 1)' = {
@@ -13626,18 +13629,6 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Total sky direct solar radiation at surface
-'J m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 21 ;
-	}
-#Cloud base height
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 23 ;
-	}
 #Horizontal visibility
 'm' = {
 	 discipline = 192 ;
@@ -13799,18 +13790,6 @@
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
-	}
-#Surface solar radiation downward clear-sky
-'J m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 129 ;
-	}
-#Surface thermal radiation downward clear-sky
-'J m**-2' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 130 ;
 	}
 #Accumulated freezing rain
 'm' = {
@@ -16468,47 +16447,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
 	}
-#10 metre wind speed
-'m s**-1' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 245 ;
-	}
-#Altimeter wave height
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 246 ;
-	}
-#Altimeter corrected wave height
-'m' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 247 ;
-	}
-#Altimeter range relative correction
-'~' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 248 ;
-	}
-#10 metre wind direction
-'degrees' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 249 ;
-	}
 #2D wave spectra (multiple)
 'm**2 s radian**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral kurtosis
-'dimensionless' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 252 ;
 	}
 #Wave spectral peakedness
 'dimensionless' = {
@@ -20458,7 +20401,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 54 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'kg kg**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
