@@ -121,7 +121,7 @@ grib_accessor_class* grib_accessor_class_step_in_units = &_grib_accessor_class_s
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    int n                             = 0;
+    int n = 0;
 
     self->forecast_time_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->forecast_time_unit  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -138,7 +138,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    int err                           = 0;
+    int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
 
@@ -163,7 +163,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int unpack_double(grib_accessor* a, double * val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    int err                           = 0;
+    int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
 
@@ -184,10 +184,11 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit) {
+static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit)
+{
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h                    = grib_handle_of_accessor(a);
-    int err                           = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
+    int err = 0;
     long forecast_time_unit;
     long start_step_value_old;
     long start_step_unit_old;
@@ -232,8 +233,8 @@ static int pack_long_new_(grib_accessor* a, const long start_step_value, const l
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret;
+    grib_handle* h = grib_handle_of_accessor(a);
+    int ret = GRIB_SUCCESS;
 
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -258,7 +259,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    int ret = 0;
+    int ret = GRIB_SUCCESS;
     Step step = step_from_string(val);
 
     if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>())) != GRIB_SUCCESS)
@@ -271,7 +272,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
-    int ret = 0;
+    int ret = GRIB_SUCCESS;
     long start_step_value;
     long start_step_unit;
     long step_units;
