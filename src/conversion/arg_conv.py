@@ -75,21 +75,27 @@ class ArgConverter:
     def to_cpp_func_sig_arg(self, type_transforms = common_type_transforms):
         
         # [1] Pointer types
-        m = re.search(r"(\w*)(\*+)", self._carg.type)
-        if m: #self._carg.type[-1]  == "*":
+        m = re.search(r"(const)?\s*(\w*)(\*+)\s*(const)?", self._carg.type)
+        if m:
             # Check for defined transforms
             for k, v in type_transforms.items():
                 if k == self._carg.non_const_type:
                     if v is None:
                         return None
                     else:
-                        return arg.Arg(v+"&", transform_variable_name(self._carg.name))
+                        cpparg = arg.Arg(v+"&", transform_variable_name(self._carg.name))
+                        return cpparg
 
             # Other pointers: removing * to avoid getting std::vector type back (unless it's **)
-            self._carg = arg.Arg(self._carg.type[:-1], self._carg.name)
+            test_type = m.group(2)
+            if m.group(3) and len(m.group(3)) > 1:
+                test_type += m.group(3)[:-1]
+            self._carg = arg.Arg(test_type, self._carg.name)
             cpparg = self.to_cpp_arg(type_transforms)
 
             if cpparg:
+                if m.group(1):
+                    cpparg.type += " const"
                 cpparg.type += "&"
                 
             return cpparg
