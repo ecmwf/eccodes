@@ -185,18 +185,24 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 }
 
 
-/* See GRIB-488 */
-static int is_special_expver(grib_handle* h)
+// See GRIB-488
+static bool is_special_expver(const grib_handle* h)
 {
-    int ret            = 0;
-    char strExpVer[50] = {0,};
+    int ret = 0;
+    char strMarsExpVer[50] = {0,};
+    char strMarsClass[50] = {0,};
     size_t slen = 50;
-    ret         = grib_get_string(h, "experimentVersionNumber", strExpVer, &slen);
-    if (ret == GRIB_SUCCESS && !strcmp(strExpVer, "1605")) {
-        return 1; /* Special case of expVer 1605! */
+    ret = grib_get_string(h, "mars.class", strMarsClass, &slen);
+    if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsClass, "em")) {
+        // em = ERA-CLIM model integration for the 20th-century (ERA-20CM)
+        slen = 50;
+        ret = grib_get_string(h, "experimentVersionNumber", strMarsExpVer, &slen);
+        if (ret == GRIB_SUCCESS && STR_EQUAL(strMarsExpVer, "1605")) {
+            return true; // Special case of expVer 1605 in class "em"
+        }
     }
 
-    return 0;
+    return false;
 }
 
 
