@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*********************************************
- *   Enrico Fucile
- *******************************************/
-
 #include "grib_api_internal.h"
 #include "step.h"
 #include "step_utilities.h"
@@ -136,7 +132,6 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
     grib_dump_string(dumper, a, NULL);
 }
 
-
 static size_t string_length(grib_accessor* a)
 {
     return 255;
@@ -147,7 +142,7 @@ static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     try {
         if (!Unit::is_visible(Unit{*val}))
             throw std::runtime_error("Unit masked");
