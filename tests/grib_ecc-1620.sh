@@ -43,6 +43,19 @@ grib_check_key_equals()
 label="grib_ecc-1620"
 temp=temp.$label
 temp2=temp_2.$label
+samples_dir=$ECCODES_SAMPLES_PATH
+
+
+#### CHECK negative forecastTime
+fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s forecastTime=-6,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=6,indicatorOfUnitForTimeRange=h $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "-6 h 6 h"
+
+grib_check_key_equals $temp "-s stepUnits:s=h -p startStep:s,endStep:s" "-6 0"
+grib_check_key_equals $temp "-s stepUnits:s=m -p startStep:s,endStep:s" "-360m 0m"
+grib_check_key_equals $temp "-s stepUnits:s=s -p startStep:s,endStep:s" "-21600s 0s"
+
 
 #### CHECK: check optimal units are set correctly in GRIB files
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
