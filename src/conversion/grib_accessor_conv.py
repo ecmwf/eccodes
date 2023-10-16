@@ -1,26 +1,10 @@
 import debug
-from grib_accessor import GribAccessor
 from accessor_data import AccessorData
 import arg
 import arg_conv
 import member_conv
-import global_func_conv
-import global_func_funcsig_conv
-import constructor_method
-import constructor_method_conv
-import constructor_method_funcsig_conv
-import funcsig
-import destructor_method
-import destructor_method_conv
-import destructor_method_funcsig_conv
-import inherited_method_conv
-import inherited_method_funcsig_conv
-import private_method_conv
-import private_method_funcsig_conv
-import static_func_conv
-import static_func_funcsig_conv
+from converter_collection import Converter, converters_for
 import transforms
-import re
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -55,6 +39,7 @@ class GribAccessorConverter:
         self._grib_accessor = grib_accessor_instance
         self._accessor_data = None
         self._transforms = None
+        self._converters = converters_for(self._grib_accessor.name)
 
     # Convert GribAccessor to AccessorData
     def to_accessor_data(self, other_grib_accessors):
@@ -119,41 +104,41 @@ class GribAccessorConverter:
         self._transforms.add_to_class_types("super", self._grib_accessor.super, self._accessor_data.super)
 
     def add_global_function(self):
-        global_func_funcsig_converter = global_func_funcsig_conv.GlobalFunctionFuncSigConverter(self._grib_accessor.global_function.func_sig)
+        global_func_funcsig_converter = self._converters[Converter.GLOBAL_FUNC_FUNCSIG](self._grib_accessor.global_function.func_sig)
         cfuncsig, cppfuncsig = global_func_funcsig_converter.to_cpp_funcsig()
         self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
 
         static_func_name_transforms = {}
         for func in self._grib_accessor.static_functions:
-            converter = static_func_funcsig_conv.StaticFunctionFuncSigConverter(func.func_sig)
+            converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
             cppfuncname = converter.to_cpp_name()
             static_func_name_transforms[func.name] = cppfuncname
 
-        self._global_func_converter = global_func_conv.GlobalFunctionConverter(static_func_name_transforms)
+        self._global_func_converter = self._converters[Converter.GLOBAL_FUNC](static_func_name_transforms)
         self._accessor_data.global_function = self._global_func_converter.to_cpp_function(self._grib_accessor.global_function, self._transforms)
         self._transforms.make_global()
 
     def add_funcsig_transforms(self):
         # Create funcsig transforms for all C funcs
         for func in self._grib_accessor.inherited_methods:
-            converter = inherited_method_funcsig_conv.InheritedMethodFuncSigConverter(func.func_sig)
+            converter = self._converters[Converter.INHERITED_METHOD_FUNCSIG](func.func_sig)
             cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
             self._transforms.add_to_inherited_funcsigs(cfuncsig, cppfuncsig)
 
         for func in self._grib_accessor.private_methods:
-            converter = private_method_funcsig_conv.PrivateMethodFuncSigConverter(func.func_sig)
+            converter = self._converters[Converter.PRIVATE_METHOD_FUNCSIG](func.func_sig)
             cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
             self._transforms.add_to_private_funcsigs(cfuncsig, cppfuncsig)
 
         for func in self._grib_accessor.static_functions:
-            converter = static_func_funcsig_conv.StaticFunctionFuncSigConverter(func.func_sig)
+            converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
             cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
             self._transforms.add_to_static_funcsigs(cfuncsig, cppfuncsig)
 
         # Add "other" funcsigs
         other_funcs = {
-            self._grib_accessor.constructor: constructor_method_funcsig_conv.ConstructorMethodFuncSigConverter,
-            self._grib_accessor.destructor: destructor_method_funcsig_conv.DestructorMethodFuncSigConverter
+            self._grib_accessor.constructor: self._converters[Converter.CONSTRUCTOR_METHOD_FUNCSIG],
+            self._grib_accessor.destructor: self._converters[Converter.DESTRUCTOR_METHOD_FUNCSIG]
         }
 
         for func, conv in other_funcs.items():
@@ -187,22 +172,22 @@ class GribAccessorConverter:
     def add_constructor_method(self):
         # Create a default constructor if none exists
         if self._grib_accessor.constructor:
-            constructor_method_converter = constructor_method_conv.ConstructorMethodConverter()
+            constructor_method_converter = self._converters[Converter.CONSTRUCTOR_METHOD]()
             self._accessor_data._constructor = constructor_method_converter.to_cpp_function(self._grib_accessor.constructor, self._transforms)
         else:
-            self._accessor_data._constructor = constructor_method.ConstructorMethod()
+            self._accessor_data._constructor = self._converters[Converter.CONSTRUCTOR_METHOD]()
 
     def add_destructor_method(self):
         # Create a default destructor if none exists
         if self._grib_accessor.destructor:
-            destructor_method_converter = destructor_method_conv.DestructorMethodConverter()
+            destructor_method_converter = self._converters[Converter.DESTRUCTOR_METHOD]()
             self._accessor_data._destructor = destructor_method_converter.to_cpp_function(self._grib_accessor.destructor, self._transforms)
         else:
-            self._accessor_data._destructor = destructor_method.DestructorMethod()
+            self._accessor_data._destructor = self._converters[Converter.DESTRUCTOR_METHOD]()
 
     def add_inherited_methods(self):
         for cfunc in self._grib_accessor.inherited_methods:
-            inherited_method_converter = inherited_method_conv.InheritedMethodConverter()
+            inherited_method_converter = self._converters[Converter.INHERITED_METHOD]()
             cppfunc = inherited_method_converter.to_cpp_function(cfunc, self._transforms)
             if cppfunc.name is not None:
                 cppfunc.const = cfunc.name not in non_const_cmethods
@@ -210,7 +195,7 @@ class GribAccessorConverter:
 
     def add_private_methods(self):
         for cfunc in self._grib_accessor.private_methods:
-            private_method_converter = private_method_conv.PrivateMethodConverter()
+            private_method_converter = self._converters[Converter.PRIVATE_METHOD]()
             cppfunc = private_method_converter.to_cpp_function(cfunc, self._transforms)
             if cppfunc.name is not None:
                 cppfunc.const = cfunc.name not in non_const_cmethods
@@ -218,7 +203,7 @@ class GribAccessorConverter:
 
     def add_static_functions(self):
         for cfunc in self._grib_accessor.static_functions:
-            static_function_converter = static_func_conv.StaticFunctionConverter()
+            static_function_converter = self._converters[Converter.STATIC_FUNC]()
             cppfunc = static_function_converter.to_cpp_function(cfunc, self._transforms)
             if cppfunc.name is not None:
                 self._accessor_data.add_static_function(cppfunc)
