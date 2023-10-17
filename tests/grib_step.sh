@@ -179,6 +179,33 @@ result=$( ${tools_dir}/grib_get -p dataTime -s hour=255 $input )
 result=$( ${tools_dir}/grib_get -p dataTime -s hour=2,minute=255 $input )
 [ "$result" = "200" ]
 
+# Various step units
+# --------------------
+input=${data_dir}/tigge_cf_ecmwf.grib2
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=h $input)
+[ $result = 96 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=30m $input)
+[ $result = 192 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=15m $input)
+[ $result = 384 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=s   $input)
+[ $result = 345600 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=12h $input)
+[ $result = 8 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=6h  $input)
+[ $result = 16 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=D   $input)
+[ $result = 4 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=m   $input)
+[ $result = 5760 ]
+
 # Clean up
 rm -f $temp $templog
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
