@@ -143,7 +143,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Key %s (unpack_long): Truncating time: non-zero seconds(%ld) ignored", a->name, second);
+                "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", a->name, __func__, second);
     }
 
     if (*len < 1)
@@ -151,12 +151,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = hour * 100 + minute;
 
-    if (hour == 255)
+    if (hour == 255) {
         *val = 12 * 100;
-
-    if (hour != 255 && minute == 255)
+    }
+    if (hour != 255 && minute == 255) {
         *val = hour * 100;
-
+    }
     return GRIB_SUCCESS;
 }
 

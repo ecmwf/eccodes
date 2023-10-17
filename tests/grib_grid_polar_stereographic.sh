@@ -22,6 +22,9 @@ ${tools_dir}/grib_get_data $input > $tempOut
 
 ${tools_dir}/grib_ls -l 60,0 $input
 
+# Scanning mode
+${tools_dir}/grib_get_data -s iScansNegatively=1 $input > $tempOut
+
 
 # Clean up
 rm -f $tempFilter $tempGrib $tempOut

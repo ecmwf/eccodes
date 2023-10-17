@@ -17,6 +17,9 @@ tempGrb=${data_dir}/temp.$label.out.grib
 templog=${data_dir}/temp.$label.log
 rm -f $templog $tempGrb
 
+grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
 for i in 0 10
 do
   for s in 0 1200 600 6000
@@ -82,9 +85,7 @@ hourEnd=$1; dayEnd=$2
 
 
 # ECC-134 case-sensitivity
-# --------------------------
-grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+# ------------------------
 temp=temp.step.$$.grib
 # M is for Month (code 3)
 ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=M $grib1_sample $temp
@@ -95,7 +96,7 @@ unit=`${tools_dir}/grib_get -p indicatorOfUnitOfTimeRange $temp`
 [ "$unit" = "3" ]
 
 # m is for Minute (code 0)
-# -------------------------
+# ------------------------
 ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=m $grib1_sample $temp
 unit=`${tools_dir}/grib_get -p unitOfTimeRange $temp`
 [ "$unit" = "0" ]
@@ -141,14 +142,22 @@ ${tools_dir}/grib_set -s stepRange:d=14.56 $grib2_sample $temp
 grib_check_key_equals $temp "stepRange,startStep,endStep" "14 14 14"
 
 # Key validityDateTime
-# -----------------------------------------------
+# --------------------
 input=${data_dir}/constant_field.grib2
 grib_check_key_equals $input "dataDate,dataTime,step" "20061205 1200 6"
 grib_check_key_equals $input "validityDate,validityTime" "20061205 1800"
 grib_check_key_equals $input "validityDateTime:s" "20061205 001800"
 
+# ECC-1704: Key validityTime as string
+# -------------------------------------
+result=$( ${tools_dir}/grib_get -p validityTime:s -s dataTime=0000 $grib2_sample )
+[ "$result" = "0000" ]
+input=$data_dir/simple.grib
+grib_check_key_equals $input "validityTime:s" "0600"
+
+
 # Key julianDay
-# -----------------------------------------------
+# -------------
 input=${data_dir}/sample.grib2
 grib_check_key_equals $input 'julianDay:i' '2454503'
 ${tools_dir}/grib_set -s julianDay=2454504 $input $temp
@@ -156,12 +165,46 @@ grib_check_key_equals $input day 6
 grib_check_key_equals $temp day  7
 
 # Seconds (ignored)
-# -----------------------------------------------
-grib2_sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+# -----------------
 ${tools_dir}/grib_ls -s second=9 -n time $grib2_sample 2>$templog
 # Something should have been written to stderr
 [ -s $templog ]
 grep -q "Truncating time: non-zero seconds.* ignored" $templog
+
+# Hour or minute set to 255
+# ---------------------------
+input=${data_dir}/simple.grib
+result=$( ${tools_dir}/grib_get -p dataTime -s hour=255 $input )
+[ "$result" = "1200" ]
+result=$( ${tools_dir}/grib_get -p dataTime -s hour=2,minute=255 $input )
+[ "$result" = "200" ]
+
+# Various step units
+# --------------------
+input=${data_dir}/tigge_cf_ecmwf.grib2
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=h $input)
+[ $result = 96 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=30m $input)
+[ $result = 192 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=15m $input)
+[ $result = 384 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=s   $input)
+[ $result = 345600 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=12h $input)
+[ $result = 8 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=6h  $input)
+[ $result = 16 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=D   $input)
+[ $result = 4 ]
+
+result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=m   $input)
+[ $result = 5760 ]
 
 # Clean up
 rm -f $temp $templog
