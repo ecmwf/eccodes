@@ -73,9 +73,9 @@ class MethodConverter(FunctionConverter):
 
         m = re.search(rf"\b(\w+)\s*\(\s*([^,]+),", line)
         if m:
-            for f in self._transforms.private_funcsigs.keys():
-                if m.group(1) == f.name:
-                    line = re.sub(m.re, f"{accessor_variable_name}.{f.name}(", line)
+            for mapping in self._transforms.private_funcsig_mappings:
+                if m.group(1) == mapping.cfuncsig.name:
+                    line = re.sub(m.re, f"{accessor_variable_name}.{mapping.cfuncsig.name}(", line)
                     debug.line("update_class_members", f"private_methods [after ]: {line}")
 
         return line
@@ -93,16 +93,16 @@ class MethodConverter(FunctionConverter):
     def convert_grib_un_pack_functions(self, line):
         m = re.search(rf"\bgrib_((?:un)?pack_\w+)\((.*)\)", line)
         if m:
-            cfuncsig = self._transforms.find_cfuncsig(m.group(1))
-            if cfuncsig:
-                buffer_arg_index, buffer_len_arg_index = self._transforms.buffer_and_len_arg_indexes(cfuncsig.name)
+            mapping = self._transforms.funcsig_mapping_for(m.group(1))
+            if mapping and mapping.arg_indexes and mapping.cppfuncsig:
+                buffer_arg_index = mapping.arg_indexes.cbuffer
+                buffer_len_arg_index = mapping.arg_indexes.clength
+
                 if buffer_arg_index and buffer_len_arg_index:
-                    cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.func_sig)
-                    if cppfuncsig:
-                        func_name = cppfuncsig.name
-                        vars = m.group(2).split(",")
-                        line = re.sub(m.re, rf"{func_name}({vars[buffer_arg_index]}); {vars[buffer_len_arg_index]} = {vars[buffer_arg_index]}.size()", line)
-                        debug.line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
+                    func_name = mapping.cppfuncsig.name
+                    vars = m.group(2).split(",")
+                    line = re.sub(m.re, rf"{func_name}({vars[buffer_arg_index]}); {vars[buffer_len_arg_index]} = {vars[buffer_arg_index]}.size()", line)
+                    debug.line("convert_grib_un_pack_functions", f"Converted grib_{m.group(1)} function: [after ]: {line}")
 
         return line
     
@@ -113,16 +113,16 @@ class MethodConverter(FunctionConverter):
 
         m = re.search(rf"(?<!\")(&)?\b(\w+)\b(?!\")", line)
         if m:
-            for cfuncsig, cppfuncsig in self._transforms.inherited_funcsigs.items():
-                if m.group(2) == cfuncsig.name:
+            for mapping in self._transforms.inherited_funcsig_mappings:
+                if m.group(2) == mapping.cfuncsig.name:
                     prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{cppfuncsig.name}", line)
+                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
                     debug.line("apply_function_transforms", f"Updating inherited method {m.group(0)} [after ]: {line}")
 
-            for cfuncsig, cppfuncsig in self._transforms.private_funcsigs.items():
-                if m.group(2) == cfuncsig.name:
+            for mapping in self._transforms.private_funcsig_mappings:
+                if m.group(2) == mapping.cfuncsig.name:
                     prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{cppfuncsig.name}", line)
+                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
                     debug.line("apply_function_transforms", f"Updating private method {m.group(0)} [after ]: {line}")
 
         return super().apply_function_transforms(line)

@@ -3,6 +3,7 @@ import debug
 import funcsig
 import arg_conv
 import re
+from funcsig_mapping import FuncSigMapping
 
 # Change C-style snake_case function name to C++-style camelCase name
 # Also, remove get_ and set_ prefixes
@@ -11,27 +12,36 @@ def transform_function_name(name):
     return arg_conv.transform_variable_name(name)
 
 # Generic function signature converter - provides basic C to C++ conversion
-# Sub-classes should populate the self._conversions dict with specialised conversions
+# Sub-classes should populate the self._conversions list with specialised conversions
 #
-# The conversions dictionary defines well-known conversions from C function name to the equivalent 
-# C++ function signature, for example:
-# sample_conversions = {
-#    "pack_string" : FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"), None]),
-# }
+# The conversions list defines well-known conversions from C function name to the equivalent 
+# C++ function signature, and identifies buffer mappings from C {ptr,len} to C++ container, for example:
+# sample_conversions = [
+#     FuncSigMap("pack_string",
+#                 FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"),  None]),
+#                 BufferIndexMap(cbuffer=1, clength=2, cpp_container=1)),
+# ]
 #
-# [Key]     Name of an inherited function as defined in the C code (func_name in the functions below)
-# [Value]   Signature for the equivalent function in C++
-#           The argument list provides a 1:1 mapping from the C equivalent function - this map is also used 
-#           when replacing the use of these in the function body
-#           Note 1: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
-#           Note 2: If there is no C++ equivalent function, then FuncSig(None, None, [None]) will be returned 
-#                   (where the number of args in the third parameter will match the C FuncSig)
+# "pack_string"     Name of a function as defined in the C code (func_name in the functions below)
+# FuncSig           Signature for the equivalent function in C++
+#                   The argument list provides a 1:1 mapping from the C equivalent function - this map is also used 
+#                   when replacing the use of these in the function body
+#                   Note 1: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
+#                   Note 2: If there is no C++ equivalent function, then FuncSig(None, None, [None]) will be returned 
+#                       (where the number of args in the third parameter will match the C FuncSig)
+# BufferIndexMap    Provides the index for each arg in the buffer mappings from C {ptr,len} to C++ container
+#
 class FuncSigConverter:
     def __init__(self, cfuncsig):
         self._cfuncsig = cfuncsig
-        self._conversions = {}
+        self._conversions = []
 
-    # Returns both the new cpp funcsig and an updated c funcsig (with any metadata added)
+    def create_funcsig_mapping(self):
+        cfuncsig, cppfuncsig = self.to_cpp_funcsig()
+        mapping = FuncSigMapping(cfuncsig, cppfuncsig, self.arg_indexes())
+        return mapping
+
+    # Returns both the new cpp funcsig and an updated c funcsig
     def to_cpp_funcsig(self):
         cppfuncsig = funcsig.FuncSig(
             self.to_cpp_return_type(), 
@@ -42,41 +52,46 @@ class FuncSigConverter:
         cppfuncsig.static = self._cfuncsig.static
         cfuncsig = self._cfuncsig
 
-        for k,v in self.cmetadata.items():
-            if k:
-                cfuncsig.add_metadata(k, v)
-
         return cfuncsig, cppfuncsig
 
     def to_cpp_return_type(self):
-        if self._cfuncsig.name in self._conversions:
-            return self._conversions[self._cfuncsig.name].return_type
-        elif self._cfuncsig.return_type == "int":
+        for entry in self._conversions:
+            debug.line("DEBUG",f"entry={entry}")
+            if entry.cfuncsig.name == self._cfuncsig.name:
+                return entry.cppfuncsig.return_type
+
+        if self._cfuncsig.return_type == "int":
             # We'll assume int means GribStatus
             return "GribStatus"
         else:
             return self._cfuncsig.return_type
 
     def to_cpp_name(self):
-        if self._cfuncsig.name in self._conversions:
-            return self._conversions[self._cfuncsig.name].name
-        else:
-            return transform_function_name(self._cfuncsig.name)
+        for entry in self._conversions:
+            if entry.cfuncsig.name == self._cfuncsig.name:
+                return entry.cppfuncsig.name
+        
+        return transform_function_name(self._cfuncsig.name)
 
     # This should return the same number of cppargs as there are cargs (set unused cppargs to None)
     def to_cpp_args(self):
-        if self._cfuncsig.name in self._conversions:
-            return self._conversions[self._cfuncsig.name].args
-        else:
-            cppargs = []
-            for entry in self._cfuncsig.args:
-                arg_converter = arg_conv.ArgConverter(entry)
-                cpparg = arg_converter.to_cpp_func_sig_arg()
-                cppargs.append(cpparg)
+        for entry in self._conversions:
+            if entry.cfuncsig.name == self._cfuncsig.name:
+                return entry.cppfuncsig.args
 
-            return cppargs
+        cppargs = []
+        for entry in self._cfuncsig.args:
+            arg_converter = arg_conv.ArgConverter(entry)
+            cpparg = arg_converter.to_cpp_func_sig_arg()
+            cppargs.append(cpparg)
+
+        return cppargs
     
-    # Override to return any relevant metadata
-    @property
-    def cmetadata(self):
-        return {}
+    # Get the buffer mappings from C {ptr,len} to C++ container, or None if there aren't any
+    def arg_indexes(self):
+        for entry in self._conversions:
+            if entry.cfuncsig.name == self._cfuncsig.name:
+                return entry.arg_indexes
+        
+        return None
+  

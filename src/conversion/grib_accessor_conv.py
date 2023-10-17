@@ -5,6 +5,7 @@ import arg_conv
 import member_conv
 from converter_collection import Converter, converters_for
 import transforms
+from funcsig_mapping import FuncSigMapping
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -66,7 +67,7 @@ class GribAccessorConverter:
         self.create_accessor_data()
         self.create_transforms()
         self.add_global_function()
-        self.add_funcsig_transforms()
+        self.create_funcsig_mappings()
         self.add_includes()
         self.add_members()
         self.add_constructor_method()
@@ -105,8 +106,8 @@ class GribAccessorConverter:
 
     def add_global_function(self):
         global_func_funcsig_converter = self._converters[Converter.GLOBAL_FUNC_FUNCSIG](self._grib_accessor.global_function.func_sig)
-        cfuncsig, cppfuncsig = global_func_funcsig_converter.to_cpp_funcsig()
-        self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
+        mapping = global_func_funcsig_converter.create_funcsig_mapping()
+        self._transforms.add_to_other_funcsig_mappings(mapping)
 
         static_func_name_transforms = {}
         for func in self._grib_accessor.static_functions:
@@ -118,22 +119,22 @@ class GribAccessorConverter:
         self._accessor_data.global_function = self._global_func_converter.to_cpp_function(self._grib_accessor.global_function, self._transforms)
         self._transforms.make_global()
 
-    def add_funcsig_transforms(self):
-        # Create funcsig transforms for all C funcs
+    def create_funcsig_mappings(self):
+        # Create funcsig mappings for all C funcs, and add to transforms 
         for func in self._grib_accessor.inherited_methods:
             converter = self._converters[Converter.INHERITED_METHOD_FUNCSIG](func.func_sig)
-            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
-            self._transforms.add_to_inherited_funcsigs(cfuncsig, cppfuncsig)
+            mapping = converter.create_funcsig_mapping()
+            self._transforms.add_to_inherited_funcsig_mappings(mapping)
 
         for func in self._grib_accessor.private_methods:
             converter = self._converters[Converter.PRIVATE_METHOD_FUNCSIG](func.func_sig)
-            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
-            self._transforms.add_to_private_funcsigs(cfuncsig, cppfuncsig)
+            mapping = converter.create_funcsig_mapping()
+            self._transforms.add_to_private_funcsig_mappings(mapping)
 
         for func in self._grib_accessor.static_functions:
             converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
-            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
-            self._transforms.add_to_static_funcsigs(cfuncsig, cppfuncsig)
+            mapping = converter.create_funcsig_mapping()
+            self._transforms.add_to_static_funcsig_mappings(mapping)
 
         # Add "other" funcsigs
         other_funcs = {
@@ -143,8 +144,8 @@ class GribAccessorConverter:
 
         for func, conv in other_funcs.items():
             converter = conv(func.func_sig)
-            cfuncsig, cppfuncsig = converter.to_cpp_funcsig()
-            self._transforms.add_to_other_funcsigs(cfuncsig, cppfuncsig)
+            mapping = converter.create_funcsig_mapping()
+            self._transforms.add_to_other_funcsig_mappings(mapping)
 
     def add_includes(self):
         # Header includes
@@ -212,17 +213,17 @@ class GribAccessorConverter:
     # file and so needs a forward declaration in the header
     def add_forward_declarations(self):
         # [1] Update the placeholders in the global function
-        self._global_func_converter.process_forward_declarations(self._transforms.static_funcsigs)
+        self._global_func_converter.process_forward_declarations(self._transforms.static_funcsig_mappings)
 
         # [2] Find and add forward declarations to the class header
         for global_arg in self._transforms.global_args.values():
             if not global_arg:
                 continue
 
-            for cppfuncsig in self._transforms.private_funcsigs.values():
-                for cpp_arg in cppfuncsig.args:
+            for mapping in self._transforms.private_funcsig_mappings:
+                for cpp_arg in mapping.cppfuncsig.args:
                     if cpp_arg and cpp_arg.underlying_type == global_arg.name:
-                        debug.line("add_forward_declarations", f"Found a forward declaration: Method: {cppfuncsig.name} arg: {arg.arg_string(cpp_arg)} declaration: {arg.arg_string(global_arg)}")
+                        debug.line("add_forward_declarations", f"Found a forward declaration: Method: {mapping.cppfuncsig.name} arg: {arg.arg_string(cpp_arg)} declaration: {arg.arg_string(global_arg)}")
                         self._accessor_data.add_forward_declaration(arg.arg_string(global_arg)+";")
 
 

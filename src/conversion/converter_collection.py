@@ -1,11 +1,10 @@
+import importlib
 from enum import Enum, auto
 from accessor_data import AccessorData
 import global_func_conv
 import global_func_funcsig_conv
-import constructor_method
 import constructor_method_conv
 import constructor_method_funcsig_conv
-import destructor_method
 import destructor_method_conv
 import destructor_method_funcsig_conv
 import inherited_method_conv
@@ -14,6 +13,8 @@ import private_method_conv
 import private_method_funcsig_conv
 import static_func_conv
 import static_func_funcsig_conv
+import debug
+import copy
 
 # Provides a collections of all converters required for converting a GRIB Accessor from C to C++
 #
@@ -51,5 +52,15 @@ default_converters = {
 }
 
 def converters_for(accessor_name):
-    return default_converters
+    converters = copy.copy(default_converters)
 
+    try:
+        m = importlib.import_module(f"converters.{accessor_name}")
+
+        if "update_converters" in dir(m):
+            converters = m.update_converters(converters)
+            assert converters, f"Converter for {accessor_name} is None"
+    except ModuleNotFoundError:
+        pass
+
+    return converters

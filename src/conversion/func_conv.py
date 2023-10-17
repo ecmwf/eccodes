@@ -1,7 +1,6 @@
 # Convert C function to C++
 import debug
 import func
-import funcsig
 import arg
 import arg_conv
 import c_def_conv
@@ -34,7 +33,7 @@ class FunctionConverter:
         self._transforms.clear_local_args()
 
         self._cfunction = cfunction
-        cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.func_sig)
+        cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.name)
 
         # Store the C to C++ function arg transforms
         for index, carg in enumerate(self._cfunction.func_sig.args):
@@ -84,6 +83,56 @@ class FunctionConverter:
 
     # Override this to provide any initial conversions before the main update_cpp_line runs
     def process_variables_initial_pass(self, line):
+        return line
+
+    # Special-handling for lengths that apply to buffers. The {ptr,length} C args are replaced by
+    # a single C++ container arg, however we still need to deal with size-related code in the body
+    # Note: The {ptr, length} and container arg indices are defined in the transforms object
+    def process_len_args(self, line):
+        mapping = self._transforms.funcsig_mapping_for(self._cfunction.name)
+        if not mapping or not mapping.arg_indexes:
+            return line
+        
+        buffer_arg_index = mapping.arg_indexes.cbuffer
+        buffer_len_arg_index = mapping.arg_indexes.clength
+        container_index = mapping.arg_indexes.cpp_container
+
+        if not buffer_arg_index and not buffer_len_arg_index and not container_index:
+            return line
+
+        len_carg = mapping.cfuncsig.args[buffer_len_arg_index]
+        assert len_carg, f"Len arg should not be none for c function: {mapping.cfuncsig.name}"
+        
+        container_arg = mapping.cppfuncsig.args[container_index]
+        assert container_arg, f"Container arg should not be none for C++ function: {mapping.cppfuncsig.name}"
+
+        # Note: Some code uses len[0] instead of *len, so we check for both...
+
+        # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*=\s*(\w+).*?;", line)
+        if m:
+            if container_arg.is_const():
+                line = re.sub(rf"^(\s*)", rf"// [length assignment removed - var is const] \1", line)
+                debug.line("process_len_args", f"Removed len assignment for const variable [after]: {line}")
+            elif m.group(2) == "0":
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.clear();", line)
+                debug.line("process_len_args", f"Replaced *len = 0 with .clear() [after]: {line}")
+            else:
+                line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.resize({m.group(2)});", line)
+                debug.line("process_len_args", f"Replaced *len = N with .resize(N) [after]: {line}")
+
+        # Replace *len <=> N with CONTAINER.size() <=> N
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*([<>!=]=?)\s*(\w+)", line)
+        if m:
+            line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.size() {m.group(2)} {m.group(3)}", line)
+            debug.line("process_len_args", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
+
+        # Replace any other *len with CONTAINER.size() <=> N
+        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?", line)
+        if m:
+            line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.size()", line)
+            debug.line("process_len_args", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
+
         return line
 
     # Find type declarations and store in the transforms
@@ -336,10 +385,10 @@ class FunctionConverter:
         # Static function substitutions
         m = re.search(rf"(?<!\")(&)?\b(\w+)\b(?!\")", line)
         if m:
-            for cfuncsig, cppfuncsig in self._transforms.static_funcsigs.items():
-                if m.group(2) == cfuncsig.name:
+            for mapping in self._transforms.static_funcsig_mappings:
+                if m.group(2) == mapping.cfuncsig.name:
                     prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{cppfuncsig.name}", line)
+                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
                     debug.line("apply_function_transforms", f"Updating static function {m.group(0)} [after ]: {line}")
 
         return line
@@ -393,6 +442,7 @@ class FunctionConverter:
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
             self.process_variables_initial_pass,
+            self.process_len_args,
             self.process_type_declarations,
             self.process_return_variables,
             self.process_variable_declarations,

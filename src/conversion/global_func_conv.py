@@ -38,16 +38,16 @@ class GlobalFunctionConverter(FunctionConverter):
     # Replace any line that starts [FORWARD_DECLARATION] with the actual declaration
     # This need to be called once all other functions have been converted to ensure the
     # signatures are correct
-    def process_forward_declarations(self, static_funcsigs):
+    def process_forward_declarations(self, static_funcsig_mappings):
         lines = self._cppfunction.code
 
         for i in range(len(lines)):
             m = re.match(rf"^\[FORWARD_DECLARATION\](\w+)", lines[i])
             if m:
                 processed = False
-                for cfuncsig, cppfuncsig in static_funcsigs.items():
-                    if cfuncsig.name == m.group(1):
-                        lines[i] = f"{cppfuncsig.as_string()};"
+                for mapping in static_funcsig_mappings:
+                    if mapping.cfuncsig.name == m.group(1):
+                        lines[i] = f"{mapping.cppfuncsig.as_string()};"
                         debug.line("process_forward_declarations",f"[FORWARD_DECLARATION] Updated: {lines[i]}")
                         processed = True
 
