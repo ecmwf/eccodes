@@ -6,6 +6,7 @@ import arg_conv
 import c_def_conv
 import c_subs
 import re
+import grib_api_converter
 
 # Change C-style snake_case function name to C++-style camelCase name
 # Also, remove get_ and set_ prefixes
@@ -352,6 +353,12 @@ class FunctionConverter:
                 debug.line("convert_grib_utils", f"Replaced {util} with {cpp_util} [after ]: {line}")
 
         return line
+    
+    def convert_grib_api_entries(self, line):
+        line = self.convert_grib_utils(line)
+        line = grib_api_converter.convert_grib_api_functions(line)
+        
+        return line
 
     def apply_get_set_substitutions(self, line):
         # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
@@ -436,7 +443,7 @@ class FunctionConverter:
         # Note: These apply in order, be careful if re-arranging!
         update_functions = [
             # [1] function updates that expect the original C variable names
-            self.convert_grib_utils,
+            self.convert_grib_api_entries,
             self.apply_function_transforms,
             self.special_function_transforms,
 

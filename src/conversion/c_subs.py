@@ -23,21 +23,12 @@ grib_context_substitutions = {
     r"\bgrib_context_log\(.*?,": r"gribLog(",
 }
 
-grib_iarray_substitutions = {
-    r"\bgrib_iarray_new\(\s*(h\s*,\s*)?\s*(.*)?,\s*(.*)?\s*\)": r"std::vector<long>(\2)",
-    r"\bgrib_iarray_push\(\s*(.*)?,\s*(.*)?\s*\)": r"\1.push_back(\2)",
-    r"\bgrib_iarray_used_size\(\s*(.*)?\s*\)": r"\1.size()",
-    r"\bgrib_iarray_get_array\(\s*(.*)?\s*\)": r"\1",
-    r"^\s*(.*?\bgrib_iarray_delete)": r"// [Removed grib_iarray_delete] \1",
-}
-    
 def apply_all_substitutions(line):
 
     func_substitutions = [
         c_lib_substitutions,
         grib_deleted_function_substitutions,
-        grib_context_substitutions,
-        grib_iarray_substitutions
+        grib_context_substitutions
     ]
 
     for func_substitution_dict in func_substitutions:
