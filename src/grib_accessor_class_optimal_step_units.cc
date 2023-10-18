@@ -147,19 +147,22 @@ static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
+    auto supported_units = Unit::list_supported_units();
     try {
-        if (!Unit::is_visible(Unit{*val}))
-            throw std::runtime_error("Unit masked");
+        Unit unit{*val}; // throws if not supported
+        auto iter = std::find(supported_units.begin(), supported_units.end(), unit);
+        if (iter == supported_units.end()) {
+            throw std::runtime_error{"Unit not supported"};
+        }
     }
     catch (std::exception& e) {
-        auto visible_units = Unit::list_visible_units();
-        std::string visible_units_str;
-        for (auto& u : visible_units)
-            visible_units_str += Unit{u}.value<std::string>() + ",";
-        visible_units_str.pop_back();
+        std::string supported_units_str;
+        for (auto& u : supported_units)
+            supported_units_str += Unit{u}.value<std::string>() + ",";
+        supported_units_str.pop_back();
 
-        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available units are: " + visible_units_str;
+        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available X tunits are: " + supported_units_str;
         grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }
@@ -207,23 +210,20 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     try {
         long unit = Unit{val}.value<long>();
-
-        if (!Unit::is_visible(Unit{val}))
-            throw std::runtime_error("Unit masked");
-
         pack_long(a, &unit, len);
     }
     catch (std::exception& e) {
-        auto visible_units = Unit::list_visible_units();
-        std::string visible_units_str;
-        for (auto& u : visible_units)
-            visible_units_str += Unit{u}.value<std::string>() + ",";
-        visible_units_str.pop_back();
+        auto supported_units = Unit::list_supported_units();
+        std::string supported_units_str;
+        for (auto& u : supported_units)
+            supported_units_str += Unit{u}.value<std::string>() + ",";
+        supported_units_str.pop_back();
 
-        std::string msg = "Invalid unit: " + std::string(val) + " (" + e.what() + ")" + ". Available units are: " + visible_units_str;
+        std::string msg = "Invalid unit: " + std::string(val) + " (" + e.what() + ")" + ". Available units are: " + supported_units_str;
         grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }
+
     return GRIB_SUCCESS;
 }
 

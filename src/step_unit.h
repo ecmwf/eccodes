@@ -91,21 +91,21 @@ public:
         return *this;
     }
 
-    static bool is_visible(Unit unit) {
-        return std::find(publicly_visible_units_.begin(), publicly_visible_units_.end(), unit.internal_value_) != publicly_visible_units_.end();
-    }
-
-    static std::vector<Unit> list_visible_units() {
-        std::vector<Unit> result;
-        for (const auto& value : publicly_visible_units_) {
-            result.push_back(Unit(value));
-        }
-        return result;
-    }
 
     template <typename T> T value() const;
     static std::vector<Value> publicly_visible_units_;
     static std::vector<Value> complete_unit_order_;
+
+    static std::vector<Unit> list_supported_units() {
+        std::vector<Unit> result;
+        for (const auto& value : complete_unit_order_) {
+            if (value == Value::MISSING)
+                continue;
+            result.push_back(Unit(value));
+        }
+
+        return result;
+    }
 
 private:
     class Map {
