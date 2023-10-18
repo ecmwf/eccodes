@@ -473,7 +473,8 @@ int grib_recompose_print(grib_handle* h, grib_accessor* observer, const char* un
                     break;
                 case '!':
                     pp = (char*)uname;
-                    if (string_to_long(uname + i + 1, &numcols) == GRIB_SUCCESS) {
+                    // Turn off strict as the input string will have a final ']' suffix
+                    if (string_to_long(uname + i + 1, &numcols, /*strict=*/0) == GRIB_SUCCESS) {
                         maxcols = (int)numcols;
                     }
                     else {
@@ -803,26 +804,22 @@ grib_hash_array_value* grib_parse_hash_array_file(grib_context* gc, const char* 
     }
 }
 
-grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename)
-{
-    if (!gc)
-        gc = grib_context_get_default();
-
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex_rules);
-
-    gc                  = gc ? gc : grib_context_get_default();
-    grib_parser_context = gc;
-
-    if (parse(gc, filename) == 0) {
-        GRIB_MUTEX_UNLOCK(&mutex_rules);
-        return grib_parser_rules;
-    }
-    else {
-        GRIB_MUTEX_UNLOCK(&mutex_rules);
-        return NULL;
-    }
-}
+// grib_rule* grib_parse_rules_file(grib_context* gc, const char* filename)
+// {
+//     if (!gc) gc = grib_context_get_default();
+//     GRIB_MUTEX_INIT_ONCE(&once, &init);
+//     GRIB_MUTEX_LOCK(&mutex_rules);
+//     gc                  = gc ? gc : grib_context_get_default();
+//     grib_parser_context = gc;
+//     if (parse(gc, filename) == 0) {
+//         GRIB_MUTEX_UNLOCK(&mutex_rules);
+//         return grib_parser_rules;
+//     }
+//     else {
+//         GRIB_MUTEX_UNLOCK(&mutex_rules);
+//         return NULL;
+//     }
+// }
 
 grib_action* grib_parse_file(grib_context* gc, const char* filename)
 {

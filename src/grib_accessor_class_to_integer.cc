@@ -7,9 +7,6 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-/***********************************************************
- *  Enrico Fucile
- ***********************************************************/
 
 #include "grib_api_internal.h"
 /*
@@ -22,7 +19,7 @@
    IMPLEMENTS = unpack_long;pack_long
    IMPLEMENTS = unpack_double;pack_double
    IMPLEMENTS = init;dump;string_length
-   IMPLEMENTS = post_init;value_count
+   IMPLEMENTS = value_count
    IMPLEMENTS = next_offset
    IMPLEMENTS = get_native_type
    IMPLEMENTS = compare
@@ -55,7 +52,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void post_init(grib_accessor*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_to_integer
@@ -77,7 +73,7 @@ static grib_accessor_class _grib_accessor_class_to_integer = {
     0,                           /* inited */
     0,                           /* init_class */
     &init,                       /* init */
-    &post_init,                  /* post_init */
+    0,                  /* post_init */
     0,                    /* destroy */
     &dump,                       /* dump */
     &next_offset,                /* next_offset */
@@ -133,11 +129,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
-}
-
-static void post_init(grib_accessor* a)
-{
-    return;
 }
 
 static int value_count(grib_accessor* a, long* count)
@@ -212,13 +203,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s as long", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as an integer", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, " Should not pack %s  as double", a->name);
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as a double", a->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 

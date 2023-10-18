@@ -2152,7 +2152,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
 #define IS_COORDINATE_DESCRIPTOR(a) (a == 8 || a == 1 || a == 2 || a == 4 || a == 5 || a == 6 || a == 7)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 7
-#define MAX_NUMBER_OF_BITMAPS 5
+#define MAX_NUMBER_OF_BITMAPS 8 // See ECC-1699
 
 static const int number_of_qualifiers = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES;
 static const int significanceQualifierIndexArray[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
@@ -2491,7 +2491,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     groupNumber = 1;
 
     gaGroup                    = grib_accessor_factory(self->dataKeys, &creatorGroup, 0, NULL);
-    gaGroup->bufr_group_number = groupNumber;
+    //gaGroup->bufr_group_number = groupNumber;
     gaGroup->sub_section       = grib_section_create(hand, gaGroup);
     section                    = gaGroup->sub_section;
     /*rootSection=section;*/
@@ -2557,7 +2557,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
 
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
-                gaGroup->bufr_group_number = groupNumber;
+                //gaGroup->bufr_group_number = groupNumber;
 
                 //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 //accessor_constant_set_dval(gaGroup, groupNumber);
@@ -2602,7 +2602,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 }
                 gaGroup                    = grib_accessor_factory(groupSection, &creatorGroup, 0, NULL);
                 gaGroup->sub_section       = grib_section_create(hand, gaGroup);
-                gaGroup->bufr_group_number = groupNumber;
+                // gaGroup->bufr_group_number = groupNumber;
                 //accessor_constant_set_type(gaGroup, GRIB_TYPE_LONG);
                 //accessor_constant_set_dval(gaGroup, groupNumber);
                 grib_push_accessor(gaGroup, groupSection->block);

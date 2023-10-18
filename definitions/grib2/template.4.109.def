@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-# TEMPLATE 4.109, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for generic optical properties 
+# TEMPLATE 4.109, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for generic optical properties
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.optical.def"

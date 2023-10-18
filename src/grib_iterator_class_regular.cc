@@ -98,6 +98,7 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
+#define ITER "Regular grid Geoiterator"
 
 static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
@@ -148,7 +149,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     long Ni; /* Number of points along a parallel = Nx */
     long Nj; /* Number of points along a meridian = Ny */
-    double idir, lon1, lon2;
+    double idir, idir_coded, lon1, lon2;
     long loi;
 
     const char* s_lon1      = grib_arguments_get_name(h, args, self->carg++);
@@ -163,17 +164,23 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
     if ((ret = grib_get_double_internal(h, s_idir, &idir))) // can be GRIB_MISSING_DOUBLE
         return ret;
+    idir_coded = idir;
     if ((ret = grib_get_long_internal(h, s_Ni, &Ni)))
         return ret;
     if (grib_is_missing(h, s_Ni, &ret) && ret == GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be 'missing' for a regular grid!", s_Ni);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Ni);
         return GRIB_WRONG_GRID;
     }
 
     if ((ret = grib_get_long_internal(h, s_Nj, &Nj)))
         return ret;
     if (grib_is_missing(h, s_Nj, &ret) && ret == GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Key %s cannot be 'missing' for a regular grid!", s_Nj);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s cannot be 'missing' for a regular grid!", ITER, s_Nj);
+        return GRIB_WRONG_GRID;
+    }
+
+    if (Ni*Nj != iter->nv) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Ni*Nj!=numberOfDataPoints (%ld*%ld!=%zu)", ITER, Ni, Nj, iter->nv);
         return GRIB_WRONG_GRID;
     }
 
@@ -218,6 +225,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     self->las = (double*)grib_context_malloc(h->context, Nj * sizeof(double));
     self->los = (double*)grib_context_malloc(h->context, Ni * sizeof(double));
 
+    if (idir != idir_coded) {
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "%s: Using idir=%g (coded value=%g)", ITER, idir, idir_coded);
+    }
+
     for (loi = 0; loi < Ni; loi++) {
         self->los[loi] = lon1;
         lon1 += idir;
@@ -225,7 +236,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     /* ECC-1406: Due to rounding, errors can accumulate.
      * So we ensure the last longitude is longitudeOfLastGridPointInDegrees
     */
-    self->los[Ni-1] = lon2;
+    self->los[Ni-1] = normalise_longitude_in_degrees(lon2); // Also see ECC-1671
 
     return ret;
 }

@@ -168,13 +168,11 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 static int value_count(grib_accessor* a, long* count)
 {
     grib_accessor_data_complex_packing* self = (grib_accessor_data_complex_packing*)a;
-    int ret                                  = 0;
-    grib_handle* gh                          = grib_handle_of_accessor(a);
-
+    int ret = 0;
+    grib_handle* gh = grib_handle_of_accessor(a);
     long pen_j = 0;
     long pen_k = 0;
     long pen_m = 0;
-
     *count = 0;
 
     if (a->length == 0)
@@ -188,15 +186,16 @@ static int value_count(grib_accessor* a, long* count)
         return ret;
 
     if (pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "pen_j=%ld, pen_k=%ld, pen_m=%ld\n", pen_j, pen_k, pen_m);
-        Assert((pen_j == pen_k) && (pen_j == pen_m));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Invalid pentagonal resolution parameters");
+        grib_context_log(a->context, GRIB_LOG_ERROR, "pen_j=%ld, pen_k=%ld, pen_m=%ld", pen_j, pen_k, pen_m);
+        return GRIB_DECODING_ERROR;
     }
     *count = (pen_j + 1) * (pen_j + 2);
 
     return ret;
 }
 
-static double calculate_pfactor(grib_context* ctx, const double* spectralField, long fieldTruncation, long subsetTruncation)
+static double calculate_pfactor(const grib_context* ctx, const double* spectralField, long fieldTruncation, long subsetTruncation)
 {
     /*long n_vals = ((fieldTruncation+1)*(fieldTruncation+2));*/
     long loop, index, m, n = 0;
@@ -416,10 +415,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return GRIB_NOT_IMPLEMENTED;
     }
 
-    Assert(sub_j == sub_k);
-    Assert(sub_j == sub_m);
-    Assert(pen_j == pen_k);
-    Assert(pen_j == pen_m);
+    if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        return GRIB_ENCODING_ERROR;
+    }
 
     n_vals = (pen_j + 1) * (pen_j + 2);
 
@@ -790,10 +789,10 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
             return GRIB_NOT_IMPLEMENTED;
     }
 
-    Assert(sub_j == sub_k);
-    Assert(sub_j == sub_m);
-    Assert(pen_j == pen_k);
-    Assert(pen_j == pen_m);
+    if (sub_j != sub_k || sub_j != sub_m || pen_j != pen_k || pen_j != pen_m) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Invalid pentagonal resolution parameters", cclass_name);
+        return GRIB_DECODING_ERROR;
+    }
 
     buf = (unsigned char*)gh->buffer->data;
 

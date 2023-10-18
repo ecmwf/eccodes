@@ -16,3 +16,4 @@
 "mhm_mrm"            = { typeOfPostProcessing = 203; }
 "pcrg_mrm"           = { typeOfPostProcessing = 204; }
 "meteogrid"          = { typeOfPostProcessing = 205; }
+"ecPoint"            = { typeOfPostProcessing = 206; }

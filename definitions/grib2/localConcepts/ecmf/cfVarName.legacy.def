@@ -769,7 +769,7 @@
  parameterCategory = 128 ;
  parameterNumber = 245 ;
 }
-#U-component of neutral wind
+#10 metre u-component of neutral wind
 'u10n' = {
  discipline = 192 ;
  parameterCategory = 228 ;
@@ -966,4 +966,346 @@
  discipline = 192 ;
  parameterCategory = 162 ;
  parameterNumber = 63 ;
+}
+#UV visible albedo for diffuse radiation, isotropic component (climatological)
+'aluvdi' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 192 ;
+}
+#UV visible albedo for diffuse radiation, volumetric component (climatological)
+'aluvdv' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 193 ;
+}
+#UV visible albedo for diffuse radiation, geometric component (climatological)
+'aluvdg' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 194 ;
+}
+#Near IR albedo for diffuse radiation, isotropic component (climatological)
+'alnidi' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 195 ;
+}
+#Near IR albedo for diffuse radiation, volumetric component (climatological)
+'alnidv' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 196 ;
+}
+#Near IR albedo for diffuse radiation, geometric component (climatological)
+'alnidg' = {
+ discipline = 192 ;
+ parameterCategory = 210 ;
+ parameterNumber = 197 ;
+}
+#Time-integrated temperature tendency due to short-wave radiation
+'srta' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 100 ;
+}
+#Time-integrated temperature tendency due to long-wave radiation
+'trta' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 101 ;
+}
+#Time-integrated temperature tendency due to short wave radiation, clear sky
+'srtca' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 102 ;
+}
+#Time-integrated temperature tendency due to long-wave radiation, clear sky
+'trtca' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 103 ;
+}
+#Time-integrated updraught mass flux
+'umfa' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 104 ;
+}
+#Time-integrated downdraught mass flux
+'dmfa' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 105 ;
+}
+#Time-integrated updraught detrainment rate
+'udra' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 106 ;
+}
+#Time-integrated downdraught detrainment rate
+'ddra' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 107 ;
+}
+#Time-integrated total precipitation flux
+'tpfa' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 108 ;
+}
+#Time-integrated turbulent diffusion coefficient for heat
+'tdcha' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 109 ;
+}
+#Time-integrated temperature tendency due to parametrisations
+'ttpha' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 110 ;
+}
+#Time-integrated specific humidity tendency due to parametrisations
+'qtpha' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 111 ;
+}
+#Time-integrated eastward wind tendency due to parametrisations
+'utpha' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 112 ;
+}
+#Time-integrated northward wind tendency due to parametrisations
+'vtpha' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 113 ;
+}
+#Period corresponding to maximum individual wave height
+'tmax' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 217 ;
+}
+#Maximum individual wave height
+'hmax' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 218 ;
+}
+#Model bathymetry
+'wmb' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 219 ;
+}
+#Mean wave period based on first moment
+'mp1' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 220 ;
+}
+#Wave spectral directional width
+'wdw' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 222 ;
+}
+#Mean wave period based on first moment for wind waves
+'p1ww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 223 ;
+}
+#Mean wave period based on second moment for wind waves
+'p2ww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 224 ;
+}
+#Wave spectral directional width for wind waves
+'dwww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 225 ;
+}
+#Mean wave period based on first moment for swell
+'p1ps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 226 ;
+}
+#Mean wave period based on second moment for swell
+'p2ps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 227 ;
+}
+#Wave spectral directional width for swell
+'dwps' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 228 ;
+}
+#Coefficient of drag with waves
+'cdww' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 233 ;
+}
+#Significant height of total swell
+'shts' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 237 ;
+}
+#Mean period of total swell
+'mpts' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 239 ;
+}
+#Mean square slope of waves
+'msqs' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 244 ;
+}
+#Benjamin-Feir index
+'bfi' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 253 ;
+}
+#Montgomery stream Function
+'mntsf' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 53 ;
+}
+#Water fraction
+'fldfrc' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 26 ;
+}
+#Anisotropy of sub-gridscale orography
+'isor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 161 ;
+}
+#Angle of sub-gridscale orography
+'anor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 162 ;
+}
+#Slope of sub-gridscale orography
+'slor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 163 ;
+}
+#U-component surface stokes drift
+'ust' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 215 ;
+}
+#V-component surface stokes drift
+'vst' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 216 ;
+}
+#Total column ozone
+'tco3' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 206 ;
+}
+#Convective snowfall
+'csf' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 239 ;
+}
+#Large-scale snowfall
+'lsf' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 240 ;
+}
+#Altimeter wave height
+'awh' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 246 ;
+}
+#Altimeter corrected wave height
+'acwh' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 247 ;
+}
+#Altimeter range relative correction
+'arrc' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 248 ;
+}
+#Total sky direct solar radiation at surface
+'fdir' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 21 ;
+}
+#Surface solar radiation downward clear-sky
+'ssrdc' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 129 ;
+}
+#Surface thermal radiation downward clear-sky
+'strdc' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 130 ;
+}
+#Standard deviation of orography
+'sdor' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 160 ;
+}
+#Cloud base height
+'cbh' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 23 ;
+}
+#Wave spectral kurtosis
+'wsk' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 252 ;
+}
+#10 metre wind speed
+'wind' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 245 ;
+}
+#10 metre wind direction
+'dwi' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 249 ;
 }

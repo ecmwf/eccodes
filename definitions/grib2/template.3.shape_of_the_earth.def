@@ -2,25 +2,25 @@
 
 codetable[1] shapeOfTheEarth ('3.2.table',masterDir,localDir) : dump;
 
-#  Scale factor of radius of spherical earth
+# Scale factor of radius of spherical earth
 unsigned[1] scaleFactorOfRadiusOfSphericalEarth = missing() : can_be_missing, edition_specific;
 
-#  Scaled value of radius of spherical earth (in metres)
+# Scaled value of radius of spherical earth (in metres)
 unsigned[4] scaledValueOfRadiusOfSphericalEarth = missing(): can_be_missing, edition_specific;
 
-#  Scale factor of major axis of oblate spheroid earth
+# Scale factor of major axis of oblate spheroid earth
 unsigned[1] scaleFactorOfEarthMajorAxis = missing(): can_be_missing, edition_specific;
 alias scaleFactorOfMajorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMajorAxis;
 
-#  Scaled value of major axis of oblate spheroid earth
+# Scaled value of major axis of oblate spheroid earth
 unsigned[4] scaledValueOfEarthMajorAxis = missing(): can_be_missing, edition_specific;
 alias scaledValueOfMajorAxisOfOblateSpheroidEarth=scaledValueOfEarthMajorAxis;
 
-#  Scale factor of minor axis of oblate spheroid earth
+# Scale factor of minor axis of oblate spheroid earth
 unsigned[1] scaleFactorOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 alias scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
 
-#  Scaled value of minor axis of oblate spheroid earth
+# Scaled value of minor axis of oblate spheroid earth
 unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
 

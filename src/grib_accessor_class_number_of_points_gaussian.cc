@@ -250,7 +250,7 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     long row_count;
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
-    long editionNumber       = 0;
+    long angleSubdivisions   = 0;
     grib_handle* h           = grib_handle_of_accessor(a);
 
     grib_accessor_number_of_points_gaussian* self = (grib_accessor_number_of_points_gaussian*)a;
@@ -268,9 +268,9 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     if (nj == 0)
         return GRIB_GEOCALCULUS_PROBLEM;
 
-    if (grib_get_long(h, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        if (editionNumber == 1)
-            angular_precision = 1.0 / 1000;
+    if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
+        Assert(angleSubdivisions > 0);
+        angular_precision = 1.0 / angleSubdivisions;
     }
 
     if (plpresent) {
@@ -361,7 +361,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     long row_count;
     long ilon_first = 0, ilon_last = 0;
     double angular_precision = 1.0 / 1000000.0;
-    long editionNumber       = 0;
+    long angleSubdivisions   = 0;
     grib_handle* h           = grib_handle_of_accessor(a);
     size_t numDataValues     = 0;
 
@@ -380,9 +380,9 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     if (nj == 0)
         return GRIB_GEOCALCULUS_PROBLEM;
 
-    if (grib_get_long(h, "editionNumber", &editionNumber) == GRIB_SUCCESS) {
-        if (editionNumber == 1)
-            angular_precision = 1.0 / 1000;
+    if (grib_get_long(h, "angleSubdivisions", &angleSubdivisions) == GRIB_SUCCESS) {
+        Assert(angleSubdivisions > 0);
+        angular_precision = 1.0 / angleSubdivisions;
     }
 
     if (plpresent) {

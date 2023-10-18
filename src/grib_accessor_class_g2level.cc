@@ -121,6 +121,9 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->scale_first    = grib_arguments_get_name(hand, c, n++);
     self->value_first    = grib_arguments_get_name(hand, c, n++);
     self->pressure_units = grib_arguments_get_name(hand, c, n++);
+
+    // See ECC-1644
+    a->flags |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -306,9 +309,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     // Not sure if this is necessary
     //   if (value_first == GRIB_MISSING_LONG) {
-    //       if ((ret=grib_set_missing_internal(hand, self->scale_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->scale_first)) != GRIB_SUCCESS)
     //           return ret;
-    //       if ((ret=grib_set_missing_internal(hand, self->value_first)) != GRIB_SUCCESS)
+    //       if ((ret=grib_set_missing(hand, self->value_first)) != GRIB_SUCCESS)
     //           return ret;
     //       return GRIB_SUCCESS;
     //   }

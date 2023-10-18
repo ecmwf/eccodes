@@ -17,7 +17,7 @@
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -29,7 +29,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -41,7 +41,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 1 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -148,6 +148,18 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standard deviation of sub-grid scale orography
+'260085' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 20 ;
+	}
+#Cloud base
+'260107' = {
+	 discipline = 0 ;
+	 parameterCategory = 6 ;
+	 parameterNumber = 11 ;
+	}
 #2 metre relative humidity
 '260242' = {
 	 discipline = 0 ;
@@ -176,6 +188,30 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
+	}
+#Time-integrated surface direct short wave radiation flux
+'260264' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 13 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward short-wave radiation flux, clear sky
+'260423' = {
+	 discipline = 0 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 52 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Accumulated surface downward long-wave radiation flux, clear sky
+'260428' = {
+	 discipline = 0 ;
+	 parameterCategory = 5 ;
+	 parameterNumber = 8 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Sea ice surface temperature
 '260649' = {

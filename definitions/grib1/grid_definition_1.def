@@ -12,7 +12,7 @@ alias numberOfPointsAlongXAxis=Ni;
 
 signed[2] Nj : dump;
 alias numberOfPointsAlongAMeridian=Nj;
-alias Nx=Nj;
+alias Ny=Nj;
 alias geography.Nj=Nj;
 alias numberOfPointsAlongYAxis=Nj;
 

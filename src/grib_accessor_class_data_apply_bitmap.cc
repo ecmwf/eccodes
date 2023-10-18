@@ -22,6 +22,7 @@
    IMPLEMENTS = pack_double
    IMPLEMENTS = value_count
    IMPLEMENTS = dump;get_native_type
+   IMPLEMENTS = compare
    MEMBERS=const char*  coded_values
    MEMBERS=const char*  bitmap
    MEMBERS=const char*  missing_value
@@ -48,6 +49,7 @@ static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
+static int compare(grib_accessor*, grib_accessor*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -104,7 +106,7 @@ static grib_accessor_class _grib_accessor_class_data_apply_bitmap = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    0,                    /* compare vs. another accessor */
+    &compare,                    /* compare vs. another accessor */
     &unpack_double_element,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     &unpack_double_element_set,  /* unpack a given set of elements (double) */
@@ -441,3 +443,47 @@ static int get_native_type(grib_accessor* a)
 
     return GRIB_TYPE_DOUBLE;
 }
+
+static int compare(grib_accessor* a, grib_accessor* b)
+{
+    int retval   = 0;
+    double* aval = 0;
+    double* bval = 0;
+
+    size_t alen = 0;
+    size_t blen = 0;
+    int err     = 0;
+    long count  = 0;
+
+    err = grib_value_count(a, &count);
+    if (err)
+        return err;
+    alen = count;
+
+    err = grib_value_count(b, &count);
+    if (err)
+        return err;
+    blen = count;
+
+    if (alen != blen)
+        return GRIB_COUNT_MISMATCH;
+
+    aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
+    bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
+
+    grib_unpack_double(a, aval, &alen);
+    grib_unpack_double(b, bval, &blen);
+
+    retval = GRIB_SUCCESS;
+    while (alen != 0) {
+        if (*bval != *aval)
+            retval = GRIB_DOUBLE_VALUE_MISMATCH;
+        alen--;
+    }
+
+    grib_context_free(a->context, aval);
+    grib_context_free(b->context, bval);
+
+    return retval;
+}
+

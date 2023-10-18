@@ -8,91 +8,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico Fucile  - 06.01.2009                                           *
- ***************************************************************************/
 #include "grib_ieeefloat.h"
-
-#if GRIB_PTHREADS
-static pthread_once_t once   = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-static void init()
-{
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex, &attr);
-    pthread_mutexattr_destroy(&attr);
-}
-#elif GRIB_OMP_THREADS
-static int once = 0;
-static omp_nest_lock_t mutex;
-
-static void init()
-{
-    GRIB_OMP_CRITICAL(lock_grib_ieeefloat_c)
-    {
-        if (once == 0) {
-            omp_init_nest_lock(&mutex);
-            once = 1;
-        }
-    }
-}
-#endif
 
 /* See old implementation in src/deprecated/grib_ieeefloat.c */
 
-typedef struct ieee_table_t ieee_table_t;
-
-struct ieee_table_t
-{
-    int inited;
-    double e[255];
-    double v[255];
-    double vmin;
-    double vmax;
-};
-
-static ieee_table_t ieee_table = { 0, {0,}, {0,}, 0, 0 };
-
-static void init_ieee_table()
-{
-    if (!ieee_table.inited) {
-        unsigned long i;
-        unsigned long mmin = 0x800000;
-        unsigned long mmax = 0xffffff;
-        double e           = 1;
-        for (i = 1; i <= 104; i++) {
-            e *= 2;
-            ieee_table.e[i + 150] = e;
-            ieee_table.v[i + 150] = e * mmin;
-        }
-        ieee_table.e[150] = 1;
-        ieee_table.v[150] = mmin;
-        e                 = 1;
-        for (i = 1; i < 150; i++) {
-            e /= 2;
-            ieee_table.e[150 - i] = e;
-            ieee_table.v[150 - i] = e * mmin;
-        }
-        ieee_table.vmin   = ieee_table.v[1];
-        ieee_table.vmax   = ieee_table.e[254] * mmax;
-        ieee_table.inited = 1;
-        /*for (i=0;i<128;i++) printf("++++ ieee_table.v[%d]=%g\n",i,ieee_table.v[i]);*/
-    }
-}
-
-static void init_table_if_needed()
-{
-    GRIB_MUTEX_INIT_ONCE(&once, &init);
-    GRIB_MUTEX_LOCK(&mutex);
-
-    if (!ieee_table.inited)
-        init_ieee_table();
-
-    GRIB_MUTEX_UNLOCK(&mutex);
-}
+constexpr auto ieee_table = IeeeTable<double>();
 
 static void binary_search(const double xx[], const unsigned long n, double x, unsigned long* j)
 {
@@ -112,18 +32,6 @@ static void binary_search(const double xx[], const unsigned long n, double x, un
     *j = jl;
 }
 
-double grib_ieee_table_e(unsigned long e)
-{
-    init_table_if_needed();
-    return ieee_table.e[e];
-}
-
-double grib_ieee_table_v(unsigned long e)
-{
-    init_table_if_needed();
-    return ieee_table.v[e];
-}
-
 unsigned long grib_ieee_to_long(double x)
 {
     unsigned long s    = 0;
@@ -132,8 +40,6 @@ unsigned long grib_ieee_to_long(double x)
     unsigned long m    = 0;
     unsigned long e    = 0;
     double rmmax       = mmax + 0.5;
-
-    init_table_if_needed();
 
     /* printf("\ngrib_ieee_to_long: x=%.20e\n",x); */
     if (x < 0) {
@@ -154,7 +60,7 @@ unsigned long grib_ieee_to_long(double x)
         return 0;
     }
 
-    binary_search(ieee_table.v, 254, x, &e);
+    binary_search(ieee_table.v.data(), 254, x, &e);
 
     /* printf("grib_ieee_to_long: e=%ld\n",e); */
 
@@ -191,8 +97,6 @@ double grib_ieeefloat_error(double x)
 {
     unsigned long e = 0;
 
-    init_table_if_needed();
-
     if (x < 0)
         x = -x;
 
@@ -207,7 +111,7 @@ double grib_ieeefloat_error(double x)
         return 0;
     }
 
-    binary_search(ieee_table.v, 254, x, &e);
+    binary_search(ieee_table.v.data(), 254, x, &e);
 
     return ieee_table.e[e];
 }
@@ -226,7 +130,6 @@ double grib_long_to_ieee(unsigned long x)
         Assert(0);
     }
 #endif
-    init_table_if_needed();
 
     if (c == 0 && m == 0)
         return 0;
@@ -257,8 +160,6 @@ unsigned long grib_ieee_nearest_smaller_to_long(double x)
 
     if (x == 0)
         return 0;
-
-    init_table_if_needed();
 
     l = grib_ieee_to_long(x);
     y = grib_long_to_ieee(l);
@@ -304,10 +205,8 @@ int grib_nearest_smaller_ieee_float(double a, double* ret)
 {
     unsigned long l = 0;
 
-    init_table_if_needed();
-
     if (a > ieee_table.vmax) {
-        grib_context* c = grib_context_get_default();
+        const grib_context* c = grib_context_get_default();
         grib_context_log(c, GRIB_LOG_ERROR,
                 "Number is too large: x=%e > xmax=%e (IEEE float)", a, ieee_table.vmax);
         return GRIB_INTERNAL_ERROR;
