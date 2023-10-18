@@ -178,12 +178,10 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->numberOfTimeRange   = grib_arguments_get_name(h, c, n++);
 }
 
-
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_double(dumper, a, NULL);
 }
-
 
 // See GRIB-488
 static bool is_special_expver(const grib_handle* h)
@@ -205,7 +203,6 @@ static bool is_special_expver(const grib_handle* h)
     return false;
 }
 
-
 static int convert_time_range_long_(
     grib_handle* h,
     long stepUnits,                   /* step_units */
@@ -226,7 +223,6 @@ static int convert_time_range_long_(
 
     return GRIB_SUCCESS;
 }
-
 
 static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 {
@@ -272,7 +268,6 @@ static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
-
 
 static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t* len)
 {
@@ -321,7 +316,6 @@ static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t*
 
     return GRIB_SUCCESS;
 }
-
 
 #define MAX_NUM_TIME_RANGES 16 /* maximum number of time range specifications */
 static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t* len)
@@ -376,8 +370,6 @@ static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t
                      "Cannot calculate endStep. No time range specification with typeOfTimeIncrement = 2");
     return GRIB_DECODING_ERROR;
 }
-
-
 
 static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, size_t* len)
 {
@@ -439,7 +431,6 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
     return GRIB_DECODING_ERROR;
 }
 
-
 // For the old implementation of unpack_long, see
 //  src/deprecated/grib_accessor_class_g2end_step.unpack_long.cc
 //
@@ -477,7 +468,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
@@ -511,8 +501,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
-
-
 
 static int pack_long_(grib_accessor* a, const long end_step_value, const long end_step_unit)
 {
@@ -628,8 +616,6 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     return GRIB_SUCCESS;
 }
 
-
-
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
@@ -667,7 +653,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
@@ -691,7 +676,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     return pack_long_(a, *val, end_step_unit);
 }
-
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {

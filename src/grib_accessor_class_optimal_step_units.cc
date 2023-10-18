@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*********************************************
- *   Enrico Fucile
- *******************************************/
-
 #include "grib_api_internal.h"
 #include "step.h"
 #include "step_utilities.h"
@@ -135,7 +131,6 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_string(dumper, a, NULL);
 }
-
 
 static size_t string_length(grib_accessor* a)
 {
