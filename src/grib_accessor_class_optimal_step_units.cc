@@ -173,29 +173,35 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    if (Unit{staticStepUnits} != Unit{Unit::Value::MISSING}) {
-        *val = staticStepUnits;
-        return GRIB_SUCCESS;
-    }
+    try {
+        if (Unit{staticStepUnits} != Unit{Unit::Value::MISSING}) {
+            *val = staticStepUnits;
+            return GRIB_SUCCESS;
+        }
 
-    grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+        grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
+        grib_handle* h                   = grib_handle_of_accessor(a);
 
-    auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
-    auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
+        auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
+        auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
 
-    if (forecast_time_opt && time_range_opt) {
-        auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(), (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
-        *val = step_a.unit().value<long>();
+        if (forecast_time_opt && time_range_opt) {
+            auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(), (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
+            *val = step_a.unit().value<long>();
+        }
+        else if (forecast_time_opt && !time_range_opt) {
+            *val = forecast_time_opt.value().optimize_unit().unit().value<long>();
+        }
+        else if (!forecast_time_opt && time_range_opt) {
+            *val = time_range_opt.value().optimize_unit().unit().value<long>();
+        }
+        else if (!forecast_time_opt && !time_range_opt) {
+            *val = Unit{Unit::Value::HOUR}.value<long>();
+        }
     }
-    else if (forecast_time_opt && !time_range_opt) {
-        *val = forecast_time_opt.value().optimize_unit().unit().value<long>();
-    }
-    else if (!forecast_time_opt && time_range_opt) {
-        *val = time_range_opt.value().optimize_unit().unit().value<long>();
-    }
-    else if (!forecast_time_opt && !time_range_opt) {
-        *val = Unit{Unit::Value::HOUR}.value<long>();
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, e.what());
+        return GRIB_INTERNAL_ERROR;
     }
 
     return GRIB_SUCCESS;

@@ -456,13 +456,19 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
     Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 
-    if (numberOfTimeRange == 1) {
-        ret =  unpack_one_time_range_long_(a, val, len);
-        return ret;
+    try {
+        if (numberOfTimeRange == 1) {
+            ret =  unpack_one_time_range_long_(a, val, len);
+            return ret;
+        }
+        else {
+            ret = unpack_multiple_time_ranges_long_(a, val, len);
+            return ret;
+        }
     }
-    else {
-        ret = unpack_multiple_time_ranges_long_(a, val, len);
-        return ret;
+    catch (std::exception& e) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::unpack_long: %s", e.what());
+        return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
@@ -490,13 +496,19 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
     Assert(numberOfTimeRange == 1 || numberOfTimeRange == 2);
 
-    if (numberOfTimeRange == 1) {
-        ret =  unpack_one_time_range_double_(a, val, len);
-        return ret;
+    try {
+        if (numberOfTimeRange == 1) {
+            ret =  unpack_one_time_range_double_(a, val, len);
+            return ret;
+        }
+        else {
+            ret = unpack_multiple_time_ranges_double_(a, val, len);
+            return ret;
+        }
     }
-    else {
-        ret = unpack_multiple_time_ranges_double_(a, val, len);
-        return ret;
+    catch (std::exception& e) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::unpack_double: %s", e.what());
+        return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
@@ -634,21 +646,27 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if ((ret = grib_get_string(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
         return ret;
 
-    Step step(step_value, step_units);
-    step.set_unit(step_units);
+    try {
+        Step step(step_value, step_units);
+        step.set_unit(step_units);
 
-    std::stringstream ss;
+        std::stringstream ss;
 
-    ss << step.value<std::string>(fp_format);
+        ss << step.value<std::string>(fp_format);
 
-    size_t size = ss.str().size() + 1;
+        size_t size = ss.str().size() + 1;
 
-    if (*len < size)
-        return GRIB_ARRAY_TOO_SMALL;
+        if (*len < size)
+            return GRIB_ARRAY_TOO_SMALL;
 
-    *len = size;
+        *len = size;
 
-    memcpy(val, ss.str().c_str(), size);
+        memcpy(val, ss.str().c_str(), size);
+    }
+    catch (std::exception& e) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::unpack_string: %s", e.what());
+        return GRIB_DECODING_ERROR;
+    }
 
     return GRIB_SUCCESS;
 }
@@ -662,32 +680,44 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
-    long end_step_unit;
-    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
-        if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
-            return ret;
+    try {
+        long end_step_unit;
+        if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+            if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
+                return ret;
 
-        if (Unit{end_step_unit} == Unit{Unit::Value::MISSING})
-            end_step_unit = Unit{Unit::Value::HOUR}.value<long>();
+            if (Unit{end_step_unit} == Unit{Unit::Value::MISSING})
+                end_step_unit = Unit{Unit::Value::HOUR}.value<long>();
+        }
+        else {
+            end_step_unit = force_step_units;
+        }
+        ret = pack_long_(a, *val, end_step_unit);
     }
-    else {
-        end_step_unit = force_step_units;
+    catch (std::exception& e) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::pack_long: %s", e.what());
+        return GRIB_DECODING_ERROR;
     }
-
-    return pack_long_(a, *val, end_step_unit);
+    return ret;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-    Step end_step = step_from_string(val);
-    end_step.optimize_unit();
+    try {
+        Step end_step = step_from_string(val);
+        end_step.optimize_unit();
 
-    if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)
-        return ret;
+        if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
 
-    if ((ret = pack_long_(a, end_step.value<long>(), end_step.unit().value<long>())) != GRIB_SUCCESS)
-        return ret;
+        if ((ret = pack_long_(a, end_step.value<long>(), end_step.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
+    }
+    catch (std::exception& e) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::pack_string: %s", e.what());
+        return GRIB_DECODING_ERROR;
+    }
     return GRIB_SUCCESS;
 }

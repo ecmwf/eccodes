@@ -146,43 +146,49 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
     if ((ret= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
-    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
-        if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+    try {
+        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+            if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+                return ret;
+        }
+
+        char fp_format[128] = "%g";
+        size_t fp_format_len = sizeof(fp_format);
+        if ((ret = grib_get_string_internal(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
             return ret;
-    }
+        std::stringstream ss;
 
-    char fp_format[128] = "%g";
-    size_t fp_format_len = sizeof(fp_format);
-    if ((ret = grib_get_string_internal(h, "formatForDoubles", fp_format, &fp_format_len)) != GRIB_SUCCESS)
-        return ret;
-    std::stringstream ss;
-
-    Step start_step{start_step_value, step_units};
-    if (self->end_step == NULL) {
-        ss << start_step.value<std::string>(fp_format);
-    }
-    else {
-        if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
-            return ret;
-
-        Step end_step{end_step_value, step_units};
-
-        if (start_step_value == end_step_value) {
-            ss << end_step.value<std::string>(fp_format);
+        Step start_step{start_step_value, step_units};
+        if (self->end_step == NULL) {
+            ss << start_step.value<std::string>(fp_format);
         }
         else {
-            ss << start_step.value<std::string>(fp_format) << "-" << end_step.value<std::string>(fp_format);
+            if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+                return ret;
+
+            Step end_step{end_step_value, step_units};
+
+            if (start_step_value == end_step_value) {
+                ss << end_step.value<std::string>(fp_format);
+            }
+            else {
+                ss << start_step.value<std::string>(fp_format) << "-" << end_step.value<std::string>(fp_format);
+            }
         }
+
+        size = ss.str().size() + 1;
+
+        if (*len < size)
+            return GRIB_ARRAY_TOO_SMALL;
+
+        *len = size;
+
+        memcpy(val, ss.str().c_str(), size);
     }
-
-    size = ss.str().size() + 1;
-
-    if (*len < size)
-        return GRIB_ARRAY_TOO_SMALL;
-
-    *len = size;
-
-    memcpy(val, ss.str().c_str(), size);
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_g2step_range::unpack_string: %s", e.what());
+        return GRIB_DECODING_ERROR;
+    }
 
     return GRIB_SUCCESS;
 }
@@ -193,28 +199,34 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
-    std::vector<Step> steps = parse_range(val);
-    if (steps.size() == 0) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
+    try {
+        std::vector<Step> steps = parse_range(val);
+        if (steps.size() == 0) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
+            return GRIB_INVALID_ARGUMENT;
+        }
+
+        Step step_0 = steps[0];
+        Step step_1;
+        if (steps.size() > 1) {
+            std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
+        }
+
+        if ((ret = grib_set_long_internal(h, "startStepUnit", step_0.unit().value<long>())))
+            return ret;
+        if ((ret = set_step(h, "forecastTime" , "indicatorOfUnitOfTimeRange", step_0)) != GRIB_SUCCESS)
+            return ret;
+
+        if ((self->end_step != NULL) && (steps.size() > 1)) {
+            if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().value<long>())))
+                return ret;
+            if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
+                return ret;
+        }
+    }
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_g2step_range::pack_string: %s", e.what());
         return GRIB_INVALID_ARGUMENT;
-    }
-
-    Step step_0 = steps[0];
-    Step step_1;
-    if (steps.size() > 1) {
-        std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
-    }
-
-    if ((ret = grib_set_long_internal(h, "startStepUnit", step_0.unit().value<long>())))
-        return ret;
-    if ((ret = set_step(h, "forecastTime" , "indicatorOfUnitOfTimeRange", step_0)) != GRIB_SUCCESS)
-        return ret;
-
-    if ((self->end_step != NULL) && (steps.size() > 1)) {
-        if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().value<long>())))
-            return ret;
-        if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
-            return ret;
     }
     return GRIB_SUCCESS;
 }
@@ -251,22 +263,28 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if ((ret = grib_get_long_internal(h, self->start_step, &end_start_value)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-        throw std::runtime_error("Failed to get stepUnits");
-    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+    try {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-            return ret;
-    }
+            throw std::runtime_error("Failed to get stepUnits");
+        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+            if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+                return ret;
+        }
 
-    Step start_step{end_start_value, step_units};
-    if (self->end_step == NULL) {
-        *val = start_step.value<long>();
+        Step start_step{end_start_value, step_units};
+        if (self->end_step == NULL) {
+            *val = start_step.value<long>();
+        }
+        else {
+            if ((ret = grib_get_long_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+                return ret;
+            Step end_step{end_step_value, step_units};
+            *val = end_step.value<long>();
+        }
     }
-    else {
-        if ((ret = grib_get_long_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
-            return ret;
-        Step end_step{end_step_value, step_units};
-        *val = end_step.value<long>();
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Failed to unpack step range: %s", e.what());
+        return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
@@ -287,20 +305,26 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         throw std::runtime_error("Failed to get stepUnits");
 
-    if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
-        if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
-            return ret;
-    }
+    try {
+        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+            if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
+                return ret;
+        }
 
-    Step start_step{end_start_value, step_units};
-    if (self->end_step == NULL) {
-        *val = start_step.value<long>();
+        Step start_step{end_start_value, step_units};
+        if (self->end_step == NULL) {
+            *val = start_step.value<long>();
+        }
+        else {
+            if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
+                return ret;
+            Step end_step{end_step_value, step_units};
+            *val = end_step.value<double>();
+        }
     }
-    else {
-        if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
-            return ret;
-        Step end_step{end_step_value, step_units};
-        *val = end_step.value<double>();
+    catch (std::exception& e) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_accessor_g2step_range::unpack_double: %s", e.what());
+        return GRIB_DECODING_ERROR;
     }
 
     return GRIB_SUCCESS;
