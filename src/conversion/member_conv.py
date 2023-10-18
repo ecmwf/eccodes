@@ -11,7 +11,7 @@ class MemberConverter(arg_conv.ArgConverter):
 
     # Override for extra changes required for a member, such as ending with "_"
     # Need to ensure we return a member, not an arg!
-    def to_cpp_arg(self, type_transforms=arg_conv.common_type_transforms):
+    def to_cpp_arg(self, type_transforms):
         cppmember = None
 
         # If then type is grib_accessor_ pointer, then we'll convert to an AccessorName
@@ -35,5 +35,5 @@ class MemberConverter(arg_conv.ArgConverter):
         
         return cppmember
 
-    def to_cpp_func_sig_arg(self, type_transforms = arg_conv.common_type_transforms):
+    def to_cpp_func_sig_arg(self, type_transforms):
         assert False, "to_cpp_func_sig_arg not supported for members"

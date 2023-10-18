@@ -3,7 +3,6 @@ import debug
 import func
 import arg
 import arg_conv
-import c_def_conv
 import c_subs
 import re
 import grib_api_converter
@@ -60,22 +59,26 @@ class FunctionConverter:
             debug.line("skip_line", f"[C++ Comment]: {line}")
             return True
 
+        # NOTE: /* only matches at the START of the line, and is ignored if it appears after code
         m = re.match(r"^\s*(/\*)?.*?(\*/)?$", line)
 
-        if m and m.group(1):
-            if m.group(2):
-                self._in_comment_block = False
-                debug.line("skip_line", f"[C Comment]: {line}")
-            else:
+        if m:
+            if m.group(1) and not m.group(2):   # /*
                 debug.line("skip_line", f"[C Comment Start]: {line}")
                 self._in_comment_block = True
-            return True
+                return True
             
-        if m and m.group(2):
-            self._in_comment_block = False
-            debug.line("skip_line", f"[C Comment End  ]: {line}")
-            return True
-        
+            elif m.group(1) and m.group(2):     # /* */
+                self._in_comment_block = False
+                debug.line("skip_line", f"[C Comment]: {line}")
+                return True
+
+            elif not m.group(1) and m.group(2): #    */
+                if self._in_comment_block:
+                    self._in_comment_block = False
+                    debug.line("skip_line", f"[C Comment End  ]: {line}")
+                    return True
+
         if self._in_comment_block:
             debug.line("skip_line", f"[C Comment Block]: {line}")
             return True
@@ -241,6 +244,12 @@ class FunctionConverter:
 
         return line
 
+    # Transform any variables, definitions, etc with a "grib" type prefix...
+    def apply_grib_api_transforms(self, line):
+        line = grib_api_converter.process_grib_api_variables(line, self._transforms.all_args)
+        line = grib_api_converter.convert_grib_api_definitions(line)
+        return line
+
     def apply_variable_transforms(self, line):
         # Assume sizeof(x)/sizeof(*x) or sizeof(x)/sizeof(x[0]) refers to a container with a size() member...
         m = re.search(r"\bsizeof\((.*?)\)\s*/\s*sizeof\(\s*(?:\*)?\1(?:\[0\])?\s*\)", line)
@@ -280,7 +289,7 @@ class FunctionConverter:
             cpp_arg_types = []
             for arg_type in [a.strip() for a in m.group(3).split(",")]:
                 arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
-                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg()
+                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms.types)
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             
@@ -325,27 +334,10 @@ class FunctionConverter:
                 debug.line("process_global_cargs", f"Substituted \"{m.group(0)}\" with \"{cpparg.name}\"{m.group(1)}\" [after ]: {line}")
 
         return line
-
-    def convert_grib_values(self, line):
-        for k, v in c_def_conv.GribStatusConverter.items():
-            line, count = re.subn(rf"{k}", rf"{v}", line)
-            if count:
-                debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
         
-        for k, v in c_def_conv.GribTypeConverter.items():
-            line, count = re.subn(rf"{k}", rf"{v}", line)
-            if count:
-                debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
-        
-        for k, v in c_def_conv.GribAccessorFlagConverter.items():
-            line, count = re.subn(rf"{k}", rf"toInt({v})", line)
-            if count:
-                debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
-        
-        return line
-        
+    # TODO: Move to grib_api folder...
     def convert_grib_utils(self, line):
-        for util in c_def_conv.GribUtilFuncs:
+        for util in ["grib_is_earth_oblate",]:
             m = re.search(rf"\b{util}\b", line)
             if m:
                 cpp_util = transform_function_name(util)
@@ -354,10 +346,10 @@ class FunctionConverter:
 
         return line
     
-    def convert_grib_api_entries(self, line):
+    def convert_grib_api_functions(self, line):
         line = self.convert_grib_utils(line)
         line = grib_api_converter.convert_grib_api_functions(line)
-        
+
         return line
 
     def apply_get_set_substitutions(self, line):
@@ -443,7 +435,7 @@ class FunctionConverter:
         # Note: These apply in order, be careful if re-arranging!
         update_functions = [
             # [1] function updates that expect the original C variable names
-            self.convert_grib_api_entries,
+            self.convert_grib_api_functions,
             self.apply_function_transforms,
             self.special_function_transforms,
 
@@ -454,11 +446,11 @@ class FunctionConverter:
             self.process_return_variables,
             self.process_variable_declarations,
             self.process_deleted_variables,
+            self.apply_grib_api_transforms,
             self.apply_variable_transforms,
             self.process_function_pointers,
             self.process_remaining_cargs,
             self.process_global_cargs,
-            self.convert_grib_values,
             self.apply_get_set_substitutions,
             self.validate_container_variables,
             self.apply_final_checks,

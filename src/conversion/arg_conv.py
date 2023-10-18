@@ -4,23 +4,12 @@ import re
 import debug
 import arg
 
-# These will be used if no other supplied...
-common_type_transforms = {
-    "grib_accessor*"    : None,
-    "grib_handle*"      : None,
-    "grib_context*"     : None,
-    "char**"            : "std::string&",
-    "char*"             : "std::string",
-    "char[]"            : "std::string",
-    "grib_iarray*"      : "std::vector<long>"
-}
-
 class ArgConverter:
     def __init__(self, carg):
         self._carg = carg
 
     # Returns the equivalent C++ arg (name and type), which could be None
-    def to_cpp_arg(self, type_transforms=common_type_transforms):
+    def to_cpp_arg(self, type_transforms):
         updated_carg = update_carg_format(self._carg)
 
         # [1] Check for defined transforms
@@ -72,7 +61,7 @@ class ArgConverter:
     # following exceptions:
     # - pointers are converted to references (not std::vector)
     # - arrays are converted to std::vector references
-    def to_cpp_func_sig_arg(self, type_transforms = common_type_transforms):
+    def to_cpp_func_sig_arg(self, type_transforms):
         
         # [1] Pointer types
         m = re.search(r"(const)?\s*(\w*)(\*+)\s*(const)?", self._carg.type)

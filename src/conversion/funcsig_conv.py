@@ -35,8 +35,10 @@ class FuncSigConverter:
     def __init__(self, cfuncsig):
         self._cfuncsig = cfuncsig
         self._conversions = []
+        self._type_transforms = []  # Pass in as required
 
-    def create_funcsig_mapping(self):
+    def create_funcsig_mapping(self, type_transforms):
+        self._type_transforms = type_transforms
         cfuncsig, cppfuncsig = self.to_cpp_funcsig()
         mapping = FuncSigMapping(cfuncsig, cppfuncsig, self.arg_indexes())
         return mapping
@@ -56,7 +58,6 @@ class FuncSigConverter:
 
     def to_cpp_return_type(self):
         for entry in self._conversions:
-            debug.line("DEBUG",f"entry={entry}")
             if entry.cfuncsig.name == self._cfuncsig.name:
                 return entry.cppfuncsig.return_type
 
@@ -82,7 +83,7 @@ class FuncSigConverter:
         cppargs = []
         for entry in self._cfuncsig.args:
             arg_converter = arg_conv.ArgConverter(entry)
-            cpparg = arg_converter.to_cpp_func_sig_arg()
+            cpparg = arg_converter.to_cpp_func_sig_arg(self._type_transforms)
             cppargs.append(cpparg)
 
         return cppargs

@@ -1,4 +1,6 @@
 # Convert C definitions (e.g. to enums)
+import debug
+import re
 
 GribStatusConverter = {
     "GRIB_SUCCESS": "GribStatus::SUCCESS", 
@@ -116,6 +118,20 @@ GribAccessorFlagConverter = {
     "GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION" : "GribAccessorFlag::COPY_IF_CHANGING_EDITION",
 }
 
-GribUtilFuncs = [
-    "grib_is_earth_oblate",
-]
+def convert_grib_values(line):
+    for k, v in GribStatusConverter.items():
+        line, count = re.subn(rf"{k}", rf"{v}", line)
+        if count:
+            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
+    
+    for k, v in GribTypeConverter.items():
+        line, count = re.subn(rf"{k}", rf"{v}", line)
+        if count:
+            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
+    
+    for k, v in GribAccessorFlagConverter.items():
+        line, count = re.subn(rf"{k}", rf"toInt({v})", line)
+        if count:
+            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
+    
+    return line

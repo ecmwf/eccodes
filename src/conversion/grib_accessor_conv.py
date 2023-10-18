@@ -6,6 +6,7 @@ import member_conv
 from converter_collection import Converter, converters_for
 import transforms
 from funcsig_mapping import FuncSigMapping
+import grib_api_converter
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -33,6 +34,13 @@ non_const_cmethods = [
     "update_size",
     "notify_change",
 ]
+
+# These will be used if no other supplied...
+common_type_transforms = {
+    "char**"  : "std::string&",
+    "char*"   : "std::string",
+    "char[]"  : "std::string",
+}
 
 # Convert GribAccessor to AccessorData
 class GribAccessorConverter:
@@ -99,14 +107,20 @@ class GribAccessorConverter:
         return result
 
     def create_transforms(self):
-        self._transforms = transforms.Transforms(types=arg_conv.common_type_transforms)
+        type_transforms = common_type_transforms
+        type_transforms.update(grib_api_converter.grib_api_type_transforms())
+
+        for k,v in type_transforms.items():
+            debug.line("create_transforms",f"Type transform: {k} -> {v}")
+
+        self._transforms = transforms.Transforms(types=type_transforms)
 
         self._transforms.add_to_class_types("self", self._grib_accessor.name, self._accessor_data.name)
         self._transforms.add_to_class_types("super", self._grib_accessor.super, self._accessor_data.super)
 
     def add_global_function(self):
         global_func_funcsig_converter = self._converters[Converter.GLOBAL_FUNC_FUNCSIG](self._grib_accessor.global_function.func_sig)
-        mapping = global_func_funcsig_converter.create_funcsig_mapping()
+        mapping = global_func_funcsig_converter.create_funcsig_mapping(self._transforms.types)
         self._transforms.add_to_other_funcsig_mappings(mapping)
 
         static_func_name_transforms = {}
@@ -123,17 +137,17 @@ class GribAccessorConverter:
         # Create funcsig mappings for all C funcs, and add to transforms 
         for func in self._grib_accessor.inherited_methods:
             converter = self._converters[Converter.INHERITED_METHOD_FUNCSIG](func.func_sig)
-            mapping = converter.create_funcsig_mapping()
+            mapping = converter.create_funcsig_mapping(self._transforms.types)
             self._transforms.add_to_inherited_funcsig_mappings(mapping)
 
         for func in self._grib_accessor.private_methods:
             converter = self._converters[Converter.PRIVATE_METHOD_FUNCSIG](func.func_sig)
-            mapping = converter.create_funcsig_mapping()
+            mapping = converter.create_funcsig_mapping(self._transforms.types)
             self._transforms.add_to_private_funcsig_mappings(mapping)
 
         for func in self._grib_accessor.static_functions:
             converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
-            mapping = converter.create_funcsig_mapping()
+            mapping = converter.create_funcsig_mapping(self._transforms.types)
             self._transforms.add_to_static_funcsig_mappings(mapping)
 
         # Add "other" funcsigs
@@ -144,7 +158,7 @@ class GribAccessorConverter:
 
         for func, conv in other_funcs.items():
             converter = conv(func.func_sig)
-            mapping = converter.create_funcsig_mapping()
+            mapping = converter.create_funcsig_mapping(self._transforms.types)
             self._transforms.add_to_other_funcsig_mappings(mapping)
 
     def add_includes(self):
@@ -165,7 +179,7 @@ class GribAccessorConverter:
     def add_members(self):
         for cmember in self.members_in_hierarchy(self._grib_accessor):
             member_converter = member_conv.MemberConverter(cmember)
-            cppmember = member_converter.to_cpp_arg()
+            cppmember = member_converter.to_cpp_arg(self._transforms.types)
             if cmember in self._grib_accessor.members:
                 self._accessor_data.add_member(cppmember)
             self._transforms.add_to_members(cmember, cppmember)
