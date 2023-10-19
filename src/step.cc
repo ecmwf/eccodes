@@ -130,20 +130,11 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
     return {a, b};
 }
 
-void Step::sanity_check() const
-{
-    static_assert(sizeof(int) == 4, "int is not 4 bytes");
-    //if (!(internal_value_ >= std::numeric_limits<int>::min() && internal_value_ <= std::numeric_limits<int>::max())) {
-        //throw std::out_of_range("Step is out of range.");
-    //}
-}
-
 void Step::init_long(long value, const Unit& unit)
 {
     internal_value_ = value;
     internal_unit_ = unit;
     unit_ = internal_unit_;
-    sanity_check();
 }
 
 void Step::init_double(double value, const Unit& unit)

@@ -74,7 +74,6 @@ public:
 private:
     void init_long(long value, const Unit& unit);
     void init_double(double value, const Unit& unit);
-    void sanity_check() const;
     Step& recalculateValue() {
         if (internal_value_ == 0) {
             internal_unit_ = unit_;
