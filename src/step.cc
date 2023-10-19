@@ -139,7 +139,7 @@ void Step::init_long(long value, const Unit& unit)
 
 void Step::init_double(double value, const Unit& unit)
 {
-    long seconds = Unit::get_converter().unit_to_duration(unit.value<Unit::Value>());
+    auto seconds = Unit::get_converter().unit_to_duration(unit.value<Unit::Value>());
     init_long(static_cast<long>(value * seconds), Unit{Unit::Value::SECOND});
     unit_ = unit;
 }
@@ -157,7 +157,7 @@ Step& Step::optimize_unit()
     Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
 
     for (auto it = Unit::grib_selected_units.rbegin(); it != Unit::grib_selected_units.rend(); ++it) {
-        long multiplier = Unit::get_converter().unit_to_duration(*it);
+        auto multiplier = Unit::get_converter().unit_to_duration(*it);
         if (seconds.count() % multiplier == 0) {
             internal_value_ = seconds.count() / multiplier;
             internal_unit_ = *it;
@@ -171,18 +171,20 @@ Step& Step::optimize_unit()
 
 template <>
 std::string Step::value<std::string>(const std::string& format) const {
-    constexpr int max_size = 128;
-    char output[128]; //Do not use variable-length arrays
+    constexpr int MAX_SIZE = 128;
+    char output[MAX_SIZE];
     std::string u;
 
     // Do not print unit if it is HOUR to keep backward compatibility
-    // with previous versions of ecCodes. This is a temporary solution.
+    // with previous versions of ecCodes (see ECC-1620). This is a temporary solution.
+    //
+    // TODO(maee): Remove this code to enable future output, e.g., 15h.
 
     if (unit_ != Unit::Value::HOUR)
         u =  unit_.value<std::string>();
 
-    int err = snprintf(output, max_size, (format + "%s").c_str(), value<double>(), u.c_str());
-    if (err < 0 || err >= max_size) {
+    int err = snprintf(output, MAX_SIZE, (format + "%s").c_str(), value<double>(), u.c_str());
+    if (err < 0 || err >= MAX_SIZE) {
         throw std::runtime_error("Error while formatting Step to string");
     }
     return output;

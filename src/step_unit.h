@@ -131,7 +131,7 @@ private:
         Value name_to_unit(const std::string& name) const {return name_to_value_.at(name);}
 
         // unit_value <-> duration
-        long unit_to_duration(const Value& unit_value) const {return value_to_duration_.at(unit_value);}
+        uint64_t unit_to_duration(const Value& unit_value) const {return value_to_duration_.at(unit_value);}
         Value duration_to_unit(long duration) const {return duration_to_value_.at(duration);}
 
         // wmo_code <-> unit_name
@@ -169,8 +169,8 @@ private:
         std::unordered_map<Value, long> value_to_long_;
         std::unordered_map<long, Value> long_to_value_;
 
-        std::unordered_map<Value, long> value_to_duration_;
-        std::unordered_map<long, Value> duration_to_value_;
+        std::unordered_map<Value, uint64_t> value_to_duration_;
+        std::unordered_map<uint64_t, Value> duration_to_value_;
     };
 
 
