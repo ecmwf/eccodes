@@ -41,30 +41,36 @@ class Arg:
     def from_string(cls, input):
 
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
-        # Groups: 1     2      3    4 5     6   7
-        # Groups: const struct TYPE * const NAME [N]
-        m = re.match(r"(const)?(struct)?\s*(\w+)\s*(\*+)?\s*(const)?\s*(\w+)\s*(\[\d*\])?", input)
+        # Groups: 1     2      3        4    5 6     7    8
+        # Groups: const struct unsigned TYPE * const NAME [N]
+        m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)\s*(\*+)?\s*(const)?\s*(\w+)\s*(\[\d*\])?", input)
 
         if m:
+            if m.group(4).startswith("return"):
+                debug.line("from_string", f"Ignoring invalid arg declaration: {m.group(0)}")
+                return None
+
             arg_type = ""
             if m.group(1):
                 arg_type += m.group(1) + " "
             if m.group(2):
                 arg_type += m.group(2) + " "
-            arg_type += m.group(3)
-            if m.group(4):
-                arg_type += m.group(4)  # Add * if present...
+            if m.group(3):
+                arg_type += m.group(3) + " "
+            arg_type += m.group(4)
             if m.group(5):
-                arg_type += " " + m.group(5)  # Add * if present...
+                arg_type += m.group(5)  # Add * if present...
+            if m.group(6):
+                arg_type += " " + m.group(6)
 
-            arg_name = m.group(6)
-            if m.group(7):
+            arg_name = m.group(7)
+            if m.group(8):
                 # Handle array declaration e.g. char buf[10]
-                arg_type += m.group(7)
+                arg_type += m.group(8)
 
             return cls(arg_type, arg_name)
 
-        debug.line("Arg from_string", f"Couldn't create arg from input: {input}")
+        debug.line("from_string", f"Couldn't create arg from input: {input}")
         return None
     
     # Generate a string to represent the Arg's declaration

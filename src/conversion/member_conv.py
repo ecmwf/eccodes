@@ -11,29 +11,25 @@ class MemberConverter(arg_conv.ArgConverter):
 
     # Override for extra changes required for a member, such as ending with "_"
     # Need to ensure we return a member, not an arg!
-    def to_cpp_arg(self, type_transforms):
+    def to_cpp_arg(self, transforms):
         cppmember = None
 
-        # If then type is grib_accessor_ pointer, then we'll convert to an AccessorName
-        if re.search(r"grib_accessor\w*\*", self._carg.type):
-            cppname = arg_conv.transform_variable_name(self._carg.name) + "_"
-            cppmember = member.Member("AccessorName", cppname)
-            cppmember.default_value = "{\"\"}"
-        else:
-            cpp_arg = super().to_cpp_arg(type_transforms)
-            if cpp_arg:
-                cppmember = member.Member(cpp_arg.type, cpp_arg.name + "_")
+        cpp_arg = super().to_cpp_arg(transforms)
+        if cpp_arg:
+            cppmember = member.Member(cpp_arg.type, cpp_arg.name + "_")
 
-                # We'll assume "const char*" means this variable refers to another accessor...
-                if self._carg.type == "const char*":
-                    cppmember.type = "AccessorName"
-                    cppmember.default_value = "{\"\"}"
-                else:
-                    cppmember.default_value = ""
+            # We'll assume "const char*" means this variable refers to another accessor...
+            if self._carg.type == "const char*":
+                cppmember.type = "AccessorName"
 
-                cppmember._mutable = False
-        
+            if cppmember.type == "AccessorName":
+                cppmember.default_value = "{\"\"}"
+            else:
+                cppmember.default_value = ""
+
+            cppmember._mutable = False
+
         return cppmember
 
-    def to_cpp_func_sig_arg(self, type_transforms):
+    def to_cpp_func_sig_arg(self, transforms):
         assert False, "to_cpp_func_sig_arg not supported for members"

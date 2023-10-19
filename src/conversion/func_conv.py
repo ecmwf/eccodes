@@ -208,7 +208,7 @@ class FunctionConverter:
 
         if m and carg:
             arg_converter = arg_conv.ArgConverter(carg)
-            cpparg = arg_converter.to_cpp_arg(self._transforms.types)
+            cpparg = arg_converter.to_cpp_arg(self._transforms)
 
             if not cpparg:
                 debug.line("process_variable_declarations", f"Found var declaration to delete: {carg.type} {carg.name}")
@@ -276,7 +276,7 @@ class FunctionConverter:
         if m:
             carg = arg.Arg(m.group(1), m.group(2))
             arg_converter = arg_conv.ArgConverter(carg)
-            cpparg = arg_converter.to_cpp_arg(self._transforms.types)
+            cpparg = arg_converter.to_cpp_arg(self._transforms)
 
             # Assume functions returning int will now return GribStatus
             if cpparg.type == "int":
@@ -289,7 +289,7 @@ class FunctionConverter:
             cpp_arg_types = []
             for arg_type in [a.strip() for a in m.group(3).split(",")]:
                 arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
-                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms.types)
+                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms)
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             

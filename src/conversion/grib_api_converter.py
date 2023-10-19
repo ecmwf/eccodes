@@ -1,8 +1,13 @@
 # Entry point for all GRIB API conversions 
 import re
 import grib_api.grib_array as grib_array
+import grib_api.grib_funcsig_type_transforms as grib_funcsig_type_transforms
 import grib_api.grib_type_transforms as grib_type_transforms
 import grib_api.grib_values as grib_values
+
+def grib_api_funcsig_type_transforms():
+    funcsig_type_transforms =  grib_funcsig_type_transforms.all_grib_funcsig_type_transforms()
+    return funcsig_type_transforms
 
 def grib_api_type_transforms():
     type_transforms =  grib_type_transforms.all_grib_type_transforms()

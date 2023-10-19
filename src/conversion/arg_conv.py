@@ -9,11 +9,11 @@ class ArgConverter:
         self._carg = carg
 
     # Returns the equivalent C++ arg (name and type), which could be None
-    def to_cpp_arg(self, type_transforms):
+    def to_cpp_arg(self, transforms):
         updated_carg = update_carg_format(self._carg)
 
         # [1] Check for defined transforms
-        for k, v in type_transforms.items():
+        for k, v in transforms.types.items():
             if k == updated_carg.non_const_type:
                 if v is None:
                     return None
@@ -23,7 +23,7 @@ class ArgConverter:
         # [2] Process any other array types
         m = re.search(r"(\w*)(\[\d*\])", updated_carg.type)
         if m:
-            for k, v in type_transforms.items():
+            for k, v in transforms.types.items():
                 if k == m.group(1):
                     if v is None:
                         return None
@@ -33,7 +33,7 @@ class ArgConverter:
             return arg.Arg(f"std::vector<{m.group(1)}>", transform_variable_name(updated_carg.name))
 
         # [3] Process other mapped types
-        for k, v in type_transforms.items():
+        for k, v in transforms.types.items():
             if k == updated_carg.non_const_type:
                 if v is None:
                     return None
@@ -61,26 +61,27 @@ class ArgConverter:
     # following exceptions:
     # - pointers are converted to references (not std::vector)
     # - arrays are converted to std::vector references
-    def to_cpp_func_sig_arg(self, type_transforms):
+    def to_cpp_func_sig_arg(self, transforms):
         
         # [1] Pointer types
         m = re.search(r"(const)?\s*(\w*)(\*+)\s*(const)?", self._carg.type)
         if m:
-            # Check for defined transforms
-            for k, v in type_transforms.items():
-                if k == self._carg.non_const_type:
-                    if v is None:
-                        return None
-                    else:
-                        cpparg = arg.Arg(v+"&", transform_variable_name(self._carg.name))
-                        return cpparg
+            # Check for defined transforms (funcsig first, then everything else)
+            for type_dict in [transforms.funcsig_types, transforms.types]:
+                for k, v in type_dict.items():
+                    if k == self._carg.non_const_type:
+                        if v is None:
+                            return None
+                        else:
+                            cpparg = arg.Arg(v+"&", transform_variable_name(self._carg.name))
+                            return cpparg
 
             # Other pointers: removing * to avoid getting std::vector type back (unless it's **)
             test_type = m.group(2)
             if m.group(3) and len(m.group(3)) > 1:
                 test_type += m.group(3)[:-1]
             self._carg = arg.Arg(test_type, self._carg.name)
-            cpparg = self.to_cpp_arg(type_transforms)
+            cpparg = self.to_cpp_arg(transforms)
 
             if cpparg:
                 if m.group(1):
@@ -90,7 +91,7 @@ class ArgConverter:
             return cpparg
 
         # [2] Everything else
-        cpparg = self.to_cpp_arg(type_transforms)
+        cpparg = self.to_cpp_arg(transforms)
 
         if cpparg and self._carg.type[-1] == "]":
             cpparg.type += "&"

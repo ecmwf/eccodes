@@ -15,30 +15,28 @@ def transform_function_name(name):
 # Sub-classes should populate the self._conversions list with specialised conversions
 #
 # The conversions list defines well-known conversions from C function name to the equivalent 
-# C++ function signature, and identifies buffer mappings from C {ptr,len} to C++ container, for example:
+# C++ function signature, and identifies arg indexes mapping C buffers {ptr,len} to C++ containers, for example:
 # sample_conversions = [
-#     FuncSigMap("pack_string",
-#                 FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"),  None]),
-#                 BufferIndexMap(cbuffer=1, clength=2, cpp_container=1)),
-# ]
+#    FuncSigMapping(FuncSig("int", "pack_string", [Arg("grib_accessor*", "a"), Arg("const char*", "v"), Arg("size_t*", "len")]),
+#                FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"),  None]),
+#                ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 #
-# "pack_string"     Name of a function as defined in the C code (func_name in the functions below)
-# FuncSig           Signature for the equivalent function in C++
-#                   The argument list provides a 1:1 mapping from the C equivalent function - this map is also used 
+# FuncSig           Signature for the C and C++ functions
+#                   The argument lists provide a 1:1 mapping from the C to C++ equivalent function - this map is also used 
 #                   when replacing the use of these in the function body
 #                   Note 1: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
 #                   Note 2: If there is no C++ equivalent function, then FuncSig(None, None, [None]) will be returned 
 #                       (where the number of args in the third parameter will match the C FuncSig)
-# BufferIndexMap    Provides the index for each arg in the buffer mappings from C {ptr,len} to C++ container
+# ArgIndexes        Provides the index for each arg in the buffer mappings from C {ptr,len} to C++ container
 #
 class FuncSigConverter:
     def __init__(self, cfuncsig):
         self._cfuncsig = cfuncsig
         self._conversions = []
-        self._type_transforms = []  # Pass in as required
+        self._transforms = None  # Pass in as required
 
-    def create_funcsig_mapping(self, type_transforms):
-        self._type_transforms = type_transforms
+    def create_funcsig_mapping(self, transforms):
+        self._transforms = transforms
         cfuncsig, cppfuncsig = self.to_cpp_funcsig()
         mapping = FuncSigMapping(cfuncsig, cppfuncsig, self.arg_indexes())
         return mapping
@@ -83,7 +81,7 @@ class FuncSigConverter:
         cppargs = []
         for entry in self._cfuncsig.args:
             arg_converter = arg_conv.ArgConverter(entry)
-            cpparg = arg_converter.to_cpp_func_sig_arg(self._type_transforms)
+            cpparg = arg_converter.to_cpp_func_sig_arg(self._transforms)
             cppargs.append(cpparg)
 
         return cppargs

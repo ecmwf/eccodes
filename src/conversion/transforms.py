@@ -24,16 +24,22 @@ default_class_type_entries = ["self", "super"]
 TypePair = namedtuple('TypePair', ['cvalue', 'cppvalue'])
 
 class Transforms:
-    def __init__(self, *, types={}, members={}, inherited_funcsig_mappings=[], private_funcsig_mappings=[], static_funcsig_mappings=[]) -> None:
+    def __init__(self, *, funcsig_types={}, types={}) -> None:
+        self._funcsig_types = funcsig_types
         self._types = types
         self._all_args = {}
         self._global_args = {}
-        self._members = members
-        self._inherited_funcsig_mappings = inherited_funcsig_mappings
-        self._private_funcsig_mappings = private_funcsig_mappings
-        self._static_funcsig_mappings = static_funcsig_mappings
+        self._members = {}
+        self._inherited_funcsig_mappings = []
+        self._private_funcsig_mappings = []
+        self._static_funcsig_mappings = []
         self._other_funcsig_mappings = []
         self._class_types = {}
+
+    # Note these are only supplied at __init__, any new types are added to the types list instead
+    @property
+    def funcsig_types(self):
+        return self._funcsig_types
 
     @property
     def types(self):
