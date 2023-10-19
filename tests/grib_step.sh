@@ -206,6 +206,21 @@ result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=D   $input)
 result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=m   $input)
 [ $result = 5760 ]
 
+# GRIB1 stepRange and timeRangeIndicator=10
+# -----------------------------------------
+input=${data_dir}/reduced_latlon_surface.grib1
+grib_check_key_equals $input timeRangeIndicator,P1,P2 '10 0 0'
+ECCODES_GRIBEX_MODE_ON=1 ${tools_dir}/grib_set -s stepRange=11-12 $input $temp
+grib_check_key_equals $temp P1,P2 '0 11'
+
+set +e
+${tools_dir}/grib_set -s stepRange=11-12 $input $temp 2>$templog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to set stepRange" $templog
+
+
 # Clean up
 rm -f $temp $templog
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
