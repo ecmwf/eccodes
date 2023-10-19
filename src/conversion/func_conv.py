@@ -193,15 +193,14 @@ class FunctionConverter:
 
         return line
                 
-    # Find variable declarations with assignments, e.g. char* buf = "Data"; and then:
+    # Find variable declarations (including with assignments), e.g. size_t len; char* buf = "Data"; and then
+    # pass on to functions to:
     # 1. Update the type if required / delete the line if no longer valid
     # 2. Store in the arg_map for future reference
+    # 3. Ensure any assignments are valid...
     def process_variable_declarations(self, line):
 
-        # Note: "return x;" looks like a variable declaration, so we explicitly exclude it
-        #       static and const are ignored
-        prefix = r"^\s*(?!return)(?:static)?(?:const)?"
-        m = re.match(rf"{prefix}\s*((\w+\*?\*?)\s+(\w+)\s*(\[\d*\])?)\s*[=;]", line)
+        m = re.match(rf"^(?:static)?\s*([^=;]*)([=;])(.*)", line)
 
         if m:
             carg = arg.Arg.from_string(m.group(1))
@@ -440,11 +439,12 @@ class FunctionConverter:
             self.special_function_transforms,
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
+            self.process_variable_declarations,
             self.process_variables_initial_pass,
             self.process_len_args,
             self.process_type_declarations,
             self.process_return_variables,
-            self.process_variable_declarations,
+            #self.process_variable_declarations,
             self.process_deleted_variables,
             self.apply_grib_api_transforms,
             self.apply_variable_transforms,

@@ -43,12 +43,13 @@ class Arg:
         # Note: "return x;" looks like a variable declaration, so we explicitly exclude this...
         # Groups: 1     2      3        4    5 6     7    8
         # Groups: const struct unsigned TYPE * const NAME [N]
-        m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)\s*(\*+)?\s*(const)?\s*(\w+)\s*(\[\d*\])?", input)
+        m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)\s*(\*+)?\s*(const)?\s+(\w+)\s*(\[\d*\])?", input)
 
         if m:
-            if m.group(4).startswith("return"):
-                debug.line("from_string", f"Ignoring invalid arg declaration: {m.group(0)}")
-                return None
+            for text in ["return", "typedef"]:
+                if m.group(4).startswith(text):
+                    debug.line("from_string", f"Ignoring invalid arg type [{text}]: {m.group(0)}")
+                    return None
 
             arg_type = ""
             if m.group(1):
@@ -70,7 +71,7 @@ class Arg:
 
             return cls(arg_type, arg_name)
 
-        debug.line("from_string", f"Couldn't create arg from input: {input}")
+        debug.line("from_string", f"Input is not an arg declaration: {input}")
         return None
     
     # Generate a string to represent the Arg's declaration
