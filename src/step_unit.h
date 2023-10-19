@@ -142,7 +142,7 @@ private:
         struct Entry {
             Value unit_value;
             std::string unit_name;
-            long duration;
+            uint64_t duration;
         };
 
         const std::array<Entry, 15> tab_ = {{
