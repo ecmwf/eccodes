@@ -98,10 +98,10 @@ public:
 
     static std::vector<Unit> list_supported_units() {
         std::vector<Unit> result;
-        for (const auto& value : complete_unit_order_) {
-            if (value == Value::MISSING)
+        for (const auto& val : complete_unit_order_) {
+            if (val == Value::MISSING)
                 continue;
-            result.push_back(Unit(value));
+            result.push_back(Unit(val));
         }
 
         return result;
