@@ -175,9 +175,10 @@ std::string Step::value<std::string>(const std::string& format) const {
     char output[128]; //Do not use variable-length arrays
     std::string u;
 
-    if (unit_ == Unit::Value::HOUR)
-        u = "";
-    else
+    // Do not print unit if it is HOUR to keep backward compatibility
+    // with previous versions of ecCodes. This is a temporary solution.
+
+    if (unit_ != Unit::Value::HOUR)
         u =  unit_.value<std::string>();
 
     int err = snprintf(output, max_size, (format + "%s").c_str(), value<double>(), u.c_str());
