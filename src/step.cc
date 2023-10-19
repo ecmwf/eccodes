@@ -114,11 +114,11 @@ std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endSt
         b.recalculateValue();
     }
     else {
-        auto it = std::find_if(Unit::publicly_visible_units_.begin(), Unit::publicly_visible_units_.end(), [&](const auto& e) {
+        auto it = std::find_if(Unit::grib_selected_units.begin(), Unit::grib_selected_units.end(), [&](const auto& e) {
             return e == a.unit().value<Unit::Value>() || e == b.unit().value<Unit::Value>();
         });
 
-        assert(it != Unit::publicly_visible_units_.end());
+        assert(it != Unit::grib_selected_units.end());
 
         a.set_unit(*it);
         b.set_unit(*it);
@@ -165,7 +165,7 @@ Step& Step::optimize_unit()
     unit_ = internal_unit_;
     Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
 
-    for (auto it = Unit::publicly_visible_units_.rbegin(); it != Unit::publicly_visible_units_.rend(); ++it) {
+    for (auto it = Unit::grib_selected_units.rbegin(); it != Unit::grib_selected_units.rend(); ++it) {
         long multiplier = Unit::get_converter().unit_to_duration(*it);
         if (seconds.count() % multiplier == 0) {
             internal_value_ = seconds.count() / multiplier;

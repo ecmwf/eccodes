@@ -93,7 +93,7 @@ public:
 
 
     template <typename T> T value() const;
-    static std::vector<Value> publicly_visible_units_;
+    static std::vector<Value> grib_selected_units;
     static std::vector<Value> complete_unit_order_;
 
     static std::vector<Unit> list_supported_units() {

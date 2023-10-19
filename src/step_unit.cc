@@ -12,7 +12,7 @@
 
 Unit::Map Unit::map_{};
 
-std::vector<Unit::Value> Unit::publicly_visible_units_ = {
+std::vector<Unit::Value> Unit::grib_selected_units = {
     Unit::Value::SECOND,
     Unit::Value::MINUTE,
     Unit::Value::HOUR,
