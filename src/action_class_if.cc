@@ -22,7 +22,6 @@
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
    IMPLEMENTS = destroy
-   IMPLEMENTS = xref
    IMPLEMENTS = reparse;execute
    MEMBERS    = grib_expression *expression
    MEMBERS    = grib_action     *block_true
@@ -44,7 +43,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
@@ -73,7 +71,7 @@ static grib_action_class _grib_action_class_if = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     &create_accessor,             /* create_accessor*/
 
@@ -86,6 +84,7 @@ grib_action_class* grib_action_class_if = &_grib_action_class_if;
 
 static void init_class(grib_action_class* c)
 {
+    c->xref    =    (*(c->super))->xref;
     c->notify_change    =    (*(c->super))->notify_change;
 }
 /* END_CLASS_IMP */
@@ -306,6 +305,3 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, act->op);
 }
 
-static void xref(grib_action* d, FILE* f, const char* path)
-{
-}
