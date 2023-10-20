@@ -55,9 +55,9 @@ grib_check_key_exists $destine_sample destineOrigin,gridSpecification
 grib_check_key_equals $destine_sample "destineOrigin,gridSpecification" "unknown unknown"
 
 # Below mapping is for MeteoFrance
-${tools_dir}/grib_set -s centre=98,subCentre=84 $destine_sample $temp_grib_a
+${tools_dir}/grib_set -s centre=98,subCentre=85 $destine_sample $temp_grib_a
 
-grib_check_key_equals $temp_grib_a "destineOrigin" "MeteoFrance"
+grib_check_key_equals $temp_grib_a "destineOrigin" "Meteo-France"
 
 # Below mapping is for H1024
 ${tools_dir}/grib_set -s numberOfDataPoints=12582912,gridDefinitionTemplateNumber=150,Nside=1024 $destine_sample $temp_grib_a
