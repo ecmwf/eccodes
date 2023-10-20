@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -235,10 +234,8 @@ static int notify_change(grib_action* act, grib_accessor* notified,
 
 static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
 {
-    /* Should be inherited */
-    printf("reparse should be inherited: %s\n", a->name);
-
-    Assert(1 == 0);
+    fprintf(stderr, "action_class_section::reparse should be inherited: %s\n", a->name);
+    Assert(0);
     return 0;
 }
 

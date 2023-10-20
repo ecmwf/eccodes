@@ -792,7 +792,6 @@ void grib_buffer_free(const grib_context* c, void* p);
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s);
 
 /* grib_buffer.cc*/
-void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b);
 grib_buffer* grib_create_growable_buffer(const grib_context* c);
 grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, size_t buflen);
 void grib_buffer_delete(const grib_context* c, grib_buffer* b);
