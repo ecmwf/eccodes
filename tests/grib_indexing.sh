@@ -134,6 +134,22 @@ cat $tempOut
 grep -q "Indexes contained in the input files have different keys" $tempOut
 rm -f $tempIndex1 $tempIndex2 $tempOut
 
+# Indexing with directory traversal
+# ----------------------------------
+temp_dir_A=tempdir.$label
+temp_dir_B=tempdir.$label/subdir.$label
+rm -rf $temp_dir_A
+mkdir $temp_dir_A
+mkdir $temp_dir_B
+cp ${data_dir}/tigge/tigge_rjtd_pl_*grib  $temp_dir_A
+cp ${data_dir}/tigge/tigge_rjtd_sfc_*grib $temp_dir_B
+
+${tools_dir}/grib_index_build -o $tempIndex1 $temp_dir_A
+${tools_dir}/grib_dump $tempIndex1
+
+rm -rf $temp_dir_A
+
+
 # ECC-1516
 # ---------
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
