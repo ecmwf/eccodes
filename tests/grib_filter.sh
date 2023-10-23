@@ -383,8 +383,19 @@ cat >$tempFilt <<EOF
  print "[scaleFactorOfSecondFixedSurface:s]";
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
-cat $tempOut
 grep "MISSING" $tempOut
+
+# Test string_compare
+cat >$tempFilt <<EOF
+ if (rubbish is "ppp") { print "yes"; } else { print "rubbish must fail"; }
+ if ("ppp" is garbage) { print "yes"; } else { print "garbage must fail"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
+cat $tempOut
+grep "rubbish must fail" $tempOut
+grep "garbage must fail" $tempOut
+grep "unable to get rubbish as string" $tempOut
+grep "unable to get garbage as string" $tempOut
 
 
 # Clean up
