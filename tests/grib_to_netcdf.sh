@@ -36,6 +36,7 @@ if command -v "ncdump" >/dev/null 2>&1; then
     NC_DUMPER="ncdump"
 fi
 
+
 echo "Test ECC-1041: One parameter with different expvers ..."
 # ------------------------------------------------------------
 # This has 5 messages, all 'tp'. Change the first message to have a different expver
@@ -48,22 +49,21 @@ if test "x$NC_DUMPER" != "x"; then
     grep -q "short tp_0001" $tempText
 fi
 
-if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
-    echo "Test HDF5 decoding ..."
-    # ---------------------------
-    # Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
-    input=${data_dir}/sample.grib2
-    set +e
-    ${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
-    stat=$?
-    set -e
-    if [ $stat -eq 0 ]; then
-        have_netcdf4=1
-        ${tools_dir}/grib_dump -TA -O $tempNetcdf
-        res=`${tools_dir}/grib_get -TA -p identifier $tempNetcdf`
-        [ "$res" = "HDF5" ]
-    fi
+echo "Test HDF5 decoding ..."
+# ---------------------------
+# Note: this is only available in NetCDF-4. So need to check if the command worked with -k3
+input=${data_dir}/sample.grib2
+set +e
+${tools_dir}/grib_to_netcdf -k3 -o $tempNetcdf $input 2>/dev/null
+stat=$?
+set -e
+if [ $stat -eq 0 ]; then
+    have_netcdf4=1
+    ${tools_dir}/grib_dump -TA -O $tempNetcdf
+    res=`${tools_dir}/grib_get -TA -p identifier $tempNetcdf`
+    [ "$res" = "HDF5" ]
 fi
+
 
 grib_files="\
  regular_latlon_surface.grib2 \

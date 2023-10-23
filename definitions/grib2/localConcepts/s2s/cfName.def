@@ -6,6 +6,22 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Time-integrated eastward turbulent surface stress
+'surface_downward_eastward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated northward turbulent surface stress
+'surface_downward_northward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;

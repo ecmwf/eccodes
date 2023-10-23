@@ -258,14 +258,22 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         return ret;
 
     secondaryBitmap = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfSecondOrderPackedValues);
+    if (!secondaryBitmap)
+        return GRIB_OUT_OF_MEMORY;
+
     grib_decode_long_array(buf, &pos, 1, numberOfSecondOrderPackedValues, secondaryBitmap);
     pos = 8 * ((pos + 7) / 8);
 
     firstOrderValues = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfGroups);
+    if (!firstOrderValues)
+        return GRIB_OUT_OF_MEMORY;
+
     grib_decode_long_array(buf, &pos, widthOfFirstOrderValues, numberOfGroups, firstOrderValues);
     pos = 8 * ((pos + 7) / 8);
 
     X = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfSecondOrderPackedValues);
+    if (!X)
+        return GRIB_OUT_OF_MEMORY;
 
     if (groupWidth > 0) {
         grib_decode_long_array(buf, &pos, groupWidth, numberOfSecondOrderPackedValues, X);
@@ -273,7 +281,11 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         i = -1;
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
-            X[n] = firstOrderValues[i] + X[n];
+            long fovi = 0;
+            // ECC-1703
+            if ( i >=0 && i < numberOfGroups )
+                fovi = firstOrderValues[i];
+            X[n] = fovi + X[n];
             n++;
         }
     }
@@ -282,7 +294,10 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         i = -1;
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
-            X[n] = firstOrderValues[i];
+            long fovi = 0;
+            if ( i >=0 && i < numberOfGroups )
+                fovi = firstOrderValues[i];
+            X[n] = fovi;
             n++;
         }
     }

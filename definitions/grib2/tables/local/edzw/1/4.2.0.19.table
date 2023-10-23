@@ -30,10 +30,15 @@
 226 226 Eddy Dissipation Rate Total Col-Max. Upper UIR (<FL450)(m2/3 s-1)
 227 227 Eddy dissipitation rate of TKE(m2 s-3)
 228 228 Eddy Dissipation Rate Total Col-Max. Lower FIR (< FL165)(m2/3 s-1)
-229 229  probability density function of EDP for turbulence  greater well defined threshold and model grid box(%)
+229 229 probability density function of EDP for turbulence  greater well defined threshold and model grid box(%)
 230 230 Ellrod and Knapp turbulence index1(s-2)
 231 231 Ellrod and Knapp turbulence index2(s-2)
 232 232 Divergence trend (scaled divergence tendency needed for CAT_DVI)(s-2)
 233 233 Divergence modified turbulence index (Ellrod and Knox)(s-2)
 234 234 Sea ice albedo - diffusive solar (0.3 - 5.0 m-6) (%)
 235 235 Random pattern for the stochastically perturbed parametrization tendencies (SPPT) scheme at levels without tapering. If multi-scale random patterns are used, RAPA_SPPT is the sum of those. (Numeric)
+236 236 Turbulence intensity (Numeric)
+240 240 Potential flight distance PFD (gliding) (m)
+241 241 Lifting ratio VST (gliding) (m s-1)
+242 242 Probability for freezing precipitation/wet snow, TOT_PREC > 15mm, -3 < T_2M < 1 ?C
+243 243 Probability for freezing precipitation with wind, TOT_PREC > 3mm, -3 < T_2M < 1 ?C, VMAX_10M > 10 m/s

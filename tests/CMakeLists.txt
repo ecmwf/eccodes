@@ -95,6 +95,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         grib_uerra
+        grib_ecpoint
         grib_s2s
         grib_fire
         # grib_true_imagery
@@ -236,6 +237,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
+        codes_ecc-1698
         gts_get
         gts_ls
         gts_count
@@ -423,7 +425,7 @@ if( HAVE_BUILD_TOOLS )
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
                       TYPE SCRIPT
-                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS
+                      CONDITION HAVE_NETCDF AND ENABLE_EXTRA_TESTS AND NOT ECCODES_ON_WINDOWS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_to_netcdf.sh
                       TEST_DEPENDS eccodes_download_gribs )
 

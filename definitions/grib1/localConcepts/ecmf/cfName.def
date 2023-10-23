@@ -589,32 +589,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'surface_downward_eastward_stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'surface_downward_eastward_stress' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'surface_downward_eastward_stress' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'surface_downward_northward_stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'surface_downward_northward_stress' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'surface_downward_northward_stress' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
@@ -959,7 +959,7 @@
 	 table2Version = 174 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'mass_fraction_of_carbon_dioxide_in_air' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 61 ;
