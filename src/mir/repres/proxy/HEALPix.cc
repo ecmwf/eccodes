@@ -54,11 +54,10 @@ HEALPix::~HEALPix() = default;
 
 
 const ::atlas::Grid& HEALPix::atlasGridRef() const {
-    ::atlas::util::Config config;
-    config.set("name", name());
-    config.set("Nside", Nside_);
-    config.set("orderingConvention", orderingConvention_);
-    return grid_ ? grid_ : (grid_ = ::atlas::grid::detail::grid::Grid::create(config));
+    if (!grid_) {
+        grid_ = atlas::HealpixGrid(Nside_, orderingConvention_);
+    }
+    return grid_;
 }
 
 
