@@ -5,7 +5,6 @@
 #endif
 
 /* action.cc */
-void grib_xref(grib_action* a, FILE* f, const char* path);
 void grib_action_delete(grib_context* context, grib_action* a);
 int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
 int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
@@ -13,7 +12,6 @@ grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit);
 int grib_action_execute(grib_action* a, grib_handle* h);
 void grib_dump_action_branch(FILE* out, grib_action* a, int decay);
 void grib_dump_action_tree(grib_context* ctx, FILE* out);
-void grib_xref_action_branch(FILE* out, grib_action* a, const char* path);
 
 /* action_class_alias.cc */
 grib_action* grib_action_create_alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags);
@@ -792,7 +790,6 @@ void grib_buffer_free(const grib_context* c, void* p);
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s);
 
 /* grib_buffer.cc*/
-void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b);
 grib_buffer* grib_create_growable_buffer(const grib_context* c);
 grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, size_t buflen);
 void grib_buffer_delete(const grib_context* c, grib_buffer* b);

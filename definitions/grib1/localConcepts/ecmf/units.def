@@ -1459,32 +1459,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
