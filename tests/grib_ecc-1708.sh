@@ -10,43 +10,37 @@
 
 . ./include.ctest.sh
 
-label="grib_ecc-1671_test"
+label="grib_ecc-1708_test"
 
 tempGrib=temp.$label.grib
 tempFilt=temp.${label}.filt
 tempOut=temp.${label}.txt
 
-sample="$samp_dir/GRIB2.tmpl"
+sample="$samp_dir/GRIB1.tmpl"
 
 cat > $tempFilt <<EOF
-  set numberOfDataPoints = 5400000;
-  set numberOfValues = 5400000;
-  set Ni = 3600;
-  set Nj = 1500;
-  set latitudeOfFirstGridPoint = 89950000;
-  set longitudeOfFirstGridPoint = 180050000;
-  set latitudeOfLastGridPoint = -59950000;
-  set longitudeOfLastGridPoint = 539950000;
-  set iDirectionIncrement = 100000;
-  set jDirectionIncrement = 100000;
+  set Ni = 1401;
+  set Nj = 701;
+  set latitudeOfFirstGridPoint  = 80000;
+  set longitudeOfFirstGridPoint = -180000;
+  set latitudeOfLastGridPoint   = 10000;
+  set longitudeOfLastGridPoint  = -40000;
+  set iDirectionIncrement = 100;
+  set jDirectionIncrement = 100;
   write;
 EOF
 
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample
-# ${tools_dir}/grib_ls -j -n geography $tempGrib
+${tools_dir}/grib_ls -j -n geography $tempGrib
 
 cat > $tempFilt <<EOF
-  meta last_elem element(distinctLongitudes, 3599);
+  meta last_elem element(distinctLongitudes, 1400);
   # print "[last_elem:d]";
-  if ( last_elem - 179.95 > 0.001 ) {
-    print "Error: last longitude is [last_elem:d] but should be 179.95";
+  if ( last_elem + 40 > 0.001 ) {
+    print "Error: last longitude is [last_elem:d] but should be -40";
     assert(0);
   }
 EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib
-
-# ${tools_dir}/grib_get_data $tempGrib > $tempOut
-# cat $tempOut
-# ${tools_dir}/grib_ls -l 37.5,16.0,1 $tempGrib > $tempOut
 
 rm -f $tempGrib $tempFilt $tempOut
