@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -21,6 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long;pack_long;
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = init
    MEMBERS=const char*    array
    MEMBERS=long    element
@@ -39,6 +35,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int pack_long(grib_accessor*, const long* val, size_t* len);
+static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
 
@@ -77,7 +74,7 @@ static grib_accessor_class _grib_accessor_class_element = {
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
     0,                 /* pack_float */
-    0,              /* unpack_double */
+    &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
     0,                /* pack_string */
     0,              /* unpack_string */
@@ -110,10 +107,11 @@ grib_accessor_class* grib_accessor_class_element = &_grib_accessor_class_element
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_element* self = (grib_accessor_element*)a;
-    int n                       = 0;
+    grib_handle* hand           = grib_handle_of_accessor(a);
 
-    self->array   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->element = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
+    int n = 0;
+    self->array   = grib_arguments_get_name(hand, c, n++);
+    self->element = grib_arguments_get_long(hand, c, n++);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
@@ -123,26 +121,27 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     size_t size                 = 0;
     long* ar                    = NULL;
     grib_context* c             = a->context;
+    grib_handle* hand           = grib_handle_of_accessor(a);
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         return ret;
     }
 
-    if ((ret = grib_get_size(grib_handle_of_accessor(a), self->array, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array, ar, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
     if (self->element < 0 || self->element >= size) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %lu",
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %zu",
                 self->element, self->array, size - 1);
         ret = GRIB_INVALID_ARGUMENT;
         goto the_end;
@@ -162,29 +161,70 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     size_t size                 = 0;
     long* ar                    = NULL;
     grib_context* c             = a->context;
+    grib_handle* hand           = grib_handle_of_accessor(a);
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
         return ret;
     }
 
-    if ((ret = grib_get_size(grib_handle_of_accessor(a), self->array, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar = (long*)grib_context_malloc_clear(c, size * sizeof(long));
     if (!ar) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size * sizeof(long));
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(long));
         return GRIB_OUT_OF_MEMORY;
     }
 
-    if ((ret = grib_get_long_array_internal(grib_handle_of_accessor(a), self->array, ar, &size)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
     ar[self->element] = *val;
 
-    if ((ret = grib_set_long_array_internal(grib_handle_of_accessor(a), self->array, ar, size)) != GRIB_SUCCESS)
+    if ((ret = grib_set_long_array_internal(hand, self->array, ar, size)) != GRIB_SUCCESS)
         return ret;
 
+    grib_context_free(c, ar);
+    return ret;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    grib_accessor_element* self = (grib_accessor_element*)a;
+    int ret                     = 0;
+    size_t size                 = 0;
+    double* ar                  = NULL;
+    grib_context* c             = a->context;
+    grib_handle* hand           = grib_handle_of_accessor(a);
+
+    if (*len < 1) {
+        ret = GRIB_ARRAY_TOO_SMALL;
+        return ret;
+    }
+
+    if ((ret = grib_get_size(hand, self->array, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    ar = (double*)grib_context_malloc_clear(c, size * sizeof(double));
+    if (!ar) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Error allocating %zu bytes", size * sizeof(double));
+        return GRIB_OUT_OF_MEMORY;
+    }
+
+    if ((ret = grib_get_double_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
+        return ret;
+
+    if (self->element < 0 || self->element >= size) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %zu",
+                self->element, self->array, size - 1);
+        ret = GRIB_INVALID_ARGUMENT;
+        goto the_end;
+    }
+
+    *val = ar[self->element];
+
+the_end:
     grib_context_free(c, ar);
     return ret;
 }

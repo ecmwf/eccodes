@@ -199,7 +199,7 @@ static int init_mercator(grib_handle* h,
     false_easting  = x0;
     false_northing = y0;
     for (j = 0; j < ny; j++) {
-        y = j * DiInMetres;
+        y = j * DjInMetres;
         for (i = 0; i < nx; i++) {
             const int index = i + j * nx;
             double _x, _y;
