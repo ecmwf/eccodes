@@ -3,14 +3,6 @@ import arg_conv
 import func
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
-common_includes = [
-    "AccessorFactory.h", 
-    "AccessorUtils/ConversionHelper.h",
-    "AccessorUtils/GribUtils.h",
-    "AccessorUtils/GribAccessorFlag.h",
-    "AccessorUtils/AccessorException.h"
-    ]
-
 # Represents the converted C++ code for an Accessor
 class AccessorData:
     def __init__(self, name, super, factory_name):

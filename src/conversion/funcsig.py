@@ -28,7 +28,7 @@ class FuncSig:
             for entry in [a.strip() for a in m.group(4).split(",")]:
                 if not entry:
                     continue
-                args.append(arg.Arg.from_string(entry))
+                args.append(arg.Arg.from_func_arg_string(entry))
             
             sig = cls(return_type, name, args)
             if sig and m.group(1):
@@ -65,4 +65,4 @@ class FuncSig:
         self._template = value
 
     def as_string(self):
-        return f"{'static ' if self.static else ''}{self.return_type} {self.name}({', '.join([a.type + ' ' + a.name for a in self.args if a])})"
+        return f"{'static ' if self.static else ''}{self.return_type} {self.name}({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"

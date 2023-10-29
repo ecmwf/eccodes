@@ -1,6 +1,7 @@
 
 from func_conv import *
 import method
+import inherited_method_funcsig_conv
 
 # Define base class member mapping
 base_members_map = {
@@ -20,72 +21,77 @@ class MethodConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return method.Method(cppfuncsig)
 
-    # Extra processing required for grib_handle members that are referenced
-    def update_grib_handle_members(self, line):
+    # Overridden to process self->, super-> etc
+    def transform_cstruct_arg(self, cstruct_arg):
 
-        for k in self._transforms.all_args.keys():
-            if k.type == "grib_handle*":
-                m = re.search(rf"\b{k.name}->buffer", line)
-                if m:
-                    line = re.sub(rf"{m.group(0)}->data", "buffer_.data()", line)
-                    debug.line("update_grib_handle_members", f"Updated buffer ref [after ]: {line}")     
+        if cstruct_arg:
+            cppstruct_arg = None
+            cstruct_member = cstruct_arg.member
 
-        return line
+            # Process member access
+            if cstruct_arg.name in ["super", "self", "a"]:
+                cppstruct_member = None
 
-    def update_class_members(self, line):
-        line,count = re.subn(r"\bsuper->\b", f"{self._transforms.class_types['super'].cppvalue}::", line)
-        if count:
-            debug.line("update_class_members", f"begin [after ]: {line}")
+                # Find member arg
+                for member_dict in [base_members_map, self._transforms.members]:
+                    for carg, cpparg in member_dict.items():
+                        if carg.name == cstruct_member.name:
+                            cppstruct_member = self.apply_cstruct_arg_transforms_for_ctype(carg.type, cstruct_member, cpparg.name)
+                            if not cppstruct_member:
+                                cppstruct_member = struct_arg.StructArg("", cpparg.name, cstruct_member.index)
+                                if cstruct_member.member:
+                                    # TODO: Additonal members here means that we've not processed something correctly - need to fix!
+                                    cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
+                                    cppstruct_member.member = cppstruct_member_member
+                                    debug.line("transform_cstruct_arg", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
+                                break
+                
+                # Extra processing for a-> structs where we've failed to match a member
+                if not cppstruct_member and cstruct_arg.name == "a":
+                    if cstruct_arg.member.name == "name":
+                        # Special handling: Replace name member with a string literal (it's only used in logging)
+                        cppstruct_member = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
+                    else:
+                        # Set name to None to mark it for deletion
+                        debug.line("transform_cstruct_arg", f"Marking for deletion: {cstruct_arg.as_string()}")
+                        cppstruct_member = struct_arg.StructArg("", None, "")
 
-        accessor_variable_name = arg_conv.transform_variable_name(self._transforms.class_types["self"].cppvalue)
+                # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
+                if cstruct_arg.name == "super":
+                    if not cppstruct_member and cstruct_arg.name == "super":
+                        # special case super->super
+                        cppstruct_arg = struct_arg.StructArg("", self._transforms.types['supersuper'], "")
+                    else:
+                        cppstruct_arg = struct_arg.StructArg("", self._transforms.types['super'], "")
+                        cppstruct_arg.member = struct_arg.StructArg("::", cppstruct_member.name, cppstruct_member.index, cppstruct_member.member)
+                else:
+                    cppstruct_arg = cppstruct_member
 
-        # Replace name member with a string literal (it's only used in logging)
-        line,count = re.subn(r"\ba->name", f"\"{self._transforms.class_types['super'].cppvalue}\"", line)
-        if count:
-            debug.line("update_class_members", f"Changed a->name to string literal [after ]: {line}")
+                assert cppstruct_arg, f"Could not transform cstruct_arg: [{cstruct_arg.as_string()}]"
 
-        for n in [r"\bself\b", r"\ba\b"]:
-            line,count = re.subn(n, f"{accessor_variable_name}", line)
-            if count:
-                debug.line("update_class_members", f"this [after ]: {line}")
+            # Extra processing required for grib_handle members that are referenced
+            elif cstruct_arg.name == "grib_handle_of_accessor(a)":
+                if cstruct_member.name == "buffer":
+                    cppstruct_arg = struct_arg.StructArg("", transform_function_name(cstruct_member.name), "" )
+                    if cstruct_member.member and cstruct_member.member.name == "data":
+                        cppstruct_arg.member = struct_arg.StructArg(".", "data()", "")
 
-        if re.match(rf".*\b{accessor_variable_name}\s+=", line):
-            debug.line("update_class_members", f"deleting: {line}")
-            line = ""
+            if cppstruct_arg:
+                return cppstruct_arg
 
-        if re.match(rf".*\bsuper\s+=\s+\*\({accessor_variable_name}->cclass->super\)", line):
-            debug.line("update_class_members", f"deleting: {line}")
-            line = ""
+        # Not accessing a member, delegate to super()
+        return super().transform_cstruct_arg(cstruct_arg)
 
-        for k,v in base_members_map.items():
-            line,count = re.subn(rf"\b{accessor_variable_name}->{k.name}\b", rf"{v.name}", line)
-            if(count):
-                debug.line("update_class_members", f"base_members_map [after ]: {line}")
-
-        # Process all members in the hierarchy
-        m = re.search(rf"\b{accessor_variable_name}->(\w+)\b", line)
-        if m:
-            for k,v in self._transforms.members.items():
-                assert v is not None, f"v is None for k={arg.arg_string(k)}"
-                if m.group(1) == k.name:
-                    line = re.sub(m.re, rf"{v.name}", line)
-                    debug.line("update_class_members", f"members_in_hierarchy [after ]: {line}")
-
+    # Overridden to update private member calls
+    def custom_cfunction_updates(self, line):
         m = re.search(rf"\b(\w+)\s*\(\s*([^,]+),", line)
         if m:
             for mapping in self._transforms.private_funcsig_mappings:
                 if m.group(1) == mapping.cfuncsig.name:
-                    line = re.sub(m.re, f"{accessor_variable_name}.{mapping.cfuncsig.name}(", line)
-                    debug.line("update_class_members", f"private_methods [after ]: {line}")
+                    line = re.sub(m.re, f"{mapping.cppfuncsig.name}(", line)
+                    debug.line("custom_cfunction_updates", f"private_methods [after]: {line}")
 
-        return line
-
-
-    # Override this to provide any initial conversions before the main update_line runs
-    def process_variables_initial_pass(self, line):
-        line = self.update_class_members(line)
-        line = self.update_grib_handle_members(line)
-        return super().process_variables_initial_pass(line)
+        return super().custom_cfunction_updates(line)
 
     # Convert grib_(un)pack_TYPE calls to the equivalent member function
     # Note: We don't convert the vars here, but we do remove those not needed in the C++ function
@@ -107,23 +113,36 @@ class MethodConverter(FunctionConverter):
         return line
     
     # Overridden to apply member function substitutions
-    def apply_function_transforms(self, line):
+    #
+    # Note: Group 2 matches self-> and super->
+    def update_cfunction_names(self, line):
      
         line = self.convert_grib_un_pack_functions(line)
 
-        m = re.search(rf"(?<!\")(&)?\b(\w+)\b(?!\")", line)
+        # Note: (?=\() ensures group(3) is followed by a "(" without capturing it - ensuring it's a function name!
+        m = re.search(rf"(&)?\b(\w+->)?(\w+)(?=\()", line)
         if m:
-            for mapping in self._transforms.inherited_funcsig_mappings:
-                if m.group(2) == mapping.cfuncsig.name:
-                    prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
-                    debug.line("apply_function_transforms", f"Updating inherited method {m.group(0)} [after ]: {line}")
+            prefix = m.group(1) if m.group(1) is not None else ""
+            struct_name = m.group(2)
+            cfunction_name = m.group(3)
 
-            for mapping in self._transforms.private_funcsig_mappings:
-                if m.group(2) == mapping.cfuncsig.name:
-                    prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
-                    debug.line("apply_function_transforms", f"Updating private method {m.group(0)} [after ]: {line}")
+            if struct_name in ["self->", "super->"]:
+                # Must be calling an inherited function
+                mapping = inherited_method_funcsig_conv.cpp_inherited_method_mapping_for(cfunction_name)
+                assert mapping, f"Expected virtual function call, but could not find mapping for function [{cfunction_name}]"
+                if struct_name == "super->":
+                    struct_name = self._transforms.types['super'] + "::"
+                else:
+                    struct_name = ""
+                line = re.sub(m.re, rf"{prefix}{struct_name}{mapping.cppfuncsig.name}", line)
+                debug.line("update_cfunction_names", f"Updating inherited class method {m.group(0)} [after ]: {line}")
+                return line
+            else:
+                for mapping in self._transforms.private_funcsig_mappings:
+                    if cfunction_name == mapping.cfuncsig.name:
+                        line = re.sub(m.re, rf"{prefix}{struct_name}{mapping.cppfuncsig.name}", line)
+                        debug.line("update_cfunction_names", f"Updating private class method {m.group(0)} [after ]: {line}")
+                        return line
 
-        return super().apply_function_transforms(line)
+        return super().update_cfunction_names(line)
 

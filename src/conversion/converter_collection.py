@@ -51,7 +51,7 @@ default_converters = {
 }
 
 def converters_for(accessor_name):
-    converters = copy.copy(default_converters)
+    converters = copy.deepcopy(default_converters)
 
     try:
         m = importlib.import_module(f"converters.{accessor_name}")

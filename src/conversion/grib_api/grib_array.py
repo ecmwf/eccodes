@@ -1,6 +1,7 @@
 import re
 import debug
 from grib_api.grib_type_transforms import grib_array_type_transforms
+import struct_arg
 
 grib_xarray_substitutions = {
     r"\bgrib_v?[dis]array_push\(\s*(.*)?,\s*(.*)?\s*\)": r"\1.push_back(\2)",
@@ -27,3 +28,17 @@ def process_grib_array_variables(line, carg, cpparg):
     line = line.replace(f"{cpparg.name}->v", f"{cpparg.name}")
 
     return line
+
+# By default, just replace s->v[4]->v[5] with s[4][5]
+def process_grib_array_cstruct_arg(cstruct_arg, cppname):
+    debug.line("process_grib_array_cstruct_arg", f"cstruct_arg={cstruct_arg.as_string()} cppname={cppname}")
+    cppstruct_arg = struct_arg.StructArg("", cppname, cstruct_arg.index)
+
+    cmember = cstruct_arg.member
+    cppmember = cppstruct_arg
+    while cmember:
+        cppmember.member = struct_arg.StructArg("", "", cmember.index)
+        cmember = cmember.member
+        cppmember = cppmember.member
+
+    return cppstruct_arg

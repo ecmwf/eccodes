@@ -6,6 +6,8 @@ import arg_conv
 import c_subs
 import re
 import grib_api_converter
+import struct_arg
+import variable
 
 # Change C-style snake_case function name to C++-style camelCase name
 # Also, remove get_ and set_ prefixes
@@ -37,6 +39,8 @@ class FunctionConverter:
 
         # Store the C to C++ function arg transforms
         for index, carg in enumerate(self._cfunction.func_sig.args):
+            assert carg, f"carg none for function name=[{cfunction.name}]"
+
             cpparg = cppfuncsig.args[index]
             self._transforms.add_local_args(carg, cpparg)
 
@@ -53,6 +57,11 @@ class FunctionConverter:
     def skip_line(self, line):
         if not line:
             debug.line("skip_line", f"[Empty]: {line}")
+            return True
+
+        # Ignore macros (for now)
+        if line.startswith("#define") or line.endswith("\\"):
+            debug.line("skip_line", f"[Macro]: {line}")
             return True
 
         if re.match(r"^\s*//", line):
@@ -85,62 +94,83 @@ class FunctionConverter:
 
         return False
 
-    # Override this to provide any initial conversions before the main update_cpp_line runs
-    def process_variables_initial_pass(self, line):
+    # ======================================== UPDATE FUNCTIONS ========================================
+
+    def update_grib_api_cfunctions(self, line):
+        line = self.convert_grib_utils(line)
+        line = grib_api_converter.convert_grib_api_functions(line)
+
         return line
 
-    # Special-handling for lengths that apply to buffers. The {ptr,length} C args are replaced by
-    # a single C++ container arg, however we still need to deal with size-related code in the body
-    # Note: The {ptr, length} and container arg indices are defined in the transforms object
-    def process_len_args(self, line):
-        mapping = self._transforms.funcsig_mapping_for(self._cfunction.name)
-        if not mapping or not mapping.arg_indexes:
+    def update_cfunction_names(self, line):
+        line = c_subs.apply_all_substitutions(line)
+
+        # Static function substitutions
+        # Note: (?=\() ensures group(3) is followed by a "(" without capturing it - ensuring it's a function name!
+        m = re.search(rf"(&)?\b(\w+)(?=\()", line)
+        if m:
+            for mapping in self._transforms.static_funcsig_mappings:
+                if m.group(2) == mapping.cfuncsig.name:
+                    prefix = m.group(1) if m.group(1) is not None else ""
+                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
+                    debug.line("update_cfunction_names", f"Updating static function {m.group(0)} [after ]: {line}")
+
+        return line
+
+    # Override this to provide any function updates specific to a class
+    def custom_cfunction_updates(self, line):
+        return line
+
+    # Special transforms for well-known return types
+    def transform_return_carg(self, carg):
+        if carg.name in ["err", "ret"]:
+            return arg.Arg("GribStatus", arg_conv.transform_variable_name(carg.name))
+        else:
+            return None
+
+    # Returns the C++ equivalent, or None if var should be deleted
+    def transform_carg(self, carg):
+        cpparg = self.transform_return_carg(carg)
+
+        if not cpparg:
+            arg_converter = arg_conv.ArgConverter(carg)
+            cpparg = arg_converter.to_cpp_arg(self._transforms)
+
+        return cpparg
+
+    # Find C variable declarations e.g. size_t len; char* buf = "Data"; and then:
+    # 1. Transform to C++ and store in the arg_map
+    # 2. Delete the line if no longer valid
+    # Note: Assignments are not processed at this stage...
+    def update_cvariable_declarations(self, line):
+
+        m = re.match(rf"^(?:static)?\s*([^=;]*)[=;]", line)
+
+        if not m:
             return line
         
-        buffer_arg_index = mapping.arg_indexes.cbuffer
-        buffer_len_arg_index = mapping.arg_indexes.clength
-        container_index = mapping.arg_indexes.cpp_container
-
-        if not buffer_arg_index and not buffer_len_arg_index and not container_index:
+        carg = arg.Arg.from_string(m.group(1))
+        if not carg:
             return line
 
-        len_carg = mapping.cfuncsig.args[buffer_len_arg_index]
-        assert len_carg, f"Len arg should not be none for c function: {mapping.cfuncsig.name}"
-        
-        container_arg = mapping.cppfuncsig.args[container_index]
-        assert container_arg, f"Container arg should not be none for C++ function: {mapping.cppfuncsig.name}"
+        cpparg = self.transform_carg(carg)
 
-        # Note: Some code uses len[0] instead of *len, so we check for both...
+        # Store even if C++ is same as C so we can further process it later...        
+        self._transforms.add_local_args(carg, cpparg)
+        debug.line("update_cvariable_declarations", f"Added local arg: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
 
-        # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
-        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*=\s*(\w+).*?;", line)
-        if m:
-            if container_arg.is_const():
-                line = re.sub(rf"^(\s*)", rf"// [length assignment removed - var is const] \1", line)
-                debug.line("process_len_args", f"Removed len assignment for const variable [after]: {line}")
-            elif m.group(2) == "0":
-                line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.clear();", line)
-                debug.line("process_len_args", f"Replaced *len = 0 with .clear() [after]: {line}")
-            else:
-                line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.resize({m.group(2)});", line)
-                debug.line("process_len_args", f"Replaced *len = N with .resize(N) [after]: {line}")
+        if not cpparg:
+            debug.line("update_cvariable_declarations", f"--> deleted line: {line}")
+            return ""
 
-        # Replace *len <=> N with CONTAINER.size() <=> N
-        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?\s*([<>!=]=?)\s*(\w+)", line)
-        if m:
-            line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.size() {m.group(2)} {m.group(3)}", line)
-            debug.line("process_len_args", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
-
-        # Replace any other *len with CONTAINER.size() <=> N
-        m = re.search(rf"\*?\b{len_carg.name}\b(\[0\])?", line)
-        if m:
-            line = re.sub(rf"{re.escape(m.group(0))}", rf"{container_arg.name}.size()", line)
-            debug.line("process_len_args", f"Replaced *len <=> N with .size() <=> N [after]: {line}")
+        if carg != cpparg:
+            line = re.sub(rf"{re.escape(m.group(1))}", f"{cpparg.as_declaration()}", line)
+            debug.line("update_cvariable_declarations", f"--> updated line: {line}")
 
         return line
 
     # Find type declarations and store in the transforms
-    def process_type_declarations(self, line):
+    def update_cstruct_type_declarations(self, line):
 
         # struct declaration [1]: [typedef] struct S [S]
         m = re.match(r"^(typedef)?\s*struct\s+(\w+)\s*(\w*)?(;)?$", line)
@@ -154,94 +184,375 @@ class FunctionConverter:
                 self._transforms.add_to_types(ctype, cpptype)
 
                 line = re.sub(m.re, f"struct {cpptype}", line)
-                debug.line("process_type_declarations", f"Added struct type transform: {ctype} -> {cpptype} [after ]: {line}")
+                debug.line("update_cstruct_type_declarations", f"Added struct type transform: {ctype} -> {cpptype} [after ]: {line}")
 
                 carg = arg.Arg("struct", ctype)
                 cpparg = arg.Arg("struct", cpptype)
                 self._transforms.add_local_args(carg, cpparg)
-                debug.line("process_type_declarations", f"Adding struct to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
+                debug.line("update_cstruct_type_declarations", f"Adding struct to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
         
         # struct declaration [2]: } S
         m = re.match(r"^}\s*(\w+)", line)
         if m and m.group(1) not in ["else"]:
             # We'll assume this definition is covered by [1]
             line = re.sub(m.re, "}", line)
-            debug.line("process_type_declarations", f"Removed extraneous struct definition: {m.group(1)} [after ]: {line}")
+            debug.line("update_cstruct_type_declarations", f"Removed extraneous struct definition: {m.group(1)} [after ]: {line}")
 
         return line
 
-    # Update any well know return values
-    def process_return_variables(self, line):
-        ret = "GribStatus"
-        if self._cppfunction.return_type == ret:
-            for ret_var in ["err", "ret"]:
-                # [1] Assigning to function result - we assume the function returns the correct type!
-                m = re.search(rf"\bint\s+{ret_var}\s*=\s*(.*)\(", line)
-                if m:
-                    line = re.sub(m.re, rf"{ret} {ret_var} = {m.group(1)}(", line)
-                    debug.line("process_return_variables", f"return value assigned via function [after ]: {line}")
+    # Special handling for function pointers: [typedef] RET (*PFUNC)(ARG1, ARG2, ..., ARGN);
+    def update_cfunction_pointers(self, line):
 
-                m = re.search(rf"\bint\b(\s+{ret_var}\s+=\s*)(\d+)[,;]", line)
-                if m:
-                    line = re.sub(m.re, rf"{ret}\1{ret}{{\2}};", line)
-                    debug.line("process_return_variables", f"return value assigned to value [after ]: {line}")
-
-                m = re.search(rf"(\(\s*{ret_var}\s*)\)", line)
-                if m:
-                    line = re.sub(m.re, rf"\1 != {ret}::SUCCESS)", line)
-                    debug.line("process_return_variables", f"return value comparison updated [after ]: {line}")
-
-        return line
-                
-    # Find variable declarations (including with assignments), e.g. size_t len; char* buf = "Data"; and then
-    # pass on to functions to:
-    # 1. Update the type if required / delete the line if no longer valid
-    # 2. Store in the arg_map for future reference
-    # 3. Ensure any assignments are valid...
-    def process_variable_declarations(self, line):
-
-        m = re.match(rf"^(?:static)?\s*([^=;]*)([=;])(.*)", line)
-
+        m = re.match(r"^(?:typedef)\s*(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
         if m:
-            carg = arg.Arg.from_string(m.group(1))
-
-        if m and carg:
+            carg = arg.Arg(m.group(1), m.group(2))
             arg_converter = arg_conv.ArgConverter(carg)
             cpparg = arg_converter.to_cpp_arg(self._transforms)
 
-            if not cpparg:
-                debug.line("process_variable_declarations", f"Found var declaration to delete: {carg.type} {carg.name}")
-                self._transforms.add_local_args(carg, None)
-                debug.line("process_variable_declarations", f"--> deleting: {line}")
-                return ""
-            else:
-                debug.line("process_variable_declarations", f"Found var declaration to store: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name}")
-                self._transforms.add_local_args(carg, cpparg)
-                if carg.type != cpparg.type or carg.name != cpparg.name:
-                    line = re.sub(rf"{re.escape(m.group(1))}", f"{cpparg.as_declaration()}", line)
-                    debug.line("process_variable_declarations", f"Transformed line: {line}")
+            # Assume functions returning int will now return GribStatus
+            if cpparg.type == "int":
+                cpparg.type = "GribStatus"
+
+            debug.line("update_cfunction_pointers", f"Adding var to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
+            self._transforms.add_local_args(carg, cpparg)
+
+            # Parse the function arg types
+            cpp_arg_types = []
+            for arg_type in [a.strip() for a in m.group(3).split(",")]:
+                arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
+                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms)
+                if cpp_sig_arg:
+                    cpp_arg_types.append(cpp_sig_arg.type)
+            
+            # Apply the transform
+            line = re.sub(rf"(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", f"{cpparg.type}(*{cpparg.name})({','.join([a for a in cpp_arg_types])})", line)
+            debug.line("update_cfunction_pointers", f"Transformed line: {line}")
 
         return line
+    
+    # Return None to delete the line
+    def transform_cstruct_arg_name(self, cstruct_arg):
+        assert cstruct_arg and cstruct_arg.name, f"Unexpected empty (None) cstruct_arg"
 
-    # Remove any variables that have been marked for deletion
-    def process_deleted_variables(self, line):
-        # Find any deleted variables that are being assigned to, and delete the line
-        m = re.match(r"^\s*\**(\w+)\s*=", line)
-        if m:
-            debug.line("process_deleted_variables", f"Found var assignment: var={m.group(1)}: {line}")
-            for carg, cpparg in self._transforms.all_args.items():
-                if carg.name == m.group(1) and not cpparg:
-                    debug.line("process_deleted_variables", f"Var assignment marked for delete, var={m.group(1)} - deleting: {line}")
-                    line = f"// [{m.group(1)} removed] " + line
-                    return line
-        
-        # Remove any deleted vars that remain (i.e. as an argument to a function call)
         for carg, cpparg in self._transforms.all_args.items():
-            if not cpparg and re.match(rf"^.*\b{carg.name}\b\s*,*", line):
-                line = re.sub(rf"[&\*]?\b{carg.name}(->)?\b\s*,*", "", line)
-                debug.line("process_deleted_variables", f"Removing arg={carg.name} [after ]: {line}")
+            if carg.name == cstruct_arg.name:
+                return cpparg.name if cpparg else None
+
+        return cstruct_arg.name
+
+    # If all else fails, use this!
+    # Conversion is *foo[1]->bar[3]->baz[7] => foo[1].bar[3].baz[7]
+    def apply_default_cstruct_arg_transform(self, cstruct_arg):
+        cppstruct_arg = None
+        if cstruct_arg:
+            cppstruct_access = ""
+            cppstruct_name = self.transform_cstruct_arg_name(cstruct_arg)
+            cppstruct_index = cstruct_arg.index
+            cppstruct_arg = struct_arg.StructArg(cppstruct_access, cppstruct_name, cppstruct_index)
+
+            cmember = cstruct_arg.member
+            cppmember = cppstruct_arg
+            while cmember:
+                cppstruct_access = "."
+                cppstruct_name = self.transform_cstruct_arg_name(cmember)
+                cppstruct_index = cmember.index
+
+                cppmember.member = struct_arg.StructArg(cppstruct_access, cppstruct_name, cppstruct_index)
+                cmember = cmember.member
+                cppmember = cppmember.member
+
+        return cppstruct_arg
+
+    # If the type is well-known (e.g. grib_darray) then apply the transform
+    # using the supplied cppname and the appropriate rules.
+    # Returns the transformed cppstruct_arg, or None if ctype not recognised
+    def apply_cstruct_arg_transforms_for_ctype(self, ctype, cstruct_arg, cppname):
+        # Check if grib_array
+        cppstruct_arg = grib_api_converter.process_cstruct_arg_for_grib_api_ctype(ctype, cstruct_arg, cppname)
+
+        return cppstruct_arg
+
+    # Transform cstruct_arg to cppstruct_arg
+    # This is the main customisation point for sub-classes
+    def transform_cstruct_arg(self, cstruct_arg):
+        cppstruct_arg = None
+
+        for carg, cpparg in self._transforms.all_args.items():
+            if cstruct_arg.name == carg.name and cpparg:
+                cppstruct_arg = self.apply_cstruct_arg_transforms_for_ctype(carg.type, cstruct_arg, cpparg.name)
+
+        if not cppstruct_arg:
+            cppstruct_arg = self.apply_default_cstruct_arg_transform(cstruct_arg)
+
+        return cppstruct_arg
+
+    # Update the remainder (of the current line) to correctly set the cppstruct_arg - returns the updated remainder
+    def update_cppstruct_arg_assignment(self, cppstruct_arg, remainder):
+
+        # Default - do nothing!
+        return remainder
+
+    def update_cstruct_access(self, line, depth):
+        assert depth<10, f"Unexpected recursion depth [{depth}]"
+
+        cstruct_arg, match_start, match_end = struct_arg.cstruct_arg_from_string(line)
+        if cstruct_arg:
+            if depth == 0: debug.line("update_cstruct_access", f"IN  : {line}")
+            if(match_end < len(line)):
+                # Recurse, transforming the remainder, then apply here...
+                remainder = self.update_cstruct_access(line[match_end:], depth+1)
+
+            cppstruct_arg = self.transform_cstruct_arg(cstruct_arg)
+            assert cppstruct_arg, f"Could not transform struct {cstruct_arg.name} to C++"
+
+            if not cppstruct_arg.name:
+                # TODO: Only delete line if assignment, else just remove struct...
+                line = f"// [Deleted struct {cstruct_arg.name}] " + line
+                debug.line("update_cstruct_access", f"[{depth}] Deleting {cstruct_arg.name} Line: {line}")
+                return line
+
+            # Check if this is a "set" operation (it's match group 3 to avoid false match with ==)
+            m = re.search(r"([=!\+\-\*/]=)|([,;\)])|(=)", line[match_end:])
+            if m and m.group(3):
+                match_end += m.end()
+                remainder = " = " + self.update_cppstruct_arg_assignment(cppstruct_arg, line[match_end:])
+
+            # Finally, update the line
+            line = line[:match_start] + cppstruct_arg.as_string() + remainder
+
+            if depth == 0: debug.line("update_cstruct_access", f"OUT : {line}")
 
         return line
+
+    def update_cstruct_variables(self, line):
+        line = self.update_cstruct_access(line, 0)
+        return line
+
+    # Checks if the supplied cvariable represents a known variable, and returns a 
+    # transformed C++ variable, or None
+    #
+    # "Known variables" are determined by comparing the cvariable name to the stored lists.
+    # If the cvariable name is found, the return value is a cpp variable with the components
+    # updated (which may be set to None if no transform available). For example:
+    #
+    # cvariable             cname    -> cppname     cppvariable
+    # (*, foo_name, "")     foo_name -> fooName     ("", fooName, "")
+    # (*, handle, "")       handle   -> None        (None, None, None)
+    # (*, bar, "")          NOT FOUND               None
+    #
+    # Note 1: We assume *var and &var should be replaced with var
+    # Note 2: When a transformed cppvariable is returned, it has its type set as well (in case this is useful!)
+    #
+    def transform_if_cvariable(self, cvariable):
+        for carg, cpparg in self._transforms.all_args.items():
+            if cvariable.name == carg.name:
+                if cpparg:
+                    cppvariable = variable.Variable("", cpparg.name, cvariable.index)
+                    cppvariable.type = cpparg.type
+                    return cppvariable
+                else:
+                    return variable.Variable(None, None, None)
+
+        return None
+
+    # Update the remainder (of the current line) to correctly set the cppvariable - returns the updated remainder
+    def update_cppvariable_assignment(self, cppname, remainder):
+
+        # Default - do nothing!
+        return remainder
+
+    # Called first from transform_cvariable_access - override to provide specialised transforms
+    def custom_transform_cvariable_access(self, cvariable, match_token, post_match_string):
+        return None
+
+    # Special transforms for return variables
+    def transform_return_cvariable_access(self, cvariable, match_token, post_match_string):
+        ret = "GribStatus"
+
+        cppvariable = self.transform_if_cvariable(cvariable)
+
+        if cppvariable and cppvariable.type == ret:
+            # If match is e.g. "err)" then we'll assume it's a boolean test eg if(err) and not the last arg of a function call, so
+            # we'll update it to a comparison
+            if match_token.value == ")":
+                transformed_string = cppvariable.as_string() + f" != {ret}::SUCCESS" + match_token.as_string() + post_match_string
+                debug.line("transform_return_cvariable_access", f"transformed boolean return value test: {transformed_string}")
+                return transformed_string
+            
+            elif match_token.is_separator or match_token.is_terminator:
+                # Just need to transform the name
+                transformed_string = cppvariable.as_string() + match_token.as_string() + post_match_string
+                debug.line("transform_return_cvariable_access", f"return value transformed: {transformed_string}")
+                return transformed_string
+            
+            else:
+                # Assignment/Comparison, so need to ensure the "rvalue" is the correct type
+
+                # Check if assigned to a function call - we assume the function returns the correct type!
+                m = re.match(r"\s*([^\(]*)\(", post_match_string)
+                if m:
+                    transformed_string = cppvariable.as_string() + match_token.as_string() + post_match_string
+                    debug.line("transform_return_cvariable_access", f"return value via function call transformed: {transformed_string}")
+                    return transformed_string
+
+                # Handle everything else: extract the assigned value and cast to the return type
+                m = re.match(r"\s*([^,\);]*)(?:\s*[,\);])", post_match_string)
+                assert m, f"Could not extract assigned value from: {post_match_string}"
+                
+                transformed_string = cppvariable.as_string() + match_token.as_string() + f" {ret}{{{m.group(1)}}}" + post_match_string[m.end(1):]
+                debug.line("transform_return_cvariable_access", f"assigned return value transformed: {transformed_string}")
+                return transformed_string
+        
+        return None
+
+    # Special transforms for lengths that apply to buffers. The {ptr,length} C args are replaced by
+    # a single C++ container arg, however we still need to deal with size-related code in the body
+    # Note: The {ptr, length} and container arg indices are defined in the transforms object.
+    #
+    # For example:
+    # cvariable match_token post_match_string   transformed_string
+    # *len[0]   =           0;                  container.clear();
+    # *len[0]   =           4;                  container.resize(4);
+    # x         ==          *len;               x == container.size();
+    # y         >           foo(*len);          y > foo(container.size());
+    #
+    # Note: Some code uses len[0] instead of *len, so we check for both...
+    #
+    def transform_len_cvariable_access(self, cvariable, match_token, post_match_string):
+        mapping = self._transforms.funcsig_mapping_for(self._cfunction.name)
+        if not mapping or not mapping.arg_indexes:
+            return None
+        
+        buffer_arg_index = mapping.arg_indexes.cbuffer
+        buffer_len_arg_index = mapping.arg_indexes.clength
+        container_index = mapping.arg_indexes.cpp_container
+
+        if not buffer_arg_index and not buffer_len_arg_index and not container_index:
+            return None
+
+        len_carg = mapping.cfuncsig.args[buffer_len_arg_index]
+        assert len_carg, f"Len arg should not be None for c function: {mapping.cfuncsig.name}"
+
+        if len_carg.name != cvariable.name:
+            return None
+        
+        container_arg = mapping.cppfuncsig.args[container_index]
+        assert container_arg, f"Container arg should not be None for C++ function: {mapping.cppfuncsig.name}"
+
+        # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
+        if match_token.is_assignment:
+            if container_arg.is_const():
+                debug.line("transform_len_cvariable_access", f"Removed len assignment for const variable [{cvariable.as_string()}]")
+                return f"// [length assignment removed - var is const] " + cvariable.as_string() + match_token.as_string() + post_match_string
+            
+            # Extract the assigned value
+            m = re.match(r"\s*([^,\);]+)\s*[,\);]", post_match_string)
+            assert m, f"Could not extract assigned value from: {post_match_string}"
+
+            if m.group(1) == "0":
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with .clear()")
+                return f"{container_arg.name}.clear();"
+            else:
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = {m.group(1)} with .resize({m.group(1)})")
+                return f"{container_arg.name}.resize({m.group(1)});"
+
+        # Replace any other *len with CONTAINER.size()
+        debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} with {container_arg.name}.size()")
+        return f"{container_arg.name}.size()" + match_token.as_string() + post_match_string
+
+
+    # Fallback if custom transforms don't match
+    def default_transform_cvariable_access(self, cvariable, match_token, post_match_string):
+        cppvariable = self.transform_if_cvariable(cvariable)
+        if cppvariable:
+            if not cppvariable.name:    # Marked for delete
+                if match_token.is_assignment:
+                    debug.line("default_transform_cvariable_access", f"Deleted [{cvariable.name}]")
+                    return f"// [Deleted variable {cvariable.name}] " + cvariable.as_string() + match_token.as_string() + post_match_string
+                debug.line("default_transform_cvariable_access", f"Removed [{cvariable.name}] for match [{match_token.value}]")
+                if match_token.is_terminator:
+                    return match_token.as_string() + post_match_string
+                else:
+                    return post_match_string
+
+            return cppvariable.as_string() + match_token.as_string() + post_match_string
+        
+        return None
+
+    # Takes the cvariable, match_value and post_match_string and return an updated string
+    # representing the transform, or None if no transform available. For example:
+    #
+    # cvariable match_token post_match_string   transformed_string
+    # *foo[0]   =           4;                  foo[4] = 4;
+    # x         ==          value_count;        x = valueCount;
+    # y         >           bar(*another_foo);  y > bar(anotherFoo);
+    def transform_cvariable_access(self, cvariable, match_token, post_match_string):
+
+        debug.line("transform_cvariable_access", f"[IN] cvariable=[{cvariable.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
+
+        for transform_func in [
+            self.custom_transform_cvariable_access,
+            self.transform_return_cvariable_access,
+            self.transform_len_cvariable_access,
+            self.default_transform_cvariable_access,
+        ]:
+            transformed_string = transform_func(cvariable, match_token, post_match_string)
+            if transformed_string:
+                return transformed_string
+        
+        return None
+
+    def update_cvariable_access(self, line, depth):
+        assert depth<15, f"Unexpected recursion depth [{depth}]"
+
+        # Regex groups:
+        # 12     3   4
+        # *my_foo[6] TOKEN
+        #
+        # TOKEN matches one of: 
+        #   =               (group 5 - assignment)
+        #   != == += >= etc (group 6) 
+        #   , ) [ ] ;       (group 7 - terminator)
+        #
+        # Note:
+        #   (?<!%) is to avoid matching e.g %ld in a printf
+        #   (=(?!=)) matches exactly one "=" so we can distinguish "=" (group 5) from "==" (group 6)
+        #   (?![<>\*&]) is added to ensure pointer/reference types and templates are not captured, e.g. in (grib_accessor*)self; or std::vector<double>
+        #   Group 2 matches a character first to avoid matching numbers as variables
+        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/]+)|([,\)\[\];]))", line)
+
+        if m:
+            if m.group(2) in ["vector", "string", "return", "break"]:
+                debug.line("update_cvariable_access", f"IN  False match [{m.group(2)}] : {line}")
+                remainder = self.update_cvariable_access(line[m.end():], depth+1)
+                line = line[:m.end()] + remainder
+                debug.line("update_cvariable_access", f"OUT False match [{m.group(2)}] : {line}")
+            else:
+                cvariable = variable.Variable(pointer=m.group(1), name=m.group(2), index=m.group(3))
+                match_token = variable.MatchToken(m.group(4))
+                debug.line("update_cvariable_access", f"IN  [{depth}][{cvariable.as_string()}][{match_token.value}]: {line}")
+
+                # First process the remainder of the string (recursively), updating it along the way, so we can use it later...
+                remainder = self.update_cvariable_access(line[m.end():], depth+1)
+
+                if True: #remainder:
+                    transformed_remainder = self.transform_cvariable_access(cvariable, match_token, remainder)
+
+                    if transformed_remainder:
+                        line = line[:m.start()] + transformed_remainder
+                        debug.line("update_cvariable_access", f"OUT [{depth}][{cvariable.as_string()}][{match_token.value}]: {line}")
+                    else:
+                        line = line[:m.end()] + remainder
+                        debug.line("update_cvariable_access", f"OUT [{depth}][No transformed_remainder]: {line}")
+
+        return line
+        
+
+    def update_cvariables(self, line):
+        line = self.update_cvariable_access(line, 0)
+        return line
+
+    # ======================================== UPDATE FUNCTIONS ========================================
 
     # Transform any variables, definitions, etc with a "grib" type prefix...
     def apply_grib_api_transforms(self, line):
@@ -268,36 +579,6 @@ class FunctionConverter:
 
         return line
 
-    # Special handling for function pointers: [typedef] RET (*PFUNC)(ARG1, ARG2, ..., ARGN);
-    def process_function_pointers(self, line):
-
-        m = re.match(r"^(?:typedef)\s*(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
-        if m:
-            carg = arg.Arg(m.group(1), m.group(2))
-            arg_converter = arg_conv.ArgConverter(carg)
-            cpparg = arg_converter.to_cpp_arg(self._transforms)
-
-            # Assume functions returning int will now return GribStatus
-            if cpparg.type == "int":
-                cpparg.type = "GribStatus"
-
-            debug.line("process_function_pointers", f"Adding var to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
-            self._transforms.add_local_args(carg, cpparg)
-
-            # Parse the function arg types
-            cpp_arg_types = []
-            for arg_type in [a.strip() for a in m.group(3).split(",")]:
-                arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
-                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms)
-                if cpp_sig_arg:
-                    cpp_arg_types.append(cpp_sig_arg.type)
-            
-            # Apply the transform
-            line = re.sub(rf"(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", f"{cpparg.type}(*{cpparg.name})({','.join([a for a in cpp_arg_types])})", line)
-            debug.line("process_function_pointers", f"Transformed line: {line}")
-
-        return line
-    
     def process_remaining_cargs(self, line):
 
         # Update any C arg that remain (i.e. as an argument to a function call)
@@ -345,12 +626,6 @@ class FunctionConverter:
 
         return line
     
-    def convert_grib_api_functions(self, line):
-        line = self.convert_grib_utils(line)
-        line = grib_api_converter.convert_grib_api_functions(line)
-
-        return line
-
     def apply_get_set_substitutions(self, line):
         # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
         # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
@@ -374,20 +649,6 @@ class FunctionConverter:
                 line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
 
             debug.line("apply_get_set_substitutions", f"Result of substitution: {line}")
-
-        return line
-
-    def apply_function_transforms(self, line):
-        line = c_subs.apply_all_substitutions(line)
-
-        # Static function substitutions
-        m = re.search(rf"(?<!\")(&)?\b(\w+)\b(?!\")", line)
-        if m:
-            for mapping in self._transforms.static_funcsig_mappings:
-                if m.group(2) == mapping.cfuncsig.name:
-                    prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
-                    debug.line("apply_function_transforms", f"Updating static function {m.group(0)} [after ]: {line}")
 
         return line
 
@@ -425,30 +686,33 @@ class FunctionConverter:
 
         return line
     
-    # Override this to provide any function transforms specific to a class
-    def special_function_transforms(self, line):
-        return line
-
     def update_cpp_line(self, line):
 
         # Note: These apply in order, be careful if re-arranging!
         update_functions = [
-            # [1] function updates that expect the original C variable names
-            self.convert_grib_api_functions,
-            self.apply_function_transforms,
-            self.special_function_transforms,
+            # [1] Update C functions only
+            self.update_grib_api_cfunctions,
+            self.update_cfunction_names,
+            self.custom_cfunction_updates,
+
+            # [2] Update C variable declarations (inc. typedefs and function pointers)
+            self.update_cvariable_declarations,
+            self.update_cstruct_type_declarations,
+            self.update_cfunction_pointers,
+
+            # [3] Update C variable access (get/set)
+            self.update_cstruct_variables,
+            self.update_cvariables,
+
+
+
+            # [4] Update C++ variable asignments
+
+            # [5] All other transforms...
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
-            self.process_variable_declarations,
-            self.process_variables_initial_pass,
-            self.process_len_args,
-            self.process_type_declarations,
-            self.process_return_variables,
-            #self.process_variable_declarations,
-            self.process_deleted_variables,
             self.apply_grib_api_transforms,
             self.apply_variable_transforms,
-            self.process_function_pointers,
             self.process_remaining_cargs,
             self.process_global_cargs,
             self.apply_get_set_substitutions,

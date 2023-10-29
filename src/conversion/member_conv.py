@@ -14,20 +14,18 @@ class MemberConverter(arg_conv.ArgConverter):
     def to_cpp_arg(self, transforms):
         cppmember = None
 
-        cpp_arg = super().to_cpp_arg(transforms)
-        if cpp_arg:
-            cppmember = member.Member(cpp_arg.type, cpp_arg.name + "_")
-
-            # We'll assume "const char*" means this variable refers to another accessor...
-            if self._carg.type == "const char*":
-                cppmember.type = "AccessorName"
-
-            if cppmember.type == "AccessorName":
-                cppmember.default_value = "{\"\"}"
-            else:
-                cppmember.default_value = ""
-
+        # We'll assume "const char*" and "grib_accessor*" types mean this variable refers to another accessor...
+        if self._carg.type in ["const char*", "grib_accessor*"]:
+            cppmember_name = arg_conv.transform_variable_name(self._carg.name) + "_"
+            cppmember = member.Member("AccessorName", cppmember_name)
+            cppmember.default_value = "{\"\"}"
             cppmember._mutable = False
+        else:
+            cpp_arg = super().to_cpp_arg(transforms)
+            if cpp_arg:
+                cppmember = member.Member(cpp_arg.type, cpp_arg.name + "_")
+                cppmember.default_value = ""
+                cppmember._mutable = False
 
         return cppmember
 

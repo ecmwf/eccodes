@@ -1,9 +1,9 @@
 
 from datetime import datetime
 
-func_pad = 30
-debug_enabled = False
-debug_filter_include = []
+func_pad = 35
+debug_enabled = True
+debug_filter_include = ["DEBUG"] #["to_accessor_data"]
 debug_filter_exclude = []
 
 show_time = False

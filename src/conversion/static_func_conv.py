@@ -10,10 +10,10 @@ class StaticFunctionConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return static_func.StaticFunction(cppfuncsig)
 
-    def special_function_transforms(self, line):
+    def custom_cfunction_updates(self, line):
         for mapping in self._transforms.static_funcsig_mappings:
             line,count = re.subn(rf"\b{mapping.cfuncsig.name}\s*\(", f"{mapping.cppfuncsig.name}(", line)
             if(count):
-                debug.line("update_static_function_calls", f"name={mapping.cfuncsig.name} [after ]: {line}")
+                debug.line("custom_cfunction_updates", f"name={mapping.cfuncsig.name} [after ]: {line}")
 
-        return super().special_function_transforms(line)
+        return super().custom_cfunction_updates(line)

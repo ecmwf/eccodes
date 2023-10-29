@@ -12,11 +12,10 @@ class ConstructorMethodConverter(MethodConverter):
     def create_cpp_function(self, cppfuncsig):
         return constructor_method.ConstructorMethod(cppfuncsig)
 
-    def process_variables_initial_pass(self, line):
+    def update_cfunction_names(self, line):
 
         # Transform the argument getters
-        line = re.sub(rf"\blen\b", "initData.length", line)
         line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
         line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
 
-        return super().process_variables_initial_pass(line)
+        return super().update_cfunction_names(line)

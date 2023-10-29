@@ -1,7 +1,7 @@
 
-# Note: grib_accessor* different to funcisg!
+# Note: grib_accessor* different to funcsig!
 common_grib_type_transforms = {
-    "grib_accessor*"    : "AccessorName",
+    "grib_accessor*"    : None,
     "grib_handle*"      : None,
     "grib_context*"     : None,
 }

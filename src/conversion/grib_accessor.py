@@ -9,6 +9,7 @@ import inherited_method
 import private_method
 import os
 import re
+import arg
 
 # Represents the C code parsed from a grib_accessor_class*cc file
 class GribAccessor:
@@ -133,8 +134,8 @@ def create_cfunction(func_sig, definitions):
 
     if not cfunction:
         # If any arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
-        for arg in func_sig.args:
-            if re.search(r"grib_accessor(\w*)?\*", arg.type):
+        for arg_entry in func_sig.args:
+            if re.search(r"grib_accessor(\w*)?\*", arg_entry.type):
                 cfunction = private_method.PrivateMethod(func_sig)
     
     if not cfunction:

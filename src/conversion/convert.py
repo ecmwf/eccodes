@@ -130,10 +130,10 @@ def parse_file(path):
             # Add function name to the global body as a forward declaration, so it is 
             # declared in the correct place for any other globals!
             #
-            # Note: We just use the placeholder [FORWARD_DECLARATION]function_name here,
+            # Note: We just use the placeholder @FORWARD_DECLARATION:function_name here,
             #       when it is processed the placeholder will be used to check that it 
             #       is a valid static function: if not it will be deleted
-            forward_declaration = f"[FORWARD_DECLARATION]{function_name}"
+            forward_declaration = f"@FORWARD_DECLARATION:{function_name}"
             global_function.add_line(forward_declaration)
 
             cfuncsig.template = template

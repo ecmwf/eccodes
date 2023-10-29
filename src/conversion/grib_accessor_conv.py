@@ -7,6 +7,7 @@ from converter_collection import Converter, converters_for
 import transforms
 from funcsig_mapping import FuncSigMapping
 import grib_api_converter
+import copy
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -111,13 +112,13 @@ class GribAccessorConverter:
         return result
 
     def create_transforms(self):
-        funcsig_type_transforms = common_funcsig_type_transforms
+        funcsig_type_transforms = copy.deepcopy(common_funcsig_type_transforms)
         funcsig_type_transforms.update(grib_api_converter.grib_api_funcsig_type_transforms())
 
         for k,v in funcsig_type_transforms.items():
             debug.line("create_transforms",f"Funcsig type transform: {k} -> {v}")
 
-        type_transforms = common_type_transforms
+        type_transforms = copy.deepcopy(common_type_transforms)
         type_transforms.update(grib_api_converter.grib_api_type_transforms())
 
         for k,v in type_transforms.items():
@@ -125,8 +126,16 @@ class GribAccessorConverter:
 
         self._transforms = transforms.Transforms(funcsig_types=funcsig_type_transforms, types=type_transforms)
 
-        self._transforms.add_to_class_types("self", self._grib_accessor.name, self._accessor_data.name)
-        self._transforms.add_to_class_types("super", self._grib_accessor.super, self._accessor_data.super)
+        self._transforms.add_to_types("self", self._accessor_data.name)
+        self._transforms.add_to_types("super", self._accessor_data.super)
+
+        # There are some instances of accessing super->super, so we'll store this as well!
+        cpp_super_super_name = None
+
+        if self._grib_accessor.super in self.other_grib_accessors.keys():
+            cpp_super_super_name = self.transform_class_name(self.other_grib_accessors[self._grib_accessor.super].super)
+
+        self._transforms.add_to_types("supersuper", cpp_super_super_name)
 
     def add_global_function(self):
         global_func_funcsig_converter = self._converters[Converter.GLOBAL_FUNC_FUNCSIG](self._grib_accessor.global_function.func_sig)

@@ -27,3 +27,13 @@ def process_grib_api_variables(line, arg_transforms):
             line = grib_array.process_grib_array_variables(line, carg, cpparg)
 
     return line
+
+# If the ctype is a valid grib_api type, transform it using the supplied cppname and return 
+# the appropriate cpp struct, else None
+def process_cstruct_arg_for_grib_api_ctype(ctype, cstruct_arg, cppname):
+    cppstruct_arg = None
+
+    if re.match(r"grib_v?[dis]array", ctype):
+        cppstruct_arg = grib_array.process_grib_array_cstruct_arg(cstruct_arg, cppname)
+
+    return cppstruct_arg

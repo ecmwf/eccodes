@@ -131,3 +131,13 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
     def __init__(self, cfuncsig):
         super().__init__(cfuncsig)
         self._conversions.extend(self.inherited_method_conversions)
+
+# Helper to get the mapping of an inherited method from the c function name
+# Use for transforms when the "virtual" method is referenced, but not implemented, in a Class
+# Returns None if not mapping exists...
+def cpp_inherited_method_mapping_for(cfunction_name):
+    for mapping in InheritedMethodFuncSigConverter.inherited_method_conversions:
+        if mapping.cfuncsig.name == cfunction_name:
+            return mapping
+        
+    return None

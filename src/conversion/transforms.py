@@ -3,7 +3,6 @@
 import re
 import debug
 import arg
-from collections import namedtuple
 import copy
 from funcsig_mapping import FuncSigMapping
 
@@ -15,13 +14,6 @@ from funcsig_mapping import FuncSigMapping
 # inherited_funcsig_mappings : [funcsig_mapping, ...]
 # private_funcsig_mappings   : [funcsig_mapping, ...]
 # static_funcsig_mappings    : [funcsig_mapping, ...]
-# class_types                : {"Entry", {cvalue, cppvalue} }   "Entry" is "self", "super", etc
-
-# These entries are expected to exist!
-default_class_type_entries = ["self", "super"]
-
-# Allow access of class_types tuples using .cvalue and .cppvalue for convenience!
-TypePair = namedtuple('TypePair', ['cvalue', 'cppvalue'])
 
 class Transforms:
     def __init__(self, *, funcsig_types={}, types={}) -> None:
@@ -34,7 +26,6 @@ class Transforms:
         self._private_funcsig_mappings = []
         self._static_funcsig_mappings = []
         self._other_funcsig_mappings = []
-        self._class_types = {}
 
     # Note these are only supplied at __init__, any new types are added to the types list instead
     @property
@@ -55,12 +46,21 @@ class Transforms:
     @property
     def all_args(self):
         return self._all_args
+    
+    # Helper to return the ctype for the supplied cname, or None
+    def ctype_of(self, cname):
+        for carg in self.all_args.keys():
+            if carg.name == cname:
+                return carg.type
+
+        return None
 
     def add_local_args(self, carg, cpparg):
         if carg in self._all_args:
             assert self._all_args[carg] == cpparg, f"Updating an existing local arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._all_args[carg])}"
         else:
             debug.line("Transforms", f"Adding new local arg transform: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
+            assert carg, f"ADDING carg which is None!"
             self._all_args[carg] = cpparg
     
     def clear_local_args(self):
@@ -152,12 +152,3 @@ class Transforms:
         for entry in self._other_funcsig_mappings:
             assert entry.cfuncsig.name != mapping.cfuncsig.name, f"Setting an existing other_funcsig_mappings transform: {mapping.cfuncsig.name} -> {mapping.cppfuncsig.name}"
         self._other_funcsig_mappings.append(mapping)
-
-    @property
-    def class_types(self):
-        return self._class_types
-
-    def add_to_class_types(self, entry, cvalue, cppvalue):
-        assert entry not in self._class_types, f"Updating an existing class type entry[{entry}] with cvalue={cvalue} cppvalue={cppvalue}"
-
-        self._class_types[entry] = TypePair(cvalue, cppvalue)
