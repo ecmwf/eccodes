@@ -48,6 +48,10 @@ class MatchToken:
         return self._value == "="
     
     @property
+    def is_comparison(self):
+        return self._value in ["==", "!=", ">", ">=", "<", "<="]
+
+    @property
     def is_separator(self):
         return self._value  == ","
 

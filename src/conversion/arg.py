@@ -144,6 +144,10 @@ def parse_type_and_name_from_string(input):
     # Phase 1 - type
     m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
     if m:
+        if m.group(4) in ["return", "typedef"]:
+            debug.line("from_string", f"Ignoring invalid arg type [{m.group(4)}]: {input}")
+            return None, None
+
         arg_type = ""
         if m.group(1):
             arg_type += m.group(1) + " "
@@ -164,10 +168,6 @@ def parse_type_and_name_from_string(input):
         m = re.match(r"\s*(\w+)\s*(\[\d*\])?", input[m.end():])
         if m:
             arg_name = m.group(1)
-
-            if arg_name in ["return", "typedef"]:
-                debug.line("from_string", f"Ignoring invalid arg type [{arg_name}]: {input}")
-                return None
 
             if m.group(2):
                 # Handle array declaration e.g. char buf[10]

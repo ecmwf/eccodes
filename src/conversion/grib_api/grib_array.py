@@ -23,12 +23,6 @@ def convert_grib_array_functions(line):
 
     return line
 
-def process_grib_array_variables(line, carg, cpparg):
-    # remove any ->v entries (keep the [i] as the cpparg should be a container!)
-    line = line.replace(f"{cpparg.name}->v", f"{cpparg.name}")
-
-    return line
-
 # By default, just replace s->v[4]->v[5] with s[4][5]
 def process_grib_array_cstruct_arg(cstruct_arg, cppname):
     debug.line("process_grib_array_cstruct_arg", f"cstruct_arg={cstruct_arg.as_string()} cppname={cppname}")

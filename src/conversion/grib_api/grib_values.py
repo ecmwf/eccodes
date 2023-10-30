@@ -2,7 +2,7 @@
 import debug
 import re
 
-GribStatusConverter = {
+GribStatusTransforms = {
     "GRIB_SUCCESS": "GribStatus::SUCCESS", 
     "GRIB_END_OF_FILE": "GribStatus::END_OF_FILE", 
     "GRIB_INTERNAL_ERROR": "GribStatus::INTERNAL_ERROR", 
@@ -85,7 +85,7 @@ GribStatusConverter = {
     "GRIB_ASSERTION_FAILURE": "GribStatus::ASSERTION_FAILURE", 
 }
 
-GribTypeConverter = {
+GribTypeTransforms = {
     "GRIB_TYPE_UNDEFINED": "GribType::UNDEFINED",
     "GRIB_TYPE_LONG": "GribType::LONG",
     "GRIB_TYPE_DOUBLE": "GribType::DOUBLE",
@@ -96,7 +96,7 @@ GribTypeConverter = {
     "GRIB_TYPE_MISSING": "GribType::MISSING",
 }
 
-GribAccessorFlagConverter = {
+GribAccessorFlagTransforms = {
     "GRIB_ACCESSOR_FLAG_READ_ONLY" : "GribAccessorFlag::READ_ONLY",
     "GRIB_ACCESSOR_FLAG_DUMP" : "GribAccessorFlag::DUMP",
     "GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC" : "GribAccessorFlag::EDITION_SPECIFIC",
@@ -118,20 +118,56 @@ GribAccessorFlagConverter = {
     "GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION" : "GribAccessorFlag::COPY_IF_CHANGING_EDITION",
 }
 
-def convert_grib_values(line):
-    for k, v in GribStatusConverter.items():
-        line, count = re.subn(rf"{k}", rf"{v}", line)
-        if count:
-            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
+# Grib Transformers - return C++ string representing the transformed value, or None
+#
+# Note - may include extra processing, e.g. GribAccessorFlags are wrapped in a toInt() call...
+
+def transform_grib_status(cgrib_status):
+    for cstatus, cppstatus in GribStatusTransforms.items():
+        if cstatus == cgrib_status:
+            return cppstatus
+        
+    return None
+
+def transform_grib_type(cgrib_type):
+    for ctype, cpptype in GribTypeTransforms.items():
+        if ctype == cgrib_type:
+            return cpptype
+        
+    return None
+
+def transform_grib_accessor_flag(cgrib_accessor_flag):
+    for caccessor_flag, cppaccessor_flag in GribAccessorFlagTransforms.items():
+        if caccessor_flag == cgrib_accessor_flag:
+            return f"toInt({cppaccessor_flag})"
+        
+    return None
+
+grib_transformers = [
+    transform_grib_status,
+    transform_grib_type,
+    transform_grib_accessor_flag
+]
+
+# Find and replace any known GRIB_* values
+# Calls itself recursively after each match, with the remainder, until all matches made
+def convert_grib_values(line, depth=0):
+    assert depth<5, f"Unexpected recursion depth [{depth}]"
+
+    m = re.search(r"\b(GRIB_\w+)\b", line)
+    if m:
+        # Call recursively to process the remainder
+        remainder = convert_grib_values(line[m.end():], depth+1)
+
+        for grib_transformer in grib_transformers:
+            transformed_value = grib_transformer(m.group(1))
+            if transformed_value:
+                line = line[:m.start()] + transformed_value + remainder
+                debug.line("convert_grib_values", f"[{depth}] Replaced {m.group(1)} with {transformed_value}: {line}")
+                return line
+                
+        # GRIB_ entry doesn't match
+        return line[:m.end()] + remainder
     
-    for k, v in GribTypeConverter.items():
-        line, count = re.subn(rf"{k}", rf"{v}", line)
-        if count:
-            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
-    
-    for k, v in GribAccessorFlagConverter.items():
-        line, count = re.subn(rf"{k}", rf"toInt({v})", line)
-        if count:
-            debug.line("convert_grib_values", f"Replaced {k} with {v} [after ]: {line}")
-    
+    # No GRIB_ entries found
     return line

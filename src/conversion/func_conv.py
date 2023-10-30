@@ -59,9 +59,9 @@ class FunctionConverter:
             debug.line("skip_line", f"[Empty]: {line}")
             return True
 
-        # Ignore macros (for now)
-        if line.startswith("#define") or line.endswith("\\"):
-            debug.line("skip_line", f"[Macro]: {line}")
+        # Ignore multi-line macros (for now)
+        if line.endswith("\\"):
+            debug.line("skip_line", f"[Multi-line Macro]: {line}")
             return True
 
         if re.match(r"^\s*//", line):
@@ -395,15 +395,22 @@ class FunctionConverter:
                     debug.line("transform_return_cvariable_access", f"return value via function call transformed: {transformed_string}")
                     return transformed_string
 
-                # Handle everything else: extract the assigned value and cast to the return type
+                # Handle everything else: extract the assigned value and process...
                 m = re.match(r"\s*([^,\);]*)(?:\s*[,\);])", post_match_string)
                 assert m, f"Could not extract assigned value from: {post_match_string}"
                 
+                # Ignore GRIB_ return types as they will be processed later...
+                if m.group(1).strip().startswith("GRIB_"):
+                    debug.line("transform_return_cvariable_access", f"Ignoring (for now) GRIB_ return value [{m.group(1)}]")
+                    return None
+
+                # Finally: cast value to the return type...
                 transformed_string = cppvariable.as_string() + match_token.as_string() + f" {ret}{{{m.group(1)}}}" + post_match_string[m.end(1):]
-                debug.line("transform_return_cvariable_access", f"assigned return value transformed: {transformed_string}")
+                debug.line("transform_return_cvariable_access", f"Casting to return type, transformed: {transformed_string}")
                 return transformed_string
         
         return None
+
 
     # Special transforms for lengths that apply to buffers. The {ptr,length} C args are replaced by
     # a single C++ container arg, however we still need to deal with size-related code in the body
@@ -461,6 +468,52 @@ class FunctionConverter:
         return f"{container_arg.name}.size()" + match_token.as_string() + post_match_string
 
 
+    # Make sure all container variables have sensible assignments, comparisons etc
+    def transform_container_cvariable_access(self, cvariable, match_token, post_match_string):
+        cpp_container_arg = None
+        for carg, cpparg in self._transforms.all_args.items():
+            if carg.name == cvariable.name and cpparg and arg.is_container(cpparg):
+                cpp_container_arg = cpparg
+                break
+
+        if not cpp_container_arg:
+            return None
+
+        if match_token.is_assignment:
+            if cpp_container_arg.is_const():
+                debug.line("transform_container_cvariable_access", f"Removed len assignment for const variable [{cvariable.as_string()}]")
+                return f"// [length assignment removed - var is const] " + cvariable.as_string() + match_token.as_string() + post_match_string
+            
+            # Extract the assigned value
+            m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
+            assert m, f"Could not extract assigned value from: {post_match_string}"
+
+            if m.group(1) == "NULL":
+                debug.line("transform_container_cvariable_access", f"Replaced {cvariable.as_string()} = NULL with {{}}")
+                return f"{cpp_container_arg.name} = {{}};"
+            elif m.group(1) == "{":
+                debug.line("transform_container_cvariable_access", f"Ignoring {cvariable.as_string()} braced initialiser [{post_match_string}]")
+                return cpp_container_arg.name + match_token.as_string() + post_match_string
+            elif m.group(1) == "0":
+                debug.line("transform_container_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with {{}}")
+                post_match_string = re.sub(r"(\s*)0", r"\1{}", post_match_string)
+                return cpp_container_arg.name + match_token.as_string() + post_match_string
+
+        elif match_token.is_comparison: 
+            # Extract the assigned value
+            m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
+            assert m, f"Could not extract assigned value from: {post_match_string}"
+
+            if m.group(1) == "0":
+                debug.line("transform_container_cvariable_access", f"Changed {cvariable.as_string()} == 0 comparison with .empty()")
+                post_match_string = re.sub(r"\s*0", "", post_match_string)
+                return f"{cpp_container_arg.name}.empty()" + post_match_string
+            
+            # TODO: Handle other comparisons?
+
+        return None
+
+
     # Fallback if custom transforms don't match
     def default_transform_cvariable_access(self, cvariable, match_token, post_match_string):
         cppvariable = self.transform_if_cvariable(cvariable)
@@ -494,9 +547,11 @@ class FunctionConverter:
             self.custom_transform_cvariable_access,
             self.transform_return_cvariable_access,
             self.transform_len_cvariable_access,
+            self.transform_container_cvariable_access,
             self.default_transform_cvariable_access,
         ]:
             transformed_string = transform_func(cvariable, match_token, post_match_string)
+            
             if transformed_string:
                 return transformed_string
         
@@ -535,15 +590,14 @@ class FunctionConverter:
                 # First process the remainder of the string (recursively), updating it along the way, so we can use it later...
                 remainder = self.update_cvariable_access(line[m.end():], depth+1)
 
-                if True: #remainder:
-                    transformed_remainder = self.transform_cvariable_access(cvariable, match_token, remainder)
+                transformed_remainder = self.transform_cvariable_access(cvariable, match_token, remainder)
 
-                    if transformed_remainder:
-                        line = line[:m.start()] + transformed_remainder
-                        debug.line("update_cvariable_access", f"OUT [{depth}][{cvariable.as_string()}][{match_token.value}]: {line}")
-                    else:
-                        line = line[:m.end()] + remainder
-                        debug.line("update_cvariable_access", f"OUT [{depth}][No transformed_remainder]: {line}")
+                if transformed_remainder:
+                    line = line[:m.start()] + transformed_remainder
+                    debug.line("update_cvariable_access", f"OUT [{depth}][{cvariable.as_string()}][{match_token.value}]: {line}")
+                else:
+                    line = line[:m.end()] + remainder
+                    debug.line("update_cvariable_access", f"OUT [{depth}][No transformed_remainder]: {line}")
 
         return line
         
@@ -552,32 +606,43 @@ class FunctionConverter:
         line = self.update_cvariable_access(line, 0)
         return line
 
-    # ======================================== UPDATE FUNCTIONS ========================================
 
     # Transform any variables, definitions, etc with a "grib" type prefix...
     def apply_grib_api_transforms(self, line):
-        line = grib_api_converter.process_grib_api_variables(line, self._transforms.all_args)
         line = grib_api_converter.convert_grib_api_definitions(line)
         return line
 
-    def apply_variable_transforms(self, line):
-        # Assume sizeof(x)/sizeof(*x) or sizeof(x)/sizeof(x[0]) refers to a container with a size() member...
-        m = re.search(r"\bsizeof\((.*?)\)\s*/\s*sizeof\(\s*(?:\*)?\1(?:\[0\])?\s*\)", line)
+    # Regex will match one of:
+    # 1. sizeof(x)
+    # 2. sizeof(x)/sizeof(*x)
+    # 3. sizeof(x)/sizeof(x)
+    # 4. sizeof(x)/sizeof(x[0])
+    #
+    # Option 3 is required because converting to C++ vars can strip the *
+    # Option 4 is required because some C code uses x[0] instead of *x
+    #
+    # Regex groups:
+    #        1 2       3
+    # sizeof(x)/sizeof(x[0])
+    #
+    def update_sizeof_calls(self, line):
+        m = re.search(r"sizeof\((.*?)\)(\s*/\s*sizeof\(\s*(\*?\1(?:\[0\])?)\))?", line)
         if m:
-            line = re.sub(m.re, f"{m.group(1)}.size()", line)
-            debug.line("apply_variable_transforms", f"sizeof transform [after ]: {line}")
-
-        # See if sizeof(x) needs to be replaced by x.size()
-        m = re.search(r"\bsizeof\((.*?)\)", line)
-        if m:
-            for _, cpparg in self._transforms.all_args.items():
-                if cpparg and cpparg.name == m.group(1):
-                    if arg.is_container(cpparg):
+            if m.group(2):
+                # We assume sizeof(x)/sizeof(*x) or sizeof(x)/sizeof(x[0]) refers to a container with a size() member...
+                line = re.sub(m.re, f"{m.group(1)}.size()", line)
+                debug.line("update_sizeof_calls", f"sizeof(x)/sizeof(*x) transform [after ]: {line}")
+            else:
+                # See if sizeof(x) needs to be replaced by x.size()
+                for cpparg in self._transforms.all_args.values():
+                    if cpparg and cpparg.name == m.group(1) and arg.is_container(cpparg):
                         line = re.sub(m.re, f"{m.group(1)}.size()", line)
-                        debug.line("apply_variable_transforms", f"sizeof(x) transform for container [after ]: {line}")
+                        debug.line("update_sizeof_calls", f"sizeof(x) transform for container [after ]: {line}")
                         break
 
         return line
+
+    # ======================================== UPDATE FUNCTIONS ========================================
 
     def process_remaining_cargs(self, line):
 
@@ -651,31 +716,6 @@ class FunctionConverter:
             debug.line("apply_get_set_substitutions", f"Result of substitution: {line}")
 
         return line
-
-    # Make sure all container variables have sensible assignments, comparisons etc after any transformations
-    def validate_container_variables(self, line):
-        for k, v in self._transforms.all_args.items():
-            if not v or not arg.is_container(v):
-                continue
-
-            # [1] Assignments
-            m = re.search(rf"\b{v.name}\s*=\s*(\"?\w+\"?).*?;", line)
-            if m:
-                if m.group(1) == "NULL":
-                    line = line.replace("NULL", "{}")
-                    debug.line("validate_container_variables", f"Updated NULL assigned value [after ]: {line}")
-                elif m.group(1) == "0":
-                    # Replace CONTAINER = 0 with CONTAINER.clear()
-                    line = re.sub(m.re, f"{v.name}.clear();", line)
-                    debug.line("validate_container_variables", f"Changed = 0 assignment to .clear() for container [after ]: {line}")
-
-            # [2] Empty comparisons (== 0)
-            m = re.search(rf"\b{v.name}(\s*==\s*0)\b", line)
-            if m:
-                line = re.sub(m.re, f"{v.name}.empty()", line)
-                debug.line("validate_container_variables", f"Changed == 0 comparison to .empty() for container [after ]: {line}")
-
-        return line
     
     # Anything else that's needed
     def apply_final_checks(self, line):
@@ -704,19 +744,16 @@ class FunctionConverter:
             self.update_cstruct_variables,
             self.update_cvariables,
 
+            # [4] All other updates...
+            self.apply_grib_api_transforms,
+            self.update_sizeof_calls,
 
 
-            # [4] Update C++ variable asignments
-
-            # [5] All other transforms...
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
-            self.apply_grib_api_transforms,
-            self.apply_variable_transforms,
             self.process_remaining_cargs,
             self.process_global_cargs,
             self.apply_get_set_substitutions,
-            self.validate_container_variables,
             self.apply_final_checks,
         ]
 
@@ -747,6 +784,7 @@ class FunctionConverter:
             # We then call ourself recursively for each split line
             m = re.match(r"^(\s*\w+\s+)\w+\s*=?\s*(\w+)?,", line)
             if m:
+                debug.line("update_cpp_body", f"--------------------------------------------------------------------------------")
                 debug.line("update_cpp_body", f"comma-separated vars [before]: {line}")
                 line = line.replace(",", f";\n{m.group(1)}")
                 split_lines = [l for l in line.split("\n")]
