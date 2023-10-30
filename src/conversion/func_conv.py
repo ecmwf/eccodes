@@ -656,27 +656,9 @@ class FunctionConverter:
             # Note: We assume *var and &var should be replaced with var
             m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
                
-            if m and m.group(0) != cpparg.name:
+            if m and m.group(0) != cpparg.name+m.group(1):
                 line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpparg.name}{m.group(1)}", line)
-                debug.line("process_remaining_cargs", f"Substituted \"{m.group(0)}\" with \"{cpparg.name}{m.group(1)}\" [after ]: {line}")
-
-        return line
-
-    # Update any references to global args
-    def process_global_cargs(self, line):
-        # Update any global C args used (i.e. as an argument to a function call)
-        # This will also remove any unnecessary pointers/refs
-        # Note: We ignore anything in quotes!
-        for carg, cpparg in self._transforms.all_args.items():
-            if not cpparg:
-                continue
-
-            # Note: We assume *var and &var should be replaced with var
-            m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
-
-            if m and m.group(0) != cpparg.name:
-                line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpparg.name}{m.group(1)}", line)
-                debug.line("process_global_cargs", f"Substituted \"{m.group(0)}\" with \"{cpparg.name}\"{m.group(1)}\" [after ]: {line}")
+                debug.line("process_remaining_cargs", f"[{m.group(0)}] -> [{cpparg.name}{m.group(1)}]: {line}")
 
         return line
         
@@ -752,7 +734,6 @@ class FunctionConverter:
 
             # [2] The remaining updates must work with C variables that may have been renamed to C++
             self.process_remaining_cargs,
-            self.process_global_cargs,
             self.apply_get_set_substitutions,
             self.apply_final_checks,
         ]

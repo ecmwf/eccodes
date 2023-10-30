@@ -3,7 +3,7 @@ from datetime import datetime
 
 func_pad = 40
 debug_enabled = True
-debug_filter_include = [] # ["to_accessor_data", "update_sizeof_calls"]
+debug_filter_include = ["to_accessor_data", "process_remaining_cargs"]
 debug_filter_exclude = []
 
 show_time = False
