@@ -79,12 +79,16 @@ def cstruct_arg_from_string(input):
     cstruct_arg = None
     match_start = match_end = 0
 
-    # Removed '.' match as it messes with container.size() etc calls...
-    #m = re.search(r"(/\*)|(\*)?(\w+)(\.|->)(\w+)(\[[\w\d]*\])?", input)
+    # match s.foo and s->foo
+    access_match = "\.|->"
+
+    # Ensure the name is a valid variable/function, i.e. doesn't begin with a number...
+    name_match = "[a-zA-Z][\w\.]*"
+
     # Note: (?:\(.+\))? is a non-capturing group that optionally matches (TEXT)
     #       and therefore allows us to capture function calls that result in 
     #       struct access, for example: grib_handle_of_accessor(a)->buffer->data;
-    m = re.search(r"(/\*)|(\*)?(\w+(?:\(.+\))?)(->)(\w+)(\[[\w\d]*\])?", input)
+    m = re.search(rf"(/\*)|(\*)?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[\w\d]*\])?", input)
 
     if m and m.group(1) != "/*":
         access = m.group(2)
@@ -100,7 +104,7 @@ def cstruct_arg_from_string(input):
         # Loop, adding any extra member sections (->foo[4]) that exist...
         next_member = cstruct_arg.member
         while m and m.end() < len(input):
-            m = re.match(r"(->)(\w+)(\[[\w\d]*\])?", input[match_end:])
+            m = re.match(rf"({access_match})({name_match})(\[[\w\d]*\])?", input[match_end:])
             if not m: 
                 break
 

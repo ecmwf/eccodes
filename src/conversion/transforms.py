@@ -19,6 +19,7 @@ class Transforms:
     def __init__(self, *, funcsig_types={}, types={}) -> None:
         self._funcsig_types = funcsig_types
         self._types = types
+        self._function_pointers = {}
         self._all_args = {}
         self._global_args = {}
         self._members = {}
@@ -42,6 +43,20 @@ class Transforms:
         else:
             self._types[ctype] = cpptype
             debug.line("Transforms", f"Adding type transform: {ctype} -> {cpptype}")
+
+    # Store C -> C++ Function Pointer names for reference
+    @property
+    def function_pointers(self):
+        return self._function_pointers
+
+    def add_to_function_pointers(self, cfuncname, cppfuncname):
+        if cfuncname in self._function_pointers:
+            assert self._function_pointers[cfuncname] == cppfuncname, f"Updating an existing function pointer: {cfuncname} -> {cppfuncname} Previous type = {self._function_pointers[cfuncname]}"
+        else:
+            self._function_pointers[cfuncname] = cppfuncname
+            debug.line("Transforms", f"Adding function pointer transform: {cfuncname} -> {cppfuncname}")
+            # We'll add to the types list too
+            self.add_to_types(cfuncname, cppfuncname)
 
     @property
     def all_args(self):

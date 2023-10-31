@@ -5,7 +5,7 @@ import debug
 
 c_lib_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
-    r"\bstrlen\(\s*(.*)\s*\)": r"\1.size()",
+    r"\bstrlen\(\s*([^\)]*)\s*\)": r"\1.size()",
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
     # This version matches either an explicit size or sizeof(x)
     r"\bsnprintf\((\w+),\s*(?:sizeof\(\w*\))?(?:\d+)?\s*,\s*(\")": r"\1 = fmtString(\2",

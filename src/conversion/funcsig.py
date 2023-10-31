@@ -20,7 +20,8 @@ class FuncSig:
             return None
 
         sig = None
-        m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]+)\)", sig_string, re.DOTALL)
+        #m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]+)\)", sig_string, re.DOTALL)
+        m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]*)\)", sig_string, re.DOTALL)
         if m:
             return_type = m.group(2)
             name = m.group(3)

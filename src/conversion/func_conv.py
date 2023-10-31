@@ -105,15 +105,31 @@ class FunctionConverter:
     def update_cfunction_names(self, line):
         line = c_subs.apply_all_substitutions(line)
 
-        # Static function substitutions
         # Note: (?=\() ensures group(3) is followed by a "(" without capturing it - ensuring it's a function name!
         m = re.search(rf"(&)?\b(\w+)(?=\()", line)
         if m:
+            # Static function substitutions
             for mapping in self._transforms.static_funcsig_mappings:
                 if m.group(2) == mapping.cfuncsig.name:
                     prefix = m.group(1) if m.group(1) is not None else ""
                     line = re.sub(m.re, rf"{prefix}{mapping.cppfuncsig.name}", line)
                     debug.line("update_cfunction_names", f"Updating static function {m.group(0)} [after ]: {line}")
+                    return line
+            # Check function pointers too - need to do this in two phases
+            # Example using: err = codec_element(..) [grib_accessor_class_bufr_data_array.cc]
+            # 1. Is codec_element in arg map? Yes: codec_element_proc codec_element
+            # 2. Is codec_element_proc in the function pointers map? Yes: transform name to C++ name
+            # Result: codecElement(...)
+            for carg, cpparg in self._transforms.all_args.items():
+                if m.group(2) == carg.name:
+                    debug.line("DEBUG", f"[1] Found [{m.group(0)}] in arg map: carg [{arg.arg_string(carg)}] carg [{arg.arg_string(cpparg)}]")
+
+                    for ctype, cpptype in self._transforms.function_pointers.items():
+                        if ctype == carg.type:
+                            prefix = m.group(1) if m.group(1) is not None else ""
+                            line = re.sub(m.re, rf"{prefix}{cpparg.name}", line)
+                            debug.line("update_cfunction_names", f"Updating function pointer {m.group(0)} [after ]: {line}")
+                            return line
 
         return line
 
@@ -215,6 +231,9 @@ class FunctionConverter:
 
             debug.line("update_cfunction_pointers", f"Adding var to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
             self._transforms.add_local_args(carg, cpparg)
+
+            # Store the function pointer cname -> cppname as a type transform
+            self._transforms.add_to_function_pointers(carg.name, cpparg.name)
 
             # Parse the function arg types
             cpp_arg_types = []
@@ -446,26 +465,40 @@ class FunctionConverter:
         container_arg = mapping.cppfuncsig.args[container_index]
         assert container_arg, f"Container arg should not be None for C++ function: {mapping.cppfuncsig.name}"
 
+        # Final check before applying transforms: is len_carg already referencing a transformed cpp container?
+        # For example: *len = strlen(v); becomes *len = v.size() becomes *len = value.size() 
+        #              *len is paired with v/value so the reference is invalid, and will be removed!
+        #              See grib_accessor_class_bits.cc for an example of this
+        m = re.match(r"\s*(\w*).(\w*)\(", post_match_string)
+        if m and container_arg.name == m.group(1):
+            if m.group(2) in ["size", "resize"]:
+                transformed_line = f"// [removing invalid reference] " + cvariable.as_string() + match_token.as_string() + post_match_string
+                debug.line("transform_len_cvariable_access", f"Removing invalid {cvariable.as_string()} reference to transformed container, Line:{transformed_line}")
+                return transformed_line
+
         # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
         if match_token.is_assignment:
             if container_arg.is_const():
                 debug.line("transform_len_cvariable_access", f"Removed len assignment for const variable [{cvariable.as_string()}]")
                 return f"// [length assignment removed - var is const] " + cvariable.as_string() + match_token.as_string() + post_match_string
-            
+
             # Extract the assigned value
             m = re.match(r"\s*([^,\);]+)\s*[,\);]", post_match_string)
             assert m, f"Could not extract assigned value from: {post_match_string}"
 
             if m.group(1) == "0":
-                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with .clear()")
-                return f"{container_arg.name}.clear();"
+                transformed_line = f"{container_arg.name}.clear();"
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with .clear() Line:{transformed_line}")
+                return transformed_line
             else:
-                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = {m.group(1)} with .resize({m.group(1)})")
-                return f"{container_arg.name}.resize({m.group(1)});"
+                transformed_line = f"{container_arg.name}.resize({m.group(1)});"
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = {m.group(1)} with .resize({m.group(1)}) Line:{transformed_line}")
+                return transformed_line
 
         # Replace any other *len with CONTAINER.size()
-        debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} with {container_arg.name}.size()")
-        return f"{container_arg.name}.size()" + match_token.as_string() + post_match_string
+        transformed_line = f"{container_arg.name}.size()" + match_token.as_string() + post_match_string
+        debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} with {container_arg.name}.size() Line:{transformed_line}")
+        return transformed_line
 
 
     # Make sure all container variables have sensible assignments, comparisons etc
@@ -574,10 +607,10 @@ class FunctionConverter:
         #   (=(?!=)) matches exactly one "=" so we can distinguish "=" (group 5) from "==" (group 6)
         #   (?![<>\*&]) is added to ensure pointer/reference types and templates are not captured, e.g. in (grib_accessor*)self; or std::vector<double>
         #   Group 2 matches a character first to avoid matching numbers as variables
-        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/]+)|([,\)\[\];]))", line)
+        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/%]+)|([,\)\[\];]))", line)
 
         if m:
-            if m.group(2) in ["vector", "string", "return", "break"]:
+            if m.group(2) in ["vector", "string", "return", "break", "goto"]:
                 debug.line("update_cvariable_access", f"IN  False match [{m.group(2)}] : {line}")
                 remainder = self.update_cvariable_access(line[m.end():], depth+1)
                 line = line[:m.end()] + remainder
@@ -653,12 +686,38 @@ class FunctionConverter:
             if not cpparg:
                 continue
 
+            # Ignore anything in quotes
+            m = re.search(r"\"", line)
+            quote_start = m.start() if m else len(line)
+            quote_end = m.end() if m else len(line)
+            m = re.search(r"\"", line[quote_end:])
+            quote_end += m.end() if m else 0
+            # Ignore anything in comments
+            m = re.search(r"/\*", line)
+            comment_start = m.start() if m else len(line)
+            comment_end = m.end() if m else len(line)
+            m = re.search(r"\*/", line[comment_end:])
+            comment_end += m.end() if m else 0
+
             # Note: We assume *var and &var should be replaced with var
-            m = re.search(rf"(?<!\")[&\*]?\b{carg.name}\b(\s*,*)(?!\")", line)
-               
-            if m and m.group(0) != cpparg.name+m.group(1):
-                line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpparg.name}{m.group(1)}", line)
-                debug.line("process_remaining_cargs", f"[{m.group(0)}] -> [{cpparg.name}{m.group(1)}]: {line}")
+            m = re.search(rf"[&\*]?\b{carg.name}\b(\s*,*)", line)
+
+            if m:
+                if quote_start <= m.start() and quote_end >= m.end():
+                    debug.line("DEBUG_CARG", f"IGNORING (QUOTES) [{m.group(0)}] for line: {line}")
+                    continue
+                if comment_start <= m.start() and comment_end >= m.end():
+                    debug.line("DEBUG_CARG", f"IGNORING (COMMENT) [{m.group(0)}] for line: {line}")
+                    continue
+
+                if m.group(0) == "args":
+                    debug.line("DEBUG_CARG", f"IGNORING REMAINING CARG [{m.group(0)}] -> [{cpparg.name}{m.group(1)}]: {line}")
+                    continue
+
+                if m.group(0) != cpparg.name+m.group(1):
+                    debug.line("process_remaining_cargs", f"1[{m.group(0)}] -> [{cpparg.name}{m.group(1)}]: {line}")
+                    line = re.sub(rf"{re.escape(m.group(0))}", rf"{cpparg.name}{m.group(1)}", line)
+                    debug.line("process_remaining_cargs", f"2[{m.group(0)}] -> [{cpparg.name}{m.group(1)}]: {line}")
 
         return line
         

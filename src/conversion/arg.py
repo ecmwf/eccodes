@@ -144,7 +144,7 @@ def parse_type_and_name_from_string(input):
     # Phase 1 - type
     m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
     if m:
-        if m.group(4) in ["return", "typedef"]:
+        if m.group(4) in ["return", "typedef", "goto"]:
             debug.line("from_string", f"Ignoring invalid arg type [{m.group(4)}]: {input}")
             return None, None
 
