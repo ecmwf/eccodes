@@ -88,7 +88,7 @@ def cstruct_arg_from_string(input):
     # Note: (?:\(.+\))? is a non-capturing group that optionally matches (TEXT)
     #       and therefore allows us to capture function calls that result in 
     #       struct access, for example: grib_handle_of_accessor(a)->buffer->data;
-    m = re.search(rf"(/\*)|(\*)?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[\w\d]*\])?", input)
+    m = re.search(rf"(/\*)|([\*&])?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[\w\d]*\])?", input)
 
     if m and m.group(1) != "/*":
         access = m.group(2)

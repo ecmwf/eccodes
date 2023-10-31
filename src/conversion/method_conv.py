@@ -137,12 +137,13 @@ class MethodConverter(FunctionConverter):
                 line = re.sub(m.re, rf"{prefix}{struct_name}{mapping.cppfuncsig.name}", line)
                 debug.line("update_cfunction_names", f"Updating inherited class method {m.group(0)} [after ]: {line}")
                 return line
-            else:
-                for mapping in self._transforms.private_funcsig_mappings:
-                    if cfunction_name == mapping.cfuncsig.name:
-                        line = re.sub(m.re, rf"{prefix}{struct_name}{mapping.cppfuncsig.name}", line)
-                        debug.line("update_cfunction_names", f"Updating private class method {m.group(0)} [after ]: {line}")
-                        return line
 
         return super().update_cfunction_names(line)
 
+    # Overridden to process private functions
+    def transform_cfunction_name(self, prefix, cfunction_name):
+        for mapping in self._transforms.private_funcsig_mappings:
+            if cfunction_name == mapping.cfuncsig.name:
+                return prefix + mapping.cppfuncsig.name
+        
+        return super().transform_cfunction_name(prefix, cfunction_name)

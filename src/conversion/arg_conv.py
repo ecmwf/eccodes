@@ -45,9 +45,22 @@ class ArgConverter:
         if m:
             return None
 
-        # [4] Pointer types
+        # [4] Struct (Pointer) types
+        m = re.search(r"struct (\w*)(\**)", self._carg.type)
+        if m:
+            for k, v in transforms.types.items():
+                if k == m.group(1) and v:
+                    return arg.Arg(v+m.group(2), transform_variable_name(updated_carg.name))
+
+        # [5] Pointer types
         m = re.search(r"(\w*)(\*+)", self._carg.type)
         if m:
+            # Is the type actually a struct?
+            for k,v in transforms.all_args.items():
+                if k.name == m.group(1) and k.type == "struct":
+                    # Yep - remove the pointer (we may consider using a smart pointer here?)
+                    return arg.Arg(v.name, transform_variable_name(updated_carg.name))
+
             cpptype = f"std::vector<{m.group(1)}>"
             if m.group(2) == "**":
                 cpptype += "&"

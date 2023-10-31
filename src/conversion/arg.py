@@ -116,8 +116,8 @@ def parse_type_and_name_from_string(input):
     #
     # The regex is quite complicated, using the following groups:
     #
-    # Groups: 1     2      3        4    5   6    
-    # Groups: const struct unsigned TYPE PTR const
+    # Groups: 1           2      3        4    5   6    
+    # Groups: const(expr) struct unsigned TYPE PTR const
     #
     # Group 5 will match the pointer regardless of whether it is with the type or name, i.e.
     #   int* var;
@@ -142,7 +142,7 @@ def parse_type_and_name_from_string(input):
     arg_type = arg_name = None
 
     # Phase 1 - type
-    m = re.match(r"(const)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
+    m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
     if m:
         if m.group(4) in ["return", "typedef", "goto"]:
             debug.line("from_string", f"Ignoring invalid arg type [{m.group(4)}]: {input}")

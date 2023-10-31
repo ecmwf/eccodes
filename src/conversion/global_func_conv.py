@@ -15,16 +15,12 @@ class GlobalFunctionConverter(FunctionConverter):
         return global_func.GlobalFunction(cppfuncsig)
 
     # Overridden to apply any static_func_name_transforms
-    def update_cfunction_names(self, line):
-        m = re.search(rf"(?<!\")(&)?\b(\w+)\b(?!\")", line)
-        if m:
-            for cfuncname, cppfuncname in self._static_func_name_transforms.items():
-                if m.group(2) == cfuncname:
-                    prefix = m.group(1) if m.group(1) is not None else ""
-                    line = re.sub(m.re, rf"{prefix}{cppfuncname}", line)
-                    debug.line("update_cfunction_names", f"[Global Converter] Updating static function {m.group(0)} [after ]: {line}")
+    def transform_cfunction_name(self, prefix, cfunction_name):
+        for cfuncname, cppfuncname in self._static_func_name_transforms.items():
+            if cfunction_name == cfuncname:
+                return prefix + cppfuncname
 
-        return super().update_cfunction_names(line)
+        return super().transform_cfunction_name(prefix, cfunction_name)
 
     # If the line starts @FORWARD_DECLARATION: then it is a placeholder from the file parser
     # We ignore it here, but will process it later (once everything else has been resolved)
