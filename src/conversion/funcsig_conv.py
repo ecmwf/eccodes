@@ -81,7 +81,7 @@ class FuncSigConverter:
         cppargs = []
         for entry in self._cfuncsig.args:
             arg_converter = arg_conv.ArgConverter(entry)
-            cpparg = arg_converter.to_cpp_func_sig_arg(self._transforms)
+            cpparg = arg_converter.to_cpp_arg(self._transforms)
             cppargs.append(cpparg)
 
         return cppargs

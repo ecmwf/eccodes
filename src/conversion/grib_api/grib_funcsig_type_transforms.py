@@ -4,6 +4,7 @@
 # Note: Any types that have the same transform in the body are removed here
 #       as the body list is always processed after the funsig list anyway...
 common_grib_funcsig_type_transforms = {
+    "grib_accessor*[]"  : "std::vector<AccessorName>",
     "grib_accessor*"    : None,
 }
 

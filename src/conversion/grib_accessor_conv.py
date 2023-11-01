@@ -38,6 +38,8 @@ non_const_cmethods = [
 
 # These will be used if no other supplied...
 common_funcsig_type_transforms = {
+    "char*"   : "std::string&",
+    "char[]"  : "std::string&",
 }
 
 # These will be used if no other supplied...

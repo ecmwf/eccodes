@@ -1,12 +1,21 @@
 
 # Note: grib_accessor* different to funcsig!
 common_grib_type_transforms = {
-    "grib_accessor*"    : None,
+    "grib_accessor*"    : "AccessorName",
     "grib_handle*"      : None,
     "grib_context*"     : None,
 }
 
 grib_array_type_transforms = {
+    "grib_darray*"  : "std::vector<double>",
+    "grib_iarray*"  : "std::vector<long>",
+    "grib_sarray*"  : "std::string",
+    "grib_vdarray*" : "std::vector<std::vector<double>>",
+    "grib_viarray*" : "std::vector<std::vector<long>>",
+    "grib_vsarray*" : "std::vector<std::string>",
+}
+
+grib_array_function_transforms = {
     "grib_darray"  : "std::vector<double>",
     "grib_iarray"  : "std::vector<long>",
     "grib_sarray"  : "std::string",

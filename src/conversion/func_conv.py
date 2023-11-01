@@ -283,9 +283,10 @@ class FunctionConverter:
 
             # Parse the function arg types
             cpp_arg_types = []
-            for arg_type in [a.strip() for a in m.group(4).split(",")]:
-                arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
-                cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms)
+            for arg_string in [a.strip() for a in m.group(4).split(",")]:
+                c_sig_arg = arg.Arg.from_func_arg_string(arg_string)
+                arg_converter = arg_conv.ArgConverter(c_sig_arg)
+                cpp_sig_arg = arg_converter.to_cpp_arg(self._transforms)
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             
@@ -362,7 +363,7 @@ class FunctionConverter:
 
         cstruct_arg, match_start, match_end = struct_arg.cstruct_arg_from_string(line)
         if cstruct_arg:
-            if depth == 0: debug.line("update_cstruct_access", f"IN  : {line}")
+            if depth == 0: debug.line("update_cstruct_access", f"IN cstruct_arg=[{cstruct_arg.as_string()}] : {line}")
             if(match_end < len(line)):
                 # Recurse, transforming the remainder, then apply here...
                 remainder = self.update_cstruct_access(line[match_end:], depth+1)

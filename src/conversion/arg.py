@@ -7,6 +7,7 @@ class Arg:
     def __init__(self, type, name="") -> None:
         self.type = type
         self.name = name
+        self._is_func_arg = False
 
     # Support for Arg as a dict key
     def __hash__(self):
@@ -36,6 +37,10 @@ class Arg:
         else:
             return self.type
 
+    @property
+    def is_func_arg(self):
+        return self._is_func_arg
+
     # Create Arg from an input string 
     @classmethod
     def from_string(cls, input):
@@ -55,8 +60,10 @@ class Arg:
         arg_type, arg_name = parse_type_and_name_from_string(input)
 
         if arg_type:
-            #debug.line("from_string", f"Creating function arg type=[{arg_type}] name=[{arg_name}] from: {input}")
-            return cls(arg_type, arg_name)
+            func_arg = cls(arg_type, arg_name)
+            func_arg._is_func_arg = True
+            debug.line("from_string", f"Creating function arg type=[{arg_type}] name=[{arg_name}] from: {input}")
+            return func_arg
 
         debug.line("from_string", f"Input is not a function arg declaration: {input}")
         return None
@@ -142,7 +149,8 @@ def parse_type_and_name_from_string(input):
     arg_type = arg_name = None
 
     # Phase 1 - type
-    m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
+    #m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
+    m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)?(const)?", input)
     if m:
         if m.group(4) in ["return", "typedef", "goto"]:
             debug.line("from_string", f"Ignoring invalid arg type [{m.group(4)}]: {input}")
@@ -172,7 +180,11 @@ def parse_type_and_name_from_string(input):
             if m.group(2):
                 # Handle array declaration e.g. char buf[10]
                 arg_type += m.group(2)
+                debug.line("from_string", f"ARRAY: arg_type=[{arg_type}] arg_name=[{arg_name}] input=[{input}]")
 
             assert arg_name, f"Error extracting arg name from input=[{input}], type=[{arg_type}]"
+
+    if arg_name is None:
+        arg_name = ""
 
     return arg_type, arg_name
