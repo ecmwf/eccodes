@@ -2,7 +2,7 @@
 from datetime import datetime
 
 func_pad = 40
-debug_enabled = True
+debug_enabled = False
 debug_filter_include = [] #["to_accessor_data"]
 debug_filter_exclude = []
 

@@ -141,9 +141,9 @@ class MethodConverter(FunctionConverter):
         return super().update_cfunction_names(line)
 
     # Overridden to process private functions
-    def transform_cfunction_name(self, prefix, cfunction_name):
+    def transform_cfunction_name(self, cfunction_name):
         for mapping in self._transforms.private_funcsig_mappings:
             if cfunction_name == mapping.cfuncsig.name:
-                return prefix + mapping.cppfuncsig.name
+                return mapping.cppfuncsig.name
         
-        return super().transform_cfunction_name(prefix, cfunction_name)
+        return super().transform_cfunction_name(cfunction_name)

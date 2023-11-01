@@ -54,6 +54,8 @@ class FunctionConverter:
         assert False, "[WARNING] Unexpected call to FunctionConverter instance - consider overriding!"
         return func.Function(cppfuncsig)
 
+    # Return true if the line should be skipped
+    # Override as required
     def skip_line(self, line):
         if not line:
             debug.line("skip_line", f"[Empty]: {line}")
@@ -96,6 +98,17 @@ class FunctionConverter:
 
     # ======================================== UPDATE FUNCTIONS ========================================
 
+    # TODO: Move to grib_api folder...
+    def convert_grib_utils(self, line):
+        for util in ["grib_is_earth_oblate",]:
+            m = re.search(rf"\b{util}\b", line)
+            if m:
+                cpp_util = transform_function_name(util)
+                line = re.sub(m.re, f"{cpp_util}", line)
+                debug.line("convert_grib_utils", f"Replaced {util} with {cpp_util} [after ]: {line}")
+
+        return line
+    
     def update_grib_api_cfunctions(self, line):
         line = self.convert_grib_utils(line)
         line = grib_api_converter.convert_grib_api_functions(line)
@@ -105,11 +118,11 @@ class FunctionConverter:
 
     # Returns the cppfunction_name for the supplied cfunction_name, or None
     # Override as required...
-    def transform_cfunction_name(self, prefix, cfunction_name):
+    def transform_cfunction_name(self, cfunction_name):
         # Static function substitutions
         for mapping in self._transforms.static_funcsig_mappings:
             if cfunction_name == mapping.cfuncsig.name:
-                return prefix+mapping.cppfuncsig.name
+                return mapping.cppfuncsig.name
             
         # Check function pointers too - need to do this in two phases
         # Example using: err = codec_element(..) [grib_accessor_class_bufr_data_array.cc]
@@ -120,31 +133,31 @@ class FunctionConverter:
             if cfunction_name == carg.name:
                 for ctype in self._transforms.function_pointers.keys():
                     if ctype == carg.type:
-                        return prefix+cpparg.name
+                        return cpparg.name
 
         return None
     
     # Recursively transform the function names in the supplied line...
     def process_cfunction_names(self, line, depth):
-        assert depth<5, f"Unexpected recursion depth [{depth}]"
+        assert depth<15, f"Unexpected recursion depth [{depth}]"
 
         # Note: (?=\() ensures group(3) is followed by a "(" without capturing it - ensuring it's a function name!
         m = re.search(rf"(&)?\b(\w+)(?=\()", line)
+        #m = re.search(rf"(&)?\b([a-zA-Z]\w*)", line)
         if m:
             prefix = m.group(1) if m.group(1) is not None else ""
             cfunction_name = m.group(2)
 
-            # Process the remainder (recursively), so we can rebuild the line correctly form the end...
+            # Process the remainder (recursively), so we can rebuild the line correctly from the end...
             remainder = self.process_cfunction_names(line[m.end():], depth+1)
 
-            cppfunction_name = self.transform_cfunction_name(prefix, cfunction_name)
+            cppfunction_name = self.transform_cfunction_name(cfunction_name)
+
             if cppfunction_name:
-                line = line[:m.start()] + cppfunction_name + remainder
+                line = line[:m.start()] + prefix + cppfunction_name + remainder
                 debug.line("process_cfunction_names", f"[{depth}] Updated function name [{cfunction_name}] -> [{cppfunction_name}]: {line}")
             else:
-                line = line[:m.end()] + prefix + remainder
-                debug.line("process_cfunction_names", f"[{depth}] Did not update function name [{cfunction_name}]: {line}")
-
+                line = line[:m.end()] + remainder
 
         return line
 
@@ -252,15 +265,14 @@ class FunctionConverter:
     # Special handling for function pointers: [typedef] RET (*PFUNC)(ARG1, ARG2, ..., ARGN);
     def update_cfunction_pointers(self, line):
 
-        #m = re.match(r"^(?:typedef)\s*(\w+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
-        m = re.match(r"^(?:typedef)\s*([^(]+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
+        m = re.match(r"^(typedef )?\s*([^(]+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", line)
         if m:
-            carg = arg.Arg(m.group(1), m.group(2))
+            carg = arg.Arg(m.group(2), m.group(3))
             arg_converter = arg_conv.ArgConverter(carg)
             cpparg = arg_converter.to_cpp_arg(self._transforms)
 
             # Assume functions returning int will now return GribStatus
-            if cpparg.type == "int":
+            if cpparg.type.strip() == "int":
                 cpparg.type = "GribStatus"
 
             debug.line("update_cfunction_pointers", f"Adding var to local arg map: {carg.type} {carg.name} -> {cpparg.type} {cpparg.name} [after ]: {line}")
@@ -271,14 +283,14 @@ class FunctionConverter:
 
             # Parse the function arg types
             cpp_arg_types = []
-            for arg_type in [a.strip() for a in m.group(3).split(",")]:
+            for arg_type in [a.strip() for a in m.group(4).split(",")]:
                 arg_converter = arg_conv.ArgConverter(arg.Arg(arg_type, "Dummy"))
                 cpp_sig_arg = arg_converter.to_cpp_func_sig_arg(self._transforms)
                 if cpp_sig_arg:
                     cpp_arg_types.append(cpp_sig_arg.type)
             
             # Apply the transform
-            line = re.sub(rf"([^(]+\**)\s*\(\s*\*(\s*\w+)\s*\)\s*\((.*)\)", f"{cpparg.type}(*{cpparg.name})({','.join([a for a in cpp_arg_types])})", line)
+            line = re.sub(m.re, f"{m.group(1)}{cpparg.type}(*{cpparg.name})({','.join([a for a in cpp_arg_types])})", line)
             debug.line("update_cfunction_pointers", f"Transformed line: {line}")
 
         return line
@@ -408,6 +420,20 @@ class FunctionConverter:
 
         return None
 
+    # Checks if the supplied cvariable actually represents a function name, and returns the 
+    # transformed C++ variable, or None
+    #
+    # Typical use-case is function pointers in initializer lists
+    def transform_if_cfunction_name(self, cvariable):
+        cppfunction_name = self.transform_cfunction_name(cvariable.name)
+
+        if cppfunction_name:
+            cppvariable = variable.Variable(cvariable.pointer, cppfunction_name, cvariable.index)
+            debug.line("transform_if_cfunction_name", f"cvariable [{cvariable.as_string()}] is function - cppvariable=[{cppvariable.as_string()}]")
+            return cppvariable
+
+        return None
+
     # Update the remainder (of the current line) to correctly set the cppvariable - returns the updated remainder
     def update_cppvariable_assignment(self, cppname, remainder):
 
@@ -461,7 +487,7 @@ class FunctionConverter:
                 transformed_string = cppvariable.as_string() + match_token.as_string() + f" {ret}{{{m.group(1)}}}" + post_match_string[m.end(1):]
                 debug.line("transform_return_cvariable_access", f"Casting to return type, transformed: {transformed_string}")
                 return transformed_string
-        
+
         return None
 
 
@@ -597,6 +623,12 @@ class FunctionConverter:
 
             return cppvariable.as_string() + match_token.as_string() + post_match_string
         
+        else:
+            # See if it a function name that hasn't been transformed (e.g. in an initializer list)
+            cppvariable = self.transform_if_cfunction_name(cvariable)
+            if cppvariable:
+                return cppvariable.as_string() + match_token.as_string() + post_match_string
+        
         return None
 
     # Takes the cvariable, match_value and post_match_string and return an updated string
@@ -641,7 +673,7 @@ class FunctionConverter:
         #   (=(?!=)) matches exactly one "=" so we can distinguish "=" (group 5) from "==" (group 6)
         #   (?![<>\*&]) is added to ensure pointer/reference types and templates are not captured, e.g. in (grib_accessor*)self; or std::vector<double>
         #   Group 2 matches a character first to avoid matching numbers as variables
-        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/%\?:]+)|([,\)\[\];]))", line)
+        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/%\?:]+)|([,\)\[\]\};]))", line)
 
         if m:
             if m.group(2) in ["vector", "string", "return", "break", "goto"]:
@@ -732,19 +764,7 @@ class FunctionConverter:
 
         return line
 
-    # ======================================== UPDATE FUNCTIONS ========================================
 
-    # TODO: Move to grib_api folder...
-    def convert_grib_utils(self, line):
-        for util in ["grib_is_earth_oblate",]:
-            m = re.search(rf"\b{util}\b", line)
-            if m:
-                cpp_util = transform_function_name(util)
-                line = re.sub(m.re, f"{cpp_util}", line)
-                debug.line("convert_grib_utils", f"Replaced {util} with {cpp_util} [after ]: {line}")
-
-        return line
-    
     def apply_get_set_substitutions(self, line):
         # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
         # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
@@ -771,14 +791,18 @@ class FunctionConverter:
 
         return line
     
-    # Anything else that's needed
-    def apply_final_checks(self, line):
+    # Convert any int return values where the function return type is GribStatus
+    def convert_int_return_values(self, line):
         m = re.search(rf"\breturn\s+(\d+)\s*;", line)
         if m and self._cppfunction.return_type == "GribStatus":
             line = re.sub(f"{m.group(1)}", f"GribStatus{{{m.group(1)}}}", line)
-            debug.line("apply_final_checks", f"Updated return value to GribStatus [after ]: {line}")
+            debug.line("convert_int_return_values", f"Updated int return value [{m.group(1)}] to GribStatus [after ]: {line}")
 
         return line
+    
+    # ======================================== UPDATE FUNCTIONS ========================================
+    
+
     
     def update_cpp_line(self, line):
 
@@ -802,12 +826,8 @@ class FunctionConverter:
             self.update_ctype_casts,
             self.apply_grib_api_transforms,
             self.update_sizeof_calls,
-
-
-
-            # [2] The remaining updates must work with C variables that may have been renamed to C++
             self.apply_get_set_substitutions,
-            self.apply_final_checks,
+            self.convert_int_return_values,
         ]
 
         debug.line("update_cpp_line", f"--------------------------------------------------------------------------------")
@@ -835,7 +855,8 @@ class FunctionConverter:
             
             # Split comma-separated variable definitions into separate lines
             # We then call ourself recursively for each split line
-            m = re.match(r"^(\s*[^\*/,\(]+\s+)\**\w+\s*=?\s*(\w+)?,", line)
+            #m = re.match(r"^(\s*[^\*/,\(]+\s+)\**\w+\s*=?\s*(\w+)?,", line)
+            m = re.match(r"^(\s*\w+\s+)\w+\s*=?\s*(\w+)?,", line)
             if m:
                 debug.line("update_cpp_body", f"--------------------------------------------------------------------------------")
                 debug.line("update_cpp_body", f"comma-separated vars [before]: {line}")

@@ -15,22 +15,22 @@ class GlobalFunctionConverter(FunctionConverter):
         return global_func.GlobalFunction(cppfuncsig)
 
     # Overridden to apply any static_func_name_transforms
-    def transform_cfunction_name(self, prefix, cfunction_name):
+    def transform_cfunction_name(self, cfunction_name):
         for cfuncname, cppfuncname in self._static_func_name_transforms.items():
             if cfunction_name == cfuncname:
-                return prefix + cppfuncname
+                return cppfuncname
 
-        return super().transform_cfunction_name(prefix, cfunction_name)
+        return super().transform_cfunction_name(cfunction_name)
 
-    # If the line starts @FORWARD_DECLARATION: then it is a placeholder from the file parser
-    # We ignore it here, but will process it later (once everything else has been resolved)
-    def custom_cfunction_updates(self, line):
-        m = re.match(rf"^@FORWARD_DECLARATION:(\w+)", line)
-        if m:
-            debug.line("custom_cfunction_updates",f"Ignoring (for now) @FORWARD_DECLARATION: name={m.group(1)}")
+    # Overridden to detect @FORWARD_DECLARATION placeholder...
+    def skip_line(self, line):
+        # Ignore @FORWARD_DECLARATION
+        if line and line.startswith("@FORWARD_DECLARATION:"):
+            debug.line("skip_line", f"[Forward declaration]: {line}")
+            return True
+        
+        return super().skip_line(line)
 
-        return super().custom_cfunction_updates(line)
-    
     # Replace any line that starts @FORWARD_DECLARATION: with the actual declaration
     # This need to be called once all other functions have been converted to ensure the
     # signatures are correct
