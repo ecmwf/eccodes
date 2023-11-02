@@ -110,6 +110,7 @@ class FunctionConverter:
         return line
     
     def update_grib_api_cfunctions(self, line):
+        line = self.apply_get_set_substitutions(line)
         line = self.convert_grib_utils(line)
         line = grib_api_converter.convert_grib_api_functions(line)
 
@@ -622,9 +623,9 @@ class FunctionConverter:
             elif m.group(1) == "{":
                 debug.line("transform_container_cvariable_access", f"Ignoring {cvariable.as_string()} braced initialiser [{post_match_string}]")
                 return cpp_container_arg.name + match_token.as_string() + post_match_string
-            elif m.group(1) == "0":
+            elif m.group(1).isalnum():
                 debug.line("transform_container_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with {{}}")
-                post_match_string = re.sub(r"(\s*)0", r"\1{}", post_match_string)
+                post_match_string = re.sub(m.group(1), f"{{{m.group(1)}}}", post_match_string)
                 return cpp_container_arg.name + match_token.as_string() + post_match_string
 
         elif match_token.is_comparison: 
@@ -800,29 +801,48 @@ class FunctionConverter:
         return line
 
 
+    # Original regex: r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)"
     def apply_get_set_substitutions(self, line):
         # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
-        # Note: This regex is complicated (!) by calls like grib_get_double(h, lonstr, &(lon[i]));
-        #       The (?:&)?([\(\w\[\]\)]*)? section is added to match this and strip off the & (and it appears twice!)
-        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)", line)
+        debug.line("apply_get_set_substitutions", f"[IN ] Line: {line}")
+        helper_func = None
+
+        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(", line)
         if m:
-            accessor_name = m.group(4)
+            if m.group(1) == "get":
+                if m.group(2) == "size":
+                    helper_func = f"getSizeHelper"
+                else:
+                    helper_func = f"unpack{m.group(2).capitalize()}Helper"
+            else:
+                helper_func = f"pack{m.group(2).capitalize()}Helper"
+
+        if not helper_func:
+            return line
+
+        helper_func_match_start = m.start()
+        helper_func_match_end = m.end()
+        # [2] Capture the parameters - we only need the second and third so the cleanest way is
+        #     to explicitly capture the first three, otherwise the first paramaeter can cause 
+        #     issues when it is grib_handle_of_accessor(a) due to the trailing )
+        param_re = r"\s*([^,]*)\s*"
+        m = re.search(rf"{param_re},{param_re},{param_re}[^\)]*\)", line[helper_func_match_end:])
+        if m:
+            parameter_match_end = helper_func_match_end+m.end()
+
+            accessor_name = m.group(2)
             if accessor_name[0] == "\"":
                 accessor_name = "AccessorName(" + accessor_name + ")"
             else:
-                for k,v in self._transforms.all_args.items():
-                    if v and v.name == accessor_name and v.type == "std::string":
+                for cpparg in self._transforms.all_args.values():
+                    if cpparg and cpparg.name == accessor_name and cpparg.type == "std::string":
                         accessor_name = "AccessorName(" + accessor_name + ")"
+            
+            helper_func += f"({accessor_name}, {m.group(3)})"
+            line = line[:helper_func_match_start] + helper_func + line[parameter_match_end:]
 
-            if m.group(1) == "get":
-                if m.group(2) == "size":
-                    line = re.sub(m.re, f"getSizeHelper({accessor_name}, {m.group(5)})", line)
-                else:
-                    line = re.sub(m.re, f"unpack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
-            else:
-                line = re.sub(m.re, f"pack{m.group(2).capitalize()}Helper({accessor_name}, {m.group(5)})", line)
-
-            debug.line("apply_get_set_substitutions", f"Result of substitution: {line}")
+        
+        debug.line("apply_get_set_substitutions", f"[OUT] helper func=[{helper_func}] Line: {line}")
 
         return line
     
@@ -861,7 +881,6 @@ class FunctionConverter:
             self.update_ctype_casts,
             self.apply_grib_api_transforms,
             self.update_sizeof_calls,
-            self.apply_get_set_substitutions,
             self.convert_int_return_values,
         ]
 

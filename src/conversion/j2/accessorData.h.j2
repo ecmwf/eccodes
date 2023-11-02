@@ -26,7 +26,7 @@ public:
     {{ c.name }}({{c.constructor.arg_string}});
     ~{{ c.name }}() = default;
 
-private:
+protected:
     // Inherited functions
     {%- for m in c.inherited_methods %}
     {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {{ m.const }} override;{% endfor %}
@@ -35,9 +35,10 @@ private:
     {% for m in c.members %} {{ m.as_declaration() }}{{ m.default_value }};
     {%- endfor %}
 
-// Private methods
-{%- for m in c.private_methods %}
-{{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
-};
+private:
+    // Private methods
+    {%- for m in c.private_methods %}
+    {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
+    };
 
 } // namespace {{ c.nested_namespaces }}
