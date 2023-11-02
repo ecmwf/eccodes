@@ -385,6 +385,8 @@ class FunctionConverter:
             if(match_end < len(line)):
                 # Recurse, transforming the remainder, then apply here...
                 remainder = self.update_cstruct_access(line[match_end:], depth+1)
+            else:
+                remainder = ""
 
             cppstruct_arg = self.transform_cstruct_arg(cstruct_arg)
             assert cppstruct_arg, f"Could not transform struct {cstruct_arg.name} to C++"

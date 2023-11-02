@@ -73,7 +73,7 @@ class MethodConverter(FunctionConverter):
             if self._transforms.ctype_of(cstruct_arg.name) == "grib_handle*" or cstruct_arg.name == "grib_handle_of_accessor(a)":
                 if cstruct_member.name == "buffer":
 
-                    debug.line("DEBUG", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
+                    debug.line("transform_cstruct_arg", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
 
                     cppstruct_arg = struct_arg.StructArg("", "buffer_", "" )
                     if cstruct_member.member and cstruct_member.member.name == "data":
