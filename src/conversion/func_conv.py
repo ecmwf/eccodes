@@ -491,6 +491,15 @@ class FunctionConverter:
 
         return None
 
+    # Customisation point for getting the correct container function call for the supplied action and data
+    # For example: get_size could be .size() or .length()
+    # Override as required
+    def container_func_call_for(self, cpparg, action, data=""):
+        if action in ["clear", "resize", "size"]:
+            return f"{action}({data})"
+        
+        assert False, f"Unknown action [{action}]"
+
 
     # Special transforms for lengths that apply to buffers. The {ptr,length} C args are replaced by
     # a single C++ container arg, however we still need to deal with size-related code in the body
@@ -548,17 +557,20 @@ class FunctionConverter:
             assert m, f"Could not extract assigned value from: {post_match_string}"
 
             if m.group(1) == "0":
-                transformed_line = f"{container_arg.name}.clear();"
-                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with .clear() Line:{transformed_line}")
+                container_func_call = self.container_func_call_for(container_arg, "clear")
+                transformed_line = f"{container_arg.name}.{container_func_call};"
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = 0 with .{container_func_call} Line:{transformed_line}")
                 return transformed_line
             else:
-                transformed_line = f"{container_arg.name}.resize({m.group(1)});"
-                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = {m.group(1)} with .resize({m.group(1)}) Line:{transformed_line}")
+                container_func_call = self.container_func_call_for(container_arg, "resize", m.group(1))
+                transformed_line = f"{container_arg.name}.{container_func_call};"
+                debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} = {m.group(1)} with .{container_func_call} Line:{transformed_line}")
                 return transformed_line
 
         # Replace any other *len with CONTAINER.size()
-        transformed_line = f"{container_arg.name}.size()" + match_token.as_string() + post_match_string
-        debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} with {container_arg.name}.size() Line:{transformed_line}")
+        container_func_call = self.container_func_call_for(container_arg, "size")
+        transformed_line = f"{container_arg.name}.{container_func_call}" + match_token.as_string() + post_match_string
+        debug.line("transform_len_cvariable_access", f"Replaced {cvariable.as_string()} with {container_arg.name}.{container_func_call} Line:{transformed_line}")
         return transformed_line
 
 

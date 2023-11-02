@@ -1,0 +1,1210 @@
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[const long] name=[len] from: const long len
+from_string                             : Creating function arg type=[grib_arguments*] name=[arg] from: grib_arguments* arg
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[long*] name=[count] from: long* count
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[grib_dumper*] name=[dumper] from: grib_dumper* dumper
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[char*] name=[val] from: char* val
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[const char*] name=[val] from: const char* val
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[const long*] name=[v] from: const long* v
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[const double*] name=[v] from: const double* v
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[long*] name=[v] from: long* v
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[double*] name=[v] from: double* v
+from_string                             : Creating function arg type=[size_t*] name=[len] from: size_t* len
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+from_string                             : Creating function arg type=[grib_accessor*] name=[b] from: grib_accessor* b
+from_string                             : Creating function arg type=[grib_context*] name=[c] from: grib_context* c
+from_string                             : Creating function arg type=[grib_accessor*] name=[a] from: grib_accessor* a
+
+to_accessor_data                        : ===== [CONVERTING:BEGIN] grib_accessor_class_ascii ====================
+                                          
+create_transforms                       : Funcsig type transform: char* -> std::string&
+create_transforms                       : Funcsig type transform: char[] -> std::string&
+create_transforms                       : Funcsig type transform: grib_accessor*[] -> std::vector<AccessorName>
+create_transforms                       : Funcsig type transform: grib_accessor* -> None
+create_transforms                       : Type transform: char** -> std::string&
+create_transforms                       : Type transform: char* -> std::string
+create_transforms                       : Type transform: char[] -> std::string
+create_transforms                       : Type transform: grib_accessor* -> AccessorName
+create_transforms                       : Type transform: grib_handle* -> None
+create_transforms                       : Type transform: grib_context* -> None
+create_transforms                       : Type transform: grib_darray* -> std::vector<double>
+create_transforms                       : Type transform: grib_iarray* -> std::vector<long>
+create_transforms                       : Type transform: grib_sarray* -> std::string
+create_transforms                       : Type transform: grib_vdarray* -> std::vector<std::vector<double>>
+create_transforms                       : Type transform: grib_viarray* -> std::vector<std::vector<long>>
+create_transforms                       : Type transform: grib_vsarray* -> std::vector<std::string>
+Transforms                              : Adding type transform: self -> AsciiData
+Transforms                              : Adding type transform: super -> AccessorData
+Transforms                              : Adding type transform: supersuper -> None
+
+create_cpp_body                         : ============================== Global [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:init
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:init
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:value_count
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:value_count
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:string_length
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:string_length
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:dump
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:dump
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:get_native_type
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:get_native_type
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:unpack_string
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:unpack_string
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:pack_string
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:pack_string
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:pack_long
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:pack_long
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:pack_double
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:pack_double
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:unpack_long
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:unpack_long
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:unpack_double
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:unpack_double
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] @FORWARD_DECLARATION:compare
+skip_line                               : [Forward declaration]: @FORWARD_DECLARATION:compare
+
+create_cpp_body                         : ============================== Global [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: const long len -> None
+Transforms                              : Adding new local arg transform: grib_arguments* arg -> AccessorInitData const& initData
+
+create_cpp_body                         : ============================== init [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] a->length = len;
+from_string                             : Input is not an arg declaration: a->length 
+update_cstruct_access                   : IN cstruct_arg=[a->length] : a->length = len;
+from_string                             : Input does not contain a struct member:  = len;
+update_cstruct_access                   : OUT : length_ =  len;
+update_cvariable_access                 : IN  [0][length_][=]: length_ =  len;
+update_cvariable_access                 : IN  [1][len][;]:   len;
+transform_cvariable_access              : [IN] cvariable=[len] match_token=[;] post_match_string=[]
+transform_len_cvariable_access          : Replaced len with initData.length Line:initData.length;
+update_cvariable_access                 : OUT [1][len][;]:   initData.length;
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[=] post_match_string=[  initData.length;]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: length_ =  initData.length;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] Assert(a->length >= 0);
+from_string                             : Input is not an arg declaration: Assert(a->length >
+update_cstruct_access                   : IN cstruct_arg=[a->length] : Assert(a->length >= 0);
+from_string                             : Input does not contain a struct member:  >= 0);
+update_cstruct_access                   : OUT : Assert(length_ =  0);
+update_cvariable_access                 : IN  [0][length_][=]: Assert(length_ =  0);
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[=] post_match_string=[  0);]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: Assert(length_ =  0);
+
+create_cpp_body                         : ============================== init [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_context* c -> None
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+
+create_cpp_body                         : ============================== destroy [IN]  ==============================
+                                          
+
+create_cpp_body                         : ============================== destroy [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: long* count -> None
+
+create_cpp_body                         : ============================== value_count [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] *count = 1;
+from_string                             : Input is not an arg declaration: *count 
+from_string                             : Input does not contain a struct member: *count = 1;
+update_cvariable_access                 : IN  [0][*count][=]: *count = 1;
+transform_cvariable_access              : [IN] cvariable=[*count] match_token=[=] post_match_string=[ 1;]
+default_transform_cvariable_access      : Deleted [count]
+update_cvariable_access                 : OUT [0][*count][=]: // [Deleted variable count] *count = 1;
+skip_line                               : [C++ Comment]: // [Deleted variable count] *count = 1;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return 0;
+from_string                             : Ignoring invalid arg type [return]: return 0
+from_string                             : Input is not an arg declaration: return 0
+from_string                             : Input does not contain a struct member: return 0;
+
+create_cpp_body                         : ============================== value_count [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+
+create_cpp_body                         : ============================== string_length [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return a->length;
+from_string                             : Ignoring invalid arg type [return]: return a->length
+from_string                             : Input is not an arg declaration: return a->length
+update_cstruct_access                   : IN cstruct_arg=[a->length] : return a->length;
+from_string                             : Input does not contain a struct member: ;
+update_cstruct_access                   : OUT : return length_;
+update_cvariable_access                 : IN  [0][length_][;]: return length_;
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return length_;
+
+create_cpp_body                         : ============================== string_length [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: grib_dumper* dumper -> None
+
+create_cpp_body                         : ============================== dump [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_dump_string(dumper, a, NULL);
+from_string                             : Input is not an arg declaration: grib_dump_string(dumper, a, NULL)
+from_string                             : Input does not contain a struct member: grib_dump_string(dumper, a, NULL);
+update_cvariable_access                 : IN  [0][dumper][,]: grib_dump_string(dumper, a, NULL);
+update_cvariable_access                 : IN  [1][a][,]:  a, NULL);
+update_cvariable_access                 : IN  [2][NULL][)]:  NULL);
+transform_cvariable_access              : [IN] cvariable=[NULL] match_token=[)] post_match_string=[;]
+update_cvariable_access                 : OUT [2][No transformed_remainder]:  NULL);
+transform_cvariable_access              : [IN] cvariable=[a] match_token=[,] post_match_string=[ NULL);]
+default_transform_cvariable_access      : Removed [a] for match [,]
+update_cvariable_access                 : OUT [1][a][,]:   NULL);
+transform_cvariable_access              : [IN] cvariable=[dumper] match_token=[,] post_match_string=[  NULL);]
+default_transform_cvariable_access      : Removed [dumper] for match [,]
+update_cvariable_access                 : OUT [0][dumper][,]: grib_dump_string(  NULL);
+
+create_cpp_body                         : ============================== dump [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+
+create_cpp_body                         : ============================== get_native_type [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_TYPE_STRING;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_TYPE_STRING
+from_string                             : Input is not an arg declaration: return GRIB_TYPE_STRING
+from_string                             : Input does not contain a struct member: return GRIB_TYPE_STRING;
+update_cvariable_access                 : IN  [0][GRIB_TYPE_STRING][;]: return GRIB_TYPE_STRING;
+transform_cvariable_access              : [IN] cvariable=[GRIB_TYPE_STRING] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_TYPE_STRING;
+convert_grib_values                     : [0] Replaced GRIB_TYPE_STRING with GribType::STRING: return GribType::STRING;
+
+create_cpp_body                         : ============================== get_native_type [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: char* val -> std::string& value
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== unpack_string [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t i = 0;
+to_cpp_arg                              : Result: [size_t i] -> [size_t i] updated_carg=[size_t i]
+Transforms                              : Adding new local arg transform: size_t i -> size_t i
+update_cvariable_declarations           : Added local arg: size_t i -> size_t i
+from_string                             : Input does not contain a struct member: size_t i = 0;
+update_cvariable_access                 : IN  [0][i][=]: size_t i = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0;]
+update_cvariable_access                 : OUT [0][i][=]: size_t i = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_handle* hand = grib_handle_of_accessor(a);
+to_cpp_arg                              : Result: [grib_handle* hand] -> [None] updated_carg=[grib_handle* hand]
+Transforms                              : Adding new local arg transform: grib_handle* hand -> None
+update_cvariable_declarations           : Added local arg: grib_handle* hand -> None
+update_cvariable_declarations           : --> deleted line: grib_handle* hand = grib_handle_of_accessor(a);
+skip_line                               : [Empty]: 
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] const size_t alen = a->length;
+to_cpp_arg                              : Result: [const size_t alen] -> [const size_t alen] updated_carg=[const size_t alen]
+Transforms                              : Adding new local arg transform: const size_t alen -> const size_t alen
+update_cvariable_declarations           : Added local arg: const size_t alen -> const size_t alen
+update_cstruct_access                   : IN cstruct_arg=[a->length] : const size_t alen = a->length;
+from_string                             : Input does not contain a struct member: ;
+update_cstruct_access                   : OUT : const size_t alen = length_;
+update_cvariable_access                 : IN  [0][alen][=]: const size_t alen = length_;
+update_cvariable_access                 : IN  [1][length_][;]:  length_;
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  length_;
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[=] post_match_string=[ length_;]
+update_cvariable_access                 : OUT [0][alen][=]: const size_t alen = length_;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (len[0] < (alen + 1)) {
+from_string                             : Input does not contain a struct member: if (len[0] < (alen + 1)) {
+update_cvariable_access                 : IN  [0][len[0]][<]: if (len[0] < (alen + 1)) {
+update_cvariable_access                 : IN  [1][alen][+]:  (alen + 1)) {
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[+] post_match_string=[ 1)) {]
+update_cvariable_access                 : OUT [1][alen][+]:  (alen + 1)) {
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[<] post_match_string=[ (alen + 1)) {]
+transform_len_cvariable_access          : Replaced len[0] with value.size() Line:value.size() < (alen + 1)) {
+update_cvariable_access                 : OUT [0][len[0]][<]: if (value.size() < (alen + 1)) {
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+from_string                             : Input does not contain a struct member: gribLog( GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+update_cvariable_access                 : IN  [0][GRIB_LOG_ERROR][,]: gribLog( GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+update_cvariable_access                 : IN  [1][unpack_string][:]:  "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+update_cvariable_access                 : IN  [2][for][%]:  Wrong size (%zu) for %s, it contains %ld values",
+update_cvariable_access                 : IN  [3][s][,]: s, it contains %ld values",
+update_cvariable_access                 : IN  [4][contains][%]:  it contains %ld values",
+transform_cvariable_access              : [IN] cvariable=[contains] match_token=[%] post_match_string=[ld values",]
+update_cvariable_access                 : OUT [4][No transformed_remainder]:  it contains %ld values",
+transform_cvariable_access              : [IN] cvariable=[s] match_token=[,] post_match_string=[ it contains %ld values",]
+update_cvariable_access                 : OUT [3][No transformed_remainder]: s, it contains %ld values",
+transform_cvariable_access              : [IN] cvariable=[for] match_token=[%] post_match_string=[s, it contains %ld values",]
+update_cvariable_access                 : OUT [2][No transformed_remainder]:  Wrong size (%zu) for %s, it contains %ld values",
+transform_cvariable_access              : [IN] cvariable=[unpack_string] match_token=[:] post_match_string=[ Wrong size (%zu) for %s, it contains %ld values",]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_ERROR] match_token=[,] post_match_string=[ "unpack_string: Wrong size (%zu) for %s, it contains %ld values",]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING]                 len[0], a->name, a->length + 1);
+from_string                             : Input is not an arg declaration: len[0], a->name, a->length + 1)
+update_cstruct_access                   : IN cstruct_arg=[a->name] :                 len[0], a->name, a->length + 1);
+from_string                             : Input does not contain a struct member:  + 1);
+update_cstruct_access                   : OUT :                 len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [0][len[0]][,]:                 len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [1][length_][+]:  "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[+] post_match_string=[ 1);]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[,] post_match_string=[ "AsciiData", length_ + 1);]
+transform_len_cvariable_access          : Replaced len[0] with value.size() Line:value.size(), "AsciiData", length_ + 1);
+update_cvariable_access                 : OUT [0][len[0]][,]:                 value.size(), "AsciiData", length_ + 1);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] len[0] = 0;
+from_string                             : Input is not an arg declaration: len[0] 
+from_string                             : Input does not contain a struct member: len[0] = 0;
+update_cvariable_access                 : IN  [0][len[0]][=]: len[0] = 0;
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[=] post_match_string=[ 0;]
+transform_len_cvariable_access          : Replaced len[0] = 0 with .clear() Line:value.clear();
+update_cvariable_access                 : OUT [0][len[0]][=]: value.clear();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_ARRAY_TOO_SMALL;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_ARRAY_TOO_SMALL
+from_string                             : Input is not an arg declaration: return GRIB_ARRAY_TOO_SMALL
+from_string                             : Input does not contain a struct member: return GRIB_ARRAY_TOO_SMALL;
+update_cvariable_access                 : IN  [0][GRIB_ARRAY_TOO_SMALL][;]: return GRIB_ARRAY_TOO_SMALL;
+transform_cvariable_access              : [IN] cvariable=[GRIB_ARRAY_TOO_SMALL] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_ARRAY_TOO_SMALL;
+convert_grib_values                     : [0] Replaced GRIB_ARRAY_TOO_SMALL with GribStatus::ARRAY_TOO_SMALL: return GribStatus::ARRAY_TOO_SMALL;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] }
+from_string                             : Input does not contain a struct member: }
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] for (i = 0; i < alen; i++)
+from_string                             : Input is not an arg declaration: for (i 
+from_string                             : Input does not contain a struct member: for (i = 0; i < alen; i++)
+update_cvariable_access                 : IN  [0][i][=]: for (i = 0; i < alen; i++)
+update_cvariable_access                 : IN  [1][i][<]:  0; i < alen; i++)
+update_cvariable_access                 : IN  [2][alen][;]:  alen; i++)
+update_cvariable_access                 : IN  [3][i][++]:  i++)
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[++] post_match_string=[)]
+update_cvariable_access                 : OUT [3][i][++]:  i ++)
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[;] post_match_string=[ i ++)]
+update_cvariable_access                 : OUT [2][alen][;]:  alen; i ++)
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[<] post_match_string=[ alen; i ++)]
+update_cvariable_access                 : OUT [1][i][<]:  0; i < alen; i ++)
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0; i < alen; i ++)]
+update_cvariable_access                 : OUT [0][i][=]: for (i = 0; i < alen; i ++)
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] val[i] = hand->buffer->data[a->offset + i];
+from_string                             : Input is not an arg declaration: val[i] 
+update_cstruct_access                   : IN cstruct_arg=[hand->buffer->data] : val[i] = hand->buffer->data[a->offset + i];
+from_string                             : Input does not contain a struct member:  + i];
+update_cstruct_access                   : [0] Deleting hand Line: // [Deleted struct hand] val[i] = hand->buffer->data[a->offset + i];
+skip_line                               : [C++ Comment]: // [Deleted struct hand] val[i] = hand->buffer->data[a->offset + i];
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] val[i] = 0;
+from_string                             : Input is not an arg declaration: val[i] 
+from_string                             : Input does not contain a struct member: val[i] = 0;
+update_cvariable_access                 : IN  [0][val][[]: val[i] = 0;
+update_cvariable_access                 : IN  [1][i][]]: i] = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[]] post_match_string=[ = 0;]
+update_cvariable_access                 : OUT [1][i][]]: i] = 0;
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[[] post_match_string=[i] = 0;]
+update_cvariable_access                 : OUT [0][val][[]: value[i] = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] len[0] = i;
+from_string                             : Input is not an arg declaration: len[0] 
+from_string                             : Input does not contain a struct member: len[0] = i;
+update_cvariable_access                 : IN  [0][len[0]][=]: len[0] = i;
+update_cvariable_access                 : IN  [1][i][;]:  i;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][i][;]:  i;
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[=] post_match_string=[ i;]
+transform_len_cvariable_access          : Replaced len[0] = i with .resize(i) Line:value.resize(i);
+update_cvariable_access                 : OUT [0][len[0]][=]: value.resize(i);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_SUCCESS;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_SUCCESS
+from_string                             : Input is not an arg declaration: return GRIB_SUCCESS
+from_string                             : Input does not contain a struct member: return GRIB_SUCCESS;
+update_cvariable_access                 : IN  [0][GRIB_SUCCESS][;]: return GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[GRIB_SUCCESS] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_SUCCESS;
+convert_grib_values                     : [0] Replaced GRIB_SUCCESS with GribStatus::SUCCESS: return GribStatus::SUCCESS;
+
+create_cpp_body                         : ============================== unpack_string [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: const char* val -> std::string const& value
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== pack_string [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t i = 0;
+to_cpp_arg                              : Result: [size_t i] -> [size_t i] updated_carg=[size_t i]
+Transforms                              : Adding new local arg transform: size_t i -> size_t i
+update_cvariable_declarations           : Added local arg: size_t i -> size_t i
+from_string                             : Input does not contain a struct member: size_t i = 0;
+update_cvariable_access                 : IN  [0][i][=]: size_t i = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0;]
+update_cvariable_access                 : OUT [0][i][=]: size_t i = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_handle* hand = grib_handle_of_accessor(a);
+to_cpp_arg                              : Result: [grib_handle* hand] -> [None] updated_carg=[grib_handle* hand]
+Transforms                              : Adding new local arg transform: grib_handle* hand -> None
+update_cvariable_declarations           : Added local arg: grib_handle* hand -> None
+update_cvariable_declarations           : --> deleted line: grib_handle* hand = grib_handle_of_accessor(a);
+skip_line                               : [Empty]: 
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] const size_t alen = a->length;
+to_cpp_arg                              : Result: [const size_t alen] -> [const size_t alen] updated_carg=[const size_t alen]
+Transforms                              : Adding new local arg transform: const size_t alen -> const size_t alen
+update_cvariable_declarations           : Added local arg: const size_t alen -> const size_t alen
+update_cstruct_access                   : IN cstruct_arg=[a->length] : const size_t alen = a->length;
+from_string                             : Input does not contain a struct member: ;
+update_cstruct_access                   : OUT : const size_t alen = length_;
+update_cvariable_access                 : IN  [0][alen][=]: const size_t alen = length_;
+update_cvariable_access                 : IN  [1][length_][;]:  length_;
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  length_;
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[=] post_match_string=[ length_;]
+update_cvariable_access                 : OUT [0][alen][=]: const size_t alen = length_;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (len[0] > (alen + 1)) {
+from_string                             : Input does not contain a struct member: if (len[0] > (alen + 1)) {
+update_cvariable_access                 : IN  [0][len[0]][>]: if (len[0] > (alen + 1)) {
+update_cvariable_access                 : IN  [1][alen][+]:  (alen + 1)) {
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[+] post_match_string=[ 1)) {]
+update_cvariable_access                 : OUT [1][alen][+]:  (alen + 1)) {
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[>] post_match_string=[ (alen + 1)) {]
+transform_len_cvariable_access          : Replaced len[0] with value.size() Line:value.size() > (alen + 1)) {
+update_cvariable_access                 : OUT [0][len[0]][>]: if (value.size() > (alen + 1)) {
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_ERROR,
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_ERROR,
+from_string                             : Input does not contain a struct member: gribLog( GRIB_LOG_ERROR,
+update_cvariable_access                 : IN  [0][GRIB_LOG_ERROR][,]: gribLog( GRIB_LOG_ERROR,
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_ERROR] match_token=[,] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_ERROR,
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING]                 "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], a->name, a->length + 1);
+from_string                             : Input is not an arg declaration: "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], a->name, a->length + 1)
+update_cstruct_access                   : IN cstruct_arg=[a->name] :                 "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], a->name, a->length + 1);
+from_string                             : Input does not contain a struct member:  + 1);
+update_cstruct_access                   : OUT :                 "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [0][pack_string][:]:                 "pack_string: Wrong size (%zu) for %s, it contains %ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [1][for][%]:  Wrong size (%zu) for %s, it contains %ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [2][s][,]: s, it contains %ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [3][contains][%]:  it contains %ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [4][len[0]][,]: ld values", len[0], "AsciiData", length_ + 1);
+update_cvariable_access                 : IN  [5][length_][+]:  "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[+] post_match_string=[ 1);]
+update_cvariable_access                 : OUT [5][No transformed_remainder]:  "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[,] post_match_string=[ "AsciiData", length_ + 1);]
+transform_len_cvariable_access          : Replaced len[0] with value.size() Line:value.size(), "AsciiData", length_ + 1);
+update_cvariable_access                 : OUT [4][len[0]][,]: ld values", value.size(), "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[contains] match_token=[%] post_match_string=[ld values", value.size(), "AsciiData", length_ + 1);]
+update_cvariable_access                 : OUT [3][No transformed_remainder]:  it contains %ld values", value.size(), "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[s] match_token=[,] post_match_string=[ it contains %ld values", value.size(), "AsciiData", length_ + 1);]
+update_cvariable_access                 : OUT [2][No transformed_remainder]: s, it contains %ld values", value.size(), "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[for] match_token=[%] post_match_string=[s, it contains %ld values", value.size(), "AsciiData", length_ + 1);]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  Wrong size (%zu) for %s, it contains %ld values", value.size(), "AsciiData", length_ + 1);
+transform_cvariable_access              : [IN] cvariable=[pack_string] match_token=[:] post_match_string=[ Wrong size (%zu) for %s, it contains %ld values", value.size(), "AsciiData", length_ + 1);]
+update_cvariable_access                 : OUT [0][No transformed_remainder]:                 "pack_string: Wrong size (%zu) for %s, it contains %ld values", value.size(), "AsciiData", length_ + 1);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] len[0] = 0;
+from_string                             : Input is not an arg declaration: len[0] 
+from_string                             : Input does not contain a struct member: len[0] = 0;
+update_cvariable_access                 : IN  [0][len[0]][=]: len[0] = 0;
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[=] post_match_string=[ 0;]
+transform_len_cvariable_access          : Removed len assignment for const variable [len[0]]
+update_cvariable_access                 : OUT [0][len[0]][=]: // [length assignment removed - var is const] len[0] = 0;
+skip_line                               : [C++ Comment]: // [length assignment removed - var is const] len[0] = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_BUFFER_TOO_SMALL;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_BUFFER_TOO_SMALL
+from_string                             : Input is not an arg declaration: return GRIB_BUFFER_TOO_SMALL
+from_string                             : Input does not contain a struct member: return GRIB_BUFFER_TOO_SMALL;
+update_cvariable_access                 : IN  [0][GRIB_BUFFER_TOO_SMALL][;]: return GRIB_BUFFER_TOO_SMALL;
+transform_cvariable_access              : [IN] cvariable=[GRIB_BUFFER_TOO_SMALL] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_BUFFER_TOO_SMALL;
+convert_grib_values                     : [0] Replaced GRIB_BUFFER_TOO_SMALL with GribStatus::BUFFER_TOO_SMALL: return GribStatus::BUFFER_TOO_SMALL;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] }
+from_string                             : Input does not contain a struct member: }
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] for (i = 0; i < alen; i++) {
+from_string                             : Input is not an arg declaration: for (i 
+from_string                             : Input does not contain a struct member: for (i = 0; i < alen; i++) {
+update_cvariable_access                 : IN  [0][i][=]: for (i = 0; i < alen; i++) {
+update_cvariable_access                 : IN  [1][i][<]:  0; i < alen; i++) {
+update_cvariable_access                 : IN  [2][alen][;]:  alen; i++) {
+update_cvariable_access                 : IN  [3][i][++]:  i++) {
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[++] post_match_string=[) {]
+update_cvariable_access                 : OUT [3][i][++]:  i ++) {
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[;] post_match_string=[ i ++) {]
+update_cvariable_access                 : OUT [2][alen][;]:  alen; i ++) {
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[<] post_match_string=[ alen; i ++) {]
+update_cvariable_access                 : OUT [1][i][<]:  0; i < alen; i ++) {
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0; i < alen; i ++) {]
+update_cvariable_access                 : OUT [0][i][=]: for (i = 0; i < alen; i ++) {
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (i < len[0])
+from_string                             : Input does not contain a struct member: if (i < len[0])
+update_cvariable_access                 : IN  [0][i][<]: if (i < len[0])
+update_cvariable_access                 : IN  [1][len[0]][)]:  len[0])
+transform_cvariable_access              : [IN] cvariable=[len[0]] match_token=[)] post_match_string=[]
+transform_len_cvariable_access          : Replaced len[0] with value.size() Line:value.size())
+update_cvariable_access                 : OUT [1][len[0]][)]:  value.size())
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[<] post_match_string=[ value.size())]
+update_cvariable_access                 : OUT [0][i][<]: if (i < value.size())
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] hand->buffer->data[a->offset + i] = val[i];
+from_string                             : Input is not an arg declaration: hand->buffer->data[a->offset + i] 
+update_cstruct_access                   : IN cstruct_arg=[hand->buffer->data] : hand->buffer->data[a->offset + i] = val[i];
+from_string                             : Input does not contain a struct member:  + i] = val[i];
+update_cstruct_access                   : [0] Deleting hand Line: // [Deleted struct hand] hand->buffer->data[a->offset + i] = val[i];
+skip_line                               : [C++ Comment]: // [Deleted struct hand] hand->buffer->data[a->offset + i] = val[i];
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] else
+from_string                             : Input does not contain a struct member: else
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] hand->buffer->data[a->offset + i] = 0;
+from_string                             : Input is not an arg declaration: hand->buffer->data[a->offset + i] 
+update_cstruct_access                   : IN cstruct_arg=[hand->buffer->data] : hand->buffer->data[a->offset + i] = 0;
+from_string                             : Input does not contain a struct member:  + i] = 0;
+update_cstruct_access                   : [0] Deleting hand Line: // [Deleted struct hand] hand->buffer->data[a->offset + i] = 0;
+skip_line                               : [C++ Comment]: // [Deleted struct hand] hand->buffer->data[a->offset + i] = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] }
+from_string                             : Input does not contain a struct member: }
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_SUCCESS;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_SUCCESS
+from_string                             : Input is not an arg declaration: return GRIB_SUCCESS
+from_string                             : Input does not contain a struct member: return GRIB_SUCCESS;
+update_cvariable_access                 : IN  [0][GRIB_SUCCESS][;]: return GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[GRIB_SUCCESS] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_SUCCESS;
+convert_grib_values                     : [0] Replaced GRIB_SUCCESS with GribStatus::SUCCESS: return GribStatus::SUCCESS;
+
+create_cpp_body                         : ============================== pack_string [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: const long* v -> std::vector<long> const& values
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== pack_long [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name);
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name);
+from_string                             : Input is not an arg declaration: gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name)
+update_cstruct_access                   : IN cstruct_arg=[a->name] : gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", a->name);
+from_string                             : Input does not contain a struct member: );
+update_cstruct_access                   : OUT : gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  [0][GRIB_LOG_ERROR][,]: gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  [1][pack][%]:  "Should not pack %s as long (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  False match [string] : s as long (It's a string)", "AsciiData");
+update_cvariable_access                 : OUT False match [string] : s as long (It's a string)", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[pack] match_token=[%] post_match_string=[s as long (It's a string)", "AsciiData");]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  "Should not pack %s as long (It's a string)", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_ERROR] match_token=[,] post_match_string=[ "Should not pack %s as long (It's a string)", "AsciiData");]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_ERROR, "Should not pack %s as long (It's a string)", "AsciiData");
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_NOT_IMPLEMENTED;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input is not an arg declaration: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input does not contain a struct member: return GRIB_NOT_IMPLEMENTED;
+update_cvariable_access                 : IN  [0][GRIB_NOT_IMPLEMENTED][;]: return GRIB_NOT_IMPLEMENTED;
+transform_cvariable_access              : [IN] cvariable=[GRIB_NOT_IMPLEMENTED] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_NOT_IMPLEMENTED;
+convert_grib_values                     : [0] Replaced GRIB_NOT_IMPLEMENTED with GribStatus::NOT_IMPLEMENTED: return GribStatus::NOT_IMPLEMENTED;
+
+create_cpp_body                         : ============================== pack_long [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: const double* v -> std::vector<double> const& values
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== pack_double [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name);
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name);
+from_string                             : Input is not an arg declaration: gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name)
+update_cstruct_access                   : IN cstruct_arg=[a->name] : gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", a->name);
+from_string                             : Input does not contain a struct member: );
+update_cstruct_access                   : OUT : gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  [0][GRIB_LOG_ERROR][,]: gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  [1][pack][%]:  "Should not pack %s as double (It's a string)", "AsciiData");
+update_cvariable_access                 : IN  False match [string] : s as double (It's a string)", "AsciiData");
+update_cvariable_access                 : OUT False match [string] : s as double (It's a string)", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[pack] match_token=[%] post_match_string=[s as double (It's a string)", "AsciiData");]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  "Should not pack %s as double (It's a string)", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_ERROR] match_token=[,] post_match_string=[ "Should not pack %s as double (It's a string)", "AsciiData");]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_ERROR, "Should not pack %s as double (It's a string)", "AsciiData");
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_NOT_IMPLEMENTED;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input is not an arg declaration: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input does not contain a struct member: return GRIB_NOT_IMPLEMENTED;
+update_cvariable_access                 : IN  [0][GRIB_NOT_IMPLEMENTED][;]: return GRIB_NOT_IMPLEMENTED;
+transform_cvariable_access              : [IN] cvariable=[GRIB_NOT_IMPLEMENTED] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_NOT_IMPLEMENTED;
+convert_grib_values                     : [0] Replaced GRIB_NOT_IMPLEMENTED with GribStatus::NOT_IMPLEMENTED: return GribStatus::NOT_IMPLEMENTED;
+
+create_cpp_body                         : ============================== pack_double [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: long* v -> std::vector<long>& values
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== unpack_long [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char val[1024] = {0,};
+from_string                             : ARRAY: arg_type=[char[1024]] arg_name=[val] input=[char val[1024] ]
+to_cpp_arg                              : Result: [char val[1024]] -> [std::string val] updated_carg=[char val[]]
+Transforms                              : Adding new local arg transform: char val[1024] -> std::string val
+update_cvariable_declarations           : Added local arg: char val[1024] -> std::string val
+update_cvariable_declarations           : --> updated line: std::string val= {0,};
+from_string                             : Input does not contain a struct member: std::string val= {0,};
+update_cvariable_access                 : IN  [0][std][::]: std::string val= {0,};
+update_cvariable_access                 : IN  [1][val][=]: string val= {0,};
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[=] post_match_string=[ {0,};]
+update_cvariable_access                 : OUT [1][val][=]: string val = {0,};
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string val = {0,};]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string val = {0,};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t l   = sizeof(val);
+to_cpp_arg                              : Result: [size_t l] -> [size_t l] updated_carg=[size_t l]
+Transforms                              : Adding new local arg transform: size_t l -> size_t l
+update_cvariable_declarations           : Added local arg: size_t l -> size_t l
+from_string                             : Input does not contain a struct member: size_t l   = sizeof(val);
+update_cvariable_access                 : IN  [0][l][=]: size_t l   = sizeof(val);
+update_cvariable_access                 : IN  [1][val][)]:  sizeof(val);
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[)] post_match_string=[;]
+update_cvariable_access                 : OUT [1][val][)]:  sizeof(val);
+transform_cvariable_access              : [IN] cvariable=[l] match_token=[=] post_match_string=[ sizeof(val);]
+update_cvariable_access                 : OUT [0][l][=]: size_t l = sizeof(val);
+update_sizeof_calls                     : sizeof(x) transform for container [after ]: size_t l = val.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t i   = 0;
+to_cpp_arg                              : Result: [size_t i] -> [size_t i] updated_carg=[size_t i]
+Transforms                              : Adding new local arg transform: size_t i -> size_t i
+update_cvariable_declarations           : Added local arg: size_t i -> size_t i
+from_string                             : Input does not contain a struct member: size_t i   = 0;
+update_cvariable_access                 : IN  [0][i][=]: size_t i   = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0;]
+update_cvariable_access                 : OUT [0][i][=]: size_t i = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char* last = NULL;
+to_cpp_arg                              : Result: [char* last] -> [std::string last] updated_carg=[char* last]
+Transforms                              : Adding new local arg transform: char* last -> std::string last
+update_cvariable_declarations           : Added local arg: char* last -> std::string last
+update_cvariable_declarations           : --> updated line: std::string last= NULL;
+from_string                             : Input does not contain a struct member: std::string last= NULL;
+update_cvariable_access                 : IN  [0][std][::]: std::string last= NULL;
+update_cvariable_access                 : IN  [1][last][=]: string last= NULL;
+update_cvariable_access                 : IN  [2][NULL][;]:  NULL;
+transform_cvariable_access              : [IN] cvariable=[NULL] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [2][No transformed_remainder]:  NULL;
+transform_cvariable_access              : [IN] cvariable=[last] match_token=[=] post_match_string=[ NULL;]
+transform_container_cvariable_access    : Replaced last = NULL with {}
+update_cvariable_access                 : OUT [1][last][=]: string last = {};
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string last = {};]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string last = {};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] int err    = grib_unpack_string(a, val, &l);
+convert_grib_un_pack_functions          : Converted grib_unpack_string function: [after ]: int err    = unpack( val);  &l =  val.size();
+Transforms                              : Adding new local arg transform: int err -> GribStatus err
+update_cvariable_declarations           : Added local arg: int err -> GribStatus err
+update_cvariable_declarations           : --> updated line: GribStatus err= unpack( val);  &l =  val.size();
+update_cstruct_access                   : IN cstruct_arg=[val.size] : GribStatus err= unpack( val);  &l =  val.size();
+from_string                             : Input does not contain a struct member: ();
+update_cstruct_access                   : OUT : GribStatus err= unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [0][err][=]: GribStatus err= unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [1][val][)]:  unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [2][&l][=]: ;  &l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[&l] match_token=[=] post_match_string=[  val.size();]
+update_cvariable_access                 : OUT [2][&l][=]: ;  l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[)] post_match_string=[;  l =  val.size();]
+update_cvariable_access                 : OUT [1][val][)]:  unpack( val);  l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[=] post_match_string=[ unpack( val);  l =  val.size();]
+transform_return_cvariable_access       : return value via function call transformed: err = unpack( val);  l =  val.size();
+update_cvariable_access                 : OUT [0][err][=]: GribStatus err = unpack( val);  l =  val.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (err)
+from_string                             : Input does not contain a struct member: if (err)
+update_cvariable_access                 : IN  [0][err][)]: if (err)
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[)] post_match_string=[]
+transform_return_cvariable_access       : transformed boolean return value test: err != GribStatus::SUCCESS)
+update_cvariable_access                 : OUT [0][err][)]: if (err != GribStatus::SUCCESS)
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return err;
+from_string                             : Ignoring invalid arg type [return]: return err
+from_string                             : Input is not an arg declaration: return err
+from_string                             : Input does not contain a struct member: return err;
+update_cvariable_access                 : IN  [0][err][;]: return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[;] post_match_string=[]
+transform_return_cvariable_access       : return value transformed: err;
+update_cvariable_access                 : OUT [0][err][;]: return err;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] i = 0;
+from_string                             : Input is not an arg declaration: i 
+from_string                             : Input does not contain a struct member: i = 0;
+update_cvariable_access                 : IN  [0][i][=]: i = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[=] post_match_string=[ 0;]
+update_cvariable_access                 : OUT [0][i][=]: i = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] while (i < l - 1 && val[i] == ' ')
+from_string                             : Input is not an arg declaration: while (i < l - 1 && val[i] 
+from_string                             : Input does not contain a struct member: while (i < l - 1 && val[i] == ' ')
+update_cvariable_access                 : IN  [0][i][<]: while (i < l - 1 && val[i] == ' ')
+update_cvariable_access                 : IN  [1][l][-]:  l - 1 && val[i] == ' ')
+update_cvariable_access                 : IN  [2][val][[]:  1 && val[i] == ' ')
+update_cvariable_access                 : IN  [3][i][]]: i] == ' ')
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[]] post_match_string=[ == ' ')]
+update_cvariable_access                 : OUT [3][i][]]: i] == ' ')
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[[] post_match_string=[i] == ' ')]
+update_cvariable_access                 : OUT [2][val][[]:  1 && val[i] == ' ')
+transform_cvariable_access              : [IN] cvariable=[l] match_token=[-] post_match_string=[ 1 && val[i] == ' ')]
+update_cvariable_access                 : OUT [1][l][-]:  l - 1 && val[i] == ' ')
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[<] post_match_string=[ l - 1 && val[i] == ' ')]
+update_cvariable_access                 : OUT [0][i][<]: while (i < l - 1 && val[i] == ' ')
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] i++;
+from_string                             : Input is not an arg declaration: i++
+from_string                             : Input does not contain a struct member: i++;
+update_cvariable_access                 : IN  [0][i][++]: i++;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[++] post_match_string=[;]
+update_cvariable_access                 : OUT [0][i][++]: i ++;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (val[i] == 0) {
+from_string                             : Input is not an arg declaration: if (val[i] 
+from_string                             : Input does not contain a struct member: if (val[i] == 0) {
+update_cvariable_access                 : IN  [0][val][[]: if (val[i] == 0) {
+update_cvariable_access                 : IN  [1][i][]]: i] == 0) {
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[]] post_match_string=[ == 0) {]
+update_cvariable_access                 : OUT [1][i][]]: i] == 0) {
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[[] post_match_string=[i] == 0) {]
+update_cvariable_access                 : OUT [0][val][[]: if (val[i] == 0) {
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] *v = 0;
+from_string                             : Input is not an arg declaration: *v 
+from_string                             : Input does not contain a struct member: *v = 0;
+update_cvariable_access                 : IN  [0][*v][=]: *v = 0;
+transform_cvariable_access              : [IN] cvariable=[*v] match_token=[=] post_match_string=[ 0;]
+transform_container_cvariable_access    : Replaced *v = 0 with {}
+update_cvariable_access                 : OUT [0][*v][=]: values = {};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return 0;
+from_string                             : Ignoring invalid arg type [return]: return 0
+from_string                             : Input is not an arg declaration: return 0
+from_string                             : Input does not contain a struct member: return 0;
+convert_int_return_values               : Updated int return value [0] to GribStatus [after ]: return GribStatus{0};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] }
+from_string                             : Input does not contain a struct member: }
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (val[i + 1] == ' ' && i < l - 2)
+from_string                             : Input is not an arg declaration: if (val[i + 1] 
+from_string                             : Input does not contain a struct member: if (val[i + 1] == ' ' && i < l - 2)
+update_cvariable_access                 : IN  [0][val][[]: if (val[i + 1] == ' ' && i < l - 2)
+update_cvariable_access                 : IN  [1][i][+]: i + 1] == ' ' && i < l - 2)
+update_cvariable_access                 : IN  [2][i][<]:  1] == ' ' && i < l - 2)
+update_cvariable_access                 : IN  [3][l][-]:  l - 2)
+transform_cvariable_access              : [IN] cvariable=[l] match_token=[-] post_match_string=[ 2)]
+update_cvariable_access                 : OUT [3][l][-]:  l - 2)
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[<] post_match_string=[ l - 2)]
+update_cvariable_access                 : OUT [2][i][<]:  1] == ' ' && i < l - 2)
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[+] post_match_string=[ 1] == ' ' && i < l - 2)]
+update_cvariable_access                 : OUT [1][i][+]: i + 1] == ' ' && i < l - 2)
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[[] post_match_string=[i + 1] == ' ' && i < l - 2)]
+update_cvariable_access                 : OUT [0][val][[]: if (val[i + 1] == ' ' && i < l - 2)
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] val[i + 1] = 0;
+from_string                             : Input is not an arg declaration: val[i + 1] 
+from_string                             : Input does not contain a struct member: val[i + 1] = 0;
+update_cvariable_access                 : IN  [0][val][[]: val[i + 1] = 0;
+update_cvariable_access                 : IN  [1][i][+]: i + 1] = 0;
+transform_cvariable_access              : [IN] cvariable=[i] match_token=[+] post_match_string=[ 1] = 0;]
+update_cvariable_access                 : OUT [1][i][+]: i + 1] = 0;
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[[] post_match_string=[i + 1] = 0;]
+update_cvariable_access                 : OUT [0][val][[]: val[i + 1] = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] *v = strtol(val, &last, 10);
+apply_all_substitutions                 : Updated line: *v = stringToLong(val, &last, 10);
+from_string                             : Input is not an arg declaration: *v 
+from_string                             : Input does not contain a struct member: *v = stringToLong(val, &last, 10);
+update_cvariable_access                 : IN  [0][*v][=]: *v = stringToLong(val, &last, 10);
+update_cvariable_access                 : IN  [1][val][,]:  stringToLong(val, &last, 10);
+update_cvariable_access                 : IN  [2][&last][,]:  &last, 10);
+transform_cvariable_access              : [IN] cvariable=[&last] match_token=[,] post_match_string=[ 10);]
+update_cvariable_access                 : OUT [2][&last][,]:  last, 10);
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[,] post_match_string=[ last, 10);]
+update_cvariable_access                 : OUT [1][val][,]:  stringToLong(val, last, 10);
+transform_cvariable_access              : [IN] cvariable=[*v] match_token=[=] post_match_string=[ stringToLong(val, last, 10);]
+update_cvariable_access                 : OUT [0][*v][=]: values = stringToLong(val, last, 10);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+from_string                             : Input is not an arg declaration: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name)
+update_cstruct_access                   : IN cstruct_arg=[a->name] : gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+from_string                             : Input does not contain a struct member: );
+update_cstruct_access                   : OUT : gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : IN  [0][GRIB_LOG_DEBUG][,]: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : IN  False match [string] :  " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : OUT False match [string] :  " Casting string %s to long", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_DEBUG] match_token=[,] post_match_string=[ " Casting string %s to long", "AsciiData");]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_SUCCESS;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_SUCCESS
+from_string                             : Input is not an arg declaration: return GRIB_SUCCESS
+from_string                             : Input does not contain a struct member: return GRIB_SUCCESS;
+update_cvariable_access                 : IN  [0][GRIB_SUCCESS][;]: return GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[GRIB_SUCCESS] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_SUCCESS;
+convert_grib_values                     : [0] Replaced GRIB_SUCCESS with GribStatus::SUCCESS: return GribStatus::SUCCESS;
+
+create_cpp_body                         : ============================== unpack_long [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: double* v -> std::vector<double>& values
+Transforms                              : Adding new local arg transform: size_t* len -> None
+
+create_cpp_body                         : ============================== unpack_double [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char val[1024];
+from_string                             : ARRAY: arg_type=[char[1024]] arg_name=[val] input=[char val[1024]]
+to_cpp_arg                              : Result: [char val[1024]] -> [std::string val] updated_carg=[char val[]]
+Transforms                              : Adding new local arg transform: char val[1024] -> std::string val
+update_cvariable_declarations           : Added local arg: char val[1024] -> std::string val
+update_cvariable_declarations           : --> updated line: std::string val;
+from_string                             : Input does not contain a struct member: std::string val;
+update_cvariable_access                 : IN  [0][std][::]: std::string val;
+update_cvariable_access                 : IN  [1][val][;]: string val;
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][val][;]: string val;
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string val;]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string val;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t l   = sizeof(val);
+to_cpp_arg                              : Result: [size_t l] -> [size_t l] updated_carg=[size_t l]
+Transforms                              : Adding new local arg transform: size_t l -> size_t l
+update_cvariable_declarations           : Added local arg: size_t l -> size_t l
+from_string                             : Input does not contain a struct member: size_t l   = sizeof(val);
+update_cvariable_access                 : IN  [0][l][=]: size_t l   = sizeof(val);
+update_cvariable_access                 : IN  [1][val][)]:  sizeof(val);
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[)] post_match_string=[;]
+update_cvariable_access                 : OUT [1][val][)]:  sizeof(val);
+transform_cvariable_access              : [IN] cvariable=[l] match_token=[=] post_match_string=[ sizeof(val);]
+update_cvariable_access                 : OUT [0][l][=]: size_t l = sizeof(val);
+update_sizeof_calls                     : sizeof(x) transform for container [after ]: size_t l = val.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char* last = NULL;
+to_cpp_arg                              : Result: [char* last] -> [std::string last] updated_carg=[char* last]
+Transforms                              : Adding new local arg transform: char* last -> std::string last
+update_cvariable_declarations           : Added local arg: char* last -> std::string last
+update_cvariable_declarations           : --> updated line: std::string last= NULL;
+from_string                             : Input does not contain a struct member: std::string last= NULL;
+update_cvariable_access                 : IN  [0][std][::]: std::string last= NULL;
+update_cvariable_access                 : IN  [1][last][=]: string last= NULL;
+update_cvariable_access                 : IN  [2][NULL][;]:  NULL;
+transform_cvariable_access              : [IN] cvariable=[NULL] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [2][No transformed_remainder]:  NULL;
+transform_cvariable_access              : [IN] cvariable=[last] match_token=[=] post_match_string=[ NULL;]
+transform_container_cvariable_access    : Replaced last = NULL with {}
+update_cvariable_access                 : OUT [1][last][=]: string last = {};
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string last = {};]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string last = {};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] int err = grib_unpack_string(a, val, &l);
+convert_grib_un_pack_functions          : Converted grib_unpack_string function: [after ]: int err = unpack( val);  &l =  val.size();
+Transforms                              : Adding new local arg transform: int err -> GribStatus err
+update_cvariable_declarations           : Added local arg: int err -> GribStatus err
+update_cvariable_declarations           : --> updated line: GribStatus err= unpack( val);  &l =  val.size();
+update_cstruct_access                   : IN cstruct_arg=[val.size] : GribStatus err= unpack( val);  &l =  val.size();
+from_string                             : Input does not contain a struct member: ();
+update_cstruct_access                   : OUT : GribStatus err= unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [0][err][=]: GribStatus err= unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [1][val][)]:  unpack( val);  &l =  val.size();
+update_cvariable_access                 : IN  [2][&l][=]: ;  &l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[&l] match_token=[=] post_match_string=[  val.size();]
+update_cvariable_access                 : OUT [2][&l][=]: ;  l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[)] post_match_string=[;  l =  val.size();]
+update_cvariable_access                 : OUT [1][val][)]:  unpack( val);  l =  val.size();
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[=] post_match_string=[ unpack( val);  l =  val.size();]
+transform_return_cvariable_access       : return value via function call transformed: err = unpack( val);  l =  val.size();
+update_cvariable_access                 : OUT [0][err][=]: GribStatus err = unpack( val);  l =  val.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (err) return err;
+from_string                             : Input is not an arg declaration: if (err) return err
+from_string                             : Input does not contain a struct member: if (err) return err;
+update_cvariable_access                 : IN  [0][err][)]: if (err) return err;
+update_cvariable_access                 : IN  [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[;] post_match_string=[]
+transform_return_cvariable_access       : return value transformed: err;
+update_cvariable_access                 : OUT [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[)] post_match_string=[ return err;]
+transform_return_cvariable_access       : transformed boolean return value test: err != GribStatus::SUCCESS) return err;
+update_cvariable_access                 : OUT [0][err][)]: if (err != GribStatus::SUCCESS) return err;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] *v = strtod(val, &last);
+apply_all_substitutions                 : Updated line: *v = stringToDouble(val, &last);
+from_string                             : Input is not an arg declaration: *v 
+from_string                             : Input does not contain a struct member: *v = stringToDouble(val, &last);
+update_cvariable_access                 : IN  [0][*v][=]: *v = stringToDouble(val, &last);
+update_cvariable_access                 : IN  [1][val][,]:  stringToDouble(val, &last);
+update_cvariable_access                 : IN  [2][&last][)]:  &last);
+transform_cvariable_access              : [IN] cvariable=[&last] match_token=[)] post_match_string=[;]
+update_cvariable_access                 : OUT [2][&last][)]:  last);
+transform_cvariable_access              : [IN] cvariable=[val] match_token=[,] post_match_string=[ last);]
+update_cvariable_access                 : OUT [1][val][,]:  stringToDouble(val, last);
+transform_cvariable_access              : [IN] cvariable=[*v] match_token=[=] post_match_string=[ stringToDouble(val, last);]
+update_cvariable_access                 : OUT [0][*v][=]: values = stringToDouble(val, last);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (*last == 0) {
+from_string                             : Input is not an arg declaration: if (*last 
+from_string                             : Input does not contain a struct member: if (*last == 0) {
+update_cvariable_access                 : IN  [0][*last][==]: if (*last == 0) {
+transform_cvariable_access              : [IN] cvariable=[*last] match_token=[==] post_match_string=[ 0) {]
+transform_container_cvariable_access    : Changed *last == 0 comparison with .empty()
+update_cvariable_access                 : OUT [0][*last][==]: if (last.empty()) {
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+from_string                             : Input is not an arg declaration: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name)
+update_cstruct_access                   : IN cstruct_arg=[a->name] : gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
+from_string                             : Input does not contain a struct member: );
+update_cstruct_access                   : OUT : gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : IN  [0][GRIB_LOG_DEBUG][,]: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : IN  False match [string] :  " Casting string %s to long", "AsciiData");
+update_cvariable_access                 : OUT False match [string] :  " Casting string %s to long", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_DEBUG] match_token=[,] post_match_string=[ " Casting string %s to long", "AsciiData");]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_DEBUG, " Casting string %s to long", "AsciiData");
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_SUCCESS;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_SUCCESS
+from_string                             : Input is not an arg declaration: return GRIB_SUCCESS
+from_string                             : Input does not contain a struct member: return GRIB_SUCCESS;
+update_cvariable_access                 : IN  [0][GRIB_SUCCESS][;]: return GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[GRIB_SUCCESS] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_SUCCESS;
+convert_grib_values                     : [0] Replaced GRIB_SUCCESS with GribStatus::SUCCESS: return GribStatus::SUCCESS;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] }
+from_string                             : Input does not contain a struct member: }
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_log(a->context, GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", a->name);
+apply_all_substitutions                 : Updated line: gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", a->name);
+from_string                             : Input is not an arg declaration: gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", a->name)
+update_cstruct_access                   : IN cstruct_arg=[a->name] : gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", a->name);
+from_string                             : Input does not contain a struct member: );
+update_cstruct_access                   : OUT : gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");
+update_cvariable_access                 : IN  [0][GRIB_LOG_WARNING][,]: gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");
+update_cvariable_access                 : IN  [1][unpack][%]:  "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");
+update_cvariable_access                 : IN  [2][Hint][:]: s as double. Hint: Try unpacking as string", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[Hint] match_token=[:] post_match_string=[ Try unpacking as string", "AsciiData");]
+update_cvariable_access                 : OUT [2][No transformed_remainder]: s as double. Hint: Try unpacking as string", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[unpack] match_token=[%] post_match_string=[s as double. Hint: Try unpacking as string", "AsciiData");]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");
+transform_cvariable_access              : [IN] cvariable=[GRIB_LOG_WARNING] match_token=[,] post_match_string=[ "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: gribLog( GRIB_LOG_WARNING, "Cannot unpack %s as double. Hint: Try unpacking as string", "AsciiData");
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_NOT_IMPLEMENTED;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input is not an arg declaration: return GRIB_NOT_IMPLEMENTED
+from_string                             : Input does not contain a struct member: return GRIB_NOT_IMPLEMENTED;
+update_cvariable_access                 : IN  [0][GRIB_NOT_IMPLEMENTED][;]: return GRIB_NOT_IMPLEMENTED;
+transform_cvariable_access              : [IN] cvariable=[GRIB_NOT_IMPLEMENTED] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_NOT_IMPLEMENTED;
+convert_grib_values                     : [0] Replaced GRIB_NOT_IMPLEMENTED with GribStatus::NOT_IMPLEMENTED: return GribStatus::NOT_IMPLEMENTED;
+
+create_cpp_body                         : ============================== unpack_double [OUT] ==============================
+                                          
+Transforms                              : Adding new local arg transform: grib_accessor* a -> None
+Transforms                              : Adding new local arg transform: grib_accessor* b -> AccessorData const& rhs
+
+create_cpp_body                         : ============================== compare [IN]  ==============================
+                                          
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] int retval = 0;
+to_cpp_arg                              : Result: [int retval] -> [int retval] updated_carg=[int retval]
+Transforms                              : Adding new local arg transform: int retval -> int retval
+update_cvariable_declarations           : Added local arg: int retval -> int retval
+from_string                             : Input does not contain a struct member: int retval = 0;
+update_cvariable_access                 : IN  [0][retval][=]: int retval = 0;
+transform_cvariable_access              : [IN] cvariable=[retval] match_token=[=] post_match_string=[ 0;]
+update_cvariable_access                 : OUT [0][retval][=]: int retval = 0;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char* aval = 0;
+to_cpp_arg                              : Result: [char* aval] -> [std::string aval] updated_carg=[char* aval]
+Transforms                              : Adding new local arg transform: char* aval -> std::string aval
+update_cvariable_declarations           : Added local arg: char* aval -> std::string aval
+update_cvariable_declarations           : --> updated line: std::string aval= 0;
+from_string                             : Input does not contain a struct member: std::string aval= 0;
+update_cvariable_access                 : IN  [0][std][::]: std::string aval= 0;
+update_cvariable_access                 : IN  [1][aval][=]: string aval= 0;
+transform_cvariable_access              : [IN] cvariable=[aval] match_token=[=] post_match_string=[ 0;]
+transform_container_cvariable_access    : Replaced aval = 0 with {}
+update_cvariable_access                 : OUT [1][aval][=]: string aval = {};
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string aval = {};]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string aval = {};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] char* bval = 0;
+to_cpp_arg                              : Result: [char* bval] -> [std::string bval] updated_carg=[char* bval]
+Transforms                              : Adding new local arg transform: char* bval -> std::string bval
+update_cvariable_declarations           : Added local arg: char* bval -> std::string bval
+update_cvariable_declarations           : --> updated line: std::string bval= 0;
+from_string                             : Input does not contain a struct member: std::string bval= 0;
+update_cvariable_access                 : IN  [0][std][::]: std::string bval= 0;
+update_cvariable_access                 : IN  [1][bval][=]: string bval= 0;
+transform_cvariable_access              : [IN] cvariable=[bval] match_token=[=] post_match_string=[ 0;]
+transform_container_cvariable_access    : Replaced bval = 0 with {}
+update_cvariable_access                 : OUT [1][bval][=]: string bval = {};
+transform_cvariable_access              : [IN] cvariable=[std] match_token=[::] post_match_string=[string bval = {};]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: std::string bval = {};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] int err    = 0;
+Transforms                              : Adding new local arg transform: int err -> GribStatus err
+update_cvariable_declarations           : Added local arg: int err -> GribStatus err
+update_cvariable_declarations           : --> updated line: GribStatus err= 0;
+from_string                             : Input does not contain a struct member: GribStatus err= 0;
+update_cvariable_access                 : IN  [0][err][=]: GribStatus err= 0;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[=] post_match_string=[ 0;]
+transform_return_cvariable_access       : Casting to return type, transformed: err = GribStatus{0};
+update_cvariable_access                 : OUT [0][err][=]: GribStatus err = GribStatus{0};
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t alen = a->length+1;
+to_cpp_arg                              : Result: [size_t alen] -> [size_t alen] updated_carg=[size_t alen]
+Transforms                              : Adding new local arg transform: size_t alen -> size_t alen
+update_cvariable_declarations           : Added local arg: size_t alen -> size_t alen
+update_cstruct_access                   : IN cstruct_arg=[a->length] : size_t alen = a->length+1;
+from_string                             : Input does not contain a struct member: +1;
+update_cstruct_access                   : OUT : size_t alen = length_+1;
+update_cvariable_access                 : IN  [0][alen][=]: size_t alen = length_+1;
+update_cvariable_access                 : IN  [1][length_][+]:  length_+1;
+transform_cvariable_access              : [IN] cvariable=[length_] match_token=[+] post_match_string=[1;]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  length_+1;
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[=] post_match_string=[ length_+1;]
+update_cvariable_access                 : OUT [0][alen][=]: size_t alen = length_+1;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] size_t blen = b->length+1;
+to_cpp_arg                              : Result: [size_t blen] -> [size_t blen] updated_carg=[size_t blen]
+Transforms                              : Adding new local arg transform: size_t blen -> size_t blen
+update_cvariable_declarations           : Added local arg: size_t blen -> size_t blen
+update_cstruct_access                   : IN cstruct_arg=[b->length] : size_t blen = b->length+1;
+from_string                             : Input does not contain a struct member: +1;
+update_cstruct_access                   : OUT : size_t blen = rhs.length+1;
+update_cvariable_access                 : IN  [0][blen][=]: size_t blen = rhs.length+1;
+update_cvariable_access                 : IN  [1][rhs.length][+]:  rhs.length+1;
+transform_cvariable_access              : [IN] cvariable=[rhs.length] match_token=[+] post_match_string=[1;]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  rhs.length+1;
+transform_cvariable_access              : [IN] cvariable=[blen] match_token=[=] post_match_string=[ rhs.length+1;]
+update_cvariable_access                 : OUT [0][blen][=]: size_t blen = rhs.length+1;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (alen != blen)
+from_string                             : Input is not an arg declaration: if (alen !
+from_string                             : Input does not contain a struct member: if (alen != blen)
+update_cvariable_access                 : IN  [0][alen][!=]: if (alen != blen)
+update_cvariable_access                 : IN  [1][blen][)]:  blen)
+transform_cvariable_access              : [IN] cvariable=[blen] match_token=[)] post_match_string=[]
+update_cvariable_access                 : OUT [1][blen][)]:  blen)
+transform_cvariable_access              : [IN] cvariable=[alen] match_token=[!=] post_match_string=[ blen)]
+update_cvariable_access                 : OUT [0][alen][!=]: if (alen != blen)
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return GRIB_COUNT_MISMATCH;
+from_string                             : Ignoring invalid arg type [return]: return GRIB_COUNT_MISMATCH
+from_string                             : Input is not an arg declaration: return GRIB_COUNT_MISMATCH
+from_string                             : Input does not contain a struct member: return GRIB_COUNT_MISMATCH;
+update_cvariable_access                 : IN  [0][GRIB_COUNT_MISMATCH][;]: return GRIB_COUNT_MISMATCH;
+transform_cvariable_access              : [IN] cvariable=[GRIB_COUNT_MISMATCH] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][No transformed_remainder]: return GRIB_COUNT_MISMATCH;
+convert_grib_values                     : [0] Replaced GRIB_COUNT_MISMATCH with GribStatus::COUNT_MISMATCH: return GribStatus::COUNT_MISMATCH;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
+from_string                             : Input is not an arg declaration: aval 
+update_cstruct_access                   : IN cstruct_arg=[a->context] : aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
+from_string                             : Input does not contain a struct member: , alen * sizeof(char));
+transform_cstruct_arg                   : Marking for deletion: a->context
+update_cstruct_access                   : [0] Deleting a Line: // [Deleted struct a] aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
+skip_line                               : [C++ Comment]: // [Deleted struct a] aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
+from_string                             : Input is not an arg declaration: bval 
+update_cstruct_access                   : IN cstruct_arg=[b->context] : bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
+from_string                             : Input does not contain a struct member: , blen * sizeof(char));
+update_cstruct_access                   : OUT : bval = (char*)grib_context_malloc(rhs.context, blen * sizeof(char));
+update_cvariable_access                 : IN  [0][bval][=]: bval = (char*)grib_context_malloc(rhs.context, blen * sizeof(char));
+update_cvariable_access                 : IN  [1][rhs.context][,]:  (char*)grib_context_malloc(rhs.context, blen * sizeof(char));
+update_cvariable_access                 : IN  [2][blen][*]:  blen * sizeof(char));
+update_cvariable_access                 : IN  [3][char][)]:  sizeof(char));
+transform_cvariable_access              : [IN] cvariable=[char] match_token=[)] post_match_string=[);]
+update_cvariable_access                 : OUT [3][No transformed_remainder]:  sizeof(char));
+transform_cvariable_access              : [IN] cvariable=[blen] match_token=[*] post_match_string=[ sizeof(char));]
+update_cvariable_access                 : OUT [2][blen][*]:  blen * sizeof(char));
+transform_cvariable_access              : [IN] cvariable=[rhs.context] match_token=[,] post_match_string=[ blen * sizeof(char));]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  (char*)grib_context_malloc(rhs.context, blen * sizeof(char));
+transform_cvariable_access              : [IN] cvariable=[bval] match_token=[=] post_match_string=[ (char*)grib_context_malloc(rhs.context, blen * sizeof(char));]
+update_cvariable_access                 : OUT [0][bval][=]: bval = (char*)grib_context_malloc(rhs.context, blen * sizeof(char));
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] err = grib_unpack_string(a, aval, &alen);
+convert_grib_un_pack_functions          : Converted grib_unpack_string function: [after ]: err = unpack( aval);  &alen =  aval.size();
+from_string                             : Input is not an arg declaration: err 
+update_cstruct_access                   : IN cstruct_arg=[aval.size] : err = unpack( aval);  &alen =  aval.size();
+from_string                             : Input does not contain a struct member: ();
+update_cstruct_access                   : OUT : err = unpack( aval);  &alen =  aval.size();
+update_cvariable_access                 : IN  [0][err][=]: err = unpack( aval);  &alen =  aval.size();
+update_cvariable_access                 : IN  [1][aval][)]:  unpack( aval);  &alen =  aval.size();
+update_cvariable_access                 : IN  [2][&alen][=]: ;  &alen =  aval.size();
+transform_cvariable_access              : [IN] cvariable=[&alen] match_token=[=] post_match_string=[  aval.size();]
+update_cvariable_access                 : OUT [2][&alen][=]: ;  alen =  aval.size();
+transform_cvariable_access              : [IN] cvariable=[aval] match_token=[)] post_match_string=[;  alen =  aval.size();]
+update_cvariable_access                 : OUT [1][aval][)]:  unpack( aval);  alen =  aval.size();
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[=] post_match_string=[ unpack( aval);  alen =  aval.size();]
+transform_return_cvariable_access       : return value via function call transformed: err = unpack( aval);  alen =  aval.size();
+update_cvariable_access                 : OUT [0][err][=]: err = unpack( aval);  alen =  aval.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (err) return err;
+from_string                             : Input is not an arg declaration: if (err) return err
+from_string                             : Input does not contain a struct member: if (err) return err;
+update_cvariable_access                 : IN  [0][err][)]: if (err) return err;
+update_cvariable_access                 : IN  [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[;] post_match_string=[]
+transform_return_cvariable_access       : return value transformed: err;
+update_cvariable_access                 : OUT [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[)] post_match_string=[ return err;]
+transform_return_cvariable_access       : transformed boolean return value test: err != GribStatus::SUCCESS) return err;
+update_cvariable_access                 : OUT [0][err][)]: if (err != GribStatus::SUCCESS) return err;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] err = grib_unpack_string(b, bval, &blen);
+convert_grib_un_pack_functions          : Converted grib_unpack_string function: [after ]: err = unpack( bval);  &blen =  bval.size();
+from_string                             : Input is not an arg declaration: err 
+update_cstruct_access                   : IN cstruct_arg=[bval.size] : err = unpack( bval);  &blen =  bval.size();
+from_string                             : Input does not contain a struct member: ();
+update_cstruct_access                   : OUT : err = unpack( bval);  &blen =  bval.size();
+update_cvariable_access                 : IN  [0][err][=]: err = unpack( bval);  &blen =  bval.size();
+update_cvariable_access                 : IN  [1][bval][)]:  unpack( bval);  &blen =  bval.size();
+update_cvariable_access                 : IN  [2][&blen][=]: ;  &blen =  bval.size();
+transform_cvariable_access              : [IN] cvariable=[&blen] match_token=[=] post_match_string=[  bval.size();]
+update_cvariable_access                 : OUT [2][&blen][=]: ;  blen =  bval.size();
+transform_cvariable_access              : [IN] cvariable=[bval] match_token=[)] post_match_string=[;  blen =  bval.size();]
+update_cvariable_access                 : OUT [1][bval][)]:  unpack( bval);  blen =  bval.size();
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[=] post_match_string=[ unpack( bval);  blen =  bval.size();]
+transform_return_cvariable_access       : return value via function call transformed: err = unpack( bval);  blen =  bval.size();
+update_cvariable_access                 : OUT [0][err][=]: err = unpack( bval);  blen =  bval.size();
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (err) return err;
+from_string                             : Input is not an arg declaration: if (err) return err
+from_string                             : Input does not contain a struct member: if (err) return err;
+update_cvariable_access                 : IN  [0][err][)]: if (err) return err;
+update_cvariable_access                 : IN  [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[;] post_match_string=[]
+transform_return_cvariable_access       : return value transformed: err;
+update_cvariable_access                 : OUT [1][err][;]:  return err;
+transform_cvariable_access              : [IN] cvariable=[err] match_token=[)] post_match_string=[ return err;]
+transform_return_cvariable_access       : transformed boolean return value test: err != GribStatus::SUCCESS) return err;
+update_cvariable_access                 : OUT [0][err][)]: if (err != GribStatus::SUCCESS) return err;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] retval = GRIB_SUCCESS;
+from_string                             : Input is not an arg declaration: retval 
+from_string                             : Input does not contain a struct member: retval = GRIB_SUCCESS;
+update_cvariable_access                 : IN  [0][retval][=]: retval = GRIB_SUCCESS;
+update_cvariable_access                 : IN  [1][GRIB_SUCCESS][;]:  GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[GRIB_SUCCESS] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  GRIB_SUCCESS;
+transform_cvariable_access              : [IN] cvariable=[retval] match_token=[=] post_match_string=[ GRIB_SUCCESS;]
+update_cvariable_access                 : OUT [0][retval][=]: retval = GRIB_SUCCESS;
+convert_grib_values                     : [0] Replaced GRIB_SUCCESS with GribStatus::SUCCESS: retval = GribStatus::SUCCESS;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] if (!STR_EQUAL(aval, bval))
+from_string                             : Input does not contain a struct member: if (!STR_EQUAL(aval, bval))
+update_cvariable_access                 : IN  [0][aval][,]: if (!STR_EQUAL(aval, bval))
+update_cvariable_access                 : IN  [1][bval][)]:  bval))
+transform_cvariable_access              : [IN] cvariable=[bval] match_token=[)] post_match_string=[)]
+update_cvariable_access                 : OUT [1][bval][)]:  bval))
+transform_cvariable_access              : [IN] cvariable=[aval] match_token=[,] post_match_string=[ bval))]
+update_cvariable_access                 : OUT [0][aval][,]: if (!STR_EQUAL(aval, bval))
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] retval = GRIB_STRING_VALUE_MISMATCH;
+from_string                             : Input is not an arg declaration: retval 
+from_string                             : Input does not contain a struct member: retval = GRIB_STRING_VALUE_MISMATCH;
+update_cvariable_access                 : IN  [0][retval][=]: retval = GRIB_STRING_VALUE_MISMATCH;
+update_cvariable_access                 : IN  [1][GRIB_STRING_VALUE_MISMATCH][;]:  GRIB_STRING_VALUE_MISMATCH;
+transform_cvariable_access              : [IN] cvariable=[GRIB_STRING_VALUE_MISMATCH] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [1][No transformed_remainder]:  GRIB_STRING_VALUE_MISMATCH;
+transform_cvariable_access              : [IN] cvariable=[retval] match_token=[=] post_match_string=[ GRIB_STRING_VALUE_MISMATCH;]
+update_cvariable_access                 : OUT [0][retval][=]: retval = GRIB_STRING_VALUE_MISMATCH;
+convert_grib_values                     : [0] Replaced GRIB_STRING_VALUE_MISMATCH with GribStatus::STRING_VALUE_MISMATCH: retval = GribStatus::STRING_VALUE_MISMATCH;
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_free(a->context, aval);
+apply_all_substitutions                 : Updated line: // [Removed grib_context_free] grib_context_free(a->context, aval);
+skip_line                               : [C++ Comment]: // [Removed grib_context_free] grib_context_free(a->context, aval);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] grib_context_free(b->context, bval);
+apply_all_substitutions                 : Updated line: // [Removed grib_context_free] grib_context_free(b->context, bval);
+skip_line                               : [C++ Comment]: // [Removed grib_context_free] grib_context_free(b->context, bval);
+update_cpp_line                         : --------------------------------------------------------------------------------
+update_cpp_line                         : [PROCESSING] return retval;
+from_string                             : Ignoring invalid arg type [return]: return retval
+from_string                             : Input is not an arg declaration: return retval
+from_string                             : Input does not contain a struct member: return retval;
+update_cvariable_access                 : IN  [0][retval][;]: return retval;
+transform_cvariable_access              : [IN] cvariable=[retval] match_token=[;] post_match_string=[]
+update_cvariable_access                 : OUT [0][retval][;]: return retval;
+
+create_cpp_body                         : ============================== compare [OUT] ==============================
+                                          
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:init
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:value_count
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:string_length
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:dump
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:get_native_type
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:unpack_string
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:pack_string
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:pack_long
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:pack_double
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:unpack_long
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:unpack_double
+process_forward_declarations            : @FORWARD_DECLARATION: Removed (not a static function) : @FORWARD_DECLARATION:compare
+
+to_accessor_data                        : ===== [CONVERTING:END] grib_accessor_class_ascii ====================
+                                          
+write_header_file                       : Class = AsciiData
+write_source_file                       : Class = AsciiData
+camel_case_name                         : name = AsciiData
