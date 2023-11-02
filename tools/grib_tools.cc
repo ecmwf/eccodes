@@ -756,7 +756,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 options->default_print_width = (int)strlen(name);
             options->print_keys[options->print_keys_count].type = GRIB_TYPE_STRING;
             if (strcmp(ns, "mars") == 0 && (strcmp(name, "step") == 0)) {
-                options->print_keys[options->print_keys_count].type = GRIB_TYPE_UNDEFINED;
+                options->print_keys[options->print_keys_count].type = GRIB_TYPE_LONG;
             }
             // For the statistics namespace, do not force the type to be string.
             // Setting it to undefined will use the keys' native type i.e. GRIB_TYPE_DOUBLE

@@ -23,8 +23,9 @@
   IMPLEMENTS = unpack_double
   IMPLEMENTS = unpack_string;pack_string
   IMPLEMENTS = init;dump
-  MEMBERS = const char* start_step_value // startStep
-  MEMBERS = const char* step_units // stepUnits
+  IMPLEMENTS = get_native_type
+  MEMBERS = const char* start_step_value
+  MEMBERS = const char* step_units
 
   MEMBERS = const char* year
   MEMBERS = const char* month
@@ -59,10 +60,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
-static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -95,7 +97,6 @@ typedef struct grib_accessor_g2end_step
 
 extern grib_accessor_class* grib_accessor_class_long;
 
-
 static grib_accessor_class _grib_accessor_class_g2end_step = {
     &grib_accessor_class_long,                      /* super */
     "g2end_step",                      /* name */
@@ -111,7 +112,7 @@ static grib_accessor_class _grib_accessor_class_g2end_step = {
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
-    0,            /* get native type */
+    &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
@@ -720,4 +721,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return GRIB_DECODING_ERROR;
     }
     return GRIB_SUCCESS;
+}
+
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_STRING;
 }
