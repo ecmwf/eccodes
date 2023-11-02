@@ -33,7 +33,8 @@ grib_option grib_options[] = {
     { "N", 0,
       "Do not compress index."
       "\n\t\tBy default the index is compressed to remove keys with only one value.\n",
-      0, 1, 0 }
+      0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 static int compress_index;

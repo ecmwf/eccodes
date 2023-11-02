@@ -3936,7 +3936,8 @@ grib_option grib_options[] = {
       "\n\t\tChunking strategy based on GRIB message.\n",
       0, 1, "6" },
     { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
-    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
+    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count    = sizeof(grib_options) / sizeof(grib_option);
