@@ -44,6 +44,11 @@ class StructArg:
     @property
     def index(self):
         return self._index
+    
+    @index.setter
+    def index(self, value):
+        assert value[0] == "[" and value[-1] == "]", f"Invalid index [{value}]"
+        self._index = value
 
     @property
     def member(self):
@@ -88,7 +93,8 @@ def cstruct_arg_from_string(input):
     # Note: (?:\(.+\))? is a non-capturing group that optionally matches (TEXT)
     #       and therefore allows us to capture function calls that result in 
     #       struct access, for example: grib_handle_of_accessor(a)->buffer->data;
-    m = re.search(rf"(/\*)|([\*&])?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[\w\d]*\])?", input)
+    #m = re.search(rf"(/\*)|([\*&])?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[\w\d]*\])?", input)
+    m = re.search(rf"(/\*)|([\*&])?({name_match}(?:\(.+\))?)({access_match})(\w+)(\[[^\]]*\])?", input)
 
     if m and m.group(1) != "/*":
         access = m.group(2)
@@ -104,7 +110,8 @@ def cstruct_arg_from_string(input):
         # Loop, adding any extra member sections (->foo[4]) that exist...
         next_member = cstruct_arg.member
         while m and m.end() < len(input):
-            m = re.match(rf"({access_match})({name_match})(\[[\w\d]*\])?", input[match_end:])
+            #m = re.match(rf"({access_match})({name_match})(\[[\w\d]*\])?", input[match_end:])
+            m = re.match(rf"({access_match})({name_match})(\[[^\]]*\])?", input[match_end:])
             if not m: 
                 break
 

@@ -22,7 +22,7 @@ class InheritedMethodConverter(MethodConverter):
             cpp_lines.append("// " + line)
         cpp_lines.append("")
         
-        cpp_lines.append(f"return {self._transforms.types['super']}::{self._cppfunction.name}({self._cppfunction.arg_string});")
+        cpp_lines.append(f"return {self._transforms.types['super']}::{self._cppfunction.name}({self._cppfunction.parent_call_arg_string});")
         
         debug.line("create_commented_cpp_body", f"\n============================== {self._cfunction.name} [OUT] ==============================\n")
 
@@ -31,7 +31,7 @@ class InheritedMethodConverter(MethodConverter):
 
     # Overridden to handle specific cases
     def create_cpp_body(self):
-        if self._cppfunction.name == "dump":
+        if self._cppfunction.name in ["dump", "compare"]:
             return self.create_commented_cpp_body()
 
         return super().create_cpp_body()

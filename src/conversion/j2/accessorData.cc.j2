@@ -24,7 +24,7 @@ static {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {
 }
 {% endfor %}
 
-{{ c.name }}::{{ c.name }}({{c.constructor.arg_string}}) : {{ c.super }}({{ c.constructor.arg_name_string }}){
+{{ c.name }}::{{ c.name }}({{c.constructor.arg_string}}) : {{ c.super }}({{ c.constructor.parent_call_arg_string }}){
        {{ c.constructor.body }}
 }
 

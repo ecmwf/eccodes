@@ -70,11 +70,14 @@ class MethodConverter(FunctionConverter):
                 assert cppstruct_arg, f"Could not transform cstruct_arg: [{cstruct_arg.as_string()}]"
 
             # Extra processing required for grib_handle members that are referenced
-            elif cstruct_arg.name == "grib_handle_of_accessor(a)":
+            if self._transforms.ctype_of(cstruct_arg.name) == "grib_handle*" or cstruct_arg.name == "grib_handle_of_accessor(a)":
                 if cstruct_member.name == "buffer":
-                    cppstruct_arg = struct_arg.StructArg("", transform_function_name(cstruct_member.name), "" )
+
+                    debug.line("DEBUG", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
+
+                    cppstruct_arg = struct_arg.StructArg("", "buffer_", "" )
                     if cstruct_member.member and cstruct_member.member.name == "data":
-                        cppstruct_arg.member = struct_arg.StructArg(".", "data()", "")
+                        cppstruct_arg.member = struct_arg.StructArg(".", "data()", cstruct_member.member.index)
 
             if cppstruct_arg:
                 return cppstruct_arg

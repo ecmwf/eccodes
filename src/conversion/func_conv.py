@@ -358,8 +358,26 @@ class FunctionConverter:
         # Default - do nothing!
         return remainder
 
+    # Takes a cppstruct and updates any C structs within the [] of the index...
+    # Required because C to C++ struct transforms ignore the index contents and so miss any other structs...
+    def update_cppstruct_indexes(self, cppstruct_arg):
+
+        debug.line("update_cppstruct_indexes", f"IN  cppstruct_arg=[{cppstruct_arg.as_string()}]")
+
+        struct_arg = cppstruct_arg
+        while struct_arg:
+            if struct_arg.index:
+                struct_arg.index = self.update_cstruct_access(struct_arg.index, 0)
+            struct_arg = struct_arg.member
+
+        debug.line("update_cppstruct_indexes", f"OUT cppstruct_arg=[{cppstruct_arg.as_string()}]")
+
+        return cppstruct_arg
+
     def update_cstruct_access(self, line, depth):
         assert depth<10, f"Unexpected recursion depth [{depth}]"
+
+        debug.line("update_cstruct_access", f"IN [{depth}] line=[{line}]")
 
         cstruct_arg, match_start, match_end = struct_arg.cstruct_arg_from_string(line)
         if cstruct_arg:
@@ -371,6 +389,8 @@ class FunctionConverter:
             cppstruct_arg = self.transform_cstruct_arg(cstruct_arg)
             assert cppstruct_arg, f"Could not transform struct {cstruct_arg.name} to C++"
 
+            cppstruct_arg = self.update_cppstruct_indexes(cppstruct_arg)
+
             if not cppstruct_arg.name:
                 # TODO: Only delete line if assignment, else just remove struct...
                 line = f"// [Deleted struct {cstruct_arg.name}] " + line
@@ -378,7 +398,7 @@ class FunctionConverter:
                 return line
 
             # Check if this is a "set" operation (it's match group 3 to avoid false match with ==)
-            m = re.search(r"([=!\+\-\*/]=)|([,;\)])|(=)", line[match_end:])
+            m = re.search(r"([=!\<\>\+\-\*/]=)|([,;\)])|(=)", line[match_end:])
             if m and m.group(3):
                 match_end += m.end()
                 remainder = " = " + self.update_cppstruct_arg_assignment(cppstruct_arg, line[match_end:])

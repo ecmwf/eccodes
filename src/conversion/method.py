@@ -7,8 +7,6 @@ class Method(Function):
         super().__init__(func_sig)
 
         self._const = False
-        #self._owner_arg_type = self._owner_class.name
-        #self._owner_arg_name = arg.transform_variable_name(self._owner_arg_type)
 
     @property
     def const(self):
@@ -17,3 +15,8 @@ class Method(Function):
     @const.setter
     def const(self, value):
         self._const = value
+
+    # Return all arg names in a string, for example to use to call the parent virtual function
+    @property
+    def parent_call_arg_string(self):
+        return ", ".join([f"{a.name}" for a in self.args if a])
