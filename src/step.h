@@ -81,7 +81,7 @@ private:
         }
 
         Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
-        auto multiplier = Unit::get_converter().unit_to_duration(unit_.value<Unit::Value>());
+        long multiplier = Unit::get_converter().unit_to_duration(unit_.value<Unit::Value>());
         internal_value_ = seconds.count() / multiplier;
         internal_unit_ = unit_;
 

@@ -56,6 +56,9 @@ grib_check_key_equals $temp "-s stepUnits:s=h -p startStep:s,endStep:s" "-6 0"
 grib_check_key_equals $temp "-s stepUnits:s=m -p startStep:s,endStep:s" "-360m 0m"
 grib_check_key_equals $temp "-s stepUnits:s=s -p startStep:s,endStep:s" "-21600s 0s"
 
+${tools_dir}/grib_set -s forecastTime=-48,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=0,indicatorOfUnitForTimeRange=h $fn $temp
+grib_check_key_equals $temp "-p stepRange" "-48"
+
 
 #### CHECK: check optimal units are set correctly in GRIB files
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"

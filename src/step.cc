@@ -75,16 +75,14 @@ bool Step::operator<(const Step& step) const
 
 Step Step::operator+(const Step& step) const
 {
-    Step tmp = step;
-    auto [a, b] = find_common_units(this->copy().optimize_unit(), tmp.copy().optimize_unit());
+    auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
     assert(a.internal_unit_ == b.internal_unit_);
     return Step(a.internal_value_ + b.internal_value_, a.internal_unit_);
 }
 
 Step Step::operator-(const Step& step) const
 {
-    Step tmp = step;
-    auto [a, b] = find_common_units(this->copy().optimize_unit(), tmp.copy().optimize_unit());
+    auto [a, b] = find_common_units(this->copy().optimize_unit(), step.copy().optimize_unit());
     assert(a.internal_unit_ == b.internal_unit_);
     return Step(a.internal_value_ - b.internal_value_, a.internal_unit_);
 }
@@ -155,10 +153,11 @@ Step& Step::optimize_unit()
 
     unit_ = internal_unit_;
     Seconds<long> seconds = to_seconds<long>(internal_value_, internal_unit_);
+    long abs_seconds = seconds.count() < 0 ? -seconds.count() : seconds.count();
 
     for (auto it = Unit::grib_selected_units.rbegin(); it != Unit::grib_selected_units.rend(); ++it) {
-        auto multiplier = Unit::get_converter().unit_to_duration(*it);
-        if (seconds.count() % multiplier == 0) {
+        long multiplier = Unit::get_converter().unit_to_duration(*it);
+        if (abs_seconds % multiplier == 0) {
             internal_value_ = seconds.count() / multiplier;
             internal_unit_ = *it;
             unit_ = *it;
