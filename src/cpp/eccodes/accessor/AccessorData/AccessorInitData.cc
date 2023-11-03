@@ -1,5 +1,5 @@
 #include "AccessorInitData.h"
-#include "AccessorUtils/GribType.h"
+#include "GribCpp/GribType.h"
 #include "grib_api_internal.h"
 
 namespace eccodes::accessor {

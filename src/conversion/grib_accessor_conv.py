@@ -19,8 +19,8 @@ rename = {
 common_includes = [
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
-    "AccessorUtils/GribUtils.h",
-    "AccessorUtils/GribAccessorFlag.h",
+    "GribCpp/GribUtils.h",
+    "GribCpp/GribAccessorFlag.h",
     "AccessorUtils/AccessorException.h"
 ]
 

@@ -4,8 +4,8 @@
 #include "AccessorData/AccessorInitData.h"
 #include "AccessorBuffer.h"
 #include "AccessorTraits.h"
-#include "AccessorUtils/GribType.h"
-#include "AccessorUtils/GribStatus.h"
+#include "GribCpp/GribType.h"
+#include "GribCpp/GribStatus.h"
 
 #include <string>
 #include <memory>

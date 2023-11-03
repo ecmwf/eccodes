@@ -4,7 +4,7 @@
 //
 // May be replaced with ECKit or other code at a later date
 
-#include "GribStatus.h"
+#include "GribCpp/GribStatus.h"
 #include <exception>
 #include <string>
 

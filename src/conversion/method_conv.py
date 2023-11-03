@@ -150,3 +150,23 @@ class MethodConverter(FunctionConverter):
                 return mapping.cppfuncsig.name
         
         return super().transform_cfunction_name(cfunction_name)
+
+    # Overridden to handle member types e.g. AccessorName x = NULL
+    def custom_transform_cppvariable_access(self, cppvariable, match_token, post_match_string):
+        accessor_arg = None
+
+        for cpparg in self._transforms.all_args.values():
+            if cpparg and cpparg.name == cppvariable.name and cpparg.type == "AccessorName":
+                accessor_arg = cpparg
+                break
+
+        if not accessor_arg:
+            return None
+        
+        if match_token.is_assignment:
+            m = re.match(r"\s*(NULL)", post_match_string)
+            if m:
+                post_match_string = re.sub(m.re, "AccessorName{\"\"}", post_match_string)
+                return cppvariable.as_string() + match_token.as_string() + post_match_string
+
+        return None

@@ -9,11 +9,12 @@
 # nor does it submit to any jurisdiction.
 #
 
-set(eccodes_dir			${CMAKE_CURRENT_LIST_DIR}/eccodes)
-set(accessor_dir		${eccodes_dir}/accessor)
-set(accessor_data_dir	${accessor_dir}/AccessorData)
-set(accessor_utils_dir	${accessor_dir}/AccessorUtils)
-set(accessor_test_dir	${accessor_dir}/Test)
+set(eccodes_dir				${CMAKE_CURRENT_LIST_DIR}/eccodes)
+set(accessor_dir			${eccodes_dir}/accessor)
+set(accessor_data_dir		${accessor_dir}/AccessorData)
+set(accessor_utils_dir		${accessor_dir}/AccessorUtils)
+set(accessor_grib_cpp_dir	${accessor_dir}/GribCpp)
+set(accessor_test_dir		${accessor_dir}/Test)
 
 include_directories(${accessor_dir})
 
@@ -45,14 +46,18 @@ set(accessor_utils_src_files
 	${accessor_utils_dir}/AccessorLogger.h
 	${accessor_utils_dir}/ConversionHelper.cc
 	${accessor_utils_dir}/ConversionHelper.h
-	${accessor_utils_dir}/GribStatus.h
-	${accessor_utils_dir}/GribType.cc
-	${accessor_utils_dir}/GribType.h
-	${accessor_utils_dir}/GribUtils.cc
-	${accessor_utils_dir}/GribUtils.h
 	${accessor_utils_dir}/NamedType.h
 	${accessor_utils_dir}/TypeString.h
 )
+
+set(accessor_grib_cpp_src_files
+	${accessor_grib_cpp_dir}/GribStatus.h
+	${accessor_grib_cpp_dir}/GribType.cc
+	${accessor_grib_cpp_dir}/GribType.h
+	${accessor_grib_cpp_dir}/GribUtils.cc
+	${accessor_grib_cpp_dir}/GribUtils.h
+)
+
 
 # Variables to be used in the parent CMakeLists.txt
 set(cpp_accessor_src_files
@@ -60,6 +65,7 @@ set(cpp_accessor_src_files
 	${accessor_data_src_files}
 	${accessor_data_funcs_src_files}
 	${accessor_utils_src_files}
+	${accessor_grib_cpp_src_files}
 	PARENT_SCOPE
 )
 

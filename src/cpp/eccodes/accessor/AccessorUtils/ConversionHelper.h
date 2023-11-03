@@ -3,7 +3,7 @@
 // Utils to help convert the accessor C code to C++
 
 #include "AccessorDefs.h"
-#include "GribStatus.h"
+#include "GribCpp/GribStatus.h"
 #include <string>
 #include <cstdarg>
 #include <vector>

@@ -460,13 +460,8 @@ class FunctionConverter:
 
         return None
 
-    # Update the remainder (of the current line) to correctly set the cppvariable - returns the updated remainder
-    def update_cppvariable_assignment(self, cppname, remainder):
 
-        # Default - do nothing!
-        return remainder
-
-    # Called first from transform_variable_access - override to provide specialised transforms
+    # Called first from transform_variable_access - override to provide specialised transforms (e.g. AccessorName x = NULL)
     def custom_transform_cppvariable_access(self, cppvariable, match_token, post_match_string):
         return None
 
@@ -657,14 +652,14 @@ class FunctionConverter:
         return cppvariable.as_string() + match_token.as_string() + post_match_string
 
     # Takes the variable, obtains the equivalent cppvariable (if required and it exists), and then
-    # uses them along with the match_value and post_match_string, to try and produce a transformed value
+    # uses them, along with the match_value and post_match_string, to try and produce a transformed value
     # Returns an updated (C++) string representing the transform, or None if no transform available.
     #  
     # Examples:
     #
     # variable  match_token post_match_string   transformed_string
     # *foo[0]   =           4;                  foo[4] = 4;
-    # x         ==          value_count;        x = valueCount;
+    # x         ==          value_count;        x == valueCount;
     # y         >           bar(*another_foo);  y > bar(anotherFoo);
     def transform_variable_access(self, var, match_token, post_match_string):
         debug.line("transform_variable_access", f"[1] var=[{var.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
@@ -718,7 +713,7 @@ class FunctionConverter:
         #
         # TOKEN matches one of: 
         #   =               (group 5 - assignment)
-        #   != == += >= etc (group 6) 
+        #   != == += >= etc (group 6 - operator) 
         #   , ) [ ] ;       (group 7 - terminator)
         #
         # Note:
@@ -726,7 +721,14 @@ class FunctionConverter:
         #   (=(?!=)) matches exactly one "=" so we can distinguish "=" (group 5) from "==" (group 6)
         #   (?![<>\*&]) is added to ensure pointer/reference types and templates are not captured, e.g. in (grib_accessor*)self; or std::vector<double>
         #   Group 2 matches a character first to avoid matching numbers as variables
-        m = re.search(r"([&\*])?\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))(\[\d+\])?\s*((=(?!=))|([!=<>&\|\+\-\*/%\?:]+)|([,\)\[\]\};]))", line)
+        prefix_re           = r"([&\*])?"
+        name_re             = r"\b((?<!%)[a-zA-Z][\w\.]*(?![<>\*&]))"
+        index_re            = r"(\[\d+\])?"
+        assignment_token_re = r"(=(?!=))"
+        operator_token_re   = r"([!=<>&\|\+\-\*/%\?:]+)"
+        terminator_token_re = r"([,\)\[\]\};])"
+        token_re            = rf"({assignment_token_re}|{operator_token_re}|{terminator_token_re})"
+        m = re.search(rf"{prefix_re}{name_re}{index_re}\s*{token_re}", line)
 
         if m:
             if m.group(2) in ["vector", "string", "return", "break", "goto"]:
