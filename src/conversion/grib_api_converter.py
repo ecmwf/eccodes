@@ -4,7 +4,7 @@ import grib_api.grib_array as grib_array
 import grib_api.grib_funcsig_type_transforms as grib_funcsig_type_transforms
 import grib_api.grib_type_transforms as grib_type_transforms
 import grib_api.grib_values as grib_values
-
+import grib_api.grib_funcsig_conv as grib_funcsig_conv
 import arg
 import debug
 
@@ -17,6 +17,7 @@ def grib_api_type_transforms():
     return type_transforms
 
 def convert_grib_api_functions(line):
+    line = grib_funcsig_conv.convert_funcsig(line)
     line = grib_array.convert_grib_array_functions(line)
     return line
 

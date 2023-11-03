@@ -57,22 +57,32 @@ def parse_file(path):
 
     LOG.info("Parsing %s", path)
 
-    # Some code is split over multiple lines, so we combine lines that end with a ',' or '('
-    # into a single line before parsing
+    # Some function calls are split over multiple lines, which causes issues when 
+    # parsing, so we combine these into a single long line
     multiline = ""
+    function_start_re     = r"\b[^(\s]*\("
+    function_continues_re = r"[,\(\"]\s*$"
 
     f = open(path, "r")
     for line in f:
 
-        # Multiline parsing - start
-        if re.search(r"[,\(]\s*$", line):
-            multiline += line
-            continue
+        # Multiline function parsing - start
 
         if multiline:
-            line = multiline + line
-            multiline = ""
-        # Multiline parsing - end
+            if re.search(rf"{function_continues_re}", line):
+                multiline += line.lstrip()
+            else:
+                multiline = multiline.replace("\n", "")
+                line = multiline + line.lstrip()
+                multiline = ""
+
+        elif re.search(rf"{function_start_re}.*{function_continues_re}", line):
+            multiline = line
+
+        if multiline:
+            continue
+
+        # Multiline function parsing - end
 
         stripped_line = line.strip()
         line = line.rstrip()

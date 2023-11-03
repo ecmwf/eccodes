@@ -56,6 +56,8 @@ set(accessor_grib_cpp_src_files
 	${accessor_grib_cpp_dir}/GribType.h
 	${accessor_grib_cpp_dir}/GribUtils.cc
 	${accessor_grib_cpp_dir}/GribUtils.h
+	${accessor_grib_cpp_dir}/GribValue.cc
+	${accessor_grib_cpp_dir}/GribValue.h
 )
 
 

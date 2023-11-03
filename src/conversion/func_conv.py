@@ -110,7 +110,6 @@ class FunctionConverter:
         return line
     
     def update_grib_api_cfunctions(self, line):
-        line = self.apply_get_set_substitutions(line)
         line = self.convert_grib_utils(line)
         line = grib_api_converter.convert_grib_api_functions(line)
 
@@ -819,57 +818,6 @@ class FunctionConverter:
 
         return line
 
-
-    # Original regex: r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(\s*(h\s*,)?\s*(\"?\w*\"?)\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*,?\s*(?:&)?([\(\w\[\]\)]*)?\s*\)"
-    def apply_get_set_substitutions(self, line):
-        # [1] grib_[gs]et_TYPE[_array][_internal](...) -> unpackTYPE(...)
-        debug.line("apply_get_set_substitutions", f"[IN ] Line: {line}")
-        helper_func = None
-
-        m = re.search(r"\bgrib_([gs]et)_(\w+?)(?:_array)?(?:_internal)?\(", line)
-        if m:
-            if m.group(1) == "get":
-                if m.group(2) == "size":
-                    helper_func = f"getSizeHelper"
-                else:
-                    helper_func = f"unpack{m.group(2).capitalize()}Helper"
-            else:
-                helper_func = f"pack{m.group(2).capitalize()}Helper"
-
-        if not helper_func:
-            return line
-
-        helper_func_match_start = m.start()
-        helper_func_match_end = m.end()
-        # [2] Capture the parameters - we only need the second and third so the cleanest way is
-        #     to explicitly capture the first three, otherwise the first paramaeter can cause 
-        #     issues when it is grib_handle_of_accessor(a) due to the trailing )
-        # 
-        # Note: The leading & is removed from the third arg (if present)
-        param_re = r"\s*([^,]*)\s*"
-        m = re.search(rf"{param_re},{param_re},{param_re}[^\)]*\)", line[helper_func_match_end:])
-        if m:
-            parameter_match_end = helper_func_match_end+m.end()
-
-            accessor_name = m.group(2)
-            if accessor_name[0] == "\"":
-                accessor_name = "AccessorName(" + accessor_name + ")"
-            else:
-                for cpparg in self._transforms.all_args.values():
-                    if cpparg and cpparg.name == accessor_name and cpparg.type == "std::string":
-                        accessor_name = "AccessorName(" + accessor_name + ")"
-            
-            value_arg = m.group(3).strip()
-            if value_arg[0] == "&":
-                value_arg = value_arg[1:]
-
-            helper_func += f"({accessor_name}, {value_arg})"
-            line = line[:helper_func_match_start] + helper_func + line[parameter_match_end:]
-
-        
-        debug.line("apply_get_set_substitutions", f"[OUT] helper func=[{helper_func}] Line: {line}")
-
-        return line
     
     # Convert any int return values where the function return type is GribStatus
     def convert_int_return_values(self, line):

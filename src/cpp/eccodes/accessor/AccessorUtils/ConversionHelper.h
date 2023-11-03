@@ -11,18 +11,6 @@
 namespace eccodes::accessor
 {
 
-GribStatus getSizeHelper(AccessorName const& name, size_t& size);
-
-GribStatus unpackDoubleHelper(AccessorName const& name, double& value);
-GribStatus unpackDoubleHelper(AccessorName const& name, std::vector<double>& value);
-GribStatus unpackLongHelper(AccessorName const& name, long& value);
-GribStatus unpackStringHelper(AccessorName const& name, std::string& value);
-
-GribStatus packDoubleHelper(AccessorName const& name, double value);
-GribStatus packLongHelper(AccessorName const& name, long value);
-GribStatus packLongHelper(AccessorName const& name, std::vector<long> const& values);
-GribStatus packStringHelper(AccessorName const& name, std::string value);
-
 // Create a string directly using format string args (e.g. snprintf)
 // For example:
 //   C code:    snprintf(result, 128, "+a=%lf +b=%lf", major, minor);
