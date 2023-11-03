@@ -148,6 +148,16 @@ set -e
 [ $status -ne 0 ]
 grep -q "Wrong number of fields" $tempText
 
+# Not regular grid
+input=${data_dir}/reduced_gaussian_pressure_level.grib2
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "not on a regular lat/lon grid or on a regular Gaussian grid" $tempText
+
+
 export GRIB_TO_NETCDF_CHECKVALIDTIME=0
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 [ -f "$tempNetcdf" ]

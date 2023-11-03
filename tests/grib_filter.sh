@@ -398,6 +398,14 @@ grep "unable to get rubbish as string" $tempOut
 grep "unable to get garbage as string" $tempOut
 
 
+# Use of "abs"
+cat >$tempFilt <<EOF
+ meta abs_twice_bsf evaluate( abs(binaryScaleFactor * 2) );
+ assert(abs_twice_bsf == 20);
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules
