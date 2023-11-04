@@ -21697,12 +21697,6 @@
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
 	}
-#Mean temperature at 2 metres
-'mean2t' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 4 ;
-	}
 #Mean of 10 metre wind speed
 'mean10ws' = {
 	 discipline = 192 ;
