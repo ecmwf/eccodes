@@ -42,16 +42,6 @@ class MethodConverter(FunctionConverter):
                                 cppstruct_member.member = cppstruct_member_member
                                 debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
                             break
-            
-            # Extra processing for a-> structs where we've failed to match a member
-            if not cppstruct_member and cstruct_arg.name == "a":
-                if cstruct_arg.member.name == "name":
-                    # Special handling: Replace name member with a string literal (it's only used in logging)
-                    cppstruct_member = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
-                else:
-                    # Set name to None to mark it for deletion
-                    debug.line("transform_cstruct_arg_member", f"Marking for deletion: {cstruct_arg.as_string()}")
-                    cppstruct_member = struct_arg.StructArg("", None, "")
 
             # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
             if cstruct_arg.name == "super":
@@ -64,7 +54,27 @@ class MethodConverter(FunctionConverter):
             else:
                 cppstruct_arg = cppstruct_member
 
-            assert cppstruct_arg, f"Could not transform cstruct_arg: [{cstruct_arg.as_string()}]"
+        return cppstruct_arg
+
+    # transform and a->foo where foo is a non-member
+    def transform_cstruct_arg_a_nonmember(self, cstruct_arg):
+        cppstruct_arg = None
+
+        if cstruct_arg.name == "a":
+            a_member = cstruct_arg.member
+            if a_member.name == "name":
+                # Special handling: Replace name member with a string literal (it's only used in logging)
+                cppstruct_arg = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
+            elif a_member.name == "context":
+                context_member = a_member.member
+                if context_member and context_member.name == "debug":
+                    # Special handling: Replace with AccessorDebug flag
+                    cppstruct_arg = struct_arg.StructArg("", "ACCESSOR_DEBUG", "")
+
+            if not cppstruct_arg:
+                # Set name to None to mark it for deletion
+                debug.line("transform_cstruct_arg_member", f"Marking for deletion: {cstruct_arg.as_string()}")
+                cppstruct_arg = struct_arg.StructArg("", None, "")
 
         return cppstruct_arg
 
@@ -107,6 +117,7 @@ class MethodConverter(FunctionConverter):
 
         transform_funcs = [
             self.transform_cstruct_arg_member,
+            self.transform_cstruct_arg_a_nonmember,
             self.transform_cstruct_arg_grib_handle_member,
             self.transform_cstruct_arg_accessor_ptr,
         ]

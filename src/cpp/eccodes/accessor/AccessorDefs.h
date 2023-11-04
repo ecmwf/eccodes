@@ -7,6 +7,9 @@
 
 #define USE_CPP_ACCESSORS
 
+// Defined to replace grib_context debug flag
+#define ACCESSOR_DEBUG 1
+
 namespace eccodes::accessor {
 
 class Accessor;
