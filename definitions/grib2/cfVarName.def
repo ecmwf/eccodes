@@ -8023,6 +8023,16 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	}
+#Mean 2 metre temperature
+'mean2t' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Lake total depth
 'dl' = {
 	 discipline = 1 ;
