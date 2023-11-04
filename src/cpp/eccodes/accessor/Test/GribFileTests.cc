@@ -45,7 +45,7 @@ void createAccessors(LayoutEntries const& entries, GribBuffer& buffer)
     {
         auto accessor = AccessorFactory::instance().build(AccessorType(entry.type_), AccessorName(entry.name_), AccessorNameSpace(""), AccessorInitData{});
 
-        AccessorBuffer accBuffer{buffer.data() + offset, static_cast<std::size_t>(entry.byteCount_)};
+        AccessorDataBuffer accBuffer{buffer.data() + offset, static_cast<std::size_t>(entry.byteCount_)};
         offset += entry.byteCount_;
 
         accessor->newBuffer(accBuffer);

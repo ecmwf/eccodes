@@ -7,7 +7,7 @@
 
 namespace eccodes::accessor {
 
-using GribBuffer = std::vector<char>;
+using GribBuffer = std::vector<unsigned char>;
 
 std::ostream& operator<<(std::ostream& os, GribBuffer const& buffer);
 

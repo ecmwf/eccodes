@@ -108,7 +108,115 @@ class FunctionConverter:
                 debug.line("convert_grib_utils", f"Replaced {util} with {cpp_util} [after ]: {line}")
 
         return line
-    
+
+    # Helper for transform_cfunction_call to apply any conversions specified in the
+    # supplied conversions map
+    # Returns the transformed cpp function name and C params, or None (for each)
+    def transform_cfunction_call_from_conversions(self, cfuncname, cparams, funcsig_conversions):
+        cppfuncsig = None
+        
+        for mapping in funcsig_conversions:
+            if mapping.cfuncsig.name == cfuncname:
+                cppfuncsig = mapping.cppfuncsig
+                break
+
+        if not cppfuncsig:
+            return None, None
+
+        # Map the cparams to their equivalent C++ params
+        # Note: 1: The params are not converted to C++
+        #       2: any & prefixes are removed
+        transformed_cparams = []
+
+        for index, func_arg in enumerate(cppfuncsig.args):
+            if not func_arg:
+                continue
+
+            param = cparams[index]
+
+            # C params are converted later, however if one of them is a string representing an accessor name then we'll 
+            # have to convert it now...
+            if func_arg.type.startswith("AccessorName") and param[0] == "\"":
+                param = f"AccessorName({param})"
+            
+            if param[0] == "&":
+                param = param[1:]
+
+            transformed_cparams.append(param)
+
+        return cppfuncsig.name, transformed_cparams
+
+
+    # Convert any C function calls to the C++ equivalent
+    # This will update which arguments are supplied, but does NOT transform the args
+    # to C++ (this is done later)
+    # Returns the transformed cpp function name and C params, or None (for each)
+    # Override to specialise (e.g. to provide a particular mapping to process)
+    def transform_cfunction_call(self, cfuncname, cparams):
+        cppfuncname = transformed_cparams = None
+
+        # Get list of grib conversions
+        for grib_conversions in grib_api_converter.grib_funcsig_conversions():
+            cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cfuncname, cparams, grib_conversions)
+            if cppfuncname:
+                break
+
+        return cppfuncname, transformed_cparams
+
+    # Takes a C function name and params and transforms the func name to C++
+    # and updates the arguments list to match the C++ function, but without transforming each
+    # remaining arg (this is done later)
+    # The result is returned as a string, or None if no transform exists
+    # 
+    # Override e.g. to convert foo(a,b) to a->foo(b)
+    def convert_cfunction_to_cpp_format(self, cfuncname, cparams):
+        cppfuncname, transformed_cparams = self.transform_cfunction_call(cfuncname, cparams)
+
+        if cppfuncname:
+            return f"{cppfuncname}({','.join([p for p in transformed_cparams])})"
+        
+        return None
+
+    # Find any C function calls in the line and pass to transform_cfunction_call
+    # If a transformed cppfunction is returned, update the line
+    def convert_cfunction_calls(self, line):
+        # Find function calls
+        m = re.search(r"\b(grib[^(\s]*)\(", line)
+        if not m:
+            return line
+        
+        cfuncname = m.group(1)
+
+        match_start = m.start()
+        match_end = m.end()
+
+        # Capture the parameters
+        cparams = []
+        param_re = r"\s*([^,]*)\s*"
+        while match_end < len(line):
+            m = re.search(rf"{param_re},", line[match_end:])
+            if m:
+                match_end += m.end()
+                cparams.append(m.group(1))
+            else:
+                break
+
+        # Final param...
+        param_re = r"\s*([^\)]*)\s*"
+        m = re.search(rf"{param_re}\)", line[match_end:])
+        assert m, f"No final param - is it multi-line? Input line [{line}]"
+        cparams.append(m.group(1))
+        match_end += m.end()
+
+        cppfunction_call = self.convert_cfunction_to_cpp_format(cfuncname, cparams)
+
+        if cppfunction_call:
+            line = line[:match_start] + cppfunction_call + line[match_end:]
+            debug.line("convert_funcsig",f"Converted function [{cfuncname}] [After]: {line}")
+
+        return line
+
+
     def update_grib_api_cfunctions(self, line):
         line = self.convert_grib_utils(line)
         line = grib_api_converter.convert_grib_api_functions(line)
@@ -837,6 +945,7 @@ class FunctionConverter:
         # Note: These apply in order, be careful if re-arranging!
         update_functions = [
             # [1] Update C functions only
+            self.convert_cfunction_calls,
             self.update_grib_api_cfunctions,
             self.update_cfunction_names,
             self.custom_cfunction_updates,

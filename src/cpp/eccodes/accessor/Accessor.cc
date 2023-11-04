@@ -50,12 +50,12 @@ int Accessor::isMissing() const
     return data_->isMissing();
 }
 
-bool Accessor::newBuffer(AccessorBuffer const& accBuffer)
+bool Accessor::newBuffer(AccessorDataBuffer const& accBuffer)
 {
     return data_->newBuffer(accBuffer);
 }
 
-AccessorBuffer Accessor::currentBuffer() const
+AccessorDataBuffer Accessor::currentBuffer() const
 {
     return data_->currentBuffer();
 }
@@ -69,6 +69,17 @@ std::vector<double> Accessor::unpackSubarray(std::size_t start) const
 {
     std::vector<double> values{};
     return data_->unpackSubarray(values, start) == GribStatus::SUCCESS ? values : std::vector<double>{};
+}
+
+// Conversion support
+long Accessor::byteCount() const
+{
+    return data_->byteCount();
+}
+
+long Accessor::byteOffset() const
+{
+    return data_->byteOffset();
 }
 
 }

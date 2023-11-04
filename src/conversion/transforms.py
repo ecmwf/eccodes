@@ -70,6 +70,14 @@ class Transforms:
 
         return None
 
+    # Helper to return the cpparg for the supplied cname, or None
+    def cpparg_for(self, cname):
+        for carg, cpparg in self.all_args.items():
+            if carg.name == cname:
+                return cpparg
+
+        return None
+
     def add_local_args(self, carg, cpparg):
         if carg in self._all_args:
             assert self._all_args[carg] == cpparg, f"Updating an existing local arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._all_args[carg])}"

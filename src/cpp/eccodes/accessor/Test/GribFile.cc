@@ -75,7 +75,7 @@ GribBuffer parseGribFile(std::filesystem::path gribFile)
 
     GribBuffer buffer(fileSize);
 
-    file.read(buffer.data(), fileSize);
+    file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
 
     return buffer;
 }

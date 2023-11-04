@@ -15,13 +15,13 @@ AccessorData::AccessorData(AccessorInitData const& initData)
 
 AccessorData::~AccessorData() = default;
 
-bool AccessorData::newBuffer(AccessorBuffer const& accBuffer)
+bool AccessorData::newBuffer(AccessorDataBuffer const& accBuffer)
 {
     buffer_ = accBuffer;
     return true;
 }
 
-AccessorBuffer AccessorData::currentBuffer() const
+AccessorDataBuffer AccessorData::currentBuffer() const
 {
     return buffer_;
 }

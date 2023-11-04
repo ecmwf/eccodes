@@ -15,9 +15,10 @@
 
 namespace eccodes::accessor {
 
+template<typename T>
 class AccessorBuffer {
 public:
-    using value_type = char;
+    using value_type = T;
     using pointer = value_type*;
     using const_pointer = value_type const*;
     using reference = value_type&;
@@ -30,9 +31,8 @@ public:
     constexpr AccessorBuffer(AccessorBuffer const&) noexcept = default;
     constexpr AccessorBuffer& operator=(AccessorBuffer const&) noexcept = default;
 
-    template<typename T>
-    constexpr AccessorBuffer(T *const buffer, const size_type num_elements) noexcept
-        : data_(reinterpret_cast<pointer>(buffer)), size_(sizeof(T) * num_elements) {}
+    constexpr AccessorBuffer(value_type *const buffer, const size_type num_elements) noexcept
+        : data_(reinterpret_cast<pointer>(buffer)), size_(sizeof(value_type) * num_elements) {}
 
     [[nodiscard]] constexpr size_type size_bytes() const noexcept {
         return size_;
@@ -50,5 +50,8 @@ private:
     pointer data_;
     size_type size_;
 };
+
+using AccessorDataBuffer = AccessorBuffer<unsigned char>;
+using DataPointer = unsigned char*;
 
 }

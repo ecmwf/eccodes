@@ -59,28 +59,32 @@ def parse_file(path):
 
     # Some function calls are split over multiple lines, which causes issues when 
     # parsing, so we combine these into a single long line
+    # Note: Multiline is disabled until we reach the /* END_CLASS_IMP */ line as
+    #       the accessor definitions need to be parsed as individual lines
+    multiline_enabled = False
     multiline = ""
     function_start_re     = r"\b[^(\s]*\("
-    function_continues_re = r"[,\(\"]\s*$"
+    comment_or_space_re   = r"((\s*)|(\s*/\*.*\*/\s*)|(\s*//.*))"
+    function_continues_re = r"[,\(\"]" + comment_or_space_re + "$"
 
     f = open(path, "r")
     for line in f:
 
         # Multiline function parsing - start
+        if multiline_enabled:
+            if multiline:
+                if re.search(rf"{function_continues_re}", line):
+                    multiline += line.lstrip()
+                else:
+                    multiline = multiline.replace("\n", "")
+                    line = multiline + line.lstrip()
+                    multiline = ""
 
-        if multiline:
-            if re.search(rf"{function_continues_re}", line):
-                multiline += line.lstrip()
-            else:
-                multiline = multiline.replace("\n", "")
-                line = multiline + line.lstrip()
-                multiline = ""
+            elif re.search(rf"({function_start_re}$)|({function_start_re}.*{function_continues_re})", line):
+                multiline = line
 
-        elif re.search(rf"{function_start_re}.*{function_continues_re}", line):
-            multiline = line
-
-        if multiline:
-            continue
+            if multiline:
+                continue
 
         # Multiline function parsing - end
 
@@ -103,6 +107,7 @@ def parse_file(path):
 
         if stripped_line.startswith("/* END_CLASS_IMP */"):
             in_implementation = False
+            multiline_enabled = True
             continue
 
         if in_implementation:

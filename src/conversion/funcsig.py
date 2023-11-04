@@ -67,3 +67,4 @@ class FuncSig:
 
     def as_string(self):
         return f"{'static ' if self.static else ''}{self.return_type} {self.name}({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"
+    

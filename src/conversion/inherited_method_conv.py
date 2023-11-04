@@ -1,6 +1,7 @@
 
 from method_conv import *
 import inherited_method
+import inherited_method_funcsig_conv
 
 # Specialisation of MethodConverter for AccessorData Methods
 class InheritedMethodConverter(MethodConverter):
@@ -35,3 +36,42 @@ class InheritedMethodConverter(MethodConverter):
             return self.create_commented_cpp_body()
 
         return super().create_cpp_body()
+
+    # Version of transform_cfunction_call for inherited methods
+    # Added to avoid traversing the map twice through calls to convert_cfunction_to_cpp_format
+    # Calls directly to transform_cfunction_call will also come through here...
+    def transform_cinherited_method_call(self, cfuncname, cparams):
+
+        m = re.match(r"grib_(\w*)", cfuncname)
+        if m:
+            cmethod_name = m.group(1)
+        else:
+            cmethod_name = cfuncname
+
+        # Need to use the full list in case the current method's local mappings don't support it!
+        conversions = inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions
+
+        cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cmethod_name, cparams, conversions)
+
+        return cppfuncname, transformed_cparams
+
+    # Overridden to handle inherited methods, and also grib_pack_long() etc that
+    # convert to accessor_ptr->packLong()
+    def transform_cfunction_call(self, cfuncname, cparams):
+
+        cppfuncname, transformed_cparams = self.transform_cinherited_method_call(cfuncname, cparams)
+
+        if cppfuncname:
+            return cppfuncname, transformed_cparams
+
+        return super().transform_cfunction_call(cfuncname, cparams)
+
+    # Overridden e.g. to convert foo(a,b) to a->foo(b) (as required)
+    def convert_cfunction_to_cpp_format(self, cfuncname, cparams):
+        cppfuncname, transformed_cparams = self.transform_cinherited_method_call(cfuncname, cparams)
+
+        if cppfuncname:
+            assert len(cparams) >= 1, f"Expected at least 1 parameter for function [{cfuncname}]"
+            return f"{cparams[0]}->{cppfuncname}({','.join([p for p in transformed_cparams ])})"
+
+        return super().convert_cfunction_to_cpp_format(cfuncname, cparams)

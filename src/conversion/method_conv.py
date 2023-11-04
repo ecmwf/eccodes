@@ -21,63 +21,100 @@ class MethodConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return method.Method(cppfuncsig)
 
+    # transform_cstruct_arg helpers - return cppstruct_arg or None
+    def transform_cstruct_arg_member(self, cstruct_arg):
+        cppstruct_arg = None
+        cstruct_member = cstruct_arg.member
+
+        if cstruct_arg.name in ["super", "self", "a"]:
+            cppstruct_member = None
+
+            # Find member arg
+            for member_dict in [base_members_map, self._transforms.members]:
+                for carg, cpparg in member_dict.items():
+                    if carg.name == cstruct_member.name:
+                        cppstruct_member = self.apply_cstruct_arg_transforms_for_ctype(carg.type, cstruct_member, cpparg.name)
+                        if not cppstruct_member:
+                            cppstruct_member = struct_arg.StructArg("", cpparg.name, cstruct_member.index)
+                            if cstruct_member.member:
+                                # TODO: Additonal members here means that we've not processed something correctly - need to fix!
+                                cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
+                                cppstruct_member.member = cppstruct_member_member
+                                debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
+                            break
+            
+            # Extra processing for a-> structs where we've failed to match a member
+            if not cppstruct_member and cstruct_arg.name == "a":
+                if cstruct_arg.member.name == "name":
+                    # Special handling: Replace name member with a string literal (it's only used in logging)
+                    cppstruct_member = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
+                else:
+                    # Set name to None to mark it for deletion
+                    debug.line("transform_cstruct_arg_member", f"Marking for deletion: {cstruct_arg.as_string()}")
+                    cppstruct_member = struct_arg.StructArg("", None, "")
+
+            # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
+            if cstruct_arg.name == "super":
+                if not cppstruct_member and cstruct_arg.name == "super":
+                    # special case super->super
+                    cppstruct_arg = struct_arg.StructArg("", self._transforms.types['supersuper'], "")
+                else:
+                    cppstruct_arg = struct_arg.StructArg("", self._transforms.types['super'], "")
+                    cppstruct_arg.member = struct_arg.StructArg("::", cppstruct_member.name, cppstruct_member.index, cppstruct_member.member)
+            else:
+                cppstruct_arg = cppstruct_member
+
+            assert cppstruct_arg, f"Could not transform cstruct_arg: [{cstruct_arg.as_string()}]"
+
+        return cppstruct_arg
+
+    def transform_cstruct_arg_grib_handle_member(self, cstruct_arg):
+        cppstruct_arg = None
+        cstruct_member = cstruct_arg.member
+
+        if self._transforms.ctype_of(cstruct_arg.name) == "grib_handle*" or cstruct_arg.name == "grib_handle_of_accessor(a)":
+            if cstruct_member.name == "buffer":
+
+                debug.line("transform_cstruct_arg_member", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
+
+                cppstruct_arg = struct_arg.StructArg("", "buffer_", "" )
+                if cstruct_member.member and cstruct_member.member.name == "data":
+                    cppstruct_arg.member = struct_arg.StructArg(".", "data()", cstruct_member.member.index)
+
+        return cppstruct_arg
+
+    def transform_cstruct_arg_accessor_ptr(self, cstruct_arg):
+        cppstruct_arg = None
+
+        # If AccessorPtr, keep access as "->"
+        cpparg = self._transforms.cpparg_for(cstruct_arg.name)
+        if cpparg and cpparg.type == "AccessorPtr":
+            if cstruct_arg.member.name == "name":
+                # Special handling: Replace name member with a string literal (it's only used in logging)
+                cppstruct_arg = struct_arg.StructArg("", f"\"{self._transforms.types['self']}\"", "" )
+            else:
+                cppstruct_arg = struct_arg.StructArg("", cpparg.name, cstruct_arg.index )
+                cppstruct_arg.member = cstruct_arg.member
+
+            debug.line("transform_cstruct_arg_accessor_ptr", f"[{cstruct_arg.as_string()}] -> [{cppstruct_arg.as_string()}]")
+
+
+        return cppstruct_arg
+
     # Overridden to process self->, super-> etc
     def transform_cstruct_arg(self, cstruct_arg):
+        assert cstruct_arg, f"Unexpected cstruct_arg with None value"
 
-        if cstruct_arg:
-            cppstruct_arg = None
-            cstruct_member = cstruct_arg.member
+        transform_funcs = [
+            self.transform_cstruct_arg_member,
+            self.transform_cstruct_arg_grib_handle_member,
+            self.transform_cstruct_arg_accessor_ptr,
+        ]
 
-            # Process member access
-            if cstruct_arg.name in ["super", "self", "a"]:
-                cppstruct_member = None
+        cppstruct_arg = None
 
-                # Find member arg
-                for member_dict in [base_members_map, self._transforms.members]:
-                    for carg, cpparg in member_dict.items():
-                        if carg.name == cstruct_member.name:
-                            cppstruct_member = self.apply_cstruct_arg_transforms_for_ctype(carg.type, cstruct_member, cpparg.name)
-                            if not cppstruct_member:
-                                cppstruct_member = struct_arg.StructArg("", cpparg.name, cstruct_member.index)
-                                if cstruct_member.member:
-                                    # TODO: Additonal members here means that we've not processed something correctly - need to fix!
-                                    cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
-                                    cppstruct_member.member = cppstruct_member_member
-                                    debug.line("transform_cstruct_arg", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
-                                break
-                
-                # Extra processing for a-> structs where we've failed to match a member
-                if not cppstruct_member and cstruct_arg.name == "a":
-                    if cstruct_arg.member.name == "name":
-                        # Special handling: Replace name member with a string literal (it's only used in logging)
-                        cppstruct_member = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
-                    else:
-                        # Set name to None to mark it for deletion
-                        debug.line("transform_cstruct_arg", f"Marking for deletion: {cstruct_arg.as_string()}")
-                        cppstruct_member = struct_arg.StructArg("", None, "")
-
-                # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
-                if cstruct_arg.name == "super":
-                    if not cppstruct_member and cstruct_arg.name == "super":
-                        # special case super->super
-                        cppstruct_arg = struct_arg.StructArg("", self._transforms.types['supersuper'], "")
-                    else:
-                        cppstruct_arg = struct_arg.StructArg("", self._transforms.types['super'], "")
-                        cppstruct_arg.member = struct_arg.StructArg("::", cppstruct_member.name, cppstruct_member.index, cppstruct_member.member)
-                else:
-                    cppstruct_arg = cppstruct_member
-
-                assert cppstruct_arg, f"Could not transform cstruct_arg: [{cstruct_arg.as_string()}]"
-
-            # Extra processing required for grib_handle members that are referenced
-            if self._transforms.ctype_of(cstruct_arg.name) == "grib_handle*" or cstruct_arg.name == "grib_handle_of_accessor(a)":
-                if cstruct_member.name == "buffer":
-
-                    debug.line("transform_cstruct_arg", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
-
-                    cppstruct_arg = struct_arg.StructArg("", "buffer_", "" )
-                    if cstruct_member.member and cstruct_member.member.name == "data":
-                        cppstruct_arg.member = struct_arg.StructArg(".", "data()", cstruct_member.member.index)
+        for transform_func in transform_funcs:
+            cppstruct_arg = transform_func(cstruct_arg)            
 
             if cppstruct_arg:
                 return cppstruct_arg

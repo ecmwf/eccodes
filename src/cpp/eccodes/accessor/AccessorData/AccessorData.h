@@ -22,8 +22,8 @@ public:
     AccessorData(AccessorInitData const& initData);
     virtual ~AccessorData() = 0;
 
-    bool newBuffer(AccessorBuffer const& accBuffer);
-    AccessorBuffer currentBuffer() const;
+    bool newBuffer(AccessorDataBuffer const& accBuffer);
+    AccessorDataBuffer currentBuffer() const;
 
     virtual void dump() const;
     virtual std::size_t stringLength() const;
@@ -76,7 +76,7 @@ public:
 // Ideally these would be private, but that makes the conversion much harder so they are protected instead
 // This will be revisited later...
 protected:
-    AccessorBuffer buffer_{};
+    AccessorDataBuffer buffer_{};
     long length_{};
     long offset_{};
     unsigned long flags_{};

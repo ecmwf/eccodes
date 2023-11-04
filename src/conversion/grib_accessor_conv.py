@@ -17,6 +17,7 @@ rename = {
 }
 
 common_includes = [
+    "Accessor.h", 
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
     "GribCpp/GribQuery.h",
@@ -46,9 +47,10 @@ common_funcsig_type_transforms = {
 
 # These will be used if no other supplied...
 common_type_transforms = {
-    "char**"  : "std::string&",
-    "char*"   : "std::string",
-    "char[]"  : "std::string",
+    "unsigned char*" : "DataPointer",
+    "char**"         : "std::string&",
+    "char*"          : "std::string",
+    "char[]"         : "std::string",
 }
 
 # Convert GribAccessor to AccessorData
