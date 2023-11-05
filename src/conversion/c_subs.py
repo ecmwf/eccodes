@@ -11,6 +11,7 @@ c_lib_substitutions = {
     r"\bsnprintf\(([^,]+),[^,]+,": r"\1 = fmtString(",
     r"\bstrtol": "stringToLong",
     r"\bstrtod": "stringToDouble",
+    r"\bstrcpy\(([^,]+),([^\)]+)\)": r"\1 = \2",
 }
 
 # grib_ functions that can be deleted - we'll comment them out for now!

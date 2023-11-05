@@ -10,52 +10,52 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
     inherited_method_conversions = [
         # static int pack_TYPE( a, const TYPE* v, size_t* len)
         FuncSigMapping(FuncSig("int", "pack_string", [Arg("grib_accessor*", "a"), Arg("const char*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"),  None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "stringValue"),  None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "pack_long", [Arg("grib_accessor*", "a"), Arg("const long*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<long> const&", "values"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<long> const&", "longValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "pack_double", [Arg("grib_accessor*", "a"), Arg("const double*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<double> const&", "values"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<double> const&", "doubleValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "pack_float", [Arg("grib_accessor*", "a"), Arg("const float*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<float> const&", "values"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<float> const&", "floatValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
                           
         FuncSigMapping(FuncSig("int", "pack_string_array", [Arg("grib_accessor*", "a"), Arg("const char**", ""), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<StringArray> const&", "values"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<StringArray> const&", "stringValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
                           
         FuncSigMapping(FuncSig("int", "pack_bytes", [Arg("grib_accessor*", "a"), Arg("const unsigned char*", ""), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<std::byte> const&", "values"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<std::byte> const&", "byteValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         # static int unpack_TYPE(grib_accessor* a, TYPE* v, size_t* len)
         FuncSigMapping(FuncSig("int", "unpack_string", [Arg("grib_accessor*", "a"), Arg("char*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::string&", "value"),  None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::string&", "stringValue"),  None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_long", [Arg("grib_accessor*", "a"), Arg("long*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<long>&", "values"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<long>&", "longValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_double", [Arg("grib_accessor*", "a"), Arg("double*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<double>&", "values"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<double>&", "doubleValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_float", [Arg("grib_accessor*", "a"), Arg("float*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<float>&", "values"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<float>&", "floatValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_string_array", [Arg("grib_accessor*", "a"), Arg("char**", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<StringArray>&", "values"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<StringArray>&", "stringValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_bytes", [Arg("grib_accessor*", "a"), Arg("unsigned char*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<std::byte>&", "values"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<std::byte>&", "byteValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         # static int unpack_TYPE_element(grib_accessor*, size_t i, TYPE* val);

@@ -96,17 +96,17 @@ AccessorDataPtr AccessorData::clone() const
 }
 
 // Pack - single value
-GribStatus AccessorData::pack(long const& value)
+GribStatus AccessorData::pack(long const& longValue)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(double const& value)
+GribStatus AccessorData::pack(double const& doubleValue)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(float const& value)
+GribStatus AccessorData::pack(float const& floatValue)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
@@ -122,63 +122,63 @@ GribStatus AccessorData::packMissing()
 }
 
 // Pack - buffer
-GribStatus AccessorData::pack(std::string const& value)
+GribStatus AccessorData::pack(std::string const& stringValue)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<long> const& values)
+GribStatus AccessorData::pack(std::vector<long> const& longValues)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<double> const& values)
+GribStatus AccessorData::pack(std::vector<double> const& doubleValues)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<float> const& values)
+GribStatus AccessorData::pack(std::vector<float> const& floatValues)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<StringArray> const& values)
+GribStatus AccessorData::pack(std::vector<StringArray> const& stringValues)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::pack(std::vector<std::byte> const& values)
+GribStatus AccessorData::pack(std::vector<std::byte> const& byteValues)
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
 // Unpack - buffer
-GribStatus AccessorData::unpack(std::string &value) const
+GribStatus AccessorData::unpack(std::string &stringValue) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<long> &values) const
+GribStatus AccessorData::unpack(std::vector<long> &longValues) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<double> &values) const
+GribStatus AccessorData::unpack(std::vector<double> &doubleValues) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<float> &values) const
+GribStatus AccessorData::unpack(std::vector<float> &floatValues) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<StringArray> &values) const
+GribStatus AccessorData::unpack(std::vector<StringArray> &stringValues) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpack(std::vector<std::byte> &values) const
+GribStatus AccessorData::unpack(std::vector<std::byte> &byteValues) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }

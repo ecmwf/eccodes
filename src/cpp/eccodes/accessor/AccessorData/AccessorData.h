@@ -40,31 +40,31 @@ public:
     virtual AccessorDataPtr clone() const;
 
     // Pack - single value
-    virtual GribStatus pack(long const& value);
-    virtual GribStatus pack(double const& value);
-    virtual GribStatus pack(float const& value);
+    virtual GribStatus pack(long const& longValue);
+    virtual GribStatus pack(double const& doubleValue);
+    virtual GribStatus pack(float const& floatValue);
     virtual GribStatus pack(grib_expression const& expression);
     virtual GribStatus packMissing();
 
     // Pack - buffer
-    virtual GribStatus pack(std::string const& value);
-    virtual GribStatus pack(std::vector<long> const& values);
-    virtual GribStatus pack(std::vector<double> const& values);
-    virtual GribStatus pack(std::vector<float> const& values);
-    virtual GribStatus pack(std::vector<StringArray> const& values);
-    virtual GribStatus pack(std::vector<std::byte> const& values);
+    virtual GribStatus pack(std::string const& stringValue);
+    virtual GribStatus pack(std::vector<long> const& longValues);
+    virtual GribStatus pack(std::vector<double> const& doubleValues);
+    virtual GribStatus pack(std::vector<float> const& floatValues);
+    virtual GribStatus pack(std::vector<StringArray> const& stringValues);
+    virtual GribStatus pack(std::vector<std::byte> const& byteValues);
 
     // Unpack - single value
     template<typename T>
     GribStatus unpack(T &value) const;
 
     // Unpack - buffer
-    virtual GribStatus unpack(std::string &value) const;
-    virtual GribStatus unpack(std::vector<long>& values) const;
-    virtual GribStatus unpack(std::vector<double>& values) const;
-    virtual GribStatus unpack(std::vector<float>& values) const;
-    virtual GribStatus unpack(std::vector<StringArray> &values) const;
-    virtual GribStatus unpack(std::vector<std::byte> &values) const;
+    virtual GribStatus unpack(std::string &stringValue) const;
+    virtual GribStatus unpack(std::vector<long>& longValues) const;
+    virtual GribStatus unpack(std::vector<double>& doubleValues) const;
+    virtual GribStatus unpack(std::vector<float>& floatValues) const;
+    virtual GribStatus unpack(std::vector<StringArray> &stringValues) const;
+    virtual GribStatus unpack(std::vector<std::byte> &byteValues) const;
 
     // Unpack - multiple values
     virtual GribStatus unpackElement(std::size_t index, double& val) const;
