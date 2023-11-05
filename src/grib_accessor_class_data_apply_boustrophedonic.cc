@@ -147,7 +147,7 @@ static int value_count(grib_accessor* a, long* numberOfPoints)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack_helper(grib_accessor* a, T* val, size_t* len)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
     size_t plSize                                  = 0;
@@ -243,12 +243,12 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack_helper<double>(a, val, len);
 }
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    return unpack_helper<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

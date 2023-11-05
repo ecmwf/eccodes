@@ -213,7 +213,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack_helper(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;
@@ -241,12 +241,12 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack_helper<double>(a, val, len);
 }
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    return unpack_helper<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)

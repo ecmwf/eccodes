@@ -192,7 +192,7 @@ static int value_count(grib_accessor* a, long* numberOfSecondOrderPackedValues)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* values, size_t* len)
+static int unpack_helper(grib_accessor* a, T* values, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_g1second_order_general_packing* self = (grib_accessor_data_g1second_order_general_packing*)a;
@@ -298,12 +298,12 @@ static int unpack(grib_accessor* a, T* values, size_t* len)
 
 static int unpack_float(grib_accessor* a, float* values, size_t* len)
 {
-    return unpack<float>(a, values, len);
+    return unpack_helper<float>(a, values, len);
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t* len)
 {
-    return unpack<double>(a, values, len);
+    return unpack_helper<double>(a, values, len);
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)

@@ -309,7 +309,7 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* v, size_t* len)
+static int unpack_helper(grib_accessor* a, T* v, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     int type = GRIB_TYPE_UNDEFINED;
@@ -346,12 +346,12 @@ static int unpack(grib_accessor* a, T* v, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* v, size_t* len)
 {
-    return unpack<double>(a, v, len);
+    return unpack_helper<double>(a, v, len);
 }
 
 static int unpack_float(grib_accessor* a, float* v, size_t* len)
 {
-    return unpack<float>(a, v, len);
+    return unpack_helper<float>(a, v, len);
 }
 
 static int unpack_string(grib_accessor* a, char* v, size_t* len)

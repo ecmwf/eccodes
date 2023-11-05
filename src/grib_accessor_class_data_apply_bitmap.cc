@@ -344,7 +344,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack_helper(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_apply_bitmap* self = (grib_accessor_data_apply_bitmap*)a;
@@ -428,12 +428,12 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack_helper<double>(a, val, len);
 }
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    return unpack_helper<float>(a, val, len);
 }
 
 static int get_native_type(grib_accessor* a)

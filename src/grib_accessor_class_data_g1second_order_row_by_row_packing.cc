@@ -254,7 +254,7 @@ static int value_count(grib_accessor* a, long* count)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* values, size_t* len)
+static int unpack_helper(grib_accessor* a, T* values, size_t* len)
 {
     grib_accessor_data_g1second_order_row_by_row_packing* self = (grib_accessor_data_g1second_order_row_by_row_packing*)a;
     grib_handle* gh                                            = grib_handle_of_accessor(a);
@@ -423,12 +423,12 @@ static int unpack(grib_accessor* a, T* values, size_t* len)
 
 static int unpack_float(grib_accessor* a, float* values, size_t* len)
 {
-    return unpack<float>(a, values, len);
+    return unpack_helper<float>(a, values, len);
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t* len)
 {
-    return unpack<double>(a, values, len);
+    return unpack_helper<double>(a, values, len);
 }
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)

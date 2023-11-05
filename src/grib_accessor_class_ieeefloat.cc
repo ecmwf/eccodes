@@ -178,7 +178,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 }
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack_helper(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     long rlen = 0;
@@ -206,12 +206,12 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack_helper<double>(a, val, len);
 }
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
 {
-    return unpack<float>(a, val, len);
+    return unpack_helper<float>(a, val, len);
 }
 
 static void update_size(grib_accessor* a, size_t s)

@@ -673,7 +673,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 
 template <typename T>
-static int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack_helper(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_complex_packing* self = (grib_accessor_data_complex_packing*)a;
@@ -897,7 +897,7 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    return unpack<double>(a, val, len);
+    return unpack_helper<double>(a, val, len);
 }
 
 static int unpack_float(grib_accessor* a, float* val, size_t* len)
@@ -905,7 +905,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
     // TODO(maee): See ECC-1579
     // Investigate why results are not bit-identical
 
-    // return unpack<float>(a, val, len);
+    // return unpack_helper<float>(a, val, len);
 
     int err = 0;
     size_t i = 0;
@@ -914,7 +914,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
     val8 = (double*)grib_context_malloc(a->context, size*(sizeof(double)));
     if (!val8) return GRIB_OUT_OF_MEMORY;
 
-    err = unpack<double>(a, val8, len);
+    err = unpack_helper<double>(a, val8, len);
     if (err) {
         grib_context_free(a->context,val8);
         return err;
