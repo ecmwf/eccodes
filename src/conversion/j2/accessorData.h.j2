@@ -40,7 +40,7 @@ protected:
 private:
     // Private methods
     {%- for m in c.private_methods %}
-    {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
+    {{ m.template }}{{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
     };
 
 } // namespace {{ c.nested_namespaces }}

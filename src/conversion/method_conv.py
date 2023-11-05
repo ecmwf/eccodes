@@ -243,7 +243,7 @@ class MethodConverter(FunctionConverter):
     # Find any overloaded virtual function calls that are not implemented in this class, and add to the 
     # "using" list so we can add a "using base::func" directive in the header
     def update_using_list(self, line):
-        m = re.search(r"\b([^\s\(]*pack[^\(]*)\(([^,\(]*)[,\)]", line)
+        m = re.search(r"\b([^\s\(]*pack[^\s\<\(]*)\(([^,\(]*)[,\)]", line)
         if m:
             funcname = m.group(1)
 
