@@ -19,7 +19,7 @@ namespace {{ c.nested_namespaces }} {
 // Global section - END
 
 {% for m in c.static_functions %}
-static {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {
+{{ m.as_source_declaration }} {
         {{ m.body }}
 }
 {% endfor %}
@@ -31,15 +31,13 @@ static {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {
 // {{ c.name }}::~{{ c.name }}() { {{ c.destructor.body }} }
 
 {% for m in c.inherited_methods %}
-{{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.arg_string }}) {{ m.const }} {
+{{ m.as_source_declaration }} {
         {{ m.body }}
  }
  {% endfor %}
 
 {% for m in c.private_methods %}
-{{ m.template }}
-{{ m.return_type }} {{ c.name }}::{{ m.name }}({{ m.arg_string }}) {{ m.const }} {
+{{ m.as_source_declaration }} {
         {{ m.body }}
  }
  {% endfor %}

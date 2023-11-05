@@ -8,4 +8,4 @@ class DestructorMethodConverter(MethodConverter):
         super().__init__()
 
     def create_cpp_function(self, cppfuncsig):
-        return destructor_method.DestructorMethod(cppfuncsig)
+        return destructor_method.DestructorMethod(cppfuncsig, self._transforms.types["self"])

@@ -31,7 +31,7 @@ protected:
     {%- for u in c.inherited_method_using_list %}
     using AccessorData::{{u}};{% endfor %}
     {%- for m in c.inherited_methods %}
-    {{ m.return_type }} {{ m.name }}({{ m.arg_string }}) {{ m.const }} override;{% endfor %}
+    {{ m.as_header_declaration }};{% endfor %}
 
     // Members
     {% for m in c.members %} {{ m.as_declaration() }}{{ m.default_value }};
@@ -40,7 +40,7 @@ protected:
 private:
     // Private methods
     {%- for m in c.private_methods %}
-    {{ m.template }}{{ m.return_type }} {{ m.name }}({{ m.arg_string }}) const;{% endfor %}
+    {{ m.as_header_declaration }};{% endfor %}
     };
 
 } // namespace {{ c.nested_namespaces }}

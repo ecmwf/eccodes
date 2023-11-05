@@ -41,6 +41,10 @@ class FuncSigConverter:
         mapping = FuncSigMapping(cfuncsig, cppfuncsig, self.arg_indexes())
         return mapping
 
+    # Override to customise the static behaviour
+    def is_cpp_static(self):
+        return self._cfuncsig.static
+
     # Returns both the new cpp funcsig and an updated c funcsig
     def to_cpp_funcsig(self):
         cppfuncsig = funcsig.FuncSig(
@@ -49,7 +53,8 @@ class FuncSigConverter:
             self.to_cpp_args(),
             self._cfuncsig.template)
 
-        cppfuncsig.static = self._cfuncsig.static
+        cppfuncsig.static = self.is_cpp_static()
+
         cfuncsig = self._cfuncsig
 
         return cfuncsig, cppfuncsig

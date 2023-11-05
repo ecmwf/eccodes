@@ -9,7 +9,7 @@ class InheritedMethodConverter(MethodConverter):
         super().__init__()
 
     def create_cpp_function(self, cppfuncsig):
-        return inherited_method.InheritedMethod(cppfuncsig)
+        return inherited_method.InheritedMethod(cppfuncsig, self._transforms.types["self"])
 
     # Comment out inherited methods that we aren't ready to implement yet...
     def create_commented_cpp_body(self):

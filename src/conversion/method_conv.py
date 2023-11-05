@@ -19,7 +19,7 @@ class MethodConverter(FunctionConverter):
         super().__init__()
 
     def create_cpp_function(self, cppfuncsig):
-        return method.Method(cppfuncsig)
+        return method.Method(cppfuncsig, self._transforms.types["self"])
 
     # transform_cstruct_arg helpers - return cppstruct_arg or None
     def transform_cstruct_arg_member(self, cstruct_arg):

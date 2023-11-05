@@ -10,7 +10,7 @@ class ConstructorMethodConverter(MethodConverter):
         super().__init__()
 
     def create_cpp_function(self, cppfuncsig):
-        return constructor_method.ConstructorMethod(cppfuncsig)
+        return constructor_method.ConstructorMethod(cppfuncsig, self._transforms.types["self"])
 
     def update_cfunction_names(self, line):
 

@@ -18,6 +18,30 @@ class Function:
             self._lines.append(l)
 
     @property
+    def as_header_declaration(self):
+        func_decl = ""
+        if self._func_sig.template:
+            func_decl += self._func_sig.template
+        func_decl += f"{'static ' if self.static else ''}{self.return_type} {self.name}"
+        func_decl += f"({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"
+        func_decl += self.const
+
+        return func_decl
+
+    @property   
+    def as_source_declaration(self):
+        func_decl = ""
+        if self._func_sig.template:
+            func_decl += self._func_sig.template
+        func_decl += f"{'static ' if self.static else ''}{self.return_type} {self.name}"
+        if self._func_sig.template:
+            func_decl += "<T>"
+        func_decl += f"({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"
+        func_decl += self.const
+
+        return func_decl
+
+    @property
     def func_sig(self):
         return self._func_sig
 
