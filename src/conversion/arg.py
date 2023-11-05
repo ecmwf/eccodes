@@ -146,6 +146,8 @@ def parse_type_and_name_from_string(input):
     #
     #       3. The index is actually added to the type to help with future parsing
     #
+
+    input = tidy_arg_string(input)
     arg_type = arg_name = None
 
     # Phase 1 - type
@@ -188,3 +190,21 @@ def parse_type_and_name_from_string(input):
         arg_name = ""
 
     return arg_type, arg_name
+
+# Helper to strip out any comments and excess space
+# from a potential arg strings...
+def tidy_arg_string(arg_string):
+    tidy_arg = ""
+    match_start = match_end = 0
+    m = re.search(r"/\*", arg_string)
+    if m:
+        match_start = m.start()
+        match_end = m.end()
+        m = re.search(rf"\*/", arg_string[match_end:])
+        if m:
+            match_end += m.end()
+
+    tidy_arg = arg_string[:match_start] + arg_string[match_end:]
+    tidy_arg = tidy_arg.strip()
+
+    return tidy_arg

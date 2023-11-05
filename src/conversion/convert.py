@@ -38,6 +38,41 @@ env = Environment(
     undefined=StrictUndefined,
 )
 
+def count_parentheses(text):
+    open_paren = 0
+    close_paren = 0
+    in_single_quote = False
+    in_double_quote = False
+    escape_char = False
+
+    for char in text:
+        # Skip if the current character is escaped
+        if escape_char:
+            escape_char = False
+            continue
+
+        # If it's the escape character and we're in a quote, skip the next character
+        if char == '\\' and (in_single_quote or in_double_quote):
+            escape_char = True
+            continue
+
+        # Toggle the single quote flag if we're not in double quotes
+        if char == "'" and not in_double_quote:
+            in_single_quote = not in_single_quote
+
+        # Toggle the double quote flag if we're not in single quotes
+        elif char == '"' and not in_single_quote:
+            in_double_quote = not in_double_quote
+
+        # Count the parentheses if we're not in any quote
+        elif not in_single_quote and not in_double_quote:
+            if char == '(':
+                open_paren += 1
+            elif char == ')':
+                close_paren += 1
+
+    return open_paren, close_paren
+
 def parse_file(path):
     in_definition = False
     in_implementation = False
@@ -59,32 +94,42 @@ def parse_file(path):
 
     # Some function calls are split over multiple lines, which causes issues when 
     # parsing, so we combine these into a single long line
-    # Note: Multiline is disabled until we reach the /* END_CLASS_IMP */ line as
-    #       the accessor definitions need to be parsed as individual lines
-    multiline_enabled = False
     multiline = ""
-    function_start_re     = r"\b[^(\s]*\("
+    function_start_re     = r"\b[^\(\s]*\("
     comment_or_space_re   = r"((\s*)|(\s*/\*.*\*/\s*)|(\s*//.*))"
     function_continues_re = r"[,\(\"]" + comment_or_space_re + "$"
+    open_paren_count = 0
+    close_paren_count = 0
+    forward_declarations = []
 
     f = open(path, "r")
     for line in f:
 
         # Multiline function parsing - start
-        if multiline_enabled:
-            if multiline:
-                if re.search(rf"{function_continues_re}", line):
-                    multiline += line.lstrip()
-                else:
-                    multiline = multiline.replace("\n", "")
-                    line = multiline + line.lstrip()
-                    multiline = ""
-
-            elif re.search(rf"({function_start_re}$)|({function_start_re}.*{function_continues_re})", line):
+        if not multiline and re.search(rf"{function_start_re}", line):
+            open_paren_count, close_paren_count = count_parentheses(line)
+            if open_paren_count > close_paren_count:
                 multiline = line
-
-            if multiline:
                 continue
+            else:
+                open_paren_count = close_paren_count = 0
+
+        if multiline:
+            new_open, new_close = count_parentheses(line)
+            open_paren_count  += new_open
+            close_paren_count += new_close
+
+            if open_paren_count > close_paren_count:
+                multiline += line.lstrip()
+                continue
+            elif open_paren_count == close_paren_count:
+                multiline = multiline.replace("\n", "")
+                line = multiline + line.lstrip()
+                debug.line("parse_file", f"multiline=[{line}]")
+                multiline = ""
+                open_paren_count = close_paren_count = 0
+            else:
+                assert False, f"open_paren_count [{open_paren_count}] < close_paren_count [{close_paren_count}]"
 
         # Multiline function parsing - end
 
@@ -107,7 +152,6 @@ def parse_file(path):
 
         if stripped_line.startswith("/* END_CLASS_IMP */"):
             in_implementation = False
-            multiline_enabled = True
             continue
 
         if in_implementation:
@@ -133,23 +177,29 @@ def parse_file(path):
         # Try and create a FuncSig from the line, if successful then it's a function definition!
         cfuncsig = funcsig.FuncSig.from_string(line)
         if cfuncsig:
-            if line.rstrip().endswith(");"):
-                # Forward declaration
-                continue
-
             assert not in_function, line
+
             function_name = cfuncsig.name
 
-            in_function = True
-
-            # Add function name to the global body as a forward declaration, so it is 
-            # declared in the correct place for any other globals!
+            # If this is the first time we've seen this function name, add it to the global body 
+            # as a forward declaration, so it is in the correct place for any other globals!
             #
             # Note: We just use the placeholder @FORWARD_DECLARATION:function_name here,
             #       when it is processed the placeholder will be used to check that it 
             #       is a valid static function: if not it will be deleted
-            forward_declaration = f"@FORWARD_DECLARATION:{function_name}"
-            global_function.add_line(forward_declaration)
+            if not function_name in forward_declarations:
+                forward_declarations.append(function_name)
+                forward_declaration = f"@FORWARD_DECLARATION:{function_name}"
+                debug.line("parse_file", f"[FORWARD DECLARATION] Adding [{forward_declaration}]")
+                global_function.add_line(forward_declaration)
+
+            # If this is an actual function declaration, then there's nothing to process
+            if line.rstrip().endswith(");"):
+                # Forward declaration
+                continue
+
+
+            in_function = True
 
             cfuncsig.template = template
             function = functions[function_name] = grib_accessor.create_cfunction(
@@ -171,6 +221,7 @@ def parse_file(path):
                 in_function = False
                 template = None
                 del function
+
             continue
 
         if stripped_line.startswith("template "):
@@ -178,6 +229,8 @@ def parse_file(path):
             continue
 
         global_function.add_line(line)
+
+    # for line in f: [END]
 
     if definitions:
         gribAccessorImpl = grib_accessor.GribAccessor(

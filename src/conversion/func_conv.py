@@ -6,6 +6,7 @@ import arg_conv
 import c_subs
 import re
 import grib_api_converter
+import funcsig_conversions.all_funcsig_conv as all_funcsig_conv
 import struct_arg
 import variable
 
@@ -155,8 +156,8 @@ class FunctionConverter:
     def transform_cfunction_call(self, cfuncname, cparams):
         cppfuncname = transformed_cparams = None
 
-        # Get list of grib conversions
-        for grib_conversions in grib_api_converter.grib_funcsig_conversions():
+        # Get list of funcsig conversions
+        for grib_conversions in all_funcsig_conv.all_funcsig_conversions():
             cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cfuncname, cparams, grib_conversions)
             if cppfuncname:
                 break
@@ -175,14 +176,20 @@ class FunctionConverter:
         if cppfuncname:
             return f"{cppfuncname}({','.join([p for p in transformed_cparams])})"
         
+        # At some point we shouldn't get the following assertion!
+        #assert cppfuncname, f"Could not convert function [{cfuncname}]"
+        
         return None
 
     # Find any C function calls in the line and pass to transform_cfunction_call
     # If a transformed cppfunction is returned, update the line
     def convert_cfunction_calls(self, line):
         # Find function calls
-        m = re.search(r"\b(grib[^(\s]*)\(", line)
+        m = re.search(r"\b([^(\s]*)\(", line)
         if not m:
+            return line
+        
+        if m.group(1) in ["Assert"]:
             return line
         
         cfuncname = m.group(1)
@@ -812,7 +819,7 @@ class FunctionConverter:
         return self.default_transform_cppvariable_access(var, cppvariable, match_token, post_match_string)
 
     def update_variable_access(self, line, depth):
-        assert depth<20, f"Unexpected recursion depth [{depth}]"
+        assert depth<50, f"Unexpected recursion depth [{depth}]"
 
         # Regex groups:
         # 12     3   4

@@ -4,8 +4,8 @@ namespace eccodes::accessor {
 
 // Overload for when the format string doesn't contain any format specifiers, 
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
-std::string fmtString(const char* format) {
-    return std::string(format);
+std::string fmtString(std::string format) {
+    return format;
 }
 
 std::vector<long> stringToLong(std::string val, std::string& last, int base)

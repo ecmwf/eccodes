@@ -12,19 +12,20 @@ class FuncSig:
         self._static = False
 
     # Try and create a func sig from a string: will return None is unsuccessful...
-    # Note: the sig_string can be multi-line...
     @classmethod
     def from_string(cls, sig_string):
+
         # Ignore typedefs - we don't want function pointers!
-        if re.match(r"\s*\btypedef", sig_string, re.DOTALL):
+        if re.match(r"\s*\btypedef", sig_string):
             return None
 
         sig = None
-        #m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]+)\)", sig_string, re.DOTALL)
-        m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]*)\)", sig_string, re.DOTALL)
+        m = re.match(r"(static\s*)?\b([^(]+)\s+(\w+)\s*\(([^(]*)\)", sig_string)
         if m:
+            is_static   = m.group(1) is not None
             return_type = m.group(2)
-            name = m.group(3)
+            name        = m.group(3)
+
             args = []
             for entry in [a.strip() for a in m.group(4).split(",")]:
                 if not entry:
@@ -32,8 +33,8 @@ class FuncSig:
                 args.append(arg.Arg.from_func_arg_string(entry))
             
             sig = cls(return_type, name, args)
-            if sig and m.group(1):
-                sig.static = True
+            if sig:
+                sig.static = is_static
 
         return sig
 
@@ -67,4 +68,4 @@ class FuncSig:
 
     def as_string(self):
         return f"{'static ' if self.static else ''}{self.return_type} {self.name}({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"
-    
+

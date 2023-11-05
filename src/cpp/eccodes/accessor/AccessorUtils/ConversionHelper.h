@@ -17,19 +17,21 @@ namespace eccodes::accessor
 //   C++ code:  std::string result = fmtString(128, "+a=%lf +b=%lf", major, minor);
 //
 template <typename... Args>
-std::string fmtString(const char* format, Args... args) {
+//std::string fmtString(const char* format, Args... args) {
+std::string fmtString(std::string format, Args... args) {
     // Determine buffer size
-    size_t formatSize = snprintf(nullptr, 0, format, args...);
+    size_t formatSize = snprintf(nullptr, 0, format.c_str(), args...);
 
     char buf[formatSize];
-    snprintf(buf, formatSize, format, args...);
+    snprintf(buf, formatSize, format.c_str(), args...);
 
     return std::string(buf);
 }
 
 // Overload for when the format string doesn't contain any format specifiers, 
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
-std::string fmtString(const char* format);
+//std::string fmtString(const char* format);
+std::string fmtString(std::string format);
 
 // Container version of strtoX functions. 
 // 
