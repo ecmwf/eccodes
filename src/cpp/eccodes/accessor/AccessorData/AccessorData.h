@@ -27,7 +27,8 @@ public:
 
     virtual void dump() const;
     virtual std::size_t stringLength() const;
-    virtual long valueCount() const;
+    //virtual long valueCount() const;
+    virtual GribStatus valueCount(long& count) const;
     virtual long byteCount() const;
     virtual long byteOffset() const;
     virtual GribType nativeType() const;

@@ -80,7 +80,7 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
                        FuncSig("GribStatus", "pack", [None, Arg("grib_expression const&", "expression")])),
         # static int value_count(grib_accessor*, long*);
         FuncSigMapping(FuncSig("int", "value_count", [Arg("grib_accessor*", ""), Arg("long*", "")]),
-                       FuncSig("long", "valueCount", [None, None])),
+                       FuncSig("GribStatus", "valueCount", [None, Arg("long&", "count")])),
         # static void update_size(grib_accessor*, size_t);
         FuncSigMapping(FuncSig("int", "update_size", [Arg("grib_accessor*", ""), Arg("size_t", "")]),
                        FuncSig("void", "updateSize", [None, Arg("std::size_t", "s")])),

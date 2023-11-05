@@ -117,7 +117,7 @@ class MethodConverter(FunctionConverter):
         cppstruct_arg = None
 
         # If AccessorPtr, keep access as "->"
-        cpparg = self._transforms.cpparg_for(cstruct_arg.name)
+        cpparg = self._transforms.cpparg_for_cname(cstruct_arg.name)
         if cpparg and cpparg.type == "AccessorPtr":
             if cstruct_arg.member.name == "name":
                 # Special handling: Replace name member with a string literal (it's only used in logging)

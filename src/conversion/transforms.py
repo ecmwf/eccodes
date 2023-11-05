@@ -71,9 +71,17 @@ class Transforms:
         return None
 
     # Helper to return the cpparg for the supplied cname, or None
-    def cpparg_for(self, cname):
+    def cpparg_for_cname(self, cname):
         for carg, cpparg in self.all_args.items():
             if carg.name == cname:
+                return cpparg
+
+        return None
+
+    # Helper to return the cpparg for the supplied cppname, or None
+    def cpparg_for_cppname(self, cppname):
+        for cpparg in self.all_args.values():
+            if cpparg and cpparg.name == cppname:
                 return cpparg
 
         return None

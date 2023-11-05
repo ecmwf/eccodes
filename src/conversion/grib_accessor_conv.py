@@ -23,6 +23,7 @@ common_includes = [
     "GribCpp/GribQuery.h",
     "GribCpp/GribUtils.h",
     "GribCpp/GribValue.h",
+    "GribCpp/StringUtil.h",
     "GribCpp/GribAccessorFlag.h",
     "AccessorUtils/AccessorException.h"
 ]

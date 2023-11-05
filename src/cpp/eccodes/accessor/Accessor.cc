@@ -27,7 +27,9 @@ std::size_t Accessor::stringLength() const
 
 long Accessor::valueCount() const
 {
-    return data_->valueCount();
+    long count{};
+    data_->valueCount(count);
+    return count;
 }
 
 GribType Accessor::nativeType() const

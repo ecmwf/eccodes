@@ -732,10 +732,20 @@ class FunctionConverter:
             elif m.group(1) == "{":
                 debug.line("transform_container_cppvariable_access", f"Ignoring {cppvariable.as_string()} braced initialiser [{post_match_string}]")
                 return cpp_container_arg.name + match_token.as_string() + post_match_string
-            elif m.group(1).isalnum():
-                debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = 0 with {{}}")
-                post_match_string = re.sub(m.group(1), f"{{{m.group(1)}}}", post_match_string)
-                return cpp_container_arg.name + match_token.as_string() + post_match_string
+            else:
+                container_underlying_type = cpp_container_arg.underlying_type
+                rhs_arg = self._transforms.cpparg_for_cppname(m.group(1))
+                rhs_arg_underling_type = rhs_arg.underlying_type if rhs_arg else None
+
+                if rhs_arg_underling_type and rhs_arg_underling_type != container_underlying_type:
+                    debug.line("transform_container_cppvariable_access", f"rhs_arg_underling_type=[{rhs_arg_underling_type}] container_underlying_type=[{container_underlying_type}]")
+                    debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = {m.group(1)} with static_cast<{container_underlying_type}>{{}}")
+                    post_match_string = re.sub(m.group(1), f"{{static_cast<{container_underlying_type}>({rhs_arg.name})}}", post_match_string)
+                    return cpp_container_arg.name + match_token.as_string() + post_match_string
+                elif m.group(1).isalnum():
+                    debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = {m.group(1)} with {{}}")
+                    post_match_string = re.sub(m.group(1), f"{{{m.group(1)}}}", post_match_string)
+                    return cpp_container_arg.name + match_token.as_string() + post_match_string
 
         elif match_token.is_comparison: 
             # Extract the assigned value
@@ -943,8 +953,23 @@ class FunctionConverter:
 
         return line
     
+    # Specific check for if(c) or if(!c) where c is a container
+    def process_container_if(self, line):
+        m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
+        if m:
+            container_arg = self._transforms.cpparg_for_cppname(m.group(2))
+            if container_arg and arg.is_container(container_arg):
+                container_func_call = self.container_func_call_for(container_arg, "size")
+                transformed_call = f"{container_arg.name}.{container_func_call}"
+                line = re.sub(m.group(2), f"{transformed_call}", line)
+                debug.line("process_container_if", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+
+        return line
+
     # Override for any final updates...
     def final_updates(self, line):
+        line = self.process_container_if(line)
+
         return line
     
     # ======================================== UPDATE FUNCTIONS ========================================

@@ -22,6 +22,13 @@ class Arg:
     # Return the "raw" type, e.g. char for char* or int for const int&
     @property
     def underlying_type(self):
+        if self.type.startswith("std::string"):
+            return "char"
+        
+        m = re.match(r"std::((vector)|(array))<(\w+)>", self.type)
+        if m:
+            return m.group(4)
+
         m = re.match(r"(?:const)?\s*(\w+)\s*[\*&]?\*?\s*(const)?", self.type)
         if m:
             return m.group(1)

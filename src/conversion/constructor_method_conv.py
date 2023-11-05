@@ -26,4 +26,4 @@ class ConstructorMethodConverter(MethodConverter):
             if action == "size":
                 return "length" # Note - no () as it's a member!
         
-        return super().container_funcname_for(cpparg, action)
+        return super().container_func_call_for(cpparg, action)

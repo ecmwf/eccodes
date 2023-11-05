@@ -60,6 +60,8 @@ set(accessor_grib_cpp_src_files
 	${accessor_grib_cpp_dir}/GribUtils.h
 	${accessor_grib_cpp_dir}/GribValue.cc
 	${accessor_grib_cpp_dir}/GribValue.h
+	${accessor_grib_cpp_dir}/StringUtil.cc
+	${accessor_grib_cpp_dir}/StringUtil.h
 )
 
 
