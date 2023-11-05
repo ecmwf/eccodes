@@ -943,9 +943,12 @@ class FunctionConverter:
 
         return line
     
+    # Override for any final updates...
+    def final_updates(self, line):
+        return line
+    
     # ======================================== UPDATE FUNCTIONS ========================================
     
-
     
     def update_cpp_line(self, line):
 
@@ -971,6 +974,9 @@ class FunctionConverter:
             self.apply_grib_api_transforms,
             self.update_sizeof_calls,
             self.convert_int_return_values,
+
+            # [5] Provide any final updates
+            self.final_updates,
         ]
 
         debug.line("update_cpp_line", f"--------------------------------------------------------------------------------")

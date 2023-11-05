@@ -78,6 +78,14 @@ class Transforms:
 
         return None
 
+    # Helper to return the cpptype for the supplied cppname, or None
+    def cpptype_of(self, cppname):
+        for cpparg in self.all_args.values():
+            if cpparg and cpparg.name == cppname:
+                return cpparg.type
+
+        return None
+
     def add_local_args(self, carg, cpparg):
         if carg in self._all_args:
             assert self._all_args[carg] == cpparg, f"Updating an existing local arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._all_args[carg])}"

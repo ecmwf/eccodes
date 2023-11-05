@@ -54,6 +54,26 @@ class MethodConverter(FunctionConverter):
             else:
                 cppstruct_arg = cppstruct_member
 
+        debug.line("transform_cstruct_arg_member", f"[{cstruct_arg.as_string()}] -> [{cppstruct_arg.as_string() if cppstruct_arg else None}]")
+
+        return cppstruct_arg
+
+    # transform_cstruct_arg helpers - return cppstruct_arg or None
+    # Tidy up any stucts that have been updated to call a member function 
+    # (for example remove a-> from a->unpack(...))
+    def transform_cstruct_arg_member_functions(self, cstruct_arg):
+        cppstruct_arg = None
+        cstruct_member = cstruct_arg.member
+
+        if cstruct_arg.name in ["super", "self", "a"]:
+            # Find member functions
+            for mapping in inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions:
+                if mapping.cppfuncsig.name == cstruct_member.name:
+                        cppstruct_arg = struct_arg.StructArg("", cstruct_member.name, cstruct_member.index)
+                        break
+
+        debug.line("transform_cstruct_arg_member_functions", f"[{cstruct_arg.as_string()}] -> [{cppstruct_arg.as_string() if cppstruct_arg else None}]")
+
         return cppstruct_arg
 
     # transform and a->foo where foo is a non-member
@@ -73,7 +93,7 @@ class MethodConverter(FunctionConverter):
 
             if not cppstruct_arg:
                 # Set name to None to mark it for deletion
-                debug.line("transform_cstruct_arg_member", f"Marking for deletion: {cstruct_arg.as_string()}")
+                debug.line("transform_cstruct_arg_a_nonmember", f"Marking for deletion: {cstruct_arg.as_string()}")
                 cppstruct_arg = struct_arg.StructArg("", None, "")
 
         return cppstruct_arg
@@ -117,6 +137,7 @@ class MethodConverter(FunctionConverter):
 
         transform_funcs = [
             self.transform_cstruct_arg_member,
+            self.transform_cstruct_arg_member_functions,
             self.transform_cstruct_arg_a_nonmember,
             self.transform_cstruct_arg_grib_handle_member,
             self.transform_cstruct_arg_accessor_ptr,
@@ -218,3 +239,32 @@ class MethodConverter(FunctionConverter):
                 return cppvariable.as_string() + match_token.as_string() + post_match_string
 
         return None
+
+    # Find any overloaded virtual function calls that are not implemented in this class, and add to the 
+    # "using" list so we can add a "using base::func" directive in the header
+    def update_using_list(self, line):
+        m = re.search(r"\b([^\s\(]*pack[^\(]*)\(([^,\(]*)[,\)]", line)
+        if m:
+            funcname = m.group(1)
+
+            if funcname not in self._cppfunction.using:
+                arg_type = self._transforms.cpptype_of(m.group(2))
+
+                for mapping in self._transforms.inherited_funcsig_mappings:
+                    if mapping.cppfuncsig.name == funcname:
+
+                        for arg_entry in mapping.cppfuncsig.args:
+                            if arg_entry and arg_entry.type == arg_type:
+                                # Correct override already implemented
+                                return line
+
+                self._cppfunction.using.append(funcname)
+                debug.line("update_using_list", f"Added [{funcname}] to using list to support type [{arg_type}]")
+
+        return line
+
+    # Override to check we can "see" all function calls...
+    def final_updates(self, line):
+        line = self.update_using_list(line)
+
+        return super().final_updates(line)

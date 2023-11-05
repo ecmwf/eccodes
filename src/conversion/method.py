@@ -7,6 +7,7 @@ class Method(Function):
         super().__init__(func_sig)
 
         self._const = False
+        self.using = []
 
     @property
     def const(self):

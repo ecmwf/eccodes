@@ -19,6 +19,7 @@ class AccessorData:
         self._static_functions = []
         self._constructor = None
         self._destructor = None
+        self._inherited_method_using_list = []
 
     @property
     def name(self):
@@ -88,6 +89,10 @@ class AccessorData:
     @property
     def destructor(self):
         return self._destructor
+    
+    @property
+    def inherited_method_using_list(self):
+        return self._inherited_method_using_list
 
     @global_function.setter
     def global_function(self, value):
@@ -109,6 +114,9 @@ class AccessorData:
 
     def add_inherited_method(self, func):
         self._inherited_methods.append(func)
+        for entry in func.using:
+            if entry not in self._inherited_method_using_list:
+                self._inherited_method_using_list.append(entry)
 
     def add_private_method(self, func):
         self._private_methods.append(func)

@@ -75,3 +75,4 @@ class InheritedMethodConverter(MethodConverter):
             return f"{cparams[0]}->{cppfuncname}({','.join([p for p in transformed_cparams ])})"
 
         return super().convert_cfunction_to_cpp_format(cfuncname, cparams)
+
