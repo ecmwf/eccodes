@@ -52,7 +52,6 @@ common_funcsig_type_transforms = {
 
 # These will be used if no other supplied...
 common_type_transforms = {
-#    "unsigned char*" : "DataPointer",
     "char**"         : "std::string&",
     "char*"          : "std::string",
     "char[]"         : "std::string",
@@ -178,6 +177,9 @@ class GribAccessorConverter:
             cpp_super_super_name = self.transform_class_name(self.other_grib_accessors[self._grib_accessor.super].super)
 
         self._transforms.add_to_types("supersuper", cpp_super_super_name)
+
+        # Add in any custom transforms
+        self._transforms = self._accessor_specific.add_custom_transforms(self._transforms)
 
     def add_global_function(self):
         global_func_funcsig_converter = self._converters[Converter.GLOBAL_FUNC_FUNCSIG](self._grib_accessor.global_function.func_sig)

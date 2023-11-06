@@ -13,6 +13,15 @@ class ArgConverter:
         self._initial_carg = initial_carg
         self._transforms = None
 
+    def transform_using_custom_types(self, carg):
+        # Do we have a custom arg transform to apply?
+        if carg in self._transforms.custom_args:
+            cpparg = self._transforms.custom_args[carg]
+            debug.line("transform_using_custom_types", f"Using custom arg transform: [{arg.arg_string(carg)}] -> [{arg.arg_string(cpparg)}]")
+            return cpparg
+
+        return CARG_NOT_FOUND
+
     def transform_known_funcsig_types(self, carg):
         if not carg.is_func_arg:
             return CARG_NOT_FOUND
@@ -125,6 +134,7 @@ class ArgConverter:
         updated_carg._is_func_arg = self._initial_carg.is_func_arg
 
         transform_funcs = [
+            self.transform_using_custom_types,
             self.transform_known_funcsig_types,
             self.transform_known_types,
             self.transform_arrays,

@@ -7,3 +7,5 @@ class AccessorSpecific:
     def update_converters(self, converters):
         return converters
     
+    def add_custom_transforms(self, transforms):
+        return transforms

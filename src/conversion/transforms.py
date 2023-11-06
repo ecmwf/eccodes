@@ -22,6 +22,7 @@ class Transforms:
         self._function_pointers = {}
         self._all_args = {}
         self._global_args = {}
+        self._custom_args = {}
         self._members = {}
         self._inherited_funcsig_mappings = []
         self._private_funcsig_mappings = []
@@ -98,13 +99,27 @@ class Transforms:
         if carg in self._all_args:
             assert self._all_args[carg] == cpparg, f"Updating an existing local arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._all_args[carg])}"
         else:
-            debug.line("Transforms", f"Adding new local arg transform: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
             assert carg, f"ADDING carg which is None!"
+            debug.line("Transforms", f"Adding new local arg transform: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
             self._all_args[carg] = cpparg
-    
+
     def clear_local_args(self):
         self._all_args.clear()
         self._all_args = copy.copy(self._global_args)
+
+    # Custom args live in their own map which should not be used by external code
+    # It provides an override that is applied when add_local_args is called...
+    def add_custom_args(self, carg, cpparg):
+        if carg in self._custom_args:
+            assert self._custom_args[carg] == cpparg, f"Updating an existing custom arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._custom_args[carg])}"
+        else:
+            debug.line("Transforms", f"Adding new custom arg transform: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
+            assert carg, f"ADDING carg which is None!"
+            self._custom_args[carg] = cpparg
+    
+    @property
+    def custom_args(self):
+        return self._custom_args
 
     @property
     def global_args(self):
