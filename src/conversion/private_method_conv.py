@@ -9,3 +9,4 @@ class PrivateMethodConverter(MethodConverter):
 
     def create_cpp_function(self, cppfuncsig):
         return private_method.PrivateMethod(cppfuncsig, self._transforms.types["self"])
+

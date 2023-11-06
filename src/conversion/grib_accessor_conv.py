@@ -3,11 +3,13 @@ from accessor_data import AccessorData
 import arg
 import arg_conv
 import member_conv
-from converter_collection import Converter, converters_for
+from converter_collection import Converter, default_converters
 import transforms
 from funcsig_mapping import FuncSigMapping
 import grib_api_converter
 import copy
+import importlib
+import accessor_specific.default
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -20,6 +22,8 @@ common_includes = [
     "Accessor.h", 
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
+    "GribCpp/GribAccessorClass.h",
+    "GribCpp/GribBitsAnyEndian.h",
     "GribCpp/GribQuery.h",
     "GribCpp/GribUtils.h",
     "GribCpp/GribValue.h",
@@ -48,23 +52,37 @@ common_funcsig_type_transforms = {
 
 # These will be used if no other supplied...
 common_type_transforms = {
-    "unsigned char*" : "DataPointer",
+#    "unsigned char*" : "DataPointer",
     "char**"         : "std::string&",
     "char*"          : "std::string",
     "char[]"         : "std::string",
 }
+
+# Define base class member mapping
+base_members_map = {
+    arg.Arg("long","length") : arg.Arg("long","length_"),
+    arg.Arg("long","offset") : arg.Arg("long","offset_"),
+    arg.Arg("unsigned long","flags") : arg.Arg("unsigned long","flags_"),
+    arg.Arg("int","dirty") : arg.Arg("int","dirty_"),
+    arg.Arg("grib_virtual_value*","vvalue") : arg.Arg("std::unique_ptr<grib_virtual_value>","vvalue_"),
+    arg.Arg("const char*","set") : arg.Arg("std::string","set_")
+    }
 
 # Convert GribAccessor to AccessorData
 class GribAccessorConverter:
     def __init__(self, grib_accessor_instance):
         self._grib_accessor = grib_accessor_instance
         self._accessor_data = None
+        self._accessor_data_name = self.transform_class_name(self._grib_accessor.name)
         self._transforms = None
-        self._converters = converters_for(self._grib_accessor.name)
 
     # Convert GribAccessor to AccessorData
     def to_accessor_data(self, other_grib_accessors):
         debug.line("to_accessor_data", f"\n===== [CONVERTING:BEGIN] {self._grib_accessor.name} ====================\n")
+
+        self.setup_accessor_specific()
+        self._converters = copy.deepcopy(default_converters)
+        self._converters = self._accessor_specific.update_converters(self._converters)
 
         # Note: we have a chicken and egg scenario when converting the C code:
         # - Some classes (e.g. bufr_data_array) need the global vars to be parsed BEFORE the funcsig transforms because
@@ -101,13 +119,30 @@ class GribAccessorConverter:
 
         return self._accessor_data
 
+    def setup_accessor_specific(self):
+        self._accessor_specific = None
+
+        try:
+            m = importlib.import_module(f"accessor_specific.{self._grib_accessor.name}")
+
+            if f"{self._accessor_data_name}AccessorSpecific" in dir(m):
+                AccessorSpecificClass = getattr(m, f"{self._accessor_data_name}AccessorSpecific")
+                self._accessor_specific = AccessorSpecificClass()
+                assert self._accessor_specific, f"AccessorSpecific inst for {self._grib_accessor.name} is None"
+                debug.line("setup_accessor_specific", f"Loaded [{self._accessor_data_name}AccessorSpecific]")
+        except ModuleNotFoundError:
+            pass
+
+        if not self._accessor_specific:
+            self._accessor_specific = accessor_specific.default.AccessorSpecific()
+            debug.line("setup_accessor_specific", f"Loaded [AccessorSpecific] (default)")
+
     def create_accessor_data(self):
-        cpp_name = self.transform_class_name(self._grib_accessor.name)
         cpp_super_name = self.transform_class_name(self._grib_accessor.super)
         # Need to keep the C name for the factory as it is called from C code...
         cpp_factory_name = self._grib_accessor.factory_name
 
-        self._accessor_data = AccessorData(cpp_name, cpp_super_name, cpp_factory_name)
+        self._accessor_data = AccessorData(self._accessor_data_name, cpp_super_name, cpp_factory_name)
 
     # Get members all the way up the hierarchy
     def members_in_hierarchy(self, grib_accessor_inst):
@@ -203,6 +238,10 @@ class GribAccessorConverter:
     # Adds all members for this accessor to the accessor_data object,
     # And also stores ALL members in the hierarchy in the transform
     def add_members(self):
+        # Base members
+        for cmember, cppmember in base_members_map.items():
+            self._transforms.add_to_members(cmember, cppmember)
+
         for cmember in self.members_in_hierarchy(self._grib_accessor):
             member_converter = member_conv.MemberConverter(cmember)
             cppmember = member_converter.to_cpp_arg(self._transforms)
@@ -239,7 +278,6 @@ class GribAccessorConverter:
             private_method_converter = self._converters[Converter.PRIVATE_METHOD]()
             cppfunc = private_method_converter.to_cpp_function(cfunc, self._transforms)
             if cppfunc.name is not None:
-                cppfunc.const = cfunc.name not in non_const_cmethods
                 self._accessor_data.add_private_method(cppfunc)
 
     def add_static_functions(self):

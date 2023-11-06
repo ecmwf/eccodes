@@ -30,6 +30,12 @@ namespace {{ c.nested_namespaces }} {
 
 // {{ c.name }}::~{{ c.name }}() { {{ c.destructor.body }} }
 
+{% for m in c.private_template_methods %}
+{{ m.as_source_declaration }} {
+        {{ m.body }}
+ }
+ {% endfor %}
+
 {% for m in c.inherited_methods %}
 {{ m.as_source_declaration }} {
         {{ m.body }}

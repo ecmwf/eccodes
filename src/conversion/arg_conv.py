@@ -87,7 +87,7 @@ class ArgConverter:
         if re.search(r"grib_accessor_", carg.type):
             return None
 
-        m = re.search(r"(const)?\s*(\w*)(\*+)\s*(const)?", carg.type)
+        m = re.search(r"(const)?\s*((unsigned )?\w*)(\*+)\s*(const)?", carg.type)
         if m:
             # Is the type actually a struct?
             for arg_key, arg_value in self._transforms.all_args.items():
@@ -99,7 +99,7 @@ class ArgConverter:
                 return self.transform_pointers_for_func_args(carg)
             else:
                 cpptype = f"std::vector<{m.group(2)}>"
-                if m.group(3) == "**":
+                if m.group(4) == "**":
                     cpptype += "&"
                 return arg.Arg(cpptype, transform_variable_name(carg.name))
                 

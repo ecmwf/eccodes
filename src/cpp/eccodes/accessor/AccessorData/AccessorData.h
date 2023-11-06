@@ -74,6 +74,9 @@ public:
     virtual GribStatus unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<float> &valArray) const;
     virtual GribStatus unpackSubarray(std::vector<double> &values, std::size_t start) const;
 
+    // Conversion helpers...
+    AccessorLoaderPtr loader() const { return nullptr; }
+
 // Ideally these would be private, but that makes the conversion much harder so they are protected instead
 // This will be revisited later...
 protected:

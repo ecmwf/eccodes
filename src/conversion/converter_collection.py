@@ -49,17 +49,3 @@ default_converters = {
     Converter.STATIC_FUNC:                static_func_conv.StaticFunctionConverter,
     Converter.STATIC_FUNC_FUNCSIG:        static_func_funcsig_conv.StaticFunctionFuncSigConverter
 }
-
-def converters_for(accessor_name):
-    converters = copy.deepcopy(default_converters)
-
-    try:
-        m = importlib.import_module(f"converters.{accessor_name}")
-
-        if "update_converters" in dir(m):
-            converters = m.update_converters(converters)
-            assert converters, f"Converter for {accessor_name} is None"
-    except ModuleNotFoundError:
-        pass
-
-    return converters

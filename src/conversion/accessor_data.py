@@ -15,6 +15,7 @@ class AccessorData:
         self._forward_declarations = []
         self._global_function = None
         self._inherited_methods = []
+        self._private_template_methods = []
         self._private_methods = []
         self._static_functions = []
         self._constructor = None
@@ -75,6 +76,10 @@ class AccessorData:
         return self._inherited_methods
 
     @property
+    def private_template_methods(self):
+        return self._private_template_methods
+
+    @property
     def private_methods(self):
         return self._private_methods
 
@@ -119,7 +124,11 @@ class AccessorData:
                 self._inherited_method_using_list.append(entry)
 
     def add_private_method(self, func):
-        self._private_methods.append(func)
+        # Put templates in a separate list, so they can be created first
+        if func.template:
+            self._private_template_methods.append(func)
+        else:
+            self._private_methods.append(func)
 
     def add_static_function(self, func):
         self._static_functions.append(func)

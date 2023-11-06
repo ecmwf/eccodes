@@ -1,3 +1,4 @@
+from accessor_specific.default import AccessorSpecific
 
 from converter_collection import Converter
 import static_func_funcsig_conv
@@ -5,10 +6,6 @@ from funcsig import FuncSig
 from arg_indexes import ArgIndexes
 from arg import Arg
 from funcsig_mapping import FuncSigMapping
-
-def update_converters(converters):
-    converters[Converter.STATIC_FUNC_FUNCSIG] = BufrDataArrayFuncSigConverter
-    return converters
 
 class BufrDataArrayFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncSigConverter):
     func_conversions = [
@@ -25,3 +22,11 @@ class BufrDataArrayFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncS
     def __init__(self, cfuncsig):
         super().__init__(cfuncsig)
         self._conversions.extend(self.func_conversions)
+
+class BufrDataArrayAccessorSpecific(AccessorSpecific):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def update_converters(self, converters):
+        converters[Converter.STATIC_FUNC_FUNCSIG] = BufrDataArrayFuncSigConverter
+        return converters

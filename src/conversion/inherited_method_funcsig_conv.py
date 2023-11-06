@@ -66,9 +66,11 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
     
         # static int unpack_TYPE_element_set(grib_accessor*, const size_t* index_array, size_t len, TYPE* val_array);
         FuncSigMapping(FuncSig("int", "unpack_double_element_set", [Arg("grib_accessor*", ""), Arg("const size_t*", "index_array"), Arg("size_t", "len"), Arg("double*", "val_array")]),
-                       FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<double>&", "valArray")])),
+                       FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<double>&", "valArray")]),
+                       ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
         FuncSigMapping(FuncSig("int", "unpack_float_element_set", [Arg("grib_accessor*", ""), Arg("const size_t*", "index_array"), Arg("size_t", "len"), Arg("float*", "val_array")]),
-                       FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<float>&", "valArray")])),
+                       FuncSig("GribStatus", "unpackElementSet", [None, Arg("std::vector<std::size_t> const&", "indexArray"), None, Arg("std::vector<float>&", "valArray")]),
+                       ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
     
         # static int unpack_double_subarray(grib_accessor*, double* val, size_t start, size_t len);
         FuncSigMapping(FuncSig("int", "unpack_double_subarray", [Arg("grib_accessor*", ""), Arg("double*", "val"), Arg("size_t", "start"), Arg("size_t", "len")]),

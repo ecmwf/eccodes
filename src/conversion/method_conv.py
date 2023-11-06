@@ -2,16 +2,7 @@
 from func_conv import *
 import method
 import inherited_method_funcsig_conv
-
-# Define base class member mapping
-base_members_map = {
-    arg.Arg("long","length") : arg.Arg("long","length_"),
-    arg.Arg("long","offset") : arg.Arg("long","offset_"),
-    arg.Arg("unsigned long","flags") : arg.Arg("unsigned long","flags_"),
-    arg.Arg("int","dirty") : arg.Arg("int","dirty_"),
-    arg.Arg("grib_virtual_value*","vvalue") : arg.Arg("std::unique_ptr<grib_virtual_value>","vvalue_"),
-    arg.Arg("const char*","set") : arg.Arg("std::string","set_")
-    }
+import private_method_funcsig_conv
 
 # Specialisation of FunctionConverter for AccessorData Methods
 class MethodConverter(FunctionConverter):
@@ -21,6 +12,21 @@ class MethodConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return method.Method(cppfuncsig, self._transforms.types["self"])
 
+    # REMOVED DUE TO CONFLICTS WITH e.g. "self->owner" member and "owner" local variable
+    # The former is detected via self-> struct access instead
+    # Overridden to include members
+    '''def cppvariable_for(self, var):
+        for cmember, cppmember in self._transforms.members.items():
+            if cppmember:
+                if var.name == cppmember.name or var.name == cmember.name:
+                    cppvariable = variable.Variable("", cppmember.name, var.index)
+                    cppvariable.type = cppmember.type
+                    return cppvariable
+            elif var.name == cmember.name:
+                return variable.Variable(None, None, None)
+
+        return super().cppvariable_for(var)'''
+    
     # transform_cstruct_arg helpers - return cppstruct_arg or None
     def transform_cstruct_arg_member(self, cstruct_arg):
         cppstruct_arg = None
@@ -30,18 +36,17 @@ class MethodConverter(FunctionConverter):
             cppstruct_member = None
 
             # Find member arg
-            for member_dict in [base_members_map, self._transforms.members]:
-                for carg, cpparg in member_dict.items():
-                    if carg.name == cstruct_member.name:
-                        cppstruct_member = self.apply_cstruct_arg_transforms_for_ctype(carg.type, cstruct_member, cpparg.name)
-                        if not cppstruct_member:
-                            cppstruct_member = struct_arg.StructArg("", cpparg.name, cstruct_member.index)
-                            if cstruct_member.member:
-                                # TODO: Additonal members here means that we've not processed something correctly - need to fix!
-                                cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
-                                cppstruct_member.member = cppstruct_member_member
-                                debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
-                            break
+            for cmember, cppmember in self._transforms.members.items():
+                if cmember.name == cstruct_member.name:
+                    cppstruct_member = self.apply_cstruct_arg_transforms_for_ctype(cmember.type, cstruct_member, cppmember.name)
+                    if not cppstruct_member:
+                        cppstruct_member = struct_arg.StructArg("", cppmember.name, cstruct_member.index)
+                        if cstruct_member.member:
+                            # TODO: Additonal members here means that we've not processed something correctly - need to fix!
+                            cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
+                            cppstruct_member.member = cppstruct_member_member
+                            debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
+                        break
 
             # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
             if cstruct_arg.name == "super":
@@ -67,10 +72,13 @@ class MethodConverter(FunctionConverter):
 
         if cstruct_arg.name in ["super", "self", "a"]:
             # Find member functions
-            for mapping in inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions:
-                if mapping.cppfuncsig.name == cstruct_member.name:
-                        cppstruct_arg = struct_arg.StructArg("", cstruct_member.name, cstruct_member.index)
-                        break
+            conversions_list = self.predefined_conversions_list()
+
+            for conversions in conversions_list:
+                for mapping in conversions:
+                    if mapping.cppfuncsig.name == cstruct_member.name:
+                            cppstruct_arg = struct_arg.StructArg("", cstruct_member.name, cstruct_member.index)
+                            break
 
         debug.line("transform_cstruct_arg_member_functions", f"[{cstruct_arg.as_string()}] -> [{cppstruct_arg.as_string() if cppstruct_arg else None}]")
 
@@ -104,12 +112,13 @@ class MethodConverter(FunctionConverter):
 
         if self._transforms.ctype_of(cstruct_arg.name) == "grib_handle*" or cstruct_arg.name == "grib_handle_of_accessor(a)":
             if cstruct_member.name == "buffer":
-
-                debug.line("transform_cstruct_arg_member", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
-
+                debug.line("transform_cstruct_arg_grib_handle_member", f"buffer: cstruct_arg=[{cstruct_arg.as_string()}]")
                 cppstruct_arg = struct_arg.StructArg("", "buffer_", "" )
                 if cstruct_member.member and cstruct_member.member.name == "data":
                     cppstruct_arg.member = struct_arg.StructArg(".", "data()", cstruct_member.member.index)
+            elif cstruct_member.name == "loader":
+                debug.line("transform_cstruct_arg_grib_handle_member", f"loader: cstruct_arg=[{cstruct_arg.as_string()}]")
+                cppstruct_arg = struct_arg.StructArg("", "loader()", "" )
 
         return cppstruct_arg
 
@@ -122,6 +131,9 @@ class MethodConverter(FunctionConverter):
             if cstruct_arg.member.name == "name":
                 # Special handling: Replace name member with a string literal (it's only used in logging)
                 cppstruct_arg = struct_arg.StructArg("", f"\"{self._transforms.types['self']}\"", "" )
+            elif cstruct_arg.member.name == "parent":
+                # Special handling: Replace parent member a call...
+                cppstruct_arg = struct_arg.StructArg("", f"parentOf({cstruct_arg.name})", "" )
             else:
                 cppstruct_arg = struct_arg.StructArg("", cpparg.name, cstruct_arg.index )
                 cppstruct_arg.member = cstruct_arg.member
@@ -221,7 +233,16 @@ class MethodConverter(FunctionConverter):
         return super().transform_cfunction_name(cfunction_name)
 
     # Overridden to handle member types e.g. AccessorName x = NULL
+    # Also removes constness of function if any members are changed
     def custom_transform_cppvariable_access(self, cppvariable, match_token, post_match_string):
+
+        # Const check
+        if match_token.is_assignment and self._cppfunction.const:
+            for cppmember in self._transforms.members.values():
+                if cppmember.name == cppvariable.name:
+                    self._cppfunction.const = ""
+                    debug.line("custom_transform_cppvariable_access", f"Setting function non-const due to assignment to member [{cppmember.name}]")
+
         accessor_arg = None
 
         for cpparg in self._transforms.all_args.values():
@@ -250,13 +271,17 @@ class MethodConverter(FunctionConverter):
             if funcname not in self._cppfunction.using:
                 arg_type = self._transforms.cpptype_of(m.group(2))
 
-                for mapping in self._transforms.inherited_funcsig_mappings:
-                    if mapping.cppfuncsig.name == funcname:
-
-                        for arg_entry in mapping.cppfuncsig.args:
-                            if arg_entry and arg_entry.type == arg_type:
-                                # Correct override already implemented
+                for mappings in [self._transforms.inherited_funcsig_mappings,
+                                 self._transforms.private_funcsig_mappings]:
+                    for mapping in mappings:
+                        if mapping.cppfuncsig.name == funcname:
+                            if mapping.cppfuncsig.template:
+                                # Ignore templates - special case!
                                 return line
+                            for arg_entry in mapping.cppfuncsig.args:
+                                if arg_entry and arg_entry.type == arg_type:
+                                    # Correct override already implemented
+                                    return line
 
                 self._cppfunction.using.append(funcname)
                 debug.line("update_using_list", f"Added [{funcname}] to using list to support type [{arg_type}]")
@@ -268,3 +293,55 @@ class MethodConverter(FunctionConverter):
         line = self.update_using_list(line)
 
         return super().final_updates(line)
+
+    # Version of transform_cfunction_call for inherited methods
+    # Added to avoid traversing the map twice through calls to convert_cfunction_to_cpp_format
+    # Calls directly to transform_cfunction_call will also come through here...
+    def transform_cmethod_call(self, cfuncname, cparams):
+
+        # Strip grib_ from funcname so we match e.g. grib_value_count as value_count
+        m = re.match(r"grib_(\w*)", cfuncname)
+        if m:
+            cmethod_name = m.group(1)
+        else:
+            cmethod_name = cfuncname
+
+        debug.line("transform_cmethod_call", f"cfuncname=[{cfuncname}] cmethod_name=[{cmethod_name}]")
+
+        cppfuncname = transformed_cparams = None
+        
+        # Need to use the full list in case the current method's local mappings don't support it!
+        conversions_list = self.predefined_conversions_list()
+
+        for conversions in conversions_list:
+            cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cmethod_name, cparams, conversions)
+            if cppfuncname:
+                break
+
+        return cppfuncname, transformed_cparams
+
+    # Overridden to handle inherited methods, and also grib_pack_long() etc that
+    # convert to accessor_ptr->packLong()
+    def transform_cfunction_call(self, cfuncname, cparams):
+
+        cppfuncname, transformed_cparams = self.transform_cmethod_call(cfuncname, cparams)
+
+        if cppfuncname:
+            return cppfuncname, transformed_cparams
+
+        return super().transform_cfunction_call(cfuncname, cparams)
+
+    # Overridden e.g. to convert foo(a,b) to a->foo(b) (as required)
+    def convert_cfunction_to_cpp_format(self, cfuncname, cparams):
+        cppfuncname, transformed_cparams = self.transform_cmethod_call(cfuncname, cparams)
+
+        if cppfuncname:
+            assert len(cparams) >= 1, f"Expected at least 1 parameter for function [{cfuncname}]"
+            return f"{cparams[0]}->{cppfuncname}({','.join([p for p in transformed_cparams ])})"
+
+        return super().convert_cfunction_to_cpp_format(cfuncname, cparams)
+
+    # Return a list of all pre-defined conversions
+    def predefined_conversions_list(self):
+        return [inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions,
+                private_method_funcsig_conv.PrivateMethodFuncSigConverter.private_method_conversions]

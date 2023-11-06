@@ -181,17 +181,24 @@ class FunctionConverter:
         
         return None
 
-    # Find any C function calls in the line and pass to transform_cfunction_call
-    # If a transformed cppfunction is returned, update the line
-    def convert_cfunction_calls(self, line):
-        # Find function calls
-        m = re.search(r"\b([^(\s]*)\(", line)
+    # Recursively find the next function call in the line and convert it...
+    # Initially called from convert_cfunction_calls()
+    def convert_next_cfunction_call(self, line, depth):
+        # Find function call
+        # Note: 1. Added return-type cast (non-capture) and template (non-capture) detection
+        return_type_cast_re = r"(?:\([^\)]+\))?"
+        funcname_re         = r"\b([^\<\(\s]*)"
+        func_template_re    = r"(\<\w+\>)?"
+
+        m = re.search(rf"{return_type_cast_re}{funcname_re}{func_template_re}\(", line)
         if not m:
             return line
         
+        debug.line("convert_next_cfunction_call", f"[{depth}] Matched [{m.group(0)}] 1=[{m.group(1)}]")
+
         if m.group(1) in ["Assert"]:
             return line
-        
+
         cfuncname = m.group(1)
 
         match_start = m.start()
@@ -215,14 +222,26 @@ class FunctionConverter:
         cparams.append(m.group(1))
         match_end += m.end()
 
+        debug.line("convert_next_cfunction_call", f"[{depth}] cfuncname=[{cfuncname}] cparams=[{cparams}]")
+
         cppfunction_call = self.convert_cfunction_to_cpp_format(cfuncname, cparams)
 
         if cppfunction_call:
             line = line[:match_start] + cppfunction_call + line[match_end:]
-            debug.line("convert_funcsig",f"Converted function [{cfuncname}] [After]: {line}")
+            debug.line("convert_next_cfunction_call",f"[{depth}] Converted function [{cfuncname}] [After]: {line}")
+
+        # End of current function, Process the remainder of the line (recursive)... 
+        if match_end < len(line):
+            remainder = self.convert_next_cfunction_call(line[match_end:], depth+1)
+            line = line[:match_end] + remainder
 
         return line
 
+    # Find any C function calls in the line and convert them
+    # Conversion done by recursive calls to convert_next_cfunction_call()
+    def convert_cfunction_calls(self, line):
+        line = self.convert_next_cfunction_call(line, 0)
+        return line
 
     def update_grib_api_cfunctions(self, line):
         line = self.convert_grib_utils(line)
@@ -257,11 +276,13 @@ class FunctionConverter:
         assert depth<15, f"Unexpected recursion depth [{depth}]"
 
         # Note: (?=\() ensures group(3) is followed by a "(" without capturing it - ensuring it's a function name!
-        m = re.search(rf"(&)?\b(\w+)(?=\()", line)
-        #m = re.search(rf"(&)?\b([a-zA-Z]\w*)", line)
+        # Note: Added (\<\w+\>)? to parse (and ignore) templates, e.g. unpack<double> will match as unpack
+        m = re.search(rf"(&)?\b(\w+)(\<\w+\>)?(?=\()", line)
         if m:
             prefix = m.group(1) if m.group(1) is not None else ""
             cfunction_name = m.group(2)
+
+            debug.line("process_cfunction_names", f"[{depth}] FOUND [{cfunction_name}] : {line}")
 
             # Process the remainder (recursively), so we can rebuild the line correctly from the end...
             remainder = self.process_cfunction_names(line[m.end():], depth+1)
@@ -496,7 +517,7 @@ class FunctionConverter:
 
         cstruct_arg, match_start, match_end = struct_arg.cstruct_arg_from_string(line)
         if cstruct_arg:
-            if depth == 0: debug.line("update_cstruct_access", f"IN cstruct_arg=[{cstruct_arg.as_string()}] : {line}")
+            debug.line("update_cstruct_access", f"IN [{depth}] cstruct_arg=[{cstruct_arg.as_string()}] : {line}")
             if(match_end < len(line)):
                 # Recurse, transforming the remainder, then apply here...
                 remainder = self.update_cstruct_access(line[match_end:], depth+1)
@@ -515,15 +536,20 @@ class FunctionConverter:
                 return line
 
             # Check if this is a "set" operation (it's match group 3 to avoid false match with ==)
-            m = re.search(r"([=!\<\>\+\-\*/]=)|([,;\)])|(=)", line[match_end:])
+            m = re.search(r"([=!\<\>\+\-\*/]=)|([,;\)])|(=)", remainder) #line[match_end:])
             if m and m.group(3):
-                match_end += m.end()
-                remainder = " = " + self.update_cppstruct_arg_assignment(cppstruct_arg, line[match_end:])
+                rem_match_end = m.end()
+
+                debug.line("update_cstruct_access", f"[SET OPERATION] [{depth}] Before: remainder=[{remainder}]")
+                debug.line("update_cstruct_access", f"[SET OPERATION] [{depth}] Before: cppstruct_arg=[{cppstruct_arg.as_string()}]")
+                debug.line("update_cstruct_access", f"[SET OPERATION] [{depth}] Before: remainder[rem_match_end:]=[{remainder[rem_match_end:]}]") #line[match_end:]=[{line[match_end:]}]")
+                remainder = " = " + self.update_cppstruct_arg_assignment(cppstruct_arg, remainder[rem_match_end:]) #line[match_end:])
+                debug.line("update_cstruct_access", f"[SET OPERATION] [{depth}] After : remainder=[{remainder}]")
 
             # Finally, update the line
             line = line[:match_start] + cppstruct_arg.as_string() + remainder
 
-            if depth == 0: debug.line("update_cstruct_access", f"OUT : {line}")
+            debug.line("update_cstruct_access", f"OUT [{depth}] : {line}")
 
         return line
 
@@ -757,6 +783,22 @@ class FunctionConverter:
                 post_match_string = re.sub(r"\s*0", "", post_match_string)
                 return f"{cpp_container_arg.name}.empty()" + post_match_string
             
+        elif match_token.value == "+":
+            # Index into container - we're replacing a buffer so use .data() - need to ensure the container is the correct size!
+            debug.line("transform_container_cppvariable_access", f"INDEX OP: Replaced {cppvariable.as_string()} + X with {cppvariable.as_string()}.data() + X")
+            return cpp_container_arg.name + ".data()" + match_token.as_string() + post_match_string
+
+            # Index into container - extract the value
+            m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
+            assert m, f"Could not extract index value from: {post_match_string}"
+
+            debug.line("DEBUG", f"m.group(1)=[{m.group(1)}]")
+
+            post_match_string = re.sub(m.group(1), f"[{m.group(1)}]", post_match_string)
+            debug.line("transform_container_cppvariable_access", f"INDEX OP: {cppvariable.as_string()} match=[{match_token.value}] extract=[{m.group(1)}] post_match_string=[{post_match_string}]")
+            return cpp_container_arg.name + post_match_string
+
+
             # TODO: Handle other comparisons?
 
         return None
@@ -806,6 +848,8 @@ class FunctionConverter:
 
         # [2] transforms that require a C++ variable
         cppvariable = self.cppvariable_for(var)
+
+        debug.line("transform_variable_access", f"[1a] var=[{var.as_string()}] cppvariable=[{cppvariable.as_string() if cppvariable else None}]")
 
         if not cppvariable:
             # See if it a function name that hasn't been transformed (e.g. in an initializer list)

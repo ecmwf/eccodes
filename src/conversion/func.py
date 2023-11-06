@@ -28,14 +28,13 @@ class Function:
 
         return func_decl
 
+    # Allow different sig, e.g. adding Class:: prefix...
     @property   
     def as_source_declaration(self):
         func_decl = ""
         if self._func_sig.template:
             func_decl += self._func_sig.template
         func_decl += f"{'static ' if self.static else ''}{self.return_type} {self.name}"
-        if self._func_sig.template:
-            func_decl += "<T>"
         func_decl += f"({', '.join([a.type + ' ' + a.name if a.name else '' for a in self.args if a])})"
         func_decl += self.const
 

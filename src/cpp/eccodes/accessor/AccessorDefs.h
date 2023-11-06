@@ -24,4 +24,8 @@ using AccessorNameSpace = NamedType<std::string, struct AccessorNameSpaceTag>;
 
 using StringArray = std::vector<std::string>;
 
+// Conversion helpers...
+struct AccessorLoader;
+using AccessorLoaderPtr = std::shared_ptr<AccessorLoader>;
+
 }

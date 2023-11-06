@@ -51,6 +51,10 @@ set(accessor_utils_src_files
 )
 
 set(accessor_grib_cpp_src_files
+	${accessor_grib_cpp_dir}/GribAccessorClass.cc
+	${accessor_grib_cpp_dir}/GribAccessorClass.h
+	${accessor_grib_cpp_dir}/GribBitsAnyEndian.cc
+	${accessor_grib_cpp_dir}/GribBitsAnyEndian.h
 	${accessor_grib_cpp_dir}/GribQuery.cc
 	${accessor_grib_cpp_dir}/GribQuery.h
 	${accessor_grib_cpp_dir}/GribStatus.h

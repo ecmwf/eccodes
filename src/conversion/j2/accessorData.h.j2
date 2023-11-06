@@ -39,6 +39,8 @@ protected:
 
 private:
     // Private methods
+    {%- for m in c.private_template_methods %}
+    {{ m.as_header_declaration }};{% endfor %}
     {%- for m in c.private_methods %}
     {{ m.as_header_declaration }};{% endfor %}
     };
