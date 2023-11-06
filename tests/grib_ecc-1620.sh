@@ -70,6 +70,23 @@ grib_check_key_equals $temp " -w count=1 -s stepUnits=6h -p step,stepUnits:s" "1
 grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step,stepUnits:s" "812h 12h"  # FIXME(maee) (8(12h) 12h) is correct
 grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step,stepUnits:s" "4D D"
 
+${tools_dir}/grib_set -s stepUnits=s,startStep=0,endStep=345600  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=m,startStep=0,endStep=5760  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=15m,startStep=0,endStep=384  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=30m,startStep=0,endStep=192  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=h,startStep=0,endStep=96  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=6h,startStep=0,endStep=16  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=12h,startStep=0,endStep=8  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+${tools_dir}/grib_set -s stepUnits=D,startStep=0,endStep=4  $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+
 
 #### CHECK negative forecastTime
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
