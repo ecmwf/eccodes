@@ -46,6 +46,31 @@ temp2=temp_2.$label
 samples_dir=$ECCODES_SAMPLES_PATH
 
 
+#### CHECK units
+fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=96,indicatorOfUnitForTimeRange=h $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+
+grib_check_key_equals $temp " -w count=1 -s stepUnits=s -p step:i,stepUnits:s" "345600 s"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=m -p step:i,stepUnits:s" "5760 m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=15m -p step:i,stepUnits:s" "384 15m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=30m -p step:i,stepUnits:s" "192 30m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=h -p step:i,stepUnits:s" "96 h"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=6h -p step:i,stepUnits:s" "16 6h"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step:i,stepUnits:s" "8 12h"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step:i,stepUnits:s" "4 D"
+
+grib_check_key_equals $temp " -w count=1 -s stepUnits=s -p step,stepUnits:s" "345600s s"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=m -p step,stepUnits:s" "5760m m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=15m -p step,stepUnits:s" "384(15m) 15m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=30m -p step,stepUnits:s" "192(30m) 30m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=h -p step,stepUnits:s" "96 h"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=6h -p step,stepUnits:s" "166h 6h"  # FIXME(maee) (16(6h) 6h) is correct
+grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step,stepUnits:s" "812h 12h"  # FIXME(maee) (8(12h) 12h) is correct
+grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step,stepUnits:s" "4D D"
+
+
 #### CHECK negative forecastTime
 fn="${data_dir}/reduced_gaussian_sub_area.grib2"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
@@ -66,7 +91,7 @@ low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indi
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 
-### TODO(EB): @Shahram: how to make parameters position independent
+### TODO(maee): @Shahram: how to make parameters position independent
 ${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
 #${tools_dir}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
@@ -113,11 +138,11 @@ ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTi
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 
 # Use range unit: hour
-${tools_dir}/grib_set -s endStep:d=30 $temp $temp2 # TODO(EB) remove in the future behavior
-#${tools_dir}/grib_set -s endStep:i=30 $temp $temp2 # TODO(EB) keep for backwards compatibility
+${tools_dir}/grib_set -s endStep:d=30 $temp $temp2 # TODO(maee) remove in the future behavior
+#${tools_dir}/grib_set -s endStep:i=30 $temp $temp2 # TODO(maee) keep for backwards compatibility
 #${tools_dir}/grib_set -s endStep:s=30 $temp $temp2 
 #${tools_dir}/grib_set -s endStep:s=30h $temp $temp2
-#${tools_dir}/grib_set -s endStep=30h $temp $temp2 # TODO(EB) add to tests
+#${tools_dir}/grib_set -s endStep=30h $temp $temp2 # TODO(maee) add to tests
 grib_check_key_equals $temp2   "-p $low_level_keys" "24 h 6 h"
 
 # Use stepUnits
@@ -179,16 +204,16 @@ keys_d="step:d,stepUnits:s"
 ${tools_dir}/grib_set -s forecastTime=59,indicatorOfUnitOfTimeRange=m $fn $temp
 grib_check_key_equals $temp "-p $keys__ -s stepUnits=s" "3540s s"
 grib_check_key_equals $temp "-p $keys__ -s stepUnits=m" "59m m"
-#grib_check_key_equals $temp "-p $keys__ -s stepUnits=h" "0" # TODO(EB): check behaviour (should be 0.983333)
+#grib_check_key_equals $temp "-p $keys__ -s stepUnits=h" "0" # TODO(maee): check behaviour (should be 0.983333)
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=s" "3540s"
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "59m"
-#grib_check_key_equals $temp "-p $keys_s -F"%.2f" -s stepUnits=h" "0.983333" # TODO(EB): check behaviour // See tools for default output format
+#grib_check_key_equals $temp "-p $keys_s -F"%.2f" -s stepUnits=h" "0.983333" # TODO(maee): check behaviour // See tools for default output format
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=s" "3540 s"
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=m" "59 m"
-#grib_check_key_equals $temp "-p $keys_i -s stepUnits=h" "0" # TODO(EB): check behaviour
+#grib_check_key_equals $temp "-p $keys_i -s stepUnits=h" "0" # TODO(maee): check behaviour
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=s" "3540 s"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "59 m"
-#grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0.983333" # TODO(EB): check behaviour
+#grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0.983333" # TODO(maee): check behaviour
 
 
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp

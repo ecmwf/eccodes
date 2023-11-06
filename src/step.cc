@@ -173,6 +173,7 @@ std::string Step::value<std::string>(const std::string& format) const {
     constexpr int MAX_SIZE = 128;
     char output[MAX_SIZE];
     std::string u;
+    int err;
 
     // Do not print unit if it is HOUR to keep backward compatibility
     // with previous versions of ecCodes (see ECC-1620). This is a temporary solution.
@@ -182,7 +183,11 @@ std::string Step::value<std::string>(const std::string& format) const {
     if (unit_ != Unit::Value::HOUR)
         u =  unit_.value<std::string>();
 
-    int err = snprintf(output, MAX_SIZE, (format + "%s").c_str(), value<double>(), u.c_str());
+    if (unit_ == Unit::Value::MINUTES15 || unit_ == Unit::Value::MINUTES30)
+        err = snprintf(output, MAX_SIZE, (format + "(%s)").c_str(), value<double>(), u.c_str());
+    else 
+        err = snprintf(output, MAX_SIZE, (format + "%s").c_str(), value<double>(), u.c_str());
+
     if (err < 0 || err >= MAX_SIZE) {
         throw std::runtime_error("Error while formatting Step to string");
     }
