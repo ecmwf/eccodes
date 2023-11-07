@@ -29,4 +29,11 @@ fTmp=${label}".tmp.txt"
 gts_file=EGRR20150317121020_00493212.DAT
 ${tools_dir}/gts_get -p TT,AA,II,CCCC,YY,GG,gg,BBB $gts_file >/dev/null
 
+gts_file=${data_dir}/gts.grib
+result=$( ${tools_dir}/grib_get -wcount=1 -p gts_CCCC -g $gts_file )
+[ "$result" = "ECMG" ]
+
+${tools_dir}/grib_get -wcount=1 -p gts_header -g $gts_file
+
+
 rm -f $fLog

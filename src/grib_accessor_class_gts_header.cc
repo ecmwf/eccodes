@@ -118,7 +118,6 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     return GRIB_NOT_IMPLEMENTED;
 }
 
-
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_gts_header* self = (grib_accessor_gts_header*)a;
