@@ -1193,9 +1193,7 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
     }
     h = (grib_multi_handle*)grib_context_malloc_clear(c, sizeof(grib_multi_handle));
     if (h == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_multi_handle_new: unable to allocate memory. %s",
-                         grib_get_error_message(GRIB_OUT_OF_MEMORY));
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate memory", __func__);
         return NULL;
     }
     h->buffer          = grib_create_growable_buffer(c);
@@ -1419,7 +1417,7 @@ int grib_get_message(const grib_handle* ch, const void** msg, size_t* size)
     return 0;
 }
 
-int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
+int grib_get_message_headers(const grib_handle* h, const void** msg, size_t* size)
 {
     int err = 0;
     size_t endOfHeadersMarker;
@@ -1428,7 +1426,7 @@ int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size)
 
     if ((err = grib_get_offset(h, "endOfHeadersMarker", &endOfHeadersMarker)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "grib_get_message_headers: unable to get offset of endOfHeadersMarker");
+                         "%s: Unable to get offset of endOfHeadersMarker", __func__);
         return err;
     }
 
