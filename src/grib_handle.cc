@@ -326,6 +326,43 @@ grib_handle* grib_handle_clone(const grib_handle* h)
     return result;
 }
 
+grib_handle* grib_handle_clone_light(const grib_handle* h)
+{
+    int err = 0;
+    size_t size1 = 0;
+    const void* msg1 = NULL;
+    grib_handle* h1 = (grib_handle*)h;
+    long edition = 0;
+
+    err = grib_get_long(h, "edition", &edition);
+    if (!err && edition == 1) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
+        return NULL;
+    }
+
+    err = grib_get_message_headers(h1, &msg1, &size1);
+    if (err) return NULL;
+
+    size1 += 4;
+    grib_handle* result  = grib_handle_new_from_partial_message_copy(h->context, msg1, size1);
+    result->buffer->data[ size1 - 4 ] = '7';
+    result->buffer->data[ size1 - 3 ] = '7';
+    result->buffer->data[ size1 - 2 ] = '7';
+    result->buffer->data[ size1 - 1 ] = '7';
+    result->buffer->ulength = size1;
+
+    result->product_kind = h->product_kind;
+
+    long off = 64; // This is only true for GRIB edition 2
+    err = grib_encode_unsigned_long( result->buffer->data, (unsigned long)size1, &off, 64);
+    if (err) {
+        printf("err=%s\n", grib_get_error_message(err));
+        return NULL;
+    }
+
+    return result;
+}
+
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
 {
     if (product == PRODUCT_GRIB)
