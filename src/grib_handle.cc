@@ -331,7 +331,6 @@ grib_handle* grib_handle_clone_light(const grib_handle* h)
     int err = 0;
     size_t size1 = 0;
     const void* msg1 = NULL;
-    grib_handle* h1 = (grib_handle*)h;
     long edition = 0;
 
     // Only for GRIB, not BUFR etc
@@ -347,7 +346,7 @@ grib_handle* grib_handle_clone_light(const grib_handle* h)
         return NULL;
     }
 
-    err = grib_get_message_headers(h1, &msg1, &size1);
+    err = grib_get_message_headers(h, &msg1, &size1);
     if (err) return NULL;
 
     size1 += 4;
