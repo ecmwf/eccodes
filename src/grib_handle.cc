@@ -334,6 +334,13 @@ grib_handle* grib_handle_clone_light(const grib_handle* h)
     grib_handle* h1 = (grib_handle*)h;
     long edition = 0;
 
+    // Only for GRIB, not BUFR etc
+    if (h->product_kind != PRODUCT_GRIB) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for %s",
+                         __func__, codes_get_product_name(PRODUCT_GRIB));
+        return NULL;
+    }
+
     err = grib_get_long(h, "edition", &edition);
     if (!err && edition == 1) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
