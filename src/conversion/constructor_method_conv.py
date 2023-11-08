@@ -12,13 +12,21 @@ class ConstructorMethodConverter(MethodConverter):
     def create_cpp_function(self, cppfuncsig):
         return constructor_method.ConstructorMethod(cppfuncsig, self._transforms.types["self"])
 
-    def update_cfunction_names(self, line):
+    # overridden to short-circuit well-knwon transforms!
+    def convert_cfunction_calls(self, line):
 
         # Transform the argument getters
-        line = re.sub(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
-        line = re.sub(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
+        line, count = re.subn(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
+        if count:
+            debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_name] line=[{line}]")
+            return line
 
-        return super().update_cfunction_names(line)
+        line, count = re.subn(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
+        if count:
+            debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_X] line=[{line}]")
+            return line
+
+        return super().convert_cfunction_calls(line)
 
     # Overridden to get correct InitData "set size"
     def container_func_call_for(self, cpparg, action, data=""):

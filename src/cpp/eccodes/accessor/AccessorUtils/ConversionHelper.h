@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdarg>
 #include <vector>
+#include <cassert>
 
 namespace eccodes::accessor
 {
@@ -17,7 +18,6 @@ namespace eccodes::accessor
 //   C++ code:  std::string result = fmtString(128, "+a=%lf +b=%lf", major, minor);
 //
 template <typename... Args>
-//std::string fmtString(const char* format, Args... args) {
 std::string fmtString(std::string format, Args... args) {
     // Determine buffer size
     size_t formatSize = snprintf(nullptr, 0, format.c_str(), args...);
@@ -32,6 +32,17 @@ std::string fmtString(std::string format, Args... args) {
 // to avoid "warning: format not a string literal and no format arguments [-Wformat-security]"
 //std::string fmtString(const char* format);
 std::string fmtString(std::string format);
+
+// Helper to replace sscanf with a version that works with std::string and takes args by ref
+// which better supports the conversion script!
+// Note: Arg 2 [offset] is provided for C code that passes "buf + 2*i" [so offset is 2*i]
+//       Pass 0 if not required (i.e. use start of buffer)
+template <typename... Args>
+int scanString(std::string buffer, size_t offset, std::string format, Args&... args) {
+    assert(offset >= buffer.size());
+
+    return sscanf(buffer.data() + offset, format.c_str(), &args...);
+}
 
 // Container version of strtoX functions. 
 // 

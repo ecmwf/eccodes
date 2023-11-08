@@ -54,7 +54,6 @@ class Arg:
         arg_type, arg_name = parse_type_and_name_from_string(input)
 
         if arg_type and arg_name:
-            #debug.line("from_string", f"Creating arg type=[{arg_type}] name=[{arg_name}] from: {input}")
             return cls(arg_type, arg_name)
 
         debug.line("from_string", f"Input is not an arg declaration: {input}")
@@ -158,8 +157,8 @@ def parse_type_and_name_from_string(input):
     arg_type = arg_name = None
 
     # Phase 1 - type
-    #m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)(const)?", input)
-    m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)?(const)?", input)
+    #m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)(\s\*+|\*+\s?|\s)?(const)?", input)
+    m = re.match(r"(const(?:expr)?)?(struct)?\s*(unsigned)?\s*(\w+)([\s\*]*)(const)?", input)
     if m:
         if m.group(4) in ["return", "typedef", "goto"]:
             debug.line("from_string", f"Ignoring invalid arg type [{m.group(4)}]: {input}")
@@ -174,7 +173,7 @@ def parse_type_and_name_from_string(input):
             arg_type += m.group(3) + " "
         arg_type += m.group(4)
         if m.group(5):
-            arg_type += m.group(5).strip()  # Add * if present...
+            arg_type += m.group(5).replace(" ", "")  # Pointer string could be "* *" eg "T* *pval" in data_simple_packing
         if m.group(6):
             arg_type += " " + m.group(6)
 

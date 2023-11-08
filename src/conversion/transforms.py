@@ -62,7 +62,16 @@ class Transforms:
     @property
     def all_args(self):
         return self._all_args
-    
+
+    # Provide {carg, cpparg} for first entry that matches name, or both None
+    def arg_transform_for(self, name):
+        for carg, cpparg in self.all_args.items():
+            if carg.name == name or (cpparg and cpparg.name == name):
+                return carg, cpparg
+
+        return None, None
+
+
     # Helper to return the ctype for the supplied cname, or None
     def ctype_of(self, cname):
         for carg in self.all_args.keys():

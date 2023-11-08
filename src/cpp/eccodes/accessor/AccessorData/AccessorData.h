@@ -53,7 +53,7 @@ public:
     virtual GribStatus pack(std::vector<double> const& doubleValues);
     virtual GribStatus pack(std::vector<float> const& floatValues);
     virtual GribStatus pack(std::vector<StringArray> const& stringValues);
-    virtual GribStatus pack(std::vector<std::byte> const& byteValues);
+    virtual GribStatus pack(std::vector<unsigned char> const& byteValues);
 
     // Unpack - single value
     template<typename T>
@@ -65,7 +65,7 @@ public:
     virtual GribStatus unpack(std::vector<double>& doubleValues) const;
     virtual GribStatus unpack(std::vector<float>& floatValues) const;
     virtual GribStatus unpack(std::vector<StringArray> &stringValues) const;
-    virtual GribStatus unpack(std::vector<std::byte> &byteValues) const;
+    virtual GribStatus unpack(std::vector<unsigned char> &byteValues) const;
 
     // Unpack - multiple values
     virtual GribStatus unpackElement(std::size_t index, double& val) const;

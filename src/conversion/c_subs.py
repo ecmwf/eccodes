@@ -3,6 +3,9 @@
 import re
 import debug
 
+def sscanf_repl(m):
+    return f"scanString({m.group(1)}, {m.group(3) if m.group(3) else '0'}{m.group(4)})"
+
 c_lib_substitutions = {
     r"\bstrcmp\((.*),\s*(.*)\s*\)\s*([!=]=)\s*\d+": r"\1 \3 \2",
     r"\bstrlen\(\s*([^\)]*)\s*\)": r"\1.size()",
@@ -12,11 +15,12 @@ c_lib_substitutions = {
     r"\bstrtol": "stringToLong",
     r"\bstrtod": "stringToDouble",
     r"\bstrcpy\(([^,]+),([^\)]+)\)": r"\1 = \2",
+    r"\bsscanf\(([^\s,\)]+)(\s+\+\s+([^,]+))?([^\)]*)\)": sscanf_repl
 }
 
 # grib_ functions that can be deleted - we'll comment them out for now!
 grib_deleted_function_substitutions = {
-    r"^\s*(.*?\bgrib_context_malloc_clear)": r"// [Removed grib_context_malloc_clear] \1",
+    #r"^\s*(.*?\bgrib_context_malloc_clear)": r"// [Removed grib_context_malloc_clear] \1",
     r"^\s*(.*?\bgrib_context_free)": r"// [Removed grib_context_free] \1",
 }
 

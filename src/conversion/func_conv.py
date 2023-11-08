@@ -188,52 +188,115 @@ class FunctionConverter:
         # Note: 1. Added return-type cast (non-capture) and template (non-capture) detection
         return_type_cast_re = r"(?:\([^\)]+\))?"
         funcname_re         = r"\b([^\<\(\s]*)"
-        func_template_re    = r"(\<\w+\>)?"
+        func_template_re    = r"(\<[\w\*]+\>)?"
 
+        # [1] Match FUNCNAME( i.e. to opening brace
         m = re.search(rf"{return_type_cast_re}{funcname_re}{func_template_re}\(", line)
         if not m:
-            return line
-        
-        debug.line("convert_next_cfunction_call", f"[{depth}] Matched [{m.group(0)}] 1=[{m.group(1)}]")
-
-        if m.group(1) in ["Assert"]:
             return line
 
         cfuncname = m.group(1)
 
+        debug.line("convert_next_cfunction_call", f"[{depth}] Matched [{m.group(0)}] cfuncname=[{cfuncname}] input line=[{line}]")
+
+        if cfuncname in ["Assert"]:
+            return line
+
         match_start = m.start()
         match_end = m.end()
 
-        # Capture the parameters
+        # [2] Process the remainder of the line (recursively) before processing the parameters (they may be functions themselves)... 
+        if match_end < len(line):
+            remainder = self.convert_next_cfunction_call(line[match_end:], depth+1)
+            line = line[:match_end] + remainder
+
+        # [3] Extract the parameters
         cparams = []
-        param_re = r"\s*([^,]*)\s*"
-        while match_end < len(line):
-            m = re.search(rf"{param_re},", line[match_end:])
+
+        debug.line("convert_next_cfunction_call", f"[{depth}] Extracting params for cfuncname=[{cfuncname}] from [{line[match_end:]}]")
+        # As we're working recursively, extracting the parameters requires an algorithm
+        # Example: foo(bar(a), b)
+        # Depth 1 func string = "foo(" arg string = "bar(a), b)" [bar(a), b] are the params to extract
+        # Depth 2 func string = "bar(" arg string = "a), b)"     [a] is the param to extract
+        # Algorithm:
+        #   Match everything not ")" or ","
+        #   If match found:
+        #       if brace count matches, "(" == ")", then arg includes everything up to the brace
+        #           if next char is ")" then we're done
+        #           if next char is "," then continue
+        #           else error!
+        #       else if next char is "," then extract as arg and continue
+        #   else done
+        param_re = r"\s*([^\),]*)[\),]"
+        keep_extracting = True
+        part_extracted_param = ""
+        in_quotes = False
+
+        while keep_extracting:
+            m = re.search(rf"{param_re}", line[match_end:])
             if m:
+                new_param = ""
                 match_end += m.end()
-                cparams.append(m.group(1))
+
+                # Check for quoted param
+                if m.group(1).startswith("\"") or in_quotes:
+                    part_extracted_param += m.group(0)
+                    debug.line("convert_next_cfunction_call", f"[{depth}] Quoted param part extracted:[{m.group(0)}] part_extracted_param=[{part_extracted_param}] line[match_end:]=[{line[match_end:]}]")
+                    if m.group(1).endswith("\""):
+                        new_param = part_extracted_param[:-1]   # Don't copy final comma!
+                        part_extracted_param = ""
+                        in_quotes = False
+                    else:
+                        in_quotes = True
+                        continue
+
+                else:
+                    if m.group(0).endswith(")"):
+                        if m.group(0).count("(") == m.group(0).count(")"):
+                            if line[match_end] == ")":
+                                keep_extracting = False
+                                new_param = part_extracted_param + m.group(0)
+                            elif line[match_end] == ",":
+                                match_end += 1  # Move past the "," so we don't match it by mistake during the next pass
+                                new_param = part_extracted_param + m.group(0)
+                            else:
+                                # We've not reached the end of this param yet - keep going!
+                                part_extracted_param += m.group(0)
+                                debug.line("convert_next_cfunction_call", f"[{depth}] Param part extracted:[{m.group(0)}] part_extracted_param=[{part_extracted_param}] line[match_end:]=[{line[match_end:]}]")
+
+                            if new_param:
+                                part_extracted_param = ""
+                                
+                        else:
+                            new_param = part_extracted_param + m.group(1)
+                            part_extracted_param = ""
+                            keep_extracting = False
+                            
+                    elif m.group(0).endswith(","):
+                        new_param = part_extracted_param + m.group(1)
+                        part_extracted_param = ""
+
+                    else:
+                        assert False, f"Unexpected match [{m.group(0)}] line=[{line[match_end]}]"
+
+                if new_param:
+                    tidy_new_param = arg.tidy_arg_string(new_param)
+                    cparams.append(tidy_new_param)
+                    debug.line("convert_next_cfunction_call", f"[{depth}] Added param: tidy=[{tidy_new_param}] untidy=[{new_param}]")
             else:
-                break
+                keep_extracting = False            
 
-        # Final param...
-        param_re = r"\s*([^\)]*)\s*"
-        m = re.search(rf"{param_re}\)", line[match_end:])
-        assert m, f"No final param - is it multi-line? Input line [{line}]"
-        cparams.append(m.group(1))
-        match_end += m.end()
-
-        debug.line("convert_next_cfunction_call", f"[{depth}] cfuncname=[{cfuncname}] cparams=[{cparams}]")
+        debug.line("convert_next_cfunction_call", f"[{depth}] Finished extracting params for cfuncname=[{cfuncname}]: cparams=[{cparams}]")
 
         cppfunction_call = self.convert_cfunction_to_cpp_format(cfuncname, cparams)
 
         if cppfunction_call:
             line = line[:match_start] + cppfunction_call + line[match_end:]
             debug.line("convert_next_cfunction_call",f"[{depth}] Converted function [{cfuncname}] [After]: {line}")
-
-        # End of current function, Process the remainder of the line (recursive)... 
-        if match_end < len(line):
-            remainder = self.convert_next_cfunction_call(line[match_end:], depth+1)
-            line = line[:match_end] + remainder
+        else:
+            # We may have tidied some args, so we'll return these...
+            line = line[:match_start] + f"{cfuncname}({','.join([p for p in cparams])})" + line[match_end:] 
+            debug.line("convert_next_cfunction_call",f"[{depth}] No conversion for function [{cfuncname}], but may have tidied args [After]: {line}")
 
         return line
 
@@ -347,7 +410,11 @@ class FunctionConverter:
         self._transforms.add_local_args(carg, cpparg)
         debug.line("update_cvariable_declarations", f"Added local arg: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
 
-        if not cpparg:
+        if cpparg:
+            if cpparg not in self._new_cppargs_list:
+                self._new_cppargs_list.append(cpparg)
+                debug.line("update_cvariable_declarations", f"Added cpparg [{arg.arg_string(carg)}] to new arg list")
+        else:
             debug.line("update_cvariable_declarations", f"--> deleted line: {line}")
             return ""
 
@@ -531,8 +598,9 @@ class FunctionConverter:
 
             if not cppstruct_arg.name:
                 # TODO: Only delete line if assignment, else just remove struct...
-                line = f"// [Deleted struct {cstruct_arg.name}] " + line
-                debug.line("update_cstruct_access", f"[{depth}] Deleting {cstruct_arg.name} Line: {line}")
+                self.mark_for_deletion(cstruct_arg.as_string())
+                #line = f"// [Deleted struct {cstruct_arg.name}] " + line
+                #debug.line("update_cstruct_access", f"[{depth}] Deleting {cstruct_arg.name} Line: {line}")
                 return line
 
             # Check if this is a "set" operation (it's match group 3 to avoid false match with ==)
@@ -748,6 +816,26 @@ class FunctionConverter:
                 debug.line("transform_container_cppvariable_access", f"Removed len assignment for const variable [{cppvariable.as_string()}]")
                 return f"// [length assignment removed - var is const] " + cppvariable.as_string() + match_token.as_string() + post_match_string
             
+            # First, check for malloc
+            # Note: Group 2 (\()? and group 5 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
+            m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\([^,]+,(.+)\)(\))[,;]", post_match_string)
+            
+            if m:
+                match_string = m.group(4)
+                if not m.group(2):
+                    match_string += m.group(5)
+
+                # Check if we're creating (new arg) or resizing (existing arg)
+                if cpp_container_arg in self._new_cppargs_list:
+                    transformed_line = f"{cpp_container_arg.name}({match_string});"
+                    debug.line("transform_container_cppvariable_access", f"[CREATION] Replaced [{cpp_container_arg.name} = grib_context_malloc_X({match_string})] with [{transformed_line}]")
+                    return transformed_line
+                else:
+                    container_func_call = self.container_func_call_for(cpp_container_arg, "resize", match_string)
+                    transformed_line = cpp_container_arg.name + "." + container_func_call + ";"
+                    debug.line("transform_container_cppvariable_access", f"[EXISTING] Replaced {cppvariable.as_string()} = grib_context_malloc_X({match_string}) with [{transformed_line}]")
+                    return transformed_line
+
             # Extract the assigned value
             m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
             assert m, f"Could not extract assigned value from: {post_match_string}"
@@ -896,26 +984,43 @@ class FunctionConverter:
         m = re.search(rf"{prefix_re}{name_re}{index_re}\s*{token_re}", line)
 
         if m:
-            if m.group(2) in ["vector", "string", "return", "break", "goto"]:
-                debug.line("update_variable_access", f"IN  False match [{m.group(2)}] : {line}")
-                remainder = self.update_variable_access(line[m.end():], depth+1)
-                line = line[:m.end()] + remainder
-                debug.line("update_variable_access", f"OUT False match [{m.group(2)}] : {line}")
+            pointer     = m.group(1)
+            name        = m.group(2)
+            index       = m.group(3)
+            match_start = m.start()
+            match_end   = m.end()
+
+            debug.line("update_variable_access", f"TEST 0=[{m.group(0)}] 1=[{m.group(1)}] 2=[{m.group(2)}] 3=[{m.group(3)}] 4=[{m.group(4)}] : {line}")
+
+            if name in ["vector", "string", "return", "break", "goto"]:
+                debug.line("update_variable_access", f"IN  False match [{name}] : {line}")
+                remainder = self.update_variable_access(line[match_end:], depth+1)
+                line = line[:match_end] + remainder
+                debug.line("update_variable_access", f"OUT False match [{name}] : {line}")
             else:
-                var = variable.Variable(pointer=m.group(1), name=m.group(2), index=m.group(3))
+                # We need to try and determine if a prefix of "*" is a pointer dereference or multiplication!
+                if pointer and pointer == "*":
+                    carg, cpparg = self._transforms.arg_transform_for(name)
+
+                    if carg.type[-1] != "*":
+                        debug.line("update_variable_access", f"[POINTER CHECK] variable name=[{name}] has carg type=[{carg.type}] so the [*] is a multiply operation - adjusting the match pointers!")
+                        pointer = ""
+                        match_start += 1               
+
+                var = variable.Variable(pointer=pointer, name=name, index=index)
                 match_token = variable.MatchToken(m.group(4))
                 debug.line("update_variable_access", f"IN  [{depth}][{var.as_string()}][{match_token.value}]: {line}")
 
                 # First process the remainder of the string (recursively), updating it along the way, so we can use it later...
-                remainder = self.update_variable_access(line[m.end():], depth+1)
+                remainder = self.update_variable_access(line[match_end:], depth+1)
 
                 transformed_remainder = self.transform_variable_access(var, match_token, remainder)
 
                 if transformed_remainder:
-                    line = line[:m.start()] + transformed_remainder
+                    line = line[:match_start] + transformed_remainder
                     debug.line("update_variable_access", f"OUT [{depth}][{var.as_string()}][{match_token.value}]: {line}")
                 else:
-                    line = line[:m.end()] + remainder
+                    line = line[:match_end] + remainder
                     debug.line("update_variable_access", f"OUT [{depth}][No transformed_remainder]: {line}")
 
         return line
@@ -1012,7 +1117,17 @@ class FunctionConverter:
         line = self.process_container_if(line)
 
         return line
-    
+
+    # If any items in the deletions list are still in the current line, then delete it!
+    def process_deletions(self, line):
+        for entry in self._deletions_list:
+            if entry in line:
+                line = f"// [Deleted due to [{entry}] " + line
+                debug.line("process_deletions", f"Deletion found: {line}")
+                break
+
+        return line
+
     # ======================================== UPDATE FUNCTIONS ========================================
     
     
@@ -1043,7 +1158,13 @@ class FunctionConverter:
 
             # [5] Provide any final updates
             self.final_updates,
+
+            # [6] Clean up...
+            self.process_deletions,
         ]
+
+        self._deletions_list = []   # Use mark_for_deletion() to add...
+        self._new_cppargs_list = [] # Add newly created args so we know if they're using assignment construction
 
         debug.line("update_cpp_line", f"--------------------------------------------------------------------------------")
         debug.line("update_cpp_line", f"[PROCESSING] {line}")
@@ -1070,8 +1191,7 @@ class FunctionConverter:
             
             # Split comma-separated variable definitions into separate lines
             # We then call ourself recursively for each split line
-            #m = re.match(r"^(\s*[^\*/,\(]+\s+)\**\w+\s*=?\s*(\w+)?,", line)
-            m = re.match(r"^(\s*\w+\s+)\w+\s*=?\s*(\w+)?,", line)
+            m = re.match(r"^(\s*[\w\*]+\s*)\s\*?\w+\s*[^,\(\{]*,", line)
             if m:
                 debug.line("update_cpp_body", f"--------------------------------------------------------------------------------")
                 debug.line("update_cpp_body", f"comma-separated vars [before]: {line}")
@@ -1096,3 +1216,9 @@ class FunctionConverter:
         debug.line("create_cpp_body", f"\n============================== {self._cfunction.name} [OUT] ==============================\n")
 
         return cpp_lines
+
+    # Add entry to the deletions_list to be processed after all other line processing
+    def mark_for_deletion(self, entry):
+        if entry not in self._deletions_list:
+            self._deletions_list.append(entry)
+            debug.line("mark_for_deletions", f"Entry marked for deletion: [{entry}]")

@@ -30,7 +30,7 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
                           
         FuncSigMapping(FuncSig("int", "pack_bytes", [Arg("grib_accessor*", "a"), Arg("const unsigned char*", ""), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<std::byte> const&", "byteValues"), None]),
+                       FuncSig("GribStatus", "pack", [None, Arg("std::vector<unsigned char> const&", "byteValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         # static int unpack_TYPE(grib_accessor* a, TYPE* v, size_t* len)
@@ -55,7 +55,7 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         FuncSigMapping(FuncSig("int", "unpack_bytes", [Arg("grib_accessor*", "a"), Arg("unsigned char*", "v"), Arg("size_t*", "len")]),
-                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<std::byte>&", "byteValues"), None]),
+                       FuncSig("GribStatus", "unpack", [None, Arg("std::vector<unsigned char>&", "byteValues"), None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
 
         # static int unpack_TYPE_element(grib_accessor*, size_t i, TYPE* val);
@@ -134,12 +134,12 @@ class InheritedMethodFuncSigConverter(MethodFuncSigConverter):
         super().__init__(cfuncsig)
         self._conversions.extend(self.inherited_method_conversions)
 
-# Helper to get the mapping of an inherited method from the c function name
-# Use for transforms when the "virtual" method is referenced, but not implemented, in a Class
+# Helper to get the mapping of an inherited method from the function name
+# The function name could be C or already transformed to C++, so we check both options...
 # Returns None if not mapping exists...
-def cpp_inherited_method_mapping_for(cfunction_name):
+def cpp_inherited_method_mapping_for(function_name):
     for mapping in InheritedMethodFuncSigConverter.inherited_method_conversions:
-        if mapping.cfuncsig.name == cfunction_name:
+        if mapping.cfuncsig.name == function_name or mapping.cppfuncsig.name == function_name:
             return mapping
         
     return None

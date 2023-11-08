@@ -1184,8 +1184,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
     long numberOfOctetsExtraDescriptors, bits_per_value = 0, bitmap_present = 0;
 
-    int dec_scale, bin_scale, wanted_bits, max_bits, use_bitmap,
-        j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1, vmn, vmx, vbits;
+    int dec_scale, bin_scale, wanted_bits, max_bits, use_bitmap;
+    int j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1, vmn, vmx, vbits;
     // Sections
     double max_val, min_val, ref, frange, dec_factor, scale, mn, mx;
     struct section start, *list, *list_backup, *s;

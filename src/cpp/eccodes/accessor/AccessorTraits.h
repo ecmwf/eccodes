@@ -20,7 +20,7 @@ using isAllowedSimpleType = isOneOf<T, long, float, double>;
 
 template<typename T>
 using isAllowedBufferType = isOneOf<T, std::string, std::vector<long>, std::vector<float>, std::vector<double>,
-                                       std::vector<StringArray>, std::vector<std::byte>>;
+                                       std::vector<StringArray>, std::vector<unsigned char>>;
 
 template<typename T>
 using isAllowedUnpackElementType = isOneOf<T, float, double>;
