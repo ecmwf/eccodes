@@ -21,7 +21,7 @@ class ConstructorMethodConverter(MethodConverter):
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_name] line=[{line}]")
             return line
 
-        line, count = re.subn(rf"\bgrib_arguments_get_(\w+)\(.*?, arg, (\d+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
+        line, count = re.subn(rf"\bgrib_arguments_get_(\w+)\([^,]+, [^,]+, ([^\)]+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
         if count:
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_X] line=[{line}]")
             return line
