@@ -211,7 +211,8 @@ static char* descriptor_type_name(int dtype)
 }
 #endif
 
-static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
+// Renaming because "__expand" becomes "expand" when converted to C++, and then clashes with the other expand() function!
+static void expand2(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
 {
     int k, j, i;
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
@@ -554,7 +555,7 @@ static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_arra
     }
 #endif
     while (unexpanded->n) {
-        __expand(a, unexpanded, expanded, ccp, err);
+        expand2(a, unexpanded, expanded, ccp, err);
         if (*err) {
             grib_bufr_descriptors_array_delete(expanded);
             return NULL;

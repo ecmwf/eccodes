@@ -11,7 +11,7 @@ namespace eccodes::accessor {
     (((x) == max_nbits) ? (unsigned long)-1UL : (1UL << (x)) - 1)
 
 // decode a value consisting of nbits from an octet-bitstream to long-representation
-unsigned long gribDecodeUnsignedLong(AccessorDataBuffer::const_pointer input, long& bitPos, long numBits)
+unsigned long gribDecodeUnsignedLong(DataPointer input, long& bitPos, long numBits)
 {
     assert(false); // TODO
     return 0;

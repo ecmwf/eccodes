@@ -97,17 +97,26 @@ container_types = [
     "std::vector",
     "std::map",
 ]
+
+# Return True if type is a container (std::vector etc)
+# Will safely handle type that is None
+def is_container_type(type):
+    if not type:
+        return False
+
+    for c in container_types:
+        if c in type:
+            return True
+    
+    return False
+
 # Return True if Arg is a container (std::vector etc)
 # Will safely handle Arg that is None
 def is_container(arg):
     if not arg:
         return False
     
-    for c in container_types:
-        if arg.type.startswith(c):
-            return True
-    
-    return False
+    return is_container_type(arg.type)
 
 
 # print helper - can be called when Arg is None

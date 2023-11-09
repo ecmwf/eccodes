@@ -245,7 +245,7 @@ class MethodConverter(FunctionConverter):
         return super().transform_cfunction_name(cfunction_name)
 
     # Overridden to handle member types e.g. AccessorName x = NULL
-    def custom_transform_cppvariable_access(self, cppvariable, match_token, post_match_string):
+    def custom_transform_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
 
         accessor_arg = None
 

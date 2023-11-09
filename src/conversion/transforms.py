@@ -153,28 +153,25 @@ class Transforms:
             self._members[cmember] = cppmember
 
     # Helper to get the C++ funcsig that matches the supplied C function name
-    def cppfuncsig_for(self, cfuncname):
-        mapping = self.funcsig_mapping_for(cfuncname)
+    def cppfuncsig_for(self, funcname):
+        mapping = self.funcsig_mapping_for(funcname)
 
         if mapping:
             return mapping.cppfuncsig
         else:
             return None
 
-    # Helper to search all mappings and return the one that matches the supplied C function name, or None
-    def funcsig_mapping_for(self, cfuncname):
-        for entry in self.inherited_funcsig_mappings:
-            if cfuncname == entry.cfuncsig.name:
-                return entry
-        for entry in self.private_funcsig_mappings:
-            if cfuncname == entry.cfuncsig.name:
-                return entry
-        for entry in self.static_funcsig_mappings:
-            if cfuncname == entry.cfuncsig.name:
-                return entry
-        for entry in self.other_funcsig_mappings:
-            if cfuncname == entry.cfuncsig.name:
-                return entry
+    # Helper to search all mappings and return the one that matches the supplied function name, or None
+    def funcsig_mapping_for(self, funcname):
+        for mappings in [self.inherited_funcsig_mappings,
+                         self.private_funcsig_mappings,
+                         self.static_funcsig_mappings,
+                         self.other_funcsig_mappings]:
+            for entry in mappings:
+                if entry.cfuncsig.name == funcname:
+                    return entry
+                elif entry.cppfuncsig and entry.cppfuncsig.name == funcname:
+                    return entry
 
         return None
 
@@ -183,8 +180,7 @@ class Transforms:
         return self._inherited_funcsig_mappings
 
     def add_to_inherited_funcsig_mappings(self, mapping):
-        for entry in self._inherited_funcsig_mappings:
-            assert entry.cfuncsig.name != mapping.cfuncsig.name, f"Setting an existing inherited_funcsig_mappings transform: {mapping.cfuncsig.name} -> {mapping.cppfuncsig.name}"
+        assert not self.funcsig_mapping_for(mapping.cfuncsig.name), f"add_to_inherited_funcsig_mappings: Mapping for [{mapping.cfuncsig.name}] already exists!"
         self._inherited_funcsig_mappings.append(mapping)
 
     @property
@@ -192,8 +188,7 @@ class Transforms:
         return self._private_funcsig_mappings
 
     def add_to_private_funcsig_mappings(self, mapping):
-        for entry in self._private_funcsig_mappings:
-            assert entry.cfuncsig.name != mapping.cfuncsig.name, f"Setting an existing private_funcsig_mappings transform: {mapping.cfuncsig.name} -> {mapping.cppfuncsig.name}"
+        assert not self.funcsig_mapping_for(mapping.cfuncsig.name), f"add_to_private_funcsig_mappings: Mapping for [{mapping.cfuncsig.name}] already exists!"
         self._private_funcsig_mappings.append(mapping)
 
     @property
@@ -201,8 +196,7 @@ class Transforms:
         return self._static_funcsig_mappings
 
     def add_to_static_funcsig_mappings(self, mapping):
-        for entry in self._static_funcsig_mappings:
-            assert entry.cfuncsig.name != mapping.cfuncsig.name, f"Setting an existing static_funcsig_mappings transform: {mapping.cfuncsig.name} -> {mapping.cppfuncsig.name}"
+        assert not self.funcsig_mapping_for(mapping.cfuncsig.name), f"add_to_static_funcsig_mappings: Mapping for [{mapping.cfuncsig.name}] already exists!"
         self._static_funcsig_mappings.append(mapping)
 
     # Other funcsigs are for Global, Constructor and Destructor
@@ -212,6 +206,5 @@ class Transforms:
         return self._other_funcsig_mappings
 
     def add_to_other_funcsig_mappings(self, mapping):
-        for entry in self._other_funcsig_mappings:
-            assert entry.cfuncsig.name != mapping.cfuncsig.name, f"Setting an existing other_funcsig_mappings transform: {mapping.cfuncsig.name} -> {mapping.cppfuncsig.name}"
+        assert not self.funcsig_mapping_for(mapping.cfuncsig.name), f"add_to_other_funcsig_mappings: Mapping for [{mapping.cfuncsig.name}] already exists!"
         self._other_funcsig_mappings.append(mapping)

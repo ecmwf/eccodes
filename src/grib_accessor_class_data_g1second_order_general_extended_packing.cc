@@ -345,7 +345,8 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
     return GRIB_SUCCESS;
 }
 
-static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len)
+// Renaming as "unpack" clashes with the C++ name
+static int unpack_helper(grib_accessor* a, double* dvalues, float* fvalues, size_t* len)
 {
     grib_accessor_data_g1second_order_general_extended_packing* self = (grib_accessor_data_g1second_order_general_extended_packing*)a;
     int ret = 0;
@@ -566,12 +567,12 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
 
 static int unpack_float(grib_accessor* a, float* values, size_t* len)
 {
-    return unpack(a, NULL, values, len);
+    return unpack_helper(a, NULL, values, len);
 }
 
 static int unpack_double(grib_accessor* a, double* values, size_t* len)
 {
-    return unpack(a, values, NULL, len);
+    return unpack_helper(a, values, NULL, len);
 }
 
 static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* numberOfGroups, long* lengthOfSecondOrderValues,

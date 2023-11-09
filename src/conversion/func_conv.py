@@ -38,6 +38,9 @@ class FunctionConverter:
         self._cfunction = cfunction
         cppfuncsig = self._transforms.cppfuncsig_for(self._cfunction.name)
 
+        debug.line("to_cpp_function", f"cfuncsig   = [{self._cfunction.func_sig.as_string()}]")
+        debug.line("to_cpp_function", f"cppfuncsig = [{cppfuncsig.as_string() if cppfuncsig else None}]")
+
         # Store the C to C++ function arg transforms
         for index, carg in enumerate(self._cfunction.func_sig.args):
             assert carg, f"carg none for function name=[{cfunction.name}]"
@@ -671,11 +674,12 @@ class FunctionConverter:
 
 
     # Called first from transform_variable_access - override to provide specialised transforms (e.g. AccessorName x = NULL)
-    def custom_transform_cppvariable_access(self, cppvariable, match_token, post_match_string):
+    # Note original_var is provided as the original variable processed in case it is useful!
+    def custom_transform_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
         return None
 
     # Special transforms for return variables
-    def transform_return_cppvariable_access(self, cppvariable, match_token, post_match_string):
+    def transform_return_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
         ret = "GribStatus"
 
         if cppvariable.type == ret:
@@ -801,79 +805,147 @@ class FunctionConverter:
         return transformed_line
 
 
+    # Helper to search all funcig mappings and try and match funcname to a C->C++ mapping
+    # Override for inherited methods etc
+    # Returns FuncSigMapping instance or None
+    def funcsig_mapping_for(self, funcname):
+
+        # [1] Search grib_conversions
+        for grib_conversions in all_funcsig_conv.all_funcsig_conversions():
+            for funcsig_mapping in grib_conversions:
+                if funcsig_mapping.cfuncsig and funcsig_mapping.cfuncsig.name == funcname:
+                    return funcsig_mapping
+                if funcsig_mapping.cppfuncsig and funcsig_mapping.cppfuncsig.name == funcname:
+                    return funcsig_mapping
+        
+        # [2] Search transforms
+        return self._transforms.funcsig_mapping_for(funcname)
+
     # Make sure all container variables have sensible assignments, comparisons etc
-    def transform_container_cppvariable_access(self, cppvariable, match_token, post_match_string):
-        cpp_container_arg = None
+    # Override to add member var containers etc
+    def transform_container_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
+        cppcontainer_arg = None
+
         for cpparg in self._transforms.all_args.values():
             if cpparg and cpparg.name == cppvariable.name and arg.is_container(cpparg):
-                cpp_container_arg = cpparg
+                cppcontainer_arg = cpparg
                 break
 
-        if not cpp_container_arg:
+        if cppcontainer_arg:
+            for transform_func in [self.transform_cpp_container_assignment,
+                                   self.transform_cpp_container_non_assignment]:
+                transformed_string = transform_func(cpparg, original_var, match_token, post_match_string)
+                if transformed_string:
+                    return transformed_string
+
+        return None
+
+    # Make sure all container args have sensible assignments
+    # Usually called from transform_container_cppvariable_access()
+    def transform_cpp_container_assignment(self, cpp_container_arg, original_var, match_token, post_match_string):
+        assert cpp_container_arg and arg.is_container(cpp_container_arg)
+        if not match_token.is_assignment:
             return None
 
-        if match_token.is_assignment:
-            if cpp_container_arg.is_const():
-                debug.line("transform_container_cppvariable_access", f"Removed len assignment for const variable [{cppvariable.as_string()}]")
-                return f"// [length assignment removed - var is const] " + cppvariable.as_string() + match_token.as_string() + post_match_string
-            
-            # First, check for malloc
-            # Note: Group 2 (\()? and group 5 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
-            m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\([^,]+,(.+)\)(\))[,;]", post_match_string)
-            
-            if m:
-                match_string = m.group(4)
-                if not m.group(2):
-                    match_string += m.group(5)
+        if cpp_container_arg.is_const():
+            debug.line("transform_container_cppvariable_access", f"Removed len assignment for const variable [{cpp_container_arg.name}]")
+            return f"// [length assignment removed - var is const] " + cpp_container_arg.name + match_token.as_string() + post_match_string
+        
+        # First, check for malloc
+        # Note: Group 2 (\()? and group 5 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
+        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\([^,]+,(.+)\)(\))[,;]", post_match_string)
+        
+        if m:
+            match_string = m.group(4)
+            if not m.group(2):
+                match_string += m.group(5)
 
-                # Check if we're creating (new arg) or resizing (existing arg)
-                if cpp_container_arg in self._new_cppargs_list:
-                    transformed_line = f"{cpp_container_arg.name}({match_string});"
-                    debug.line("transform_container_cppvariable_access", f"[CREATION] Replaced [{cpp_container_arg.name} = grib_context_malloc_X({match_string})] with [{transformed_line}]")
-                    return transformed_line
-                else:
-                    container_func_call = self.container_func_call_for(cpp_container_arg, "resize", match_string)
-                    transformed_line = cpp_container_arg.name + "." + container_func_call + ";"
-                    debug.line("transform_container_cppvariable_access", f"[EXISTING] Replaced {cppvariable.as_string()} = grib_context_malloc_X({match_string}) with [{transformed_line}]")
-                    return transformed_line
-
-            # Extract the assigned value
-            m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
-            assert m, f"Could not extract assigned value from: {post_match_string}"
-
-            if m.group(1) == "NULL":
-                debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = NULL with {{}}")
-                return f"{cpp_container_arg.name} = {{}};"
-            elif m.group(1) == "{":
-                debug.line("transform_container_cppvariable_access", f"Ignoring {cppvariable.as_string()} braced initialiser [{post_match_string}]")
-                return cpp_container_arg.name + match_token.as_string() + post_match_string
+            # Check if we're creating (new arg) or resizing (existing arg)
+            if cpp_container_arg in self._new_cppargs_list:
+                transformed_line = f"{cpp_container_arg.name}({match_string});"
+                debug.line("transform_cpp_container_assignment", f"[CREATION] Replaced [{cpp_container_arg.name} = grib_context_malloc_X({match_string})] with [{transformed_line}]")
+                return transformed_line
             else:
-                container_underlying_type = cpp_container_arg.underlying_type
-                rhs_arg = self._transforms.cpparg_for_cppname(m.group(1))
-                rhs_arg_underling_type = rhs_arg.underlying_type if rhs_arg else None
+                container_func_call = self.container_func_call_for(cpp_container_arg, "resize", match_string)
+                transformed_line = cpp_container_arg.name + "." + container_func_call + ";"
+                debug.line("transform_cpp_container_assignment", f"[EXISTING] Replaced {cpp_container_arg.name} = grib_context_malloc_X({match_string}) with [{transformed_line}]")
+                return transformed_line
 
-                if rhs_arg_underling_type and rhs_arg_underling_type != container_underlying_type:
-                    debug.line("transform_container_cppvariable_access", f"rhs_arg_underling_type=[{rhs_arg_underling_type}] container_underlying_type=[{container_underlying_type}]")
-                    debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = {m.group(1)} with static_cast<{container_underlying_type}>{{}}")
-                    post_match_string = re.sub(re.escape(m.group(1)), f"{{static_cast<{container_underlying_type}>({rhs_arg.name})}}", post_match_string)
-                    return cpp_container_arg.name + match_token.as_string() + post_match_string
-                elif m.group(1).isalnum():
-                    debug.line("transform_container_cppvariable_access", f"Replaced {cppvariable.as_string()} = {m.group(1)} with {{}}")
-                    post_match_string = re.sub(re.escape(m.group(1)), f"{{{m.group(1)}}}", post_match_string)
-                    return cpp_container_arg.name + match_token.as_string() + post_match_string
+        # Extract the assigned value
+        m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
+        assert m, f"Could not extract assigned value from: {post_match_string}"
 
-        elif match_token.is_comparison: 
+        if m.group(1) == "NULL":
+            debug.line("transform_cpp_container_assignment", f"Replaced {cpp_container_arg.name} = NULL with {{}}")
+            return f"{cpp_container_arg.name} = {{}};"
+        
+        if m.group(1) == "{":
+            debug.line("transform_cpp_container_assignment", f"Ignoring {cpp_container_arg.name} braced initialiser [{post_match_string}]")
+            return cpp_container_arg.name + match_token.as_string() + post_match_string
+
+        container_underlying_type = cpp_container_arg.underlying_type
+        rhs_arg = self._transforms.cpparg_for_cppname(m.group(1))
+        rhs_arg_underling_type = rhs_arg.underlying_type if rhs_arg else None
+
+        if rhs_arg_underling_type and rhs_arg_underling_type != container_underlying_type:
+            debug.line("transform_cpp_container_assignment", f"rhs_arg_underling_type=[{rhs_arg_underling_type}] container_underlying_type=[{container_underlying_type}]")
+            debug.line("transform_cpp_container_assignment", f"Replaced {cpp_container_arg.name} = {m.group(1)} with static_cast<{container_underlying_type}>{{}}")
+            post_match_string = re.sub(re.escape(m.group(1)), f"{{static_cast<{container_underlying_type}>({rhs_arg.name})}}", post_match_string)
+            return cpp_container_arg.name + match_token.as_string() + post_match_string
+        elif m.group(1).isalnum():
+            debug.line("transform_cpp_container_assignment", f"Replaced {cpp_container_arg.name} = {m.group(1)} with {{}}")
+            post_match_string = re.sub(re.escape(m.group(1)), f"{{{m.group(1)}}}", post_match_string)
+            return cpp_container_arg.name + match_token.as_string() + post_match_string
+
+        # If original_var is a dereferenced pointer, then we'll just assign to index 0
+        if original_var.pointer:
+            assert not original_var.index, f"Didn't expect original variable to already have an index!"
+            transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
+            debug.line("transform_cpp_container_assignment", f"C call was dereferenced: updating container var to assign to index [0]: Transformed line = [{transformed_line}]")
+            return transformed_line
+
+        # See if we're assigning from a function call
+        '''m = re.match(r"\s*([^\(]+)\(", post_match_string)
+        if m:
+            funcname = m.group(1)
+            funcsig_mapping = self.funcsig_mapping_for(funcname)
+            if funcsig_mapping and funcsig_mapping.cppfuncsig:
+                return_type = funcsig_mapping.cppfuncsig.return_type
+                debug.line("transform_cpp_container_assignment", f"Found assignment from function [{funcname}] with return type=[{return_type}]")
+                if not arg.is_container_type(return_type):
+                    transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
+                    debug.line("transform_cpp_container_assignment", f"Function returns non-container type, so assigning to first element of [{cpp_container_arg.name}]: Transformed line = [{transformed_line}]")
+                    return transformed_line'''
+
+        return None
+
+    # Make sure all container args have sensible (non-assignment) operations
+    # This is the compliment to transform_cpp_container_assignment
+    # Usually called from transform_container_cppvariable_access()
+    def transform_cpp_container_non_assignment(self, cpp_container_arg, original_var, match_token, post_match_string):
+        assert cpp_container_arg and arg.is_container(cpp_container_arg)
+        if match_token.is_assignment:
+            return None
+
+        # If original_var is a dereferenced pointer, then we'll just update call to access index 0
+        if original_var.pointer == "*":
+            assert not original_var.index, f"Didn't expect original variable to already have an index!"
+            transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
+            debug.line("transform_cpp_container_assignment", f"C call was dereferenced: updating container var to access index [0]: Transformed line = [{transformed_line}]")
+            return transformed_line
+
+        if match_token.is_comparison: 
             # Extract the assigned value
             m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
             assert m, f"Could not extract assigned value from: {post_match_string}"
 
             if m.group(1) == "0":
-                debug.line("transform_container_cppvariable_access", f"Changed {cppvariable.as_string()} == 0 comparison with .empty()")
+                debug.line("transform_cpp_container_non_assignment", f"Changed {cpp_container_arg.name} == 0 comparison with .empty()")
                 post_match_string = re.sub(r"\s*0", "", post_match_string)
                 return f"{cpp_container_arg.name}.empty()" + post_match_string
             
         elif match_token.value == "+":
-            # Index into container - extract the value Note: May need a more advanced expression evaluator!
+            # We must be indexing into the container, so need to extract the value Note: May need a more advanced expression evaluator!
             # [1] Search up to next , or ; to cater for complex expressions...
             m = re.match(r"\s*([^,;]+)\s*[,;]", post_match_string)
             if not m:
@@ -882,13 +954,13 @@ class FunctionConverter:
             assert m, f"Could not extract index value from: {post_match_string}"
 
             post_match_string = re.sub(re.escape(m.group(1)), f".at({m.group(1)})", post_match_string)
-            debug.line("transform_container_cppvariable_access", f"INDEX OP: Replaced [{cppvariable.as_string()}{match_token.as_string()}{m.group(1)}] with post_match_string=[{cpp_container_arg.name}{post_match_string}]")
+            debug.line("transform_cpp_container_non_assignment", f"INDEX OP: Replaced [{cpp_container_arg.name}{match_token.as_string()}{m.group(1)}] with post_match_string=[{cpp_container_arg.name}{post_match_string}]")
             return cpp_container_arg.name + post_match_string
 
         # TODO: Handle other comparisons?
 
         return None
-
+    
     # Fallback if custom transforms don't match
     def default_transform_cppvariable_access(self, var, cppvariable, match_token, post_match_string):
         if not cppvariable.name:    # Marked for delete
@@ -914,7 +986,7 @@ class FunctionConverter:
     # x         ==          value_count;        x == valueCount;
     # y         >           bar(*another_foo);  y > bar(anotherFoo);
     def transform_variable_access(self, var, match_token, post_match_string):
-        debug.line("transform_variable_access", f"[1] var=[{var.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
+        debug.line("transform_variable_access", f"[IN] var=[{var.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
 
         # Check if this is a function pointer - don't process if it is!
         # Remember we don't know if var is C or C++ so we check both here...
@@ -935,7 +1007,7 @@ class FunctionConverter:
         # [2] transforms that require a C++ variable
         cppvariable = self.cppvariable_for(var)
 
-        debug.line("transform_variable_access", f"[1a] var=[{var.as_string()}] cppvariable=[{cppvariable.as_string() if cppvariable else None}]")
+        debug.line("transform_variable_access", f"[CPP1] original_var=[{var.as_string()}] cppvariable=[{cppvariable.as_string() if cppvariable else None}]")
 
         if not cppvariable:
             # See if it a function name that hasn't been transformed (e.g. in an initializer list)
@@ -944,18 +1016,21 @@ class FunctionConverter:
                 return cppvariable.as_string() + match_token.as_string() + post_match_string
             return None
         
-        debug.line("transform_variable_access", f"[2] cppvariable=[{cppvariable.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
+        debug.line("transform_variable_access", f"[CPP2] cppvariable=[{cppvariable.as_string()}] original_var=[{var.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
         for transform_func in [
             self.custom_transform_cppvariable_access,
             self.transform_return_cppvariable_access,
             self.transform_container_cppvariable_access,
             
         ]:
-            transformed_string = transform_func(cppvariable, match_token, post_match_string)
+            transformed_string = transform_func(cppvariable, var, match_token, post_match_string)
             
             if transformed_string:
+                debug.line("transform_variable_access", f"[CPP3] cppvariable=[{cppvariable.as_string()}] transform_func=[{transform_func.__name__}] transformed_string=[{transformed_string}]")
                 return transformed_string
         
+        debug.line("transform_variable_access", f"[CPP4] Fallback to default_transform_cppvariable_access() cppvariable=[{cppvariable.as_string()}]")
+
         return self.default_transform_cppvariable_access(var, cppvariable, match_token, post_match_string)
 
     def update_variable_access(self, line, depth):

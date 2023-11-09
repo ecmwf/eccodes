@@ -1,5 +1,4 @@
 from accessor_specific.default import AccessorSpecific
-import arg
 
 from converter_collection import Converter
 import private_method_funcsig_conv
@@ -8,10 +7,10 @@ from arg_indexes import ArgIndexes
 from arg import Arg
 from funcsig_mapping import FuncSigMapping
 
-class DataG1secondOrderGeneralPackingDataFuncSigConverter(private_method_funcsig_conv.PrivateMethodFuncSigConverter):
+class DataApplyBoustrophedonicDataFuncSigConverter(private_method_funcsig_conv.PrivateMethodFuncSigConverter):
     func_conversions = [
         # template<typename T> static int unpack_helper(grib_accessor* a, T* val, size_t* len)
-        FuncSigMapping(FuncSig("int", "unpack_helper", [Arg("grib_accessor*", "a"), Arg("T*", "values"), Arg("size_t*", "len")]),
+        FuncSigMapping(FuncSig("int", "unpack_helper", [Arg("grib_accessor*", "a"), Arg("T*", "val"), Arg("size_t*", "len")]),
                        FuncSig("GribStatus", "unpackHelper", [None, Arg("std::vector<T>&", "vecTValues"),  None]),
                        ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
     ]
@@ -20,20 +19,10 @@ class DataG1secondOrderGeneralPackingDataFuncSigConverter(private_method_funcsig
         super().__init__(cfuncsig)
         self._conversions.extend(self.func_conversions)
 
-class DataG1secondOrderGeneralPackingDataAccessorSpecific(AccessorSpecific):
+class DataApplyBoustrophedonicDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
-   
-    custom_arg_transforms = {
-        arg.Arg("unsigned char*","buf") : arg.Arg("DataPointer","buf"),
-        }
-
-    def add_custom_transforms(self, transforms):
-        for carg, cpparg in self.custom_arg_transforms.items():
-            transforms.add_custom_args(carg, cpparg)
-
-        return transforms
 
     def update_converters(self, converters):
-        converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataG1secondOrderGeneralPackingDataFuncSigConverter
+        converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataApplyBoustrophedonicDataFuncSigConverter
         return converters
