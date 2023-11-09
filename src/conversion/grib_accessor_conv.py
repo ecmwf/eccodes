@@ -203,6 +203,8 @@ class GribAccessorConverter:
             converter = self._converters[Converter.PRIVATE_METHOD_FUNCSIG](func.func_sig)
             mapping = converter.create_funcsig_mapping(self._transforms)
             self._transforms.add_to_private_funcsig_mappings(mapping)
+            # Add Accessor-specific private mappings
+
 
         for func in self._grib_accessor.static_functions:
             converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)

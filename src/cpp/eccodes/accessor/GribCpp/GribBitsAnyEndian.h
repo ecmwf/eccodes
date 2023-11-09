@@ -6,6 +6,6 @@
 
 namespace eccodes::accessor {
 
-unsigned long gribDecodeUnsignedLong(AccessorDataBuffer::const_pointer input, long& bitPos, long numBits);
+unsigned long gribDecodeUnsignedLong(DataPointer input, long& bitPos, long numBits);
 
 }

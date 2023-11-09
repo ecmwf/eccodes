@@ -84,7 +84,7 @@ class MethodConverter(FunctionConverter):
 
         if cstruct_arg.name in ["super", "self", "a"]:
             # Find member functions
-            conversions_list = self.predefined_conversions_list()
+            conversions_list = self.method_conversions_list()
 
             for conversions in conversions_list:
                 for mapping in conversions:
@@ -325,8 +325,7 @@ class MethodConverter(FunctionConverter):
 
         cppfuncname = transformed_cparams = None
         
-        # Need to use the full list in case the current method's local mappings don't support it!
-        conversions_list = self.predefined_conversions_list()
+        conversions_list = self.method_conversions_list()
 
         for conversions in conversions_list:
             cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cmethod_name, cparams, conversions)
@@ -344,6 +343,7 @@ class MethodConverter(FunctionConverter):
         return super().transform_cfunction_call(cfuncname, cparams)
 
     # Return a list of all pre-defined conversions
-    def predefined_conversions_list(self):
+    def method_conversions_list(self):
+        # Need to use the full inherited list in case the current method's local mappings don't support it!
         return [inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions,
-                private_method_funcsig_conv.PrivateMethodFuncSigConverter.private_method_conversions]
+                self._transforms.private_funcsig_mappings]

@@ -848,17 +848,18 @@ class FunctionConverter:
             return None
 
         if cpp_container_arg.is_const():
-            debug.line("transform_container_cppvariable_access", f"Removed len assignment for const variable [{cpp_container_arg.name}]")
+            debug.line("transform_cpp_container_assignment", f"Removed len assignment for const variable [{cpp_container_arg.name}]")
             return f"// [length assignment removed - var is const] " + cpp_container_arg.name + match_token.as_string() + post_match_string
         
         # First, check for malloc
-        # Note: Group 2 (\()? and group 5 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
-        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\([^,]+,(.+)\)(\))[,;]", post_match_string)
+        # Note: Group 2 (\()? and group 6 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
+        # Note: Group 4 ([^,]+,)? is an optional match for the first param (usually c) which we discard, but may have already been removed!
+        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\(([^,]+,)?(.+)\)(\))[,;]", post_match_string)
         
         if m:
-            match_string = m.group(4)
+            match_string = m.group(5)
             if not m.group(2):
-                match_string += m.group(5)
+                match_string += m.group(6)
 
             # Check if we're creating (new arg) or resizing (existing arg)
             if cpp_container_arg in self._new_cppargs_list:
