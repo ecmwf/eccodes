@@ -1082,7 +1082,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int strlenvalue = 0;
     double dvalue   = 0;
     long lvalue     = 0;
-    char value[MAX_STRING_LEN];
+    char value[MAX_STRING_LEN] = {0,};
     const char* notfound = "not_found";
     int written_to_dump  = 0; /* boolean */
     grib_accessor* acc   = NULL;
