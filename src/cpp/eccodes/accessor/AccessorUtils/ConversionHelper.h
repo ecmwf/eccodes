@@ -45,12 +45,8 @@ int scanString(std::string buffer, size_t offset, std::string format, Args&... a
 }
 
 // Container version of strtoX functions. 
-// 
-// In order to work correctly with the converted C++ types, these functions:
-//  - If successful:   return a vector with a single entry set to the converted value, and clears last
-//  - If unsuccessful: returns {0} and sets last = val
-std::vector<long> stringToLong(std::string val, std::string& last, int base);
-std::vector<double> stringToDouble(std::string val, std::string& last);
+long strToLong(std::string val, std::string& last, int base);
+double strToDouble(std::string val, std::string& last);
 
 // Placeholder for a new version of grib_context_log()
 // For now it just swallows all arguments, which allows the convert tool to only

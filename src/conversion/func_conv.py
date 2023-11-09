@@ -897,25 +897,28 @@ class FunctionConverter:
             post_match_string = re.sub(re.escape(m.group(1)), f"{{{m.group(1)}}}", post_match_string)
             return cpp_container_arg.name + match_token.as_string() + post_match_string
 
-        # If original_var is a dereferenced pointer, then we'll just assign to index 0
-        if original_var.pointer:
+        # If original_var is a dereferenced pointer, we need to decide what to do...
+        if original_var.pointer == "*":
             assert not original_var.index, f"Didn't expect original variable to already have an index!"
+
+            # [1] See if we're assigning from a function call that returns a container - if so we don't need to do anything
+            m = re.match(r"\s*([^\(]+)\(", post_match_string)
+            if m:
+                funcname = m.group(1)
+                funcsig_mapping = self.funcsig_mapping_for(funcname)
+                if funcsig_mapping and funcsig_mapping.cppfuncsig:
+                    return_type = funcsig_mapping.cppfuncsig.return_type
+                    debug.line("transform_cpp_container_assignment", f"Found assignment from function [{funcname}] with return type=[{return_type}]")
+                    if arg.is_container_type(return_type):
+                        transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
+                        debug.line("transform_cpp_container_assignment", f"Function returns container type, nothing to do!")
+                        return None
+
+            # [2] The dereference was a single value, so we'll add [0] to out container var...
             transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
             debug.line("transform_cpp_container_assignment", f"C call was dereferenced: updating container var to assign to index [0]: Transformed line = [{transformed_line}]")
             return transformed_line
 
-        # See if we're assigning from a function call
-        '''m = re.match(r"\s*([^\(]+)\(", post_match_string)
-        if m:
-            funcname = m.group(1)
-            funcsig_mapping = self.funcsig_mapping_for(funcname)
-            if funcsig_mapping and funcsig_mapping.cppfuncsig:
-                return_type = funcsig_mapping.cppfuncsig.return_type
-                debug.line("transform_cpp_container_assignment", f"Found assignment from function [{funcname}] with return type=[{return_type}]")
-                if not arg.is_container_type(return_type):
-                    transformed_line = cpp_container_arg.name + "[0]" + match_token.as_string() + post_match_string
-                    debug.line("transform_cpp_container_assignment", f"Function returns non-container type, so assigning to first element of [{cpp_container_arg.name}]: Transformed line = [{transformed_line}]")
-                    return transformed_line'''
 
         return None
 

@@ -12,8 +12,8 @@ c_lib_substitutions = {
     # snprintf substitutions can span multiple lines, but we only need to match to the start of the format string...
     # This version matches either an explicit size or sizeof(x)
     r"\bsnprintf\(([^,]+),[^,]+,": r"\1 = fmtString(",
-    r"\bstrtol": "stringToLong",
-    r"\bstrtod": "stringToDouble",
+    r"\bstrtol": "strToLong",
+    r"\bstrtod": "strToDouble",
     r"\bstrcpy\(([^,]+),([^\)]+)\)": r"\1 = \2",
     r"\bsscanf\(([^\s,\)]+)(\s+\+\s+([^,]+))?([^\)]*)\)": sscanf_repl
 }
