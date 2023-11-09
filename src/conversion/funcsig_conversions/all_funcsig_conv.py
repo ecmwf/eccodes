@@ -6,6 +6,8 @@ import funcsig_conversions.grib_query_funcsig_conv as grib_query_funcsig_conv
 import funcsig_conversions.grib_value_funcsig_conv as grib_value_funcsig_conv
 import funcsig_conversions.string_util_funcsig_conv as string_util_funcsig_conv
 
+import funcsig_conversions.grib_stub_funcsig_conversions.all_grib_stub_funcsig_conv as all_grib_stub_funcsig_conv
+
 funcsig_conversions = [
     grib_accessor_class_funcsig_conv.grib_accessor_class_funcsig_conversions,
     grib_bits_any_endian_funcsig_conv.grib_bits_any_endian_funcsig_conversions,
@@ -17,4 +19,4 @@ funcsig_conversions = [
 
 # Return a list of all the funcsig conversions
 def all_funcsig_conversions():
-    return funcsig_conversions
+    return funcsig_conversions + all_grib_stub_funcsig_conv.all_grib_stub_funcsig_conversions()

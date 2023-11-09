@@ -14,6 +14,7 @@ set(accessor_dir			${eccodes_dir}/accessor)
 set(accessor_data_dir		${accessor_dir}/AccessorData)
 set(accessor_utils_dir		${accessor_dir}/AccessorUtils)
 set(accessor_grib_cpp_dir	${accessor_dir}/GribCpp)
+set(accessor_grib_stub_dir	${accessor_dir}/GribStub)
 set(accessor_test_dir		${accessor_dir}/Test)
 
 include_directories(${accessor_dir})
@@ -55,6 +56,7 @@ set(accessor_grib_cpp_src_files
 	${accessor_grib_cpp_dir}/GribAccessorClass.h
 	${accessor_grib_cpp_dir}/GribBitsAnyEndian.cc
 	${accessor_grib_cpp_dir}/GribBitsAnyEndian.h
+	${accessor_grib_cpp_dir}/GribCppIncludes.h
 	${accessor_grib_cpp_dir}/GribQuery.cc
 	${accessor_grib_cpp_dir}/GribQuery.h
 	${accessor_grib_cpp_dir}/GribStatus.h
@@ -68,6 +70,11 @@ set(accessor_grib_cpp_src_files
 	${accessor_grib_cpp_dir}/StringUtil.h
 )
 
+set(accessor_grib_stub_src_files
+	${accessor_grib_stub_dir}/GribExpressionStub.cc
+	${accessor_grib_stub_dir}/GribExpressionStub.h
+	${accessor_grib_stub_dir}/GribStubIncludes.h
+)
 
 # Variables to be used in the parent CMakeLists.txt
 set(cpp_accessor_src_files
@@ -76,6 +83,7 @@ set(cpp_accessor_src_files
 	${accessor_data_funcs_src_files}
 	${accessor_utils_src_files}
 	${accessor_grib_cpp_src_files}
+	${accessor_grib_stub_src_files}
 	PARENT_SCOPE
 )
 

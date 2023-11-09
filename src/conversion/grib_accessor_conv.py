@@ -22,14 +22,9 @@ common_includes = [
     "Accessor.h", 
     "AccessorFactory.h", 
     "AccessorUtils/ConversionHelper.h",
-    "GribCpp/GribAccessorClass.h",
-    "GribCpp/GribBitsAnyEndian.h",
-    "GribCpp/GribQuery.h",
-    "GribCpp/GribUtils.h",
-    "GribCpp/GribValue.h",
-    "GribCpp/StringUtil.h",
-    "GribCpp/GribAccessorFlag.h",
-    "AccessorUtils/AccessorException.h"
+    "AccessorUtils/AccessorException.h",
+    "GribCpp/GribCppIncludes.h",
+    "GribStub/GribStubIncludes.h",
 ]
 
 non_const_cmethods = [
@@ -52,9 +47,10 @@ common_funcsig_type_transforms = {
 
 # These will be used if no other supplied...
 common_type_transforms = {
-    "char**"         : "std::string&",
-    "char*"          : "std::string",
-    "char[]"         : "std::string",
+    "char**"            : "std::string&",
+    "char*"             : "std::string",
+    "char[]"            : "std::string",
+    "grib_expression*"  : "GribExpressionPtr"
 }
 
 # Define base class member mapping

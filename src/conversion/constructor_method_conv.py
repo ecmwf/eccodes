@@ -21,6 +21,11 @@ class ConstructorMethodConverter(MethodConverter):
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_name] line=[{line}]")
             return line
 
+        line, count = re.subn(rf"\bgrib_arguments_get_expression\s*\(.*?,\s*\w+\s*,\s*(.*)?\)", rf"std::get<GribExpressionPtr>(initData.args[\1].second)", line)
+        if count:
+            debug.line("convert_cfunction_calls", f"Updated [bgrib_arguments_get_expression] line=[{line}]")
+            return line
+
         line, count = re.subn(rf"\bgrib_arguments_get_(\w+)\([^,]+, [^,]+, ([^\)]+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
         if count:
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_X] line=[{line}]")

@@ -255,6 +255,7 @@ class FunctionConverter:
                         if m.group(0).count("(") == m.group(0).count(")"):
                             if line[match_end] == ")":
                                 keep_extracting = False
+                                match_end += 1  # Move past the ")" so we don't add it (erroneously) to the output string
                                 new_param = part_extracted_param + m.group(0)
                             elif line[match_end] == ",":
                                 match_end += 1  # Move past the "," so we don't match it by mistake during the next pass
