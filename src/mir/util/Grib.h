@@ -21,9 +21,9 @@
 #include "mir/util/Exceptions.h"
 
 
-inline bool grib_call(int e, const char* call, bool missingOK = false) {
+inline bool grib_call(int e, const char* call, bool NOT_FOUND_IS_OK = false) {
     if (static_cast<bool>(e)) {
-        if (missingOK && (e == CODES_NOT_FOUND)) {
+        if (NOT_FOUND_IS_OK && (e == CODES_NOT_FOUND)) {
             return false;
         }
 
