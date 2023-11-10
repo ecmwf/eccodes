@@ -9,6 +9,7 @@ import grib_api_converter
 import funcsig_conversions.all_funcsig_conv as all_funcsig_conv
 import struct_arg
 import variable
+import utils
 
 # Change C-style snake_case function name to C++-style camelCase name
 # Also, remove get_ and set_ prefixes
@@ -190,11 +191,13 @@ class FunctionConverter:
         # Find function call
         # Note: 1. Added return-type cast (non-capture) and template (non-capture) detection
         return_type_cast_re = r"(?:\([^\)]+\))?"
-        funcname_re         = r"\b([^\<\(\s]*)"
-        func_template_re    = r"(\<[\w\*]+\>)?"
+        funcname_re         = r"\b([^\s\(]+)\("
+        #funcname_re         = r"\b([^\<\(\s]*)"
+        #func_template_re    = r"(\<[\w\*]+\>)?"
 
         # [1] Match FUNCNAME( i.e. to opening brace
-        m = re.search(rf"{return_type_cast_re}{funcname_re}{func_template_re}\(", line)
+        m = re.search(rf"{return_type_cast_re}{funcname_re}", line)
+        #m = re.search(rf"{return_type_cast_re}{funcname_re}{func_template_re}\(", line)
         if not m:
             return line
 
@@ -213,93 +216,97 @@ class FunctionConverter:
             remainder = self.convert_next_cfunction_call(line[match_end:], depth+1)
             line = line[:match_end] + remainder
 
+        # [3] Find the end of the function signature
+        open_parens = 1 # Already matched one to get here!
+        close_parens = 0
+        index = match_end
+        in_single_quotes = False
+        in_double_quotes = False
+        while index < len(line):
+            if line[index] == "\'": in_single_quotes = not in_single_quotes
+            if line[index] == "\"": in_double_quotes = not in_double_quotes
+            if not in_single_quotes and not in_double_quotes:
+                if line[index] == "(":
+                    open_parens += 1
+                if line[index] == ")":
+                    close_parens += 1
+            index += 1
+            if open_parens == close_parens:
+                break
+        
+        funcsig_line = line[match_end:index]
+        remainder = line[index:]
+
         # [3] Extract the parameters
         cparams = []
 
-        debug.line("convert_next_cfunction_call", f"[{depth}] Extracting params for cfuncname=[{cfuncname}] from [{line[match_end:]}]")
+        debug.line("convert_next_cfunction_call", f"[{depth}] Extracting params for cfuncname=[{cfuncname}] from [{funcsig_line}]")
         # As we're working recursively, extracting the parameters requires an algorithm
-        # Example: foo(bar(a), b)
-        # Depth 1 func string = "foo(" arg string = "bar(a), b)" [bar(a), b] are the params to extract
-        # Depth 2 func string = "bar(" arg string = "a), b)"     [a] is the param to extract
-        # Algorithm:
-        #   Match everything not ")" or ","
-        #   If match found:
-        #       if brace count matches, "(" == ")", then arg includes everything up to the brace
-        #           if next char is ")" then we're done
-        #           if next char is "," then continue
-        #           else error!
-        #       else if next char is "," then extract as arg and continue
-        #   else done
-        param_re = r"\s*([^\),]*)[\),]"
+        # Example:  foo(a, b(), baz(bar<boo>()), caz(car<coo>()));
+        # Line:     a, b(), baz(bar<boo>()), caz(car<coo>()));
+        #
+        # The regex has two parts:
+        #   Group 1: Match the param
+        #   Group 2: Match either "),", ")" or ","
+        #
+        # From the example line above...
+        #
+        # Match     Group 0                 Group 1             Group 2 Decision
+        # 1:        "a,"                    "a"                 ","     Continue parsing
+        # 2:        " b(),"                 " b()"              ","     Continue parsing
+        # 3:        " baz(bar<boo>()),"     " baz(bar<boo>())"  ","     Continue parsing
+        # 4:        " caz(car<coo>()))"     " baz(bar<boo>())"  ")"     Stop parsing
+        #
+        # Note: When "baz(bar<boo>())," is later parsed, the match is:
+        # Match     Group 0                 Group 1             Group 2 Decision
+        # 1:        "bar<boo>()),"          "bar<boo>())"       ","     Continue parsing
+        #
+        # However, the fact that Group 1 has an unmatched set of braces means we've reached the end of this function, and need to
+        # backtrack one character to continue...
+
+        param_re = r"\s*([^\),]+\)*)([\),]+)"
         keep_extracting = True
-        part_extracted_param = ""
-        in_quotes = False
+        new_param = ""
+        match_end = 0
 
         while keep_extracting:
-            m = re.search(rf"{param_re}", line[match_end:])
+            m = re.search(rf"{param_re}", funcsig_line[match_end:])
             if m:
-                new_param = ""
+                new_param  += m.group(1)
+                match_char = m.group(2)
                 match_end += m.end()
 
-                # Check for quoted param
-                if m.group(1).startswith("\"") or in_quotes:
-                    part_extracted_param += m.group(0)
-                    debug.line("convert_next_cfunction_call", f"[{depth}] Quoted param part extracted:[{m.group(0)}] part_extracted_param=[{part_extracted_param}] line[match_end:]=[{line[match_end:]}]")
-                    if m.group(1).endswith("\""):
-                        new_param = part_extracted_param[:-1]   # Don't copy final comma!
-                        part_extracted_param = ""
-                        in_quotes = False
-                    else:
-                        in_quotes = True
-                        continue
+                open_parens, close_parens = utils.count_parentheses(m.group(1))
 
-                else:
-                    if m.group(0).endswith(")"):
-                        if m.group(0).count("(") == m.group(0).count(")"):
-                            if line[match_end] == ")":
-                                keep_extracting = False
-                                match_end += 1  # Move past the ")" so we don't add it (erroneously) to the output string
-                                new_param = part_extracted_param + m.group(0)
-                            elif line[match_end] == ",":
-                                match_end += 1  # Move past the "," so we don't match it by mistake during the next pass
-                                new_param = part_extracted_param + m.group(0)
-                            else:
-                                # We've not reached the end of this param yet - keep going!
-                                part_extracted_param += m.group(0)
-                                debug.line("convert_next_cfunction_call", f"[{depth}] Param part extracted:[{m.group(0)}] part_extracted_param=[{part_extracted_param}] line[match_end:]=[{line[match_end:]}]")
+                if close_parens < open_parens:
+                    if match_char == ")":
+                        new_param += match_char
+                        if line[match_end] != ",":
+                            continue # Partial extraction...
+                elif close_parens == open_parens:
+                    if match_char == ")":
+                        keep_extracting = False
 
-                            if new_param:
-                                part_extracted_param = ""
-                                
-                        else:
-                            new_param = part_extracted_param + m.group(1)
-                            part_extracted_param = ""
-                            keep_extracting = False
-                            
-                    elif m.group(0).endswith(","):
-                        new_param = part_extracted_param + m.group(1)
-                        part_extracted_param = ""
+                tidy_new_param = arg.tidy_arg_string(new_param)
+                cparams.append(tidy_new_param)
 
-                    else:
-                        assert False, f"Unexpected match [{m.group(0)}] line=[{line[match_end]}]"
+                debug.line("convert_next_cfunction_call", f"[{depth}] tidy_new_param=[{tidy_new_param}] new_param=[{m.group(1)}] match_char=[{match_char}] keep_extracting=[{keep_extracting}]")
 
-                if new_param:
-                    tidy_new_param = arg.tidy_arg_string(new_param)
-                    cparams.append(tidy_new_param)
-                    debug.line("convert_next_cfunction_call", f"[{depth}] Added param: tidy=[{tidy_new_param}] untidy=[{new_param}]")
+                new_param = ""
+
             else:
-                keep_extracting = False            
+                keep_extracting = False
 
         debug.line("convert_next_cfunction_call", f"[{depth}] Finished extracting params for cfuncname=[{cfuncname}]: cparams=[{cparams}]")
 
         cppfunction_call = self.convert_cfunction_to_cpp_format(cfuncname, cparams)
 
         if cppfunction_call:
-            line = line[:match_start] + cppfunction_call + line[match_end:]
+            line = line[:match_start] + cppfunction_call + remainder
             debug.line("convert_next_cfunction_call",f"[{depth}] Converted function [{cfuncname}] [After]: {line}")
         else:
             # We may have tidied some args, so we'll return these...
-            line = line[:match_start] + f"{cfuncname}({','.join([p for p in cparams])})" + line[match_end:] 
+            line = line[:match_start] + f"{cfuncname}({','.join([p for p in cparams])})" + remainder 
             debug.line("convert_next_cfunction_call",f"[{depth}] No conversion for function [{cfuncname}], but may have tidied args [After]: {line}")
 
         return line

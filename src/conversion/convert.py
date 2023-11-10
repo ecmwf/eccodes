@@ -17,6 +17,8 @@ import cProfile
 import pstats
 from pstats import SortKey
 
+import utils
+
 LOG = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser()
@@ -37,41 +39,6 @@ env = Environment(
     loader=FileSystemLoader(ARGS.templates),
     undefined=StrictUndefined,
 )
-
-def count_parentheses(text):
-    open_paren = 0
-    close_paren = 0
-    in_single_quote = False
-    in_double_quote = False
-    escape_char = False
-
-    for char in text:
-        # Skip if the current character is escaped
-        if escape_char:
-            escape_char = False
-            continue
-
-        # If it's the escape character and we're in a quote, skip the next character
-        if char == '\\' and (in_single_quote or in_double_quote):
-            escape_char = True
-            continue
-
-        # Toggle the single quote flag if we're not in double quotes
-        if char == "'" and not in_double_quote:
-            in_single_quote = not in_single_quote
-
-        # Toggle the double quote flag if we're not in single quotes
-        elif char == '"' and not in_single_quote:
-            in_double_quote = not in_double_quote
-
-        # Count the parentheses if we're not in any quote
-        elif not in_single_quote and not in_double_quote:
-            if char == '(':
-                open_paren += 1
-            elif char == ')':
-                close_paren += 1
-
-    return open_paren, close_paren
 
 def parse_file(path):
     in_definition = False
@@ -107,7 +74,7 @@ def parse_file(path):
 
         # Multiline function parsing - start
         if not multiline and re.search(rf"{function_start_re}", line):
-            open_paren_count, close_paren_count = count_parentheses(line)
+            open_paren_count, close_paren_count = utils.count_parentheses(line)
             if open_paren_count > close_paren_count:
                 multiline = line
                 continue
@@ -115,7 +82,7 @@ def parse_file(path):
                 open_paren_count = close_paren_count = 0
 
         if multiline:
-            new_open, new_close = count_parentheses(line)
+            new_open, new_close = utils.count_parentheses(line)
             open_paren_count  += new_open
             close_paren_count += new_close
 
