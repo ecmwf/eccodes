@@ -192,12 +192,9 @@ class FunctionConverter:
         # Note: 1. Added return-type cast (non-capture) and template (non-capture) detection
         return_type_cast_re = r"(?:\([^\)]+\))?"
         funcname_re         = r"\b([^\s\(]+)\("
-        #funcname_re         = r"\b([^\<\(\s]*)"
-        #func_template_re    = r"(\<[\w\*]+\>)?"
 
         # [1] Match FUNCNAME( i.e. to opening brace
         m = re.search(rf"{return_type_cast_re}{funcname_re}", line)
-        #m = re.search(rf"{return_type_cast_re}{funcname_re}{func_template_re}\(", line)
         if not m:
             return line
 
@@ -220,24 +217,42 @@ class FunctionConverter:
         open_parens = 1 # Already matched one to get here!
         close_parens = 0
         index = match_end
-        in_single_quotes = False
-        in_double_quotes = False
+        in_single_quote = False
+        in_double_quote = False
+        escape_char = False
+
         while index < len(line):
-            if line[index] == "\'": in_single_quotes = not in_single_quotes
-            if line[index] == "\"": in_double_quotes = not in_double_quotes
-            if not in_single_quotes and not in_double_quotes:
-                if line[index] == "(":
-                    open_parens += 1
-                if line[index] == ")":
-                    close_parens += 1
+            # Skip if the current character is escaped
+            if escape_char:
+                escape_char = False
+            else:
+                # If it's the escape character and we're in a quote, skip the next character
+                if line[index] == '\\' and (in_single_quote or in_double_quote):
+                    escape_char = True
+                    continue
+
+                # Toggle the single quote flag if we're not in double quotes
+                if line[index] == "'" and not in_double_quote:
+                    in_single_quote = not in_single_quote
+
+                # Toggle the double quote flag if we're not in single quotes
+                elif line[index] == '"' and not in_single_quote:
+                    in_double_quote = not in_double_quote
+
+                elif not in_single_quote and not in_double_quote:
+                    if line[index] == "(":
+                        open_parens += 1
+                    if line[index] == ")":
+                        close_parens += 1
+            
             index += 1
             if open_parens == close_parens:
                 break
-        
+
         funcsig_line = line[match_end:index]
         remainder = line[index:]
 
-        # [3] Extract the parameters
+        # [4] Extract the parameters
         cparams = []
 
         debug.line("convert_next_cfunction_call", f"[{depth}] Extracting params for cfuncname=[{cfuncname}] from [{funcsig_line}]")
@@ -270,27 +285,38 @@ class FunctionConverter:
         match_end = 0
 
         while keep_extracting:
-            m = re.search(rf"{param_re}", funcsig_line[match_end:])
+            m = re.search(rf"^\s?\"", funcsig_line[match_end:])
             if m:
-                new_param  += m.group(1)
-                match_char = m.group(2)
                 match_end += m.end()
+                m = re.search(rf"([^\"]*\")\s*[\),]+", funcsig_line[match_end:])
+                if m:
+                    match_end += m.end()
+                    new_param += "\"" + m.group(1)
+                    debug.line("convert_next_cfunction_call", f"[{depth}] Extracted quote:[{new_param}]")
 
-                open_parens, close_parens = utils.count_parentheses(m.group(1))
+            else:
+                m = re.search(rf"{param_re}", funcsig_line[match_end:])
+                if m:
+                    new_param  += m.group(1)
+                    match_char = m.group(2)
+                    match_end += m.end()
 
-                if close_parens < open_parens:
-                    if match_char == ")":
-                        new_param += match_char
-                        if line[match_end] != ",":
-                            continue # Partial extraction...
-                elif close_parens == open_parens:
-                    if match_char == ")":
-                        keep_extracting = False
+                    open_parens, close_parens = utils.count_parentheses(m.group(1))
 
+                    if close_parens < open_parens:
+                        if match_char == ")":
+                            new_param += match_char
+                            if line[match_end] != ",":
+                                continue # Partial extraction...
+                    elif close_parens == open_parens:
+                        if match_char == ")":
+                            keep_extracting = False
+
+            if new_param:
                 tidy_new_param = arg.tidy_arg_string(new_param)
                 cparams.append(tidy_new_param)
 
-                debug.line("convert_next_cfunction_call", f"[{depth}] tidy_new_param=[{tidy_new_param}] new_param=[{m.group(1)}] match_char=[{match_char}] keep_extracting=[{keep_extracting}]")
+                debug.line("convert_next_cfunction_call", f"[{depth}] tidy_new_param=[{tidy_new_param}] new_param=[{new_param}]")
 
                 new_param = ""
 
