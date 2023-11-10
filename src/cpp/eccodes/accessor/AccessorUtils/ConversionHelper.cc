@@ -1,4 +1,5 @@
 #include "ConversionHelper.h"
+#include <cassert>
 
 namespace eccodes::accessor {
 

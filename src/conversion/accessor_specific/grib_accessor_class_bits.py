@@ -7,6 +7,7 @@ class BitsDataAccessorSpecific(AccessorSpecific):
    
     custom_arg_transforms = {
         arg.Arg("unsigned char*","p") : arg.Arg("DataPointer","p"),
+        arg.Arg("int","type") : arg.Arg("GribType","type"),
         }
 
     def add_custom_transforms(self, transforms):

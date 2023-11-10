@@ -15,7 +15,8 @@ c_lib_substitutions = {
     r"\bstrtol": "strToLong",
     r"\bstrtod": "strToDouble",
     r"\bstrcpy\(([^,]+),([^\)]+)\)": r"\1 = \2",
-    r"\bsscanf\(([^\s,\)]+)(\s+\+\s+([^,]+))?([^\)]*)\)": sscanf_repl
+    r"\bsscanf\(([^\s,\)]+)(\s+\+\s+([^,]+))?([^\)]*)\)": sscanf_repl,
+    r"\bmemcpy\(([^,]+),([^,]+),([^\)]+)\)": r"copyBuffer(\1,\2,\3)"
 }
 
 # grib_ functions that can be deleted - we'll comment them out for now!

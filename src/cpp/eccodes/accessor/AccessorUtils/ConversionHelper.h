@@ -44,6 +44,17 @@ int scanString(std::string buffer, size_t offset, std::string format, Args&... a
     return sscanf(buffer.data() + offset, format.c_str(), &args...);
 }
 
+// Helper to support memcpy from a C buffer into a std::vector
+template<typename OUT_TYPE, typename IN_TYPE>
+void copyBuffer(std::vector<OUT_TYPE>& out, IN_TYPE* in, size_t numBytes)
+{
+    assert(sizeof(OUT_TYPE)==sizeof(IN_TYPE));
+
+    size_t numEntries = numBytes/sizeof(IN_TYPE);
+    
+    std::copy(out.begin(), out.begin() + numEntries, in);
+}
+
 // Container version of strtoX functions. 
 long strToLong(std::string val, std::string& last, int base);
 double strToDouble(std::string val, std::string& last);

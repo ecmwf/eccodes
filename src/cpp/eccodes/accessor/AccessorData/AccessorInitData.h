@@ -3,6 +3,7 @@
 #include <string>
 #include <variant>
 #include <vector>
+#include <memory>
 
 struct grib_section;
 struct grib_arguments;
@@ -11,7 +12,10 @@ struct grib_arguments;
 
 namespace eccodes::accessor {
 
-using AccessorInitArgumentType = std::variant<long,float,double,std::string>;
+class GribExpression;
+using GribExpressionPtr = std::shared_ptr<GribExpression>;
+
+using AccessorInitArgumentType = std::variant<long,float,double,std::string, GribExpressionPtr>;
 using AccessorInitArgumentEntry = std::pair<std::string, AccessorInitArgumentType>;
 using AccessorInitArguments = std::vector<AccessorInitArgumentEntry>;
 

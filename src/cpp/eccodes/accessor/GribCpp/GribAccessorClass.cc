@@ -1,4 +1,4 @@
-#include "GribBitsAnyEndian.h"
+#include "GribAccessorClass.h"
 #include "Accessor.h"
 
 #include <cassert>
