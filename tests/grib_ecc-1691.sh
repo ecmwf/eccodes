@@ -65,13 +65,13 @@ ${tools_dir}/grib_set -s numberOfDataPoints=12582912,gridDefinitionTemplateNumbe
 grib_check_key_equals $temp_grib_a "gridSpecification" "H1024"
 
 # Now check streams.
-# Setting stream clte and type fc should set mars.date and mars.time to validityDate and validityTime,
+# Setting stream clte and type fc should set mars.date and mars.time to dataDate and dataTime,
 # and mars.step should be unaliased
 
 ${tools_dir}/grib_set -s stream=clte,type=fc $destine_sample $temp_grib_a
 
 result1=$( ${tools_dir}/grib_get -p mars.date,mars.time $temp_grib_a )
-result2=$( ${tools_dir}/grib_get -p validityDate,validityTime $temp_grib_a )
+result2=$( ${tools_dir}/grib_get -p dataDate,dataTime $temp_grib_a )
 [ "$result1" = "$result2" ]
 
 ${tools_dir}/grib_ls -jm $temp_grib_a
