@@ -17509,8 +17509,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
-'Mean temperature at 2 metres' = {
+#Mean 2 metre temperature
+'Mean 2 metre temperature' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
 	}
