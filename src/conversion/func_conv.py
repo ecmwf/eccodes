@@ -517,6 +517,7 @@ class FunctionConverter:
     # Conversion is *foo[1]->bar[3]->baz[7] => foo[1].bar[3].baz[7]
     def apply_default_cstruct_arg_transform(self, cstruct_arg):
         cppstruct_arg = None
+
         if cstruct_arg:
             cppstruct_access = ""
             cppstruct_name = self.transform_cstruct_arg_name(cstruct_arg)
@@ -527,7 +528,9 @@ class FunctionConverter:
             cppmember = cppstruct_arg
             while cmember:
                 cppstruct_access = "."
-                cppstruct_name = self.transform_cstruct_arg_name(cmember)
+                # Note: calling self.transform_cstruct_arg_name(cmember) here can cause issues e.g. initData.arg becomes initData.initData because of the constructor arg
+                #       If a transform is required, transform_cstruct_arg_name should be updated to know if it is top-level name or member name...
+                cppstruct_name = cmember.name 
                 cppstruct_index = cmember.index
 
                 cppmember.member = struct_arg.StructArg(cppstruct_access, cppstruct_name, cppstruct_index)

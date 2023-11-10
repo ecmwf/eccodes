@@ -37,7 +37,6 @@ GribStatus gribGetSize(AccessorName const& name, size_t& size)
 
 GribStatus gribGetDouble(AccessorName const& name, double& value)
 {
-//    return getAccessor(name)->unpack<double>();
     if(auto accessorPtr = getAccessor(name); accessorPtr)
     {
         value = accessorPtr->unpack<double>();
@@ -83,6 +82,22 @@ GribStatus gribGetLong(AccessorName const& name, long& value)
     return GribStatus{ret};
 }
 
+GribStatus gribGetLong(AccessorName const& name, std::vector<long>& value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        value = accessorPtr->unpack<std::vector<long>>();
+        return GribStatus::SUCCESS;
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    size_t len = value.size();
+    int ret = grib_get_long_array_internal(grib_handle_of_accessor(a), name.get().c_str(), value.data(), &len);
+    return GribStatus{ret};    
+}
+
 GribStatus gribGetString(AccessorName const& name, std::string& value)
 {
 //    return getAccessor(name)->unpack<std::string>();
@@ -113,6 +128,20 @@ GribStatus gribSetDouble(AccessorName const& name, double value)
     grib_accessor* a = get_grib_accessor(name);
     Assert(a);
     int ret = grib_set_double_internal(grib_handle_of_accessor(a), name.get().c_str(), value);
+    return GribStatus{ret};
+}
+
+GribStatus gribSetDouble(AccessorName const& name, std::vector<double> const& values)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(values);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    int ret = grib_set_double_array_internal(grib_handle_of_accessor(a), name.get().c_str(), values.data(), values.size());
     return GribStatus{ret};
 }
 
