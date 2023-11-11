@@ -88,6 +88,12 @@ class ArgConverter:
         # Change * to &
         cpparg.type = re.sub(r"\*", "&", cpparg.type)
 
+        # Check we haven't created [const T& const] from [const T* const]
+        m = re.search(r"(const [^&]+&) const", cpparg.type)
+        if m:
+            debug.line("transform_pointers_for_func_args", f"Changed type from [{cpparg.type}] -> [{m.group(1)}]")
+            cpparg.type = m.group(1)
+
         debug.line("transform_pointers_for_func_args", f"[{arg.arg_string(carg)}] -> [{arg.arg_string(cpparg)}]")
         return cpparg
 

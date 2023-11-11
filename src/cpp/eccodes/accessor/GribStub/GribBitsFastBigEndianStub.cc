@@ -1,4 +1,4 @@
-#include "GribBitsFastBigEndian.h"
+#include "GribBitsFastBigEndianStub.h"
 
 #include <cassert>
 

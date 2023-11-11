@@ -160,6 +160,12 @@ class FunctionConverter:
     def transform_cfunction_call(self, cfuncname, cparams):
         cppfuncname = transformed_cparams = None
 
+        # Check static functions first...
+        cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cfuncname, cparams, self._transforms.private_funcsig_mappings)
+        if cppfuncname:
+            debug.line("transform_cfunction_call", f"cfuncname=[{cfuncname}] -> cppfuncname=[{cppfuncname}]")
+            return cppfuncname, transformed_cparams
+
         # Get list of funcsig conversions
         for grib_conversions in all_funcsig_conv.all_funcsig_conversions():
             cppfuncname, transformed_cparams = self.transform_cfunction_call_from_conversions(cfuncname, cparams, grib_conversions)
@@ -815,7 +821,7 @@ class FunctionConverter:
 
         # Replace *len = N with CONTAINER.clear() if N=0, or CONTAINER.resize() the line if N is any other value
         if match_token.is_assignment:
-            if container_arg.is_const():
+            if container_arg.is_const() and container_arg not in self._new_cppargs_list:
                 debug.line("transform_len_variable_access", f"Removed len assignment for const variable [{var.as_string()}]")
                 return f"// [length assignment removed - var is const] " + var.as_string() + match_token.as_string() + post_match_string
 
@@ -883,7 +889,7 @@ class FunctionConverter:
         if not match_token.is_assignment:
             return None
 
-        if cpp_container_arg.is_const():
+        if cpp_container_arg.is_const() and cpp_container_arg not in self._new_cppargs_list:
             debug.line("transform_cpp_container_assignment", f"Removed len assignment for const variable [{cpp_container_arg.name}]")
             return f"// [length assignment removed - var is const] " + cpp_container_arg.name + match_token.as_string() + post_match_string
         

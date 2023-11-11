@@ -52,8 +52,6 @@ set(accessor_utils_src_files
 )
 
 set(accessor_grib_cpp_src_files
-	${accessor_grib_cpp_dir}/GribAccessorClass.cc
-	${accessor_grib_cpp_dir}/GribAccessorClass.h
 	${accessor_grib_cpp_dir}/GribCppIncludes.h
 	${accessor_grib_cpp_dir}/GribQuery.cc
 	${accessor_grib_cpp_dir}/GribQuery.h
@@ -69,10 +67,14 @@ set(accessor_grib_cpp_src_files
 )
 
 set(accessor_grib_stub_src_files
-	${accessor_grib_stub_dir}/GribBitsAnyEndian.cc
-	${accessor_grib_stub_dir}/GribBitsAnyEndian.h
-	${accessor_grib_stub_dir}/GribBitsFastBigEndian.cc
-	${accessor_grib_stub_dir}/GribBitsFastBigEndian.h
+	${accessor_grib_stub_dir}/GribAccessorStub.cc
+	${accessor_grib_stub_dir}/GribAccessorStub.h
+	${accessor_grib_stub_dir}/GribAccessorClassStub.cc
+	${accessor_grib_stub_dir}/GribAccessorClassStub.h
+	${accessor_grib_stub_dir}/GribBitsAnyEndianStub.cc
+	${accessor_grib_stub_dir}/GribBitsAnyEndianStub.h
+	${accessor_grib_stub_dir}/GribBitsFastBigEndianStub.cc
+	${accessor_grib_stub_dir}/GribBitsFastBigEndianStub.h
 	${accessor_grib_stub_dir}/GribExpressionStub.cc
 	${accessor_grib_stub_dir}/GribExpressionStub.h
 	${accessor_grib_stub_dir}/GribStubIncludes.h

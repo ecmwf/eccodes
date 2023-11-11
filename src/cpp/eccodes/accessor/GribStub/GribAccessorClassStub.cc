@@ -1,4 +1,4 @@
-#include "GribAccessorClass.h"
+#include "GribAccessorClassStub.h"
 #include "Accessor.h"
 
 #include <cassert>

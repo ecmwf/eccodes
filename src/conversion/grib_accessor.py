@@ -125,20 +125,26 @@ def create_cfunction(func_sig, definitions):
 
     if func_sig.name == global_cfuncsig.name:
         cfunction = global_func.GlobalFunction(func_sig)
+        debug.line("create_cfunction", f"Created global function [{func_sig.name}]")
     elif func_sig.name == "init":
         cfunction = constructor_method.ConstructorMethod(func_sig)
+        debug.line("create_cfunction", f"Created constructor function [{func_sig.name}]")
     elif func_sig.name == "destroy":
         cfunction = destructor_method.DestructorMethod(func_sig)
+        debug.line("create_cfunction", f"Created destructor function [{func_sig.name}]")
     elif func_sig.name in definitions.get("IMPLEMENTS", []):
         cfunction = inherited_method.InheritedMethod(func_sig)
+        debug.line("create_cfunction", f"Created inherited function [{func_sig.name}]")
 
     if not cfunction:
         # If any arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
         for arg_entry in func_sig.args:
             if re.search(r"grib_accessor(\w*)?\*", arg_entry.type):
                 cfunction = private_method.PrivateMethod(func_sig)
+                debug.line("create_cfunction", f"Created private function [{func_sig.name}]")
     
     if not cfunction:
         cfunction = static_func.StaticFunction(func_sig)
+        debug.line("create_cfunction", f"Created static function [{func_sig.name}]")
    
     return cfunction

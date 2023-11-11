@@ -117,20 +117,24 @@ class GribAccessorConverter:
     def setup_accessor_specific(self):
         self._accessor_specific = None
 
-        try:
-            m = importlib.import_module(f"accessor_specific.{self._grib_accessor.name}")
+        module_name = f"accessor_specific.{self._grib_accessor.name}"
+        class_name = f"{self._accessor_data_name}AccessorSpecific"
 
-            if f"{self._accessor_data_name}AccessorSpecific" in dir(m):
-                AccessorSpecificClass = getattr(m, f"{self._accessor_data_name}AccessorSpecific")
+        debug.line("setup_accessor_specific", f"Looking for [{class_name}] in module [{module_name}]")
+        try:
+            m = importlib.import_module(module_name)
+
+            if class_name in dir(m):
+                AccessorSpecificClass = getattr(m, class_name)
                 self._accessor_specific = AccessorSpecificClass()
                 assert self._accessor_specific, f"AccessorSpecific inst for {self._grib_accessor.name} is None"
-                debug.line("setup_accessor_specific", f"Loaded [{self._accessor_data_name}AccessorSpecific]")
+                debug.line("setup_accessor_specific", f"Loaded [{class_name}]")
         except ModuleNotFoundError:
             pass
 
         if not self._accessor_specific:
             self._accessor_specific = accessor_specific.default.AccessorSpecific()
-            debug.line("setup_accessor_specific", f"Loaded [AccessorSpecific] (default)")
+            debug.line("setup_accessor_specific", f"[{class_name}] not found... loaded [AccessorSpecific] (default) instead")
 
     def create_accessor_data(self):
         cpp_super_name = self.transform_class_name(self._grib_accessor.super)
@@ -203,13 +207,12 @@ class GribAccessorConverter:
             converter = self._converters[Converter.PRIVATE_METHOD_FUNCSIG](func.func_sig)
             mapping = converter.create_funcsig_mapping(self._transforms)
             self._transforms.add_to_private_funcsig_mappings(mapping)
-            # Add Accessor-specific private mappings
-
 
         for func in self._grib_accessor.static_functions:
             converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
             mapping = converter.create_funcsig_mapping(self._transforms)
             self._transforms.add_to_static_funcsig_mappings(mapping)
+            debug.line("DEBUG", f"ADDED STATIC MAPPING FOR [{mapping.cfuncsig.as_string()}] -> [{mapping.cppfuncsig.as_string()}]")
 
         # Add "other" funcsigs
         other_funcs = {

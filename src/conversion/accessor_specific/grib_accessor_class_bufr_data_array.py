@@ -7,7 +7,7 @@ from arg_indexes import ArgIndexes
 from arg import Arg
 from funcsig_mapping import FuncSigMapping
 
-class BufrDataArrayFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncSigConverter):
+class BufrDataArrayDataFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncSigConverter):
     func_conversions = [
         # static int check_overridden_reference_values(const grib_context* c, long* refValList, size_t refValListSize, int numBits)
         FuncSigMapping(FuncSig("int", "check_overridden_reference_values", [Arg("const grib_context*", "c"), Arg("long*", "refValList"), Arg("size_t", "refValListSize"), Arg("int", "numBits")]),
@@ -23,10 +23,10 @@ class BufrDataArrayFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncS
         super().__init__(cfuncsig)
         self._conversions.extend(self.func_conversions)
 
-class BufrDataArrayAccessorSpecific(AccessorSpecific):
+class BufrDataArrayDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
 
     def update_converters(self, converters):
-        converters[Converter.STATIC_FUNC_FUNCSIG] = BufrDataArrayFuncSigConverter
+        converters[Converter.STATIC_FUNC_FUNCSIG] = BufrDataArrayDataFuncSigConverter
         return converters
