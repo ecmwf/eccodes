@@ -5,6 +5,7 @@ import static_func_funcsig_conv
 from funcsig import FuncSig
 from arg_indexes import ArgIndexes
 from arg import Arg
+import arg
 from funcsig_mapping import FuncSigMapping
 
 class BufrDataArrayDataFuncSigConverter(static_func_funcsig_conv.StaticFunctionFuncSigConverter):
@@ -26,6 +27,10 @@ class BufrDataArrayDataFuncSigConverter(static_func_funcsig_conv.StaticFunctionF
 class BufrDataArrayDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
+
+        self._custom_arg_transforms = {
+            arg.Arg("const char*","dataKeysName") : arg.Arg("AccessorName","dataKeysName"),
+            }
 
     def update_converters(self, converters):
         converters[Converter.STATIC_FUNC_FUNCSIG] = BufrDataArrayDataFuncSigConverter

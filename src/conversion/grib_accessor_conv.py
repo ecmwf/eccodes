@@ -212,7 +212,6 @@ class GribAccessorConverter:
             converter = self._converters[Converter.STATIC_FUNC_FUNCSIG](func.func_sig)
             mapping = converter.create_funcsig_mapping(self._transforms)
             self._transforms.add_to_static_funcsig_mappings(mapping)
-            debug.line("DEBUG", f"ADDED STATIC MAPPING FOR [{mapping.cfuncsig.as_string()}] -> [{mapping.cppfuncsig.as_string()}]")
 
         # Add "other" funcsigs
         other_funcs = {
