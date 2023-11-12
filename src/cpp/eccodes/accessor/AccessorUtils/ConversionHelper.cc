@@ -9,6 +9,22 @@ std::string fmtString(std::string format) {
     return format;
 }
 
+// Helper to replace strncpy
+void copyString(std::string& dest, std::string src, size_t count)
+{
+    dest = src.substr(0, count);
+}
+
+FILE* fopenFromString(std::string name, std::string mode)
+{
+    return fopen(name.c_str(), mode.c_str());
+}
+
+char* fgetsFromString(std::string str, int count, FILE* stream)
+{
+    return fgets(str.data(), count, stream);
+}
+
 long strToLong(std::string val, std::string& last, int base)
 {
     last.clear();
@@ -35,6 +51,11 @@ double strToDouble(std::string val, std::string& last)
     }
 
     return result;
+}
+
+long strAtoL(std::string input)
+{
+    return atol(input.c_str());
 }
 
 }

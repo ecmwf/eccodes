@@ -80,12 +80,16 @@ set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribBitsFastBigEndianStub.h
 	${accessor_grib_stub_dir}/GribBufferStub.cc
 	${accessor_grib_stub_dir}/GribBufferStub.h
+	${accessor_grib_stub_dir}/GribContextStub.cc
+	${accessor_grib_stub_dir}/GribContextStub.h
 	${accessor_grib_stub_dir}/GribDateStub.cc
 	${accessor_grib_stub_dir}/GribDateStub.h
 	${accessor_grib_stub_dir}/GribExpressionStub.cc
 	${accessor_grib_stub_dir}/GribExpressionStub.h
 	${accessor_grib_stub_dir}/GribUtilStub.cc
 	${accessor_grib_stub_dir}/GribUtilStub.h
+	${accessor_grib_stub_dir}/GribParseUtilsStub.cc
+	${accessor_grib_stub_dir}/GribParseUtilsStub.h
 )
 
 # Variables to be used in the parent CMakeLists.txt

@@ -1269,6 +1269,16 @@ class FunctionConverter:
                 break
 
         return line
+    
+    # This is where we "give up" and tell the converter what to change - these are applied
+    # to the version of the line at the end of the conversion
+    def apply_custom_final_line_transforms(self, line):
+        for from_line, to_line in list(self._transforms.custom_final_line_transforms.items()):
+            if from_line == line:
+                line = self._transforms.custom_final_line_transforms.pop(from_line)
+                break
+
+        return line
 
     # ======================================== UPDATE FUNCTIONS ========================================
     
@@ -1303,6 +1313,9 @@ class FunctionConverter:
 
             # [6] Clean up...
             self.process_deletions,
+
+            # [7] Apply any custom line transforms
+            self.apply_custom_final_line_transforms,
         ]
 
         self._deletions_list = []   # Use mark_for_deletion() to add...

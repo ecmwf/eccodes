@@ -50,7 +50,8 @@ common_type_transforms = {
     "char**"            : "std::string&",
     "char*"             : "std::string",
     "char[]"            : "std::string",
-    "grib_expression*"  : "GribExpressionPtr"
+    "grib_expression*"  : "GribExpressionPtr",
+    "FILE*"             : "FILE*",
 }
 
 # Define base class member mapping
@@ -109,6 +110,9 @@ class GribAccessorConverter:
         self.add_private_methods()
         self.add_static_functions()
         self.add_forward_declarations()
+
+        # We shouldn't have any custom line transforms left, otherwise something hasn't worked!
+        assert len(self._transforms.custom_final_line_transforms) == 0, self._transforms.custom_final_line_transforms.keys()
 
         debug.line("to_accessor_data", f"\n===== [CONVERTING:END] {self._grib_accessor.name} ====================\n")
 

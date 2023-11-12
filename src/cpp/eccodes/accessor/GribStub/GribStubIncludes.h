@@ -8,6 +8,8 @@
 #include "GribBitsAnyEndianStub.h"
 #include "GribBitsFastBigEndianStub.h"
 #include "GribBufferStub.h"
+#include "GribContextStub.h"
 #include "GribDateStub.h"
 #include "GribExpressionStub.h"
 #include "GribUtilStub.h"
+#include "GribParseUtilsStub.h"

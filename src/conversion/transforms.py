@@ -30,6 +30,8 @@ class Transforms:
         self._static_funcsig_mappings = []
         self._other_funcsig_mappings = []
 
+        self._custom_final_line_transforms = {}
+
     # Note these are only supplied at __init__, any new types are added to the types list instead
     @property
     def funcsig_types(self):
@@ -224,4 +226,10 @@ class Transforms:
         assert not self.funcsig_mapping_for(mapping.cfuncsig.name), f"add_to_other_funcsig_mappings: Mapping for [{mapping.cfuncsig.name}] already exists!"
         self._other_funcsig_mappings.append(mapping)
 
+    @property
+    def custom_final_line_transforms(self):
+        return self._custom_final_line_transforms
     
+    def add_custom_final_line_transforms(self, from_line, to_line):
+        assert from_line not in self._custom_final_line_transforms, f"Attempting to re-add custom final line = [{from_line}]"
+        self._custom_final_line_transforms[from_line] = to_line

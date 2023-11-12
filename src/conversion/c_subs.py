@@ -14,9 +14,13 @@ c_lib_substitutions = {
     r"\bsnprintf\(([^,]+),[^,]+,": r"\1 = fmtString(",
     r"\bstrtol": "strToLong",
     r"\bstrtod": "strToDouble",
+    r"\batol": "strAtoL",
     r"\bstrcpy\(([^,]+),([^\)]+)\)": r"\1 = \2",
+    r"\bstrcat\(([^,]+),([^\)]+)\)": r"\1 += \2",
     r"\bsscanf\(([^\s,\)]+)(\s+\+\s+([^,]+))?([^\)]*)\)": sscanf_repl,
-    r"\bmemcpy\(([^,]+),([^,]+),([^\)]+)\)": r"copyBuffer(\1,\2,\3)"
+    r"\bmemcpy\(([^,]+),([^,]+),([^\)]+)\)": r"copyBuffer(\1,\2,\3)",
+    r"\bstrncpy\(([^,]+),([^,]+),([^\)]+)\)": r"copyString(\1,\2,\3)",
+    r"\bfgets": r"fgetsFromString",
 }
 
 # grib_ functions that can be deleted - we'll comment them out for now!
@@ -30,12 +34,18 @@ grib_context_substitutions = {
     r"\bgrib_context_log\(.*?,": r"gribLog(",
 }
 
+codes_substitutions = {
+    r"\bcodes_fopen\b": r"fopenFromString",
+}
+
+
 def apply_all_substitutions(line):
 
     func_substitutions = [
         c_lib_substitutions,
         grib_deleted_function_substitutions,
-        grib_context_substitutions
+        grib_context_substitutions,
+        codes_substitutions,
     ]
 
     for func_substitution_dict in func_substitutions:

@@ -55,9 +55,19 @@ void copyBuffer(std::vector<OUT_TYPE>& out, IN_TYPE* in, size_t numBytes)
     std::copy(out.begin(), out.begin() + numEntries, in);
 }
 
+// Helper to replace strncpy
+void copyString(std::string& dest, std::string src, size_t count);
+
+// Helper to replace codes_fopen
+FILE* fopenFromString(std::string name, std::string mode);
+char* fgetsFromString(std::string str, int count, FILE* stream );
+
 // Container version of strtoX functions. 
 long strToLong(std::string val, std::string& last, int base);
 double strToDouble(std::string val, std::string& last);
+
+// std::string version of atol
+long strAtoL(std::string input);
 
 // Placeholder for a new version of grib_context_log()
 // For now it just swallows all arguments, which allows the convert tool to only

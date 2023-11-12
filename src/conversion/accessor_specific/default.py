@@ -4,6 +4,7 @@ class AccessorSpecific:
     def __init__(self) -> None:
         self._custom_arg_transforms = {}
         self._custom_member_arg_transforms = {}
+        self._custom_final_line_transforms = {}
             
     def update_converters(self, converters):
         return converters
@@ -15,6 +16,9 @@ class AccessorSpecific:
         # Note: These represent members, but are stored as ARGS!!!
         for carg, cpparg in self._custom_member_arg_transforms.items():
             transforms.add_custom_member_args(carg, cpparg)
+
+        for from_line, to_line in self._custom_final_line_transforms.items():
+            transforms.add_custom_final_line_transforms(from_line, to_line)
 
         return transforms
     
