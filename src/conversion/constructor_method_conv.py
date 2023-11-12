@@ -16,20 +16,30 @@ class ConstructorMethodConverter(MethodConverter):
     def convert_cfunction_calls(self, line):
 
         # Transform the argument getters
-        line, count = re.subn(rf"\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*([^\)]*)?\)", rf"AccessorName(std::get<std::string>(initData.args[\1].second))", line)
-        if count:
+        m = re.search(r"((self->)?(\w+)\s+=\s+)?\bgrib_arguments_get_name\s*\(.*?,\s*\w+\s*,\s*([^\)]*)?\)", line)
+        if m:
+            ctype = "AccessorName"
+            if m.group(1): 
+                member_name = m.group(3)
+                for cmember, cppmember in self._transforms.members.items():
+                    if cmember.name == member_name:
+                        ctype = cppmember.type
+                        break
+
+            if ctype == "AccessorName":
+                line = re.sub(m.re, rf"\1AccessorName(std::get<std::string>(initData.args[\4].second))", line)
+            else:
+                line = re.sub(m.re, rf"\1std::get<std::string>(initData.args[\4].second)", line)
+
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_name] line=[{line}]")
-            #return line
 
         line, count = re.subn(rf"\bgrib_arguments_get_expression\s*\(.*?,\s*\w+\s*,\s*([^\)]*)?\)", rf"std::get<GribExpressionPtr>(initData.args[\1].second)", line)
         if count:
             debug.line("convert_cfunction_calls", f"Updated [bgrib_arguments_get_expression] line=[{line}]")
-            #return line
 
         line, count = re.subn(rf"\bgrib_arguments_get_(\w+)\([^,]+, [^,]+, ([^\)]+)\)", rf"std::get<\1>(initData.args[\2].second)", line)
         if count:
             debug.line("convert_cfunction_calls", f"Updated [grib_arguments_get_X] line=[{line}]")
-            #return line
 
         return super().convert_cfunction_calls(line)
 

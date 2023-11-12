@@ -23,6 +23,7 @@ class Transforms:
         self._all_args = {}
         self._global_args = {}
         self._custom_args = {}
+        self._custom_member_args = {}
         self._members = {}
         self._inherited_funcsig_mappings = []
         self._private_funcsig_mappings = []
@@ -129,6 +130,20 @@ class Transforms:
     @property
     def custom_args(self):
         return self._custom_args
+
+    # Same as add_custom_args, but for members!
+    # Note: The transforms are stored as ARGS, not MEMBERS, so need to be handled accordingly...
+    def add_custom_member_args(self, carg, cpparg):
+        if carg in self._custom_member_args:
+            assert self._custom_member_args[carg] == cpparg, f"Updating an existing custom member arg transform: C Arg = {arg.arg_string(carg)} -> {arg.arg_string(cpparg)} Previous arg = {arg.arg_string(self._custom_args[carg])}"
+        else:
+            debug.line("Transforms", f"Adding new custom member arg transform: {arg.arg_string(carg)} -> {arg.arg_string(cpparg)}")
+            assert carg, f"ADDING carg which is None!"
+            self._custom_member_args[carg] = cpparg
+    
+    @property
+    def custom_member_args(self):
+        return self._custom_member_args
 
     @property
     def global_args(self):

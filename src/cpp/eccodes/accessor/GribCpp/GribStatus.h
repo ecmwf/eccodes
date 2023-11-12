@@ -85,4 +85,7 @@ enum class GribStatus{
     ASSERTION_FAILURE = -79,
 };
 
+// Helper for the conversion process
+bool isError(GribStatus stat);
+
 }

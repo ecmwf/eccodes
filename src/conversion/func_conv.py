@@ -198,7 +198,7 @@ class FunctionConverter:
         debug.line("convert_next_cfunction_call", f"[{depth}] Matched [{m.group(0)}] cfuncname=[{cfuncname}] input line=[{line}]")
 
         if cfuncname in ["Assert"]:
-            return line
+            pass #return line
 
         match_start = m.start()
         match_end = m.end()
@@ -280,13 +280,15 @@ class FunctionConverter:
         match_end = 0
 
         while keep_extracting:
+            match_char = ""
             m = re.search(rf"^\s?\"", funcsig_line[match_end:])
             if m:
                 match_end += m.end()
-                m = re.search(rf"([^\"]*\")\s*[\),]+", funcsig_line[match_end:])
+                m = re.search(rf"([^\"]*\")\s*([\),]+)", funcsig_line[match_end:])
                 if m:
-                    match_end += m.end()
                     new_param += "\"" + m.group(1)
+                    match_char = m.group(2)
+                    match_end += m.end()
                     debug.line("convert_next_cfunction_call", f"[{depth}] Extracted quote:[{new_param}]")
 
             else:
@@ -296,16 +298,19 @@ class FunctionConverter:
                     match_char = m.group(2)
                     match_end += m.end()
 
-                    open_parens, close_parens = utils.count_parentheses(m.group(1))
+            open_parens, close_parens = utils.count_parentheses(new_param)
 
-                    if close_parens < open_parens:
-                        if match_char == ")":
-                            new_param += match_char
-                            if line[match_end] != ",":
-                                continue # Partial extraction...
-                    elif close_parens == open_parens:
-                        if match_char == ")":
-                            keep_extracting = False
+            if close_parens < open_parens:
+                if match_char == ")":
+                    new_param += match_char
+                    if line[match_end] != ",":
+                        continue # Partial extraction...
+                else:
+                    new_param += match_char
+                    continue # Partial extraction...
+            elif close_parens == open_parens:
+                if match_char == ")":
+                    keep_extracting = False
 
             if new_param:
                 tidy_new_param = arg.tidy_arg_string(new_param)
@@ -721,7 +726,7 @@ class FunctionConverter:
             # If match is e.g. "err)" then we'll assume it's a boolean test eg if(err) and not the last arg of a function call, so
             # we'll update it to a comparison
             if match_token.value == ")":
-                transformed_string = cppvariable.as_string() + f" != {ret}::SUCCESS" + match_token.as_string() + post_match_string
+                transformed_string =  "isError(" + cppvariable.as_string() + ")" + match_token.as_string() + post_match_string
                 debug.line("transform_return_cppvariable_access", f"transformed boolean return value test: {transformed_string}")
                 return transformed_string
             
@@ -761,7 +766,7 @@ class FunctionConverter:
     # For example: get_size could be .size() or .length()
     # Override as required
     def container_func_call_for(self, cpparg, action, data=""):
-        if action in ["clear", "resize", "size"]:
+        if action in ["clear", "resize", "size", "empty"]:
             return f"{action}({data})"
         
         assert False, f"Unknown action [{action}]"
@@ -996,6 +1001,7 @@ class FunctionConverter:
             debug.line("transform_cpp_container_non_assignment", f"INDEX OP: Replaced [{cpp_container_arg.name}{match_token.as_string()}{m.group(1)}] with post_match_string=[{cpp_container_arg.name}{post_match_string}]")
             return cpp_container_arg.name + post_match_string
 
+
         # TODO: Handle other comparisons?
 
         return None
@@ -1227,9 +1233,23 @@ class FunctionConverter:
 
         return line
 
+    # Specific check for if(c) or if(!c) where c is a container
+    def process_container_assert(self, line):
+        m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
+        if m:
+            container_arg = self._transforms.cpparg_for_cppname(m.group(2))
+            if container_arg and arg.is_container(container_arg):
+                container_func_call = self.container_func_call_for(container_arg, "size")
+                transformed_call = f"{container_arg.name}.{container_func_call}"
+                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                debug.line("process_container_assert", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+
+        return line
+
     # Override for any final updates...
     def final_updates(self, line):
         line = self.process_container_if(line)
+        line = self.process_container_assert(line)
 
         return line
 

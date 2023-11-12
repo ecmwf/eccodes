@@ -12,20 +12,19 @@ class MethodConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return method.Method(cppfuncsig, self._transforms.types["self"])
 
-    # REMOVED DUE TO CONFLICTS WITH e.g. "self->owner" member and "owner" local variable
+    # WARNING: CAN CAUSE CONFLICTS WITH e.g. "self->owner" member and "owner" local variable
     # The former is detected via self-> struct access instead
-    # Overridden to include members
-    '''def cppvariable_for(self, var):
-        for cmember, cppmember in self._transforms.members.items():
-            if cppmember:
-                if var.name == cppmember.name or var.name == cmember.name:
-                    cppvariable = variable.Variable("", cppmember.name, var.index)
-                    cppvariable.type = cppmember.type
-                    return cppvariable
-            elif var.name == cmember.name:
-                return variable.Variable(None, None, None)
+    # We only validate vars that end in "_" are indeed members, or return None
+    def cppvariable_for(self, var):
 
-        return super().cppvariable_for(var)'''
+        if var.name.endswith("_"):
+            for cppmember in self._transforms.members.values():
+                if cppmember and var.name == cppmember.name:
+                        cppvariable = variable.Variable("", cppmember.name, var.index)
+                        cppvariable.type = cppmember.type
+                        return cppvariable
+
+        return super().cppvariable_for(var)
 
     # Overridden to check if we're assigning to a member var and therefore need to remove const from
     # the function signature
@@ -105,6 +104,10 @@ class MethodConverter(FunctionConverter):
             if a_member.name == "name":
                 # Special handling: Replace name member with a string literal (it's only used in logging)
                 cppstruct_arg = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
+            elif a_member.name == "cclass":
+                if a_member.member and a_member.member.name == "name":
+                    # Special handling: Replace name member with a string literal (it's only used in logging)
+                    cppstruct_arg = struct_arg.StructArg("",f"\"{self._transforms.types['self']}\"", "")
             elif a_member.name == "context":
                 context_member = a_member.member
                 if context_member and context_member.name == "debug":
@@ -341,6 +344,66 @@ class MethodConverter(FunctionConverter):
             return cppfuncname, transformed_cparams
 
         return super().transform_cfunction_call(cfuncname, cparams)
+
+    # Overridden for container members
+    def transform_container_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
+        cppcontainer_arg = None
+
+        for cppmember in self._transforms.members.values():
+            if cppmember.name == cppvariable.name and arg.is_container(cppmember):
+                cppcontainer_arg = cppmember
+                break
+
+        if cppcontainer_arg:
+            for transform_func in [self.transform_cpp_container_assignment,
+                                   self.transform_cpp_container_non_assignment]:
+                transformed_string = transform_func(cppcontainer_arg, original_var, match_token, post_match_string)
+                if transformed_string:
+                    return transformed_string
+                
+            return None
+
+        return super().transform_container_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
+
+    # Overridden for member checks
+    def process_container_if(self, line):
+        m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
+        if m:
+            arg_name = m.group(2)
+            container_arg = None
+            for cppmember in self._transforms.members.values():
+                if cppmember.name == arg_name and arg.is_container(cppmember):
+                    container_arg = cppmember
+                    break
+
+            if container_arg:
+                container_func_call = self.container_func_call_for(container_arg, "size")
+                transformed_call = f"{container_arg.name}.{container_func_call}"
+                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                debug.line("process_container_if", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                return line
+
+        return super().process_container_if(line)
+
+    # Overridden for member checks
+    def process_container_assert(self, line):
+        m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
+        if m:
+            arg_name = m.group(2)
+            container_arg = None
+            for cppmember in self._transforms.members.values():
+                if cppmember.name == arg_name and arg.is_container(cppmember):
+                    container_arg = cppmember
+                    break
+
+            if container_arg:
+                container_func_call = self.container_func_call_for(container_arg, "size")
+                transformed_call = f"{container_arg.name}.{container_func_call}"
+                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                debug.line("process_container_assert", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                return line
+            
+        return super().process_container_assert(line)
 
     # Return a list of all pre-defined conversions
     def method_conversions_list(self):
