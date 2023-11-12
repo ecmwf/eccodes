@@ -19,12 +19,12 @@ rename = {
 }
 
 common_includes = [
-    "Accessor.h", 
-    "AccessorFactory.h", 
-    "AccessorUtils/ConversionHelper.h",
-    "AccessorUtils/AccessorException.h",
-    "GribCpp/GribCppIncludes.h",
-    "GribStub/GribStubIncludes.h",
+    "\"Accessor.h\"", 
+    "\"AccessorFactory.h\"", 
+    "\"AccessorUtils/ConversionHelper.h\"",
+    "\"AccessorUtils/AccessorException.h\"",
+    "\"GribCpp/GribCppIncludes.h\"",
+    "\"GribStub/GribStubIncludes.h\"",
 ]
 
 non_const_cmethods = [
@@ -232,9 +232,12 @@ class GribAccessorConverter:
             self._accessor_data.add_header_include(f"{self._accessor_data.super}.h")
 
         # Source includes
-        self._accessor_data.add_source_include(f"{self._accessor_data.name}.h")
+        self._accessor_data.add_source_include(f"\"{self._accessor_data.name}.h\"")
         
         for inc in common_includes:
+            self._accessor_data.add_source_include(inc)
+
+        for inc in self._accessor_specific.custom_includes():
             self._accessor_data.add_source_include(inc)
 
     # Adds all members for this accessor to the accessor_data object,

@@ -366,7 +366,7 @@ class MethodConverter(FunctionConverter):
         return super().transform_container_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
 
     # Overridden for member checks
-    def process_container_if(self, line):
+    def process_if_test(self, line):
         m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
         if m:
             arg_name = m.group(2)
@@ -380,30 +380,36 @@ class MethodConverter(FunctionConverter):
                 container_func_call = self.container_func_call_for(container_arg, "size")
                 transformed_call = f"{container_arg.name}.{container_func_call}"
                 line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_container_if", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                debug.line("process_if_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
                 return line
 
-        return super().process_container_if(line)
+        return super().process_if_test(line)
 
     # Overridden for member checks
-    def process_container_assert(self, line):
+    def process_assert_test(self, line):
         m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
         if m:
             arg_name = m.group(2)
-            container_arg = None
+            test_arg = None
             for cppmember in self._transforms.members.values():
-                if cppmember.name == arg_name and arg.is_container(cppmember):
-                    container_arg = cppmember
+                if cppmember.name == arg_name:
+                    test_arg = cppmember
                     break
 
-            if container_arg:
-                container_func_call = self.container_func_call_for(container_arg, "size")
-                transformed_call = f"{container_arg.name}.{container_func_call}"
-                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_container_assert", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
-                return line
+            if test_arg:
+                transformed_call = None
+                if arg.is_container(test_arg):
+                    container_func_call = self.container_func_call_for(test_arg, "size")
+                    transformed_call = f"{test_arg.name}.{container_func_call}"
+                elif test_arg.type == "AccessorName":
+                    transformed_call = f"{test_arg.name}.get()"
+                
+                if transformed_call:
+                    line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                    debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                    return line
             
-        return super().process_container_assert(line)
+        return super().process_assert_test(line)
 
     # Return a list of all pre-defined conversions
     def method_conversions_list(self):

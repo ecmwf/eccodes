@@ -1221,7 +1221,7 @@ class FunctionConverter:
         return line
     
     # Specific check for if(c) or if(!c) where c is a container
-    def process_container_if(self, line):
+    def process_if_test(self, line):
         m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
         if m:
             container_arg = self._transforms.cpparg_for_cppname(m.group(2))
@@ -1229,27 +1229,34 @@ class FunctionConverter:
                 container_func_call = self.container_func_call_for(container_arg, "size")
                 transformed_call = f"{container_arg.name}.{container_func_call}"
                 line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_container_if", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                debug.line("process_if_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
 
         return line
 
-    # Specific check for if(c) or if(!c) where c is a container
-    def process_container_assert(self, line):
+    # Specific check for if(c) or if(!c) where c is a container (or other special types)
+    def process_assert_test(self, line):
         m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
         if m:
-            container_arg = self._transforms.cpparg_for_cppname(m.group(2))
-            if container_arg and arg.is_container(container_arg):
-                container_func_call = self.container_func_call_for(container_arg, "size")
-                transformed_call = f"{container_arg.name}.{container_func_call}"
-                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_container_assert", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+            test_arg = self._transforms.cpparg_for_cppname(m.group(2))
+
+            if test_arg:
+                transformed_call = None
+                if arg.is_container(test_arg):
+                    container_func_call = self.container_func_call_for(test_arg, "size")
+                    transformed_call = f"{test_arg.name}.{container_func_call}"
+                elif test_arg.type == "AccessorName":
+                    transformed_call = f"{test_arg.name}.get().size()"
+                
+                if transformed_call:
+                    line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                    debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
 
         return line
 
     # Override for any final updates...
     def final_updates(self, line):
-        line = self.process_container_if(line)
-        line = self.process_container_assert(line)
+        line = self.process_if_test(line)
+        line = self.process_assert_test(line)
 
         return line
 

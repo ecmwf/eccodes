@@ -38,6 +38,12 @@ grib_value_funcsig_conversions = [
     FuncSigMapping( FuncSig("int", "grib_get_double_array_internal", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("double*", "val"), Arg("size_t*", "length")]),
                     FuncSig("GribStatus", "gribGetDouble", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<double>&", "value")])),
 
+    FuncSigMapping( FuncSig("int", "grib_get_long_array", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("long*", "val"), Arg("size_t*", "length")]),
+                    FuncSig("GribStatus", "gribGetLong", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<long>&", "value")])),
+
+    FuncSigMapping( FuncSig("int", "grib_get_long_array_internal", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("long*", "val"), Arg("size_t*", "length")]),
+                    FuncSig("GribStatus", "gribGetLong", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<long>&", "value")])),
+
 
     FuncSigMapping( FuncSig("int", "grib_set_double", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("double*", "val")]),
                     FuncSig("GribStatus", "gribSetDouble", [None, Arg("AccessorName const&", "name"),  Arg("double", "value")])),
@@ -68,4 +74,10 @@ grib_value_funcsig_conversions = [
 
     FuncSigMapping( FuncSig("int", "grib_set_double_array_internal", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("double*", "val"), Arg("size_t*", "length")]),
                     FuncSig("GribStatus", "gribSetDouble", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<double> const&", "value")])),
+
+    FuncSigMapping( FuncSig("int", "grib_set_long_array", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("long*", "val"), Arg("size_t*", "length")]),
+                    FuncSig("GribStatus", "gribSetLong", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<long> const&", "value")])),
+
+    FuncSigMapping( FuncSig("int", "grib_set_long_array_internal", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("long*", "val"), Arg("size_t*", "length")]),
+                    FuncSig("GribStatus", "gribSetLong", [None, Arg("AccessorName const&", "name"),  Arg("std::vector<long> const&", "value")])),
 ]

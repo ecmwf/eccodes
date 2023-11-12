@@ -9,7 +9,7 @@
  */
 
 {%- for i in c.source_includes %}
-#include "{{ i }}"
+#include {{ i }}
 {%- endfor %}
 
 namespace {{ c.nested_namespaces }} {
