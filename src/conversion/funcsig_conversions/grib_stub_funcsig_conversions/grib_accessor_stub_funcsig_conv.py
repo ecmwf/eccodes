@@ -180,4 +180,15 @@ grib_accessor_stub_funcsig_conversions = [
     FuncSigMapping( FuncSig("int", "grib_accessor_has_attributes", [Arg("grib_accessor*", "a")]),
                     FuncSig("GribStatus", "gribAccessorHasAttributes", [Arg("AccessorPtr", "ptr")])),
 
+    # =============================================================================
+
+    FuncSigMapping( FuncSig("grib_accessor*", "grib_accessor_clone", [Arg("grib_accessor*", "a"), Arg("grib_section*", "s"), Arg("int*", "err")]),
+                    FuncSig("AccessorPtr", "gribAccessorClone", [Arg("AccessorPtr", "ptr"), None, Arg("int&", "err")])),
+
+    FuncSigMapping( FuncSig("grib_accessor*", "grib_accessor_get_attribute", [Arg("grib_accessor*", "a"), Arg("const char*", "name")]),
+                    FuncSig("AccessorPtr", "gribAccessorGetAttribute", [Arg("AccessorPtr", "ptr"), Arg("const std::string", "name")])),
+
+    FuncSigMapping( FuncSig("grib_accessors_list*", "grib_accessors_list_last", [Arg("grib_accessors_list*", "al")]),
+                    FuncSig("std::vector<AccessorPtr>", "gribAccessorsListLast", [Arg("std::vector<AccessorPtr>", "ptrList")])),
+
 ]

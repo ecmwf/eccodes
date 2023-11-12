@@ -21,8 +21,9 @@ c_lib_substitutions = {
 
 # grib_ functions that can be deleted - we'll comment them out for now!
 grib_deleted_function_substitutions = {
-    #r"^\s*(.*?\bgrib_context_malloc_clear)": r"// [Removed grib_context_malloc_clear] \1",
     r"^\s*(.*?\bgrib_context_free)": r"// [Removed grib_context_free] \1",
+    r"^\s*(.*?\bgrib_context_free_persistent)": r"// [Removed grib_context_free_persistent] \1",
+    r"^\s*(.*?\bgrib_context_buffer_free)": r"// [Removed grib_context_buffer_free] \1",
 }
 
 grib_context_substitutions = {

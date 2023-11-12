@@ -53,13 +53,13 @@ set(accessor_utils_src_files
 
 set(accessor_grib_cpp_src_files
 	${accessor_grib_cpp_dir}/GribCppIncludes.h
+	${accessor_grib_cpp_dir}/GribBits.cc
+	${accessor_grib_cpp_dir}/GribBits.h
 	${accessor_grib_cpp_dir}/GribQuery.cc
 	${accessor_grib_cpp_dir}/GribQuery.h
 	${accessor_grib_cpp_dir}/GribStatus.h
 	${accessor_grib_cpp_dir}/GribType.cc
 	${accessor_grib_cpp_dir}/GribType.h
-	${accessor_grib_cpp_dir}/GribUtils.cc
-	${accessor_grib_cpp_dir}/GribUtils.h
 	${accessor_grib_cpp_dir}/GribValue.cc
 	${accessor_grib_cpp_dir}/GribValue.h
 	${accessor_grib_cpp_dir}/StringUtil.cc
@@ -67,17 +67,24 @@ set(accessor_grib_cpp_src_files
 )
 
 set(accessor_grib_stub_src_files
+	${accessor_grib_stub_dir}/GribStubIncludes.h
 	${accessor_grib_stub_dir}/GribAccessorStub.cc
 	${accessor_grib_stub_dir}/GribAccessorStub.h
 	${accessor_grib_stub_dir}/GribAccessorClassStub.cc
 	${accessor_grib_stub_dir}/GribAccessorClassStub.h
+	${accessor_grib_stub_dir}/GribActionStub.h
 	${accessor_grib_stub_dir}/GribBitsAnyEndianStub.cc
 	${accessor_grib_stub_dir}/GribBitsAnyEndianStub.h
 	${accessor_grib_stub_dir}/GribBitsFastBigEndianStub.cc
 	${accessor_grib_stub_dir}/GribBitsFastBigEndianStub.h
+	${accessor_grib_stub_dir}/GribBufferStub.cc
+	${accessor_grib_stub_dir}/GribBufferStub.h
+	${accessor_grib_stub_dir}/GribDateStub.cc
+	${accessor_grib_stub_dir}/GribDateStub.h
 	${accessor_grib_stub_dir}/GribExpressionStub.cc
 	${accessor_grib_stub_dir}/GribExpressionStub.h
-	${accessor_grib_stub_dir}/GribStubIncludes.h
+	${accessor_grib_stub_dir}/GribUtilStub.cc
+	${accessor_grib_stub_dir}/GribUtilStub.h
 )
 
 # Variables to be used in the parent CMakeLists.txt

@@ -103,17 +103,6 @@ class FunctionConverter:
 
     # ======================================== UPDATE FUNCTIONS ========================================
 
-    # TODO: Move to grib_api folder...
-    def convert_grib_utils(self, line):
-        for util in ["grib_is_earth_oblate",]:
-            m = re.search(rf"\b{util}\b", line)
-            if m:
-                cpp_util = transform_function_name(util)
-                line = re.sub(m.re, f"{cpp_util}", line)
-                debug.line("convert_grib_utils", f"Replaced {util} with {cpp_util} [after ]: {line}")
-
-        return line
-
     # Helper for transform_cfunction_call to apply any conversions specified in the
     # supplied conversions map
     # Returns the transformed cpp function name and C params, or None (for each)
@@ -341,6 +330,10 @@ class FunctionConverter:
             line = line[:match_start] + f"{cfuncname}({','.join([p for p in cparams])})" + remainder 
             debug.line("convert_next_cfunction_call",f"[{depth}] No conversion for function [{cfuncname}], but may have tidied args [After]: {line}")
 
+            # DEBUG OUTPUT
+            if cfuncname.startswith("grib_"):
+                debug.line("GRIB FUNCTION", f"{cfuncname}")
+
         return line
 
     # Find any C function calls in the line and convert them
@@ -350,7 +343,7 @@ class FunctionConverter:
         return line
 
     def update_grib_api_cfunctions(self, line):
-        line = self.convert_grib_utils(line)
+        # grib_is_earth_oblate was here...
         line = grib_api_converter.convert_grib_api_functions(line)
 
         return line

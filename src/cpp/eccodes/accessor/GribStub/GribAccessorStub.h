@@ -70,4 +70,7 @@ GribStatus gribAccessorReplaceAttribute(AccessorPtr ptr, AccessorPtr attr);
 GribStatus gribAccessorDeleteAttribute(AccessorPtr ptr, const std::string name);
 GribStatus gribAccessorHasAttributes(AccessorPtr ptr);
 
+AccessorPtr gribAccessorClone(AccessorPtr ptr, int& err);
+AccessorPtr gribAccessorGetAttribute(AccessorPtr ptr, const std::string name);
+std::vector<AccessorPtr> gribAccessorsListLast(std::vector<AccessorPtr> ptrList);
 }

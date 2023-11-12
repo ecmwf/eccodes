@@ -376,4 +376,25 @@ GribStatus gribAccessorHasAttributes(AccessorPtr ptr)
     return GribStatus::NOT_IMPLEMENTED;
 }
 
+AccessorPtr gribAccessorClone(AccessorPtr ptr, int& err)
+{
+    assert(false); // TO DO
+
+    return nullptr;
+}
+
+AccessorPtr gribAccessorGetAttribute(AccessorPtr ptr, const std::string name)
+{
+    assert(false); // TO DO
+
+    return nullptr;
+}
+
+std::vector<AccessorPtr> gribAccessorsListLast(std::vector<AccessorPtr> ptrList)
+{
+    assert(false); // TO DO
+
+    return {};
+}
+
 }
