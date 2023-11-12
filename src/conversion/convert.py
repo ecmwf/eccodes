@@ -266,7 +266,16 @@ def convert_grib_accessors():
     grib_accessors = {}
     accessor_name_list = []
 
-    for a in ARGS.path:
+    accessor_input_files= []
+    if ARGS.path[0].endswith("accessor_input_files"):
+        f = open(ARGS.path[0], "r")
+        for entry in f:
+            if not entry.startswith("#"):
+                accessor_input_files.append(os.getcwd() + "/" + entry.rstrip())
+    else:
+        accessor_input_files = ARGS.path
+
+    for a in accessor_input_files:
         if a in ignore_files:
             LOG.info("Ignoring file %s", a)
         else:
