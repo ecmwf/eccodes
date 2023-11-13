@@ -12,6 +12,43 @@ class MethodConverter(FunctionConverter):
     def create_cpp_function(self, cppfuncsig):
         return method.Method(cppfuncsig, self._transforms.types["self"])
 
+    # overridden to short-circuit well-knwon transforms!
+    def convert_cfunction_calls(self, line):
+
+        # Transform the argument getters
+        m = re.search(r"((self->)?(\w+)\s+=\s+)?\bgrib_arguments_get_(\w+)\([^,]+, ([^,]+), ([^\)]+)\)", line)
+        if m:
+            ctype = assignment_text = ""
+            if m.group(1): 
+                assignment_text = m.group(1)
+                member_name = m.group(3)
+                for cmember, cppmember in self._transforms.members.items():
+                    if cmember.name == member_name:
+                        ctype = cppmember.type
+                        break
+
+            get_what = m.group(4)
+            if get_what == "expression":
+                get_what = "GribExpressionPtr"
+            elif get_what in ["string", "name"]:
+                get_what = "std::string"
+                if not ctype:
+                    ctype = "AccessorName"
+
+            if m.group(5).startswith("self->"):
+                grib_arguments_arg_name = m.group(5)
+            else:
+                grib_arguments_arg_name = "initData"
+
+            if ctype == "AccessorName":
+                line = re.sub(m.re, f"{assignment_text}AccessorName(std::get<{get_what}>({grib_arguments_arg_name}.args[{m.group(6)}].second))", line)
+            else:
+                line = re.sub(m.re, f"{assignment_text}std::get<{get_what}>({grib_arguments_arg_name}.args[{m.group(6)}].second)", line)
+            
+            debug.line("convert_cfunction_calls", f"Updated [bgrib_arguments_get_expression] line=[{line}]")
+
+        return super().convert_cfunction_calls(line)
+
     # WARNING: CAN CAUSE CONFLICTS WITH e.g. "self->owner" member and "owner" local variable
     # The former is detected via self-> struct access instead
     # We only validate vars that end in "_" are indeed members, or return None
@@ -53,10 +90,17 @@ class MethodConverter(FunctionConverter):
                     if not cppstruct_member:
                         cppstruct_member = struct_arg.StructArg("", cppmember.name, cstruct_member.index)
                         if cstruct_member.member:
-                            # TODO: Additonal members here means that we've not processed something correctly - need to fix!
-                            cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
-                            cppstruct_member.member = cppstruct_member_member
-                            debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
+                            if cstruct_member.name == "vvalue":
+                                # This is a direct mapping
+                                cppstruct_member.member = cstruct_member.member
+                            elif cppmember and cppmember.type == "AccessorInitData":
+                                # This is a direct mapping
+                                cppstruct_member.member = cstruct_member.member
+                            else:
+                                # TODO: Additonal members here means that we've not processed something correctly - need to fix!
+                                cppstruct_member_member = self.apply_default_cstruct_arg_transform(cstruct_member.member)
+                                cppstruct_member.member = cppstruct_member_member
+                                debug.line("transform_cstruct_arg_member", f"WARNING: Unexpected member, so not processed correctly: {cstruct_member.member.as_string()}")
                         break
 
             # If super-> then replace with the correct AccessorName:: call, else remove top-level (self->, a-> etc) 
@@ -95,7 +139,7 @@ class MethodConverter(FunctionConverter):
 
         return cppstruct_arg
 
-    # transform and a->foo where foo is a non-member
+    # transform any a->foo where foo is a non-member
     def transform_cstruct_arg_a_nonmember(self, cstruct_arg):
         cppstruct_arg = None
 
@@ -250,23 +294,26 @@ class MethodConverter(FunctionConverter):
     # Overridden to handle member types e.g. AccessorName x = NULL
     def custom_transform_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
 
-        accessor_arg = None
+        access_arg = None
 
-        for cpparg in self._transforms.all_args.values():
-            if cpparg and cpparg.name == cppvariable.name and cpparg.type == "AccessorPtr":
-                    accessor_arg = cpparg
+        for cpparg_list in [self._transforms.all_args.values(),
+                            self._transforms.members.values()]:
+            for cpparg in cpparg_list:
+                if cpparg and cpparg.name == cppvariable.name:
+                    access_arg = cpparg
                     break
 
-        if not accessor_arg:
-            return None
+        if not access_arg:
+            return super().custom_transform_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
         
         if match_token.is_assignment:
-            m = re.match(r"\s*(NULL)", post_match_string)
-            if m:
-                post_match_string = re.sub(m.re, "nullptr", post_match_string)
-                return cppvariable.as_string() + match_token.as_string() + post_match_string
+            if access_arg.type == "AccessorPtr":
+                m = re.match(r"\s*(NULL)", post_match_string)
+                if m:
+                    post_match_string = re.sub(m.re, "nullptr", post_match_string)
+                    return cppvariable.as_string() + match_token.as_string() + post_match_string
 
-        return None
+        return super().custom_transform_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
 
     # Find any overloaded virtual function calls that are not implemented in this class, and add to the 
     # "using" list so we can add a "using base::func" directive in the header
@@ -366,30 +413,11 @@ class MethodConverter(FunctionConverter):
         return super().transform_container_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
 
     # Overridden for member checks
-    def process_if_test(self, line):
-        m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
-        if m:
-            arg_name = m.group(2)
-            container_arg = None
-            for cppmember in self._transforms.members.values():
-                if cppmember.name == arg_name and arg.is_container(cppmember):
-                    container_arg = cppmember
-                    break
+    def process_boolean_test(self, line):
+        m = re.search(r"\b(\w+)(\s*\(!?)(\w+)\)", line)
 
-            if container_arg:
-                container_func_call = self.container_func_call_for(container_arg, "size")
-                transformed_call = f"{container_arg.name}.{container_func_call}"
-                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_if_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
-                return line
-
-        return super().process_if_test(line)
-
-    # Overridden for member checks
-    def process_assert_test(self, line):
-        m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
-        if m:
-            arg_name = m.group(2)
+        if m and m.group(1) in ["if", "Assert"]:
+            arg_name = m.group(3)
             test_arg = None
             for cppmember in self._transforms.members.values():
                 if cppmember.name == arg_name:
@@ -403,13 +431,15 @@ class MethodConverter(FunctionConverter):
                     transformed_call = f"{test_arg.name}.{container_func_call}"
                 elif test_arg.type == "AccessorName":
                     transformed_call = f"{test_arg.name}.get()"
+                elif test_arg.type == "AccessorInitData":
+                    transformed_call = f"{test_arg.name}.args.size()"
                 
                 if transformed_call:
-                    line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                    line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
                     debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
                     return line
             
-        return super().process_assert_test(line)
+        return super().process_boolean_test(line)
 
     # Return a list of all pre-defined conversions
     def method_conversions_list(self):

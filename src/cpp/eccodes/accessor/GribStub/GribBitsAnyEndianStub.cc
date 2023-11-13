@@ -5,17 +5,34 @@
 
 namespace eccodes::accessor {
 
-// A mask with x least-significant bits set, possibly 0 or >=32 */
-// -1UL is 1111111... in every bit in binary representation
-#define BIT_MASK(x) \
-    (((x) == max_nbits) ? (unsigned long)-1UL : (1UL << (x)) - 1)
-
-// decode a value consisting of nbits from an octet-bitstream to long-representation
-unsigned long gribDecodeUnsignedLong(DataPointer input, long& bitPos, long numBits)
+unsigned long gribDecodeUnsignedLong(const AccessorDataPointer input, long& bitPos, long numBits)
 {
     assert(false); // TODO
     return 0;
 }
 
+unsigned long gribDecodeUnsignedLong(const AccessorDataBuffer& input, long& bitPos, long numBits)
+{
+    assert(false); // TODO
+    return 0;
+}
+
+GribStatus gribEncodeUnsignedLong(AccessorDataPointer p, unsigned long val, long& bitPos, long numBits)
+{
+    assert(false); // TODO
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus gribEncodeUnsignedLong(AccessorDataBuffer& p, unsigned long val, long& bitPos, long numBits)
+{
+    assert(false); // TODO
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus gribEncodeUnsignedLongb(AccessorDataPointer p, unsigned long val, long& bitPos, long nnumBitsb)
+{
+    assert(false); // TODO
+    return GribStatus::NOT_IMPLEMENTED;
+}
 
 }

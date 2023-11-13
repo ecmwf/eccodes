@@ -6,6 +6,7 @@
 #include "AccessorTraits.h"
 #include "GribCpp/GribType.h"
 #include "GribCpp/GribStatus.h"
+#include "GribStub/GribVirtualValueStub.h"
 
 #include <string>
 #include <memory>
@@ -22,8 +23,8 @@ public:
     AccessorData(AccessorInitData const& initData);
     virtual ~AccessorData() = 0;
 
-    bool newBuffer(AccessorDataBuffer const& accBuffer);
-    AccessorDataBuffer currentBuffer() const;
+    bool newBuffer(AccessorDataView const& accBuffer);
+    AccessorDataView currentBuffer() const;
 
     virtual void dump() const;
     virtual std::size_t stringLength() const;
@@ -80,12 +81,12 @@ public:
 // Ideally these would be private, but that makes the conversion much harder so they are protected instead
 // This will be revisited later...
 protected:
-    AccessorDataBuffer buffer_{};
+    AccessorDataView buffer_{};
     long length_{};
     long offset_{};
     unsigned long flags_{};
     int dirty_{};
-    std::unique_ptr<grib_virtual_value> vvalue_{};
+    GribVirtualValuePtr vvalue_{};
     std::string set_{};
 };
 

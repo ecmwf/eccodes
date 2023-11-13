@@ -96,6 +96,7 @@ container_types = [
     "std::array",
     "std::vector",
     "std::map",
+    "AccessorDataBuffer",
 ]
 
 # Return True if type is a container (std::vector etc)

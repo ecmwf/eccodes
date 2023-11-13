@@ -7,10 +7,10 @@
 
 namespace eccodes::accessor {
 
-void gribSetBitOn(DataPointer p, long& bitp);
-void gribSetBitsOn(DataPointer p, long& bitp, long nbits);
-void gribSetBitOff(DataPointer p, long& bitp);
-void gribSetBit(DataPointer p, long bitp, int val);
+void gribSetBitOn(AccessorDataPointer p, long& bitp);
+void gribSetBitsOn(AccessorDataPointer p, long& bitp, long nbits);
+void gribSetBitOff(AccessorDataPointer p, long& bitp);
+void gribSetBit(AccessorDataPointer p, long bitp, int val);
 
 
 }

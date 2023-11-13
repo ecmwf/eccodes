@@ -5,7 +5,7 @@
 #include <vector>
 #include <cstddef>
 
-// Provides a non-owning view to a contiguous block of memory, accessed as std::byte
+// Provides a non-owning view to a contiguous block of memory, accessed as unsigned char
 //
 // Required because we have to use C++17, so don't have access to std::span
 //
@@ -15,23 +15,19 @@
 
 namespace eccodes::accessor {
 
-template<typename T>
-class AccessorBuffer {
+class AccessorDataView {
 public:
-    using value_type = T;
+    using value_type = unsigned char;
     using pointer = value_type*;
     using const_pointer = value_type const*;
-    using reference = value_type&;
-    using const_reference = value_type const&;
     using size_type = size_t;
-    using difference_type = ptrdiff_t;
 
-    constexpr AccessorBuffer() noexcept : data_{ nullptr }, size_{ 0 } {};
+    constexpr AccessorDataView() noexcept : data_{ nullptr }, size_{ 0 } {};
 
-    constexpr AccessorBuffer(AccessorBuffer const&) noexcept = default;
-    constexpr AccessorBuffer& operator=(AccessorBuffer const&) noexcept = default;
+    constexpr AccessorDataView(AccessorDataView const&) noexcept = default;
+    constexpr AccessorDataView& operator=(AccessorDataView const&) noexcept = default;
 
-    constexpr AccessorBuffer(value_type *const buffer, const size_type num_elements) noexcept
+    constexpr AccessorDataView(value_type *const buffer, const size_type num_elements) noexcept
         : data_(reinterpret_cast<pointer>(buffer)), size_(sizeof(value_type) * num_elements) {}
 
     [[nodiscard]] constexpr size_type size_bytes() const noexcept {
@@ -51,7 +47,8 @@ private:
     size_type size_;
 };
 
-using AccessorDataBuffer = AccessorBuffer<unsigned char>;
-using DataPointer = unsigned char*;
+using AccessorDataPointer = unsigned char*;
+
+using AccessorDataBuffer = std::vector<unsigned char>;
 
 }

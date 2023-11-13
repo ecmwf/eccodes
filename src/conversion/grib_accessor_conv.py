@@ -60,7 +60,7 @@ base_members_map = {
     arg.Arg("long","offset") : arg.Arg("long","offset_"),
     arg.Arg("unsigned long","flags") : arg.Arg("unsigned long","flags_"),
     arg.Arg("int","dirty") : arg.Arg("int","dirty_"),
-    arg.Arg("grib_virtual_value*","vvalue") : arg.Arg("std::unique_ptr<grib_virtual_value>","vvalue_"),
+    arg.Arg("grib_virtual_value*","vvalue") : arg.Arg("GribVirtualValuePtr","vvalue_"),
     arg.Arg("const char*","set") : arg.Arg("std::string","set_")
     }
 
@@ -259,20 +259,12 @@ class GribAccessorConverter:
             self._transforms.add_to_members(cmember, cppmember)
 
     def add_constructor_method(self):
-        # Create a default constructor if none exists
-        if self._grib_accessor.constructor:
-            constructor_method_converter = self._converters[Converter.CONSTRUCTOR_METHOD]()
-            self._accessor_data._constructor = constructor_method_converter.to_cpp_function(self._grib_accessor.constructor, self._transforms)
-        else:
-            self._accessor_data._constructor = self._converters[Converter.CONSTRUCTOR_METHOD]()
+        constructor_method_converter = self._converters[Converter.CONSTRUCTOR_METHOD]()
+        self._accessor_data._constructor = constructor_method_converter.to_cpp_function(self._grib_accessor.constructor, self._transforms)
 
     def add_destructor_method(self):
-        # Create a default destructor if none exists
-        if self._grib_accessor.destructor:
-            destructor_method_converter = self._converters[Converter.DESTRUCTOR_METHOD]()
-            self._accessor_data._destructor = destructor_method_converter.to_cpp_function(self._grib_accessor.destructor, self._transforms)
-        else:
-            self._accessor_data._destructor = self._converters[Converter.DESTRUCTOR_METHOD]()
+        destructor_method_converter = self._converters[Converter.DESTRUCTOR_METHOD]()
+        self._accessor_data._destructor = destructor_method_converter.to_cpp_function(self._grib_accessor.destructor, self._transforms)
 
     def add_inherited_methods(self):
         for cfunc in self._grib_accessor.inherited_methods:

@@ -6,6 +6,6 @@ class CountMissingDataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","p") : arg.Arg("DataPointer","p"),
+            arg.Arg("unsigned char*","p") : arg.Arg("AccessorDataPointer","p"),
             }
 

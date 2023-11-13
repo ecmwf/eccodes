@@ -894,22 +894,26 @@ class FunctionConverter:
         # First, check for malloc
         # Note: Group 2 (\()? and group 6 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
         # Note: Group 4 ([^,]+,)? is an optional match for the first param (usually c) which we discard, but may have already been removed!
-        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\(([^,]+,)?(.+)\)(\))[,;]", post_match_string)
-        
+        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\(([^,]+,)?([^\)]*\)+)([,;])", post_match_string)
         if m:
+            malloc_type = m.group(3) if m.group(3) else ""
             match_string = m.group(5)
-            if not m.group(2):
-                match_string += m.group(6)
+
+            # Strip trailing ')' so parens match!
+            open_parens, close_parens = utils.count_parentheses(match_string)
+            extra_close_parens = close_parens-open_parens
+            if extra_close_parens > 0:
+                match_string = match_string[:len(match_string)-extra_close_parens]
 
             # Check if we're creating (new arg) or resizing (existing arg)
             if cpp_container_arg in self._new_cppargs_list:
-                transformed_line = f"{cpp_container_arg.name}({match_string});"
-                debug.line("transform_cpp_container_assignment", f"[CREATION] Replaced [{cpp_container_arg.name} = grib_context_malloc_X({match_string})] with [{transformed_line}]")
+                transformed_line = f"{cpp_container_arg.name}({match_string}{m.group(6)}"
+                debug.line("transform_cpp_container_assignment", f"[CREATION] Replaced [{cpp_container_arg.name} = grib_context_malloc{malloc_type}{m.group(3)}({match_string})] with [{transformed_line}]")
                 return transformed_line
             else:
                 container_func_call = self.container_func_call_for(cpp_container_arg, "resize", match_string)
-                transformed_line = cpp_container_arg.name + "." + container_func_call + ";"
-                debug.line("transform_cpp_container_assignment", f"[EXISTING] Replaced {cpp_container_arg.name} = grib_context_malloc_X({match_string}) with [{transformed_line}]")
+                transformed_line = cpp_container_arg.name + "." + container_func_call + m.group(6)
+                debug.line("transform_cpp_container_assignment", f"[EXISTING] Replaced {cpp_container_arg.name} = grib_context_malloc_{malloc_type}({match_string}) with [{transformed_line}]")
                 return transformed_line
 
         # Extract the assigned value
@@ -1001,6 +1005,8 @@ class FunctionConverter:
             debug.line("transform_cpp_container_non_assignment", f"INDEX OP: Replaced [{cpp_container_arg.name}{match_token.as_string()}{m.group(1)}] with post_match_string=[{cpp_container_arg.name}{post_match_string}]")
             return cpp_container_arg.name + post_match_string
 
+        elif match_token.value in [",",")"]:
+            pass #assert False, f"FUNC ARG? [{arg.arg_string(cpp_container_arg)}]"
 
         # TODO: Handle other comparisons?
 
@@ -1220,24 +1226,13 @@ class FunctionConverter:
 
         return line
     
-    # Specific check for if(c) or if(!c) where c is a container
-    def process_if_test(self, line):
-        m = re.search(r"\b(if\s*\(!?)(\w+)\)", line)
-        if m:
-            container_arg = self._transforms.cpparg_for_cppname(m.group(2))
-            if container_arg and arg.is_container(container_arg):
-                container_func_call = self.container_func_call_for(container_arg, "size")
-                transformed_call = f"{container_arg.name}.{container_func_call}"
-                line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
-                debug.line("process_if_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+    # Specific check for TEST(arg) or TEST(!arg) where TEST is if, assert etc
+    # Supports special handling for container types
+    def process_boolean_test(self, line):
+        m = re.search(r"\b(\w+)(\s*\(!?)(\w+)\)", line)
 
-        return line
-
-    # Specific check for if(c) or if(!c) where c is a container (or other special types)
-    def process_assert_test(self, line):
-        m = re.search(r"\b(Assert\s*\(!?)(\w+)\)", line)
-        if m:
-            test_arg = self._transforms.cpparg_for_cppname(m.group(2))
+        if m and m.group(1) in ["if", "Assert"]:
+            test_arg = self._transforms.cpparg_for_cppname(m.group(3))
 
             if test_arg:
                 transformed_call = None
@@ -1248,15 +1243,14 @@ class FunctionConverter:
                     transformed_call = f"{test_arg.name}.get().size()"
                 
                 if transformed_call:
-                    line = re.sub(re.escape(m.group(2)), f"{transformed_call}", line)
+                    line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
                     debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
 
         return line
 
     # Override for any final updates...
     def final_updates(self, line):
-        line = self.process_if_test(line)
-        line = self.process_assert_test(line)
+        line = self.process_boolean_test(line)
 
         return line
 

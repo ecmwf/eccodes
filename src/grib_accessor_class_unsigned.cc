@@ -118,7 +118,7 @@ grib_accessor_class* grib_accessor_class_unsigned = &_grib_accessor_class_unsign
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
-    self->arg                    = NULL;
+    //self->arg                    = NULL;
     self->arg                    = arg;
     self->nbytes                 = len;
 

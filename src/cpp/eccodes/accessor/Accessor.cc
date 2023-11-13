@@ -52,12 +52,12 @@ int Accessor::isMissing() const
     return data_->isMissing();
 }
 
-bool Accessor::newBuffer(AccessorDataBuffer const& accBuffer)
+bool Accessor::newBuffer(AccessorDataView const& accBuffer)
 {
     return data_->newBuffer(accBuffer);
 }
 
-AccessorDataBuffer Accessor::currentBuffer() const
+AccessorDataView Accessor::currentBuffer() const
 {
     return data_->currentBuffer();
 }

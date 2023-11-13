@@ -5,18 +5,17 @@
 
 namespace eccodes::accessor {
 
-void griBufferDelete(AccessorDataBuffer b)
+void griBufferDelete(AccessorDataBuffer& b)
 {
     assert(false);
 }
 
-void gribBufferReplace(AccessorPtr ptr, AccessorDataBuffer data,
-                         size_t newsize, int update_lengths, int update_paddings)
+void gribBufferReplace(AccessorDataBuffer& data, size_t newsize, int update_lengths, int update_paddings)
 {
     assert(false);
 }
 
-void gribBufferSetUlengthBits(AccessorDataBuffer b, size_t length_bits)
+void gribBufferSetUlengthBits(AccessorDataBuffer& b, size_t length_bits)
 {
     assert(false);
 }

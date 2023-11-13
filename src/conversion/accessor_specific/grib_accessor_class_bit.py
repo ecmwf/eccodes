@@ -6,5 +6,5 @@ class BitDataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","mdata") : arg.Arg("DataPointer","mdata"),
+            arg.Arg("unsigned char*","mdata") : arg.Arg("AccessorDataPointer","mdata"),
             }

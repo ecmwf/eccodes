@@ -6,6 +6,6 @@ class MessageCopyDataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","v") : arg.Arg("DataPointer","v"),
+            arg.Arg("unsigned char*","v") : arg.Arg("AccessorDataPointer","v"),
             }
 

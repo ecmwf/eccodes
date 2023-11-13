@@ -5,14 +5,14 @@
 namespace eccodes::accessor {
 
 
-void gribSetBitOn(DataPointer p, long& bitp)
+void gribSetBitOn(AccessorDataPointer p, long& bitp)
 {
     p += bitp / 8;
     *p |= (1u << (7 - (bitp % 8)));
     bitp++;
 }
 
-void gribSetBitsOn(DataPointer p, long& bitp, long nbits)
+void gribSetBitsOn(AccessorDataPointer p, long& bitp, long nbits)
 {
     int i;
     for (i = 0; i < nbits; i++) {
@@ -20,14 +20,14 @@ void gribSetBitsOn(DataPointer p, long& bitp, long nbits)
     }
 }
 
-void gribSetBitOff(DataPointer p, long& bitp)
+void gribSetBitOff(AccessorDataPointer p, long& bitp)
 {
     p += bitp / 8;
     *p &= ~(1u << (7 - (bitp % 8)));
     bitp++;
 }
 
-void gribSetBit(DataPointer p, long bitp, int val)
+void gribSetBit(AccessorDataPointer p, long bitp, int val)
 {
     if (val == 0)
         gribSetBitOff(p, bitp);

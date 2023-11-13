@@ -27,8 +27,8 @@ public:
     int                 compare(AccessorPtr const rhs) const;
     int                 isMissing() const;
 
-    bool                newBuffer(AccessorDataBuffer const& accBuffer);
-    AccessorDataBuffer  currentBuffer() const;
+    bool                newBuffer(AccessorDataView const& accBuffer);
+    AccessorDataView  currentBuffer() const;
 
     // Required to support C -> C++ Conversion - Start
     long                byteCount() const;

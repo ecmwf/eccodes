@@ -41,8 +41,9 @@ env = Environment(
 )
 
 def parse_file(path):
-    in_definition = False
-    in_implementation = False
+    in_class_def_section = False
+    in_class_imp_section = False
+    in_main_code_section = False
     in_function = False
     includes = []
     template = None
@@ -104,31 +105,32 @@ def parse_file(path):
         line = line.rstrip()
 
         if stripped_line.startswith("START_CLASS_DEF"):
-            in_definition = True
+            in_class_def_section = True
             continue
 
         if stripped_line.startswith("END_CLASS_DEF"):
-            in_definition = False
+            in_class_def_section = False
             continue
 
         if stripped_line.startswith("/* START_CLASS_IMP */"):
-            in_implementation = True
+            in_class_imp_section = True
             # Discard any global lines captured before here...
             global_function.clear_lines()
             continue
 
         if stripped_line.startswith("/* END_CLASS_IMP */"):
-            in_implementation = False
+            in_class_imp_section = False
+            in_main_code_section = True
             continue
 
-        if in_implementation:
+        if in_class_imp_section:
             m = re.match(r"\s*\"(\w+)\",\s+/\* name \*/", stripped_line)
             if m:
                 definitions["FACTORY"] = [m.group(1)]
 
             continue
 
-        if in_definition:
+        if in_class_def_section:
             if stripped_line.strip() == "":
                 continue
             bits = [s.strip() for s in re.split(r"[=;]+", stripped_line)]
@@ -139,6 +141,10 @@ def parse_file(path):
             except KeyError:
                 LOG.error(f"Unknown definition: {bits}")
                 raise
+            continue
+
+        if not in_main_code_section:
+            debug.line("parse_file",f"[IGNORING] [{line}]")
             continue
 
         # Try and create a FuncSig from the line, if successful then it's a function definition!

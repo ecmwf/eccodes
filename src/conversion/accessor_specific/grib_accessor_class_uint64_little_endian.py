@@ -6,6 +6,6 @@ class Uint64LittleEndianDataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","data") : arg.Arg("DataPointer","data"),
+            arg.Arg("unsigned char*","data") : arg.Arg("AccessorDataPointer","data"),
             }
 

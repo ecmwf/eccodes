@@ -6,6 +6,6 @@ class Md5DataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","mess") : arg.Arg("DataPointer","mess"),
+            arg.Arg("unsigned char*","mess") : arg.Arg("AccessorDataPointer","mess"),
             }
 

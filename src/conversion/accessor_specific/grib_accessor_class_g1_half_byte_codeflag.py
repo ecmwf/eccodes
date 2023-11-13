@@ -6,6 +6,6 @@ class G1HalfByteCodeflagDataAccessorSpecific(AccessorSpecific):
         super().__init__()
    
         self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","dat") : arg.Arg("DataPointer","dat"),
+            arg.Arg("unsigned char*","dat") : arg.Arg("AccessorDataPointer","dat"),
             }
 

@@ -7,10 +7,9 @@
 
 namespace eccodes::accessor {
 
-void griBufferDelete(AccessorDataBuffer b);
-void gribBufferReplace(AccessorPtr ptr, AccessorDataBuffer data,
-                         size_t newsize, int updateLengths, int updatePaddings);
-void gribBufferSetUlengthBits(AccessorDataBuffer b, size_t lengthBits);
+void griBufferDelete(AccessorDataBuffer& b);
+void gribBufferReplace(AccessorDataBuffer& data, size_t newsize, int updateLengths, int updatePaddings);
+void gribBufferSetUlengthBits(AccessorDataBuffer& b, size_t lengthBits);
 AccessorDataBuffer gribCreateGrowableBuffer();
 
 }
