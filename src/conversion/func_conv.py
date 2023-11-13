@@ -894,7 +894,7 @@ class FunctionConverter:
         # First, check for malloc
         # Note: Group 2 (\()? and group 6 (\)) ensure we match the correct number of braces (grib_X()) vs grib_X()
         # Note: Group 4 ([^,]+,)? is an optional match for the first param (usually c) which we discard, but may have already been removed!
-        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\(([^,]+,)?([^\)]*\)+)([,;])", post_match_string)
+        m = re.search(r"\s*(\([^\)]+\))?(\()?grib_context_malloc(_\w+)?\(([^,]+,)?([^,:]*)([,;])", post_match_string)
         if m:
             malloc_type = m.group(3) if m.group(3) else ""
             match_string = m.group(5)
@@ -1253,9 +1253,17 @@ class FunctionConverter:
 
         return line
 
+    def apply_final_substitutions(self, line):
+        line, count = re.subn(r"\bNULL\b", "0", line)
+        if count:
+            debug.line("apply_final_substitutions", f"Replaced [NULL] with [0] line=[{line}]")
+        
+        return line
+
     # Override for any final updates...
     def final_updates(self, line):
         line = self.process_boolean_test(line)
+        line = self.apply_final_substitutions(line)
 
         return line
 

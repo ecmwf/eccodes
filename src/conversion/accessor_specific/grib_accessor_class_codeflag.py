@@ -27,7 +27,7 @@ class CodeflagDataAccessorSpecific(AccessorSpecific):
             }
         
         self._custom_final_line_transforms = {
-            "if ((filename = gribContextFullDefsPath(fname)) == NULL) {" : "if ((filename = gribContextFullDefsPath(fname)) == \"\") {",
+            "if ((filename = gribContextFullDefsPath(fname)) == 0) {" : "if ((filename = gribContextFullDefsPath(fname)) == \"\") {",
             }
     
     def update_converters(self, converters):
