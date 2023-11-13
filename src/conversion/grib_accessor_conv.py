@@ -52,6 +52,7 @@ common_type_transforms = {
     "char[]"            : "std::string",
     "grib_expression*"  : "GribExpressionPtr",
     "FILE*"             : "FILE*",
+    "grib_codetable*"   : "GribCodeTablePtr",
 }
 
 # Define base class member mapping

@@ -52,6 +52,10 @@ class MatchToken:
         return self._value in ["==", "!=", ">", ">=", "<", "<="]
 
     @property
+    def is_boolean_test(self):
+        return self._value in ["&&", "||"]
+
+    @property
     def is_separator(self):
         return self._value  == ","
 

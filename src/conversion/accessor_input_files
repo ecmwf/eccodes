@@ -25,9 +25,9 @@ grib_accessor_class_check_internal_version.cc
 grib_accessor_class_closest_date.cc
 grib_accessor_class_codeflag.cc
 #grib_accessor_class_codetable.cc
-grib_accessor_class_codetable_title.cc
-grib_accessor_class_codetable_units.cc
-grib_accessor_class_concept.cc
+#grib_accessor_class_codetable_title.cc
+#grib_accessor_class_codetable_units.cc
+#grib_accessor_class_concept.cc
 grib_accessor_class_constant.cc
 grib_accessor_class_count_file.cc
 grib_accessor_class_count_missing.cc

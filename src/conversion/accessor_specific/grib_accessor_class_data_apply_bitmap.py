@@ -23,6 +23,10 @@ class DataApplyBitmapDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
 
+        self._custom_final_line_transforms = {
+            "err = gribSetDouble(codedValues_,NULL);" : "err = gribSetDouble(codedValues_, 0);",
+            }
+
     def update_converters(self, converters):
         converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataApplyBitmapDataFuncSigConverter
         return converters

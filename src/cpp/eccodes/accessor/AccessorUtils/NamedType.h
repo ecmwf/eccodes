@@ -15,6 +15,8 @@ public:
     T& get() { return value_; }
     T const& get() const {return value_; }
 
+    bool hasValue() { return value_ != T{}; }
+
     friend bool operator<(const NamedType& l, const NamedType& r) { return l.value_ < r.value_; }
 
 private:

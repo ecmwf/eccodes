@@ -9,3 +9,7 @@ class CountMissingDataAccessorSpecific(AccessorSpecific):
             arg.Arg("unsigned char*","p") : arg.Arg("AccessorDataPointer","p"),
             }
 
+        self._custom_final_line_transforms = {
+            "longValues[0] += bitsoff[(p) | used[unusedBitsInBitmap]];" : "longValues[0] += bitsoff[(*p) | used[unusedBitsInBitmap]];",
+            }
+    

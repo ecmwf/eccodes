@@ -305,13 +305,17 @@ class MethodConverter(FunctionConverter):
 
         if not access_arg:
             return super().custom_transform_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
-        
+
         if match_token.is_assignment:
             if access_arg.type == "AccessorPtr":
                 m = re.match(r"\s*(NULL)", post_match_string)
                 if m:
                     post_match_string = re.sub(m.re, "nullptr", post_match_string)
                     return cppvariable.as_string() + match_token.as_string() + post_match_string
+        # Check for && or ||
+        elif match_token.is_boolean_test:
+            if access_arg.type == "AccessorName":
+                return cppvariable.as_string() + ".get().size()" + match_token.as_string() + post_match_string
 
         return super().custom_transform_cppvariable_access(cppvariable, original_var, match_token, post_match_string)
 
@@ -430,13 +434,13 @@ class MethodConverter(FunctionConverter):
                     container_func_call = self.container_func_call_for(test_arg, "size")
                     transformed_call = f"{test_arg.name}.{container_func_call}"
                 elif test_arg.type == "AccessorName":
-                    transformed_call = f"{test_arg.name}.get()"
+                    transformed_call = f"{test_arg.name}.hasValue()"
                 elif test_arg.type == "AccessorInitData":
                     transformed_call = f"{test_arg.name}.args.size()"
                 
                 if transformed_call:
                     line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
-                    debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                    debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
                     return line
             
         return super().process_boolean_test(line)

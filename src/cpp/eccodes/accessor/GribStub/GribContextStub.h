@@ -7,4 +7,8 @@ namespace eccodes::accessor {
 
 std::string gribContextFullDefsPath(std::string basename);
 
+int gribContextGetHandleFileCount();
+
+int gribContextGetHandleTotalCount();
+
 }

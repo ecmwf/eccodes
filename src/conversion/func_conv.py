@@ -992,6 +992,11 @@ class FunctionConverter:
                 post_match_string = re.sub(r"\s*0", "", post_match_string)
                 return f"{cpp_container_arg.name}.empty()" + post_match_string
             
+            if m.group(1) == "NULL":
+                debug.line("transform_cpp_container_non_assignment", f"Changed {cpp_container_arg.name} == 0 comparison with .empty()")
+                post_match_string = re.sub(r"\s*NULL", "", post_match_string)
+                return f"{cpp_container_arg.name}.empty()" + post_match_string
+            
         elif match_token.value == "+":
             # We must be indexing into the container, so need to extract the value Note: May need a more advanced expression evaluator!
             # [1] Search up to next , or ; to cater for complex expressions...
@@ -1244,7 +1249,7 @@ class FunctionConverter:
                 
                 if transformed_call:
                     line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
-                    debug.line("process_assert_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                    debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
 
         return line
 
@@ -1267,8 +1272,11 @@ class FunctionConverter:
     # This is where we "give up" and tell the converter what to change - these are applied
     # to the version of the line at the end of the conversion
     def apply_custom_final_line_transforms(self, line):
+        test_line = line.strip()
+        debug.line("apply_custom_final_line_transforms", f"test_line = [{test_line}]")
         for from_line, to_line in list(self._transforms.custom_final_line_transforms.items()):
-            if from_line == line:
+            debug.line("apply_custom_final_line_transforms", f"from_line = [{from_line}]")
+            if from_line == test_line:
                 line = self._transforms.custom_final_line_transforms.pop(from_line)
                 break
 

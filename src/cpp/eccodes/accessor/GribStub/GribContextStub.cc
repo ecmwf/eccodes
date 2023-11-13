@@ -10,4 +10,18 @@ std::string gribContextFullDefsPath(std::string basename)
     return {};
 }
 
+int gribContextGetHandleFileCount()
+{
+    assert(false);
+
+    return 0;
+}
+
+int gribContextGetHandleTotalCount()
+{
+    assert(false);
+
+    return 0;
+}
+
 }

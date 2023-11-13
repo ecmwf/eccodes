@@ -35,6 +35,38 @@ GribStatus gribGetSize(AccessorName const& name, size_t& size)
     return GribStatus{ret};
 }
 
+GribStatus gribGetFloat(AccessorName const& name, float& value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        value = accessorPtr->unpack<float>();
+        return GribStatus::SUCCESS;
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    double dvalue = value;
+    int ret = grib_get_double_internal(grib_handle_of_accessor(a), name.get().c_str(), &dvalue);
+    return GribStatus{ret};
+}
+
+GribStatus gribGetFloat(AccessorName const& name, std::vector<float>& value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        value = accessorPtr->unpack<std::vector<float>>();
+        return GribStatus::SUCCESS;
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    size_t len = value.size();
+    int ret = grib_get_float_array_internal(grib_handle_of_accessor(a), name.get().c_str(), value.data(), &len);
+    return GribStatus{ret};    
+}
+
 GribStatus gribGetDouble(AccessorName const& name, double& value)
 {
     if(auto accessorPtr = getAccessor(name); accessorPtr)
@@ -114,6 +146,34 @@ GribStatus gribGetString(AccessorName const& name, std::string& value)
     char buffer[len] = {0,};
     int ret = grib_get_string_internal(grib_handle_of_accessor(a), name.get().c_str(), buffer, &len);
     value = buffer;
+    return GribStatus{ret};
+}
+
+GribStatus gribSetFloat(AccessorName const& name, float value)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(value);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    int ret = grib_set_double_internal(grib_handle_of_accessor(a), name.get().c_str(), value);
+    return GribStatus{ret};
+}
+
+GribStatus gribSetFloat(AccessorName const& name, std::vector<float> const& values)
+{
+    if(auto accessorPtr = getAccessor(name); accessorPtr)
+    {
+        return accessorPtr->pack(values);
+    }
+
+    // C++ Accessor not found - fall back to C (should be safe!)
+    grib_accessor* a = get_grib_accessor(name);
+    Assert(a);
+    int ret = grib_set_float_array_internal(grib_handle_of_accessor(a), name.get().c_str(), values.data(), values.size());
     return GribStatus{ret};
 }
 

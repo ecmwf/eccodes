@@ -69,6 +69,7 @@ set(accessor_grib_cpp_src_files
 
 set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribStubIncludes.h
+	${accessor_grib_stub_dir}/CodeTableStub.h
 	${accessor_grib_stub_dir}/GribAccessorStub.cc
 	${accessor_grib_stub_dir}/GribAccessorStub.h
 	${accessor_grib_stub_dir}/GribAccessorClassStub.cc
@@ -89,6 +90,8 @@ set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribParseUtilsStub.cc
 	${accessor_grib_stub_dir}/GribParseUtilsStub.h
 	${accessor_grib_stub_dir}/GribVirtualValueStub.h
+	${accessor_grib_stub_dir}/GribValueStub.cc
+	${accessor_grib_stub_dir}/GribValueStub.h
 )
 
 # Variables to be used in the parent CMakeLists.txt
