@@ -18,8 +18,9 @@ class ConstructorMethodConverter(MethodConverter):
         # Transform the argument getters
         m = re.search(r"((self->)?(\w+)\s+=\s+)?\bgrib_arguments_get_(\w+)\([^,]+, [^,]+, ([^\)]+)\)", line)
         if m:
-            ctype = ""
+            ctype = assignment_text = ""
             if m.group(1): 
+                assignment_text = m.group(1)
                 member_name = m.group(3)
                 for cmember, cppmember in self._transforms.members.items():
                     if cmember.name == member_name:
@@ -31,11 +32,13 @@ class ConstructorMethodConverter(MethodConverter):
                 get_what = "GribExpressionPtr"
             elif get_what in ["string", "name"]:
                 get_what = "std::string"
+                if not ctype:
+                    ctype = "AccessorName"
 
             if ctype == "AccessorName":
-                line = re.sub(m.re, f"{m.group(1)}AccessorName(std::get<{get_what}>(initData.args[{m.group(5)}].second))", line)
+                line = re.sub(m.re, f"{assignment_text}AccessorName(std::get<{get_what}>(initData.args[{m.group(5)}].second))", line)
             else:
-                line = re.sub(m.re, f"{m.group(1)}std::get<{get_what}>(initData.args[{m.group(5)}].second)", line)
+                line = re.sub(m.re, f"{assignment_text}std::get<{get_what}>(initData.args[{m.group(5)}].second)", line)
             
             debug.line("convert_cfunction_calls", f"Updated [bgrib_arguments_get_expression] line=[{line}]")
 
