@@ -1357,7 +1357,7 @@ class FunctionConverter:
             
             # Split comma-separated variable definitions into separate lines
             # We then call ourself recursively for each split line
-            m = re.match(r"^(\s*[\w\*]+\s*)\s\*?\w+\s*[^,\(\{]*,", line)
+            m = re.match(r"^(\s*[\w]+\s*)[\s\*]+\w+\s*[^,\(\{]*,", line)
             if m:
                 debug.line("update_cpp_body", f"--------------------------------------------------------------------------------")
                 debug.line("update_cpp_body", f"comma-separated vars [before]: {line}")

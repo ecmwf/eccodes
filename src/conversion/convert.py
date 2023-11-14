@@ -289,6 +289,28 @@ def convert_grib_accessors():
             if gribAccessorInst is not None:
                 grib_accessors[gribAccessorInst._name] = gribAccessorInst
 
+    # Parse any super classes not listed
+    LOG.info("Looking for missing super classes...")
+
+    grib_accessor_supers = {}
+
+    for name, gribAccessor in grib_accessors.items():
+        gribAccessorInst = gribAccessor
+        super_name = gribAccessorInst._super
+
+        while super_name != "grib_accessor_class_gen":
+            if super_name in grib_accessors.keys() or super_name in grib_accessor_supers.keys():
+                break
+            else:
+                LOG.info("Found super class %s of class %s", super_name, gribAccessorInst._name)
+                gribAccessorInst = parse_file(super_name+".cc")
+                if gribAccessorInst is not None:
+                    grib_accessor_supers[gribAccessorInst._name] = gribAccessorInst
+                    super_name = gribAccessorInst._super
+    
+    LOG.info("Number of missing super classes parsed: %d", len(grib_accessor_supers))
+    grib_accessors.update(grib_accessor_supers)
+
     for gribAccessorInst in grib_accessors.values():
         converter = GribAccessorConverter(gribAccessorInst)
         accessorDataImpl = converter.to_accessor_data(grib_accessors)
@@ -296,7 +318,7 @@ def convert_grib_accessors():
         write_header_file(accessorDataImpl)
         write_source_file(accessorDataImpl)
 
-    write_makefile(accessor_name_list)
+    write_makefile(sorted(accessor_name_list))
 
 def main():
     convert_grib_accessors()

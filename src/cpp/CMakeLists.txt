@@ -86,6 +86,8 @@ set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribDateStub.h
 	${accessor_grib_stub_dir}/GribExpressionStub.cc
 	${accessor_grib_stub_dir}/GribExpressionStub.h
+	${accessor_grib_stub_dir}/GribIeeefloatStub.cc
+	${accessor_grib_stub_dir}/GribIeeefloatStub.h
 	${accessor_grib_stub_dir}/GribUtilStub.cc
 	${accessor_grib_stub_dir}/GribUtilStub.h
 	${accessor_grib_stub_dir}/GribParseUtilsStub.cc

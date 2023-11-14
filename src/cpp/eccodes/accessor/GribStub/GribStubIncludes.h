@@ -11,6 +11,7 @@
 #include "GribContextStub.h"
 #include "GribDateStub.h"
 #include "GribExpressionStub.h"
+#include "GribIeeefloatStub.h"
 #include "GribUtilStub.h"
 #include "GribParseUtilsStub.h"
 #include "GribValueStub.h"
