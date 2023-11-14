@@ -84,6 +84,8 @@ set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribContextStub.h
 	${accessor_grib_stub_dir}/GribDateStub.cc
 	${accessor_grib_stub_dir}/GribDateStub.h
+	${accessor_grib_stub_dir}/GribErrorsStub.cc
+	${accessor_grib_stub_dir}/GribErrorsStub.h
 	${accessor_grib_stub_dir}/GribExpressionStub.cc
 	${accessor_grib_stub_dir}/GribExpressionStub.h
 	${accessor_grib_stub_dir}/GribIeeefloatStub.cc
@@ -95,6 +97,10 @@ set(accessor_grib_stub_src_files
 	${accessor_grib_stub_dir}/GribVirtualValueStub.h
 	${accessor_grib_stub_dir}/GribValueStub.cc
 	${accessor_grib_stub_dir}/GribValueStub.h
+	${accessor_grib_stub_dir}/GribOptimizeDecimalFactorStub.cc
+	${accessor_grib_stub_dir}/GribOptimizeDecimalFactorStub.h
+	${accessor_grib_stub_dir}/GribScalingStub.cc
+	${accessor_grib_stub_dir}/GribScalingStub.h
 )
 
 # Variables to be used in the parent CMakeLists.txt

@@ -10,9 +10,13 @@
 #include "GribBufferStub.h"
 #include "GribContextStub.h"
 #include "GribDateStub.h"
+#include "GribErrorsStub.h"
 #include "GribExpressionStub.h"
 #include "GribIeeefloatStub.h"
 #include "GribUtilStub.h"
 #include "GribParseUtilsStub.h"
+#include "GribScalingStub.h"
 #include "GribValueStub.h"
 #include "GribVirtualValueStub.h"
+#include "GribOptimizeDecimalFactorStub.h"
+

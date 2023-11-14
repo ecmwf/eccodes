@@ -19,7 +19,7 @@ GribStatus gribIeeeDecodeArray<double>(AccessorDataPointer buf, size_t nvals, in
 }
 
 
-GribStatus gribIeeeEncodeArray(std::vector<double>& val, size_t nvals, int bytes, AccessorDataPointer buf)
+GribStatus gribIeeeEncodeArray(std::vector<double>& val, size_t nvals, int bytes, AccessorDataBuffer& buf)
 {
     assert(false);
     return GribStatus::NOT_IMPLEMENTED;

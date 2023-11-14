@@ -63,6 +63,10 @@ class MatchToken:
     def is_terminator(self):
         return self._value in [")", "[", "]", ";"]
     
+    @property
+    def is_maths_operator(self):
+        return self._value in ["+", "-", "*", "/", "%"] #, "+=", "-=", "*=", "/=", "%="]
+    
     # Generate a string representing the value in a format that can be added to a string,
     # i.e. there is a space before "=", ">=" etc but not ",", ";" etc
     def as_string(self):

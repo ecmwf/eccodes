@@ -28,4 +28,10 @@ GribStatus gribGetDoubleElementSetInternal(AccessorName const& name, const std::
     return GribStatus::NOT_IMPLEMENTED;
 }
 
+GribStatus gribGetNearestSmallerValue(AccessorName name, double val, double& nearest)
+{
+    assert(false);
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
 }

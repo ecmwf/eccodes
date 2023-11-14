@@ -200,7 +200,7 @@ class FunctionConverter:
         if cfuncname in ["Assert"]:
             pass #return line
 
-        match_start = m.start()
+        match_start = m.start(1)    # Don't count return_type_cast_re as part of the match
         match_end = m.end()
 
         # [2] Process the remainder of the line (recursively) before processing the parameters (they may be functions themselves)... 
@@ -723,14 +723,8 @@ class FunctionConverter:
         ret = "GribStatus"
 
         if cppvariable.type == ret:
-            # If match is e.g. "err)" then we'll assume it's a boolean test eg if(err) and not the last arg of a function call, so
-            # we'll update it to a comparison
-            if match_token.value == ")":
-                transformed_string =  "isError(" + cppvariable.as_string() + ")" + match_token.as_string() + post_match_string
-                debug.line("transform_return_cppvariable_access", f"transformed boolean return value test: {transformed_string}")
-                return transformed_string
             
-            elif match_token.is_separator or match_token.is_terminator:
+            if match_token.is_separator or match_token.is_terminator:
                 # Just need to transform the name
                 transformed_string = cppvariable.as_string() + match_token.as_string() + post_match_string
                 debug.line("transform_return_cppvariable_access", f"return value transformed: {transformed_string}")
@@ -824,6 +818,12 @@ class FunctionConverter:
                 return f"// [length assignment removed - var is const] " + var.as_string() + match_token.as_string() + post_match_string
 
             # Extract the assigned value
+            # [1] Remove any casts
+            m = re.match(r"^\s*\([^\)]+\**\)", post_match_string)
+            if m:
+                post_match_string = re.sub(re.escape(m.group(0)), "", post_match_string)
+                debug.line("transform_len_variable_access", f"Removed cast [{m.group(0)}], post_match_string=[{post_match_string}]")
+                
             m = re.match(r"\s*([^,\);]+)\s*[,\);]", post_match_string)
             assert m, f"Could not extract assigned value from: {post_match_string}"
 
@@ -982,6 +982,11 @@ class FunctionConverter:
         if match_token.is_assignment:
             return None
 
+        if cpp_container_arg in self._new_cppargs_list:
+            debug.line("transform_cpp_container_assignment", f"Ignoring assignment [{match_token.as_string()}] for new argument [{cpp_container_arg.name}]")
+            return None
+
+
         # If original_var is a dereferenced pointer, then we'll just update call to access index 0
         if original_var.pointer == "*":
             assert not original_var.index, f"Didn't expect original variable to already have an index!"
@@ -1004,6 +1009,26 @@ class FunctionConverter:
                 post_match_string = re.sub(r"\s*NULL", "", post_match_string)
                 return f"{cpp_container_arg.name}.empty()" + post_match_string
             
+        elif match_token.is_maths_operator:
+            if match_token.value == "+":
+                # We might be indexing into the container, so need to extract the value Note: May need a more advanced expression evaluator!
+                # [1] Search up to next , or ; to cater for complex expressions...
+                m = re.match(r"\s*([^,;]+)\s*[,;]", post_match_string)
+                if not m:
+                    # [2] Now try a narrower search...
+                    m = re.match(r"\s*([^,\)\{};]+)\s*[,\)\{};]", post_match_string)
+                if m:
+                    post_match_string = re.sub(re.escape(m.group(1)), f".at({m.group(1)})", post_match_string)
+                    transformed_line = cpp_container_arg.name + post_match_string
+                    debug.line("transform_cpp_container_non_assignment", f"[METHOD] updated AccessorDataBuffer access for [{cpp_container_arg.name}]: Transformed line = [{transformed_line}]")
+                    return transformed_line
+
+            else:
+                transformed_line = cpp_container_arg.name + ".data()" + match_token.as_string() + post_match_string
+                debug.line("transform_cpp_container_non_assignment", f"[METHOD] updated AccessorDataBuffer access for [{cpp_container_arg.name}]: Transformed line = [{transformed_line}]")
+                return transformed_line
+
+        # Note: This (+) test is currently hidden by the .is_maths_operator test above...
         elif match_token.value == "+":
             # We must be indexing into the container, so need to extract the value Note: May need a more advanced expression evaluator!
             # [1] Search up to next , or ; to cater for complex expressions...
@@ -1242,22 +1267,41 @@ class FunctionConverter:
     # Specific check for TEST(arg) or TEST(!arg) where TEST is if, assert etc
     # Supports special handling for container types
     def process_boolean_test(self, line):
-        m = re.search(r"\b(\w+)(\s*\(!?)([^\)]+)\)", line)
+        m = re.search(r"\b(if|Assert)\s*\(", line)
 
-        if m and m.group(1) in ["if", "Assert"]:
-            transformed_call = None
-            test_arg = self._transforms.cpparg_for_cppname(m.group(3))
+        if not m:
+            return line
+        
+        test_line_start = m.end()
+        test_line_end = utils.find_close_parenthesis(line[test_line_start:])
 
-            if test_arg:
-                if arg.is_container(test_arg):
-                    container_func_call = self.container_func_call_for(test_arg, "size")
-                    transformed_call = f"{test_arg.name}.{container_func_call}"
-                elif test_arg.type == "AccessorName":
-                    transformed_call = f"{test_arg.name}.get().size()"
-                
-            if transformed_call:
-                line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
-                debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+        if not test_line_end:
+            return line
+        
+        test_line_end += test_line_start
+        test_line = line[test_line_start:test_line_end]
+
+        m = re.search(r"[,\(]?\s*!?(\w+)\s*\)", test_line)
+        if not m:
+            return line
+        
+        if m.group(0).startswith((",", "(")):
+            return line
+
+        transformed_line = ""
+        test_arg = self._transforms.cpparg_for_cppname(m.group(1))
+        if test_arg:
+            if arg.is_container(test_arg):
+                container_func_call = self.container_func_call_for(test_arg, "size")
+                transformed_line = test_line.replace(test_arg.name, f"{test_arg.name}.{container_func_call}")
+            elif test_arg.type == "AccessorName":
+                transformed_line = test_line.replace(test_arg.name, f"{test_arg.name}.get().size()")
+            elif test_arg.type == "GribStatus":
+                transformed_line = test_line.replace(test_arg.name, f"isError({test_arg.name})")
+
+        if transformed_line:
+            line = line[:test_line_start] + transformed_line + line[test_line_end:]
+            debug.line("process_boolean_test", f"Updated arg=[{arg.arg_string(test_arg)}]: line=[{line}]")
 
         return line
 
@@ -1291,10 +1335,12 @@ class FunctionConverter:
         test_line = line.strip()
         debug.line("apply_custom_final_line_transforms", f"test_line = [{test_line}]")
         for from_line, to_line in list(self._transforms.custom_final_line_transforms.items()):
-            debug.line("apply_custom_final_line_transforms", f"from_line = [{from_line}]")
             if from_line == test_line:
+                debug.line("apply_custom_final_line_transforms", f"MATCH = [{from_line}]")
                 line = self._transforms.custom_final_line_transforms.pop(from_line)
                 break
+            else:
+                debug.line("apply_custom_final_line_transforms", f"NO MATCH = [{from_line}]")
 
         return line
 
@@ -1387,6 +1433,13 @@ class FunctionConverter:
         debug.line("create_cpp_body", f"\n============================== {self._cfunction.name} [IN]  ==============================\n")
         cpp_lines = self.update_cpp_body(self._cfunction.code)
         debug.line("create_cpp_body", f"\n============================== {self._cfunction.name} [OUT] ==============================\n")
+
+        # We shouldn't have any custom line transforms left, otherwise something hasn't worked!
+        if len(self._transforms.custom_final_line_transforms) != 0:
+            debug.line("create_cpp_body", f"The following custom final line transforms have not been applied:")
+            for entry in self._transforms.custom_final_line_transforms.keys():
+                debug.line("create_cpp_body", f" [{entry}]")
+            assert False, f"Some custom final line transforms have not been applied - see debug log for details"
 
         return cpp_lines
 

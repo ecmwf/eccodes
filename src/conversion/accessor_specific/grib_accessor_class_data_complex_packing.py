@@ -35,15 +35,19 @@ class DataComplexPackingDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
 
-        self._custom_arg_transforms["ALL"] = {
-            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataBuffer","buf"),
-            arg.Arg("unsigned char*","hres") : arg.Arg("AccessorDataBuffer","hres"),
-            arg.Arg("unsigned char*","lres") : arg.Arg("AccessorDataBuffer","lres"),
+        self._custom_arg_transforms["unpack_helper"] = {
+            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataPointer","buf"),
+            arg.Arg("unsigned char*","hres") : arg.Arg("AccessorDataPointer","hres"),
+            arg.Arg("unsigned char*","lres") : arg.Arg("AccessorDataPointer","lres"),
+            #arg.Arg("unsigned char*","scals") : arg.Arg("AccessorDataBuffer","scals"),
+            arg.Arg("T*","pscals") : arg.Arg("T","pscals"),
+            arg.Arg("T*","pval") : arg.Arg("T","pval"),
             }
 
-        self._custom_final_line_transforms["unpack_helper"] = {
-            "pscals = scals .at(lup);" : "pscals.assign(scals.begin() + lup, scals.end());",
-            "pval = vecTValues .at(i);" : "pval.assign(vecTValues.begin() + i, vecTValues.end());",
+        self._custom_arg_transforms["pack_double"] = {
+            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataBuffer","buf"),
+            arg.Arg("unsigned char*","hres") : arg.Arg("AccessorDataPointer","hres"),
+            arg.Arg("unsigned char*","lres") : arg.Arg("AccessorDataPointer","lres"),
             }
     
     def update_converters(self, converters):

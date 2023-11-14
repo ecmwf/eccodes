@@ -70,8 +70,12 @@ class MethodConverter(FunctionConverter):
         if self._cppfunction.const:
             for cppmember in self._transforms.members.values():
                 if cppmember.name == cppstruct_arg.name:
-                    self._cppfunction.const = ""
-                    debug.line("update_cppstruct_arg_assignment", f"Setting function non-const due to assignment to member [{cppmember.name}]")
+
+                    if cppmember._mutable:
+                        debug.line("update_cppstruct_arg_assignment", f"Assignment to mutable member [{cppmember.name}] in const function, so leaving const")
+                    else:
+                        self._cppfunction.const = ""
+                        debug.line("update_cppstruct_arg_assignment", f"Assignment to member [{cppmember.name}] in const function, so removing constness")
 
         return super().update_cppstruct_arg_assignment(cppstruct_arg, remainder)
 
@@ -396,6 +400,16 @@ class MethodConverter(FunctionConverter):
 
         return super().transform_cfunction_call(cfuncname, cparams)
 
+    # Overridden to handle AccessorDataBuffer...
+    def transform_cpp_container_non_assignment(self, cpp_container_arg, original_var, match_token, post_match_string):
+        if cpp_container_arg.underlying_type == "AccessorDataBuffer":
+            if match_token.value == ";" or match_token.is_maths_operator:
+                transformed_line = cpp_container_arg.name + ".data()" + match_token.as_string() + post_match_string
+                debug.line("transform_cpp_container_non_assignment", f"[METHOD] updated AccessorDataBuffer access for [{cpp_container_arg.name}]: Transformed line = [{transformed_line}]")
+                return transformed_line
+        
+        return super().transform_cpp_container_non_assignment(cpp_container_arg, original_var, match_token, post_match_string)
+
     # Overridden for container members
     def transform_container_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
         cppcontainer_arg = None
@@ -454,4 +468,5 @@ class MethodConverter(FunctionConverter):
     def method_conversions_list(self):
         # Need to use the full inherited list in case the current method's local mappings don't support it!
         return [inherited_method_funcsig_conv.InheritedMethodFuncSigConverter.inherited_method_conversions,
-                self._transforms.private_funcsig_mappings]
+                self._transforms.private_funcsig_mappings,
+                self._transforms.static_funcsig_mappings]

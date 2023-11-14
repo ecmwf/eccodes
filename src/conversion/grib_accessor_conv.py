@@ -1,6 +1,7 @@
 import debug
 from accessor_data import AccessorData
 import arg
+import member
 import arg_conv
 import member_conv
 from converter_collection import Converter, default_converters
@@ -57,12 +58,12 @@ common_type_transforms = {
 
 # Define base class member mapping
 base_members_map = {
-    arg.Arg("long","length") : arg.Arg("long","length_"),
-    arg.Arg("long","offset") : arg.Arg("long","offset_"),
-    arg.Arg("unsigned long","flags") : arg.Arg("unsigned long","flags_"),
-    arg.Arg("int","dirty") : arg.Arg("int","dirty_"),
-    arg.Arg("grib_virtual_value*","vvalue") : arg.Arg("GribVirtualValuePtr","vvalue_"),
-    arg.Arg("const char*","set") : arg.Arg("std::string","set_")
+    member.Member("long","length") : member.Member("long","length_"),
+    member.Member("long","offset") : member.Member("long","offset_"),
+    member.Member("unsigned long","flags") : member.Member("unsigned long","flags_"),
+    member.Member("int","dirty") : member.Member("int","dirty_", mutable=True),
+    member.Member("grib_virtual_value*","vvalue") : member.Member("GribVirtualValuePtr","vvalue_"),
+    member.Member("const char*","set") : member.Member("std::string","set_")
     }
 
 # Convert GribAccessor to AccessorData
@@ -111,9 +112,6 @@ class GribAccessorConverter:
         self.add_private_methods()
         self.add_static_functions()
         self.add_forward_declarations()
-
-        # We shouldn't have any custom line transforms left, otherwise something hasn't worked!
-        assert len(self._transforms.custom_final_line_transforms) == 0, self._transforms.custom_final_line_transforms.keys()
 
         debug.line("to_accessor_data", f"\n===== [CONVERTING:END] {self._grib_accessor.name} ====================\n")
 
@@ -253,6 +251,11 @@ class GribAccessorConverter:
         for cmember in self.members_in_hierarchy(self._grib_accessor):
             member_converter = member_conv.MemberConverter(cmember)
             cppmember = member_converter.to_cpp_arg(self._transforms)
+
+            # Special case - shadows base declaration
+            if cppmember.name == "dirty_":
+                cppmember._mutable = True
+
             if cmember in self._grib_accessor.members:
                 self._accessor_data.add_member(cppmember)
             self._transforms.add_to_members(cmember, cppmember)
