@@ -13,4 +13,8 @@ grib_context_stub_funcsig_conversions = [
 
     FuncSigMapping( FuncSig("int", "grib_context_get_handle_total_count", [Arg("grib_context*", "c")]),
                     FuncSig("int", "gribContextGetHandleTotalCount", [None])),
+
+    FuncSigMapping( FuncSig("void*", "grib_context_buffer_malloc_clear", [Arg("grib_context*", "c"), Arg("size_t", "size")]),
+                    FuncSig("AccessorDataBuffer", "gribcontextBufferMallocClear", [None, Arg("size_t", "size")])),
+
 ]

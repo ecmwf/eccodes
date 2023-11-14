@@ -5,6 +5,7 @@ import private_method_funcsig_conv
 from funcsig import FuncSig
 from arg_indexes import ArgIndexes
 from arg import Arg
+import arg
 from funcsig_mapping import FuncSigMapping
 
 class DataCcsdsPackingDataFuncSigConverter(private_method_funcsig_conv.PrivateMethodFuncSigConverter):
@@ -22,6 +23,11 @@ class DataCcsdsPackingDataFuncSigConverter(private_method_funcsig_conv.PrivateMe
 class DataCcsdsPackingDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
+
+        self._custom_arg_transforms = {
+            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataPointer","buf"),
+            }
+
 
     def update_converters(self, converters):
         converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataCcsdsPackingDataFuncSigConverter

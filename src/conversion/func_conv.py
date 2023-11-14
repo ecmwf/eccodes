@@ -1023,6 +1023,7 @@ class FunctionConverter:
             if match_token.is_assignment:
                 debug.line("default_transform_cvariable_access", f"Deleted [{var.name}]")
                 return f"// [Deleted variable {var.name}] " + var.as_string() + match_token.as_string() + post_match_string
+
             debug.line("default_transform_cvariable_access", f"Removed [{var.name}] for match [{match_token.value}]")
             if match_token.is_terminator:
                 return match_token.as_string() + post_match_string
@@ -1234,22 +1235,22 @@ class FunctionConverter:
     # Specific check for TEST(arg) or TEST(!arg) where TEST is if, assert etc
     # Supports special handling for container types
     def process_boolean_test(self, line):
-        m = re.search(r"\b(\w+)(\s*\(!?)(\w+)\)", line)
+        m = re.search(r"\b(\w+)(\s*\(!?)([^\)]+)\)", line)
 
         if m and m.group(1) in ["if", "Assert"]:
+            transformed_call = None
             test_arg = self._transforms.cpparg_for_cppname(m.group(3))
 
             if test_arg:
-                transformed_call = None
                 if arg.is_container(test_arg):
                     container_func_call = self.container_func_call_for(test_arg, "size")
                     transformed_call = f"{test_arg.name}.{container_func_call}"
                 elif test_arg.type == "AccessorName":
                     transformed_call = f"{test_arg.name}.get().size()"
                 
-                if transformed_call:
-                    line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
-                    debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+            if transformed_call:
+                line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
+                debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
 
         return line
 

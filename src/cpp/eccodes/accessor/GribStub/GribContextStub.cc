@@ -24,4 +24,11 @@ int gribContextGetHandleTotalCount()
     return 0;
 }
 
+AccessorDataBuffer gribcontextBufferMallocClear(size_t size)
+{
+    assert(false);
+
+    return {};
+}
+
 }

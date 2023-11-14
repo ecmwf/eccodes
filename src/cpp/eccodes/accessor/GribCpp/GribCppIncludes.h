@@ -8,3 +8,4 @@
 #include "GribType.h"
 #include "GribValue.h"
 #include "StringUtil.h"
+#include "GribScaling.h"

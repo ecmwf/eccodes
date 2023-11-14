@@ -418,9 +418,11 @@ class MethodConverter(FunctionConverter):
 
     # Overridden for member checks
     def process_boolean_test(self, line):
-        m = re.search(r"\b(\w+)(\s*\(!?)(\w+)\)", line)
+        m = re.search(r"\b(\w+)(\s*\(!?)([^\)]+)\)", line)
 
         if m and m.group(1) in ["if", "Assert"]:
+            transformed_call = None
+
             arg_name = m.group(3)
             test_arg = None
             for cppmember in self._transforms.members.values():
@@ -429,7 +431,6 @@ class MethodConverter(FunctionConverter):
                     break
 
             if test_arg:
-                transformed_call = None
                 if arg.is_container(test_arg):
                     container_func_call = self.container_func_call_for(test_arg, "size")
                     transformed_call = f"{test_arg.name}.{container_func_call}"
@@ -437,11 +438,14 @@ class MethodConverter(FunctionConverter):
                     transformed_call = f"{test_arg.name}.hasValue()"
                 elif test_arg.type == "AccessorInitData":
                     transformed_call = f"{test_arg.name}.args.size()"
+
+            elif "context->debug" in m.group(3):
+                transformed_call = "false"
                 
-                if transformed_call:
-                    line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
-                    debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
-                    return line
+            if transformed_call:
+                line = re.sub(re.escape(m.group(3)), f"{transformed_call}", line)
+                debug.line("process_boolean_test", f"Replaced [{m.group(0)}] with [{transformed_call}] line:[{line}]")
+                return line
             
         return super().process_boolean_test(line)
 
