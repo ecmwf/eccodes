@@ -34,11 +34,11 @@ class UnsignedDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
     
-        self._custom_arg_transforms = {
+        self._custom_arg_transforms["ALL"] = {
             arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataBuffer","buf"),
             }
 
-        self._custom_member_arg_transforms = {
+        self._custom_member_arg_transforms["ALL"] = {
             arg.Arg("grib_arguments*","arg") : arg.Arg("AccessorInitData","arg"),
             }
         

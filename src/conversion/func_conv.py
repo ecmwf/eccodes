@@ -964,6 +964,13 @@ class FunctionConverter:
             debug.line("transform_cpp_container_assignment", f"C call was dereferenced: updating container var to assign to index [0]: Transformed line = [{transformed_line}]")
             return transformed_line
 
+        # Remove any pointer C casts (the types likely match now!)
+        m = re.match(r"\s*(\([^\*]+\*\))", post_match_string)
+        if m:
+            post_match_string = re.sub(re.escape(m.group(1)), "", post_match_string)
+            transformed_line = cpp_container_arg.name + match_token.as_string() + post_match_string
+            debug.line("transform_cpp_container_assignment", f"Removed C-style cast [{m.group(1)}]: Transformed line = [{transformed_line}]")
+            return transformed_line
 
         return None
 

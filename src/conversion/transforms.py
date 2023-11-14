@@ -32,6 +32,13 @@ class Transforms:
 
         self._custom_final_line_transforms = {}
 
+    # Call this before adding new custom data...
+    def clear_custom_transforms(self):
+        self._custom_args.clear()
+        self._custom_member_args.clear()
+        self._custom_final_line_transforms.clear()
+        debug.line("Transforms", f"Custom data has been cleared...")
+
     # Note these are only supplied at __init__, any new types are added to the types list instead
     @property
     def funcsig_types(self):

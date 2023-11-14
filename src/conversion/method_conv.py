@@ -439,7 +439,8 @@ class MethodConverter(FunctionConverter):
                 elif test_arg.type == "AccessorInitData":
                     transformed_call = f"{test_arg.name}.args.size()"
 
-            elif "context->debug" in m.group(3):
+            #elif "context->debug" in m.group(3):
+            elif "context->" in m.group(3):
                 transformed_call = "false"
                 
             if transformed_call:

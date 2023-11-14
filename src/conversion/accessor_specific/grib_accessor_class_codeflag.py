@@ -22,11 +22,11 @@ class CodeflagDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
 
-        self._custom_member_arg_transforms = {
+        self._custom_member_arg_transforms["ALL"] = {
             arg.Arg("const char*","tablename") : arg.Arg("std::string","tablename"),
             }
-        
-        self._custom_final_line_transforms = {
+
+        self._custom_final_line_transforms["grib_get_codeflag"] = {
             "if ((filename = gribContextFullDefsPath(fname)) == 0) {" : "if ((filename = gribContextFullDefsPath(fname)) == \"\") {",
             }
     

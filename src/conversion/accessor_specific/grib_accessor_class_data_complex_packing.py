@@ -35,12 +35,17 @@ class DataComplexPackingDataAccessorSpecific(AccessorSpecific):
     def __init__(self) -> None:
         super().__init__()
 
-        self._custom_arg_transforms = {
-            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataPointer","buf"),
-            arg.Arg("unsigned char*","hres") : arg.Arg("AccessorDataPointer","hres"),
-            arg.Arg("unsigned char*","lres") : arg.Arg("AccessorDataPointer","lres"),
+        self._custom_arg_transforms["ALL"] = {
+            arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataBuffer","buf"),
+            arg.Arg("unsigned char*","hres") : arg.Arg("AccessorDataBuffer","hres"),
+            arg.Arg("unsigned char*","lres") : arg.Arg("AccessorDataBuffer","lres"),
             }
 
+        self._custom_final_line_transforms["unpack_helper"] = {
+            "pscals = scals .at(lup);" : "pscals.assign(scals.begin() + lup, scals.end());",
+            "pval = vecTValues .at(i);" : "pval.assign(vecTValues.begin() + i, vecTValues.end());",
+            }
+    
     def update_converters(self, converters):
         converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataComplexPackingDataFuncSigConverter
         converters[Converter.STATIC_FUNC_FUNCSIG] = DataComplexPackingDataStaticFunctionSigConverter
