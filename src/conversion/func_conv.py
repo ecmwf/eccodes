@@ -718,6 +718,42 @@ class FunctionConverter:
     def custom_transform_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
         return None
 
+    # Special handling for iterators
+    def transform_iterator_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
+
+        iterator_arg = None
+
+        for cpparg in self._transforms.all_args.values():
+            if cpparg and cpparg.name == cppvariable.name:
+                if cpparg.type.endswith("Iterator"):
+                    iterator_arg = cpparg
+                    break
+
+        if not iterator_arg:
+            return None
+        
+        if match_token.is_assignment:
+            m = re.match(r"\s*([^\;]+);", post_match_string)
+            if m:
+                if "Const" in iterator_arg.type:
+                    get_iter_text = ".cbegin()"
+                else:
+                    get_iter_text = ".begin()"
+                test_arg = self._transforms.cpparg_for_cppname(m.group(1))
+                if test_arg and arg.is_container(test_arg):
+                    post_match_string = re.sub(m.group(1), f"{test_arg.name}{get_iter_text}", post_match_string)
+                    transformed_string = cppvariable.as_string() + match_token.as_string() + post_match_string
+                    debug.line("transform_iterator_cppvariable_access", f"Added iterator assignment [{get_iter_text}] for cppvariable [{cppvariable.as_string()}], transformed_string=[{transformed_string}]")
+                    return transformed_string
+
+        if original_var.pointer == "*":
+            transformed_string = "*" + cppvariable.as_string() + match_token.as_string() + post_match_string
+            debug.line("transform_iterator_cppvariable_access", f"Restoring [*] to access iterator [{cppvariable.name}], transformed_string=[{transformed_string}]")
+            return transformed_string
+
+        return None
+
+
     # Special transforms for return variables
     def transform_return_cppvariable_access(self, cppvariable, original_var, match_token, post_match_string):
         ret = "GribStatus"
@@ -1108,6 +1144,7 @@ class FunctionConverter:
         debug.line("transform_variable_access", f"[CPP2] cppvariable=[{cppvariable.as_string()}] original_var=[{var.as_string()}] match_token=[{match_token.value}] post_match_string=[{post_match_string}]")
         for transform_func in [
             self.custom_transform_cppvariable_access,
+            self.transform_iterator_cppvariable_access,
             self.transform_return_cppvariable_access,
             self.transform_container_cppvariable_access,
             

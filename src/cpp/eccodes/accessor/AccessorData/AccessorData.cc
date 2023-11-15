@@ -205,7 +205,7 @@ GribStatus AccessorData::unpackElementSet(std::vector<std::size_t> const& indexA
     return GribStatus::NOT_IMPLEMENTED;
 }
 
-GribStatus AccessorData::unpackSubarray(std::vector<double> &values, std::size_t start) const
+GribStatus AccessorData::unpackSubArray(std::vector<double> &values, std::size_t start) const
 {
     return GribStatus::NOT_IMPLEMENTED;
 }

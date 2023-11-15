@@ -67,10 +67,10 @@ GribStatus Accessor::packMissing() const
     return data_->packMissing();
 }
 
-std::vector<double> Accessor::unpackSubarray(std::size_t start) const
+std::vector<double> Accessor::unpackSubArray(std::size_t start) const
 {
     std::vector<double> values{};
-    return data_->unpackSubarray(values, start) == GribStatus::SUCCESS ? values : std::vector<double>{};
+    return data_->unpackSubArray(values, start) == GribStatus::SUCCESS ? values : std::vector<double>{};
 }
 
 // Conversion support

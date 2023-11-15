@@ -28,6 +28,10 @@ class DataSimplePackingDataAccessorSpecific(AccessorSpecific):
             arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataPointer","buf"),
             }
 
+        self._custom_arg_transforms["number_of_bits"] = {
+            arg.Arg("const unsigned long*","n") : arg.Arg("UnsignedLongVectorConstIterator","n"),
+            }
+
     def update_converters(self, converters):
         converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataSimplePackingDataFuncSigConverter
         return converters

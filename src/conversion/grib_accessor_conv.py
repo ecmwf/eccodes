@@ -23,6 +23,7 @@ common_includes = [
     "\"Accessor.h\"", 
     "\"AccessorFactory.h\"", 
     "\"AccessorUtils/ConversionHelper.h\"",
+    "\"AccessorUtils/ContainerHelper.h\"",
     "\"AccessorUtils/AccessorException.h\"",
     "\"GribCpp/GribCppIncludes.h\"",
     "\"GribStub/GribStubIncludes.h\"",

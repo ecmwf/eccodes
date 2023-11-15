@@ -35,4 +35,10 @@ GribStatus gribEncodeUnsignedLongb(AccessorDataPointer p, unsigned long val, lon
     return GribStatus::NOT_IMPLEMENTED;
 }
 
+GribStatus gribDecodeLongArray(const AccessorDataPointer p, long& bitp, long bitsPerValue, size_t nVals, std::vector<long>& val)
+{
+    assert(false); // TODO
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
 }

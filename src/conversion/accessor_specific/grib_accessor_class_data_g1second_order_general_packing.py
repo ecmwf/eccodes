@@ -28,6 +28,16 @@ class DataG1secondOrderGeneralPackingDataAccessorSpecific(AccessorSpecific):
             arg.Arg("unsigned char*","buf") : arg.Arg("AccessorDataPointer","buf"),
             }
 
+        self._custom_arg_transforms["unpack_helper"] = {
+            arg.Arg("long*","p") : arg.Arg("auto","p"),
+            }
+
+        self._custom_final_line_transforms["unpack_helper"] = {
+            "auto p = secondaryBitmap .at(n + 1);" : "auto p = secondaryBitmap.begin() + n + 1;",
+            "while (p != 1) {" : "while (*p != 1) {",
+            }
+    
     def update_converters(self, converters):
         converters[Converter.PRIVATE_METHOD_FUNCSIG] = DataG1secondOrderGeneralPackingDataFuncSigConverter
         return converters
+

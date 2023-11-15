@@ -53,7 +53,7 @@ public:
     template<typename T>
     std::vector<T> unpackElementSet(std::vector<std::size_t> const& indexArray) const;
 
-    std::vector<double> unpackSubarray(std::size_t start) const;
+    std::vector<double> unpackSubArray(std::size_t start) const;
 
 private:
     AccessorDataPtr data_{};

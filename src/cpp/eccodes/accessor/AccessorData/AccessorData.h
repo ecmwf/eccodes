@@ -73,7 +73,7 @@ public:
     virtual GribStatus unpackElement(std::size_t index, float& val) const;
     virtual GribStatus unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<double> &valArray) const;
     virtual GribStatus unpackElementSet(std::vector<std::size_t> const& indexArray, std::vector<float> &valArray) const;
-    virtual GribStatus unpackSubarray(std::vector<double> &values, std::size_t start) const;
+    virtual GribStatus unpackSubArray(std::vector<double> &values, std::size_t start) const;
 
     // Conversion helpers...
     AccessorLoaderPtr loader() const { return nullptr; }

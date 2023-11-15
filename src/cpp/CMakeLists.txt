@@ -47,6 +47,7 @@ set(accessor_utils_src_files
 	${accessor_utils_dir}/AccessorLogger.h
 	${accessor_utils_dir}/ConversionHelper.cc
 	${accessor_utils_dir}/ConversionHelper.h
+	${accessor_utils_dir}/ContainerHelper.h
 	${accessor_utils_dir}/NamedType.h
 	${accessor_utils_dir}/TypeString.h
 )

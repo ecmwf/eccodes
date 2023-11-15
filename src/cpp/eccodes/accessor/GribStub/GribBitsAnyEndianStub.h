@@ -15,7 +15,9 @@ unsigned long gribDecodeUnsignedLong(const AccessorDataBuffer& input, long& bitP
 GribStatus gribEncodeUnsignedLong(AccessorDataPointer p, unsigned long val, long& bitp, long nbits);
 GribStatus gribEncodeUnsignedLong(AccessorDataBuffer& p, unsigned long val, long& bitPos, long numBits);
 
-//int grib_encode_unsigned_longb(unsigned char* p, unsigned long val, long* bitp, long nb);
 GribStatus gribEncodeUnsignedLongb(AccessorDataPointer p, unsigned long val, long& bitPos, long numBits);
+
+//int grib_decode_long_array(const unsigned char* p, long* bitp, long bitsPerValue, size_t n_vals, long* val);
+GribStatus gribDecodeLongArray(const AccessorDataPointer p, long& bitp, long bitsPerValue, size_t nVals, std::vector<long>& val);
 
 }
