@@ -881,6 +881,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
+    free(c->grib_definition_files_path);
     c->grib_definition_files_path = strdup(path);
     grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
 
@@ -893,6 +894,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path)
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
+    free(c->grib_samples_path);
     c->grib_samples_path = strdup(path);
     grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s", c->grib_samples_path);
 
