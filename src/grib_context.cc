@@ -18,12 +18,12 @@
  #include <fcntl.h> /* Windows: for _O_BINARY */
 #endif
 
+grib_string_list grib_file_not_found;
+
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
  #include <fenv.h>
  int feenableexcept(int excepts);
 #endif
-
-grib_string_list grib_file_not_found;
 
 /* Windows always has a colon in pathnames e.g. C:\temp\file. So instead we use semi-colons as delimiter */
 /* in order to have multiple definitions/samples directories */
