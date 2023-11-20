@@ -3357,7 +3357,7 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Maximum total colum integrated graupel (snow pellets)
+#Maximum total column integrated graupel (snow pellets)
 '231042' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -3401,7 +3401,7 @@
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 14 ;
 	}
-#Geometric height of neutral buoyancy above ground
+#Geometric height of neutral buoyancy level above ground
 '231048' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
@@ -3415,35 +3415,35 @@
 	 parameterNumber = 34 ;
 	 typeOfFirstFixedSurface = 20 ;
 	}
-#Roof layer temperature
+#Roof temperature
 '231050' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 185 ;
 	}
-#Wall layer temperature
+#Wall temperature
 '231051' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 186 ;
 	}
-#Road layer temperature
+#Road temperature
 '231052' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 187 ;
 	}
-#Snow depth water equivalent on roof surface
+#Snow depth water equivalent on roof
 '231053' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 60 ;
 	 typeOfFirstFixedSurface = 185 ;
 	}
-#Snow depth water equivalent on road surface
+#Snow depth water equivalent on road
 '231054' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
@@ -3457,10 +3457,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 187 ;
 	 typeOfSecondFixedSurface = 185 ;
-	 scaledValueOfFirstFixedSurface = 1 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 1 ;
-	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Urban canyon specific humidity
 '231056' = {
@@ -3469,10 +3465,6 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 187 ;
 	 typeOfSecondFixedSurface = 185 ;
-	 scaledValueOfFirstFixedSurface = 1 ;
-	 scaleFactorOfFirstFixedSurface = 0 ;
-	 scaledValueOfSecondFixedSurface = 1 ;
-	 scaleFactorOfSecondFixedSurface = 0 ;
 	}
 #Burned area
 '232000' = {
