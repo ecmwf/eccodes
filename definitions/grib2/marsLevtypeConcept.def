@@ -66,3 +66,15 @@
 'sfc'  = {typeOfFirstFixedSurface=177; typeOfSecondFixedSurface=255;}
 'o2d'  = {typeOfFirstFixedSurface=188; typeOfSecondFixedSurface=189;}
 
+'sfc' = {typeOfFirstFixedSurface=5; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=14; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=16; typeOfSecondFixedSurface=255;}
+'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=151;}
+'sfc' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=167;}
+'sol' = {typeOfFirstFixedSurface=185; typeOfSecondFixedSurface=255;}
+'sol' = {typeOfFirstFixedSurface=185; typeOfSecondFixedSurface=185;}
+'sol' = {typeOfFirstFixedSurface=186; typeOfSecondFixedSurface=255;}
+'sol' = {typeOfFirstFixedSurface=186; typeOfSecondFixedSurface=186;}
+'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
+'sol' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
+'sfc' = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}
