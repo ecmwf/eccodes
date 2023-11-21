@@ -76,10 +76,10 @@ concept marsType(unknown) {
 }
 
 # get the values from the 1st most outer loop which matter!
-#   aarays should be implemented in ecCodes as for bufr i.e. lloop[0] => #0#lengthOfTimeRange
-meta lloop element(lengthOfTimeRange, 0);
-meta tloop element(typeOfStatisticalProcessing, 0);
-meta tloopti element(typeOfTimeIncrement, 0);
+#   aarays should be implemented in ecCodes as for bufr i.e. outerLoopLengthOfTimeRange[0] => #0#lengthOfTimeRange
+meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
+meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
+meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
 
 # See GRIB-205 re no_copy
 # Cannot use typeOfProcessedData for stream. See GRIB-911
@@ -99,19 +99,19 @@ concept marsStream(unknown) {
     }
     moda = {
       productDefinitionTemplateNumber = 8;
-      tloopti = 1;
+      outerLoopTypeOfTimeIncrement = 1;
     }
     # avgd, mind, maxd
     dame = {
       productDefinitionTemplateNumber = 8;
-      tloopti = 1;
-      lloop = 21;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 21;
     }
     # accumd
     dame = {
       productDefinitionTemplateNumber = 8;
-      tloopti = 1;
-      lloop = 24;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 24;
     }
 } : no_copy;
 
@@ -120,7 +120,7 @@ alias mars.type   = marsType;
 
 if (marsStream is "moda") {
 
-  meta verificationDate        g1verificationdate(dataDate, dataTime, lloop) : read_only;
+  meta verificationDate        g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
   meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
   alias mars.date            = monthlyVerificationDate;
 
@@ -130,14 +130,14 @@ if (marsStream is "moda") {
 
 if (marsStream is "dame") {
 
-  if (!(tloop == 3 || tloop == 2)) {
+  if (!(outerLoopTypeOfStatisticalProcessing == 3 || outerLoopTypeOfStatisticalProcessing == 2)) {
   # not mind or maxd
     alias mars.date            = validityDate;
   }
 
-  if (lloop == 24) {
+  if (outerLoopLengthOfTimeRange == 24) {
   # accumd
-    meta verificationDate        g1verificationdate(dataDate, dataTime, lloop) : read_only;
+    meta verificationDate        g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
     alias mars.date            = verificationDate;
 
   }
