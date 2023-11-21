@@ -148,6 +148,18 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Momentum flux, u component
+'260062' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	}
+#Momentum flux, v component
+'260063' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	}
 #Standard deviation of sub-grid scale orography
 '260085' = {
 	 discipline = 0 ;

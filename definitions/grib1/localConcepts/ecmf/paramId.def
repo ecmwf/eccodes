@@ -1054,12 +1054,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Surface net radiation
+#Surface net radiation (SW and LW)
 '149' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Top net radiation
+#Top net radiation (SW and LW)
 '150' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 150 ;
@@ -1459,32 +1459,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
@@ -15024,7 +15024,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean surface net radiation flux
+#Time-mean surface net radiation flux (SW and LW)
 '172149' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
@@ -17509,7 +17509,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
+#Mean 2 metre temperature
 '228004' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;

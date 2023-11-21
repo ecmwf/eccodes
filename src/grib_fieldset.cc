@@ -73,8 +73,7 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
             set->columns[id].long_values = (long*)grib_context_malloc_clear(c, sizeof(long) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].long_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
-                                 sizeof(long) * GRIB_START_ARRAY_SIZE);
+                                 "%s: Error allocating %zu bytes", __func__, sizeof(long) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
             }
@@ -83,8 +82,7 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
             set->columns[id].double_values = (double*)grib_context_malloc_clear(c, sizeof(double) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].double_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
-                                 sizeof(double) * GRIB_START_ARRAY_SIZE);
+                                 "%s: Error allocating %zu bytes", __func__, sizeof(double) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
             }
@@ -93,8 +91,7 @@ int grib_fieldset_new_column(grib_fieldset* set, int id, char* key, int type)
             set->columns[id].string_values = (char**)grib_context_malloc_clear(c, sizeof(char*) * GRIB_START_ARRAY_SIZE);
             if (!set->columns[id].string_values) {
                 grib_context_log(c, GRIB_LOG_ERROR,
-                                 "grib_fieldset_new_column: Cannot malloc %ld bytes",
-                                 sizeof(char*) * GRIB_START_ARRAY_SIZE);
+                                 "%s: Error allocating %zu bytes", __func__, sizeof(char*) * GRIB_START_ARRAY_SIZE);
                 err = GRIB_OUT_OF_MEMORY;
                 return err;
             }
@@ -171,8 +168,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                        newsize * sizeof(long));
                 if (!newlongs) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
-                                     newsize - set->columns[i].values_array_size);
+                                     "%s: Error allocating %zu bytes", __func__, newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -183,8 +179,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                            newsize * sizeof(double));
                 if (!newdoubles) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
-                                     newsize - set->columns[i].values_array_size);
+                                     "%s: Error allocating %zu bytes", __func__, newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -195,8 +190,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
                                                           newsize * sizeof(char*));
                 if (!newstrings) {
                     grib_context_log(c, GRIB_LOG_ERROR,
-                                     "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
-                                     newsize - set->columns[i].values_array_size);
+                                     "%s: Error allocating %zu bytes", __func__, newsize - set->columns[i].values_array_size);
                     return GRIB_OUT_OF_MEMORY;
                 }
                 else
@@ -206,8 +200,7 @@ static int grib_fieldset_columns_resize(grib_fieldset* set, size_t newsize)
         newerrors = (int*)grib_context_realloc(c, set->columns[i].errors, newsize * sizeof(int));
         if (!newerrors) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "grib_fieldset_columns_resize: Cannot malloc %ld bytes",
-                             newsize * sizeof(int));
+                             "%s: Error allocating %zu bytes", __func__, newsize * sizeof(int));
             return GRIB_OUT_OF_MEMORY;
         }
         else
@@ -332,8 +325,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
     msize = sizeof(grib_fieldset);
     set   = (grib_fieldset*)grib_context_malloc_clear(c, msize);
     if (!set) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_fieldset_create_from_keys: Cannot malloc %lu bytes", msize);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", __func__, msize);
         return NULL;
     }
 
@@ -357,7 +349,7 @@ static grib_fieldset* grib_fieldset_create_from_keys(grib_context* c, const char
 
     set->columns = (grib_column*)grib_context_malloc_clear(c, sizeof(grib_column) * nkeys);
     if (!set->columns) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_fieldset_create_from_keys: memory allocation error");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: memory allocation error", __func__);
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -417,7 +409,6 @@ int grib_fieldset_apply_where(grib_fieldset* set, const char* where_string)
     // grib_math* m = NULL;
     // m = grib_math_new(set->context, where_string, &err);
     // if (err || !m) return err;
-
     // print_math(m);
     // printf("\n");
     // grib_math_delete(set->context, m);
@@ -816,8 +807,7 @@ static int grib_fieldset_resize_int_array(grib_int_array* a, size_t newsize)
     el = (int*)grib_context_realloc(a->context, a->el, newsize);
     if (!el) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_int_array: Cannot malloc %lu bytes",
-                         newsize);
+                         "%s: Error allocating %zu bytes", __func__, newsize);
         return GRIB_OUT_OF_MEMORY;
     }
     else
@@ -860,8 +850,7 @@ static int grib_fieldset_resize_fields(grib_fieldset* set, size_t newsize)
     fields = (grib_field**)grib_context_realloc(set->context, set->fields, newsize * sizeof(grib_field*));
     if (!fields) {
         grib_context_log(set->context, GRIB_LOG_ERROR,
-                         "grib_fieldset_resize_fields: Cannot malloc %lu bytes",
-                         newsize * sizeof(grib_field*));
+                         "%s: Error allocating %zu bytes", __func__, newsize * sizeof(grib_field*));
         return GRIB_OUT_OF_MEMORY;
     }
     else

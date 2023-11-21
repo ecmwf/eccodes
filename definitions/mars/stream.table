@@ -69,6 +69,8 @@
 1095 wamf Wave monthly forecast
 1096 wmfm Wave monthly forecast means
 1097 smma Seasonal monthly means anomalies
+1098 clte Climate run output
+1099 clmn Climate run monthly means output
 1110 seap Sensitive area prediction
 1120 eefh Extended ensemble forecast hindcast
 1121 eehs Extended ensemble forecast hindcast statistics

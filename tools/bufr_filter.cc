@@ -23,7 +23,8 @@ grib_option grib_options[] = {
     /*      {"G",0,0,0,1,0}, */
     { "T:", 0, 0, 1, 0, "B" },
     { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 const char* tool_description =
     "Apply the rules defined in rules_file to each BUFR "

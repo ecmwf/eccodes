@@ -15,7 +15,8 @@ grib_option grib_options[] = {
     { "V", 0, 0, 0, 1, 0 },
     { "p:", 0, 0, 0, 1, 0 }, /* print keys */
     { "S", 0, 0, 1, 0, 0 },  /* needed for skip */
-    { "w:", 0, 0, 0, 1, 0 }  /* 'where' clause */
+    { "w:", 0, 0, 0, 1, 0 },  /* 'where' clause */
+    { "h", 0, 0, 0, 1, 0 },
 };
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 

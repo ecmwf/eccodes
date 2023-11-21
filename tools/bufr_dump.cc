@@ -53,7 +53,8 @@ grib_option grib_options[] = {
     { "V", 0, 0, 0, 1, 0 },
     { "q", 0, 0, 1, 0, 0 },
     { "S:", "subset_number", "\n\t\tDump the given subset\n", 0, 1, 0 },
-    { "X:", 0, 0, 0, 1, 0 }
+    { "X:", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
     /* {"x",0,0,0,1,0} */
 };
 
