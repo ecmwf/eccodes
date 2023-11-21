@@ -113,7 +113,7 @@ concept marsStream(unknown) {
       outerLoopTypeOfTimeIncrement = 1;
       outerLoopLengthOfTimeRange = 24;
     }
-} : no_copy;
+} : no_copy,read_only;
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
@@ -121,7 +121,7 @@ alias mars.type   = marsType;
 if (marsStream is "moda") {
 
   meta verificationDate        g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
-  meta monthlyVerificationDate g1monthlydate(verificationDate) : dump,no_copy;
+  meta monthlyVerificationDate g1monthlydate(verificationDate) : no_copy;
   alias mars.date            = monthlyVerificationDate;
 
   unalias mars.time;
