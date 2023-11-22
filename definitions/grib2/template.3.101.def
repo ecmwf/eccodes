@@ -2,7 +2,7 @@
 
 # TEMPLATE 3.101, General Unstructured Grid
 
-constant isGridded = one;
+constant isGridded = true;
 
 codetable[1] shapeOfTheEarth ('3.2.table',masterDir,localDir) : dump;
 

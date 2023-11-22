@@ -2,7 +2,7 @@
 
 # See https://healpix.jpl.nasa.gov/pdf/intro.pdf
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Number of grid points along one side of one of the 12 base resolution pixels (>=1)
 # The number of data points should be = 12 * Nside * Nside

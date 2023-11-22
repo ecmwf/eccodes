@@ -3,7 +3,7 @@
 # TEMPLATE 3.30, Lambert conformal
 include "grib2/template.3.shape_of_the_earth.def";
 
-constant isGridded = one;
+constant isGridded = true;
 
 unsigned[4] Nx : dump;
 alias Ni = Nx;
