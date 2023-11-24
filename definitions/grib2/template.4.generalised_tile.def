@@ -1,8 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
 # Generalised tile specifications
-codetable[1] tileClassification ('4.242.table',masterDir,localDir) : dump;
-codetable[2] typeOfTile ('4.252.table',masterDir,localDir) : dump;
+codetable[1] tileClassification ('4.242.table',masterDir,localDir) : dump, string_type;
+codetable[2] typeOfTile ('4.252.table',masterDir,localDir) : dump, string_type;
 unsigned[1]  numberOfUsedSpatialTiles=1 : dump; # Maximum number of tiles used in the entire grid
 unsigned[1]  numberOfUsedTileAttributeCombinationsForTypeOfTile=1 : dump; # Number of tile attributes for a given tile in the gridbox
 unsigned[1]  numberOfUsedTileAttributesForTileAttributeCombination=1 : dump; # Number of used attributes in a given combination
@@ -15,18 +15,35 @@ transient unknownCombinationOfAttributesOfTile = "unknown";
 concept combinationOfAttributesOfTile (unknownCombinationOfAttributesOfTile,"combinationOfAttributesOfTileConcept.def",conceptsDir2,conceptsDir1): no_copy,dump;
 byte[16] uuidOfDataGroup : dump; # UUID of data group
 
-alias NT=totalNumberOfTileAttributeCombinations;
-alias NUT=numberOfUsedSpatialTiles;
-alias ITN=tileIndex;
-alias NATC=numberOfUsedTileAttributeCombinationsForTypeOfTile;
+# Extract long name (title) + part in brackets (grouping)
+meta tileGrouping codetable_units(typeOfTile) : dump;
+meta tileName  codetable_title(typeOfTile) : dump;
+
 alias uuid=uuidOfDataGroup;
+
 alias ls.tile=typeOfTile;
 alias ls.tileAttribute=combinationOfAttributesOfTile;
+
+# Create transients to reorder keys in the namespace
+
+transient tempTileAttribute=combinationOfAttributesOfTile;
+transient tempTile=typeOfTile;
+transient tempTileName=tileName;
+
 alias tile.tileIndex=tileIndex;
-alias tile.tile=typeOfTile;
-alias tile.tileAttribute=combinationOfAttributesOfTile;
-alias tile.nTiles=numberOfUsedSpatialTiles;
-alias tile.totalTileAttCombo=totalNumberOfTileAttributeCombinations;
-alias tile.nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
-alias tile.nTileAtt=numberOfUsedTileAttributesForTileAttributeCombination;
-alias tile.uuid=uuidOfDataGroup;
+alias tile=tempTile;
+alias tile.tile=tile;
+alias tile.tileName=tempTileName;
+alias tileAttribute=tempTileAttribute;
+alias tile.tileAttribute=tileAttribute;
+alias nTiles=numberOfUsedSpatialTiles;
+alias tile.nTiles=nTiles;
+alias totalTileAttCombo=totalNumberOfTileAttributeCombinations;
+alias tile.totalTileAttCombo=totalTileAttCombo;
+alias nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
+alias tile.nTileAttCombo=nTileAttCombo;
+
+alias mars.tile=typeOfTile;
+alias mars.tileAttribute=tileAttribute;
+transient paramtype = "tile";
+alias mars.paramType=paramtype;
