@@ -54,5 +54,24 @@ set -e
 grep -q "Invalid element.*Value must be between 0 and 95" $tempText
 
 
+# Access a double array
+input=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+cat > $tempFilt <<EOF
+    meta elemZ element(values, -1);
+    print "Last value as a double = [elemZ:d]";
+EOF
+${tools_dir}/grib_filter $tempFilt $input
+
+cat > $tempFilt <<EOF
+    meta badElem element(values, 100000);
+    print "[badElem:d]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $input
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
 # Clean up
 rm -f $tempRef $tempText $tempFilt
