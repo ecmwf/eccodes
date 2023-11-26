@@ -75,24 +75,69 @@ concept marsType(unknown) {
    }
 }
 
+# get the values from the 1st most outer loop which matter
+meta outerLoopLengthOfTimeRange element(lengthOfTimeRange, 0);
+meta outerLoopTypeOfStatisticalProcessing element(typeOfStatisticalProcessing, 0);
+meta outerLoopTypeOfTimeIncrement element(typeOfTimeIncrement, 0);
+
 # See GRIB-205 re no_copy
 # Cannot use typeOfProcessedData for stream. See GRIB-911
 concept marsStream(unknown) {
 
     oper = {
-      productDefinitionTemplateNumber = 8;
-    }
-    oper = {
       productDefinitionTemplateNumber = 0;
     }
-
+    oper = {
+      productDefinitionTemplateNumber = 8;
+    }
     enda = {
       productDefinitionTemplateNumber = 11;
     }
     enda = {
       productDefinitionTemplateNumber = 1;
     }
-} : no_copy;
+    moda = {
+      productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+    }
+    # avgd, mind, maxd
+    dame = {
+      productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 21;
+    }
+    # accumd
+    dame = {
+      productDefinitionTemplateNumber = 8;
+      outerLoopTypeOfTimeIncrement = 1;
+      outerLoopLengthOfTimeRange = 24;
+    }
+} : no_copy,read_only;
 
 alias mars.stream = marsStream;
 alias mars.type   = marsType;
+
+if (marsStream is "moda") {
+  meta verificationDate g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
+  meta monthlyVerificationDate g1monthlydate(verificationDate) : no_copy;
+  alias mars.date = monthlyVerificationDate;
+
+  unalias mars.time;
+  unalias mars.step;
+}
+
+if (marsStream is "dame") {
+  if (!(outerLoopTypeOfStatisticalProcessing == 3 || outerLoopTypeOfStatisticalProcessing == 2)) {
+    # not mind or maxd
+    alias mars.date = validityDate;
+  }
+
+  if (outerLoopLengthOfTimeRange == 24) {
+    # accumd
+    meta verificationDate g1verificationdate(dataDate, dataTime, outerLoopLengthOfTimeRange) : read_only;
+    alias mars.date = verificationDate;
+  }
+
+  unalias mars.time;
+  unalias mars.step;
+}

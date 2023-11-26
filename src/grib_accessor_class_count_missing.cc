@@ -200,10 +200,15 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (grib_get_long(h, self->unusedBitsInBitmap, &unusedBitsInBitmap) != GRIB_SUCCESS) {
         if (grib_get_long(h, self->numberOfDataPoints, &numberOfDataPoints) != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "unable to count missing values");
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to count missing values");
             return GRIB_INTERNAL_ERROR;
         }
         unusedBitsInBitmap = size * 8 - numberOfDataPoints;
+        if (unusedBitsInBitmap < 0) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Inconsistent number of bitmap points: Check the bitmap and data sections!");
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Bitmap size=%ld, numberOfDataPoints=%ld", size*8, numberOfDataPoints);
+            return GRIB_DECODING_ERROR;
+        }
     }
 
     p = h->buffer->data + offset;

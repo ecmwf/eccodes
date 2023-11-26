@@ -13,6 +13,8 @@ constant tablesVersionLatestOfficial = 31 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
 constant tablesVersionLatest = 31 : edition_specific;
 
+constant false = 0 : hidden;
+constant true = 1 : hidden;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;

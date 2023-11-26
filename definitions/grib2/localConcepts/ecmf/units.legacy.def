@@ -1309,3 +1309,33 @@
  parameterCategory = 140 ;
  parameterNumber = 249 ;
 }
+#Mean temperature at 2 metres
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 4 ;
+}
+#Mean surface net radiation flux
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 149 ;
+}
+#Surface net radiation
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 149 ;
+}
+#Top net radiation
+'J m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 150 ;
+}
+#Surface emissivity
+'dimensionless' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 124 ;
+}

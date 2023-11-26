@@ -267,11 +267,9 @@ static void add_bitstream(bitstream_context *ctx, grib_accessor* a, int t, int n
     return;
 }
 
-/*
- * find min/max of an integer array
- * return 0:  if min max found
- * return 1:  if min max not found, min = max = 0
- */
+// find min/max of an integer array
+// return 0:  if min max found
+// return 1:  if min max not found, min = max = 0
 static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
 {
     unsigned int first;
@@ -1325,8 +1323,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", cclass_name);
         return GRIB_ENCODING_ERROR;
     }
-    min_val = static_cast<double>(mn);
-    max_val = static_cast<double>(mx);
+    min_val = mn;
+    max_val = mx;
 
     binary_scale = bin_scale;
 

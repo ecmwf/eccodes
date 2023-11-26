@@ -35,4 +35,9 @@ export METAR_MONTH=4
 ${tools_dir}/metar_get -n ls $metar_file >/dev/null
 ${tools_dir}/metar_get -w count=1/2/3 -p CCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $metar_file
 
+# Decode a 'group' key as int and double
+result=$( ${tools_dir}/metar_get -p visibilityInMetres:i,visibilityInMetres:d -w count=1 $metar_file )
+[ "$result" = "6000 6000" ]
+
+# Clean up
 rm -f $fLog

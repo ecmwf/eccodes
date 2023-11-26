@@ -3,7 +3,7 @@
 # TEMPLATE 3.1000, Cross-section grid, with points equally spaced on the horizontal
 include "grib2/template.3.shape_of_the_earth.def";
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Number of horizontal points
 unsigned[4] numberOfHorizontalPoints : dump ;

@@ -86,16 +86,24 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
 
-    if (strcmp(e->name, "lookup") == 0) {
+    if (STR_EQUAL(e->name, "lookup")) {
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "new") == 0) {
+    if (STR_EQUAL(e->name, "new")) {
         *lres = h->loader != NULL;
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "missing") == 0) {
+    if (STR_EQUAL(e->name, "abs")) {
+        grib_expression* exp = grib_arguments_get_expression(h, e->args, 0);
+        long lval = 0;
+        int ret = grib_expression_evaluate_long(h, exp, &lval);
+        *lres = abs(lval);
+        return ret;
+    }
+
+    if (STR_EQUAL(e->name, "missing")) {
         const char* p = grib_arguments_get_name(h, e->args, 0);
         if (p) {
             long val = 0;
@@ -122,7 +130,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "defined") == 0) {
+    if (STR_EQUAL(e->name, "defined")) {
         const char* p = grib_arguments_get_name(h, e->args, 0);
 
         if (p) {
@@ -134,7 +142,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "environment_variable") == 0) {
+    if (STR_EQUAL(e->name, "environment_variable")) {
         // ECC-1520: This implementation has some limitations:
         // 1. Cannot distinguish between environment variable NOT SET
         //    and SET but equal to 0
@@ -154,12 +162,12 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "changed") == 0) {
+    if (STR_EQUAL(e->name, "changed")) {
         *lres = 1;
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "gribex_mode_on") == 0) {
+    if (STR_EQUAL(e->name, "gribex_mode_on")) {
         *lres = h->context->gribex_mode_on ? 1 : 0;
         return GRIB_SUCCESS;
     }

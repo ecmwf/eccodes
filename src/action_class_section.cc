@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -20,8 +19,6 @@
    START_CLASS_DEF
    CLASS      = action
    IMPLEMENTS = notify_change
-   IMPLEMENTS = reparse
-   IMPLEMENTS = xref
    END_CLASS_DEF
 
  */
@@ -37,9 +34,7 @@ or edit "action.class" and rerun ./make_class.pl
 */
 
 static void init_class      (grib_action_class*);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
-static grib_action* reparse(grib_action* a,grib_accessor* acc,int *doit);
 
 
 typedef struct grib_action_section {
@@ -58,12 +53,12 @@ static grib_action_class _grib_action_class_section = {
     0,                            /* destroy */
 
     0,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
     &notify_change,                            /* notify_change */
-    &reparse,                            /* reparse */
+    0,                            /* reparse */
     0,                            /* execute */
 };
 
@@ -231,17 +226,4 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     grib_update_paddings(old_section);
 
     return GRIB_SUCCESS;
-}
-
-static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
-{
-    /* Should be inherited */
-    printf("reparse should be inherited: %s\n", a->name);
-
-    Assert(1 == 0);
-    return 0;
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

@@ -908,7 +908,7 @@ int main(int argc, char* argv[])
         GRIB_CHECK(grib_set_long(h, "minute", 0), 0);
         GRIB_CHECK(grib_set_long(h, "second", 0), 0);
         len = strlen("s");
-        GRIB_CHECK(grib_set_string(h, "indicatorOfUnitOfTimeRange", "s", &len), 0);
+        GRIB_CHECK(grib_set_string(h, "indicatorOfUnitForForecastTime", "s", &len), 0);
         len = strlen("s");
         GRIB_CHECK(grib_set_string(h, "stepUnits", "s", &len), 0);
         GRIB_CHECK(grib_set_long(h, "endStep", 3600), 0);

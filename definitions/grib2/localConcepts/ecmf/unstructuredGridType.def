@@ -6,3 +6,5 @@
 'eORCA1'    = { numberOfGridUsed = 5; }
 'eORCA025'  = { numberOfGridUsed = 6; }
 'eORCA12'   = { numberOfGridUsed = 7; }
+'CORE2'     = { numberOfGridUsed = 8; }
+'NG5'       = { numberOfGridUsed = 9; }
