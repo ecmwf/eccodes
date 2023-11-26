@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.1200, Time section grid
-constant isGridded = one;
+constant isGridded = true;
 
 #  NT - Number of time steps
 unsigned[4] numberOfTimeSteps  : dump;

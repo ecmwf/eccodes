@@ -14,7 +14,7 @@ transient addEmptySection2 = 0;
 
 if ( addEmptySection2 == 0 ) {
     if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
-        alias section2Used=one;
+        alias section2Used=true;
 
         if(productionStatusOfProcessedData == 8 || productionStatusOfProcessedData == 9) {
             # This for adding an expver other than prod/test to UERRA
