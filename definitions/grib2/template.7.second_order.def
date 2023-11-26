@@ -41,7 +41,6 @@ meta codedValues data_g2second_order_packing(
      widthOfSPD,
      orderOfSPD,
      numberOfPoints
-
 ): read_only;
 
 meta values data_apply_bitmap(codedValues,
