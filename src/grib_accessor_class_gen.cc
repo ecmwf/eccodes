@@ -424,7 +424,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len = 1;
             ret = grib_expression_evaluate_double(hand, e, &dval);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as double (from %s)",
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as double (from %s)",
                                  a->name, e->cclass->name);
                 return ret;
             }
@@ -438,7 +438,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len  = sizeof(tmp);
             cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string (from %s)",
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as string (from %s)",
                                  a->name, e->cclass->name);
                 return ret;
             }
