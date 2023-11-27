@@ -326,6 +326,10 @@ int codes_set_missing(grib_handle* h, const char* key)
 {
     return grib_set_missing(h, key);
 }
+int codes_get_offset(const codes_handle* h, const char* key, size_t* offset)
+{
+    return grib_get_offset(h, key, offset);
+}
 int codes_get_size(const grib_handle* h, const char* key, size_t* size)
 {
     return grib_get_size(h, key, size);

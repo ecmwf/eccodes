@@ -1,5 +1,5 @@
 # GRID DEFINITION spherical harmonic coefficients (including rotated, stretched, or stretched and rotated)
-constant isGridded = zero;
+constant isGridded = false;
 
 # J - pentagonal resolution parameter
 unsigned[2] J : dump ;

@@ -8,21 +8,21 @@
 # Octets 6-nn : Binary data values - binary string, with each (scaled)
 
 meta codedValues data_g2simple_packing_with_preprocessing(
-        section7Length,
-        offsetBeforeData,
-        offsetSection7,
-        unitsFactor,
-        unitsBias,
-        changingPrecision,
-        numberOfValues,
-        bitsPerValue,
-        referenceValue,
-        binaryScaleFactor,
-        decimalScaleFactor,
-        optimizeScaleFactor,
-        typeOfPreProcessing,
-        preProcessingParameter
-  ): read_only;
+    section7Length,
+    offsetBeforeData,
+    offsetSection7,
+    unitsFactor,
+    unitsBias,
+    changingPrecision,
+    numberOfValues,
+    bitsPerValue,
+    referenceValue,
+    binaryScaleFactor,
+    decimalScaleFactor,
+    optimizeScaleFactor,
+    typeOfPreProcessing,
+    preProcessingParameter
+): read_only;
 
 meta values data_apply_bitmap(codedValues,
                               bitmap,

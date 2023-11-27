@@ -26,4 +26,4 @@ alias spectralDataRepresentationType=spectralType;
 codetable[1] spectralMode ('3.7.table',masterDir,localDir) = 1 : no_copy;
 alias spectralDataRepresentationMode=spectralMode;
 
-constant isGridded = zero;
+constant isGridded = false;

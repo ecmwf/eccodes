@@ -111,7 +111,7 @@ meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
-alias calendarIdPresent = zero;
+alias calendarIdPresent = false;
 if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   alias calendarIdPresent = present;
   codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;

@@ -257,10 +257,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     long v = 0; /* The converted value */
 
-    // Requires more work e.g. filter
-    //if (strcmp_nocase(val, "missing")==0) {
-    //    return pack_missing(a);
-    //}
+    // ECC-1722
+    if (strcmp_nocase(val, "missing")==0) {
+        return pack_missing(a);
+    }
 
     if (string_to_long(val, &v, 1) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,

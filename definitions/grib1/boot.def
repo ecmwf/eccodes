@@ -9,6 +9,8 @@
 
 constant ieeeFloats   = 0 : hidden, edition_specific;
 transient eps=0;
+constant false=0 : hidden;
+constant true=1 : hidden;
 constant two=1 : hidden;
 constant three=1 : hidden;
 constant eight=8 : hidden;

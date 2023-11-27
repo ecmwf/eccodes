@@ -87,3 +87,13 @@
                                   scaleFactorOfSecondFixedSurface=0; scaledValueOfSecondFixedSurface=0;}
 'waterSurfaceToIsothermalOceanLayer' = {typeOfFirstFixedSurface=160; typeOfSecondFixedSurface=20;
                                     scaledValueOfFirstFixedSurface=0; scaleFactorOfFirstFixedSurface=0;}
+
+'totalSoilLayer' = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=151;}
+'rootZone'       = {typeOfFirstFixedSurface=1; typeOfSecondFixedSurface=167;}
+'roof'           = {typeOfFirstFixedSurface=185; typeOfSecondFixedSurface=255;}
+'roofLayer'      = {typeOfFirstFixedSurface=185; typeOfSecondFixedSurface=185;}
+'wall'           = {typeOfFirstFixedSurface=186; typeOfSecondFixedSurface=255;}
+'wallLayer'      = {typeOfFirstFixedSurface=186; typeOfSecondFixedSurface=186;}
+'road'           = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=255;}
+'roadLayer'      = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=187;}
+'urbanCanyon'    = {typeOfFirstFixedSurface=187; typeOfSecondFixedSurface=185;}

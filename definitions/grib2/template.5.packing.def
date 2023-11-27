@@ -3,7 +3,7 @@
 #  Reference value (R)
 # The copy_ok means that the value is copied when changing the representation
 # e.g. from jpeg to simple packing.
-ieeefloat referenceValue  : read_only, copy_ok;
+ieeefloat referenceValue : read_only, copy_ok;
 meta referenceValueError reference_value_error(referenceValue,ieee);
 
 # Binary scale factor (E)
