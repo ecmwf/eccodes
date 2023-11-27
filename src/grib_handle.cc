@@ -341,25 +341,38 @@ static bool can_create_clone_light(const grib_handle* h)
 
 grib_handle* grib_handle_clone_light(const grib_handle* h)
 {
-    int err        = 0;
-    long edition   = 0;
+    int err = 0;
     grib_handle* result = NULL;
+    grib_context* c = h->context;
 
     if (!can_create_clone_light(h)) {
         // Lightweight clone not possible. Do a normal clone
         return grib_handle_clone(h);
     }
 
-    char sample_name[1024]; /* name of the GRIB sample file */
+    char sample_name[1024];
+    long edition = 0;
     grib_get_long(h, "edition", &edition);
     snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
-    grib_handle* h_sample = grib_handle_new_from_samples(NULL, sample_name);
+    grib_handle* h_sample = grib_handle_new_from_samples(c, sample_name);
+    if (!h_sample) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create lightweight clone using sample %s", sample_name);
+        return NULL;
+    }
+
+    // Must preserve the packingType
+    char input_packing_type[100];
+    size_t len = sizeof(input_packing_type);
+    err = grib_get_string(h, "packingType", input_packing_type, &len);
+    if (!err) {
+        grib_set_string(h_sample, "packingType", input_packing_type, &len);
+    }
 
     // Copy all sections except Bitmap and Data from h to h_sample
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
     result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
     if (!result || err) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to create lightweight clone");
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create lightweight clone: Unable to copy sections");
         grib_handle_delete(h_sample);
         return NULL;
     }
