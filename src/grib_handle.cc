@@ -326,48 +326,90 @@ grib_handle* grib_handle_clone(const grib_handle* h)
     return result;
 }
 
+static bool can_create_clone_light(const grib_handle* h)
+{
+    // Only for GRIB, not BUFR etc
+    if (h->product_kind != PRODUCT_GRIB) return false;
+
+    // Spectral data does not have constant fields!
+    long isGridded = 0;
+    int err = grib_get_long(h, "isGridded", &isGridded);
+    if (err || !isGridded) return false;
+
+    return true;
+}
+
 grib_handle* grib_handle_clone_light(const grib_handle* h)
 {
-    int err = 0;
-    size_t size1 = 0;
-    const void* msg1 = NULL;
-    long edition = 0;
+    int err        = 0;
+    long edition   = 0;
+    grib_handle* result = NULL;
 
-    // Only for GRIB, not BUFR etc
-    if (h->product_kind != PRODUCT_GRIB) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for %s",
-                         __func__, codes_get_product_name(PRODUCT_GRIB));
+    if (!can_create_clone_light(h)) {
+        // Lightweight clone not possible. Do a normal clone
+        return grib_handle_clone(h);
+    }
+
+    char sample_name[1024]; /* name of the GRIB sample file */
+    grib_get_long(h, "edition", &edition);
+    snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
+    grib_handle* h_sample = grib_handle_new_from_samples(NULL, sample_name);
+
+    // Copy all sections except Bitmap and Data from h to h_sample
+    const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
+    result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
+    if (!result || err) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Failed to create lightweight clone");
+        grib_handle_delete(h_sample);
         return NULL;
     }
 
-    err = grib_get_long(h, "edition", &edition);
-    if (!err && edition == 1) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
-        return NULL;
-    }
-
-    err = grib_get_message_headers(h, &msg1, &size1);
-    if (err) return NULL;
-
-    size1 += 4;
-    grib_handle* result  = grib_handle_new_from_partial_message_copy(h->context, msg1, size1);
-    result->buffer->data[ size1 - 4 ] = '7';
-    result->buffer->data[ size1 - 3 ] = '7';
-    result->buffer->data[ size1 - 2 ] = '7';
-    result->buffer->data[ size1 - 1 ] = '7';
-    result->buffer->ulength = size1;
-
-    result->product_kind = h->product_kind;
-
-    long off = 64; // This is only true for GRIB edition 2
-    err = grib_encode_unsigned_long( result->buffer->data, (unsigned long)size1, &off, 64);
-    if (err) {
-        printf("err=%s\n", grib_get_error_message(err));
-        return NULL;
-    }
-
+    grib_handle_delete(h_sample);
     return result;
 }
+
+// grib_handle* grib_handle_clone_light(const grib_handle* h)
+// {
+//     int err = 0;
+//     size_t size1 = 0;
+//     const void* msg1 = NULL;
+//     long edition = 0;
+
+//     // Only for GRIB, not BUFR etc
+//     if (h->product_kind != PRODUCT_GRIB) {
+//         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for %s",
+//                          __func__, codes_get_product_name(PRODUCT_GRIB));
+//         return NULL;
+//     }
+
+//     err = grib_get_long(h, "edition", &edition);
+//     if (!err && edition == 1) {
+//         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
+//         return NULL;
+//     }
+
+//     err = grib_get_message_headers(h, &msg1, &size1);
+//     if (err) return NULL;
+
+//     size1 += 4;
+//     grib_handle* result  = grib_handle_new_from_partial_message_copy(h->context, msg1, size1);
+//     result->buffer->data[ size1 - 4 ] = '7';
+//     result->buffer->data[ size1 - 3 ] = '7';
+//     result->buffer->data[ size1 - 2 ] = '7';
+//     result->buffer->data[ size1 - 1 ] = '7';
+//     result->buffer->ulength = size1;
+
+//     result->product_kind = h->product_kind;
+
+//     long off = 64; // This is only true for GRIB edition 2
+//     err = grib_encode_unsigned_long( result->buffer->data, (unsigned long)size1, &off, 64);
+//     if (err) {
+//         printf("err=%s\n", grib_get_error_message(err));
+//         return NULL;
+//     }
+
+//     return result;
+// }
 
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
 {
