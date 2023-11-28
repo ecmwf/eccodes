@@ -433,7 +433,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len = 1;
             ret = grib_expression_evaluate_long(hand, e, &lval);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as long", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as long", a->name);
                 return ret;
             }
             /*if (hand->context->debug)
@@ -454,7 +454,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len  = sizeof(tmp);
             cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as string", a->name);
                 return ret;
             }
             len = strlen(cval);

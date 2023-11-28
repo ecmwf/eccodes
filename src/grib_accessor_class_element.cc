@@ -133,6 +133,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     long* ar                    = NULL;
     const grib_context* c       = a->context;
     grib_handle* hand           = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -152,15 +153,15 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
-    if (self->element < 0) {
-        self->element = size + self->element;
+    if (index < 0) {
+        index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, self->element, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
-    *val = ar[self->element];
+    *val = ar[index];
 
 the_end:
     grib_context_free(c, ar);
@@ -175,6 +176,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     long* ar                    = NULL;
     const grib_context* c       = a->context;
     grib_handle* hand           = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -194,17 +196,17 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
-    if (self->element < 0) {
-        self->element = size + self->element;
+    if (index < 0) {
+        index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, self->element, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
-    Assert(self->element >= 0);
-    Assert(self->element < size);
-    ar[self->element] = *val;
+    Assert(index >= 0);
+    Assert(index < size);
+    ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, self->array, ar, size)) != GRIB_SUCCESS)
         goto the_end;
@@ -222,6 +224,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     double* ar                  = NULL;
     const grib_context* c       = a->context;
     const grib_handle* hand     = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -241,15 +244,15 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
 
     // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
-    if (self->element < 0) {
-        self->element = size + self->element;
+    if (index < 0) {
+        index = size + index;
     }
 
-    if ((ret = check_element_index(__func__, self->array, self->element, size)) != GRIB_SUCCESS) {
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
-    *val = ar[self->element];
+    *val = ar[index];
 
 the_end:
     grib_context_free(c, ar);

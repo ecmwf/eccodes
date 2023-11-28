@@ -207,7 +207,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to find definition file %s", self->dictionary);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", self->dictionary);
         if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG,"master path=%s", masterRecomposed);
         if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
         *err = GRIB_FILE_NOT_FOUND;
