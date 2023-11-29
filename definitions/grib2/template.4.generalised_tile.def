@@ -24,24 +24,20 @@ alias uuid=uuidOfDataGroup;
 alias ls.tile=typeOfTile;
 alias ls.tileAttribute=combinationOfAttributesOfTile;
 
-# Create transients to reorder keys in the namespace
-
-transient tempTileAttribute=combinationOfAttributesOfTile;
-transient tempTile=typeOfTile;
-transient tempTileName=tileName;
-
 alias tile.tileIndex=tileIndex;
-alias tile=tempTile;
+alias tile=typeOfTile;
 alias tile.tile=tile;
-alias tile.tileName=tempTileName;
-alias tileAttribute=tempTileAttribute;
+alias tile.tileName=tileName;
+alias tileAttribute=combinationOfAttributesOfTile;
 alias tile.tileAttribute=tileAttribute;
 alias nTiles=numberOfUsedSpatialTiles;
 alias tile.nTiles=nTiles;
 alias totalTileAttCombo=totalNumberOfTileAttributeCombinations;
 alias tile.totalTileAttCombo=totalTileAttCombo;
 alias nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
-alias tile.nTileAttCombo=nTileAttCombo;
+alias tile.nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
+alias nTileAtt=numberOfUsedTileAttributesForTileAttributeCombination;
+alias tile.nTileAtts=nTileAtt;
 
 alias mars.tile=typeOfTile;
 alias mars.tileAttribute=tileAttribute;
