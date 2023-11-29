@@ -191,8 +191,14 @@ std::string Step::value<std::string>(const std::string& format) const {
     //
     // TODO(maee): Remove this code to enable future output, e.g., 15h.
 
-    if (unit_ != Unit::Value::HOUR)
+    int future_behaviour = getenv("ECCODES_FUTURE_BEHAVIOUR") ? atoi(getenv("ECCODES_FUTURE_BEHAVIOUR")) : 0;
+    if (future_behaviour != 1) {
+        if (unit_ != Unit::Value::HOUR)
+            u =  unit_.value<std::string>();
+    }
+    else {
         u =  unit_.value<std::string>();
+    }
 
     if (unit_ == Unit::Value::MINUTES15 ||
         unit_ == Unit::Value::MINUTES30 ||
