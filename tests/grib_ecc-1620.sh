@@ -45,9 +45,49 @@ temp=temp.$label
 temp2=temp_2.$label
 samples_dir=$ECCODES_SAMPLES_PATH
 
+instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
+accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
+
+# if stepUnits is set, then set the low level keys to stepUnits
+# if stepUnits is not set, then optimise low level keys
+# instant fields:
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+fn="$instantaneous_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
+keys__="step,stepUnits:s"
+keys_s="step:s"
+keys_i="step:i,stepUnits:s"
+keys_d="step:d,stepUnits:s"
+
+${tools_dir}/grib_set -s stepUnits=m,step=60 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m"
+grib_check_key_equals $temp "-p $keys_s" "1"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "60m"
+${tools_dir}/grib_set -s step=60m $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "1 h"
+grib_check_key_equals $temp "-p $keys_s" "1"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "60m"
+
+
+# accumulated fields:
+fn="$accumulated_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+keys__="step,startStep,endStep,stepRange,stepUnits:s"
+keys_s="step:s,startStep:s,endStep:s,stepRange:s,stepUnits:s"
+keys_i="step:i,startStep:i,endStep:i,stepRange:i,stepUnits:s"
+keys_d="step:d,startStep:d,endStep:d,stepRange:d,stepUnits:s"
+
+${tools_dir}/grib_set -s stepUnits=m,stepRange=60-120 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m 60 m"
+grib_check_key_equals $temp "-p $keys_s" "2 1 2 1-2 h"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "120m 60m 120m 60m-120m m"
+${tools_dir}/grib_set -s stepRange=60m-120m $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "1 h 1 h"
+grib_check_key_equals $temp "-p $keys_s" "2 1 2 1-2 h"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "120m 60m 120m 60m-120m m"
 
 #### CHECK units
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=96,indicatorOfUnitForTimeRange=h $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
@@ -71,25 +111,21 @@ grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step,stepUnits:s" "
 grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step,stepUnits:s" "4D D"
 
 ${tools_dir}/grib_set -s stepUnits=s,startStep=0,endStep=345600  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+grib_check_key_equals $temp "-p $low_level_keys" "0 s 345600 s"
 ${tools_dir}/grib_set -s stepUnits=m,startStep=0,endStep=5760  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
-${tools_dir}/grib_set -s stepUnits=15m,startStep=0,endStep=384  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
-${tools_dir}/grib_set -s stepUnits=30m,startStep=0,endStep=192  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+grib_check_key_equals $temp "-p $low_level_keys" "0 m 5760 m"
 ${tools_dir}/grib_set -s stepUnits=h,startStep=0,endStep=96  $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
 ${tools_dir}/grib_set -s stepUnits=6h,startStep=0,endStep=16  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+grib_check_key_equals $temp "-p $low_level_keys" "0 6h 16 6h"
 ${tools_dir}/grib_set -s stepUnits=12h,startStep=0,endStep=8  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+grib_check_key_equals $temp "-p $low_level_keys" "0 12h 8 12h"
 ${tools_dir}/grib_set -s stepUnits=D,startStep=0,endStep=4  $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 h 96 h"
+grib_check_key_equals $temp "-p $low_level_keys" "0 D 4 D"
 
 
 #### CHECK negative forecastTime
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s forecastTime=-6,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=6,indicatorOfUnitForTimeRange=h $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "-6 h 6 h"
@@ -103,33 +139,36 @@ grib_check_key_equals $temp "-p stepRange" "-48"
 
 
 #### CHECK: check optimal units are set correctly in GRIB files
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
 
 ### TODO(maee): @Shahram: how to make parameters position independent
 ${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 s 120 s"
 #${tools_dir}/grib_set -s startStep:i=60,endStep:i=180,stepUnits:s=s $temp $temp2
 #grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
 
+# Seconds
 ${tools_dir}/grib_set -s stepUnits:i=13,startStep:i=60,endStep:i=180 $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 s 120 s"
 ${tools_dir}/grib_set -s stepUnits:s=s,startStep:i=60,endStep:i=180 $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "1 m 2 m"
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 s 120 s"
 
+# Minutes
 ${tools_dir}/grib_set -s stepUnits:i=0,startStep:i=60,endStep:i=180 $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "1 h 2 h"
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 m 120 m"
 ${tools_dir}/grib_set -s stepUnits:s=m,startStep:i=60,endStep:i=180 $temp $temp2
-grib_check_key_equals $temp2   "-p $low_level_keys" "1 h 2 h"
+grib_check_key_equals $temp2   "-p $low_level_keys" "60 m 120 m"
 
+# Hours
 ${tools_dir}/grib_set -s stepUnits:i=1,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 ${tools_dir}/grib_set -s stepUnits:s=h,startStep:i=60,endStep:i=180 $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 
-#fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+#fn="$accumulated_field"
 #low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ##high_level_keys="startStep:s,endStep:s"
 #high_level_keys="startStep:i,endStep:i"
@@ -149,7 +188,7 @@ grib_check_key_equals $temp2   "-p $low_level_keys" "60 h 120 h"
 #exit
 
 #### CHECK: grib_set - endStep + stepUnits
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s forecastTime=24,indicatorOfUnitOfTimeRange=h,lengthOfTimeRange=1,indicatorOfUnitForTimeRange=D $fn $temp
 grib_check_key_equals $temp    "-p $low_level_keys" "24 h 1 D"
@@ -211,7 +250,7 @@ ${tools_dir}/grib_set -s stepRange:s=62D-122D $temp $temp2
 grib_check_key_equals $temp2   "-p $low_level_keys" "1488 h 1440 h"
 grib_check_key_equals $temp2   "-p stepRange:s"     "1488-2928"
 
-fn="${data_dir}/reduced_gaussian_surface.grib2"
+fn="$instantaneous_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 keys__="step,stepUnits:s"
 keys_s="step:s"
@@ -221,16 +260,18 @@ keys_d="step:d,stepUnits:s"
 ${tools_dir}/grib_set -s forecastTime=59,indicatorOfUnitOfTimeRange=m $fn $temp
 grib_check_key_equals $temp "-p $keys__ -s stepUnits=s" "3540s s"
 grib_check_key_equals $temp "-p $keys__ -s stepUnits=m" "59m m"
-#grib_check_key_equals $temp "-p $keys__ -s stepUnits=h" "0" # TODO(maee): check behaviour (should be 0.983333)
+#grib_check_key_equals $temp "-p $keys__ -s stepUnits=h" "0" # not supported
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=s" "3540s"
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "59m"
-#grib_check_key_equals $temp "-p $keys_s -F"%.2f" -s stepUnits=h" "0.983333" # TODO(maee): check behaviour // See tools for default output format
+#grib_check_key_equals $temp "-p $keys_s -F"%.2f" -s stepUnits=h" "0.98" # not supported
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=s" "3540 s"
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=m" "59 m"
-#grib_check_key_equals $temp "-p $keys_i -s stepUnits=h" "0" # TODO(maee): check behaviour
+#grib_check_key_equals $temp "-p $keys_i -s stepUnits=h" "0" # not supported
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=s" "3540 s"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "59 m"
-#grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0.983333" # TODO(maee): check behaviour
+#grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0.983333" # not supported
+
+
 
 
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
@@ -242,7 +283,8 @@ grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "0 m"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0 h"
 
 
-fn="${data_dir}/reduced_gaussian_surface.grib2"
+
+fn="$instantaneous_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 keys__="step,stepUnits:s"
 keys_s="step:s,stepUnits:s"
@@ -308,13 +350,13 @@ grib_check_key_equals $temp "-p $keys_i" "24 h"
 grib_check_key_equals $temp "-p $keys_d" "24 h"
 
 
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s stepRange=60m-2h $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "1 h 1 h"
 
 
-fn="${data_dir}/reduced_gaussian_sub_area.grib2"
+fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 keys__="stepRange,startStep,endStep"
 keys_s="stepRange:s,startStep:s,endStep:s"

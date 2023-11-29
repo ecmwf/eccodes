@@ -569,6 +569,10 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return err;
 
+    long force_step_units;
+    if ((err= grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
+        return err;
+
     if (Unit{start_step_unit} == Unit{Unit::Value::MISSING}) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "missing start step unit");
@@ -615,7 +619,15 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     const char* forecast_time_value_key = "forecastTime";
     const char* forecast_time_unit_key = "indicatorOfUnitOfTimeRange";
-    auto [forecast_time_opt, time_range_opt] = find_common_units(start_step.optimize_unit(), time_range.optimize_unit());
+    Step forecast_time_opt;
+    Step time_range_opt;
+    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+        std::tie(forecast_time_opt, time_range_opt) = find_common_units(start_step.optimize_unit(), time_range.optimize_unit());
+    }
+    else {
+        forecast_time_opt = Step{start_step.value<long>(Unit{force_step_units}), Unit{force_step_units}};
+        time_range_opt = Step{time_range.value<long>(Unit{force_step_units}), Unit{force_step_units}};
+    }
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_opt.value<long>())) != GRIB_SUCCESS)
         return err;
@@ -706,8 +718,12 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
+    long force_step_units;
+    if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
+        return ret;
+
     try {
-        Step end_step = step_from_string(val);
+        Step end_step = step_from_string(val, Unit{force_step_units});
         end_step.optimize_unit();
 
         if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)

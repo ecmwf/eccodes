@@ -94,8 +94,8 @@ private:
 };
 
 
-Step step_from_string(std::string step);
-std::vector<Step> parse_range(const std::string& range_str);
+Step step_from_string(const std::string& step, const Unit& force_unit);
+std::vector<Step> parse_range(const std::string& range_str, const Unit& force_unit);
 std::pair<Step, Step> find_common_units(const Step& startStep, const Step& endStep);
 
 

@@ -198,7 +198,7 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit)
+static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -236,7 +236,10 @@ static int pack_long_new_(grib_accessor* a, const long start_step_value, const l
         return GRIB_SUCCESS;
     }
 
-    forecast_time.optimize_unit();
+    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+        forecast_time.optimize_unit();
+    }
+
     if ((err = grib_set_long_internal(h, "startStepUnit", forecast_time.unit().value<long>())) != GRIB_SUCCESS)
         return err;
     if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, forecast_time)) != GRIB_SUCCESS)
@@ -272,18 +275,23 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_DECODING_ERROR;
     }
 
-    ret = pack_long_new_(a, *val, start_step_unit);
+    ret = pack_long_new_(a, *val, start_step_unit, force_step_units);
 
     return ret;
 }
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
+    grib_handle* h = grib_handle_of_accessor(a);
+    //long force_step_units = Unit(Unit::Value::MISSING).value<long>();
     int ret = GRIB_SUCCESS;
-    try {
-        Step step = step_from_string(val);
+    long force_step_units;
+    if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
+        return ret;
 
-        if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>())) != GRIB_SUCCESS)
+    try {
+        Step step = step_from_string(val, Unit{force_step_units});
+        if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>(), force_step_units)) != GRIB_SUCCESS)
             return ret;
     }
     catch (std::exception& e) {

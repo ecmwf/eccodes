@@ -199,17 +199,30 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
 
+    long force_step_units;
+    if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
+        return ret;
+
     try {
-        std::vector<Step> steps = parse_range(val);
+        std::vector<Step> steps = parse_range(val, Unit{force_step_units});
         if (steps.size() == 0) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
             return GRIB_INVALID_ARGUMENT;
         }
 
-        Step step_0 = steps[0];
+        Step step_0;
         Step step_1;
-        if (steps.size() > 1) {
-            std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
+        if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+            if (steps.size() > 1)
+                std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
+            else
+                step_0 = steps[0].optimize_unit();
+        }
+        else {
+            step_0 = Step{steps[0].value<long>(Unit{force_step_units}), Unit{force_step_units}};
+            if (steps.size() > 1) {
+                step_1 = Step{steps[1].value<long>(Unit{force_step_units}), Unit{force_step_units}};
+            }
         }
 
         if ((ret = grib_set_long_internal(h, "startStepUnit", step_0.unit().value<long>())))

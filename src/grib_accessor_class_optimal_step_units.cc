@@ -157,7 +157,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             supported_units_str += Unit{u}.value<std::string>() + ",";
         supported_units_str.pop_back();
 
-        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available X tunits are: " + supported_units_str;
+        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available units are: " + supported_units_str;
         grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }

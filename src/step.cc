@@ -20,34 +20,44 @@
 #include "step_unit.h"
 #include "step.h"
 
-Step step_from_string(std::string step)
+Step step_from_string(const std::string& step, const Unit& force_unit)
 {
     std::regex re("([0-9.]+)([smhDMYC]?)");
     std::smatch match;
     if (std::regex_match(step, match, re)) {
         if (match.size() == 3) {
             std::string value = match[1];
-            std::string unit = match[2];
-            if (unit.size() == 0) {
-                unit = "h";
+            std::string unit_str = match[2];
+            Unit unit;
+            if (unit_str.size() != 0) {
+                if (force_unit == Unit{Unit::Value::MISSING})
+                    unit = Unit{unit_str};
+                else
+                    throw std::runtime_error("Cannot force unit when unit is specified in step string");
             }
-            Step ret{std::stod(value), Unit{unit}};
+            else {
+                if (force_unit == Unit{Unit::Value::MISSING})
+                    unit = Unit{Unit::Value::HOUR};
+                else
+                    unit = force_unit;
+            }
+            Step ret{std::stod(value), unit};
             return ret;
         }
     }
     throw std::runtime_error("Could not parse step: " + step);
 }
 
-std::vector<Step> parse_range(const std::string& range_str)
+std::vector<Step> parse_range(const std::string& range_str, const Unit& force_unit)
 {
     std::vector<Step> steps;
     std::string::size_type pos = 0;
     std::string::size_type prev = 0;
     while ((pos = range_str.find("-", prev)) != std::string::npos) {
-        steps.push_back(step_from_string(range_str.substr(prev, pos - prev)));
+        steps.push_back(step_from_string(range_str.substr(prev, pos - prev), force_unit));
         prev = pos + 1;
     }
-    steps.push_back(step_from_string(range_str.substr(prev)));
+    steps.push_back(step_from_string(range_str.substr(prev), force_unit));
     return steps;
 }
 
@@ -132,13 +142,14 @@ void Step::init_long(long value, const Unit& unit)
 {
     internal_value_ = value;
     internal_unit_ = unit;
-    unit_ = internal_unit_;
+    unit_ = unit;
 }
 
 void Step::init_double(double value, const Unit& unit)
 {
     auto seconds = Unit::get_converter().unit_to_duration(unit.value<Unit::Value>());
-    init_long(static_cast<long>(value * seconds), Unit{Unit::Value::SECOND});
+    internal_value_ = value * seconds;
+    internal_unit_ = Unit{Unit::Value::SECOND};
     unit_ = unit;
 }
 
