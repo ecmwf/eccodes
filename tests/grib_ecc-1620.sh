@@ -63,11 +63,11 @@ grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step:i,stepUnits:s" "
 
 grib_check_key_equals $temp " -w count=1 -s stepUnits=s -p step,stepUnits:s" "345600s s"
 grib_check_key_equals $temp " -w count=1 -s stepUnits=m -p step,stepUnits:s" "5760m m"
-grib_check_key_equals $temp " -w count=1 -s stepUnits=15m -p step,stepUnits:s" "384(15m) 15m"
-grib_check_key_equals $temp " -w count=1 -s stepUnits=30m -p step,stepUnits:s" "192(30m) 30m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=15m -p step,stepUnits:s" "384x15m 15m"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=30m -p step,stepUnits:s" "192x30m 30m"
 grib_check_key_equals $temp " -w count=1 -s stepUnits=h -p step,stepUnits:s" "96 h"
-grib_check_key_equals $temp " -w count=1 -s stepUnits=6h -p step,stepUnits:s" "166h 6h"  # FIXME(maee) (16(6h) 6h) is correct
-grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step,stepUnits:s" "812h 12h"  # FIXME(maee) (8(12h) 12h) is correct
+grib_check_key_equals $temp " -w count=1 -s stepUnits=6h -p step,stepUnits:s" "16x6h 6h"
+grib_check_key_equals $temp " -w count=1 -s stepUnits=12h -p step,stepUnits:s" "8x12h 12h"
 grib_check_key_equals $temp " -w count=1 -s stepUnits=D -p step,stepUnits:s" "4D D"
 
 ${tools_dir}/grib_set -s stepUnits=s,startStep=0,endStep=345600  $fn $temp

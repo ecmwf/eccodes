@@ -183,9 +183,16 @@ std::string Step::value<std::string>(const std::string& format) const {
     if (unit_ != Unit::Value::HOUR)
         u =  unit_.value<std::string>();
 
-    if (unit_ == Unit::Value::MINUTES15 || unit_ == Unit::Value::MINUTES30)
-        err = snprintf(output, MAX_SIZE, (format + "(%s)").c_str(), value<double>(), u.c_str());
-    else 
+    if (unit_ == Unit::Value::MINUTES15 ||
+        unit_ == Unit::Value::MINUTES30 ||
+        unit_ == Unit::Value::HOURS3 ||
+        unit_ == Unit::Value::HOURS6 ||
+        unit_ == Unit::Value::HOURS12 ||
+        unit_ == Unit::Value::YEARS10 ||
+        unit_ == Unit::Value::YEARS30
+    )
+        err = snprintf(output, MAX_SIZE, (format + "x%s").c_str(), value<double>(), u.c_str());
+    else
         err = snprintf(output, MAX_SIZE, (format + "%s").c_str(), value<double>(), u.c_str());
 
     if (err < 0 || err >= MAX_SIZE) {
