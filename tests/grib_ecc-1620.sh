@@ -49,7 +49,7 @@ instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
 # if stepUnits is set, then set the low level keys to stepUnits
-# if stepUnits is not set, then optimise low level keys
+# else optimise low level keys
 # instant fields:
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 fn="$instantaneous_field"
@@ -59,6 +59,10 @@ keys_s="step:s"
 keys_i="step:i,stepUnits:s"
 keys_d="step:d,stepUnits:s"
 
+${tools_dir}/grib_set -s stepunits=m,step=60 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m"
+grib_check_key_equals $temp "-p $keys_s" "1"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "60m"
 ${tools_dir}/grib_set -s stepUnits=m,step=60 $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "60 m"
 grib_check_key_equals $temp "-p $keys_s" "1"
@@ -77,6 +81,10 @@ keys_s="step:s,startStep:s,endStep:s,stepRange:s,stepUnits:s"
 keys_i="step:i,startStep:i,endStep:i,stepRange:i,stepUnits:s"
 keys_d="step:d,startStep:d,endStep:d,stepRange:d,stepUnits:s"
 
+${tools_dir}/grib_set -s stepunits=m,stepRange=60-120 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m 60 m"
+grib_check_key_equals $temp "-p $keys_s" "2 1 2 1-2 h"
+grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "120m 60m 120m 60m-120m m"
 ${tools_dir}/grib_set -s stepUnits=m,stepRange=60-120 $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "60 m 60 m"
 grib_check_key_equals $temp "-p $keys_s" "2 1 2 1-2 h"
@@ -85,6 +93,7 @@ ${tools_dir}/grib_set -s stepRange=60m-120m $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "1 h 1 h"
 grib_check_key_equals $temp "-p $keys_s" "2 1 2 1-2 h"
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "120m 60m 120m 60m-120m m"
+
 
 #### CHECK units
 fn="$accumulated_field"
