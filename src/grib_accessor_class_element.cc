@@ -114,14 +114,26 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->element = grib_arguments_get_long(hand, c, n++);
 }
 
+static int check_element_index(const char* func, const char* array_name, long index, size_t size)
+{
+    const grib_context* c = grib_context_get_default();
+    if (index < 0 || index >= size) {
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
+                func, index, array_name, size - 1);
+        return GRIB_INVALID_ARGUMENT;
+    }
+    return GRIB_SUCCESS;
+}
+
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_element* self = (grib_accessor_element*)a;
     int ret                     = 0;
     size_t size                 = 0;
     long* ar                    = NULL;
-    grib_context* c             = a->context;
+    const grib_context* c       = a->context;
     grib_handle* hand           = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -140,14 +152,16 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->element < 0 || self->element >= size) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %zu",
-                self->element, self->array, size - 1);
-        ret = GRIB_INVALID_ARGUMENT;
+    // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+    if (index < 0) {
+        index = size + index;
+    }
+
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
-    *val = ar[self->element];
+    *val = ar[index];
 
 the_end:
     grib_context_free(c, ar);
@@ -160,8 +174,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     int ret                     = 0;
     size_t size                 = 0;
     long* ar                    = NULL;
-    grib_context* c             = a->context;
+    const grib_context* c       = a->context;
     grib_handle* hand           = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -180,11 +195,23 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_long_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
-    ar[self->element] = *val;
+    // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+    if (index < 0) {
+        index = size + index;
+    }
+
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
+        goto the_end;
+    }
+
+    Assert(index >= 0);
+    Assert(index < size);
+    ar[index] = *val;
 
     if ((ret = grib_set_long_array_internal(hand, self->array, ar, size)) != GRIB_SUCCESS)
-        return ret;
+        goto the_end;
 
+the_end:
     grib_context_free(c, ar);
     return ret;
 }
@@ -195,8 +222,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     int ret                     = 0;
     size_t size                 = 0;
     double* ar                  = NULL;
-    grib_context* c             = a->context;
-    grib_handle* hand           = grib_handle_of_accessor(a);
+    const grib_context* c       = a->context;
+    const grib_handle* hand     = grib_handle_of_accessor(a);
+    long index                  = self->element;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -215,14 +243,16 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((ret = grib_get_double_array_internal(hand, self->array, ar, &size)) != GRIB_SUCCESS)
         return ret;
 
-    if (self->element < 0 || self->element >= size) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Invalid element %ld for array '%s'. Value must be between 0 and %zu",
-                self->element, self->array, size - 1);
-        ret = GRIB_INVALID_ARGUMENT;
+    // An index of -x means the xth item from the end of the list, so ar[-1] means the last item in ar
+    if (index < 0) {
+        index = size + index;
+    }
+
+    if ((ret = check_element_index(__func__, self->array, index, size)) != GRIB_SUCCESS) {
         goto the_end;
     }
 
-    *val = ar[self->element];
+    *val = ar[index];
 
 the_end:
     grib_context_free(c, ar);

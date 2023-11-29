@@ -160,7 +160,7 @@ static void init(grib_accessor* a, const long length, grib_arguments* args)
                 len = sizeof(tmp);
                 p   = grib_expression_evaluate_string(hand, expression, tmp, &len, &ret);
                 if (ret != GRIB_SUCCESS) {
-                    grib_context_log(a->context, GRIB_LOG_ERROR, "unable to evaluate %s as string: %s",
+                    grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to evaluate %s as string: %s",
                                      a->name, grib_get_error_message(ret));
                     return;
                 }

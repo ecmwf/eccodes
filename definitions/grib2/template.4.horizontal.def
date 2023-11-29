@@ -54,10 +54,10 @@ alias vertical.level=level;
 alias vertical.bottomLevel=bottomLevel;
 alias vertical.topLevel=topLevel;
 
-alias extraDim=zero;
+alias extraDim=false;
 if (defined(extraDimensionPresent)) {
     if (extraDimensionPresent) {
-        alias extraDim=one;
+        alias extraDim=true;
     }
 }
 if (extraDim) {

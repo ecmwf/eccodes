@@ -2,7 +2,7 @@
 
 # TEMPLATE 3.120, Azimuth-range projection
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Nb - number of data bins along radials (A data bin is a data point representing the volume centred on it)
 unsigned[4] numberOfDataBinsAlongRadials;

@@ -9,7 +9,7 @@ unsigned[4] primaryMissingValue ;
 unsigned[4] secondaryMissingValue ;
 
 unsigned[4] numberOfGroups ;
-alias NG  = numberOfGroups;
+alias NG = numberOfGroups;
 
 unsigned[1] referenceOfWidths ;
 unsigned[1] widthOfWidths ;
