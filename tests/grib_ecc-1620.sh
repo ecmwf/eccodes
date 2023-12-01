@@ -50,6 +50,24 @@ samples_dir=$ECCODES_SAMPLES_PATH
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
+
+#### Check that step, stepRange, startStep, endStep produce the same result in instantaneous fields
+fn="$instantaneous_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
+keys_step="step,step:s,step:i,step:d,stepUnits:s"
+keys_step_range="stepRange,stepRange:s,stepRange:i,stepRange:d,stepUnits:s"
+keys_start_step="startStep,startStep:s,startStep:i,startStep:d,stepUnits:s"
+keys_end_step="endStep,endStep:s,endStep:i,endStep:d,stepUnits:s"
+${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 m"
+${tools_dir}/grib_set -s stepunits=m,step=59 $fn $temp
+grib_check_key_equals $temp "-p $keys_step" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_step_range" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_start_step" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_end_step" "59m 59m 59 59 m"
+
+
+
 # if stepUnits is set, then set the low level keys to stepUnits
 # else optimise low level keys
 # instant fields:
@@ -70,7 +88,6 @@ grib_check_key_equals $temp "-p $low_level_keys" "60 m"
 grib_check_key_equals $temp "-p $keys_s" "1$HOUR"
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "60m"
 ${tools_dir}/grib_set -s step=60m $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "1 h"
 grib_check_key_equals $temp "-p $low_level_keys" "1 h"
 grib_check_key_equals $temp "-p $keys_s" "1$HOUR"
 grib_check_key_equals $temp "-p $keys_s -s stepUnits=m" "60m"
