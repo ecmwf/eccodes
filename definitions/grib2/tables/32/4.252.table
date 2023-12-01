@@ -30,16 +30,16 @@
 1021 C4 C4 crops
 1022 FLTR Flooded trees
 1023 FLGR Flooded grassland
-1024 LCZ1 Local climate zone 1: compact high-rise
-1025 LCZ2 Local climate zone 2: compact midrise
-1026 LCZ3 Local climate zone 3: compact low-rise
-1027 LCZ4 Local climate zone 4: open high-rise
-1028 LCZ5 Local climate zone 5: open midrise
-1029 LCZ6 Local climate zone 6: open low-rise
-1030 LCZ7 Local climate zone 7: lightweight low-rise
-1031 LCZ8 Local climate zone 8: large low-rise
-1032 LCZ9 Local climate zone 9: sparsely built
-1033 LCZ10 Local climate zone 10: heavy industry
+1024 LCZ1 Local climate zone 1: compact high-rise (buildings)
+1025 LCZ2 Local climate zone 2: compact midrise (buildings)
+1026 LCZ3 Local climate zone 3: compact low-rise (buildings)
+1027 LCZ4 Local climate zone 4: open high-rise (buildings)
+1028 LCZ5 Local climate zone 5: open midrise (buildings)
+1029 LCZ6 Local climate zone 6: open low-rise (buildings)
+1030 LCZ7 Local climate zone 7: lightweight low-rise (buildings)
+1031 LCZ8 Local climate zone 8: large low-rise (buildings)
+1032 LCZ9 Local climate zone 9: sparsely built (buildings)
+1033 LCZ10 Local climate zone 10: heavy industry (buildings)
 1034 TEBDU Urban temperate broadleaf deciduous
 1035 TRBDU Urban tropical broadleaf deciduous
 1036 TEBEU Urban temperate broadleaf evergreen
