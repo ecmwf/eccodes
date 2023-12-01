@@ -546,6 +546,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     /*point in time */
     if (self->year == NULL) {
+        err = grib_set_long_internal(h, "startStepUnit", end_step.unit().value<long>());
         err = grib_set_long_internal(h, self->start_step_value, end_step.value<long>());
         return err;
     }

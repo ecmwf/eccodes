@@ -41,11 +41,12 @@ grib_check_key_equals()
 }
 
 HOUR=""
-if [ -v ECCODES_GRIB_SHOW_HOUR_STEPUNIT ]; then
+if (set -u; : ${ECCODES_GRIB_SHOW_HOUR_STEPUNIT?}) 2> /dev/null; then
    if [ $ECCODES_GRIB_SHOW_HOUR_STEPUNIT -gt 0 ]; then
       export HOUR="h"
    fi
 fi
+
 
 label="grib_ecc-1620"
 temp=temp.$label
@@ -56,24 +57,32 @@ instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
 
-#### Check that step, stepRange, startStep, endStep produce the same result in instantaneous fields
+#### Make sure that step, stepRange, startStep, endStep produce the same result for instantaneous fields
 fn="$instantaneous_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 keys_step="step,step:s,step:i,step:d,stepUnits:s"
 keys_step_range="stepRange,stepRange:s,stepRange:i,stepRange:d,stepUnits:s"
 keys_start_step="startStep,startStep:s,startStep:i,startStep:d,stepUnits:s"
 keys_end_step="endStep,endStep:s,endStep:i,endStep:d,stepUnits:s"
-${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "0 m"
+${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=h $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h"
 ${tools_dir}/grib_set -s stepunits=m,step=59 $fn $temp
 grib_check_key_equals $temp "-p $keys_step" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_step_range" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_start_step" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_end_step" "59m 59m 59 59 m"
 
+${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=h $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "0 h"
+${tools_dir}/grib_set -s step=59m $fn $temp
+grib_check_key_equals $temp "-p $keys_step" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_step_range" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_start_step" "59m 59m 59 59 m"
+grib_check_key_equals $temp "-p $keys_end_step" "59m 59m 59 59 m"
 
 
-# if stepUnits is set, then set the low level keys to stepUnits
+#### stepUnits overrides the units in the low level keys
+# if stepUnits=UNIT is set, then set the low level keys to UNIT
 # else optimise low level keys
 # instant fields:
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
