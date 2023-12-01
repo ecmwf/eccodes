@@ -10,37 +10,33 @@
 
 . ./include.ctest.sh
 
-
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_set_keys_test_c"
-
-#Define tmp file
+REDIRECT=/dev/null
 fBufrTmp=${label}.tmp.bufr
 rm -f $fBufrTmp
 
-#We check "syno_multi.bufr". The path is
-#hardcoded in the example
+# We check "syno_multi.bufr". The path is hard coded in the example
 f=${data_dir}/bufr/syno_multi.bufr
 
-REDIRECT=/dev/null
+set +e
+${examples_dir}/c_bufr_set_keys
+status=$?
+set -e
+[ $status -ne 0 ]
 
-#
+# Run
 ${examples_dir}/c_bufr_set_keys $fBufrTmp  2> $REDIRECT > $REDIRECT
 
-#Compare modified to the original
+# Compare modified to the original
 set +e
 ${tools_dir}/bufr_compare $f $fBufrTmp >$REDIRECT 2> $REDIRECT
-
-#Check if modified is different
-if [ $? -eq 0 ]; then
-   echo "setting keys produced identical files " >&2
-   exit 1
-fi
-
+status=$?
 set -e
+[ $status -ne 0 ]
 
-#Check if modified has the same number of messages
+# Check if modified has the same number of messages
 [ `${tools_dir}/bufr_count $f` -eq `${tools_dir}/bufr_count ${fBufrTmp}` ]
 
-#Clean up
+# Clean up
 rm -f $fBufrTmp

@@ -179,6 +179,7 @@ alias setDecimalPrecision=changeDecimalPrecision;
 
 meta bitsPerValueAndRepack bits_per_value(values,bitsPerValue)  : edition_specific;
 alias setBitsPerValue=bitsPerValueAndRepack;
+meta setPackingType packing_type(values,packingType) : edition_specific;
 
 meta scaleValuesBy scale_values(values,missingValue) : edition_specific;
 meta offsetValuesBy offset_values(values,missingValue) : edition_specific;
@@ -194,7 +195,7 @@ concept gridType {
   "UTM"                  = {dataRepresentationType = 6;  sphericalHarmonics = 0; PLPresent=0; }
   "simple_polyconic"     = {dataRepresentationType = 7;  sphericalHarmonics = 0; PLPresent=0; }
   "albers"               = {dataRepresentationType = 8;  sphericalHarmonics = 0; PLPresent=0; }
-  "miller"               = {dataRepresentationType = 8;  sphericalHarmonics = 0; PLPresent=0; }
+  "miller"               = {dataRepresentationType = 9;  sphericalHarmonics = 0; PLPresent=0; }
   "rotated_ll"           = {dataRepresentationType = 10; sphericalHarmonics = 0; PLPresent=0; }
   "stretched_ll"         = {dataRepresentationType = 20; sphericalHarmonics = 0; PLPresent=0; }
   "stretched_rotated_ll" = {dataRepresentationType = 30; sphericalHarmonics = 0; PLPresent=0; }

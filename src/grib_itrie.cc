@@ -319,7 +319,7 @@ grib_itrie* grib_itrie_new(grib_context* c, int* count)
 
 void grib_itrie_delete(grib_itrie* t)
 {
-    GRIB_MUTEX_INIT_ONCE(&once, &init)
+    GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex);
 
     if (t) {

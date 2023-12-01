@@ -35,7 +35,6 @@ static int get_native_type(grib_accessor*);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_bytes
@@ -97,12 +96,6 @@ static grib_accessor_class _grib_accessor_class_bytes = {
 
 
 grib_accessor_class* grib_accessor_class_bytes = &_grib_accessor_class_bytes;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -172,8 +165,9 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     size_t i = 0, slen = strlen(val);
 
     if (slen != expected_slen || *len != expected_slen) {
-        grib_context_log(c, GRIB_LOG_ERROR,"pack_string: key %s is %lu bytes. Expected a string with %lu characters",
-                         a->name, expected_blen, expected_slen);
+        grib_context_log(c, GRIB_LOG_ERROR,
+                        "%s: Key %s is %lu bytes. Expected a string with %lu characters (actual length=%zu)",
+                        __func__, a->name, expected_blen, expected_slen, *len);
         return GRIB_WRONG_ARRAY_SIZE;
     }
 
@@ -183,7 +177,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     for (i = 0; i < (slen/2); i++) {
         unsigned int byteVal = 0;
         if (sscanf(val + 2*i, "%02x", &byteVal) != 1) {
-            grib_context_log(c, GRIB_LOG_ERROR,"pack_string: Invalid hex byte specfication '%.2s'",val + 2*i);
+            grib_context_log(c, GRIB_LOG_ERROR,"%s: Invalid hex byte specfication '%.2s'", __func__, val + 2*i);
             grib_context_free(c, bytearray);
             return GRIB_INVALID_KEY_VALUE;
         }

@@ -34,7 +34,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g1_section4_length
 {
@@ -102,14 +101,7 @@ static grib_accessor_class _grib_accessor_class_g1_section4_length = {
 
 grib_accessor_class* grib_accessor_class_g1_section4_length = &_grib_accessor_class_g1_section4_length;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
-
 
 static void init(grib_accessor* a, const long len, grib_arguments* args)
 {
@@ -119,36 +111,31 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-#if 0
-    grib_accessor_class* super = *(a->cclass->super);
+    // Old implementation:
+    //   Here we assume that the totalLength will be coded AFTER the section4 length, and
+    //   the section4 length will be overwritten by the totalLength accessor for large GRIBs
+    //    grib_accessor_class* super = *(a->cclass->super);
+    //    return super->pack_long(a,val,len);
 
-    /* Here we assume that the totalLength will be coded AFTER the section4 length, and
-    the section4 length will be overwritten by the totalLength accessor for large GRIBs */
-
-    /*printf("UPDATING sec4len %ld\n",*val);*/
-
-    return super->pack_long(a,val,len);
-#endif
-    /* Do not directly call pack_long on base class */
-    /* because in this special case we want to skip the checks. */
-    /* So we call the helper function which has an extra argument */
+    // Note: Do not directly call pack_long on base class
+    // because in this special case we want to skip the checks.
+    // So we call the helper function which has an extra argument
     return pack_long_unsigned_helper(a, val, len, /*check=*/0);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g1_section4_length* self = (grib_accessor_g1_section4_length*)a;
-    int ret;
-
-    long total_length, sec4_length;
+    int ret = 0;
+    long total_length = 0, sec4_length = 0;
 
     if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a),
                                         grib_find_accessor(grib_handle_of_accessor(a), self->total_length),
                                         a,
                                         &total_length,
-                                        &sec4_length)) != GRIB_SUCCESS)
+                                        &sec4_length)) != GRIB_SUCCESS) {
         return ret;
-
+    }
 
     *val = sec4_length;
 

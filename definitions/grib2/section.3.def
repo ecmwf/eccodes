@@ -33,7 +33,7 @@ if(numberOfOctectsForNumberOfPoints  == 0){
 codetable[2] gridDefinitionTemplateNumber ('3.1.table',masterDir,localDir) =0 : dump,edition_specific;
 meta gridDefinitionDescription codetable_title(gridDefinitionTemplateNumber);
 
-alias isRotatedGrid=zero;
+alias isRotatedGrid = false;
 
 if (gridDefinitionTemplateNumber >= 32768) {
   template gridDefinitionSection "grib2/local/[centreForLocal]/template.3.[gridDefinitionTemplateNumber:l].def";
@@ -110,6 +110,7 @@ concept gridType {
  "lambert_bf"              = { gridDefinitionTemplateNumber=63; PLPresent=0; }
  "mercator_bf"             = { gridDefinitionTemplateNumber=61; PLPresent=0; }
  "polar_stereographic_bf"  = { gridDefinitionTemplateNumber=62; PLPresent=0; }
+ "healpix"                 = { gridDefinitionTemplateNumber=150; PLPresent=0; }
 
  "ncep_32769" = { centre=7; gridDefinitionTemplateNumber=32769; PLPresent=0; }
 
@@ -127,3 +128,5 @@ alias md5GridSection = md5Section3;
 meta  projSourceString proj_string(gridType, 0): hidden;
 meta  projTargetString proj_string(gridType, 1): hidden;
 alias projString = projTargetString : hidden;
+
+constant isSpectral = !isGridded : constraint;

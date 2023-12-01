@@ -23,15 +23,14 @@ section_length[3] section1Length;
 meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 constant wrongPadding=0;
 
-#  GRIB tables Version No.
+# GRIB tables Version No.
 # (currently 3 for international exchange)
-unsigned[1] table2Version  : edition_specific,dump;
+unsigned[1] table2Version : edition_specific,dump;
 alias gribTablesVersionNo=table2Version;
-
 
 #assert(section1Length > 5);
 
-#  Identification of originating/generating centre
+# Identification of originating/generating centre
 codetable[1] centre 'common/c-1.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
@@ -40,8 +39,7 @@ alias parameter.centre=centre;
 alias originatingCentre=centre;
 alias ls.centre = centre;
 
-#  Generating process identification number
-# (allocated by originating centre)
+# Generating process identification number
 unsigned[1] generatingProcessIdentifier : dump;
 alias generatingProcessIdentificationNumber=generatingProcessIdentifier;
 alias process=generatingProcessIdentifier;
@@ -246,6 +244,7 @@ if (centre == 34 && subCentre == 241)
 
 meta time.validityDate validity_date(dataDate,dataTime,step,stepUnits);
 meta time.validityTime validity_time(dataDate,dataTime,step,stepUnits);
+meta validityDateTime julian_date(validityDate, validityTime) : no_copy;
 
 transient deleteLocalDefinition=0;
 
@@ -268,7 +267,6 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
     }
 
     template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
-    #template marsKeywords "mars/grib.[stream:s].[type:s].def";
 
   }
   else
@@ -285,13 +283,12 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
 else
 {
    constant localUsePresent  = 0 : edition_specific;
-   #   template defaultMarsLabeling "mars/default_labeling.def";
 }
 
 section_padding section1Padding : read_only;
 
 #if (!wrongPadding) {
-#  padtoeven evenpadding_sec1(offsetSection1,section1Length);
+# padtoeven evenpadding_sec1(offsetSection1,section1Length);
 #}
 
 concept shortNameECMF (defaultShortName,"shortName.def",conceptsMasterDir,conceptsLocalDirECMF) : no_copy;

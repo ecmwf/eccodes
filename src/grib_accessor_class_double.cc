@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/************************************************
- *  Enrico Fucile
- ***********************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -41,7 +37,6 @@ static int get_native_type(grib_accessor*);
 static int pack_missing(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_double
@@ -104,12 +99,6 @@ static grib_accessor_class _grib_accessor_class_double = {
 
 grib_accessor_class* grib_accessor_class_double = &_grib_accessor_class_double;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int get_native_type(grib_accessor* a)
@@ -122,13 +111,18 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     double val = 0;
     size_t l   = 1;
     char repres[1024];
+    char format[32] = "%g";
+    grib_handle* h = grib_handle_of_accessor(a);
 
     grib_unpack_double(a, &val, &l);
 
-    if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
+    if ((val == GRIB_MISSING_DOUBLE) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    else
-        snprintf(repres, sizeof(repres), "%g", val);
+    } else {
+        size_t size = sizeof(format);
+        grib_get_string(h, "formatForDoubles", format, &size);
+        snprintf(repres, sizeof(repres), format, val);
+    }
 
     l = strlen(repres) + 1;
 
@@ -203,17 +197,3 @@ static int pack_missing(grib_accessor* a)
         return grib_pack_double(a, &value, &len);
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
-/*
-static int is_missing(grib_accessor* a){
-    size_t one = 1;
-    double value = GRIB_MISSING_DOUBLE;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        int e=grib_unpack_double(a,&value,&one);
-        Assert(e == 0);
-        return value == GRIB_MISSING_DOUBLE;
-    }
-    return 0;
-}
-*/

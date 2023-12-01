@@ -30,7 +30,7 @@ program set
    call codes_set(igrib, 'dataDate', date1)
    call codes_set(igrib, 'type', marsType)
 
-   ! set centre as a integer */
+   ! set centre as a integer
    call codes_set(igrib, 'centre', centre)
 
    ! check if it is correct in the actual GRIB message

@@ -35,7 +35,8 @@ grib_option grib_options[] = {
     /*      {"G",0,0,0,1,0}, */
     { "T:", 0, 0, 1, 0, "B" },
     { "f", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -76,15 +77,14 @@ int grib_tool_init(grib_runtime_options* options)
         exit(1);
     }
 
-#if 0
-    if (options->outfile && options->outfile->name) {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-#endif
+    // if (options->outfile && options->outfile->name) {
+    //     options->outfile->file = fopen(options->outfile->name,"w");
+    //     if(!options->outfile->file) {
+    //         perror(options->outfile->name);
+    //         exit(1);
+    //     }
+    // }
+
     return 0;
 }
 

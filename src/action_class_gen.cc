@@ -19,7 +19,7 @@
    START_CLASS_DEF
    CLASS      = action
    IMPLEMENTS = create_accessor
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy
    IMPLEMENTS = notify_change
    MEMBERS    = long            len
@@ -40,7 +40,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
@@ -64,7 +63,7 @@ static grib_action_class _grib_action_class_gen = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     &create_accessor,             /* create_accessor*/
 
@@ -127,57 +126,8 @@ static void dump(grib_action* act, FILE* f, int lvl)
     grib_context_print(act->context, f, "%s[%d] %s \n", act->op, a->len, act->name);
 }
 
-#if 0
-#define F(x)                      \
-    if (flg & x) {                \
-        fprintf(f, "%s=>1,", #x); \
-        flg &= !x;                \
-    }
-static int count = 0;
-static void xref(grib_action* act, FILE* f, const char* path)
-{
-    grib_action_gen* a = (grib_action_gen*)act;
-    unsigned long flg  = act->flags;
-    int position       = a->len > 0 ? count++ : -1;
-
-    fprintf(f, "bless({path=>'%s',size => %ld, name=> '%s', position=> %d, ", path, (long)a->len, act->name, position);
-
-    fprintf(f, " params=> [");
-    grib_arguments_print(act->context, a->params, NULL);
-    fprintf(f, "], flags=> {");
-
-    F(GRIB_ACCESSOR_FLAG_READ_ONLY);
-    F(GRIB_ACCESSOR_FLAG_DUMP);
-    F(GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC);
-    F(GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
-    F(GRIB_ACCESSOR_FLAG_HIDDEN);
-    F(GRIB_ACCESSOR_FLAG_CONSTRAINT);
-    F(GRIB_ACCESSOR_FLAG_NO_COPY);
-    F(GRIB_ACCESSOR_FLAG_COPY_OK);
-    F(GRIB_ACCESSOR_FLAG_FUNCTION);
-    F(GRIB_ACCESSOR_FLAG_DATA);
-    F(GRIB_ACCESSOR_FLAG_NO_FAIL);
-    F(GRIB_ACCESSOR_FLAG_TRANSIENT);
-    F(GRIB_ACCESSOR_FLAG_STRING_TYPE);
-    F(GRIB_ACCESSOR_FLAG_LONG_TYPE);
-    F(GRIB_ACCESSOR_FLAG_DOUBLE_TYPE);
-
-    /* make sure all flags are processed */
-    if (flg) {
-        printf("FLG = %ld\n", (long)flg);
-    }
-    Assert(flg == 0);
-
-    fprintf(f, "}, defaults=> [");
-    grib_arguments_print(act->context, act->default_value, NULL);
-
-    fprintf(f, "]}, 'xref::%s'),\n", act->op);
-}
-#endif
-static void xref(grib_action* act, FILE* f, const char* path)
-{
-    Assert(!"xref is disabled");
-}
+// For xref implementation see
+//   src/deprecated/action_class_gen.cc
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* loader)
 {

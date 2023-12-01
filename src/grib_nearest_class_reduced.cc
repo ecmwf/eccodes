@@ -169,8 +169,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
         err = grib_nearest_find_generic(
             nearest, h, inlat, inlon, flags,
             self->values_key,
-            "Ni",
-            self->Nj,
             &(self->lats),
             &(self->lats_count),
             &(self->lons),

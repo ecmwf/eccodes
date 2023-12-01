@@ -60,32 +60,30 @@ static void init(grib_action_class* c)
     GRIB_MUTEX_UNLOCK(&mutex1);
 }
 
-#if 0
-/* A non-recursive version */
-static void init(grib_action_class *c)
-{
-    if (!c) return;
+// A non-recursive version
+// static void init(grib_action_class *c)
+// {
+//     if (!c) return;
 
-    GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
-    GRIB_MUTEX_LOCK(&mutex1);
-    if(!c->inited)
-    {
-        if(c->super) {
-            grib_action_class *g = *(c->super);
-            if (g && !g->inited) {
-                Assert(g->super == NULL);
-                g->init_class(g);
-                g->inited = 1;
-            }
-        }
-        c->init_class(c);
-        c->inited = 1;
-    }
-    GRIB_MUTEX_UNLOCK(&mutex1);
-}
-#endif
+//     GRIB_MUTEX_INIT_ONCE(&once,&init_mutex);
+//     GRIB_MUTEX_LOCK(&mutex1);
+//     if(!c->inited)
+//     {
+//         if(c->super) {
+//             grib_action_class *g = *(c->super);
+//             if (g && !g->inited) {
+//                 Assert(g->super == NULL);
+//                 g->init_class(g);
+//                 g->inited = 1;
+//             }
+//         }
+//         c->init_class(c);
+//         c->inited = 1;
+//     }
+//     GRIB_MUTEX_UNLOCK(&mutex1);
+// }
 
-void grib_dump(grib_action* a, FILE* f, int l)
+static void grib_dump(grib_action* a, FILE* f, int l)
 {
     grib_action_class* c = a->cclass;
     init(c);
@@ -97,25 +95,24 @@ void grib_dump(grib_action* a, FILE* f, int l)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
 }
 
-void grib_xref(grib_action* a, FILE* f, const char* path)
-{
-    grib_action_class* c = a->cclass;
-    init(c);
+// void grib_xref(grib_action* a, FILE* f, const char* path)
+// {
+//     grib_action_class* c = a->cclass;
+//     init(c);
 
-    while (c) {
-        if (c->xref) {
-            c->xref(a, f, path);
-            return;
-        }
-        c = c->super ? *(c->super) : NULL;
-    }
-    printf("xref not implemented for %s\n", a->cclass->name);
-    DebugAssert(0);
-}
-
+//     while (c) {
+//         if (c->xref) {
+//             c->xref(a, f, path);
+//             return;
+//         }
+//         c = c->super ? *(c->super) : NULL;
+//     }
+//     printf("xref not implemented for %s\n", a->cclass->name);
+//     DEBUG_ASSERT(0);
+// }
 
 void grib_action_delete(grib_context* context, grib_action* a)
 {
@@ -146,7 +143,7 @@ int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h)
         c = c->super ? *(c->super) : NULL;
     }
     fprintf(stderr, "Cannot create accessor %s %s\n", a->name, a->cclass->name);
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -169,7 +166,7 @@ int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_acce
         c = c->super ? *(c->super) : NULL;
     }
     /*GRIB_MUTEX_UNLOCK(&mutex1);*/
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -182,7 +179,7 @@ grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit)
             return c->reparse(a, acc, doit);
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -195,7 +192,7 @@ int grib_action_execute(grib_action* a, grib_handle* h)
             return c->execute(a, h);
         c = c->super ? *(c->super) : NULL;
     }
-    DebugAssert(0);
+    DEBUG_ASSERT(0);
     return 0;
 }
 
@@ -209,13 +206,17 @@ void grib_dump_action_branch(FILE* out, grib_action* a, int decay)
 
 void grib_dump_action_tree(grib_context* ctx, FILE* out)
 {
+    Assert(ctx);
+    Assert(ctx->grib_reader);
+    Assert(ctx->grib_reader->first);
+    Assert(out);
     grib_dump_action_branch(out, ctx->grib_reader->first->root, 0);
 }
 
-void grib_xref_action_branch(FILE* out, grib_action* a, const char* path)
-{
-    while (a) {
-        grib_xref(a, out, path);
-        a = a->next;
-    }
-}
+// void grib_xref_action_branch(FILE* out, grib_action* a, const char* path)
+// {
+//     while (a) {
+//         grib_xref(a, out, path);
+//         a = a->next;
+//     }
+// }

@@ -41,7 +41,6 @@ static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_time
 {
@@ -107,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_time = {
 
 grib_accessor_class* grib_accessor_class_time = &_grib_accessor_class_time;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -150,7 +143,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Key %s (unpack_long): Truncating time: non-zero seconds(%ld) ignored", a->name, second);
+                "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", a->name, __func__, second);
     }
 
     if (*len < 1)
@@ -158,12 +151,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = hour * 100 + minute;
 
-    if (hour == 255)
+    if (hour == 255) {
         *val = 12 * 100;
-
-    if (hour != 255 && minute == 255)
+    }
+    if (hour != 255 && minute == 255) {
         *val = hour * 100;
-
+    }
     return GRIB_SUCCESS;
 }
 

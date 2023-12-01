@@ -38,7 +38,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_bit
 {
@@ -103,20 +102,14 @@ static grib_accessor_class _grib_accessor_class_bit = {
 
 grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    grib_accessor_bit* ac = (grib_accessor_bit*)a;
+    grib_accessor_bit* self = (grib_accessor_bit*)a;
     a->length             = 0;
-    ac->owner             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    ac->bit_index         = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
+    self->owner           = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
+    self->bit_index       = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -126,7 +119,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_bit* ac = (grib_accessor_bit*)a;
+    grib_accessor_bit* self = (grib_accessor_bit*)a;
     int ret               = 0;
 
     long data = 0;
@@ -137,12 +130,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), ac->owner, &data)) != GRIB_SUCCESS) {
+    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->owner, &data)) != GRIB_SUCCESS) {
         *len = 0;
         return ret;
     }
 
-    if (data & (1 << ac->bit_index))
+    if (data & (1 << self->bit_index))
         *val = 1;
     else
         *val = 0;
@@ -153,7 +146,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_accessor_bit* ac = (grib_accessor_bit*)a;
+    grib_accessor_bit* self = (grib_accessor_bit*)a;
     grib_accessor* owner  = NULL;
     unsigned char* mdata  = 0;
     if (*len < 1) {
@@ -162,10 +155,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    owner = grib_find_accessor(grib_handle_of_accessor(a), ac->owner);
+    owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
 
     if (!owner) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ", ac->owner, a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ", self->owner, a->name);
         *len = 0;
         return GRIB_NOT_FOUND;
     }
@@ -176,9 +169,9 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
     if (a->context->debug) {
         /* Print bit positions from 1 (MSB) */
-        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - ac->bit_index, owner->name, (*val > 0) );
+        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - self->bit_index, owner->name, (*val > 0) );
     }
-    grib_set_bit(mdata, 7 - ac->bit_index, *val > 0);
+    grib_set_bit(mdata, 7 - self->bit_index, *val > 0);
 
     *len = 1;
     return GRIB_SUCCESS;

@@ -8,15 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *
- *   Enrico Fucile
- *
- ***************************************************************************/
-
 #include "grib_api_internal.h"
 
-/* For debugging purposes */
+// For debugging purposes
 void grib_vsarray_print(const char* title, const grib_vsarray* vsarray)
 {
     size_t i = 0;
@@ -41,7 +35,7 @@ grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_vsarray*)grib_context_malloc_clear(c, sizeof(grib_vsarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_vsarray_new unable to allocate %lu bytes\n", sizeof(grib_vsarray));
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_vsarray));
         return NULL;
     }
     v->size    = size;
@@ -51,7 +45,7 @@ grib_vsarray* grib_vsarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (grib_sarray**)grib_context_malloc_clear(c, sizeof(grib_sarray*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_vsarray_new unable to allocate %lu bytes\n", sizeof(grib_sarray*) * size);
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_sarray*) * size);
         return NULL;
     }
     return v;
@@ -68,7 +62,7 @@ static grib_vsarray* grib_vsarray_resize(grib_vsarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_vsarray_resize unable to allocate %lu bytes\n", sizeof(grib_sarray*) * newsize);
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_sarray*) * newsize);
         return NULL;
     }
     return v;
@@ -114,17 +108,17 @@ void grib_vsarray_delete_content(grib_context* c, grib_vsarray* v)
     v->n = 0;
 }
 
-grib_sarray** grib_vsarray_get_array(grib_context* c, grib_vsarray* v)
-{
-    grib_sarray** ret;
-    size_t i = 0;
-    if (!v)
-        return NULL;
-    ret = (grib_sarray**)grib_context_malloc_clear(c, sizeof(grib_sarray*) * v->n);
-    for (i = 0; i < v->n; i++)
-        ret[i] = v->v[i];
-    return ret;
-}
+// grib_sarray** grib_vsarray_get_array(grib_context* c, grib_vsarray* v)
+// {
+//     grib_sarray** ret;
+//     size_t i = 0;
+//     if (!v)
+//         return NULL;
+//     ret = (grib_sarray**)grib_context_malloc_clear(c, sizeof(grib_sarray*) * v->n);
+//     for (i = 0; i < v->n; i++)
+//         ret[i] = v->v[i];
+//     return ret;
+// }
 
 size_t grib_vsarray_used_size(grib_vsarray* v)
 {

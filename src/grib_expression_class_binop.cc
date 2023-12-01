@@ -68,20 +68,18 @@ typedef struct grib_expression_binop{
 static grib_expression_class _grib_expression_class_binop = {
     0,                    /* super                     */
     "binop",                    /* name                      */
-    sizeof(grib_expression_binop),/* size of instance          */
+    sizeof(grib_expression_binop),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	&evaluate_long,
-	&evaluate_double,
-	0,
+    &native_type,
+    0,
+    &evaluate_long,
+    &evaluate_double,
+    0,
 };
 
 grib_expression_class* grib_expression_class_binop = &_grib_expression_class_binop;
@@ -99,20 +97,19 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     int ret;
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-#if 0 /* DEBUGGING */
-    {
-        int typeLeft, typeRight;
-        const char* nameLeft;
-        const char* nameRight;
-        typeLeft = grib_expression_native_type(h, e->left);
-        typeRight = grib_expression_native_type(h, e->right);
-        nameLeft = grib_expression_get_name(e->left);
-        nameRight= grib_expression_get_name(e->right);
-        printf("eval_long nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
-        grib_expression_print(h->context, g, h);
-        printf("\n");
-    }
-#endif
+// #if DEBUGGING
+//     {
+//         int typeLeft, typeRight;
+//         const char* nameLeft;
+//         const char* nameRight;
+//         typeLeft = grib_expression_native_type(h, e->left);
+//         typeRight = grib_expression_native_type(h, e->right);
+//         nameLeft = grib_expression_get_name(e->left);
+//         nameRight= grib_expression_get_name(e->right);
+//         printf("eval_long nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
+//         grib_expression_print(h->context, g, h);
+//         printf("\n");
+//     }
 
     ret = grib_expression_evaluate_long(h, e->left, &v1);
     if (ret != GRIB_SUCCESS)
@@ -134,20 +131,19 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 
     grib_expression_binop* e = (grib_expression_binop*)g;
 
-#if 0 /* DEBUGGING */
-    {
-        int typeLeft, typeRight;
-        const char* nameLeft;
-        const char* nameRight;
-        typeLeft = grib_expression_native_type(h, e->left);
-        typeRight = grib_expression_native_type(h, e->right);
-        nameLeft = grib_expression_get_name(e->left);
-        nameRight= grib_expression_get_name(e->right);
-        printf("eval_dbl nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
-        grib_expression_print(h->context, g, h);
-        printf("\n");
-    }
-#endif
+// #if DEBUGGING
+//     {
+//         int typeLeft, typeRight;
+//         const char* nameLeft;
+//         const char* nameRight;
+//         typeLeft = grib_expression_native_type(h, e->left);
+//         typeRight = grib_expression_native_type(h, e->right);
+//         nameLeft = grib_expression_get_name(e->left);
+//         nameRight= grib_expression_get_name(e->right);
+//         printf("eval_dbl nameLeft=%s (type=%d), nameRight=%s (type=%d)\n",nameLeft,typeLeft, nameRight,typeRight);
+//         grib_expression_print(h->context, g, h);
+//         printf("\n");
+//     }
 
     ret = grib_expression_evaluate_double(h, e->left, &v1);
     if (ret != GRIB_SUCCESS)

@@ -41,7 +41,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_dummy_field
 {
@@ -127,12 +126,6 @@ static grib_accessor_class _grib_accessor_class_data_dummy_field = {
 
 
 grib_accessor_class* grib_accessor_class_data_dummy_field = &_grib_accessor_class_data_dummy_field;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -224,7 +217,7 @@ static int value_count(grib_accessor* a, long* numberOfPoints)
     *numberOfPoints                      = 0;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints)) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unable to get count of %s (%s)", a->name, grib_get_error_message(err));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to get count of %s (%s)", a->name, grib_get_error_message(err));
     }
 
     return err;

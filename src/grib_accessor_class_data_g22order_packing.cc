@@ -9,6 +9,7 @@
  */
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include <type_traits>
 
@@ -64,7 +65,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -153,12 +153,6 @@ static grib_accessor_class _grib_accessor_class_data_g22order_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_g22order_packing = &_grib_accessor_class_data_g22order_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -273,11 +267,9 @@ static void add_bitstream(bitstream_context *ctx, grib_accessor* a, int t, int n
     return;
 }
 
-/*
- * find min/max of an integer array
- * return 0:  if min max found
- * return 1:  if min max not found, min = max = 0
- */
+// find min/max of an integer array
+// return 0:  if min max found
+// return 1:  if min max not found, min = max = 0
 static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
 {
     unsigned int first;
@@ -347,7 +339,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
 
     if (n == 0) {
         *min = *max = 0.0;
-        return 1;
+        return GRIB_DECODING_ERROR;
     }
 
     for (first = 0; first < n; first++) {
@@ -355,7 +347,7 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
     }
     if (first >= n) {
         *min = *max = 0.0;
-        return 1;
+        return GRIB_DECODING_ERROR;
     }
 
     mn = mx = data[first];
@@ -380,80 +372,78 @@ static int min_max_array(double* data, unsigned int n, double* min, double* max)
 
     *min = mn;
     *max = mx;
-    return 0;
+    return GRIB_SUCCESS;
 }
 
-#if 0
-static void uint_char(unsigned int i, unsigned char* p)
-{
-    p[0] = (i >> 24) & 255;
-    p[1] = (i >> 16) & 255;
-    p[2] = (i >> 8) & 255;
-    p[3] = (i)&255;
-    }
+// static void uint_char(unsigned int i, unsigned char* p)
+// {
+//     p[0] = (i >> 24) & 255;
+//     p[1] = (i >> 16) & 255;
+//     p[2] = (i >> 8) & 255;
+//     p[3] = (i)&255;
+// }
 
-static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata)
-{
-    int bms_size;
-    unsigned char *bms, *cbits;
-    unsigned int nn, i, start, c, imask, i0;
+// static unsigned char* mk_bms(grib_accessor* a, double* data, unsigned int* ndata)
+// {
+//     int bms_size;
+//     unsigned char *bms, *cbits;
+//     unsigned int nn, i, start, c, imask, i0;
 
-    nn = *ndata;
+//     nn = *ndata;
 
-    /* find first grid point with undefined data */
-    for (i = 0; i < nn; i++) {
-        if (UNDEFINED_VAL(data[i])) break;
-    }
+//     /* find first grid point with undefined data */
+//     for (i = 0; i < nn; i++) {
+//         if (UNDEFINED_VAL(data[i])) break;
+//     }
 
-    if (i == nn) { /* all defined values, no need for bms */
-        bms = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, 6));
-        if (bms == NULL)
-            grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
-        uint_char(6, bms);  // length of section 6
-        bms[4] = 6;         // section 6
-        bms[5] = 255;       // no bitmap
-        return bms;
-    }
+//     if (i == nn) { /* all defined values, no need for bms */
+//         bms = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, 6));
+//         if (bms == NULL)
+//             grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
+//         uint_char(6, bms);  // length of section 6
+//         bms[4] = 6;         // section 6
+//         bms[5] = 255;       // no bitmap
+//         return bms;
+//     }
 
-    bms_size = 6 + (nn + 7) / 8;
-    bms      = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, bms_size));
-    if (bms == NULL)
-        grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
+//     bms_size = 6 + (nn + 7) / 8;
+//     bms      = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, bms_size));
+//     if (bms == NULL)
+//         grib_context_log(a->context, GRIB_LOG_ERROR, "mk_bms: memory allocation problem", "");
 
-    uint_char(bms_size, bms);  // length of section 6
-    bms[4] = 6;                // section 6
-    bms[5] = 0;                // has bitmap
+//     uint_char(bms_size, bms);  // length of section 6
+//     bms[4] = 6;                // section 6
+//     bms[5] = 0;                // has bitmap
 
-    /* bitmap is accessed by bytes, make i0=i/8 bytes of bitmap */
-    cbits = bms + 6;
-    i0    = i >> 3;  // Number of bytes, required to store the bitmap
-    for (i = 0; i < i0; i++) {
-        // Set all bits in the bitmap to 1
-        *cbits++ = 255;
-    }
+//     /* bitmap is accessed by bytes, make i0=i/8 bytes of bitmap */
+//     cbits = bms + 6;
+//     i0    = i >> 3;  // Number of bytes, required to store the bitmap
+//     for (i = 0; i < i0; i++) {
+//         // Set all bits in the bitmap to 1
+//         *cbits++ = 255;
+//     }
 
-    /* start processing data, skip i0*8 */
+//     /* start processing data, skip i0*8 */
 
-    c     = 0;        // counter: c += imask
-    imask = 128;      // 100.0000
-    i0    = i0 << 3;  // Number of bits in the bitmap
-    start = i0;
-    for (i = i0; i < nn; i++) {
-        if (DEFINED_VAL(data[i])) {
-            c += imask;
-            data[start++] = data[i];
-        }
-        if ((imask >>= 1) == 0) {
-            *cbits++ = c;
-            c        = 0;
-            imask    = 128;
-        }
-    }
-    if (imask != 128) *cbits = c;
-    *ndata = start;
-    return bms;
-}
-#endif
+//     c     = 0;        // counter: c += imask
+//     imask = 128;      // 100.0000
+//     i0    = i0 << 3;  // Number of bits in the bitmap
+//     start = i0;
+//     for (i = i0; i < nn; i++) {
+//         if (DEFINED_VAL(data[i])) {
+//             c += imask;
+//             data[start++] = data[i];
+//         }
+//         if ((imask >>= 1) == 0) {
+//             *cbits++ = c;
+//             c        = 0;
+//             imask    = 128;
+//         }
+//     }
+//     if (imask != 128) *cbits = c;
+//     *ndata = start;
+//     return bms;
+// }
 
 static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
 {
@@ -521,16 +511,15 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
+    const char* cclass_name = a->cclass->name;
+    grib_handle* gh         = grib_handle_of_accessor(a);
 
     size_t i    = 0;
     size_t j    = 0;
     long n_vals = 0;
     long vcount = 0;
     int err     = GRIB_SUCCESS;
-
-    long* sec_val   = NULL;
-    grib_handle* gh = grib_handle_of_accessor(a);
-
+    long* sec_val = NULL;
     unsigned char* buf        = reinterpret_cast<unsigned char*>(gh->buffer->data);
     unsigned char* buf_ref    = NULL;
     unsigned char* buf_width  = NULL;
@@ -541,7 +530,6 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
     long ref_p    = 0;
     long width_p  = 0;
     long vals_p   = 0;
-
     long nvals_per_group     = 0;
     long nbits_per_group_val = 0;
     long group_ref_val       = 0;
@@ -665,7 +653,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         if (missingValueManagementUsed == 0) {
             // No explicit missing values included within data values
             for (j = 0; j < nvals_per_group; j++) {
-                DebugAssertAccess(sec_val, (long)(vcount + j), n_vals);
+                DEBUG_ASSERT_ACCESS(sec_val, (long)(vcount + j), n_vals);
                 sec_val[vcount + j] = group_ref_val + grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
                 // printf("sec_val[%ld]=%ld\n", vcount+j, sec_val[vcount+j]);
             }
@@ -737,7 +725,7 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
         if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                            "grid_complex unpacking: Unsupported order of spatial differencing %ld", orderOfSpatialDifferencing);
+                            "%s unpacking: Unsupported order of spatial differencing %ld", cclass_name, orderOfSpatialDifferencing);
             return GRIB_INTERNAL_ERROR;
         }
 
@@ -751,8 +739,8 @@ static int unpack(grib_accessor* a, T* val, const size_t* len)
         // de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
     }
 
-    binary_s  = (T)grib_power(binary_scale_factor, 2);
-    decimal_s = (T)grib_power(-decimal_scale_factor, 10);
+    binary_s  = (T)codes_power<T>(binary_scale_factor, 2);
+    decimal_s = (T)codes_power<T>(-decimal_scale_factor, 10);
 
     for (i = 0; i < n_vals; i++) {
         if (sec_val[i] == LONG_MAX) {
@@ -1178,56 +1166,33 @@ static void merge_j(struct section* h, int ref_bits, int width_bits, int has_und
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
-    unsigned char* sec7;
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     grib_handle* gh = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
 
     int err = 0;
-
-    long bits_per_value = 0;
 
     // double reference_value = 0;
     // long nvals_per_group     = 0;
     // long nbits_per_group_val = 0;
 
-    long binary_scale_factor;
-    long decimal_scale_factor;
-    long optimize_scale_factor;
-    long typeOfOriginalFieldValues;
+    long binary_scale_factor, decimal_scale_factor, optimize_scale_factor, typeOfOriginalFieldValues;
     // long groupSplittingMethodUsed, numberOfGroupsOfDataValues, referenceForGroupWidths;
-    long missingValueManagementUsed;
-    long primaryMissingValueSubstitute;
-    long secondaryMissingValueSubstitute;
-    long numberOfBitsUsedForTheGroupWidths;
-    long numberOfBitsUsedForTheScaledGroupLengths;
-    long orderOfSpatialDifferencing;
-    long numberOfOctetsExtraDescriptors;
+    long missingValueManagementUsed, primaryMissingValueSubstitute, secondaryMissingValueSubstitute;
+    long numberOfBitsUsedForTheGroupWidths, numberOfBitsUsedForTheScaledGroupLengths, orderOfSpatialDifferencing;
+    long numberOfOctetsExtraDescriptors, bits_per_value = 0, bitmap_present = 0;
 
-    int dec_scale;
-    int bin_scale;
-    int wanted_bits;
-    int max_bits;
-    int use_bitmap;
-
-    int j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1;
-    unsigned int i, ii;
-    int vmn, vmx, vbits;
+    int dec_scale, bin_scale, wanted_bits, max_bits, use_bitmap,
+        j, j0, k, *v, binary_scale, nbits, has_undef, extra_0, extra_1, vmn, vmx, vbits;
     // Sections
-    double max_val, min_val, ref, frange, dec_factor, scale;
-    double mn, mx;
+    double max_val, min_val, ref, frange, dec_factor, scale, mn, mx;
     struct section start, *list, *list_backup, *s;
     // Group
-    int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last;
-    int size_sec7;
+    int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last, size_sec7;
     int *refs, *lens, *widths, *itmp, *itmp2;
-    // int est_group_width = 12;
     int est_group_width = 6;
 
-    size_t ndef   = 0;
-    size_t nndata = 0;
-    size_t nstruct;
-
-    long bitmap_present = 0;
+    size_t ndef = 0, nndata = 0, nstruct, i, ii;
 
     int LEN_SEC_MAX = 127;
     int LEN_BITS    = 7;
@@ -1331,7 +1296,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_t ndata = *len;
     double* data = reinterpret_cast<double*>(grib_context_malloc_clear(a->context, ndata * sizeof(double)));
     if (data == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: unable to allocate %zu bytes", ndata * sizeof(double));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", cclass_name, ndata * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     memcpy(data, val, sizeof(*data) * ndata);
@@ -1351,15 +1316,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     v = reinterpret_cast<int*>(grib_context_malloc(a->context, nndata * sizeof(int)));
     if (v == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: unable to allocate %d bytes", nndata * sizeof(int));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: unable to allocate %zu bytes", cclass_name, nndata * sizeof(int));
         return GRIB_OUT_OF_MEMORY;
     }
-    if (min_max_array(data, ndata, &mn, &mx) != 0) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: failed to get min max of data");
+    if (min_max_array(data, ndata, &mn, &mx) != GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: failed to get min max of data", cclass_name);
         return GRIB_ENCODING_ERROR;
     }
-    min_val = static_cast<double>(mn);
-    max_val = static_cast<double>(mx);
+    min_val = mn;
+    max_val = mx;
 
     binary_scale = bin_scale;
 
@@ -1534,7 +1499,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     list = reinterpret_cast<section*>(grib_context_malloc_clear(a->context, nstruct * sizeof(section)));
     if (list == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list failed");
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed",cclass_name);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1564,7 +1529,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     start.tail    = &list[0];
 
     if (nstruct != ii + 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: nstruct=%zu wanted %lu", nstruct, ii + 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: nstruct=%zu wanted %zu", cclass_name, nstruct, ii + 1);
         return GRIB_ENCODING_ERROR;
     }
     for (i = 1; i < nstruct; i++) {
@@ -1592,7 +1557,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     list_backup = reinterpret_cast<section*>(grib_context_malloc(a->context, nstruct * sizeof(section)));
     if (list_backup == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of list_backup failed");
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory allocation of list_backup failed", cclass_name);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1672,7 +1637,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     itmp2  = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: memory allocation of lens/widths/refs/itmp/itmp2 failed");
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed",cclass_name);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1805,9 +1770,9 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     size_sec7 += (k >> 3) + ((k & 7) ? 1 : 0);
 
-    sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
+    unsigned char* sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
     if (sec7 == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grid_complex packing: unable to allocate %d bytes", size_sec7);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: unable to allocate %d bytes", cclass_name, size_sec7);
         return GRIB_OUT_OF_MEMORY;
     }
 

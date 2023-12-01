@@ -2,17 +2,19 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
 # This gets updated twice a year by WMO.
 # See https://community.wmo.int/activity-areas/wmo-codes/manual-codes/latest-version
-constant tablesVersionLatestOfficial = 31 : edition_specific;
+constant tablesVersionLatestOfficial = 32 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 31 : edition_specific;
+constant tablesVersionLatest = 32 : edition_specific;
 
+constant false = 0 : hidden;
+constant true = 1 : hidden;
 constant million = 1000000 : hidden;
 constant grib2divider   = 1000000;
 alias extraDimensionPresent=zero;

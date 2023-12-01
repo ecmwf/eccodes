@@ -11,7 +11,7 @@ unsigned[1] matrixBitmapsPresent;
 alias secondaryBitmapPresent=matrixBitmapsPresent;
 
 # Number of data values encoded in Section 7
-unsigned[4] numberOfCodedValues; 
+unsigned[4] numberOfCodedValues;
 
 # NR - first dimension (rows)
 unsigned[2] firstDimension;
@@ -20,7 +20,7 @@ alias NR = firstDimension;
 # NC - second dimension (columns)
 unsigned[2] secondDimension;
 
-alias NC =  secondDimension;
+alias NC = secondDimension;
 # First dimension coordinate value definition (Code Table 5.2)
 unsigned[1] firstDimensionCoordinateValueDefinition;
 
@@ -41,7 +41,7 @@ unsigned[1] firstDimensionPhysicalSignificance ;
 # Second dimension physical significance (Code Table 5.3)
 unsigned[1] secondDimensionPhysicalSignificance ;
 
-ieeefloat coefsFirst[NC1];  # TODO: find proper names
+ieeefloat coefsFirst[NC1]; # TODO: find proper names
 ieeefloat coefsSecond[NC2]; # TODO: find proper names
 
 alias data.coefsFirst = coefsFirst;

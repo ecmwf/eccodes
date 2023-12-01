@@ -16,10 +16,10 @@ program grib_get_pl
    integer                         :: infile
    integer                         :: igrib
    integer                         :: PLPresent, nb_pl
-   real, dimension(:), allocatable :: pl
+   integer(kind=8), dimension(:), allocatable :: pl_8
+   integer(kind=4), dimension(:), allocatable :: pl_4
 
-   call codes_open_file(infile, &
-                        '../../data/reduced_gaussian_surface.grib1', 'r')
+   call codes_open_file(infile,  '../../data/reduced_gaussian_surface.grib1', 'r')
 
    ! A new grib message is loaded from file
    ! igrib is the grib id to be used in subsequent calls
@@ -31,12 +31,15 @@ program grib_get_pl
    if (PLPresent == 1) then
       call codes_get_size(igrib, 'pl', nb_pl)
       print *, "there are ", nb_pl, " PL values"
-      allocate (pl(nb_pl))
-      call codes_get(igrib, 'pl', pl)
-      print *, "pl = ", pl
-      deallocate (pl)
+      allocate (pl_4(nb_pl))
+      call codes_get(igrib, 'pl', pl_4)
+      allocate (pl_8(nb_pl))
+      call codes_get(igrib, 'pl', pl_8)
+      ! print *, "pl = ", pl
+      deallocate (pl_4)
+      deallocate (pl_8)
    else
-      print *, "There is no PL values in your GRIB message!"
+      print *, "There are no PL values in your GRIB message!"
    end if
    call codes_release(igrib)
 

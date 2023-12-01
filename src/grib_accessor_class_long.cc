@@ -40,7 +40,6 @@ static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
-//static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_long
@@ -103,12 +102,6 @@ static grib_accessor_class _grib_accessor_class_long = {
 
 grib_accessor_class* grib_accessor_class_long = &_grib_accessor_class_long;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static int get_native_type(grib_accessor* a)
@@ -127,6 +120,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     long val = 0;
     size_t l = 1;
     char repres[1024];
+    char format[32] = "%ld";
+    grib_handle* h = grib_handle_of_accessor(a);
 
     err = grib_unpack_long(a, &val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -134,10 +129,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     /* if (err) return err; */
     (void)err;
 
-    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
+    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    else
-        snprintf(repres, sizeof(repres), "%ld", val);
+    } else {
+        size_t size = sizeof(format);
+        grib_get_string(h, "formatForLongs", format, &size);
+        snprintf(repres, sizeof(repres), format, val);
+    }
 
     l = strlen(repres) + 1;
 
@@ -164,24 +162,6 @@ static int pack_missing(grib_accessor* a)
 
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
-
-/*
-static int is_missing(grib_accessor* a){
-
-    size_t len = 1;
-    long value = GRIB_MISSING_LONG;
-    long ret=0;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        ret = grib_unpack_long(a,&value,&len);
-        Assert( ret == 0);
-        return value == GRIB_MISSING_LONG;
-    }
-
-    return 0;
-}
-*/
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
@@ -277,14 +257,12 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     long v = 0; /* The converted value */
 
-#if 0
-    /* Requires more work e.g. filter */
+    // ECC-1722
     if (strcmp_nocase(val, "missing")==0) {
         return pack_missing(a);
     }
-#endif
 
-    if (string_to_long(val, &v) != GRIB_SUCCESS) {
+    if (string_to_long(val, &v, 1) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                 "Trying to pack \"%s\" as long. String cannot be converted to an integer", val);
         return GRIB_WRONG_TYPE;

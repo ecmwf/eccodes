@@ -44,7 +44,6 @@ static int is_missing(grib_accessor*);
 static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g2latlon
 {
@@ -109,12 +108,6 @@ static grib_accessor_class _grib_accessor_class_g2latlon = {
 
 
 grib_accessor_class* grib_accessor_class_g2latlon = &_grib_accessor_class_g2latlon;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 

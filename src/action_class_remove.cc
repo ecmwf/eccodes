@@ -19,7 +19,7 @@
    CLASS      = action
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
-   IMPLEMENTS = destroy; xref
+   IMPLEMENTS = destroy
    MEMBERS    = grib_arguments* args
    END_CLASS_DEF
 
@@ -37,7 +37,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
@@ -59,7 +58,7 @@ static grib_action_class _grib_action_class_remove = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     &create_accessor,             /* create_accessor*/
 
@@ -153,6 +152,3 @@ static void destroy(grib_context* context, grib_action* act)
     grib_context_free_persistent(context, act->op);
 }
 
-static void xref(grib_action* d, FILE* f, const char* path)
-{
-}

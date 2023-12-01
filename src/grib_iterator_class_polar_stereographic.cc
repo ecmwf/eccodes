@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 
 /*
    This is used by make_class.pl
@@ -164,7 +164,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
 
     if (iter->nv != nx * ny) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%ld!=%ldx%ld)", ITER, iter->nv, nx, ny);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=%ldx%ld)", ITER, iter->nv, nx, ny);
         return GRIB_WRONG_GRID;
     }
     if ((ret = grib_get_double_internal(h, s_latFirstInDegrees, &latFirstInDegrees)) != GRIB_SUCCESS)
@@ -244,12 +244,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
     self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (!self->lats) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %ld bytes", ITER, iter->nv * sizeof(double));
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, iter->nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
     lats = self->lats;
@@ -292,68 +292,66 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         }
         y += Dy;
     }
-#if 0
-    /*standardParallel = (southPoleOnPlane == 1) ? -90 : +90;*/
-    if (jPointsAreConsecutive)
-    {
-        x=xFirst;
-        for (i=0;i<nx;i++) {
-            y=yFirst;
-            for (j=0;j<ny;j++) {
-                rho=sqrt(x*x+y*y);
-                if (rho == 0) {
-                    /* indeterminate case */
-                    *lats = standardParallel;
-                    *lons = centralLongitude;
-                }
-                else {
-                    c=2*atan2(rho,(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-                }
-                while (*lons<0)   *lons += 360;
-                while (*lons>360) *lons -= 360;
-                lons++;
-                lats++;
 
-                y+=Dy;
-            }
-            x+=Dx;
-        }
-    }
-    else
-    {
-        y=yFirst;
-        for (j=0;j<ny;j++) {
-            x=xFirst;
-            for (i=0;i<nx;i++) {
-                /* int index =i+j*nx; */
-                rho=sqrt(x*x+y*y);
-                if (rho == 0) {
-                    /* indeterminate case */
-                    *lats = standardParallel;
-                    *lons = centralLongitude;
-                }
-                else {
-                    c=2*atan2(rho,(2.0*radius));
-                    cosc=cos(c);
-                    sinc=sin(c);
-                    *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
-                    *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
-                }
-                while (*lons<0)   *lons += 360;
-                while (*lons>360) *lons -= 360;
-                lons++;
-                lats++;
+//     /*standardParallel = (southPoleOnPlane == 1) ? -90 : +90;*/
+//     if (jPointsAreConsecutive)
+//     {
+//         x=xFirst;
+//         for (i=0;i<nx;i++) {
+//             y=yFirst;
+//             for (j=0;j<ny;j++) {
+//                 rho=sqrt(x*x+y*y);
+//                 if (rho == 0) {
+//                     /* indeterminate case */
+//                     *lats = standardParallel;
+//                     *lons = centralLongitude;
+//                 }
+//                 else {
+//                     c=2*atan2(rho,(2.0*radius));
+//                     cosc=cos(c);
+//                     sinc=sin(c);
+//                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+//                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+//                 }
+//                 while (*lons<0)   *lons += 360;
+//                 while (*lons>360) *lons -= 360;
+//                 lons++;
+//                 lats++;
+//                 y+=Dy;
+//             }
+//             x+=Dx;
+//         }
+//     }
+//     else
+//     {
+//         y=yFirst;
+//         for (j=0;j<ny;j++) {
+//             x=xFirst;
+//             for (i=0;i<nx;i++) {
+//                 /* int index =i+j*nx; */
+//                 rho=sqrt(x*x+y*y);
+//                 if (rho == 0) {
+//                     /* indeterminate case */
+//                     *lats = standardParallel;
+//                     *lons = centralLongitude;
+//                 }
+//                 else {
+//                     c=2*atan2(rho,(2.0*radius));
+//                     cosc=cos(c);
+//                     sinc=sin(c);
+//                     *lats = asin( cosc*sinphi1 + y*sinc*cosphi1/rho ) * RAD2DEG;
+//                     *lons = (lambda0+atan2(x*sinc, rho*cosphi1*cosc - y*sinphi1*sinc)) * RAD2DEG;
+//                 }
+//                 while (*lons<0)   *lons += 360;
+//                 while (*lons>360) *lons -= 360;
+//                 lons++;
+//                 lats++;
+//                 x+=Dx;
+//             }
+//             y+=Dy;
+//         }
+//     }
 
-                x+=Dx;
-            }
-            y+=Dy;
-        }
-    }
-#endif
     iter->e = -1;
 
     /* Apply the scanning mode flags which may require data array to be transformed */

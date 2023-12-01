@@ -32,7 +32,8 @@ grib_option grib_options[] = {
     { "7", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 1, 0, 0 },
     { "X:", 0, 0, 0, 1, 0 },
-    { "i:", 0, 0, 0, 1, 0 }
+    { "i:", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -76,7 +77,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (options->latlon) {
         lat = strtod(options->latlon, &theEnd);
         if (*theEnd != ',') {
-            fprintf(stderr, "Error %s: wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
+            fprintf(stderr, "%s: Wrong latitude value. Please use 'latitude,longitude'\n", tool_name);
             exit(1);
         }
         lon = strtod(++theEnd, &end1);
@@ -96,7 +97,7 @@ int grib_tool_init(grib_runtime_options* options)
                     options->latlon_mode = 1;
                 }
                 else {
-                    fprintf(stderr, "Error %s: wrong mode given in option -l\n", tool_name);
+                    fprintf(stderr, "%s: Wrong mode given for the '-l' option (Please use 1 or 4)\n", tool_name);
                     exit(1);
                 }
             }

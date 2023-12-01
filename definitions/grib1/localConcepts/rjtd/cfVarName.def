@@ -785,7 +785,7 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
+#Snowmelt
 'snom' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 99 ;

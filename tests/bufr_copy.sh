@@ -98,6 +98,18 @@ ${tools_dir}/bufr_copy -s unpack=1 -w stormIdentifier=none $fBufrInput $fBufrTmp
 [ ! -f "$fBufrTmp" ]
 
 
+#-------------------------------------------------------------------
+echo "Test: corner cases ..."
+#-------------------------------------------------------------------
+echo BUFR > $fBufrTmp
+set +e
+${tools_dir}/bufr_copy $fBufrTmp /dev/null > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -w "unreadable message" $fLog
+
+
 # Clean up
 #-----------
 rm -f $fLog $fBufrTmp

@@ -73,6 +73,22 @@ int main(int argc, char** argv)
 
     Assert(grib_iterator_has_next(iter) == 0);
 
+    {
+        // Test getting the previous value from a geoiterator.
+        // Note: Only implemented for regular grids
+        char gridType[128] = {0,};
+        size_t len = sizeof(gridType);
+        GRIB_CHECK(grib_get_string(h, "gridType", gridType, &len), 0);
+        if (strstr(gridType, "regular_")) {
+            double last_lat = 0, last_lon = 0, last_value = 0;
+            int result = grib_iterator_previous(iter, &last_lat, &last_lon, &last_value);
+            Assert(result == 1);
+            Assert(lat == last_lat);
+            Assert(lon == last_lon);
+            Assert(value == last_value);
+        }
+    }
+
     grib_iterator_delete(iter);
 
     grib_handle_delete(h);

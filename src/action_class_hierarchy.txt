@@ -21,11 +21,8 @@ Action Class Hierarchy
    |---action_class_list
    |---action_class_switch
    |---action_class_template
-   |---action_class_trigger
-   |---action_class_while
    |-action_class_set
    |-action_class_set_darray
-   |-action_class_set_iarray
    |-action_class_set_missing
    |-action_class_set_sarray
    |-action_class_when

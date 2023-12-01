@@ -16,9 +16,9 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = value_count;get_native_type
-   IMPLEMENTS = pack_string;unpack_string
-   IMPLEMENTS = pack_long;unpack_long
-   IMPLEMENTS = pack_double;unpack_double
+   IMPLEMENTS = unpack_string
+   IMPLEMENTS = unpack_long
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = init
    MEMBERS= grib_arguments* args
    END_CLASS_DEF
@@ -36,15 +36,11 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
-static int pack_double(grib_accessor*, const double* val, size_t* len);
-static int pack_long(grib_accessor*, const long* val, size_t* len);
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_suppressed
 {
@@ -76,13 +72,13 @@ static grib_accessor_class _grib_accessor_class_suppressed = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    &pack_long,                  /* pack_long */
+    0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
     &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -107,12 +103,6 @@ static grib_accessor_class _grib_accessor_class_suppressed = {
 
 
 grib_accessor_class* grib_accessor_class_suppressed = &_grib_accessor_class_suppressed;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -140,24 +130,6 @@ static void log_message(grib_accessor* a)
                          grib_arguments_get_name(hand, self->args, i));
         i++;
     }
-}
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    log_message(a);
-    return GRIB_NOT_FOUND;
-}
-
-static int pack_long(grib_accessor* a, const long* val, size_t* len)
-{
-    log_message(a);
-    return GRIB_NOT_FOUND;
-}
-
-static int pack_double(grib_accessor* a, const double* val, size_t* len)
-{
-    log_message(a);
-    return GRIB_NOT_FOUND;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)

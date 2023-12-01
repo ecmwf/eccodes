@@ -48,7 +48,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -118,12 +117,6 @@ static grib_accessor_class _grib_accessor_class_data_apply_boustrophedonic_bitma
 
 
 grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic_bitmap = &_grib_accessor_class_data_apply_boustrophedonic_bitmap;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -504,8 +497,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    /*  grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
-    return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));*/
+    //grib_accessor_data_apply_boustrophedonic_bitmap* self =  (grib_accessor_data_apply_boustrophedonic_bitmap*)a;
+    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
 
     return GRIB_TYPE_DOUBLE;
 }

@@ -44,7 +44,23 @@ fi
 ${tools_dir}/grib_get_data $tempGrib2 > $tempOut
 
 ${tools_dir}/grib_ls -l 50,0 $tempGrib2
-rm -f $tempGrib2
+
+# Invalid cases
+set +e
+${tools_dir}/grib_get_data -sNr=missing $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Orthographic view (Nr missing) not supported" $tempOut
+
+set +e
+${tools_dir}/grib_get_data -sNr=0 $tempGrib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "must be greater than zero" $tempOut
+
+rm -f $tempGrib2 $tempOut
 
 # -----------
 # GRIB1

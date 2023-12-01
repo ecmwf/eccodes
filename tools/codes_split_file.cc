@@ -32,21 +32,15 @@ static void usage(const char* prog)
 static int split_file(FILE* in, const char* filename, const int nchunks, unsigned long* count)
 {
     void* mesg = NULL;
-    FILE* out;
     size_t size = 0, read_size = 0, insize = 0, chunk_size, msg_size = 0, num_msg = 0;
-    size_t ofilenameMaxLen = 0;
     off_t offset = 0;
-    int err      = GRIB_SUCCESS;
-    int i;
-    char* ofilename;
+    int err = GRIB_SUCCESS, i = 0;
     grib_context* c = grib_context_get_default();
-
-    if (!in)
-        return 1;
+    assert(in);
 
     /* name of output file */
-    ofilenameMaxLen = strlen(filename) + 10;
-    ofilename = (char*)calloc(1, ofilenameMaxLen);
+    size_t ofilenameMaxLen = strlen(filename) + 10;
+    char* ofilename = (char*)calloc(1, ofilenameMaxLen);
 
     fseeko(in, 0, SEEK_END);
     insize = ftello(in);
@@ -61,7 +55,7 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 
     i = 1;
     snprintf(ofilename, ofilenameMaxLen, OUTPUT_FILENAME_FORMAT, filename, i);
-    out = fopen(ofilename, "w");
+    FILE* out = fopen(ofilename, "w");
     if (!out) {
         perror(ofilename);
         free(ofilename);
@@ -71,7 +65,6 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
     while (err != GRIB_END_OF_FILE) {
         mesg = wmo_read_any_from_file_malloc(in, 0, &size, &offset, &err);
         num_msg++;
-        /*printf("=1=%d\t%d\t%d\n",*count,size,insize);*/
         if (mesg != NULL && err == 0) {
             if (fwrite(mesg, 1, size, out) != size) {
                 perror(ofilename);
@@ -115,8 +108,6 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
 
 int main(int argc, char* argv[])
 {
-    FILE* infh = NULL;
-    char* filename;
     int i, status = 0;
     int err = 0, nchunks = 0;
     unsigned long count = 0;
@@ -140,12 +131,12 @@ int main(int argc, char* argv[])
     }
 
     i++;
-    filename = argv[i];
+    const char* filename = argv[i];
     if (path_is_directory(filename)) {
         fprintf(stderr, "ERROR: %s: Is a directory\n", filename);
         return 1;
     }
-    infh = fopen(filename, "rb");
+    FILE* infh = fopen(filename, "rb");
     if (!infh) {
         perror(filename);
         return 1;

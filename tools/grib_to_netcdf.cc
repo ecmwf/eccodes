@@ -12,7 +12,7 @@
 
 #ifdef HAVE_NETCDF
 
-#include <math.h>
+#include <cmath>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -1317,8 +1317,9 @@ static int axisindex(const char* name)
 {
     size_t i = 0;
     for (i = 0; i < NUMBER(global_axis); i++) {
-        if (strcmp(name, global_axis[i].name) == 0)
-            return i;
+        if (STR_EQUAL(name, global_axis[i].name)){
+            return (int)i;
+        }
     }
     return -1;
 }
@@ -1335,7 +1336,7 @@ static namecmp comparator(const char* name)
     }
 
     if (dontcompare != NULL) {
-        if (strcmp(dontcompare, name) == 0)
+        if (STR_EQUAL(dontcompare, name))
             return eq_null;
     }
 
@@ -1434,7 +1435,7 @@ static void unset_value(request* r, const char* parname)
 
     p = r->params;
     while (p) {
-        if (strcmp(parname, p->name) == 0) {
+        if (STR_EQUAL(parname, p->name)) {
             if (q)
                 q->next = p->next;
             else
@@ -1624,7 +1625,7 @@ static void cube_indexes(
         int k                      = 0;
         int count                  = count_values(cube, axis);
         int last                   = h->index_cache[i];
-        const bool is_time_axis = (strcmp(axis, "time") == 0);
+        const bool is_time_axis = (STR_EQUAL(axis, "time"));
         if (is_time_axis) {
             Assert(times_array);
             Assert(times_array_size == count);
@@ -1744,15 +1745,12 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
 
     struct stuff_1 s;
 
-#if 0
-    const request *lang = mars_language_from_request(r);
-    int count = 0;
-
-    count = init_axis(lang);
-    grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
-    /* print_all_requests(mars_language_from_request(r)); */
-    grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
-#endif
+//     const request *lang = mars_language_from_request(r);
+//     int count = 0;
+//     count = init_axis(lang);
+//     grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
+//     /* print_all_requests(mars_language_from_request(r)); */
+//     grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
 
     s.c = new_hypercube(r);
     s.r = clone_one_request(r);
@@ -1959,9 +1957,9 @@ static long monthnumber(const char* m)
 static int check_stepUnits(const char* step_units_str)
 {
     /* Only hours, minutes and seconds supported */
-    if (strcmp(step_units_str, "h") == 0 ||
-        strcmp(step_units_str, "m") == 0 ||
-        strcmp(step_units_str, "s") == 0) {
+    if (STR_EQUAL(step_units_str, "h") ||
+        STR_EQUAL(step_units_str, "m") ||
+        STR_EQUAL(step_units_str, "s")) {
         return GRIB_SUCCESS;
     }
     return GRIB_WRONG_STEP_UNIT;
@@ -2054,10 +2052,10 @@ static void validation_time(request* r)
             grib_context_log(ctx, GRIB_LOG_ERROR,
                              "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
         }
-        if (strcmp("m", step_units) == 0) {
+        if (STR_EQUAL("m", step_units)) {
             step /= 60;
         }
-        else if (strcmp("s", step_units) == 0) {
+        else if (STR_EQUAL("s", step_units)) {
             step /= 3600;
         }
     }
@@ -2110,8 +2108,12 @@ static void get_nc_options(const request* user_r)
     setup.history   = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
 
+    setup.checkvalidtime   = true;
     checkvalidtime_env     = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
-    setup.checkvalidtime   = checkvalidtime_env ? atol(checkvalidtime_env) : 1;
+    if (checkvalidtime_env) {
+        const long v = atol(checkvalidtime_env);
+        if (v == 0) setup.checkvalidtime = false;
+    }
     setup.mars_description = empty_request("MARS");
 }
 
@@ -2120,19 +2122,19 @@ static nc_type translate_nctype(const char* name)
     if (!name)
         return NC_SHORT;
 
-    if (strcmp(name, "NC_BYTE") == 0)
+    if (STR_EQUAL(name, "NC_BYTE"))
         return NC_BYTE;
 
-    if (strcmp(name, "NC_SHORT") == 0)
+    if (STR_EQUAL(name, "NC_SHORT"))
         return NC_SHORT;
 
-    if (strcmp(name, "NC_INT") == 0)
+    if (STR_EQUAL(name, "NC_INT"))
         return NC_INT;
 
-    if (strcmp(name, "NC_FLOAT") == 0)
+    if (STR_EQUAL(name, "NC_FLOAT"))
         return NC_FLOAT;
 
-    if (strcmp(name, "NC_DOUBLE") == 0)
+    if (STR_EQUAL(name, "NC_DOUBLE"))
         return NC_DOUBLE;
 
     grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown netCDF type '%s'. Using NC_SHORT", name);
@@ -2162,7 +2164,7 @@ static int set_dimension(int ncid, const char* name, int n, int xtype, const cha
     int dim_id = DIM_ID;
     int dim_vec[DIM_ID];
 
-    if (setup.unlimited && (strcmp(name, setup.unlimited) == 0))
+    if ( setup.unlimited && (STR_EQUAL(name, setup.unlimited)) )
         n = NC_UNLIMITED;
 
     stat = nc_def_dim(ncid, name, n, &dim_id);
@@ -2196,7 +2198,7 @@ static int check_grid(field* f)
         return e;
     }
 
-    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0)) {
+    if ( !STR_EQUAL(grid_type, "regular_ll") && !STR_EQUAL(grid_type, "regular_gg") ) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
         grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -2248,7 +2250,7 @@ static int def_latlon(int ncid, fieldset* fs)
 
     field* g = get_field(fs, 0, expand_mem);
 
-    DebugAssert(check_grid(g) == GRIB_SUCCESS);
+    DEBUG_ASSERT(check_grid(g) == GRIB_SUCCESS);
 
     if ((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
@@ -2335,7 +2337,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
-    Assert(n == ni);
+    if (n != ni) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)",n,ni);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2352,8 +2357,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
-
-    Assert(n == nj);
+    if (n != nj) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)",n,nj);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2632,8 +2639,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      return;
     }
     */
-    DebugAssert(vals);
-    DebugAssert(n > 0);
+    DEBUG_ASSERT(vals);
+    DEBUG_ASSERT(n > 0);
     if (!vals) return;
 
     switch (nctype) {
@@ -2642,7 +2649,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_BYTE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2656,7 +2666,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
                     double d = 0;
                     Assert(scale_factor > 0);
                     d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_SHORT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2668,7 +2681,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_INT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2680,7 +2696,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_FLOAT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2692,7 +2711,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if(!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_DOUBLE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2817,9 +2839,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             return e;
         }
 
-#if 0
-        bool missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
-#endif
+        // bool missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
 
         r = field_to_request(g);
         if (!missing) {
@@ -3119,14 +3139,12 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
-#if 0
-        if(subsets[i].att.other)
-        {
-            const char *txt = subsets[i].att.long_name;
-            stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
-            check_err("nc_put_att_text", stat,__LINE__,__FILE__);
-        }
-#endif
+        // if(subsets[i].att.other)
+        // {
+        //     const char *txt = subsets[i].att.long_name;
+        //     stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
+        //     check_err("nc_put_att_text", stat,__LINE__,__FILE__);
+        // }
 
         if (subsets[i].att.metadata) {
             parameter* p = subsets[i].att.metadata->params;
@@ -3200,13 +3218,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err("nc_put_att_text", stat, __LINE__);
 
-#if 0
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
-        check_err(stat,__LINE__,__FILE__);
-
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
-        check_err(stat,__LINE__,__FILE__);
-#endif
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
+        //check_err(stat,__LINE__,__FILE__);
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
+        //check_err(stat,__LINE__,__FILE__);
 
         if (setup.title) {
             stat = nc_put_att_text(ncid, NC_GLOBAL, "title", strlen(setup.title), setup.title);
@@ -3251,6 +3266,7 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     }
     return result;
 }
+
 static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
 {
     const request* cube = h->cube;
@@ -3920,7 +3936,8 @@ grib_option grib_options[] = {
       "\n\t\tChunking strategy based on GRIB message.\n",
       0, 1, "6" },
     { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
-    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
+    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count    = sizeof(grib_options) / sizeof(grib_option);

@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 /*
@@ -57,7 +58,6 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -153,12 +153,6 @@ static grib_accessor_class _grib_accessor_class_data_g1second_order_constant_wid
 
 
 grib_accessor_class* grib_accessor_class_data_g1second_order_constant_width_packing = &_grib_accessor_class_data_g1second_order_constant_width_packing;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -264,14 +258,22 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         return ret;
 
     secondaryBitmap = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfSecondOrderPackedValues);
+    if (!secondaryBitmap)
+        return GRIB_OUT_OF_MEMORY;
+
     grib_decode_long_array(buf, &pos, 1, numberOfSecondOrderPackedValues, secondaryBitmap);
     pos = 8 * ((pos + 7) / 8);
 
     firstOrderValues = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfGroups);
+    if (!firstOrderValues)
+        return GRIB_OUT_OF_MEMORY;
+
     grib_decode_long_array(buf, &pos, widthOfFirstOrderValues, numberOfGroups, firstOrderValues);
     pos = 8 * ((pos + 7) / 8);
 
     X = (long*)grib_context_malloc_clear(a->context, sizeof(long) * numberOfSecondOrderPackedValues);
+    if (!X)
+        return GRIB_OUT_OF_MEMORY;
 
     if (groupWidth > 0) {
         grib_decode_long_array(buf, &pos, groupWidth, numberOfSecondOrderPackedValues, X);
@@ -279,7 +281,11 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         i = -1;
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
-            X[n] = firstOrderValues[i] + X[n];
+            long fovi = 0;
+            // ECC-1703
+            if ( i >=0 && i < numberOfGroups )
+                fovi = firstOrderValues[i];
+            X[n] = fovi + X[n];
             n++;
         }
     }
@@ -288,7 +294,10 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         i = -1;
         while (n < numberOfSecondOrderPackedValues) {
             i += secondaryBitmap[n];
-            X[n] = firstOrderValues[i];
+            long fovi = 0;
+            if ( i >=0 && i < numberOfGroups )
+                fovi = firstOrderValues[i];
+            X[n] = fovi;
             n++;
         }
     }
@@ -298,8 +307,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
         printf("XXXXXXX extrabits=%ld pos=%ld\n",extrabits,pos);
     }*/
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
     for (i = 0; i < numberOfSecondOrderPackedValues; i++) {
         values[i] = (double)(((X[i] * s) + reference_value) * d);
     }
@@ -314,7 +323,8 @@ static int unpack_double(grib_accessor* a, double* values, size_t* len)
 
 static int pack_double(grib_accessor* a, const double* cval, size_t* len)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR, "constant width packing not implemented");
+    const char* cclass_name = a->cclass->name;
+    grib_context_log(a->context, GRIB_LOG_ERROR, "%s: %s: Not implemented", cclass_name, __func__);
     return GRIB_NOT_IMPLEMENTED;
 }
 

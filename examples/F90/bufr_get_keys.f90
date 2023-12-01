@@ -26,11 +26,11 @@ program bufr_get_keys
 
    call codes_open_file(ifile, '../../data/bufr/syno_multi.bufr', 'r')
 
-   ! The first BUFR message is loaded from file,
-   ! ibufr is the BUFR id to be used in subsequent calls
-   call codes_bufr_new_from_file(ifile, ibufr, iret)
-
-   do while (iret /= CODES_END_OF_FILE)
+   do while (.true.)
+      ! A BUFR message is loaded from the file,
+      ! ibufr is the BUFR id to be used in subsequent calls
+      call codes_bufr_new_from_file(ifile, ibufr, iret)
+      if (iret == CODES_END_OF_FILE) exit
 
       ! Get and print some keys from the BUFR header
       write (*, *) 'message: ', count
@@ -82,9 +82,6 @@ program bufr_get_keys
 
       ! Release the BUFR message
       call codes_release(ibufr)
-
-      ! Load the next BUFR message
-      call codes_bufr_new_from_file(ifile, ibufr, iret)
 
       count = count + 1
 

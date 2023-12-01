@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -46,7 +46,6 @@ static long byte_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void post_init(grib_accessor*);
-//static void init_class(grib_accessor_class*);
 static int notify_change(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_lookup
@@ -112,12 +111,6 @@ static grib_accessor_class _grib_accessor_class_lookup = {
 
 
 grib_accessor_class* grib_accessor_class_lookup = &_grib_accessor_class_lookup;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -200,10 +193,10 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_lookup* al = (grib_accessor_lookup*)a;
+    grib_accessor_lookup* self = (grib_accessor_lookup*)a;
     grib_handle* h           = grib_handle_of_accessor(a);
 
-    long pos = (a->offset + al->loffset) * 8;
+    long pos = (a->offset + self->loffset) * 8;
 
     if (len[0] < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
@@ -217,7 +210,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return h->loader->lookup_long(h->context, h->loader, a->name, val);
     }
 
-    val[0] = grib_decode_unsigned_long(h->buffer->data, &pos, al->llength * 8);
+    val[0] = grib_decode_unsigned_long(h->buffer->data, &pos, self->llength * 8);
     len[0] = 1;
 
     /*printf("###########lookup unpack_long: %s %ld %ld\n",a->name, pos/8, val[0]);*/
@@ -232,14 +225,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static long byte_count(grib_accessor* a)
 {
-    grib_accessor_lookup* al = (grib_accessor_lookup*)a;
-    return al->llength;
+    grib_accessor_lookup* self = (grib_accessor_lookup*)a;
+    return self->llength;
 }
 
 static long byte_offset(grib_accessor* a)
 {
-    grib_accessor_lookup* al = (grib_accessor_lookup*)a;
-    return al->loffset;
+    grib_accessor_lookup* self = (grib_accessor_lookup*)a;
+    return self->loffset;
 }
 
 static int notify_change(grib_accessor* self, grib_accessor* changed)

@@ -47,7 +47,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_unpack_bufr_values
 {
@@ -110,12 +109,6 @@ static grib_accessor_class _grib_accessor_class_unpack_bufr_values = {
 
 grib_accessor_class* grib_accessor_class_unpack_bufr_values = &_grib_accessor_class_unpack_bufr_values;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
@@ -144,6 +137,8 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_unpack_bufr_values* self = (grib_accessor_unpack_bufr_values*)a;
     grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+    strcpy(buffer, "0");
+    *len=1;
 
     return grib_unpack_double(data, 0, 0);
 }
@@ -179,15 +174,13 @@ static int get_native_type(grib_accessor* a)
     return GRIB_TYPE_LONG;
 }
 
-#if 0
-static const char* mode_to_str(int p)
-{
-    if (p==CODES_BUFR_UNPACK_STRUCTURE) return "CODES_BUFR_UNPACK_STRUCTURE";
-    if (p==CODES_BUFR_UNPACK_FLAT)      return "CODES_BUFR_UNPACK_FLAT";
-    if (p==CODES_BUFR_NEW_DATA)         return "CODES_BUFR_NEW_DATA";
-    return "unknown proc flag";
-}
-#endif
+// static const char* mode_to_str(int p)
+// {
+//     if (p==CODES_BUFR_UNPACK_STRUCTURE) return "CODES_BUFR_UNPACK_STRUCTURE";
+//     if (p==CODES_BUFR_UNPACK_FLAT)      return "CODES_BUFR_UNPACK_FLAT";
+//     if (p==CODES_BUFR_NEW_DATA)         return "CODES_BUFR_NEW_DATA";
+//     return "unknown proc flag";
+// }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {

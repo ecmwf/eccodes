@@ -162,7 +162,7 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 10 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 '3062' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 62 ;
@@ -392,12 +392,12 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 '3049' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 '3050' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 50 ;
@@ -532,7 +532,7 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
+#Snowmelt
 '3099' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 99 ;
@@ -678,7 +678,7 @@
 	 table2Version = 3 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 '228144' = {
 	 table2Version = 3 ;
 	 indicatorOfParameter = 65 ;
@@ -858,7 +858,7 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 10 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 '3062' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 62 ;
@@ -1073,12 +1073,12 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 '3049' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 '3050' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 50 ;
@@ -1213,7 +1213,7 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
+#Snowmelt
 '3099' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 99 ;
@@ -1359,7 +1359,7 @@
 	 table2Version = 2 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 '228144' = {
 	 table2Version = 2 ;
 	 indicatorOfParameter = 65 ;
@@ -1539,7 +1539,7 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 10 ;
 	}
-#large scale precipitation
+#Large-scale precipitation
 '3062' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 62 ;
@@ -1754,12 +1754,12 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
+#U-component of current
 '3049' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
+#V-component of current
 '3050' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 50 ;
@@ -1894,7 +1894,7 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
+#Snowmelt
 '3099' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 99 ;
@@ -2040,7 +2040,7 @@
 	 table2Version = 1 ;
 	 indicatorOfParameter = 85 ;
 	}
-#Snow Fall water equivalent
+#Snowfall water equivalent
 '228144' = {
 	 table2Version = 1 ;
 	 indicatorOfParameter = 65 ;

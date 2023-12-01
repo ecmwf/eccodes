@@ -60,20 +60,18 @@ typedef struct grib_expression_functor{
 static grib_expression_class _grib_expression_class_functor = {
     0,                    /* super                     */
     "functor",                    /* name                      */
-    sizeof(grib_expression_functor),/* size of instance          */
+    sizeof(grib_expression_functor),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	&evaluate_long,
-	0,
-	0,
+    &native_type,
+    0,
+    &evaluate_long,
+    0,
+    0,
 };
 
 grib_expression_class* grib_expression_class_functor = &_grib_expression_class_functor;
@@ -88,16 +86,24 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     grib_expression_functor* e = (grib_expression_functor*)g;
 
-    if (strcmp(e->name, "lookup") == 0) {
+    if (STR_EQUAL(e->name, "lookup")) {
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "new") == 0) {
+    if (STR_EQUAL(e->name, "new")) {
         *lres = h->loader != NULL;
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "missing") == 0) {
+    if (STR_EQUAL(e->name, "abs")) {
+        grib_expression* exp = grib_arguments_get_expression(h, e->args, 0);
+        long lval = 0;
+        int ret = grib_expression_evaluate_long(h, exp, &lval);
+        *lres = abs(lval);
+        return ret;
+    }
+
+    if (STR_EQUAL(e->name, "missing")) {
         const char* p = grib_arguments_get_name(h, e->args, 0);
         if (p) {
             long val = 0;
@@ -124,7 +130,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "defined") == 0) {
+    if (STR_EQUAL(e->name, "defined")) {
         const char* p = grib_arguments_get_name(h, e->args, 0);
 
         if (p) {
@@ -136,7 +142,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "environment_variable") == 0) {
+    if (STR_EQUAL(e->name, "environment_variable")) {
         // ECC-1520: This implementation has some limitations:
         // 1. Cannot distinguish between environment variable NOT SET
         //    and SET but equal to 0
@@ -146,7 +152,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             char* env = getenv(p);
             if (env) {
                 long lval = 0;
-                if (string_to_long(env, &lval) == GRIB_SUCCESS) {
+                if (string_to_long(env, &lval, 1) == GRIB_SUCCESS) {
                     *lres = lval;
                     return GRIB_SUCCESS;
                 }
@@ -156,12 +162,12 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "changed") == 0) {
+    if (STR_EQUAL(e->name, "changed")) {
         *lres = 1;
         return GRIB_SUCCESS;
     }
 
-    if (strcmp(e->name, "gribex_mode_on") == 0) {
+    if (STR_EQUAL(e->name, "gribex_mode_on")) {
         *lres = h->context->gribex_mode_on ? 1 : 0;
         return GRIB_SUCCESS;
     }

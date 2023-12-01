@@ -40,7 +40,6 @@ static int unpack_bytes(grib_accessor*, unsigned char*, size_t* len);
 static long byte_count(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int compare(grib_accessor*, grib_accessor*);
 
@@ -107,12 +106,6 @@ static grib_accessor_class _grib_accessor_class_raw = {
 
 grib_accessor_class* grib_accessor_class_raw = &_grib_accessor_class_raw;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
@@ -131,7 +124,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     e   = grib_arguments_get_expression(hand, arg, n++);
     err = grib_expression_evaluate_long(hand, e, &(self->relativeOffset));
     if (err)
-        grib_context_log(hand->context, GRIB_LOG_ERROR, "unable to evaluate relativeOffset");
+        grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");
 
     grib_get_long(hand, self->sectionLength, &sectionLength);
 

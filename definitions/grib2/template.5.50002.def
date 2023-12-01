@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-ieeefloat   referenceValue  : no_copy;
+ieeefloat referenceValue : no_copy;
 meta referenceValueError reference_value_error(referenceValue,ieee);
 
 signed[2] binaryScaleFactor : no_copy;

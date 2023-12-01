@@ -30,7 +30,8 @@ grib_option grib_options[] = {
     { "P", 0, 0, 1, 0, 0 },
     { "T:", 0, 0, 1, 0, "B" },
     { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 1, 0, 0 }
+    { "v", 0, 0, 1, 0, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -66,7 +67,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 */
 int grib_tool_init(grib_runtime_options* options)
 {
-    DebugAssert(!options->latlon);
+    DEBUG_ASSERT(!options->latlon);
     return 0;
 }
 

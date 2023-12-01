@@ -41,7 +41,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_g1number_of_coded_values_sh_simple
 {
@@ -109,12 +108,6 @@ static grib_accessor_class _grib_accessor_class_g1number_of_coded_values_sh_simp
 
 grib_accessor_class* grib_accessor_class_g1number_of_coded_values_sh_simple = &_grib_accessor_class_g1number_of_coded_values_sh_simple;
 
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
-
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
@@ -152,7 +145,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return ret;
 
     if (bpv != 0) {
-        DebugAssert(offsetAfterData > offsetBeforeData);
+        DEBUG_ASSERT(offsetAfterData > offsetBeforeData);
         *val = ((offsetAfterData - offsetBeforeData) * 8 - unusedBits) / bpv;
     }
     else {

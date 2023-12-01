@@ -9,7 +9,6 @@
 program get_native_type
    use eccodes
    implicit none
-   integer            :: iret
    integer            :: ihandle
    integer            :: ktype = CODES_TYPE_UNDEFINED
 

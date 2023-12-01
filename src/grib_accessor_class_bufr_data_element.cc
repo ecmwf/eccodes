@@ -65,7 +65,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-//static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static grib_accessor* make_clone(grib_accessor*, grib_section*, int*);
 
@@ -138,12 +137,6 @@ static grib_accessor_class _grib_accessor_class_bufr_data_element = {
 
 
 grib_accessor_class* grib_accessor_class_bufr_data_element = &_grib_accessor_class_bufr_data_element;
-
-
-//static void init_class(grib_accessor_class* c)
-//{
-// INIT
-//}
 
 /* END_CLASS_IMP */
 
@@ -284,9 +277,9 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
     grib_context* c = a->context;
 
     if (self->compressedData) {
-        DebugAssert(self->index < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->n);
         idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
-        DebugAssert(idx < self->stringValues->n);
+        DEBUG_ASSERT(idx < self->stringValues->n);
         count = grib_sarray_used_size(self->stringValues->v[idx]);
         for (i = 0; i < count; i++) {
             val[i] = grib_context_strdup(c, self->stringValues->v[idx]->v[i]);
@@ -294,8 +287,8 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
+        DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->v[self->subsetNumber]->n);
         idx    = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
         val[0] = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
         *len   = 1;
@@ -329,7 +322,19 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
         }
     }
     else {
-        ret = GRIB_NOT_IMPLEMENTED;
+        //ECC-1623
+        if (*len != self->numberOfSubsets) {
+            grib_context_log(c, GRIB_LOG_ERROR,
+                "Number of values mismatch for '%s': %zu strings provided but expected %ld (=number of subsets)",
+                a->name, *len, self->numberOfSubsets);
+            return GRIB_WRONG_ARRAY_SIZE;
+        }
+        for (i = 0; i < *len; i++) {
+            //idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+            idx = (int)self->numericValues->v[i]->v[self->index] / 1000 - 1;
+            self->stringValues->v[idx]->v[0] = strdup(v[i]);
+        }
+        *len=1;
     }
 
     return ret;
@@ -359,18 +364,18 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
 
     if (self->compressedData) {
-        DebugAssert(self->index < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->n);
         idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
         if (idx < 0)
             return GRIB_INTERNAL_ERROR;
         str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
+        DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
         idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
         if (idx < 0)
             return GRIB_INTERNAL_ERROR;
-        DebugAssert(idx < self->stringValues->n);
+        DEBUG_ASSERT(idx < self->stringValues->n);
         str = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
     }
 
@@ -440,15 +445,15 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (self->compressedData) {
         for (i = 0; i < count; i++) {
-            DebugAssert(self->index < self->numericValues->n);
-            DebugAssert(i < self->numericValues->v[self->index]->n);
+            DEBUG_ASSERT(self->index < self->numericValues->n);
+            DEBUG_ASSERT(i < self->numericValues->v[self->index]->n);
             val[i] = self->numericValues->v[self->index]->v[i] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->index]->v[i];
         }
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
+        DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0] = self->numericValues->v[self->subsetNumber]->v[self->index] == GRIB_MISSING_DOUBLE ? GRIB_MISSING_LONG : (long)self->numericValues->v[self->subsetNumber]->v[self->index];
         *len   = 1;
     }
@@ -469,15 +474,15 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     if (self->compressedData) {
         for (i = 0; i < count; i++) {
-            DebugAssert(self->index < self->numericValues->n);
-            DebugAssert(i < self->numericValues->v[self->index]->n);
+            DEBUG_ASSERT(self->index < self->numericValues->n);
+            DEBUG_ASSERT(i < self->numericValues->v[self->index]->n);
             val[i] = self->numericValues->v[self->index]->v[i];
         }
         *len = count;
     }
     else {
-        DebugAssert(self->subsetNumber < self->numericValues->n);
-        DebugAssert(self->index < self->numericValues->v[self->subsetNumber]->n);
+        DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->v[self->subsetNumber]->n);
         val[0] = self->numericValues->v[self->subsetNumber]->v[self->index];
         *len   = 1;
     }
@@ -558,12 +563,12 @@ static int value_count(grib_accessor* a, long* count)
     type = get_native_type(a);
 
     if (type == GRIB_TYPE_STRING) {
-        DebugAssert(self->index < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->n);
         idx  = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
         size = grib_sarray_used_size(self->stringValues->v[idx]);
     }
     else {
-        DebugAssert(self->index < self->numericValues->n);
+        DEBUG_ASSERT(self->index < self->numericValues->n);
         size = grib_darray_used_size(self->numericValues->v[self->index]);
     }
 
@@ -597,7 +602,7 @@ static int get_native_type(grib_accessor* a)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     int ret                               = GRIB_TYPE_DOUBLE;
-    DebugAssert(self);
+    DEBUG_ASSERT(self);
     switch (self->type) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
             ret = GRIB_TYPE_STRING;
