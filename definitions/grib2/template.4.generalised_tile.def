@@ -9,15 +9,15 @@ unsigned[1]  numberOfUsedTileAttributesForTileAttributeCombination=1 : dump; # N
 listOfUsedTileAttributesInCombination list(numberOfUsedTileAttributesForTileAttributeCombination){
     codetable[1] attributeOfTile ('4.241.table',masterDir,localDir) : dump;
 }
-unsigned[1]  totalNumberOfTileAttributeCombinations=1 : dump; # Sum over all tile-attribute pairs over whole grid. >= 1
-unsigned[1]  tileIndex=1 : dump; # Local index of tile
-transient unknownCombinationOfAttributesOfTile = "unknown";
-concept combinationOfAttributesOfTile (unknownCombinationOfAttributesOfTile,"combinationOfAttributesOfTileConcept.def",conceptsDir2,conceptsDir1): no_copy,dump;
+unsigned[1] totalNumberOfTileAttributeCombinations=1 : dump; # Sum over all tile-attribute pairs over whole grid. >= 1
+unsigned[1] tileIndex=1 : dump; # Local index of tile
+
+concept combinationOfAttributesOfTile (unknown,"combinationOfAttributesOfTileConcept.def",conceptsDir2,conceptsDir1): no_copy,dump;
 byte[16] uuidOfDataGroup : dump; # UUID of data group
 
 # Extract long name (title) + part in brackets (grouping)
 meta tileGrouping codetable_units(typeOfTile) : dump;
-meta tileName  codetable_title(typeOfTile) : dump;
+meta tileName codetable_title(typeOfTile) : dump;
 
 alias uuid=uuidOfDataGroup;
 
