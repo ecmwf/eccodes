@@ -35,9 +35,9 @@ alias tile.nTiles=nTiles;
 alias totalTileAttCombo=totalNumberOfTileAttributeCombinations;
 alias tile.totalTileAttCombo=totalTileAttCombo;
 alias nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
-alias tile.nTileAttCombo=numberOfUsedTileAttributeCombinationsForTypeOfTile;
+alias tile.nTileAttCombo=nTileAttCombo;
 alias nTileAtt=numberOfUsedTileAttributesForTileAttributeCombination;
-alias tile.nTileAtts=nTileAtt;
+alias tile.nTileAtt=nTileAtt;
 
 alias mars.tile=typeOfTile;
 alias mars.tileAttribute=tileAttribute;
