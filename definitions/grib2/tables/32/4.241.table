@@ -1,12 +1,12 @@
 # Code table 4.241 - Coverage attributes
-0 0 Undefined
-1 1 Unmodified
-2 2 Snow covered
-3 3 Flooded
-4 4 Ice covered
-5 5 With intercepted water
-6 6 With intercepted snow
-7 7 Aggregated
+0 UNDEF Undefined
+1 UNMMOD Unmodified
+2 SNOW Snow covered
+3 FLOOD Flooded
+4 ICE Ice covered
+5 ITCW With intercepted water
+6 ITCS With intercepted snow
+7 AGG Aggregated
 # 8-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing value

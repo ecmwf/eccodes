@@ -10666,24 +10666,3 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 }
-#Tile class
-'231005' = {
-  discipline = 2 ;
-  parameterCategory = 0 ;
-  parameterNumber = 35 ;
-  typeOfFirstFixedSurface = 1 ;
-}
-#Tile fraction
-'231006' = {
-  discipline = 2 ;
-  parameterCategory = 0 ;
-  parameterNumber = 36 ;
-  typeOfFirstFixedSurface = 1 ;
-}
-#Tile percentage
-'231007' = {
-  discipline = 2 ;
-  parameterCategory = 0 ;
-  parameterNumber = 37 ;
-  typeOfFirstFixedSurface = 1 ;
-}

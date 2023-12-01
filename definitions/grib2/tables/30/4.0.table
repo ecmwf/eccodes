@@ -80,19 +80,15 @@
 96 96 Average, accumulation, extreme values or other statistically processed values of an individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
 97 97 Average, accumulation, extreme values or other statistically processed values of post-processing analysis or forecast at a horizontal level or in a horizontal layer at a specified local time
 98 98 Average, accumulation, extreme values or other statistically processed values of a post-processing individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a specified local time
-113	113 Generalised tiles at a horizontal level or horizontal layer at a point in time
-114	114 Average, accumulation, and/or extreme values or other statistically processed values on generalised tiles at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-115	115 Individual ensemble forecast, control and perturbed on generalised tiles at a horizontal level or in a horizontal layer at a point in time
-116	116 Individual ensemble forecast, control and perturbed on generalised tiles at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
-# 117-253 Reserved
-254 254 CCITT IA5 character string 
-# 255-999 Reserved 
-1000 1000 Cross-section of analysis and forecast at a point in time 
-1001 1001 Cross-section of averaged or otherwise statistically processed analysis or forecast over a range of time 
-1002 1002 Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude 
-# 1003-1099 Reserved 
-1100 1100 Hovmoller-type grid with no averaging or other statistical processing 
-1101 1101 Hovmoller-type grid with averaging or other statistical processing 
-# 1102-32767 Reserved 
-# 32768-65534 Reserved for local use 
-65535 65535 Missing 
+# 99-253 Reserved
+254 254 CCITT IA5 character string
+# 255-999 Reserved
+1000 1000 Cross-section of analysis and forecast at a point in time
+1001 1001 Cross-section of averaged or otherwise statistically processed analysis or forecast over a range of time
+1002 1002 Cross-section of analysis and forecast, averaged or otherwise statistically processed over latitude or longitude
+# 1003-1099 Reserved
+1100 1100 Hovmoller-type grid with no averaging or other statistical processing
+1101 1101 Hovmoller-type grid with averaging or other statistical processing
+# 1102-32767 Reserved
+# 32768-65534 Reserved for local use
+65535 65535 Missing

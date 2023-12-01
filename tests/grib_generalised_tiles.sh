@@ -45,6 +45,18 @@ ${tools_dir}/grib_set -s productDefinitionTemplateNumber=114,tablesVersion=30 ${
 
 grib_check_key_exists ${temp_grib_a} typeOfTile,typeOfStatisticalProcessing
 
+# Check Ensemble template also works
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=115,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+
+grib_check_key_exists ${temp_grib_a} typeOfTile,perturbationNumber
+
+# Check Ensemble StatisticalProcessing template also works
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=116,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+
+grib_check_key_exists ${temp_grib_a} typeOfTile,perturbationNumber,typeOfStatisticalProcessing
+
 # Clean up
 
 rm -f $temp_grib_a $temp_grib_b $temp_dump
