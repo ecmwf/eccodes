@@ -58,6 +58,15 @@
 56 56 u-component of neutral wind (m s-1)
 57 57 v-component of neutral wind (m s-1)
 58 58 Magnitude of turbulent surface stress (N m-2)
-# 59-191 Reserved
+59 59 Vertical divergence (s-1)
+60 60 Drag thermal coefficient (Numeric)
+61 61 Drag evaporation coefficient (Numeric)
+62 62 Eastward turbulent surface stress (N m-2)
+63 63 Northward turbulent surface stress (N m-2)
+64 64 Eastward turbulent surface stress due to orographic form drag (N m-2)
+65 65 Northward turbulent surface stress due to orographic form drag (N m-2)
+66 66 Eastward turbulent surface stress due to surface roughness (N m-2)
+67 67 Northward turbulent surface stress due to surface roughness (N m-2)
+# 68-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

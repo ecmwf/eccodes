@@ -35,10 +35,20 @@
 35 35 Sea water salinity tendency due to Newtonian relaxation (g kg-1 s-1)
 36 36 Sea water temperature tendency due to parameterization (K s-1)
 37 37 Sea water salinity tendency due to parameterization (g kg-1 s-1)
-38 38 Eastward sea water velocity tendency due to parameterization (m-2 s-1)
-39 39 Northward sea water velocity tendency due to parameterization (m-2 s-1)
+38 38 Eastward sea water velocity tendency due to parameterization (m s-2)
+39 39 Northward sea water velocity tendency due to parameterization (m s-2)
 40 40 Sea water temperature tendency due to direct bias correction (K s-1)
 41 41 Sea water salinity tendency due to direct bias correction (g kg-1 s-1)
-# 42-191 Reserved
+42 42 Sea water meridional volume transport (m3 m-2 s-1)
+43 43 Sea water zonal volume transport (m3 m-2 s-1)
+44 44 Sea water column integrated meridional volume transport (m3 m-1 s-1)
+45 45 Sea water column integrated zonal volume transport (m3 m-1 s-1)
+46 46 Sea water meridional mass transport (kg m-2 s-1)
+47 47 Sea water zonal mass transport (kg m-2 s-1)
+48 48 Sea water column integrated meridional mass transport (kg m-1 s-1)
+49 49 Sea water column integrated zonal mass transport (kg m-1 s-1)
+50 50 Sea water column integrated practical salinity (g kg-1 m)
+51 51 Sea water column integrated salinity (kg kg-1 m)
+# 52-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

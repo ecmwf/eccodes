@@ -167,6 +167,8 @@
 165 165 Column integrated divergence of total water mass flux (kg m-2 s-1)
 166 166 Column integrated water vapour flux (kg m-2 s-1)
 167 167 Total column supercooled liquid water (kg m-2)
-# 168-191 Reserved
+168 168 Saturation specific humidity with respect to water (kg m-3)
+169 169 Total column integrated saturation specific humidity with respect to water (kg m-2)
+# 170-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

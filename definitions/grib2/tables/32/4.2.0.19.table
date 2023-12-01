@@ -45,6 +45,10 @@
 43 43 Trapping layer top height (m)
 44 44 Mean vertical gradient of refractivity inside trapping layer (m-1)
 45 45 Minimum vertical gradient of refractivity inside trapping layer (m-1)
-# 46-191 Reserved
+46 46 Net radiation flux (W m-2)
+47 47 Global irradiance on tilted surfaces (W m-2)
+48 48 Top of persistent contrails (m)
+49 49 Base of persistent contrails (m)
+# 50-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

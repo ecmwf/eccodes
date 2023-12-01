@@ -29,6 +29,7 @@
 27 27 Soil depth (m)
 28 28 Snow temperature (K)
 29 29 Ice temperature (K)
-# 30-191 Reserved
+30 30 Soil wetness index (Numeric)
+# 31-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

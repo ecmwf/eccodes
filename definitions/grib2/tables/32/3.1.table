@@ -44,7 +44,9 @@
 120 120 Azimuth-range projection
 # 121-139 Reserved
 140 140 Lambert azimuthal equal area projection
-# 141-999 Reserved
+# 141-149 Reserved
+150 150 Hierarchical Equal Area isoLatitude Pixelization grid (HEALPix)
+# 151-999 Reserved
 1000 1000 Cross-section grid with points equally spaced on the horizontal
 # 1001-1099 Reserved
 1100 1100 Hovmoller diagram grid with points equally spaced on the horizontal

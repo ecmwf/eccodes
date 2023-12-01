@@ -72,7 +72,8 @@
 169 169 Ocean level defined by water density (sigma-theta) difference from near-surface to level (kg m-3)
 170 170 Ocean level defined by water potential temperature difference from near-surface to level (K)
 171 171 Ocean level defined by vertical eddy diffusivity difference from near-surface to level (m2 s-1)
-# 172-173 Reserved
+# 172 Reserved
+173 173 Top of snow over sea ice on sea, lake or river
 174 sfc Top surface of ice on sea, lake or river
 175 175 Top surface of ice, under snow cover, on sea, lake or river
 176 176 Bottom surface (underside) ice on sea, lake or river
@@ -84,6 +85,11 @@
 182 182 Grid tile water fraction as a model surface
 183 183 Grid tile ice fraction on sea, lake or river as a model surface
 184 184 Grid tile glacier ice and inland ice fraction as a model surface
-# 185-191 Reserved
+185 185 Roof level
+186 186 Wall level
+187 187 Road level
+188 188 Melt pond top surface
+189 189 Melt pond bottom surface
+# 190-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing
