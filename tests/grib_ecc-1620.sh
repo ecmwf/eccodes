@@ -40,7 +40,12 @@ grib_check_key_equals()
    fi
 }
 
-[ -v ECCODES_GRIB_SHOW_HOUR_STEPUNIT ] && HOUR="h" || HOUR=""
+HOUR=""
+if [ -v ECCODES_GRIB_SHOW_HOUR_STEPUNIT ]; then
+   if [ $ECCODES_GRIB_SHOW_HOUR_STEPUNIT -gt 0 ]; then
+      export HOUR="h"
+   fi
+fi
 
 label="grib_ecc-1620"
 temp=temp.$label
