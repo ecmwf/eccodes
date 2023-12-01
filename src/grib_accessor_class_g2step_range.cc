@@ -142,6 +142,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     double end_step_value = 0;
     long step_units;
 
+    int show_hours = a->context->show_hour_stepunit;
+
     if ((ret = grib_get_double_internal(h, self->start_step, &start_step_value)) != GRIB_SUCCESS)
         return ret;
     if ((ret= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
@@ -160,7 +162,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
         Step start_step{start_step_value, step_units};
         if (self->end_step == NULL) {
-            ss << start_step.value<std::string>(fp_format);
+            ss << start_step.value<std::string>(fp_format, show_hours);
         }
         else {
             if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
@@ -169,10 +171,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             Step end_step{end_step_value, step_units};
 
             if (start_step_value == end_step_value) {
-                ss << end_step.value<std::string>(fp_format);
+                ss << end_step.value<std::string>(fp_format, show_hours);
             }
             else {
-                ss << start_step.value<std::string>(fp_format) << "-" << end_step.value<std::string>(fp_format);
+                ss << start_step.value<std::string>(fp_format, show_hours) << "-" << end_step.value<std::string>(fp_format, show_hours);
             }
         }
 

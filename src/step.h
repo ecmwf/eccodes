@@ -42,7 +42,7 @@ public:
     // Getters
     template <typename T> T value() const;
     template <typename T> T value(const Unit& unit) const;
-    template <typename T> T value(const std::string& format) const;
+    template <typename T> T value(const std::string& format, bool show_hours) const;
     Unit unit() const { return unit_; }
 
     // Setters

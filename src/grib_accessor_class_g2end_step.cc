@@ -540,6 +540,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     long typeOfTimeIncrement;
 
     double dend, dstep;
+    int show_hours = a->context->show_hour_stepunit;
 
     Step end_step{end_step_value, end_step_unit};
 
@@ -587,7 +588,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     if (time_range.value<double>() < 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "endStep < startStep (%s < %s)", end_step.value<std::string>("%g").c_str(), start_step.value<std::string>("%g").c_str());
+                         "endStep < startStep (%s < %s)", end_step.value<std::string>("%g", show_hours).c_str(), start_step.value<std::string>("%g", show_hours).c_str());
         return GRIB_WRONG_STEP;
     }
 
@@ -651,6 +652,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t step_len = 0;
     long step_value;
     long step_units;
+    int show_hours = a->context->show_hour_stepunit;
 
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
@@ -665,7 +667,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
         std::stringstream ss;
 
-        ss << step.value<std::string>(fp_format);
+        ss << step.value<std::string>(fp_format, show_hours);
 
         size_t size = ss.str().size() + 1;
 

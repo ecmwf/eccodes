@@ -312,6 +312,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long step_units;
     char fp_format[128] = "%g";
     size_t fp_format_len = sizeof(fp_format);
+    int show_hours = a->context->show_hour_stepunit;
 
     if ((ret = grib_get_long_internal(h, "startStep", &start_step_value)) != GRIB_SUCCESS)
         return ret;
@@ -326,7 +327,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         Step step{start_step_value, start_step_unit};
         std::stringstream ss;
 
-        ss << step.value<std::string>(fp_format);
+        ss << step.value<std::string>(fp_format, show_hours);
 
         size_t size = ss.str().size() + 1;
 

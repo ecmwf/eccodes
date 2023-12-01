@@ -180,7 +180,7 @@ Step& Step::optimize_unit()
 }
 
 template <>
-std::string Step::value<std::string>(const std::string& format) const {
+std::string Step::value<std::string>(const std::string& format, bool show_hours) const {
     constexpr int MAX_SIZE = 128;
     char output[MAX_SIZE];
     std::string u;
@@ -188,16 +188,13 @@ std::string Step::value<std::string>(const std::string& format) const {
 
     // Do not print unit if it is HOUR to keep backward compatibility
     // with previous versions of ecCodes (see ECC-1620). This is a temporary solution.
-    //
-    // TODO(maee): Remove this code to enable future output, e.g., 15h.
 
-    int future_behaviour = getenv("ECCODES_FUTURE_BEHAVIOUR") ? atoi(getenv("ECCODES_FUTURE_BEHAVIOUR")) : 0;
-    if (future_behaviour != 1) {
-        if (unit_ != Unit::Value::HOUR)
-            u =  unit_.value<std::string>();
+    if (show_hours) {
+        u =  unit_.value<std::string>();
     }
     else {
-        u =  unit_.value<std::string>();
+        if (unit_ != Unit::Value::HOUR)
+            u =  unit_.value<std::string>();
     }
 
     if (unit_ == Unit::Value::MINUTES15 ||
