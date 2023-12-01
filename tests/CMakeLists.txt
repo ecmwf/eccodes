@@ -165,6 +165,7 @@ if( HAVE_BUILD_TOOLS )
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
+        grib_true_imagery
         grib_headers_only
         grib_unpack_subarray
         grib_count
