@@ -9,15 +9,16 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
+
 label="grib_generalised_tiles_test"
 temp_grib_a=temp.$label.a.grib
 temp_grib_b=temp2.$label.b.grib
 temp_dump=temp.$label.dump
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample_grib2`
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=113,tablesVersion=$latest ${sample_grib2} ${temp_grib_a}
 
 # Check tile related keys are present
 
@@ -41,22 +42,21 @@ grep -q "Generalised tiles at a horizontal level or horizontal layer at a point 
 
 # Check StatisticalProcessing template also works
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=114,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=114,tablesVersion=$latest ${sample_grib2} ${temp_grib_a}
 
 grib_check_key_exists ${temp_grib_a} typeOfTile,typeOfStatisticalProcessing
 
 # Check Ensemble template also works
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=115,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=115,tablesVersion=$latest ${sample_grib2} ${temp_grib_a}
 
 grib_check_key_exists ${temp_grib_a} typeOfTile,perturbationNumber
 
 # Check Ensemble StatisticalProcessing template also works
 
-${tools_dir}/grib_set -s productDefinitionTemplateNumber=116,tablesVersion=30 ${sample_grib2} ${temp_grib_a}
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=116,tablesVersion=$latest ${sample_grib2} ${temp_grib_a}
 
 grib_check_key_exists ${temp_grib_a} typeOfTile,perturbationNumber,typeOfStatisticalProcessing
 
 # Clean up
-
 rm -f $temp_grib_a $temp_grib_b $temp_dump
