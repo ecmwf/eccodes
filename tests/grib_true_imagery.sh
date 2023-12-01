@@ -15,30 +15,26 @@ temp=temp.$label
 tempd=temp_dump.$label
 sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
-latest=30 # TODO
+latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample_grib2`
 
 ## PDTN 108 - Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for generic optical products
 ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=108 $sample_grib2 $temp
 ${tools_dir}/grib_dump -O $temp > $tempd
-grep -q 'Analysis or forecast at a horizontal level or in a horizontal layer at a point in time for generic optical properties' $tempd
 grib_check_key_equals $temp typeOfWavelengthInterval,scaledValueOfFirstWavelength,scaledValueOfSecondWavelength "0 0 MISSING"
 
 ## PDTN 109 - Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for generic optical products
 ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=109 $sample_grib2 $temp
 ${tools_dir}/grib_dump -O $temp > $tempd
-grep -q 'Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer at a point in time for generic optical properties' $tempd
 grib_check_key_equals $temp typeOfWavelengthInterval,scaledValueOfFirstWavelength,scaledValueOfSecondWavelength "0 0 MISSING"
 
 ## PDTN 110 - Average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical products
 ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=110 $sample_grib2 $temp
 ${tools_dir}/grib_dump -O $temp > $tempd
-grep -q 'Average, accumulation, and/or extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical properties' $tempd
 grib_check_key_equals $temp typeOfWavelengthInterval,scaledValueOfFirstWavelength,scaledValueOfSecondWavelength "0 0 MISSING"
 
 ## PDTN 111 - Average, accumulation, extreme values or other statistically processed values at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical products
 ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=111 $sample_grib2 $temp
 ${tools_dir}/grib_dump -O $temp > $tempd
-grep -q 'Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval for generic optical properties' $tempd
 grib_check_key_equals $temp typeOfWavelengthInterval,scaledValueOfFirstWavelength,scaledValueOfSecondWavelength "0 0 MISSING"
 
 rm -f $temp $tempd
