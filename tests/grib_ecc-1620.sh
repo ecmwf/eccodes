@@ -40,7 +40,7 @@ grib_check_key_equals()
    fi
 }
 
-[[ -z "${ECCODES_FUTURE_BEHAVIOUR}" ]] && HOUR="" || HOUR="h"
+[[ -z "${ECCODES_GRIB_SHOW_HOUR_STEPUNIT}" ]] && HOUR="" || HOUR="h"
 
 label="grib_ecc-1620"
 temp=temp.$label
