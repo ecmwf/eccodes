@@ -7,7 +7,6 @@
 'ITCW' = {attributeOfTile = [5];}
 'ITCS' = {attributeOfTile = [6];}
 'AGG' = {attributeOfTile = [7];}
-'UNRES' = {attributeOfTile = [8];}
 
 'SNOW_FLOOD' = {attributeOfTile = [2,3];}
 'SNOW_ICE' = {attributeOfTile = [2,4];}
