@@ -567,7 +567,7 @@ int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, c
     return GRIB_CODE_NOT_FOUND_IN_TABLE;
 }
 
-int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code)
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure)
 {
     code_table_entry* entries = NULL;
     size_t num_entries = 0;
@@ -575,12 +575,12 @@ int codes_codetable_check_code_figure(const grib_handle* h, const char* key, lon
     err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
     if (err) return err;
 
-    if (code < 0 || (size_t)code >= num_entries) {
+    if (code_figure < 0 || (size_t)code_figure >= num_entries) {
         err = GRIB_OUT_OF_RANGE;
         goto cleanup;
     }
 
-    if (entries[code].abbreviation == NULL) {
+    if (entries[code_figure].abbreviation == NULL) {
         err = GRIB_INVALID_KEY_VALUE;
         goto cleanup;
     }
