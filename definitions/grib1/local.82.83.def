@@ -21,15 +21,13 @@
 #MeanSize                        70-71   I2      57      -
 #StandardDeviation               72-73   I2      58      -
 #PartDef                         74      PAD     n/a     7
-################################################################
+##########################################################
 #
 # author: Sebastien Villaume
 # created: 6 Oct 2011
 # modified: 20 Feb 2014
 #
-#########################
 ### LOCAL SECTION 83 ###
-#########################
 
 constant GRIBEXSection1Problem = 80 - section1Length;
 
@@ -52,5 +50,4 @@ unsigned[2]		upperRange              : dump;
 unsigned[2]		meanSize                : dump;
 unsigned[2]		standardDeviation       : dump;
 pad padding_local1_1(7);
-
 
