@@ -1,9 +1,6 @@
-#########################
-#
 # author: Sebastien Villaume
 # created: 13 May 2013
 #
-#########################
 "none"={matchSort=0;}
 "cm"={matchSort=1;}
 "lncm"={matchSort=2;}
