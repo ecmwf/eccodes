@@ -20,15 +20,50 @@ int main(int argc, char* argv[])
 
     code_table_entry* entries = NULL;
     size_t num_entries = 0;
-    const char* keyname = "indicatorOfUnitOfTimeRange";
-    int err = codes_get_codetable_contents_malloc(h, keyname, &entries, &num_entries);
+    int err = codes_codetable_get_contents_malloc(h, "indicatorOfUnitOfTimeRange", &entries, &num_entries);
     Assert(!err);
-    Assert(num_entries == 13);
+    Assert(entries != NULL);
+    Assert(num_entries == 256);
 
     for (size_t i=0; i<num_entries;++i) {
-        printf(" i=%zu |%s| |%s|\n", i, entries[i].abbreviation, entries[i].title);
+        const char* abbrev = entries[i].abbreviation;
+        const char* title = entries[i].title;
+        if (abbrev) {
+            Assert(title != NULL);
+            printf(" i=%zu |%s| |%s|\n", i, abbrev, title);
+        } else {
+            Assert(title == NULL);
+        }
     }
+    Assert( STR_EQUAL(entries[13].abbreviation, "s") );
+    Assert( STR_EQUAL(entries[13].title, "Second") );
     free(entries);
+    entries = NULL;
+
+    // Check a given code is in the table
+    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 7); //century
+    Assert(err == GRIB_SUCCESS);
+    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 255); //missing
+    Assert(err == GRIB_SUCCESS);
+    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", -1); //-ve code
+    Assert(err == GRIB_OUT_OF_RANGE);
+    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 666); //out of bounds
+    Assert(err == GRIB_OUT_OF_RANGE);
+    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 200); // entry not present
+    Assert(err == GRIB_INVALID_KEY_VALUE);
+    err = codes_codetable_check_entry(h, "poo", 0); // non-existent key
+    Assert(err == GRIB_NOT_FOUND);
+    err = codes_codetable_check_entry(h, "year", 0); // not a codetable key
+    Assert(err == GRIB_INVALID_ARGUMENT);
+
+    // Now try a codetable key with 2 octets
+    err = codes_codetable_get_contents_malloc(h, "gridDefinitionTemplateNumber", &entries, &num_entries);
+    Assert(!err);
+    Assert(entries != NULL);
+    Assert(num_entries == 65536);
+    Assert( STR_EQUAL(entries[40].title, "Gaussian latitude/longitude") );
+    free(entries);
+
     grib_handle_delete(h);
 
     return 0;
