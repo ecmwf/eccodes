@@ -523,7 +523,7 @@ void grib_codetable_delete(grib_context* c)
     }
 }
 
-int codes_get_all_codetable_entries_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
+int codes_get_codetable_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
 {
     long lvalue = 0;
     size_t size = 1;
