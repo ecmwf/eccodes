@@ -41,20 +41,30 @@ int main(int argc, char* argv[])
     entries = NULL;
 
     // Check a given code is in the table
-    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 7); //century
+    err = codes_codetable_check_code_figure(h, "indicatorOfUnitOfTimeRange", 7); //century
     Assert(err == GRIB_SUCCESS);
-    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 255); //missing
+    err = codes_codetable_check_code_figure(h, "indicatorOfUnitOfTimeRange", 255); //missing
     Assert(err == GRIB_SUCCESS);
-    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", -1); //-ve code
+    err = codes_codetable_check_code_figure(h, "indicatorOfUnitOfTimeRange", -1); //-ve code
     Assert(err == GRIB_OUT_OF_RANGE);
-    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 666); //out of bounds
+    err = codes_codetable_check_code_figure(h, "indicatorOfUnitOfTimeRange", 666); //out of bounds
     Assert(err == GRIB_OUT_OF_RANGE);
-    err = codes_codetable_check_entry(h, "indicatorOfUnitOfTimeRange", 200); // entry not present
+    err = codes_codetable_check_code_figure(h, "indicatorOfUnitOfTimeRange", 200); // entry not present
     Assert(err == GRIB_INVALID_KEY_VALUE);
-    err = codes_codetable_check_entry(h, "poo", 0); // non-existent key
+    err = codes_codetable_check_code_figure(h, "American Pie", 0); // non-existent key
     Assert(err == GRIB_NOT_FOUND);
-    err = codes_codetable_check_entry(h, "year", 0); // not a codetable key
+    err = codes_codetable_check_code_figure(h, "year", 0); // not a codetable key
     Assert(err == GRIB_INVALID_ARGUMENT);
+
+    // Check a given abbreviation is in the table
+    err = codes_codetable_check_abbreviation(h, "indicatorOfUnitOfTimeRange", "15m"); // entry not present
+    Assert(err == GRIB_INVALID_KEY_VALUE);
+    err = codes_codetable_check_abbreviation(h, "indicatorOfUnitOfTimeRange", "D"); // Day
+    Assert(err == GRIB_SUCCESS);
+    err = codes_codetable_check_abbreviation(h, "centre", "ecmf");
+    Assert(err == GRIB_SUCCESS);
+    err = codes_codetable_check_abbreviation(h, "centre", "Smoke On The Water"); // non-existent key
+    Assert(err == GRIB_INVALID_KEY_VALUE);
 
     // Now try a codetable key with 2 octets
     err = codes_codetable_get_contents_malloc(h, "gridDefinitionTemplateNumber", &entries, &num_entries);

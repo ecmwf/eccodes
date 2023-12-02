@@ -341,7 +341,8 @@ void grib_smart_table_delete(grib_context* c);
 /* grib_accessor_class_codetable.cc*/
 void grib_codetable_delete(grib_context* c);
 int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries);
-int codes_codetable_check_entry(const grib_handle* h, const char* key, long code);
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code);
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation);
 
 /* grib_accessor_class_codetable_units.cc*/
 

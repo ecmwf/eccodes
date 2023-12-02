@@ -567,7 +567,7 @@ int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, c
     return GRIB_CODE_NOT_FOUND_IN_TABLE;
 }
 
-int codes_codetable_check_entry(const grib_handle* h, const char* key, long code)
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code)
 {
     code_table_entry* entries = NULL;
     size_t num_entries = 0;
@@ -585,6 +585,28 @@ int codes_codetable_check_entry(const grib_handle* h, const char* key, long code
         goto cleanup;
     }
 cleanup:
+    free(entries);
+    return err;
+}
+
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    bool found = false;
+    for (size_t i=0; i<num_entries; ++i) {
+        const char* abbrev = entries[i].abbreviation;
+        if (abbrev && STR_EQUAL(abbrev, abbreviation)) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) err = GRIB_INVALID_KEY_VALUE;
+
     free(entries);
     return err;
 }
