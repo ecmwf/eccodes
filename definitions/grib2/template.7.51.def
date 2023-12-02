@@ -101,11 +101,12 @@ meta data.unpackedValues data_sh_unpacked(
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 
-meta values data_apply_bitmap(codedValues,
-                              bitmap,
-                              missingValue,
-                              binaryScaleFactor,
-                              numberOfDataPoints,
-                              numberOfValues) : dump;
+meta values data_apply_bitmap(
+    codedValues,
+    bitmap,
+    missingValue,
+    binaryScaleFactor,
+    numberOfDataPoints,
+    numberOfValues) : dump;
 
 template statistics "common/statistics_spectral.def";

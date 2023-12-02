@@ -23,7 +23,7 @@ meta g2grid g2grid(
   jDirectionIncrement,
   basicAngleOfTheInitialProductionDomain,
   subdivisionsOfBasicAngle
-  );
+);
 
 meta geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0) : dump;
 meta geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1) : dump;
@@ -59,12 +59,12 @@ _if ( missing(Ni) && PLPresent == 1 ) {
 } else {
   transient iteratorDisableUnrotate = 0 : hidden; # ECC-808
   iterator latlon(numberOfPoints,missingValue,values,
-                  longitudeFirstInDegrees,DiInDegrees  ,
-                  Ni,Nj,iScansNegatively,
-                  latitudeFirstInDegrees, DjInDegrees,
-                  jScansPositively, jPointsAreConsecutive,
-                  isRotatedGrid, angleOfRotation,
-                  latitudeOfSouthernPoleInDegrees,longitudeOfSouthernPoleInDegrees);
+      longitudeFirstInDegrees,DiInDegrees  ,
+      Ni,Nj,iScansNegatively,
+      latitudeFirstInDegrees, DjInDegrees,
+      jScansPositively, jPointsAreConsecutive,
+      isRotatedGrid, angleOfRotation,
+      latitudeOfSouthernPoleInDegrees,longitudeOfSouthernPoleInDegrees);
   nearest regular(values,radius,Ni,Nj);
 }
 meta latLonValues latlonvalues(values);
