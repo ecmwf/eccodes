@@ -523,6 +523,72 @@ void grib_codetable_delete(grib_context* c)
     }
 }
 
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
+{
+    long lvalue = 0;
+    size_t size = 1;
+    int err = 0;
+    grib_context* c = h->context;
+
+    grib_accessor* aa = grib_find_accessor(h, key);
+    if (!aa) return GRIB_NOT_FOUND;
+
+    if (!STR_EQUAL(aa->cclass->name, "codetable")) {
+        return GRIB_INVALID_ARGUMENT; // key is not a codetable
+    }
+
+    const grib_accessor_codetable* ca = (const grib_accessor_codetable*)aa; // could be dynamic_cast
+
+    // Decode the key itself. This will either fetch it from the cache or place it there
+    if ((err = grib_unpack_long(aa, &lvalue, &size)) != GRIB_SUCCESS) {
+        return err;
+    }
+
+    const grib_codetable* table = ca->table;
+    if (!table) return GRIB_INTERNAL_ERROR;
+
+    grib_codetable* cached_table = c->codetable; // Access the codetable cache
+    while (cached_table) {
+        if (STR_EQUAL(table->recomposed_name[0], cached_table->recomposed_name[0])) {
+            // Found a cache entry that matches the recomposed name of ours
+            *num_entries = cached_table->size;
+            *entries = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
+            if (!*entries) {
+                return GRIB_OUT_OF_MEMORY;
+            }
+            for (size_t i = 0; i < cached_table->size; i++) {
+                (*entries)[i] = cached_table->entries[i];
+            }
+            return GRIB_SUCCESS;
+        }
+        cached_table = cached_table->next;
+    }
+
+    return GRIB_CODE_NOT_FOUND_IN_TABLE;
+}
+
+int codes_codetable_check_entry(const grib_handle* h, const char* key, long code)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    if (code < 0 || (size_t)code >= num_entries) {
+        err = GRIB_OUT_OF_RANGE;
+        goto cleanup;
+    }
+
+    if (entries[code].abbreviation == NULL) {
+        err = GRIB_INVALID_KEY_VALUE;
+        goto cleanup;
+    }
+cleanup:
+    free(entries);
+    return err;
+}
+
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
