@@ -10,6 +10,9 @@
 
 . ./include.ctest.sh
 
+# See JIRA issues ECC-1620, ECC-1238
+# -----------------------------------
+
 grib_expect_failure() 
 {
    a_file=$1
