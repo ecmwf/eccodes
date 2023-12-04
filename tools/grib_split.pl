@@ -1,6 +1,11 @@
 #!/usr/bin/perl
 use strict;
 
+# ----------------------------------------------------------------------
+# Convert GRIB edition 2 multi-field (several fields per message) files
+# to single-field (one field per message)
+# ----------------------------------------------------------------------
+
 my $debug = 0;
 my $total = 0;
 my $previous_bitmap;
