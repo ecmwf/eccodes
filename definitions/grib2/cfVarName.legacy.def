@@ -52,3 +52,17 @@
   parameterCategory = 3 ;
   parameterNumber = 9 ;
  }
+#Instantaneous eastward turbulent surface stress
+'iews' = {
+ discipline = 0 ;
+ parameterCategory = 2 ;
+ parameterNumber = 38 ;
+ typeOfFirstFixedSurface = 1 ;
+}
+#Instantaneous northward turbulent surface stress
+'inss' = {
+ discipline = 0 ;
+ parameterCategory = 2 ;
+ parameterNumber = 37 ;
+ typeOfFirstFixedSurface = 1 ;
+}
