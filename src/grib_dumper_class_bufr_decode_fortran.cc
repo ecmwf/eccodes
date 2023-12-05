@@ -347,8 +347,10 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out, "  call codes_get(ibufr, '%s->%s', iValues)\n", prefix, a->name);
     }
     else {
-        if (!grib_is_missing_long(a, value)) {
-            fprintf(self->dumper.out, "  call codes_get(ibufr, '%s->%s', iVal)\n", prefix, a->name);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            if (!grib_is_missing_long(a, value)) {
+                fprintf(self->dumper.out, "  call codes_get(ibufr, '%s->%s', iVal)\n", prefix, a->name);
+            }
         }
     }
 
