@@ -3,6 +3,11 @@
 	constituentType = 2 ;
 	localTablesVersion = 1 ;
 	}
+#Volcanic sulfur dioxide
+'Volcanic sulfur dioxide' = {
+        constituentType = 65507 ;
+        localTablesVersion = 1 ;
+        }
 #Stratospheric ozone
 'Stratospheric ozone' = {
 	constituentType = 65524 ;
