@@ -73,7 +73,7 @@ alias mars.type   = marsType;
 # Normally MARS step is endStep but for monthly means we want stepRange
 if (stepType is "avg") {
    alias mars.step = stepRange;
-   alias mars.stepunits = stepUnits;
+   alias stepunits = stepUnits;
 }
 
 if (isHindcast == 1) {

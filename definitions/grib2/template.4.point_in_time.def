@@ -7,7 +7,7 @@ alias step=startStep;
 alias marsStep=startStep;
 
 alias mars.step=startStep;
-alias mars.stepunits=stepUnits;
+alias stepunits=stepUnits;
 
 alias marsStartStep = startStep;
 alias marsEndStep   = endStep;
@@ -21,7 +21,6 @@ meta stepHumanReadable step_human_readable(stepUnits, stepRange): hidden,no_copy
 
 alias time.stepType=stepType;
 alias time.stepRange=stepRange;
-alias time.stepunits=stepUnits;
 alias time.dataDate=dataDate;
 alias time.dataTime=dataTime;
 alias time.startStep=startStep;

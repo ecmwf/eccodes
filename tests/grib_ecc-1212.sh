@@ -59,7 +59,6 @@ cat > $tempRef <<EOF
     "type": "an",
     "stream": "oper",
     "levtype": "sfc",
-    "stepunits": "h",
     "date": 20200804,
     "time": "0000",
     "step": 36,

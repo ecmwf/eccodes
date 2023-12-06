@@ -82,7 +82,7 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   alias mars.date = dateOfForecastUsedInLocalTime : dump;
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
   alias mars.step = endStep;
-  alias mars.stepunits = stepUnits;
+  alias stepunits = stepUnits;
   alias time.dataDate = dateOfForecastUsedInLocalTime;
   alias time.dataTime = timeOfForecastUsedInLocalTime;
   alias time.endStep = endStep;
