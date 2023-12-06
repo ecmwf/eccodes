@@ -322,8 +322,9 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         return;
 
     self->empty = 0;
-    fprintf(self->dumper.out, "print \"%s->%s = [%s->%s]\";\n", prefix, a->name, prefix, a->name);
-
+    if (!codes_bufr_key_exclude_from_dump(prefix)) {
+        fprintf(self->dumper.out, "print \"%s->%s = [%s->%s]\";\n", prefix, a->name, prefix, a->name);
+    }
     if (self->isLeaf == 0) {
         char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
         snprintf(prefix1, 1024, "%s->%s", prefix, a->name);

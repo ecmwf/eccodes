@@ -1134,3 +1134,11 @@ int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err
     *err = GRIB_SUCCESS;
     return ((acc->flags & GRIB_ACCESSOR_FLAG_BUFR_COORD) != 0);
 }
+
+int codes_bufr_key_exclude_from_dump(const char* key)
+{
+    if (strstr(key, "percentConfidence->percentConfidence->percentConfidence->percentConfidence->percentConfidence")) {
+        return 1;
+    }
+    return 0;
+}

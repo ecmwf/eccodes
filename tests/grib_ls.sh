@@ -40,7 +40,13 @@ ${tools_dir}/grib_ls -l 0,0,1 $infile       >> $tempLog
 ${tools_dir}/grib_get -l 0,0,1 $infile      >> $tempLog
 ${tools_dir}/grib_get -p count,step $infile >> $tempLog
 ${tools_dir}/grib_get -P count $infile      >> $tempLog
-${tools_dir}/grib_get -i 0 $infile
+
+# ECC-786 and ECC-791
+result=$( ${tools_dir}/grib_get -p shortName -i 0 $infile )
+[ "$result" = "t 199.078  " ]
+result=$( ${tools_dir}/grib_get -i 8191 $infile )
+[ "$result" = "160.852  " ]
+
 
 files=" reduced_gaussian_lsm.grib1
 reduced_gaussian_model_level.grib1
