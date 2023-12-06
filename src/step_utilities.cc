@@ -11,7 +11,7 @@
 #include "step_utilities.h"
 #include <type_traits>
 
-std::optional<Step> get_step(grib_handle* h, const char* value_key, const char* unit_key)
+std::optional<eccodes::Step> get_step(grib_handle* h, const char* value_key, const char* unit_key)
 {
     if (value_key && unit_key && grib_is_defined(h, unit_key) && grib_is_defined(h, value_key)) {
         long unit = 0;
@@ -22,14 +22,14 @@ std::optional<Step> get_step(grib_handle* h, const char* value_key, const char* 
         if (grib_get_long_internal(h, value_key, &value) != GRIB_SUCCESS)
             return {};
 
-        return Step(value, unit);
+        return eccodes::Step(value, unit);
     }
     else {
         return {};
     }
 }
 
-int set_step(grib_handle* h, const std::string& value_key, const std::string& unit_key, const Step& step)
+int set_step(grib_handle* h, const std::string& value_key, const std::string& unit_key, const eccodes::Step& step)
 {
     int err;
     if ((err = grib_set_long_internal(h, value_key.c_str(), step.value<long>())) != GRIB_SUCCESS)

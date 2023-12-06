@@ -20,6 +20,8 @@
 #include "step_unit.h"
 #include "step.h"
 
+namespace eccodes {
+
 Step step_from_string(const std::string& step, const Unit& force_unit)
 {
     std::regex re("([0-9.]+)([smhDMYC]?)");
@@ -214,3 +216,5 @@ std::string Step::value<std::string>(const std::string& format, bool show_hours)
     }
     return output;
 }
+
+}  // namespace eccodes

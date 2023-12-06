@@ -149,7 +149,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if ((ret= grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
         return ret;
     try {
-        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
                 return ret;
         }
@@ -160,7 +160,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             return ret;
         std::stringstream ss;
 
-        Step start_step{start_step_value, step_units};
+        eccodes::Step start_step{start_step_value, step_units};
         if (self->end_step == NULL) {
             ss << start_step.value<std::string>(fp_format, show_hours);
         }
@@ -168,7 +168,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
 
-            Step end_step{end_step_value, step_units};
+            eccodes::Step end_step{end_step_value, step_units};
 
             if (start_step_value == end_step_value) {
                 ss << end_step.value<std::string>(fp_format, show_hours);
@@ -206,24 +206,24 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return ret;
 
     try {
-        std::vector<Step> steps = parse_range(val, Unit{force_step_units});
+        std::vector<eccodes::Step> steps = parse_range(val, eccodes::Unit{force_step_units});
         if (steps.size() == 0) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "Could not parse step range: %s", val);
             return GRIB_INVALID_ARGUMENT;
         }
 
-        Step step_0;
-        Step step_1;
-        if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+        eccodes::Step step_0;
+        eccodes::Step step_1;
+        if (eccodes::Unit{force_step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if (steps.size() > 1)
                 std::tie(step_0, step_1) = find_common_units(steps[0].optimize_unit(), steps[1].optimize_unit());
             else
                 step_0 = steps[0].optimize_unit();
         }
         else {
-            step_0 = Step{steps[0].value<long>(Unit{force_step_units}), Unit{force_step_units}};
+            step_0 = eccodes::Step{steps[0].value<long>(eccodes::Unit{force_step_units}), eccodes::Unit{force_step_units}};
             if (steps.size() > 1) {
-                step_1 = Step{steps[1].value<long>(Unit{force_step_units}), Unit{force_step_units}};
+                step_1 = eccodes::Step{steps[1].value<long>(eccodes::Unit{force_step_units}), eccodes::Unit{force_step_units}};
             }
         }
 
@@ -281,19 +281,19 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     try {
         if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
             throw std::runtime_error("Failed to get stepUnits");
-        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
                 return ret;
         }
 
-        Step start_step{end_start_value, step_units};
+        eccodes::Step start_step{end_start_value, step_units};
         if (self->end_step == NULL) {
             *val = start_step.value<long>();
         }
         else {
             if ((ret = grib_get_long_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
-            Step end_step{end_step_value, step_units};
+            eccodes::Step end_step{end_step_value, step_units};
             *val = end_step.value<long>();
         }
     }
@@ -321,19 +321,19 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         throw std::runtime_error("Failed to get stepUnits");
 
     try {
-        if (Unit{step_units} == Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if ((ret = grib_get_long_internal(h, "stepUnits", &step_units)) != GRIB_SUCCESS)
                 return ret;
         }
 
-        Step start_step{end_start_value, step_units};
+        eccodes::Step start_step{end_start_value, step_units};
         if (self->end_step == NULL) {
             *val = start_step.value<long>();
         }
         else {
             if ((ret = grib_get_double_internal(h, self->end_step, &end_step_value)) != GRIB_SUCCESS)
                 return ret;
-            Step end_step{end_step_value, step_units};
+            eccodes::Step end_step{end_step_value, step_units};
             *val = end_step.value<double>();
         }
     }

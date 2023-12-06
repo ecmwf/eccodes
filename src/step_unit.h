@@ -18,6 +18,8 @@
 #include <unordered_map>
 #include <algorithm>
 
+namespace eccodes {
+
 template <typename T> using Minutes = std::chrono::duration<T, std::ratio<60>>;
 template <typename T> using Hours = std::chrono::duration<T, std::ratio<3600>>;
 template <typename T> using Days = std::chrono::duration<T, std::ratio<86400>>;
@@ -232,3 +234,5 @@ T from_seconds(Seconds<T> seconds, const Unit& unit) {
     }
     return value;
 }
+
+} // namespace eccodes

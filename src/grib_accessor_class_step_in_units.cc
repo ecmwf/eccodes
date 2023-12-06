@@ -152,13 +152,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return err;
 
     try {
-        Step step{forecast_time_value, forecast_time_unit};
+        eccodes::Step step{forecast_time_value, forecast_time_unit};
         step.optimize_unit();
 
-        if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.value<long>())) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(h, "startStepUnit", eccodes::Unit{step_units}.value<long>())) != GRIB_SUCCESS)
             return err;
 
-        *val = step.value<long>(Unit{step_units});
+        *val = step.value<long>(eccodes::Unit{step_units});
     }
     catch (std::exception& e) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "step_in_units: %s", e.what());
@@ -183,12 +183,12 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
         return err;
 
     try {
-        Step step{forecast_time_value, forecast_time_unit};
+        eccodes::Step step{forecast_time_value, forecast_time_unit};
 
-        if ((err = grib_set_long_internal(h, "startStepUnit", Unit{step_units}.value<long>())) != GRIB_SUCCESS)
+        if ((err = grib_set_long_internal(h, "startStepUnit", eccodes::Unit{step_units}.value<long>())) != GRIB_SUCCESS)
             return err;
 
-        *val = step.value<double>(Unit{step_units});
+        *val = step.value<double>(eccodes::Unit{step_units});
     }
     catch (std::exception& e) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "step_in_units: %s", e.what());
@@ -215,9 +215,9 @@ static int pack_long_new_(grib_accessor* a, const long start_step_value, const l
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit_old)) != GRIB_SUCCESS)
         return err;
 
-    Step start_step_old(start_step_value_old, start_step_unit_old);
-    Step forecast_time(start_step_value, start_step_unit);
-    Step time_range_new{};
+    eccodes::Step start_step_old(start_step_value_old, start_step_unit_old);
+    eccodes::Step forecast_time(start_step_value, start_step_unit);
+    eccodes::Step time_range_new{};
 
     auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
 
@@ -225,7 +225,7 @@ static int pack_long_new_(grib_accessor* a, const long start_step_value, const l
         auto time_range = time_range_opt.value();
         time_range = time_range - (forecast_time - start_step_old);
         if (time_range.value<long>() < 0)
-            time_range = Step{0l, time_range.unit()};
+            time_range = eccodes::Step{0l, time_range.unit()};
         auto [sa, sb] = find_common_units(forecast_time.optimize_unit(), time_range.optimize_unit());
         if ((err = set_step(h, self->forecast_time_value, self->forecast_time_unit, sa)) != GRIB_SUCCESS)
             return err;
@@ -236,7 +236,7 @@ static int pack_long_new_(grib_accessor* a, const long start_step_value, const l
         return GRIB_SUCCESS;
     }
 
-    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+    if (eccodes::Unit{force_step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
         forecast_time.optimize_unit();
     }
 
@@ -259,12 +259,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     long start_step_unit;
     try {
-        if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{force_step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
                 return ret;
 
-            if (Unit{start_step_unit} == Unit{Unit::Value::MISSING})
-                start_step_unit = Unit{Unit::Value::HOUR}.value<long>();
+            if (eccodes::Unit{start_step_unit} == eccodes::Unit{eccodes::Unit::Value::MISSING})
+                start_step_unit = eccodes::Unit{eccodes::Unit::Value::HOUR}.value<long>();
         }
         else {
             start_step_unit = force_step_units;
@@ -283,14 +283,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(a);
-    //long force_step_units = Unit(Unit::Value::MISSING).value<long>();
+    //long force_step_units = eccodes::Unit(eccodes::Unit::Value::MISSING).value<long>();
     int ret = GRIB_SUCCESS;
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
     try {
-        Step step = step_from_string(val, Unit{force_step_units});
+        eccodes::Step step = step_from_string(val, eccodes::Unit{force_step_units});
         if ((ret = pack_long_new_(a, step.value<long>(), step.unit().value<long>(), force_step_units)) != GRIB_SUCCESS)
             return ret;
     }
@@ -324,7 +324,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
     try {
-        Step step{start_step_value, start_step_unit};
+        eccodes::Step step{start_step_value, start_step_unit};
         std::stringstream ss;
 
         ss << step.value<std::string>(fp_format, show_hours);

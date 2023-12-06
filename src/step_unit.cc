@@ -10,6 +10,8 @@
 
 #include "step_unit.h"
 
+namespace eccodes {
+
 Unit::Map Unit::map_{};
 
 std::vector<Unit::Value> Unit::grib_selected_units = {
@@ -47,3 +49,5 @@ template <> Unit::Value Unit::value<Unit::Value>() const {
 template <> std::string Unit::value<std::string>() const {
     return map_.unit_to_name(internal_value_);
 }
+
+} // namespace eccodes

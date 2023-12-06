@@ -24,6 +24,7 @@
 
 #include "step_unit.h"
 
+namespace eccodes {
 class Step {
 public:
     // Constructors
@@ -122,3 +123,5 @@ template <typename T> T Step::value(const Unit& unit) const {
     T value = from_seconds<T>(seconds, unit);
     return value;
 }
+
+} // namespace eccodes

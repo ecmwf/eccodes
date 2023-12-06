@@ -137,24 +137,24 @@ static size_t string_length(grib_accessor* a)
     return 255;
 }
 
-static long staticStepUnits = Unit{Unit::Value::MISSING}.value<long>();
-static long staticForceStepUnits = Unit{Unit::Value::MISSING}.value<long>();
+static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
+static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(a);
-    auto supported_units = Unit::list_supported_units();
+    auto supported_units = eccodes::Unit::list_supported_units();
     try {
-        Unit unit{*val}; // throws if not supported
+        eccodes::Unit unit{*val}; // throws if not supported
         auto iter = std::find(supported_units.begin(), supported_units.end(), unit);
         if (iter == supported_units.end()) {
-            throw std::runtime_error{"Unit not supported"};
+            throw std::runtime_error{"eccodes::Unit not supported"};
         }
     }
     catch (std::exception& e) {
         std::string supported_units_str;
         for (auto& u : supported_units)
-            supported_units_str += Unit{u}.value<std::string>() + ",";
+            supported_units_str += eccodes::Unit{u}.value<std::string>() + ",";
         supported_units_str.pop_back();
 
         std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available units are: " + supported_units_str;
@@ -174,7 +174,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     try {
-        if (Unit{staticStepUnits} != Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{staticStepUnits} != eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             *val = staticStepUnits;
             return GRIB_SUCCESS;
         }
@@ -196,7 +196,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             *val = time_range_opt.value().optimize_unit().unit().value<long>();
         }
         else if (!forecast_time_opt && !time_range_opt) {
-            *val = Unit{Unit::Value::HOUR}.value<long>();
+            *val = eccodes::Unit{eccodes::Unit::Value::HOUR}.value<long>();
         }
     }
     catch (std::exception& e) {
@@ -210,14 +210,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     try {
-        long unit = Unit{val}.value<long>();
+        long unit = eccodes::Unit{val}.value<long>();
         pack_long(a, &unit, len);
     }
     catch (std::exception& e) {
-        auto supported_units = Unit::list_supported_units();
+        auto supported_units = eccodes::Unit::list_supported_units();
         std::string supported_units_str;
         for (auto& u : supported_units)
-            supported_units_str += Unit{u}.value<std::string>() + ",";
+            supported_units_str += eccodes::Unit{u}.value<std::string>() + ",";
         supported_units_str.pop_back();
 
         std::string msg = "Invalid unit: " + std::string(val) + " (" + e.what() + ")" + ". Available units are: " + supported_units_str;
@@ -235,7 +235,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t unit_len = 0;
     if ((ret = unpack_long(a, &unit, &unit_len)) != GRIB_SUCCESS)
         return ret;
-    *len = snprintf(val, *len, "%s", Unit{unit}.value<std::string>().c_str());
+    *len = snprintf(val, *len, "%s", eccodes::Unit{unit}.value<std::string>().c_str());
     return GRIB_SUCCESS;
 }
 

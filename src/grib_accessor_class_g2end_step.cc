@@ -214,8 +214,8 @@ static int convert_time_range_long_(
     Assert(lengthOfTimeRange != NULL);
 
     if (indicatorOfUnitForTimeRange != stepUnits) {
-        Step time_range{*lengthOfTimeRange, indicatorOfUnitForTimeRange};
-        time_range.set_unit(Unit{stepUnits});
+        eccodes::Step time_range{*lengthOfTimeRange, indicatorOfUnitForTimeRange};
+        time_range.set_unit(eccodes::Unit{stepUnits});
         if (time_range.value<long>() != time_range.value<double>()) {
             return GRIB_DECODING_ERROR;
         }
@@ -297,8 +297,8 @@ static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t*
     if ((err = grib_get_long_internal(h, self->typeOfTimeIncrement, &typeOfTimeIncrement)))
         return err;
 
-    Step start_step{start_step_value, start_step_unit};
-    Step time_range{time_range_value, time_range_unit};
+    eccodes::Step start_step{start_step_value, start_step_unit};
+    eccodes::Step time_range{time_range_value, time_range_unit};
 
     if (typeOfTimeIncrement == 1) {
         /* See GRIB-488 */
@@ -309,10 +309,10 @@ static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t*
         }
     }
     if (add_time_range) {
-        *val = (start_step + time_range).value<double>(Unit(step_units));
+        *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
     }
     else {
-        *val = start_step.value<double>(Unit(start_step_unit));
+        *val = start_step.value<double>(eccodes::Unit(start_step_unit));
     }
 
     return GRIB_SUCCESS;
@@ -392,7 +392,7 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
     if ((err = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return err;
 
-    Step start_step{start_step_value, start_step_unit};
+    eccodes::Step start_step{start_step_value, start_step_unit};
 
     if ((err = grib_get_long_internal(h, self->step_units, &step_units)))
         return err;
@@ -420,8 +420,8 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
             long the_coded_unit       = arr_coded_unit[i];
             long the_coded_time_range = arr_coded_time_range[i];
 
-            Step time_range{the_coded_unit, the_coded_time_range};
-            *val = (start_step + time_range).value<double>(Unit(step_units));
+            eccodes::Step time_range{the_coded_unit, the_coded_time_range};
+            *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
 
             return GRIB_SUCCESS;
         }
@@ -542,7 +542,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     double dend, dstep;
     int show_hours = a->context->show_hour_stepunit;
 
-    Step end_step{end_step_value, end_step_unit};
+    eccodes::Step end_step{end_step_value, end_step_unit};
 
     /*point in time */
     if (self->year == NULL) {
@@ -575,7 +575,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if ((err= grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return err;
 
-    if (Unit{start_step_unit} == Unit{Unit::Value::MISSING}) {
+    if (eccodes::Unit{start_step_unit} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "missing start step unit");
         return GRIB_WRONG_STEP_UNIT;
@@ -584,8 +584,8 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if ((err = grib_get_long_internal(h, self->typeOfTimeIncrement, &typeOfTimeIncrement)))
         return err;
 
-    Step start_step{start_step_value, start_step_unit};
-    Step time_range = end_step - start_step;
+    eccodes::Step start_step{start_step_value, start_step_unit};
+    eccodes::Step time_range = end_step - start_step;
 
     if (time_range.value<double>() < 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
@@ -597,7 +597,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     if (err != GRIB_SUCCESS)
         return err;
 
-    dstep = end_step.value<double>(Unit{Unit::Value::DAY});
+    dstep = end_step.value<double>(eccodes::Unit{eccodes::Unit::Value::DAY});
     dend += dstep;
 
     err = grib_julian_to_datetime(dend, &year_of_end_of_interval, &month_of_end_of_interval,
@@ -621,14 +621,14 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     const char* forecast_time_value_key = "forecastTime";
     const char* forecast_time_unit_key = "indicatorOfUnitOfTimeRange";
-    Step forecast_time_opt;
-    Step time_range_opt;
-    if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+    eccodes::Step forecast_time_opt;
+    eccodes::Step time_range_opt;
+    if (eccodes::Unit{force_step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
         std::tie(forecast_time_opt, time_range_opt) = find_common_units(start_step.optimize_unit(), time_range.optimize_unit());
     }
     else {
-        forecast_time_opt = Step{start_step.value<long>(Unit{force_step_units}), Unit{force_step_units}};
-        time_range_opt = Step{time_range.value<long>(Unit{force_step_units}), Unit{force_step_units}};
+        forecast_time_opt = eccodes::Step{start_step.value<long>(eccodes::Unit{force_step_units}), eccodes::Unit{force_step_units}};
+        time_range_opt = eccodes::Step{time_range.value<long>(eccodes::Unit{force_step_units}), eccodes::Unit{force_step_units}};
     }
 
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->time_range_value, time_range_opt.value<long>())) != GRIB_SUCCESS)
@@ -663,7 +663,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
 
     try {
-        Step step(step_value, step_units);
+        eccodes::Step step(step_value, step_units);
         step.set_unit(step_units);
 
         std::stringstream ss;
@@ -698,12 +698,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     try {
         long end_step_unit;
-        if (Unit{force_step_units} == Unit{Unit::Value::MISSING}) {
+        if (eccodes::Unit{force_step_units} == eccodes::Unit{eccodes::Unit::Value::MISSING}) {
             if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
                 return ret;
 
-            if (Unit{end_step_unit} == Unit{Unit::Value::MISSING})
-                end_step_unit = Unit{Unit::Value::HOUR}.value<long>();
+            if (eccodes::Unit{end_step_unit} == eccodes::Unit{eccodes::Unit::Value::MISSING})
+                end_step_unit = eccodes::Unit{eccodes::Unit::Value::HOUR}.value<long>();
         }
         else {
             end_step_unit = force_step_units;
@@ -726,7 +726,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         return ret;
 
     try {
-        Step end_step = step_from_string(val, Unit{force_step_units});
+        eccodes::Step end_step = step_from_string(val, eccodes::Unit{force_step_units});
         end_step.optimize_unit();
 
         if ((ret = grib_set_long_internal(h, "endStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)
