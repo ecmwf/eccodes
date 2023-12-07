@@ -1079,7 +1079,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int strlenvalue = 0;
     double dvalue   = 0;
     long lvalue     = 0;
-    char value[MAX_STRING_LEN];
+    char value[MAX_STRING_LEN] = {0,};
     const char* notfound = "not_found";
     int written_to_dump  = 0; /* boolean */
     grib_accessor* acc   = NULL;
@@ -1285,7 +1285,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
         width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
-        fprintf(dump_file, "%-*s", (int)width, value);
+        fprintf(dump_file, "%s%-*s", (written_to_dump?" ":""),  (int)width, value);
         written_to_dump = 1;
     }
     if (written_to_dump) {

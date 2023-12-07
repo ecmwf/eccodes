@@ -326,11 +326,13 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     }
     else {
         r = compute_bufr_key_rank(h, self->keys, a->name);
-        if (!grib_is_missing_long(a, value)) {
-            if (r != 0)
-                fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"#%d#%s\", &iVal), 0);\n", r, a->name);
-            else
-                fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"%s\", &iVal), 0);\n", a->name);
+        if (!codes_bufr_key_exclude_from_dump(a->name)) {
+            if (!grib_is_missing_long(a, value)) {
+                if (r != 0)
+                    fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"#%d#%s\", &iVal), 0);\n", r, a->name);
+                else
+                    fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"%s\", &iVal), 0);\n", a->name);
+            }
         }
     }
 
@@ -388,8 +390,10 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
     else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if (!grib_is_missing_long(a, value)) {
-            fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"%s->%s\", &iVal), 0);\n", prefix, a->name);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            if (!grib_is_missing_long(a, value)) {
+                fprintf(self->dumper.out, "  CODES_CHECK(codes_get_long(h, \"%s->%s\", &iVal), 0);\n", prefix, a->name);
+            }
         }
     }
 

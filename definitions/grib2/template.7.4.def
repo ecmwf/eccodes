@@ -3,19 +3,21 @@
 # TEMPLATE 7.4, Grid point data - IEEE floating point data
 
 meta codedValues data_raw_packing(
-              section7Length,
-              offsetBeforeData,
-              offsetSection7,
-              numberOfValues,
-              precision
-     ): read_only;
+     section7Length,
+     offsetBeforeData,
+     offsetSection7,
+     numberOfValues,
+     precision
+): read_only;
 
-meta values data_apply_bitmap(codedValues,
-                              bitmap,
-                              missingValue,
-                              binaryScaleFactor,
-                              numberOfDataPoints,
-                              numberOfValues) : dump;
+meta values data_apply_bitmap(
+     codedValues,
+     bitmap,
+     missingValue,
+     binaryScaleFactor,
+     numberOfDataPoints,
+     numberOfValues
+) : dump;
 
 alias data.packedValues = codedValues;
 

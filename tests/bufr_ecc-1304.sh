@@ -36,7 +36,7 @@ EOF
 
 # Command should fail but not crash
 set +e
-${tools_dir}/bufr_filter $tempFilt $sample_bufr4 > $tempOut
+${tools_dir}/bufr_filter $tempFilt $sample_bufr4 2> $tempOut
 stat=$?
 set -e
 echo stat=$stat

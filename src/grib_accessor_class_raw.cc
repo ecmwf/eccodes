@@ -124,7 +124,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     e   = grib_arguments_get_expression(hand, arg, n++);
     err = grib_expression_evaluate_long(hand, e, &(self->relativeOffset));
     if (err)
-        grib_context_log(hand->context, GRIB_LOG_ERROR, "unable to evaluate relativeOffset");
+        grib_context_log(hand->context, GRIB_LOG_ERROR, "Unable to evaluate relativeOffset");
 
     grib_get_long(hand, self->sectionLength, &sectionLength);
 

@@ -101,7 +101,7 @@ ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=m $grib1_sample $temp
 unit=`${tools_dir}/grib_get -p unitOfTimeRange $temp`
 [ "$unit" = "0" ]
 ${tools_dir}/grib_set -s indicatorOfUnitOfTimeRange=m $grib2_sample $temp
-unit=`${tools_dir}/grib_get -p indicatorOfUnitOfTimeRange $temp`
+unit=`${tools_dir}/grib_get -p indicatorOfUnitForForecastTime $temp`
 [ "$unit" = "0" ]
 
 # ECC-457

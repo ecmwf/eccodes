@@ -98,6 +98,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecpoint
         grib_s2s
         grib_fire
+        grib_generalised_tiles
         # grib_true_imagery
         grib2_wave_spectra
         grib_element
@@ -127,6 +128,9 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1560
         grib_ecc-1571
         grib_ecc-1654
+        grib_ecc-1671
+        grib_ecc-1708
+        grib_ecc-1691
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -162,6 +166,7 @@ if( HAVE_BUILD_TOOLS )
         grib_run_length_packing
         grib_grid_space_view
         grib_partial_message
+        grib_true_imagery
         grib_headers_only
         grib_unpack_subarray
         grib_count

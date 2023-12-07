@@ -994,7 +994,7 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 int grib_get_message_size(const grib_handle* h, size_t* size);
 int grib_get_message(const grib_handle* h, const void** msg, size_t* size);
-int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size);
+int grib_get_message_headers(const grib_handle* h, const void** msg, size_t* size);
 grib_action* grib_action_from_filter(const char* filter);
 int grib_handle_apply_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
@@ -1382,6 +1382,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err);
+int codes_bufr_key_exclude_from_dump(const char* key);
 
 /* string_util.cc*/
 int strcmp_nocase(const char* s1, const char* s2);

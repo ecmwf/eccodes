@@ -665,7 +665,7 @@
 	 indicatorOfParameter = 123 ;
 	}
 #Surface emissivity
-'dimensionless' = {
+'Proportion' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 124 ;
 	}
@@ -1054,12 +1054,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Surface net radiation
+#Surface net radiation (SW and LW)
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Top net radiation
+#Top net radiation (SW and LW)
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 150 ;
@@ -15024,7 +15024,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean surface net radiation flux
+#Time-mean surface net radiation flux (SW and LW)
 'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
@@ -17509,7 +17509,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
+#Mean 2 metre temperature
 'K' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
