@@ -179,7 +179,7 @@ static grib_trie* load_dictionary(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to find def file %s", self->dictionary);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find def file %s", self->dictionary);
         *err = GRIB_FILE_NOT_FOUND;
         return NULL;
     }

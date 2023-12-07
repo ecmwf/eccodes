@@ -24,13 +24,13 @@ alias scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
 unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
 
-alias earthIsOblate=one;
+alias earthIsOblate = true;
 
 _if (shapeOfTheEarth == 0) {
   transient radius=6367470;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 _if (shapeOfTheEarth == 1){
   meta radius from_scale_factor_scaled_value(
@@ -38,20 +38,20 @@ _if (shapeOfTheEarth == 1){
                           scaledValueOfRadiusOfSphericalEarth);
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 _if (shapeOfTheEarth == 6){
   transient radius=6371229;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 
 _if (shapeOfTheEarth == 8){
   transient radius=6371200;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 
 

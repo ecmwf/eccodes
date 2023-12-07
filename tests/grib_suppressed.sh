@@ -34,6 +34,7 @@ cat > $tempRef <<EOF
 ECCODES ERROR   :  key 'a_deprecated_key' is unavailable in this version.
 ECCODES ERROR   :  Please use the following key(s):
 ECCODES ERROR   :  	- typeOfOriginalFieldValues
+ERROR: Key/value not found (message 1)
 EOF
 
 diff $tempRef $tempErr

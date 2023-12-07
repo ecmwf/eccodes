@@ -17,7 +17,7 @@
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -29,7 +29,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 3 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -41,7 +41,7 @@
 	 typeOfStatisticalProcessing = 2 ;
 	 lengthOfTimeRange = 1 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 '49' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
@@ -147,6 +147,18 @@
 	 parameterNumber = 64 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Momentum flux, u component
+'260062' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	}
+#Momentum flux, v component
+'260063' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
 	}
 #Standard deviation of sub-grid scale orography
 '260085' = {

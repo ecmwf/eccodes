@@ -5,7 +5,6 @@
 #endif
 
 /* action.cc */
-void grib_xref(grib_action* a, FILE* f, const char* path);
 void grib_action_delete(grib_context* context, grib_action* a);
 int grib_create_accessor(grib_section* p, grib_action* a, grib_loader* h);
 int grib_action_notify_change(grib_action* a, grib_accessor* observer, grib_accessor* observed);
@@ -13,7 +12,6 @@ grib_action* grib_action_reparse(grib_action* a, grib_accessor* acc, int* doit);
 int grib_action_execute(grib_action* a, grib_handle* h);
 void grib_dump_action_branch(FILE* out, grib_action* a, int decay);
 void grib_dump_action_tree(grib_context* ctx, FILE* out);
-void grib_xref_action_branch(FILE* out, grib_action* a, const char* path);
 
 /* action_class_alias.cc */
 grib_action* grib_action_create_alias(grib_context* context, const char* name, const char* arg1, const char* name_space, int flags);
@@ -765,8 +763,6 @@ unsigned long grib_ibm_nearest_smaller_to_long(double x);
 int grib_nearest_smaller_ibm_float(double a, double* ret);
 
 /* grib_ieeefloat.cc*/
-double grib_ieee_table_e(unsigned long e);
-double grib_ieee_table_v(unsigned long e);
 unsigned long grib_ieee_to_long(double x);
 double grib_ieeefloat_error(double x);
 double grib_long_to_ieee(unsigned long x);
@@ -794,7 +790,6 @@ void grib_buffer_free(const grib_context* c, void* p);
 void* grib_buffer_realloc(const grib_context* c, void* p, size_t s);
 
 /* grib_buffer.cc*/
-void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b);
 grib_buffer* grib_create_growable_buffer(const grib_context* c);
 grib_buffer* grib_new_buffer(const grib_context* c, const unsigned char* data, size_t buflen);
 void grib_buffer_delete(const grib_context* c, grib_buffer* b);
@@ -999,7 +994,7 @@ int codes_check_message_header(const void* bytes, size_t length, ProductKind pro
 int codes_check_message_footer(const void* bytes, size_t length, ProductKind product);
 int grib_get_message_size(const grib_handle* h, size_t* size);
 int grib_get_message(const grib_handle* h, const void** msg, size_t* size);
-int grib_get_message_headers(grib_handle* h, const void** msg, size_t* size);
+int grib_get_message_headers(const grib_handle* h, const void** msg, size_t* size);
 grib_action* grib_action_from_filter(const char* filter);
 int grib_handle_apply_action(grib_handle* h, grib_action* a);
 void grib_multi_support_reset_file(grib_context* c, FILE* f);
@@ -1387,6 +1382,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err);
+int codes_bufr_key_exclude_from_dump(const char* key);
 
 /* string_util.cc*/
 int strcmp_nocase(const char* s1, const char* s2);

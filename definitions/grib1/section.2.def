@@ -25,7 +25,7 @@ codetable[1] dataRepresentationType 'grib1/6.table' = 0;
 meta gridDefinitionDescription codetable_title(dataRepresentationType);
 
 # Grid definition (according to data representation type - octet 6 above)
-alias isRotatedGrid=zero;
+alias isRotatedGrid = false;
 
 if (dataRepresentationType < 192) {
   template dataRepresentation "grib1/grid_definition_[dataRepresentationType:l].def";

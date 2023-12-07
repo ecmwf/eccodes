@@ -13,7 +13,7 @@
  ***************************************************************************/
 #include "grib_api_internal.h"
 
-void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
+static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
     unsigned char* newdata;
     if (b->property == CODES_MY_BUFFER)
@@ -137,23 +137,19 @@ static void update_offsets_after(grib_accessor* a, long len)
     }
 }
 
-// /* new GCC compiler v4.5.0 complains function is defined but not used*/
 // void grib_recompute_sections_lengths(grib_section* s)
 // {
 //     if(s)
 //     {
 //         long   plen = 0;
 //         size_t  len = 1;
-
 //         grib_accessor* a = s->block->first;
-
 //         while(a)
 //         {
 //             /* grib_recompute_sections_lengths(grib_get_sub_section(a)); */
 //             grib_recompute_sections_lengths(a->sub_section);
 //             a = a->next;
 //         }
-
 //         if(s->aclength)
 //         {
 //             int ret;
@@ -161,10 +157,8 @@ static void update_offsets_after(grib_accessor* a, long len)
 //                 plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
 //             else
 //                 plen = grib_get_next_position_offset(s->block->last);
-
 //             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
 //                 ;
-
 // 
 //             if(s->h->context->debug)
 //                 printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
@@ -177,7 +171,6 @@ static void update_offsets_after(grib_accessor* a, long len)
 // {
 //     long   plen = 0;
 //     size_t  len = 1;
-
 //     if(!s) return;
 //     if(s->aclength)
 //     {
@@ -186,14 +179,11 @@ static void update_offsets_after(grib_accessor* a, long len)
 //             plen = grib_get_next_position_offset(s->block->last) - s->owner->offset;
 //         else
 //             plen = grib_get_next_position_offset(s->block->last);
-
 //         /* if(s->owner) */
 //         /* s->owner->length = plen; */
-
 //         /* if(s->aclength)  */
 //         if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
 //             ;
-
 //         if(s->h->context->debug)
 //         {
 //             printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);

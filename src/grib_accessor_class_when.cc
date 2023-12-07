@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -21,6 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump;
+   IMPLEMENTS = get_native_type
    IMPLEMENTS = notify_change
    END_CLASS_DEF
 
@@ -36,6 +32,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
+static int get_native_type(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static int notify_change(grib_accessor*, grib_accessor*);
@@ -64,7 +61,7 @@ static grib_accessor_class _grib_accessor_class_when = {
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
-    0,            /* get native type */
+    &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
@@ -109,7 +106,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     /* grib_dump_when(dumper,a,NULL); */
@@ -118,4 +114,9 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int notify_change(grib_accessor* a, grib_accessor* changed)
 {
     return grib_action_notify_change(a->creator, a, changed);
+}
+
+static int get_native_type(grib_accessor* a)
+{
+    return GRIB_TYPE_UNDEFINED;
 }

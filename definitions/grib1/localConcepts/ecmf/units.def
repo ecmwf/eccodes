@@ -294,7 +294,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}
-#10 metre wind gust since previous post-processing
+#Maximum 10 metre wind gust since previous post-processing
 'm s**-1' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 49 ;
@@ -659,13 +659,13 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 122 ;
 	}
-#10 metre wind gust in the last 6 hours
+#Maximum 10 metre wind gust in the last 6 hours
 'm s**-1' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 123 ;
 	}
 #Surface emissivity
-'dimensionless' = {
+'Proportion' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 124 ;
 	}
@@ -1054,12 +1054,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Surface net radiation
+#Surface net radiation (SW and LW)
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Top net radiation
+#Top net radiation (SW and LW)
 'J m**-2' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 150 ;
@@ -1169,7 +1169,7 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Standard deviation of orography
+#Standard deviation of sub-gridscale orography
 'm' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
@@ -1459,32 +1459,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 'N m**-2 s' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
@@ -9879,7 +9879,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Total sky direct solar radiation at surface
+#Total sky direct short-wave (solar) radiation at surface
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
@@ -9914,7 +9914,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 27 ;
 	}
-#10 metre wind gust in the last 3 hours
+#Maximum 10 metre wind gust in the last 3 hours
 'm s**-1' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
@@ -10089,12 +10089,12 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 94 ;
 	}
-#Surface solar radiation downward clear-sky
+#Surface short-wave (solar) radiation downward clear-sky
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Surface thermal radiation downward clear-sky
+#Surface long-wave (thermal) radiation downward clear-sky
 'J m**-2' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
@@ -15024,7 +15024,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean surface net radiation flux
+#Time-mean surface net radiation flux (SW and LW)
 'W m**-2' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
@@ -16314,7 +16314,7 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'kg kg**-1' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 61 ;
@@ -17509,7 +17509,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
+#Mean 2 metre temperature
 'K' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;

@@ -16,29 +16,30 @@ meta codedValues data_g22order_packing(
      decimalScaleFactor,
      optimizeScaleFactor,
 
-     typeOfOriginalFieldValues ,
+     typeOfOriginalFieldValues,
      groupSplittingMethodUsed,
-     missingValueManagementUsed ,
-     primaryMissingValueSubstitute ,
-     secondaryMissingValueSubstitute ,
-     numberOfGroupsOfDataValues ,
-     referenceForGroupWidths ,
-     numberOfBitsUsedForTheGroupWidths ,
-     referenceForGroupLengths ,
+     missingValueManagementUsed,
+     primaryMissingValueSubstitute,
+     secondaryMissingValueSubstitute,
+     numberOfGroupsOfDataValues,
+     referenceForGroupWidths,
+     numberOfBitsUsedForTheGroupWidths,
+     referenceForGroupLengths,
      lengthIncrementForTheGroupLengths,
-     trueLengthOfLastGroup ,
+     trueLengthOfLastGroup,
      numberOfBitsForScaledGroupLengths,
      orderOfSpatialDifferencing,
      numberOfOctetsExtraDescriptors
-
 ): read_only;
 
-meta values data_apply_bitmap(codedValues,
-                              bitmap,
-                              missingValue,
-                              binaryScaleFactor,
-                              numberOfDataPoints,
-                              numberOfValues) : dump;
+meta values data_apply_bitmap(
+     codedValues,
+     bitmap,
+     missingValue,
+     binaryScaleFactor,
+     numberOfDataPoints,
+     numberOfValues
+) : dump;
 
 alias data.packedValues=codedValues;
 

@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *   Enrico Fucile                                                         *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -19,7 +16,6 @@
    CLASS      = action
    SUPER      = action_class_section
    IMPLEMENTS = destroy
-   IMPLEMENTS = xref
    IMPLEMENTS = execute
    MEMBERS    = grib_arguments* args
    MEMBERS    = grib_case *Case
@@ -39,7 +35,6 @@ or edit "action.class" and rerun ./make_class.pl
 */
 
 static void init_class      (grib_action_class*);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -65,7 +60,7 @@ static grib_action_class _grib_action_class_switch = {
     &destroy,                            /* destroy */
 
     0,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -79,6 +74,7 @@ grib_action_class* grib_action_class_switch = &_grib_action_class_switch;
 static void init_class(grib_action_class* c)
 {
     c->dump    =    (*(c->super))->dump;
+    c->xref    =    (*(c->super))->xref;
     c->create_accessor    =    (*(c->super))->create_accessor;
     c->notify_change    =    (*(c->super))->notify_change;
     c->reparse    =    (*(c->super))->reparse;
@@ -239,8 +235,4 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

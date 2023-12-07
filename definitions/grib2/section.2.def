@@ -14,7 +14,7 @@ transient addEmptySection2 = 0;
 
 if ( addEmptySection2 == 0 ) {
     if ( grib2LocalSectionPresent==1 or ( section2Length>5 or new() ) ) {
-        alias section2Used=one;
+        alias section2Used=true;
 
         if(productionStatusOfProcessedData == 8 || productionStatusOfProcessedData == 9) {
             # This for adding an expver other than prod/test to UERRA
@@ -32,6 +32,12 @@ if ( addEmptySection2 == 0 ) {
             # crra = Copernicus Regional ReAnalysis
             codetable[2] crraLocalVersion 'grib2/crraLocalVersion.table' = 1 : dump;
             template  crraSection "grib2/local.crra.[crraLocalVersion:l].def";
+        }
+
+        if(productionStatusOfProcessedData == 12 || productionStatusOfProcessedData == 13) {
+            # destine = Destination Earth
+            codetable[2] destineLocalVersion 'grib2/destineLocalVersion.table' = 1 : dump;
+            template  destineSection "grib2/local.destine.[destineLocalVersion:l].def";
         }
 
         codetable[2] grib2LocalSectionNumber 'grib2/grib2LocalSectionNumber.[centreForLocal:l].table' = 1 : dump;

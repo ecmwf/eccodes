@@ -83,7 +83,6 @@ static void init_class(grib_iterator_class* c)
 }
 /* END_CLASS_IMP */
 
-
 #define ITER "HEALPix Geoiterator"
 #define RAD2DEG 57.29577951308232087684 // 180 over pi
 
@@ -123,7 +122,7 @@ size_t HEALPix_nj(size_t N, size_t i)
 //    // Equator
 //    xstart[2*N-1] = start * (1 - (N % 2 ? 1 : 0));
 //    pl[2*N-1] = 4*N;
-// 
+//
 static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 {
     const auto Nj    = HEALPix_nj(N, i);
@@ -138,7 +137,7 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 
 static int iterate_healpix(grib_iterator_healpix* self, long N)
 {
-    size_t ny, nx, k;
+    size_t ny, nx;
     ny = nx = 4*N - 1;
     std::vector<double> latitudes(ny);
 
@@ -160,7 +159,7 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
     // Equator
     latitudes[2 * N - 1] = 0.0;
 
-    k = 0;
+    size_t k = 0;
     for (size_t i = 0; i < ny; i++) {
         // Compute the longitudes at a given latitude
         std::vector<double> longitudes = HEALPix_longitudes(N, i);
@@ -211,7 +210,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     }
 
     self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    if (self->lats == NULL) return GRIB_OUT_OF_MEMORY;
     self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
+    if (self->lons == NULL) return GRIB_OUT_OF_MEMORY;
 
     try {
         err = iterate_healpix(self, N);

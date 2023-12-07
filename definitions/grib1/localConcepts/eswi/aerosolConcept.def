@@ -1,9 +1,6 @@
-#########################
-#
 # author: Sebastien Villaume
 # created: 13 May 2013
 #
-#########################
 "none"={matchAerosolBinNumber=0;}
 "bin1"={matchAerosolBinNumber=1;}
 "bin2"={matchAerosolBinNumber=2;}

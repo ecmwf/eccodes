@@ -2152,7 +2152,7 @@ static grib_accessor* create_accessor_from_descriptor(const grib_accessor* a, gr
 #define IS_COORDINATE_DESCRIPTOR(a) (a == 8 || a == 1 || a == 2 || a == 4 || a == 5 || a == 6 || a == 7)
 #define NUMBER_OF_QUALIFIERS_PER_CATEGORY 256
 #define NUMBER_OF_QUALIFIERS_CATEGORIES 7
-#define MAX_NUMBER_OF_BITMAPS 5
+#define MAX_NUMBER_OF_BITMAPS 8 // See ECC-1699
 
 static const int number_of_qualifiers = NUMBER_OF_QUALIFIERS_PER_CATEGORY * NUMBER_OF_QUALIFIERS_CATEGORIES;
 static const int significanceQualifierIndexArray[] = { -1, 0, 1, -1, 2, 3, 4, 5, 6 };
@@ -2579,9 +2579,10 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 groupNumber++;
                 incrementBitmapIndex = 0;
                 if (bitmapIndex >= MAX_NUMBER_OF_BITMAPS) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "Bitmap error: bitmap index=%d, max num bitmaps=%d\n", bitmapIndex, MAX_NUMBER_OF_BITMAPS);
-                    err = GRIB_DECODING_ERROR;
-                    return err;
+                    //grib_context_log(c, GRIB_LOG_ERROR, "Bitmap error: bitmap index=%d, max num bitmaps=%d\n", bitmapIndex, MAX_NUMBER_OF_BITMAPS);
+                    //err = GRIB_DECODING_ERROR;
+                    //return err;
+                    bitmapIndex--;
                 }
                 bitmapStart[bitmapIndex] = grib_accessors_list_last(self->dataAccessors);
                 bitmapSize[bitmapIndex]  = 1;

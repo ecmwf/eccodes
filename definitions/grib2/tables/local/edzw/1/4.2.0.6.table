@@ -13,3 +13,6 @@
 204 204 Mass density of cloud ice(kg m-3)
 205 205 Possible astronomical sunshine duration (s)
 206 206 Relative duration of sunshine (DURSUN * 100 / DURSUN_M)(%)
+210 210 Number of active clouds per horizontal unit area (m-2)
+211 211 Number of passive clouds per horizontal unit area (m-2)
+215 215 Cloud cover for use in radiative transfer (modified where large hydrometeors are present) (%)

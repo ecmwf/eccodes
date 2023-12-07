@@ -542,17 +542,11 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 120 ;
 	}
-#10 metre wind gust in the last 6 hours
+#Maximum 10 metre wind gust in the last 6 hours
 'p10fg6' = {
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 123 ;
-	}
-#Surface emissivity
-'emis' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 124 ;
 	}
 #Vertically integrated total energy
 'vite' = {
@@ -624,18 +618,6 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
-#Surface net radiation
-'snr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 149 ;
-	}
-#Top net radiation
-'tnr' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 150 ;
-	}
 #Logarithm of surface pressure
 'lnsp' = {
 	 discipline = 0 ;
@@ -660,12 +642,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 128 ;
 	 parameterNumber = 158 ;
-	}
-#Standard deviation of orography
-'sdor' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 160 ;
 	}
 #Total cloud cover
 'tcc' = {
@@ -13635,18 +13611,6 @@
 	 typeOfStatisticalProcessing = 1 ;
 	 is_chemical = 1 ;
 	}
-#Total sky direct solar radiation at surface
-'fdir' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 21 ;
-	}
-#Cloud base height
-'cbh' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 23 ;
-	}
 #Horizontal visibility
 'hvis' = {
 	 discipline = 192 ;
@@ -13808,18 +13772,6 @@
 	 typeOfWavelengthInterval = 11 ;
 	 scaleFactorOfSecondWavelength = missing() ;
 	 is_aerosol_optical = 1 ;
-	}
-#Surface solar radiation downward clear-sky
-'ssrdc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 129 ;
-	}
-#Surface thermal radiation downward clear-sky
-'strdc' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 130 ;
 	}
 #Accumulated freezing rain
 'fzra' = {
@@ -16477,47 +16429,11 @@
 	 parameterCategory = 140 ;
 	 parameterNumber = 243 ;
 	}
-#10 metre wind speed
-'wind' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 245 ;
-	}
-#Altimeter wave height
-'awh' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 246 ;
-	}
-#Altimeter corrected wave height
-'acwh' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 247 ;
-	}
-#Altimeter range relative correction
-'arrc' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 248 ;
-	}
-#10 metre wind direction
-'dwi' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 249 ;
-	}
 #2D wave spectra (multiple)
 'd2sp' = {
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 250 ;
-	}
-#Wave spectral kurtosis
-'wsk' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 252 ;
 	}
 #Wave spectral peakedness
 'wsp' = {
@@ -18937,12 +18853,6 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 147 ;
 	}
-#Mean surface net radiation flux
-'msnrf' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 149 ;
-	}
 #Mean short-wave heating rate
 'mswhr' = {
 	 discipline = 192 ;
@@ -20467,7 +20377,7 @@
 	 parameterCategory = 210 ;
 	 parameterNumber = 54 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'co2' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;
@@ -21762,12 +21672,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
-	}
-#Mean temperature at 2 metres
-'mean2t' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 4 ;
 	}
 #Mean of 10 metre wind speed
 'mean10ws' = {

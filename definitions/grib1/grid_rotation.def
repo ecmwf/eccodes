@@ -8,5 +8,5 @@ meta geography.longitudeOfSouthernPoleInDegrees scale(longitudeOfSouthernPole ,o
 
 ibmfloat geography.angleOfRotationInDegrees : dump;
 
-alias angleOfRotation =angleOfRotationInDegrees;
-alias isRotatedGrid = one;
+alias angleOfRotation = angleOfRotationInDegrees;
+alias isRotatedGrid = true;

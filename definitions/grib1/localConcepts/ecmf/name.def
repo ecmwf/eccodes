@@ -294,8 +294,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 48 ;
 	}
-#10 metre wind gust since previous post-processing
-'10 metre wind gust since previous post-processing' = {
+#Maximum 10 metre wind gust since previous post-processing
+'Maximum 10 metre wind gust since previous post-processing' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 49 ;
 	}
@@ -659,8 +659,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 122 ;
 	}
-#10 metre wind gust in the last 6 hours
-'10 metre wind gust in the last 6 hours' = {
+#Maximum 10 metre wind gust in the last 6 hours
+'Maximum 10 metre wind gust in the last 6 hours' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 123 ;
 	}
@@ -1054,13 +1054,13 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Surface net radiation
-'Surface net radiation' = {
+#Surface net radiation (SW and LW)
+'Surface net radiation (SW and LW)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Top net radiation
-'Top net radiation' = {
+#Top net radiation (SW and LW)
+'Top net radiation (SW and LW)' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 150 ;
 	}
@@ -1169,8 +1169,8 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 159 ;
 	}
-#Standard deviation of orography
-'Standard deviation of orography' = {
+#Standard deviation of sub-gridscale orography
+'Standard deviation of sub-gridscale orography' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 160 ;
 	}
@@ -1459,33 +1459,33 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
-'Eastward turbulent surface stress' = {
+#Time-integrated eastward turbulent surface stress
+'Time-integrated eastward turbulent surface stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
-'Eastward turbulent surface stress' = {
+#Time-integrated eastward turbulent surface stress
+'Time-integrated eastward turbulent surface stress' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
-'Eastward turbulent surface stress' = {
+#Time-integrated eastward turbulent surface stress
+'Time-integrated eastward turbulent surface stress' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
-'Northward turbulent surface stress' = {
+#Time-integrated northward turbulent surface stress
+'Time-integrated northward turbulent surface stress' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
-'Northward turbulent surface stress' = {
+#Time-integrated northward turbulent surface stress
+'Time-integrated northward turbulent surface stress' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
-'Northward turbulent surface stress' = {
+#Time-integrated northward turbulent surface stress
+'Time-integrated northward turbulent surface stress' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
 	}
@@ -9879,8 +9879,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 20 ;
 	}
-#Total sky direct solar radiation at surface
-'Total sky direct solar radiation at surface' = {
+#Total sky direct short-wave (solar) radiation at surface
+'Total sky direct short-wave (solar) radiation at surface' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 21 ;
 	}
@@ -9914,8 +9914,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 27 ;
 	}
-#10 metre wind gust in the last 3 hours
-'10 metre wind gust in the last 3 hours' = {
+#Maximum 10 metre wind gust in the last 3 hours
+'Maximum 10 metre wind gust in the last 3 hours' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 28 ;
 	}
@@ -10089,13 +10089,13 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 94 ;
 	}
-#Surface solar radiation downward clear-sky
-'Surface solar radiation downward clear-sky' = {
+#Surface short-wave (solar) radiation downward clear-sky
+'Surface short-wave (solar) radiation downward clear-sky' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 129 ;
 	}
-#Surface thermal radiation downward clear-sky
-'Surface thermal radiation downward clear-sky' = {
+#Surface long-wave (thermal) radiation downward clear-sky
+'Surface long-wave (thermal) radiation downward clear-sky' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 130 ;
 	}
@@ -15024,8 +15024,8 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean surface net radiation flux
-'Mean surface net radiation flux' = {
+#Time-mean surface net radiation flux (SW and LW)
+'Time-mean surface net radiation flux (SW and LW)' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
 	}
@@ -16314,8 +16314,8 @@
 	 table2Version = 210 ;
 	 indicatorOfParameter = 54 ;
 	}
-#Carbon Dioxide
-'Carbon Dioxide' = {
+#Carbon dioxide mass mixing ratio
+'Carbon dioxide mass mixing ratio' = {
 	 table2Version = 210 ;
 	 indicatorOfParameter = 61 ;
 	}
@@ -17509,8 +17509,8 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
-'Mean temperature at 2 metres' = {
+#Mean 2 metre temperature
+'Mean 2 metre temperature' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;
 	}

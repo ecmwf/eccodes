@@ -5,3 +5,6 @@
 195 195 3 hour pressure change(Pa-3h)
 196 196 Height of -10 degree Celsius isotherm(m)
 197 197 Pressure difference between two specific levels (Pa)
+198 198 Slope of orography (using average of maximum gradient in different directions) (Numeric)
+199 199 Updraught mass flux associated with passive clouds (kg m-2 s-1)
+200 200 Updraught mass flux associated with active clouds (kg m-2 s-1)
