@@ -81,7 +81,7 @@ int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 
 int grib_set_long_internal(grib_handle* h, const char* name, long val)
 {
-    grib_context* c  = h->context;
+    const grib_context* c  = h->context;
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     size_t l         = 1;
@@ -213,8 +213,8 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
         grib_accessor* a = NULL;
         key_err          = first;
         while (key_err) {
-            char* key = key_err->name;
-            err       = &(key_err->err);
+            const char* key = key_err->name;
+            err = &(key_err->err);
 
             if (*err == GRIB_SUCCESS) {
                 key_err = key_err->next;
@@ -663,7 +663,7 @@ int grib_is_missing(const grib_handle* h, const char* name, int* err)
 /* Return true if the given key exists (is defined) in our grib message */
 int grib_is_defined(const grib_handle* h, const char* name)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
+    const grib_accessor* a = grib_find_accessor(h, name);
     return (a ? 1 : 0);
 }
 
@@ -951,16 +951,16 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
     return ret;
 }
 
-int grib_is_in_dump(grib_handle* h, const char* name)
+int grib_is_in_dump(const grib_handle* h, const char* name)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
+    const grib_accessor* a = grib_find_accessor(h, name);
     if (a != NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
         return 1;
     else
         return 0;
 }
 
-int grib_attributes_count(grib_accessor* a, size_t* size)
+int grib_attributes_count(const grib_accessor* a, size_t* size)
 {
     if (a) {
         *size = 0;
@@ -1465,7 +1465,7 @@ int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 
 int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 {
-    grib_handle* h     = (grib_handle*)ch;
+    const grib_handle* h     = (grib_handle*)ch;
     grib_accessor* act = grib_find_accessor(h, key);
     if (act) {
         *val = (size_t)grib_byte_offset(act);
@@ -1931,7 +1931,7 @@ int grib_values_check(grib_handle* h, grib_values* values, int count)
     return 0;
 }
 
-int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err)
+int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err)
 {
     double d1 = 0, d2 = 0;
     long l1 = 0, l2 = 0;
