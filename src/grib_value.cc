@@ -571,7 +571,7 @@ int grib_set_missing(grib_handle* h, const char* name)
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
-        if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        if (grib_accessor_can_be_missing(a, &ret)) {
             if (h->context->debug)
                 fprintf(stderr, "ECCODES DEBUG grib_set_missing %s\n", name);
 
@@ -639,6 +639,19 @@ int grib_accessor_is_missing(grib_accessor* a, int* err)
         *err = GRIB_NOT_FOUND;
         return 1;
     }
+}
+
+int grib_accessor_can_be_missing(grib_accessor* a, int* err)
+{
+    if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        return 1;
+    }
+    if (STR_EQUAL(a->cclass->name, "codetable")) {
+        // Special case of Code Table keys
+        // The vast majority have a 'Missing' entry
+        return 1;
+    }
+    return 0;
 }
 
 int grib_is_missing(const grib_handle* h, const char* name, int* err)

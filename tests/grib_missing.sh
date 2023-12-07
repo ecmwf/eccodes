@@ -29,10 +29,26 @@ scaleFactorOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaleFactor
 scaledValueOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaledValueOfSecondFixedSurface $outfile`
 [ "$scaledValueOfSecondFixedSurface" = "MISSING" ]
 
-set +e
+# Codetable keys being set to 'missing'
+# -----------------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+temp=temp.grib_missing.grib
 
-${tools_dir}/grib_set -s centre=missing $infile $outfile 2> $REDIRECT > $REDIRECT
+# Make sure it works with the default sample
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing $sample2 $outfile
+grib_check_key_equals $outfile 'typeOfFirstFixedSurface:i' '255'
 
-[ $? -ne 0 ]
+# Make sure it works with the latest GRIB2 version code table 4.5
+latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
+${tools_dir}/grib_set -s tablesVersion=$latest $sample2 $temp
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing $temp $outfile
+grib_check_key_equals $outfile 'typeOfFirstFixedSurface:i' '255'
+rm -f $temp
 
+${tools_dir}/grib_set -s centre=missing $sample1 $outfile
+grib_check_key_equals $outfile 'centre' 'consensus'
+
+
+# Clean up
 rm -f $outfile

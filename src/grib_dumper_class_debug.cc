@@ -113,8 +113,6 @@ static void default_long_value(grib_dumper* d, grib_accessor* a, long actualValu
         return;
 
     const int type = grib_expression_native_type(h, expression);
-    DEBUG_ASSERT(type == GRIB_TYPE_LONG);
-
     if (type == GRIB_TYPE_LONG) {
         long defaultValue = 0;
         if (grib_expression_evaluate_long(h, expression, &defaultValue) == GRIB_SUCCESS && defaultValue != actualValue) {

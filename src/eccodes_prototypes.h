@@ -340,6 +340,9 @@ void grib_smart_table_delete(grib_context* c);
 
 /* grib_accessor_class_codetable.cc*/
 void grib_codetable_delete(grib_context* c);
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries);
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure);
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation);
 
 /* grib_accessor_class_codetable_units.cc*/
 
@@ -1144,6 +1147,7 @@ int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
+int grib_accessor_can_be_missing(grib_accessor* a, int* err);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);

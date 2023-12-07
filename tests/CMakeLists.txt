@@ -50,6 +50,7 @@ list(APPEND test_c_bins
     codes_set_samples_path
     codes_compare_keys
     codes_dump_content
+    codes_codetable
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -243,6 +244,7 @@ if( HAVE_BUILD_TOOLS )
         grib_set_force
         bufr_ecc-556
         codes_ecc-1698
+        codes_codetable
         gts_get
         gts_ls
         gts_count
