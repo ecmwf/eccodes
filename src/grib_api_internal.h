@@ -1469,7 +1469,8 @@ struct grib_smart_table
     grib_smart_table_entry* entries;
 };
 
-#if defined(ECCODES_TIMER)
+
+#if ECCODES_TIMER
 typedef struct grib_timer
 {
     struct timeval start_;
@@ -1487,6 +1488,11 @@ typedef struct grib_timer
     grib_context* context;
 
     struct grib_timer* next_;
+} grib_timer;
+#else
+typedef struct grib_timer
+{
+    char nothing;
 } grib_timer;
 #endif
 
