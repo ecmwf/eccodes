@@ -42,7 +42,7 @@ static void encode_decode(double* zval, const char* packingType, const int bitsP
     GRIB_CHECK(grib_handle_delete(h), 0);
 }
 
-static double calc_error(double* zval1, double* zval2)
+static double calc_error(const double* zval1, const double* zval2)
 {
     int i;
     double zerr = 0;
@@ -55,7 +55,7 @@ static double calc_error(double* zval1, double* zval2)
 
 int main(int argc, char* argv[])
 {
-    int bitsPerValue[11] = { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
+    const int bitsPerValue[11] = { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
     int ipackingType, ibitsPerValue, ioptimizeScaleFactor;
 
     for (ibitsPerValue = 0; ibitsPerValue < 11; ibitsPerValue++) {

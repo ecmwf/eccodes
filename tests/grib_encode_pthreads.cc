@@ -49,7 +49,7 @@ void* runner(void* ptr)
     pthread_exit(0);
 }
 
-static int encode_file(char* input_file, char* output_file)
+static int encode_file(const char* input_file, const char* output_file)
 {
     grib_handle* source_handle = NULL;
     const void* buffer         = NULL;
