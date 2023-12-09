@@ -1339,3 +1339,15 @@
  parameterCategory = 128 ;
  parameterNumber = 124 ;
 }
+#Vertical integral of water vapour
+'162055' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 55 ;
+}
+#Snow depth
+'190141' = {
+ discipline = 192 ;
+ parameterCategory = 190 ;
+ parameterNumber = 141 ;
+}

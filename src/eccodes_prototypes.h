@@ -1147,6 +1147,7 @@ int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
+int grib_accessor_can_be_missing(grib_accessor* a, int* err);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -1160,8 +1161,8 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_get_long_internal(grib_handle* h, const char* name, long* val);
-int grib_is_in_dump(grib_handle* h, const char* name);
-int grib_attributes_count(grib_accessor* a, size_t* size);
+int grib_is_in_dump(const grib_handle* h, const char* name);
+int grib_attributes_count(const grib_accessor* a, size_t* size);
 int grib_get_long(const grib_handle* h, const char* name, long* val);
 int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
@@ -1207,7 +1208,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
 void grib_print_values(const char* title, grib_values* values);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
-int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err);
+int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);
 int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags);
 

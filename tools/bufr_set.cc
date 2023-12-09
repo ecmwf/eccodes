@@ -62,7 +62,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        printf("ERROR: please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "ERROR: Please provide some keys to set through the -s option or use the -r/-d options\n");
         exit(1);
     }
     if (options->verbose)
@@ -73,7 +73,7 @@ int grib_tool_init(grib_runtime_options* options)
   }*/
 
     if (grib_options_on("n:") && grib_options_on("d:")) {
-        printf("Error: -n and -d options are incompatible. Choose one of the two please.\n");
+        fprintf(stderr, "ERROR: -n and -d options are incompatible. Choose one of the two please.\n");
         exit(1);
     }
 

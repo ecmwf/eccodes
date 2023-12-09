@@ -50,7 +50,7 @@ static void thread_init()
    CLASS      = accessor
    SUPER      = grib_accessor_class_unsigned
    IMPLEMENTS = init;dump;unpack_string;pack_expression;unpack_long
-   IMPLEMENTS = value_count;pack_string; destroy; get_native_type;
+   IMPLEMENTS = value_count;pack_string; destroy; get_native_type;pack_missing
    MEMBERS    =  const char* tablename
    MEMBERS    =  const char* masterDir
    MEMBERS    =  const char* localDir
@@ -71,6 +71,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
+static int pack_missing(grib_accessor*);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int pack_expression(grib_accessor*, grib_expression*);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
@@ -115,7 +116,7 @@ static grib_accessor_class _grib_accessor_class_codetable = {
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    0,               /* pack_missing */
+    &pack_missing,               /* pack_missing */
     0,                 /* is_missing */
     0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
@@ -736,6 +737,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         return grib_pack_long(a, &lValue, &l);
     }
 
+    if (STR_EQUAL_NOCASE(buffer, "missing")) {
+        return pack_missing(a);
+    }
+
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     grib_codetable* table;
     long i;
@@ -911,4 +916,28 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *len = rlen;
     return GRIB_SUCCESS;
+}
+
+static int pack_missing(grib_accessor* a)
+{
+    // Many of the code tables do have a 'Missing' entry (all bits = 1)
+    // So it is more user-friendly to allow setting codetable keys to
+    // missing. For tables that do not have such an entry, an error is issued
+    grib_accessor_codetable* self = (grib_accessor_codetable*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    const long nbytes = a->length;
+    const long nbits = nbytes*8;
+    const long maxVal = (1<<nbits) - 1;
+
+    int err = codes_codetable_check_code_figure(h, a->name, maxVal);
+    if (!err) {
+        size_t l = 1;
+        return grib_pack_long(a, &maxVal, &l);
+    }
+
+    grib_context_log(a->context, GRIB_LOG_ERROR, "There is no 'missing' entry in Code Table %s (%s)",
+            self->tablename, grib_get_error_message(err));
+
+    return err;
 }

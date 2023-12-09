@@ -201,6 +201,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 /* Return true if two strings are equal */
 #define STR_EQUAL(a, b) (strcmp((a), (b)) == 0)
+/* Return true if two strings are equal, ignoring case */
+#define STR_EQUAL_NOCASE(a, b) (strcmp_nocase((a), (b)) == 0)
 
 #include "grib_api.h"
 
@@ -862,6 +864,7 @@ struct grib_handle
     /* grib_trie* bufr_elements_table; */
 };
 
+/* For GRIB2 multi-field messages */
 struct grib_multi_handle
 {
     grib_context* context; /** < context attached to this handle  */
@@ -938,7 +941,6 @@ struct grib_accessor_class
 };
 
 typedef struct grib_multi_support grib_multi_support;
-
 struct grib_multi_support
 {
     FILE* file;
@@ -955,7 +957,6 @@ struct grib_multi_support
 
 /* Hash_array */
 typedef struct grib_hash_array_value grib_hash_array_value;
-
 struct grib_hash_array_value
 {
     grib_hash_array_value* next;
@@ -968,7 +969,6 @@ struct grib_hash_array_value
 
 /* Concepts */
 typedef struct grib_concept_condition grib_concept_condition;
-
 struct grib_concept_condition
 {
     grib_concept_condition* next;
@@ -985,7 +985,6 @@ struct grib_concept_value_name
 };
 
 typedef struct grib_concept_value grib_concept_value;
-
 struct grib_concept_value
 {
     grib_concept_value* next;
@@ -1416,7 +1415,6 @@ struct cvs_MD5Context
 /* --- */
 
 typedef struct grib_rule_entry grib_rule_entry;
-
 struct grib_rule_entry
 {
     grib_rule_entry* next;
@@ -1425,7 +1423,6 @@ struct grib_rule_entry
 };
 
 typedef struct grib_rule grib_rule;
-
 struct grib_rule
 {
     grib_rule* next;
@@ -1434,7 +1431,6 @@ struct grib_rule
 };
 
 typedef struct grib_case grib_case;
-
 struct grib_case
 {
     grib_arguments* values;
@@ -1531,4 +1527,3 @@ typedef struct j2k_encode_helper
 #endif
 
 #endif
-

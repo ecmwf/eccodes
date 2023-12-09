@@ -81,7 +81,7 @@ int grib_set_expression(grib_handle* h, const char* name, grib_expression* e)
 
 int grib_set_long_internal(grib_handle* h, const char* name, long val)
 {
-    grib_context* c  = h->context;
+    const grib_context* c  = h->context;
     int ret          = GRIB_SUCCESS;
     grib_accessor* a = NULL;
     size_t l         = 1;
@@ -213,8 +213,8 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
         grib_accessor* a = NULL;
         key_err          = first;
         while (key_err) {
-            char* key = key_err->name;
-            err       = &(key_err->err);
+            const char* key = key_err->name;
+            err = &(key_err->err);
 
             if (*err == GRIB_SUCCESS) {
                 key_err = key_err->next;
@@ -571,7 +571,7 @@ int grib_set_missing(grib_handle* h, const char* name)
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
             return GRIB_READ_ONLY;
 
-        if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        if (grib_accessor_can_be_missing(a, &ret)) {
             if (h->context->debug)
                 fprintf(stderr, "ECCODES DEBUG grib_set_missing %s\n", name);
 
@@ -641,6 +641,19 @@ int grib_accessor_is_missing(grib_accessor* a, int* err)
     }
 }
 
+int grib_accessor_can_be_missing(grib_accessor* a, int* err)
+{
+    if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) {
+        return 1;
+    }
+    if (STR_EQUAL(a->cclass->name, "codetable")) {
+        // Special case of Code Table keys
+        // The vast majority have a 'Missing' entry
+        return 1;
+    }
+    return 0;
+}
+
 int grib_is_missing(const grib_handle* h, const char* name, int* err)
 {
     grib_accessor* a = grib_find_accessor(h, name);
@@ -650,7 +663,7 @@ int grib_is_missing(const grib_handle* h, const char* name, int* err)
 /* Return true if the given key exists (is defined) in our grib message */
 int grib_is_defined(const grib_handle* h, const char* name)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
+    const grib_accessor* a = grib_find_accessor(h, name);
     return (a ? 1 : 0);
 }
 
@@ -938,16 +951,16 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
     return ret;
 }
 
-int grib_is_in_dump(grib_handle* h, const char* name)
+int grib_is_in_dump(const grib_handle* h, const char* name)
 {
-    grib_accessor* a = grib_find_accessor(h, name);
+    const grib_accessor* a = grib_find_accessor(h, name);
     if (a != NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
         return 1;
     else
         return 0;
 }
 
-int grib_attributes_count(grib_accessor* a, size_t* size)
+int grib_attributes_count(const grib_accessor* a, size_t* size)
 {
     if (a) {
         *size = 0;
@@ -1452,7 +1465,7 @@ int grib_get_length(const grib_handle* h, const char* name, size_t* length)
 
 int grib_get_offset(const grib_handle* ch, const char* key, size_t* val)
 {
-    grib_handle* h     = (grib_handle*)ch;
+    const grib_handle* h     = (grib_handle*)ch;
     grib_accessor* act = grib_find_accessor(h, key);
     if (act) {
         *val = (size_t)grib_byte_offset(act);
@@ -1815,9 +1828,9 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
     for (i = 0; i < count; i++) {
         if (args[i].error != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_set_values[%d] %s (type=%s) failed: %s",
+                             "grib_set_values[%d] %s (type=%s) failed: %s (message %d)",
                              i, args[i].name, grib_get_type_name(args[i].type),
-                             grib_get_error_message(args[i].error));
+                             grib_get_error_message(args[i].error), h->context->handle_file_count);
             err = err == GRIB_SUCCESS ? args[i].error : err;
         }
     }
@@ -1918,7 +1931,7 @@ int grib_values_check(grib_handle* h, grib_values* values, int count)
     return 0;
 }
 
-int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err)
+int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err)
 {
     double d1 = 0, d2 = 0;
     long l1 = 0, l2 = 0;

@@ -365,7 +365,7 @@ cat >$tempFilt <<EOF
  assert(edition == 0);
 EOF
 set +e
-${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2> $tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
