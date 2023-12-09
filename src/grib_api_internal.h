@@ -862,6 +862,7 @@ struct grib_handle
     /* grib_trie* bufr_elements_table; */
 };
 
+/* For GRIB2 multi-field messages */
 struct grib_multi_handle
 {
     grib_context* context; /** < context attached to this handle  */
@@ -938,7 +939,6 @@ struct grib_accessor_class
 };
 
 typedef struct grib_multi_support grib_multi_support;
-
 struct grib_multi_support
 {
     FILE* file;
@@ -955,7 +955,6 @@ struct grib_multi_support
 
 /* Hash_array */
 typedef struct grib_hash_array_value grib_hash_array_value;
-
 struct grib_hash_array_value
 {
     grib_hash_array_value* next;
@@ -968,7 +967,6 @@ struct grib_hash_array_value
 
 /* Concepts */
 typedef struct grib_concept_condition grib_concept_condition;
-
 struct grib_concept_condition
 {
     grib_concept_condition* next;
@@ -985,7 +983,6 @@ struct grib_concept_value_name
 };
 
 typedef struct grib_concept_value grib_concept_value;
-
 struct grib_concept_value
 {
     grib_concept_value* next;
@@ -1415,7 +1412,6 @@ struct cvs_MD5Context
 /* --- */
 
 typedef struct grib_rule_entry grib_rule_entry;
-
 struct grib_rule_entry
 {
     grib_rule_entry* next;
@@ -1424,7 +1420,6 @@ struct grib_rule_entry
 };
 
 typedef struct grib_rule grib_rule;
-
 struct grib_rule
 {
     grib_rule* next;
@@ -1433,7 +1428,6 @@ struct grib_rule
 };
 
 typedef struct grib_case grib_case;
-
 struct grib_case
 {
     grib_arguments* values;
@@ -1475,8 +1469,7 @@ struct grib_smart_table
     grib_smart_table_entry* entries;
 };
 
-
-#if ECCODES_TIMER
+#if defined(ECCODES_TIMER)
 typedef struct grib_timer
 {
     struct timeval start_;
@@ -1494,11 +1487,6 @@ typedef struct grib_timer
     grib_context* context;
 
     struct grib_timer* next_;
-} grib_timer;
-#else
-typedef struct grib_timer
-{
-    char nothing;
 } grib_timer;
 #endif
 
@@ -1530,4 +1518,3 @@ typedef struct j2k_encode_helper
 #endif
 
 #endif
-
