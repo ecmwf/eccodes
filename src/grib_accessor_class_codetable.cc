@@ -737,6 +737,10 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         return grib_pack_long(a, &lValue, &l);
     }
 
+    if (STR_EQUAL_NOCASE(buffer, "missing")) {
+        return pack_missing(a);
+    }
+
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
     grib_codetable* table;
     long i;

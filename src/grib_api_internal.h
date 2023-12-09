@@ -201,6 +201,8 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
 
 /* Return true if two strings are equal */
 #define STR_EQUAL(a, b) (strcmp((a), (b)) == 0)
+/* Return true if two strings are equal, ignoring case */
+#define STR_EQUAL_NOCASE(a, b) (strcmp_nocase((a), (b)) == 0)
 
 #include "grib_api.h"
 
