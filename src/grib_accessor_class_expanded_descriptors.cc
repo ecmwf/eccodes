@@ -343,7 +343,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                     *err = GRIB_DECODING_ERROR;
                     return;
                 }
-                grib_bufr_descriptor_set_code(0, (size - 1) * 1000 + 100000, uidx);
+                grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }
             else {
@@ -602,7 +602,7 @@ static int expand(grib_accessor* a)
     bufr_descriptors_array* unexpanded_copy = NULL;
     bufr_descriptors_array* expanded        = NULL;
     grib_context* c                         = a->context;
-    grib_handle* h                          = grib_handle_of_accessor(a);
+    const grib_handle* h                    = grib_handle_of_accessor(a);
     int operator206yyy_width                = 0; /* width specified by operator 206YYY */
 
     if (!self->do_expand) {
@@ -813,7 +813,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     char buf[25] = {0,};
     long llen = 0;
     size_t i = 0, size = 0;
-    grib_context* c = a->context;
+    const grib_context* c = a->context;
 
     err = grib_value_count(a, &llen);
     if (err) return err;
