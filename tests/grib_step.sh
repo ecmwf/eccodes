@@ -221,6 +221,26 @@ set -e
 grep -q "Unable to set stepRange" $templog
 
 
+# GRIB1: sub-hourly
+# -----------------
+${tools_dir}/grib_set -s unitOfTimeRange=0,P1=5 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$templog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unable to represent the step in h" $templog
+
+# GRIB1: Unknown timeRangeIndicator
+${tools_dir}/grib_set -s timeRangeIndicator=138 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$templog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unknown stepType" $templog
+
+
 # Clean up
 rm -f $temp $templog
 rm -f $grib2File.p8tmp ${grib2File}.tmp x.grib
