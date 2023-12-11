@@ -3,8 +3,8 @@
 	constituentType = 2 ;
 	localTablesVersion = 1 ;
 	}
-#Volcanic sulfur dioxide
-'Volcanic sulfur dioxide' = {
+#Volcanic sulphur dioxide
+'Volcanic sulphur dioxide' = {
         constituentType = 65507 ;
         localTablesVersion = 1 ;
         }
