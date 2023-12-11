@@ -732,7 +732,7 @@ int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
 /*! \defgroup get_set Accessing header and data values   */
 /*! @{ */
 /**
- *  Get the number offset of a key, in a message if several keys of the same name
+ *  Get the byte offset of a key. If several keys of the same name
  *  are present, the offset of the last one is returned
  *
  * @param h           : the handle to get the offset from
@@ -745,7 +745,7 @@ int grib_get_offset(const grib_handle* h, const char* key, size_t* offset);
 /**
  *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param size        : the address of a size_t where the size will be set
  * @return            0 if OK, integer value on error
@@ -755,7 +755,7 @@ int grib_get_size(const grib_handle* h, const char* key, size_t* size);
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length      : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error

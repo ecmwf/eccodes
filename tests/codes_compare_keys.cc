@@ -43,6 +43,12 @@ int main(int argc, char* argv[])
             }
         }
 
+        // Some specific keys
+        codes_compare_key(h1, h2, "md5Headers", 0); // md5
+        codes_compare_key(h1, h2, "computeStatistics", 0); // statistics
+        codes_compare_key(h1, h2, "paramId", 0);    // concept
+        codes_compare_key(h1, h2, "identifier", 0); // ascii
+
         grib_keys_iterator_delete(kiter);
         grib_handle_delete(h1);
         grib_handle_delete(h2);

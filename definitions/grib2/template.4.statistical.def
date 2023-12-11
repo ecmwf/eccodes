@@ -18,15 +18,16 @@ unsigned[1] minuteOfEndOfOverallTimeInterval =0 : edition_specific;
 # Second of end of overall time interval
 unsigned[1] secondOfEndOfOverallTimeInterval =0 : edition_specific;
 
-# n - number of time range specifications describing the time intervals used to calculate the statistically-processed field
+# Number of time range specifications describing the time intervals used to calculate the statistically-processed field
 unsigned[1]  numberOfTimeRange = 1 : edition_specific;
 alias n =  numberOfTimeRange;
+alias numberOfTimeRanges = numberOfTimeRange;
 
 # Total number of data values missing in statistical process
 unsigned[4] numberOfMissingInStatisticalProcess = 0  : edition_specific;
 alias totalNumberOfDataValuesMissingInStatisticalProcess=numberOfMissingInStatisticalProcess;
 
-statisticalProcessesList list(numberOfTimeRange)
+statisticalProcessesList list(numberOfTimeRanges)
 {
  # Statistical process used to calculate the processed field from the field at each time increment during the time range
  codetable[1] typeOfStatisticalProcessing ('4.10.table',masterDir,localDir) : edition_specific;
@@ -50,7 +51,7 @@ statisticalProcessesList list(numberOfTimeRange)
 }
 
 # See GRIB-488. We only support maximum of 2 time ranges
-if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
+if (numberOfTimeRanges == 1 || numberOfTimeRanges == 2) {
   concept stepTypeInternal {
     "instant" = {typeOfStatisticalProcessing=255;}
     "avg"     = {typeOfStatisticalProcessing=0;typeOfTimeIncrement=255;}
@@ -95,7 +96,7 @@ if (numberOfTimeRange == 1 || numberOfTimeRange == 2) {
     indicatorOfUnitForTimeRange,
     lengthOfTimeRange,
     typeOfTimeIncrement,
-    numberOfTimeRange
+    numberOfTimeRanges
   ) : dump,no_copy;
 
   meta stepRange g2step_range(startStep,endStep): dump;

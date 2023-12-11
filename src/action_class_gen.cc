@@ -19,7 +19,7 @@
    START_CLASS_DEF
    CLASS      = action
    IMPLEMENTS = create_accessor
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy
    IMPLEMENTS = notify_change
    MEMBERS    = long            len
@@ -40,7 +40,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 static int notify_change(grib_action* a, grib_accessor* observer,grib_accessor* observed);
@@ -64,7 +63,7 @@ static grib_action_class _grib_action_class_gen = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     &create_accessor,             /* create_accessor*/
 
@@ -129,11 +128,6 @@ static void dump(grib_action* act, FILE* f, int lvl)
 
 // For xref implementation see
 //   src/deprecated/action_class_gen.cc
-
-static void xref(grib_action* act, FILE* f, const char* path)
-{
-    Assert(!"xref is disabled");
-}
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* loader)
 {

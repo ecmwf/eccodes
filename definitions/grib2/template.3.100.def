@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.100, Triangular grid based on an icosahedron (see Attachment I.2-GRIB-Att.)
-constant isGridded = one;
+constant isGridded = true;
 
 # n2 - exponent of 2 for the number of intervals on main triangle sides
 unsigned[1] n2  : dump ;

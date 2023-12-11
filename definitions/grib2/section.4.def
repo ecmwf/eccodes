@@ -20,7 +20,7 @@ alias numberOfVerticalGridDescriptors=NV ;
 transient neitherPresent = 0;
 
 if (centre==7 || centre==46) {
-   alias disableGrib1LocalSection=one;
+   alias disableGrib1LocalSection=true;
 }
 
 concept datasetForLocal(unknown) {

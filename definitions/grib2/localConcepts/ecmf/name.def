@@ -548,12 +548,6 @@
 	 parameterCategory = 128 ;
 	 parameterNumber = 123 ;
 	}
-#Surface emissivity
-'Surface emissivity' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 124 ;
-	}
 #Vertically integrated total energy
 'Vertically integrated total energy' = {
 	 discipline = 192 ;
@@ -623,18 +617,6 @@
 	 parameterNumber = 198 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
-	}
-#Surface net radiation
-'Surface net radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 149 ;
-	}
-#Top net radiation
-'Top net radiation' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 150 ;
 	}
 #Logarithm of surface pressure
 'Logarithm of surface pressure' = {
@@ -18870,12 +18852,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 147 ;
-	}
-#Mean surface net radiation flux
-'Mean surface net radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 149 ;
 	}
 #Mean short-wave heating rate
 'Mean short-wave heating rate' = {

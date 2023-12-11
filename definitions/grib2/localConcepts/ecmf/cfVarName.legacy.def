@@ -1315,3 +1315,39 @@
  parameterCategory = 228 ;
  parameterNumber = 4 ;
 }
+#Mean surface net radiation flux
+'msnrf' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 149 ;
+}
+#Surface net radiation
+'snr' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 149 ;
+}
+#Top net radiation
+'tnr' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 150 ;
+}
+#Surface emissivity
+'emis' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 124 ;
+}
+#Vertical integral of water vapour
+'p55.162' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 55 ;
+}
+#Snow depth
+'sdsien' = {
+ discipline = 192 ;
+ parameterCategory = 190 ;
+ parameterNumber = 141 ;
+}

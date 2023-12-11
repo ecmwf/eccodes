@@ -31,7 +31,8 @@ grib_option grib_options[] = {
     { "p:", "key1,key2,...",
       "\n\t\tDeclaration of keys to dump. Only those keys are dumped (not the whole message).\n", 0, 1, 0 },
     { "X:", 0, 0, 0, 1, 0 },
-    { "x", 0, 0, 0, 1, 0 }
+    { "x", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description = "Dump the content of a GRIB file in different formats.";

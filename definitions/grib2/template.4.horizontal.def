@@ -54,10 +54,10 @@ alias vertical.level=level;
 alias vertical.bottomLevel=bottomLevel;
 alias vertical.topLevel=topLevel;
 
-alias extraDim=zero;
+alias extraDim=false;
 if (defined(extraDimensionPresent)) {
     if (extraDimensionPresent) {
-        alias extraDim=one;
+        alias extraDim=true;
     }
 }
 if (extraDim) {
@@ -75,7 +75,7 @@ if (extraDim) {
         }
     }
     # ECC-1333: levtype should be read-only in GRIB2
-    concept mars.levtype(unknown,"marsLevtypeConcept.def",conceptsDir2,conceptsDir1):no_copy;
+    concept mars.levtype(unknown,"marsLevtypeConcept.def",conceptsDir2,conceptsDir1):no_copy, read_only;
     # GRIB-372: levelist alias does not pertain to surface parameters
     if (levtype is "sfc" || levtype is "o2d") {
         unalias mars.levelist;

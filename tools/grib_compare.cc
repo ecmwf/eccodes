@@ -34,7 +34,8 @@ grib_option grib_options[] = {
     { "I", 0, 0, 1, 0, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
