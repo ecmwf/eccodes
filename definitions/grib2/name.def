@@ -7707,6 +7707,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Mass mixing ratio
 'Mass mixing ratio' = {
@@ -8035,6 +8037,32 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 59 ;
+	}
+#Mass mixing ratio from volcanoes
+'Mass mixing ratio from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Total column vertically-integrated mass density from volcanoes
+'Total column vertically-integrated mass density from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Dry deposition velocity from volcanoes
+'Dry deposition velocity from volcanoes' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Virtual potential temperature
 'Virtual potential temperature' = {
