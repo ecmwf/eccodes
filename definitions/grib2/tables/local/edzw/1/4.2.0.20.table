@@ -17,3 +17,6 @@
 207 207 Wet deposition of number concentration if rain reaches the surface (m-2 s-1)
 208 208 Sedimentation of number concentration (m-2 s-1)
 209 209 Aerosol backscatter (not attenuated) for given wavelength (m-1 sr-1)
+210 210 Volumetric content of constituent in snow (m3 m-3)
+211 211 Emission tuning factor for pollen (Numeric)
+220 220 Mass median diameter (m)

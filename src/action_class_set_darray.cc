@@ -8,16 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile                                                          *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy;execute
    MEMBERS    = grib_darray *darray
    MEMBERS    = char *name
@@ -37,7 +34,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -60,7 +56,7 @@ static grib_action_class _grib_action_class_set_darray = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -125,8 +121,4 @@ static void destroy(grib_context* context, grib_action* act)
     grib_darray_delete(context, a->darray);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

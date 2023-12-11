@@ -26,7 +26,7 @@ REDIRECT=/dev/null
 # Write the values into a file and compare with reference
 ${examples_dir}/eccodes_f_bufr_read_header $f 2> $REDIRECT > $fTmp
 
-# Compare output to the reference by ignoring the whitespaces 
+# Compare output to the reference by ignoring the whitespaces
 diff -w $fRef $fTmp >$REDIRECT 2> $REDIRECT
 
 #Clean up

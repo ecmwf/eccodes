@@ -16,13 +16,26 @@ temp1=temp1.$label.grib2
 temp2=temp2.$label.grib2
 temp=temp.$label.grib2
 tempFilt=temp.$label.filt
+tempText=temp.$label.txt
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# Go thru all templates listed in the most recent Code Table 4.0
+# and ensure each has a template in section 4
+# -----------------------------------------------
+latestOfficial=`${tools_dir}/grib_get -p tablesVersionLatestOfficial $sample2`
+
+latest_codetable_file=$ECCODES_DEFINITION_PATH/grib2/tables/$latestOfficial/4.0.table
+awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file | while read pdtn; do
+    if [ ! -f "$ECCODES_DEFINITION_PATH/grib2/template.4.$pdtn.def" ]; then
+        echo "GRIB2 template for product definition $pdtn does not exist!"
+        exit 1
+    fi
+done
 
 
 # Template 4.86
 # -------------
-# TODO: Add tablesVersion later...
-$tools_dir/grib_set -s productDefinitionTemplateNumber=86,totalNumberOfQuantiles=2 $sample2 $temp
+$tools_dir/grib_set -s tablesVersion=31,productDefinitionTemplateNumber=86,totalNumberOfQuantiles=2 $sample2 $temp
 grib_check_key_equals $temp totalNumberOfQuantiles,quantileValue '2 0'
 
 
@@ -119,4 +132,48 @@ $tools_dir/grib_set -s tablesVersion=26,productDefinitionTemplateNumber=85 $samp
 $tools_dir/grib_compare -b productDefinitionTemplateNumber $temp1 $temp2
 
 
-rm -f $temp $temp1 $temp2 $tempFilt
+# ECC-1564: Support local product definition templates for different centres
+$tools_dir/grib_set -s productDefinitionTemplateNumber=40033 $sample2 $temp
+$tools_dir/grib_set -s productDefinitionTemplateNumber=40034 $sample2 $temp
+
+# ECC-1563: new local section 4 templates for extra large ensembles
+$tools_dir/grib_set -s localTablesVersion=1,productDefinitionTemplateNumber=65533,perturbationNumber=2e8 $sample2 $temp
+grib_check_key_equals $temp perturbationNumber '200000000'
+$tools_dir/grib_dump -O -p section_4 $temp > $tempText
+grep -q "Individual member for large ensemble forecast.*point in time" $tempText
+
+$tools_dir/grib_set -s localTablesVersion=1,productDefinitionTemplateNumber=65534,perturbationNumber=2e8 $sample2 $temp
+grib_check_key_equals $temp perturbationNumber,typeOfStatisticalProcessing '200000000 255'
+$tools_dir/grib_dump -O -p section_4 $temp > $tempText
+grep -q "Individual member for large ensemble forecast.*continuous or non-continuous interval" $tempText
+
+# stepType & PDTNs
+# --------------------
+test_PDTN_conversions()
+{
+    # Arguments
+    # $1 = product def template for instantaneous
+    # $2 = product def template for interval-based
+    pdtn_instant=$1
+    pdtn_interval=$2
+    $tools_dir/grib_set -s productDefinitionTemplateNumber=$pdtn_instant,stepType=accum $sample2 $temp
+    grib_check_key_equals $temp productDefinitionTemplateNumber $pdtn_interval
+    $tools_dir/grib_set -s stepType=instant $temp $temp1
+    grib_check_key_equals $temp1 productDefinitionTemplateNumber $pdtn_instant
+}
+
+test_PDTN_conversions 2  12
+test_PDTN_conversions 3  13
+test_PDTN_conversions 4  14
+test_PDTN_conversions 5  9
+test_PDTN_conversions 6  10
+test_PDTN_conversions 40 42
+test_PDTN_conversions 41 43
+# test_PDTN_conversions 45 85 # TODO
+test_PDTN_conversions 57 67
+test_PDTN_conversions 58 68
+test_PDTN_conversions 71 73
+
+
+# Clean up
+rm -f $temp $temp1 $temp2 $tempFilt $tempText

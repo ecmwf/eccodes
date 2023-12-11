@@ -21,8 +21,8 @@
 #endif
 
 #ifdef ENABLE_FLOATING_POINT_EXCEPTIONS
-#include <fenv.h>
-int feenableexcept(int excepts);
+ #include <fenv.h>
+ int feenableexcept(int excepts);
 #endif
 
 GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
@@ -179,10 +179,11 @@ int grib_tool(int argc, char** argv)
         dump_file = stdout;
     }
 
-    /* ECC-926: Currently only GRIB indexing works. Disable the through_index if BUFR, GTS etc */
-    if (global_options.mode == MODE_GRIB &&
+    /* ECC-926: Currently only GRIB and BUFR indexing work. Disable the through_index if GTS etc */
+    if ((global_options.mode == MODE_GRIB || global_options.mode == MODE_BUFR) &&
         is_index_file(global_options.infile->name) &&
-        (global_options.infile_extra && is_index_file(global_options.infile_extra->name))) {
+        (global_options.infile_extra && is_index_file(global_options.infile_extra->name)))
+    {
         global_options.through_index = 1;
         return grib_tool_index(&global_options);
     }
@@ -296,7 +297,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
         grib_handle_delete(h);
     }
 
-    if (set->size==0) fprintf(stderr, "No messages found in fieldset\n");
+    if (set->size==0) fprintf(stderr, "%s: No messages found in fieldset\n", tool_name);
     grib_tool_finalise_action(options);
 
     grib_fieldset_delete(set);
@@ -343,8 +344,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
-                /*fprintf(stderr, "Invalid file offset: %ld\n", options->infile_offset);*/
-                perror("Invalid file offset");
+                fprintf(stderr, "%s: Invalid file offset: %ld\n", tool_name, (long)options->infile_offset);
                 exit(1);
             }
         }
@@ -418,7 +418,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
             fclose(infile->file);
 
         if (infile->handle_count == 0) {
-            fprintf(stderr, "no messages found in %s\n", infile->name);
+            fprintf(stderr, "%s: No messages found in %s\n", tool_name, infile->name);
             if (options->fail)
                 exit(1);
         }
@@ -511,17 +511,17 @@ static int grib_tool_index(grib_runtime_options* options)
             k2 = k2->next;
         }
         if (!found) {
-            printf("Indexes contained in the input files have different keys\n");
-            printf("keys in file %s:\n", f1);
+            fprintf(stderr, "Indexes contained in the input files have different keys!\n");
+            fprintf(stderr, "keys in file %s:\n", f1);
             k1 = options->index1->keys;
             while (k1) {
-                printf("\t%s\n", k1->name);
+                fprintf(stderr, "\t%s\n", k1->name);
                 k1 = k1->next;
             }
-            printf("keys in file %s:\n", f2);
+            fprintf(stderr, "keys in file %s:\n", f2);
             k2 = options->index2->keys;
             while (k2) {
-                printf("\t%s\n", k2->name);
+                fprintf(stderr, "\t%s\n", k2->name);
                 k2 = k2->next;
             }
             exit(1);
@@ -543,17 +543,17 @@ static int grib_tool_index(grib_runtime_options* options)
             k1 = k1->next;
         }
         if (!found) {
-            printf("Indexes contained in the input files have different keys\n");
-            printf("keys in file %s:\n", f2);
+            fprintf(stderr,"Indexes contained in the input files have different keys!\n");
+            fprintf(stderr, "keys in file %s:\n", f2);
             k2 = options->index2->keys;
             while (k2) {
-                printf("\t%s\n", k2->name);
+                fprintf(stderr, "\t%s\n", k2->name);
                 k2 = k2->next;
             }
-            printf("keys in file %s:\n", f1);
+            fprintf(stderr, "keys in file %s:\n", f1);
             k1 = options->index1->keys;
             while (k1) {
-                printf("\t%s\n", k1->name);
+                fprintf(stderr, "\t%s\n", k1->name);
                 k1 = k1->next;
             }
 
@@ -671,7 +671,7 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
     int width;
     int written_to_dump = 0; /* boolean */
     if (options->json_output && !options->latlon)
-        return; /* For JSON output we do not print a single header for all msgs */
+        return; // For JSON output we do not print a single header for all msgs
     if (options->handle_count != 1)
         return;
 
@@ -712,9 +712,9 @@ static void grib_print_header(grib_runtime_options* options, grib_handle* h)
 
 static int cmpstringp(const void* p1, const void* p2)
 {
-    /* The actual arguments to this function are "pointers to
-       pointers to char", but strcmp(3) arguments are "pointers
-       to char", hence the following cast plus dereference */
+    // The actual arguments to this function are "pointers to
+    // pointers to char", but strcmp(3) arguments are "pointers
+    // to char", hence the following cast plus dereference
     return strcmp(*(char* const*)p1, *(char* const*)p2);
 }
 
@@ -736,7 +736,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
     if (ns) {
         kiter = grib_keys_iterator_new(h, 0, ns);
         if (!kiter) {
-            fprintf(stderr, "ERROR: Unable to create keys iterator\n");
+            fprintf(stderr, "%s: Unable to create keys iterator\n", tool_name);
             exit(1);
         }
 
@@ -744,8 +744,8 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
             const char* name = grib_keys_iterator_get_name(kiter);
 
             if (options->print_keys_count >= MAX_KEYS) {
-                fprintf(stderr, "ERROR: keys list too long (more than %d keys)\n",
-                        options->print_keys_count);
+                fprintf(stderr, "%s: Keys list too long (more than %d keys)\n",
+                        tool_name, options->print_keys_count);
                 exit(1);
             }
             if (options->print_keys[options->print_keys_count].name) {
@@ -765,9 +765,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
         grib_keys_iterator_delete(kiter);
         if (options->print_keys_count == 0 && options->latlon == 0) {
             int j = 0, k = 0, ns_count = 0;
-            const char* all_namespace_vals[1024] = {
-                NULL,
-            }; /* sorted array containing all namespaces */
+            const char* all_namespace_vals[1024] = {NULL,}; // sorted array containing all namespaces
             printf("ERROR: namespace \"%s\" does not contain any key.\n", ns);
             printf("Here are the available namespaces in this message:\n");
             for (i = 0; i < ACCESSORS_ARRAY_SIZE; i++) {
@@ -787,7 +785,7 @@ static void grib_tools_set_print_keys(grib_runtime_options* options, grib_handle
                 if (all_namespace_vals[i]) {
                     int print_it = 1;
                     if (i > 0 && strcmp(all_namespace_vals[i], all_namespace_vals[i - 1]) == 0) {
-                        print_it = 0; /* skip duplicate entries */
+                        print_it = 0; // skip duplicate entries
                     }
                     if (print_it)
                         printf("\t%s\n", all_namespace_vals[i]);
@@ -1050,7 +1048,9 @@ static void get_value_for_key(grib_handle* h, const char* key_name, int key_type
         if (ret == GRIB_NOT_FOUND) {
             snprintf(value_str, 32, "not_found");
         } else {
-            fprintf(dump_file, "ERROR: Failed to get value for key %s\n", key_name);
+            fprintf(dump_file, "ERROR: Failed to get value for key '%s' (%s)\n", key_name, grib_get_error_message(ret));
+            if (ret == GRIB_ARRAY_TOO_SMALL)
+                fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
             exit(1);
         }
     }
@@ -1079,7 +1079,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int strlenvalue = 0;
     double dvalue   = 0;
     long lvalue     = 0;
-    char value[MAX_STRING_LEN];
+    char value[MAX_STRING_LEN] = {0,};
     const char* notfound = "not_found";
     int written_to_dump  = 0; /* boolean */
     grib_accessor* acc   = NULL;
@@ -1207,12 +1207,18 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         }
 
         if (ret != GRIB_SUCCESS) {
-            if (options->fail)
-                GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
-            if (ret == GRIB_NOT_FOUND)
+            if (options->fail) { // ECC-1551
+                //GRIB_CHECK_NOLINE(ret, options->print_keys[i].name);
+                grib_context_log(h->context, GRIB_LOG_ERROR, "%s (%s)",
+                                options->print_keys[i].name, grib_get_error_message(ret));
+                exit(ret);
+            }
+            if (ret == GRIB_NOT_FOUND) {
                 strcpy(value, notfound);
-            else {
-                fprintf(dump_file, "%s %s\n", grib_get_error_message(ret), options->print_keys[i].name);
+            } else {
+                fprintf(dump_file, "%s (%s)\n", options->print_keys[i].name, grib_get_error_message(ret));
+                if (ret == GRIB_ARRAY_TOO_SMALL)
+                    fprintf(dump_file, "\tHint: Tool %s cannot print keys of array type. Use grib_filter.\n", tool_name);
                 exit(ret);
             }
         }
@@ -1268,8 +1274,8 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
             the_index = options->index;
             if (the_index >= size) {
                 fprintf(dump_file, "\n");
-                fprintf(stderr, "ERROR: Invalid index value %d (should be between 0 and %d)\n",
-                        options->index, (int)(size - 1));
+                fprintf(stderr, "%s: Invalid index value %d (should be between 0 and %d)\n",
+                        tool_name, options->index, (int)(size - 1));
                 exit(1);
             }
             v = values[options->index];
@@ -1279,7 +1285,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
         width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
-        fprintf(dump_file, "%-*s", (int)width, value);
+        fprintf(dump_file, "%s%-*s", (written_to_dump?" ":""),  (int)width, value);
         written_to_dump = 1;
     }
     if (written_to_dump) {

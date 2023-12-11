@@ -21,7 +21,6 @@ static void usage(const char* prog)
     exit(1);
 }
 
-#ifdef ECCODES_TIMER
 int main(int argc, char** argv)
 {
     grib_timer* tes = grib_get_timer(0, "decoding", 0, 0);
@@ -32,7 +31,7 @@ int main(int argc, char** argv)
     double* values            = NULL;
     double duration_actual    = 0;
     const double duration_max = 3.6; /* seconds */
-    const int num_repetitions = 1000;
+    const int num_repetitions = 100;
 
     if (argc < 2) usage(argv[0]);
 
@@ -73,9 +72,9 @@ int main(int argc, char** argv)
     fclose(in);
     return 0;
 }
-#else
-int main(int argc, char** argv)
-{
-    return 0;
-}
-#endif
+
+// int main(int argc, char** argv)
+// {
+//     return 0;
+// }
+// #endif

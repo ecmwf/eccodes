@@ -9,8 +9,6 @@
 #
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib2to3_test"
 temp=temp.$label.grib3
 sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl

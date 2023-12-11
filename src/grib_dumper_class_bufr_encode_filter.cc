@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -451,9 +451,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
     else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if (!grib_is_missing_long(a, value)) {
-            fprintf(self->dumper.out, "set %s->%s = ", prefix, a->name);
-            fprintf(self->dumper.out, "%ld ;\n", value);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            if (!grib_is_missing_long(a, value)) {
+                fprintf(self->dumper.out, "set %s->%s = ", prefix, a->name);
+                fprintf(self->dumper.out, "%ld ;\n", value);
+            }
         }
     }
 

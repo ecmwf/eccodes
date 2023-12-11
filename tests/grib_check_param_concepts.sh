@@ -23,6 +23,9 @@ $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/gri
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/paramId.def
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge/paramId.def
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s/paramId.def
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6/paramId.def
+$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine/paramId.def
+
 
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/shortName.def
@@ -30,6 +33,8 @@ $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/g
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge/shortName.def
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s/shortName.def
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6/shortName.def
+$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine/shortName.def
 
 # Check the group: name.def paramId.def shortName.def units.def cfVarName.def
 # ----------------------------------------------------------------------------
@@ -79,6 +84,25 @@ done
 cd $test_dir
 
 # -------------------------------
+echo "WMO legacy parameters..."
+# -------------------------------
+ECMF_DIR=$ECCODES_DEFINITION_PATH/grib2
+
+tempDir=temp.${label}.dir
+rm -fr $tempDir
+mkdir -p $tempDir
+cd $tempDir
+#cp $ECMF_DIR/cfName.legacy.def    cfName.def
+#cp $ECMF_DIR/cfVarName.legacy.def cfVarName.def
+cp $ECMF_DIR/name.legacy.def      name.def
+cp $ECMF_DIR/paramId.legacy.def   paramId.def
+cp $ECMF_DIR/shortName.legacy.def shortName.def
+cp $ECMF_DIR/units.legacy.def     units.def
+$CHECK_DEFS
+cd $test_dir
+rm -fr $tempDir
+
+# -------------------------------
 echo "ECMWF legacy parameters..."
 # -------------------------------
 ECMF_DIR=$ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
@@ -94,6 +118,8 @@ cp $ECMF_DIR/paramId.legacy.def   paramId.def
 cp $ECMF_DIR/shortName.legacy.def shortName.def
 cp $ECMF_DIR/units.legacy.def     units.def
 $CHECK_DEFS
+cd $test_dir
+rm -fr $tempDir
 
 # -------------------------------
 echo "Check duplicates"

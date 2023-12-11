@@ -199,11 +199,29 @@ cat >$tempFilt <<EOF
 switch (edition) {
   case 1: print "1";
   case 2: print "2";
-  default: print "what is this?";assert(0);
+  default: print "[file]: what is this?"; assert(0);
 }
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
+cat >$tempFilt <<EOF
+switch (packingType) {
+  case "grid_simple": print "simple";
+  case "grid_ccsds":  print "ccsds";
+  case "spectral_complex": print "spectral";
+  default: print "[file]: what is this?"; assert(0);
+}
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2 ${data_dir}/ccsds.grib2 $data_dir/spherical_model_level.grib2
+
+cat >$tempFilt <<EOF
+switch (length(packingType)) {
+  # Expression 'length' evaluated as a string. Length of grid_simple is 11
+  case "11": print "ok";
+  default: print "[file]: bad length?"; assert(0);
+}
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2
 
 echo "Test MISSING"
 # -----------------
@@ -278,6 +296,114 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "ECCODES ERROR.*Number is too large" $tempOut
+
+
+echo "Padded count for filenames"
+# -----------------------------------------
+input=${data_dir}/tigge_af_ecmwf.grib2
+tempDir=temp.${label}.dir
+rm -fr $tempDir
+mkdir -p $tempDir
+cd $tempDir
+cat >$tempFilt <<EOF
+  meta count_padded sprintf("%.2d", count);
+  write "out__[count_padded].grib";
+EOF
+${tools_dir}/grib_filter $tempFilt $input
+[ -f out__01.grib ]
+[ -f out__02.grib ]
+[ -f out__39.grib ]
+[ -f out__40.grib ]
+cd ..
+rm -rf $tempDir
+
+# Use of 'defined' functor
+cat >$tempFilt <<EOF
+  if (defined(Ni)) { print "Ni defined: true"; }
+  else             { print "Ni defined: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "Ni defined: true" $tempOut
+
+
+cat >$tempFilt <<EOF
+  if (defined(N)) { print "N defined: true"; }
+  else            { print "N defined: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "N defined: false" $tempOut
+
+cat >$tempFilt <<EOF
+  if (defined()) { print "No args: true"; }
+  else           { print "No args: false"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "No args: false" $tempOut
+
+
+# Use of dummy expression (=true)
+cat >$tempFilt <<EOF
+  if (~) { print "case 1"; }
+  if (!~) { assert(0); }
+  else    { print "case 2"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep -q "case 1" $tempOut
+grep -q "case 2" $tempOut
+
+# Rules
+cat >$tempFilt <<EOF
+ x = 8;
+ y = (edition == 1);
+ z = (edition == 2);
+ skip;
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+
+
+cat >$tempFilt <<EOF
+ assert(edition == 0);
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2> $tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+grep "Assertion failure" $tempOut
+
+# Use of the "length" expression
+cat >$tempFilt <<EOF
+ assert( length(identifier) == 4 );
+ if (length(edition) == referenceValue) { print "matched"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl #> $tempOut
+
+# Decode an integer key as string
+cat >$tempFilt <<EOF
+ print "[scaleFactorOfSecondFixedSurface:s]";
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+grep "MISSING" $tempOut
+
+# Test string_compare
+cat >$tempFilt <<EOF
+ if (rubbish is "ppp") { print "yes"; } else { print "rubbish must fail"; }
+ if ("ppp" is garbage) { print "yes"; } else { print "garbage must fail"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
+cat $tempOut
+grep "rubbish must fail" $tempOut
+grep "garbage must fail" $tempOut
+grep "unable to get rubbish as string" $tempOut
+grep "unable to get garbage as string" $tempOut
+
+
+# Use of "abs"
+cat >$tempFilt <<EOF
+ meta abs_twice_bsf evaluate( abs(binaryScaleFactor * 2) );
+ assert(abs_twice_bsf == 20);
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
 # Clean up

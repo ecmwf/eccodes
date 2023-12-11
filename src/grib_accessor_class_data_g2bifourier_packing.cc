@@ -12,9 +12,11 @@
  *   philippe.marguinaud@meteo.fr
  *******************************/
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #include "grib_optimize_decimal_factor.h"
-#include <math.h>
+#include <cmath>
+#include <algorithm>
 
 /*
    This is used by make_class.pl
@@ -57,7 +59,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_g2bifourier_packing
 {
@@ -103,30 +104,32 @@ static grib_accessor_class _grib_accessor_class_data_g2bifourier_packing = {
     "data_g2bifourier_packing",                      /* name */
     sizeof(grib_accessor_data_g2bifourier_packing),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    0,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    0,                /* pack_string */
+    0,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -135,8 +138,10 @@ static grib_accessor_class _grib_accessor_class_data_g2bifourier_packing = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -144,41 +149,6 @@ static grib_accessor_class _grib_accessor_class_data_g2bifourier_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_g2bifourier_packing = &_grib_accessor_class_data_g2bifourier_packing;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -217,9 +187,6 @@ static int value_count(grib_accessor* a, long* numberOfValues)
     return grib_get_long_internal(gh, self->number_of_values, numberOfValues);
 }
 
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-
 static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
 {
     const double zeps   = 1.E-10;
@@ -232,7 +199,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (j = 1; j < nj; j++) {
-        zi        = (double)ni / (double)nj * sqrt(MAX(zauxil, (double)(nj * nj - j * j)));
+        zi        = (double)ni / (double)nj * sqrt(std::max(zauxil, (double)(nj * nj - j * j)));
         itrunc[j] = (int)(zi + zeps);
     }
 
@@ -249,7 +216,7 @@ static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
      */
 
     for (i = 1; i < ni; i++) {
-        zj        = (double)nj / (double)ni * sqrt(MAX(zauxil, (double)(ni * ni - i * i)));
+        zj        = (double)nj / (double)ni * sqrt(std::max(zauxil, (double)(ni * ni - i * i)));
         jtrunc[i] = (int)(zj + zeps);
     }
 
@@ -444,10 +411,10 @@ static double laplam(bif_trunc_t* bt, const double val[])
         else {
             int m, ll = itab1[i * i + j * j];
             for (m = 0; m < 4; m++, isp++) {
-                DebugAssertAccess(znorm, (long)ll, (long)lmax);
-                DebugAssertAccess(val, (long)isp, (long)bt->n_vals_bif);
+                DEBUG_ASSERT_ACCESS(znorm, (long)ll, (long)lmax);
+                DEBUG_ASSERT_ACCESS(val, (long)isp, (long)bt->n_vals_bif);
                 if (ll < lmax && isp < bt->n_vals_bif) {
-                    znorm[ll] = MAX(znorm[ll], fabs(val[isp]));
+                    znorm[ll] = std::max(znorm[ll], fabs(val[isp]));
                 }
             }
         }
@@ -496,7 +463,7 @@ static double laplam(bif_trunc_t* bt, const double val[])
 
     zbeta1 = zsum1 / zsum2;
     zp     = -zbeta1;
-    zp     = MAX(-9.999, MIN(9.999, zp));
+    zp     = std::max(-9.999, std::min(9.999, zp));
 
     free(itab1);
     free(itab2);
@@ -526,9 +493,11 @@ static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
     grib_context_free(gh->context, bt);
 }
 
-static bif_trunc_t* new_bif_trunc(grib_accessor* a, grib_accessor_data_g2bifourier_packing* self)
+static bif_trunc_t* new_bif_trunc(grib_accessor* a)
 {
     int ret;
+    grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
+
     grib_handle* gh = grib_handle_of_accessor(a);
     bif_trunc_t* bt = (bif_trunc_t*)grib_context_malloc(gh->context, sizeof(bif_trunc_t));
 
@@ -667,7 +636,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((ret = grib_value_count(a, &count)) != GRIB_SUCCESS)
         goto cleanup;
 
-    bt = new_bif_trunc(a, self);
+    bt = new_bif_trunc(a);
 
     if (bt == NULL) {
         ret = GRIB_INTERNAL_ERROR;
@@ -692,8 +661,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     buf = (unsigned char*)gh->buffer->data;
     buf += grib_byte_offset(a);
 
-    s = grib_power(bt->binary_scale_factor, 2);
-    d = grib_power(-bt->decimal_scale_factor, 10);
+    s = codes_power<double>(bt->binary_scale_factor, 2);
+    d = codes_power<double>(-bt->decimal_scale_factor, 10);
 
     /*
      * Decode data
@@ -741,6 +710,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_g2bifourier_packing* self = (grib_accessor_data_g2bifourier_packing*)a;
     grib_handle* gh                              = grib_handle_of_accessor(a);
+    const char* cclass_name                      = a->cclass->name;
+
     size_t buflen                                = 0;
     size_t hsize                                 = 0;
     size_t lsize                                 = 0;
@@ -766,7 +737,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
     }
 
-    bt = new_bif_trunc(a, self);
+    bt = new_bif_trunc(a);
 
     if (bt == NULL) {
         long makeTemplate = 0;
@@ -840,8 +811,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if (ret != GRIB_SUCCESS)
             goto cleanup;
 
-        s = grib_power(-bt->binary_scale_factor, 2);
-        d = grib_power(+bt->decimal_scale_factor, 10);
+        s = codes_power<double>(-bt->binary_scale_factor, 2);
+        d = codes_power<double>(+bt->decimal_scale_factor, 10);
     }
     else {
         bt->decimal_scale_factor = 0;
@@ -908,10 +879,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         goto cleanup;
 
     {
-        /* Make sure we can decode it again */
+        // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(gh, self->reference_value, &ref);
-        Assert(ref == bt->reference_value);
+        if (ref != bt->reference_value) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                            cclass_name, __func__, self->reference_value, ref, bt->reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
 
     if ((ret = grib_set_long_internal(gh, self->binary_scale_factor, bt->binary_scale_factor)) != GRIB_SUCCESS)

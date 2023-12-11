@@ -23,6 +23,8 @@ int main(int argc, char* argv[])
 
     assert (argc == 3);
 
+    printf("%ld\n", codes_get_api_version());
+
     in = fopen(argv[1], "rb");
     assert(in);
 

@@ -9,8 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
+
 label="grib_ecc-1322_test"
 
 tempGrb=temp.$label.grib

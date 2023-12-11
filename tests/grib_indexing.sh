@@ -13,6 +13,7 @@
 label="grib_indexing_test"
 temp=temp.$label.index.out
 infile=${data_dir}/index.grib
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 
 # Writes to "out.gribidx"
 $EXEC ${test_dir}/grib_indexing ${infile} > $temp
@@ -106,12 +107,51 @@ cat ${data_dir}/sample.grib2         ${data_dir}/high_level_api.grib2  > $tempGr
 
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $tempGribFile1
 ${tools_dir}/grib_index_build -N -o $tempIndex2 $tempGribFile2
-${tools_dir}/grib_compare $tempIndex1 $tempIndex2
+${tools_dir}/grib_compare -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
+
+# Indexes containing different keys
+${tools_dir}/grib_index_build -k date,time -N -o $tempIndex1 $sample1
+${tools_dir}/grib_index_build -k level     -N -o $tempIndex2 $sample1
+set +e
+${tools_dir}/grib_compare -v $tempIndex1 $tempIndex2 2>$tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempOut
+grep -q "Indexes contained in the input files have different keys" $tempOut
+rm -f $tempIndex1 $tempIndex2 $tempOut
+
+
+${tools_dir}/grib_index_build -k date,time       -N -o $tempIndex1 $sample1
+${tools_dir}/grib_index_build -k date,time,level -N -o $tempIndex2 $sample1
+set +e
+${tools_dir}/grib_compare -v $tempIndex2 $tempIndex1 2>$tempOut
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempOut
+grep -q "Indexes contained in the input files have different keys" $tempOut
+rm -f $tempIndex1 $tempIndex2 $tempOut
+
+# Indexing with directory traversal
+# ----------------------------------
+temp_dir_A=tempdir.$label
+temp_dir_B=tempdir.$label/subdir.$label
+rm -rf $temp_dir_A
+mkdir $temp_dir_A
+mkdir $temp_dir_B
+cp ${data_dir}/tigge/tigge_rjtd_pl_*grib  $temp_dir_A
+cp ${data_dir}/tigge/tigge_rjtd_sfc_*grib $temp_dir_B
+
+${tools_dir}/grib_index_build -o $tempIndex1 $temp_dir_A
+${tools_dir}/grib_dump $tempIndex1
+
+rm -rf $temp_dir_A
+
 
 # ECC-1516
 # ---------
-sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 ${tools_dir}/grib_dump $tempIndex1 >/dev/null
 

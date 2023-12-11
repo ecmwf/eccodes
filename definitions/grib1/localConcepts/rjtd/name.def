@@ -141,8 +141,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 81 ;
 	}
-#Surface roughness
-'Surface roughness' = {
+#Surface roughness (climatological)
+'Surface roughness (climatological)' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 83 ;
 	}
@@ -285,8 +285,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 163 ;
 	}
-#Albedo
-'Albedo' = {
+#Forecast albedo
+'Forecast albedo' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 84 ;
 	}
@@ -665,13 +665,13 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current 
-'U-component of current ' = {
+#U-component of current
+'U-component of current' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 49 ;
 	}
-#V-component of current 
-'V-component of current ' = {
+#V-component of current
+'V-component of current' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 50 ;
 	}
@@ -785,8 +785,8 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 98 ;
 	}
-#Snow melt
-'Snow melt' = {
+#Snowmelt
+'Snowmelt' = {
 	 table2Version = 200 ;
 	 indicatorOfParameter = 99 ;
 	}

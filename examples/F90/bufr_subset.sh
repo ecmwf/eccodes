@@ -10,15 +10,15 @@
 
 . ./include.ctest.sh
 
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_subset_test_f"
 
-#Prepare tmp file
+# Prepare tmp file
 fTmp=${label}.tmp.txt
 fTmp2=${label}.tmp2.txt
 rm -f $fTmp
 
-#Prepare ref file
+# Prepare ref file
 fRef=${label}.ref
 cat > $fRef <<EOF
  message:            0
@@ -73,18 +73,18 @@ cat > $fRef <<EOF
    stationNumber:         485
 EOF
 
-#We check "synop_multi_subset.bufr". The path is
-#hardcoded in the example
+# We check "synop_multi_subset.bufr". The path is
+# hardcoded in the example
 
 REDIRECT=/dev/stdout
 
-#Write the values into a file and compare with reference
+# Write the values into a file and compare with reference
 ${examples_dir}/eccodes_f_bufr_subset 2> $REDIRECT > $fTmp
 
 # Remove blank lines
 sed '/^\s*$/d' < $fTmp > $fTmp2
 
-#We compare output to the reference by ignoring the whitespaces 
+# We compare output to the reference by ignoring the whitespaces
 diff -w $fRef $fTmp2 >$REDIRECT 2> $REDIRECT
 
 #Clean up

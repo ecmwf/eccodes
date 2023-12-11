@@ -8,8 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 /*
    This is used by make_class.pl
 
@@ -47,7 +48,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_data_sh_packed
 {
@@ -90,30 +90,32 @@ static grib_accessor_class _grib_accessor_class_data_sh_packed = {
     "data_sh_packed",                      /* name */
     sizeof(grib_accessor_data_sh_packed),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    0,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    0,                /* pack_string */
+    0,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -122,8 +124,10 @@ static grib_accessor_class _grib_accessor_class_data_sh_packed = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -131,42 +135,6 @@ static grib_accessor_class _grib_accessor_class_data_sh_packed = {
 
 
 grib_accessor_class* grib_accessor_class_data_sh_packed = &_grib_accessor_class_data_sh_packed;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -196,8 +164,9 @@ static void init(grib_accessor* a, const long v, grib_arguments* args)
 static int value_count(grib_accessor* a, long* count)
 {
     grib_accessor_data_sh_packed* self = (grib_accessor_data_sh_packed*)a;
-    grib_handle* hand                  = grib_handle_of_accessor(a);
-    int ret                            = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int ret = 0;
+    const char* cclass_name = a->cclass->name;
 
     long sub_j = 0;
     long sub_k = 0;
@@ -221,8 +190,9 @@ static int value_count(grib_accessor* a, long* count)
         return ret;
 
     if (pen_j != pen_k || pen_j != pen_m) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "pen_j=%ld, pen_k=%ld, pen_m=%ld\n", pen_j, pen_k, pen_m);
-        Assert((pen_j == pen_k) && (pen_j == pen_m));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: pen_j=%ld, pen_k=%ld, pen_m=%ld\n",
+                         cclass_name, pen_j, pen_k, pen_m);
+        return GRIB_DECODING_ERROR;
     }
     *count = (pen_j + 1) * (pen_j + 2) - (sub_j + 1) * (sub_j + 2);
     return ret;
@@ -232,20 +202,13 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_sh_packed* self = (grib_accessor_data_sh_packed*)a;
 
-    size_t i      = 0;
-    int ret       = GRIB_SUCCESS;
-    long hcount   = 0;
-    long lcount   = 0;
-    long hpos     = 0;
-    long lup      = 0;
-    long mmax     = 0;
-    long n_vals   = 0;
+    size_t i    = 0;
+    int ret     = GRIB_SUCCESS;
+    long hcount = 0, lcount = 0, hpos = 0, lup = 0, mmax = 0, n_vals = 0;
     double* scals = NULL;
     /* double *pscals=NULL; */
 
-    double s                 = 0;
-    double d                 = 0;
-    double laplacianOperator = 0;
+    double s = 0, d = 0, laplacianOperator = 0;
     unsigned char* buf       = NULL;
     unsigned char* hres      = NULL;
     unsigned char* lres      = NULL;
@@ -255,22 +218,16 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     long maxv                  = 0;
     long GRIBEX_sh_bug_present = 0;
     long ieee_floats           = 0;
-
     long offsetdata           = 0;
     long bits_per_value       = 0;
     double reference_value    = 0;
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
 
-    long sub_j = 0;
-    long sub_k = 0;
-    long sub_m = 0;
-    long pen_j = 0;
-    long pen_k = 0;
-    long pen_m = 0;
+    long sub_j = 0, sub_k = 0, sub_m = 0, pen_j = 0, pen_k = 0, pen_m = 0;
 
     double operat = 0;
-    int bytes;
+    int bytes = 0;
     int err = 0;
 
     decode_float_proc decode_float = NULL;
@@ -354,11 +311,11 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     lpos = 8 * (packed_offset - offsetdata);
 
-    s = grib_power(binary_scale_factor, 2);
-    d = grib_power(-decimal_scale_factor, 10);
+    s = codes_power<double>(binary_scale_factor, 2);
+    d = codes_power<double>(-decimal_scale_factor, 10);
 
     scals = (double*)grib_context_malloc(a->context, maxv * sizeof(double));
-    Assert(scals);
+    if(!scals) return GRIB_OUT_OF_MEMORY;
 
     scals[0] = 0;
     for (i = 1; i < maxv; i++) {

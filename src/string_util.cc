@@ -10,10 +10,9 @@
 
 #include "grib_api_internal.h"
 
-/* Compare two strings ignoring case.
- * strcasecmp is not in the C standard. However, it's defined by
- * 4.4BSD, POSIX.1-2001. So we use our own
- */
+// Compare two strings ignoring case.
+// strcasecmp is not in the C standard. However, it's defined by
+// 4.4BSD, POSIX.1-2001. So we use our own
 int strcmp_nocase(const char* s1, const char* s2)
 {
     const unsigned char *us1 = (const unsigned char*)s1,
@@ -26,7 +25,7 @@ int strcmp_nocase(const char* s1, const char* s2)
     return (tolower(*us1) - tolower(*--us2));
 }
 
-/* Strip whitespace from the end of a string */
+// Strip whitespace from the end of a string
 void string_rtrim(char* s)
 {
     size_t len = 0;
@@ -40,7 +39,7 @@ void string_rtrim(char* s)
 
 void string_lrtrim(char** x, int do_left, int do_right)
 {
-    DebugAssert(do_left || do_right);
+    DEBUG_ASSERT(do_left || do_right);
     if (do_left) {
         while (isspace(**x) && **x != '\0')
             (*x)++;
@@ -58,14 +57,13 @@ void string_lrtrim(char** x, int do_left, int do_right)
     }
 }
 
-/* Return the component after final slash */
-/*  "/tmp/x"  -> "x"  */
-/*  "/tmp/"   -> ""   */
+// Return the component after final slash
+//  "/tmp/x"  -> "x"
+//  "/tmp/"   -> ""
 const char* extract_filename(const char* filepath)
 {
-    /* Note: Windows users could pass in fwd slashes!
-     * so have to check both separators
-     */
+    // Note: Windows users could pass in fwd slashes!
+    // so have to check both separators
     const char* s = strrchr(filepath, '/');
     if (!s)
         s = strrchr(filepath, '\\');
@@ -75,10 +73,9 @@ const char* extract_filename(const char* filepath)
         return s + 1;
 }
 
-/* Returns an array of strings the last of which is NULL.
- * Note: The delimiter here is a 'string' but must be ONE character!
- *       Splitting with several delimiters is not supported.
- */
+// Returns an array of strings the last of which is NULL.
+// Note: The delimiter here is a 'string' but must be ONE character!
+//       Splitting with several delimiters is not supported.
 char** string_split(char* inputString, const char* delimiter)
 {
     char** result       = NULL;
@@ -91,8 +88,8 @@ char** string_split(char* inputString, const char* delimiter)
     size_t index        = 0;
     char delimiterChar  = 0;
 
-    DebugAssert(inputString);
-    DebugAssert(delimiter && (strlen(delimiter) == 1));
+    DEBUG_ASSERT(inputString);
+    DEBUG_ASSERT(delimiter && (strlen(delimiter) == 1));
     delimiterChar = delimiter[0];
     while (*p) {
         const char ctmp = *p;
@@ -104,14 +101,14 @@ char** string_split(char* inputString, const char* delimiter)
     }
     strLength = strlen(inputString);
     if (lastDelimiter < (inputString + strLength - 1)) {
-        ++numTokens; /* there is a trailing token */
+        ++numTokens; // there is a trailing token
     }
-    ++numTokens; /* terminating NULL string to mark the end */
+    ++numTokens; // terminating NULL string to mark the end
 
     result = (char**)malloc(numTokens * sizeof(char*));
     Assert(result);
 
-    /* Start tokenizing */
+    // Start tokenizing
     aToken = strtok_r(inputString, delimiter, &lasts);
     while (aToken) {
         Assert(index < numTokens);
@@ -124,8 +121,10 @@ char** string_split(char* inputString, const char* delimiter)
     return result;
 }
 
-/* Return GRIB_SUCCESS if can convert input to an integer, GRIB_INVALID_ARGUMENT otherwise */
-int string_to_long(const char* input, long* output)
+// Return GRIB_SUCCESS if we can convert 'input' to an integer, GRIB_INVALID_ARGUMENT otherwise.
+// If 'strict' is 1 then disallow characters at the end which are not valid digits.
+// E.g., in strict mode, "4i" will be rejected. Otherwise it will convert it to 4
+int string_to_long(const char* input, long* output, int strict)
 {
     const int base = 10;
     char* endptr;
@@ -138,18 +137,22 @@ int string_to_long(const char* input, long* output)
     val   = strtol(input, &endptr, base);
     if ((errno == ERANGE && (val == LONG_MAX || val == LONG_MIN)) ||
         (errno != 0 && val == 0)) {
-        /*perror("strtol");*/
+        // perror("strtol");
         return GRIB_INVALID_ARGUMENT;
     }
     if (endptr == input) {
-        /*fprintf(stderr, "No digits were found. EXIT_FAILURE\n");*/
+        // fprintf(stderr, "No digits were found\n");
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (strict && *endptr != 0) {
+        // fprintf(stderr, "Left over characters at the end; not a pure number\n");
         return GRIB_INVALID_ARGUMENT;
     }
     *output = val;
     return GRIB_SUCCESS;
 }
 
-/* Return 1 if 's' ends with 'suffix', 0 otherwise */
+// Return 1 if 's' ends with 'suffix', 0 otherwise
 int string_ends_with(const char* s, const char* suffix)
 {
     const size_t len1 = strlen(s);
@@ -165,8 +168,8 @@ int string_ends_with(const char* s, const char* suffix)
 int string_count_char(const char* str, char c)
 {
     int i = 0, count = 0;
-    DebugAssert(str);
-    for(i=0; str[i]; i++) {
+    DEBUG_ASSERT(str);
+    for (i=0; str[i]; i++) {
         if (str[i] == c) count++;
     }
     return count;
@@ -210,10 +213,9 @@ const char* grib_get_type_name(int type)
     return "unknown";
 }
 
-/* Replace all occurrences of character in string.
-*  Returns pointer to the NUL byte at the end of 's'
-*/
-char *string_replace_char(char *s, char oldc, char newc)
+// Replace all occurrences of character in string.
+// Returns pointer to the NUL byte at the end of 's'
+char* string_replace_char(char *s, char oldc, char newc)
 {
     for (; *s; ++s)
         if (*s == oldc)
@@ -221,10 +223,11 @@ char *string_replace_char(char *s, char oldc, char newc)
     return s;
 }
 
-/* Remove all instances of character 'c' from 'str' */
-void string_remove_char(char * str, char c)
+// Remove all instances of character 'c' from 'str'
+void string_remove_char(char* str, char c)
 {
     size_t i, j;
+    DEBUG_ASSERT(str);
     size_t len = strlen(str);
     for(i=0; i<len; i++) {
         if(str[i] == c) {

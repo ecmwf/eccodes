@@ -9,8 +9,7 @@
 #
 
 . ./include.ctest.sh
-set -u
-REDIRECT=/dev/null
+
 label="grib_ecc-1406_test"
 
 tempGrib=temp.$label.grib
@@ -31,7 +30,7 @@ cat > $tempFilt <<EOF
   set iDirectionIncrement = 10000;
   set jDirectionIncrement = 10000;
 
-  meta lastVal element(values, numberOfValues - 1);
+  meta lastVal element(values, -1); # Like Python
   set lastVal = 42;
 
   write;

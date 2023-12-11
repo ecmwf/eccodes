@@ -21,8 +21,8 @@ cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 find_package( ecbuild 3.7 REQUIRED HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../ecbuild)
 
 # Initialise project
-project( eccodes VERSION 2.30.0 LANGUAGES CXX )
-set(CMAKE_CXX_STANDARD 11)
+project( eccodes LANGUAGES CXX )
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
@@ -102,9 +102,9 @@ ecbuild_add_option( FEATURE BUILD_TOOLS
 ecbuild_add_option( FEATURE JPG
     DESCRIPTION "Support for JPG decoding/encoding"
     DEFAULT ON )
-# Options related to JPG. The Jasper and OpenJPEG libraries
+# Options related to JPG. The JasPer and OpenJPEG libraries
 ecbuild_add_option( FEATURE JPG_LIBJASPER
-    DESCRIPTION "Support for JPG decoding/encoding with the Jasper library"
+    DESCRIPTION "Support for JPG decoding/encoding with the JasPer library"
     CONDITION ENABLE_JPG
     DEFAULT ON )
 ecbuild_add_option( FEATURE JPG_LIBOPENJPEG
@@ -217,7 +217,7 @@ set( HAVE_LIBJASPER 0 )
 set( HAVE_LIBOPENJPEG 0 )
 
 if( ENABLE_JPG )
-    # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find Jasper at ECMWF.
+    # Note: The function ecbuild_add_extra_search_paths is deprecated but we need it to find JasPer at ECMWF.
     #       It modifies CMAKE_PREFIX_PATH
     #       which can affect future package discovery if not undone by the caller.
     #       The current CMAKE_PREFIX_PATH is backed up as _CMAKE_PREFIX_PATH
@@ -234,7 +234,7 @@ if( ENABLE_JPG )
         list( APPEND ECCODES_TPLS Jasper )
         set( HAVE_JPEG 1 )
         set( HAVE_LIBJASPER 1 )
-        # Extract Jasper's major version number to enable conditional code. See ECC-396
+        # Extract JasPer's major version number to enable conditional code. See ECC-396
         string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" JASPER_VERSION_MAJOR "${JASPER_VERSION_STRING}")
     endif()
 
@@ -419,7 +419,6 @@ add_subdirectory( memfs )
 add_subdirectory( src )
 if( HAVE_BUILD_TOOLS )
     add_subdirectory( tools )
-    add_subdirectory( tigge )
 endif()
 add_subdirectory( fortran )
 
@@ -430,11 +429,12 @@ add_subdirectory( samples )
 add_subdirectory( ifs_samples ) # must come after samples
 
 # ecbuild_dont_pack( DIRS samples DONT_PACK_REGEX "*.grib" )
+ecbuild_dont_pack( FILES .cproject .project )
 ecbuild_dont_pack( DIRS
-     experimental deprecated doxygen confluence tests/tests.ecmwf
-     config m4 examples/F77 src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
-     examples/examples.dev examples/extra examples/deprecated bamboo
-     fortran/fortranCtypes tigge/tools share/eccodes  .settings )
+    experimental deprecated doxygen confluence tests/deprecated tests/tests.ecmwf
+    src/deprecated tools/deprecated ifs_samples/grib1_mlgrib2_ieee32
+    examples/examples.dev examples/extra examples/deprecated bamboo
+    fortran/fortranCtypes share/eccodes  .settings )
 #ecbuild_dont_pack( DIRS data/bufr  DONT_PACK_REGEX "*.bufr" )
 #ecbuild_dont_pack( DIRS data/tigge DONT_PACK_REGEX "*.grib" )
 

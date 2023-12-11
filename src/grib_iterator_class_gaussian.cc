@@ -12,7 +12,7 @@
  **************************************/
 
 #include "grib_api_internal.h"
-#include <math.h>
+#include <cmath>
 
 /*
    This is used by make_class.pl
@@ -36,8 +36,10 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class (grib_iterator_class*);
-static int init        (grib_iterator* i,grib_handle*,grib_arguments*);
+static void init_class              (grib_iterator_class*);
+
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+
 
 typedef struct grib_iterator_gaussian{
   grib_iterator it;
@@ -80,10 +82,10 @@ grib_iterator_class* grib_iterator_class_gaussian = &_grib_iterator_class_gaussi
 
 static void init_class(grib_iterator_class* c)
 {
-    c->next     = (*(c->super))->next;
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->next    =    (*(c->super))->next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
@@ -127,7 +129,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
     ret = grib_get_gaussian_latitudes(trunc, lats);
 
     if (ret != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "error %d calculating gaussian points", ret);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Error calculating gaussian points: %s", grib_get_error_message(ret));
         return ret;
     }
     /*
@@ -146,7 +148,7 @@ static int init(grib_iterator* i, grib_handle* h, grib_arguments* args)
 
     if (jScansPositively) {
         for (lai = 0; lai < self->Nj; lai++) {
-            DebugAssert(istart >= 0);
+            DEBUG_ASSERT(istart >= 0);
             self->las[lai] = lats[istart--];
             if (istart<0) istart=size-1;
         }
@@ -189,34 +191,31 @@ static void binary_search_gaussian_latitudes(const double array[], const unsigne
     *j = -1; /* Not found */
 }
 
-#if 0
-static void binary_search_old(const double xx[], const unsigned long n, double x, long* j)
-{
-    /*This routine works only on descending ordered arrays*/
-    unsigned long ju, jm, jl;
-    jl = 0;
-    ju = n;
-    if (fabs(x - xx[0]) < EPSILON) {
-        *j = 0;
-        return;
-    }
-    if (fabs(x - xx[n]) < EPSILON) {
-        *j = n;
-        return;
-    }
-
-    while (ju - jl > 1) {
-        jm = (ju + jl) >> 1;
-        if (fabs(x - xx[jm]) < EPSILON) {
-            /* found something close enough. We're done */
-            *j = jm;
-            return;
-        }
-        if (x < xx[jm])
-            jl = jm;
-        else
-            ju = jm;
-    }
-    *j = jl;
-}
-#endif
+// static void binary_search_old(const double xx[], const unsigned long n, double x, long* j)
+// {
+//     /*This routine works only on descending ordered arrays*/
+//     unsigned long ju, jm, jl;
+//     jl = 0;
+//     ju = n;
+//     if (fabs(x - xx[0]) < EPSILON) {
+//         *j = 0;
+//         return;
+//     }
+//     if (fabs(x - xx[n]) < EPSILON) {
+//         *j = n;
+//         return;
+//     }
+//     while (ju - jl > 1) {
+//         jm = (ju + jl) >> 1;
+//         if (fabs(x - xx[jm]) < EPSILON) {
+//             /* found something close enough. We're done */
+//             *j = jm;
+//             return;
+//         }
+//         if (x < xx[jm])
+//             jl = jm;
+//         else
+//             ju = jm;
+//     }
+//     *j = jl;
+// }

@@ -9,7 +9,7 @@
  */
 
 /*
- * Author: Enrico Fucile <enrico.fucile@ecmwf.int>
+ * Author: Enrico Fucile
  * Description:
  * In Observations team we need a tool to merge the GRIB messages coming from GTS.
  * They come with compatible grid (lat/lon) but they are split in different quadrants.
@@ -56,7 +56,8 @@ grib_option grib_options[] = {
     { "g", 0, 0, 0, 1, 0 },
     { "G", 0, 0, 0, 1, 0 },
     { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);

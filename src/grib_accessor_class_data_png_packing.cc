@@ -8,6 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 #define PNG_ANYBITS
 
@@ -51,7 +52,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
 
@@ -85,30 +85,32 @@ static grib_accessor_class _grib_accessor_class_data_png_packing = {
     "data_png_packing",                      /* name */
     sizeof(grib_accessor_data_png_packing),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    &pack_double,                /* grib_pack procedures double */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    0,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    &pack_double,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    0,                /* pack_string */
+    0,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -117,8 +119,10 @@ static grib_accessor_class _grib_accessor_class_data_png_packing = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    &unpack_double_element,      /* unpack only ith value */
-    &unpack_double_element_set,  /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    &unpack_double_element_set,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -126,39 +130,6 @@ static grib_accessor_class _grib_accessor_class_data_png_packing = {
 
 
 grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_class_data_png_packing;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -271,8 +242,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    bscale = grib_power(binary_scale_factor, 2);
-    dscale = grib_power(-decimal_scale_factor, 10);
+    bscale = codes_power<double>(binary_scale_factor, 2);
+    dscale = codes_power<double>(-decimal_scale_factor, 10);
 
     /* TODO: This should be called upstream */
     if (*len < n_vals)
@@ -372,15 +343,15 @@ cleanup:
     return err;
 }
 
-static int is_constant(const double* values, size_t n_vals)
+static bool is_constant(const double* values, size_t n_vals)
 {
-    int isConstant = 1;
+    bool isConstant = true;
     double v = 0;
     size_t i;
     for (i = 0; i < n_vals; i++) {
         if (i == 0) v = values[i];
         else if (v != values[i]) {
-            isConstant = 0;
+            isConstant = false;
             break;
         }
     }
@@ -390,8 +361,10 @@ static int is_constant(const double* values, size_t n_vals)
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
+    const char* cclass_name = a->cclass->name;
 
-    int err = GRIB_SUCCESS, is_constant_field = 0;
+    int err = GRIB_SUCCESS;
+    bool is_constant_field = false;
     int i, j;
     size_t buflen = 0;
 
@@ -456,12 +429,16 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 #endif
         if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, val[0])) != GRIB_SUCCESS)
             return err;
+
         {
-            /* Make sure we can decode it again */
+            // Make sure we can decode it again
             double ref = 1e-100;
             grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &ref);
-            /*printf("%g %g %g\n", reference_value, ref, reference_value - ref);*/
-            Assert(ref == reference_value);
+            if (ref != reference_value) {
+                grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                            cclass_name, __func__, self->reference_value, ref, reference_value);
+                return GRIB_INTERNAL_ERROR;
+            }
         }
 
         if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals)) != GRIB_SUCCESS)
@@ -510,9 +487,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if (width * height != *len) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_accessor_class_data_png_packing pack_double: width=%ld height=%ld len=%ld."
-                         " width*height should equal len!",
-                         (long)width, (long)height, (long)*len);
+                         "%s %s: width=%ld height=%ld len=%ld. width*height should equal len!",
+                         cclass_name, __func__, (long)width, (long)height, (long)*len);
         /* ECC-802: We cannot bomb out here as the user might have changed Ni/Nj and the packingType
          * but has not yet submitted the new data values. So len will be out of sync!
          * So issue a warning but proceed.
@@ -520,7 +496,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         return GRIB_SUCCESS;
     }
 
-    d = grib_power(decimal_scale_factor, 10);
+    d = codes_power<double>(decimal_scale_factor, 10);
 
     max = val[0];
     min = max;
@@ -538,12 +514,13 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
 
     if (reference_value > min) {
-        fprintf(stderr, "reference_value=%g min_value=%g diff=%g\n", reference_value, min, reference_value - min);
-        Assert(reference_value <= min);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "reference_value=%g min_value=%g diff=%g",
+                    reference_value, min, reference_value - min);
+        return GRIB_INTERNAL_ERROR;
     }
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
-    divisor             = grib_power(-binary_scale_factor, 2);
+    divisor             = codes_power<double>(-binary_scale_factor, 2);
 
 #ifndef PNG_ANYBITS
     Assert(bits_per_value % 8 == 0);
@@ -579,12 +556,18 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     if ((err = grib_set_double_internal(grib_handle_of_accessor(a), self->reference_value, reference_value)) != GRIB_SUCCESS)
         return err;
+
     {
-        /* Make sure we can decode it again */
+        // Make sure we can decode it again
         double ref = 1e-100;
         grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &ref);
-        Assert(ref == reference_value);
+        if (ref != reference_value) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
+                             cclass_name, __func__, self->reference_value, ref, reference_value);
+            return GRIB_INTERNAL_ERROR;
+        }
     }
+
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->binary_scale_factor, binary_scale_factor)) != GRIB_SUCCESS)
         return err;
     if ((err = grib_set_long_internal(grib_handle_of_accessor(a), self->decimal_scale_factor, decimal_scale_factor)) != GRIB_SUCCESS)
@@ -756,8 +739,7 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 static void print_error_feature_not_enabled(grib_context* c)
 {
     grib_context_log(c, GRIB_LOG_ERROR,
-                     "grib_accessor_data_png_packing: PNG support not enabled. "
-                     "Please rebuild with -DENABLE_PNG=ON");
+                     "PNG support not enabled. Please rebuild with -DENABLE_PNG=ON");
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)

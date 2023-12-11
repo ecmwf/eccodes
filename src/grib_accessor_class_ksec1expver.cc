@@ -37,7 +37,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_ksec1expver
 {
@@ -54,30 +53,32 @@ static grib_accessor_class _grib_accessor_class_ksec1expver = {
     "ksec1expver",                      /* name */
     sizeof(grib_accessor_ksec1expver),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    0,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    0,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    &pack_long,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    0,              /* grib_unpack procedures double */
-    &pack_string,                /* grib_pack procedures string */
-    0,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    &pack_long,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    0,              /* unpack_double */
+    0,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    0,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -86,8 +87,10 @@ static grib_accessor_class _grib_accessor_class_ksec1expver = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -95,41 +98,6 @@ static grib_accessor_class _grib_accessor_class_ksec1expver = {
 
 
 grib_accessor_class* grib_accessor_class_ksec1expver = &_grib_accessor_class_ksec1expver;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->dump    =    (*(c->super))->dump;
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->unpack_string    =    (*(c->super))->unpack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -168,13 +136,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     expver[2] = *pTemp++;
     expver[3] = *pTemp++;
     expver[4] = 0;
-#if 0
-    expver[0] = intc[0];
-    expver[1] = intc[1];
-    expver[2] = intc[2];
-    expver[3] = intc[3];
-    expver[4] = 0;
-#endif
+
+//     expver[0] = intc[0];
+//     expver[1] = intc[1];
+//     expver[2] = intc[2];
+//     expver[3] = intc[3];
+//     expver[4] = 0;
+
     /* if there is a difference, have to reverse*/
     if (strcmp(refexpver, expver)) {
         intc[0] = expver[3];

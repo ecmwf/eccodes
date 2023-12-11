@@ -39,7 +39,8 @@ grib_option grib_options[] = {
     { "G", 0, 0, 0, 1, 0 },
     { "T:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -65,30 +66,28 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        printf("ERROR: please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "%s: Please provide some keys to set through the -s option or use the -r/-d options\n", tool_name);
         exit(1);
     }
     if (options->verbose)
         options->print_header = 1;
-    /*if (grib_options_on("n:")) {
-    noise=atof(grib_options_get_option("n:"));
-    options->repack=1;
-  }*/
+    //  if (grib_options_on("n:")) {
+    //     noise=atof(grib_options_get_option("n:"));
+    //     options->repack=1;
+    //   }
 
-    if (grib_options_on("n:") && grib_options_on("d:")) {
-        printf("Error: -n and -d options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
+    // if (grib_options_on("n:") && grib_options_on("d:")) {
+    //     fprintf(stderr, "%s: -n and -d options are incompatible. Choose one of the two please.\n",tool_name);
+    //     exit(1);
+    // }
 
-#if 0
-    if (options->outfile && options->outfile->name) {
-        options->outfile->file = fopen(options->outfile->name,"w");
-        if(!options->outfile->file) {
-            perror(options->outfile->name);
-            exit(1);
-        }
-    }
-#endif
+    //     if (options->outfile && options->outfile->name) {
+    //         options->outfile->file = fopen(options->outfile->name,"w");
+    //         if(!options->outfile->file) {
+    //             perror(options->outfile->name);
+    //             exit(1);
+    //         }
+    //     }
     return 0;
 }
 
@@ -116,7 +115,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
             v = (double*)calloc(size, sizeof(double));
             if (!v) {
-                fprintf(stderr, "failed to allocate %d bytes\n", (int)(size * sizeof(double)));
+                fprintf(stderr, "%s: Failed to allocate %zu bytes\n", tool_name, size * sizeof(double));
                 exit(1);
             }
 

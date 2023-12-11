@@ -51,13 +51,9 @@ int grib_lookup_long_from_handle(grib_context* gc, grib_loader* loader, const ch
     if (b)
         return grib_unpack_long(b, value, &len);
 
-        /* TODO: fix me. For now, we don't fail on a lookup. */
-#if 1
+    /* TODO: fix me. For now, we don't fail on a lookup. */
     *value = -1;
     return GRIB_SUCCESS;
-#else
-    return GRIB_NOT_FOUND;
-#endif
 }
 
 int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_arguments* default_value)
@@ -96,14 +92,12 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         return GRIB_SUCCESS;
     }
 
-#if 0
-    if(h->values)
-        if(copy_values(h,ga) == GRIB_SUCCESS)
-        {
-            grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
-            return GRIB_SUCCESS;
-        }
-#endif
+//     if(h->values)
+//         if(copy_values(h,ga) == GRIB_SUCCESS)
+//         {
+//             grib_context_log(h->context,GRIB_LOG_DEBUG, "Copying: setting %s to multi-set-value",   ga->name);
+//             return GRIB_SUCCESS;
+//         }
 
 #if 0
     if(h->loader)
@@ -162,9 +156,16 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
         pack_missing = 1;
     }
 
-    switch (grib_accessor_get_native_type(ga)) {
-        case GRIB_TYPE_STRING:
+    const long ga_type = grib_accessor_get_native_type(ga);
 
+    if ((ga->flags & GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION) && !loader->changing_edition) {
+        // See ECC-1560 and ECC-1644
+        grib_context_log(h->context, GRIB_LOG_DEBUG, "Skipping %s (only copied if changing edition)", ga->name);
+        return GRIB_SUCCESS;
+    }
+
+    switch (ga_type) {
+        case GRIB_TYPE_STRING:
             /*ecc__grib_get_string_length(ga,&len);  See ECC-490 */
             grib_get_string_length(h, name, &len);
             sval = (char*)grib_context_malloc(h->context, len);

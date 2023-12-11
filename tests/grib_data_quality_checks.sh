@@ -200,12 +200,38 @@ unset ECCODES_EXTRA_DEFINITION_PATH
 
 # Check CCSDS encoding too
 # -------------------------
+if [ $HAVE_AEC -eq 1 ]; then
+   export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+   set +e
+   ${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
+   status=$?
+   set -e
+   [ $status -ne 0 ]
+fi
+
+# Invalid shortName/name
+# -------------------------
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+input2=${data_dir}/reduced_gaussian_surface.grib2
+${tools_dir}/grib_set -s discipline=254 $input2 $tempOut
+grib_check_key_equals $tempOut 'shortName' 'unknown'
 set +e
-${tools_dir}/grib_set -s scaleValuesBy=1000 $sample_ccsds $tempGrib2 2>$tempErr
+${tools_dir}/grib_set -s scaleValuesBy=2  $tempOut $tempGrib2 2>$tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
+grep -q "Invalid metadata: shortName='unknown'" $tempErr
+
+# Invalid name (ECC-793)
+${tools_dir}/grib_set -s paramId=129080 $input2 $tempOut 2>$tempErr
+grib_check_key_equals $tempOut 'name' 'Experimental product'
+# Repacking causes the values to be set
+set +e
+${tools_dir}/grib_set -r -s paramId=129080 $input2 $tempOut 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid metadata: name='Experimental product'" $tempErr
 
 
 # Clean up

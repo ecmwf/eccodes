@@ -18,11 +18,11 @@
 #ifndef eccodes_H
 #define eccodes_H
 
+#include "grib_api.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "grib_api.h"
 
 #define CODES_VERSION ECCODES_VERSION
 
@@ -156,7 +156,6 @@ typedef struct grib_iterator codes_iterator;
     \struct codes_nearest
 */
 typedef struct grib_nearest codes_nearest;
-typedef struct grib_points codes_points;
 
 /*! Codes keys iterator. Iterator over keys.
     \ingroup keys_iterator
@@ -434,7 +433,7 @@ codes_handle* codes_handle_new_from_message(codes_context* c, const void* data, 
 /**
  *  Create a handle from a user message in memory. The message will not be freed at the end.
  *  The message will be copied as soon as a modification is needed.
- *  This function works also with GRIB multi-field messages.
+ *  This function also works with GRIB multi-field messages.
  *
  * @param c           : the context from which the handle will be created (NULL for default context)
  * @param data        : the actual message
@@ -607,9 +606,9 @@ int codes_grib_get_data(const codes_handle* h, double* lats, double* lons, doubl
  * Get the next value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double* value);
@@ -618,9 +617,9 @@ int codes_grib_iterator_next(codes_iterator* i, double* lat, double* lon, double
  * Get the previous value from a geoiterator.
  *
  * @param i           : the geoiterator
- * @param lat         : on output latitude in degree
- * @param lon         : on output longitude in degree
- * @param value       : on output value of the point*
+ * @param lat         : output latitude in degrees
+ * @param lon         : output longitude in degrees
+ * @param value       : output value of the point*
  * @return            positive value if successful, 0 if no more data are available
  */
 int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, double* value);
@@ -629,7 +628,7 @@ int codes_grib_iterator_previous(codes_iterator* i, double* lat, double* lon, do
  * Test procedure for values in a geoiterator.
  *
  * @param i           : the geoiterator
- * @return            boolean, 1 if the iterator still nave next values, 0 otherwise
+ * @return            boolean, 1 if the iterator still has next values, 0 otherwise
  */
 int codes_grib_iterator_has_next(codes_iterator* i);
 
@@ -686,7 +685,7 @@ int codes_grib_nearest_find(codes_nearest* nearest, const codes_handle* h, doubl
 /**
  *  Frees a nearest object from memory
  *
- * @param nearest           : the nearest
+ * @param nearest           : the nearest neighbour object
  * @return            0 if OK, integer value on error
  */
 int codes_grib_nearest_delete(codes_nearest* nearest);
@@ -725,7 +724,7 @@ int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
 /*! \defgroup get_set Accessing header and data values   */
 /*! @{ */
 /**
- *  Get the number offset of a key, in a message if several keys of the same name
+ *  Get the byte offset of a key, if several keys of the same name
  *  are present, the offset of the last one is returned
  *
  * @param h           : the handle to get the offset from
@@ -738,7 +737,7 @@ int codes_get_offset(const codes_handle* h, const char* key, size_t* offset);
 /**
  *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param size        : the address of a size_t where the size will be set
  * @return            0 if OK, integer value on error
@@ -748,7 +747,7 @@ int codes_get_size(const codes_handle* h, const char* key, size_t* size);
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length        : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error
@@ -776,6 +775,7 @@ int codes_get_long(const codes_handle* h, const char* key, long* value);
  * @return            0 if OK, integer value on error
  */
 int codes_get_double(const codes_handle* h, const char* key, double* value);
+int codes_get_float(const codes_handle* h, const char* key, float* value);
 
 /**
  *  Get as double the i-th element of the "key" array
@@ -787,6 +787,7 @@ int codes_get_double(const codes_handle* h, const char* key, double* value);
  * @return            0 if OK, integer value on error
  */
 int codes_get_double_element(const codes_handle* h, const char* key, int i, double* value);
+int codes_get_float_element(const codes_handle* h, const char* key, int i, float* value);
 
 /**
  *  Get as double array the elements of the "key" array whose indexes are listed in the input array "index_array"
@@ -799,6 +800,7 @@ int codes_get_double_element(const codes_handle* h, const char* key, int i, doub
  * @return            0 if OK, integer value on error
  */
 int codes_get_double_elements(const codes_handle* h, const char* key, const int* index_array, long size, double* value);
+int codes_get_float_elements(const codes_handle* h, const char* key, const int* index_array, long size, float* value);
 
 /**
  *  Get a string value from a key, if several keys of the same name are present, the last one is returned
@@ -807,7 +809,8 @@ int codes_get_double_elements(const codes_handle* h, const char* key, const int*
  * @param h         : the handle to get the data from
  * @param key       : the key to be searched
  * @param mesg      : the address of a string where the data will be retrieved
- * @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+ * @param length    : the address of a size_t that contains allocated length of the string on input,
+ *                    and that contains the actual length of the string on output
  * @return          0 if OK, integer value on error
  */
 int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t* length);
@@ -819,7 +822,8 @@ int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t*
  * @param h       : the handle to get the data from
  * @param key     : the key to be searched
  * @param vals    : the address of a string array where the data will be retrieved
- * @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+ * @param length  : the address of a size_t that contains allocated length of the array on input,
+ *                  and that contains the actual length of the array on output
  * @return        0 if OK, integer value on error
  */
 int codes_get_string_array(const codes_handle* h, const char* key, char** vals, size_t* length);
@@ -828,11 +832,12 @@ int codes_get_string_array(const codes_handle* h, const char* key, char** vals, 
  *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
  * @see  codes_set_bytes
  *
- * @param h           : the handle to get the data from
- * @param key         : the key to be searched
- * @param bytes       : the address of a byte array where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
- * @return            0 if OK, integer value on error
+ * @param h         : the handle to get the data from
+ * @param key       : the key to be searched
+ * @param bytes     : the address of a byte array where the data will be retrieved
+ * @param length    : the address of a size_t that contains allocated length of the byte array on input,
+ *                    and that contains the actual length of the byte array on output
+ * @return          0 if OK, integer value on error
  */
 int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes, size_t* length);
 
@@ -843,10 +848,12 @@ int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes
  * @param h        : the handle to get the data from
  * @param key      : the key to be searched
  * @param vals     : the address of a double array where the data will be retrieved
- * @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+ * @param length   : the address of a size_t that contains allocated length of the double array on input,
+ *                   and that contains the actual length of the double array on output
  * @return         0 if OK, integer value on error
  */
 int codes_get_double_array(const codes_handle* h, const char* key, double* vals, size_t* length);
+int codes_get_float_array(const codes_handle* h, const char* key, float* vals, size_t* length);
 
 /**
  *  Get long array values from a key. If several keys of the same name are present, the last one is returned
@@ -854,8 +861,9 @@ int codes_get_double_array(const codes_handle* h, const char* key, double* vals,
  *
  * @param h           : the handle to get the data from
  * @param key         : the key to be searched
- * @param vals       : the address of a long array where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
+ * @param vals        : the address of a long array where the data will be retrieved
+ * @param length      : the address of a size_t that contains allocated length of the long array on input,
+ *                      and that contains the actual length of the long array on output
  * @return            0 if OK, integer value on error
  */
 int codes_get_long_array(const codes_handle* h, const char* key, long* vals, size_t* length);
@@ -888,10 +896,10 @@ int codes_set_long(codes_handle* h, const char* key, long val);
  *  Set a double value from a key. If several keys of the same name are present, the last one is set
  *  @see  codes_get_double
  *
- * @param h           : the handle to set the data to
- * @param key         : the key to be searched
+ * @param h         : the handle to set the data to
+ * @param key       : the key to be searched
  * @param val       : a double where the data will be read
- * @return            0 if OK, integer value on error
+ * @return          0 if OK, integer value on error
  */
 int codes_set_double(codes_handle* h, const char* key, double val);
 
@@ -899,11 +907,12 @@ int codes_set_double(codes_handle* h, const char* key, double val);
  *  Set a string value from a key. If several keys of the same name are present, the last one is set
  *  @see  codes_get_string
  *
- * @param h           : the handle to set the data to
- * @param key         : the key to be searched
+ * @param h          : the handle to set the data to
+ * @param key        : the key to be searched
  * @param mesg       : the address of a string where the data will be read
- * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
- * @return            0 if OK, integer value on error
+ * @param length     : the address of a size_t that contains the length of the string on input,
+ *                     and that contains the actual packed length of the string on output
+ * @return           0 if OK, integer value on error
  */
 int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t* length);
 
@@ -914,7 +923,8 @@ int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t*
  * @param h           : the handle to set the data to
  * @param key         : the key to be searched
  * @param bytes       : the address of a byte array where the data will be read
- * @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
+ * @param length      : the address of a size_t that contains the length of the byte array on input,
+ *                      and that contains the actual packed length of the byte array  on output
  * @return            0 if OK, integer value on error
  */
 int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes, size_t* length);
@@ -930,12 +940,14 @@ int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes
  * @return            0 if OK, integer value on error
  */
 int codes_set_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 /**
  * Same as codes_set_double_array but allows setting of READ-ONLY keys like codedValues.
  * Use with great caution!!
  */
 int codes_set_force_double_array(codes_handle* h, const char* key, const double* vals, size_t length);
+int codes_set_force_float_array(codes_handle* h, const char* key, const float* vals, size_t length);
 
 
 /**
@@ -1224,7 +1236,7 @@ void codes_grib_multi_support_on(codes_context* c);
 void codes_grib_multi_support_off(codes_context* c);
 
 /**
- *  Reset file handle in multiple GRIB field support mode
+ *  Reset file handle in GRIB multi-field support mode
  *
  * @param c            : the context to be modified
  * @param f            : the file pointer
@@ -1318,6 +1330,7 @@ int codes_keys_iterator_rewind(codes_keys_iterator* kiter);
 int codes_keys_iterator_set_flags(codes_keys_iterator* kiter, unsigned long flags);
 int codes_keys_iterator_get_long(const codes_keys_iterator* kiter, long* v, size_t* len);
 int codes_keys_iterator_get_double(const codes_keys_iterator* kiter, double* v, size_t* len);
+int codes_keys_iterator_get_float(const codes_keys_iterator* kiter, float* v, size_t* len);
 int codes_keys_iterator_get_string(const codes_keys_iterator* kiter, char* v, size_t* len);
 int codes_keys_iterator_get_bytes(const codes_keys_iterator* kiter, unsigned char* v, size_t* len);
 
@@ -1345,17 +1358,26 @@ int codes_set_values(codes_handle* h, codes_values* codes_values, size_t arg_cou
 codes_handle* codes_handle_new_from_partial_message_copy(codes_context* c, const void* data, size_t size);
 codes_handle* codes_handle_new_from_partial_message(codes_context* c, const void* data, size_t buflen);
 
-/* Returns a bool i.e. 0 or 1. The error code is the final argument */
+/* Check whether the given key has the value 'missing'.
+   Returns a bool i.e. 0 or 1. The error code is an argument */
 int codes_is_missing(const codes_handle* h, const char* key, int* err);
-/* Returns a bool i.e. 0 or 1 */
+
+/* Check whether the given key is defined (exists).
+   Returns a bool i.e. 0 or 1 */
 int codes_is_defined(const codes_handle* h, const char* key);
 
 /* Returns 1 if the BUFR key is in the header and 0 if it is in the data section.
    The error code is the final argument */
 int codes_bufr_key_is_header(const codes_handle* h, const char* key, int* err);
 
+/* Returns 1 if the BUFR key is a coordinate descriptor and 0 otherwise.
+   The error code is the final argument */
+int codes_bufr_key_is_coordinate(const codes_handle* h, const char* key, int* err);
+
+/* Set the given key to have the value 'missing' */
 int codes_set_missing(codes_handle* h, const char* key);
-/* The truncation is the Gaussian number (or order) */
+
+/* The truncation is the Gaussian number (also called order) */
 int codes_get_gaussian_latitudes(long truncation, double* latitudes);
 
 int codes_julian_to_datetime(double jd, long* year, long* month, long* day, long* hour, long* minute, long* second);
@@ -1376,7 +1398,6 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 
 
 /* --------------------------------------- */
-
 #define CODES_UTIL_GRID_SPEC_REGULAR_LL                   GRIB_UTIL_GRID_SPEC_REGULAR_LL
 #define CODES_UTIL_GRID_SPEC_ROTATED_LL                   GRIB_UTIL_GRID_SPEC_ROTATED_LL
 #define CODES_UTIL_GRID_SPEC_REGULAR_GG                   GRIB_UTIL_GRID_SPEC_REGULAR_GG
@@ -1389,6 +1410,7 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 #define CODES_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA GRIB_UTIL_GRID_SPEC_LAMBERT_AZIMUTHAL_EQUAL_AREA
 #define CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL            GRIB_UTIL_GRID_SPEC_LAMBERT_CONFORMAL
 #define CODES_UTIL_GRID_SPEC_UNSTRUCTURED                 GRIB_UTIL_GRID_SPEC_UNSTRUCTURED
+#define CODES_UTIL_GRID_SPEC_HEALPIX                      GRIB_UTIL_GRID_SPEC_HEALPIX
 
 #define CODES_UTIL_PACKING_TYPE_SAME_AS_INPUT      GRIB_UTIL_PACKING_TYPE_SAME_AS_INPUT
 #define CODES_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX   GRIB_UTIL_PACKING_TYPE_SPECTRAL_COMPLEX
@@ -1407,7 +1429,6 @@ int codes_check_message_footer(const void* bytes, size_t length, ProductKind pro
 #define CODES_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES       GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES
 #define CODES_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT GRIB_UTIL_ACCURACY_SAME_DECIMAL_SCALE_FACTOR_AS_INPUT
 #define CODES_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR  GRIB_UTIL_ACCURACY_USE_PROVIDED_DECIMAL_SCALE_FACTOR
-
 
 codes_handle* codes_grib_util_set_spec(codes_handle* h,
                                        const codes_util_grid_spec* grid_spec,
@@ -1451,140 +1472,164 @@ Error codes returned by the eccodes functions.
 */
 /*! @{*/
 /** No error */
-#define CODES_SUCCESS GRIB_SUCCESS
+#define CODES_SUCCESS		GRIB_SUCCESS
 /** End of resource reached */
-#define CODES_END_OF_FILE GRIB_END_OF_FILE
+#define CODES_END_OF_FILE		GRIB_END_OF_FILE
 /** Internal error */
-#define CODES_INTERNAL_ERROR GRIB_INTERNAL_ERROR
+#define CODES_INTERNAL_ERROR		GRIB_INTERNAL_ERROR
 /** Passed buffer is too small */
-#define CODES_BUFFER_TOO_SMALL GRIB_BUFFER_TOO_SMALL
+#define CODES_BUFFER_TOO_SMALL		GRIB_BUFFER_TOO_SMALL
 /** Function not yet implemented */
-#define CODES_NOT_IMPLEMENTED GRIB_NOT_IMPLEMENTED
+#define CODES_NOT_IMPLEMENTED		GRIB_NOT_IMPLEMENTED
 /** Missing 7777 at end of message */
-#define CODES_7777_NOT_FOUND GRIB_7777_NOT_FOUND
+#define CODES_7777_NOT_FOUND		GRIB_7777_NOT_FOUND
 /** Passed array is too small */
-#define CODES_ARRAY_TOO_SMALL GRIB_ARRAY_TOO_SMALL
+#define CODES_ARRAY_TOO_SMALL		GRIB_ARRAY_TOO_SMALL
 /** File not found */
-#define CODES_FILE_NOT_FOUND GRIB_FILE_NOT_FOUND
+#define CODES_FILE_NOT_FOUND		GRIB_FILE_NOT_FOUND
 /** Code not found in code table */
-#define CODES_CODE_NOT_FOUND_IN_TABLE GRIB_CODE_NOT_FOUND_IN_TABLE
+#define CODES_CODE_NOT_FOUND_IN_TABLE		GRIB_CODE_NOT_FOUND_IN_TABLE
 /** Array size mismatch */
-#define CODES_WRONG_ARRAY_SIZE GRIB_WRONG_ARRAY_SIZE
+#define CODES_WRONG_ARRAY_SIZE		GRIB_WRONG_ARRAY_SIZE
 /** Key/value not found */
-#define CODES_NOT_FOUND GRIB_NOT_FOUND
+#define CODES_NOT_FOUND		GRIB_NOT_FOUND
 /** Input output problem */
-#define CODES_IO_PROBLEM GRIB_IO_PROBLEM
+#define CODES_IO_PROBLEM		GRIB_IO_PROBLEM
 /** Message invalid */
-#define CODES_INVALID_MESSAGE GRIB_INVALID_MESSAGE
+#define CODES_INVALID_MESSAGE		GRIB_INVALID_MESSAGE
 /** Decoding invalid */
-#define CODES_DECODING_ERROR GRIB_DECODING_ERROR
+#define CODES_DECODING_ERROR		GRIB_DECODING_ERROR
 /** Encoding invalid */
-#define CODES_ENCODING_ERROR GRIB_ENCODING_ERROR
+#define CODES_ENCODING_ERROR		GRIB_ENCODING_ERROR
 /** Code cannot unpack because of string too small */
-#define CODES_NO_MORE_IN_SET GRIB_NO_MORE_IN_SET
+#define CODES_NO_MORE_IN_SET		GRIB_NO_MORE_IN_SET
 /** Problem with calculation of geographic attributes */
-#define CODES_GEOCALCULUS_PROBLEM GRIB_GEOCALCULUS_PROBLEM
+#define CODES_GEOCALCULUS_PROBLEM		GRIB_GEOCALCULUS_PROBLEM
 /** Memory allocation error */
-#define CODES_OUT_OF_MEMORY GRIB_OUT_OF_MEMORY
+#define CODES_OUT_OF_MEMORY		GRIB_OUT_OF_MEMORY
 /** Value is read only */
-#define CODES_READ_ONLY GRIB_READ_ONLY
+#define CODES_READ_ONLY		GRIB_READ_ONLY
 /** Invalid argument */
-#define CODES_INVALID_ARGUMENT GRIB_INVALID_ARGUMENT
+#define CODES_INVALID_ARGUMENT		GRIB_INVALID_ARGUMENT
 /** Null handle */
-#define CODES_NULL_HANDLE GRIB_NULL_HANDLE
+#define CODES_NULL_HANDLE		GRIB_NULL_HANDLE
 /** Invalid section number */
-#define CODES_INVALID_SECTION_NUMBER GRIB_INVALID_SECTION_NUMBER
+#define CODES_INVALID_SECTION_NUMBER		GRIB_INVALID_SECTION_NUMBER
 /** Value cannot be missing */
-#define CODES_VALUE_CANNOT_BE_MISSING GRIB_VALUE_CANNOT_BE_MISSING
+#define CODES_VALUE_CANNOT_BE_MISSING		GRIB_VALUE_CANNOT_BE_MISSING
 /** Wrong message length */
-#define CODES_WRONG_LENGTH GRIB_WRONG_LENGTH
+#define CODES_WRONG_LENGTH		GRIB_WRONG_LENGTH
 /** Invalid key type */
-#define CODES_INVALID_TYPE GRIB_INVALID_TYPE
+#define CODES_INVALID_TYPE		GRIB_INVALID_TYPE
 /** Unable to set step */
-#define CODES_WRONG_STEP GRIB_WRONG_STEP
+#define CODES_WRONG_STEP		GRIB_WRONG_STEP
 /** Wrong units for step (step must be integer) */
-#define CODES_WRONG_STEP_UNIT GRIB_WRONG_STEP_UNIT
+#define CODES_WRONG_STEP_UNIT		GRIB_WRONG_STEP_UNIT
 /** Invalid file id */
-#define CODES_INVALID_FILE GRIB_INVALID_FILE
+#define CODES_INVALID_FILE		GRIB_INVALID_FILE
 /** Invalid grib id */
-#define CODES_INVALID_GRIB GRIB_INVALID_GRIB
+#define CODES_INVALID_GRIB		GRIB_INVALID_GRIB
 /** Invalid index id */
-#define CODES_INVALID_INDEX GRIB_INVALID_INDEX
+#define CODES_INVALID_INDEX		GRIB_INVALID_INDEX
 /** Invalid iterator id */
-#define CODES_INVALID_ITERATOR GRIB_INVALID_ITERATOR
+#define CODES_INVALID_ITERATOR		GRIB_INVALID_ITERATOR
 /** Invalid keys iterator id */
-#define CODES_INVALID_KEYS_ITERATOR GRIB_INVALID_KEYS_ITERATOR
+#define CODES_INVALID_KEYS_ITERATOR		GRIB_INVALID_KEYS_ITERATOR
 /** Invalid nearest id */
-#define CODES_INVALID_NEAREST GRIB_INVALID_NEAREST
+#define CODES_INVALID_NEAREST		GRIB_INVALID_NEAREST
 /** Invalid order by */
-#define CODES_INVALID_ORDERBY GRIB_INVALID_ORDERBY
+#define CODES_INVALID_ORDERBY		GRIB_INVALID_ORDERBY
 /** Missing a key from the fieldset */
-#define CODES_MISSING_KEY GRIB_MISSING_KEY
+#define CODES_MISSING_KEY		GRIB_MISSING_KEY
 /** The point is out of the grid area */
-#define CODES_OUT_OF_AREA GRIB_OUT_OF_AREA
+#define CODES_OUT_OF_AREA		GRIB_OUT_OF_AREA
 /** Concept no match */
-#define CODES_CONCEPT_NO_MATCH GRIB_CONCEPT_NO_MATCH
+#define CODES_CONCEPT_NO_MATCH		GRIB_CONCEPT_NO_MATCH
 /** Hash array no match */
-#define CODES_HASH_ARRAY_NO_MATCH GRIB_HASH_ARRAY_NO_MATCH
+#define CODES_HASH_ARRAY_NO_MATCH		GRIB_HASH_ARRAY_NO_MATCH
 /** Definitions files not found */
-#define CODES_NO_DEFINITIONS GRIB_NO_DEFINITIONS
+#define CODES_NO_DEFINITIONS		GRIB_NO_DEFINITIONS
 /** Wrong type while packing */
-#define CODES_WRONG_TYPE GRIB_WRONG_TYPE
+#define CODES_WRONG_TYPE		GRIB_WRONG_TYPE
 /** End of resource */
-#define CODES_END GRIB_END
+#define CODES_END		GRIB_END
 /** Unable to code a field without values */
-#define CODES_NO_VALUES GRIB_NO_VALUES
+#define CODES_NO_VALUES		GRIB_NO_VALUES
 /** Grid description is wrong or inconsistent */
-#define CODES_WRONG_GRID GRIB_WRONG_GRID
+#define CODES_WRONG_GRID		GRIB_WRONG_GRID
 /** End of index reached */
-#define CODES_END_OF_INDEX GRIB_END_OF_INDEX
+#define CODES_END_OF_INDEX		GRIB_END_OF_INDEX
 /** Null index */
-#define CODES_NULL_INDEX GRIB_NULL_INDEX
+#define CODES_NULL_INDEX		GRIB_NULL_INDEX
 /** End of resource reached when reading message */
-#define CODES_PREMATURE_END_OF_FILE GRIB_PREMATURE_END_OF_FILE
+#define CODES_PREMATURE_END_OF_FILE		GRIB_PREMATURE_END_OF_FILE
 /** An internal array is too small */
-#define CODES_INTERNAL_ARRAY_TOO_SMALL GRIB_INTERNAL_ARRAY_TOO_SMALL
+#define CODES_INTERNAL_ARRAY_TOO_SMALL		GRIB_INTERNAL_ARRAY_TOO_SMALL
 /** Message is too large for the current architecture */
-#define CODES_MESSAGE_TOO_LARGE GRIB_MESSAGE_TOO_LARGE
+#define CODES_MESSAGE_TOO_LARGE		GRIB_MESSAGE_TOO_LARGE
 /** Constant field */
-#define CODES_CONSTANT_FIELD GRIB_CONSTANT_FIELD
+#define CODES_CONSTANT_FIELD		GRIB_CONSTANT_FIELD
 /** Switch unable to find a matching case */
-#define CODES_SWITCH_NO_MATCH GRIB_SWITCH_NO_MATCH
+#define CODES_SWITCH_NO_MATCH		GRIB_SWITCH_NO_MATCH
 /** Underflow */
-#define CODES_UNDERFLOW GRIB_UNDERFLOW
+#define CODES_UNDERFLOW		GRIB_UNDERFLOW
 /** Message malformed */
-#define CODES_MESSAGE_MALFORMED GRIB_MESSAGE_MALFORMED
+#define CODES_MESSAGE_MALFORMED		GRIB_MESSAGE_MALFORMED
 /** Index is corrupted */
-#define CODES_CORRUPTED_INDEX GRIB_CORRUPTED_INDEX
+#define CODES_CORRUPTED_INDEX		GRIB_CORRUPTED_INDEX
 /** Invalid number of bits per value */
-#define CODES_INVALID_BPV GRIB_INVALID_BPV
+#define CODES_INVALID_BPV		GRIB_INVALID_BPV
 /** Edition of two messages is different */
-#define CODES_DIFFERENT_EDITION GRIB_DIFFERENT_EDITION
+#define CODES_DIFFERENT_EDITION		GRIB_DIFFERENT_EDITION
 /** Value is different */
-#define CODES_VALUE_DIFFERENT GRIB_VALUE_DIFFERENT
+#define CODES_VALUE_DIFFERENT		GRIB_VALUE_DIFFERENT
 /** Invalid key value */
-#define CODES_INVALID_KEY_VALUE GRIB_INVALID_KEY_VALUE
+#define CODES_INVALID_KEY_VALUE		GRIB_INVALID_KEY_VALUE
 /** String is smaller than requested */
-#define CODES_STRING_TOO_SMALL GRIB_STRING_TOO_SMALL
+#define CODES_STRING_TOO_SMALL		GRIB_STRING_TOO_SMALL
 /** Wrong type conversion */
-#define CODES_WRONG_CONVERSION GRIB_WRONG_CONVERSION
+#define CODES_WRONG_CONVERSION		GRIB_WRONG_CONVERSION
 /** Missing BUFR table entry for descriptor */
-#define CODES_MISSING_BUFR_ENTRY GRIB_MISSING_BUFR_ENTRY
+#define CODES_MISSING_BUFR_ENTRY		GRIB_MISSING_BUFR_ENTRY
 /** Null pointer */
-#define CODES_NULL_POINTER GRIB_NULL_POINTER
+#define CODES_NULL_POINTER		GRIB_NULL_POINTER
 /** Attribute is already present, cannot add */
-#define CODES_ATTRIBUTE_CLASH GRIB_ATTRIBUTE_CLASH
+#define CODES_ATTRIBUTE_CLASH		GRIB_ATTRIBUTE_CLASH
 /** Too many attributes. Increase MAX_ACCESSOR_ATTRIBUTES */
-#define CODES_TOO_MANY_ATTRIBUTES GRIB_TOO_MANY_ATTRIBUTES
+#define CODES_TOO_MANY_ATTRIBUTES		GRIB_TOO_MANY_ATTRIBUTES
 /** Attribute not found. */
-#define CODES_ATTRIBUTE_NOT_FOUND GRIB_ATTRIBUTE_NOT_FOUND
+#define CODES_ATTRIBUTE_NOT_FOUND		GRIB_ATTRIBUTE_NOT_FOUND
 /** Edition not supported. */
-#define CODES_UNSUPPORTED_EDITION GRIB_UNSUPPORTED_EDITION
+#define CODES_UNSUPPORTED_EDITION		GRIB_UNSUPPORTED_EDITION
 /** Value out of coding range */
-#define CODES_OUT_OF_RANGE GRIB_OUT_OF_RANGE
+#define CODES_OUT_OF_RANGE		GRIB_OUT_OF_RANGE
 /** Size of bitmap is incorrect */
-#define CODES_WRONG_BITMAP_SIZE GRIB_WRONG_BITMAP_SIZE
+#define CODES_WRONG_BITMAP_SIZE		GRIB_WRONG_BITMAP_SIZE
 /** Functionality not enabled */
-#define CODES_FUNCTIONALITY_NOT_ENABLED GRIB_FUNCTIONALITY_NOT_ENABLED
+#define CODES_FUNCTIONALITY_NOT_ENABLED		GRIB_FUNCTIONALITY_NOT_ENABLED
+/** Value mismatch */
+#define CODES_VALUE_MISMATCH		GRIB_VALUE_MISMATCH
+/** Double values are different */
+#define CODES_DOUBLE_VALUE_MISMATCH		GRIB_DOUBLE_VALUE_MISMATCH
+/** Long values are different */
+#define CODES_LONG_VALUE_MISMATCH		GRIB_LONG_VALUE_MISMATCH
+/** Byte values are different */
+#define CODES_BYTE_VALUE_MISMATCH		GRIB_BYTE_VALUE_MISMATCH
+/** String values are different */
+#define CODES_STRING_VALUE_MISMATCH		GRIB_STRING_VALUE_MISMATCH
+/** Offset mismatch */
+#define CODES_OFFSET_MISMATCH		GRIB_OFFSET_MISMATCH
+/** Count mismatch */
+#define CODES_COUNT_MISMATCH		GRIB_COUNT_MISMATCH
+/** Name mismatch */
+#define CODES_NAME_MISMATCH		GRIB_NAME_MISMATCH
+/** Type mismatch */
+#define CODES_TYPE_MISMATCH		GRIB_TYPE_MISMATCH
+/** Type and value mismatch */
+#define CODES_TYPE_AND_VALUE_MISMATCH		GRIB_TYPE_AND_VALUE_MISMATCH
+/** Unable to compare accessors */
+#define CODES_UNABLE_TO_COMPARE_ACCESSORS		GRIB_UNABLE_TO_COMPARE_ACCESSORS
+/** Assertion failure */
+#define CODES_ASSERTION_FAILURE		GRIB_ASSERTION_FAILURE
 /*! @}*/
 #endif

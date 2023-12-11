@@ -33,7 +33,7 @@ program set
    ! igrib is the grib id to be used in subsequent calls
    call codes_grib_new_from_file(infile, igrib)
 
-   ! set centre as a long */
+   ! set centre as a long
    centre = 80
    call codes_set(igrib, 'centre', centre)
 

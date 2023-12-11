@@ -40,7 +40,6 @@ static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
-static void init_class(grib_accessor_class*);
 static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_long
@@ -57,30 +56,32 @@ static grib_accessor_class _grib_accessor_class_long = {
     "long",                      /* name */
     sizeof(grib_accessor_long),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     0,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    &dump,                       /* describes himself */
-    0,                /* get length of section */
+    0,                    /* destroy */
+    &dump,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    &pack_missing,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    &unpack_double,              /* grib_unpack procedures double */
-    &pack_string,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    &pack_missing,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    0,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -89,8 +90,10 @@ static grib_accessor_class _grib_accessor_class_long = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     &compare,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -98,37 +101,6 @@ static grib_accessor_class _grib_accessor_class_long = {
 
 
 grib_accessor_class* grib_accessor_class_long = &_grib_accessor_class_long;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -148,6 +120,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     long val = 0;
     size_t l = 1;
     char repres[1024];
+    char format[32] = "%ld";
+    grib_handle* h = grib_handle_of_accessor(a);
 
     err = grib_unpack_long(a, &val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -155,10 +129,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     /* if (err) return err; */
     (void)err;
 
-    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0))
+    if ((val == GRIB_MISSING_LONG) && ((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0)) {
         snprintf(repres, sizeof(repres), "MISSING");
-    else
-        snprintf(repres, sizeof(repres), "%ld", val);
+    } else {
+        size_t size = sizeof(format);
+        grib_get_string(h, "formatForLongs", format, &size);
+        snprintf(repres, sizeof(repres), format, val);
+    }
 
     l = strlen(repres) + 1;
 
@@ -185,24 +162,6 @@ static int pack_missing(grib_accessor* a)
 
     return GRIB_VALUE_CANNOT_BE_MISSING;
 }
-
-/*
-static int is_missing(grib_accessor* a){
-
-    size_t len = 1;
-    long value = GRIB_MISSING_LONG;
-    long ret=0;
-
-    if(a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-    {
-        ret = grib_unpack_long(a,&value,&len);
-        Assert( ret == 0);
-        return value == GRIB_MISSING_LONG;
-    }
-
-    return 0;
-}
-*/
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
@@ -298,14 +257,12 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     long v = 0; /* The converted value */
 
-#if 0
-    /* Requires more work e.g. filter */
-    if (strcmp_nocase(val, "missing")==0) {
+    // ECC-1722
+    if (STR_EQUAL_NOCASE(val, "missing")) {
         return pack_missing(a);
     }
-#endif
 
-    if (string_to_long(val, &v) != GRIB_SUCCESS) {
+    if (string_to_long(val, &v, 1) != GRIB_SUCCESS) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                 "Trying to pack \"%s\" as long. String cannot be converted to an integer", val);
         return GRIB_WRONG_TYPE;

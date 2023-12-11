@@ -9,6 +9,7 @@
  */
 
 
+#include "grib_scaling.h"
 #include "grib_api_internal.h"
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)
@@ -47,59 +48,40 @@ bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d)
     return cd;
 }
 
-int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v)
+int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code)
 {
-    int err = 0;
-    bufr_descriptor* d;
+    if (!v) return GRIB_NULL_POINTER;
+    Assert(v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION || v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR);
 
-    if (!v)
-        return GRIB_NULL_POINTER;
+    v->code = code;
+    v->F    = code / 100000;
+    if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION) Assert(v->F == 1);
+    if (v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR) Assert(v->F == 2);
+    v->X = (code - v->F * 100000) / 1000;
+    v->Y = (code - v->F * 100000) % 1000;
 
-    if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION || v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR) {
-        v->code = code;
-        v->F    = code / 100000;
-        if (v->type == BUFR_DESCRIPTOR_TYPE_REPLICATION) Assert(v->F == 1);
-        if (v->type == BUFR_DESCRIPTOR_TYPE_OPERATOR)    Assert(v->F == 2);
-        v->X    = (code - v->F * 100000) / 1000;
-        v->Y    = (code - v->F * 100000) % 1000;
-    }
-    else {
-        if (tables_accessor == NULL)
-            return GRIB_NULL_POINTER;
-        d       = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, &err);
-        v->code = d->code;
-        v->F    = d->F;
-        v->X    = d->X;
-        v->Y    = d->Y;
-        /* grib_context_free(c,v->name); See ECC-489 */
-        /* v->name=grib_context_strdup(c,d->name); See ECC-489 */
+    return GRIB_SUCCESS;
 
-        strcpy(v->shortName,d->shortName);
-        strcpy(v->units,d->units);
-
-        v->scale     = d->scale;
-        v->factor    = d->factor;
-        v->width     = d->width;
-        v->reference = d->reference;
-        v->type      = d->type;
-        v->nokey     = d->nokey;
-        grib_bufr_descriptor_delete(d);
-    }
-    return err;
-}
-
-void grib_bufr_descriptor_set_reference(bufr_descriptor* v, long reference)
-{
-    if (!v)
-        return;
-    v->reference = reference;
-}
-
-void grib_bufr_descriptor_set_width(bufr_descriptor* v, long width)
-{
-    if (!v)
-        return;
-    v->width = width;
+    // Old implementation also had a "grib_accessor* tables_accessor" argument:
+    //     if (tables_accessor == NULL)
+    //         return GRIB_NULL_POINTER;
+    //     bufr_descriptor* d  = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, &err);
+    //     v->code = d->code;
+    //     v->F    = d->F;
+    //     v->X    = d->X;
+    //     v->Y    = d->Y;
+    //     /* grib_context_free(c,v->name); See ECC-489 */
+    //     /* v->name=grib_context_strdup(c,d->name); See ECC-489 */
+    //     strcpy(v->shortName,d->shortName);
+    //     strcpy(v->units,d->units);
+    //     v->scale     = d->scale;
+    //     v->factor    = d->factor;
+    //     v->width     = d->width;
+    //     v->reference = d->reference;
+    //     v->type      = d->type;
+    //     v->nokey     = d->nokey;
+    //     grib_bufr_descriptor_delete(d);
+    // return err;
 }
 
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale)
@@ -109,10 +91,10 @@ void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale)
     v->scale = scale;
     if (scale != 0)
         v->type = BUFR_DESCRIPTOR_TYPE_DOUBLE;
-    v->factor = grib_power(-scale, 10);
+    v->factor = codes_power<double>(-scale, 10);
 }
 
-int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v)
+int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v)
 {
     if (v->code == 31031 || v->code == 999999)
         return 0;

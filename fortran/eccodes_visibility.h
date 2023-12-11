@@ -26,6 +26,7 @@ public :: codes_new_from_message, &
 public :: codes_release
 public :: codes_dump
 public :: codes_get_error_string
+public :: codes_get_native_type
 public :: codes_get_api_version
 public :: codes_get_size
 public :: codes_get_message_size, codes_copy_message

@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-
 # Define a common label for all the tmp files
 label="bufr_read_scatterometer_f"
 
@@ -19,15 +18,12 @@ fTmp=${label}.tmp.txt
 rm -f $fTmp
 
 # We check "asca_139.bufr". The path is hardcoded in the example
-
-REDIRECT=/dev/null
-
 # Write the key values into a file
-${examples_dir}/eccodes_f_bufr_read_scatterometer 2> $REDIRECT > $fTmp
+${examples_dir}/eccodes_f_bufr_read_scatterometer > $fTmp
 
 # Check the results
 REFERENCE_FILE=bufr_read_scatterometer_f.ref
 diff $REFERENCE_FILE $fTmp
 
-#Clean up
+# Clean up
 rm -f $fTmp

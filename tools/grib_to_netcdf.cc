@@ -12,7 +12,7 @@
 
 #ifdef HAVE_NETCDF
 
-#include <math.h>
+#include <cmath>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -48,12 +48,8 @@ static double global_missing_value = 9.9692099683868690e+36; /* See GRIB-953 */
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
-typedef int boolean;
 typedef int err;
 typedef off_t file_offset;
-
-static int FALSE = 0;
-static int TRUE  = 1;
 
 static int files = 0;
 
@@ -85,60 +81,60 @@ struct parameter
 typedef struct parameter parameter;
 
 static const char* get_value(const request*, const char* name, int n);
-static boolean parsedate(const char* name, long* julian, long* second, boolean* isjul);
+static bool parsedate(const char* name, long* julian, long* second, bool* isjul);
 
-static boolean eq_string(const char* l, const char* r)
+static bool eq_string(const char* l, const char* r)
 {
     if (l && r)
         return strcmp(l, r) == 0;
-    return FALSE;
+    return false;
 }
 
-static boolean eq_integer(const char* l, const char* r)
+static bool eq_integer(const char* l, const char* r)
 {
     if (l && r)
         return atol(l) == atol(r);
-    return FALSE;
+    return false;
 }
 
-static boolean eq_null(const char* l, const char* r)
+static bool eq_null(const char* l, const char* r)
 {
-    return TRUE;
+    return true;
 }
 
-static boolean eq_coord(const char* l, const char* r)
-{
-    if (l && r)
-        return strcmp(l, r) == 0;
-    return FALSE;
-}
-
-static boolean eq_range(const char* l, const char* r)
+static bool eq_coord(const char* l, const char* r)
 {
     if (l && r)
         return strcmp(l, r) == 0;
-    return FALSE;
+    return false;
 }
 
-static boolean eq_date(const char* l, const char* r)
+static bool eq_range(const char* l, const char* r)
 {
     if (l && r)
         return strcmp(l, r) == 0;
-    return FALSE;
+    return false;
 }
 
-static boolean eq_param(const char* l, const char* r)
+static bool eq_date(const char* l, const char* r)
 {
     if (l && r)
         return strcmp(l, r) == 0;
-    return FALSE;
+    return false;
 }
 
-static boolean eq_time(const char* l, const char* r)
+static bool eq_param(const char* l, const char* r)
 {
     if (l && r)
         return strcmp(l, r) == 0;
-    return FALSE;
+    return false;
+}
+
+static bool eq_time(const char* l, const char* r)
+{
+    if (l && r)
+        return strcmp(l, r) == 0;
+    return false;
 }
 
 static value* new_value(const char* name)
@@ -175,11 +171,11 @@ static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
         value* va      = pa->values;
         value* last    = 0;
         const char* nb = vb->name;
-        boolean add    = TRUE;
+        bool add    = true;
 
         while (va) {
             if (strcmp(va->name, nb) == 0) {
-                add = FALSE;
+                add = false;
                 break;
             }
 
@@ -201,14 +197,14 @@ static void ecc_reqmerge(parameter* pa, const parameter* pb, request* a)
 }
 
 /* Fast version if a && b same */
-static boolean ecc_reqmerge1(request* a, const request* b)
+static bool ecc_reqmerge1(request* a, const request* b)
 {
     parameter* pa       = a->params;
     const parameter* pb = b->params;
 
     while (pa && pb) {
         if (strcmp(pa->name, pb->name) != 0)
-            return FALSE;
+            return false;
 
         ecc_reqmerge(pa, pb, a);
 
@@ -248,13 +244,13 @@ static const char* parse1(const char* p, int* x, int* n)
     return p;
 }
 
-static boolean is_number(const char* name)
+static bool is_number(const char* name)
 {
     const char* p = name;
     int x, n;
 
     if (p == 0 || *p == 0)
-        return FALSE;
+        return false;
 
     if (*p == '-')
         p++;
@@ -263,7 +259,7 @@ static boolean is_number(const char* name)
 
     p = parse1(p, &x, &n);
     if (n == 0 && *p != '.')
-        return FALSE;
+        return false;
 
     if (*p == '.') {
         p++;
@@ -278,10 +274,10 @@ static boolean is_number(const char* name)
             p++;
         p = parse1(p, &x, &n);
         if (n == 0)
-            return FALSE;
+            return false;
     }
 
-    return *p == 0 ? TRUE : FALSE;
+    return *p == 0 ? true : false;
 }
 static parameter* new_parameter(char* name, value* v)
 {
@@ -292,7 +288,7 @@ static parameter* new_parameter(char* name, value* v)
     return p;
 }
 
-static void put_value(request* r, const char* parname, const char* valname, boolean append, boolean unique, boolean ascending)
+static void put_value(request* r, const char* parname, const char* valname, bool append, bool unique, bool ascending)
 {
     parameter* p;
     value* v;
@@ -393,7 +389,7 @@ static void add_value(request* r, const char* parname, const char* fmt, ...)
     vsnprintf(buffer, sizeof(buffer), fmt, list);
     va_end(list);
 
-    put_value(r, parname, buffer, TRUE, FALSE, FALSE);
+    put_value(r, parname, buffer, true, false, false);
 }
 
 static void ecc_reqmerge2(request* a, const request* b)
@@ -406,7 +402,7 @@ static void ecc_reqmerge2(request* a, const request* b)
         if (pa == NULL) {
             value* v = pb->values;
             while (v) {
-                put_value(a, pb->name, v->name, TRUE, TRUE, FALSE);
+                put_value(a, pb->name, v->name, true, true, false);
                 v = v->next;
             }
         }
@@ -540,7 +536,7 @@ static void set_value(request* r, const char* parname, const char* fmt, ...)
     vsnprintf(buffer, sizeof(buffer), fmt, list);
     va_end(list);
 
-    put_value(r, parname, buffer, FALSE, FALSE, FALSE);
+    put_value(r, parname, buffer, false, false, false);
 }
 
 static err handle_to_request(request* r, grib_handle* g)
@@ -624,7 +620,7 @@ static err handle_to_request(request* r, grib_handle* g)
 /*===============================================================================*/
 /*===============================================================================*/
 
-typedef boolean (*namecmp)(const char*, const char*);
+typedef bool (*namecmp)(const char*, const char*);
 
 typedef struct hypercube
 {
@@ -682,8 +678,8 @@ typedef struct field
 
     /* missing fields/values */
 
-    /*boolean is_missing;*/ /* field is missing */
-    boolean has_bitmap;     /* field has missing values (= bitmap) */
+    /*bool is_missing;*/ /* field is missing */
+    bool has_bitmap;     /* field has missing values (= bitmap) */
 
     field_request* r;
 
@@ -719,7 +715,7 @@ static const char* get_axis(const hypercube* h, int pos);
 static const char* get_axis(const hypercube* h, int pos);
 static int cube_order(const hypercube* h, const request* r);
 static void free_hypercube(hypercube* h);
-static int ecc_cube_position(const hypercube* h, const request* r, boolean remove_holes);
+static int ecc_cube_position(const hypercube* h, const request* r, bool remove_holes);
 
 static value* clone_one_value(const value* p)
 {
@@ -1143,14 +1139,14 @@ static request* fieldset_to_request(fieldset* fs)
 /* hypercube from mars client */
 /*===============================================================================*/
 
-static boolean eq_string(const char*, const char*);
-static boolean eq_integer(const char*, const char*);
-static boolean eq_range(const char*, const char*);
-static boolean eq_param(const char*, const char*);
-static boolean eq_coord(const char*, const char*);
-static boolean eq_date(const char*, const char*);
-static boolean eq_time(const char*, const char*);
-static boolean eq_null(const char*, const char*);
+static bool eq_string(const char*, const char*);
+static bool eq_integer(const char*, const char*);
+static bool eq_range(const char*, const char*);
+static bool eq_param(const char*, const char*);
+static bool eq_coord(const char*, const char*);
+static bool eq_date(const char*, const char*);
+static bool eq_time(const char*, const char*);
+static bool eq_null(const char*, const char*);
 
 static axis_t global_axis[] = {
 
@@ -1319,10 +1315,11 @@ static axis_t global_axis[] = {
 
 static int axisindex(const char* name)
 {
-    int i = 0;
+    size_t i = 0;
     for (i = 0; i < NUMBER(global_axis); i++) {
-        if (strcmp(name, global_axis[i].name) == 0)
-            return i;
+        if (STR_EQUAL(name, global_axis[i].name)){
+            return (int)i;
+        }
     }
     return -1;
 }
@@ -1330,16 +1327,16 @@ static int axisindex(const char* name)
 static namecmp comparator(const char* name)
 {
     static char* dontcompare = NULL;
-    static boolean first     = 1;
+    static bool first     = 1;
     int i                    = 0;
 
     if (first) {
         dontcompare = getenv("MARS_DONT_CHECK");
-        first       = FALSE;
+        first       = false;
     }
 
     if (dontcompare != NULL) {
-        if (strcmp(dontcompare, name) == 0)
+        if (STR_EQUAL(dontcompare, name))
             return eq_null;
     }
 
@@ -1438,7 +1435,7 @@ static void unset_value(request* r, const char* parname)
 
     p = r->params;
     while (p) {
-        if (strcmp(parname, p->name) == 0) {
+        if (STR_EQUAL(parname, p->name)) {
             if (q)
                 q->next = p->next;
             else
@@ -1460,11 +1457,11 @@ static void valcpy(request* a, request* b, char* aname, char* bname)
 {
     parameter* p;
     if (a && b && (p = find_parameter(b, bname))) {
-        boolean z = FALSE;
+        bool z = false;
         value* v  = p->values;
         while (v) {
-            put_value(a, aname, v->name, z, FALSE, FALSE);
-            z = TRUE;
+            put_value(a, aname, v->name, z, false, false);
+            z = true;
             v = v->next;
         }
     }
@@ -1521,7 +1518,8 @@ static int count_dimensions(const hypercube* h, const char* axis)
 
 static int count_hypercube(const request* r)
 {
-    int i = 0, count = 1;
+    int count = 1;
+    size_t i = 0;
     for (i = 0; i < NUMBER(global_axis); ++i) {
         int c = count_values(r, global_axis[i].name);
         count *= c ? c : 1;
@@ -1532,17 +1530,17 @@ static int count_hypercube(const request* r)
 
 static int cube_order(const hypercube* h, const request* r)
 {
-    return ecc_cube_position(h, r, TRUE);
+    return ecc_cube_position(h, r, true);
 }
 
 static int cube_position(const hypercube* h, const request* r)
 {
-    return ecc_cube_position(h, r, FALSE);
+    return ecc_cube_position(h, r, false);
 }
 
 static void reserve_index_cache(hypercube* h, int size)
 {
-    if (size == 0)
+    if (size <= 0)
         return;
 
     if (h->index_cache != 0)
@@ -1553,7 +1551,7 @@ static void reserve_index_cache(hypercube* h, int size)
     h->index_cache_size = size;
 }
 
-static int ecc_cube_position(const hypercube* h, const request* r, boolean remove_holes)
+static int ecc_cube_position(const hypercube* h, const request* r, bool remove_holes)
 {
     request* cube = h->cube;
     int c         = count_axis(h);
@@ -1627,7 +1625,7 @@ static void cube_indexes(
         int k                      = 0;
         int count                  = count_values(cube, axis);
         int last                   = h->index_cache[i];
-        const boolean is_time_axis = (strcmp(axis, "time") == 0);
+        const bool is_time_axis = (STR_EQUAL(axis, "time"));
         if (is_time_axis) {
             Assert(times_array);
             Assert(times_array_size == count);
@@ -1669,7 +1667,7 @@ static hypercube* new_hypercube(const request* r)
 {
     hypercube* h = (hypercube*)calloc(sizeof(hypercube), 1);
     int total = 0, count = 0;
-    int n           = 0;
+    size_t n        = 0;
     const char* val = 0;
     Assert(h);
     h->r    = clone_one_request(r);
@@ -1747,15 +1745,12 @@ static hypercube* new_hypercube_from_mars_request(const request* r)
 
     struct stuff_1 s;
 
-#if 0
-    const request *lang = mars_language_from_request(r);
-    int count = 0;
-
-    count = init_axis(lang);
-    grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
-    /* print_all_requests(mars_language_from_request(r)); */
-    grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
-#endif
+//     const request *lang = mars_language_from_request(r);
+//     int count = 0;
+//     count = init_axis(lang);
+//     grib_context_log(ctx,GRIB_LOG_DEBUG,"cube %s",r->kind);
+//     /* print_all_requests(mars_language_from_request(r)); */
+//     grib_context_log(ctx,GRIB_LOG_INFO,"NUMBER(axis): %d, number axisnew: %d",NUMBER(axis),count);
 
     s.c = new_hypercube(r);
     s.r = clone_one_request(r);
@@ -1850,10 +1845,10 @@ typedef struct filter_type
     double scale_factor;
     double add_offset;
     double missing;
-    boolean bitmap;
+    bool bitmap;
     ncatt_t att;
     request* filter_request;
-    boolean scale;
+    bool scale;
 } dataset_t;
 
 /*
@@ -1865,19 +1860,19 @@ typedef struct filter_type
 
 typedef struct ncoptions
 {
-    boolean usevalidtime; /* Whether to use valid TIME only or not */
-    boolean auto_refdate; /* Automatic Reference Date */
+    bool usevalidtime; /* Whether to use valid TIME only or not */
+    bool auto_refdate; /* Automatic Reference Date */
     long refdate;         /* Reference date */
     const char* version;
 
     char* title;
     char* history;
     char* unlimited;
-    boolean checkvalidtime;
+    bool checkvalidtime;
     request* mars_description;
-    boolean mmeans;      /* Whether this dataset is Monthly Means */
-    boolean climatology; /* Whether this dataset is climatology */
-    boolean shuffle;
+    bool mmeans;      /* Whether this dataset is Monthly Means */
+    bool climatology; /* Whether this dataset is climatology */
+    bool shuffle;
     long deflate;
 } ncoptions_t;
 
@@ -1962,9 +1957,9 @@ static long monthnumber(const char* m)
 static int check_stepUnits(const char* step_units_str)
 {
     /* Only hours, minutes and seconds supported */
-    if (strcmp(step_units_str, "h") == 0 ||
-        strcmp(step_units_str, "m") == 0 ||
-        strcmp(step_units_str, "s") == 0) {
+    if (STR_EQUAL(step_units_str, "h") ||
+        STR_EQUAL(step_units_str, "m") ||
+        STR_EQUAL(step_units_str, "s")) {
         return GRIB_SUCCESS;
     }
     return GRIB_WRONG_STEP_UNIT;
@@ -2020,7 +2015,7 @@ static void validation_time(request* r)
             date = atol(p);
         else {
             long second = 0;
-            boolean isjul, date_ok;
+            bool isjul, date_ok;
             date_ok = parsedate(p, &julian, &second, &isjul);
             if (!date_ok)
                 grib_context_log(ctx, GRIB_LOG_ERROR, "Failed to parse date: '%s'", p);
@@ -2031,9 +2026,9 @@ static void validation_time(request* r)
         if (strlen(p) == 3) {
             if (setup.usevalidtime)
                 grib_context_log(ctx, GRIB_LOG_ERROR, "Climatology data. Setting usevalidtime=OFF");
-            setup.auto_refdate = FALSE;
-            setup.usevalidtime = FALSE;
-            setup.climatology  = TRUE;
+            setup.auto_refdate = false;
+            setup.usevalidtime = false;
+            setup.climatology  = true;
         }
     }
 
@@ -2057,10 +2052,10 @@ static void validation_time(request* r)
             grib_context_log(ctx, GRIB_LOG_ERROR,
                              "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
         }
-        if (strcmp("m", step_units) == 0) {
+        if (STR_EQUAL("m", step_units)) {
             step /= 60;
         }
-        else if (strcmp("s", step_units) == 0) {
+        else if (STR_EQUAL("s", step_units)) {
             step /= 3600;
         }
     }
@@ -2103,18 +2098,22 @@ static void get_nc_options(const request* user_r)
     const char* history   = get_value(user_r, "history", 0);
     const char* unlimited = get_value(user_r, "unlimited", 0);
 
-    setup.shuffle      = shuffle ? (strcmp(shuffle, "true") == 0) : FALSE;
+    setup.shuffle      = shuffle ? (strcmp(shuffle, "true") == 0) : false;
     setup.deflate      = deflate ? ((strcmp(deflate, "none") == 0) ? -1 : atol(deflate)) : -1;
-    setup.usevalidtime = validtime ? (strcmp(validtime, "true") == 0) : FALSE;
+    setup.usevalidtime = validtime ? (strcmp(validtime, "true") == 0) : false;
     setup.refdate      = refdate ? atol(refdate) : 19000101;
-    setup.auto_refdate = refdate ? (strcmp(get_value(user_r, "referencedate", 0), "AUTOMATIC") == 0) : FALSE;
+    setup.auto_refdate = refdate ? (strcmp(get_value(user_r, "referencedate", 0), "AUTOMATIC") == 0) : false;
 
     setup.title     = title ? grib_context_strdup(ctx, (title)) : NULL;
     setup.history   = history ? grib_context_strdup(ctx, (history)) : NULL;
     setup.unlimited = unlimited ? grib_context_strdup(ctx, ((unlimited))) : NULL;
 
+    setup.checkvalidtime   = true;
     checkvalidtime_env     = getenv("GRIB_TO_NETCDF_CHECKVALIDTIME");
-    setup.checkvalidtime   = checkvalidtime_env ? atol(checkvalidtime_env) : 1;
+    if (checkvalidtime_env) {
+        const long v = atol(checkvalidtime_env);
+        if (v == 0) setup.checkvalidtime = false;
+    }
     setup.mars_description = empty_request("MARS");
 }
 
@@ -2123,19 +2122,19 @@ static nc_type translate_nctype(const char* name)
     if (!name)
         return NC_SHORT;
 
-    if (strcmp(name, "NC_BYTE") == 0)
+    if (STR_EQUAL(name, "NC_BYTE"))
         return NC_BYTE;
 
-    if (strcmp(name, "NC_SHORT") == 0)
+    if (STR_EQUAL(name, "NC_SHORT"))
         return NC_SHORT;
 
-    if (strcmp(name, "NC_INT") == 0)
+    if (STR_EQUAL(name, "NC_INT"))
         return NC_INT;
 
-    if (strcmp(name, "NC_FLOAT") == 0)
+    if (STR_EQUAL(name, "NC_FLOAT"))
         return NC_FLOAT;
 
-    if (strcmp(name, "NC_DOUBLE") == 0)
+    if (STR_EQUAL(name, "NC_DOUBLE"))
         return NC_DOUBLE;
 
     grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown netCDF type '%s'. Using NC_SHORT", name);
@@ -2165,7 +2164,7 @@ static int set_dimension(int ncid, const char* name, int n, int xtype, const cha
     int dim_id = DIM_ID;
     int dim_vec[DIM_ID];
 
-    if (setup.unlimited && (strcmp(name, setup.unlimited) == 0))
+    if ( setup.unlimited && (STR_EQUAL(name, setup.unlimited)) )
         n = NC_UNLIMITED;
 
     stat = nc_def_dim(ncid, name, n, &dim_id);
@@ -2199,7 +2198,7 @@ static int check_grid(field* f)
         return e;
     }
 
-    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0)) {
+    if ( !STR_EQUAL(grid_type, "regular_ll") && !STR_EQUAL(grid_type, "regular_gg") ) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
         grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -2251,7 +2250,7 @@ static int def_latlon(int ncid, fieldset* fs)
 
     field* g = get_field(fs, 0, expand_mem);
 
-    DebugAssert(check_grid(g) == GRIB_SUCCESS);
+    DEBUG_ASSERT(check_grid(g) == GRIB_SUCCESS);
 
     if ((e = get_num_latitudes_longitudes(g->handle, &nlats, &nlons)) != GRIB_SUCCESS) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: cannot get lat/lon info: %s", grib_get_error_message(e));
@@ -2266,7 +2265,7 @@ static int def_latlon(int ncid, fieldset* fs)
     n = nlats;
     set_dimension(ncid, "latitude", n, NC_FLOAT, "degrees_north", "latitude");
 
-    /* g->purge_header = TRUE; */
+    /* g->purge_header = true; */
     release_field(g);
 
     return e;
@@ -2275,7 +2274,7 @@ static int def_latlon(int ncid, fieldset* fs)
 static int put_latlon(int ncid, fieldset* fs)
 {
     int var_id = 0;
-    int i      = 0;
+    size_t i   = 0;
     size_t n   = 0;
     int stat   = 0;
     err e      = 0;
@@ -2338,7 +2337,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLongitudes: %s", grib_get_error_message(e));
         return e;
     }
-    Assert(n == ni);
+    if (n != ni) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLongitudes is not the same as Ni (%zu!=%zu)",n,ni);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2355,8 +2357,10 @@ static int put_latlon(int ncid, fieldset* fs)
         grib_context_log(ctx, GRIB_LOG_ERROR, "ecCodes: put_latlon: cannot get distinctLatitudes: %s", grib_get_error_message(e));
         return e;
     }
-
-    Assert(n == nj);
+    if (n != nj) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Number of distinctLatitudes is not the same as Nj (%zu!=%zu)",n,nj);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     for (i = 0; i < n; i++) {
         fvalues[i] = dvalues[i];
@@ -2364,7 +2368,7 @@ static int put_latlon(int ncid, fieldset* fs)
     stat = nc_put_var_float(ncid, var_id, fvalues);
     check_err("nc_put_var_float", stat, __LINE__);
 
-    /* g->purge_header = TRUE; */
+    /* g->purge_header = true; */
     release_field(g);
     grib_context_free(ctx, fvalues);
     grib_context_free(ctx, dvalues);
@@ -2378,7 +2382,7 @@ static int compute_scale(dataset_t* subset)
     double min            = DBL_MAX;
     double median         = 0;
     long i                = 0;
-    long j                = 0;
+    size_t j              = 0;
     int64_t scaled_max    = 0;
     int64_t scaled_min    = 0;
     int64_t scaled_median = 0;
@@ -2417,7 +2421,7 @@ static int compute_scale(dataset_t* subset)
         }
 
         if (g->has_bitmap) {
-            subset->bitmap = TRUE;
+            subset->bitmap = true;
             for (j = 0; j < len; ++j) {
                 if (vals && vals[j] != global_missing_value) {
                     if (vals[j] > max) max = vals[j];
@@ -2433,7 +2437,7 @@ static int compute_scale(dataset_t* subset)
                 }
             }
         }
-        /* g->purge_header = TRUE; */
+        /* g->purge_header = true; */
         release_field(g);
     }
 
@@ -2635,8 +2639,8 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
      return;
     }
     */
-    DebugAssert(vals);
-    DebugAssert(n > 0);
+    DEBUG_ASSERT(vals);
+    DEBUG_ASSERT(n > 0);
     if (!vals) return;
 
     switch (nctype) {
@@ -2645,7 +2649,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_BYTE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2659,7 +2666,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
                     double d = 0;
                     Assert(scale_factor > 0);
                     d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_SHORT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2671,7 +2681,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = rint((vals[i] - add_offset) / scale_factor);
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_INT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2683,7 +2696,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if (!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_FLOAT failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2695,7 +2711,10 @@ static void scale(double* vals, long n, void* data, dataset_t* g)
             for (i = 0; i < n; ++i) {
                 if (!g->bitmap || (vals[i] != global_missing_value)) {
                     double d = vals[i];
-                    Assert(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max);
+                    if(!(d >= nc_type_values[nctype].nc_type_min && d <= nc_type_values[nctype].nc_type_max)) {
+                        grib_context_log(ctx, GRIB_LOG_ERROR, "Scaling for type NC_DOUBLE failed");
+                        return;
+                    }
                     vscaled[i] = d;
                 }
             }
@@ -2754,7 +2773,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
     field* f                = get_field(fs, 0, expand_mem);
 
     void* vscaled       = NULL;
-    long vscaled_length = 0;
+    size_t vscaled_length = 0;
 
     long ni;
     long nj;
@@ -2782,7 +2801,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
     count[naxis]     = nj; /* latitude */
     count[naxis + 1] = ni; /* longitude */
 
-    /* f->purge_header = TRUE; */
+    /* f->purge_header = true; */
     release_field(f);
 
     stat = nc_inq_varid(ncid, name, &dataid);
@@ -2797,7 +2816,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
         size_t len;
         static double* vals    = NULL;
         static size_t vals_len = 0;
-        boolean missing        = 0;
+        bool missing        = 0;
 
         request* r;
         int j = 0;
@@ -2820,9 +2839,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             return e;
         }
 
-#if 0
-        boolean missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
-#endif
+        // bool missing = (g->ksec4[0] < 0); /* If negative number of values, field is missing */
 
         r = field_to_request(g);
         if (!missing) {
@@ -2865,7 +2882,7 @@ static int put_data(hypercube* h, int ncid, const char* name, dataset_t* subset)
             check_err("nc_put_vara_type", stat, __LINE__);
         }
 
-        /* g->purge_header = TRUE; */
+        /* g->purge_header = true; */
         release_field(g);
     }
 
@@ -2993,7 +3010,7 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         }
 
         if (strcmp(axis, "time") == 0) {
-            boolean onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
+            bool onedtime = (count_values(cube, "date") == 0 && count_values(cube, "step") == 0);
             snprintf(u, sizeof(u), "hours since 0000-00-00 00:00:00.0");
             longname = "reference_time";
             if (setup.usevalidtime || onedtime) {
@@ -3122,14 +3139,12 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
             check_err("nc_put_att_text", stat, __LINE__);
         }
 
-#if 0
-        if(subsets[i].att.other)
-        {
-            const char *txt = subsets[i].att.long_name;
-            stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
-            check_err("nc_put_att_text", stat,__LINE__,__FILE__);
-        }
-#endif
+        // if(subsets[i].att.other)
+        // {
+        //     const char *txt = subsets[i].att.long_name;
+        //     stat = nc_put_att_text(ncid, var_id, "other",strlen(txt),txt);
+        //     check_err("nc_put_att_text", stat,__LINE__,__FILE__);
+        // }
 
         if (subsets[i].att.metadata) {
             parameter* p = subsets[i].att.metadata->params;
@@ -3203,13 +3218,10 @@ static int define_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid, datase
         stat = nc_put_att_text(ncid, NC_GLOBAL, "history", strlen(history), history);
         check_err("nc_put_att_text", stat, __LINE__);
 
-#if 0
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
-        check_err(stat,__LINE__,__FILE__);
-
-        stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
-        check_err(stat,__LINE__,__FILE__);
-#endif
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "source",strlen(setup.source),setup.source);
+        //check_err(stat,__LINE__,__FILE__);
+        //stat = nc_put_att_text(ncid, NC_GLOBAL, "institution",strlen(institution),institution);
+        //check_err(stat,__LINE__,__FILE__);
 
         if (setup.title) {
             stat = nc_put_att_text(ncid, NC_GLOBAL, "title", strlen(setup.title), setup.title);
@@ -3254,6 +3266,7 @@ static size_t string_to_unique_number(const char* axis, const char* str)
     }
     return result;
 }
+
 static int fill_netcdf_dimensions(hypercube* h, fieldset* fs, int ncid)
 {
     const request* cube = h->cube;
@@ -3370,7 +3383,7 @@ static void print_ignored_keys(FILE* f, request* data)
 #define NO_TABLE -1
 #define NO_PARAM 0
 
-static void paramtable(const char* p, long* param, long* table, boolean paramIdMode)
+static void paramtable(const char* p, long* param, long* table, bool paramIdMode)
 {
     const char* q = p;
     int len       = strlen(p);
@@ -3406,7 +3419,7 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
 {
     const char* split         = NULL;
     int j                     = 0;
-    boolean set_param_as_name = TRUE;
+    bool set_param_as_name = true;
     long datatable            = 0; /* = atol(get_value(data_r,"_CODETABLE2",0)); */
 
     if (count_values(user_r, "split") == 0)
@@ -3415,18 +3428,18 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
     while ((split = get_value(user_r, "split", j++)) != NULL) {
         if (strcmp(split, "param") != 0) {
             if (count_values(data_r, split) > 1)
-                set_param_as_name = FALSE;
+                set_param_as_name = false;
         }
     }
 
     j = 0;
     while ((split = get_value(user_r, "split", j++)) != NULL) {
-        boolean found    = FALSE;
+        bool found    = false;
         request* cfg     = (request*)config_r;
-        boolean is_param = strcmp(split, "param") == 0;
+        bool is_param = strcmp(split, "param") == 0;
         /* Only use this parameter in the name if there is more
            than one value in the original request or if param */
-        boolean setname = ((count_values(data_r, split) > 1) || (is_param && set_param_as_name));
+        bool setname = ((count_values(data_r, split) > 1) || (is_param && set_param_as_name));
 
         while (cfg) {
             const char* cfgname = get_value(cfg, "NAME", 0);
@@ -3441,7 +3454,7 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
 
                     long cfgparam  = atol(cfgval);
                     long dataparam = atol(dataval);
-                    paramtable(dataval, &dataparam, &datatable, FALSE);
+                    paramtable(dataval, &dataparam, &datatable, false);
 
                     /* If it is not param and they're EXACTLY equal or
                        being param, they're the same parameter and table */
@@ -3473,7 +3486,7 @@ static void find_nc_attributes(const request* subset_r, const request* user_r, n
                                 strcat(att->name, "_");
                             strcat(att->name, pname);
                         }
-                        found = TRUE;
+                        found = true;
 
                         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: Var. name found: '%s'", att->name);
                     }
@@ -3516,7 +3529,7 @@ static void reqcb(const request* r, int count, axis_t* names, char* vals[], void
     w->order = (*n)++;
     for (i = 0; i < count; i++) {
         if (vals[i])
-            put_value(w, names[i].name, vals[i], FALSE, FALSE, FALSE);
+            put_value(w, names[i].name, vals[i], false, false, false);
     }
 
     if (first == NULL)
@@ -3526,12 +3539,12 @@ static void reqcb(const request* r, int count, axis_t* names, char* vals[], void
     last = w;
 }
 
-static boolean chk_152(int count, axis_t* names, char* vals[])
+static bool chk_152(int count, axis_t* names, char* vals[])
 {
-    return TRUE;
+    return true;
 }
 
-static void loop(const request* r, boolean ml, int index, int count, axis_t* strings, char* values[], loopproc callback, void* data)
+static void loop(const request* r, bool ml, int index, int count, axis_t* strings, char* values[], loopproc callback, void* data)
 {
     if (index < count) {
         parameter* p = find_parameter(r, strings[index].name);
@@ -3560,14 +3573,14 @@ static void values_loop(const request* r, int count, axis_t* parnames, loopproc 
 {
     char** values = (char**)grib_context_malloc(ctx, sizeof(char*) * count);
     const char* p = get_value(r, "levtype", 0);
-    boolean ml    = (boolean)(p && (strcmp(p, "ml") == 0));
+    bool ml    = (bool)(p && (strcmp(p, "ml") == 0));
 
     if (ml) {
         p = get_value(r, "expect", 0);
         if (p && atol(p) != 0) {
             grib_context_log(ctx, GRIB_LOG_ERROR, "EXPECT provided, special treatment of LNSP");
             grib_context_log(ctx, GRIB_LOG_ERROR, "and other single level parameters disabled");
-            ml = FALSE;
+            ml = false;
         }
     }
 
@@ -3622,14 +3635,14 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
         filters[i].fset           = new_fieldset(1);
         filters[i].count          = 0;
         filters[i].filter_request = clone_one_request(s);
-        filters[i].bitmap         = FALSE;
-        /* filters[i].mmeans  = FALSE; */
+        filters[i].bitmap         = false;
+        /* filters[i].mmeans  = false; */
 
         s = s->next;
     }
 
     for (i = 0; i < fs->count; ++i) {
-        boolean ok = FALSE;
+        bool ok = false;
         field* f   = get_field(fs, i, packed_mem);
         request* g = field_to_request(f);
         int j      = 0;
@@ -3660,13 +3673,13 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
             print_hypercube(filters[0].filter);
             exit(1);
         }
-        /* f->purge_header = TRUE; */
+        /* f->purge_header = true; */
         release_field(f);
     }
 
     for (i = 0; i < count; ++i) {
         filters[i].att.nctype = nctype;
-        filters[i].scale      = TRUE;
+        filters[i].scale      = true;
         filters[i].missing    = nc_type_values[nctype].nc_type_missing;
         find_nc_attributes(filters[i].filter_request, user_r, &(filters[i].att), config_r, data_r);
         grib_context_log(ctx, GRIB_LOG_DEBUG, "grib_to_netcdf: filter[%d] found.- Var. name '%s', nctype: %d, found nctype: %d", i, filters[i].att.name, nctype, filters[i].att.nctype);
@@ -3680,10 +3693,10 @@ static int split_fieldset(fieldset* fs, request* data_r, dataset_t** subsets, co
         switch (filters[i].att.nctype) {
             case NC_FLOAT:
             case NC_DOUBLE:
-                filters[i].scale = FALSE;
+                filters[i].scale = false;
                 break;
             default:
-                filters[i].scale = TRUE;
+                filters[i].scale = true;
                 break;
         }
     }
@@ -3740,17 +3753,17 @@ static int convert_month(const char* pMonthString)
     return -1; /*Failed*/
 }
 
-static boolean parsedate(const char* name, long* julian, long* second, boolean* isjul)
+static bool parsedate(const char* name, long* julian, long* second, bool* isjul)
 {
     const char* p = name;
     int n;
     int y = 0, m = 0, d = 0, H = 0, M = 0, S = 0;
 
     *julian = *second = 0;
-    *isjul            = FALSE;
+    *isjul            = false;
 
     if (p == 0 || *p == 0)
-        return FALSE;
+        return false;
 
     /* Special ERA Interim grib1 date format: jul-21, sep-02 etc
      * See GRIB-416
@@ -3764,29 +3777,29 @@ static boolean parsedate(const char* name, long* julian, long* second, boolean* 
             y = 1900; /* no year specified */
             m = convert_month(month);
             if (m == -1)
-                return FALSE;
+                return false;
             *julian = grib_date_to_julian(y * 10000 + m * 100 + day);
             *second = 0;
-            return TRUE;
+            return true;
         }
     }
 
     /* year */
     p = parse1(p, &y, &n);
     if (n != 2 && n != 4) /* year string must be 2 or 4 characters long: 93 or 1993 */
-        return FALSE;
+        return false;
     if (*p++ != '-')
-        return FALSE;
+        return false;
 
     /* month */
     p = parse1(p, &m, &n);
     if (n == 2) {
         /* day */
         if (*p++ != '-')
-            return FALSE;
+            return false;
         p = parse1(p, &d, &n);
         if (n != 2)
-            return FALSE;
+            return false;
     }
     else if (n == 3) {
         long j = grib_date_to_julian(y * 10000 + 101) + m - 1;
@@ -3794,13 +3807,13 @@ static boolean parsedate(const char* name, long* julian, long* second, boolean* 
         /* julian day */;
         d      = j % 100;
         m      = (j % 10000) / 100;
-        *isjul = TRUE;
+        *isjul = true;
     }
     else
-        return FALSE;
+        return false;
 
     if (m == 0 || m > 12) {
-        return FALSE; /* month out of range */
+        return false; /* month out of range */
     }
 
     while (*p && isspace(*p))
@@ -3810,53 +3823,53 @@ static boolean parsedate(const char* name, long* julian, long* second, boolean* 
     p = parse1(p, &H, &n);
     if (n != 0) {
         if (n != 2)
-            return FALSE;
+            return false;
 
         /* minute */
         if (*p++ != ':')
-            return FALSE;
+            return false;
 
         p = parse1(p, &M, &n);
         if (n != 2)
-            return FALSE;
+            return false;
 
         if (*p != 0) {
             /* second */
             if (*p++ != ':')
-                return FALSE;
+                return false;
             p = parse1(p, &S, &n);
             if (n != 2)
-                return FALSE;
+                return false;
         }
     }
 
     *julian = grib_date_to_julian(y * 10000 + m * 100 + d);
     *second = H * 3600 + M * 60 + S;
 
-    return *p == 0 ? TRUE : FALSE;
+    return *p == 0 ? true : false;
 }
 
-static boolean check_dimension_name(const char* dim)
+static bool check_dimension_name(const char* dim)
 {
     /* Dimension name must begin with an alphabetic character, followed by zero
      * or more alphanumeric characters including the underscore */
     int i = 0, len = 0;
     if (!dim)
-        return FALSE;
+        return false;
 
     len = strlen(dim);
     if (len == 0)
-        return FALSE;
+        return false;
     if (!isalpha(dim[0]))
-        return FALSE;
+        return false;
 
     for (i = 1; i < len; ++i) {
         const char c = dim[i];
         const int ok = isalnum(c) || c == '_';
         if (!ok)
-            return FALSE;
+            return false;
     }
-    return TRUE;
+    return true;
 }
 
 static int get_creation_mode(int option_kind)
@@ -3923,7 +3936,8 @@ grib_option grib_options[] = {
       "\n\t\tChunking strategy based on GRIB message.\n",
       0, 1, "6" },
     { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
-    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
+    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count    = sizeof(grib_options) / sizeof(grib_option);
@@ -4173,7 +4187,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
 
         if (i == 1) {
             const char* mmeans = get_value(r, "_MONTHLY_MEANS", 0);
-            setup.mmeans       = mmeans ? (atol(mmeans) == 1) : FALSE;
+            setup.mmeans       = mmeans ? (atol(mmeans) == 1) : false;
         }
         fcmonth2nbmonths(r);
 
@@ -4186,7 +4200,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
                     setup.refdate = atol(p);
                 else {
                     long julian = 0, second = 0;
-                    boolean isjul;
+                    bool isjul;
                     parsedate(p, &julian, &second, &isjul);
                     setup.refdate = grib_julian_to_date(julian);
                 }

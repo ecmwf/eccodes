@@ -200,6 +200,26 @@ EOF
 ${tools_dir}/bufr_compare -R airTemperature=4e-5 $f $fBufrTmp
 
 #--------------------------------------------------------------------
+# -d option
+#--------------------------------------------------------------------
+echo "Test: -d option" >> $fLog
+f='PraticaTemp.bufr'
+${tools_dir}/codes_bufr_filter -o $fBufrTmp - $f <<EOF
+ set unpack=1;
+ set #1#airTemperature=288.41;
+ set pack=1;
+ write;
+EOF
+set +e
+${tools_dir}/bufr_compare -d $f $fBufrTmp
+status=$?
+set -e
+[ $status -eq 1 ]
+[ -f "error1_1.bufr" ]
+[ -f "error2_1.bufr" ]
+rm -f error1_1.bufr error2_1.bufr
+
+#--------------------------------------------------------------------
 # ECC-1283: string arrays
 #--------------------------------------------------------------------
 sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
@@ -260,6 +280,24 @@ grep -q "string \[stationOrSiteName\] 2 out of 3 different" $fLog
 ${tools_dir}/bufr_compare -b stationOrSiteName $fBufrTmp1 $fBufrTmp2
 unset ECCODES_BUFR_MULTI_ELEMENT_CONSTANT_ARRAYS
 rm -f $fBufrTmp1 $fBufrTmp2
+
+# Through index
+# -------------
+tempIndex1=temp.$label.1.idx
+tempIndex2=temp.$label.2.idx
+f=$ECCODES_SAMPLES_PATH/BUFR3_local.tmpl
+${tools_dir}/bufr_set -s ident:s=66611 $f $fBufrTmp
+${tools_dir}/bufr_index_build -N -o $tempIndex1 $f
+${tools_dir}/bufr_index_build -N -o $tempIndex2 $fBufrTmp
+
+set +e
+${tools_dir}/bufr_compare  $tempIndex1 $tempIndex2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
+rm -f $tempIndex1 $tempIndex2
 
 
 # Clean up

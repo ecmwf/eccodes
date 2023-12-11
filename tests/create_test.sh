@@ -13,6 +13,7 @@ if [ $# -ne 1 ]; then
 fi
 
 TEST_TITLE="$1"
+TEST_TITLE=$(echo $TEST_TITLE | tr '[A-Z]' '[a-z]')
 
 # Check label is unique
 grep -i -q "label=\"$TEST_TITLE\"" $TEST_DIR/*.sh
@@ -34,25 +35,33 @@ cat <<EOF
 #
 
 . ./include.ctest.sh
-set -u
+
 REDIRECT=/dev/null
+
 label="prod_${TEST_TITLE}_test"  # Change prod to bufr or grib etc
-temp=temp.\$label
-sample_grib1=\$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+tempGrib=temp.\$label.grib
+tempBufr=temp.\$label.bufr
+tempFilt=temp.\$label.filt
+tempLog=temp.\$label.log
+tempRef=temp.\$label.ref
+
 sample_grib2=\$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-sample_bufr3=\$ECCODES_SAMPLES_PATH/BUFR3.tmpl
 sample_bufr4=\$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 
 #...
 #infile=\${data_dir}/SOME_FILE
+#cat >\$tempFilt<<EOF
+#EOF
+#\${tools_dir}/grib_filter -o \$tempGrib \$tempFilt \$sample_grib2
 #\${tools_dir}/grib_get
 #\${tools_dir}/grib_set
 #grib_check_key_equals \$temp k1,k2 "v1 v2"
+
 #\${tools_dir}/bufr_get
 #\${tools_dir}/bufr_set
 #...
 
-rm -f \$temp
+rm -f \$tempGrib \$tempBufr \$tempFilt \$tempLog \$tempRef
 EOF
 
 echo >&2

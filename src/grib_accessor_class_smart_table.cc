@@ -13,7 +13,7 @@
  ****************************************/
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 
 /*
    This is used by make_class.pl
@@ -55,7 +55,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_smart_table
 {
@@ -86,30 +85,32 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
     "smart_table",                      /* name */
     sizeof(grib_accessor_smart_table),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    &dump,                       /* describes himself */
-    0,                /* get length of section */
+    &destroy,                    /* destroy */
+    &dump,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    0,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    0,              /* unpack_double */
+    0,               /* unpack_float */
+    0,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -118,8 +119,10 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -127,39 +130,6 @@ static grib_accessor_class _grib_accessor_class_smart_table = {
 
 
 grib_accessor_class* grib_accessor_class_smart_table = &_grib_accessor_class_smart_table;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -191,8 +161,7 @@ static void thread_init()
 }
 #endif
 
-static int grib_load_smart_table(grib_context* c, const char* filename,
-                                 const char* recomposed_name, size_t size, grib_smart_table* t);
+static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
@@ -215,8 +184,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     self->tableCodes     = 0;
 }
 
-static grib_smart_table* load_table(grib_accessor_smart_table* self)
+static grib_smart_table* load_table(grib_accessor* a)
 {
+    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
     size_t size            = 0;
     grib_handle* h         = ((grib_accessor*)self)->parent->h;
     grib_context* c        = h->context;
@@ -329,10 +299,10 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
         t->next               = c->smart_table;
         t->numberOfEntries    = size;
-        GRIB_MUTEX_INIT_ONCE(&once, &thread_init)
-        GRIB_MUTEX_LOCK(&mutex)
+        GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
+        GRIB_MUTEX_LOCK(&mutex);
         c->smart_table = t;
-        GRIB_MUTEX_UNLOCK(&mutex)
+        GRIB_MUTEX_UNLOCK(&mutex);
     }
     else if (t->filename[1] == NULL) {
         t->filename[1]        = grib_context_strdup_persistent(c, filename);
@@ -374,13 +344,13 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 
         numberOfColumns = 0;
         /* The highest possible descriptor code must fit into t->numberOfEntries */
-        DebugAssert(code < t->numberOfEntries);
+        DEBUG_ASSERT(code < t->numberOfEntries);
         while (*s) {
             char* tcol = t->entries[code].column[numberOfColumns];
             if ( tcol ) grib_context_free_persistent(c, tcol);
             t->entries[code].column[numberOfColumns] = grib_context_strdup_persistent(c, s);
             numberOfColumns++;
-            DebugAssert(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
+            DEBUG_ASSERT(numberOfColumns < MAX_SMART_TABLE_COLUMNS);
 
             p++;
             s = p;
@@ -446,7 +416,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
         return err;
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
     table = self->table;
 
     if (table && (value >= 0) && (value < table->numberOfEntries) && table->entries[value].abbreviation) {
@@ -487,7 +457,7 @@ static int get_table_codes(grib_accessor* a)
     table_size = (1 << self->widthOfCode); /* 2 ^ self->widthOfCode */
 
     if (!self->table)
-        self->table = load_table(self);
+        self->table = load_table(a);
 
     err = grib_get_size(grib_handle_of_accessor(a), self->values, &size);
     if (err) {

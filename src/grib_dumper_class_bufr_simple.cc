@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -315,9 +315,9 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
             /* Note: the "subsetNumber" key is only there for UNCOMPRESSED BUFR messages */
             if (self->numberOfSubsets > 1 && strcmp(a->name, "subsetNumber") == 0) {
                 err = grib_unpack_long(a, &value, &size);
-                DebugAssert(!err);
+                DEBUG_ASSERT(!err);
                 fprintf(self->dumper.out, "%s=%ld\n", a->name, value);
-                DebugAssert(!grib_is_missing_long(a, value));
+                DEBUG_ASSERT(!grib_is_missing_long(a, value));
                 (void)err;
                 return;
             }
@@ -466,19 +466,19 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
     else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if (!grib_is_missing_long(a, value)) {
-            fprintf(self->dumper.out, "%s->%s = ", prefix, a->name);
-            fprintf(self->dumper.out, "%ld\n", value);
-        }
-        else {
-            fprintf(self->dumper.out, "%s->%s = MISSING\n", prefix, a->name);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            if (!grib_is_missing_long(a, value)) {
+                fprintf(self->dumper.out, "%s->%s = ", prefix, a->name);
+                fprintf(self->dumper.out, "%ld\n", value);
+            }
+            else {
+                fprintf(self->dumper.out, "%s->%s = MISSING\n", prefix, a->name);
+            }
         }
     }
 
     if (self->isLeaf == 0) {
-        char* prefix1;
-
-        prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
+        char* prefix1 = (char*)grib_context_malloc_clear(c, sizeof(char) * (strlen(a->name) + strlen(prefix) + 5));
         snprintf(prefix1, 1024, "%s->%s", prefix, a->name);
 
         dump_attributes(d, a, prefix1);

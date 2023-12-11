@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 static const int mapping[] = {
     0,  /* 00 */
     0,  /* 01 */

@@ -10,14 +10,12 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
-temp=neg_fctime.temp.grib
+label="grib_neg_fctime_test"
+temp=temp.$label.grib
 input=${data_dir}/sample.grib2
 
-
-############################
 # Check various grib2 PDTs
+# --------------------------
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 PDTs="0 1 2 3 8 9 10 11 12 13 14 45 46 47 48 53"
 for p in $PDTs; do
@@ -25,9 +23,8 @@ for p in $PDTs; do
 done
 
 
-############################
-
 # check input time and date
+# --------------------------
 grib_check_key_equals $input 'dataDate,dataTime' '20080206 1200'
 
 # Negative step in same day

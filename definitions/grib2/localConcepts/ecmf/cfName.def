@@ -29,10 +29,12 @@
 	}
 #Convective precipitation
 'lwe_thickness_of_convective_precipitation_amount' = {
+	 localTablesVersion = 1 ;
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
-	 parameterNumber = 10 ;
-	 unitsFactor = 1000 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
 	}
 #Snowfall
 'lwe_thickness_of_snowfall_amount' = {
@@ -58,11 +60,13 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
-#Albedo
+#Albedo (climatological)
 'surface_albedo' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 174 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 19 ;
+	 parameterNumber = 193 ;
+	 typeOfGeneratingProcess = 9 ;
 	}
 #Evaporation
 'lwe_thickness_of_water_evaporation_amount' = {
@@ -81,9 +85,12 @@
 	}
 #Total column ozone
 'atmosphere_mass_content_of_ozone' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 206 ;
+	 localTablesVersion = 1 ;
+	 discipline = 0 ;
+	 parameterCategory = 14 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Hydrogen peroxide
 'mass_fraction_of_hydrogen_peroxide_in_air' = {
@@ -511,7 +518,7 @@
 	 parameterCategory = 151 ;
 	 parameterNumber = 154 ;
 	}
-#Carbon Dioxide
+#Carbon dioxide mass mixing ratio
 'mass_fraction_of_carbon_dioxide_in_air' = {
 	 discipline = 192 ;
 	 parameterCategory = 210 ;

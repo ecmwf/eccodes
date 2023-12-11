@@ -12,11 +12,11 @@ if (gribex_mode_on()) {
 
 meta _numberOfValues spectral_truncation(J,K,M,numberOfValues): read_only;
 
-constant laplacianScalingFactorUnset  = -2147483647;
+constant laplacianScalingFactorUnset = -2147483647;
 signed[4] laplacianScalingFactor : edition_specific ;
 
-meta  data.laplacianOperator scale(laplacianScalingFactor,one,million,truncateLaplacian) ;
-meta  laplacianOperatorIsSet evaluate(laplacianScalingFactor != laplacianScalingFactorUnset && !computeLaplacianOperator);
+meta data.laplacianOperator scale(laplacianScalingFactor,one,million,truncateLaplacian) ;
+meta laplacianOperatorIsSet evaluate(laplacianScalingFactor != laplacianScalingFactorUnset && !computeLaplacianOperator);
 
 transient JS= 20 ;
 transient KS=20 ;
@@ -33,3 +33,8 @@ meta _TS spectral_truncation(J,K,M,TS) : read_only,hidden;
 codetable[1] unpackedSubsetPrecision ('5.7.table',masterDir,localDir) = 2 : dump;
 
 alias precisionOfTheUnpackedSubset=unpackedSubsetPrecision;
+concept accuracy(zero) {
+  32  = { unpackedSubsetPrecision = 1; }
+  64  = { unpackedSubsetPrecision = 2; }
+  128 = { unpackedSubsetPrecision = 3; }
+} : long_type, no_copy;

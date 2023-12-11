@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 label="grib_packing_order_test"
 temp=${label}".grib.tmp"
 temp_simple1=${label}".simple1.tmp"

@@ -39,5 +39,14 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Reforecasts
+${tools_dir}/grib_set -s \
+   tablesVersion=14,productionStatusOfProcessedData=6,productDefinitionTemplateNumber=60 \
+   $grib2_sample $temp1
+${tools_dir}/grib_ls -jm $temp1
+grib_check_key_equals $temp1 mars.hdate '20070323'
+grib_check_key_equals $temp1 mars.stream 'enfh'
+grib_check_key_equals $temp1 isHindcast '1'
+
 # Clean up
 rm -f $temp1 $temp2 $tempSample

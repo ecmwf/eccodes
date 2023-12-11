@@ -20,6 +20,10 @@ if [ -f "${tools_dir}/grib_get" ]; then
     [ "$sf" = "MISSING" ]
     sf=`${tools_dir}/grib_get -p scaledValueOfFirstFixedSurface $tempGrib`
     [ "$sf" = "MISSING" ]
+
+    # Code Table key being set to missing
+    sf=`${tools_dir}/grib_get -p typeOfFirstFixedSurface:i, $tempGrib`
+    [ "$sf" = "255" ]
 fi
 
 rm -f $tempGrib

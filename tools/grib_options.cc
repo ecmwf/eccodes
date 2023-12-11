@@ -106,8 +106,8 @@ static grib_options_help grib_options_help_list[] = {
     { "k:", "key1,key2,...",
       "\n\t\tSpecify a list of keys to index on. By default the input files are indexed on the MARS keys."
       "\n\t\tFor each key a string (key:s) or a double (key:d) or an integer (key:i)"
-      "\n\t\ttype can be requested.\n" }
-
+      "\n\t\ttype can be requested.\n" },
+    { "h", 0, "Display this help text and exit.\n" }
 };
 
 static int grib_options_help_count = sizeof(grib_options_help_list) / sizeof(grib_options_help);
@@ -198,6 +198,10 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     int has_input_extra = 0, nfiles = 0;
     char *karg = NULL, *warg = NULL, *sarg = NULL, *barg = NULL;
 
+    if (grib_options_on("h")) {
+        usage();
+    }
+
     if (grib_options_on("V")) {
         printf("\necCodes Version ");
         grib_print_api_version(stdout);
@@ -265,7 +269,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         const char* optionStr = grib_options_get_option("d:");
         options->constant     = strtod(optionStr, &endPtr);
         if (*endPtr) {
-            fprintf(stderr, "Invalid number for -d option: '%s'\n", optionStr);
+            fprintf(stderr, "%s: Invalid number for -d option: '%s'\n", tool_name, optionStr);
             exit(1);
         }
         options->repack = 1;
@@ -386,7 +390,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     if (grib_options_on("e")) {
         for (i = 0; i < names_count; i++) {
             options->compare[i + options->compare_count].name = names[i];
-            options->compare[i + options->compare_count].type = GRIB_NAMESPACE;
+            options->compare[i + options->compare_count].type = CODES_NAMESPACE;
         }
         options->compare_count += names_count;
     }
@@ -481,27 +485,25 @@ void usage_doxygen(void)
     exit(1);
 }
 
-#if 0
-void usage_doxygen(void) {
-    int i=0;
-    printf("/*!  \\page %s %s\n",tool_name,tool_name);
-    printf("\\section DESCRIPTION \n%s\n\n",tool_description);
-    printf("\\section USAGE \n%s \n%s\n\n",tool_name,tool_usage);
-    printf("\\section OPTIONS\n");
-    printf("<table frame=void border=0>\n");
-    for (i=0;i<grib_options_count;i++) {
-        if (grib_options[i].command_line) {
-            printf("<tr>\n");
-            printf("<td colspan=2>-%c %s</td>\n",
-                    grib_options[i].id[0],
-                    grib_options_get_args(grib_options[i].id));
-            printf("</tr><tr>\n");
-            printf("<td width=20></td><td>%s</td>",
-                    grib_options_get_help(grib_options[i].id));
-            printf("</tr><tr><td></td></tr>\n");
-        }
-    }
-    printf("</table>\n");
-    exit(1);
-}
-#endif
+// void usage_doxygen(void) {
+//     int i=0;
+//     printf("/*!  \\page %s %s\n",tool_name,tool_name);
+//     printf("\\section DESCRIPTION \n%s\n\n",tool_description);
+//     printf("\\section USAGE \n%s \n%s\n\n",tool_name,tool_usage);
+//     printf("\\section OPTIONS\n");
+//     printf("<table frame=void border=0>\n");
+//     for (i=0;i<grib_options_count;i++) {
+//         if (grib_options[i].command_line) {
+//             printf("<tr>\n");
+//             printf("<td colspan=2>-%c %s</td>\n",
+//                     grib_options[i].id[0],
+//                     grib_options_get_args(grib_options[i].id));
+//             printf("</tr><tr>\n");
+//             printf("<td width=20></td><td>%s</td>",
+//                     grib_options_get_help(grib_options[i].id));
+//             printf("</tr><tr><td></td></tr>\n");
+//         }
+//     }
+//     printf("</table>\n");
+//     exit(1);
+// }

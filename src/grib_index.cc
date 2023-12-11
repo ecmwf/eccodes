@@ -16,39 +16,39 @@
 #define NULL_MARKER 0
 #define NOT_NULL_MARKER 255
 
+#define GRIB_KEY_UNDEF "undef"
+
 /* #if GRIB_PTHREADS */
-#if 0
-static pthread_once_t once  = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
+// static pthread_once_t once  = PTHREAD_ONCE_INIT;
+// static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+// static pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
-static void init() {
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init(&attr);
-    pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&mutex1,&attr);
-    pthread_mutex_init(&mutex2,&attr);
-    pthread_mutexattr_destroy(&attr);
+// static void init() {
+//     pthread_mutexattr_t attr;
+//     pthread_mutexattr_init(&attr);
+//     pthread_mutexattr_settype(&attr,PTHREAD_MUTEX_RECURSIVE);
+//     pthread_mutex_init(&mutex1,&attr);
+//     pthread_mutex_init(&mutex2,&attr);
+//     pthread_mutexattr_destroy(&attr);
 
-}
-/* #elif GRIB_OMP_THREADS */
-static int once = 0;
-static omp_nest_lock_t mutex1;
-static omp_nest_lock_t mutex2;
+// }
+// /* #elif GRIB_OMP_THREADS */
+// static int once = 0;
+// static omp_nest_lock_t mutex1;
+// static omp_nest_lock_t mutex2;
 
-static void init()
-{
-    GRIB_OMP_CRITICAL(lock_grib_index_c)
-    {
-        if (once == 0)
-        {
-            omp_init_nest_lock(&mutex1);
-            omp_init_nest_lock(&mutex2);
-            once = 1;
-        }
-    }
-}
-#endif
+// static void init()
+// {
+//     GRIB_OMP_CRITICAL(lock_grib_index_c)
+//     {
+//         if (once == 0)
+//         {
+//             omp_init_nest_lock(&mutex1);
+//             omp_init_nest_lock(&mutex2);
+//             once = 1;
+//         }
+//     }
+// }
 
 static const char* mars_keys =
     "mars.date,mars.time,mars.expver,mars.stream,mars.class,mars.type,"
@@ -1271,168 +1271,167 @@ int ecc__codes_index_add_file(grib_index* index, const char* filename, int messa
     return GRIB_SUCCESS;
 }
 
-#if 0
-int grib_index_add_file(grib_index* index, const char* filename)
-{
-    double dval;
-    size_t svallen;
-    long length,lval;
-    char buf[1024]={0,};
-    int err=0;
-    grib_file* indfile;
-    grib_file* newfile;
+// int grib_index_add_file(grib_index* index, const char* filename)
+// {
+//     double dval;
+//     size_t svallen;
+//     long length,lval;
+//     char buf[1024]={0,};
+//     int err=0;
+//     grib_file* indfile;
+//     grib_file* newfile;
 
-    grib_index_key* index_key=NULL;
-    grib_handle* h=NULL;
-    grib_field* field;
-    grib_field_tree* field_tree;
-    grib_file* file=NULL;
-    grib_context* c;
+//     grib_index_key* index_key=NULL;
+//     grib_handle* h=NULL;
+//     grib_field* field;
+//     grib_field_tree* field_tree;
+//     grib_file* file=NULL;
+//     grib_context* c;
 
-    if (!index) return GRIB_NULL_INDEX;
-    c=index->context;
+//     if (!index) return GRIB_NULL_INDEX;
+//     c=index->context;
 
-    file=grib_file_open(filename,"r",&err);
+//     file=grib_file_open(filename,"r",&err);
 
-    if (!file || !file->handle) return err;
+//     if (!file || !file->handle) return err;
 
-    if (!index->files) {
-        grib_filesid++;
-        newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
-        newfile->id=grib_filesid;
-        newfile->name=strdup(file->name);
-        newfile->handle = file->handle;
-        index->files=newfile;
-    } else {
-        indfile=index->files;
-        while(indfile) {
-            if (!strcmp(indfile->name,file->name)) return 0;
-            indfile=indfile->next;
-        }
-        indfile=index->files;
-        while(indfile->next) indfile=indfile->next;
-        grib_filesid++;
-        newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
-        newfile->id=grib_filesid;
-        newfile->name=strdup(file->name);
-        newfile->handle = file->handle;
-        indfile->next=newfile;
-    }
+//     if (!index->files) {
+//         grib_filesid++;
+//         newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
+//         newfile->id=grib_filesid;
+//         newfile->name=strdup(file->name);
+//         newfile->handle = file->handle;
+//         index->files=newfile;
+//     } else {
+//         indfile=index->files;
+//         while(indfile) {
+//             if (!strcmp(indfile->name,file->name)) return 0;
+//             indfile=indfile->next;
+//         }
+//         indfile=index->files;
+//         while(indfile->next) indfile=indfile->next;
+//         grib_filesid++;
+//         newfile=(grib_file*)grib_context_malloc_clear(c,sizeof(grib_file));
+//         newfile->id=grib_filesid;
+//         newfile->name=strdup(file->name);
+//         newfile->handle = file->handle;
+//         indfile->next=newfile;
+//     }
 
-    fseeko(file->handle,0,SEEK_SET);
+//     fseeko(file->handle,0,SEEK_SET);
 
-    while ((h=grib_handle_new_from_file(c,file->handle,&err))!=NULL) {
-        grib_string_list* v=0;
-        index_key=index->keys;
-        field_tree=index->fields;
-        index_key->value[0]=0;
+//     while ((h=grib_handle_new_from_file(c,file->handle,&err))!=NULL) {
+//         grib_string_list* v=0;
+//         index_key=index->keys;
+//         field_tree=index->fields;
+//         index_key->value[0]=0;
 
-        /* process only GRIB for the moment*/
-        svallen=1024;
-        grib_get_string(h,"identifier",buf,&svallen);
-        if (strcmp(buf,"GRIB")) {
-            grib_handle_delete(h);
-            return 0;
-        }
+//         /* process only GRIB for the moment*/
+//         svallen=1024;
+//         grib_get_string(h,"identifier",buf,&svallen);
+//         if (strcmp(buf,"GRIB")) {
+//             grib_handle_delete(h);
+//             return 0;
+//         }
 
-        while (index_key) {
-            if (index_key->type==GRIB_TYPE_UNDEFINED) {
-                err=grib_get_native_type(h,index_key->name,&(index_key->type));
-                if (err) index_key->type=GRIB_TYPE_STRING;
-            }
-            svallen=1024;
-            switch (index_key->type) {
-            case GRIB_TYPE_STRING:
-                err=grib_get_string(h,index_key->name,buf,&svallen);
-                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
-                break;
-            case GRIB_TYPE_LONG:
-                err=grib_get_long(h,index_key->name,&lval);
-                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
-                else snprintf(buf,1024,"%ld",lval);
-                break;
-            case GRIB_TYPE_DOUBLE:
-                err=grib_get_double(h,index_key->name,&dval);
-                if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
-                else snprintf(buf,1024,"%g",dval);
-                break;
-            default :
-                err=GRIB_WRONG_TYPE;
-                return err;
-            }
-            if (err && err != GRIB_NOT_FOUND) {
-                grib_context_log(c,GRIB_LOG_ERROR,"unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
-                return err;
-            }
+//         while (index_key) {
+//             if (index_key->type==GRIB_TYPE_UNDEFINED) {
+//                 err=grib_get_native_type(h,index_key->name,&(index_key->type));
+//                 if (err) index_key->type=GRIB_TYPE_STRING;
+//             }
+//             svallen=1024;
+//             switch (index_key->type) {
+//             case GRIB_TYPE_STRING:
+//                 err=grib_get_string(h,index_key->name,buf,&svallen);
+//                 if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
+//                 break;
+//             case GRIB_TYPE_LONG:
+//                 err=grib_get_long(h,index_key->name,&lval);
+//                 if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
+//                 else snprintf(buf,1024,"%ld",lval);
+//                 break;
+//             case GRIB_TYPE_DOUBLE:
+//                 err=grib_get_double(h,index_key->name,&dval);
+//                 if (err==GRIB_NOT_FOUND) snprintf(buf,1024,GRIB_KEY_UNDEF);
+//                 else snprintf(buf,1024,"%g",dval);
+//                 break;
+//             default :
+//                 err=GRIB_WRONG_TYPE;
+//                 return err;
+//             }
+//             if (err && err != GRIB_NOT_FOUND) {
+//                 grib_context_log(c,GRIB_LOG_ERROR,"unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
+//                 return err;
+//             }
 
-            if (!index_key->values->value) {
-                index_key->values->value=grib_context_strdup(c,buf);
-                index_key->values_count++;
-            } else {
-                v=index_key->values;
-                while (v->next && strcmp(v->value,buf)) v=v->next;
-                if (strcmp(v->value,buf)) {
-                    index_key->values_count++;
-                    if (v->next) v=v->next;
-                    v->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
-                    v->next->value=grib_context_strdup(c,buf);
-                }
-            }
+//             if (!index_key->values->value) {
+//                 index_key->values->value=grib_context_strdup(c,buf);
+//                 index_key->values_count++;
+//             } else {
+//                 v=index_key->values;
+//                 while (v->next && strcmp(v->value,buf)) v=v->next;
+//                 if (strcmp(v->value,buf)) {
+//                     index_key->values_count++;
+//                     if (v->next) v=v->next;
+//                     v->next=(grib_string_list*)grib_context_malloc_clear(c,sizeof(grib_string_list));
+//                     v->next->value=grib_context_strdup(c,buf);
+//                 }
+//             }
 
-            if (!field_tree->value) {
-                field_tree->value=grib_context_strdup(c,buf);
-            } else {
-                while (field_tree->next &&
-                        (field_tree->value==NULL ||
-                                strcmp(field_tree->value,buf)))
-                    field_tree=field_tree->next;
+//             if (!field_tree->value) {
+//                 field_tree->value=grib_context_strdup(c,buf);
+//             } else {
+//                 while (field_tree->next &&
+//                         (field_tree->value==NULL ||
+//                                 strcmp(field_tree->value,buf)))
+//                     field_tree=field_tree->next;
 
-                if (!field_tree->value || strcmp(field_tree->value,buf)){
-                    field_tree->next=
-                            (grib_field_tree*)grib_context_malloc_clear(c,
-                                    sizeof(grib_field_tree));
-                    field_tree=field_tree->next;
-                    field_tree->value=grib_context_strdup(c,buf);
-                }
-            }
+//                 if (!field_tree->value || strcmp(field_tree->value,buf)){
+//                     field_tree->next=
+//                             (grib_field_tree*)grib_context_malloc_clear(c,
+//                                     sizeof(grib_field_tree));
+//                     field_tree=field_tree->next;
+//                     field_tree->value=grib_context_strdup(c,buf);
+//                 }
+//             }
 
-            if (index_key->next) {
-                if (!field_tree->next_level) {
-                    field_tree->next_level=
-                            (grib_field_tree*)grib_context_malloc_clear(c,sizeof(grib_field_tree));
-                }
-                field_tree=field_tree->next_level;
-            }
-            index_key=index_key->next;
-        }
+//             if (index_key->next) {
+//                 if (!field_tree->next_level) {
+//                     field_tree->next_level=
+//                             (grib_field_tree*)grib_context_malloc_clear(c,sizeof(grib_field_tree));
+//                 }
+//                 field_tree=field_tree->next_level;
+//             }
+//             index_key=index_key->next;
+//         }
 
-        field=(grib_field*)grib_context_malloc_clear(c,sizeof(grib_field));
-        field->file=file;
-        index->count++;
-        field->offset=h->offset;
+//         field=(grib_field*)grib_context_malloc_clear(c,sizeof(grib_field));
+//         field->file=file;
+//         index->count++;
+//         field->offset=h->offset;
 
-        err=grib_get_long(h,"totalLength",&length);
-        if (err) return err;
-        field->length=length;
+//         err=grib_get_long(h,"totalLength",&length);
+//         if (err) return err;
+//         field->length=length;
 
-        if (field_tree->field) {
-            grib_field* pfield=field_tree->field;
-            while (pfield->next) pfield=pfield->next;
-            pfield->next=field;
-        } else
-            field_tree->field=field;
+//         if (field_tree->field) {
+//             grib_field* pfield=field_tree->field;
+//             while (pfield->next) pfield=pfield->next;
+//             pfield->next=field;
+//         } else
+//             field_tree->field=field;
 
-        if (h) grib_handle_delete(h);
+//         if (h) grib_handle_delete(h);
 
-    }
+//     }
 
-    grib_file_close(file->name, 0, &err);
+//     grib_file_close(file->name, 0, &err);
 
-    if (err) return err;
-    index->rewind=1;
-    return GRIB_SUCCESS;
-}
-#endif
+//     if (err) return err;
+//     index->rewind=1;
+//     return GRIB_SUCCESS;
+// }
+
 
 grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err)
 {
@@ -1750,7 +1749,7 @@ static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
     grib_dump_key_values(fout, keys->values);
     grib_dump_index_keys(fout, keys->next);
 }
-#if 0
+#ifdef INDEX_DUMPS
 static void grib_dump_files(FILE* fout, grib_file* files)
 {
     if (!files) return;
@@ -1875,6 +1874,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
     grib_field_list *fieldset, *next;
     grib_handle* h  = NULL;
     grib_context* c = NULL;
+    *err = 0;
 
     if (!index)
         return NULL;
@@ -1941,34 +1941,32 @@ void grib_index_rewind(grib_index* index)
     index->rewind = 1;
 }
 
-#if 0
-static grib_index_key* search_key(grib_index_key* keys, grib_index_key* to_search)
-{
-    if (!keys || !strcmp(keys->name, to_search->name))
-        return keys;
-    return search_key(keys->next, to_search);
-}
+// static grib_index_key* search_key(grib_index_key* keys, grib_index_key* to_search)
+// {
+//     if (!keys || !strcmp(keys->name, to_search->name))
+//         return keys;
+//     return search_key(keys->next, to_search);
+// }
 
-int grib_index_search(grib_index* index, grib_index_key* keys)
-{
-    grib_index_key* ki = index->keys;
-    grib_index_key* ks = keys;
+// int grib_index_search(grib_index* index, grib_index_key* keys)
+// {
+//     grib_index_key* ki = index->keys;
+//     grib_index_key* ks = keys;
 
-    while (ks) {
-        ki = search_key(ki, ks);
-        if (!ki) {
-            ki = index->keys;
-            ki = search_key(ki, ks);
-        }
-        if (ki)
-            snprintf(ki->value, 1024, "%s", ks->value);
-        ks = ks->next;
-    }
+//     while (ks) {
+//         ki = search_key(ki, ks);
+//         if (!ki) {
+//             ki = index->keys;
+//             ki = search_key(ki, ks);
+//         }
+//         if (ki)
+//             snprintf(ki->value, 1024, "%s", ks->value);
+//         ks = ks->next;
+//     }
 
-    grib_index_rewind(index);
-    return 0;
-}
-#endif
+//     grib_index_rewind(index);
+//     return 0;
+// }
 
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind)
 {

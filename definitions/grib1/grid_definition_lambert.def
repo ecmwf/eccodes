@@ -8,7 +8,7 @@ alias Nj =  Ny;
 alias numberOfPointsAlongYAxis =  Ny;
 alias geography.Ny=Ny;
 
-#  La1 - latitude of first grid point
+# La1 - latitude of first grid point
 signed[3] latitudeOfFirstGridPoint :  edition_specific;
 meta geography.latitudeOfFirstGridPointInDegrees
       scale(latitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -17,7 +17,7 @@ alias La1InDegrees=latitudeOfFirstGridPointInDegrees;
 #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,thousand);
 
 
-#  Lo1 - longitude of first grid point
+# Lo1 - longitude of first grid point
 signed[3] longitudeOfFirstGridPoint  : edition_specific;
 meta geography.longitudeOfFirstGridPointInDegrees
       scale(longitudeOfFirstGridPoint,oneConstant,grib1divider,truncateDegrees) : dump;
@@ -25,24 +25,24 @@ alias Lo1 = longitudeOfFirstGridPoint;
 alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
 #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,thousand);
 
-#  Resolution and component flags
+# Resolution and component flags
 include "grib1/resolution_flags.def";
 
-#  LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
+# LoV - orientation of the grid; i.e.  the east longitude value of the meridian which is parallel to the Y-axis
 signed[3] LoV : edition_specific  ;
 meta geography.LoVInDegrees
     scale(LoV,oneConstant,grib1divider,truncateDegrees) : dump;
 alias orientationOfTheGrid = LoV;
 alias orientationOfTheGridInDegrees = LoVInDegrees;
 
-#  Dx - X-direction grid length (in units of metres)
+# Dx - X-direction grid length (in units of metres)
 unsigned[3] DxInMetres  : dump;
 alias xDirectionGridLength=DxInMetres;
 alias geography.DxInMetres=DxInMetres ;
 alias Dx = DxInMetres;
 alias Di = DxInMetres;
 
-#  Dy - Y-direction grid length (in units of metres)
+# Dy - Y-direction grid length (in units of metres)
 unsigned[3] DyInMetres  : dump;
 alias yDirectionGridLength=DyInMetres;
 alias geography.DyInMetres=DyInMetres;
@@ -59,8 +59,8 @@ alias xFirst=longitudeOfFirstGridPointInDegrees;
 
 include "grib1/scanning_mode.def";
 
-#  Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
-signed[3] Latin1 : edition_specific;
+# Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
+signed[3] Latin1 : edition_specific, no_copy;
 meta geography.Latin1InDegrees scale(Latin1,oneConstant,grib1divider,truncateDegrees) : dump;
 alias firstLatitude=Latin1;
 alias firstLatitudeInDegrees=Latin1InDegrees;
@@ -69,8 +69,8 @@ alias firstLatitudeInDegrees=Latin1InDegrees;
 constant LaDInDegrees = Latin1InDegrees : dump;
 alias geography.LaDInDegrees=LaDInDegrees;
 
-#  Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
-signed[3] Latin2 :edition_specific;
+# Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
+signed[3] Latin2 :edition_specific,no_copy;
 alias secondLatitude=Latin2;
 meta geography.Latin2InDegrees scale(Latin2,oneConstant,grib1divider,truncateDegrees) : dump;
 alias secondLatitudeInDegrees=Latin2InDegrees;

@@ -31,28 +31,29 @@ static const struct table_entry table[] = {
 #include "grib_iterator_factory.h"
 };
 
-grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* ret)
+grib_iterator* grib_iterator_factory(grib_handle* h, grib_arguments* args, unsigned long flags, int* error)
 {
-    int i;
+    size_t i = 0;
     const char* type = (char*)grib_arguments_get_name(h, args, 0);
+    *error = GRIB_NOT_IMPLEMENTED;
 
-    for (i = 0; i < NUMBER(table); i++)
+    for (i = 0; i < NUMBER(table); i++) {
         if (strcmp(type, table[i].type) == 0) {
             grib_iterator_class* c = *(table[i].cclass);
             grib_iterator* it      = (grib_iterator*)grib_context_malloc_clear(h->context, c->size);
             it->cclass             = c;
             it->flags              = flags;
-            *ret                   = GRIB_SUCCESS;
-            *ret                   = grib_iterator_init(it, h, args);
-            if (*ret == GRIB_SUCCESS)
+            *error                 = grib_iterator_init(it, h, args);
+            if (*error == GRIB_SUCCESS)
                 return it;
             grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Error instantiating iterator %s (%s)",
-                             table[i].type, grib_get_error_message(*ret));
+                             table[i].type, grib_get_error_message(*error));
             grib_iterator_delete(it);
             return NULL;
         }
+    }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s for iterator", type);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Geoiterator factory: Unknown type: %s", type);
 
     return NULL;
 }

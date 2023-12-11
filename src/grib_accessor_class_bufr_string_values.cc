@@ -51,7 +51,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 
 typedef struct grib_accessor_bufr_string_values
 {
@@ -70,30 +69,32 @@ static grib_accessor_class _grib_accessor_class_bufr_string_values = {
     "bufr_string_values",                      /* name */
     sizeof(grib_accessor_bufr_string_values),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    &destroy,                    /* free mem */
-    &dump,                       /* describes himself */
-    0,                /* get length of section */
+    &destroy,                    /* destroy */
+    &dump,                       /* dump */
+    0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    0,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    0,              /* grib_unpack procedures double */
-    &pack_string,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    &pack_string_array,          /* grib_pack array procedures string */
-    &unpack_string_array,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    0,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    0,              /* unpack_double */
+    0,               /* unpack_float */
+    &pack_string,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    &pack_string_array,          /* pack_string_array */
+    &unpack_string_array,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
@@ -102,8 +103,10 @@ static grib_accessor_class _grib_accessor_class_bufr_string_values = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value */
-    0,  /* unpack a given set of elements */
+    0,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    0,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -111,38 +114,6 @@ static grib_accessor_class _grib_accessor_class_bufr_string_values = {
 
 
 grib_accessor_class* grib_accessor_class_bufr_string_values = &_grib_accessor_class_bufr_string_values;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->next_offset    =    (*(c->super))->next_offset;
-    c->string_length    =    (*(c->super))->string_length;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->unpack_long    =    (*(c->super))->unpack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->unpack_double    =    (*(c->super))->unpack_double;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->update_size    =    (*(c->super))->update_size;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_element    =    (*(c->super))->unpack_double_element;
-    c->unpack_double_element_set    =    (*(c->super))->unpack_double_element_set;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 

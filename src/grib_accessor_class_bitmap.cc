@@ -9,6 +9,8 @@
  */
 
 #include "grib_api_internal.h"
+#include <type_traits>
+
 /*
    This is used by make_class.pl
 
@@ -18,6 +20,7 @@
 
    IMPLEMENTS = next_offset
    IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
+   IMPLEMENTS = unpack_float
    IMPLEMENTS = unpack_long
    IMPLEMENTS = unpack_string
    IMPLEMENTS = init;dump;update_size
@@ -40,12 +43,12 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_double(grib_accessor*, double* val, size_t* len);
+static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static long next_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static void init_class(grib_accessor_class*);
 static void update_size(grib_accessor*, size_t);
 static int unpack_double_element(grib_accessor*, size_t i, double* val);
 static int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array);
@@ -69,30 +72,32 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     "bitmap",                      /* name */
     sizeof(grib_accessor_bitmap),  /* size */
     0,                           /* inited */
-    &init_class,                 /* init_class */
+    0,                           /* init_class */
     &init,                       /* init */
     0,                  /* post_init */
-    0,                    /* free mem */
-    &dump,                       /* describes himself */
-    &next_offset,                /* get length of section */
+    0,                    /* destroy */
+    &dump,                       /* dump */
+    &next_offset,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
     0,            /* get native type */
     0,                /* get sub_section */
-    0,               /* grib_pack procedures long */
-    0,                 /* grib_pack procedures long */
-    0,                  /* grib_pack procedures long */
-    &unpack_long,                /* grib_unpack procedures long */
-    0,                /* grib_pack procedures double */
-    &unpack_double,              /* grib_unpack procedures double */
-    0,                /* grib_pack procedures string */
-    &unpack_string,              /* grib_unpack procedures string */
-    0,          /* grib_pack array procedures string */
-    0,        /* grib_unpack array procedures string */
-    0,                 /* grib_pack procedures bytes */
-    0,               /* grib_unpack procedures bytes */
+    0,               /* pack_missing */
+    0,                 /* is_missing */
+    0,                  /* pack_long */
+    &unpack_long,                /* unpack_long */
+    0,                /* pack_double */
+    0,                 /* pack_float */
+    &unpack_double,              /* unpack_double */
+    &unpack_float,               /* unpack_float */
+    0,                /* pack_string */
+    &unpack_string,              /* unpack_string */
+    0,          /* pack_string_array */
+    0,        /* unpack_string_array */
+    0,                 /* pack_bytes */
+    0,               /* unpack_bytes */
     0,            /* pack_expression */
     0,              /* notify_change */
     &update_size,                /* update_size */
@@ -101,8 +106,10 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
     0,                    /* compare vs. another accessor */
-    &unpack_double_element,      /* unpack only ith value */
-    &unpack_double_element_set,  /* unpack a given set of elements */
+    &unpack_double_element,      /* unpack only ith value (double) */
+    0,       /* unpack only ith value (float) */
+    &unpack_double_element_set,  /* unpack a given set of elements (double) */
+    0,   /* unpack a given set of elements (float) */
     0,     /* unpack a subarray */
     0,                      /* clear */
     0,                 /* clone accessor */
@@ -110,36 +117,6 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
 
 
 grib_accessor_class* grib_accessor_class_bitmap = &_grib_accessor_class_bitmap;
-
-
-static void init_class(grib_accessor_class* c)
-{
-    c->string_length    =    (*(c->super))->string_length;
-    c->value_count    =    (*(c->super))->value_count;
-    c->byte_count    =    (*(c->super))->byte_count;
-    c->byte_offset    =    (*(c->super))->byte_offset;
-    c->get_native_type    =    (*(c->super))->get_native_type;
-    c->sub_section    =    (*(c->super))->sub_section;
-    c->pack_missing    =    (*(c->super))->pack_missing;
-    c->is_missing    =    (*(c->super))->is_missing;
-    c->pack_long    =    (*(c->super))->pack_long;
-    c->pack_double    =    (*(c->super))->pack_double;
-    c->pack_string    =    (*(c->super))->pack_string;
-    c->pack_string_array    =    (*(c->super))->pack_string_array;
-    c->unpack_string_array    =    (*(c->super))->unpack_string_array;
-    c->pack_bytes    =    (*(c->super))->pack_bytes;
-    c->unpack_bytes    =    (*(c->super))->unpack_bytes;
-    c->pack_expression    =    (*(c->super))->pack_expression;
-    c->notify_change    =    (*(c->super))->notify_change;
-    c->preferred_size    =    (*(c->super))->preferred_size;
-    c->resize    =    (*(c->super))->resize;
-    c->nearest_smaller_value    =    (*(c->super))->nearest_smaller_value;
-    c->next    =    (*(c->super))->next;
-    c->compare    =    (*(c->super))->compare;
-    c->unpack_double_subarray    =    (*(c->super))->unpack_double_subarray;
-    c->clear    =    (*(c->super))->clear;
-    c->make_clone    =    (*(c->super))->make_clone;
-}
 
 /* END_CLASS_IMP */
 
@@ -167,10 +144,7 @@ static void compute_size(grib_accessor* a)
         }
     }
 
-#if 0
-    printf("compute_size off=%ld slen=%ld a->offset=%ld\n",
-            (long)off,(long)slen,(long)a->offset);
-#endif
+    // printf("compute_size off=%ld slen=%ld a->offset=%ld\n", (long)off,(long)slen,(long)a->offset);
 
     a->length = off + (slen - a->offset);
 
@@ -226,7 +200,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %ld values", a->name, tlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -238,8 +212,10 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int unpack_double(grib_accessor* a, double* val, size_t* len)
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;
     long tlen;
     long i;
@@ -251,16 +227,26 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return err;
 
     if (*len < tlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %ld values", a->name, tlen);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     for (i = 0; i < tlen; i++) {
-        val[i] = (double)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
+        val[i] = (T)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
     }
     *len = tlen;
     return GRIB_SUCCESS;
+}
+
+static int unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    return unpack<double>(a, val, len);
+}
+
+static int unpack_float(grib_accessor* a, float* val, size_t* len)
+{
+    return unpack<float>(a, val, len);
 }
 
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
@@ -292,7 +278,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (len[0] < (a->length)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s it contains %ld values",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
                 len[0], a->name, a->length);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;

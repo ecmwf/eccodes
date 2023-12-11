@@ -14,7 +14,7 @@
 12 12 Dry deposition mass flux (kg m-2 s-1)
 13 13 Transfer from hydrophobic to hydrophilic (kg kg-1 s-1)
 14 14 Transfer from SO2 (sulphur dioxide) to SO4 (sulphate) (kg kg-1 s-1)
-# 15-49 Reserved 
+# 15-49 Reserved
 50 50 Amount in atmosphere (mol)
 51 51 Concentration in air (mol m-3)
 52 52 Volume mixing ratio (fraction in air) (mol/mol)
@@ -29,7 +29,7 @@
 61 61 Maximum of mass density in layer (kg m-3)
 62 62 Height of maximum mass density (m)
 63 63 Column-averaged mass density in layer (kg m-3)
-# 64-99 Reserved 
+# 64-99 Reserved
 100 100 Surface area density (aerosol) (/m)
 101 101 Vertical visual range (m)
 102 102 Aerosol optical thickness (Numeric)
@@ -42,6 +42,6 @@
 109 109 Aerosol lidar extinction from satellite (/m)
 110 110 Aerosol lidar extinction from the ground (/m)
 111 111 Angstrom exponent (Numeric)
-# 112-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 112-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

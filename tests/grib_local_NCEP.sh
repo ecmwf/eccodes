@@ -10,7 +10,8 @@
 
 . ./include.ctest.sh
 
-temp=output.grib_local_NCEP.grib
+label="grib_local_NCEP_test"
+temp=temp.$label.grib
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 ${tools_dir}/grib_set -s centre=kwbc,discipline=3,parameterCategory=192,parameterNumber=35 $sample $temp

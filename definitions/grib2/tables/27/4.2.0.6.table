@@ -46,5 +46,5 @@
 49 49 Volume fraction of cloud (ice and/or water) (Numeric)
 50 50 Fog (%)
 # 51-191 Reserved
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 192-254 Reserved for local use
+255 255 Missing

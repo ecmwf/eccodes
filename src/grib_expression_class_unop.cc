@@ -64,20 +64,18 @@ typedef struct grib_expression_unop{
 static grib_expression_class _grib_expression_class_unop = {
     0,                    /* super                     */
     "unop",                    /* name                      */
-    sizeof(grib_expression_unop),/* size of instance          */
+    sizeof(grib_expression_unop),/* size of instance        */
     0,                           /* inited */
     &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
     &add_dependency,
-
-	&native_type,
-	0,
-
-	&evaluate_long,
-	&evaluate_double,
-	0,
+    &native_type,
+    0,
+    &evaluate_long,
+    &evaluate_double,
+    0,
 };
 
 grib_expression_class* grib_expression_class_unop = &_grib_expression_class_unop;

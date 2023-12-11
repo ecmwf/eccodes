@@ -34,7 +34,14 @@ if(typeOfFirstFixedSurface == 151 && typeOfSecondFixedSurface == 151) {
     #alias mars.levelist = level;
 }
 
-alias mars.expver = marsExpver;
+# if there is a local section, we take the experimentVersionNumber
+if(localUsePresent == 1){
+    alias mars.expver = experimentVersionNumber;
+}
+if(localUsePresent == 0){
+    alias mars.expver = marsExpver;
+}
+
 alias mars.class  = marsClass;
 alias mars.param = paramId;
 alias mars.origin = centre;

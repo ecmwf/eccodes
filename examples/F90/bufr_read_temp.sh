@@ -10,22 +10,15 @@
 
 . ./include.ctest.sh
 
-
-#Define a common label for all the tmp files
+# Define a common label for all the tmp files
 label="bufr_read_temp_f"
 
-#Define tmp file
 fTmp=${label}.tmp.txt
 rm -f $fTmp
 
 # The path to the BUFR file is hardcoded in the example
-
-REDIRECT=/dev/null
-
-# Run the example
 ${examples_dir}/eccodes_f_bufr_read_temp > $fTmp
+grep -q 'timePeriod pressure geopotentialHeight' $fTmp
 
-#TODO: check the results
-
-#Clean up
+# Clean up
 rm -f $fTmp

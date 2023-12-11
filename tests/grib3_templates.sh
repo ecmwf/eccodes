@@ -9,8 +9,6 @@
 #
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
-
 label="grib3_templates_test"
 temp1=temp1.$label.grib3
 temp2=temp2.$label.grib3

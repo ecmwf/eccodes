@@ -26,22 +26,26 @@ program grib_get_keys
    real, dimension(:), allocatable    ::  values
    integer                            ::  numberOfValues
    real                               ::  average, min_val, max_val
-   integer                            ::  is_missing
+   integer                            ::  is_missing, is_defined
    character(len=10)                  ::  open_mode = 'r'
 
    call codes_open_file(ifile, '../../data/reduced_latlon_surface.grib1', open_mode)
 
-   ! loop on all the messages in a file.
+   ! loop on all the messages in a file
+   LOOP: DO WHILE (.true.)
+      ! a new GRIB message is loaded from file.
+      ! igrib is the grib id to be used in subsequent calls
+      call codes_grib_new_from_file(ifile, igrib, iret)
+      if (iret == CODES_END_OF_FILE) exit LOOP
 
-   ! a new GRIB message is loaded from file
-   ! igrib is the grib id to be used in subsequent calls
-   call codes_grib_new_from_file(ifile, igrib, iret)
-
-   LOOP: DO WHILE (iret /= CODES_END_OF_FILE)
+      ! check key is defined
+      is_defined = 0
+      call codes_is_defined(igrib, 'Ni', is_defined)
+      write (*, *) 'Key Ni is defined? ', is_defined
 
       ! check if the value of the key is MISSING
-      is_missing = 0;
-      call codes_is_missing(igrib, 'Ni', is_missing);
+      is_missing = 0
+      call codes_is_missing(igrib, 'Ni', is_missing)
       if (is_missing /= 1) then
          ! key value is not missing so get as an integer
          call codes_get(igrib, 'Ni', numberOfPointsAlongAParallel)
@@ -99,8 +103,6 @@ program grib_get_keys
          ' max is ', max_val
 
       call codes_release(igrib)
-
-      call codes_grib_new_from_file(ifile, igrib, iret)
 
    end do LOOP
 

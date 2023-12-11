@@ -108,20 +108,20 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
         return GRIB_OUT_OF_MEMORY;
     grib_get_long(h, "global", &self->global);
     if (!self->global) {
-        int ret;
+        int err;
         /*TODO longitudeOfFirstGridPointInDegrees from the def file*/
-        if ((ret = grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &self->lon_first)) != GRIB_SUCCESS) {
+        if ((err = grib_get_double(h, "longitudeOfFirstGridPointInDegrees", &self->lon_first)) != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
                              "grib_nearest_reduced: Unable to get longitudeOfFirstGridPointInDegrees %s\n",
-                             grib_get_error_message(ret));
-            return ret;
+                             grib_get_error_message(err));
+            return err;
         }
         /*TODO longitudeOfLastGridPointInDegrees from the def file*/
-        if ((ret = grib_get_double(h, "longitudeOfLastGridPointInDegrees", &self->lon_last)) != GRIB_SUCCESS) {
+        if ((err = grib_get_double(h, "longitudeOfLastGridPointInDegrees", &self->lon_last)) != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
                              "grib_nearest_reduced: Unable to get longitudeOfLastGridPointInDegrees %s\n",
-                             grib_get_error_message(ret));
-            return ret;
+                             grib_get_error_message(err));
+            return err;
         }
     }
 
@@ -135,12 +135,15 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                 double* outlats, double* outlons, double* values,
                 double* distances, int* indexes, size_t* len);
 
-static int is_legacy(grib_handle* h)
+static int is_legacy(grib_handle* h, int* legacy)
 {
-    long is_legacy = 0;
-    return (grib_get_long(h, "legacyGaussSubarea", &is_legacy) == GRIB_SUCCESS && is_legacy == 1);
+    int err = 0;
+    long lLegacy = 0;
+    err = grib_get_long(h, "legacyGaussSubarea", &lLegacy);
+    if (err) return err;
+    *legacy = (int)lLegacy;
+    return GRIB_SUCCESS;
 }
-
 
 static int find(grib_nearest* nearest, grib_handle* h,
                 double inlat, double inlon, unsigned long flags,
@@ -166,8 +169,6 @@ static int find(grib_nearest* nearest, grib_handle* h,
         err = grib_nearest_find_generic(
             nearest, h, inlat, inlon, flags,
             self->values_key,
-            "Ni",
-            self->Nj,
             &(self->lats),
             &(self->lats_count),
             &(self->lons),
@@ -186,7 +187,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                 double* distances, int* indexes, size_t* len)
 {
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
-    int ret = 0, kk = 0, ii = 0;
+    int err = 0, kk = 0, ii = 0;
     size_t jj = 0;
     long* pla           = NULL;
     long* pl            = NULL;
@@ -198,18 +199,19 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
     get_reduced_row_proc get_reduced_row_func = &grib_get_reduced_row;
 
     if (self->legacy == -1 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
-        self->legacy = is_legacy(h);
+        err = is_legacy(h, &(self->legacy));
+        if (err) return err;
     }
     if (self->legacy == 1) {
         get_reduced_row_func = &grib_get_reduced_row_legacy;
     }
 
-    if ((ret = grib_get_size(h, self->values_key, &nvalues)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_get_size(h, self->values_key, &nvalues)) != GRIB_SUCCESS)
+        return err;
     nearest->values_count = nvalues;
 
-    if ((ret = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
-        return ret;
+    if ((err = grib_nearest_get_radius(h, &radiusInKm)) != GRIB_SUCCESS)
+        return err;
 
     /* Compute lat/lon info, create iterator etc if it's the 1st time or different grid.
      * This is for performance: if the grid has not changed, we only do this once
@@ -220,13 +222,13 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
 
         ilat = 0;
         ilon = 0;
-        if (grib_is_missing(h, self->Nj, &ret)) {
+        if (grib_is_missing(h, self->Nj, &err)) {
             grib_context_log(h->context, GRIB_LOG_DEBUG, "Key '%s' is missing", self->Nj);
-            return ret ? ret : GRIB_GEOCALCULUS_PROBLEM;
+            return err ? err : GRIB_GEOCALCULUS_PROBLEM;
         }
 
-        if ((ret = grib_get_long(h, self->Nj, &n)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_long(h, self->Nj, &n)) != GRIB_SUCCESS)
+            return err;
         self->lats_count = n;
 
         if (self->lats)
@@ -243,10 +245,10 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
         if (!self->lons)
             return GRIB_OUT_OF_MEMORY;
 
-        iter = grib_iterator_new(h, GRIB_GEOITERATOR_NO_VALUES, &ret);
-        if (ret != GRIB_SUCCESS) {
+        iter = grib_iterator_new(h, GRIB_GEOITERATOR_NO_VALUES, &err);
+        if (err != GRIB_SUCCESS) {
             grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_reduced: Unable to create lat/lon iterator");
-            return ret;
+            return err;
         }
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
             if (olat != lat) {
@@ -307,13 +309,13 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                            &(self->j[0]), &(self->j[1]));
 
         plsize = self->lats_count;
-        if ((ret = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_size(h, self->pl, &plsize)) != GRIB_SUCCESS)
+            return err;
         pla = (long*)grib_context_malloc(h->context, plsize * sizeof(long));
         if (!pla)
             return GRIB_OUT_OF_MEMORY;
-        if ((ret = grib_get_long_array(h, self->pl, pla, &plsize)) != GRIB_SUCCESS)
-            return ret;
+        if ((err = grib_get_long_array(h, self->pl, pla, &plsize)) != GRIB_SUCCESS)
+            return err;
 
         pl = pla;
         while ((*pl) == 0) {
@@ -471,8 +473,8 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
     if (values) {
         /* See ECC-1403 and ECC-499 */
         /* Performance: Decode the field once and get all 4 values */
-        ret = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
-        if (ret != GRIB_SUCCESS) return ret;
+        err = grib_get_double_element_set(h, self->values_key, self->k, NUM_NEIGHBOURS, values);
+        if (err != GRIB_SUCCESS) return err;
     }
     for (jj = 0; jj < 2; jj++) {
         for (ii = 0; ii < 2; ii++) {

@@ -9,7 +9,7 @@
  */
 
 #include "grib_api_internal.h"
-#include <ctype.h>
+#include <cctype>
 /*
    This is used by make_class.pl
 
@@ -524,10 +524,12 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out, "  CODES_CHECK(codes_set_long_array(h, \"%s->%s\", ivalues, size), 0);\n", prefix, a->name);
     }
     else {
-        char* sval = lval_to_string(c, value);
-        fprintf(self->dumper.out, "  CODES_CHECK(codes_set_long(h, \"%s->%s\", ", prefix, a->name);
-        fprintf(self->dumper.out, "%s), 0);\n", sval);
-        grib_context_free(c, sval);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            char* sval = lval_to_string(c, value);
+            fprintf(self->dumper.out, "  CODES_CHECK(codes_set_long(h, \"%s->%s\", ", prefix, a->name);
+            fprintf(self->dumper.out, "%s), 0);\n", sval);
+            grib_context_free(c, sval);
+        }
     }
 
     if (self->isLeaf == 0) {

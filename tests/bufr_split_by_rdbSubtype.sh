@@ -17,6 +17,7 @@ fRules=${label}.filter
 
 # Do all the work in a temporary directory
 temp_dir=tempdir.${label}
+rm -rf $temp_dir
 mkdir -p $temp_dir
 cd $temp_dir
 
@@ -42,6 +43,21 @@ for f in ${bufr_files}; do
     rm -f split_rdbSubtype*.bufr
     rm -f out.filter_by_rdbSubtype.*
 done
+
+# Failing cases
+# ----------------
+set +e
+${tools_dir}/bufr_split_by_rdbSubtype
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/bufr_split_by_rdbSubtype $data_dir
+status=$?
+set -e
+[ $status -eq 1 ]
+
 
 # Clean up
 # -------------

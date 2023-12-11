@@ -10,7 +10,6 @@
 
 . ./include.ctest.sh
 
-REDIRECT=/dev/null
 label="grib_ecc-1313_test"
 tempOut=temp.$label.text
 tempRef=temp.$label.ref
