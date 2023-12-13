@@ -12,7 +12,7 @@ meta codedValues data_g2complex_packing(
      offsetSection7,
 
      unitsFactor,
- 	 unitsBias,
+ 	unitsBias,
      changingPrecision,
      numberOfValues,
      bitsPerValue,
@@ -27,13 +27,8 @@ meta codedValues data_g2complex_packing(
      laplacianOperatorIsSet,
      laplacianOperator,
 
-     J,
-     K,
-     M,
-
-     J,
-     J,
-     J,
+     J, K, M,
+     J, J, J,
      numberOfValues
 ): read_only;
 
@@ -58,13 +53,8 @@ meta data.packedValues data_sh_packed(
      laplacianOperatorIsSet,
      laplacianOperator,
 
-     J,
-     K,
-     M,
-
-     J,
-     J,
-     J
+     J,K, M,
+     J, J, J
 ) : read_only;
 
 meta data.unpackedValues data_sh_unpacked(
@@ -88,22 +78,20 @@ meta data.unpackedValues data_sh_unpacked(
      laplacianOperatorIsSet,
      laplacianOperator,
 
-     J,
-     K,
-     M,
-     J,
-     K,
-     M
+     J, K, M,
+     J, K, M
  ) : read_only;
 
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 meta unpackedError simple_packing_error(zero,binaryScaleFactor,decimalScaleFactor,referenceValue,ieee) : no_copy;
 
-meta values data_apply_bitmap(codedValues,
-                                bitmap,
-                                missingValue,
-                                binaryScaleFactor,
-                                numberOfDataPoints,
-                                numberOfValues) : dump;
+meta values data_apply_bitmap(
+     codedValues,
+     bitmap,
+     missingValue,
+     binaryScaleFactor,
+     numberOfDataPoints,
+     numberOfValues
+) : dump;
 
 template statistics "common/statistics_spectral.def";

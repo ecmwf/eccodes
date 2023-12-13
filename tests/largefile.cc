@@ -14,7 +14,7 @@
 #include <unistd.h>
 #endif
 
-void usage(char* prog)
+void usage(const char* prog)
 {
     printf("usage: %s filename\n", prog);
     exit(1);
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     if (argc != 2) usage(argv[0]);
 
-    printf("sizeof(off_t)=%d sizeof(long)=%d\n", sizeof(off_t), sizeof(long));
+    printf("sizeof(off_t)=%zu sizeof(long)=%zu\n", sizeof(off_t), sizeof(long));
 
     f = fopen(argv[1], "r");
     if (!f) {
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
         }
         rsizeout = fread(str, 1, rsizein, f);
         if (rsizeout != rsizein) {
-            printf("rsizein=%d rsizeout=%d\n", rsizein, rsizeout);
+            printf("rsizein=%zu rsizeout=%zu\n", rsizein, rsizeout);
             printf("end of file\n");
             exit(1);
         }

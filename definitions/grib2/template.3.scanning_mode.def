@@ -28,14 +28,16 @@ flagbit scanningMode6(scanningMode,2) = 0: read_only;
 flagbit scanningMode7(scanningMode,1) = 0: read_only;
 flagbit scanningMode8(scanningMode,0) = 0: read_only;
 
-meta swapScanningX change_scanning_direction( values,Ni,Nj,
-                 iScansNegatively,jScansPositively,
-                 xFirst,xLast,x) : edition_specific,hidden,no_copy;
+meta swapScanningX change_scanning_direction(
+    values,Ni,Nj,
+    iScansNegatively,jScansPositively,
+    xFirst,xLast,x) : edition_specific,hidden,no_copy;
 alias swapScanningLon = swapScanningX;
 
-meta swapScanningY change_scanning_direction( values,Ni,Nj,
-                 iScansNegatively,jScansPositively,
-                 yFirst,yLast,y) : edition_specific,hidden,no_copy;
+meta swapScanningY change_scanning_direction(
+    values,Ni,Nj,
+    iScansNegatively,jScansPositively,
+    yFirst,yLast,y) : edition_specific,hidden,no_copy;
 alias swapScanningLat = swapScanningY;
 
 meta swapScanningAlternativeRows change_alternative_row_scanning(

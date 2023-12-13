@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     }
 
     while (codes_bufr_keys_iterator_next(kiter)) {
-        char* kname = codes_bufr_keys_iterator_get_name(kiter);
+        const char* kname = codes_bufr_keys_iterator_get_name(kiter);
         printf("%s\n", kname);
     }
     codes_bufr_keys_iterator_delete(kiter);

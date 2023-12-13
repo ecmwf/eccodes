@@ -176,9 +176,9 @@ void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 /* grib_bufr_descriptor.cc*/
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
-int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v);
+int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
-int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v);
+int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.cc*/
@@ -340,6 +340,9 @@ void grib_smart_table_delete(grib_context* c);
 
 /* grib_accessor_class_codetable.cc*/
 void grib_codetable_delete(grib_context* c);
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries);
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure);
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation);
 
 /* grib_accessor_class_codetable_units.cc*/
 
@@ -1144,6 +1147,7 @@ int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
+int grib_accessor_can_be_missing(grib_accessor* a, int* err);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -1157,8 +1161,8 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_get_long_internal(grib_handle* h, const char* name, long* val);
-int grib_is_in_dump(grib_handle* h, const char* name);
-int grib_attributes_count(grib_accessor* a, size_t* size);
+int grib_is_in_dump(const grib_handle* h, const char* name);
+int grib_attributes_count(const grib_accessor* a, size_t* size);
 int grib_get_long(const grib_handle* h, const char* name, long* val);
 int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
@@ -1204,7 +1208,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
 void grib_print_values(const char* title, grib_values* values);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
-int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err);
+int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);
 int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags);
 
@@ -1382,6 +1386,7 @@ int codes_bufr_extract_headers_malloc(grib_context* c, const char* filename, cod
 int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* val, size_t* len);
 int codes_bufr_key_is_header(const grib_handle* h, const char* key, int* err);
 int codes_bufr_key_is_coordinate(const grib_handle* h, const char* key, int* err);
+int codes_bufr_key_exclude_from_dump(const char* key);
 
 /* string_util.cc*/
 int strcmp_nocase(const char* s1, const char* s2);

@@ -12,8 +12,12 @@
 
 REDIRECT=/dev/null
 
+label="grib_missing_test"
+
 infile="${data_dir}/missing.grib2"
-outfile="${data_dir}/temp.missing_new.grib2"
+outfile="${data_dir}/temp.$label.grib2"
+tempText=temp.$label.txt
+tempGrib=temp.$label.grib
 
 scaleFactorOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaleFactorOfSecondFixedSurface $infile`
 [ "$scaleFactorOfSecondFixedSurface" = "0" ]
@@ -29,10 +33,33 @@ scaleFactorOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaleFactor
 scaledValueOfSecondFixedSurface=`${tools_dir}/grib_get -w count=1 -p scaledValueOfSecondFixedSurface $outfile`
 [ "$scaledValueOfSecondFixedSurface" = "MISSING" ]
 
+# Codetable keys being set to 'missing'
+# -----------------------------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+# Make sure it works with the default sample
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing $sample2 $outfile
+grib_check_key_equals $outfile 'typeOfFirstFixedSurface:i' '255'
+
+# Make sure it works with the latest GRIB2 version code table 4.5
+latest=`${tools_dir}/grib_get -p tablesVersionLatest $sample2`
+${tools_dir}/grib_set -s tablesVersion=$latest $sample2 $tempGrib
+${tools_dir}/grib_set -s typeOfFirstFixedSurface=missing $tempGrib $outfile
+grib_check_key_equals $outfile 'typeOfFirstFixedSurface:i' '255'
+rm -f $tempGrib
+
+${tools_dir}/grib_set -s centre=missing $sample1 $outfile
+grib_check_key_equals $outfile 'centre' 'consensus'
+
+# Some code tables do not have a missing entry
 set +e
+${tools_dir}/grib_set -s timeRangeIndicator=missing $sample1 $outfile 2>$tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "There is no 'missing' entry in Code Table 5.table" $tempText
 
-${tools_dir}/grib_set -s centre=missing $infile $outfile 2> $REDIRECT > $REDIRECT
 
-[ $? -ne 0 ]
-
-rm -f $outfile
+# Clean up
+rm -f $outfile $tempText $tempGrib
