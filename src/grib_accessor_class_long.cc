@@ -258,7 +258,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     long v = 0; /* The converted value */
 
     // ECC-1722
-    if (strcmp_nocase(val, "missing")==0) {
+    if (STR_EQUAL_NOCASE(val, "missing")) {
         return pack_missing(a);
     }
 

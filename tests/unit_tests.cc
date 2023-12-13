@@ -599,7 +599,13 @@ void test_sarray()
     grib_sarray_push(c, a, "ants");
     grib_sarray_push(c, a, "bugs");
     grib_sarray_print("sarray", a);
+
+    grib_vsarray* va = grib_vsarray_new(c, 1, 1);
+    grib_vsarray_push(c, va, a);
+    grib_vsarray_print("vsarray", va);
+
     grib_sarray_delete(c, a);
+    grib_vsarray_delete(c, va);
 }
 
 void test_codes_get_product_name()

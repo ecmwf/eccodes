@@ -54,7 +54,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (!options->action) {
         const char* filt = options->infile_extra->name;
         if (strcmp(filt, "-") == 0) filt = "stdin";
-        fprintf(stderr, "Error: %s: unable to create action\n", filt);
+        fprintf(stderr, "ERROR: %s: unable to create action\n", filt);
         exit(1);
     }
 
@@ -86,7 +86,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     err = grib_handle_apply_action(h, options->action);
     if (err != GRIB_SUCCESS && options->fail) {
-        printf("ERROR: %s\n", grib_get_error_message(err));
+        fprintf(stderr, "ERROR: %s (message %d)\n",
+                grib_get_error_message(err), h->context->handle_file_count);
         exit(err);
     }
     return 0;

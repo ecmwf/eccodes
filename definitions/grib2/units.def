@@ -523,14 +523,14 @@
 'N m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 38 ;
+	 parameterNumber = 62 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Instantaneous northward turbulent surface stress
 'N m**-2' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
-	 parameterNumber = 37 ;
+	 parameterNumber = 63 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
 #Instantaneous surface sensible heat flux
@@ -7512,6 +7512,15 @@
 	 typeOfSecondFixedSurface = 168 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean sea water salinity
+'kg kg**-1' = {
+	 discipline = 10 ;
+	 parameterCategory = 4 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 168 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean net short wave radiation rate at sea surface
 'W m**-2' = {
 	 discipline = 0 ;
@@ -7698,6 +7707,8 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
 	}
 #Mass mixing ratio
 'kg kg**-1' = {
@@ -8026,6 +8037,32 @@
 	 discipline = 0 ;
 	 parameterCategory = 20 ;
 	 parameterNumber = 59 ;
+	}
+#Mass mixing ratio from volcanoes
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 2 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Total column vertically-integrated mass density from volcanoes
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
+	}
+#Dry deposition velocity from volcanoes
+'m s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 20 ;
+	 parameterNumber = 15 ;
+	 is_chemical_srcsink = 1 ;
+	 sourceSinkChemicalPhysicalProcess = 7 ;
 	}
 #Virtual potential temperature
 'K' = {

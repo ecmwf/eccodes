@@ -196,6 +196,7 @@ int main(int argc, char** argv)
 
     /* 255 = Missing (grib2/tables/4/4.5.table)  */
     CODES_CHECK(codes_set_long(h, "typeOfSecondFixedSurface", 255), 0);
+    CODES_CHECK(codes_set_missing(h, "typeOfSecondFixedSurface"), 0);
 
     CODES_CHECK(codes_set_missing(h, "scaleFactorOfSecondFixedSurface"), 0);
     CODES_CHECK(codes_set_missing(h, "scaledValueOfSecondFixedSurface"), 0);
