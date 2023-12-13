@@ -2,7 +2,7 @@
 import default.cparser as cparser
 import grib_accessor.grib_accessor_ccode as grib_accessor_ccode
 import clang.cindex
-import arg
+import code_object.arg as arg
 
 class GribAccessorCParser(cparser.CParser):
     def __init__(self, cfilename) -> None:

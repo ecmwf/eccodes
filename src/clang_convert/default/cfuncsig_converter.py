@@ -1,7 +1,7 @@
 
 import debug
-import funcsig
-import arg_converter
+import code_object.funcsig as funcsig
+import code_object_converter.arg_converter as arg_converter
 from funcsig_mapping import FuncSigMapping
 from standard_transforms import transform_function_name
 

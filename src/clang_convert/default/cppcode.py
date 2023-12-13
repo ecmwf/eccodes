@@ -1,6 +1,6 @@
 
 import debug
-import cppfunction
+import code_object.cppfunction as cppfunction
 
 # Represents the conversion of a CCode class to C++
 

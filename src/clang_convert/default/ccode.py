@@ -1,6 +1,7 @@
 
 import debug
-import cfunction
+import code_object.cfunction as cfunction
+import default.macro_details as macro_details
 
 # Represents a coherent unit of C code that needs to be parsed together: usually a single C file
 
@@ -9,6 +10,7 @@ class CCode:
         self._cfilename = cfilename
         self._global_declarations = []
         self._functions = []
+        self._macro_details = macro_details.MacroDetails()
 
     @property
     def global_declarations(self):
@@ -16,6 +18,16 @@ class CCode:
 
     def add_global_declaration(self, node):
         self._global_declarations.append(node)
+
+    @property
+    def macro_details(self):
+        return self._macro_details
+
+    def add_macro_definition(self, def_node):
+        self._macro_details.add_definition(def_node)
+
+    def add_macro_instantiation(self, inst_node):
+        self._macro_details.add_instantiation(inst_node)
 
     @property
     def functions(self):

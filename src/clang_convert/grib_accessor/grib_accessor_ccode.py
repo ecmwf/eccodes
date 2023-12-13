@@ -1,7 +1,7 @@
 
 import debug
 import default.ccode as ccode
-import cfunction
+import code_object.cfunction as cfunction
 import re
 
 grib_accessor_inherited_methods = [
@@ -66,6 +66,25 @@ class GribAccessorCCode(ccode.CCode):
         else:
             return super().parent_cfilename
 
+    @property
+    def constructor(self):
+        return self._constructor
+
+    @property
+    def destructor(self):
+        return self._destructor
+
+    @property
+    def inherited_methods(self):
+        return self._inherited_methods
+
+    @property
+    def private_methods(self):
+        return self._private_methods
+
+    @property
+    def static_functions(self):
+        return self._static_functions
 
     def add_member(self, cmember):
         assert cmember not in self._members, f"member [{cmember.as_string()}] already defined for [{self._accessor_class_name}]"

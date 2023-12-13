@@ -43,15 +43,16 @@ def line(func, text):
         elapsed_time = current_time - start_time
         elapsed_time_str = f",{elapsed_time.microseconds},"
 
-    # Multiline support
-    if text[0] == "\n":
-        print()
-        text = text[1:]
+    # List support
+    if isinstance(text, list):
+        if len(text) == 0:
+            print(f"{func:{func_pad}}:{elapsed_time_str} *** ERROR - CAN'T PRINT DEBUG TEXT, SUPPLIED LIST IS EMPTY ***")
+            return
 
-    lines = text.split("\n")
-   
-    print(f"{func:{func_pad}}:{elapsed_time_str} {lines[0]}")
+        print(f"{func:{func_pad}}:{elapsed_time_str} {text[0]}")
 
-    func = ""
-    for line in lines[1:]:
-        print(f"{func:{func_pad}}  {line}")
+        func = ""
+        for line in text[1:]:
+            print(f"{func:{func_pad}}  {line}")
+    else:
+        print(f"{func:{func_pad}}:{elapsed_time_str} {text}")

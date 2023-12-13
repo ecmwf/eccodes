@@ -1,6 +1,6 @@
 
 import debug
-from arg import arg_string
+from code_object.code_interface import as_debug_string
 
 # Store C to C++ transforms to be used by the converters
 
@@ -42,10 +42,10 @@ class Transforms:
 
     def add_to_custom_args(self, carg, cpparg):
         if carg in self._custom_args:
-            assert self._custom_args[carg] == cpparg, f"Updating an existing custom arg mapping: C Arg = {arg_string(carg)} -> {arg_string(cpparg)} Previous arg = {arg_string(self._all_args[carg])}"
+            assert self._custom_args[carg] == cpparg, f"Updating an existing custom arg mapping: C Arg = {as_debug_string(carg)} -> {as_debug_string(cpparg)} Previous arg = {as_debug_string(self._all_args[carg])}"
         else:
             assert carg, f"ADDING carg which is None!"
-            debug.line("Transforms", f"Adding new custom arg mapping: {arg_string(carg)} -> {arg_string(cpparg)}")
+            debug.line("Transforms", f"Adding new custom arg mapping: {as_debug_string(carg)} -> {as_debug_string(cpparg)}")
             self._custom_args[carg] = cpparg
 
     @property
@@ -54,10 +54,10 @@ class Transforms:
 
     def add_to_global_args(self, carg, cpparg):
         if carg in self._global_args:
-            assert self._global_args[carg] == cpparg, f"Updating an existing global arg mapping: C Arg = {arg_string(carg)} -> {arg_string(cpparg)} Previous arg = {arg_string(self._all_args[carg])}"
+            assert self._global_args[carg] == cpparg, f"Updating an existing global arg mapping: C Arg = {as_debug_string(carg)} -> {as_debug_string(cpparg)} Previous arg = {as_debug_string(self._all_args[carg])}"
         else:
             assert carg, f"ADDING carg which is None!"
-            debug.line("Transforms", f"Adding new global arg mapping: {arg_string(carg)} -> {arg_string(cpparg)}")
+            debug.line("Transforms", f"Adding new global arg mapping: {as_debug_string(carg)} -> {as_debug_string(cpparg)}")
             self._global_args[carg] = cpparg
 
     @property
@@ -66,10 +66,10 @@ class Transforms:
 
     def add_to_local_args(self, carg, cpparg):
         if carg in self._local_args:
-            assert self._local_args[carg] == cpparg, f"Updating an existing local arg mapping: C Arg = {arg_string(carg)} -> {arg_string(cpparg)} Previous arg = {arg_string(self._all_args[carg])}"
+            assert self._local_args[carg] == cpparg, f"Updating an existing local arg mapping: C Arg = {as_debug_string(carg)} -> {as_debug_string(cpparg)} Previous arg = {as_debug_string(self._all_args[carg])}"
         else:
             assert carg, f"ADDING carg which is None!"
-            debug.line("Transforms", f"Adding new local arg mapping: {arg_string(carg)} -> {arg_string(cpparg)}")
+            debug.line("Transforms", f"Adding new local arg mapping: {as_debug_string(carg)} -> {as_debug_string(cpparg)}")
             self._local_args[carg] = cpparg
 
     @property
@@ -82,6 +82,13 @@ class Transforms:
                 assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
 
         self._funcsig_mappings.append(mapping)
+
+    def cppfuncsig_for_cfuncsig(self, cfuncsig):
+        for mapping in self._funcsig_mappings:
+            if cfuncsig.name == mapping.cfuncsig.name:
+                return mapping.cppfuncsig
+        
+        return None
 
     def cppfuncsig_for_cfuncname(self, cfuncname):
         for mapping in self._funcsig_mappings:

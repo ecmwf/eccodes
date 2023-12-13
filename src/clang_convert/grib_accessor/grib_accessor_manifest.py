@@ -2,6 +2,7 @@
 import default.default_manifest as default_manifest
 import grib_accessor.grib_accessor_cparser as grib_accessor_cparser
 import grib_accessor.grib_accessor_ccode as grib_accessor_ccode
+import grib_accessor.grib_accessor_ccode_converter as grib_accessor_ccode_converter
 
 # The manifest provides generic access to all the components required to run the parser for this class of code
 #
@@ -24,6 +25,10 @@ class GribAccessorManifest(default_manifest.Manifest):
     @property
     def CCODE(self):
         return grib_accessor_ccode.GribAccessorCCode
+
+    @property
+    def CCODE_CONVERTER(self):
+        return grib_accessor_ccode_converter.GribAccessorCCodeConverter
 
     '''@property
     def CFUNCSIG_CONVERTER(self):
