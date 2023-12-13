@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
     int err                     = 0;
 
     long totalLength_src = 0, totalLength_dst = 0;
-    long edition = 0;
+    long edition = 0, isGridded = 0, bitmapPresent = 0;
+    long isConstant_src = 0, isConstant_dst = 0;
     long dataSectionLength_src = 0, dataSectionLength_dst = 0;
-    long bitmapPresent_dst = 0, isConstant = 0;
     size_t messageLength_src = 0, messageLength_dst = 0;
 
     if (argc != 3) {
@@ -45,29 +45,33 @@ int main(int argc, char* argv[])
         codes_handle* clone_handle = codes_handle_clone_lightweight(source_handle);
         assert(clone_handle);
 
-        CODES_CHECK(codes_get_message(source_handle, &buffer, &messageLength_src), 0);
-        CODES_CHECK(codes_get_message(clone_handle, &buffer, &messageLength_dst), 0);
-        assert( messageLength_src > messageLength_dst );
+        codes_get_long(source_handle, "isConstant", &isConstant_src);
+        codes_get_long(source_handle, "isGridded", &isGridded);
+        if (isGridded && !isConstant_src) {
 
-        CODES_CHECK(codes_get_long(source_handle, "totalLength", &totalLength_src), 0);
-        CODES_CHECK(codes_get_long(clone_handle, "totalLength", &totalLength_dst), 0);
-        assert(totalLength_src > totalLength_dst);
+            CODES_CHECK(codes_get_message(source_handle, &buffer, &messageLength_src), 0);
+            CODES_CHECK(codes_get_message(clone_handle, &buffer, &messageLength_dst), 0);
+            assert( messageLength_src > messageLength_dst );
 
-        CODES_CHECK(codes_get_long(source_handle, "edition", &edition), 0);
-        if (edition == 1) {
-            CODES_CHECK(codes_get_long(source_handle, "section4Length", &dataSectionLength_src), 0);
-            CODES_CHECK(codes_get_long(clone_handle, "section4Length", &dataSectionLength_dst), 0);
-        } else if (edition == 2) {
-            CODES_CHECK(codes_get_long(source_handle, "section7Length", &dataSectionLength_src), 0);
-            CODES_CHECK(codes_get_long(clone_handle, "section7Length", &dataSectionLength_dst), 0);
+            CODES_CHECK(codes_get_long(source_handle, "totalLength", &totalLength_src), 0);
+            CODES_CHECK(codes_get_long(clone_handle, "totalLength", &totalLength_dst), 0);
+            assert(totalLength_src > totalLength_dst);
+
+            CODES_CHECK(codes_get_long(source_handle, "edition", &edition), 0);
+            if (edition == 1) {
+                CODES_CHECK(codes_get_long(source_handle, "section4Length", &dataSectionLength_src), 0);
+                CODES_CHECK(codes_get_long(clone_handle, "section4Length", &dataSectionLength_dst), 0);
+            } else if (edition == 2) {
+                CODES_CHECK(codes_get_long(source_handle, "section7Length", &dataSectionLength_src), 0);
+                CODES_CHECK(codes_get_long(clone_handle, "section7Length", &dataSectionLength_dst), 0);
+            }
+            assert( dataSectionLength_src > dataSectionLength_dst );
+
+            codes_get_long(clone_handle, "bitmapPresent", &bitmapPresent);
+            assert(bitmapPresent == 0);
+            codes_get_long(clone_handle, "isConstant", &isConstant_dst);
+            assert(isConstant_dst == 1);
         }
-        //printf("sectionLengths: %ld %ld\n", dataSectionLength_src, dataSectionLength_dst);
-        assert( dataSectionLength_src > dataSectionLength_dst );
-
-        codes_get_long(clone_handle, "bitmapPresent", &bitmapPresent_dst);
-        assert(bitmapPresent_dst == 0);
-        codes_get_long(clone_handle, "isConstant", &isConstant);
-        assert(isConstant == 1);
 
         /* write out the cloned buffer */
         if (fwrite(buffer, 1, messageLength_dst, out) != messageLength_dst) {
