@@ -175,9 +175,9 @@ grib_handle* codes_handle_clone(const grib_handle* h)
 {
     return grib_handle_clone(h);
 }
-grib_handle* codes_handle_clone_light(const grib_handle* h)
+grib_handle* codes_handle_clone_lightweight(const grib_handle* h)
 {
-    return grib_handle_clone_light(h);
+    return grib_handle_clone_lightweight(h);
 }
 
 int codes_handle_delete(grib_handle* h)

@@ -326,7 +326,7 @@ grib_handle* grib_handle_clone(const grib_handle* h)
     return result;
 }
 
-static bool can_create_clone_light(const grib_handle* h)
+static bool can_create_clone_lightweight(const grib_handle* h)
 {
     // Only for GRIB, not BUFR etc
     if (h->product_kind != PRODUCT_GRIB) return false;
@@ -339,13 +339,13 @@ static bool can_create_clone_light(const grib_handle* h)
     return true;
 }
 
-grib_handle* grib_handle_clone_light(const grib_handle* h)
+grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
 {
     int err = 0;
     grib_handle* result = NULL;
     grib_context* c = h->context;
 
-    if (!can_create_clone_light(h)) {
+    if (!can_create_clone_lightweight(h)) {
         // Lightweight clone not possible. Do a normal clone
         return grib_handle_clone(h);
     }
@@ -381,7 +381,7 @@ grib_handle* grib_handle_clone_light(const grib_handle* h)
     return result;
 }
 
-// grib_handle* grib_handle_clone_light(const grib_handle* h)
+// grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
 // {
 //     int err = 0;
 //     size_t size1 = 0;

@@ -507,7 +507,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_na
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 grib_handle* grib_handle_clone(const grib_handle* h);
-grib_handle* grib_handle_clone_light(const grib_handle* h);
+grib_handle* grib_handle_clone_lightweight(const grib_handle* h);
 
 /**
  *  Frees a handle, also frees the message if it is not a user message
