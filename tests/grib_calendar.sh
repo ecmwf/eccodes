@@ -10,11 +10,11 @@
 
 . ./include.ctest.sh
 
+label="grib_calendar_test"
 
-temp1=temp1.calendar.$$
-temp2=temp2.calendar.$$
+temp1=temp1.$label.$$
+temp2=temp2.$label.$$
 sample=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-
 
 ${tools_dir}/grib_set -s tablesVersion=13,setCalendarId=1,typeOfCalendar=0 $sample $temp1
 grib_check_key_equals $temp1 calendarIdPresent 1

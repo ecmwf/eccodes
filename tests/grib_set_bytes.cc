@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     FILE* in            = NULL;
     const char* infile  = "../data/test_uuid.grib2";
     FILE* out           = NULL;
-    const char* outfile = "temp.grib_set_bytes.grib";
+    const char* outfile = "temp.grib_set_bytes_test.grib";
     grib_handle* h     = NULL;
     const void* buffer  = NULL;
 
