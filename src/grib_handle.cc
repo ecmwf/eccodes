@@ -17,7 +17,7 @@
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
 static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
-static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err);
+static bool grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err);
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* msglen);
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f);
 static grib_multi_support* grib_multi_support_new(grib_context* c);
@@ -1483,7 +1483,7 @@ static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsig
     return true;
 }
 
-static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err)
+static bool grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err)
 {
     long next_seclen;
     *err = 0;
@@ -1495,12 +1495,12 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
             *err = GRIB_SUCCESS;
         else
             *err = GRIB_7777_NOT_FOUND;
-        return 0;
+        return false;
     }
 
     /*secbegin += seclen;*/
 
-    return 1;
+    return true;
 }
 
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* len)
@@ -1615,6 +1615,8 @@ void grib_multi_support_reset(grib_context* c)
 
 static grib_multi_support* grib_multi_support_new(grib_context* c)
 {
+    // GRIB edition 2 has 9 sections ( 0 to 8 )
+    const int GRIB2_END_SECTION = 8;
     int i = 0;
     grib_multi_support* gm =
         (grib_multi_support*)grib_context_malloc_clear(c, sizeof(grib_multi_support));
@@ -1626,9 +1628,10 @@ static grib_multi_support* grib_multi_support_new(grib_context* c)
     gm->section_number        = 0;
     gm->next                  = 0;
     gm->sections_length[0]    = 16;
-    for (i = 1; i < 8; i++)
+
+    for (i = 1; i < GRIB2_END_SECTION; i++)
         gm->sections_length[i] = 0;
-    gm->sections_length[8] = 4;
+    gm->sections_length[GRIB2_END_SECTION] = 4; // The 7777
 
     return gm;
 }
