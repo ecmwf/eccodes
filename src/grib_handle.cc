@@ -16,7 +16,7 @@
 
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
-static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
+static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
 static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err);
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* msglen);
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f);
@@ -1161,11 +1161,10 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
 
 int grib_multi_handle_delete(grib_multi_handle* h)
 {
-    if (h == NULL)
-        return GRIB_SUCCESS;
-
-    grib_buffer_delete(h->context, h->buffer);
-    grib_context_free(h->context, h);
+    if (h != NULL) {
+        grib_buffer_delete(h->context, h->buffer);
+        grib_context_free(h->context, h);
+    }
     return GRIB_SUCCESS;
 }
 
@@ -1227,11 +1226,11 @@ int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
         return GRIB_INVALID_GRIB;
 
     if (fwrite(h->buffer->data, 1, h->buffer->ulength, f) != h->buffer->ulength) {
-        grib_context_log(h->context, GRIB_LOG_PERROR, "grib_multi_handle_write writing on file");
+        grib_context_log(h->context, GRIB_LOG_PERROR, "%s failed", __func__);
         return GRIB_IO_PROBLEM;
     }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int grib_get_partial_message(grib_handle* h, const void** msg, size_t* len, int start_section)
@@ -1295,9 +1294,9 @@ int grib_get_message_offset(const grib_handle* h, off_t* offset)
     if (h)
         *offset = h->offset;
     else
-        return GRIB_INTERNAL_ERROR;
+        return GRIB_NULL_HANDLE;
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
@@ -1468,10 +1467,10 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
 //     return GRIB_SUCCESS;
 // }
 
-static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
+static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
 {
     if (!grib2_has_next_section(msgbegin, msglen, *secbegin, *seclen, err))
-        return 0;
+        return false;
 
     *secbegin += *seclen;
     *seclen = grib_decode_unsigned_byte_long(*secbegin, 0, 4);
@@ -1479,9 +1478,9 @@ static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsign
 
     if (*secnum < 1 || *secnum > 7) {
         *err = GRIB_INVALID_SECTION_NUMBER;
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
 static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err)

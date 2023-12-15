@@ -79,7 +79,8 @@ int main(int argc, char** argv)
     }
 
     /* write multi-field handle to output file */
-    codes_grib_multi_handle_write(mh, of);
+    err = codes_grib_multi_handle_write(mh, of);
+    if (err) return 1;
     fclose(of);
 
     /* release memory */
