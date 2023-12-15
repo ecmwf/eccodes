@@ -1658,7 +1658,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_WRONG_STEP_UNIT		-26
 /** Invalid file id */
 #define GRIB_INVALID_FILE		-27
-/** Invalid grib id */
+/** Invalid GRIB id */
 #define GRIB_INVALID_GRIB		-28
 /** Invalid index id */
 #define GRIB_INVALID_INDEX		-29
