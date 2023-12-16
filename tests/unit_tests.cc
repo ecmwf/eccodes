@@ -379,9 +379,32 @@ static void test_gribex_mode()
 
     Assert( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
     grib_gribex_mode_on(c);
+    codes_gribex_mode_on(c);
     Assert( grib_get_gribex_mode(c) == 1 );
     grib_gribex_mode_off(c);
+    codes_gribex_mode_off(c);
     Assert( grib_get_gribex_mode(c) == 0 );
+    Assert( codes_get_gribex_mode(c) == 0 );
+}
+
+static void test_gts_header_mode()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Running %s ...\n", __func__);
+
+    grib_gts_header_on(c);
+    codes_gts_header_on(c);
+    grib_gts_header_off(c);
+    codes_gts_header_off(c);
+}
+
+static void test_bufr_multi_element_constant_arrays()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Running %s ...\n", __func__);
+
+    codes_bufr_multi_element_constant_arrays_on(c);
+    codes_bufr_multi_element_constant_arrays_off(c);
 }
 
 static void test_grib_binary_search()
@@ -650,6 +673,8 @@ int main(int argc, char** argv)
     test_get_git_sha1();
     test_get_build_date();
     test_gribex_mode();
+    test_gts_header_mode();
+    test_bufr_multi_element_constant_arrays();
 
     test_concept_condition_strings();
 
