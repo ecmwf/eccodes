@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -91,7 +92,7 @@ static void test_gaussian_latitudes(int order)
     double lat1 = 0, lat2 = 0;
     double* lats = (double*)malloc(sizeof(double) * num);
 
-    ret = grib_get_gaussian_latitudes(order, lats);
+    ret = codes_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
     lat1 = lats[0];
@@ -112,7 +113,7 @@ static void test_gaussian_latitude_640()
     int ret                = 0;
     const double tolerance = 1e-6;
     double* lats           = (double*)malloc(sizeof(double) * num);
-    ret                    = grib_get_gaussian_latitudes(order, lats);
+    ret                    = codes_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
     compare_doubles(lats[0], 89.892396, tolerance);
