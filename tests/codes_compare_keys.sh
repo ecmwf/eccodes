@@ -63,5 +63,16 @@ EOF
 
 diff $tempRef $tempLog
 
+# Local definitions
+# ----------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+tempGribA=temp.${label}.A.grib
+tempGribB=temp.${label}.B.grib
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=11 $sample1 $tempGribA
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=11 $sample1 $tempGribB
+${test_dir}/codes_compare_keys $tempGribA $tempGribB endOfInterval
+rm -f $tempGribA $tempGribB
+
+
 # Clean up
 rm -f $tempLog $tempRef $tempGrib
