@@ -394,8 +394,10 @@ static void test_gts_header_mode()
 
     grib_gts_header_on(c);
     codes_gts_header_on(c);
+    Assert(c->gts_header_on == 1);
     grib_gts_header_off(c);
     codes_gts_header_off(c);
+    Assert(c->gts_header_on == 0);
 }
 
 static void test_bufr_multi_element_constant_arrays()
