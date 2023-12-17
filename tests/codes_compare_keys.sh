@@ -68,9 +68,14 @@ diff $tempRef $tempLog
 sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 tempGribA=temp.${label}.A.grib
 tempGribB=temp.${label}.B.grib
-${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=11 $sample1 $tempGribA
-${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=11 $sample1 $tempGribB
-${test_dir}/codes_compare_keys $tempGribA $tempGribB endOfInterval
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=6 $sample1 $tempGribA
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=5 $sample1 $tempGribB
+set +e
+${test_dir}/codes_compare_keys $tempGribA $tempGribB endOfInterval > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "2 differences" $tempLog
 rm -f $tempGribA $tempGribB
 
 

@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             Assert(name);
-            //printf(".... %s \n",name);
             err = codes_compare_key(h1, h2, name, 0);
             if (err) {
                 fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
@@ -59,7 +58,7 @@ int main(int argc, char* argv[])
         if (list_provided_keys) {
             for (i = 0; list_provided_keys[i] != NULL; ++i) {
                 const char* pkey = list_provided_keys[i];
-                printf("Comparing provided key %s ...\n", list_provided_keys[i]);
+                //printf("Comparing provided key %s ...\n", list_provided_keys[i]);
                 err = codes_compare_key(h1, h2, pkey, 0);
                 if (err) {
                     fprintf(stderr, "key: %s  (%s)\n", pkey, grib_get_error_message(err));
