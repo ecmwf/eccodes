@@ -446,7 +446,7 @@ static int get_native_type(grib_accessor* a)
 
 static int compare(grib_accessor* a, grib_accessor* b)
 {
-    int retval   = 0;
+    int retval   = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
 
@@ -475,10 +475,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
     grib_unpack_double(b, bval, &blen);
 
     retval = GRIB_SUCCESS;
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_DOUBLE_VALUE_MISMATCH;
-        alen--;
+    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);
