@@ -11,6 +11,7 @@ program codes_f90_misc
    use eccodes
    implicit none
 
+   integer :: array_of_error_codes(8), i, code
    character(len=64) :: error_message = ''
 
    call codes_gribex_mode_on()
@@ -19,7 +20,12 @@ program codes_f90_misc
    call codes_bufr_multi_element_constant_arrays_on()
    call codes_bufr_multi_element_constant_arrays_off()
 
-   call codes_get_error_string(-26, error_message)
-   write (*, *) 'error message: ', trim(error_message)
+   array_of_error_codes = [0, -2, -14, -16, -26, -28, -38, -41]
+   do i = 1, size(array_of_error_codes)
+      error_message = ''
+      code = array_of_error_codes(i)
+      call codes_get_error_string(code, error_message)
+      write (*, *) 'error message: <', adjustl(trim(error_message)), '>'
+   end do
 
 end program
