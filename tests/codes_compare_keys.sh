@@ -63,6 +63,12 @@ EOF
 
 diff $tempRef $tempLog
 
+# Spectral
+# ----------
+sample_spectral=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+${test_dir}/codes_compare_keys $sample_spectral $sample_spectral enorm,avg
+
+
 # Local definitions
 # ----------------------
 sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
