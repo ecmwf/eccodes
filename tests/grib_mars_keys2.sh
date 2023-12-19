@@ -13,7 +13,15 @@
 label="grib_mars_keys2_test"
 tempGrib=temp.${label}.grib
 
+grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+
+
+# Check lowercase/uppercase
+${tools_dir}/grib_set -s class=YT,type=EM,stream=DCWV $grib1_sample $tempGrib
+grib_check_key_equals $tempGrib mars.class,mars.type,mars.stream 'yt em dcwv'
+grib_check_key_equals $tempGrib marsClass:i,marsType:i,marsStream:i '18 17 1029'
+
 
 # Check all combinations
 # ------------------------
@@ -31,4 +39,5 @@ for cfg in $ECCODES_DEFINITION_PATH/mars/grib.*.*.def; do
 done
 echo "Checked $i files"
 
+# Clean up
 rm -f $tempGrib
