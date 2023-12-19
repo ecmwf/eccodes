@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     assert(out);
 
     while ((source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err)) != NULL) {
-        codes_handle* clone_handle = codes_handle_clone_lightweight(source_handle);
+        codes_handle* clone_handle = codes_handle_clone_headers_only(source_handle);
         assert(clone_handle);
 
         codes_get_long(source_handle, "isConstant", &isConstant_src);

@@ -495,7 +495,7 @@ codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_clone(const codes_handle* h);
-codes_handle* codes_handle_clone_lightweight(const codes_handle* h);
+codes_handle* codes_handle_clone_headers_only(const codes_handle* h);
 
 /**
  *  Frees a handle, also frees the message if it is not a user message

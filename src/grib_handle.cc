@@ -326,7 +326,7 @@ grib_handle* grib_handle_clone(const grib_handle* h)
     return result;
 }
 
-static bool can_create_clone_lightweight(const grib_handle* h)
+static bool can_create_clone_headers_only(const grib_handle* h)
 {
     // Only for GRIB, not BUFR etc
     if (h->product_kind != PRODUCT_GRIB) return false;
@@ -339,14 +339,14 @@ static bool can_create_clone_lightweight(const grib_handle* h)
     return true;
 }
 
-grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
+grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 {
     int err = 0;
     grib_handle* result = NULL;
     grib_context* c = h->context;
 
-    if (!can_create_clone_lightweight(h)) {
-        // Lightweight clone not possible. Do a normal clone
+    if (!can_create_clone_headers_only(h)) {
+        // Headers-only clone not possible. Do a normal clone
         return grib_handle_clone(h);
     }
 
@@ -356,7 +356,7 @@ grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
     snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
     grib_handle* h_sample = grib_handle_new_from_samples(c, sample_name);
     if (!h_sample) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create lightweight clone using sample %s", sample_name);
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone using sample %s", sample_name);
         return NULL;
     }
 
@@ -372,7 +372,7 @@ grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
     result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
     if (!result || err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create lightweight clone: Unable to copy sections");
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone: Unable to copy sections");
         grib_handle_delete(h_sample);
         return NULL;
     }

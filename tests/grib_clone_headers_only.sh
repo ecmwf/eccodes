@@ -10,7 +10,7 @@
 
 . ./include.ctest.sh
 
-label="grib_clone_lightweight_test"
+label="grib_clone_headers_only_test"
 temp=temp.$label.grib
 
 inputs="
@@ -22,7 +22,7 @@ inputs="
 for f in $inputs; do
     infile=$data_dir/$f
     rm -f $temp
-    $EXEC ${test_dir}/grib_clone_lightweight $infile $temp
+    $EXEC ${test_dir}/grib_clone_headers_only $infile $temp
     ${tools_dir}/grib_compare -H -b totalLength $infile $temp
 done
 
