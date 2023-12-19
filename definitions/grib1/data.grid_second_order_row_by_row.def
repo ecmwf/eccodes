@@ -49,7 +49,7 @@ if(bitmapPresent)   {
 	 bitmap
 
    ): read_only;
-   alias data.packedValues = codedValues; 
+   alias data.packedValues = codedValues;
 
    meta values data_apply_bitmap(codedValues,bitmap,missingValue,binaryScaleFactor) : dump;
 } else {

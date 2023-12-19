@@ -406,6 +406,15 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
+# Bad filter
+set +e
+${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot include file" $tempOut
+
+
 # Clean up
 rm -f $tempGrib $tempFilt $tempOut $tempRef
 rm -f ${data_dir}/formatint.rules ${data_dir}/binop.rules

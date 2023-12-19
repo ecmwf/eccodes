@@ -16,6 +16,8 @@ cd ${data_dir}/bufr
 # Define a common label for all the tmp files
 label="bufr_filter_misc_test"
 
+tempErr=temp.$label.err
+
 # Create log file
 fLog=${label}".log"
 rm -f $fLog
@@ -1337,5 +1339,16 @@ EOF
 diff $fRef $fLog
 rm -f $fRef
 
+
+# Bad filter
+set +e
+${tools_dir}/bufr_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/BUFR4.tmpl > $tempErr 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot include file" $tempErr
+
+
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+rm -f $tempErr

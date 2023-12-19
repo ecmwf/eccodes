@@ -6,14 +6,8 @@
 #
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
-#
 
 . ./include.ctest.sh
 
-# Check that first coefficient have an imaginary part equal to zero.
-# philippe.marguinaud@meteo.fr, 2016/02
-
-tempGrib=output.grib_sh_imag.grib
-$EXEC ${test_dir}/grib_sh_imag $tempGrib
-
-rm -f $tempGrib
+# export ECCODES_DEBUG=1
+${examples_dir}/eccodes_f_codes_f90_misc

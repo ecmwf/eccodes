@@ -15,7 +15,7 @@
 
 static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
-    unsigned char* newdata;
+    unsigned char* newdata = NULL;
     if (b->property == CODES_MY_BUFFER)
         return;
 
@@ -78,11 +78,9 @@ void grib_buffer_delete(const grib_context* c, grib_buffer* b)
 
 static void grib_grow_buffer_to(const grib_context* c, grib_buffer* b, size_t ns)
 {
-    unsigned char* newdata;
-
     if (ns > b->length) {
         grib_get_buffer_ownership(c, b);
-        newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
+        unsigned char* newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
         memcpy(newdata, b->data, b->length);
         grib_context_free(c, b->data);
         b->data   = newdata;
@@ -159,7 +157,7 @@ static void update_offsets_after(grib_accessor* a, long len)
 //                 plen = grib_get_next_position_offset(s->block->last);
 //             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
 //                 ;
-// 
+//
 //             if(s->h->context->debug)
 //                 printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
 //         }

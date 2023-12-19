@@ -1528,7 +1528,7 @@ Error codes returned by the eccodes functions.
 #define CODES_WRONG_STEP_UNIT		GRIB_WRONG_STEP_UNIT
 /** Invalid file id */
 #define CODES_INVALID_FILE		GRIB_INVALID_FILE
-/** Invalid grib id */
+/** Invalid GRIB id */
 #define CODES_INVALID_GRIB		GRIB_INVALID_GRIB
 /** Invalid index id */
 #define CODES_INVALID_INDEX		GRIB_INVALID_INDEX

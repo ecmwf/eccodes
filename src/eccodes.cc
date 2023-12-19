@@ -466,6 +466,11 @@ void codes_gts_header_off(grib_context* c)
 {
     grib_gts_header_off(c);
 }
+void codes_gts_header_on(grib_context* c)
+{
+    grib_gts_header_on(c);
+}
+
 void codes_gribex_mode_on(grib_context* c)
 {
     grib_gribex_mode_on(c);
