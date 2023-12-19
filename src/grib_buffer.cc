@@ -159,7 +159,7 @@ static void update_offsets_after(grib_accessor* a, long len)
 //                 plen = grib_get_next_position_offset(s->block->last);
 //             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
 //                 ;
-// 
+//
 //             if(s->h->context->debug)
 //                 printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
 //         }
