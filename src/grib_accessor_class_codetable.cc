@@ -751,11 +751,6 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
     grib_codetable* table = NULL;
     long i = 0;
     size_t size = 1;
-    bool case_sensitive = true;
-
-    // If the key has the "lowercase" flag set, then the string comparison
-    // should ignore the case
-    if (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) case_sensitive = false;
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -771,6 +766,11 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         if (err != 0)
             return err;
     }
+
+    // If the key has the "lowercase" flag set, then the string comparison
+    // should ignore the case
+    bool case_sensitive = true;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) case_sensitive = false;
 
     for (i = 0; i < table->size; i++) {
         if (table->entries[i].abbreviation) {
