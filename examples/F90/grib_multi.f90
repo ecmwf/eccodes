@@ -16,7 +16,7 @@ program multi
    use eccodes
    implicit none
 
-   integer          :: iret, counter
+   integer          :: iret, counter=0
    integer(kind=4)  :: step
    integer          :: ifile, igrib
 
