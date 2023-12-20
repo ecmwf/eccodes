@@ -294,6 +294,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local
         grib_step
         grib_set
+        grib_set_fail
         grib_iterator
         grib_proj_string
         grib_compare
