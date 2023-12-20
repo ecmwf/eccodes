@@ -1497,11 +1497,10 @@ int codes_f_bufr_keys_iterator_delete(int* iterid) {
 int grib_f_new_from_message_(int* gid, void* buffer , size_t* bufsize){
     grib_handle *h = NULL;
     h = grib_handle_new_from_message_copy(0, buffer, *bufsize);
-    if(h){
+    if (h){
         push_handle(h,gid);
         return GRIB_SUCCESS;
     }
-
     *gid = -1;
     return  GRIB_INTERNAL_ERROR;
 }
@@ -1512,6 +1511,23 @@ int grib_f_new_from_message(int* gid, void* buffer , size_t* bufsize){
     return grib_f_new_from_message_(gid,  buffer ,  bufsize);
 }
 
+/* See SUP-3893: Need to provide an 'int' version */
+int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize){
+    grib_handle *h = NULL;
+    h = grib_handle_new_from_message_copy(0, (void*)buffer, *bufsize);
+    if (h){
+        push_handle(h,gid);
+        return GRIB_SUCCESS;
+    }
+    *gid = -1;
+    return  GRIB_INTERNAL_ERROR;
+}
+int grib_f_new_from_message_int__(int* gid, int* buffer , size_t* bufsize){
+    return grib_f_new_from_message_int_(gid,  buffer ,  bufsize);
+}
+int grib_f_new_from_message_int(int* gid, int* buffer , size_t* bufsize){
+    return grib_f_new_from_message_int_(gid,  buffer ,  bufsize);
+}
 /*****************************************************************************/
 int grib_f_new_from_message_copy_(int* gid, void* buffer , size_t* bufsize){
     grib_handle *h = NULL;
