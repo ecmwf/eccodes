@@ -339,6 +339,7 @@ static bool can_create_clone_headers_only(const grib_handle* h)
     return true;
 }
 
+// Clone the message but not its Bitmap and Data sections (only the meta-data)
 grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 {
     int err = 0;
@@ -381,29 +382,25 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     return result;
 }
 
-// grib_handle* grib_handle_clone_lightweight(const grib_handle* h)
+// grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 // {
 //     int err = 0;
 //     size_t size1 = 0;
 //     const void* msg1 = NULL;
 //     long edition = 0;
-
 //     // Only for GRIB, not BUFR etc
 //     if (h->product_kind != PRODUCT_GRIB) {
 //         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for %s",
 //                          __func__, codes_get_product_name(PRODUCT_GRIB));
 //         return NULL;
 //     }
-
 //     err = grib_get_long(h, "edition", &edition);
 //     if (!err && edition == 1) {
 //         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
 //         return NULL;
 //     }
-
 //     err = grib_get_message_headers(h, &msg1, &size1);
 //     if (err) return NULL;
-
 //     size1 += 4;
 //     grib_handle* result  = grib_handle_new_from_partial_message_copy(h->context, msg1, size1);
 //     result->buffer->data[ size1 - 4 ] = '7';
@@ -411,16 +408,13 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
 //     result->buffer->data[ size1 - 2 ] = '7';
 //     result->buffer->data[ size1 - 1 ] = '7';
 //     result->buffer->ulength = size1;
-
 //     result->product_kind = h->product_kind;
-
 //     long off = 64; // This is only true for GRIB edition 2
 //     err = grib_encode_unsigned_long( result->buffer->data, (unsigned long)size1, &off, 64);
 //     if (err) {
 //         printf("err=%s\n", grib_get_error_message(err));
 //         return NULL;
 //     }
-
 //     return result;
 // }
 
