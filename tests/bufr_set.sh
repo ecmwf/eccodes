@@ -183,6 +183,22 @@ ${tools_dir}/bufr_set -s messageLength:s=333 $ECCODES_SAMPLES_PATH/BUFR4_local.t
 result=`${tools_dir}/bufr_get -p messageLength $fBufrTmp`
 [ "$result" = "333" ]
 
+
+#-----------------------------------------------------------
+# Invalid masterTablesVersionNumber
+#-----------------------------------------------------------
+${tools_dir}/bufr_set -s masterTablesVersionNumber=255 $ECCODES_SAMPLES_PATH/BUFR4.tmpl $fBufrTmp
+set +e
+${tools_dir}/bufr_dump -p $fBufrTmp 2>>$fLog 1>>$fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_dump should have failed" >&2
+   exit 1
+fi
+set -e
+grep -q "unable to find definition file sequence.def.*bufr/tables/0/local/0/98/0/sequence.def" $fLog
+grep -q "ECCODES ERROR.*unable to get hash value for sequences" $fLog
+
+
 # Clean up
 rm -f $fLog 
 rm -f $fBufrTmp

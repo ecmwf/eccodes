@@ -45,6 +45,23 @@ if [ $status -eq 0 ]; then
    exit 1
 fi
 
+# Compare using a namespace
+set +e
+${tools_dir}/metar_compare -c ls:n $metar_file $fMetarTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "DIFFERENCE == string.*dateTime" $fLog
+
+set +e
+${tools_dir}/metar_compare -a -c ls:n $metar_file $fMetarTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "DIFFERENCE == string.*dateTime" $fLog
+grep -q "DIFFERENCE == string.*theMessage" $fLog
+
+
 # The -d option should have created these files
 rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
 

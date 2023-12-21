@@ -727,6 +727,12 @@ static bool is_number(const char* s)
     return true;
 }
 
+static bool strings_equal(const char* s1, const char* s2, bool case_sensitive)
+{
+    if (case_sensitive) return (strcmp(s1, s2) == 0);
+    return (strcmp_nocase(s1, s2) == 0);
+}
+
 static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
     long lValue = 0;
@@ -742,13 +748,9 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
     }
 
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
-    grib_codetable* table;
-    long i;
+    grib_codetable* table = NULL;
+    long i = 0;
     size_t size = 1;
-
-    typedef int (*cmpproc)(const char*, const char*);
-
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -765,10 +767,18 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
             return err;
     }
 
-    for (i = 0; i < table->size; i++)
-        if (table->entries[i].abbreviation)
-            if (cmp(table->entries[i].abbreviation, buffer) == 0)
+    // If the key has the "lowercase" flag set, then the string comparison
+    // should ignore the case
+    bool case_sensitive = true;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) case_sensitive = false;
+
+    for (i = 0; i < table->size; i++) {
+        if (table->entries[i].abbreviation) {
+            if (strings_equal(table->entries[i].abbreviation, buffer, case_sensitive)) {
                 return grib_pack_long(a, &i, &size);
+            }
+        }
+    }
 
     if (a->flags & GRIB_ACCESSOR_FLAG_NO_FAIL) {
         grib_action* act = (grib_action*)(a->creator);

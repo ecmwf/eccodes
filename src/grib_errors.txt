@@ -29,7 +29,7 @@ GRIB_WRONG_STEP                     Unable to set step
 GRIB_WRONG_STEP_UNIT                Wrong units for step (step must be integer)
 /*  some errors for the fortran interface  */
 GRIB_INVALID_FILE                   Invalid file id
-GRIB_INVALID_GRIB                   Invalid grib id
+GRIB_INVALID_GRIB                   Invalid GRIB id
 GRIB_INVALID_INDEX                  Invalid index id
 GRIB_INVALID_ITERATOR               Invalid iterator id
 GRIB_INVALID_KEYS_ITERATOR          Invalid keys iterator id

@@ -52,6 +52,17 @@ if [ $? -eq 0 ]; then
 fi
 set -e
 
+# Namespace options
+set +e
+${tools_dir}/bufr_compare -c ls:n $f1 $f2 >> $fLog
+statusA=$?
+${tools_dir}/bufr_compare -a -c ls:n $f1 $f2 >> $fLog
+statusB=$?
+set -e
+[ $statusA -ne 0 ]
+[ $statusB -ne 0 ]
+
+
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
 #----------------------------------------------------

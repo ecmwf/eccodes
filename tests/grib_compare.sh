@@ -30,7 +30,11 @@ set -e
 infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ${tools_dir}/grib_set -s year=2019 $infile1 $outfile
 ${tools_dir}/grib_compare -c data:n $infile1 $outfile
-
+set +e
+${tools_dir}/grib_compare -a -c data:n $infile1 $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
 
 # Header (meta-data) keys
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl

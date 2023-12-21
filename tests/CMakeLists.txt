@@ -17,6 +17,7 @@ list(APPEND test_c_bins
     grib_indexing
     grib_fieldset
     grib_multi_from_message
+    grib_clone_headers_only
     grib_read_index
     unit_tests
     bufr_keys_iter
@@ -171,6 +172,7 @@ if( HAVE_BUILD_TOOLS )
         grib_headers_only
         grib_unpack_subarray
         grib_count
+        grib_clone_headers_only
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
@@ -293,6 +295,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local
         grib_step
         grib_set
+        grib_set_fail
         grib_iterator
         grib_proj_string
         grib_compare
