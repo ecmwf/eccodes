@@ -286,6 +286,12 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     full = grib_context_full_defs_path(context, master);
 
     if (c) {
+        if (!full) {
+            grib_context_log(context, GRIB_LOG_ERROR,
+                             "unable to find definition file %s in %s:%s:%s\nDefinition files path=\"%s\"",
+                             self->basename, master, ecmf, local, context->grib_definition_files_path);
+            return NULL;
+        }
         grib_hash_array_value* last = c;
         while (last->next)
             last = last->next;
