@@ -74,6 +74,7 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 /* action_class_hash_array.cc*/
 grib_action* grib_action_create_hash_array(grib_context* context, const char* name, grib_hash_array_value* hash_array, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
 grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a);
+const char* get_hash_array_full_path(grib_action* a);
 
 /* action_class_set.cc*/
 grib_action* grib_action_create_set(grib_context* context, const char* name, grib_expression* expression, int nofail);

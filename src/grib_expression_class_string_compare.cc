@@ -100,9 +100,9 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     int ret = 0;
-    char b1[1024];
+    char b1[1024] = {0,};
     size_t l1 = sizeof(b1);
-    char b2[1024];
+    char b2[1024] = {0,};
     size_t l2 = sizeof(b2);
     const char* v1 = NULL;
     const char* v2 = NULL;

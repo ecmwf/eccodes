@@ -690,7 +690,7 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
     iter                     = grib_keys_iterator_new(h1, 0, NULL);
 
     if (!iter) {
-        printf("ERROR: unable to get iterator\n");
+        fprintf(stderr, "Error: unable to get keys iterator\n");
         exit(1);
     }
 
@@ -728,7 +728,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get iterator\n");
+                    fprintf(stderr, "Error: unable to get iterator\n");
                     exit(1);
                 }
                 while (grib_keys_iterator_next(iter)) {
@@ -789,7 +789,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                 if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                     if (!iter) {
-                        printf("ERROR: unable to get iterator for %s\n", options->compare[i].name);
+                        fprintf(stderr, "Error: unable to get iterator for %s\n", options->compare[i].name);
                         exit(1);
                     }
                     while (grib_keys_iterator_next(iter)) {

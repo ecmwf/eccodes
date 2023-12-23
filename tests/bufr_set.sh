@@ -179,7 +179,8 @@ result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
 #-----------------------------------------------------------
 # ECC-1359: string that can be converted to an integer
 # ----------------------------------------------------------
-${tools_dir}/bufr_set -s messageLength:s=333 $ECCODES_SAMPLES_PATH/BUFR4_local.tmpl $fBufrTmp
+sample=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+${tools_dir}/bufr_set -s messageLength:s=333 $sample $fBufrTmp
 result=`${tools_dir}/bufr_get -p messageLength $fBufrTmp`
 [ "$result" = "333" ]
 
@@ -187,7 +188,8 @@ result=`${tools_dir}/bufr_get -p messageLength $fBufrTmp`
 #-----------------------------------------------------------
 # Invalid masterTablesVersionNumber
 #-----------------------------------------------------------
-${tools_dir}/bufr_set -s masterTablesVersionNumber=255 $ECCODES_SAMPLES_PATH/BUFR4.tmpl $fBufrTmp
+sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/bufr_set -s masterTablesVersionNumber=255 $sample $fBufrTmp
 set +e
 ${tools_dir}/bufr_dump -p $fBufrTmp 2>>$fLog 1>>$fLog
 if [ $? -eq 0 ]; then
@@ -197,6 +199,16 @@ fi
 set -e
 grep -q "unable to find definition file sequence.def.*bufr/tables/0/local/0/98/0/sequence.def" $fLog
 grep -q "ECCODES ERROR.*unable to get hash value for sequences" $fLog
+
+# ECC-1739
+sample=$ECCODES_SAMPLES_PATH/BUFR3.tmpl
+${tools_dir}/bufr_set -s masterTablesVersionNumber=255,localTablesVersionNumber=1 $sample $fBufrTmp
+set +e
+${tools_dir}/bufr_dump -p $fBufrTmp >$fLog 2>&1
+status=$?
+set -e
+grep -q "ECCODES ERROR.*unable to get hash value for sequences" $fLog
+
 
 
 # Clean up
