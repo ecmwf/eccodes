@@ -255,6 +255,7 @@ if( HAVE_BUILD_TOOLS )
         taf
         pseudo_diag
         metar_ls
+        metar_filter
         metar_get
         metar_dump
         metar_compare
