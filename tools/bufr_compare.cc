@@ -1311,7 +1311,7 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
             if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                 if (!iter) {
-                    grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to get iterator");
+                    grib_context_log(handle1->context, GRIB_LOG_ERROR, "unable to create the BUFR keys iterator");
                     exit(1);
                 }
                 while (grib_keys_iterator_next(iter)) {
@@ -1372,12 +1372,11 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
                     iter = grib_keys_iterator_new(handle1, 0, options->compare[i].name);
                     if (!iter) {
                         grib_context_log(handle1->context, GRIB_LOG_ERROR,
-                                         "ERROR: unable to get keys iterator for %s", options->compare[i].name);
+                                         "unable to create the BUFR keys iterator for %s", options->compare[i].name);
                         exit(1);
                     }
                     while (grib_keys_iterator_next(iter)) {
                         name = grib_keys_iterator_get_name(iter);
-                        /*printf("----- comparing %s\n",name);*/
 
                         if (blocklisted(name))
                             continue;
