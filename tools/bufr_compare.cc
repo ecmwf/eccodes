@@ -24,7 +24,6 @@ grib_option grib_options[] = {
     { "H", 0, "Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
-    /*    {"P",0,"Compare data values using the packing error as tolerance.\n",0,1,0},*/
     { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
@@ -74,7 +73,6 @@ struct grib_error
 static grib_error* error_summary;
 static compare_double_proc compare_double;
 static double global_tolerance     = 0;
-static int packingCompare          = 0;
 static grib_string_list* blocklist = 0;
 static grib_string_list* keys_list = NULL; /* Used to determine rank of key */
 static int isLeafKey               = 0;    /* 0 if key is top-level, 1 if key has no children attributes */
@@ -338,10 +336,6 @@ int grib_tool_init(grib_runtime_options* options)
             compare_double   = &compare_double_absolute;
             global_tolerance = atof(grib_options_get_option("A:"));
         }
-    }
-    if (grib_options_on("P")) {
-        packingCompare = 1;
-        compare_double = &compare_double_absolute;
     }
 
     if (grib_options_on("t:"))
@@ -708,7 +702,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
     double maxdiff       = 0;
-    double packingError1 = 0, packingError2 = 0;
     double value_tolerance = 0;
     grib_context* c        = handle1->context;
     const char* first_str  = (handles_swapped == 0 ? "1st" : "2nd");
@@ -1020,28 +1013,13 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 save_error(c, name);
             }
             if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS && len1 == len2) {
-                int imaxdiff;
+                int imaxdiff = 0;
                 double diff;
                 double *pv1, *pv2;
                 maxdiff   = 0;
-                imaxdiff  = 0;
                 countdiff = 0;
                 pv1       = dval1;
                 pv2       = dval2;
-                /* if (isangle) {
-                    dnew1 = *dval1;
-                    dnew2 = *dval2;
-                    pv1   = &dnew1;
-                    pv2   = &dnew2;
-                    if (*dval1 < 0)
-                        dnew1 += 360.0;
-                    if (*dval2 < 0)
-                        dnew2 += 360.0;
-                    if (*dval1 > 360)
-                        dnew1 -= 360.0;
-                    if (*dval2 > 360)
-                        dnew2 -= 360.0;
-                } */
                 value_tolerance *= tolerance_factor;
                 if (verbose)
                     printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
@@ -1080,8 +1058,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                             grib_context_free(c, svalA);
                             grib_context_free(c, svalB);
                         }
-                        if (packingError2 != 0 || packingError1 != 0)
-                            printf(" packingError: [%g] [%g]", packingError1, packingError2);
 
                         printf("\n");
                     }
