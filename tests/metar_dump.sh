@@ -34,11 +34,10 @@ metar_file=metar.txt
 f=$metar_file
 
 echo $f >> $fLog
-${tools_dir}/metar_dump $f >> $fLog
+${tools_dir}/metar_dump -w count=1 $f >> $fLog
+${tools_dir}/metar_dump -Dat $f >> $fLog
+${tools_dir}/metar_dump -OH  $f >> $fLog
 
-#-------------------------------------------
-# Test "-p" switch
-#-------------------------------------------
 ref_dump=$f".dump.ref"
 res_dump=$f".dump.test"
 REDIRECT=/dev/null
