@@ -25,6 +25,7 @@ if( HAVE_BUILD_TOOLS )
           bufr_copy_message
           grib_get_keys
           grib_get_data
+          grib_get_data_real4
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
