@@ -856,9 +856,6 @@ int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbyt
         return GRIB_INVALID_FILE;
     }
 }
-int grib_f_read_any_headers_only_from_file__(int* fid, char* buffer, size_t* nbytes) {
-    return grib_f_read_any_headers_only_from_file_(fid,buffer,nbytes);
-}
 int grib_f_read_any_headers_only_from_file(int* fid, char* buffer, size_t* nbytes) {
     return grib_f_read_any_headers_only_from_file_(fid,buffer,nbytes);
 }
@@ -876,9 +873,6 @@ int grib_f_read_any_from_file_(int* fid, void* buffer, size_t* nbytes) {
     } else {
         return GRIB_INVALID_FILE;
     }
-}
-int grib_f_read_any_from_file__(int* fid, void* buffer, size_t* nbytes) {
-    return grib_f_read_any_from_file_(fid,buffer,nbytes);
 }
 int grib_f_read_any_from_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_any_from_file_(fid,buffer,nbytes);
@@ -902,9 +896,6 @@ int grib_f_write_file_(int* fid, void* buffer, size_t* nbytes) {
         return GRIB_INVALID_FILE;
     }
 }
-int grib_f_write_file__(int* fid, void* buffer, size_t* nbytes) {
-    return grib_f_write_file_(fid,buffer,nbytes);
-}
 int grib_f_write_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_write_file_(fid,buffer,nbytes);
 }
@@ -926,9 +917,6 @@ int grib_f_read_file_(int* fid, void* buffer, size_t* nbytes) {
     } else {
         return GRIB_INVALID_FILE;
     }
-}
-int grib_f_read_file__(int* fid, void* buffer, size_t* nbytes) {
-    return grib_f_read_file_(fid,buffer,nbytes);
 }
 int grib_f_read_file(int* fid, void* buffer, size_t* nbytes) {
     return grib_f_read_file_(fid,buffer,nbytes);
@@ -980,9 +968,6 @@ int grib_f_open_file_(int* fid, char* name , char* op, int lname, int lop) {
     }
     return ret;
 }
-int grib_f_open_file__(int* fid, char* name , char* op, int lname, int lop){
-    return grib_f_open_file_(fid, name, op, lname, lop);
-}
 int grib_f_open_file(int* fid, char* name , char* op, int lname, int lop){
     return grib_f_open_file_(fid, name, op, lname, lop);
 }
@@ -990,9 +975,6 @@ int grib_f_open_file(int* fid, char* name , char* op, int lname, int lop){
 /*****************************************************************************/
 int grib_f_close_file_(int* fid){
     return clear_file(*fid);
-}
-int grib_f_close_file__(int* fid){
-    return grib_f_close_file_(fid);
 }
 int grib_f_close_file(int* fid){
     return grib_f_close_file_(fid);
@@ -1022,17 +1004,10 @@ void grib_f_write_on_fail(int* gid) {
 void grib_f_write_on_fail_(int* gid) {
     grib_f_write_on_fail(gid);
 }
-void grib_f_write_on_fail__(int* gid) {
-    grib_f_write_on_fail(gid);
-}
-
 /*****************************************************************************/
 int grib_f_multi_support_on_(){
     grib_multi_support_on(0);
     return GRIB_SUCCESS;
-}
-int grib_f_multi_support_on__(){
-    return grib_f_multi_support_on_();
 }
 int grib_f_multi_support_on(){
     return grib_f_multi_support_on_();
@@ -1041,9 +1016,6 @@ int grib_f_multi_support_on(){
 int grib_f_multi_support_off_(){
     grib_multi_support_off(0);
     return GRIB_SUCCESS;
-}
-int grib_f_multi_support_off__(){
-    return grib_f_multi_support_off_();
 }
 int grib_f_multi_support_off(){
     return grib_f_multi_support_off_();
@@ -1164,9 +1136,6 @@ int grib_f_iterator_new_(int* gid,int* iterid,int* mode) {
     GRIB_MUTEX_UNLOCK(&iterator_mutex)
     return ret;
 }
-int grib_f_iterator_new__(int* gid,int* iterid,int* mode) {
-    return grib_f_iterator_new_(gid,iterid,mode);
-}
 int grib_f_iterator_new(int* gid,int* iterid,int* mode) {
     return grib_f_iterator_new_(gid,iterid,mode);
 }
@@ -1176,18 +1145,12 @@ int grib_f_iterator_next_(int* iterid,double* lat,double* lon,double* value) {
     if (!iter) return GRIB_INVALID_ITERATOR;
     return grib_iterator_next(iter,lat,lon,value);
 }
-int grib_f_iterator_next__(int* iterid,double* lat,double* lon,double* value) {
-    return grib_f_iterator_next_(iterid,lat,lon,value);
-}
 int grib_f_iterator_next(int* iterid,double* lat,double* lon,double* value) {
     return grib_f_iterator_next_(iterid,lat,lon,value);
 }
 /*****************************************************************************/
 int grib_f_iterator_delete_(int* iterid) {
     return clear_iterator(*iterid);
-}
-int grib_f_iterator_delete__(int* iterid) {
-    return grib_f_iterator_delete_(iterid);
 }
 int grib_f_iterator_delete(int* iterid) {
     return grib_f_iterator_delete_(iterid);
@@ -1221,9 +1184,6 @@ int grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
     GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
     return ret;
 }
-int grib_f_keys_iterator_new__(int* gid,int* iterid,char* name_space,int len) {
-    return grib_f_keys_iterator_new_(gid,iterid,name_space,len);
-}
 int grib_f_keys_iterator_new(int* gid,int* iterid,char* name_space,int len) {
     return grib_f_keys_iterator_new_(gid,iterid,name_space,len);
 }
@@ -1235,9 +1195,6 @@ int grib_f_keys_iterator_next_(int* iterid) {
 
     return grib_keys_iterator_next(iter);
 }
-int grib_f_keys_iterator_next__(int* iterid) {
-    return grib_f_keys_iterator_next_(iterid);
-}
 int grib_f_keys_iterator_next(int* iterid) {
     return grib_f_keys_iterator_next_(iterid);
 }
@@ -1245,9 +1202,6 @@ int grib_f_keys_iterator_next(int* iterid) {
 /*****************************************************************************/
 int grib_f_keys_iterator_delete_(int* iterid) {
     return clear_keys_iterator(*iterid);
-}
-int grib_f_keys_iterator_delete__(int* iterid) {
-    return grib_f_keys_iterator_delete_(iterid);
 }
 int grib_f_keys_iterator_delete(int* iterid) {
     return grib_f_keys_iterator_delete_(iterid);
@@ -1258,20 +1212,12 @@ int grib_f_gribex_mode_on_() {
     grib_gribex_mode_on(0);
     return GRIB_SUCCESS;
 }
-int grib_f_gribex_mode_on__() {
-    grib_gribex_mode_on(0);
-    return GRIB_SUCCESS;
-}
 int grib_f_gribex_mode_on() {
     grib_gribex_mode_on(0);
     return GRIB_SUCCESS;
 }
 
 int grib_f_gribex_mode_off_() {
-    grib_gribex_mode_off(0);
-    return GRIB_SUCCESS;
-}
-int grib_f_gribex_mode_off__() {
     grib_gribex_mode_off(0);
     return GRIB_SUCCESS;
 }
@@ -1286,9 +1232,6 @@ int grib_f_skip_computed_(int* iterid) {
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_COMPUTED);
 }
-int grib_f_skip_computed__(int* iterid) {
-    return grib_f_skip_computed_(iterid);
-}
 int grib_f_skip_computed(int* iterid) {
     return grib_f_skip_computed_(iterid);
 }
@@ -1297,9 +1240,6 @@ int grib_f_skip_coded_(int* iterid) {
     grib_keys_iterator* iter=get_keys_iterator(*iterid);
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_CODED);
-}
-int grib_f_skip_coded__(int* iterid) {
-    return grib_f_skip_coded_(iterid);
 }
 int grib_f_skip_coded(int* iterid) {
     return grib_f_skip_coded_(iterid);
@@ -1310,9 +1250,6 @@ int grib_f_skip_edition_specific_(int* iterid) {
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_EDITION_SPECIFIC);
 }
-int grib_f_skip_edition_specific__(int* iterid) {
-    return grib_f_skip_edition_specific_(iterid);
-}
 int grib_f_skip_edition_specific(int* iterid) {
     return grib_f_skip_edition_specific_(iterid);
 }
@@ -1321,9 +1258,6 @@ int grib_f_skip_duplicates_(int* iterid) {
     grib_keys_iterator* iter=get_keys_iterator(*iterid);
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_DUPLICATES);
-}
-int grib_f_skip_duplicates__(int* iterid) {
-    return grib_f_skip_duplicates_(iterid);
 }
 int grib_f_skip_duplicates(int* iterid) {
     return grib_f_skip_duplicates_(iterid);
@@ -1334,9 +1268,6 @@ int grib_f_skip_read_only_(int* iterid) {
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_READ_ONLY);
 }
-int grib_f_skip_read_only__(int* iterid) {
-    return grib_f_skip_read_only_(iterid);
-}
 int grib_f_skip_read_only(int* iterid) {
     return grib_f_skip_read_only_(iterid);
 }
@@ -1345,9 +1276,6 @@ int grib_f_skip_function_(int* iterid) {
     grib_keys_iterator* iter=get_keys_iterator(*iterid);
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_set_flags(iter,GRIB_KEYS_ITERATOR_SKIP_FUNCTION);
-}
-int grib_f_skip_function__(int* iterid) {
-    return grib_f_skip_function_(iterid);
 }
 int grib_f_skip_function(int* iterid) {
     return grib_f_skip_function_(iterid);
@@ -1374,9 +1302,6 @@ int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len) {
 
     return 0;
 }
-int grib_f_keys_iterator_get_name__(int* kiter,char* name,int len) {
-    return grib_f_keys_iterator_get_name_(kiter,name,len);
-}
 int grib_f_keys_iterator_get_name(int* kiter,char* name,int len) {
     return grib_f_keys_iterator_get_name_(kiter,name,len);
 }
@@ -1387,9 +1312,6 @@ int grib_f_keys_iterator_rewind_(int* kiter) {
 
     if (!i) return GRIB_INVALID_KEYS_ITERATOR;
     return grib_keys_iterator_rewind(i);
-}
-int grib_f_keys_iterator_rewind__(int* kiter) {
-    return grib_f_keys_iterator_rewind_(kiter);
 }
 int grib_f_keys_iterator_rewind(int* kiter) {
     return grib_f_keys_iterator_rewind_(kiter);
@@ -1423,9 +1345,6 @@ int codes_f_bufr_keys_iterator_new_(int* gid,int* iterid) {
     GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
     return ret;
 }
-int codes_f_bufr_keys_iterator_new__(int* gid,int* iterid) {
-    return codes_f_bufr_keys_iterator_new_(gid,iterid);
-}
 int codes_f_bufr_keys_iterator_new(int* gid,int* iterid) {
     return codes_f_bufr_keys_iterator_new_(gid,iterid);
 }
@@ -1435,9 +1354,6 @@ int codes_f_bufr_keys_iterator_next_(int* iterid) {
     if (!iter) return GRIB_INVALID_KEYS_ITERATOR;
 
     return codes_bufr_keys_iterator_next(iter);
-}
-int codes_f_bufr_keys_iterator_next__(int* iterid) {
-    return codes_f_bufr_keys_iterator_next_(iterid);
 }
 int codes_f_bufr_keys_iterator_next(int* iterid) {
     return codes_f_bufr_keys_iterator_next_(iterid);
@@ -1463,9 +1379,6 @@ int codes_f_bufr_keys_iterator_get_name_(int* iterid,char* name,int len) {
 
     return 0;
 }
-int codes_f_bufr_keys_iterator_get_name__(int* kiter,char* name,int len) {
-    return codes_f_bufr_keys_iterator_get_name_(kiter,name,len);
-}
 int codes_f_bufr_keys_iterator_get_name(int* kiter,char* name,int len) {
     return codes_f_bufr_keys_iterator_get_name_(kiter,name,len);
 }
@@ -1476,18 +1389,12 @@ int codes_f_bufr_keys_iterator_rewind_(int* kiter) {
     if (!i) return GRIB_INVALID_KEYS_ITERATOR;
     return codes_bufr_keys_iterator_rewind(i);
 }
-int codes_f_bufr_keys_iterator_rewind__(int* kiter) {
-    return codes_f_bufr_keys_iterator_rewind_(kiter);
-}
 int codes_f_bufr_keys_iterator_rewind(int* kiter) {
     return codes_f_bufr_keys_iterator_rewind_(kiter);
 }
 /*****************************************************************************/
 int codes_f_bufr_keys_iterator_delete_(int* iterid) {
     return clear_bufr_keys_iterator(*iterid);
-}
-int codes_f_bufr_keys_iterator_delete__(int* iterid) {
-    return codes_f_bufr_keys_iterator_delete_(iterid);
 }
 int codes_f_bufr_keys_iterator_delete(int* iterid) {
     return codes_f_bufr_keys_iterator_delete_(iterid);
@@ -1504,9 +1411,6 @@ int grib_f_new_from_message_(int* gid, void* buffer, size_t* bufsize) {
     *gid = -1;
     return  GRIB_INTERNAL_ERROR;
 }
-int grib_f_new_from_message__(int* gid, void* buffer, size_t* bufsize){
-    return grib_f_new_from_message_(gid, buffer, bufsize);
-}
 int grib_f_new_from_message(int* gid, void* buffer, size_t* bufsize){
     return grib_f_new_from_message_(gid, buffer, bufsize);
 }
@@ -1515,9 +1419,6 @@ int grib_f_new_from_message(int* gid, void* buffer, size_t* bufsize){
 int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize) {
     /* Call the version with void pointer */
     return grib_f_new_from_message_(gid, (void*)buffer, bufsize);
-}
-int grib_f_new_from_message_int__(int* gid, int* buffer , size_t* bufsize){
-    return grib_f_new_from_message_int_(gid, buffer, bufsize);
 }
 int grib_f_new_from_message_int(int* gid, int* buffer, size_t* bufsize){
     return grib_f_new_from_message_int_(gid, buffer, bufsize);
@@ -1532,9 +1433,6 @@ int grib_f_new_from_message_copy_(int* gid, void* buffer, size_t* bufsize){
     }
     *gid = -1;
     return  GRIB_INTERNAL_ERROR;
-}
-int grib_f_new_from_message_copy__(int* gid, void* buffer, size_t* bufsize){
-    return grib_f_new_from_message_copy_(gid, buffer, bufsize);
 }
 int grib_f_new_from_message_copy(int* gid, void* buffer, size_t* bufsize){
     return grib_f_new_from_message_copy_(gid, buffer, bufsize);
@@ -1553,9 +1451,6 @@ int grib_f_new_from_samples_(int* gid, char* name, int lname){
     *gid = -1;
     return  GRIB_FILE_NOT_FOUND;
 }
-int grib_f_new_from_samples__(int* gid, char* name , int lname){
-    return  grib_f_new_from_samples_(gid, name, lname);
-}
 int grib_f_new_from_samples(int* gid, char* name , int lname){
     return  grib_f_new_from_samples_(gid, name, lname);
 }
@@ -1572,9 +1467,6 @@ int codes_bufr_f_new_from_samples_(int* gid, char* name, int lname){
     }
     *gid = -1;
     return  GRIB_FILE_NOT_FOUND;
-}
-int codes_bufr_f_new_from_samples__(int* gid, char* name, int lname){
-    return codes_bufr_f_new_from_samples_(gid, name, lname);
 }
 int codes_bufr_f_new_from_samples(int* gid, char* name, int lname){
     return codes_bufr_f_new_from_samples_(gid, name, lname);
@@ -1596,9 +1488,6 @@ int grib_f_clone_(int* gidsrc,int* giddest){
     *giddest = -1;
     return GRIB_INVALID_GRIB;
 }
-int grib_f_clone__(int* gidsrc,int* giddest){
-    return grib_f_clone_(gidsrc, giddest);
-}
 int grib_f_clone(int* gidsrc,int* giddest){
     return grib_f_clone_(gidsrc, giddest);
 }
@@ -1618,9 +1507,6 @@ int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len)
 
     return GRIB_INVALID_GRIB;
 }
-int grib_f_copy_key__(int* gidsrc, char* name, int* giddest, int len){
-    return grib_f_copy_key_(gidsrc, name, giddest, len);
-}
 int grib_f_copy_key(int* gidsrc, char* name, int* giddest, int len){
     return grib_f_copy_key_(gidsrc, name, giddest, len);
 }
@@ -1639,9 +1525,6 @@ int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout){
 
     return err;
 }
-int grib_f_util_sections_copy__(int* gidfrom,int* gidto,int* what,int *gidout){
-    return grib_f_util_sections_copy_(gidfrom,gidto,what,gidout);
-}
 int grib_f_util_sections_copy(int* gidfrom,int* gidto,int* what,int *gidout){
     return grib_f_util_sections_copy_(gidfrom,gidto,what,gidout);
 }
@@ -1656,9 +1539,6 @@ int grib_f_copy_namespace_(int* gidsrc,char* name,int* giddest,int len){
         return grib_copy_namespace(dest,cast_char(buf,name,len),src);
 
     return GRIB_INVALID_GRIB;
-}
-int grib_f_copy_namespace__(int* gidsrc,char* name,int* giddest,int len){
-    return grib_f_copy_namespace_(gidsrc,name,giddest,len);
 }
 int grib_f_copy_namespace(int* gidsrc,char* name,int* giddest,int len){
     return grib_f_copy_namespace_(gidsrc,name,giddest,len);
@@ -1698,9 +1578,6 @@ int any_f_scan_file(int* fid,int* n) {
 int any_f_scan_file_(int* fid,int* n) {
     return any_f_scan_file(fid,n);
 }
-int any_f_scan_file__(int* fid,int* n) {
-    return any_f_scan_file(fid,n);
-}
 
 /*****************************************************************************/
 int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
@@ -1733,9 +1610,6 @@ int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
     }
 }
 int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid){
-  return any_f_new_from_scanned_file(fid,msgid,gid);
-}
-int any_f_new_from_scanned_file__(int* fid,int* msgid,int* gid){
   return any_f_new_from_scanned_file(fid,msgid,gid);
 }
 
@@ -1772,9 +1646,6 @@ int any_f_load_all_from_file(int* fid,int* n) {
 int any_f_load_all_from_file_(int* fid,int* n) {
     return any_f_load_all_from_file(fid,n);
 }
-int any_f_load_all_from_file__(int* fid,int* n) {
-    return any_f_load_all_from_file(fid,n);
-}
 
 /*****************************************************************************/
 int any_f_new_from_loaded(int* msgid,int* gid)
@@ -1802,9 +1673,6 @@ int any_f_new_from_loaded(int* msgid,int* gid)
 int any_f_new_from_loaded_(int* msgid,int* gid){
   return any_f_new_from_loaded(msgid,gid);
 }
-int any_f_new_from_loaded__(int* msgid,int* gid){
-  return any_f_new_from_loaded(msgid,gid);
-}
 
 /*****************************************************************************/
 int codes_f_clear_loaded_from_file(void) {
@@ -1816,9 +1684,7 @@ int codes_f_clear_loaded_from_file(void) {
 int codes_f_clear_loaded_from_file_(void) {
   return codes_f_clear_loaded_from_file();
 }
-int codes_f_clear_loaded_from_file__(void) {
-  return codes_f_clear_loaded_from_file();
-}
+
 /*****************************************************************************/
 int grib_f_count_in_file(int* fid,int* n) {
     int err = 0;
@@ -1827,9 +1693,6 @@ int grib_f_count_in_file(int* fid,int* n) {
     return err;
 }
 int grib_f_count_in_file_(int* fid,int* n) {
-    return grib_f_count_in_file(fid,n);
-}
-int grib_f_count_in_file__(int* fid,int* n) {
     return grib_f_count_in_file(fid,n);
 }
 
@@ -1851,9 +1714,6 @@ int any_f_new_from_file_(int* fid, int* gid){
     }
     *gid=-1;
     return GRIB_INVALID_FILE;
-}
-int any_f_new_from_file__(int* fid, int* gid){
-    return any_f_new_from_file_( fid, gid);
 }
 int any_f_new_from_file(int* fid, int* gid){
     return any_f_new_from_file_( fid, gid);
@@ -1880,10 +1740,6 @@ int bufr_f_new_from_file_(int* fid, int* gid){
     *gid=-1;
     return GRIB_INVALID_FILE;
 }
-
-int bufr_f_new_from_file__(int* fid, int* gid){
-    return bufr_f_new_from_file_( fid, gid);
-}
 int bufr_f_new_from_file(int* fid, int* gid){
     return bufr_f_new_from_file_( fid, gid);
 }
@@ -1908,9 +1764,6 @@ int grib_f_new_from_file_(int* fid, int* gid){
 
     *gid=-1;
     return GRIB_INVALID_FILE;
-}
-int grib_f_new_from_file__(int* fid, int* gid){
-    return grib_f_new_from_file_( fid, gid);
 }
 int grib_f_new_from_file(int* fid, int* gid){
     return grib_f_new_from_file_( fid, gid);
@@ -1937,9 +1790,6 @@ int grib_f_headers_only_new_from_file_(int* fid, int* gid){
     *gid=-1;
     return GRIB_INVALID_FILE;
 }
-int grib_f_headers_only_new_from_file__(int* fid, int* gid){
-    return grib_f_headers_only_new_from_file_( fid, gid);
-}
 int grib_f_headers_only_new_from_file(int* fid, int* gid){
     return grib_f_headers_only_new_from_file_( fid, gid);
 }
@@ -1964,10 +1814,6 @@ int grib_f_new_from_index_(int* iid, int* gid){
 
     *gid=-1;
     return GRIB_INVALID_INDEX;
-}
-
-int grib_f_new_from_index__(int* iid, int* gid){
-    return grib_f_new_from_index_(iid,gid);
 }
 int grib_f_new_from_index(int* iid, int* gid){
     return grib_f_new_from_index_(iid,gid);
@@ -1996,9 +1842,6 @@ int grib_f_index_new_from_file_(char* file ,char* keys ,int* gid, int lfile, int
     *gid=-1;
     return GRIB_INVALID_FILE;
 }
-int grib_f_index_new_from_file__(char* file, char* keys, int* gid, int lfile, int lkeys){
-    return grib_f_index_new_from_file_(file ,keys ,gid, lfile, lkeys);
-}
 int grib_f_index_new_from_file(char* file, char* keys, int* gid, int lfile, int lkeys){
     return grib_f_index_new_from_file_(file ,keys ,gid, lfile, lkeys);
 }
@@ -2015,10 +1858,6 @@ int grib_f_index_add_file_(int* iid, char* file, int lfile) {
         err = grib_index_add_file(i,cast_char(buf,file,lfile));
         return err;
     }
-}
-
-int grib_f_index_add_file__(int* iid, char* file, int lfile) {
-    return grib_f_index_add_file_(iid,file,lfile);
 }
 int grib_f_index_add_file(int* iid, char* file, int lfile) {
     return grib_f_index_add_file_(iid,file,lfile);
@@ -2045,9 +1884,6 @@ int grib_f_index_read_(char* file, int* gid, int lfile) {
     *gid=-1;
     return GRIB_INVALID_FILE;
 }
-int grib_f_index_read__(char* file, int* gid, int lfile) {
-    return grib_f_index_read_(file,gid,lfile);
-}
 int grib_f_index_read(char* file, int* gid, int lfile) {
     return grib_f_index_read_(file,gid,lfile);
 }
@@ -2065,9 +1901,6 @@ int grib_f_index_write_(int* gid, char* file, int lfile) {
         return err;
     }
 }
-int grib_f_index_write__(int* gid, char* file, int lfile) {
-    return grib_f_index_write_(gid,file,lfile);
-}
 int grib_f_index_write(int* gid, char* file, int lfile) {
     return grib_f_index_write_(gid,file,lfile);
 }
@@ -2076,11 +1909,6 @@ int grib_f_index_write(int* gid, char* file, int lfile) {
 int grib_f_index_release_(int* hid){
     return clear_index(*hid);
 }
-
-int grib_f_index_release__(int* hid){
-    return grib_f_index_release_(hid);
-}
-
 int grib_f_index_release(int* hid){
     return grib_f_index_release_(hid);
 }
@@ -2088,20 +1916,12 @@ int grib_f_index_release(int* hid){
 int grib_f_multi_handle_release_(int* hid){
     return clear_multi_handle(*hid);
 }
-
-int grib_f_multi_handle_release__(int* hid){
-    return grib_f_multi_handle_release_(hid);
-}
-
 int grib_f_multi_handle_release(int* hid){
     return grib_f_multi_handle_release_(hid);
 }
 
 int grib_f_release_(int* hid){
     return clear_handle(*hid);
-}
-int grib_f_release__(int* hid){
-    return grib_f_release_( hid);
 }
 int grib_f_release(int* hid){
     return grib_f_release_( hid);
@@ -2139,9 +1959,6 @@ int grib_f_dump_(int* gid){
 
     return GRIB_SUCCESS;
 }
-int grib_f_dump__(int* gid){
-    return grib_f_dump_( gid);
-}
 int grib_f_dump(int* gid){
     return grib_f_dump_( gid);
 }
@@ -2163,9 +1980,6 @@ int grib_f_print_(int* gid, char* key, int len){
         return  err;
     }
 }
-int grib_f_print__(int* gid, char* key, int len){
-    return grib_f_print_(gid, key, len);
-}
 int grib_f_print(int* gid, char* key, int len){
     return grib_f_print_(gid, key, len);
 }
@@ -2178,9 +1992,6 @@ int grib_f_get_error_string_(int* err, char* buf, int len){
     strncpy(buf, err_msg, (size_t)erlen); /* ECC-1488 */
     return GRIB_SUCCESS;
 }
-int grib_f_get_error_string__(int* err, char* buf, int len){
-    return grib_f_get_error_string_(err, buf, len);
-}
 int grib_f_get_error_string(int* err, char* buf, int len){
     return grib_f_get_error_string_(err, buf, len);
 }
@@ -2189,9 +2000,6 @@ int grib_f_get_error_string(int* err, char* buf, int len){
 int grib_f_get_api_version_(int* apiVersion,int len){
     *apiVersion = grib_get_api_version();
     return GRIB_SUCCESS;
-}
-int grib_f_get_api_version__(int* apiVersion, int len){
-    return grib_f_get_api_version_(apiVersion, len);
 }
 int grib_f_get_api_version(int* apiVersion, int len){
     return grib_f_get_api_version_(apiVersion, len);
@@ -2212,9 +2020,6 @@ int grib_f_get_size_int_(int* gid, char* key, int* val, int len){
         return  err;
     }
 }
-int grib_f_get_size_int__(int* gid, char* key, int* val, int len){
-    return grib_f_get_size_int_( gid, key, val, len);
-}
 int grib_f_get_size_int(int* gid, char* key, int* val, int len){
     return grib_f_get_size_int_( gid, key, val, len);
 }
@@ -2232,9 +2037,6 @@ int grib_f_get_size_long_(int* gid, char* key, long* val, int len){
         *val = tsize;
         return  err;
     }
-}
-int grib_f_get_size_long__(int* gid, char* key, long* val, int len){
-    return grib_f_get_size_long_( gid, key, val, len);
 }
 int grib_f_get_size_long(int* gid, char* key, long* val, int len){
     return grib_f_get_size_long_( gid, key, val, len);
@@ -2254,9 +2056,6 @@ int grib_f_index_get_size_int_(int* gid, char* key, int* val, int len){
         return  err;
     }
 }
-int grib_f_index_get_size_int__(int* gid, char* key, int* val, int len){
-    return grib_f_index_get_size_int_( gid, key, val, len);
-}
 int grib_f_index_get_size_int(int* gid, char* key, int* val, int len){
     return grib_f_index_get_size_int_( gid, key, val, len);
 }
@@ -2275,9 +2074,6 @@ int grib_f_index_get_size_long_(int* gid, char* key, long* val, int len){
         return  err;
     }
 }
-int grib_f_index_get_size_long__(int* gid, char* key, long* val, int len){
-    return grib_f_index_get_size_long_( gid, key, val, len);
-}
 int grib_f_index_get_size_long(int* gid, char* key, long* val, int len){
     return grib_f_index_get_size_long_( gid, key, val, len);
 }
@@ -2293,9 +2089,6 @@ int grib_f_get_int_(int* gid, char* key, int* val, int len){
     *val = long_val;
     return err;
 }
-int grib_f_get_int__(int* gid, char* key, int* val, int len){
-    return grib_f_get_int_( gid, key, val, len);
-}
 int grib_f_get_int(int* gid, char* key, int* val, int len){
     return grib_f_get_int_( gid, key, val, len);
 }
@@ -2308,9 +2101,6 @@ int grib_f_get_long_(int* gid, char* key, long* val, int len){
     if(!h) return GRIB_INVALID_GRIB;
     err = grib_get_long(h, cast_char(buf,key,len),val);
     return err;
-}
-int grib_f_get_long__(int* gid, char* key, long* val, int len){
-    return grib_f_get_long_( gid, key, val, len);
 }
 int grib_f_get_long(int* gid, char* key, long* val, int len){
     return grib_f_get_long_( gid, key, val, len);
@@ -2327,9 +2117,6 @@ int grib_f_get_native_type_(int* gid, char* key, int* val, int len){
     err = grib_get_native_type(h, cast_char(buf,key,len), &type_val);
     *val = type_val;
     return err;
-}
-int grib_f_get_native_type__(int* gid, char* key, int* val, int len){
-    return grib_f_get_native_type_( gid, key, val, len);
 }
 int grib_f_get_native_type(int* gid, char* key, int* val, int len){
     return grib_f_get_native_type_( gid, key, val, len);
@@ -2366,9 +2153,6 @@ int grib_f_get_int_array_(int* gid, char* key, int *val, int* size, int len){
     grib_context_free(h->context,long_val);
     return  err;
 }
-int grib_f_get_int_array__(int* gid, char* key, int*val, int* size, int len){
-    return grib_f_get_int_array_( gid, key, val, size, len);
-}
 int grib_f_get_int_array(int* gid, char* key, int*val, int* size, int len){
     return grib_f_get_int_array_( gid, key, val, size, len);
 }
@@ -2386,9 +2170,6 @@ int grib_f_get_long_array_(int* gid, char* key, long *val, int* size, int len){
     *size=lsize;
 
     return  err;
-}
-int grib_f_get_long_array__(int* gid, char* key, long *val, int* size, int len){
-    return grib_f_get_long_array_( gid, key, val, size, len);
 }
 int grib_f_get_long_array(int* gid, char* key, long *val, int* size, int len){
     return grib_f_get_long_array_( gid, key, val, size, len);
@@ -2408,9 +2189,6 @@ int grib_f_get_byte_array_(int* gid, char* key, unsigned char *val, int* size, i
     *size = (int) lsize;
 
     return  err;
-}
-int grib_f_get_byte_array__(int* gid, char* key, unsigned char *val, int* size, int len, int lenv){
-    return grib_f_get_byte_array_( gid, key, val, size, len, lenv);
 }
 int grib_f_get_byte_array(int* gid, char* key, unsigned char *val, int* size, int len, int lenv){
     return grib_f_get_byte_array_( gid, key, val, size, len, lenv);
@@ -2455,9 +2233,6 @@ int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* 
 
     return  err;
 }
-int grib_f_index_get_string__(int* gid, char* key, char *val, int* eachsize, int* size, int len){
-    return grib_f_index_get_string_(gid,key,val,eachsize,size,len);
-}
 int grib_f_index_get_string(int* gid, char* key, char* val, int* eachsize, int* size, int len){
     return grib_f_index_get_string_(gid,key,val,eachsize,size,len);
 }
@@ -2474,9 +2249,6 @@ int grib_f_index_get_long_(int* gid, char* key, long *val, int* size, int len){
     err = grib_index_get_long(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
     return  err;
-}
-int grib_f_index_get_long__(int* gid, char* key, long *val, int* size, int len){
-    return grib_f_index_get_long_(gid,key,val,size,len);
 }
 int grib_f_index_get_long(int* gid, char* key, long *val, int* size, int len){
     return grib_f_index_get_long_(gid,key,val,size,len);
@@ -2504,9 +2276,6 @@ int grib_f_index_get_int_(int* gid, char* key, int *val, int* size, int len){
     grib_context_free(h->context, lval);
     return  err;
 }
-int grib_f_index_get_int__(int* gid, char* key, int *val, int* size, int len){
-    return grib_f_index_get_int_(gid,key,val,size,len);
-}
 int grib_f_index_get_int(int* gid, char* key, int *val, int* size, int len){
     return grib_f_index_get_int_(gid,key,val,size,len);
 }
@@ -2523,9 +2292,6 @@ int grib_f_index_get_real8_(int* gid, char* key, double *val, int* size, int len
     err = grib_index_get_double(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
     return  err;
-}
-int grib_f_index_get_real8__(int* gid, char* key, double *val, int* size, int len){
-    return grib_f_index_get_real8_(gid,key,val,size,len);
 }
 int grib_f_index_get_real8(int* gid, char* key, double *val, int* size, int len){
     return grib_f_index_get_real8_(gid,key,val,size,len);
@@ -2561,9 +2327,6 @@ int grib_f_set_int_array_(int* gid, char* key, int* val, int* size, int len){
     grib_context_free(h->context,long_val);
     return err;
 }
-int grib_f_set_int_array__(int* gid, char* key, int* val, int* size, int len){
-    return grib_f_set_int_array_( gid, key, val, size, len);
-}
 int grib_f_set_int_array(int* gid, char* key, int* val, int* size, int len){
     return grib_f_set_int_array_( gid, key, val, size, len);
 }
@@ -2577,9 +2340,6 @@ int grib_f_set_long_array_(int* gid, char* key, long* val, int* size, int len){
     if(!h) return GRIB_INVALID_GRIB;
 
     return grib_set_long_array(h, cast_char(buf,key,len), val, lsize);
-}
-int grib_f_set_long_array__(int* gid, char* key, long* val, int* size, int len){
-    return grib_f_set_long_array_( gid, key, val, size, len);
 }
 int grib_f_set_long_array(int* gid, char* key, long* val, int* size, int len){
     return grib_f_set_long_array_( gid, key, val, size, len);
@@ -2599,9 +2359,6 @@ int grib_f_set_byte_array_(int* gid, char* key, unsigned char* val, int* size, i
 
     return err;
 }
-int grib_f_set_byte_array__(int* gid, char* key, unsigned char* val, int* size, int len, int lenv){
-    return grib_f_set_byte_array_( gid, key, val, size, len, lenv);
-}
 int grib_f_set_byte_array(int* gid, char* key, unsigned char* val, int* size, int len, int lenv){
     return grib_f_set_byte_array_( gid, key, val, size, len, lenv);
 }
@@ -2614,9 +2371,6 @@ int grib_f_set_int_(int* gid, char* key, int* val, int len){
     if(!h) return GRIB_INVALID_GRIB;
     return grib_set_long(h, cast_char(buf,key,len), long_val);
 }
-int grib_f_set_int__(int* gid, char* key, int* val, int len){
-    return  grib_f_set_int_( gid, key, val, len);
-}
 int grib_f_set_int(int* gid, char* key, int* val, int len){
     return  grib_f_set_int_( gid, key, val, len);
 }
@@ -2626,9 +2380,6 @@ int grib_f_set_long_(int* gid, char* key, long* val, int len){
     char buf[1024];
     if(!h) return GRIB_INVALID_GRIB;
     return grib_set_long(h, cast_char(buf,key,len), *val);
-}
-int grib_f_set_long__(int* gid, char* key, long* val, int len){
-    return  grib_f_set_long_( gid, key, val, len);
 }
 int grib_f_set_long(int* gid, char* key, long* val, int len){
     return  grib_f_set_long_( gid, key, val, len);
@@ -2643,9 +2394,6 @@ int grib_f_set_missing_(int* gid, char* key,int len){
 
     return grib_set_missing(h, cast_char(buf,key,len));
 }
-int grib_f_set_missing__(int* gid, char* key, int len){
-    return grib_f_set_missing_( gid, key, len);
-}
 int grib_f_set_missing(int* gid, char* key, int len){
     return grib_f_set_missing_( gid, key, len);
 }
@@ -2658,9 +2406,6 @@ int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len){
 
     *isMissing=grib_is_missing(h, cast_char(buf,key,len),&err);
     return err;
-}
-int grib_f_is_missing__(int* gid, char* key,int* isMissing,int len){
-    return grib_f_is_missing_(gid,key,isMissing,len);
 }
 int grib_f_is_missing(int* gid, char* key,int* isMissing,int len){
     return grib_f_is_missing_(gid,key,isMissing,len);
@@ -2675,9 +2420,6 @@ int grib_f_is_defined_(int* gid, char* key,int* isDefined,int len){
     *isDefined=grib_is_defined(h, cast_char(buf,key,len));
     return GRIB_SUCCESS;
 }
-int grib_f_is_defined__(int* gid, char* key,int* isDefined,int len){
-    return grib_f_is_defined_(gid,key,isDefined,len);
-}
 int grib_f_is_defined(int* gid, char* key,int* isDefined,int len){
     return grib_f_is_defined_(gid,key,isDefined,len);
 }
@@ -2691,9 +2433,6 @@ int grib_f_set_real4_(int* gid, char* key, float* val, int len){
     if(!h)  return GRIB_INVALID_GRIB;
 
     return grib_set_double(h, cast_char(buf,key,len), val8);
-}
-int grib_f_set_real4__(int* gid, char* key, float* val, int len){
-    return grib_f_set_real4_( gid, key, val, len);
 }
 int grib_f_set_real4(int* gid, char* key, float* val, int len){
     return grib_f_set_real4_( gid, key, val, len);
@@ -2711,9 +2450,6 @@ int grib_f_get_real4_element_(int* gid, char* key, int* index,float* val, int le
     err = grib_get_double_element(h, cast_char(buf,key,len), *index,&val8);
     *val = val8;
     return err;
-}
-int grib_f_get_real4_element__(int* gid, char* key,int* index, float* val,int len){
-    return grib_f_get_real4_element_( gid, key, index, val, len);
 }
 int grib_f_get_real4_element(int* gid, char* key,int* index, float* val,int len){
     return grib_f_get_real4_element_( gid, key, index, val, len);
@@ -2747,9 +2483,6 @@ int grib_f_get_real4_elements_(int* gid, char* key,int* index, float *val,int* s
 
     return  err;
 }
-int grib_f_get_real4_elements__(int* gid, char* key,int* index, float* val,int* len,int size){
-    return grib_f_get_real4_elements_( gid, key, index, val, len,size);
-}
 int grib_f_get_real4_elements(int* gid, char* key,int* index, float* val,int* len,int size){
     return grib_f_get_real4_elements_( gid, key, index, val, len,size);
 }
@@ -2766,9 +2499,6 @@ int grib_f_get_real4_(int* gid, char* key, float* val, int len){
     err = grib_get_double(h, cast_char(buf,key,len), &val8);
     *val = val8;
     return err;
-}
-int grib_f_get_real4__(int* gid, char* key, float* val, int len){
-    return grib_f_get_real4_( gid, key, val, len);
 }
 int grib_f_get_real4(int* gid, char* key, float* val, int len){
     return grib_f_get_real4_( gid, key, val, len);
@@ -2817,10 +2547,6 @@ int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
 
     return err;
 }
-
-int grib_f_get_real4_array__(int* gid, char* key, float* val, int* size, int len){
-    return grib_f_get_real4_array_( gid, key, val, size, len);
-}
 int grib_f_get_real4_array(int* gid, char* key, float* val, int* size, int len){
     return grib_f_get_real4_array_( gid, key, val, size, len);
 }
@@ -2849,9 +2575,6 @@ int grib_f_set_force_real4_array_(int* gid, char* key, float* val, int* size, in
     err = grib_set_force_double_array(h, cast_char(buf,key,len), val8, lsize);
     grib_context_free(h->context,val8);
     return err;
-}
-int grib_f_set_force_real4_array__(int* gid, char* key, float*val, int* size, int len){
-    return grib_f_set_force_real4_array_( gid, key, val, size, len);
 }
 int grib_f_set_force_real4_array(int* gid, char* key, float*val, int* size, int len){
     return grib_f_set_force_real4_array_( gid, key, val, size, len);
@@ -2890,9 +2613,6 @@ int grib_f_set_real4_array_(int* gid, char* key, float* val, int* size, int len)
 
     return err;
 }
-int grib_f_set_real4_array__(int* gid, char* key, float* val, int* size, int len) {
-    return grib_f_set_real4_array_(gid, key, val, size, len);
-}
 int grib_f_set_real4_array(int* gid, char* key, float* val, int* size, int len) {
     return grib_f_set_real4_array_(gid, key, val, size, len);
 }
@@ -2905,9 +2625,6 @@ int grib_f_index_select_real8_(int* gid, char* key, double* val, int len)
 
     if(!h) return GRIB_INVALID_GRIB;
     return grib_index_select_double(h, cast_char(buf,key,len), *val);
-}
-int grib_f_index_select_real8__(int* gid, char* key, double* val, int len){
-    return grib_f_index_select_real8_(gid,key,val,len);
 }
 int grib_f_index_select_real8(int* gid, char* key, double* val, int len){
     return grib_f_index_select_real8_(gid,key,val,len);
@@ -2929,9 +2646,6 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
 
     return grib_index_select_string(h, cast_char(buf,key,len), bufval);
 }
-int grib_f_index_select_string__(int* gid, char* key, char* val, int len, int vallen){
-    return grib_f_index_select_string_(gid,key,val,len,vallen);
-}
 int grib_f_index_select_string(int* gid, char* key, char* val, int len, int vallen){
     return grib_f_index_select_string_(gid,key,val,len,vallen);
 }
@@ -2946,9 +2660,6 @@ int grib_f_index_select_int_(int* gid, char* key, int* val, int len)
     if(!h) return GRIB_INVALID_GRIB;
     return grib_index_select_long(h, cast_char(buf,key,len), lval);
 }
-int grib_f_index_select_int__(int* gid, char* key, int* val, int len){
-    return grib_f_index_select_int_(gid,key,val,len);
-}
 int grib_f_index_select_int(int* gid, char* key, int* val, int len){
     return grib_f_index_select_int_(gid,key,val,len);
 }
@@ -2962,9 +2673,6 @@ int grib_f_index_select_long_(int* gid, char* key, long* val, int len)
     if(!h) return GRIB_INVALID_GRIB;
     return grib_index_select_long(h, cast_char(buf,key,len), *val);
 }
-int grib_f_index_select_long__(int* gid, char* key, long* val, int len){
-    return grib_f_index_select_long_(gid,key,val,len);
-}
 int grib_f_index_select_long(int* gid, char* key, long* val, int len){
     return grib_f_index_select_long_(gid,key,val,len);
 }
@@ -2977,9 +2685,6 @@ int grib_f_set_real8_(int* gid, char* key, double* val, int len)
 
     if(!h) return GRIB_INVALID_GRIB;
     return grib_set_double(h, cast_char(buf,key,len), *val);
-}
-int grib_f_set_real8__(int* gid, char* key, double* val, int len){
-    return  grib_f_set_real8_( gid, key, val, len);
 }
 int grib_f_set_real8(int* gid, char* key, double* val, int len){
     return  grib_f_set_real8_( gid, key, val, len);
@@ -2995,9 +2700,6 @@ int grib_f_get_real8_(int* gid, char* key, double* val, int len)
     return grib_get_double(h, cast_char(buf,key,len), val);
 
 }
-int grib_f_get_real8__(int* gid, char* key, double* val, int len){
-    return grib_f_get_real8_( gid, key, val, len);
-}
 int grib_f_get_real8(int* gid, char* key, double* val, int len){
     return grib_f_get_real8_( gid, key, val, len);
 }
@@ -3012,13 +2714,11 @@ int grib_f_get_real8_element_(int* gid, char* key,int* index, double* val, int l
     return grib_get_double_element(h, cast_char(buf,key,len), *index,val);
 
 }
-int grib_f_get_real8_element__(int* gid, char* key, int* index,double* val, int len){
-    return grib_f_get_real8_element_( gid, key, index, val,len);
-}
 int grib_f_get_real8_element(int* gid, char* key, int* index,double* val, int len){
     return grib_f_get_real8_element_( gid, key, index, val,len);
 }
 
+/*****************************************************************************/
 int grib_f_get_real8_elements_(int* gid, char* key,int* index, double* val, int *size, int len){
 
     grib_handle *h = get_handle(*gid);
@@ -3028,9 +2728,6 @@ int grib_f_get_real8_elements_(int* gid, char* key,int* index, double* val, int 
 
     return grib_get_double_elements(h, cast_char(buf,key,len), index,*size,val);
 
-}
-int grib_f_get_real8_elements__(int* gid, char* key, int* index,double* val, int* len,int size){
-    return grib_f_get_real8_elements_( gid, key, index, val,len,size);
 }
 int grib_f_get_real8_elements(int* gid, char* key, int* index,double* val, int* len,int size){
     return grib_f_get_real8_elements_( gid, key, index, val,len,size);
@@ -3060,16 +2757,6 @@ int grib_f_find_nearest_four_single_(int* gid,int* is_lsm,
     grib_nearest_delete(nearest);
     return result;
 }
-int grib_f_find_nearest_four_single__(int* gid,int* is_lsm,
-        double* inlats,double* inlons,
-        double* outlats,double* outlons,
-        double* values,double* distances,
-        int* indexes) {
-
-    return grib_f_find_nearest_four_single_(gid,is_lsm,
-            inlats,inlons,outlats,outlons,values,
-            distances,indexes);
-}
 int grib_f_find_nearest_four_single(int* gid,int* is_lsm,
         double* inlats,double* inlons,
         double* outlats,double* outlons,
@@ -3096,16 +2783,6 @@ int grib_f_find_nearest_single_(int* gid,int* is_lsm,
             inlats,inlons,1,outlats,outlons,
             values,distances,indexes);
 }
-int grib_f_find_nearest_single__(int* gid,int* is_lsm,
-        double* inlats,double* inlons,
-        double* outlats,double* outlons,
-        double* values,double* distances,
-        int* indexes) {
-
-    return grib_f_find_nearest_single_(gid,is_lsm,
-            inlats,inlons,outlats,outlons,values,
-            distances,indexes);
-}
 int grib_f_find_nearest_single(int* gid,int* is_lsm,
         double* inlats,double* inlons,
         double* outlats,double* outlons,
@@ -3131,16 +2808,6 @@ int grib_f_find_nearest_multiple_(int* gid,int* is_lsm,
     return grib_nearest_find_multiple(h,*is_lsm,
             inlats,inlons,*npoints,outlats,outlons,
             values,distances,indexes);
-}
-int grib_f_find_nearest_multiple__(int* gid,int* is_lsm,
-        double* inlats,double* inlons,
-        double* outlats,double* outlons,
-        double* values,double* distances,
-        int* indexes, int* npoints) {
-
-    return grib_f_find_nearest_multiple_(gid,is_lsm,
-            inlats,inlons,outlats,outlons,values,
-            distances,indexes,npoints);
 }
 int grib_f_find_nearest_multiple(int* gid,int* is_lsm,
         double* inlats,double* inlons,
@@ -3169,15 +2836,8 @@ int grib_f_get_real8_array_(int* gid, char* key, double*val, int* size, int len)
         return  err;
     }
 }
-int grib_f_get_real8_array__(int* gid, char* key, double*val, int* size, int len){
-    return grib_f_get_real8_array_( gid, key, val, size, len);
-}
 int grib_f_get_real8_array(int* gid, char* key, double*val, int* size, int len){
     return grib_f_get_real8_array_( gid, key, val, size, len);
-}
-
-int grib_f_set_force_real8_array__(int* gid, char* key, double *val, int* size, int len){
-    return grib_f_set_force_real8_array_( gid, key, val, size, len);
 }
 int grib_f_set_force_real8_array(int* gid, char* key, double *val, int* size, int len){
     return grib_f_set_force_real8_array_( gid, key, val, size, len);
@@ -3204,9 +2864,6 @@ int grib_f_set_real8_array_(int* gid, char* key, double*val, int* size, int len)
     if (!h) return GRIB_INVALID_GRIB;
 
     return grib_set_double_array(h, cast_char(buf,key,len), val, lsize);
-}
-int grib_f_set_real8_array__(int* gid, char* key, double *val, int* size, int len){
-    return grib_f_set_real8_array_( gid, key, val, size, len);
 }
 int grib_f_set_real8_array(int* gid, char* key, double *val, int* size, int len){
     return grib_f_set_real8_array_( gid, key, val, size, len);
@@ -3241,9 +2898,6 @@ int grib_f_get_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
 
     return  err;
 }
-int grib_f_get_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
-    return  grib_f_get_string_array_( gid, key, val,nvals,slen,len);
-}
 int grib_f_get_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
     return  grib_f_get_string_array_( gid, key, val, nvals, slen, len);
 }
@@ -3261,9 +2915,6 @@ int codes_f_bufr_copy_data_(int* gid1,int* gid2)
     if (err) return err;
 
     return  err;
-}
-int codes_f_bufr_copy_data__(int* gid1,int* gid2){
-    return  codes_f_bufr_copy_data_(gid1, gid2);
 }
 int codes_f_bufr_copy_data(int* gid1,int* gid2){
     return  codes_f_bufr_copy_data_(gid1, gid2);
@@ -3301,9 +2952,6 @@ int grib_f_set_string_array_(int* gid, char* key, char* val,int* nvals,int* slen
 
     return  err;
 }
-int grib_f_set_string_array__(int* gid, char* key, char* val,int* nvals,int* slen, int len){
-    return  grib_f_set_string_array_( gid, key, val,nvals,slen,len);
-}
 int grib_f_set_string_array(int* gid, char* key, char* val,int* nvals,int* slen, int len){
     return  grib_f_set_string_array_( gid, key, val, nvals, slen, len);
 }
@@ -3325,9 +2973,6 @@ int grib_f_get_string_(int* gid, char* key, char* val,int len, int len2){
     czstr_to_fortran(val,len2);
 
     return  err;
-}
-int grib_f_get_string__(int* gid, char* key, char* val, int len, int len2){
-    return  grib_f_get_string_( gid, key, val, len, len2);
 }
 int grib_f_get_string(int* gid, char* key, char* val, int len, int len2){
     return  grib_f_get_string_( gid, key, val, len, len2);
@@ -3362,9 +3007,6 @@ int grib_f_set_string_(int* gid, char* key, char* val, int len, int len2){
     }
 
     return grib_set_string(h, cast_char(buf,key,len), val_str, &lsize);
-}
-int grib_f_set_string__(int* gid, char* key, char* val, int len, int len2){
-    return  grib_f_set_string_( gid, key, val, len, len2);
 }
 int grib_f_set_string(int* gid, char* key, char* val, int len, int len2){
     return  grib_f_set_string_( gid, key, val, len, len2);
@@ -3401,21 +3043,14 @@ int grib_f_get_data_real4_(int* gid,float* lats, float* lons,float* values,size_
 
     return err;
 }
-int grib_f_get_data_real4__(int* gid,float* lats, float* lons,float* values,size_t* size) {
-    return grib_f_get_data_real4_(gid,lats,lons,values,size);
-}
 int grib_f_get_data_real4(int* gid,float* lats, float* lons,float* values,size_t* size) {
     return grib_f_get_data_real4_(gid,lats,lons,values,size);
 }
-
 
 int grib_f_get_data_real8_(int* gid,double* lats, double* lons,double* values,size_t* size) {
     grib_handle *h = get_handle(*gid);
     return grib_get_data(h,lats,lons,values);
 
-}
-int grib_f_get_data_real8__(int* gid,double* lats, double* lons,double* values,size_t* size) {
-    return grib_f_get_data_real8_(gid,lats,lons,values,size);
 }
 int grib_f_get_data_real8(int* gid,double* lats, double* lons,double* values,size_t* size) {
     return grib_f_get_data_real8_(gid,lats,lons,values,size);
@@ -3428,11 +3063,6 @@ int grib_f_get_message_size_(int* gid, size_t *len){
     *len = h->buffer->ulength;
     return GRIB_SUCCESS;
 }
-/*
-int grib_f_get_message_size__(int* gid, size_t *len){
-    return  grib_f_get_message_size_( gid, len);
-}
-*/
 int grib_f_get_message_size(int* gid, size_t *len){
     return  grib_f_get_message_size_( gid, len);
 }
@@ -3453,9 +3083,6 @@ int grib_f_copy_message_(int* gid, void* mess, size_t* len){
     *len=h->buffer->ulength;
     return GRIB_SUCCESS;
 }
-int grib_f_copy_message__(int* gid, void* mess, size_t* len){
-    return grib_f_copy_message_( gid, mess, len);
-}
 int grib_f_copy_message(int* gid, void* mess, size_t* len){
     return grib_f_copy_message_( gid, mess, len);
 }
@@ -3474,11 +3101,6 @@ void grib_f_check_(int* err,char* call,char* str,int lencall,int lenstr){
             bufcall,bufstr,grib_get_error_message(*err));
     exit(*err);
 }
-/*
-void grib_f_check__(int* err,char* call, char* key, int lencall, int lenkey){
-    grib_f_check_(err,call,key,lencall,lenkey);
-}
-*/
 void grib_f_check(int* err,char* call, char* key, int lencall, int lenkey){
     grib_f_check_(err,call,key,lencall,lenkey);
 }
@@ -3501,9 +3123,6 @@ int grib_f_write_(int* gid, int* fid) {
 
     return GRIB_SUCCESS;
 }
-int grib_f_write__(int* gid, int* fid) {
-    return grib_f_write_(gid,fid);
-}
 int grib_f_write(int* gid, int* fid) {
     return grib_f_write_(gid,fid);
 }
@@ -3518,11 +3137,6 @@ int grib_f_multi_write_(int* gid, int* fid) {
 
     return grib_multi_handle_write(h,f);
 }
-/*
-int grib_f_multi_write__(int* gid, int* fid) {
-    return grib_f_multi_write_(gid,fid);
-}
-*/
 int grib_f_multi_write(int* gid, int* fid) {
     return grib_f_multi_write_(gid,fid);
 }
@@ -3544,17 +3158,11 @@ int grib_f_multi_append_(int* ingid, int* sec,int* mgid) {
 int grib_f_multi_append(int* ingid, int* sec,int* mgid) {
     return grib_f_multi_append_(ingid, sec, mgid);
 }
-int grib_f_multi_append__(int* ingid, int* sec,int* mgid) {
-    return grib_f_multi_append_(ingid, sec, mgid);
-}
 
 /*****************************************************************************/
 int codes_f_bufr_multi_element_constant_arrays_on_() {
     codes_bufr_multi_element_constant_arrays_on(NULL);
     return GRIB_SUCCESS;
-}
-int codes_f_bufr_multi_element_constant_arrays_on__() {
-    return codes_f_bufr_multi_element_constant_arrays_on_();
 }
 int codes_f_bufr_multi_element_constant_arrays_on() {
     return codes_f_bufr_multi_element_constant_arrays_on_();
@@ -3563,9 +3171,6 @@ int codes_f_bufr_multi_element_constant_arrays_on() {
 int codes_f_bufr_multi_element_constant_arrays_off_() {
     codes_bufr_multi_element_constant_arrays_off(NULL);
     return GRIB_SUCCESS;
-}
-int codes_f_bufr_multi_element_constant_arrays_off__() {
-    return codes_f_bufr_multi_element_constant_arrays_off_();
 }
 int codes_f_bufr_multi_element_constant_arrays_off() {
     return codes_f_bufr_multi_element_constant_arrays_off_();
@@ -3579,9 +3184,6 @@ int grib_f_set_definitions_path_(char* path, int len){
     grib_context_set_definitions_path(c, cast_char(buf,path,len));
     return GRIB_SUCCESS;
 }
-int grib_f_set_definitions_path__(char* path, int len){
-    return grib_f_set_definitions_path_(path, len);
-}
 int grib_f_set_definitions_path(char* path, int len){
     return grib_f_set_definitions_path_(path, len);
 }
@@ -3592,9 +3194,6 @@ int grib_f_set_samples_path_(char* path, int len){
     char buf[1024];
     grib_context_set_samples_path(c, cast_char(buf,path,len));
     return GRIB_SUCCESS;
-}
-int grib_f_set_samples_path__(char* path, int len){
-    return grib_f_set_samples_path_(path, len);
 }
 int grib_f_set_samples_path(char* path, int len){
     return grib_f_set_samples_path_(path, len);
@@ -3607,19 +3206,11 @@ int grib_f_julian_to_datetime_(double* jd,long* year,long* month,long* day,long 
 int grib_f_julian_to_datetime(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
     return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
 }
-int grib_f_julian_to_datetime__(double* jd,long* year,long* month,long* day,long *hour,long *minute,long *second) {
-    return grib_julian_to_datetime(*jd,year,month,day,hour,minute,second);
-}
 
 /*****************************************************************************/
 int grib_f_datetime_to_julian_(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
     return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
 }
-/*
-int grib_f_datetime_to_julian__(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
-    return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
-}
-*/
 int grib_f_datetime_to_julian(long* year,long* month,long* day, long* hour,long* minute,long* second,double* jd) {
     return grib_datetime_to_julian(*year,*month,*day,*hour,*minute,*second,jd);
 }
