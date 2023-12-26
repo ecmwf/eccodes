@@ -29,6 +29,7 @@ if( HAVE_BUILD_TOOLS )
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi_write
           grib_multi
           grib_nearest
@@ -80,6 +81,7 @@ else()
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi
           grib_nearest
           grib_nearest_single
