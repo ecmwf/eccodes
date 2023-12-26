@@ -32,5 +32,24 @@ set -e
 [ $status -ne 0 ]
 grep -q "Nh (Key/value not found)" $tempText
 
+
+# Nearest
+# ---------
+set +e
+${tools_dir}/grib_get -s Nj=MISSING -l 0,0,1 $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key Nj cannot be 'missing'" $tempText
+
+set +e
+${tools_dir}/grib_get -s Nj=0 -l 0,0,1 $ECCODES_SAMPLES_PATH/reduced_ll_sfc_grib1.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Key Nj cannot be 0" $tempText
+
+
+
 # Clean up
 rm -f $tempText
