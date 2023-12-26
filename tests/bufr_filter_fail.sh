@@ -90,5 +90,21 @@ set -e
 grep -q "Cannot include file" $tempErr
 
 
+# Close
+# --------
+cat > $fRules <<EOF
+ transient abcd = "afile"; 
+ close(abcd);
+EOF
+set +e
+${tools_dir}/bufr_filter $fRules $ECCODES_SAMPLES_PATH/BUFR4.tmpl > $tempErr 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempErr
+grep -q "Input output problem" $tempErr
+
+
+
 # Clean up
 rm -f $fLog $fRules $tempErr
