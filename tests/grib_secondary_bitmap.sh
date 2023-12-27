@@ -23,10 +23,12 @@ grib_check_key_equals $input bitmapPresent 1
 ${tools_dir}/grib_set -s packingType=grid_simple_matrix,NC=1,NR=1 $input $tempGribA
 ${tools_dir}/grib_set -s matrixBitmapsPresent=1 $tempGribA $tempGribB
 ${tools_dir}/grib_dump -O $tempGribB
+${tools_dir}/grib_dump -Dat $tempGribB
 
-# Call pack_double
+# Call pack_double and unpack_double
 cat >$tempFilt<<EOF
   set values = {0, 1, 9999};
+  print "[bitmap]";
 EOF
 ${tools_dir}/grib_filter $tempFilt $tempGribB
 
