@@ -96,6 +96,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_transient_darray
         grib_uerra
         grib_ecpoint
         grib_s2s
