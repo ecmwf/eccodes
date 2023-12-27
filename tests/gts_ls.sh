@@ -52,9 +52,17 @@ echo 'print "[theMessage]";' | ${tools_dir}/gts_filter - $gts_file
 
 ${tools_dir}/gts_ls -wcount=1 -p theMessage $f
 
-
 gts_file=${data_dir}/gts.grib
 result=$( ${tools_dir}/grib_ls -wcount=1 -p gts_CCCC -g $gts_file )
+
+
+# Bad filter
+set +e
+${tools_dir}/gts_filter a_non_existent_filter_file $gts_file > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot include file" $fLog
 
 
 # Clean up

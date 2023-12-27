@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 #define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 
@@ -91,7 +92,7 @@ static void test_gaussian_latitudes(int order)
     double lat1 = 0, lat2 = 0;
     double* lats = (double*)malloc(sizeof(double) * num);
 
-    ret = grib_get_gaussian_latitudes(order, lats);
+    ret = codes_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
     lat1 = lats[0];
@@ -112,7 +113,7 @@ static void test_gaussian_latitude_640()
     int ret                = 0;
     const double tolerance = 1e-6;
     double* lats           = (double*)malloc(sizeof(double) * num);
-    ret                    = grib_get_gaussian_latitudes(order, lats);
+    ret                    = codes_get_gaussian_latitudes(order, lats);
     Assert(ret == GRIB_SUCCESS);
 
     compare_doubles(lats[0], 89.892396, tolerance);
@@ -378,9 +379,34 @@ static void test_gribex_mode()
 
     Assert( grib_get_gribex_mode(c) == 0 ); /* default is OFF */
     grib_gribex_mode_on(c);
+    codes_gribex_mode_on(c);
     Assert( grib_get_gribex_mode(c) == 1 );
     grib_gribex_mode_off(c);
+    codes_gribex_mode_off(c);
     Assert( grib_get_gribex_mode(c) == 0 );
+    Assert( codes_get_gribex_mode(c) == 0 );
+}
+
+static void test_gts_header_mode()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Running %s ...\n", __func__);
+
+    grib_gts_header_on(c);
+    codes_gts_header_on(c);
+    Assert(c->gts_header_on == 1);
+    grib_gts_header_off(c);
+    codes_gts_header_off(c);
+    Assert(c->gts_header_on == 0);
+}
+
+static void test_bufr_multi_element_constant_arrays()
+{
+    grib_context* c = grib_context_get_default();
+    printf("Running %s ...\n", __func__);
+
+    codes_bufr_multi_element_constant_arrays_on(c);
+    codes_bufr_multi_element_constant_arrays_off(c);
 }
 
 static void test_grib_binary_search()
@@ -649,6 +675,8 @@ int main(int argc, char** argv)
     test_get_git_sha1();
     test_get_build_date();
     test_gribex_mode();
+    test_gts_header_mode();
+    test_bufr_multi_element_constant_arrays();
 
     test_concept_condition_strings();
 

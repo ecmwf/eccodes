@@ -11,6 +11,7 @@ if( HAVE_BUILD_TOOLS )
           codes_ecc-1392
           codes_datetime_julian
           codes_set_paths
+          codes_f90_misc
           grib_set_pv
           grib_set_data
           bufr_ecc-1284
@@ -24,12 +25,15 @@ if( HAVE_BUILD_TOOLS )
           bufr_copy_message
           grib_get_keys
           grib_get_data
+          grib_get_data_real4
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi_write
           grib_multi
           grib_nearest
+          grib_nearest_single
           grib_precision
           grib_print_data
           grib_set_keys
@@ -67,6 +71,7 @@ else()
           grib_set_pv
           grib_set_data
           codes_set_paths
+          codes_f90_misc
           get_native_type
           grib_ecc-671 )
     list( APPEND tests_extra
@@ -76,8 +81,10 @@ else()
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi
           grib_nearest
+          grib_nearest_single
           grib_precision
           grib_print_data
           grib_set_missing

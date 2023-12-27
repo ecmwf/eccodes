@@ -15,14 +15,13 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = unpack_string;pack_string
-   IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = unpack_double;pack_double
+   IMPLEMENTS = unpack_string
+   IMPLEMENTS = unpack_long
+   IMPLEMENTS = unpack_double
    IMPLEMENTS = init;dump;string_length
    IMPLEMENTS = value_count
    IMPLEMENTS = next_offset
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = compare
    END_CLASS_DEF
 
  */
@@ -38,9 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
-static int pack_double(grib_accessor*, const double* val, size_t* len);
-static int pack_long(grib_accessor*, const long* val, size_t* len);
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
@@ -49,7 +45,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_non_alpha
 {
@@ -79,13 +74,13 @@ static grib_accessor_class _grib_accessor_class_non_alpha = {
     0,                /* get sub_section */
     0,               /* pack_missing */
     0,                 /* is_missing */
-    &pack_long,                  /* pack_long */
+    0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
-    &pack_double,                /* pack_double */
+    0,                /* pack_double */
     0,                 /* pack_float */
     &unpack_double,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -98,7 +93,7 @@ static grib_accessor_class _grib_accessor_class_non_alpha = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -171,23 +166,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int pack_long(grib_accessor* a, const long* v, size_t* len)
-{
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as an integer", a->name);
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int pack_double(grib_accessor* a, const double* v, size_t* len)
-{
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack %s as a double", a->name);
-    return GRIB_NOT_IMPLEMENTED;
-}
-
 static int unpack_long(grib_accessor* a, long* v, size_t* len)
 {
     char val[1024] = {0,};
@@ -231,46 +209,6 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     }
 
     return GRIB_NOT_IMPLEMENTED;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    int retval = 0;
-    char* aval = 0;
-    char* bval = 0;
-    int err    = 0;
-
-    size_t alen = 0;
-    size_t blen = 0;
-    long count  = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    alen = count;
-
-    err = grib_value_count(b, &count);
-    if (err)
-        return err;
-    blen = count;
-
-    if (alen != blen)
-        return GRIB_COUNT_MISMATCH;
-
-    aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
-    bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
-
-    grib_unpack_string(a, aval, &alen);
-    grib_unpack_string(b, bval, &blen);
-
-    retval = GRIB_SUCCESS;
-    if (strcmp(aval, bval))
-        retval = GRIB_STRING_VALUE_MISMATCH;
-
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
-
-    return retval;
 }
 
 static long next_offset(grib_accessor* a)

@@ -106,6 +106,7 @@ grep -q "dataDate = 19090206" $temp
 # Skip handle
 ${tools_dir}/grib_dump -w count=4 $file > $temp 2>&1
 
+ECCODES_DEBUG=1 ${tools_dir}/grib_dump $data_dir/sample.grib2
 
 # Clean up
 rm -f $temp

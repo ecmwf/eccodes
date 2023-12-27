@@ -1365,7 +1365,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_char', '')
     end if
 
   end subroutine grib_new_from_message_char
@@ -1394,11 +1394,13 @@
     integer(kind=kindOfInt)                         :: iret
 
     size_bytes = size(message, dim=1)*sizeOfInteger4
-    iret = grib_f_new_from_message(gribid, message, size_bytes)
+    ! See SUP-3893
+    !iret = grib_f_new_from_message(gribid, message, size_bytes)
+    iret = grib_f_new_from_message_int(gribid, message, size_bytes)
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_int4', '')
     end if
 
   end subroutine grib_new_from_message_int4
@@ -2936,13 +2938,13 @@
                                       inlat, inlon, outlat, outlon, &
                                       value, distance, kindex, status)
     integer(kind=kindOfInt), intent(in)    :: gribid
-    logical, intent(in)    :: is_lsm
+    logical, intent(in)                    :: is_lsm
     real(kind=kindOfDouble), intent(in)    :: inlat
     real(kind=kindOfDouble), intent(in)    :: inlon
     real(kind=kindOfDouble), intent(out)   :: outlat
     real(kind=kindOfDouble), intent(out)   :: outlon
-    real(kind=kindOfDouble), intent(out)   :: distance
     real(kind=kindOfDouble), intent(out)   :: value
+    real(kind=kindOfDouble), intent(out)   :: distance
     integer(kind=kindOfInt), intent(out)   :: kindex
     integer(kind=kindOfInt), optional, intent(out)                           :: status
     integer(kind=kindOfInt)                                                 :: iret

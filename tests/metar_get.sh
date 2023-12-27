@@ -39,5 +39,11 @@ ${tools_dir}/metar_get -w count=1/2/3 -p CCCC,latitude,longitude,dateTime,elevat
 result=$( ${tools_dir}/metar_get -p visibilityInMetres:i,visibilityInMetres:d -w count=1 $metar_file )
 [ "$result" = "6000 6000" ]
 
+# non-alpha keys
+# ----------------
+result=$(${tools_dir}/metar_get -w count=1 -p na:i,na:d $metar_file)
+[ "$result" = "0 0" ]
+
+
 # Clean up
 rm -f $fLog

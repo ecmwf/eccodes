@@ -17,6 +17,7 @@ list(APPEND test_c_bins
     grib_indexing
     grib_fieldset
     grib_multi_from_message
+    grib_clone_headers_only
     grib_read_index
     unit_tests
     bufr_keys_iter
@@ -171,6 +172,7 @@ if( HAVE_BUILD_TOOLS )
         grib_headers_only
         grib_unpack_subarray
         grib_count
+        grib_clone_headers_only
         bufr_templates
         bufr_dump_data
         bufr_dump_descriptors
@@ -186,6 +188,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
@@ -253,6 +256,7 @@ if( HAVE_BUILD_TOOLS )
         taf
         pseudo_diag
         metar_ls
+        metar_filter
         metar_get
         metar_dump
         metar_compare
@@ -292,6 +296,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local
         grib_step
         grib_set
+        grib_set_fail
         grib_iterator
         grib_proj_string
         grib_compare

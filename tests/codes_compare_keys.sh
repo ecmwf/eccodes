@@ -63,5 +63,27 @@ EOF
 
 diff $tempRef $tempLog
 
+# Spectral
+# ----------
+sample_spectral=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+${test_dir}/codes_compare_keys $sample_spectral $sample_spectral enorm,avg
+
+
+# Local definitions
+# ----------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+tempGribA=temp.${label}.A.grib
+tempGribB=temp.${label}.B.grib
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=6 $sample1 $tempGribA
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=5 $sample1 $tempGribB
+set +e
+${test_dir}/codes_compare_keys $tempGribA $tempGribB endOfInterval > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "2 differences" $tempLog
+rm -f $tempGribA $tempGribB
+
+
 # Clean up
 rm -f $tempLog $tempRef $tempGrib

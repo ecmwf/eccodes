@@ -40,7 +40,7 @@ static const char *errors[] = {
 "Unable to set step",		/* -25 GRIB_WRONG_STEP */
 "Wrong units for step (step must be integer)",		/* -26 GRIB_WRONG_STEP_UNIT */
 "Invalid file id",		/* -27 GRIB_INVALID_FILE */
-"Invalid grib id",		/* -28 GRIB_INVALID_GRIB */
+"Invalid GRIB id",		/* -28 GRIB_INVALID_GRIB */
 "Invalid index id",		/* -29 GRIB_INVALID_INDEX */
 "Invalid iterator id",		/* -30 GRIB_INVALID_ITERATOR */
 "Invalid keys iterator id",		/* -31 GRIB_INVALID_KEYS_ITERATOR */

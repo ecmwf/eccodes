@@ -117,8 +117,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
 
     self->number_of_elements = 6;
-    self->v                  = (double*)grib_context_malloc(a->context,
-                                           sizeof(double) * self->number_of_elements);
+    self->v = (double*)grib_context_malloc(a->context, sizeof(double) * self->number_of_elements);
 
     a->length = 0;
     a->dirty  = 1;
@@ -127,8 +126,8 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g1end_of_interval_monthly* self = (grib_accessor_g1end_of_interval_monthly*)a;
-    int ret                                       = 0;
-    char verifyingMonth[7]                        = {0,};
+    int ret = 0;
+    char verifyingMonth[7] = {0,};
     size_t slen = 7;
     long year = 0, month = 0, date = 0;
     const long mdays[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -144,6 +143,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         return ret;
 
     date  = atoi(verifyingMonth);
+    if (date < 0) {
+        return GRIB_INVALID_ARGUMENT;
+    }
     year  = date / 100;
     month = date - year * 100;
     if (month == 2) {
@@ -151,9 +153,10 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0))
             days = 29;
     }
-    else
+    else {
+        if (month < 1 || month > 12) return GRIB_INVALID_ARGUMENT;
         days = mdays[month - 1];
-
+    }
     self->v[0] = year;
     self->v[1] = month;
 
@@ -217,13 +220,11 @@ static int compare(grib_accessor* a, grib_accessor* b)
     b->dirty = 1;
     a->dirty = 1;
 
-    grib_unpack_double(a, aval, &alen);
-    grib_unpack_double(b, bval, &blen);
+    err = grib_unpack_double(a, aval, &alen); if(err) return err;
+    err = grib_unpack_double(b, bval, &blen); if(err) return err;
 
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_DOUBLE_VALUE_MISMATCH;
-        alen--;
+    for(size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);

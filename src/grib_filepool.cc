@@ -344,6 +344,11 @@ grib_file* grib_get_file(const char* filename, int* err)
 {
     grib_file* file = NULL;
 
+    if (!file_pool.current) {
+        *err = GRIB_IO_PROBLEM;
+        return NULL;
+    }
+
     if (file_pool.current->name && !grib_inline_strcmp(filename, file_pool.current->name)) {
         return file_pool.current;
     }

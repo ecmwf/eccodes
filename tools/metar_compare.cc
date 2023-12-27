@@ -21,8 +21,6 @@ grib_option grib_options[] = {
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
-    { "P", 0, "Compare data values using the packing error as tolerance.\n", 0, 1, 0 },
-    { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -P -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "f", 0, 0, 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
@@ -38,7 +36,7 @@ int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 const char* tool_description =
     "Compare METAR messages contained in two files."
     "\n\tIf some differences are found it fails returning an error code."
-    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -P -A -R."
+    "\n\tFloating-point values are compared exactly by default, different tolerance can be defined see -A -R."
     "\n\tDefault behaviour: absolute error=0, bit-by-bit compare, same order in files.";
 
 const char* tool_name = "metar_compare";
@@ -70,7 +68,6 @@ struct grib_error
 static grib_error* error_summary;
 static compare_double_proc compare_double;
 static double global_tolerance     = 0;
-static int packingCompare          = 0;
 static grib_string_list* blocklist = 0;
 static int compareAbsolute         = 1;
 
@@ -278,10 +275,6 @@ int grib_tool_init(grib_runtime_options* options)
             global_tolerance = atof(grib_options_get_option("A:"));
         }
     }
-    if (grib_options_on("P")) {
-        packingCompare = 1;
-        compare_double = &compare_double_absolute;
-    }
 
     if (grib_options_on("t:"))
         tolerance_factor = atof(grib_options_get_option("t:"));
@@ -467,7 +460,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
     double maxdiff       = 0;
-    double packingError1 = 0, packingError2 = 0;
     double value_tolerance = 0;
     grib_context* c        = h1->context;
 
@@ -662,37 +654,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             dval2 = (double*)grib_context_malloc(h2->context, len2 * sizeof(double));
 
             value_tolerance = global_tolerance;
-            if (!grib_inline_strcmp(name, "packedValues") || !grib_inline_strcmp(name, "values") || !grib_inline_strcmp(name, "codedValues")) {
-                packingError1 = 0;
-                packingError2 = 0;
-                err1          = grib_get_double(h1, "packingError", &packingError1);
-                err2          = grib_get_double(h2, "packingError", &packingError2);
-                if (packingCompare && !err1 && !err2) {
-                    value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
-                    compare_double  = &compare_double_absolute;
-                    compareAbsolute = 1;
-                }
-            }
-            else if (!grib_inline_strcmp(name, "unpackedValues")) {
-                packingError1 = 0;
-                packingError2 = 0;
-                err1          = grib_get_double(h1, "unpackedError", &packingError1);
-                err2          = grib_get_double(h2, "unpackedError", &packingError2);
-                if (packingCompare && !err1 && !err2) {
-                    value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
-                    compare_double  = &compare_double_absolute;
-                    compareAbsolute = 1;
-                }
-            }
-            else if (!grib_inline_strcmp(name, "referenceValue")) {
-                packingError1   = 0;
-                packingError2   = 0;
-                err1            = grib_get_double(h1, "referenceValueError", &packingError1);
-                err2            = grib_get_double(h2, "referenceValueError", &packingError2);
-                if (!err1 && !err2) {
-                    value_tolerance = packingError1 > packingError2 ? packingError1 : packingError2;
-                }
-            }
 
             if (!compareAbsolute) {
                 for (i = 0; i < options->tolerance_count; i++) {
@@ -759,17 +720,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                         printf("\n\tmax diff. element %d: %.20e %.20e",
                                imaxdiff, dval1[imaxdiff], dval2[imaxdiff]);
                         printf("\n\ttolerance=%.16e", value_tolerance);
-                        if (packingError2 != 0 || packingError1 != 0)
-                            printf(" packingError: [%g] [%g]", packingError1, packingError2);
-
-                        if (!grib_inline_strcmp(name, "packedValues") || !grib_inline_strcmp(name, "values") || !grib_inline_strcmp(name, "codedValues")) {
-                            double max1, min1, max2, min2;
-                            grib_get_double(h1, "max", &max1);
-                            grib_get_double(h1, "min", &min1);
-                            grib_get_double(h2, "max", &max2);
-                            grib_get_double(h2, "min", &min2);
-                            printf("\n\tvalues max= [%g]  [%g]         min= [%g] [%g]", max1, max2, min1, min2);
-                        }
                         printf("\n");
                     }
                     else {
@@ -871,7 +821,7 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
     grib_keys_iterator* iter = grib_keys_iterator_new(h1, 0, NULL);
 
     if (!iter) {
-        printf("ERROR: unable to get iterator\n");
+        fprintf(stderr, "Error: unable to get keys iterator\n");
         exit(1);
     }
 
@@ -909,7 +859,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
             if (options->compare[i].type == CODES_NAMESPACE) {
                 iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                 if (!iter) {
-                    printf("ERROR: unable to get iterator\n");
+                    fprintf(stderr, "Error: unable to get keys iterator\n");
                     exit(1);
                 }
                 while (grib_keys_iterator_next(iter)) {
@@ -950,7 +900,7 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                 if (options->compare[i].type == CODES_NAMESPACE) {
                     iter = grib_keys_iterator_new(h1, 0, options->compare[i].name);
                     if (!iter) {
-                        printf("ERROR: unable to get iterator for %s\n", options->compare[i].name);
+                        fprintf(stderr, "Error: unable to get keys iterator for %s\n", options->compare[i].name);
                         exit(1);
                     }
                     while (grib_keys_iterator_next(iter)) {

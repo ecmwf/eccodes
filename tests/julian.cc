@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "eccodes.h"
 
 #define EPSILON 1e-12
 #define DBL_EQUAL(a, b) (fabs((a) - (b)) <= (EPSILON)*fabs((a)))
@@ -34,10 +35,10 @@ static void TestDateTime(const long year, const long month, const long day, cons
     long jdlong1, jdlong2, date;
 
     /* Convert the input values to a double */
-    grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
+    codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
 
     /* Convert the double back to the input values and compare */
-    grib_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
+    codes_julian_to_datetime(jd, &year1, &month1, &day1, &hour1, &min1, &sec1);
 
     if (!Check(year, month, day, hour, min, sec, year1, month1, day1, hour1, min1, sec1)) {
         fprintf(stderr,
@@ -73,7 +74,7 @@ static void Test0()
     min   = 26;
     sec   = 24;
 
-    grib_datetime_to_julian(year, month, day, hour, min, sec, &jd);
+    codes_datetime_to_julian(year, month, day, hour, min, sec, &jd);
     Assert(DBL_EQUAL(jd, 2378891.268333));
     printf("%ld %ld %ld %ld:%ld:%ld -> %f\n", year, month, day, hour, min, sec, jd);
 
@@ -153,9 +154,9 @@ static void Test2()
         }
 
         jdl  = (long)(jd + 0.5);
-        date = grib_julian_to_date(jdl);
+        date = codes_julian_to_date(jdl);
         printf("+ %ld -> %ld\n", date, jdl);
-        jdl = grib_date_to_julian(date);
+        jdl = codes_date_to_julian(date);
         printf("- %ld -> %ld\n", date, jdl);
         printf("\n");
     }
