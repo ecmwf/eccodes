@@ -305,6 +305,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_secondary_bitmap
         grib_list
         grib_second_order
         grib_multi_from_message
