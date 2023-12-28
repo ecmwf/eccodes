@@ -2597,8 +2597,8 @@
     real(kind=kindOfDouble), intent(in)   :: inlon
     real(kind=kindOfDouble), intent(out)  :: outlat
     real(kind=kindOfDouble), intent(out)  :: outlon
-    real(kind=kindOfDouble), intent(out)  :: distance
     real(kind=kindOfDouble), intent(out)  :: value
+    real(kind=kindOfDouble), intent(out)  :: distance
     integer(kind=kindOfInt), intent(out)  :: kindex
     integer(kind=kindOfInt), optional, intent(out)  :: status
 

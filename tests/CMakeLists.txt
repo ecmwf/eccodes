@@ -96,6 +96,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_transient_darray
         grib_uerra
         grib_ecpoint
         grib_s2s
@@ -188,6 +189,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
@@ -256,6 +258,7 @@ if( HAVE_BUILD_TOOLS )
         taf
         pseudo_diag
         metar_ls
+        metar_filter
         metar_get
         metar_dump
         metar_compare
@@ -303,6 +306,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_secondary_bitmap
         grib_list
         grib_second_order
         grib_multi_from_message
