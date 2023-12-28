@@ -1184,9 +1184,6 @@ int grib_f_keys_iterator_new_(int* gid,int* iterid,char* name_space,int len) {
     GRIB_MUTEX_UNLOCK(&keys_iterator_mutex)
     return ret;
 }
-int grib_f_keys_iterator_new(int* gid,int* iterid,char* name_space,int len) {
-    return grib_f_keys_iterator_new_(gid,iterid,name_space,len);
-}
 
 /*****************************************************************************/
 int grib_f_keys_iterator_next_(int* iterid) {
@@ -1195,24 +1192,14 @@ int grib_f_keys_iterator_next_(int* iterid) {
 
     return grib_keys_iterator_next(iter);
 }
-int grib_f_keys_iterator_next(int* iterid) {
-    return grib_f_keys_iterator_next_(iterid);
-}
 
 /*****************************************************************************/
 int grib_f_keys_iterator_delete_(int* iterid) {
     return clear_keys_iterator(*iterid);
 }
-int grib_f_keys_iterator_delete(int* iterid) {
-    return grib_f_keys_iterator_delete_(iterid);
-}
 
 /*****************************************************************************/
 int grib_f_gribex_mode_on_() {
-    grib_gribex_mode_on(0);
-    return GRIB_SUCCESS;
-}
-int grib_f_gribex_mode_on() {
     grib_gribex_mode_on(0);
     return GRIB_SUCCESS;
 }
@@ -2434,9 +2421,6 @@ int grib_f_set_real4_(int* gid, char* key, float* val, int len){
 
     return grib_set_double(h, cast_char(buf,key,len), val8);
 }
-int grib_f_set_real4(int* gid, char* key, float* val, int len){
-    return grib_f_set_real4_( gid, key, val, len);
-}
 
 int grib_f_get_real4_element_(int* gid, char* key, int* index,float* val, int len){
 
@@ -2450,9 +2434,6 @@ int grib_f_get_real4_element_(int* gid, char* key, int* index,float* val, int le
     err = grib_get_double_element(h, cast_char(buf,key,len), *index,&val8);
     *val = val8;
     return err;
-}
-int grib_f_get_real4_element(int* gid, char* key,int* index, float* val,int len){
-    return grib_f_get_real4_element_( gid, key, index, val, len);
 }
 
 int grib_f_get_real4_elements_(int* gid, char* key,int* index, float *val,int* size, int len){
@@ -2482,9 +2463,6 @@ int grib_f_get_real4_elements_(int* gid, char* key,int* index, float *val,int* s
     grib_context_free(h->context,val8);
 
     return  err;
-}
-int grib_f_get_real4_elements(int* gid, char* key,int* index, float* val,int* len,int size){
-    return grib_f_get_real4_elements_( gid, key, index, val, len,size);
 }
 
 int grib_f_get_real4_(int* gid, char* key, float* val, int len){
