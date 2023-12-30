@@ -2182,9 +2182,6 @@ int grib_f_set_missing_(int* gid, char* key,int len){
 
     return grib_set_missing(h, cast_char(buf,key,len));
 }
-int grib_f_set_missing(int* gid, char* key, int len){
-    return grib_f_set_missing_( gid, key, len);
-}
 
 int grib_f_is_missing_(int* gid, char* key,int* isMissing,int len){
     int err=0;
@@ -2273,6 +2270,7 @@ int grib_f_get_real4_(int* gid, char* key, float* val, int len){
     return err;
 }
 
+/*****************************************************************************/
 int grib_f_get_real4_array_(int* gid, char* key, float* val, int* size, int len)
 {
     /* See ECC-1579:
@@ -2325,6 +2323,7 @@ int grib_f_set_force_real4_array_(int* gid, char* key, float* val, int* size, in
     char buf[1024];
     size_t lsize = *size;
     double* val8 = NULL;
+    size_t numElements = lsize;
 
     if(!h) return GRIB_INVALID_GRIB;
 
@@ -2335,7 +2334,7 @@ int grib_f_set_force_real4_array_(int* gid, char* key, float* val, int* size, in
 
     if(!val8) return GRIB_OUT_OF_MEMORY;
 
-    for(lsize=0;lsize<*size;lsize++)
+    for (lsize = 0; lsize < numElements; lsize++)
         val8[lsize] = val[lsize];
 
     err = grib_set_force_double_array(h, cast_char(buf,key,len), val8, lsize);
@@ -2445,6 +2444,7 @@ int grib_f_get_real8_(int* gid, char* key, double* val, int len)
     return grib_get_double(h, cast_char(buf,key,len), val);
 }
 
+/*****************************************************************************/
 int grib_f_get_real8_element_(int* gid, char* key,int* index, double* val, int len){
 
     grib_handle *h = get_handle(*gid);
@@ -2540,6 +2540,7 @@ int grib_f_get_real8_array_(int* gid, char* key, double*val, int* size, int len)
     }
 }
 
+/*****************************************************************************/
 int grib_f_set_force_real8_array_(int* gid, char* key, double*val, int* size, int len){
 
     grib_handle *h = get_handle(*gid);
@@ -2781,7 +2782,7 @@ int grib_f_write_(int* gid, int* fid) {
 
     grib_get_message(h,&mess,&mess_len);
     if(fwrite(mess,1, mess_len,f) != mess_len) {
-        perror("grib_write");
+        perror("write");
         return GRIB_IO_PROBLEM;
     }
 

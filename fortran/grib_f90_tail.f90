@@ -2665,12 +2665,12 @@
   !> @param value       real(8) array value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_force_real8_array(gribid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    real(kind=kindOfDouble), dimension(:), intent(in)  :: value
-    integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt)                               :: nb_values
+    integer(kind=kindOfInt), intent(in)               :: gribid
+    character(len=*), intent(in)                      :: key
+    real(kind=kindOfDouble), dimension(:), intent(in) :: value
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt)                           :: iret
+    integer(kind=kindOfInt)                           :: nb_values
 
     nb_values = size(value)
     iret = grib_f_set_force_real8_array(gribid, key, value, nb_values)
@@ -2696,10 +2696,10 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_string(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    character(len=*), intent(in)  :: value
+    character(len=*), intent(in)         :: key
+    character(len=*), intent(in)         :: value
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_set_string(gribid, key, value)
     if (iret /= 0) then
@@ -2722,8 +2722,8 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_int(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    integer(kind=kindOfInt), intent(out) :: nbytes
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), intent(out)           :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)                        :: iret
     integer(kind=kindOfSize_t)                     :: ibytes
@@ -2753,10 +2753,10 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_size_t(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)     :: gribid
     integer(kind=kindOfSize_t), intent(out) :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)                 :: iret
 
     iret = grib_f_get_message_size(gribid, nbytes)
     if (iret /= 0) then
@@ -2779,7 +2779,7 @@
   !> @param message     array containing the coded message to be copied
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_copy_message(gribid, message, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)         :: gribid
     character(len=1), dimension(:), intent(out) :: message
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)      :: iret
@@ -2810,7 +2810,6 @@
     integer(kind=kindOfInt), intent(in)  :: gribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-
     integer(kind=kindOfInt)               :: iret
 
     iret = grib_f_write(gribid, ifile)
@@ -2834,7 +2833,7 @@
     integer(kind=kindOfInt), intent(in)  :: multigribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_multi_write(multigribid, ifile)
     if (present(status)) then

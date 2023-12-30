@@ -14,6 +14,7 @@ if( HAVE_BUILD_TOOLS )
           codes_f90_misc
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           bufr_ecc-1284
           bufr_ecc-1019
           get_native_type
@@ -70,6 +71,7 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           codes_set_paths
           codes_f90_misc
           get_native_type
