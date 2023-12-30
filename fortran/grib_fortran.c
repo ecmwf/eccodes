@@ -9,7 +9,6 @@
  */
 
 #include "grib_api_internal.h"
-#include "grib_fortran_prototypes.h"
 
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -27,9 +26,9 @@
 
 #include <ctype.h>
 
-/* Have file ids distinct from grib ids, in order to be
- *  protected against user errors where a file id is given
- *  instead of a grib id or viceversa
+/* Have file ids distinct from GRIB/BUFR ids, in order to be
+ * protected against user errors where a file id is given
+ * instead of a GRIB/BUFR id or vice versa
  */
 #define MIN_FILE_ID 50000
 
@@ -67,9 +66,8 @@ static omp_nest_lock_t keys_iterator_mutex;
 static void init()
 {
     GRIB_OMP_CRITICAL(lock_fortran)
-            {
-        if (once == 0)
-        {
+    {
+        if (once == 0) {
             omp_init_nest_lock(&handle_mutex);
             omp_init_nest_lock(&index_mutex);
             omp_init_nest_lock(&read_mutex);
@@ -78,7 +76,7 @@ static void init()
             omp_init_nest_lock(&keys_iterator_mutex);
             once = 1;
         }
-            }
+    }
 }
 #endif
 
@@ -88,9 +86,8 @@ typedef enum FileMode {
     FILE_MODE_APPEND
 } FileMode;
 
-int GRIB_NULL=-1;
-int GRIB_NULL_NEAREST=-1;
-/*extern int errno;*/
+int GRIB_NULL = -1;
+int GRIB_NULL_NEAREST = -1;
 
 typedef struct l_grib_file l_grib_file;
 
