@@ -33,6 +33,7 @@ if( HAVE_BUILD_TOOLS )
           grib_keys_iterator_skip
           grib_multi_write
           grib_multi
+          grib_elements
           grib_nearest
           grib_nearest_single
           grib_precision
@@ -86,6 +87,7 @@ else()
           grib_keys_iterator_skip
           grib_multi
           grib_nearest
+          grib_elements
           grib_nearest_single
           grib_precision
           grib_print_data

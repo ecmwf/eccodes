@@ -2316,7 +2316,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4_elements', key)
     end if
   end subroutine grib_get_real4_elements
 
@@ -2348,7 +2348,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real8_elements', key)
     end if
   end subroutine grib_get_real8_elements
 
@@ -2649,7 +2649,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real4_array', key)
     end if
   end subroutine grib_set_force_real4_array
 
@@ -2680,7 +2680,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real8_array', key)
     end if
   end subroutine grib_set_force_real8_array
 
@@ -3057,7 +3057,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_on', '')
+      call grib_check(iret, 'gribex_mode_on', '')
     end if
 
   end subroutine grib_gribex_mode_on
@@ -3077,7 +3077,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_off', '')
+      call grib_check(iret, 'gribex_mode_off', '')
     end if
 
   end subroutine grib_gribex_mode_off
