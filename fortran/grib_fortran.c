@@ -1629,58 +1629,56 @@ int grib_f_new_from_file_(int* fid, int* gid){
 int grib_f_headers_only_new_from_file_(int* fid, int* gid){
     int err = 0;
     FILE* f = get_file(*fid);
-
     grib_handle *h = NULL;
+    const int headers_only = 1;
 
-    if(f){
-        h=grib_new_from_file ( 0, f,1,&err);
-        if(h){
+    if (f){
+        h=grib_new_from_file (0, f, headers_only, &err);
+        if (h){
             push_handle(h,gid);
             return GRIB_SUCCESS;
         } else {
-            *gid=-1;
+            *gid = -1;
             return GRIB_END_OF_FILE;
         }
     }
 
-    *gid=-1;
+    *gid = -1;
     return GRIB_INVALID_FILE;
 }
 
 /*****************************************************************************/
-int grib_f_new_from_index_(int* iid, int* gid){
+int grib_f_new_from_index_(int* iid, int* gid) {
     int err = 0;
     grib_index* i = get_index(*iid);
-
     grib_handle *h = NULL;
 
-    if(i){
-        h = grib_handle_new_from_index(i,&err);
-        if(h){
+    if (i) {
+        h = grib_handle_new_from_index(i, &err);
+        if (h){
             push_handle(h,gid);
             return GRIB_SUCCESS;
         } else {
-            *gid=-1;
+            *gid = -1;
             return GRIB_END_OF_INDEX;
         }
     }
 
-    *gid=-1;
+    *gid = -1;
     return GRIB_INVALID_INDEX;
 }
 
 /*****************************************************************************/
-int grib_f_index_new_from_file_(char* file ,char* keys ,int* gid, int lfile, int lkeys){
+int grib_f_index_new_from_file_(char* file, char* keys, int* gid, int lfile, int lkeys) {
     int err = 0;
-    char fname[1024]={0,};
-    char knames[1024]={0,};
-
+    char fname[1024] = {0,};
+    char knames[1024] = {0,};
     grib_index *i = NULL;
 
-    if(*file){
+    if (*file){
         i = grib_index_new_from_file(0,cast_char(fname,file,lfile),
                 cast_char(knames,keys,lkeys),&err);
-        if(i){
+        if (i) {
             push_index(i,gid);
             return GRIB_SUCCESS;
         } else {
@@ -1689,7 +1687,7 @@ int grib_f_index_new_from_file_(char* file ,char* keys ,int* gid, int lfile, int
         }
     }
 
-    *gid=-1;
+    *gid = -1;
     return GRIB_INVALID_FILE;
 }
 
@@ -1823,18 +1821,20 @@ int grib_f_get_api_version_(int* apiVersion,int len){
 }
 
 /*****************************************************************************/
-int grib_f_get_size_int_(int* gid, char* key, int* val, int len){
-    grib_handle *h = get_handle(*gid);
-    int err = GRIB_SUCCESS;
+int grib_f_get_size_int_(int* gid, char* key, int* val, int len)
+{
+    grib_handle* h = get_handle(*gid);
+    int err        = GRIB_SUCCESS;
     char buf[1024];
     size_t tsize = 0;
 
-    if(!h){
+    if (!h) {
         return GRIB_INVALID_GRIB;
-    }else{
-        err = grib_get_size(h, cast_char(buf,key,len), &tsize);
+    }
+    else {
+        err  = grib_get_size(h, cast_char(buf, key, len), &tsize);
         *val = tsize;
-        return  err;
+        return err;
     }
 }
 
@@ -1853,6 +1853,7 @@ int grib_f_get_size_long_(int* gid, char* key, long* val, int len){
     }
 }
 
+/*****************************************************************************/
 int grib_f_index_get_size_int_(int* gid, char* key, int* val, int len){
     grib_index *h = get_index(*gid);
     int err = GRIB_SUCCESS;
@@ -1883,6 +1884,7 @@ int grib_f_index_get_size_long_(int* gid, char* key, long* val, int len){
     }
 }
 
+/*****************************************************************************/
 int grib_f_get_int_(int* gid, char* key, int* val, int len){
     grib_handle *h = get_handle(*gid);
     long long_val;
@@ -1912,7 +1914,7 @@ int grib_f_get_native_type_(int* gid, char* key, int* val, int len){
     int err = GRIB_SUCCESS;
     char buf[1024];
 
-    if(!h) return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
     err = grib_get_native_type(h, cast_char(buf,key,len), &type_val);
     *val = type_val;
     return err;
@@ -2005,7 +2007,8 @@ int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* 
         int l=strlen(bufval[i]);
         int j;
         if (*eachsize < l ) {
-            printf("eachsize=%d strlen(bufval[i])=%ld\n",*eachsize,(long)strlen(bufval[i]));
+            fprintf(stderr, "eachsize=%d strlen(bufval[i])=%zu\n",
+                    *eachsize, strlen(bufval[i]));
             grib_context_free(h->context,bufval);
             return GRIB_ARRAY_TOO_SMALL;
         }
