@@ -1429,7 +1429,7 @@ int grib_f_copy_namespace_(int* gidsrc,char* name,int* giddest,int len){
 }
 
 /*****************************************************************************/
-int any_f_scan_file(int* fid,int* n) {
+int any_f_scan_file_(int* fid, int* n) {
     int err = 0;
     off_t offset=0;
     void *data = NULL;
@@ -1459,12 +1459,9 @@ int any_f_scan_file(int* fid,int* n) {
     *n=info_messages->n;
     return err;
 }
-int any_f_scan_file_(int* fid,int* n) {
-    return any_f_scan_file(fid,n);
-}
 
 /*****************************************************************************/
-int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
+int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid)
 {
     grib_handle *h = NULL;
     grib_context* c=grib_context_get_default();
@@ -1493,12 +1490,9 @@ int any_f_new_from_scanned_file(int* fid,int* msgid,int* gid)
         return GRIB_END_OF_FILE;
     }
 }
-int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid){
-  return any_f_new_from_scanned_file(fid,msgid,gid);
-}
 
 /*****************************************************************************/
-int any_f_load_all_from_file(int* fid,int* n) {
+int any_f_load_all_from_file_(int* fid,int* n) {
     int err = 0;
     off_t offset=0;
     void *data = NULL;
@@ -1527,12 +1521,9 @@ int any_f_load_all_from_file(int* fid,int* n) {
     *n=binary_messages->n;
     return err;
 }
-int any_f_load_all_from_file_(int* fid,int* n) {
-    return any_f_load_all_from_file(fid,n);
-}
 
 /*****************************************************************************/
-int any_f_new_from_loaded(int* msgid,int* gid)
+int any_f_new_from_loaded_(int* msgid,int* gid)
 {
     grib_handle *h = NULL;
     grib_context* c=grib_context_get_default();
@@ -1554,30 +1545,20 @@ int any_f_new_from_loaded(int* msgid,int* gid)
     }
 }
 
-int any_f_new_from_loaded_(int* msgid,int* gid){
-  return any_f_new_from_loaded(msgid,gid);
-}
-
 /*****************************************************************************/
-int codes_f_clear_loaded_from_file(void) {
+int codes_f_clear_loaded_from_file_(void) {
     grib_context* c=grib_context_get_default();
     /* grib_oarray_delete_content(c,binary_messages); */
     grib_oarray_delete(c,binary_messages);
     return GRIB_SUCCESS;
 }
-int codes_f_clear_loaded_from_file_(void) {
-  return codes_f_clear_loaded_from_file();
-}
 
 /*****************************************************************************/
-int grib_f_count_in_file(int* fid,int* n) {
+int grib_f_count_in_file_(int* fid,int* n) {
     int err = 0;
     FILE* f = get_file(*fid);
     if (f) err=grib_count_in_file(0, f,n);
     return err;
-}
-int grib_f_count_in_file_(int* fid,int* n) {
-    return grib_f_count_in_file(fid,n);
 }
 
 /*****************************************************************************/
@@ -1598,9 +1579,6 @@ int any_f_new_from_file_(int* fid, int* gid){
     }
     *gid=-1;
     return GRIB_INVALID_FILE;
-}
-int any_f_new_from_file(int* fid, int* gid){
-    return any_f_new_from_file_( fid, gid);
 }
 
 /*****************************************************************************/
@@ -1624,9 +1602,6 @@ int bufr_f_new_from_file_(int* fid, int* gid){
     *gid=-1;
     return GRIB_INVALID_FILE;
 }
-int bufr_f_new_from_file(int* fid, int* gid){
-    return bufr_f_new_from_file_( fid, gid);
-}
 
 /*****************************************************************************/
 int grib_f_new_from_file_(int* fid, int* gid){
@@ -1648,9 +1623,6 @@ int grib_f_new_from_file_(int* fid, int* gid){
 
     *gid=-1;
     return GRIB_INVALID_FILE;
-}
-int grib_f_new_from_file(int* fid, int* gid){
-    return grib_f_new_from_file_( fid, gid);
 }
 
 /*****************************************************************************/
