@@ -11,8 +11,9 @@ program grib_get_elements
    use eccodes
    implicit none
 
-   integer   :: infile
-   integer   :: igrib, i
+   integer :: infile, igrib, i
+   real(4) :: value_real4
+   real(8) :: value_real8
    real(4) :: values_real4(4)
    real(8) :: values_real8(4)
    integer :: array_of_indexes(4)
@@ -21,15 +22,27 @@ program grib_get_elements
    call codes_grib_new_from_file(infile, igrib)
 
    array_of_indexes = [1, 0, 2, 4]
+
+   print *,'Values as REAL(4) at specific indexes'
    call codes_get_element(igrib, "values", array_of_indexes, values_real4)
    do i = 1, 4
-      print *, i, array_of_indexes(i), values_real4(i)
+      print *, array_of_indexes(i), values_real4(i)
    end do
 
+   print *,'Values as REAL(8) at specific indexes'
    call codes_get_element(igrib, "values", array_of_indexes, values_real8)
    do i = 1, 4
-      print *, i, array_of_indexes(i), values_real8(i)
+      print *, array_of_indexes(i), values_real8(i)
    end do
+
+   i = 12
+   print *,'The Value REAL(4) at index=',i
+   call codes_get_element(igrib, "values", i, value_real4)
+   print *, value_real4
+
+   print *,'The Value REAL(8) at index=',i
+   call codes_get_element(igrib, "values", i, value_real8)
+   print *, value_real8
 
    call codes_release(igrib)
    call codes_close_file(infile)
