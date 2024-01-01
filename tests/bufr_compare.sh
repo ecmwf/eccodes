@@ -45,7 +45,7 @@ f1="syno_1.bufr"
 f2="aaen_55.bufr"
 echo "Test: comparing two completely different files" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_compare $f1 $f2 >> $fLog
+${tools_dir}/bufr_compare -v $f1 $f2 >> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_compare should have failed if files are completely different" >&2
    exit 1
@@ -309,6 +309,24 @@ set -e
 
 ${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2
+
+# Fail to unpack
+# ---------------
+bufr1=vos308014_v3_26.bufr
+bufr2=aaen_55.bufr
+set +e
+${tools_dir}/bufr_compare $bufr1 $bufr2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Failed to unpack 1st message" $fLog
+
+set +e
+${tools_dir}/bufr_compare $bufr2 $bufr1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Failed to unpack 2nd message" $fLog
 
 
 # Clean up

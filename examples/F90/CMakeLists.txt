@@ -14,6 +14,7 @@ if( HAVE_BUILD_TOOLS )
           codes_f90_misc
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           bufr_ecc-1284
           bufr_ecc-1019
           get_native_type
@@ -32,6 +33,7 @@ if( HAVE_BUILD_TOOLS )
           grib_keys_iterator_skip
           grib_multi_write
           grib_multi
+          grib_elements
           grib_nearest
           grib_nearest_single
           grib_precision
@@ -70,6 +72,7 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           codes_set_paths
           codes_f90_misc
           get_native_type
@@ -84,6 +87,7 @@ else()
           grib_keys_iterator_skip
           grib_multi
           grib_nearest
+          grib_elements
           grib_nearest_single
           grib_precision
           grib_print_data

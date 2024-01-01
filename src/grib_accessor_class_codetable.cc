@@ -222,7 +222,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
                     p     = grib_expression_evaluate_string(grib_handle_of_accessor(a), expression, tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(a->context, GRIB_LOG_FATAL,
-                                         "unable to evaluate %s as string", a->name);
+                                         "Unable to evaluate %s as string", a->name);
                     }
                     s_len = strlen(p) + 1;
                     pack_string(a, p, &s_len);
@@ -843,7 +843,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
 
     if (strcmp(e->cclass->name, "long") == 0) {
         grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
-        /*if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
+        //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
         ret = grib_pack_long(a, &lval, &len);
     }
     else {
@@ -851,12 +851,14 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
         len  = sizeof(tmp);
         cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n", grib_expression_get_name(e), a->name);
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
+                __func__, grib_expression_get_name(e), a->name);
             return ret;
         }
         len = strlen(cval) + 1;
-        /*if (hand->context->debug)
-            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);*/
+        //if (hand->context->debug)
+        //    printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);
         ret = grib_pack_string(a, cval, &len);
     }
     return ret;

@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -21,7 +17,6 @@
    SUPER      = grib_accessor_class_bytes
    IMPLEMENTS = init;update_size;resize; value_count
    IMPLEMENTS = unpack_string; string_length
-   IMPLEMENTS = compare
    END_CLASS_DEF
 
  */
@@ -42,7 +37,6 @@ static int value_count(grib_accessor*, long*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void update_size(grib_accessor*, size_t);
 static void resize(grib_accessor*,size_t);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_message
 {
@@ -92,7 +86,7 @@ static grib_accessor_class _grib_accessor_class_message = {
     &resize,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -115,12 +109,12 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     a->length = grib_handle_of_accessor(a)->buffer->ulength - len - a->offset;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    if (a->length != b->length)
-        return GRIB_COUNT_MISMATCH;
-    return GRIB_SUCCESS;
-}
+// static int compare(grib_accessor* a, grib_accessor* b)
+// {
+//     if (a->length != b->length)
+//         return GRIB_COUNT_MISMATCH;
+//     return GRIB_SUCCESS;
+// }
 
 static void update_size(grib_accessor* a, size_t new_size)
 {

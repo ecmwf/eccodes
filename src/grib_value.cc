@@ -97,12 +97,12 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
             return grib_dependency_notify_change(a);
         }
 
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to set %s=%ld as long (%s)",
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to set %s=%ld as long (%s)",
                          name, val, grib_get_error_message(ret));
         return ret;
     }
 
-    grib_context_log(c, GRIB_LOG_ERROR, "unable to find accessor %s", name);
+    grib_context_log(c, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -151,12 +151,12 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
             return grib_dependency_notify_change(a);
         }
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=%g as double (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=%g as double (%s)",
                          name, val, grib_get_error_message(ret));
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -189,7 +189,7 @@ int grib_copy_namespace(grib_handle* dest, const char* name, grib_handle* src)
     iter = grib_keys_iterator_new(src, 0, name);
 
     if (!iter) {
-        grib_context_log(src->context, GRIB_LOG_ERROR, "grib_copy_namespace: unable to get iterator for %s", name);
+        grib_context_log(src->context, GRIB_LOG_ERROR, "grib_copy_namespace: Unable to get iterator for %s", name);
         return GRIB_INTERNAL_ERROR;
     }
 
@@ -378,12 +378,12 @@ int grib_set_string_internal(grib_handle* h, const char* name,
             return grib_dependency_notify_change(a);
         }
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=%s as string (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=%s as string (%s)",
                          name, val, grib_get_error_message(ret));
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -516,12 +516,12 @@ int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned cha
             return grib_dependency_notify_change(a);
         }
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=%s as bytes (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=%s as bytes (%s)",
                          name, val, grib_get_error_message(ret));
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -552,11 +552,11 @@ int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, s
 //         if (a->length == 0)
 //             return 0;
 //         if ((ret = grib_pack_zero(a)) != GRIB_SUCCESS)
-//             grib_context_log(h->context, GRIB_LOG_ERROR, "unable to clear %s (%s)",
+//             grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to clear %s (%s)",
 //                              name, grib_get_error_message(ret));
 //         return ret;
 //     }
-//     /*grib_context_log(h->context,GRIB_LOG_ERROR,"unable to find accessor %s",name);*/
+//     /*grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to find accessor %s",name);*/
 //     return GRIB_NOT_FOUND;
 // }
 
@@ -582,12 +582,12 @@ int grib_set_missing(grib_handle* h, const char* name)
         else
             ret = GRIB_VALUE_CANNOT_BE_MISSING;
 
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set %s=missing (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=missing (%s)",
                          name, grib_get_error_message(ret));
         return ret;
     }
 
-    grib_context_log(h->context, GRIB_LOG_ERROR, "unable to find accessor %s", name);
+    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
     return GRIB_NOT_FOUND;
 }
 
@@ -743,7 +743,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     int ret = 0;
 
     if (h->context->debug) {
-        print_debug_info__set_array(h, "grib_set_double_array_internal", name, val, length);
+        print_debug_info__set_array(h, __func__, name, val, length);
     }
 
     if (length == 0) {
@@ -755,7 +755,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     }
 
     if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set double array %s (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set double array %s (%s)",
                          name, grib_get_error_message(ret));
     /*if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
@@ -772,7 +772,7 @@ static int __grib_set_double_array(grib_handle* h, const char* name, const doubl
     size_t i = 0;
 
     if (h->context->debug) {
-        print_debug_info__set_array(h, "__grib_set_double_array", name, val, length);
+        print_debug_info__set_array(h, __func__, name, val, length);
     }
 
     if (length == 0) {
@@ -928,7 +928,7 @@ int grib_set_long_array_internal(grib_handle* h, const char* name, const long* v
 {
     int ret = _grib_set_long_array(h, name, val, length, 0);
     if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "unable to set long array %s (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set long array %s (%s)",
                          name, grib_get_error_message(ret));
     return ret;
 }
@@ -944,7 +944,7 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
 
     if (ret != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as long (%s)",
+                         "Unable to get %s as long (%s)",
                          name, grib_get_error_message(ret));
     }
 
@@ -1002,7 +1002,7 @@ int grib_get_double_internal(grib_handle* h, const char* name, double* val)
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as double (%s)",
+                         "Unable to get %s as double (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1060,7 +1060,7 @@ int grib_get_double_element_internal(grib_handle* h, const char* name, int i, do
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as double element (%s)",
+                         "Unable to get %s as double element (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1091,7 +1091,7 @@ int grib_get_double_element_set_internal(grib_handle* h, const char* name, const
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as double element set (%s)",
+                         "Unable to get %s as double element set (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1102,7 +1102,7 @@ int grib_get_float_element_set_internal(grib_handle* h, const char* name, const 
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as float element set (%s)",
+                         "Unable to get %s as float element set (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1142,7 +1142,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     err = ecc__grib_get_size(h, act, &size);
 
     if (err != GRIB_SUCCESS) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_double_elements: cannot get size of %s\n", name);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Cannot get size of %s", __func__, name);
         return err;
     }
 
@@ -1151,7 +1151,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
         const int anIndex = index_array[j];
         if (anIndex < 0 || anIndex >= size) {
             grib_context_log(h->context, GRIB_LOG_ERROR,
-                             "grib_get_double_elements: index out of range: %d (should be between 0 and %ld)", anIndex, size - 1);
+                             "%s: Index out of range: %d (should be between 0 and %zu)", __func__, anIndex, size - 1);
             return GRIB_INVALID_ARGUMENT;
         }
     }
@@ -1159,7 +1159,7 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
     num_bytes = size * sizeof(double);
     values    = (double*)grib_context_malloc(h->context, num_bytes);
     if (!values) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "grib_get_double_elements: unable to allocate %ld bytes\n", num_bytes);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, num_bytes);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1185,7 +1185,7 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as string (%s)",
+                         "Unable to get %s as string (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1219,7 +1219,7 @@ int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned cha
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as bytes (%s)",
+                         "Unable to get %s as bytes (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1545,7 +1545,7 @@ int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, si
 
     if (ret != GRIB_SUCCESS)
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "unable to get %s as long array (%s)",
+                         "Unable to get %s as long array (%s)",
                          name, grib_get_error_message(ret));
 
     return ret;
@@ -1815,7 +1815,7 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
                     break;
             }
             /*if (args[i].error != GRIB_SUCCESS)
-         grib_context_log(h->context,GRIB_LOG_ERROR,"unable to set %s (%s)",
+         grib_context_log(h->context,GRIB_LOG_ERROR,"Unable to set %s (%s)",
                           args[i].name,grib_get_error_message(args[i].error)); */
         }
     }
