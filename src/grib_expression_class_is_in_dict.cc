@@ -174,44 +174,41 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    int err                       = 0;
-    char mybuf[1024]              = {0,};
-    size_t size = 1024;
+    return GRIB_NOT_IMPLEMENTED;
 
-    grib_trie* list = load_dictionary(h->context, g, &err);
-
-    if ((err = grib_get_string_internal(h, e->key, mybuf, &size)) != GRIB_SUCCESS)
-        return err;
-
-    if (grib_trie_get(list, mybuf))
-        *result = 1;
-    else
-        *result = 0;
-
-    return err;
+    // grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    // int err                       = 0;
+    // char mybuf[1024]              = {0,};
+    // size_t size = 1024;
+    // grib_trie* list = load_dictionary(h->context, g, &err);
+    // if ((err = grib_get_string_internal(h, e->key, mybuf, &size)) != GRIB_SUCCESS)
+    //     return err;
+    // if (grib_trie_get(list, mybuf))
+    //     *result = 1;
+    // else
+    //     *result = 0;
+    // return err;
 }
 
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    char mybuf[1024]              = {0,};
-    size_t sizebuf = 1024;
-    long result;
+    *err = GRIB_NOT_IMPLEMENTED;
+    return NULL;
 
-    grib_trie* list = load_dictionary(h->context, g, err);
-
-    if ((*err = grib_get_string_internal(h, e->key, mybuf, &sizebuf)) != GRIB_SUCCESS)
-        return NULL;
-
-    if (grib_trie_get(list, mybuf))
-        result = 1;
-    else
-        result = 0;
-
-    snprintf(buf, 32, "%ld", result);
-    *size = strlen(buf);
-    return buf;
+    // grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    // char mybuf[1024]              = {0,};
+    // size_t sizebuf = 1024;
+    // long result;
+    // grib_trie* list = load_dictionary(h->context, g, err);
+    // if ((*err = grib_get_string_internal(h, e->key, mybuf, &sizebuf)) != GRIB_SUCCESS)
+    //     return NULL;
+    // if (grib_trie_get(list, mybuf))
+    //     result = 1;
+    // else
+    //     result = 0;
+    // snprintf(buf, 32, "%ld", result);
+    // *size = strlen(buf);
+    // return buf;
 }
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
