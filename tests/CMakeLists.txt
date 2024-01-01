@@ -144,7 +144,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
-        bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -154,14 +153,15 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_healpix
-        grib_g1monthlydate
         grib_g1day_of_the_year_date
-        grib_g1fcperiod)
+    )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_g1monthlydate
+        grib_g1fcperiod
         grib_bpv_limit
         grib_complex
         grib_double_cmp
@@ -175,6 +175,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         bufr_templates
+        bufr_rdbSubTypes
         bufr_dump_data
         bufr_dump_descriptors
         bufr_coordinate_descriptors

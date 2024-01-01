@@ -79,7 +79,7 @@ if( HAVE_FORTRAN )
 
     ecbuild_add_resources( TARGET fortran_resources
                            PACK
-                            grib_fortran_prototypes.h grib_api_constants.h grib_api_externals.h
+                            grib_api_constants.h grib_api_externals.h
                             grib_api_visibility.h grib_types.f90 create_grib_f90.sh
                             grib_f90.f90.head grib_f90.f90.tail grib_f90_int.f90 grib_f90_long_int.f90
                             grib_f90_int_size_t.f90 grib_f90_long_size_t.f90
