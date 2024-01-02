@@ -12,7 +12,7 @@ program codes_scan_file
    implicit none
    integer, parameter          :: max_strsize = 200
    integer                     :: ifile, cnt, level, step
-   integer                     :: i, igrib
+   integer                     :: i, igrib, iret
    character(len=max_strsize)  :: infile_name
 
    call getarg(1, infile_name)
@@ -22,7 +22,7 @@ program codes_scan_file
    call codes_any_scan_file(ifile,cnt)
 
    i = 45
-   call codes_any_new_from_scanned_file(ifile,i,igrib)
+   call codes_any_new_from_scanned_file(ifile, i, igrib)
    call codes_get(igrib, 'level', level)
    call codes_get(igrib, 'stepRange', step)
 
@@ -30,6 +30,16 @@ program codes_scan_file
    print *, 'Msg ',i,' level=',level, ' step=', step
 
    call codes_release(igrib)
+
+   ! Invalid msg number
+   i = 450
+   call codes_any_new_from_scanned_file(ifile, i, igrib, iret)
+   if (iret /= GRIB_INVALID_ARGUMENT) then
+      call codes_check(iret, 'codes_any_new_from_scanned_file', 'exit')
+   else
+      print *,'Invalid message index returned error (as expected)'
+   end if
+
    call codes_close_file(ifile)
 
 end program
