@@ -1467,6 +1467,10 @@ int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
     grib_context* c = grib_context_get_default();
     int err = 0;
     FILE* f = get_file(*fid);
+    l_message_info* msg = NULL;
+
+    /* fortran convention of 1-based index */
+    const int n = *msgid - 1;
 
     if (info_messages == NULL) {
         return GRIB_INVALID_ARGUMENT;
@@ -1475,10 +1479,7 @@ int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
         return GRIB_INVALID_ARGUMENT;
     }
 
-    /* fortran convention of 1-based index */
-    const int n = *msgid - 1;
-
-    l_message_info* msg=(l_message_info*)grib_oarray_get(info_messages, n);
+    msg = (l_message_info*)grib_oarray_get(info_messages, n);
 
     if (msg && f) {
         GRIB_MUTEX_INIT_ONCE(&once, &init);
