@@ -1441,52 +1441,59 @@ int any_f_scan_file_(int* fid, int* n) {
     /* this needs a callback to a destructor*/
     /* grib_oarray_delete_content(c,binary_messages); */
 
-    grib_oarray_delete(c,info_messages);
-    info_messages=grib_oarray_new(c,1000,1000);
+    grib_oarray_delete(c, info_messages);
+    info_messages=grib_oarray_new(c, 1000, 1000);
 
     if (f) {
         while (err!=GRIB_END_OF_FILE) {
-            data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
+            data = wmo_read_any_from_file_malloc ( f, 0, &olen, &offset, &err );
             msg=(l_message_info*)grib_context_malloc_clear(c,sizeof(l_message_info));
-            msg->offset=offset;
-            msg->size=olen;
-            
-            if (err==0 && data) grib_oarray_push(c,info_messages,msg);
-            grib_context_free(c,data);
+            msg->offset = offset;
+            msg->size = olen;
+
+            if (err == 0 && data) grib_oarray_push(c, info_messages, msg);
+            grib_context_free(c, data);
         }
-        if (err==GRIB_END_OF_FILE) err=0;
+        if (err == GRIB_END_OF_FILE) err = 0;
     }
-    *n=info_messages->n;
+    *n = info_messages->n;
     return err;
 }
 
 /*****************************************************************************/
-int any_f_new_from_scanned_file_(int* fid,int* msgid,int* gid)
+int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
 {
     grib_handle *h = NULL;
-    grib_context* c=grib_context_get_default();
-    int err=0;
+    grib_context* c = grib_context_get_default();
+    int err = 0;
     FILE* f = get_file(*fid);
 
-    /* fortran convention of 1 based index*/
-    const int n=*msgid-1;
+    if (info_messages == NULL) {
+        return GRIB_INVALID_ARGUMENT;
+    }
+    if (*msgid < 1 || *msgid > info_messages->n) {
+        return GRIB_INVALID_ARGUMENT;
+    }
 
-    l_message_info* msg=(l_message_info*)grib_oarray_get(info_messages,n);
+    /* fortran convention of 1-based index */
+    const int n = *msgid - 1;
+
+    l_message_info* msg=(l_message_info*)grib_oarray_get(info_messages, n);
 
     if (msg && f) {
-        GRIB_MUTEX_INIT_ONCE(&once,&init);
+        GRIB_MUTEX_INIT_ONCE(&once, &init);
         GRIB_MUTEX_LOCK(&read_mutex);
-        fseeko(f,msg->offset,SEEK_SET);
-        h=any_new_from_file (c,f,&err);
+        fseeko(f, msg->offset, SEEK_SET);
+        h = any_new_from_file (c, f, &err);
         GRIB_MUTEX_UNLOCK(&read_mutex);
     }
     if (err) return err;
 
-    if(h){
-        push_handle(h,gid);
+    if (h) {
+        push_handle(h, gid);
         return GRIB_SUCCESS;
     } else {
-        *gid=-1;
+        *gid = -1;
         return GRIB_END_OF_FILE;
     }
 }
