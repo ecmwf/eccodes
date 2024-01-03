@@ -51,7 +51,7 @@ ${tools_dir}/grib_set -s Ni=33 $samp_dir/GRIB2.tmpl $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempText 2>&1
 status=$?
-set +e
+set -e
 [ $status -ne 0 ]
 grep -q "Grid description is wrong or inconsistent" $tempText
 
@@ -60,15 +60,43 @@ ${tools_dir}/grib_set -s Ni=MISSING $samp_dir/GRIB2.tmpl $tempGrib
 set +e
 ${tools_dir}/grib_get_data $tempGrib > $tempText 2>&1
 status=$?
-set +e
+set -e
 [ $status -ne 0 ]
 grep -q "Grid description is wrong or inconsistent" $tempText
 
 
+set +e
 ${tools_dir}/grib_ls -s Ni=missing  -j -p latLonValues $data_dir/sample.grib2 > $tempText 2>&1
-cat $tempText
+status=$?
+set -e
+[ $status -ne 0 ]
 grep -q "Key Ni cannot be 'missing' for a regular grid" $tempText
 grep -q "latlonvalues: Unable to create iterator" $tempText
+
+
+# -w option
+${tools_dir}/grib_get_data -w count=11 $data_dir/tigge_cf_ecmwf.grib2 > $tempText
+
+
+# ------------------------
+# Bad key
+# ------------------------
+${tools_dir}/grib_get_data -f -p nonexistingkey $data_dir/sample.grib2 > $tempText
+grep -q "not found" $tempText
+
+
+# ------------------------
+# Unreadable message
+# ------------------------
+echo GRIB > $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempText
+grep -q "unreadable message" $tempText
+
 
 
 # Clean up
