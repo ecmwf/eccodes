@@ -611,8 +611,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         case GRIB_TYPE_BYTES:
             if (verbose)
                 printf(" as bytes\n");
-            if (options->mode == MODE_GTS)
+            if (options->mode == MODE_GTS) {
+                // We do not want to compare the message itself
                 return 0;
+            }
             if (len1 < 2)
                 len1 = 512;
             if (len2 < 2)

@@ -64,7 +64,20 @@ set -e
 # Add correct blocklist
 ${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
 
+#----------------------------------------------------
+# Compare using -c
+#----------------------------------------------------
+temp1=temp.$label.1.gts
+temp2=temp.$label.2.gts
+# Pick two messages which do have different contents
+${tools_dir}/gts_copy -w count=1 $gts_file $temp1
+${tools_dir}/gts_copy -w count=4 $gts_file $temp2
+${tools_dir}/gts_compare -c theMessage $temp1 $temp2
+rm -f $temp1 $temp2
+
+#----------------------------------------------------
 # Test with file of the same name in a dir
+#----------------------------------------------------
 tempDir=temp.$label.dir
 rm -fr $tempDir
 mkdir $tempDir
