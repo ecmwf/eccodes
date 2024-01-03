@@ -328,6 +328,17 @@ set -e
 [ $status -ne 0 ]
 grep -q "Failed to unpack 2nd message" $fLog
 
+# ----------------------------------------
+# Summary mode (-f)
+# ----------------------------------------
+set +e
+${tools_dir}/bufr_compare -f aaen_55.bufr aben_55.bufr > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Summary of different key values" $fLog
+
+
 
 # Clean up
 # -------------
