@@ -49,6 +49,8 @@ diff $ref_dump $res_dump >$REDIRECT 2> $REDIRECT
 # JSON
 ${tools_dir}/metar_dump -j $f
 
+# Skip
+${tools_dir}/metar_dump -w count=11 $f
 
 # Clean up
 rm -f $fLog $res_dump 
