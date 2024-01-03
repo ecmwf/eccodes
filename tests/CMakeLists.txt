@@ -254,6 +254,7 @@ if( HAVE_BUILD_TOOLS )
         gts_ls
         gts_count
         gts_compare
+        gts_dump
         wrap
         taf
         pseudo_diag
