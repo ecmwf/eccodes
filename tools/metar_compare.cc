@@ -279,21 +279,29 @@ int grib_tool_init(grib_runtime_options* options)
     if (grib_options_on("t:"))
         tolerance_factor = atof(grib_options_get_option("t:"));
 
-    {
-        /* Check for 2nd file being a directory. If so, we assume user is comparing to a file */
-        /* with the same name as first file in that directory */
-        grib_tools_file* infile = options->infile; /* the 2nd file in comparison */
-        if (infile) {
-            if (path_is_directory(infile->name)) {
-                /* Take the filename of the 1st file and append to dir */
-                char bufr[2048] = {0,};
-                /* options->infile_extra->name is the 1st file */
-                snprintf(bufr, 2048, "%s%c%s",
-                        infile->name,
-                        get_dir_separator_char(),
-                        extract_filename(options->infile_extra->name));
-                infile->name = strdup(bufr);
-            }
+    if (grib_options_on("R:")) {
+        char* sarg               = grib_options_get_option("R:");
+        options->tolerance_count = MAX_KEYS;
+        int err = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        if (err == GRIB_INVALID_ARGUMENT) {
+            usage();
+            exit(1);
+        }
+    }
+
+    // Check for 2nd file being a directory. If so, we assume user is comparing to a file
+    // with the same name as first file in that directory
+    grib_tools_file* infile = options->infile; // the 2nd file in comparison
+    if (infile) {
+        if (path_is_directory(infile->name)) {
+            // Take the filename of the 1st file and append to dir
+            char bufr[2048] = {0,};
+            // options->infile_extra->name is the 1st file
+            snprintf(bufr, 2048, "%s%c%s",
+                     infile->name,
+                     get_dir_separator_char(),
+                     extract_filename(options->infile_extra->name));
+            infile->name = strdup(bufr);
         }
     }
 
@@ -693,8 +701,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
                 pv1       = dval1;
                 pv2       = dval2;
                 value_tolerance *= tolerance_factor;
-                if (verbose)
-                    printf("  (%d values) tolerance=%g\n", (int)len1, value_tolerance);
+                if (verbose) {
+                    printf("  (%d values) tolerance=%g \t", (int)len1, value_tolerance);
+                    if (compare_double == &compare_double_absolute)
+                        printf("using compare_double_absolute");
+                    if (compare_double == &compare_double_relative)
+                        printf("using compare_double_relative");
+                    printf("\n");
+                }
                 for (i = 0; i < len1; i++) {
                     if ((diff = compare_double(pv1++, pv2++, &value_tolerance)) != 0) {
                         countdiff++;
@@ -828,7 +842,6 @@ static int compare_all_dump_keys(grib_handle* h1, grib_handle* h2, grib_runtime_
     while (grib_keys_iterator_next(iter)) {
         grib_accessor* xa = grib_keys_iterator_get_accessor(iter);
         name              = grib_keys_iterator_get_name(iter);
-        /* printf("----- comparing %s\n",name); */
 
         if (blocklisted(name))
             continue;
@@ -864,7 +877,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                 }
                 while (grib_keys_iterator_next(iter)) {
                     name = grib_keys_iterator_get_name(iter);
-                    /*printf("----- comparing %s\n",name);*/
 
                     if (blocklisted(name))
                         continue;
@@ -886,7 +898,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
         int memcmp_ret = 0;
-        /* int ii=0; */
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
         if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
@@ -905,7 +916,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
                     }
                     while (grib_keys_iterator_next(iter)) {
                         name = grib_keys_iterator_get_name(iter);
-                        /*printf("----- comparing %s\n",name);*/
 
                         if (blocklisted(name))
                             continue;
