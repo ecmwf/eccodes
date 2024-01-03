@@ -711,7 +711,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
     if (type1 == GRIB_TYPE_UNDEFINED && (err = grib_get_native_type(h1, name, &type1)) != GRIB_SUCCESS) {
         printInfo(h1);
-        printf("Oops... cannot get type of [%s] in %s field: %s\n", name, first_str, grib_get_error_message(err));
+        printf("Error: cannot get type of [%s] in %s field: %s\n", name, first_str, grib_get_error_message(err));
         save_error(c, name);
         return err;
     }
@@ -724,7 +724,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             return err;
         }
         printInfo(h1);
-        printf("Oops... cannot get type of [%s] in %s field: %s\n", name, second_str, grib_get_error_message(err));
+        printf("Error: cannot get type of [%s] in %s field: %s\n", name, second_str, grib_get_error_message(err));
         save_error(c, name);
         return err;
     }
@@ -746,7 +746,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
     if ((err = grib_get_size(h1, name, &len1)) != GRIB_SUCCESS) {
         printInfo(h1);
-        printf("Oops... cannot get size of [%s] in %s field: %s\n", name, first_str, grib_get_error_message(err));
+        printf("Error: cannot get size of [%s] in %s field: %s\n", name, first_str, grib_get_error_message(err));
         save_error(c, name);
         return err;
     }
@@ -760,7 +760,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
         }
 
         printInfo(h1);
-        printf("Oops... cannot get size of [%s] in %s field: %s\n", name, second_str, grib_get_error_message(err));
+        printf("Error: cannot get size of [%s] in %s field: %s\n", name, second_str, grib_get_error_message(err));
         save_error(c, name);
         return err;
     }
@@ -818,14 +818,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if ((err1 = grib_get_string(h1, name, sval1, &len1)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get string value of [%s] in %s field: %s\n",
+                printf("Error: cannot get string value of [%s] in %s field: %s\n",
                        name, first_str, grib_get_error_message(err1));
                 save_error(c, name);
             }
 
             if ((err2 = grib_get_string(h2, name, sval2, &len2)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get string value of [%s] in %s field: %s\n",
+                printf("Error: cannot get string value of [%s] in %s field: %s\n",
                        name, second_str, grib_get_error_message(err2));
                 save_error(c, name);
             }
@@ -875,14 +875,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if ((err1 = grib_get_long_array(h1, name, lval1, &len1)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get long value of [%s] in %s field: %s\n",
+                printf("Error: cannot get long value of [%s] in %s field: %s\n",
                        name, first_str, grib_get_error_message(err1));
                 save_error(c, name);
             }
 
             if ((err2 = grib_get_long_array(h2, name, lval2, &len2)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get long value of [%s] in %s field: %s\n",
+                printf("Error: cannot get long value of [%s] in %s field: %s\n",
                        name, second_str, grib_get_error_message(err2));
                 save_error(c, name);
             }
@@ -1000,14 +1000,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
 
             if ((err1 = grib_get_double_array(h1, name, dval1, &len1)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get double value of [%s] in %s field: %s\n",
+                printf("Error: cannot get double value of [%s] in %s field: %s\n",
                        name, first_str, grib_get_error_message(err1));
                 save_error(c, name);
             }
 
             if ((err2 = grib_get_double_array(h2, name, dval2, &len2)) != GRIB_SUCCESS) {
                 printInfo(h1);
-                printf("Oops... cannot get double value of [%s] in %s field: %s\n",
+                printf("Error: cannot get double value of [%s] in %s field: %s\n",
                        name, second_str, grib_get_error_message(err2));
                 save_error(c, name);
             }
@@ -1121,14 +1121,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_h
             if ((err1 = grib_get_bytes(h1, name, uval1, &len1)) != GRIB_SUCCESS) {
                 printInfo(h1);
                 save_error(c, name);
-                printf("Oops... cannot get bytes value of [%s] in %s field: %s\n",
+                printf("Error: cannot get bytes value of [%s] in %s field: %s\n",
                        name, first_str, grib_get_error_message(err1));
             }
 
             if ((err2 = grib_get_bytes(h2, name, uval2, &len2)) != GRIB_SUCCESS) {
                 printInfo(h1);
                 save_error(c, name);
-                printf("Oops... cannot get bytes value of [%s] in %s field: %s\n",
+                printf("Error: cannot get bytes value of [%s] in %s field: %s\n",
                        name, second_str, grib_get_error_message(err2));
             }
 
