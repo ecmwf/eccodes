@@ -23,7 +23,7 @@ program index
    character(len=20)    :: oshortName
    integer              :: shortNameSize, numberSize, levelSize, stepSize
    integer              :: i, j, k, l
-   integer              :: idx, igrib, count1
+   integer              :: idx, idx1, igrib, count1
    character(len=10)    :: index_file = 'index.idx'
 
    ! uncomment following line to load index from file
@@ -107,7 +107,10 @@ program index
    ! save the index to a file for later reuse
    call codes_index_write(idx, index_file)
 
+   call codes_index_read(idx1, index_file)
+
    call codes_index_release(idx)
+   call codes_index_release(idx1)
 
    deallocate (level)
    deallocate (shortName)
