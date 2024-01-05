@@ -951,27 +951,26 @@ int grib_get_long_internal(grib_handle* h, const char* name, long* val)
     return ret;
 }
 
-int grib_is_in_dump(const grib_handle* h, const char* name)
-{
-    const grib_accessor* a = grib_find_accessor(h, name);
-    if (a != NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
-        return 1;
-    else
-        return 0;
-}
+// int grib_is_in_dump(const grib_handle* h, const char* name)
+// {
+//     const grib_accessor* a = grib_find_accessor(h, name);
+//     if (a != NULL && (a->flags & GRIB_ACCESSOR_FLAG_DUMP))
+//         return 1;
+//     else
+//         return 0;
+// }
 
-int grib_attributes_count(const grib_accessor* a, size_t* size)
-{
-    if (a) {
-        *size = 0;
-        while (a->attributes[*size] != NULL) {
-            (*size)++;
-        }
-        return GRIB_SUCCESS;
-    }
-
-    return GRIB_NOT_FOUND;
-}
+// int grib_attributes_count(const grib_accessor* a, size_t* size)
+// {
+//     if (a) {
+//         *size = 0;
+//         while (a->attributes[*size] != NULL) {
+//             (*size)++;
+//         }
+//         return GRIB_SUCCESS;
+//     }
+//     return GRIB_NOT_FOUND;
+// }
 
 int grib_get_long(const grib_handle* h, const char* name, long* val)
 {

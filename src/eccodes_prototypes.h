@@ -1162,8 +1162,6 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_get_long_internal(grib_handle* h, const char* name, long* val);
-int grib_is_in_dump(const grib_handle* h, const char* name);
-int grib_attributes_count(const grib_accessor* a, size_t* size);
 int grib_get_long(const grib_handle* h, const char* name, long* val);
 int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
