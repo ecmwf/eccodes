@@ -26,11 +26,11 @@ files="reduced_latlon_surface.grib1 \
       regular_latlon_surface.grib2"
 
 for f in $files; do
- file=${data_dir}/$f
- # Must exclude the first line of grib_get_data which is "Latitude Longitude Value"
- iterator_count=`${tools_dir}/grib_get_data -m 9999:missing -f -p centre -F "%g" -w count=1 $file | grep -v Lat |wc -l `
- numberOfPoints=`${tools_dir}/grib_get -w count=1 -p numberOfPoints $file`
- [ $numberOfPoints = ${iterator_count} ]
+  file=${data_dir}/$f
+  # Must exclude the first line of grib_get_data which is "Latitude Longitude Value"
+  iterator_count=`${tools_dir}/grib_get_data -m 9999:missing -f -p centre -F "%g" -w count=1 $file | grep -v Lat |wc -l `
+  numberOfPoints=`${tools_dir}/grib_get -w count=1 -p numberOfPoints $file`
+  [ $numberOfPoints = ${iterator_count} ]
 done
 
 
@@ -97,6 +97,16 @@ set -e
 cat $tempText
 grep -q "unreadable message" $tempText
 
+# Legacy Gaussian sub-area (produced by old ProdGen)
+# See ECC-906:
+#   grib_get_data not working correctly with old-style sub-areas of reduced grids
+# -------------------------------------------------
+input=$data_dir/reduced_gaussian_sub_area.legacy.grib1
+${tools_dir}/grib_get_data $input > $tempText
+grib_check_key_equals $input legacyGaussSubarea 1
+
+ECCODES_DEBUG=-1 ${tools_dir}/grib_ls -p numberOfDataPoints $input > $tempText 2>&1
+grep -q "LEGACY MODE activated. Count.=253982. changed to num values.=254139" $tempText
 
 
 # Clean up
