@@ -1199,8 +1199,6 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int ecc__grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length);
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
-grib_key_value_list* grib_key_value_list_clone(grib_context* c, grib_key_value_list* list);
-void grib_key_value_list_delete(grib_context* c, grib_key_value_list* kvl);
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
