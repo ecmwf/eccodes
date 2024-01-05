@@ -102,11 +102,18 @@ grep -q "unreadable message" $tempText
 #   grib_get_data not working correctly with old-style sub-areas of reduced grids
 # -------------------------------------------------
 input=$data_dir/reduced_gaussian_sub_area.legacy.grib1
-${tools_dir}/grib_get_data $input > $tempText
-grib_check_key_equals $input legacyGaussSubarea 1
+if [ -f "$input" ]; then
+  ${tools_dir}/grib_get_data $input > $tempText
+  grib_check_key_equals $input legacyGaussSubarea 1
 
-ECCODES_DEBUG=-1 ${tools_dir}/grib_ls -p numberOfDataPoints $input > $tempText 2>&1
-grep -q "LEGACY MODE activated. Count.=253982. changed to num values.=254139" $tempText
+  ECCODES_DEBUG=-1 ${tools_dir}/grib_ls -p numberOfDataPoints $input > $tempText 2>&1
+  grep -q "LEGACY MODE activated. Count.=253982. changed to num values.=254139" $tempText
+fi
+
+# Iterate with DEBUG on
+input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+ECCODES_DEBUG=1 ${tools_dir}/grib_get_data $input > $tempText 2>&1
+grep "global num points=6114" $tempText
 
 
 # Clean up
