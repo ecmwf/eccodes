@@ -383,7 +383,7 @@ static void save_error(grib_context* c, const char* key)
     }
 }
 
-static int compare_values(grib_runtime_options* options, grib_handle* h1, grib_handle* h2, const char* name, int type)
+static int compare_values(const grib_runtime_options* options, grib_handle* h1, grib_handle* h2, const char* name, int type)
 {
     size_t len1 = 0;
     size_t len2 = 0;
