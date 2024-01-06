@@ -1439,7 +1439,7 @@ int any_f_scan_file_(int* fid, int* n) {
     grib_context* c=grib_context_get_default();
 
     /* this needs a callback to a destructor*/
-    /* grib_oarray_delete_content(c,binary_messages); */
+    /* grib_oarray_delete_content(c, info_messages); */
 
     grib_oarray_delete(c, info_messages);
     info_messages=grib_oarray_new(c, 1000, 1000);
@@ -1500,64 +1500,65 @@ int any_f_new_from_scanned_file_(int* fid, int* msgid, int* gid)
 }
 
 /*****************************************************************************/
-int any_f_load_all_from_file_(int* fid,int* n) {
+int any_f_load_all_from_file_(int* fid, int* n) {
     int err = 0;
     off_t offset=0;
-    void *data = NULL;
+    void* data = NULL;
     size_t olen = 0;
     l_binary_message* msg=0;
     FILE* f = get_file(*fid);
-    grib_context* c=grib_context_get_default();
+    grib_context* c = grib_context_get_default();
 
     /* this needs a callback to a destructor*/
-    /* grib_oarray_delete_content(c,binary_messages); */
+    /* grib_oarray_delete_content(c, binary_messages); */
 
-    grib_oarray_delete(c,binary_messages);
-    binary_messages=grib_oarray_new(c,1000,1000);
+    grib_oarray_delete(c, binary_messages);
+    binary_messages = grib_oarray_new(c, 1000, 1000);
 
     if (f) {
-      while (err!=GRIB_END_OF_FILE) {
-        data = wmo_read_any_from_file_malloc ( f, 0,&olen,&offset,&err );
-        msg=(l_binary_message*)grib_context_malloc_clear(c,sizeof(l_binary_message));
-        msg->data=data;
-        msg->size=olen;
+      while (err != GRIB_END_OF_FILE) {
+        data = wmo_read_any_from_file_malloc (f, 0,&olen, &offset, &err);
+        msg = (l_binary_message*)grib_context_malloc_clear(c,sizeof(l_binary_message));
+        msg->data = data;
+        msg->size = olen;
 
-        if (err==0 && data) grib_oarray_push(c,binary_messages,msg);
+        if (err == 0 && data) grib_oarray_push(c, binary_messages, msg);
       }
-      if (err==GRIB_END_OF_FILE) err=0;
+      if (err == GRIB_END_OF_FILE) err = 0;
     }
-    *n=binary_messages->n;
+    *n = binary_messages->n;
     return err;
 }
 
 /*****************************************************************************/
-int any_f_new_from_loaded_(int* msgid,int* gid)
+int any_f_new_from_loaded_(int* msgid, int* gid)
 {
-    grib_handle *h = NULL;
-    grib_context* c=grib_context_get_default();
+    grib_handle* h  = NULL;
+    grib_context* c = grib_context_get_default();
 
     /* fortran convention of 1 based index*/
-    const int n=*msgid-1;
+    const int n = *msgid - 1;
 
-    l_binary_message* msg=(l_binary_message*)grib_oarray_get(binary_messages,n);
+    l_binary_message* msg = (l_binary_message*)grib_oarray_get(binary_messages, n);
 
     if (msg && msg->data)
-      h=grib_handle_new_from_message_copy (c,msg->data,msg->size);
+        h = grib_handle_new_from_message_copy(c, msg->data, msg->size);
 
-    if(h){
-        push_handle(h,gid);
+    if (h) {
+        push_handle(h, gid);
         return GRIB_SUCCESS;
-    } else {
-        *gid=-1;
+    }
+    else {
+        *gid = -1;
         return GRIB_END_OF_FILE;
     }
 }
 
 /*****************************************************************************/
 int codes_f_clear_loaded_from_file_(void) {
-    grib_context* c=grib_context_get_default();
+    grib_context* c = grib_context_get_default();
     /* grib_oarray_delete_content(c,binary_messages); */
-    grib_oarray_delete(c,binary_messages);
+    grib_oarray_delete(c, binary_messages);
     return GRIB_SUCCESS;
 }
 
@@ -1565,27 +1566,28 @@ int codes_f_clear_loaded_from_file_(void) {
 int grib_f_count_in_file_(int* fid,int* n) {
     int err = 0;
     FILE* f = get_file(*fid);
-    if (f) err=grib_count_in_file(0, f,n);
+    if (f) err = grib_count_in_file(0, f, n);
     return err;
 }
 
 /*****************************************************************************/
-int any_f_new_from_file_(int* fid, int* gid){
-    int err = 0;
-    FILE* f = get_file(*fid);
-    grib_handle *h = NULL;
+int any_f_new_from_file_(int* fid, int* gid) {
+    int err        = 0;
+    FILE* f        = get_file(*fid);
+    grib_handle* h = NULL;
 
-    if(f){
-        h = codes_handle_new_from_file(0,f,PRODUCT_ANY,&err);
-        if(h){
-            push_handle(h,gid);
+    if (f) {
+        h = codes_handle_new_from_file(0, f, PRODUCT_ANY, &err);
+        if (h) {
+            push_handle(h, gid);
             return GRIB_SUCCESS;
-        } else {
-            *gid=-1;
+        }
+        else {
+            *gid = -1;
             return GRIB_END_OF_FILE;
         }
     }
-    *gid=-1;
+    *gid = -1;
     return GRIB_INVALID_FILE;
 }
 
