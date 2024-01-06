@@ -10,12 +10,10 @@
 program codes_scan_file
    use eccodes
    implicit none
-   integer, parameter          :: max_strsize = 200
-   integer                     :: ifile, cnt, level, step
-   integer                     :: i, igrib, iret
-   character(len=max_strsize)  :: infile_name
 
-   call getarg(1, infile_name)
+   integer           :: ifile, cnt, level, step
+   integer           :: i, igrib, iret
+   character(len=32) :: infile_name = '../../data/index.grib'
 
    call codes_open_file(ifile, infile_name, 'r')
 
@@ -35,7 +33,7 @@ program codes_scan_file
    i = 450
    call codes_any_new_from_scanned_file(ifile, i, igrib, iret)
    if (iret /= GRIB_INVALID_ARGUMENT) then
-      call codes_check(iret, 'codes_any_new_from_scanned_file', 'exit')
+      call codes_check(iret, 'Error', 'codes_any_new_from_scanned_file should have failed')
    else
       print *,'Invalid message index returned error (as expected)'
    end if

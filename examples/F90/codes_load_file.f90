@@ -13,7 +13,7 @@ program codes_load_file
 
    integer           :: ifile, cnt, level, step
    integer           :: i, igrib, iret
-   character(len=32) :: infile_name = '../../data/index.grib' 
+   character(len=32) :: infile_name = '../../data/index.grib'
 
    call codes_open_file(ifile, infile_name, 'r')
 

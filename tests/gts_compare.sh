@@ -73,6 +73,20 @@ temp2=temp.$label.2.gts
 ${tools_dir}/gts_copy -w count=1 $gts_file $temp1
 ${tools_dir}/gts_copy -w count=4 $gts_file $temp2
 ${tools_dir}/gts_compare -c theMessage $temp1 $temp2
+${tools_dir}/gts_compare -c theMessage -a $temp1 $temp2
+
+set +e
+${tools_dir}/gts_compare -c ls:n $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/gts_compare -c ls:n -a $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
 rm -f $temp1 $temp2
 
 #----------------------------------------------------

@@ -9,4 +9,13 @@
 
 . ./include.ctest.sh
 
-${examples_dir}/eccodes_f_codes_load_file
+label='eccodes_f_codes_load_file'
+temp=temp.$label.txt
+
+# The input file is hard coded => data/index.grib
+${examples_dir}/eccodes_f_codes_load_file > $temp
+
+grep -q "Num messages= *384" $temp
+grep -q "level= *700  step= *60" $temp
+
+rm -f $temp
