@@ -23,6 +23,7 @@ if( HAVE_BUILD_TOOLS )
           grib_index
           codes_dump
           codes_scan_file
+          codes_load_file
           grib_copy_message
           bufr_copy_message
           grib_get_keys
