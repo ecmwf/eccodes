@@ -428,6 +428,8 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
         return metar_new_from_file(c, f, error);
     if (product == PRODUCT_GTS)
         return gts_new_from_file(c, f, error);
+    //if (product == PRODUCT_TAF)
+    //    return taf_new_from_file(c, f, error);
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 

@@ -160,6 +160,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_repair
         grib_g1monthlydate
         grib_g1fcperiod
         grib_bpv_limit

@@ -1274,7 +1274,6 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
 //     reader r;
 //     u.user_buffer = buffer;
 //     u.buffer_size = *len;
-
 //     r.read_data       = f;
 //     r.read            = &stdio_read;
 //     r.alloc_data      = &u;
@@ -1724,7 +1723,6 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
 
     err  = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *len = r.message_size;
-
     *data_length = m.data_len;
     *data        = m.data;
 
