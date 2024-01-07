@@ -256,6 +256,7 @@ if( HAVE_BUILD_TOOLS )
         gts_compare
         gts_dump
         wrap
+        hdf5
         taf
         pseudo_diag
         metar_ls
