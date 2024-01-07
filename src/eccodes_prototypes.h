@@ -1020,8 +1020,6 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);

@@ -1267,57 +1267,50 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
     return err;
 }
 
-int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
-{
-    int err;
-    user_buffer_t u;
-    reader r;
+// int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
+// {
+//     int err;
+//     user_buffer_t u;
+//     reader r;
+//     u.user_buffer = buffer;
+//     u.buffer_size = *len;
 
-    u.user_buffer = buffer;
-    u.buffer_size = *len;
+//     r.read_data       = f;
+//     r.read            = &stdio_read;
+//     r.alloc_data      = &u;
+//     r.alloc           = &user_provider_buffer;
+//     r.headers_only    = 0;
+//     r.seek            = &stdio_seek;
+//     r.seek_from_start = &stdio_seek_from_start;
+//     r.tell            = &stdio_tell;
+//     r.offset          = 0;
+//     r.message_size    = 0;
+//     err  = read_any_taf(&r);
+//     *len = r.message_size;
+//     return err;
+// }
 
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
-    r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
-
-    err  = read_any_taf(&r);
-    *len = r.message_size;
-
-    return err;
-}
-
-int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len)
-{
-    int err;
-    user_buffer_t u;
-    reader r;
-
-    u.user_buffer = buffer;
-    u.buffer_size = *len;
-
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
-    r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
-
-    err  = read_any_metar(&r);
-    *len = r.message_size;
-
-    return err;
-}
+// int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len)
+// {
+//     int err;
+//     user_buffer_t u;
+//     reader r;
+//     u.user_buffer = buffer;
+//     u.buffer_size = *len;
+//     r.read_data       = f;
+//     r.read            = &stdio_read;
+//     r.alloc_data      = &u;
+//     r.alloc           = &user_provider_buffer;
+//     r.headers_only    = 0;
+//     r.seek            = &stdio_seek;
+//     r.seek_from_start = &stdio_seek_from_start;
+//     r.tell            = &stdio_tell;
+//     r.offset          = 0;
+//     r.message_size    = 0;
+//     err  = read_any_metar(&r);
+//     *len = r.message_size;
+//     return err;
+// }
 
 /*================== */
 
