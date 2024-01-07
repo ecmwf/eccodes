@@ -3,7 +3,7 @@
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-# 
+#
 # In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
@@ -12,16 +12,23 @@
 
 label="grib_repair_test"
 tempText=temp.$label.txt
-tempGrib=temp.$label.grib
+tempGoodGribs=temp.$label.good.grib
+tempBadGribs=temp.$label.bad.grib
 
 if [ -e "${tools_dir}/grib_repair" ]; then
     export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
-    ${tools_dir}/grib_repair $data_dir/bad.grib $tempGrib > $tempText 2>&1
-    cat $tempText
-    ${tools_dir}/grib_ls  $tempGrib
-
+    ${tools_dir}/grib_repair $data_dir/bad.grib $tempGoodGribs $tempBadGribs > $tempText 2>&1
     grep -q "Wrong message length" $tempText
+
+    count=$( ${tools_dir}/grib_count $tempGoodGribs )
+    [ $count -eq 1 ]
+
+    count=$( ${tools_dir}/grib_count $tempBadGribs )
+    [ $count -eq 3 ]
+
+    ${tools_dir}/grib_ls $tempGoodGribs
+    ${tools_dir}/grib_ls $tempBadGribs
 fi
 
 # Clean up
-rm -f $tempText $tempGrib
+rm -f $tempText $tempGoodGribs $tempBadGribs
