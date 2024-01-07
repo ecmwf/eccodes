@@ -14,14 +14,14 @@ label="grib_repair_test"
 tempText=temp.$label.txt
 tempGrib=temp.$label.grib
 
-export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
+if [ -e "${tools_dir}/grib_repair" ]; then
+    export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
+    ${tools_dir}/grib_repair $data_dir/bad.grib $tempGrib > $tempText 2>&1
+    cat $tempText
+    ${tools_dir}/grib_ls  $tempGrib
 
-ls -l $data_dir/bad.grib
-${tools_dir}/grib_repair $data_dir/bad.grib $tempGrib > $tempText 2>&1
-cat $tempText
-${tools_dir}/grib_ls  $tempGrib
-
-grep -q "Wrong message length" $tempText
+    grep -q "Wrong message length" $tempText
+fi
 
 # Clean up
 rm -f $tempText $tempGrib
