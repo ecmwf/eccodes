@@ -16,7 +16,9 @@ tempGrib=temp.$label.grib
 
 export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
 
+ls -l $data_dir/bad.grib
 ${tools_dir}/grib_repair $data_dir/bad.grib $tempGrib > $tempText 2>&1
+cat $tempText
 ${tools_dir}/grib_ls  $tempGrib
 
 grep -q "Wrong message length" $tempText
