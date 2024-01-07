@@ -339,6 +339,17 @@ set -e
 grep -q "Summary of different key values" $fLog
 
 
+# ----------------------------------------
+# Unreadable message
+# ----------------------------------------
+echo BUFR > $fBufrTmp
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $fLog
+
 
 # Clean up
 # -------------
