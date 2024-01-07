@@ -255,7 +255,9 @@ if( HAVE_BUILD_TOOLS )
         gts_ls
         gts_count
         gts_compare
+        gts_dump
         wrap
+        hdf5
         taf
         pseudo_diag
         metar_ls
@@ -361,6 +363,10 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+    ecbuild_add_test( TARGET eccodes_t_grib_repair
+                      TYPE SCRIPT
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)

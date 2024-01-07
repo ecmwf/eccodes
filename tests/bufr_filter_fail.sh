@@ -105,6 +105,22 @@ cat $tempErr
 grep -q "Input output problem" $tempErr
 
 
+# ------------------------
+# Unreadable message
+# ------------------------
+cat > $fRules <<EOF
+  print "[edition]";
+EOF
+outfile=temp.$label.out
+echo BUFR > $outfile
+set +e
+${tools_dir}/bufr_filter $fRules $outfile > $tempErr 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $tempErr
+rm -f $outfile
+
 
 # Clean up
 rm -f $fLog $fRules $tempErr

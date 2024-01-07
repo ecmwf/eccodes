@@ -35,7 +35,6 @@ ${tools_dir}/grib_index_build -N -o $tempIndex ${infile} >/dev/null
 
 # Must remove first two lines (filename specifics)
 ${tools_dir}/grib_dump ${tempIndex} | sed '1,2d' > $tempOut
-#cat $tempOut
 
 cat > $tempRef <<EOF
 Index keys:
@@ -118,7 +117,6 @@ ${tools_dir}/grib_compare -v $tempIndex1 $tempIndex2 2>$tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempOut
 grep -q "Indexes contained in the input files have different keys" $tempOut
 rm -f $tempIndex1 $tempIndex2 $tempOut
 
@@ -130,7 +128,6 @@ ${tools_dir}/grib_compare -v $tempIndex2 $tempIndex1 2>$tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempOut
 grep -q "Indexes contained in the input files have different keys" $tempOut
 rm -f $tempIndex1 $tempIndex2 $tempOut
 

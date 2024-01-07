@@ -120,6 +120,18 @@ result=`${tools_dir}/bufr_get -p unpack:s,heightOfStation aaen_55.bufr`
 [ "$result" = "0 858000" ]
 
 
+# ----------------------------------------
+# Unreadable message
+# ----------------------------------------
+echo BUFR > $fTmp
+set +e
+${tools_dir}/bufr_get -p edition $fTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $fLog
+
+
 # Clean up
 rm -f $fLog $fTmp $res_get $tempRef
 

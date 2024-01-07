@@ -1020,8 +1020,6 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
@@ -1162,8 +1160,6 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_get_long_internal(grib_handle* h, const char* name, long* val);
-int grib_is_in_dump(const grib_handle* h, const char* name);
-int grib_attributes_count(const grib_accessor* a, size_t* size);
 int grib_get_long(const grib_handle* h, const char* name, long* val);
 int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
@@ -1201,9 +1197,6 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int ecc__grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length);
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
-grib_key_value_list* grib_key_value_list_clone(grib_context* c, grib_key_value_list* list);
-void grib_key_value_list_delete(grib_context* c, grib_key_value_list* kvl);
-int grib_get_key_value_list(grib_handle* h, grib_key_value_list* list);
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
