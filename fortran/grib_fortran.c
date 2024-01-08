@@ -840,6 +840,7 @@ static int clear_bufr_keys_iterator(int keys_iterator_id)
 }
 
 /*****************************************************************************/
+#if 0
 int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbytes) {
     grib_context* c;
     int err=0;
@@ -853,6 +854,7 @@ int grib_f_read_any_headers_only_from_file_(int* fid, char* buffer, size_t* nbyt
         return GRIB_INVALID_FILE;
     }
 }
+#endif
 
 /*****************************************************************************/
 int grib_f_read_any_from_file_(int* fid, void* buffer, size_t* nbytes) {

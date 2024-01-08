@@ -50,6 +50,7 @@ if( HAVE_BUILD_TOOLS )
           grib_copy_namespace
           grib_read_message
           grib_read_from_file
+          grib_read_bytes
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316
