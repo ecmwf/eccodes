@@ -23,9 +23,14 @@ int main(int argc, char** argv)
     long Ni = 0, Nj = 0;
     double* values = NULL;
     const double missing = 1.0e36;
-    bool use_bitmap = true;
+    bool use_bitmap = false;
+
+    if (argc == 2 && strcmp(argv[1], "-b")==0) {
+         use_bitmap = true;
+    }
 
     h = codes_grib_handle_new_from_samples(NULL, "GRIB1");
+    assert(h);
 
     CODES_CHECK(codes_set_double(h, "missingValue", missing), 0);
 
@@ -54,7 +59,7 @@ int main(int argc, char** argv)
     if (err) {
         printf("codes_set_double_array failed as expected: err=%s\n", codes_get_error_message(err));
     } else {
-        fprintf(stderr, "codes_set_double_array should have failed!\n");
+        fprintf(stderr, "Error: codes_set_double_array should have failed!\n");
         return 1;
     }
 

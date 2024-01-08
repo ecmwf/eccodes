@@ -10,5 +10,14 @@
 
 . ./include.ctest.sh
 
-$EXEC ${test_dir}/grib_set_large_message_fail
+label='grib_set_large_message_fail_test'
+temp=temp.$label.txt
 
+$EXEC ${test_dir}/grib_set_large_message_fail > $temp 2>&1
+grep -q "Failed to set GRIB1 message length" $temp
+
+$EXEC ${test_dir}/grib_set_large_message_fail -b > $temp 2>&1
+grep -q "Unable to set double array.*bitmap" $temp
+
+# Clean up
+rm -f $temp
