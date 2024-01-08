@@ -203,7 +203,14 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                                  grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
                                  &total_length,
                                  &sec4_length);
-
+        if (total_length != *val) {
+            const char* cclass_name = a->cclass->name;
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "%s %s: Failed to set GRIB1 message length to %ld"
+                             " (actual length=%ld)",
+                              cclass_name, __func__, *val, total_length);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
+        }
         Assert(total_length == *val);
     }
 
