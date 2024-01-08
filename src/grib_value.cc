@@ -755,7 +755,7 @@ int grib_set_double_array_internal(grib_handle* h, const char* name, const doubl
     }
 
     if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set double array %s (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set double array '%s' (%s)",
                          name, grib_get_error_message(ret));
     /*if (h->context->debug) fprintf(stderr,"ECCODES DEBUG grib_set_double_array_internal key=%s --DONE\n",name);*/
     return ret;
@@ -928,7 +928,7 @@ int grib_set_long_array_internal(grib_handle* h, const char* name, const long* v
 {
     int ret = _grib_set_long_array(h, name, val, length, 0);
     if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set long array %s (%s)",
+        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set long array '%s' (%s)",
                          name, grib_get_error_message(ret));
     return ret;
 }

@@ -195,8 +195,8 @@ static void update_offsets_after(grib_accessor* a, long len)
 //         update_sections_lengths(s->owner->parent);
 // }
 
-void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
-                         size_t newsize, int update_lengths, int update_paddings)
+int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
+                        size_t newsize, int update_lengths, int update_paddings)
 {
     size_t offset = a->offset;
     long oldsize  = grib_get_next_position_offset(a) - offset;
@@ -232,11 +232,13 @@ void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
         update_offsets_after(a, increase);
         if (update_lengths) {
             grib_update_size(a, newsize);
-            grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            int err = grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            if (err) return err;
             if (update_paddings)
                 grib_update_paddings(grib_handle_of_accessor(a)->root);
         }
     }
+    return GRIB_SUCCESS;
 }
 
 void grib_update_sections_lengths(grib_handle* h)

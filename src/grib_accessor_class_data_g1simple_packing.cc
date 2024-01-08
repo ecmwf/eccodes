@@ -313,7 +313,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_data_g1simple_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
-    grib_buffer_replace(a, buf, buflen, 1, 1);
+    ret = grib_buffer_replace(a, buf, buflen, 1, 1);
+    if (ret != GRIB_SUCCESS) return ret;
 
     grib_context_buffer_free(a->context, buf);
 
