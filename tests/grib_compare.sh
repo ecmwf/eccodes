@@ -30,7 +30,11 @@ set -e
 infile1=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 ${tools_dir}/grib_set -s year=2019 $infile1 $outfile
 ${tools_dir}/grib_compare -c data:n $infile1 $outfile
-
+set +e
+${tools_dir}/grib_compare -a -c data:n $infile1 $outfile
+status=$?
+set -e
+[ $status -eq 1 ]
 
 # Header (meta-data) keys
 infile=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
@@ -145,6 +149,14 @@ set -e
 # Raise the tolerance
 ${tools_dir}/grib_compare -b referenceValue -A 3.2  $infile $temp1
 
+# Invalid value
+set +e
+${tools_dir}/grib_compare -A badnum $infile $temp1 >$outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Invalid absolute error" $outfile
+
 
 # ----------------------------------------
 # ECC-355: -R with "all" option
@@ -156,6 +168,23 @@ BLACKLIST="typeOfProcessedData,typeOfEnsembleForecast,perturbationNumber"
 ${tools_dir}/grib_compare -b $BLACKLIST -R referenceValue=0.03,codedValues=2 $temp1 $temp2
 # Now try the "all" option with the highest relative diff value
 ${tools_dir}/grib_compare -b $BLACKLIST -R all=2 $temp1 $temp2
+
+# ----------------------------------------
+# Use -w switch
+# ----------------------------------------
+cp ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+${tools_dir}/grib_compare -w typeOfLevel=surface ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
+
+# ----------------------------------------
+# Summary mode (-f)
+# ----------------------------------------
+set +e
+${tools_dir}/grib_compare -f ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_pf_ecmwf.grib2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "indicatorOfUnitForTimeIncrement . 7 different" $outfile
+
 
 # ----------------------------------------
 # ECC-651: Two-way (symmetric) comparison
@@ -213,14 +242,14 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 # --------------------------------------------
 ${tools_dir}/grib_set -s scaleFactorOfFirstFixedSurface=1 $sample_g2 $temp1
 set +e
-${tools_dir}/grib_compare $sample_g2 $temp1 > $outfile
+${tools_dir}/grib_compare -v $sample_g2 $temp1 > $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "scaleFactorOfFirstFixedSurface is set to missing in 1st field but is not missing in 2nd field" $outfile
 
 set +e
-${tools_dir}/grib_compare $temp1 $sample_g2 > $outfile
+${tools_dir}/grib_compare -v $temp1 $sample_g2 > $outfile
 status=$?
 set -e
 [ $status -eq 1 ]
@@ -266,6 +295,15 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+
+echo GRIB > $temp1
+echo GRIB > $temp2
+set +e
+${tools_dir}/grib_compare $temp1 $temp2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep "unreadable message" $outfile
 
 # Clean up
 # ---------

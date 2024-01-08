@@ -106,6 +106,27 @@ grep -q "dataDate = 19090206" $temp
 # Skip handle
 ${tools_dir}/grib_dump -w count=4 $file > $temp 2>&1
 
+ECCODES_DEBUG=1 ${tools_dir}/grib_dump $data_dir/sample.grib2
+
+
+# Unreadable message
+#-----------------------------------------------------------
+tempOut=temp.$label.out
+echo GRIB > $temp
+
+set +e
+${tools_dir}/grib_dump $temp > $tempOut 2>&1
+status=$?
+set -e
+grep -q "unreadable message" $tempOut
+
+set +e
+${tools_dir}/grib_dump -j $temp > $tempOut 2>&1
+status=$?
+set -e
+grep -q "unreadable message" $tempOut
+
+rm -f $tempOut
 
 # Clean up
 rm -f $temp

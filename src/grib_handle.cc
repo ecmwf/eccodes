@@ -16,8 +16,8 @@
 
 static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f, int headers_only, int* error);
 static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, int* error);
-static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
-static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err);
+static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err);
+static bool grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err);
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* msglen);
 static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f);
 static grib_multi_support* grib_multi_support_new(grib_context* c);
@@ -326,6 +326,98 @@ grib_handle* grib_handle_clone(const grib_handle* h)
     return result;
 }
 
+static bool can_create_clone_headers_only(const grib_handle* h)
+{
+    // Only for GRIB, not BUFR etc
+    if (h->product_kind != PRODUCT_GRIB) return false;
+
+    // Spectral data does not have constant fields!
+    long isGridded = 0;
+    int err = grib_get_long(h, "isGridded", &isGridded);
+    if (err || !isGridded) return false;
+
+    return true;
+}
+
+// Clone the message but not its Bitmap and Data sections (only the meta-data)
+grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
+{
+    int err = 0;
+    grib_handle* result = NULL;
+    grib_context* c = h->context;
+
+    if (!can_create_clone_headers_only(h)) {
+        // Headers-only clone not possible. Do a normal clone
+        return grib_handle_clone(h);
+    }
+
+    char sample_name[1024];
+    long edition = 0;
+    grib_get_long(h, "edition", &edition);
+    snprintf(sample_name, sizeof(sample_name), "GRIB%ld", edition);
+    grib_handle* h_sample = grib_handle_new_from_samples(c, sample_name);
+    if (!h_sample) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone using sample %s", sample_name);
+        return NULL;
+    }
+
+    // Must preserve the packingType
+    char input_packing_type[100];
+    size_t len = sizeof(input_packing_type);
+    err = grib_get_string(h, "packingType", input_packing_type, &len);
+    if (!err) {
+        grib_set_string(h_sample, "packingType", input_packing_type, &len);
+    }
+
+    // Copy all sections except Bitmap and Data from h to h_sample
+    const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
+    result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
+    if (!result || err) {
+        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone: Unable to copy sections");
+        grib_handle_delete(h_sample);
+        return NULL;
+    }
+
+    grib_handle_delete(h_sample);
+    return result;
+}
+
+// grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
+// {
+//     int err = 0;
+//     size_t size1 = 0;
+//     const void* msg1 = NULL;
+//     long edition = 0;
+//     // Only for GRIB, not BUFR etc
+//     if (h->product_kind != PRODUCT_GRIB) {
+//         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only supported for %s",
+//                          __func__, codes_get_product_name(PRODUCT_GRIB));
+//         return NULL;
+//     }
+//     err = grib_get_long(h, "edition", &edition);
+//     if (!err && edition == 1) {
+//         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Edition not supported", __func__);
+//         return NULL;
+//     }
+//     err = grib_get_message_headers(h, &msg1, &size1);
+//     if (err) return NULL;
+//     size1 += 4;
+//     grib_handle* result  = grib_handle_new_from_partial_message_copy(h->context, msg1, size1);
+//     result->buffer->data[ size1 - 4 ] = '7';
+//     result->buffer->data[ size1 - 3 ] = '7';
+//     result->buffer->data[ size1 - 2 ] = '7';
+//     result->buffer->data[ size1 - 1 ] = '7';
+//     result->buffer->ulength = size1;
+//     result->product_kind = h->product_kind;
+//     long off = 64; // This is only true for GRIB edition 2
+//     err = grib_encode_unsigned_long( result->buffer->data, (unsigned long)size1, &off, 64);
+//     if (err) {
+//         printf("err=%s\n", grib_get_error_message(err));
+//         return NULL;
+//     }
+//     return result;
+// }
+
 grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind product, int* error)
 {
     if (product == PRODUCT_GRIB)
@@ -336,6 +428,8 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
         return metar_new_from_file(c, f, error);
     if (product == PRODUCT_GTS)
         return gts_new_from_file(c, f, error);
+    //if (product == PRODUCT_TAF)
+    //    return taf_new_from_file(c, f, error);
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 
@@ -550,7 +644,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
                 if (grib_decode_unsigned_byte_long(secbegin, 5, 1) == 254) {
                     if (!gm->bitmap_section) {
                         grib_context_log(c, GRIB_LOG_ERROR,
-                                         "grib_handle_new_multi : cannot create handle, missing bitmap\n");
+                                         "grib_handle_new_multi : cannot create handle, missing bitmap");
                         return NULL;
                     }
                     gm->sections[secnum]        = gm->bitmap_section;
@@ -603,7 +697,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
     gl = grib_handle_new_from_message(c, message, olen);
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_multi: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_multi: cannot create handle");
         return NULL;
     }
 
@@ -702,7 +796,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
                 /* Special case for inherited bitmaps */
                 if (grib_decode_unsigned_byte_long(secbegin, 5, 1) == 254) {
                     if (!gm->bitmap_section) {
-                        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle, missing bitmap\n");
+                        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle, missing bitmap");
                         grib_context_free(c, data);
                         return NULL;
                     }
@@ -758,7 +852,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     gl = grib_handle_new_from_message(c, data, olen);
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -838,7 +932,7 @@ grib_handle* gts_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "gts_new_from_file: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "gts_new_from_file: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -879,7 +973,7 @@ grib_handle* taf_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "taf_new_from_file: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "taf_new_from_file: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -920,7 +1014,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "metar_new_from_file: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "metar_new_from_file: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -988,7 +1082,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "bufr_new_from_file: cannot create handle \n");
+        grib_context_log(c, GRIB_LOG_ERROR, "bufr_new_from_file: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -1040,7 +1134,7 @@ grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "any_new_from_file : cannot create handle\n");
+        grib_context_log(c, GRIB_LOG_ERROR, "any_new_from_file: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -1113,7 +1207,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_no_multi: cannot create handle\n");
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_no_multi: cannot create handle");
         grib_context_free(c, data);
         return NULL;
     }
@@ -1161,11 +1255,10 @@ grib_multi_handle* grib_multi_handle_new(grib_context* c)
 
 int grib_multi_handle_delete(grib_multi_handle* h)
 {
-    if (h == NULL)
-        return GRIB_SUCCESS;
-
-    grib_buffer_delete(h->context, h->buffer);
-    grib_context_free(h->context, h);
+    if (h != NULL) {
+        grib_buffer_delete(h->context, h->buffer);
+        grib_context_free(h->context, h);
+    }
     return GRIB_SUCCESS;
 }
 
@@ -1227,11 +1320,11 @@ int grib_multi_handle_write(grib_multi_handle* h, FILE* f)
         return GRIB_INVALID_GRIB;
 
     if (fwrite(h->buffer->data, 1, h->buffer->ulength, f) != h->buffer->ulength) {
-        grib_context_log(h->context, GRIB_LOG_PERROR, "grib_multi_handle_write writing on file");
+        grib_context_log(h->context, GRIB_LOG_PERROR, "%s failed", __func__);
         return GRIB_IO_PROBLEM;
     }
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int grib_get_partial_message(grib_handle* h, const void** msg, size_t* len, int start_section)
@@ -1295,9 +1388,9 @@ int grib_get_message_offset(const grib_handle* h, off_t* offset)
     if (h)
         *offset = h->offset;
     else
-        return GRIB_INTERNAL_ERROR;
+        return GRIB_NULL_HANDLE;
 
-    return 0;
+    return GRIB_SUCCESS;
 }
 
 int codes_get_product_kind(const grib_handle* h, ProductKind* product_kind)
@@ -1468,10 +1561,10 @@ int grib_handle_apply_action(grib_handle* h, grib_action* a)
 //     return GRIB_SUCCESS;
 // }
 
-static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
+static bool grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsigned char** secbegin, size_t* seclen, int* secnum, int* err)
 {
     if (!grib2_has_next_section(msgbegin, msglen, *secbegin, *seclen, err))
-        return 0;
+        return false;
 
     *secbegin += *seclen;
     *seclen = grib_decode_unsigned_byte_long(*secbegin, 0, 4);
@@ -1479,12 +1572,12 @@ static int grib2_get_next_section(unsigned char* msgbegin, size_t msglen, unsign
 
     if (*secnum < 1 || *secnum > 7) {
         *err = GRIB_INVALID_SECTION_NUMBER;
-        return 0;
+        return false;
     }
-    return 1;
+    return true;
 }
 
-static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err)
+static bool grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsigned char* secbegin, size_t seclen, int* err)
 {
     long next_seclen;
     *err = 0;
@@ -1496,12 +1589,12 @@ static int grib2_has_next_section(unsigned char* msgbegin, size_t msglen, unsign
             *err = GRIB_SUCCESS;
         else
             *err = GRIB_7777_NOT_FOUND;
-        return 0;
+        return false;
     }
 
     /*secbegin += seclen;*/
 
-    return 1;
+    return true;
 }
 
 static void grib2_build_message(grib_context* context, unsigned char* sections[], size_t sections_len[], void** data, size_t* len)
@@ -1616,6 +1709,8 @@ void grib_multi_support_reset(grib_context* c)
 
 static grib_multi_support* grib_multi_support_new(grib_context* c)
 {
+    // GRIB edition 2 has 9 sections ( 0 to 8 )
+    const int GRIB2_END_SECTION = 8;
     int i = 0;
     grib_multi_support* gm =
         (grib_multi_support*)grib_context_malloc_clear(c, sizeof(grib_multi_support));
@@ -1627,9 +1722,10 @@ static grib_multi_support* grib_multi_support_new(grib_context* c)
     gm->section_number        = 0;
     gm->next                  = 0;
     gm->sections_length[0]    = 16;
-    for (i = 1; i < 8; i++)
+
+    for (i = 1; i < GRIB2_END_SECTION; i++)
         gm->sections_length[i] = 0;
-    gm->sections_length[8] = 4;
+    gm->sections_length[GRIB2_END_SECTION] = 4; // The 7777
 
     return gm;
 }

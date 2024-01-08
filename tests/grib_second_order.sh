@@ -201,6 +201,13 @@ ${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
 ${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
 
 
+# Encoding
+input=second_ord_rbr.grib1
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $input $temp1
+${tools_dir}/grib_dump $temp1
+grib_check_key_equals $temp1 packingType grid_second_order
+
+
 # Clean up
 rm -f $temp_stat1 $temp_stat2
 rm -f $temp1 $temp2 $temp3 $sec_ord_bmp

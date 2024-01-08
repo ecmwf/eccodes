@@ -19,7 +19,6 @@
    IMPLEMENTS = unpack_long;pack_long
    IMPLEMENTS = init;dump
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = compare
    END_CLASS_DEF
 
  */
@@ -39,7 +38,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_g1_half_byte_codeflag
 {
@@ -88,7 +86,7 @@ static grib_accessor_class _grib_accessor_class_g1_half_byte_codeflag = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -149,35 +147,4 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_LONG;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    long aval = 0;
-    long bval = 0;
-
-    long count  = 0;
-    size_t alen = 0;
-    size_t blen = 0;
-    int err     = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    alen = count;
-
-    err = grib_value_count(b, &count);
-    if (err)
-        return err;
-    blen = count;
-
-    if (alen != 1 || blen != 1)
-        return GRIB_COUNT_MISMATCH;
-
-    grib_unpack_long(a, &aval, &alen);
-    grib_unpack_long(b, &bval, &blen);
-
-    if (bval != aval)
-        return GRIB_VALUE_MISMATCH;
-    return GRIB_SUCCESS;
 }

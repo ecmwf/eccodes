@@ -74,6 +74,7 @@ int get_concept_condition_string(grib_handle* h, const char* key, const char* va
 /* action_class_hash_array.cc*/
 grib_action* grib_action_create_hash_array(grib_context* context, const char* name, grib_hash_array_value* hash_array, const char* basename, const char* name_space, const char* defaultkey, const char* masterDir, const char* localDir, const char* ecmfDir, int flags, int nofail);
 grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a);
+const char* get_hash_array_full_path(grib_action* a);
 
 /* action_class_set.cc*/
 grib_action* grib_action_create_set(grib_context* context, const char* name, grib_expression* expression, int nofail);
@@ -176,9 +177,9 @@ void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 /* grib_bufr_descriptor.cc*/
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
 bufr_descriptor* grib_bufr_descriptor_clone(bufr_descriptor* d);
-int grib_bufr_descriptor_set_code(grib_accessor* tables_accessor, int code, bufr_descriptor* v);
+int grib_bufr_descriptor_set_code(bufr_descriptor* v, int code);
 void grib_bufr_descriptor_set_scale(bufr_descriptor* v, long scale);
-int grib_bufr_descriptor_can_be_missing(bufr_descriptor* v);
+int grib_bufr_descriptor_can_be_missing(const bufr_descriptor* v);
 void grib_bufr_descriptor_delete(bufr_descriptor* v);
 
 /* grib_bufr_descriptors_array.cc*/
@@ -340,6 +341,9 @@ void grib_smart_table_delete(grib_context* c);
 
 /* grib_accessor_class_codetable.cc*/
 void grib_codetable_delete(grib_context* c);
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries);
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure);
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation);
 
 /* grib_accessor_class_codetable_units.cc*/
 
@@ -1016,8 +1020,6 @@ int wmo_read_any_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_grib_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_bufr_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len);
-int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len);
 int wmo_read_any_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_grib_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
 int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset);
@@ -1144,6 +1146,7 @@ int grib_set_missing(grib_handle* h, const char* name);
 int grib_is_missing_long(grib_accessor* a, long x);
 int grib_is_missing_double(grib_accessor* a, double x);
 int grib_is_missing_string(grib_accessor* a, const unsigned char* x, size_t len);
+int grib_accessor_can_be_missing(grib_accessor* a, int* err);
 int grib_accessor_is_missing(grib_accessor* a, int* err);
 int grib_is_missing(const grib_handle* h, const char* name, int* err);
 int grib_is_defined(const grib_handle* h, const char* name);
@@ -1157,8 +1160,6 @@ int grib_set_float_array(grib_handle* h, const char* name, const float* val, siz
 int grib_set_long_array_internal(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_set_long_array(grib_handle* h, const char* name, const long* val, size_t length);
 int grib_get_long_internal(grib_handle* h, const char* name, long* val);
-int grib_is_in_dump(grib_handle* h, const char* name);
-int grib_attributes_count(grib_accessor* a, size_t* size);
 int grib_get_long(const grib_handle* h, const char* name, long* val);
 int grib_get_double_internal(grib_handle* h, const char* name, double* val);
 int grib_get_double(const grib_handle* h, const char* name, double* val);
@@ -1196,15 +1197,12 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int ecc__grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length);
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
-grib_key_value_list* grib_key_value_list_clone(grib_context* c, grib_key_value_list* list);
-void grib_key_value_list_delete(grib_context* c, grib_key_value_list* kvl);
-int grib_get_key_value_list(grib_handle* h, grib_key_value_list* list);
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
 void grib_print_values(const char* title, grib_values* values);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
-int grib_key_equal(grib_handle* h1, grib_handle* h2, const char* key, int type, int* err);
+int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);
 int codes_compare_key(grib_handle* h1, grib_handle* h2, const char* key, int compare_flags);
 

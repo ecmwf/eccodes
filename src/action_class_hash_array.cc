@@ -25,6 +25,7 @@
    MEMBERS    = char* masterDir
    MEMBERS    = char* localDir
    MEMBERS    = char* ecmfDir
+   MEMBERS    = char* full_path
    MEMBERS    = int nofail
    END_CLASS_DEF
 
@@ -56,6 +57,7 @@ typedef struct grib_action_hash_array {
     char* masterDir;
     char* localDir;
     char* ecmfDir;
+    char* full_path;
     int nofail;
 } grib_action_hash_array;
 
@@ -158,6 +160,8 @@ grib_action* grib_action_create_hash_array(grib_context* context,
         a->ecmfDir = grib_context_strdup_persistent(context, ecmfDir);
     else
         a->ecmfDir = NULL;
+
+    a->full_path = NULL;
 
     if (defaultkey)
         act->defaultkey = grib_context_strdup_persistent(context, defaultkey);
@@ -282,6 +286,12 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
     full = grib_context_full_defs_path(context, master);
 
     if (c) {
+        if (!full) {
+            grib_context_log(context, GRIB_LOG_ERROR,
+                             "unable to find definition file %s in %s:%s:%s\nDefinition files path=\"%s\"",
+                             self->basename, master, ecmf, local, context->grib_definition_files_path);
+            return NULL;
+        }
         grib_hash_array_value* last = c;
         while (last->next)
             last = last->next;
@@ -296,6 +306,7 @@ static grib_hash_array_value* get_hash_array_impl(grib_handle* h, grib_action* a
                          self->basename, master, ecmf, local, context->grib_definition_files_path);
         return NULL;
     }
+    self->full_path = full;
 
     grib_context_log(h->context, GRIB_LOG_DEBUG,
                      "Loading hash_array %s from %s", ((grib_action*)self)->name, full);
@@ -323,4 +334,10 @@ grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a)
 
     GRIB_MUTEX_UNLOCK(&mutex);
     return result;
+}
+
+const char* get_hash_array_full_path(grib_action* a)
+{
+    grib_action_hash_array* self = (grib_action_hash_array*)a;
+    return self->full_path;
 }

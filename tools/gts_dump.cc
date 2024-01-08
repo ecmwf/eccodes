@@ -8,12 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * Implementation: gts_dump
- *
- *
- */
-
 #include "grib_tools.h"
 
 grib_option grib_options[] = {
@@ -41,7 +35,6 @@ const char* tool_usage       = "[options] file file ...";
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
 
 /**
-* gts_dump
 * Dump the content of a GTS file
 *
 */
@@ -57,10 +50,9 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D");
+    int opt = grib_options_on("O") + grib_options_on("D");
 
     options->dump_mode = (char*)"default";
-
 
     if (opt > 1) {
         printf("%s: simultaneous O/D options not allowed\n", tool_name);

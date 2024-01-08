@@ -48,5 +48,13 @@ set -e
 [ $status -ne 0 ]
 grep -q "Wrong message length" $tempLog
 
+set +e
+$EXEC ${test_dir}/extract_offsets nonexistentfile > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to read file" $tempLog
+
+
 # Clean up
 rm -f $temp1 $temp2 $tempLog

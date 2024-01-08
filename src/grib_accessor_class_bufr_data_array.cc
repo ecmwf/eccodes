@@ -23,7 +23,6 @@
    IMPLEMENTS = byte_count; value_count
    IMPLEMENTS = byte_offset; unpack_double
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = compare
    IMPLEMENTS = pack_long; unpack_double; pack_double
    MEMBERS    = const char* bufrDataEncodedName
    MEMBERS    = const char* numberOfSubsetsName
@@ -98,7 +97,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_bufr_data_array
 {
@@ -194,7 +192,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -472,11 +470,6 @@ static long byte_offset(grib_accessor* a)
 static long next_offset(grib_accessor* a)
 {
     return a->offset;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)

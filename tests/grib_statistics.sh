@@ -10,24 +10,24 @@
 
 . ./include.ctest.sh
 
+label="grib_statistics_test"
+temp1=temp1.$label.grib
+temp2=temp2.$label.grib
+
 files="regular_latlon_surface.grib2 regular_latlon_surface.grib1"
 
-for file in $files
-do
+for file in $files; do
 
 cat >statistics.filter<<EOF
-set Ni=2;
-set Nj=2;
-
-set decimalPrecision=4;
-set values={2.0,2.0,2.0,2.0};
-print "values=[values]";
-print "max=[max] min=[min] average=[average]";
-
-set values={2.0,5.0,2.0,2.0};
-print "values=[values]";
-print "max=[max] min=[min] average=[average]";
-
+ set Ni=2;
+ set Nj=2;
+ set decimalPrecision=4;
+ set values={2.0,2.0,2.0,2.0};
+ print "values=[values]";
+ print "max=[max] min=[min] average=[average]";
+ set values={2.0,5.0,2.0,2.0};
+ print "values=[values]";
+ print "max=[max] min=[min] average=[average]";
 EOF
 
 ${tools_dir}/grib_filter statistics.filter ${data_dir}/$file > statistics.out
@@ -42,8 +42,6 @@ rm -f statistics.out statistics.filter
 # See ECC-478
 # ---------------------------------------------------
 input=${data_dir}/lfpw.grib1
-temp1=temp1.statistics.grib
-temp2=temp2.statistics.grib
 stats=`${tools_dir}/grib_get -w count=50 -F%.2f -n statistics $input`
 [ "$stats" = "10098.00 0.00 1064.19 3066.07 2.57 4.61 0.00" ]
 

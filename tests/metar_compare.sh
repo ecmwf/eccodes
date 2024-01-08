@@ -45,8 +45,37 @@ if [ $status -eq 0 ]; then
    exit 1
 fi
 
+# Compare using a namespace
+set +e
+${tools_dir}/metar_compare -c ls:n $metar_file $fMetarTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "DIFFERENCE == string.*dateTime" $fLog
+
+set +e
+${tools_dir}/metar_compare -a -c ls:n $metar_file $fMetarTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "DIFFERENCE == string.*dateTime" $fLog
+grep -q "DIFFERENCE == string.*theMessage" $fLog
+
+
 # The -d option should have created these files
 rm -f error1_1.metar error2_1.metar error1_2.metar error2_2.metar
+
+#----------------------------------------------------
+# Compare a key of type double
+#----------------------------------------------------
+temp1=temp.$label.metar.1
+temp2=temp.$label.metar.2
+${tools_dir}/metar_copy -w count=1 $metar_file $temp1
+${tools_dir}/metar_copy -w count=2 $metar_file $temp2
+# absolute diff. = 16.53, relative diff. = 0.381315
+${tools_dir}/metar_compare -c latitude -R latitude=0.4 $temp1 $temp2
+${tools_dir}/metar_compare -c latitude -A 17 $temp1 $temp2
+rm -f $temp1 $temp2
 
 #----------------------------------------------------
 # Test: comparing with and without the -b switch

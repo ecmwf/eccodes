@@ -225,12 +225,22 @@ grib_check_key_equals $file 'expver:s' '0001'
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
 
+${tools_dir}/grib_get -l0,0,4 $data_dir/sample.grib2
+
 set +e
 ${tools_dir}/grib_ls -l0,0,666 $data_dir/sample.grib2 > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Wrong mode given" $tempText
+
+
+set +e
+${tools_dir}/grib_ls -l0,0,1,nonexistingmask $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unable to open mask file" $tempText
 
 
 # Clean up

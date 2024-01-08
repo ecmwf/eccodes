@@ -241,10 +241,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
     grib_unpack_long(b, bval, &blen);
 
     retval = GRIB_SUCCESS;
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_LONG_VALUE_MISMATCH;
-        alen--;
+    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_LONG_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);
@@ -258,7 +256,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     long v = 0; /* The converted value */
 
     // ECC-1722
-    if (strcmp_nocase(val, "missing")==0) {
+    if (STR_EQUAL_NOCASE(val, "missing")) {
         return pack_missing(a);
     }
 

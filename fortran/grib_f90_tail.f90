@@ -1365,7 +1365,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_char', '')
     end if
 
   end subroutine grib_new_from_message_char
@@ -1394,11 +1394,13 @@
     integer(kind=kindOfInt)                         :: iret
 
     size_bytes = size(message, dim=1)*sizeOfInteger4
-    iret = grib_f_new_from_message(gribid, message, size_bytes)
+    ! See SUP-3893
+    !iret = grib_f_new_from_message(gribid, message, size_bytes)
+    iret = grib_f_new_from_message_int(gribid, message, size_bytes)
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'new_from_message', '')
+      call grib_check(iret, 'new_from_message_int4', '')
     end if
 
   end subroutine grib_new_from_message_int4
@@ -2314,7 +2316,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real4_elements', key)
     end if
   end subroutine grib_get_real4_elements
 
@@ -2346,7 +2348,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'get', key)
+      call grib_check(iret, 'get_real8_elements', key)
     end if
   end subroutine grib_get_real8_elements
 
@@ -2647,7 +2649,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real4_array', key)
     end if
   end subroutine grib_set_force_real4_array
 
@@ -2663,12 +2665,12 @@
   !> @param value       real(8) array value
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_force_real8_array(gribid, key, value, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    real(kind=kindOfDouble), dimension(:), intent(in)  :: value
-    integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                               :: iret
-    integer(kind=kindOfInt)                               :: nb_values
+    integer(kind=kindOfInt), intent(in)               :: gribid
+    character(len=*), intent(in)                      :: key
+    real(kind=kindOfDouble), dimension(:), intent(in) :: value
+    integer(kind=kindOfInt), optional, intent(out)    :: status
+    integer(kind=kindOfInt)                           :: iret
+    integer(kind=kindOfInt)                           :: nb_values
 
     nb_values = size(value)
     iret = grib_f_set_force_real8_array(gribid, key, value, nb_values)
@@ -2678,7 +2680,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'set', key)
+      call grib_check(iret, 'set_force_real8_array', key)
     end if
   end subroutine grib_set_force_real8_array
 
@@ -2694,10 +2696,10 @@
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_set_string(gribid, key, value, status)
     integer(kind=kindOfInt), intent(in)  :: gribid
-    character(len=*), intent(in)  :: key
-    character(len=*), intent(in)  :: value
+    character(len=*), intent(in)         :: key
+    character(len=*), intent(in)         :: value
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_set_string(gribid, key, value)
     if (iret /= 0) then
@@ -2720,8 +2722,8 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_int(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
-    integer(kind=kindOfInt), intent(out) :: nbytes
+    integer(kind=kindOfInt), intent(in)            :: gribid
+    integer(kind=kindOfInt), intent(out)           :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)                        :: iret
     integer(kind=kindOfSize_t)                     :: ibytes
@@ -2751,10 +2753,10 @@
   !> @param nbytes      size in bytes of the message
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_get_message_size_size_t(gribid, nbytes, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)     :: gribid
     integer(kind=kindOfSize_t), intent(out) :: nbytes
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)                                   :: iret
+    integer(kind=kindOfInt)                 :: iret
 
     iret = grib_f_get_message_size(gribid, nbytes)
     if (iret /= 0) then
@@ -2777,7 +2779,7 @@
   !> @param message     array containing the coded message to be copied
   !> @param status      GRIB_SUCCESS if OK, integer value on error
   subroutine grib_copy_message(gribid, message, status)
-    integer(kind=kindOfInt), intent(in)  :: gribid
+    integer(kind=kindOfInt), intent(in)         :: gribid
     character(len=1), dimension(:), intent(out) :: message
     integer(kind=kindOfInt), optional, intent(out) :: status
     integer(kind=kindOfInt)      :: iret
@@ -2808,7 +2810,6 @@
     integer(kind=kindOfInt), intent(in)  :: gribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-
     integer(kind=kindOfInt)               :: iret
 
     iret = grib_f_write(gribid, ifile)
@@ -2832,7 +2833,7 @@
     integer(kind=kindOfInt), intent(in)  :: multigribid
     integer(kind=kindOfInt), intent(in)  :: ifile
     integer(kind=kindOfInt), optional, intent(out) :: status
-    integer(kind=kindOfInt)               :: iret
+    integer(kind=kindOfInt)              :: iret
 
     iret = grib_f_multi_write(multigribid, ifile)
     if (present(status)) then
@@ -2936,13 +2937,13 @@
                                       inlat, inlon, outlat, outlon, &
                                       value, distance, kindex, status)
     integer(kind=kindOfInt), intent(in)    :: gribid
-    logical, intent(in)    :: is_lsm
+    logical, intent(in)                    :: is_lsm
     real(kind=kindOfDouble), intent(in)    :: inlat
     real(kind=kindOfDouble), intent(in)    :: inlon
     real(kind=kindOfDouble), intent(out)   :: outlat
     real(kind=kindOfDouble), intent(out)   :: outlon
-    real(kind=kindOfDouble), intent(out)   :: distance
     real(kind=kindOfDouble), intent(out)   :: value
+    real(kind=kindOfDouble), intent(out)   :: distance
     integer(kind=kindOfInt), intent(out)   :: kindex
     integer(kind=kindOfInt), optional, intent(out)                           :: status
     integer(kind=kindOfInt)                                                 :: iret
@@ -3056,7 +3057,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_on', '')
+      call grib_check(iret, 'gribex_mode_on', '')
     end if
 
   end subroutine grib_gribex_mode_on
@@ -3076,7 +3077,7 @@
     if (present(status)) then
       status = iret
     else
-      call grib_check(iret, 'grib_gribex_mode_off', '')
+      call grib_check(iret, 'gribex_mode_off', '')
     end if
 
   end subroutine grib_gribex_mode_off
