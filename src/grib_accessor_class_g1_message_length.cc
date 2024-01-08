@@ -210,6 +210,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
                              " (actual length=%ld)",
                               cclass_name, __func__, *val, total_length);
             grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
+            return GRIB_ENCODING_ERROR;
         }
         Assert(total_length == *val);
     }
