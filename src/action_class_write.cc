@@ -174,7 +174,7 @@ static int execute(grib_action* act, grib_handle* h)
     }
 
     if (h->gts_header) {
-        char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
+        const char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing GTS trailer to %s", filename);

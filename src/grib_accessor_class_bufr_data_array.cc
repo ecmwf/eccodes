@@ -254,7 +254,7 @@ static size_t get_length(grib_accessor* a)
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
     size_t len                          = 0;
 
-    grib_handle* h = grib_handle_of_accessor(a);
+    const grib_handle* h = grib_handle_of_accessor(a);
 
     grib_get_size(h, self->bufrDataEncodedName, &len);
 
