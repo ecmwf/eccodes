@@ -21,6 +21,12 @@ dir="${data_dir}/tigge"
 temp1="temp.${label}.grib1_"
 temp2="temp.${label}.grib2_"
 
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 # --- Do I want to exclude any file pattern from the comparison ?
 exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
