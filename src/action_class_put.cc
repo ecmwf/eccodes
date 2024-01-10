@@ -77,64 +77,62 @@ static void init_class(grib_action_class* c)
 
 grib_action* grib_action_create_put(grib_context* context, const char* name, grib_arguments* args)
 {
-    grib_action_put* a   = NULL;
-    grib_action_class* c = grib_action_class_put;
-    grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
-    act->next            = NULL;
-    act->name            = grib_context_strdup_persistent(context, name);
-    act->op              = grib_context_strdup_persistent(context, "forward");
-    act->cclass          = c;
-    act->context         = context;
-    a                    = (grib_action_put*)act;
-    a->args              = args;
-    return act;
+    grib_context_log(context, GRIB_LOG_FATAL, "Function '%s' is deprecated", __func__);
+    return NULL;
+    // grib_action_put* a   = NULL;
+    // grib_action_class* c = grib_action_class_put;
+    // grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
+    // act->next            = NULL;
+    // act->name            = grib_context_strdup_persistent(context, name);
+    // act->op              = grib_context_strdup_persistent(context, "forward");
+    // act->cclass          = c;
+    // act->context         = context;
+    // a                    = (grib_action_put*)act;
+    // a->args              = args;
+    // return act;
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
-    grib_action_put* a = (grib_action_put*)act;
+    grib_context_log(act->context, GRIB_LOG_FATAL, "Action '%s' is deprecated", act->op);
+    return GRIB_NOT_IMPLEMENTED;
 
-    grib_section* ts = NULL;
+    // grib_action_put* a = (grib_action_put*)act;
+    // grib_section* ts = NULL;
+    // grib_accessor* ga = NULL;
+    // ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 1));
+    // if (ga)
+    //     ts = ga->sub_section;
+    // /* ts = grib_get_sub_section(ga); */
+    // else
+    //     return GRIB_BUFFER_TOO_SMALL;
 
-    grib_accessor* ga = NULL;
-
-    ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 1));
-    if (ga)
-        ts = ga->sub_section;
-    /* ts = grib_get_sub_section(ga); */
-    else
-        return GRIB_BUFFER_TOO_SMALL;
-
-    if (ts) {
-        ga = grib_accessor_factory(ts, act, 0, a->args);
-        if (ga)
-            grib_push_accessor(ga, ts->block);
-        else
-            return GRIB_BUFFER_TOO_SMALL;
-    }
-    else {
-        grib_context_log(act->context, GRIB_LOG_ERROR, "Action_class_put  : create_accessor_buffer : No Section named %s to export %s ", grib_arguments_get_name(p->h, a->args, 1), grib_arguments_get_name(p->h, a->args, 0));
-    }
-    return GRIB_SUCCESS;
+    // if (ts) {
+    //     ga = grib_accessor_factory(ts, act, 0, a->args);
+    //     if (ga)
+    //         grib_push_accessor(ga, ts->block);
+    //     else
+    //         return GRIB_BUFFER_TOO_SMALL;
+    // }
+    // else {
+    //     grib_context_log(act->context, GRIB_LOG_ERROR, "Action_class_put  : create_accessor_buffer : No Section named %s to export %s ", grib_arguments_get_name(p->h, a->args, 1), grib_arguments_get_name(p->h, a->args, 0));
+    // }
+    // return GRIB_SUCCESS;
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    grib_action_put* a = (grib_action_put*)act;
-
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-
-    grib_context_print(act->context, f, "put %s as %s in %s\n", grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
+    // grib_action_put* a = (grib_action_put*)act;
+    // int i = 0;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_context_print(act->context, f, "put %s as %s in %s\n", grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
 }
 
 static void destroy(grib_context* context, grib_action* act)
 {
-    grib_action_put* a = (grib_action_put*)act;
-
-    grib_arguments_free(context, a->args);
-    grib_context_free_persistent(context, act->name);
-    grib_context_free_persistent(context, act->op);
+    // grib_action_put* a = (grib_action_put*)act;
+    // grib_arguments_free(context, a->args);
+    // grib_context_free_persistent(context, act->name);
+    // grib_context_free_persistent(context, act->op);
 }
