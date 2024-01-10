@@ -99,7 +99,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
     if (!options->current_infile->name)
         return 0;
     snprintf(tmp, 1024, "FILE: %s ", options->current_infile->name);
-    if ( !grib_options_on("C") && !grib_options_on("j") )
+    if ( !grib_options_on("j") )
         fprintf(stdout, "***** %s\n", tmp);
     return 0;
 }
@@ -118,7 +118,7 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
         grib_set_flag(h, options->print_keys[i].name, GRIB_ACCESSOR_FLAG_DUMP);
 
     snprintf(tmp, 1024, "MESSAGE %d ( length=%ld )", options->handle_count, length);
-    if (!grib_options_on("C") && !grib_options_on("j"))
+    if (!grib_options_on("j"))
         fprintf(stdout, "#==============   %-38s   ==============\n", tmp);
     if (!strcmp(options->dump_mode, "default")) {
         GRIB_CHECK_NOLINE(grib_get_string(h, "identifier", identifier, &idlen), 0);
