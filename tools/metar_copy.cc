@@ -31,7 +31,6 @@ grib_option grib_options[] = {
       "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
       "is string.\n",
       0, 1, 0 },
-    { "B:", 0, 0, 0, 1, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "W:", 0, 0, 0, 1, 0 },
     { "U", 0, 0, 1, 0, 0 },
