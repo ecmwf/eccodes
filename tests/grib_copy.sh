@@ -27,7 +27,8 @@ val2=`${tools_dir}/gts_get -p AA $temp`
 [ "$val1" = "$val2" ]
 [ "$val1" = "XK" ]
 
-${tools_dir}/grib_copy -w count=1 $input $temp
+${tools_dir}/grib_copy -p edition -w count=1 $input $temp
+${tools_dir}/grib_copy -p shortName -w count=2 $input $temp
 set +e
 ${tools_dir}/gts_get -p AA $temp
 status=$?
