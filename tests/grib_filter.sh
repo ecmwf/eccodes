@@ -406,6 +406,32 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 
+# Write statement with padding
+# ------------------------------------------------------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+echo 'write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+cmp $input $tempGrib # No padding added
+
+echo 'write(0);' | ${tools_dir}/grib_filter -o $tempGrib - $input
+cmp $input $tempGrib # zero bytes padding
+
+echo 'write(10);' | ${tools_dir}/grib_filter -o $tempGrib - $input
+set +e
+cmp $input $tempGrib # output should be different byte-wise
+status=$?
+set -e
+[ $status -ne 0 ]
+${tools_dir}/grib_compare $input $tempGrib # compare should succeed
+
+set +e
+echo 'write(-10);' | ${tools_dir}/grib_filter -o $tempGrib - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid argument" $tempOut
+
+
 # Bad filter
 set +e
 ${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
