@@ -432,7 +432,22 @@ set -e
 grep -q "Invalid argument" $tempOut
 
 
+# GTS header
+# ---------------
+input=$data_dir/gts.grib
+echo 'write;' | ${tools_dir}/grib_filter -g -o $tempGrib - $input
+cmp $input $tempGrib
+
+echo 'write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+set +e
+cmp $input $tempGrib
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
 # Bad filter
+# ----------------
 set +e
 ${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
 status=$?
