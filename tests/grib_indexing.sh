@@ -153,6 +153,18 @@ ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 ${tools_dir}/grib_dump $tempIndex1 >/dev/null
 
 
+# ------------------
+# Error conditions
+# ------------------
+echo GRIB > $tempGribFile1
+set +e
+${tools_dir}/grib_index_build $tempGribFile1 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "End of resource reached" $tempOut
+
+
 # Clean up
 rm -f $tempOut $tempRef
 rm -f $tempIndex $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2

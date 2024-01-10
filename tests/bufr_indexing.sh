@@ -12,6 +12,7 @@
 
 label="bufr_indexing_test"
 tempIndex=temp.$label.$$.idx
+tempBufr=temp.$label.$$.bufr
 tempOut=temp.$label.$$.out
 tempRef=temp.$label.$$.ref
 
@@ -41,5 +42,17 @@ ${tools_dir}/bufr_index_build -k mars.ident -o $tempIndex $infile |\
    grep -q "mars.ident = { 01001, 01003, 01007 }"
 
 
+# ------------------
+# Error conditions
+# ------------------
+echo BUFR > $tempBufr
+set +e
+${tools_dir}/bufr_index_build $tempBufr > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "End of resource reached" $tempOut
+
+
 # Clean up
-rm -f $tempIndex $tempOut $tempRef
+rm -f $tempIndex $tempOut $tempRef $tempBufr
