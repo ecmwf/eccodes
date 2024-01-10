@@ -103,7 +103,7 @@ static int execute(grib_action* act, grib_handle* h)
 {
     grib_action_write* a = (grib_action_write*)act;
     int err              = GRIB_SUCCESS;
-    size_t size;
+    size_t size          = 0;
     const void* buffer   = NULL;
     const char* filename = NULL;
     char string[1024]    = {0,};
@@ -116,13 +116,13 @@ static int execute(grib_action* act, grib_handle* h)
     }
 
     if (strlen(a->name) != 0) {
-        err      = grib_recompose_name(h, NULL, a->name, string, 0);
+        err = grib_recompose_name(h, NULL, a->name, string, 0);
         filename = string;
     }
     else {
         if (act->context->outfilename) {
             filename = act->context->outfilename;
-            err      = grib_recompose_name(h, NULL, act->context->outfilename, string, 0);
+            err = grib_recompose_name(h, NULL, act->context->outfilename, string, 0);
             if (!err)
                 filename = string;
         }
@@ -159,14 +159,16 @@ static int execute(grib_action* act, grib_handle* h)
 
     if (a->padtomultiple) {
         char* zeros = NULL;
+        if (a->padtomultiple < 0)
+            return GRIB_INVALID_ARGUMENT;
         size_t padding = a->padtomultiple - size % a->padtomultiple;
-        /* printf("XXX padding=%d size=%d padtomultiple=%d\n",padding,size,a->padtomultiple); */
+        /* printf("XXX padding=%zu size=%zu padtomultiple=%d\n", padding, size,a->padtomultiple); */
         zeros = (char*)calloc(padding, 1);
         if (!zeros)
             return GRIB_OUT_OF_MEMORY;
         if (fwrite(zeros, 1, padding, of->handle) != padding) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                             "Error writing to %s", filename);
+                             "Error writing to '%s'", filename);
             free(zeros);
             return GRIB_IO_PROBLEM;
         }
@@ -177,7 +179,7 @@ static int execute(grib_action* act, grib_handle* h)
         const char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
             grib_context_log(act->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
-                             "Error writing GTS trailer to %s", filename);
+                             "Error writing GTS trailer to '%s'", filename);
             return GRIB_IO_PROBLEM;
         }
     }
