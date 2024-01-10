@@ -159,6 +159,8 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
+    return GRIB_NOT_IMPLEMENTED;
+#if 0
     grib_accessor_signed_bits* self = (grib_accessor_signed_bits*)a;
     int i;
     int ret           = 0;
@@ -193,10 +195,13 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     *len = rlen;
 
     return GRIB_SUCCESS;
+#endif
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
+    return GRIB_NOT_IMPLEMENTED;
+#if 0
     grib_accessor_signed_bits* self = (grib_accessor_signed_bits*)a;
     int ret                         = 0;
     long off                        = 0;
@@ -232,6 +237,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_context_free(a->context, buf);
 
     return ret;
+#endif
 }
 
 static int value_count(grib_accessor* a, long* numberOfElements)
