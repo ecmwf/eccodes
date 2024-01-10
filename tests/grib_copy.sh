@@ -103,6 +103,12 @@ set -e
 grep -w "unreadable message" $fLog
 
 
+#-------------------------------------------------------------------
+echo "Test: dummy field ..."
+#-------------------------------------------------------------------
+input=${data_dir}/missing_field.grib1
+${tools_dir}/grib_copy -r $input $temp
+
 #${tools_dir}/grib_copy -w count=1 -X 57143 $input $temp #Last msg
 #r1=`${tools_dir}/grib_get -w count=37 -n ls $input`
 #r2=`${tools_dir}/grib_get -n ls $temp`
