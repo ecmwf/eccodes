@@ -635,19 +635,6 @@ grib_action* grib_action_create_set_missing(grib_context* context, const char* n
 
 /* grib_index.cc*/
 int grib_index_compress(grib_index* index);
-int grib_read_uchar(FILE* fh, unsigned char* val);
-int grib_read_short(FILE* fh, short* val);
-int grib_read_long(FILE* fh, long* val);
-int grib_read_unsigned_long(FILE* fh, unsigned long* val);
-int grib_write_uchar(FILE* fh, unsigned char val);
-int grib_write_short(FILE* fh, short val);
-int grib_write_long(FILE* fh, long val);
-int grib_write_unsigned_long(FILE* fh, unsigned long val);
-int grib_write_string(FILE* fh, const char* s);
-int grib_write_identifier(FILE* fh, const char* id);
-int grib_write_null_marker(FILE* fh);
-int grib_write_not_null_marker(FILE* fh);
-char* grib_read_string(grib_context* c, FILE* fh, int* err);
 grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** files, int* err);
 grib_index* grib_index_new(grib_context* c, const char* key, int* err);
 void grib_index_delete(grib_index* index);
