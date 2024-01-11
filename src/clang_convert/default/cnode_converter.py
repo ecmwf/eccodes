@@ -15,6 +15,7 @@ import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object.function_call as function_call
 import code_object.if_statement as if_statement
+import code_object.for_statement as for_statement
 
 # Convert a C node (AST) into lines of C++ code
 #
@@ -168,7 +169,6 @@ class CNodeConverter:
 
     def convert_IF_STMT(self, node):
         debug.line("convert_IF_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-        cnode_utils.dump_node(node, 2)
 
         children = list(node.get_children())
         child_count = len(children)
@@ -184,6 +184,55 @@ class CNodeConverter:
 
         return if_stmt
 
+    def convert_FOR_STMT(self, node):
+        debug.line("convert_FOR_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
+
+        init_statement = condition = iteration_expression = statement = None
+
+        # A for loop can have empty sections (e.g. for(i=0;;++i){} ) but we don't know which missing nodes
+        # correspond with these, so need to identify them from the tokens...
+        tokens = [token.spelling for token in node.get_tokens()]
+            
+        # Find the indices of the parens and semicolons in "for(;;)"
+        loop_indices = [i for i, token in enumerate(tokens) if token in ['(',';',')']]
+        
+        # Check there are at least two semicolons as well as open/close parens
+        assert len(loop_indices) >= 4, "Could not find 2 semicolons in for loop"
+
+        open_paren_token_index = loop_indices[0]
+        init_end_token_index = loop_indices[1]
+        cond_end_token_index = loop_indices[2]
+        close_paren_token_index = loop_indices[3]
+
+        children = node.get_children()
+
+        # init_statement
+        if init_end_token_index-open_paren_token_index > 1:
+            child = next(children, None)
+            assert child, f"init_statement node=[None]: open_paren_token_index=[{open_paren_token_index}] init_end_token_index=[{init_end_token_index}]"
+            init_statement = self.convert_node(child)
+
+        # condition
+        if cond_end_token_index-init_end_token_index > 1:
+            child = next(children, None)
+            assert child, f"condition node=[None]: init_end_token_index=[{init_end_token_index}] cond_end_token_index=[{cond_end_token_index}]"
+            condition = self.convert_node(child)
+
+        # iteration_expression
+        if close_paren_token_index - cond_end_token_index > 1:
+            child = next(children, None)
+            assert child, f"iteration_expression node=[None]: cond_end_token_index=[{cond_end_token_index}] close_paren_token_index=[{close_paren_token_index}]"
+            iteration_expression = self.convert_node(child)
+
+        # statement
+        child = next(children, None)
+        assert child, f"For loop has no statement! node=[None]"
+        statement = self.convert_node(child)
+
+        for_stmt = for_statement.ForStatement(init_statement, condition, iteration_expression, statement)
+
+        return for_stmt
+
     convert_STMT_funcs = {
         clang.cindex.CursorKind.COMPOUND_STMT:  convert_COMPOUND_STMT,
         clang.cindex.CursorKind.DECL_STMT:      convert_DECL_STMT,
@@ -193,7 +242,7 @@ class CNodeConverter:
         clang.cindex.CursorKind.SWITCH_STMT:    convert_node_not_implemented,
         clang.cindex.CursorKind.WHILE_STMT:     convert_node_not_implemented,
         clang.cindex.CursorKind.DO_STMT:        convert_node_not_implemented,
-        clang.cindex.CursorKind.FOR_STMT:       convert_node_not_implemented,
+        clang.cindex.CursorKind.FOR_STMT:       convert_FOR_STMT,
         clang.cindex.CursorKind.GOTO_STMT:      convert_node_not_implemented,
         clang.cindex.CursorKind.CONTINUE_STMT:  convert_node_not_implemented,
         clang.cindex.CursorKind.BREAK_STMT:     convert_node_not_implemented,
@@ -394,7 +443,18 @@ class CNodeConverter:
         right_tokens = [token.spelling for token in right_operand.get_tokens()]
 
         # Find the operator by excluding operand tokens
-        operator_tokens = [t for t in tokens if t not in left_tokens and t not in right_tokens]
+        tokens_count = len(tokens)
+        left_tokens_count = len(left_tokens)
+        if left_tokens_count >= tokens_count:
+            debug.line("convert_BINARY_OPERATOR", f"operator_tokens is empty!")
+            debug.line("convert_BINARY_OPERATOR", f" -> tokens       = [{tokens}]")
+            debug.line("convert_BINARY_OPERATOR", f" -> left_tokens  = [{left_tokens}]")
+            debug.line("convert_BINARY_OPERATOR", f" -> right_tokens = [{right_tokens}]")
+            assert False, "Binary operator: operator_tokens array should not be empty!"
+
+        #operator_tokens = [t for t in tokens if t not in left_tokens and t not in right_tokens]
+        operator_tokens = tokens[left_tokens_count:]
+
         operator_token = operator_tokens[0]
         debug.line("convert_BINARY_OPERATOR", f"operator_token=[{operator_token}] => operator_tokens=[{operator_tokens}]")
 
@@ -442,8 +502,11 @@ class CNodeConverter:
         for arg_node in node.get_arguments():
             arg_entry = self.convert_node(arg_node)
             debug.line("convert_CALL_EXPR", f"arg_node spelling=[{arg_node.spelling}] type=[{arg_node.type.spelling}] kind=[{arg_node.kind}]")
-            debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
-            cfunc_call.add_arg(arg_entry.as_string())
+            if arg_entry:
+                debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
+                cfunc_call.add_arg(arg_entry.as_string())
+            else:
+                debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry}] - IS THIS AN ERROR?")
 
         return cfunc_call
 
