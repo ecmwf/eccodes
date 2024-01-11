@@ -65,6 +65,11 @@ grep -q "313" $fTmp
 
 
 # ------------------------
+# Test -w
+# ------------------------
+${tools_dir}/bufr_ls -w count=2 syno_multi.bufr
+
+# ------------------------
 # Test corner cases
 # ------------------------
 echo BUFR > $fTmp

@@ -38,9 +38,6 @@ if( HAVE_FORTRAN )
                         COMMAND cat ${srcdir}/eccodes_f90_head.f90 ${srcdir}/${_long_int_interface_ec} ${srcdir}/${_sizet_int_interface_ec} ${srcdir}/eccodes_f90_tail.f90 > eccodes_f90.f90
                         DEPENDS eccodes_f90_head.f90 eccodes_f90_tail.f90 grib_kinds.h ${_long_int_interface_ec} ${_sizet_int_interface_ec} )
 
-    #ecbuild_add_library( TARGET     eccodes_f77
-    #                     SOURCES    grib_fortran.c grib_f77.c
-    #                     LIBS       eccodes )
 
     # Note: $<BUILD_INTERFACE:...> will be present only while building (for the whole bundle),
     # whereas $<INSTALL_INTERFACE:...> is only present once you install the package / bundle
@@ -82,7 +79,7 @@ if( HAVE_FORTRAN )
 
     ecbuild_add_resources( TARGET fortran_resources
                            PACK
-                            grib_fortran_prototypes.h grib_api_constants.h grib_api_externals.h
+                            grib_api_constants.h grib_api_externals.h
                             grib_api_visibility.h grib_types.f90 create_grib_f90.sh
                             grib_f90.f90.head grib_f90.f90.tail grib_f90_int.f90 grib_f90_long_int.f90
                             grib_f90_int_size_t.f90 grib_f90_long_size_t.f90

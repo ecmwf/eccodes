@@ -21,6 +21,7 @@ meta stepHumanReadable step_human_readable(stepUnits, stepRange): hidden,no_copy
 
 alias time.stepType=stepType;
 alias time.stepRange=stepRange;
+alias time.stepUnits=stepUnits;
 alias time.dataDate=dataDate;
 alias time.dataTime=dataTime;
 alias time.startStep=startStep;

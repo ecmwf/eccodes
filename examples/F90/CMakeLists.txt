@@ -14,6 +14,7 @@ if( HAVE_BUILD_TOOLS )
           codes_f90_misc
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           bufr_ecc-1284
           bufr_ecc-1019
           get_native_type
@@ -21,16 +22,23 @@ if( HAVE_BUILD_TOOLS )
     list( APPEND tests_extra
           grib_index
           codes_dump
+          codes_scan_file
+          codes_load_file
           grib_copy_message
           bufr_copy_message
           grib_get_keys
           grib_get_data
+          grib_get_data_real4
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi_write
           grib_multi
+          grib_elements
           grib_nearest
+          grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_keys
@@ -42,6 +50,7 @@ if( HAVE_BUILD_TOOLS )
           grib_copy_namespace
           grib_read_message
           grib_read_from_file
+          grib_read_bytes
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316
@@ -67,6 +76,7 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           codes_set_paths
           codes_f90_misc
           get_native_type
@@ -78,8 +88,12 @@ else()
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi
           grib_nearest
+          grib_elements
+          grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_missing

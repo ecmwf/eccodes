@@ -484,7 +484,7 @@ static int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* 
     size_t numBytes = *len * (sizeof(long));
     long* lValues   = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes\n", numBytes);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
         return GRIB_OUT_OF_MEMORY;
     }
     for (i = 0; i < *len; i++)

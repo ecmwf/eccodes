@@ -19,6 +19,7 @@ list(APPEND test_c_bins
     grib_multi_from_message
     grib_clone_headers_only
     grib_read_index
+    grib_set_large_message_fail
     unit_tests
     bufr_keys_iter
     grib_keys_iter
@@ -96,6 +97,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_transient_darray
         grib_uerra
         grib_ecpoint
         grib_s2s
@@ -143,7 +145,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
-        bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -153,14 +154,16 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_healpix
-        grib_g1monthlydate
         grib_g1day_of_the_year_date
-        grib_g1fcperiod)
+    )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_set_large_message_fail
+        grib_g1monthlydate
+        grib_g1fcperiod
         grib_bpv_limit
         grib_complex
         grib_double_cmp
@@ -174,6 +177,7 @@ if( HAVE_BUILD_TOOLS )
         grib_count
         grib_clone_headers_only
         bufr_templates
+        bufr_rdbSubTypes
         bufr_dump_data
         bufr_dump_descriptors
         bufr_coordinate_descriptors
@@ -188,6 +192,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
@@ -252,10 +257,13 @@ if( HAVE_BUILD_TOOLS )
         gts_ls
         gts_count
         gts_compare
+        gts_dump
         wrap
+        hdf5
         taf
         pseudo_diag
         metar_ls
+        metar_filter
         metar_get
         metar_dump
         metar_compare
@@ -303,6 +311,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_secondary_bitmap
         grib_list
         grib_second_order
         grib_multi_from_message
@@ -356,6 +365,10 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+    ecbuild_add_test( TARGET eccodes_t_grib_repair
+                      TYPE SCRIPT
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)

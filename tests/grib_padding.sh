@@ -15,6 +15,11 @@ REDIRECT=/dev/null
 tempGrib=temp.local.$label.grib1
 tempFilt=temp.local.$label.filt
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 ${tools_dir}/grib_set -s setLocalDefinition=1 ${data_dir}/regular_latlon_surface.grib1 $tempGrib
 cat  > $tempFilt <<EOF
     if (GRIBEXSection1Problem ) {

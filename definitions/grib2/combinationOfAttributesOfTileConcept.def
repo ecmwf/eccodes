@@ -1,5 +1,6 @@
 # Concept combinationOfAttributesOfTile
 
+'UNDEF' = {attributeOfTile = [0];}
 'UNMOD' = {attributeOfTile = [1];}
 'SNOW' = {attributeOfTile = [2];}
 'FLOOD' = {attributeOfTile = [3];}

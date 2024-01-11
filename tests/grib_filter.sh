@@ -394,8 +394,8 @@ ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2
 cat $tempOut
 grep "rubbish must fail" $tempOut
 grep "garbage must fail" $tempOut
-grep "unable to get rubbish as string" $tempOut
-grep "unable to get garbage as string" $tempOut
+grep "Unable to get rubbish as string" $tempOut
+grep "Unable to get garbage as string" $tempOut
 
 
 # Use of "abs"
