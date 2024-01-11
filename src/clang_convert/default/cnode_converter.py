@@ -14,6 +14,7 @@ import code_object.unary_operation as unary_operation
 import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object.function_call as function_call
+import code_object.if_statement as if_statement
 
 # Convert a C node (AST) into lines of C++ code
 #
@@ -82,7 +83,7 @@ class CNodeConverter:
         debug.line("convert_node_not_implemented", f"*** kind=[{node.kind}] not implemented ***")
         cnode_utils.dump_node(node,5)
         debug.line("convert_node_not_implemented", f"No convert routine implemented for kind=[{node.kind}]")
-        assert False, f"No convert routine implemented for kind=[{node.kind}]"
+        #assert False, f"No convert routine implemented for kind=[{node.kind}]"
         return None
 
     # =================================== Macros Convert functions [BEGIN] ===================================
@@ -124,8 +125,12 @@ class CNodeConverter:
 
         stmt_lines = code_lines.CodeLines()
 
+        stmt_lines.add_line("{")
+
         for child in node.get_children():
             stmt_lines.add_lines(self.convert_node(child))
+
+        stmt_lines.add_line("}")
 
         return stmt_lines
 
@@ -161,13 +166,30 @@ class CNodeConverter:
 
         return code_lines.CodeLines(return_lines)
 
+    def convert_IF_STMT(self, node):
+        debug.line("convert_IF_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
+        cnode_utils.dump_node(node, 2)
+
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count >= 2, f"Expected at least two children for if statement"
+
+        if_expression = self.convert_node(children[0])
+        if_action = self.convert_node(children[1])
+        if_stmt = if_statement.IfStatement(if_expression, if_action)
+
+        if child_count == 3:
+            else_statement = self.convert_node(children[2])
+            if_stmt.add_else(else_statement)
+
+        return if_stmt
 
     convert_STMT_funcs = {
         clang.cindex.CursorKind.COMPOUND_STMT:  convert_COMPOUND_STMT,
         clang.cindex.CursorKind.DECL_STMT:      convert_DECL_STMT,
         clang.cindex.CursorKind.CASE_STMT:      convert_node_not_implemented,
         clang.cindex.CursorKind.DEFAULT_STMT:   convert_node_not_implemented,
-        clang.cindex.CursorKind.IF_STMT:        convert_node_not_implemented,
+        clang.cindex.CursorKind.IF_STMT:        convert_IF_STMT,
         clang.cindex.CursorKind.SWITCH_STMT:    convert_node_not_implemented,
         clang.cindex.CursorKind.WHILE_STMT:     convert_node_not_implemented,
         clang.cindex.CursorKind.DO_STMT:        convert_node_not_implemented,
