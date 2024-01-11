@@ -203,7 +203,7 @@ tropical_cyclone.bufr
 tros_31.bufr
 "
 
-KEYS='localLongitude1,localLatitude1,localLongitude2,localLatitude2,localNumberOfObservations,satelliteID,restricted'
+KEYS='typicalDate,localNumberOfObservations,satelliteID,restricted'
 for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
     $EXEC ${test_dir}/bufr_extract_headers $KEYS $input > $temp1
