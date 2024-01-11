@@ -748,6 +748,7 @@ static int _clear_index(int index_id)
     return GRIB_SUCCESS;
 }
 
+#if 0
 static int _clear_multi_handle(int multi_handle_id)
 {
     l_grib_multi_handle* current  = multi_handle_set;
@@ -761,6 +762,7 @@ static int _clear_multi_handle(int multi_handle_id)
     }
     return GRIB_SUCCESS;
 }
+#endif
 
 static int clear_handle(int handle_id)
 {
@@ -782,6 +784,7 @@ static int clear_index(int index_id)
     return ret;
 }
 
+#if 0
 static int clear_multi_handle(int multi_handle_id)
 {
     int ret=0;
@@ -791,6 +794,7 @@ static int clear_multi_handle(int multi_handle_id)
     GRIB_MUTEX_UNLOCK(&multi_handle_mutex);
     return ret;
 }
+#endif
 
 static int _clear_keys_iterator(int keys_iterator_id)
 {
@@ -1214,22 +1218,23 @@ int grib_f_skip_function_(int* iterid) {
 
 /*****************************************************************************/
 int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len) {
-    size_t lsize=len;
+    size_t input_len = len;
+    size_t lsize = len;
     char buf[1024]={0,};
 
     grib_keys_iterator* kiter=get_keys_iterator(*iterid);
 
     if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
 
-    fort_char_clean(name,len);
+    fort_char_clean(name, len);
 
     sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
-    lsize=strlen(buf);
-    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+    lsize = strlen(buf);
+    if (input_len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
-    memcpy(name,buf,lsize);
+    memcpy(name, buf, lsize);
 
-    czstr_to_fortran(name,len);
+    czstr_to_fortran(name, len);
 
     return 0;
 }
@@ -1279,23 +1284,24 @@ int codes_f_bufr_keys_iterator_next_(int* iterid) {
 }
 
 /*****************************************************************************/
-int codes_f_bufr_keys_iterator_get_name_(int* iterid,char* name,int len) {
-    size_t lsize=len;
-    char buf[1024]={0,};
+int codes_f_bufr_keys_iterator_get_name_(int* iterid, char* name, int len) {
+    size_t input_len = len;
+    size_t lsize = len;
+    char buf[1024] = {0,};
 
-    bufr_keys_iterator* kiter=get_bufr_keys_iterator(*iterid);
+    bufr_keys_iterator* kiter = get_bufr_keys_iterator(*iterid);
 
     if (!kiter) return GRIB_INVALID_KEYS_ITERATOR;
 
-    fort_char_clean(name,len);
+    fort_char_clean(name, len);
 
-    sprintf(buf,"%s",codes_bufr_keys_iterator_get_name(kiter));
-    lsize=strlen(buf);
-    if (len < lsize) return GRIB_ARRAY_TOO_SMALL;
+    sprintf(buf, "%s", codes_bufr_keys_iterator_get_name(kiter));
+    lsize = strlen(buf);
+    if (input_len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
-    memcpy(name,buf,lsize);
+    memcpy(name, buf, lsize);
 
-    czstr_to_fortran(name,len);
+    czstr_to_fortran(name, len);
 
     return 0;
 }
@@ -1758,9 +1764,9 @@ int grib_f_index_release_(int* hid){
     return clear_index(*hid);
 }
 
-int grib_f_multi_handle_release_(int* hid){
+/* int grib_f_multi_handle_release_(int* hid){
     return clear_multi_handle(*hid);
-}
+} */
 
 int grib_f_release_(int* hid){
     return clear_handle(*hid);
@@ -1818,7 +1824,7 @@ int grib_f_print_(int* gid, char* key, int len){
 }
 #endif
 /*****************************************************************************/
-int grib_f_get_error_string_(int* err, char* buf, int len){
+int grib_f_get_error_string_(int* err, char* buf, int len) {
     const char* err_msg = grib_get_error_message(*err);
     const size_t erlen = strlen(err_msg);
     if( len <  erlen) return GRIB_ARRAY_TOO_SMALL;
@@ -1827,7 +1833,7 @@ int grib_f_get_error_string_(int* err, char* buf, int len){
 }
 
 /*****************************************************************************/
-int grib_f_get_api_version_(int* apiVersion,int len){
+int grib_f_get_api_version_(int* apiVersion,int len) {
     *apiVersion = grib_get_api_version();
     return GRIB_SUCCESS;
 }
@@ -2221,7 +2227,7 @@ int grib_f_get_real4_elements_(int* gid, char* key,int* index, float *val,int* s
     int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size;
-    long i=0;
+    size_t i = 0;
     double* val8 = NULL;
 
     if(!h) return GRIB_INVALID_GRIB;
