@@ -47,9 +47,11 @@ class CNodeConverter:
     def convert_node(self, node):
 
         # Handle macros
-        if self._macros.is_instantiation(node):
-            return self.convert_macro_instantiation(node)
-        elif node.kind.is_statement():
+        macro_instantiation_node = self._macros.instantiation_node_for(node)
+        if macro_instantiation_node:
+            return self.convert_macro_instantiation(macro_instantiation_node)
+
+        if node.kind.is_statement():
             return self.convert_STMT_node(node)
         elif node.kind.is_declaration():
             return self.convert_DECL_node(node)
@@ -59,6 +61,7 @@ class CNodeConverter:
             return self.convert_REF_node(node)
         elif node.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
             debug.line("convert_node", f"IGNORING MACRO spelling=[{node.spelling}] kind=[{node.kind}]")
+            assert False
         else:
             assert False, f"Unclassified kind=[{node.kind}] spelling=[{node.spelling}]"
 
@@ -79,32 +82,35 @@ class CNodeConverter:
         debug.line("convert_node_not_implemented", f"*** kind=[{node.kind}] not implemented ***")
         cnode_utils.dump_node(node,5)
         debug.line("convert_node_not_implemented", f"No convert routine implemented for kind=[{node.kind}]")
-        #assert False, f"No convert routine implemented for kind=[{node.kind}]"
+        assert False, f"No convert routine implemented for kind=[{node.kind}]"
         return None
 
     # =================================== Macros Convert functions [BEGIN] ===================================
 
     def convert_macro_instantiation(self, node):
-        debug.line("convert_macro_instantiation", f"MACRO INST spelling=[{node.spelling}] kind=[{node.kind}]")
+        debug.line("convert_macro_instantiation", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
+        token_text = "".join([token.spelling for token in node.get_tokens()]) + ";"
+        debug.line("convert_macro_instantiation", f"MACRO token text=[{token_text}]")
+        macro_lines = code_lines.CodeLines()
+        macro_lines.add_line(token_text)
+
+        return macro_lines
+
+        '''debug.line("convert_macro_instantiation", f"MACRO INST spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
 
         # Iterate children to find node with tokens and process...
         for child in node.get_children():
             tokens = child.get_tokens()
             token = next(tokens, None)
             if  token != None:
-                debug.line("convert_macro_instantiation", f"MACRO INST [FOUND] spelling=[{child.spelling}] kind=[{child.kind}]")
-                debug.line("convert_macro_instantiation", f"           [FOUND] displayname=[{child.displayname}]")
-                debug.line("convert_macro_instantiation", f"           [FOUND] token=[{token.spelling}] extent=[{token.extent.start.line}:{token.extent.start.column} -> {token.extent.end.line}:{token.extent.end.column}]")
-                for child_arg in child.get_arguments():
-                    debug.line("convert_macro_instantiation", f"           [FOUND] argument spelling=[{child_arg.spelling}] type=[{child_arg.type.spelling}] kind=[{child_arg.kind}]")
-                debug.line("convert_macro_instantiation", f"           [FOUND] lexical_parent=[{child.lexical_parent}]")
-                debug.line("convert_macro_instantiation", f"           [FOUND] semantic_parent=[{child.semantic_parent}]")
+                debug.line("convert_macro_instantiation", f"MACRO INST [1] FOUND node with tokens: spelling=[{child.spelling}] kind=[{child.kind}] extent=[{child.extent.start.line}:{child.extent.start.column} -> {child.extent.end.line}:{child.extent.end.column}]")
                 cnode_utils.dump_node(child, 2)
+                debug.line("convert_macro_instantiation", f"MACRO INST [2] Converting node spelling=[{child.spelling}] kind=[{child.kind}] extent=[{child.extent.start.line}:{child.extent.start.column} -> {child.extent.end.line}:{child.extent.end.column}]")
                 return self.convert_node(child)
             else:
                 self.convert_macro_instantiation(child)
 
-        return None
+        return None'''
 
     # =================================== Macros Convert functions [END]   ===================================
 

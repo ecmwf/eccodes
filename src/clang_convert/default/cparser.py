@@ -93,7 +93,8 @@ class CParser:
 
         parse_options = clang.cindex.TranslationUnit.PARSE_NONE
         # Enable this to get macros...
-        #parse_options = clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD
+        parse_options = clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD
+        debug.line("parse", f"MACRO generation enabled [PARSE_DETAILED_PROCESSING_RECORD]")
 
         self._translation_unit = index.parse(self._cfilepath + self._cfilename, 
                                              args=CParser.parse_args,
