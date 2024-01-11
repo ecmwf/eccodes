@@ -284,7 +284,8 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
 {
     char line[1024] = {0,};
     FILE* f = NULL;
-    int lineNumber, numberOfColumns, code;
+    // int lineNumber;
+    int numberOfColumns, code;
 
     grib_context_log(c, GRIB_LOG_DEBUG, "Loading code table from %s", filename);
 
@@ -313,14 +314,14 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         t->recomposed_name[2] = grib_context_strdup_persistent(c, recomposed_name);
     }
 
-    lineNumber = 0;
+    // lineNumber = 0;
     while (fgets(line, sizeof(line) - 1, f)) {
         char* s = line;
         char* p;
 
         line[strlen(line) - 1] = 0;
 
-        ++lineNumber;
+        // ++lineNumber;
         while (*s != '\0' && isspace(*s))
             s++;
 

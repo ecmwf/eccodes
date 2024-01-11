@@ -359,7 +359,8 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
     double reference_value;
     long binary_scale_factor;
     long decimal_scale_factor;
-    long j, count = 0;
+    long j;
+    // long count = 0;
     long *groupWidths = NULL, *groupLengths = NULL;
     long orderOfSPD     = 0;
     long* SPD           = 0;
@@ -456,7 +457,7 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
                                    &X[n]);
             for (j = 0; j < groupLengths[i]; j++) {
                 X[n] += firstOrderValues[i];
-                count++;
+                // count++;
                 n++;
             }
 
