@@ -125,7 +125,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_t i;
     int err               = 0;
     long pos              = 0;
-    long bmaplen          = 0;
+    //long bmaplen          = 0;
     const int bit_padding = 16;
     double miss_values    = 0;
     tlen                  = ((*len + bit_padding - 1) / bit_padding * bit_padding) / 8;
@@ -141,7 +141,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         if (val[i] == miss_values)
             pos++;
         else {
-            bmaplen++;
+            //bmaplen++;
             grib_set_bit_on(buf, &pos);
         }
     }
