@@ -25,7 +25,7 @@ class CCodeConverter:
         self._transforms = transforms.Transforms()
 
     def convert_global_declarations(self):
-        global_decl_ast_parser = self._manifest_class.CAST_PARSER(self._manifest_class)
+        global_decl_ast_parser = self._manifest_class.CAST_PARSER()
         global_decl_ccode_objects = global_decl_ast_parser.to_ccode_objects(self._ccode.global_declarations, self._transforms, self._ccode.macro_details)
         debug.line("convert_global_declarations", global_decl_ccode_objects.as_lines())
 
@@ -42,7 +42,7 @@ class CCodeConverter:
         return cppfuncsig
 
     def convert_cfunction_body(self, cfunc):
-        function_body_ast_parser = self._manifest_class.CAST_PARSER(self._manifest_class)
+        function_body_ast_parser = self._manifest_class.CAST_PARSER()
         function_body_ccode_objects = function_body_ast_parser.to_ccode_objects(cfunc.body, self._transforms, self._ccode.macro_details)
         return function_body_ccode_objects.as_lines()
 
