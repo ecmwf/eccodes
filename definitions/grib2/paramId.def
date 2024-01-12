@@ -958,6 +958,36 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 52 ;
 	}
+#Envelope-maximum individual wave height
+'140130' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 93 ;
+	}
+#Time domain maximum individual crest height
+'140131' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 94 ;
+	}
+#Time domain maximum individual wave height
+'140132' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 95 ;
+	}
+#Space time maximum individual crest height
+'140133' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 96 ;
+	}
+#Space time maximum individual wave height
+'140134' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 97 ;
+	}
 #Wave Spectral Skewness
 '140207' = {
 	 discipline = 10 ;
@@ -4453,6 +4483,40 @@
 	 discipline = 1 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 9 ;
+	}
+#Lake depth
+'240030' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 15 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#River depth
+'240031' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 16 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 162 ;
+	}
+#River outflow of water
+'240032' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	}
+#Floodplain outflow of water
+'240033' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 18 ;
+	}
+#Floodpath outflow of water
+'240034' = {
+	 discipline = 1 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 19 ;
 	}
 #Latitude
 '250001' = {
