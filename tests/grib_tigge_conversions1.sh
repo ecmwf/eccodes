@@ -31,7 +31,7 @@ fi
 # --- Do I want to exclude any file pattern from the comparison ?
 exclusion_pattern="tcw|ssr|str|skt|cap|ci|ttr|st|sm|sd|slhf|sshf"
 
-# Some very small floating-point differences shown for these
+# ECC-1744: Some very small floating-point differences shown for these
 blacklist="-b iDirectionIncrementInDegrees,jDirectionIncrementInDegrees"
 
 for file in ${dir}/tigge_[a-e]*.grib; do

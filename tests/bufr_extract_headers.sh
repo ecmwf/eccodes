@@ -99,8 +99,8 @@ for bf in ${bufr_files}; do
 done
 
 
-# BUFRs with localLatitude1, localLongitude2 etc
-# ----------------------------------------------
+# BUFRs with specific keys to compare
+# ------------------------------------
 bufr_files="
 aaen_55.bufr
 aben_55.bufr
@@ -179,21 +179,16 @@ modw_87.bufr
 monw_87.bufr
 nomi_206.bufr
 nos1_208.bufr
-nos2_208.bufr
 nos3_208.bufr
 nos4_208.bufr
-nos5_208.bufr
 nos6_208.bufr
-nos7_208.bufr
 nos8_208.bufr
 pgps_110.bufr
-rada_250.bufr
 rado_250.bufr
 s4kn_165.bufr
 sb19_206.bufr
 sbu8_206.bufr
 smin_49.bufr
-smis_49.bufr
 smiu_49.bufr
 smos_203.bufr
 sn4k_165.bufr
@@ -203,6 +198,7 @@ tropical_cyclone.bufr
 tros_31.bufr
 "
 
+# ECC-1744: Do not compare floating-point keys like localLatitude1, localLongitude2
 KEYS='typicalDate,localNumberOfObservations,satelliteID,restricted'
 for bf in ${bufr_files}; do
     input=${data_dir}/bufr/$bf
