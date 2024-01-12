@@ -131,6 +131,11 @@ int grib_set_long(grib_handle* h, const char* name, long val)
 
         return ret;
     }
+
+    if (h->context->debug) {
+        fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (Key not found)\n", name, val);
+    }
+
     return GRIB_NOT_FOUND;
 }
 
@@ -476,6 +481,11 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
         }
         return ret;
     }
+
+    if (h->context->debug) {
+        fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s| (Key not found)\n", name, val);
+    }
+
     return GRIB_NOT_FOUND;
 }
 
@@ -1769,6 +1779,12 @@ int grib_set_values(grib_handle* h, grib_values* args, size_t count)
     for (i = 0; i < count; i++)
         args[i].error = GRIB_NOT_FOUND;
 
+    if (h->context->debug) {
+        for (i = 0; i < count; i++) {
+            grib_print_values("ECCODES DEBUG set key/value pairs", &args[i], stderr);
+        }
+    }
+
     while (more) {
         more = 0;
         for (i = 0; i < count; i++) {
@@ -1839,23 +1855,22 @@ int grib_get_nearest_smaller_value(grib_handle* h, const char* name,
     return grib_nearest_smaller_value(act, val, nearest);
 }
 
-void grib_print_values(const char* title, grib_values* values)
+void grib_print_values(const char* title, grib_values* values, FILE* out)
 {
-    while(values) {
-        printf("%s: %s%s", title, values->name, (values->equal?"=":"!="));
+    if (values) {
+        fprintf(out, "%s: %s=", title, values->name);
         switch (values->type) {
             case GRIB_TYPE_LONG:
-                printf("%ld", values->long_value);
+                fprintf(out, "%ld", values->long_value);
                 break;
             case GRIB_TYPE_DOUBLE:
-                printf("%g", values->double_value);
+                fprintf(out, "%g", values->double_value);
                 break;
             case GRIB_TYPE_STRING:
-                printf("%s", values->string_value);
+                fprintf(out, "%s", values->string_value);
                 break;
         }
-        printf(" (type=%s)\n", grib_get_type_name(values->type));
-        values = values->next;
+        fprintf(out, " (type=%s)\n", grib_get_type_name(values->type));
     }
 }
 
