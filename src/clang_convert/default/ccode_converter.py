@@ -1,7 +1,5 @@
 
 import debug
-import default.cppcode as cppcode
-import default.cnode_converter as cnode_converter
 import transforms
 import code_object.cppfunction as cppfunction
 
@@ -27,9 +25,9 @@ class CCodeConverter:
         self._transforms = transforms.Transforms()
 
     def convert_global_declarations(self):
-        global_decl_converter = self._manifest_class.CNODE_CONVERTER(self._manifest_class)
-        lines = global_decl_converter.convert(self._ccode.global_declarations, self._transforms, self._ccode.macro_details)
-        debug.line("convert_global_declarations", lines)
+        global_decl_ast_parser = self._manifest_class.CAST_PARSER(self._manifest_class)
+        global_decl_ccode_objects = global_decl_ast_parser.to_ccode_objects(self._ccode.global_declarations, self._transforms, self._ccode.macro_details)
+        debug.line("convert_global_declarations", global_decl_ccode_objects.as_lines())
 
     # Helper to create the funcsig mapping and update the transforms
     def convert_cfunction_funcsig(self, cfunc):
@@ -44,9 +42,9 @@ class CCodeConverter:
         return cppfuncsig
 
     def convert_cfunction_body(self, cfunc):
-        func_decl_converter = self._manifest_class.CNODE_CONVERTER(self._manifest_class)
-        lines = func_decl_converter.convert(cfunc.body, self._transforms, self._ccode.macro_details)
-        return lines
+        function_body_ast_parser = self._manifest_class.CAST_PARSER(self._manifest_class)
+        function_body_ccode_objects = function_body_ast_parser.to_ccode_objects(cfunc.body, self._transforms, self._ccode.macro_details)
+        return function_body_ccode_objects.as_lines()
 
     def convert_functions(self):
         for func in self._ccode.functions:

@@ -5,7 +5,7 @@ import default.cfuncsig_pointer_converter as cfuncsig_pointer_converter
 import default.ccode as ccode
 import default.ccode_converter as ccode_converter
 import default.cppcode as cppcode
-import default.cnode_converter as cnode_converter
+import default.cast_parser as cast_parser
 
 # The manifest provides generic access to all the components required to run the parser for this class of code
 #
@@ -47,7 +47,7 @@ class Manifest:
         return cppcode.CppCode
 
     @property
-    def CNODE_CONVERTER(self):
-        return cnode_converter.CNodeConverter
+    def CAST_PARSER(self):
+        return cast_parser.CASTParser
 
 MANIFEST_CLASS=Manifest
