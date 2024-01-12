@@ -52,6 +52,11 @@ for i in 1 2 3 ;do
     [ $centre = "222" ]
 done
 
+# Strict option
+f=aeolus_wmo_26.bufr
+${tools_dir}/bufr_set -S -w localNumberOfObservations=40 -s rdbType=3 $f $fBufrTmp
+cnt=$( ${tools_dir}/bufr_count $fBufrTmp )
+[ $cnt -eq 3 ]
 
 #-----------------------------------------------------
 # Test: setting data values for single message file

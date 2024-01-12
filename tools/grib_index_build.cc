@@ -83,7 +83,7 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
     printf("--- %s: processing %s\n", tool_name, file);
     ret = grib_index_add_file(idx, file);
     if (ret) {
-        printf("error: %s\n", grib_get_error_message(ret));
+        fprintf(stderr, "Error: %s\n", grib_get_error_message(ret));
         exit(ret);
     }
     return 0;

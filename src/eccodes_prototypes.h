@@ -20,7 +20,7 @@ grib_action* grib_action_create_alias(grib_context* context, const char* name, c
 grib_action* grib_action_create_gen(grib_context* context, const char* name, const char* op, const long len, grib_arguments* params, grib_arguments* default_value, int flags, const char* name_space, const char* set);
 
 /* action_class_if.cc */
-grib_action* grib_action_create_if(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false, int transient, int lineno, char* file_being_parsed);
+grib_action* grib_action_create_if(grib_context* context, grib_expression* expression, grib_action* block_true, grib_action* block_false, int transient, int lineno, const char* file_being_parsed);
 
 /* action_class_switch.cc */
 grib_action* grib_action_create_switch(grib_context* context, grib_arguments* args, grib_case* Case, grib_action* Default);
@@ -635,19 +635,6 @@ grib_action* grib_action_create_set_missing(grib_context* context, const char* n
 
 /* grib_index.cc*/
 int grib_index_compress(grib_index* index);
-int grib_read_uchar(FILE* fh, unsigned char* val);
-int grib_read_short(FILE* fh, short* val);
-int grib_read_long(FILE* fh, long* val);
-int grib_read_unsigned_long(FILE* fh, unsigned long* val);
-int grib_write_uchar(FILE* fh, unsigned char val);
-int grib_write_short(FILE* fh, short val);
-int grib_write_long(FILE* fh, long val);
-int grib_write_unsigned_long(FILE* fh, unsigned long val);
-int grib_write_string(FILE* fh, const char* s);
-int grib_write_identifier(FILE* fh, const char* id);
-int grib_write_null_marker(FILE* fh);
-int grib_write_not_null_marker(FILE* fh);
-char* grib_read_string(grib_context* c, FILE* fh, int* err);
 grib_field_tree* grib_read_field_tree(grib_context* c, FILE* fh, grib_file** files, int* err);
 grib_index* grib_index_new(grib_context* c, const char* key, int* err);
 void grib_index_delete(grib_index* index);
@@ -1200,7 +1187,7 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
 int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
-void grib_print_values(const char* title, grib_values* values);
+void grib_print_values(const char* title, grib_values* values, FILE* out);
 int grib_values_check(grib_handle* h, grib_values* values, int count);
 int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err);
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type);

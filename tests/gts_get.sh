@@ -29,7 +29,14 @@ ${tools_dir}/gts_get -p TT,AA,II,CCCC,YY,GG,gg,BBB $gts_file >/dev/null
 #----------------------------------------------
 # Test "-w" switch
 #----------------------------------------------
-${tools_dir}/gts_get -p TT -w count=3 $gts_file >/dev/null
+${tools_dir}/gts_get -p TT -w count=3 $gts_file
+
+
+#----------------------------------------------
+# Test "-s" switch
+#----------------------------------------------
+result=$( ${tools_dir}/gts_get -s YY=ab -p YY -w count=3 $gts_file )
+[ "$result" = "ab" ]
 
 
 gts_file=${data_dir}/gts.grib

@@ -107,12 +107,12 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i                    = 0;
-    grib_action_assert* self = (grib_action_assert*)act;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-    grib_expression_print(act->context, self->expression, 0);
-    printf("\n");
+    // int i = 0;
+    // grib_action_assert* self = (grib_action_assert*)act;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_expression_print(act->context, self->expression, 0);
+    // printf("\n");
 }
 
 static void destroy(grib_context* context, grib_action* act)

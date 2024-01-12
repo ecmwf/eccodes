@@ -274,7 +274,7 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
     return keys;
 }
 
-int grib_read_uchar(FILE* fh, unsigned char* val)
+static int grib_read_uchar(FILE* fh, unsigned char* val)
 {
     if (fread(val, sizeof(unsigned char), 1, fh) < 1) {
         if (feof(fh))
@@ -285,7 +285,7 @@ int grib_read_uchar(FILE* fh, unsigned char* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_short(FILE* fh, short* val)
+static int grib_read_short(FILE* fh, short* val)
 {
     if (fread(val, sizeof(short), 1, fh) < 1) {
         if (feof(fh))
@@ -296,7 +296,18 @@ int grib_read_short(FILE* fh, short* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_long(FILE* fh, long* val)
+// static int grib_read_long(FILE* fh, long* val)
+// {
+//     if (fread(val, sizeof(long), 1, fh) < 1) {
+//         if (feof(fh))
+//             return GRIB_END_OF_FILE;
+//         else
+//             return GRIB_IO_PROBLEM;
+//     }
+//     return GRIB_SUCCESS;
+// }
+
+static int grib_read_unsigned_long(FILE* fh, unsigned long* val)
 {
     if (fread(val, sizeof(long), 1, fh) < 1) {
         if (feof(fh))
@@ -307,46 +318,35 @@ int grib_read_long(FILE* fh, long* val)
     return GRIB_SUCCESS;
 }
 
-int grib_read_unsigned_long(FILE* fh, unsigned long* val)
-{
-    if (fread(val, sizeof(long), 1, fh) < 1) {
-        if (feof(fh))
-            return GRIB_END_OF_FILE;
-        else
-            return GRIB_IO_PROBLEM;
-    }
-    return GRIB_SUCCESS;
-}
-
-int grib_write_uchar(FILE* fh, unsigned char val)
+static int grib_write_uchar(FILE* fh, unsigned char val)
 {
     if (fwrite(&val, sizeof(unsigned char), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_short(FILE* fh, short val)
+static int grib_write_short(FILE* fh, short val)
 {
     if (fwrite(&val, sizeof(short), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_long(FILE* fh, long val)
+// static int grib_write_long(FILE* fh, long val)
+// {
+//     if (fwrite(&val, sizeof(long), 1, fh) < 1)
+//         return GRIB_IO_PROBLEM;
+//     return GRIB_SUCCESS;
+// }
+
+static int grib_write_unsigned_long(FILE* fh, unsigned long val)
 {
     if (fwrite(&val, sizeof(long), 1, fh) < 1)
         return GRIB_IO_PROBLEM;
     return GRIB_SUCCESS;
 }
 
-int grib_write_unsigned_long(FILE* fh, unsigned long val)
-{
-    if (fwrite(&val, sizeof(long), 1, fh) < 1)
-        return GRIB_IO_PROBLEM;
-    return GRIB_SUCCESS;
-}
-
-int grib_write_string(FILE* fh, const char* s)
+static int grib_write_string(FILE* fh, const char* s)
 {
     size_t len = 0;
     if (s == NULL)
@@ -358,22 +358,22 @@ int grib_write_string(FILE* fh, const char* s)
     return GRIB_SUCCESS;
 }
 
-int grib_write_identifier(FILE* fh, const char* ID)
+static int grib_write_identifier(FILE* fh, const char* ID)
 {
     return grib_write_string(fh, ID);
 }
 
-int grib_write_null_marker(FILE* fh)
+static int grib_write_null_marker(FILE* fh)
 {
     return grib_write_uchar(fh, NULL_MARKER);
 }
 
-int grib_write_not_null_marker(FILE* fh)
+static int grib_write_not_null_marker(FILE* fh)
 {
     return grib_write_uchar(fh, NOT_NULL_MARKER);
 }
 
-char* grib_read_string(grib_context* c, FILE* fh, int* err)
+static char* grib_read_string(grib_context* c, FILE* fh, int* err)
 {
     unsigned char len = 0;
     char* s           = NULL;

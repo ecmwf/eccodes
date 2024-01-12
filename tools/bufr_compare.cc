@@ -698,7 +698,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
     char *sval1 = NULL, *sval2 = NULL;
     char **svals1 = NULL, **svals2 = NULL;
-    unsigned char *uval1 = NULL, *uval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
     double maxdiff       = 0;
@@ -1094,60 +1093,9 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
                 printf(" as bytes\n");
             if (options->mode == MODE_BUFR)
                 return 0;
-            if (len1 < 2)
-                len1 = 512;
-            if (len2 < 2)
-                len2 = 512;
-            uval1 = (unsigned char*)grib_context_malloc(handle1->context, len1 * sizeof(unsigned char));
-            uval2 = (unsigned char*)grib_context_malloc(handle2->context, len2 * sizeof(unsigned char));
-
-            if ((err1 = grib_get_bytes(handle1, name, uval1, &len1)) != GRIB_SUCCESS) {
-                printInfo(handle1);
-                save_error(c, name);
-                printf("Error: cannot get bytes value of [%s] in %s field: %s\n",
-                       name, first_str, grib_get_error_message(err1));
-            }
-
-            if ((err2 = grib_get_bytes(handle2, name, uval2, &len2)) != GRIB_SUCCESS) {
-                printInfo(handle1);
-                save_error(c, name);
-                printf("Error: cannot get bytes value of [%s] in %s field: %s\n",
-                       name, second_str, grib_get_error_message(err2));
-            }
-
-            if (err1 == GRIB_SUCCESS && err2 == GRIB_SUCCESS) {
-                if (memcmp(uval1, uval2, len1) != 0) {
-                    for (i = 0; i < len1; i++) {
-                        if (uval1[i] != uval2[i]) {
-                            printInfo(handle1);
-                            save_error(c, name);
-                            if (len1 == 1)
-                                printf("[%s] byte values are different: [%02x] and [%02x]\n",
-                                       name, uval1[i], uval2[i]);
-                            else
-                                printf("[%s] byte value %d of %ld are different: [%02x] and [%02x]\n",
-                                       name, i, (long)len1, uval1[i], uval2[i]);
-
-                            err1 = GRIB_VALUE_MISMATCH;
-                            break;
-                        }
-                    }
-                    err1 = GRIB_VALUE_MISMATCH;
-                }
-            }
-
-            grib_context_free(handle1->context, uval1);
-            grib_context_free(handle2->context, uval2);
-
-            if (err1)
-                return err1;
-            if (err2)
-                return err2;
             break;
 
         case GRIB_TYPE_LABEL:
-            if (verbose)
-                printf(" as label\n");
             break;
 
         default:

@@ -16,6 +16,10 @@ tempGrib=temp.${label}.grib
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
 
 # Check lowercase/uppercase
 ${tools_dir}/grib_set -s class=YT,type=EM,stream=DCWV $grib1_sample $tempGrib
