@@ -4,7 +4,7 @@ import code_object.cppfunction as cppfunction
 
 # Represents the conversion of a CCode class to C++
 
-class CppCode:
+class DefaultCppCode:
     def __init__(self) -> None:
         self._global_declarations = []
         self._functions = []

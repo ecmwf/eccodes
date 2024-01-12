@@ -1,12 +1,17 @@
 
 import debug
-import default.ccode_converter as ccode_converter
+import default.default_ccode_converter as default_ccode_converter
 import code_object.cppfunction as cppfunction
 
 # Converter for grib_accessor_ccode classes...
-class GribAccessorCCodeConverter(ccode_converter.CCodeConverter):
-    def __init__(self, ccode_instance, manifest_class) -> None:
-        super().__init__(ccode_instance, manifest_class)
+class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
+    def __init__(self, ccode_instance) -> None:
+        super().__init__(ccode_instance)
+
+    # TODO when the class is available...
+    @property
+    def cpp_code_class(self):
+        return super().cpp_code_class
 
     def convert_functions(self):
         self.convert_constructor_method()

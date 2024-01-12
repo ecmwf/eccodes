@@ -1,6 +1,6 @@
 
 import debug
-import default.ccode as ccode
+import default.default_ccode as default_ccode
 import code_object.cfunction as cfunction
 import re
 
@@ -45,7 +45,7 @@ grib_accessor_inherited_methods = [
 ]
 
 # Represents a grib_accessor_class_*cc file
-class GribAccessorCCode(ccode.CCode):
+class GribAccessorCCode(default_ccode.DefaultCCode):
     def __init__(self, cfilename, accessor_name, accessor_class_name) -> None:
         super().__init__(cfilename)
         self._accessor_name = accessor_name

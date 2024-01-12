@@ -1,28 +1,31 @@
 
 import clang.cindex
-import default.ccode as ccode
+import default.default_ccode as default_ccode
 import cnode_utils
 import os
 import debug
 
-class CParser:
+# Parse a single C file using Libclang and store the AST in a CCode object
+# Subclass for more specialised parsing
+
+class DefaultCFileParser:
     def __init__(self, cfilename) -> None:
         self._cfilename = cfilename
         self._cfilepath = None
         self._ccode = None
         self._include_dirs = []
 
-    parse_args = [
-            #"-fparse-all-comments",
-            #"-fdebug-macro",
-            #"-fmacro-backtrace-limit=0",
-            #"-E",
-            #"-d1PP"
-        ]
-    
+        self._parse_args = [
+                #"-fparse-all-comments",
+                #"-fdebug-macro",
+                #"-fmacro-backtrace-limit=0",
+                #"-E",
+                #"-d1PP"
+            ]
+
     # Override to create the right object
     def create_ccode(self):
-        self._ccode = ccode.CCode(self._cfilename)
+        self._ccode = default_ccode.DefaultCCode(self._cfilename)
 
     # Default behaviour is to just add to the ccode object
     def parse_global_declaration(self, node):
@@ -79,8 +82,6 @@ class CParser:
         for inc in self._include_dirs:
             debug.line("parse_root", f"INCLUDE=[{inc}]")
         
-        #self.extract_macros()
-
         for child in self._root.get_children():
             self.parse_node(child)
 
@@ -97,13 +98,13 @@ class CParser:
         debug.line("parse", f"self._cfilepath=[{self._cfilepath}] self._cfilename=[{self._cfilename}]")
         debug.line("parse", f"FILE=[{self._cfilepath + self._cfilename}]")
 
-        parse_options = clang.cindex.TranslationUnit.PARSE_NONE
+        #parse_options = clang.cindex.TranslationUnit.PARSE_NONE
         # Enable this to get macros...
         parse_options = clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD
         debug.line("parse", f"MACRO generation enabled [PARSE_DETAILED_PROCESSING_RECORD]")
 
         self._translation_unit = index.parse(self._cfilepath + self._cfilename, 
-                                             args=CParser.parse_args,
+                                             args=self._parse_args,
                                              unsaved_files=None,
                                              options=parse_options)
 

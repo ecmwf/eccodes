@@ -1,10 +1,10 @@
 
-import default.cparser as cparser
+import default.default_cfile_parser as default_cfile_parser
 import grib_accessor.grib_accessor_ccode as grib_accessor_ccode
 import clang.cindex
 import code_object.arg as arg
 
-class GribAccessorCParser(cparser.CParser):
+class GribAccessorCParser(default_cfile_parser.DefaultCFileParser):
     def __init__(self, cfilename) -> None:
         super().__init__(cfilename)
         self._accessor_class_name = self._cfilename.rstrip(".cc")

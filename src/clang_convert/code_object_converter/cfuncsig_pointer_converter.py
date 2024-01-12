@@ -1,6 +1,6 @@
 
 import code_object.funcsig_pointer as funcsig_pointer
-import default.cfuncsig_converter as cfuncsig_converter
+import cfuncsig_converter as cfuncsig_converter
 
 # Convert a C Function Signature Pointer to C++
 #

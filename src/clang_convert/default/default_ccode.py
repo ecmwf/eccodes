@@ -5,7 +5,7 @@ import default.macro_details as macro_details
 
 # Represents a coherent unit of C code that needs to be parsed together: usually a single C file
 
-class CCode:
+class DefaultCCode:
     def __init__(self, cfilename) -> None:
         self._cfilename = cfilename
         self._global_declarations = []
