@@ -17,6 +17,7 @@ import code_object.function_call as function_call
 import code_object.if_statement as if_statement
 import code_object.for_statement as for_statement
 import code_object.array_access as array_access
+import code_object.conditional_operation as conditional_operation
 
 # Convert a C node (AST) into lines of C++ code
 #
@@ -565,6 +566,22 @@ class CNodeConverter:
 
         return arr_access
 
+    def convert_CONDITIONAL_OPERATOR(self, node):
+        debug.line("convert_CONDITIONAL_OPERATOR", f"spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
+
+        # We expect three children: the condition, true branch and false branch
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 3, f"Expected exactly three children for conditional operator"
+
+        bool_expression = self.convert_node(children[0])
+        true_expression = self.convert_node(children[1])
+        false_expression = self.convert_node(children[2])
+
+        cond_operation = conditional_operation.ConditionalOperation(bool_expression, true_expression, false_expression)
+
+        return cond_operation
+
     convert_EXPR_funcs = {
         clang.cindex.CursorKind.UNEXPOSED_EXPR:                 convert_UNEXPOSED_EXPR,
         clang.cindex.CursorKind.DECL_REF_EXPR:                  convert_DECL_REF_EXPR,
@@ -583,7 +600,7 @@ class CNodeConverter:
         clang.cindex.CursorKind.UNARY_OPERATOR:                 convert_UNARY_OPERATOR,
         clang.cindex.CursorKind.BINARY_OPERATOR:                convert_BINARY_OPERATOR,
         clang.cindex.CursorKind.COMPOUND_ASSIGNMENT_OPERATOR:   convert_COMPOUND_ASSIGNMENT_OPERATOR,
-        clang.cindex.CursorKind.CONDITIONAL_OPERATOR:           convert_node_not_implemented,
+        clang.cindex.CursorKind.CONDITIONAL_OPERATOR:           convert_CONDITIONAL_OPERATOR,
     }
 
     def convert_EXPR_node(self, node):

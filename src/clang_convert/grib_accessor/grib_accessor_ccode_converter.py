@@ -12,6 +12,8 @@ class GribAccessorCCodeConverter(ccode_converter.CCodeConverter):
         self.convert_constructor_method()
         self.convert_destructor_method()
         self.convert_inherited_methods()
+        self.convert_private_methods()
+        self.convert_static_functions()
 
     def convert_constructor_method(self):
         constructor_funcsig = self.convert_cfunction_funcsig(self._ccode.constructor)
@@ -30,9 +32,28 @@ class GribAccessorCCodeConverter(ccode_converter.CCodeConverter):
         self.dump_function("convert_destructor_method", destructor)
 
     def convert_inherited_methods(self):
+        debug.line("convert_inherited_methods", f"Converting inherited methods...")
         for entry in self._ccode.inherited_methods:
             debug.line("convert_inherited_methods", f"Converting name=[{entry.funcsig.name}]")
             entry_funcsig = self.convert_cfunction_funcsig(entry)
             entry_body = self.convert_cfunction_body(entry)
             entry_cppfunction = cppfunction.CppFunction(entry_funcsig, entry_body)
             self.dump_function("convert_inherited_methods", entry_cppfunction)
+
+    def convert_private_methods(self):
+        debug.line("convert_private_methods", f"Converting private methods...")
+        for entry in self._ccode.private_methods:
+            debug.line("convert_private_methods", f"Converting name=[{entry.funcsig.name}]")
+            entry_funcsig = self.convert_cfunction_funcsig(entry)
+            entry_body = self.convert_cfunction_body(entry)
+            entry_cppfunction = cppfunction.CppFunction(entry_funcsig, entry_body)
+            self.dump_function("convert_private_methods", entry_cppfunction)
+
+    def convert_static_functions(self):
+        debug.line("convert_static_functions", f"Converting static functions...")
+        for entry in self._ccode.static_functions:
+            debug.line("convert_static_functions", f"Converting name=[{entry.funcsig.name}]")
+            entry_funcsig = self.convert_cfunction_funcsig(entry)
+            entry_body = self.convert_cfunction_body(entry)
+            entry_cppfunction = cppfunction.CppFunction(entry_funcsig, entry_body)
+            self.dump_function("convert_static_functions", entry_cppfunction)
