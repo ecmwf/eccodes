@@ -53,6 +53,13 @@ class CCodeConverter:
             cppfuncsig = self.convert_cfunction_funcsig(func)
             cppbody = self.convert_cfunction_body(func)
             cppfunc = cppfunction.CppFunction(cppfuncsig, cppbody)
-            debug.line("convert_functions", cppfunc.funcsig.as_string())
-            debug.line("convert_functions", cppfunc.body)
+            self.dump_function("convert_functions", cppfunc)
 
+    # Helper for consistent debug output!
+    def dump_function(self, def_name, cppfunc):
+        debug.line("dump_function", "================================================================================")
+        debug.line("dump_function", f"Source=[{def_name}]")
+        debug.line("dump_function", "--------------------------------------------------------------------------------")
+        debug.line("dump_function", cppfunc.funcsig.as_string())
+        debug.line("dump_function", cppfunc.body)
+        debug.line("dump_function", "================================================================================")

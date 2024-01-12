@@ -63,8 +63,7 @@ class CNodeConverter:
         elif node.kind.is_reference():
             return self.convert_REF_node(node)
         elif node.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
-            debug.line("convert_node", f"IGNORING MACRO spelling=[{node.spelling}] kind=[{node.kind}]")
-            assert False
+            return self.convert_macro_definition(node)
         else:
             assert False, f"Unclassified kind=[{node.kind}] spelling=[{node.spelling}]"
 
@@ -85,10 +84,40 @@ class CNodeConverter:
         debug.line("convert_node_not_implemented", f"*** kind=[{node.kind}] not implemented ***")
         cnode_utils.dump_node(node,5)
         debug.line("convert_node_not_implemented", f"No convert routine implemented for kind=[{node.kind}]")
-        #assert False, f"No convert routine implemented for kind=[{node.kind}]"
+        assert False, f"No convert routine implemented for kind=[{node.kind}]"
         return None
 
     # =================================== Macros Convert functions [BEGIN] ===================================
+
+    def convert_macro_definition(self, node):
+        debug.line("convert_macro_definition", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
+        tokens = [token.spelling for token in node.get_tokens()]
+        debug.line("convert_macro_definition", f"MACRO tokens=[{tokens}]")
+        tokens_count = len(tokens)
+        assert tokens_count > 0, f"Expected at least 1 macro token!"
+
+        macro_text = "#define " + tokens[0]
+
+        # The tokens don't contain any whitespace, so ["FOO", "0"] could be
+        # #define FOO0
+        # #define FOO 0
+        #
+        # To try and mitigate this, we'll use the following rules:
+        # 1. If the 2nd token is "(", assume function macro:  #define FOO(a) a*a
+        # 2. If the 2nd token ISN'T "(", assume object macro: #define FOO BAR
+        # 3. Add a space after every subsequent token
+        #
+        # Note: Use the debug output to confirm the converted macro
+        if tokens_count > 1:
+            if tokens[1] != "(":
+                macro_text += " "
+            macro_text += " ".join(tokens[1:])
+
+        debug.line("convert_macro_definition", f"MACRO text=[{macro_text}]")
+        macro_lines = code_lines.CodeLines()
+        macro_lines.add_line(macro_text)
+
+        return macro_lines
 
     def convert_macro_instantiation(self, node):
         debug.line("convert_macro_instantiation", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
@@ -98,22 +127,6 @@ class CNodeConverter:
         macro_lines.add_line(token_text)
 
         return macro_lines
-
-        '''debug.line("convert_macro_instantiation", f"MACRO INST spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
-
-        # Iterate children to find node with tokens and process...
-        for child in node.get_children():
-            tokens = child.get_tokens()
-            token = next(tokens, None)
-            if  token != None:
-                debug.line("convert_macro_instantiation", f"MACRO INST [1] FOUND node with tokens: spelling=[{child.spelling}] kind=[{child.kind}] extent=[{child.extent.start.line}:{child.extent.start.column} -> {child.extent.end.line}:{child.extent.end.column}]")
-                cnode_utils.dump_node(child, 2)
-                debug.line("convert_macro_instantiation", f"MACRO INST [2] Converting node spelling=[{child.spelling}] kind=[{child.kind}] extent=[{child.extent.start.line}:{child.extent.start.column} -> {child.extent.end.line}:{child.extent.end.column}]")
-                return self.convert_node(child)
-            else:
-                self.convert_macro_instantiation(child)
-
-        return None'''
 
     # =================================== Macros Convert functions [END]   ===================================
 

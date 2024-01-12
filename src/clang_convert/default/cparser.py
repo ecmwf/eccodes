@@ -43,8 +43,14 @@ class CParser:
 
     def parse_node(self, node):
         if node.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
-            if node.location.file and not node.location.file.name.startswith("/usr/include") and not node.spelling.startswith("_"):
-                self._ccode.add_macro_definition(node)
+            if node.location.file:
+                if not node.location.file.name.startswith("/usr/include") and not node.spelling.startswith("_"):
+                    self._ccode.add_macro_definition(node)
+                if node.location.file.name == self._cfilepath + self._cfilename:
+                    # Add this definition to the global declaration
+                    # Note: the preprocessor necessarily parses macros before everything else, so these will
+                    #       ALWAYS appear at the top of the global declaration
+                    self.parse_global_declaration(node)
         elif node.kind == clang.cindex.CursorKind.MACRO_INSTANTIATION:
             if node.location.file and node.location.file.name == self._cfilepath + self._cfilename:
                 self._ccode.add_macro_instantiation(node)

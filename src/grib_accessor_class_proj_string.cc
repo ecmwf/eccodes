@@ -294,7 +294,6 @@ static proj_mapping proj_mappings[] = {
 
 #define ENDPOINT_SOURCE 0
 #define ENDPOINT_TARGET 1
-int makeInt(){return 42;}
 static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;

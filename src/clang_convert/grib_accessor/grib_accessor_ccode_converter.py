@@ -13,13 +13,6 @@ class GribAccessorCCodeConverter(ccode_converter.CCodeConverter):
         self.convert_destructor_method()
         self.convert_inherited_methods()
 
-    # Helper for consistent debug output!
-    def dump_function(self, def_name, cppfunc):
-        debug.line(def_name, "================================================================================")
-        debug.line(def_name, cppfunc.funcsig.as_string())
-        debug.line(def_name, cppfunc.body)
-        debug.line(def_name, "================================================================================")
-
     def convert_constructor_method(self):
         constructor_funcsig = self.convert_cfunction_funcsig(self._ccode.constructor)
         constructor_body = self.convert_cfunction_body(self._ccode.constructor)
