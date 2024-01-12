@@ -16,6 +16,7 @@ import code_object.struct_member_access as struct_member_access
 import code_object.function_call as function_call
 import code_object.if_statement as if_statement
 import code_object.for_statement as for_statement
+import code_object.array_access as array_access
 
 # Convert a C node (AST) into lines of C++ code
 #
@@ -497,18 +498,34 @@ class CNodeConverter:
         return None
 
     def convert_CALL_EXPR(self, node):
-        cfunc_call = function_call.FunctionCall(node.spelling)
+        tokens = [token.spelling for token in node.get_tokens()]
+        debug.line("convert_CALL_EXPR", f"spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
+        debug.line("convert_CALL_EXPR", f"CALL_EXPR tokens=[{tokens}]")
 
-        for arg_node in node.get_arguments():
-            arg_entry = self.convert_node(arg_node)
-            debug.line("convert_CALL_EXPR", f"arg_node spelling=[{arg_node.spelling}] type=[{arg_node.type.spelling}] kind=[{arg_node.kind}]")
-            if arg_entry:
-                debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
-                cfunc_call.add_arg(arg_entry.as_string())
-            else:
-                debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry}] - IS THIS AN ERROR?")
+        if "(" in tokens:
+            debug.line("convert_CALL_EXPR", f"Found regular function call")
+            cfunc_call = function_call.FunctionCall(node.spelling)
 
-        return cfunc_call
+            for arg_node in node.get_arguments():
+                arg_entry = self.convert_node(arg_node)
+                debug.line("convert_CALL_EXPR", f"arg_node spelling=[{arg_node.spelling}] type=[{arg_node.type.spelling}] kind=[{arg_node.kind}]")
+                if arg_entry:
+                    debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
+                    cfunc_call.add_arg(arg_entry.as_string())
+                else:
+                    debug.line("convert_CALL_EXPR", f"arg_node arg_entry=[{arg_entry}] - IS THIS AN ERROR?")
+
+            return cfunc_call
+        
+        # No "(" in the tokens, so this is not really a function call!
+        # It is probably a copy constructor, so we'll parse and return the (first) child node as whatever type it is...
+        debug.line("convert_CALL_EXPR", f"NOT a regular function call - parsing first child instead...")
+        children = node.get_children()
+        child = next(children, None)
+        assert child, f"Expected a child node while parsing a non-regular function call!"
+
+        return self.convert_node(child)
+
 
     def convert_CSTYLE_CAST_EXPR(self, node):
         for child in node.get_children():
@@ -520,12 +537,27 @@ class CNodeConverter:
 
         return None
 
+    def convert_ARRAY_SUBSCRIPT_EXPR(self, node):
+        debug.line("convert_ARRAY_SUBSCRIPT_EXPR", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
+
+        # We expect two children: the variable name and the index
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 2, f"Expected exactly two children for array subscription"
+
+        name = self.convert_node(children[0])
+        index = self.convert_node(children[1])
+
+        arr_access = array_access.ArrayAccess(name, index)
+
+        return arr_access
+
     convert_EXPR_funcs = {
         clang.cindex.CursorKind.UNEXPOSED_EXPR:                 convert_UNEXPOSED_EXPR,
         clang.cindex.CursorKind.DECL_REF_EXPR:                  convert_DECL_REF_EXPR,
         clang.cindex.CursorKind.MEMBER_REF_EXPR:                convert_MEMBER_REF_EXPR,
         clang.cindex.CursorKind.CALL_EXPR:                      convert_CALL_EXPR,
-        clang.cindex.CursorKind.ARRAY_SUBSCRIPT_EXPR:           convert_node_not_implemented,
+        clang.cindex.CursorKind.ARRAY_SUBSCRIPT_EXPR:           convert_ARRAY_SUBSCRIPT_EXPR,
         clang.cindex.CursorKind.CSTYLE_CAST_EXPR:               convert_CSTYLE_CAST_EXPR,
         clang.cindex.CursorKind.COMPOUND_LITERAL_EXPR:          convert_node_not_implemented,
         clang.cindex.CursorKind.INIT_LIST_EXPR:                 convert_INIT_LIST_EXPR,

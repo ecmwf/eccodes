@@ -47,8 +47,6 @@ class IfStatement(code_interface.CodeInterface):
         if_lines[-1] += ")"
 
         action_lines = self._action.as_lines()
-        #action_lines[0] = "{" + action_lines[0]
-        #action_lines[-1] += "}"
 
         if self._else:
             else_lines = self._else.as_lines()
