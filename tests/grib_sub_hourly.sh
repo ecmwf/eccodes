@@ -51,9 +51,10 @@ if (set -u; : ${ECCODES_GRIB_SHOW_HOUR_STEPUNIT?}) 2> /dev/null; then
 fi
 
 
-label="grib_ecc-1620"
-temp=temp.$label
-temp2=temp_2.$label
+label="grib_sub_hourly"
+temp=temp.1.$label
+temp2=temp.2.$label
+tempFilt=temp.$label.filt
 samples_dir=$ECCODES_SAMPLES_PATH
 
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
@@ -466,7 +467,20 @@ grib_check_key_equals $temp "-p $keys_s" "18$HOUR-24$HOUR 18$HOUR 24$HOUR"
 grib_check_key_equals $temp "-p $keys_i" "24 18 24"
 grib_check_key_equals $temp "-p $keys_d" "24 18 24"
 
-rm -f $temp $temp2
+cat >$tempFilt<<EOF
+    set stepUnits="m"; print "[step]";
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/constant_field.grib2
+
+
+cat >$tempFilt<<EOF
+    set stepUnits="s"; print "[step]";
+EOF
+${tools_dir}/grib_filter $tempFilt $data_dir/constant_field.grib2
+
+
+
+rm -f $temp $temp2 $tempFilt
 
 #~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/151145_s2_enfo_cf_o2d_zos_2002_prod_ecmf_glob.grib2
 #~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/240023_ce_efas_fc_sfc_dis06_2022_0001_ecmf_lisflood.grib2
