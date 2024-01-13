@@ -78,7 +78,7 @@ ${tools_dir}/metar_compare -c latitude -A 17 $temp1 $temp2
 rm -f $temp1 $temp2
 
 #----------------------------------------------------
-# Test: comparing with and without the -b switch
+# Comparing with and without the -b switch
 #----------------------------------------------------
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
    # Add wrong blocklist. Should still fail
@@ -90,6 +90,26 @@ if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
    # Add correct blocklist
    ${tools_dir}/metar_compare -b minute,theMessage $metar_file $fMetarTmp
 fi
+
+#----------------------------------------------------
+# Compare doubles
+#----------------------------------------------------
+temp1=temp.$label.1.metar
+temp2=temp.$label.2.metar
+echo 'METAR LQMO 022350Z 09003KT 6000 FEW010 SCT035 BKN060 09/09 Q1003=' > $temp1
+${tools_dir}/metar_copy -w count=1 $metar_file $temp2
+set +e
+${tools_dir}/metar_compare -b theMessage -f -v $temp1 $temp2 > $fLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "temperature .*1 different" $fLog
+grep -q "dewPointTemperature .*1 different" $fLog
+
+# dewPointTemperature diffs: absolute diff. = 1, relative diff. = 0.111111
+${tools_dir}/metar_compare -b temperature,theMessage -R dewPointTemperature=0.12 $temp1 $temp2
+
+rm -f $temp1 $temp2
 
 # Clean up
 rm -f $fLog $fMetarTmp

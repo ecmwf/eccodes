@@ -755,15 +755,11 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (verbose)
-                printf(" as bytes\n");
             if (options->mode == MODE_METAR)
                 return 0;
             break;
 
         case GRIB_TYPE_LABEL:
-            if (verbose)
-                printf(" as label\n");
             break;
 
         default:
