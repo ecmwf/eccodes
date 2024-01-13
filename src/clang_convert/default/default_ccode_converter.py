@@ -5,6 +5,8 @@ import default.default_cast_parser as default_cast_parser
 import code_object.cppfunction as cppfunction
 import code_object_converter.cfuncsig_converter as cfuncsig_converter
 import default.default_cppcode as default_cppcode
+import code_object_converter.conversion_data as conversion_data 
+import code_object_converter.code_interface_converter as code_interface_converter
 
 # Convert a CCode object into a CppCode object, using the cconverter and derived classes as helpers
 
@@ -25,6 +27,7 @@ class DefaultCCodeConverter:
     def convert(self):
         self.create_cpp_code()
         self.create_transforms()
+        self.create_conversion_data()
         self.convert_global_declarations()
         self.convert_functions()
 
@@ -36,10 +39,16 @@ class DefaultCCodeConverter:
     def create_transforms(self):
         self._transforms = transforms.Transforms()
 
+    def create_conversion_data(self):
+        self._conversion_data = conversion_data.ConversionData()
+
     def convert_global_declarations(self):
         global_decl_ast_parser = self.cast_parser_class()
         global_decl_ccode_objects = global_decl_ast_parser.to_ccode_objects(self._ccode.global_declarations, self._transforms, self._ccode.macro_details)
         debug.line("convert_global_declarations", global_decl_ccode_objects.as_lines())
+        global_decl_cpp_code_objects = code_interface_converter.convert_ccode_objects(global_decl_ccode_objects, self._conversion_data)
+        debug.line("convert_global_declarations", f"Converted C++ code...")
+        debug.line("convert_global_declarations", global_decl_cpp_code_objects.as_lines())
 
     # Helper to create the funcsig mapping and update the transforms
     def convert_cfunction_funcsig(self, cfunc):
