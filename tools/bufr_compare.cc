@@ -778,19 +778,17 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
 
     if (options->mode != MODE_BUFR) {
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
-        isMissing1 = ((grib_is_missing(handle1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
-        isMissing2 = ((grib_is_missing(handle2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
+        //isMissing1 = ((grib_is_missing(handle1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
+        //isMissing2 = ((grib_is_missing(handle2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
     }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
-        if (verbose)
-            printf(" is set to missing in both fields\n");
+        // if (verbose) printf(" is set to missing in both fields\n");
         return GRIB_SUCCESS;
     }
 
     if (isMissing1 == 1) {
-        if (verbose)
-            printf(" is set to missing in %s field\n", first_str);
+        // if (verbose) printf(" is set to missing in %s field\n", first_str);
         printInfo(handle1);
         printf("%s is set to missing in %s field is not missing in %s field\n", name, first_str, second_str);
         err1 = GRIB_VALUE_MISMATCH;
@@ -799,8 +797,7 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
     }
 
     if (isMissing2 == 1) {
-        if (verbose)
-            printf(" is set to missing in %s field\n", first_str);
+        // if (verbose) printf(" is set to missing in %s field\n", first_str);
         printInfo(handle1);
         printf("%s is set to missing in %s field is not missing in %s field\n", name, second_str, first_str);
         err1 = GRIB_VALUE_MISMATCH;
@@ -1089,8 +1086,6 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             break;
 
         case GRIB_TYPE_BYTES:
-            if (verbose)
-                printf(" as bytes\n");
             if (options->mode == MODE_BUFR)
                 return 0;
             break;

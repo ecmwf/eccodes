@@ -106,8 +106,12 @@ grep -q "dataDate = 19090206" $temp
 # Skip handle
 ${tools_dir}/grib_dump -w count=4 $file > $temp 2>&1
 
-ECCODES_DEBUG=1 ${tools_dir}/grib_dump $data_dir/sample.grib2
+ECCODES_DEBUG=1 ${tools_dir}/grib_dump $data_dir/sample.grib2 > $temp 2>&1
 
+# Error conditions
+#-----------------------------------------------------------
+${tools_dir}/grib_dump -p nonexist $file > $temp 2>&1
+grep -q "Key/value not found" $temp
 
 # Unreadable message
 #-----------------------------------------------------------

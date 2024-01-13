@@ -72,14 +72,15 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    int err = 0;
-    if (!options->skip) {
-        if (options->set_values_count != 0)
-            err = grib_set_values(h, options->set_values, options->set_values_count);
+    Assert(options->set_values_count==0); // Cannot set keys in this tool
 
-        if (err != GRIB_SUCCESS && options->fail)
-            exit(err);
-    }
+    // int err = 0;
+    // if (!options->skip) {
+        // if (options->set_values_count != 0)
+        //     err = grib_set_values(h, options->set_values, options->set_values_count);
+        // if (err != GRIB_SUCCESS && options->fail)
+        //     exit(err);
+    // }
 
     grib_tools_write_message(options, h);
     return 0;
