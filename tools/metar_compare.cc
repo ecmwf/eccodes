@@ -523,11 +523,11 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
     }
 
-    if (options->mode != MODE_METAR) {
-        /* TODO: Ignore missing values for keys in METAR. Not yet implemented */
-        isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
-        isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    }
+    // if (options->mode != MODE_METAR) {
+    //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
+    //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
+    //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
+    // }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         if (verbose)
