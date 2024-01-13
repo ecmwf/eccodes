@@ -99,5 +99,14 @@ cp $gts_file $tempDir
 ${tools_dir}/gts_compare $gts_file $tempDir
 rm -r $tempDir
 
+# Non-existence
+set +e
+${tools_dir}/gts_compare non-exist1 non-exist2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No such file or directory" $fLog
+
+
 # Clean up
 rm -f $fLog $fGtsTmp $fRules

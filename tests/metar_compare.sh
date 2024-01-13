@@ -111,5 +111,23 @@ ${tools_dir}/metar_compare -b temperature,theMessage -R dewPointTemperature=0.12
 
 rm -f $temp1 $temp2
 
+#----------------------------------------------------
+# Test with file of the same name in a dir
+#----------------------------------------------------
+tempDir=temp.$label.dir
+rm -fr $tempDir
+mkdir $tempDir
+cp $metar_file $tempDir
+${tools_dir}/metar_compare $metar_file $tempDir
+rm -r $tempDir
+
+# Non-existence
+set +e
+${tools_dir}/metar_compare non-exist1 non-exist2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No such file or directory" $fLog
+
 # Clean up
 rm -f $fLog $fMetarTmp
