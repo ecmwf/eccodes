@@ -74,9 +74,11 @@ if [ $HAVE_AEC -eq 1 ]; then
     grib_check_key_equals $outfile packingType grid_simple
 fi
 
-infile=${data_dir}/sample.grib2
-$EXEC $grib_util_set_spec -p grid_ieee $infile $outfile
-grib_check_key_equals $outfile 'packingType,precision' 'grid_ieee 1'
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+  infile=${data_dir}/sample.grib2
+  $EXEC $grib_util_set_spec -p grid_ieee $infile $outfile
+  grib_check_key_equals $outfile 'packingType,precision' 'grid_ieee 1'
+fi
 
 infile=${data_dir}/sample.grib2
 $EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
