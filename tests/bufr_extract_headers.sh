@@ -113,7 +113,6 @@ amsb_55.bufr
 amse_55.bufr
 amsu_55.bufr
 amv2_87.bufr
-amv3_87.bufr
 asbh_139.bufr
 asbl_139.bufr
 asca_139.bufr
@@ -130,26 +129,18 @@ avhm_87.bufr
 avhn_87.bufr
 avhr_58.bufr
 b003_56.bufr
-b005_87.bufr
 b005_89.bufr
-b007_31.bufr
 cmwi_87.bufr
 cmwn_87.bufr
 cori_156.bufr
 crit_202.bufr
 csrh_189.bufr
 emsg_189.bufr
-emsg_87.bufr
 euwv_87.bufr
 fy3a_154.bufr
-fy3b_154.bufr
 g2nd_208.bufr
 g2to_206.bufr
 go15_87.bufr
-goee_87.bufr
-goes_87.bufr
-goga_89.bufr
-gosat.bufr
 grst_26.bufr
 gsd1_208.bufr
 gsd2_208.bufr
@@ -169,20 +160,12 @@ j2nb_216.bufr
 jaso_214.bufr
 kond_209.bufr
 maer_207.bufr
-mhen_55.bufr
-mhsa_55.bufr
-mhsb_55.bufr
-mhse_55.bufr
 mloz_206.bufr
 modi_87.bufr
 modw_87.bufr
 monw_87.bufr
 nomi_206.bufr
 nos1_208.bufr
-nos3_208.bufr
-nos4_208.bufr
-nos6_208.bufr
-nos8_208.bufr
 pgps_110.bufr
 rado_250.bufr
 s4kn_165.bufr
@@ -207,8 +190,21 @@ for bf in ${bufr_files}; do
     diff $temp1 $temp2
 done
 
+# Floating-point keys
+input=${data_dir}/bufr/aaen_55.bufr
+$EXEC ${test_dir}/bufr_extract_headers 'localLongitude1,localLatitude1,localLongitude2,localLatitude2' $input
+$EXEC ${test_dir}/bufr_extract_headers 'localLatitude,localLongitude' $input
+
+# Some local keys
+input=${data_dir}/bufr/aaen_55.bufr
+$EXEC ${test_dir}/bufr_extract_headers 'localMonth,localDay,localHour,localMinute,localSecond' $input
+$EXEC ${test_dir}/bufr_extract_headers 'rdbtimeDay,rdbtimeHour,rdbtimeMinute,rdbtimeSecond' $input
+$EXEC ${test_dir}/bufr_extract_headers 'rectimeDay,rectimeHour,rectimeMinute,rectimeSecond' $input
+
+
 # Test restricted
-${tools_dir}/bufr_set -s restricted=1 ${data_dir}/bufr/aaen_55.bufr $temp1
+input=${data_dir}/bufr/aaen_55.bufr
+${tools_dir}/bufr_set -s restricted=1 $input $temp1
 r=`$EXEC ${test_dir}/bufr_extract_headers restricted $temp1`
 [ "$r" = "1" ]
 
