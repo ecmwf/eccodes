@@ -657,33 +657,50 @@ void test_codes_get_type_name()
 
 void test_grib2_select_PDTN()
 {
-    //int pdtn = 0;
     printf("Running %s ...\n", __func__);
+    int eps = 1;
+    int instant = 1;
+    int chemical = 1;
+    int chemical_srcsink = 1;
+    int chemical_distfn = 1;
+    int aerosol = 1;
+    //int aerosol_optical = 1;
 
-    // eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
-    Assert( 40 == grib2_select_PDTN(0,1,1,0,0,0,0) );
-    Assert( 41 == grib2_select_PDTN(1,1,1,0,0,0,0) );
-    Assert( 42 == grib2_select_PDTN(0,0,1,0,0,0,0) );
-    Assert( 43 == grib2_select_PDTN(1,0,1,0,0,0,0) );
+    // arguments = eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
 
-    Assert( 76 == grib2_select_PDTN(0,1,0,1,0,0,0) );
-    Assert( 77 == grib2_select_PDTN(1,1,0,1,0,0,0) );
-    Assert( 78 == grib2_select_PDTN(0,0,0,1,0,0,0) );
-    Assert( 79 == grib2_select_PDTN(1,0,0,1,0,0,0) );
+    // Chemicals
+    Assert( 40 == grib2_select_PDTN(!eps, instant,  chemical, 0, 0, 0, 0) );
+    Assert( 41 == grib2_select_PDTN(eps,  instant,  chemical, 0, 0, 0, 0) );
+    Assert( 42 == grib2_select_PDTN(!eps, !instant, chemical, 0, 0, 0, 0) );
+    Assert( 43 == grib2_select_PDTN(eps,  !instant, chemical, 0, 0, 0, 0) );
 
-    Assert(  0 == grib2_select_PDTN(0,1,0,0,0,0,0) );
-    Assert(  1 == grib2_select_PDTN(1,1,0,0,0,0,0) );
-    Assert(  8 == grib2_select_PDTN(0,0,0,0,0,0,0) );
-    Assert( 11 == grib2_select_PDTN(1,0,0,0,0,0,0) );
+    // Chemical source/sink
+    Assert( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink,0,0,0) );
+    Assert( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink,0,0,0) );
+    Assert( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink,0,0,0) );
+    Assert( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink,0,0,0) );
 
-    //pdtn = grib2_select_PDTN(1,0,0,0,0,0,0); printf(" %d\n", pdtn);
+    // Aerosols
+    Assert( 48 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 46 == grib2_select_PDTN(!eps, !instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 45 == grib2_select_PDTN(eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 85 == grib2_select_PDTN(eps, !instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+
+    // Plain vanilla
+    Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol,0) );
+    Assert(  1 == grib2_select_PDTN(1,1,0,0,0, !aerosol,0) );
+    Assert(  8 == grib2_select_PDTN(0,0,0,0,0, !aerosol,0) );
+    Assert( 11 == grib2_select_PDTN(1,0,0,0,0, !aerosol,0) );
+
+    //printf("%d\n", grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 1 == grib2_is_PDTN_EPS(1) );
+    Assert( 1 == grib2_is_PDTN_EPS(11) );
+    Assert( 0 == grib2_is_PDTN_EPS(0) );
 }
 
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
-
-    test_grib2_select_PDTN();
 
     test_iarray();
     test_darray();
@@ -734,6 +751,8 @@ int main(int argc, char** argv)
     test_string_trimming();
     test_string_replace_char();
     test_string_remove_char();
+
+    test_grib2_select_PDTN();
 
     return 0;
 }
