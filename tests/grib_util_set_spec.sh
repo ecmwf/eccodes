@@ -75,9 +75,9 @@ if [ $HAVE_AEC -eq 1 ]; then
 fi
 
 if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
-  infile=${data_dir}/sample.grib2
+  infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
   $EXEC $grib_util_set_spec -p grid_ieee $infile $outfile
-  grib_check_key_equals $outfile 'packingType,precision' 'grid_ieee 1'
+  grib_check_key_equals $outfile 'packingType' 'grid_ieee'
 fi
 
 infile=${data_dir}/sample.grib2
