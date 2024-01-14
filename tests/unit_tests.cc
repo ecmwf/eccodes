@@ -655,9 +655,35 @@ void test_codes_get_type_name()
     Assert( STR_EQUAL("section", grib_get_type_name(GRIB_TYPE_SECTION)) );
 }
 
+void test_grib2_select_PDTN()
+{
+    //int pdtn = 0;
+    printf("Running %s ...\n", __func__);
+
+    // eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
+    Assert( 40 == grib2_select_PDTN(0,1,1,0,0,0,0) );
+    Assert( 41 == grib2_select_PDTN(1,1,1,0,0,0,0) );
+    Assert( 42 == grib2_select_PDTN(0,0,1,0,0,0,0) );
+    Assert( 43 == grib2_select_PDTN(1,0,1,0,0,0,0) );
+
+    Assert( 76 == grib2_select_PDTN(0,1,0,1,0,0,0) );
+    Assert( 77 == grib2_select_PDTN(1,1,0,1,0,0,0) );
+    Assert( 78 == grib2_select_PDTN(0,0,0,1,0,0,0) );
+    Assert( 79 == grib2_select_PDTN(1,0,0,1,0,0,0) );
+
+    Assert(  0 == grib2_select_PDTN(0,1,0,0,0,0,0) );
+    Assert(  1 == grib2_select_PDTN(1,1,0,0,0,0,0) );
+    Assert(  8 == grib2_select_PDTN(0,0,0,0,0,0,0) );
+    Assert( 11 == grib2_select_PDTN(1,0,0,0,0,0,0) );
+
+    //pdtn = grib2_select_PDTN(1,0,0,0,0,0,0); printf(" %d\n", pdtn);
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_grib2_select_PDTN();
 
     test_iarray();
     test_darray();
