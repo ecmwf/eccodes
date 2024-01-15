@@ -1,7 +1,7 @@
 # Convert Arg from C to C++
 
-import re
 import debug
+import code_object_converter.code_interface_converter as code_interface_converter
 import code_object.arg as arg
 from standard_transforms import transform_variable_name
 from code_object.code_interface import as_debug_string
@@ -10,15 +10,15 @@ from code_object.code_interface import as_debug_string
 # CARG_NOT_FOUND to signal that the search should continue...
 CARG_NOT_FOUND = arg.Arg("cargNotFound", "__C_ARGUMENT_NOT_FOUND__")
 
-class ArgConverter:
-    def __init__(self, initial_carg):
-        self._initial_carg = initial_carg
-        self._transforms = None
+class ArgConverter(code_interface_converter.CodeInterfaceConverter):
+    def __init__(self, ccode_object):
+        super().__init__(ccode_object)
+        assert isinstance(ccode_object, arg.Arg), f"Expected Arg, got type=[{type(ccode_object)}]"
 
     def transform_using_custom_types(self, carg):
         # Do we have a custom arg transform to apply?
-        if carg in self._transforms.custom_args:
-            cpparg = self._transforms.custom_args[carg]
+        if carg in self._conversion_data.custom_args:
+            cpparg = self._conversion_data.custom_args[carg]
             debug.line("transform_using_custom_types", f"Using custom arg transform: [{as_debug_string(carg)}] -> [{as_debug_string(cpparg)}]")
             return cpparg
 
@@ -28,7 +28,7 @@ class ArgConverter:
         if not carg.is_func_arg:
             return CARG_NOT_FOUND
 
-        for cdecl_spec, cppdecl_spec in self._transforms.funcsig_decl_specs.items():
+        for cdecl_spec, cppdecl_spec in self._conversion_data.funcsig_decl_specs.items():
             if cdecl_spec.type == carg.decl_spec.type:
                 if cppdecl_spec is None:
                     return None
@@ -38,7 +38,7 @@ class ArgConverter:
         return CARG_NOT_FOUND
 
     def transform_known_decl_specs(self, carg):
-        for cdecl_spec, cppdecl_spec in self._transforms.decl_specs.items():
+        for cdecl_spec, cppdecl_spec in self._conversion_data.decl_specs.items():
             if cdecl_spec.type == carg.decl_spec.type:
                 if cppdecl_spec is None:
                     return None
@@ -52,7 +52,7 @@ class ArgConverter:
         if m:
             match_text = carg.type[:m.start()]
 
-            for ctype, cpptype in self._transforms.types.items():
+            for ctype, cpptype in self._conversion_data.types.items():
                 if ctype == match_text:
                     if cpptype is None:
                         return None
@@ -71,7 +71,7 @@ class ArgConverter:
     def transform_structs(self, carg):
         m = re.search(r"struct (\w*)(\**)", carg.type)
         if m:
-            for ctype, cpptype in self._transforms.types.items():
+            for ctype, cpptype in self._conversion_data.types.items():
                 if ctype == m.group(1) and cpptype:
                     return arg.Arg(cpptype+m.group(2), transform_variable_name(carg.name), carg.is_func_arg)
                 
@@ -107,7 +107,7 @@ class ArgConverter:
         m = re.search(r"(const)?\s*((unsigned )?\w*)(\*+)\s*(const)?", carg.type)
         if m:
             # Is the type actually a struct?
-            for arg_key, arg_value in self._transforms.all_args.items():
+            for arg_key, arg_value in self._conversion_data.all_args.items():
                 if arg_key.name == m.group(2) and arg_key.type == "struct":
                     # Yep - remove the pointer (we may consider using a smart pointer here?)
                     return arg.Arg(arg_value.name, transform_variable_name(arg_key.name))
@@ -124,25 +124,26 @@ class ArgConverter:
 
     # The fallback if no other transforms apply...
     def default_transform(self, carg):
-        return arg.Arg(self._initial_carg.decl_spec, transform_variable_name(self._initial_carg.name), self._initial_carg.is_func_arg)
+        return arg.Arg(self._ccode_object.decl_spec, transform_variable_name(self._ccode_object.name), self._ccode_object.is_func_arg)
 
     # Returns the equivalent C++ arg (name and type), which could be None
     # Note there are some differences in what is produced if the arg is a function arg...
     #
-    def to_cpp_arg(self, transforms):
+    def to_cpp_code_object(self, conversion_data):
+    #def to_cpp_arg(self, transforms):
 
         # For now, just change the name
-        #updated_carg = arg.Arg(self._initial_carg.decl_spec.as_string(), transform_variable_name(self._initial_carg.name))
+        #updated_carg = arg.Arg(self._ccode_object.decl_spec.as_string(), transform_variable_name(self._ccode_object.name))
         #return updated_carg
 
-        self._transforms = transforms
+        self._conversion_data = conversion_data
 
         # Tidy up type and arg: basically change "int[10] val" to "int[] val"
-        '''m = re.search(r"(\[\d*\])", self._initial_carg.type)
+        '''m = re.search(r"(\[\d*\])", self._ccode_object.type)
         if m:
-            updated_carg = arg.Arg(self._initial_carg.type[:m.start()]+"[]", self._initial_carg.name)
+            updated_carg = arg.Arg(self._ccode_object.type[:m.start()]+"[]", self._ccode_object.name)
         else:'''
-        updated_carg = arg.Arg.from_instance(self._initial_carg)
+        updated_carg = arg.Arg.from_instance(self._ccode_object)
 
         transform_funcs = [
             self.transform_using_custom_types,
@@ -164,7 +165,7 @@ class ArgConverter:
         if cpparg:
             cpparg._is_func_arg = updated_carg.is_func_arg
 
-        debug.line("to_cpp_arg", f"Result: [{as_debug_string(self._initial_carg)}] -> [{as_debug_string(cpparg)}] updated_carg=[{as_debug_string(updated_carg)}]")
+        debug.line("to_cpp_code_object", f"Result: [{as_debug_string(self._ccode_object)}] -> [{as_debug_string(cpparg)}] updated_carg=[{as_debug_string(updated_carg)}]")
 
         return cpparg
        

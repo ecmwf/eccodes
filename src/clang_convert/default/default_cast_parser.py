@@ -31,8 +31,8 @@ class DefaultCASTParser:
     # Parse the AST and return a list of CodeInterface objects representing the C objects
     # CNode can be a single node or a list of nodes (for example, the global declaration is a list)
     # - A list will be treated as a single block of code
-    def to_ccode_objects(self, cnode, transforms, macros):
-        self._transforms = transforms
+    def to_ccode_objects(self, cnode, conversion_data, macros):
+        self._conversion_data = conversion_data
         self._macros = macros
 
         ccode_objects = code_objects.CodeObjects()
@@ -324,7 +324,7 @@ class DefaultCASTParser:
     def parse_FIELD_DECL(self, node):
         carg = cnode_utils.create_carg(node)
         arg_conv = arg_converter.ArgConverter(carg)
-        cpparg = arg_conv.to_cpp_arg(self._transforms)
+        cpparg = arg_conv.to_cpp_arg(self._conversion_data)
         
         debug.line("parse_FIELD_DECL", f"Converted spelling=[{node.spelling}] to cpparg=[{cpparg.as_string()}]")
         return cpparg

@@ -2,7 +2,8 @@
 import debug
 import code_object.funcsig as funcsig
 import code_object_converter.arg_converter as arg_converter
-from funcsig_mapping import FuncSigMapping
+import code_object_converter.code_interface_converter as code_interface_converter
+import code_object_converter.funcsig_mapping as funcsig_mapping
 from standard_transforms import transform_function_name
 
 # Convert a C Function Signature to C++
@@ -25,65 +26,68 @@ from standard_transforms import transform_function_name
 #                       (where the number of args in the third parameter will match the C FuncSig)
 # ArgIndexes        Provides the index for each arg in the buffer mappings from C {ptr,len} to C++ container
 #
-class CFuncSigConverter:
-    def __init__(self, cfuncsig) -> None:
-        self._cfuncsig = cfuncsig
+class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
+    def __init__(self, ccode_object) -> None:
+        super().__init__(ccode_object)
+        assert isinstance(ccode_object, funcsig.FuncSig), f"Expected FuncSig, got type=[{type(ccode_object)}]"
+
         self._conversions = []
-        self._transforms = None  # Pass in as required
-
-    # Creates a new C to C++ funcsig mapping
-    def create_funcsig_mapping(self, transforms):
-        self._transforms = transforms
-        cfuncsig, cppfuncsig = self.to_cpp_funcsig()
-        mapping = FuncSigMapping(cfuncsig, cppfuncsig, self.arg_indexes())
-        return mapping
-
-    # Override to customise the static behaviour
-    def is_cpp_static(self):
-        return self._cfuncsig.static
 
     # Returns both the new cpp funcsig and an updated c funcsig
-    def to_cpp_funcsig(self):
+    def to_cpp_code_object(self, conversion_data):
+        self._conversion_data = conversion_data
+
+        # If we have a mapping already stored, just return that!
+        cppfuncsig = self._conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
+        if cppfuncsig:
+            return cppfuncsig
+
         cppfuncsig = funcsig.FuncSig(
             self.to_cpp_return_type(), 
             self.to_cpp_name(), 
             self.to_cpp_args(),
-            self._cfuncsig.template)
+            self._ccode_object.template)
 
         #cppfuncsig.static = self.is_cpp_static()
 
-        cfuncsig = self._cfuncsig
+        # Add this conversion to the mappings
+        mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
+        self._conversion_data.add_to_funcsig_mappings(mapping)
 
-        return cfuncsig, cppfuncsig
+        return cppfuncsig
+
+    # Override to customise the static behaviour
+    def is_cpp_static(self):
+        return self._ccode_object.static
 
     def to_cpp_return_type(self):
         for entry in self._conversions:
-            if entry.cfuncsig.name == self._cfuncsig.name:
+            if entry.cfuncsig.name == self._ccode_object.name:
                 return entry.cppfuncsig.return_type
 
-        if self._cfuncsig.return_type == "int":
+        if self._ccode_object.return_type == "int":
             # We'll assume int means GribStatus
             return "GribStatus"
         else:
-            return self._cfuncsig.return_type
+            return self._ccode_object.return_type
 
     def to_cpp_name(self):
         for entry in self._conversions:
-            if entry.cfuncsig.name == self._cfuncsig.name:
+            if entry.cfuncsig.name == self._ccode_object.name:
                 return entry.cppfuncsig.name
         
-        return transform_function_name(self._cfuncsig.name)
+        return transform_function_name(self._ccode_object.name)
 
     # This should return the same number of cppargs as there are cargs (set unused cppargs to None)
     def to_cpp_args(self):
         for entry in self._conversions:
-            if entry.cfuncsig.name == self._cfuncsig.name:
+            if entry.cfuncsig.name == self._ccode_object.name:
                 return entry.cppfuncsig.args
 
         cppargs = []
-        for entry in self._cfuncsig.args:
+        for entry in self._ccode_object.args:
             arg_conv = arg_converter.ArgConverter(entry)
-            cpparg = arg_conv.to_cpp_arg(self._transforms)
+            cpparg = arg_conv.to_cpp_code_object(self._conversion_data)
             cppargs.append(cpparg)
 
         return cppargs
@@ -91,7 +95,7 @@ class CFuncSigConverter:
     # Get the buffer mappings from C {ptr,len} to C++ container, or None if there aren't any
     def arg_indexes(self):
         for entry in self._conversions:
-            if entry.cfuncsig.name == self._cfuncsig.name:
+            if entry.cfuncsig.name == self._ccode_object.name:
                 return entry.arg_indexes
         
         return None
