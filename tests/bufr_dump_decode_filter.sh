@@ -8,13 +8,17 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -x
 . ./include.ctest.sh
-
-cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
 label="bufr_dump_decode_filter_test"
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+cd ${data_dir}/bufr
 
 # Create log file
 fLog=temp.${label}".log"

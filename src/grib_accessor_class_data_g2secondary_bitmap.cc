@@ -126,7 +126,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     long primary_len = 0, secondary_len = 0;
     double* primary_bitmap   = NULL;
     double* secondary_bitmap = NULL;
-    long i = 0, j = 0, on = 0, k = 0, m = 0;
+    long i = 0, j = 0, k = 0, m = 0;
     double missing_value = 0, present_value = 0;
     long expand_by = 0;
 
@@ -177,7 +177,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             primary_bitmap[k++] = present_value;
             for (j = 0; j < expand_by; j++)
                 secondary_bitmap[m++] = val[i + j];
-            on++;
+            //on++;
         }
     }
 

@@ -80,6 +80,13 @@ set -e
 [ $status -ne 0 ]
 grep -w "unreadable message" $fLog
 
+set +e
+${tools_dir}/bufr_ls -j $fTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -w "unreadable message" $fLog
+
 
 # Clean up
 rm -f $fLog $res_ls 
