@@ -1,0 +1,7 @@
+# alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
+# template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
+# codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
+
+meta stepUnits optimal_step_units(forecastTime,indicatorOfUnitOfTimeRange,lengthOfTimeRange,indicatorOfUnitForTimeRange) : transient,dump;
+transient startStepUnit = 255 : hidden; # 255 means MISSING. See code table 4.4
+transient endStepUnit = 255 : hidden;
