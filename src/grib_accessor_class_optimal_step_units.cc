@@ -17,9 +17,9 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = pack_long,unpack_long;dump
-   IMPLEMENTS = pack_string,unpack_string;dump
-   IMPLEMENTS = string_length
+   IMPLEMENTS = pack_long;unpack_long;dump
+   IMPLEMENTS = pack_string;unpack_string;dump
+   IMPLEMENTS = string_length;get_native_type
    IMPLEMENTS = init
    MEMBERS    = const char* forecast_time_value
    MEMBERS    = const char* forecast_time_unit
