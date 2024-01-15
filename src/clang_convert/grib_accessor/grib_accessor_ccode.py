@@ -4,7 +4,7 @@ import default.default_ccode as default_ccode
 import code_object.cfunction as cfunction
 import re
 
-grib_accessor_inherited_methods = [
+grib_accessor_virtual_member_functions = [
     "dump",
     "next_offset",
     "string_length",
@@ -49,15 +49,8 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
     def __init__(self, cfilename, accessor_name, accessor_class_name) -> None:
         super().__init__(cfilename)
         self._accessor_name = accessor_name
-        self._accessor_class_name = accessor_class_name
-        self._super_class_name = ""
+        self._class_name = accessor_class_name
         self._accessor_class_short_name = ""
-        self._members = []
-        self._inherited_methods = []
-        self._private_methods = []
-        self._static_functions = []
-        self._constructor = None
-        self._destructor = None
 
     @property
     def parent_cfilename(self):
@@ -65,30 +58,6 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
             return self._super_class_name + ".cc"
         else:
             return super().parent_cfilename
-
-    @property
-    def constructor(self):
-        return self._constructor
-
-    @property
-    def destructor(self):
-        return self._destructor
-
-    @property
-    def inherited_methods(self):
-        return self._inherited_methods
-
-    @property
-    def private_methods(self):
-        return self._private_methods
-
-    @property
-    def static_functions(self):
-        return self._static_functions
-
-    def add_member(self, cmember):
-        assert cmember not in self._members, f"member [{cmember.as_string()}] already defined for [{self._accessor_class_name}]"
-        self._members.append(cmember)
 
     # Overridden to classify the functions being added
     def add_function(self, cfuncsig, body):
@@ -100,43 +69,20 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
         elif cfuncsig.name == "destroy":
             self._destructor = cfunc
             return
-        elif cfuncsig.name in grib_accessor_inherited_methods:
-            self._inherited_methods.append(cfunc)
+        elif cfuncsig.name in grib_accessor_virtual_member_functions:
+            self._virtual_member_functions.append(cfunc)
             return
         
-        # If any arg starts with a "ptr type name", then it's a private method (as we've already extracted inherited functions)
+        # If any arg starts with a "ptr type name", then it's a member function (as we've already extracted virtual functions)
         for arg_entry in cfuncsig.args:
             if re.search(r"grib_accessor(\w*)?\s*\*", arg_entry.decl_spec.as_string()):
-                self._private_methods.append(cfunc)
+                self._member_functions.append(cfunc)
                 return
 
-        # Must be a static function
-        self._static_functions.append(cfunc)
+        # Must be a "free"" function
+        self._functions.append(cfunc)
 
     def dump_class_info(self):
+        super().dump_class_info()
         debug.line("dump_class_info", f"accessor_name=[{self._accessor_name}]")
-        debug.line("dump_class_info", f"accessor_class_name=[{self._accessor_class_name}]")
         debug.line("dump_class_info", f"accessor_class_short_name=[{self._accessor_class_short_name}]")
-        debug.line("dump_class_info", f"super_class_name=[{self._super_class_name}]")
-
-    def dump_members(self):
-        for cmember in self._members:
-            debug.line("dump_members", f"member=[{cmember.as_string()}]")
-
-    def dump_functions(self):
-        debug.line("dump_functions", f"Constructor=[{self._constructor.funcsig.as_string() if self._constructor else None}]")
-        debug.line("dump_functions", f"Destructor=[{self._destructor.funcsig.as_string() if self._destructor else None}]")
-
-        for entry in self._inherited_methods:
-            debug.line("dump_functions", f"Inherited=[{entry.funcsig.as_string()}]")
-        for entry in self._private_methods:
-            debug.line("dump_functions", f"Private=[{entry.funcsig.as_string()}]")
-        for entry in self._static_functions:
-            debug.line("dump_functions", f"Static=[{entry.funcsig.as_string()}]")
-
-
-    def dump(self):
-        self.dump_class_info()
-        self.dump_members()
-        self.dump_global_declarations()
-        self.dump_functions()

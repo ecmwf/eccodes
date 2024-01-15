@@ -50,7 +50,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
         #cppfuncsig.static = self.is_cpp_static()
 
-        # Add this conversion to the mappings
+        # Add this to the conversion data mappings
         mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
         self._conversion_data.add_to_funcsig_mappings(mapping)
 

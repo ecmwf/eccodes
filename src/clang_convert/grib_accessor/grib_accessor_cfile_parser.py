@@ -22,7 +22,7 @@ class GribAccessorCParser(default_cfile_parser.DefaultCFileParser):
                 #debug.line("parse_grib_accessor_struct", f"Ignoring member=[{node.spelling}] kind=[{child.kind}]")
             else:
                 cmember = arg.Arg(child.type.spelling, child.spelling)
-                self._ccode.add_member(cmember)
+                self._ccode.add_data_member(cmember)
 
     # Parse the first entry in the initializer list for the super class name, and the second entry for the string name
     def parse_grib_accessor_class_struct(self, node):

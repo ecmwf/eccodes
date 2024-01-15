@@ -38,7 +38,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
     def convert_inherited_methods(self):
         debug.line("convert_inherited_methods", f"Converting inherited methods...")
-        for entry in self._ccode.inherited_methods:
+        for entry in self._ccode.virtual_member_functions:
             debug.line("convert_inherited_methods", f"Converting name=[{entry.funcsig.name}]")
             entry_funcsig = self.convert_cfunction_funcsig(entry)
             entry_body = self.convert_cfunction_body(entry)
@@ -47,7 +47,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
     def convert_private_methods(self):
         debug.line("convert_private_methods", f"Converting private methods...")
-        for entry in self._ccode.private_methods:
+        for entry in self._ccode.member_functions:
             debug.line("convert_private_methods", f"Converting name=[{entry.funcsig.name}]")
             entry_funcsig = self.convert_cfunction_funcsig(entry)
             entry_body = self.convert_cfunction_body(entry)
@@ -56,7 +56,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
     def convert_static_functions(self):
         debug.line("convert_static_functions", f"Converting static functions...")
-        for entry in self._ccode.static_functions:
+        for entry in self._ccode.functions:
             debug.line("convert_static_functions", f"Converting name=[{entry.funcsig.name}]")
             entry_funcsig = self.convert_cfunction_funcsig(entry)
             entry_body = self.convert_cfunction_body(entry)
