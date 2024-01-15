@@ -28,6 +28,10 @@ class DefaultCCodeConverter:
         self.create_conversion_data()
         self.convert_global_declarations()
         self.convert_functions()
+        self.convert_constructor_function()
+        self.convert_destructor_function()
+        self.convert_member_functions()
+        self.convert_virtual_member_functions()
 
         return self._cppcode
     
@@ -62,12 +66,43 @@ class DefaultCCodeConverter:
         function_body_ccode_objects = function_body_ast_parser.to_ccode_objects(cfunc.body, self._conversion_data, self._ccode.macro_details)
         return function_body_ccode_objects.as_lines()
 
+    # Default conversion routine
+    def convert_cfunction(self, cfunc):
+        cppfuncsig = self.convert_cfunction_funcsig(cfunc)
+        cppbody = self.convert_cfunction_body(cfunc)
+        cppfunc = cppfunction.CppFunction(cppfuncsig, cppbody)
+        return cppfunc
+
     def convert_functions(self):
         for func in self._ccode.functions:
-            cppfuncsig = self.convert_cfunction_funcsig(func)
-            cppbody = self.convert_cfunction_body(func)
-            cppfunc = cppfunction.CppFunction(cppfuncsig, cppbody)
-            self.dump_function("convert_functions", cppfunc)
+            cppfunc = self.convert_cfunction(func)
+            self.dump_function("Default convert_functions", cppfunc)
+
+    # Override as required...
+    def convert_constructor_function(self):
+        if self._ccode.constructor :
+            constructor = self.convert_cfunction(self._ccode.constructor)
+            self.dump_function("Default convert_constructor_function", constructor)
+
+    # Override as required...
+    def convert_destructor_function(self):
+        if self._ccode.destructor :
+            destructor = self.convert_cfunction(self._ccode.destructor)
+            self.dump_function("Default convert_destructor_function", destructor)
+
+    # Override as required...
+    def convert_member_functions(self):
+        debug.line("convert_member_functions", f"Converting member functions...")
+        for entry in self._ccode.member_functions:
+            member_func = self.convert_cfunction(entry)
+            self.dump_function("Default convert_member_functions", member_func)
+
+    # Override as required...
+    def convert_virtual_member_functions(self):
+        debug.line("convert_virtual_member_functions", f"Converting virtual member functions...")
+        for entry in self._ccode.virtual_member_functions:
+            virtual_member_func = self.convert_cfunction(entry)
+            self.dump_function("Default convert_virtual_member_functions", virtual_member_func)
 
     # Helper for consistent debug output!
     def dump_function(self, def_name, cppfunc):
