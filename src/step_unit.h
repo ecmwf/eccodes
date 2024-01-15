@@ -20,21 +20,21 @@
 
 namespace eccodes {
 
-template <typename T> using Minutes = std::chrono::duration<T, std::ratio<60>>;
-template <typename T> using Hours = std::chrono::duration<T, std::ratio<3600>>;
-template <typename T> using Days = std::chrono::duration<T, std::ratio<86400>>;
-template <typename T> using Months = std::chrono::duration<T, std::ratio<2592000>>;
-template <typename T> using Years = std::chrono::duration<T, std::ratio<31536000>>;
-template <typename T> using Years10 = std::chrono::duration<T, std::ratio<315360000>>;
-template <typename T> using Years30 = std::chrono::duration<T, std::ratio<946080000>>;
+template <typename T> using Minutes   = std::chrono::duration<T, std::ratio<60>>;
+template <typename T> using Hours     = std::chrono::duration<T, std::ratio<3600>>;
+template <typename T> using Days      = std::chrono::duration<T, std::ratio<86400>>;
+template <typename T> using Months    = std::chrono::duration<T, std::ratio<2592000>>;
+template <typename T> using Years     = std::chrono::duration<T, std::ratio<31536000>>;
+template <typename T> using Years10   = std::chrono::duration<T, std::ratio<315360000>>;
+template <typename T> using Years30   = std::chrono::duration<T, std::ratio<946080000>>;
 template <typename T> using Centuries = std::chrono::duration<T, std::ratio<3153600000>>;
-template <typename T> using Hours3 = std::chrono::duration<T, std::ratio<10800>>;
-template <typename T> using Hours6 = std::chrono::duration<T, std::ratio<21600>>;
-template <typename T> using Hours12 = std::chrono::duration<T, std::ratio<43200>>;
-template <typename T> using Seconds = std::chrono::duration<T, std::ratio<1>>;
+template <typename T> using Hours3    = std::chrono::duration<T, std::ratio<10800>>;
+template <typename T> using Hours6    = std::chrono::duration<T, std::ratio<21600>>;
+template <typename T> using Hours12   = std::chrono::duration<T, std::ratio<43200>>;
+template <typename T> using Seconds   = std::chrono::duration<T, std::ratio<1>>;
 template <typename T> using Minutes15 = std::chrono::duration<T, std::ratio<900>>;
 template <typename T> using Minutes30 = std::chrono::duration<T, std::ratio<1800>>;
-template <typename T> using Missing = std::chrono::duration<T, std::ratio<0>>;
+template <typename T> using Missing   = std::chrono::duration<T, std::ratio<0>>;
 
 
 
@@ -70,7 +70,7 @@ public:
         try {
             internal_value_ = map_.name_to_unit(unit_value);
         } catch (std::exception& e) {
-            throw std::runtime_error(std::string{"Unit not found"});
+            throw std::runtime_error(std::string{"Unit not found "} + e.what());
         }
     }
 
@@ -78,7 +78,7 @@ public:
         try {
             internal_value_ = map_.long_to_unit(unit_value);
         } catch (std::exception& e) {
-            throw std::runtime_error(std::string{"Unit not found"});
+            throw std::runtime_error(std::string{"Unit not found "} + e.what());
         }
     }
 
@@ -93,13 +93,13 @@ public:
         return *this;
     }
 
-
     template <typename T> T value() const;
     static std::vector<Value> grib_selected_units;
     static std::vector<Value> complete_unit_order_;
 
     static std::vector<Unit> list_supported_units() {
         std::vector<Unit> result;
+        result.reserve(32);
         for (const auto& val : complete_unit_order_) {
             if (val == Value::MISSING)
                 continue;
