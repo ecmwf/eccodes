@@ -13,6 +13,7 @@
 #include "step_utilities.h"
 #include <vector>
 #include <sstream>
+#include <iostream>
 /*
    This is used by make_class.pl
 
@@ -195,11 +196,45 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
+//static int pack_string(grib_accessor* a, const char* val, size_t* len)
+//{
+//    grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
+//    grib_handle* h                   = grib_handle_of_accessor(a);
+
+//    long start = 0, theEnd = -1;
+//    int ret = 0;
+//    char *p = NULL, *q = NULL;
+
+//    start  = strtol(val, &p, 10);
+//    theEnd = start;
+
+//    if (*p != 0)
+//        theEnd = strtol(++p, &q, 10);
+//    ret = grib_set_long_internal(h, self->startStep, start);
+//    if (ret)
+//        return ret;
+
+//    if (self->endStep != NULL) {
+//        ret = grib_set_long_internal(h, self->endStep, theEnd);
+//        if (ret)
+//            return ret;
+//    }
+
+//    return 0;
+//}
+
+
+
+// Step range format: <start_step>[-<end_step>]
+// <start_step> and <end_step> can be in different units
+// stepRange="0" in instantaneous field is equivalent to set step=0
+// stepRange="0" in accumulated field is equivalent to ???
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
+    std::cerr << "VAL: " << val << std::endl;
 
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -232,11 +267,16 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
         if ((ret = set_step(h, "forecastTime" , "indicatorOfUnitOfTimeRange", step_0)) != GRIB_SUCCESS)
             return ret;
 
-        if ((self->end_step != NULL) && (steps.size() > 1)) {
+        if (self->end_step != NULL) {
             if ((ret = grib_set_long_internal(h, "endStepUnit", step_1.unit().value<long>())))
                 return ret;
-            if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
-                return ret;
+            if (steps.size() > 1) {
+                if ((ret = grib_set_long_internal(h, self->end_step, step_1.value<long>())))
+                    return ret;
+            } else {
+                if ((ret = grib_set_long_internal(h, self->end_step, step_0.value<long>())))
+                    return ret;
+            }
         }
     }
     catch (std::exception& e) {
