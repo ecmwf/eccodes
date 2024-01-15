@@ -234,7 +234,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_accessor_g2step_range* self = (grib_accessor_g2step_range*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int ret = 0;
-    std::cerr << "VAL: " << val << std::endl;
+    //std::cerr << "VAL: " << val << std::endl;
 
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
