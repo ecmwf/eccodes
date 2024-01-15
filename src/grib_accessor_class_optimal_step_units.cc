@@ -17,9 +17,9 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
-   IMPLEMENTS = pack_long,unpack_long;dump
-   IMPLEMENTS = pack_string,unpack_string;dump
-   IMPLEMENTS = string_length
+   IMPLEMENTS = pack_long;unpack_long;dump
+   IMPLEMENTS = pack_string;unpack_string;dump
+   IMPLEMENTS = string_length;pack_expression;get_native_type;is_missing
    IMPLEMENTS = init
    MEMBERS    = const char* forecast_time_value
    MEMBERS    = const char* forecast_time_unit
@@ -40,8 +40,10 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
+static int is_missing(grib_accessor*);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int pack_string(grib_accessor*, const char*, size_t* len);
+static int pack_expression(grib_accessor*, grib_expression*);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
@@ -79,7 +81,7 @@ static grib_accessor_class _grib_accessor_class_optimal_step_units = {
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
     0,               /* pack_missing */
-    0,                 /* is_missing */
+    &is_missing,                 /* is_missing */
     &pack_long,                  /* pack_long */
     &unpack_long,                /* unpack_long */
     0,                /* pack_double */
@@ -92,7 +94,7 @@ static grib_accessor_class _grib_accessor_class_optimal_step_units = {
     0,        /* unpack_string_array */
     0,                 /* pack_bytes */
     0,               /* unpack_bytes */
-    0,            /* pack_expression */
+    &pack_expression,            /* pack_expression */
     0,              /* notify_change */
     0,                /* update_size */
     0,             /* preferred_size */
@@ -136,6 +138,39 @@ static size_t string_length(grib_accessor* a)
 {
     return 255;
 }
+
+
+static int pack_expression(grib_accessor* a, grib_expression* e)
+{
+    const char* cval  = NULL;
+    int ret           = 0;
+    long lval         = 0;
+    size_t len        = 1;
+    grib_handle* hand = grib_handle_of_accessor(a);
+
+    if (strcmp(e->cclass->name, "long") == 0) {
+        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
+        //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
+        ret = grib_pack_long(a, &lval, &len);
+    }
+    else {
+        char tmp[1024];
+        len  = sizeof(tmp);
+        cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
+        if (ret != GRIB_SUCCESS) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
+                __func__, grib_expression_get_name(e), a->name);
+            return ret;
+        }
+        len = strlen(cval) + 1;
+        //if (hand->context->debug)
+        //    printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);
+        ret = grib_pack_string(a, cval, &len);
+    }
+    return ret;
+}
+
 
 static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
@@ -237,6 +272,13 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return ret;
     *len = snprintf(val, *len, "%s", eccodes::Unit{unit}.value<std::string>().c_str());
     return GRIB_SUCCESS;
+}
+
+// Step units are never missing
+// If the user does not specify a step unit, we default to hours
+static int is_missing(grib_accessor* a)
+{
+    return 0;
 }
 
 static int get_native_type(grib_accessor* a)
