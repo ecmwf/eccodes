@@ -139,7 +139,6 @@ static size_t string_length(grib_accessor* a)
     return 255;
 }
 
-
 static int pack_expression(grib_accessor* a, grib_expression* e)
 {
     const char* cval  = NULL;
@@ -147,10 +146,10 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     long lval         = 0;
     size_t len        = 1;
     grib_handle* hand = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
-        //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
+        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
         ret = grib_pack_long(a, &lval, &len);
     }
     else {
@@ -159,8 +158,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
         cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
-                __func__, grib_expression_get_name(e), a->name);
+                "%s.%s: Unable to evaluate string %s to be set in %s",
+                cclass_name, __func__, grib_expression_get_name(e), a->name);
             return ret;
         }
         len = strlen(cval) + 1;
@@ -170,7 +169,6 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     }
     return ret;
 }
-
 
 static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
