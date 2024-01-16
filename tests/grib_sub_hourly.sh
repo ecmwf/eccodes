@@ -55,7 +55,9 @@ label="grib_sub_hourly"
 temp=temp.1.$label
 temp2=temp.2.$label
 tempFilt=temp.$label.filt
-samples_dir=$ECCODES_SAMPLES_PATH
+tempText=temp.$label.txt
+
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
@@ -319,8 +321,6 @@ grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "59 m"
 #grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0.983333" # not supported
 
 
-
-
 ${tools_dir}/grib_set -s forecastTime=0,indicatorOfUnitOfTimeRange=m $fn $temp
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=s" "0 s"
 grib_check_key_equals $temp "-p $keys_i -s stepUnits=m" "0 m"
@@ -328,7 +328,6 @@ grib_check_key_equals $temp "-p $keys_i -s stepUnits=h" "0 h"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=s" "0 s"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=m" "0 m"
 grib_check_key_equals $temp "-p $keys_d -s stepUnits=h" "0 h"
-
 
 
 fn="$instantaneous_field"
@@ -401,7 +400,6 @@ fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
 ${tools_dir}/grib_set -s stepRange=60m-2h $fn $temp
 grib_check_key_equals $temp "-p $low_level_keys" "1 h 1 h"
-
 
 fn="$accumulated_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
@@ -484,12 +482,18 @@ cat >$tempFilt<<EOF
     set startStep = "16";
     write;
 EOF
-${tools_dir}/grib_filter -o $temp $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
-# ${tools_dir}/grib_ls -j -n time $temp
+${tools_dir}/grib_filter -o $temp $tempFilt $sample_g2
 grib_check_key_equals $temp '-p startStep' '16m'
 grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange' '0'
 grib_check_key_equals $temp '-p forecastTime' '16'
 
+# Bad stepUnits
+set +e
+${tools_dir}/grib_set -s stepUnits=190 $sample_g2 $temp > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid unit" $tempText
 
 # Clean up
-rm -f $temp $temp2 $tempFilt
+rm -f $temp $temp2 $tempFilt $tempText
