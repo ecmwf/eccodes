@@ -3,7 +3,7 @@ import utils.debug as debug
 import os
 import default.default_ccode_converter as default_ccode_converter
 import default.default_cppcode as default_cppcode
-import code_object.cppfunction as cppfunction
+import cpp_code_object.cppfunction as cppfunction
 import utils.standard_transforms as standard_transforms
 
 prefix = "grib_accessor_class_"

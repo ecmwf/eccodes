@@ -1,6 +1,6 @@
 
 import utils.debug as debug
-import code_object.cppfunction as cppfunction
+import cpp_code_object.cppfunction as cppfunction
 
 # Stores information about Macro definition and use
 

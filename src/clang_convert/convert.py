@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import grib_accessor.grib_accessor_converter
+
 # Must have libclang!
 try:
     import clang.cindex

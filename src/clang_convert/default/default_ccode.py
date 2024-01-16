@@ -1,6 +1,6 @@
 
 import utils.debug as debug
-import code_object.cfunction as cfunction
+import code_object.function as function
 import default.macro_details as macro_details
 
 # Represents a coherent unit of C code that needs to be parsed together: usually a single C file
@@ -110,7 +110,7 @@ class DefaultCCode:
     # Add a function object from the funcsig and body (AST)
     # Override is_xxx functions to identify class member functions
     def add_function(self, cfuncsig, body):
-        cfunc = cfunction.CFunction(cfuncsig, body)
+        cfunc = function.Function(cfuncsig, body)
 
         if self.is_constructor(cfuncsig):
             self._constructor = cfunc
