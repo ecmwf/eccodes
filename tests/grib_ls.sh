@@ -221,9 +221,14 @@ file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $file 'expver:d' 1
 grib_check_key_equals $file 'expver:s' '0001'
 
-
+# JSON and lat/lon
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
+${tools_dir}/grib_ls -j -l0,0 -p bitmap $data_dir/simple_bitmap.grib > $tempText 2>&1
+grep -q "invalid_type" $tempText
+${tools_dir}/grib_ls -j -l0,0 -p nosuchkey $data_dir/sample.grib2 > $tempText 2>&1
+grep -q "nosuchkey.* null" $tempText
+
 
 ${tools_dir}/grib_get -l0,0,4 $data_dir/sample.grib2
 
@@ -233,6 +238,13 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Wrong mode given" $tempText
+
+set +e
+${tools_dir}/grib_ls -l poo $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong latitude value" $tempText
 
 
 set +e
