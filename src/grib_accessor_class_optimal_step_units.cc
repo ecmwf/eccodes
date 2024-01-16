@@ -119,13 +119,13 @@ grib_accessor_class* grib_accessor_class_optimal_step_units = &_grib_accessor_cl
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
-
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->forecast_time_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->forecast_time_unit = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_unit= grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_value = grib_arguments_get_name(hand, c, n++);
+    self->forecast_time_unit  = grib_arguments_get_name(hand, c, n++);
+    self->time_range_value    = grib_arguments_get_name(hand, c, n++);
+    self->time_range_unit     = grib_arguments_get_name(hand, c, n++);
     a->length = 0;
 }
 
@@ -190,7 +190,8 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             supported_units_str += eccodes::Unit{u}.value<std::string>() + ",";
         supported_units_str.pop_back();
 
-        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" + ". Available units are: " + supported_units_str;
+        std::string msg = std::string{"Invalid unit: "} + std::to_string(*val) + " (" + e.what() + ")" +
+                                      ". Available units are: " + supported_units_str;
         grib_context_log(a->context, GRIB_LOG_ERROR, msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }
@@ -212,14 +213,15 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             return GRIB_SUCCESS;
         }
 
-        grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
-        grib_handle* h                   = grib_handle_of_accessor(a);
+        const grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
+        grib_handle* h = grib_handle_of_accessor(a);
 
         auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
         auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);
 
         if (forecast_time_opt && time_range_opt) {
-            auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(), (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
+            auto [step_a, step_b] = find_common_units(forecast_time_opt.value().optimize_unit(),
+                                                     (forecast_time_opt.value() + time_range_opt.value()).optimize_unit());
             *val = step_a.unit().value<long>();
         }
         else if (forecast_time_opt && !time_range_opt) {

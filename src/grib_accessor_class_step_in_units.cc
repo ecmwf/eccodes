@@ -123,13 +123,14 @@ grib_accessor_class* grib_accessor_class_step_in_units = &_grib_accessor_class_s
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;
 
-    self->forecast_time_value = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->forecast_time_unit  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->step_units          = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_unit     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->time_range_value    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->forecast_time_value = grib_arguments_get_name(hand, c, n++);
+    self->forecast_time_unit  = grib_arguments_get_name(hand, c, n++);
+    self->step_units          = grib_arguments_get_name(hand, c, n++);
+    self->time_range_unit     = grib_arguments_get_name(hand, c, n++);
+    self->time_range_value    = grib_arguments_get_name(hand, c, n++);
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -139,7 +140,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    const grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -170,7 +171,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int unpack_double(grib_accessor* a, double * val, size_t* len)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    const grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -200,7 +201,7 @@ static int unpack_double(grib_accessor* a, double * val, size_t* len)
 
 static int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units)
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    const grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     int err = 0;
     long forecast_time_unit;
@@ -304,12 +305,12 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len) 
 {
-    grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    const grib_accessor_step_in_units* self = (grib_accessor_step_in_units*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret = GRIB_SUCCESS;
-    long start_step_value;
-    long start_step_unit;
-    long step_units;
+    long start_step_value = 0;
+    long start_step_unit = 0;
+    long step_units = 0;
     char fp_format[128] = "%g";
     size_t fp_format_len = sizeof(fp_format);
     int show_hours = a->context->show_hour_stepunit;
@@ -345,7 +346,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     return GRIB_SUCCESS;
 }
-
 
 static int get_native_type(grib_accessor* a)
 {
