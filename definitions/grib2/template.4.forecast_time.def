@@ -12,7 +12,7 @@ alias minutesAfterReferenceTimeOfDataCutoff=minutesAfterDataCutoff;
 codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
 alias indicatorOfUnitForForecastTime = indicatorOfUnitOfTimeRange;
 
-include "grib2/stepUnits.def";
+include "grib2/stepUnits.def"
 
 # Forecast time in units defined by previous octet (GRIB-29: supports negative forecast time)
-signed[4] forecastTime  : dump;
+signed[4] forecastTime : dump;

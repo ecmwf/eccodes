@@ -36,7 +36,7 @@ when (missing(subdivisionsOfBasicAngle) || subdivisionsOfBasicAngle == 0) {
 
 include "grib2/template.3.resolution_flags.def"
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 longitudesList list(Ni) {
    unsigned[4] longitude;

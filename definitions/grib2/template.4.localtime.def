@@ -3,7 +3,7 @@
 remove is_localtime;
 transient is_localtime=1;
 
-include "grib2/stepUnits.def";
+include "grib2/stepUnits.def"
 
 alias time.stepUnits = stepUnits;
 
