@@ -478,9 +478,18 @@ cat >$tempFilt<<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $data_dir/constant_field.grib2
 
+# Setting stepUnits as integer via filter
+cat >$tempFilt<<EOF
+    set stepUnits = 0;
+    set startStep = "16";
+    write;
+EOF
+${tools_dir}/grib_filter -o $temp $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+# ${tools_dir}/grib_ls -j -n time $temp
+grib_check_key_equals $temp '-p startStep' '16m'
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange' '0'
+grib_check_key_equals $temp '-p forecastTime' '16'
 
 
+# Clean up
 rm -f $temp $temp2 $tempFilt
-
-#~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/151145_s2_enfo_cf_o2d_zos_2002_prod_ecmf_glob.grib2
-#~/build/eccodes/bin/grib_ls -m /perm/maro/referenceGRIBfiles4MTG2testing/grib1+2_operational_and_rd/240023_ce_efas_fc_sfc_dis06_2022_0001_ecmf_lisflood.grib2
