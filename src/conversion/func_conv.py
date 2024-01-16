@@ -1,5 +1,5 @@
 # Convert C function to C++
-import debug
+import utils.debug as debug
 import func
 import arg
 import arg_conv

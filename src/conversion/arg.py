@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import re
 
 # Represent an argument in the form TYPE NAME

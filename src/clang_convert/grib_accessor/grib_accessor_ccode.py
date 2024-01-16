@@ -1,5 +1,5 @@
 
-import debug
+import utils.debug as debug
 import default.default_ccode as default_ccode
 import code_object.cfunction as cfunction
 import re

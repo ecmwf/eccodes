@@ -1,5 +1,5 @@
 
-import debug
+import utils.debug as debug
 import code_object.cfunction as cfunction
 import default.macro_details as macro_details
 

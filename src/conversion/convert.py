@@ -7,7 +7,7 @@ import logging
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
-import debug
+import utils.debug as debug
 from global_func_funcsig_conv import global_cfuncsig
 import funcsig
 import grib_accessor

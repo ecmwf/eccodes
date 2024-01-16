@@ -1,6 +1,6 @@
 
 import code_object.code_interface as code_interface
-import debug
+import utils.debug as debug
 
 # Representation of a function
 # The body is stored as an AST

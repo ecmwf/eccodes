@@ -1,10 +1,10 @@
 
-import debug
+import utils.debug as debug
 import code_object.funcsig as funcsig
 import code_object_converter.arg_converter as arg_converter
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.funcsig_mapping as funcsig_mapping
-from standard_transforms import transform_function_name
+from utils.standard_transforms import transform_function_name
 
 # Convert a C Function Signature to C++
 

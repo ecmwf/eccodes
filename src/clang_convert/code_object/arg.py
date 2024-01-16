@@ -1,6 +1,6 @@
 
 import code_object.code_interface as code_interface
-import debug
+import utils.debug as debug
 from code_object.declaration_specifier import DeclSpec
 import re
 

@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 from accessor_data import AccessorData
 import arg
 import member

@@ -1,7 +1,7 @@
 
-import debug
+import utils.debug as debug
 import clang.cindex
-import cnode_utils
+import utils.cnode_utils as cnode_utils
 import code_object.code_objects as code_objects
 import code_object_converter.arg_converter as arg_converter
 import code_object.variable_declaration as variable_declaration

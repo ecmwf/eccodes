@@ -6,7 +6,7 @@ import code_object_converter.arg_converter as arg_converter
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.funcsig_converter as funcsig_converter
 
-import debug
+import utils.debug as debug
 
 # Mapping from C code objects to their converters
 CodeInterfaceConverterClasses = {

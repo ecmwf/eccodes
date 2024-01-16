@@ -1,7 +1,7 @@
 # C to C++ transforms, including arg, type, function name
 
 import re
-import debug
+import utils.debug as debug
 import arg
 import copy
 from funcsig_mapping import FuncSigMapping

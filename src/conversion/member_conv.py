@@ -3,7 +3,7 @@
 import member
 import arg
 import arg_conv
-import debug
+import utils.debug as debug
 import re
 
 class MemberConverter(arg_conv.ArgConverter):

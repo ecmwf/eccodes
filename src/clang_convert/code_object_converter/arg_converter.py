@@ -1,9 +1,9 @@
 # Convert Arg from C to C++
 
-import debug
+import utils.debug as debug
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object.arg as arg
-from standard_transforms import transform_variable_name
+from utils.standard_transforms import transform_variable_name
 from code_object.code_interface import as_debug_string
 
 # Arg type of None means it should be deleted, so we return

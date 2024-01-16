@@ -1,9 +1,9 @@
 
 import clang.cindex
 import default.default_ccode as default_ccode
-import cnode_utils
+import utils.cnode_utils as cnode_utils
 import os
-import debug
+import utils.debug as debug
 
 # Parse a single C file using Libclang and store the AST in a CCode object
 # Subclass for more specialised parsing

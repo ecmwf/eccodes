@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import code_object.code_interface as code_interface
 import code_object.code_lines as code_lines
 

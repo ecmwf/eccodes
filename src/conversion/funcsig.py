@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import arg
 import re
 

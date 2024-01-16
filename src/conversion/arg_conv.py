@@ -1,7 +1,7 @@
 # Convert Arg from C to C++
 
 import re
-import debug
+import utils.debug as debug
 import arg
 
 # Arg type of None means it should be deleted, so we return

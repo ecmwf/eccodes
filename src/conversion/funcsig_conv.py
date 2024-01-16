@@ -1,5 +1,5 @@
 # Convert C function signature to C++
-import debug
+import utils.debug as debug
 import funcsig
 import arg_conv
 import re

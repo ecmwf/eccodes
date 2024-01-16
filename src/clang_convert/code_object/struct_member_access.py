@@ -1,6 +1,6 @@
 
 import code_object.code_interface as code_interface
-import debug
+import utils.debug as debug
 
 # Represent the accessing of a struct member as defined in code, in order to manipulate/transform it
 #

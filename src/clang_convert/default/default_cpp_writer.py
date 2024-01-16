@@ -1,6 +1,6 @@
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
-import debug
+import utils.debug as debug
 import os
 
 # Write the supplied cppcode objects to disk

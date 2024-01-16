@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import code_object.code_interface as code_interface
 
 # An object that holds lines of code not represented by a known class (Arg, Funcsig etc),

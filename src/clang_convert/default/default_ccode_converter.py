@@ -1,5 +1,5 @@
 
-import debug
+import utils.debug as debug
 import default.default_cast_parser as default_cast_parser
 import code_object.cppfunction as cppfunction
 import default.default_cppcode as default_cppcode

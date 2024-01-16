@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import member
 from global_func_funcsig_conv import global_cfuncsig
 import global_func

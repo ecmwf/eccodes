@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import re
 
 # Represent the argument of a struct as defined in code, in order to manipulate/transform it

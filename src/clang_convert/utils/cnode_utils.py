@@ -1,6 +1,6 @@
 
 import clang.cindex
-import debug
+import utils.debug as debug
 import code_object.funcsig as funcsig
 import code_object.funcsig_pointer as funcsig_pointer
 import code_object.arg as arg

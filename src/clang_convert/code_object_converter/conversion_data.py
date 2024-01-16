@@ -1,5 +1,5 @@
 
-import debug
+import utils.debug as debug
 from code_object.code_interface import as_debug_string
 
 # Store C to C++ conversion data to be used by the converters

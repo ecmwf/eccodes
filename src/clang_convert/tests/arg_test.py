@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import debug
-import arg
+import utils.debug as debug
+import code_object.arg as arg
 
 # Various test cases for the convert code
 

@@ -1,6 +1,6 @@
 
 import code_object.code_interface as code_interface
-import debug
+import utils.debug as debug
 import re
 
 # Represents the full declaration specifier sequence (see C++ standard section 9.2 Specifiers) for an arg

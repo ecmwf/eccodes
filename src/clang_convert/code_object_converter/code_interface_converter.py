@@ -1,6 +1,6 @@
 import code_object.code_interface as code_interface
 import copy
-import debug
+import utils.debug as debug
 
 # Base class for converting a C code object to C++
 #

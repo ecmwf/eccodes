@@ -1,5 +1,5 @@
 # Convert C definitions (e.g. to enums)
-import debug
+import utils.debug as debug
 import re
 
 GribStatusTransforms = {

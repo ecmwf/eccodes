@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 import arg_conv
 import func
 from jinja2 import Environment, FileSystemLoader, StrictUndefined

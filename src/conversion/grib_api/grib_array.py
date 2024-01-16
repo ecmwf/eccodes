@@ -1,5 +1,5 @@
 import re
-import debug
+import utils.debug as debug
 from grib_api.grib_type_transforms import grib_array_function_transforms
 import struct_arg
 

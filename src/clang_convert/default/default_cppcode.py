@@ -1,5 +1,5 @@
 
-import debug
+import utils.debug as debug
 import os
 import code_object.cppfunction as cppfunction
 import code_object.code_objects as code_objects

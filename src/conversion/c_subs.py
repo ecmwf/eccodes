@@ -1,7 +1,7 @@
 # C code substitutions to apply
 
 import re
-import debug
+import utils.debug as debug
 
 def sscanf_repl(m):
     return f"scanString({m.group(1)}, {m.group(3) if m.group(3) else '0'}{m.group(4)})"

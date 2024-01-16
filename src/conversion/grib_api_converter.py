@@ -5,7 +5,7 @@ import grib_api.grib_funcsig_type_transforms as grib_funcsig_type_transforms
 import grib_api.grib_type_transforms as grib_type_transforms
 import grib_api.grib_values as grib_values
 import arg
-import debug
+import utils.debug as debug
 
 def grib_api_funcsig_type_transforms():
     funcsig_type_transforms =  grib_funcsig_type_transforms.all_grib_funcsig_type_transforms()

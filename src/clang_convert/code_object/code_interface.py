@@ -1,4 +1,4 @@
-import debug
+import utils.debug as debug
 
 # Provides an interface for common functionality such as getting string representation
 #
