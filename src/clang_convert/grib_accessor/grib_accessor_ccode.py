@@ -59,28 +59,23 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
         else:
             return super().parent_cfilename
 
-    # Overridden to classify the functions being added
-    def add_function(self, cfuncsig, body):
-        cfunc = cfunction.CFunction(cfuncsig, body)
+    def is_constructor(self, cfuncsig):
+        return cfuncsig.name == "init"
 
-        if cfuncsig.name == "init":
-            self._constructor = cfunc
-            return
-        elif cfuncsig.name == "destroy":
-            self._destructor = cfunc
-            return
-        elif cfuncsig.name in grib_accessor_virtual_member_functions:
-            self._virtual_member_functions.append(cfunc)
-            return
-        
-        # If any arg starts with a "ptr type name", then it's a member function (as we've already extracted virtual functions)
-        for arg_entry in cfuncsig.args:
-            if re.search(r"grib_accessor(\w*)?\s*\*", arg_entry.decl_spec.as_string()):
-                self._member_functions.append(cfunc)
-                return
+    def is_destructor(self, cfuncsig):
+        return cfuncsig.name == "destroy"
 
-        # Must be a "free"" function
-        self._functions.append(cfunc)
+    def is_virtual_member_function(self, cfuncsig):
+        return cfuncsig.name in grib_accessor_virtual_member_functions
+
+    def is_member_function(self, cfuncsig):
+        if not self.is_virtual_member_function(cfuncsig):
+            # If any arg starts with a "ptr type name", then it's a member function (as we've already extracted virtual functions)
+            for arg_entry in cfuncsig.args:
+                if re.search(r"grib_accessor(\w*)?\s*\*", arg_entry.decl_spec.as_string()):
+                    return True
+
+        return False
 
     def dump_class_info(self):
         super().dump_class_info()

@@ -27,9 +27,18 @@ class DefaultCFileParser:
     def create_ccode(self):
         self._ccode = default_ccode.DefaultCCode(self._cfilename)
 
-    # Default behaviour is to just add to the ccode object
+    # Default behaviour is to just add to the ccode object, UNLESS it is a
+    # class member function
+    #
+    # This includes function definitions so we can determine whether to add a
+    # forward declaration (nb all nodes are references so it isn't a big overhead)
     def parse_global_declaration(self, node):
-        self._ccode.add_global_declaration(node)
+        if node.kind == clang.cindex.CursorKind.FUNCTION_DECL:
+            cfuncsig = cnode_utils.create_cfuncsig(node)
+            if not self._ccode.is_class_member_function(cfuncsig):
+                self._ccode.add_global_declaration(node)
+        else:
+            self._ccode.add_global_declaration(node)
 
     def parse_function_definition(self, node):
         cfuncsig = cnode_utils.create_cfuncsig(node)
@@ -63,9 +72,7 @@ class DefaultCFileParser:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():
                 self.parse_function_definition(node)
 
-            # Add *ALL* nodes to the global declaration. 
-            # This includes function definitions so we can determine whether to add a
-            # forward declaration (nb all nodes are references so it isn't a big overhead)
+            # Parse *ALL* nodes to determine whether to add to the global declaration. 
             self.parse_global_declaration(node)
 
         else:

@@ -11,8 +11,18 @@ class CodeInterfaceConverter:
         self._ccode_object = ccode_object
     
     # Convert the ccode_object to a cpp_code_object
-    # It must be overridden - this version just returns a copy of the ccode_object
+    #
+    # This is the function that *MUST* be called externally, as it ensures a copy
+    # of the converted object is returned to avoid reference issues (funcsig is particularly
+    # prone to this!)
+    # 
+    # The real work is done in create_cpp_code_object() !!!
     def to_cpp_code_object(self, conversion_data):
-        cpp_code_object = copy.deepcopy(self._ccode_object)
-        debug.line("to_cpp_code", f"Base version - just returning a copy of the C code object")
-        return cpp_code_object
+        cpp_code_object = self.create_cpp_code_object(conversion_data)
+        return copy.deepcopy(cpp_code_object)
+
+    # Actual implementation of to_cpp_code_object()
+    # It must be overridden - this version just returns the passed in ccode_object!
+    def create_cpp_code_object(self, conversion_data):
+        debug.line("to_cpp_code_object_internal", f"Base version - just returning the C code object")
+        return self._ccode_object

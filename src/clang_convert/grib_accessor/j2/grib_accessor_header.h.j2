@@ -1,0 +1,51 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+#pragma once
+
+// DEBUG - REMOVE!
+#include "grib_api_internal.h"
+
+{% for i in c._header_file_includes -%}
+#include "{{ i }}"
+{%- endfor %}
+
+namespace {{ c.nested_namespaces }} {
+
+// Forward declarations
+{%- for f in c.forward_declarations %}
+{{ f }}
+{%- endfor %}
+
+class {{ c.class_name }} : public {{ c.super_class_name }} {
+public:
+    {{ c.class_name }}({{c.constructor.funcsig.as_string()}});
+    ~{{ c.class_name }}() = default;
+
+protected:
+    // Virtual member functions
+    {%- for u in c.virtual_member_functions_using_list %}
+    using c.class_name::{{u}};{% endfor %}
+    {%- for m in c.virtual_member_functions %}
+    {{ m.funcsig.as_string() }};{% endfor %}
+
+    // Data members
+    {% for m in c.data_members %} {{ m.as_declaration() }}{{ m.default_value }};
+    {%- endfor %}
+
+private:
+    // Member functions
+    {%- for m in c.template_member_functions %}
+    {{ m.funcsig.as_string() }};{% endfor %}
+    {%- for m in c.member_functions %}
+    {{ m.funcsig.as_string() }};{% endfor %}
+};
+
+} // namespace {{ c.nested_namespaces }}

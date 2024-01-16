@@ -1,0 +1,23 @@
+#
+# (C) Copyright 2005- ECMWF.
+#
+# This software is licensed under the terms of the Apache Licence Version 2.0
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# In applying this licence, ECMWF does not waive the privileges and immunities
+# granted to it by virtue of its status as an intergovernmental organisation
+# nor does it submit to any jurisdiction.
+#
+
+set(converted_accessor_data_dir	${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor)
+
+# Define all the source files to build for the C++ accessors
+# Note the PARENT_SCOPE option sets the variable in the calling CMakeLists.txt
+# file - it remains undefined in this file: https://cmake.org/cmake/help/latest/command/set.html
+set(converted_accessor_data_src_files
+    {% for file in c-%}
+    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/{{ file }}.cc
+    ${CMAKE_CURRENT_LIST_DIR}/eccodes/accessor/{{ file }}.h
+    {% endfor -%}
+    PARENT_SCOPE
+)

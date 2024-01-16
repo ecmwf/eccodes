@@ -23,12 +23,17 @@ class DefaultConverter:
         return []
 
     # This is the main entry point (should only need to call this!)
+    # Returns a list of cppcode objects that can be written to files
     def convert_files(self, files):
 
+        cppcode_entries = []
         for ccode_entry in self.parse_files(files):
             self._cli_logger.info("Converting C to C++ for source %s", ccode_entry.cfilename)
             ccode_conv = self.ccode_converter_class(ccode_entry)
-            ccode_conv.convert()
+            cppcode_entry = ccode_conv.convert()
+            cppcode_entries.append(cppcode_entry)
+        
+        return cppcode_entries
 
     # Called by convert_files()...
     def parse_files(self, files):

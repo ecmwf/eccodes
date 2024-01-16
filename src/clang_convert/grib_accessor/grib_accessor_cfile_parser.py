@@ -48,5 +48,4 @@ class GribAccessorCParser(default_cfile_parser.DefaultCFileParser):
         elif node.spelling == self.base_class:
             return # ignore!
         else:
-            # Add everything else for now, we'll filter it when converting to C++!
-            self._ccode.add_global_declaration(node)
+            super().parse_global_declaration(node)

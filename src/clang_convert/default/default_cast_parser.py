@@ -290,13 +290,11 @@ class DefaultCASTParser:
     # Assume this is just a declaration - the function body will be converted via a function class...
     def parse_FUNCTION_DECL(self, node):
         cfuncsig = cnode_utils.create_cfuncsig(node)
+        cfuncsig.is_declaration = True
         return cfuncsig
 
     def parse_STRUCT_DECL(self, node):
         cstruct_arg = cnode_utils.create_cstruct_arg(node)
-
-        #TODO - Convert to C++
-
         return cstruct_arg
 
     def parse_PARM_DECL(self, node):

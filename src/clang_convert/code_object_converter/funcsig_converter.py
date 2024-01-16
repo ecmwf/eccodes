@@ -33,26 +33,26 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
         self._conversions = []
 
-    # Returns both the new cpp funcsig and an updated c funcsig
-    def to_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_data):
         self._conversion_data = conversion_data
 
-        # If we have a mapping already stored, just return that!
+        # If we have a mapping already stored, just use that!
         cppfuncsig = self._conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
-        if cppfuncsig:
-            return cppfuncsig
+        if not cppfuncsig:
+            cppfuncsig = funcsig.FuncSig(
+                self.to_cpp_return_type(), 
+                self.to_cpp_name(), 
+                self.to_cpp_args(),
+                self._ccode_object.template)
 
-        cppfuncsig = funcsig.FuncSig(
-            self.to_cpp_return_type(), 
-            self.to_cpp_name(), 
-            self.to_cpp_args(),
-            self._ccode_object.template)
+            #cppfuncsig.static = self.is_cpp_static()
 
-        #cppfuncsig.static = self.is_cpp_static()
+            # Add this to the conversion data mappings
+            mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
+            self._conversion_data.add_to_funcsig_mappings(mapping)
 
-        # Add this to the conversion data mappings
-        mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
-        self._conversion_data.add_to_funcsig_mappings(mapping)
+        # Update the settings that we don't need (want?) to store in the map
+        cppfuncsig.is_declaration = self._ccode_object.is_declaration
 
         return cppfuncsig
 

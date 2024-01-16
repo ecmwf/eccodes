@@ -1,0 +1,47 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+{%- for i in c.source_file_includes %}
+#include {{ i }}
+{%- endfor %}
+
+namespace {{ c.nested_namespaces }} {
+
+// Global declarations - START
+{{ c.global_declarations.as_string() }}
+// Global declarations - END
+
+{% for func in c.functions %}
+{{ func.as_string() }}
+{% endfor %}
+
+{% if c.class_name %}
+
+{{ c.constructor.as_string() }}
+
+{% if c.destructor %}
+{{ c.destructor.as_string() }}
+{% endif %}
+
+{% for func in c.template_member_functions %}
+{{ func.as_string() }}
+{% endfor %}
+
+{% for func in c.virtual_member_functions %}
+{{ func.as_string() }}
+{% endfor %}
+
+{% for func in c.member_functions %}
+{{ func.as_string() }}
+{% endfor %}
+
+{% endif %}
+
+} // namespace {{ c.nested_namespaces }}

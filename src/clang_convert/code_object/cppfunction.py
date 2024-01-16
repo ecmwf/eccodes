@@ -25,9 +25,7 @@ class CppFunction(code_interface.CodeInterface):
     # The whole function will be returned: signature and body (in braces)
     def as_lines(self):
         lines = self._funcsig.as_lines()
-        lines.append("{")
         lines.extend(self._body)
-        lines.append("}")
 
         return lines
     

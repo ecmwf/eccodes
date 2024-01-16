@@ -79,6 +79,24 @@ class DefaultCCode:
         assert cmember not in self._data_members, f"member [{cmember.as_string()}] already defined for [{self._class_name}]"
         self._data_members.append(cmember)
 
+    def is_constructor(self, cfuncsig):
+        return False
+
+    def is_destructor(self, cfuncsig):
+        return False
+
+    def is_virtual_member_function(self, cfuncsig):
+        return False
+
+    def is_member_function(self, cfuncsig):
+        return False
+
+    def is_class_member_function(self, cfuncsig):
+        return self.is_constructor(cfuncsig) \
+            or self.is_destructor(cfuncsig) \
+            or self.is_virtual_member_function(cfuncsig) \
+            or self.is_member_function(cfuncsig)
+
     # Class representation - END   ##############################
         
     @property
@@ -90,11 +108,21 @@ class DefaultCCode:
         return ""
 
     # Add a function object from the funcsig and body (AST)
-    # This version assumes it is a free function
-    # Override to identify class member functions
+    # Override is_xxx functions to identify class member functions
     def add_function(self, cfuncsig, body):
         cfunc = cfunction.CFunction(cfuncsig, body)
-        self._functions.append(cfunc)
+
+        if self.is_constructor(cfuncsig):
+            self._constructor = cfunc
+        elif self.is_destructor(cfuncsig):
+            self._destructor = cfunc
+        elif self.is_virtual_member_function(cfuncsig):
+            self._virtual_member_functions.append(cfunc)
+        elif self.is_member_function(cfuncsig):
+            self._member_functions.append(cfunc)
+        else:
+            # Must be a "free"" function
+            self._functions.append(cfunc)
 
     # Debug Support
     def dump_global_declarations(self):

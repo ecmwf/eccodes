@@ -29,6 +29,36 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+# Call the appropriate converter and return a list of converted cppcode objects
+def convert_cfiles(convert_type):
+    converter_lib_name = f"{convert_type}.{convert_type}_converter"
+    LOG.info("Type=[%s] converter_lib_name=[%s]", convert_type, converter_lib_name)
+
+    try:
+        converter_lib = importlib.import_module(converter_lib_name)
+        converter = converter_lib.CONVERTER_CLASS(LOG)
+        return converter.convert_files(ARGS.path)
+    except ModuleNotFoundError:
+        LOG.error("Import failed, converter_lib_name=[%s]", converter_lib_name)
+        exit()
+
+def write_cpp_files(write_type, cppcode_entries):
+    cpp_writer_lib_name = f"{write_type}.{write_type}_cpp_writer"
+    LOG.info("Type=[%s] cpp_writer_lib_name=[%s]", write_type, cpp_writer_lib_name)
+
+    try:
+        cpp_writer_lib = importlib.import_module(cpp_writer_lib_name)
+        writer = cpp_writer_lib.CPP_WRITER_CLASS(ARGS.target, LOG)
+        writer.write_files(cppcode_entries)
+    except ModuleNotFoundError:
+        LOG.error("Import failed, cpp_writer_lib_name=[%s]", cpp_writer_lib_name)
+        exit()
+
+# Convert the C input files to C++ and write to disk
+def generate_cpp_files(convert_type):
+    cppcode_entries = convert_cfiles(convert_type)
+    write_cpp_files(convert_type, cppcode_entries)
+
 def main():
     if os.path.exists(ARGS.libclang):
         clang.cindex.Config.set_library_file(ARGS.libclang)
@@ -41,20 +71,11 @@ def main():
     if not ARGS.type:
         LOG.info("C code type not supplied, using default.\n")
         LOG.info("Use --type to specify the type, e.g: convert.py --type grib_accessor\n")
-        converter_type = "default"
+        convert_type = "default"
     else:
-        converter_type = ARGS.type
+        convert_type = ARGS.type
 
-    converter_lib_name = f"{converter_type}.{converter_type}_converter"
-    LOG.info("Type=[%s] converter_lib_name=[%s]", converter_type, converter_lib_name)
-
-    try:
-        converter_lib = importlib.import_module(converter_lib_name)
-        converter = converter_lib.CONVERTER_CLASS(LOG)
-        converter.convert_files(ARGS.path)
-    except ModuleNotFoundError:
-        LOG.error("Import failed, converter_lib_name=[%s]", converter_lib_name)
-        exit()
+    generate_cpp_files(convert_type)
 
 if __name__ == "__main__":
     main()
