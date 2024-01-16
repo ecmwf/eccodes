@@ -842,7 +842,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
+        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
         //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
         ret = grib_pack_long(a, &lval, &len);
     }

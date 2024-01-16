@@ -1004,6 +1004,7 @@ struct grib_context
     int no_big_group_split;
     int no_spd;
     int keep_matrix;
+    int show_hour_stepunit;
     char* grib_definition_files_path;
     char* grib_samples_path;
     char* grib_concept_path;
