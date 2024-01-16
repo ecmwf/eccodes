@@ -61,7 +61,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
+    const int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
 
     options->dump_mode = (char*)"default";
 

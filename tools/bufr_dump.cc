@@ -99,15 +99,8 @@ static void check_code_gen_dump_mode(const char* language)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O");
-
     options->dump_mode = (char*)"default";
     options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
-
-    if (opt > 1) {
-        printf("%s: simultaneous j/C/O options not allowed\n", tool_name);
-        exit(1);
-    }
 
     if (grib_options_on("j:")) {
         options->dump_mode = (char*)"json";
