@@ -622,8 +622,11 @@ void test_sarray()
     printf("Running %s ...\n", __func__);
     grib_context* c = grib_context_get_default();
     grib_sarray* a = grib_sarray_new(c, 10, 10);
-    grib_sarray_push(c, a, "ants");
-    grib_sarray_push(c, a, "bugs");
+
+    char ants_s[] = "ants";
+    char bugs_s[] = "bugs";
+    grib_sarray_push(c, a, ants_s);
+    grib_sarray_push(c, a, bugs_s);
     grib_sarray_print("sarray", a);
 
     grib_vsarray* va = grib_vsarray_new(c, 1, 1);
