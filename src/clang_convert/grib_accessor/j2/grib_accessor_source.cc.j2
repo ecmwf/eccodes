@@ -26,7 +26,9 @@ namespace {{ c.nested_namespaces }} {
 {{ func.as_string() }}
 {% endfor %}
 
+{% if c.constructor %}
 {{ c.constructor.as_string() }}
+{% endif %}
 
 {% if c.destructor %}
 {{ c.destructor.as_string() }}

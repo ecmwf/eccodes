@@ -26,15 +26,20 @@ namespace {{ c.nested_namespaces }} {
 
 class {{ c.class_name }} : public {{ c.super_class_name }} {
 public:
-    {{ c.class_name }}({{c.constructor.funcsig.as_string()}});
+    {% if c.constructor %}
+    {{c.constructor.funcsig_as_declaration}};
+    {%- endif %}
+    {%- if c.destructor %}
+    {% else %}
     ~{{ c.class_name }}() = default;
+    {%- endif %}
 
 protected:
     // Virtual member functions
     {%- for u in c.virtual_member_functions_using_list %}
     using c.class_name::{{u}};{% endfor %}
     {%- for m in c.virtual_member_functions %}
-    {{ m.funcsig.as_string() }};{% endfor %}
+    {{ m.funcsig_as_declaration }};{% endfor %}
 
     // Data members
     {% for m in c.data_members %} {{ m.as_declaration() }}{{ m.default_value }};
@@ -43,9 +48,9 @@ protected:
 private:
     // Member functions
     {%- for m in c.template_member_functions %}
-    {{ m.funcsig.as_string() }};{% endfor %}
+    {{ m.funcsig_as_declaration }};{% endfor %}
     {%- for m in c.member_functions %}
-    {{ m.funcsig.as_string() }};{% endfor %}
+    {{ m.funcsig_as_declaration }};{% endfor %}
 };
 
 } // namespace {{ c.nested_namespaces }}
