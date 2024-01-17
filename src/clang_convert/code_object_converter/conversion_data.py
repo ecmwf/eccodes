@@ -77,6 +77,11 @@ class ConversionData:
     def funcsig_mappings(self):
         return self._funcsig_mappings
 
+    # Clear current mappings and set to supplied mappings
+    def set_funcsig_mappings(self, new_mappings):
+        self._funcsig_mappings.clear()
+        self._funcsig_mappings.extend(new_mappings)
+
     def add_to_funcsig_mappings(self, mapping):
         for entry in self._funcsig_mappings:
             if entry.cfuncsig.name == mapping.cfuncsig.name:
