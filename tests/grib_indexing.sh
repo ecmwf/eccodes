@@ -91,6 +91,12 @@ EOF
 
 diff $tempRef $tempOut
 
+# ECC-1748
+${tools_dir}/grib_dump -t ${tempIndex} > $tempOut
+grep -q "key type = string" $tempOut
+grep -q "key type = long" $tempOut
+
+
 ${tools_dir}/grib_index_build -N -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 

@@ -189,7 +189,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         const char* filename = options->current_infile->name;
         json = 0;
 
-        err = grib_index_dump_file(stdout, filename);
+        err = grib_index_dump_file(stdout, filename, options->dump_flags);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
                              tool_name,

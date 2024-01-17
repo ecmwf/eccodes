@@ -1739,16 +1739,19 @@ static void grib_dump_key_values(FILE* fout, grib_string_list* values)
     }
     fprintf(fout, "\n");
 }
-static void grib_dump_index_keys(FILE* fout, grib_index_key* keys)
+
+static void grib_dump_index_keys(FILE* fout, grib_index_key* keys, unsigned long flags)
 {
     if (!keys)
         return;
     fprintf(fout, "key name = %s\n", keys->name);
-    /* fprintf(fout, "key type = %d\n", keys->type); */
-
+    if ((flags & GRIB_DUMP_FLAG_TYPE) != 0) {
+        fprintf(fout, "key type = %s\n", grib_get_type_name(keys->type));
+    }
     grib_dump_key_values(fout, keys->values);
-    grib_dump_index_keys(fout, keys->next);
+    grib_dump_index_keys(fout, keys->next, flags);
 }
+
 #ifdef INDEX_DUMPS
 static void grib_dump_files(FILE* fout, grib_file* files)
 {
@@ -1780,7 +1783,7 @@ static void grib_dump_field_tree(FILE* fout, grib_field_tree* tree)
 }
 #endif
 
-int grib_index_dump_file(FILE* fout, const char* filename)
+int grib_index_dump_file(FILE* fout, const char* filename, unsigned long flags)
 {
     int err           = 0;
     grib_index* index = NULL;
@@ -1821,13 +1824,13 @@ int grib_index_dump_file(FILE* fout, const char* filename)
         fclose(fh);
     }
 
-    grib_index_dump(fout, index);
+    grib_index_dump(fout, index, flags);
     grib_index_delete(index);
 
     return GRIB_SUCCESS;
 }
 
-void grib_index_dump(FILE* fout, grib_index* index)
+void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags)
 {
     if (!index)
         return;
@@ -1838,7 +1841,7 @@ void grib_index_dump(FILE* fout, grib_index* index)
     /* grib_dump_files(fout, index->files); */
 
     fprintf(fout, "Index keys:\n");
-    grib_dump_index_keys(fout, index->keys);
+    grib_dump_index_keys(fout, index->keys, flags);
 
     /*
      * fprintf(fout, "Index field tree:\n");
