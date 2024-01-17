@@ -62,6 +62,9 @@ sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
+# Check the lowercase alias 'stepunits' for a variety of step types (instant, accum etc)
+${tools_dir}/grib_get -p stepunits $data_dir/tigge_cf_ecmwf.grib2
+
 
 #### Make sure that step, stepRange, startStep, endStep produce the same result for instantaneous fields
 fn="$instantaneous_field"

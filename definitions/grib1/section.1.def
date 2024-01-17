@@ -180,6 +180,8 @@ meta dataTime   time(hour,minute,second) : dump;
 meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
 
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+# The lowercase version is to unify it with the helper key in the MARS language
+alias stepunits = stepUnits;
 
 concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsDir2, conceptsDir1);
 
