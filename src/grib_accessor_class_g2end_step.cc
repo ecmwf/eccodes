@@ -744,5 +744,15 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
+#if 0
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    long step_units = 0;
+    if (grib_get_long_internal(h, "stepUnits", &step_units) == GRIB_SUCCESS) {
+        if (step_units == 1) {
+            return GRIB_TYPE_LONG;
+        }
+    }
+#endif
     return GRIB_TYPE_STRING;
 }
