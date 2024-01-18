@@ -445,6 +445,17 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Setting step
+# -------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+echo 'set step = 12; write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+${tools_dir}/grib_compare -b forecastTime $input $tempGrib
+grib_check_key_equals $tempGrib step 12
+grib_check_key_equals $tempGrib forecastTime 12
+echo 'set endStep = 12; write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+grib_check_key_equals $tempGrib step 12
+grib_check_key_equals $tempGrib forecastTime 12
+
 
 # Bad filter
 # ----------------

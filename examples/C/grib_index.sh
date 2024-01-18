@@ -11,8 +11,13 @@
 
 label="grib_index_c"
 tempIndex=temp.$label.idx
+tempText=temp.$label.txt
 
 input=$data_dir/tigge_cf_ecmwf.grib2
-${examples_dir}/c_grib_index $input $tempIndex
+${examples_dir}/c_grib_index $input $tempIndex > $tempText
 
-rm -f $tempIndex
+grep -q "43 messages selected" $tempText
+
+${tools_dir}/grib_dump $tempIndex
+
+rm -f $tempIndex $tempText
