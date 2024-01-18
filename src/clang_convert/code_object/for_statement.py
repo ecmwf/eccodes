@@ -62,18 +62,19 @@ class ForStatement(code_interface.CodeInterface):
         return self._statement
 
     def as_lines(self):
-        lines = ["for("]
+        init_string = cond_string = iter_string = ""
         if self._init_statement:
-            lines.extend(self._init_statement.as_lines())
-        if not lines[-1].endswith(";"):
-            lines[-1] += ";"
+            init_string = self._init_statement.as_string()
+        if not init_string.endswith(";"):
+            init_string += ";"
         if self._condition:
-            lines.extend(self._condition.as_lines())
-        if not lines[-1].endswith(";"):
-            lines[-1] += ";"
+            cond_string = self._condition.as_string()
+        if not cond_string.endswith(";"):
+            cond_string += ";"
         if self._iteration_expression:
-            lines.extend(self._iteration_expression.as_lines())
-        lines[-1] += ")"
+            iter_string = self._iteration_expression.as_string()
+
+        lines = [f"for({init_string}{cond_string}{iter_string})"]
 
         if self._statement:
             lines.extend(self._statement.as_lines())
