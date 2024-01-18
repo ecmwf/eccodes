@@ -3,7 +3,6 @@ import utils.debug as debug
 import clang.cindex
 import utils.cnode_utils as cnode_utils
 import code_object.code_objects as code_objects
-import code_object_converter.arg_converter as arg_converter
 import code_object.variable_declaration as variable_declaration
 import code_object.init_list as init_list
 import code_object.declaration_specifier as declaration_specifier
@@ -328,11 +327,9 @@ class DefaultCASTParser:
 
     def parse_FIELD_DECL(self, node):
         carg = cnode_utils.create_carg(node)
-        arg_conv = arg_converter.ArgConverter(carg)
-        cpparg = arg_conv.to_cpp_arg(self._conversion_data)
         
-        debug.line("parse_FIELD_DECL", f"Converted spelling=[{node.spelling}] to cpparg=[{cpparg.as_string()}]")
-        return cpparg
+        debug.line("parse_FIELD_DECL", f"Converted spelling=[{node.spelling}] to cpparg=[{carg.as_string()}]")
+        return carg
 
     def parse_VAR_DECL(self, node):
         cvariable = cnode_utils.create_carg(node)

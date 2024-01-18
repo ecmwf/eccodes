@@ -10,8 +10,6 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
         assert isinstance(ccode_object, variable_declaration.VariableDeclaration), f"Expected VariableDeclaration, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_data):
-        self._conversion_data = conversion_data
-
         cpp_variable = conversion_funcs.convert_ccode_object(self._ccode_object.variable, conversion_data)
         cpp_value = conversion_funcs.convert_ccode_object(self._ccode_object.value, conversion_data)
 

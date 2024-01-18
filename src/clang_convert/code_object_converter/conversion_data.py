@@ -109,8 +109,14 @@ class ConversionData:
 
     def add_to_funcsig_pointer_mappings(self, mapping):
         for entry in self._funcsig_pointer_mappings:
-            if entry.cfuncsig.name == mapping.cfuncsig.name:
-                assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
+            if entry.cfuncsig_pointer.name == mapping.cfuncsig_pointer.name:
+                assert False, f"Mapping for [{mapping.cfuncsig_pointer.name}] already exists!"
 
         self._funcsig_pointer_mappings.append(mapping)
 
+    def cppfuncsig_pointer_for_cfuncsig_pointer(self, cfuncsig_pointer):
+        for mapping in self._funcsig_pointer_mappings:
+            if cfuncsig_pointer.name == mapping.cfuncsig_pointer.name:
+                return mapping.cppfuncsig_pointer
+        
+        return None
