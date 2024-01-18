@@ -35,6 +35,13 @@ class DefaultCASTParser:
         self._conversion_data = conversion_data
         self._macros = macros
 
+        # Local override - resets the current debug state at function exit!
+        include_ast_parser_debugging = False
+        global_debug_enabled = debug.debug_enabled
+
+        if global_debug_enabled and not include_ast_parser_debugging:
+            debug.disable_debug()
+
         ccode_objects = code_objects.CodeObjects()
 
         if isinstance(cnode, list):
@@ -51,6 +58,9 @@ class DefaultCASTParser:
             else:
                 debug.line("to_ccode_objects", f"Code object is None for node spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] kind=[{cnode.kind}]")
         
+        if global_debug_enabled and not include_ast_parser_debugging:
+            debug.enable_debug()
+
         return ccode_objects
 
     # Main entry point to parse an AST node and return a CodeInterface objects
@@ -83,17 +93,17 @@ class DefaultCASTParser:
     # Default behaviour for node kinds that we ignore
     def parse_node_ignored_kind(self, node):
         debug.line("parse_node_ignored_kind", f"*** IGNORING *** spelling=[{node.spelling}] kind=[{node.kind}]")
-        if node.kind == clang.cindex.CursorKind.UNEXPOSED_DECL:
+        '''if node.kind == clang.cindex.CursorKind.UNEXPOSED_DECL:
             debug.line("parse_node_ignored_kind", f"     Not dumping node - could be a lot of tokens if #include !")
         else:
-            cnode_utils.dump_node(node,5)
+            cnode_utils.dump_node(node,5)'''
 
         return None
 
     # Placeholder for node kinds that we should support, but haven't yet implemented!
     def parse_node_not_implemented(self, node):
         debug.line("parse_node_not_implemented", f"*** kind=[{node.kind}] not implemented ***")
-        cnode_utils.dump_node(node,5)
+        #cnode_utils.dump_node(node,5)
         debug.line("parse_node_not_implemented", f"No convert routine implemented for kind=[{node.kind}]")
         assert False, f"No convert routine implemented for kind=[{node.kind}]"
         return None
@@ -147,7 +157,6 @@ class DefaultCASTParser:
     def parse_COMPOUND_STMT(self, node):
 
         debug.line("parse_COMPOUND_STMT", f">>> spelling=[{node.spelling}] kind=[{node.kind}]")
-        cnode_utils.dump_node(node, 1)
 
         stmt_lines = code_lines.CodeLines()
 
@@ -431,8 +440,8 @@ class DefaultCASTParser:
         # Find the operator by excluding operand tokens
         operator_tokens = [t for t in tokens if t not in right_tokens]
         debug.line("parse_UNARY_OPERATOR", f"Unary Operator = [{operator_tokens}]")
-        debug.line("parse_UNARY_OPERATOR", f"right_operand...")
-        cnode_utils.dump_node(right_operand)
+        #debug.line("parse_UNARY_OPERATOR", f"right_operand...")
+        #cnode_utils.dump_node(right_operand)
 
         operator_str = "".join(t for t in operator_tokens)
         right_operand_cvalue = self.parse_ast_node(right_operand)

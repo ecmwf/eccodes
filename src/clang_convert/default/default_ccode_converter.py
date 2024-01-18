@@ -75,7 +75,8 @@ class DefaultCCodeConverter:
     def convert_cfunction_body(self, cfunc):
         function_body_ast_parser = self.cast_parser_class()
         function_body_ccode_objects = function_body_ast_parser.to_ccode_objects(cfunc.body, self._conversion_data, self._ccode.macro_details)
-        return function_body_ccode_objects.as_lines()
+        function_body_cppcode_objects = conversion_funcs.convert_ccode_object_collection(function_body_ccode_objects, self._conversion_data)
+        return function_body_cppcode_objects.as_lines()
 
     # Standard function conversion: returns: funcsig, body
     def convert_function_helper(self, cfunc):
