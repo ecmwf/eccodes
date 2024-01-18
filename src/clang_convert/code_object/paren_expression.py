@@ -1,6 +1,5 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
-import code_object.code_lines as code_lines
 
 # Represent an expression wrapped in a pair of parentheses, i.e. (EXPRESSION)
 # Models the PAREN_EXPR CursorKind in libclang
@@ -8,12 +7,8 @@ import code_object.code_lines as code_lines
 # expression can be a string or a code_interface subclass
 class ParenExpression(code_interface.CodeInterface):
     def __init__(self, expression) -> None:
-        if isinstance(expression, str):
-            self._expression = code_lines.CodeLines(expression)
-        else:
-            self._expression = expression
-
-        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class (or a string)"
+        self._expression = expression
+        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class"
 
     @property
     def expression(self):

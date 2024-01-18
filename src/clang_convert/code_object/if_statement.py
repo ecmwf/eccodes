@@ -1,6 +1,5 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
-import code_object.code_lines as code_lines
 
 # Represents an if statement in the form:
 #
@@ -11,17 +10,11 @@ import code_object.code_lines as code_lines
 # expression & action can be a string or a code_interface subclass (or None)
 class IfStatement(code_interface.CodeInterface):
     def __init__(self, expression, action) -> None:
-        if isinstance(expression, str):
-            self._expression = code_lines.CodeLines(expression)
-        else:
-            self._expression = expression
-        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class (or a string)"
+        self._expression = expression
+        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class"
 
-        if isinstance(action, str):
-            self._action = code_lines.CodeLines(action)
-        else:
-            self._action = action
-        assert isinstance(self._action, code_interface.CodeInterface), f"Action must be a CodeInterface class (or a string)"
+        self._action = action
+        assert isinstance(self._action, code_interface.CodeInterface), f"Action must be a CodeInterface class"
 
         self._else = None
 
@@ -35,11 +28,8 @@ class IfStatement(code_interface.CodeInterface):
 
     def add_else(self, else_statement):
 
-        if isinstance(else_statement, str):
-            self._else = code_lines.CodeLines(else_statement)
-        else:
-            self._else = else_statement
-        assert isinstance(self._else, code_interface.CodeInterface), f"Else statement must be a CodeInterface class (or a string)"
+        self._else = else_statement
+        assert isinstance(self._else, code_interface.CodeInterface), f"Else statement must be a CodeInterface class"
 
     def as_lines(self):
         if_lines = []

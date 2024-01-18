@@ -1,49 +1,41 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
-import code_object.code_lines as code_lines
+import code_object.literal as literal
 
 # Represents a for loop in the form:
 #
 # for(init_statement; condition; iteration_expression) statement
 #
-# init_statement, condition and iteration_expression can be a string or a code_interface subclass (or None)
+# init_statement, condition and iteration_expression must be a code_interface subclass (or None)
 class ForStatement(code_interface.CodeInterface):
     def __init__(self, init_statement, condition, iteration_expression, statement) -> None:
-        if isinstance(init_statement, str):
-            self._init_statement = code_lines.CodeLines(init_statement)
-        elif isinstance(init_statement, code_interface.CodeInterface):
+        if isinstance(init_statement, code_interface.CodeInterface):
             self._init_statement = init_statement
         elif init_statement is None:
-            self._init_statement = code_lines.CodeLines("")
+            self._init_statement = literal.Literal("")
         else:
-            assert False, f"Init statement must be a CodeInterface class (or a string)"
+            assert False, f"Init statement must be a CodeInterface class (or None)"
 
-        if isinstance(condition, str):
-            self._condition = code_lines.CodeLines(condition)
-        elif isinstance(condition, code_interface.CodeInterface):
+        if isinstance(condition, code_interface.CodeInterface):
             self._condition = condition
         elif condition is None:
-            self._condition = code_lines.CodeLines("")
+            self._condition = literal.Literal("")
         else:
-            assert False, f"Condition must be a CodeInterface class (or a string)"
+            assert False, f"Condition must be a CodeInterface class (or None)"
 
-        if isinstance(iteration_expression, str):
-            self._iteration_expression = code_lines.CodeLines(iteration_expression)
-        elif isinstance(iteration_expression, code_interface.CodeInterface):
+        if isinstance(iteration_expression, code_interface.CodeInterface):
             self._iteration_expression = iteration_expression
         elif iteration_expression is None:
-            self._iteration_expression = code_lines.CodeLines("")
+            self._iteration_expression = literal.Literal("")
         else:
-            assert False, f"Iteration expression must be a CodeInterface class (or a string)"
+            assert False, f"Iteration expression must be a CodeInterface class (or None)"
 
-        if isinstance(statement, str):
-            self._statement = code_lines.CodeLines(statement)
-        elif isinstance(statement, code_interface.CodeInterface):
+        if isinstance(statement, code_interface.CodeInterface):
             self._statement = statement
         elif statement is None:
-            self._statement = code_lines.CodeLines(";")
+            self._statement = literal.Literal(";")
         else:
-            assert False, f"Statement must be a CodeInterface class (or a string)"
+            assert False, f"Statement must be a CodeInterface class (or None)"
 
     @property
     def init_statement(self):

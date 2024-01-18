@@ -1,6 +1,5 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
-import code_object.code_lines as code_lines
 import code_object.arg as arg
 
 # Represent a variable declaration of the form VAR = VALUE

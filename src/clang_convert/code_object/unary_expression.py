@@ -1,6 +1,5 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
-import code_object.code_lines as code_lines
 
 # Represent a unary expression expression in the form KEYWORD(EXPRESSION)
 # For example: sizeof(char)
@@ -13,12 +12,8 @@ class UnaryExpression(code_interface.CodeInterface):
     def __init__(self, keyword, expression) -> None:
         self._keyword = keyword
 
-        if isinstance(expression, str):
-            self._expression = code_lines.CodeLines(expression)
-        else:
-            self._expression = expression
-
-        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class (or a string)"
+        self._expression = expression
+        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class"
 
     @property
     def keyword(self):

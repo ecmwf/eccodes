@@ -5,7 +5,6 @@ import utils.cnode_utils as cnode_utils
 import code_object.code_objects as code_objects
 import code_object_converter.arg_converter as arg_converter
 import code_object.variable_declaration as variable_declaration
-import code_object.code_lines as code_lines
 import code_object.init_list as init_list
 import code_object.declaration_specifier as declaration_specifier
 import code_object.paren_expression as paren_expression
@@ -19,6 +18,10 @@ import code_object.for_statement as for_statement
 import code_object.array_access as array_access
 import code_object.conditional_operation as conditional_operation
 import code_object.compound_statement as compound_statement
+import code_object.macro_definition as macro_definition
+import code_object.macro_instantation as macro_instantation
+import code_object.return_statement as return_statement
+import code_object.literal as literal
 
 # Parse C AST nodes and create code interface objects (classes that implement the CodeInterface)
 #
@@ -136,19 +139,19 @@ class DefaultCASTParser:
             macro_text += " ".join(tokens[1:])
 
         debug.line("parse_macro_definition", f"MACRO text=[{macro_text}]")
-        macro_lines = code_lines.CodeLines()
-        macro_lines.add_line(macro_text)
+        macro_def = macro_definition.MacroDefinition()
+        macro_def.add_line(macro_text)
 
-        return macro_lines
+        return macro_def
 
     def parse_macro_instantiation(self, node):
         debug.line("parse_macro_instantiation", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
         token_text = "".join([token.spelling for token in node.get_tokens()]) + ";"
         debug.line("parse_macro_instantiation", f"MACRO token text=[{token_text}]")
-        macro_lines = code_lines.CodeLines()
-        macro_lines.add_line(token_text)
+        macro_inst = macro_instantation.MacroInstantation()
+        macro_inst.add_line(token_text)
 
-        return macro_lines
+        return macro_inst
 
     # =================================== Macros Convert functions [END]   ===================================
 
@@ -169,11 +172,11 @@ class DefaultCASTParser:
     # DECL_STMT is an "Adaptor class for mixing declarations with statements and expressions."
     # For now we'll just call parse_ast_node recursively with the children...
     def parse_DECL_STMT(self, node):
-        stmt_lines = code_lines.CodeLines()
+        stmt_lines = code_objects.CodeObjects()
 
         for child in node.get_children():
             debug.line("parse_DECL_STMT", f"child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
-            stmt_lines.add_lines(self.parse_ast_node(child))
+            stmt_lines.add_code_object(self.parse_ast_node(child))
 
         return stmt_lines
 
@@ -186,17 +189,15 @@ class DefaultCASTParser:
         return_value_tokens = [token.spelling for token in return_value.get_tokens()]
 
         if len(return_value_tokens) == 0:
-            # Probably a macro - return as string
+            # Probably a macro - return as literal
             debug.line("parse_RETURN_STMT", f"The return value has no tokens: using the top-level tokens=[{tokens[1:]}]")
-            return_cvalue = code_lines.CodeLines(f"{' '.join(t for t in tokens[1:])}")
+            return_cvalue = literal.Literal(f"{' '.join(t for t in tokens[1:])}")
         else:
             return_cvalue = self.parse_ast_node(return_value)
 
-        return_lines = return_cvalue.as_lines()
-        return_lines[0] = "return " + return_lines[0]
-        return_lines[-1] += ";"
+        return_lines = return_statement.ReturnStatement(return_cvalue)
 
-        return code_lines.CodeLines(return_lines)
+        return return_lines
 
     def parse_IF_STMT(self, node):
         debug.line("parse_IF_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
@@ -393,18 +394,18 @@ class DefaultCASTParser:
     def parse_INTEGER_LITERAL(self, node):
         if node.spelling:
             debug.line("parse_INTEGER_LITERAL", f"Got value from spelling=[{node.spelling}]")
-            return code_lines.CodeLines(node.spelling)
+            return literal.Literal(node.spelling)
         
         # We'll have to extract the value from the tokens
         tokens=[token.spelling for token in node.get_tokens()]
         if tokens:
             debug.line("parse_INTEGER_LITERAL", f"Got value from tokens=[{tokens[0]}]")
-            return code_lines.CodeLines(tokens[0])
+            return literal.Literal(tokens[0])
         
         assert False, f"Could not extract integer literal"
 
     def parse_STRING_LITERAL(self, node):
-        return code_lines.CodeLines(node.spelling)
+        return literal.Literal(node.spelling)
 
     def parse_PAREN_EXPR(self, node):
         children = list(node.get_children())
@@ -479,7 +480,7 @@ class DefaultCASTParser:
             # contains (for example) a macro definition. 
             # For now we'll just take the top-level tokens as a string
             debug.line("parse_BINARY_OPERATOR", f"The top level tokens don't match the right_operand tokens: using the top-level tokens=[{operator_tokens[1:]}]")
-            right_operand_cvalue = code_lines.CodeLines(f"{' '.join(t for t in operator_tokens[1:])}")
+            right_operand_cvalue = literal.Literal(f"{' '.join(t for t in operator_tokens[1:])}")
         else:
             right_operand_cvalue = self.parse_ast_node(right_operand)
 
@@ -491,7 +492,7 @@ class DefaultCASTParser:
         return self.parse_BINARY_OPERATOR(node)
 
     def parse_DECL_REF_EXPR(self, node):
-        return code_lines.CodeLines(node.spelling)
+        return literal.Literal(node.spelling)
 
     # This is simplified for now, need to come back to...
     def parse_MEMBER_REF_EXPR(self, node):
@@ -544,7 +545,7 @@ class DefaultCASTParser:
         for child in node.get_children():
             if child.kind == clang.cindex.CursorKind.UNEXPOSED_EXPR:
                 # We ignore the cast, and just return the object
-                return code_lines.CodeLines(child.spelling)
+                return literal.Literal(child.spelling)
             
             debug.line("parse_CSTYLE_CAST_EXPR", f"*** IGNORING *** child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
 
