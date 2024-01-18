@@ -57,7 +57,7 @@ class DefaultCCodeConverter:
         global_decl_ast_parser = self.cast_parser_class()
         global_decl_ccode_objects = global_decl_ast_parser.to_ccode_objects(self._ccode.global_declarations, self._conversion_data, self._ccode.macro_details)
         debug.line("convert_global_declarations", global_decl_ccode_objects.as_lines())
-        global_decl_cpp_code_objects = conversion_funcs.convert_ccode_object_collection(global_decl_ccode_objects, self._conversion_data)
+        global_decl_cpp_code_objects = conversion_funcs.convert_ccode_object(global_decl_ccode_objects, self._conversion_data)
         self._cppcode.add_global_declaration(global_decl_cpp_code_objects)
         debug.line("convert_global_declarations", f"Converted C++ code [as_lines]...")
         debug.line("convert_global_declarations", global_decl_cpp_code_objects.as_lines())
@@ -75,7 +75,7 @@ class DefaultCCodeConverter:
     def convert_cfunction_body(self, cfunc):
         function_body_ast_parser = self.cast_parser_class()
         function_body_ccode_objects = function_body_ast_parser.to_ccode_objects(cfunc.body, self._conversion_data, self._ccode.macro_details)
-        function_body_cppcode_objects = conversion_funcs.convert_ccode_object_collection(function_body_ccode_objects, self._conversion_data)
+        function_body_cppcode_objects = conversion_funcs.convert_ccode_object(function_body_ccode_objects, self._conversion_data)
         return function_body_cppcode_objects.as_lines()
 
     # Standard function conversion: returns: funcsig, body

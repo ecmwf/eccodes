@@ -1,6 +1,7 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
 import code_object.code_lines as code_lines
+import code_object.arg as arg
 
 # Represent a variable declaration of the form VAR = VALUE
 # Models the VAR_DECL CursorKind in libclang
@@ -8,16 +9,12 @@ import code_object.code_lines as code_lines
 # VAR   is the variable, stored as an Arg
 # OP    is the operation (see class operation.Operation)
 # VALUE is the value used by OP (stored as a code_interface subclass)
-#
-# value can be a string or a code_interface subclass
 class VariableDeclaration(code_interface.CodeInterface):
     def __init__(self, variable, value=None) -> None:
         self._variable = variable
-        if isinstance(value, str):
-            self._value = code_lines.CodeLines(value)
-        else:
-            self._value = value
+        self._value = value
 
+        assert isinstance(self._variable, arg.Arg), f"Variable must be an Arg class"
         assert isinstance(self._value, code_interface.CodeInterface), f"Value must be a CodeInterface class (or a string)"
 
     @property
