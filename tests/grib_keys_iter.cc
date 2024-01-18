@@ -34,7 +34,12 @@ int main(int argc, char* argv[])
         while (grib_keys_iterator_next(kiter)) {
             const char* name = grib_keys_iterator_get_name(kiter);
             Assert(name);
-            printf("%s\n", name);
+            int type = 0;
+            GRIB_CHECK(grib_get_native_type(h, name, &type), 0);
+            Assert( type > 0 && type < 7 );
+            const char* type_name = grib_get_type_name(type);
+            Assert( !STR_EQUAL(type_name, "unknown") );
+            printf("%s = %s (%d)\n", name, type_name, type);
         }
 
         grib_keys_iterator_delete(kiter);
