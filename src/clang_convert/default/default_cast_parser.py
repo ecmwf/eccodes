@@ -18,6 +18,7 @@ import code_object.if_statement as if_statement
 import code_object.for_statement as for_statement
 import code_object.array_access as array_access
 import code_object.conditional_operation as conditional_operation
+import code_object.compound_statement as compound_statement
 
 # Parse C AST nodes and create code interface objects (classes that implement the CodeInterface)
 #
@@ -158,14 +159,10 @@ class DefaultCASTParser:
 
         debug.line("parse_COMPOUND_STMT", f">>> spelling=[{node.spelling}] kind=[{node.kind}]")
 
-        stmt_lines = code_lines.CodeLines()
-
-        stmt_lines.add_line("{")
+        stmt_lines = compound_statement.CompoundStatement()
 
         for child in node.get_children():
-            stmt_lines.add_lines(self.parse_ast_node(child))
-
-        stmt_lines.add_line("}")
+            stmt_lines.add_code_object(self.parse_ast_node(child))
 
         return stmt_lines
 

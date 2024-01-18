@@ -30,7 +30,8 @@ class UnaryOperation(code_interface.CodeInterface):
         return self._operand
 
     def as_lines(self):
-        lines = self._operand.as_lines()
+        lines = []
+        lines.extend(self._operand.as_lines())
         lines[0] = self._unary_op.as_string() + lines[0]
 
         return lines

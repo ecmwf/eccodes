@@ -42,16 +42,17 @@ class IfStatement(code_interface.CodeInterface):
         assert isinstance(self._else, code_interface.CodeInterface), f"Else statement must be a CodeInterface class (or a string)"
 
     def as_lines(self):
-        if_lines = self._expression.as_lines()
+        if_lines = []
+        if_lines.extend(self._expression.as_lines())
         if_lines[0] = "if (" + if_lines[0]
         if_lines[-1] += ")"
 
-        action_lines = self._action.as_lines()
+        action_lines = []
+        action_lines.extend(self._action.as_lines())
 
+        else_lines = []
         if self._else:
-            else_lines = self._else.as_lines()
+            else_lines.extend(self._else.as_lines())
             else_lines[0] = "else " + else_lines[0]
-        else:
-            else_lines = []
 
         return if_lines + action_lines + else_lines

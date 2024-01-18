@@ -24,5 +24,5 @@ class CodeInterfaceConverter:
     # Actual implementation of to_cpp_code_object()
     # It must be overridden - this version just returns the passed in ccode_object!
     def create_cpp_code_object(self, conversion_data):
-        debug.line("to_cpp_code_object_internal", f"Base version - just returning the C code object")
+        debug.line("create_cpp_code_object", f"Base version - just returning the C code object")
         return self._ccode_object

@@ -37,10 +37,12 @@ class BinaryOperation(code_interface.CodeInterface):
         return self._right_operand
 
     def as_lines(self):
-        lines = self._left_operand.as_lines()
+        lines = []
+        lines.extend(self._left_operand.as_lines())
         lines[-1] += " " + self._binary_op.as_string()
 
-        right_lines = self._right_operand.as_lines()
+        right_lines = []
+        right_lines.extend(self._right_operand.as_lines())
         lines[-1] += " " + right_lines[0]
 
         lines.extend(right_lines[1:])
