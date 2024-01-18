@@ -13,6 +13,8 @@
 
 #include "grib_api_internal.h"
 
+#define MAX_VAL_LEN 1024
+
 int main(int argc, char* argv[])
 {
     FILE* f         = NULL;
@@ -40,6 +42,13 @@ int main(int argc, char* argv[])
             const char* type_name = grib_get_type_name(type);
             Assert( !STR_EQUAL(type_name, "unknown") );
             printf("%s = %s (%d)\n", name, type_name, type);
+
+            if (STR_EQUAL(type_name, "label")) {
+                char value[MAX_VAL_LEN] = {0,};
+                size_t vlen = MAX_VAL_LEN;
+                GRIB_CHECK(grib_get_string(h, name, value, &vlen), name);
+                Assert( strlen(value) > 0 );
+            }
         }
 
         grib_keys_iterator_delete(kiter);
