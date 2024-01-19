@@ -12,6 +12,7 @@ list(APPEND test_c_bins
     list_codetable_flagtable_keys
     wmo_read_bufr_from_file
     wmo_read_gts_from_file
+    wmo_read_any_from_file
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -182,6 +183,7 @@ if( HAVE_BUILD_TOOLS )
         grib_clone_headers_only
         wmo_read_bufr_from_file
         wmo_read_gts_from_file
+        wmo_read_any_from_file
         bufr_templates
         bufr_rdbSubTypes
         bufr_dump_data
