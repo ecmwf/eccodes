@@ -522,7 +522,7 @@ class DefaultCASTParser:
                 debug.line("parse_CALL_EXPR", f"arg_node spelling=[{arg_node.spelling}] type=[{arg_node.type.spelling}] kind=[{arg_node.kind}]")
                 if arg_entry:
                     debug.line("parse_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
-                    cfunc_call.add_arg(arg_entry.as_string())
+                    cfunc_call.add_arg(arg_entry)
                 else:
                     debug.line("parse_CALL_EXPR", f"arg_node arg_entry=[{arg_entry}] - IS THIS AN ERROR?")
 

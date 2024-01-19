@@ -8,6 +8,7 @@ import code_object.declaration_specifier as declaration_specifier
 import code_object.for_statement as for_statement
 import code_object.funcsig_pointer as funcsig_pointer
 import code_object.funcsig as funcsig
+import code_object.function_call as function_call
 import code_object.variable_declaration as variable_declaration
 
 import code_object_converter.array_access_converter as array_access_converter
@@ -19,6 +20,7 @@ import code_object_converter.declaration_specifier_converter as declaration_spec
 import code_object_converter.for_statement_converter as for_statement_converter
 import code_object_converter.funcsig_converter as funcsig_converter
 import code_object_converter.funcsig_pointer_converter as funcsig_pointer_converter
+import code_object_converter.function_call_converter as function_call_converter
 import code_object_converter.variable_declaration_converter as variable_declaration_converter
 
 import code_object_converter.code_interface_converter as code_interface_converter
@@ -35,6 +37,7 @@ CodeInterfaceConverterClasses = {
     for_statement.ForStatement                  : for_statement_converter.ForStatementConverter,
     funcsig.FuncSig                             : funcsig_converter.FuncSigConverter,
     funcsig_pointer.FuncSigPointer              : funcsig_pointer_converter.FuncSigPointerConverter,
+    function_call.FunctionCall                  : function_call_converter.FunctionCallConverter,
     variable_declaration.VariableDeclaration    : variable_declaration_converter.VariableDeclarationConverter,
 }
 

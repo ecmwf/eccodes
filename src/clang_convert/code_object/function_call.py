@@ -4,7 +4,7 @@ import code_object.code_interface as code_interface
 
 # Represent a function call
 #
-# Note: Name and args are just strings...
+# Note: Name is a string; args are CodeInterface instances
 class FunctionCall(code_interface.CodeInterface):
     def __init__(self, name, args=None) -> None:
         self._name = name
@@ -19,7 +19,8 @@ class FunctionCall(code_interface.CodeInterface):
         return self._args
 
     def add_arg(self, arg_entry):
+        assert isinstance(arg_entry, code_interface.CodeInterface), f"arg_entry must be a CodeInterface class, supplied=[{arg_entry}]"
         self._args.append(arg_entry)
 
     def as_lines(self):
-        return [f"{self._name}({', '.join([a for a in self._args])})"]
+        return [f"{self._name}({', '.join([a.as_string() for a in self._args])})"]
