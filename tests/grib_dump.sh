@@ -117,6 +117,13 @@ input=$data_dir/lfpw.grib1
 ${tools_dir}/grib_dump -w count=1 -p SPD $input
 
 
+# ECC-1749: grib_dump: No gap between offsets and key name
+#-----------------------------------------------------------
+file=$data_dir/sst_globus0083.grib
+${tools_dir}/grib_dump -O $file > $temp 2>&1
+grep -q "12-10227752 codedValues" $temp
+
+
 # Error conditions
 #-----------------------------------------------------------
 file=$data_dir/sample.grib2
