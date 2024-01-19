@@ -513,27 +513,23 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     return GRIB_NOT_FOUND;
 }
 
-int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
-{
-    int ret          = GRIB_SUCCESS;
-    grib_accessor* a = NULL;
-
-    a = grib_find_accessor(h, name);
-
-    if (a) {
-        ret = grib_pack_bytes(a, val, length);
-        if (ret == GRIB_SUCCESS) {
-            return grib_dependency_notify_change(a);
-        }
-
-        grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=%s as bytes (%s)",
-                         name, val, grib_get_error_message(ret));
-        return ret;
-    }
-
-    grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
-    return GRIB_NOT_FOUND;
-}
+// int grib_set_bytes_internal(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
+// {
+//     int ret          = GRIB_SUCCESS;
+//     grib_accessor* a = NULL;
+//     a = grib_find_accessor(h, name);
+//     if (a) {
+//         ret = grib_pack_bytes(a, val, length);
+//         if (ret == GRIB_SUCCESS) {
+//             return grib_dependency_notify_change(a);
+//         }
+//         grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to set %s=%s as bytes (%s)",
+//                          name, val, grib_get_error_message(ret));
+//         return ret;
+//     }
+//     grib_context_log(h->context, GRIB_LOG_ERROR, "Unable to find accessor %s", name);
+//     return GRIB_NOT_FOUND;
+// }
 
 int grib_set_bytes(grib_handle* h, const char* name, const unsigned char* val, size_t* length)
 {
