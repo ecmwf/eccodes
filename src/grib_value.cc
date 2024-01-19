@@ -1218,17 +1218,15 @@ int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* l
     }
 }
 
-int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
-{
-    int ret = grib_get_bytes(h, name, val, length);
-
-    if (ret != GRIB_SUCCESS)
-        grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Unable to get %s as bytes (%s)",
-                         name, grib_get_error_message(ret));
-
-    return ret;
-}
+// int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
+// {
+//     int ret = grib_get_bytes(h, name, val, length);
+//     if (ret != GRIB_SUCCESS)
+//         grib_context_log(h->context, GRIB_LOG_ERROR,
+//                          "Unable to get %s as bytes (%s)",
+//                          name, grib_get_error_message(ret));
+//     return ret;
+// }
 
 int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length)
 {

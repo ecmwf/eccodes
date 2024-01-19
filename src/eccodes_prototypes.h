@@ -1162,7 +1162,6 @@ int grib_get_double_elements(const grib_handle* h, const char* name, const int* 
 int grib_get_float_elements(const grib_handle* h, const char* name, const int* index_array, long len, float* val_array);
 int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t* length);
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length);
-int grib_get_bytes_internal(const grib_handle* h, const char* name, unsigned char* val, size_t* length);
 int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length);
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
 int ecc__grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length);
