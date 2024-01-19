@@ -153,8 +153,8 @@ grib_accessor_class* grib_accessor_class_g2end_step = &_grib_accessor_class_g2en
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    int n                          = 0;
-    grib_handle* h                 = grib_handle_of_accessor(a);
+    int n = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
 
     self->start_step_value = grib_arguments_get_name(h, c, n++);
     self->step_units       = grib_arguments_get_name(h, c, n++);
@@ -228,7 +228,7 @@ static int convert_time_range_long_(
 static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    int err                        = 0;
+    int err = 0;
     long start_step_value;
     long step_units;
     long time_range_unit;
@@ -273,7 +273,7 @@ static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
 static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    int err                        = 0;
+    int err = 0;
     double start_step_value;
     long start_step_unit;
     long step_units;
@@ -323,10 +323,10 @@ static int unpack_multiple_time_ranges_long_(grib_accessor* a, long* val, size_t
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
     int i = 0, err = 0;
-    grib_handle* h         = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     long numberOfTimeRange = 0, step_units = 0, start_step_value = 0;
 
-    size_t count                                      = 0;
+    size_t count = 0;
     long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0,};
     long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0,};
     long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0,};
@@ -382,7 +382,7 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
     long start_step_value = 0;
     long start_step_unit = 0;
 
-    size_t count                                      = 0;
+    size_t count = 0;
     long arr_typeOfTimeIncrement[MAX_NUM_TIME_RANGES] = {0, };
     long arr_coded_unit[MAX_NUM_TIME_RANGES] = {0, };
     long arr_coded_time_range[MAX_NUM_TIME_RANGES] = {0, };
@@ -438,7 +438,7 @@ static int unpack_multiple_time_ranges_double_(grib_accessor* a, double* val, si
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     long start_step_value;
     long numberOfTimeRange;
@@ -478,7 +478,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     long start_step_value;
     long numberOfTimeRange;
@@ -518,7 +518,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 static int pack_long_(grib_accessor* a, const long end_step_value, const long end_step_unit)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                 = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int err = 0;
 
     long year;
@@ -540,7 +540,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     long typeOfTimeIncrement;
 
     double dend, dstep;
-    int show_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->show_hour_stepunit;
 
     eccodes::Step end_step{end_step_value, end_step_unit};
 
@@ -589,7 +589,9 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     if (time_range.value<double>() < 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "endStep < startStep (%s < %s)", end_step.value<std::string>("%g", show_hours).c_str(), start_step.value<std::string>("%g", show_hours).c_str());
+                         "endStep < startStep (%s < %s)",
+                         end_step.value<std::string>("%g", show_units_for_hours).c_str(),
+                         start_step.value<std::string>("%g", show_units_for_hours).c_str());
         return GRIB_WRONG_STEP;
     }
 
@@ -646,14 +648,14 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_g2end_step* self = (grib_accessor_g2end_step*)a;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     char fp_format[128] = "%g";
     size_t fp_format_len = sizeof(fp_format);
     size_t step_len = 0;
     long step_value;
     long step_units;
-    int show_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->show_hour_stepunit;
 
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
@@ -668,7 +670,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
         std::stringstream ss;
 
-        ss << step.value<std::string>(fp_format, show_hours);
+        ss << step.value<std::string>(fp_format, show_units_for_hours);
 
         size_t size = ss.str().size() + 1;
 
@@ -689,7 +691,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret;
 
     long force_step_units;
@@ -719,7 +721,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     long force_step_units;
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
@@ -745,13 +747,13 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 static int get_native_type(grib_accessor* a)
 {
     grib_handle* h = grib_handle_of_accessor(a);
-    int show_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->show_hour_stepunit;
 
-    if (!show_hours) {
+    if (!show_units_for_hours) {
         long step_units = 0;
         if (grib_get_long_internal(h, "stepUnits", &step_units) == GRIB_SUCCESS) {
             if (eccodes::Unit{step_units} == eccodes::Unit::Value::HOUR) {
-                return GRIB_TYPE_LONG;
+                return GRIB_TYPE_LONG; // For backward compatibility
             }
         }
     }
