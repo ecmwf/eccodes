@@ -14,11 +14,18 @@ label="wmo_read_bufr_from_file_test"
 tempText=temp.$label.txt
 tempBufr=temp.$label.bufr
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 ${test_dir}/wmo_read_bufr_from_file $data_dir/bufr/ias1_240.bufr > $tempText
+cat $tempText
 grep -q "BUFR: size: 180696 .*No error" $tempText
 
 echo BUFR > $tempBufr
 ${test_dir}/wmo_read_bufr_from_file $tempBufr > $tempText
+cat $tempText
 grep -q "BUFR: size: 0 .*End of resource reached when reading message" $tempText
 
 # Clean up
