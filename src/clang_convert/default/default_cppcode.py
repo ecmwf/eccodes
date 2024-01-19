@@ -65,6 +65,7 @@ class DefaultCppCode:
         return self._constructor
 
     def add_constructor(self, constructor):
+        constructor.class_name = self._class_name
         self._constructor = constructor
 
     @property
@@ -72,6 +73,7 @@ class DefaultCppCode:
         return self._destructor
 
     def add_destructor(self, destructor):
+        destructor.class_name = self._class_name
         self._destructor = destructor
 
     @property
@@ -79,6 +81,7 @@ class DefaultCppCode:
         return self._member_functions
 
     def add_member_function(self, member_function):
+        member_function.class_name = self._class_name
         self._member_functions.append(member_function)
 
     @property
@@ -90,6 +93,7 @@ class DefaultCppCode:
         return self._virtual_member_functions
 
     def add_virtual_member_function(self, virtual_member_function):
+        virtual_member_function.class_name = self._class_name
         self._virtual_member_functions.append(virtual_member_function)
 
     @property

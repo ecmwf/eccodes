@@ -1,8 +1,12 @@
 
 import utils.debug as debug
 import code_object.code_objects as code_objects
-import code_object.function as function
 import code_object.global_function as global_function
+import code_object.function as function
+import code_object.constructor_function as constructor_function
+import code_object.destructor_function as destructor_function
+import code_object.member_function as member_function
+import code_object.virtual_member_function as virtual_member_function
 
 # Represents a coherent unit of C code that needs to be parsed together: usually a single C file
 #
@@ -113,18 +117,20 @@ class DefaultCCode:
     # Add a function object from the funcsig and body (AST)
     # Override is_xxx functions to identify class member functions
     def add_function(self, cfuncsig, body):
-        cfunc = function.Function(cfuncsig, body)
 
         if self.is_constructor(cfuncsig):
-            self._constructor = cfunc
+            self._constructor = constructor_function.ConstructorFunction(cfuncsig, body, self._class_name)
         elif self.is_destructor(cfuncsig):
-            self._destructor = cfunc
+            self._destructor = destructor_function.DestructorFunction(cfuncsig, body, self._class_name)
         elif self.is_virtual_member_function(cfuncsig):
+            cfunc = virtual_member_function.VirtualMemberFunction(cfuncsig, body, self._class_name)
             self._virtual_member_functions.append(cfunc)
         elif self.is_member_function(cfuncsig):
+            cfunc = member_function.MemberFunction(cfuncsig, body, self._class_name)
             self._member_functions.append(cfunc)
         else:
             # Must be a "free"" function
+            cfunc = function.Function(cfuncsig, body)
             self._functions.append(cfunc)
 
     # Debug Support
