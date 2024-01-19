@@ -16,3 +16,5 @@ grib_accessor_member_funcsig_mapping = [
     FuncSigMapping( FuncSig("", "destroy", [Arg("grib_context*", ""), Arg("grib_accessor*", "")]),
                     FuncSig("", "Destructor", [None, None]) ),
 ]
+
+member_function_names = [mapping.cfuncsig.name for mapping in grib_accessor_member_funcsig_mapping]

@@ -127,3 +127,5 @@ grib_accessor_virtual_member_funcsig_mapping = [
     #FuncSigMapping(FuncSig("int", "next_offset",  [Arg("grib_accessor*", "")]),
     #                FuncSig(None, None, [None])),
 ]
+
+virtual_member_function_names = [mapping.cfuncsig.name for mapping in grib_accessor_virtual_member_funcsig_mapping]

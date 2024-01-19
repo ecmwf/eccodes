@@ -1,47 +1,8 @@
 
 import utils.debug as debug
 import default.default_ccode as default_ccode
+import grib_accessor.conversion_data.virtual_member_functions as virtual_member_functions
 import re
-
-grib_accessor_virtual_member_functions = [
-    "dump",
-    "next_offset",
-    "string_length",
-    "value_count",
-    "byte_count",
-    "byte_offset",
-    "get_native_type",
-    "sub_section",
-    "pack_missing",
-    "is_missing",
-    "pack_long",
-    "unpack_long",
-    "pack_double",
-    "pack_float",
-    "unpack_double",
-    "unpack_float",
-    "pack_string",
-    "unpack_string",
-    "pack_string_array",
-    "unpack_string_array",
-    "pack_bytes",
-    "unpack_bytes",
-    "pack_expression",
-    "notify_change",
-    "update_size",
-    "preferred_size",
-    "resize",
-    "nearest_smaller_value",
-    "next",
-    "compare",
-    "unpack_double_element",
-    "unpack_float_element",
-    "unpack_double_element",
-    "unpack_float_element",
-    "unpack_double_subarray",
-    "clear",
-    "clone",
-]
 
 # Represents a grib_accessor_class_*cc file
 class GribAccessorCCode(default_ccode.DefaultCCode):
@@ -65,7 +26,7 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
         return cfuncsig.name == "destroy"
 
     def is_virtual_member_function(self, cfuncsig):
-        return cfuncsig.name in grib_accessor_virtual_member_functions
+        return cfuncsig.name in virtual_member_functions.virtual_member_function_names
 
     def is_member_function(self, cfuncsig):
         if not self.is_virtual_member_function(cfuncsig):

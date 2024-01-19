@@ -44,26 +44,25 @@ class AstParser:
         if global_debug_enabled and not include_ast_parser_debugging:
             debug.disable_debug()
 
-        ccode_objects = code_objects.CodeObjects()
+        parsed_cnode = None
 
         if isinstance(cnode, list):
+            parsed_cnode = code_objects.CodeObjects()
             for entry in cnode:
                 cnode_code_object = self.parse_ast_node(entry)
                 if cnode_code_object:
-                    ccode_objects.add_code_object(cnode_code_object)
+                    parsed_cnode.add_code_object(cnode_code_object)
                 else:
                     debug.line("to_ccode_objects", f"Code object is None for node spelling=[{entry.spelling}] type=[{entry.type.spelling}] kind=[{entry.kind}]")
         else:
-            cnode_code_object = self.parse_ast_node(cnode)
-            if cnode_code_object:
-                ccode_objects.add_code_object(cnode_code_object)
-            else:
+            parsed_cnode = self.parse_ast_node(cnode)
+            if not parsed_cnode:
                 debug.line("to_ccode_objects", f"Code object is None for node spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] kind=[{cnode.kind}]")
         
         if global_debug_enabled and not include_ast_parser_debugging:
             debug.enable_debug()
 
-        return ccode_objects
+        return parsed_cnode
 
     # Main entry point to parse an AST node and return a CodeInterface objects
     #

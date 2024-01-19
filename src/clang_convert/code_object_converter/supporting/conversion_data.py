@@ -14,6 +14,7 @@ class ConversionData:
         self._local_args = {}   # Local to the function being processed
         self._funcsig_mappings = []
         self._funcsig_pointer_mappings = []
+        self._member_function_names = []
 
     @property
     def funcsig_decl_specs(self):
@@ -120,3 +121,11 @@ class ConversionData:
                 return mapping.cppfuncsig_pointer
         
         return None
+
+    @property
+    def member_function_names(self):
+        return self._member_function_names
+    
+    def set_member_function_names(self, mem_func_names):
+        self._member_function_names = []
+        self._member_function_names.extend(mem_func_names)
