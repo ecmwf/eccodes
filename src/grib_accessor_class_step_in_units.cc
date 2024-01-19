@@ -349,16 +349,16 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
 static int get_native_type(grib_accessor* a)
 {
-    // TODO: Still experimental.
-    // Change the type to depend on the stepUnits for backward compatibility
-
     grib_handle* h = grib_handle_of_accessor(a);
-    long step_units = 0;
-    if (grib_get_long_internal(h, "stepUnits", &step_units) == GRIB_SUCCESS) {
-        if (step_units == 1) {
-            return GRIB_TYPE_LONG;
+    int show_hours = a->context->show_hour_stepunit;
+
+    if (!show_hours) {
+        long step_units = 0;
+        if (grib_get_long_internal(h, "stepUnits", &step_units) == GRIB_SUCCESS) {
+            if (eccodes::Unit{step_units} == eccodes::Unit::Value::HOUR) {
+                return GRIB_TYPE_LONG;
+            }
         }
     }
-
     return GRIB_TYPE_STRING;
 }
