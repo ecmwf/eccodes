@@ -1,19 +1,17 @@
 
 import clang.cindex
-import default.default_ccode as default_ccode
-import utils.cnode_utils as cnode_utils
+import ast_object.ast_code as ast_code
 import os
 import utils.debug as debug
 
-# Parse a single C file using Libclang and store the AST in a CCode object
-# Subclass for more specialised parsing
+# Parse a single C file using Libclang and store the AST in an AstCode object
 
-class DefaultCFileParser:
+class AstCodeCreator:
     def __init__(self, cfilename) -> None:
         self._cfilename = cfilename
         self._cfilepath = None
-        self._ccode = None
         self._include_dirs = []
+        self._global_function_body = []
 
         self._parse_args = [
                 #"-fparse-all-comments",
@@ -23,61 +21,30 @@ class DefaultCFileParser:
                 #"-d1PP"
             ]
 
-    # Override to create the right object
-    def create_ccode(self):
-        self._ccode = default_ccode.DefaultCCode(self._cfilename)
-
-    # Default behaviour is to just add to the ccode object, UNLESS it is a
-    # class member function
-    #
-    # This includes function definitions so we can determine whether to add a
-    # forward declaration (nb all nodes are references so it isn't a big overhead)
-    def parse_global_declaration(self, node):
-        if node.kind == clang.cindex.CursorKind.FUNCTION_DECL:
-            cfuncsig = cnode_utils.create_cfuncsig(node)
-            if not self._ccode.is_class_member_function(cfuncsig):
-                self._ccode.add_global_declaration(node)
-        else:
-            self._ccode.add_global_declaration(node)
-
-    def parse_function_definition(self, node):
-        cfuncsig = cnode_utils.create_cfuncsig(node)
-        body = None
-
-        for child in node.get_children():
-            if child.kind == clang.cindex.CursorKind.COMPOUND_STMT:
-                body = child
-                break
-
-        assert body, f"Could not find body for function=[{node.spelling}]"
-
-        self._ccode.add_function(cfuncsig, body)
-
     def parse_node(self, node):
         if node.kind == clang.cindex.CursorKind.MACRO_DEFINITION:
             if node.location.file:
                 if not node.location.file.name.startswith("/usr/include") and not node.spelling.startswith("_"):
-                    self._ccode.add_macro_definition(node)
+                    self._ast_code.add_macro_definition(node)
                 if node.location.file.name == self._cfilepath + self._cfilename:
                     # Add this definition to the global declaration
                     # Note: the preprocessor necessarily parses macros before everything else, so these will
                     #       ALWAYS appear at the top of the global declaration
-                    self.parse_global_declaration(node)
+                    self._ast_code.add_global_function_entry(node)
         elif node.kind == clang.cindex.CursorKind.MACRO_INSTANTIATION:
             if node.location.file and node.location.file.name == self._cfilepath + self._cfilename:
-                self._ccode.add_macro_instantiation(node)
+                self._ast_code.add_macro_instantiation(node)
         elif node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
             pass
         elif node.kind.is_declaration:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():
-                self.parse_function_definition(node)
+                self._ast_code.add_function_node(node)
 
             # Parse *ALL* nodes to determine whether to add to the global declaration. 
-            self.parse_global_declaration(node)
+            self._ast_code.add_global_function_entry(node)
 
         else:
             assert False, f"Unexpected node kind=[{node.kind}] spelling=[{node.spelling}] line=[{node.location.line}] col=[{node.location.column}]"
-
 
     def parse_root(self):
         self._root = self._translation_unit.cursor
@@ -92,8 +59,8 @@ class DefaultCFileParser:
         for child in self._root.get_children():
             self.parse_node(child)
 
-    # Perform shallow parse of AST and store in CCode object
-    def parse(self):
+    # Perform shallow parse of AST and store in AstCode object
+    def create(self):
         index = clang.cindex.Index.create()
 
         self._cfilepath = os.path.dirname(self._cfilename)
@@ -115,14 +82,14 @@ class DefaultCFileParser:
                                              unsaved_files=None,
                                              options=parse_options)
 
-        self.create_ccode()
+        self._ast_code = ast_code.AstCode(self._cfilename)
 
         self.parse_root()
 
         # Debug - dump macros
-        for node in self._ccode.macro_details.def_nodes:
+        for node in self._ast_code.macro_details.def_nodes:
             debug.line("parse", f"MACRO DEFN spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}]")
-        for node in self._ccode.macro_details.inst_nodes:
+        for node in self._ast_code.macro_details.inst_nodes:
             debug.line("parse", f"MACRO INST spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}]")
 
-        return self._ccode
+        return self._ast_code

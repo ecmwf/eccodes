@@ -1,8 +1,8 @@
 
-from code_object_converter.funcsig_mapping import FuncSigMapping
+from code_object_converter.supporting.funcsig_mapping import FuncSigMapping
 from code_object.funcsig import FuncSig
 from code_object.arg import Arg
-from code_object_converter.arg_indexes import ArgIndexes
+from code_object_converter.supporting.arg_indexes import ArgIndexes
 
 # NOTE: The C FuncSig variable names may be different so should only be used as a guide (some are missing)
 grib_accessor_member_funcsig_mapping = [

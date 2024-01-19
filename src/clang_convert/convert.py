@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import grib_accessor.grib_accessor_converter
-
 # Must have libclang!
 try:
     import clang.cindex
@@ -31,35 +29,18 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-# Call the appropriate converter and return a list of converted cppcode objects
-def convert_cfiles(convert_type):
-    converter_lib_name = f"{convert_type}.{convert_type}_converter"
-    LOG.info("Type=[%s] converter_lib_name=[%s]", convert_type, converter_lib_name)
+# Call the appropriate conversion manager to convert and write the C++ files
+def run_conversion(convert_type):
+    conversion_manager_lib_name = f"{convert_type}.{convert_type}_conversion_manager"
+    LOG.info("Type=[%s] conversion_manager_lib_name=[%s]", convert_type, conversion_manager_lib_name)
 
     try:
-        converter_lib = importlib.import_module(converter_lib_name)
-        converter = converter_lib.CONVERTER_CLASS(LOG)
-        return converter.convert_files(ARGS.path)
+        conversion_manager_lib = importlib.import_module(conversion_manager_lib_name)
+        conversion_manager = conversion_manager_lib.CONVERSION_MANAGER_CLASS(ARGS.target, LOG)
+        return conversion_manager.convert(ARGS.path)
     except ModuleNotFoundError:
-        LOG.error("Import failed, converter_lib_name=[%s]", converter_lib_name)
+        LOG.error("Import failed, conversion_manager_lib_name=[%s]", conversion_manager_lib_name)
         exit()
-
-def write_cpp_files(write_type, cppcode_entries):
-    cpp_writer_lib_name = f"{write_type}.{write_type}_cpp_writer"
-    LOG.info("Type=[%s] cpp_writer_lib_name=[%s]", write_type, cpp_writer_lib_name)
-
-    try:
-        cpp_writer_lib = importlib.import_module(cpp_writer_lib_name)
-        writer = cpp_writer_lib.CPP_WRITER_CLASS(ARGS.target, LOG)
-        writer.write_files(cppcode_entries)
-    except ModuleNotFoundError:
-        LOG.error("Import failed, cpp_writer_lib_name=[%s]", cpp_writer_lib_name)
-        exit()
-
-# Convert the C input files to C++ and write to disk
-def generate_cpp_files(convert_type):
-    cppcode_entries = convert_cfiles(convert_type)
-    write_cpp_files(convert_type, cppcode_entries)
 
 def main():
     if os.path.exists(ARGS.libclang):
@@ -77,7 +58,7 @@ def main():
     else:
         convert_type = ARGS.type
 
-    generate_cpp_files(convert_type)
+    run_conversion(convert_type)
 
 if __name__ == "__main__":
     main()

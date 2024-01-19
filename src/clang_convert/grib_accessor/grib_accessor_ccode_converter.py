@@ -3,7 +3,6 @@ import utils.debug as debug
 import os
 import default.default_ccode_converter as default_ccode_converter
 import default.default_cppcode as default_cppcode
-import cpp_code_object.cppfunction as cppfunction
 import utils.standard_transforms as standard_transforms
 from grib_accessor.conversion_data.virtual_member_functions import grib_accessor_virtual_member_funcsig_mapping 
 from grib_accessor.conversion_data.member_functions import grib_accessor_member_funcsig_mapping

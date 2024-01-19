@@ -1,10 +1,7 @@
 
-import utils.debug as debug
-import cpp_code_object.cppfunction as cppfunction
-
 # Stores information about Macro definition and use
 
-class MacroDetails:
+class AstMacroDetails:
     def __init__(self) -> None:
         self._def_nodes = []
         self._inst_nodes = []

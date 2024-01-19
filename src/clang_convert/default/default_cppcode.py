@@ -1,14 +1,13 @@
 
 import utils.debug as debug
+import code_object.global_function as global_function
 import os
-import cpp_code_object.cppfunction as cppfunction
-import code_object.code_objects as code_objects
 
 # Represents the C++ conversion of a CCode instance
 # Stored as CodeInterface objects
 class DefaultCppCode:
     def __init__(self, filename, class_name="", super_class_name="") -> None:
-        self._global_declarations = code_objects.CodeObjects()
+        self._global_function = None
         self._functions = []
         self._filename = filename
         self._class_name = class_name
@@ -46,11 +45,13 @@ class DefaultCppCode:
         return []
 
     @property
-    def global_declarations(self):
-        return self._global_declarations
+    def global_function(self):
+        return self._global_function
 
-    def add_global_declaration(self, global_decl_ccode_objects):
-        self._global_declarations = global_decl_ccode_objects
+    @global_function.setter
+    def global_function(self, global_function_instance):
+        assert isinstance(global_function_instance, global_function.GlobalFunction), f"global_function_instance must be a GlobalFunction!"
+        self._global_function = global_function_instance
 
     @property
     def functions(self):

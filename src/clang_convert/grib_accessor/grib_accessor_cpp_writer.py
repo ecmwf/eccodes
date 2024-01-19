@@ -4,8 +4,8 @@ import os
 
 # Write the supplied GRIB Accessor cppcode objects to disk
 class GribAccessorCppWriter(default_cpp_writer.DefaultCppWriter):
-    def __init__(self, target_path, cli_logger):
-        super().__init__(target_path, cli_logger)
+    def __init__(self, output_path, cli_logger):
+        super().__init__(output_path, cli_logger)
         
         self._j2_template_path = f"{os.path.dirname(__file__)}/j2"
         self._header_template = "grib_accessor_header.h.j2"

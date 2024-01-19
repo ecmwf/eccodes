@@ -1,15 +1,18 @@
 
 import utils.debug as debug
+import code_object.code_objects as code_objects
 import code_object.function as function
-import default.macro_details as macro_details
+import code_object.global_function as global_function
 
 # Represents a coherent unit of C code that needs to be parsed together: usually a single C file
+#
+# Everything is stored as an AST node
 #
 # Note: C code can be stored as the equivalent C++ class representation
 class DefaultCCode:
     def __init__(self, cfilename) -> None:
         self._cfilename = cfilename
-        self._global_declarations = []
+        self._global_function = None
         self._functions = []
 
         # Class representation - START
@@ -22,24 +25,24 @@ class DefaultCCode:
         self._data_members = []
         # Class representation - END
 
-        self._macro_details = macro_details.MacroDetails()
+        self._macro_details = None
 
     @property
-    def global_declarations(self):
-        return self._global_declarations
+    def global_function(self):
+        return self._global_function
 
-    def add_global_declaration(self, node):
-        self._global_declarations.append(node)
+    def set_global_function_body(self, global_function_body):
+        assert isinstance(global_function_body, code_objects.CodeObjects), f"global_function_body must be a CodeObjects instance!"
+        self._global_function = global_function.GlobalFunction(global_function_body)
 
     @property
     def macro_details(self):
         return self._macro_details
 
-    def add_macro_definition(self, def_node):
-        self._macro_details.add_definition(def_node)
-
-    def add_macro_instantiation(self, inst_node):
-        self._macro_details.add_instantiation(inst_node)
+    # TODO - Replace AST nodes with a CodeInterface object...
+    @macro_details.setter
+    def macro_details(self, value):
+        self._macro_details = value
 
     @property
     def functions(self):

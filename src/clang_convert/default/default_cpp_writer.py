@@ -5,8 +5,8 @@ import os
 
 # Write the supplied cppcode objects to disk
 class DefaultCppWriter:
-    def __init__(self, target_path, cli_logger):
-        self._target_path = target_path
+    def __init__(self, output_path, cli_logger):
+        self._output_path = output_path
         self._cli_logger = cli_logger
         
         # Override these as required
@@ -24,14 +24,14 @@ class DefaultCppWriter:
             )
 
     # Main entry point to write out the files
-    def write_files(self, cppcode_entries):
+    def write_files(self, cppcode_list):
         self.setup_jinja()
         
-        for cppcode_entry in cppcode_entries:
+        for cppcode_entry in cppcode_list:
             self.write_header_file(cppcode_entry)
             self.write_source_file(cppcode_entry)
 
-        filenames = [cpp.file_stem for cpp in cppcode_entries]
+        filenames = [cpp.file_stem for cpp in cppcode_list]
         self.write_makefile(filenames)
 
     def write_header_file(self, cppcode):
@@ -50,7 +50,7 @@ class DefaultCppWriter:
         template = self._env.get_template(self._cmakelists_template)
         content = template.render(c=filenames)
 
-        target = os.path.join(self._target_path, "CMakeLists.txt")
+        target = os.path.join(self._output_path, "CMakeLists.txt")
         self._cli_logger.info("Writing %s", target)
 
         os.makedirs(os.path.dirname(target), exist_ok=True)
@@ -58,10 +58,10 @@ class DefaultCppWriter:
             f.write(content)
 
     def save(self, file_stem, ext, content):
-        target = os.path.join(self._target_path, f"{file_stem}.{ext}")
+        target = os.path.join(self._output_path, f"{file_stem}.{ext}")
         self._cli_logger.info("Writing %s", target)
 
-        tmp = os.path.join(self._target_path, f"{file_stem}-tmp.{ext}")
+        tmp = os.path.join(self._output_path, f"{file_stem}-tmp.{ext}")
         os.makedirs(os.path.dirname(target), exist_ok=True)
 
         with open(tmp, "w") as f:

@@ -11,7 +11,7 @@ import code_object.struct_arg as struct_arg
 # Utilities for working with C AST Nodes
 
 # tokens string can be:
-# "flat" to show aflat summary
+# "flat" to show a flat summary
 # "list" to show a detailed list
 # "" to not show tokens
 def dump_node(cnode, depth=0, tokens="flat"):
@@ -35,6 +35,14 @@ def create_cfuncsig(cnode):
         cargs.append(carg)
 
     return funcsig.FuncSig(cnode.result_type.spelling, cnode.spelling, cargs)
+
+# Extract the node representing the body of a function, or assert!
+def find_function_body_node(cnode):
+    for child in cnode.get_children():
+        if child.kind == clang.cindex.CursorKind.COMPOUND_STMT:
+            return child
+
+    assert False, f"Could not find body for function=[{cnode.spelling}] type=[{cnode.type.spelling}]"
 
 # Create a C FuncSigPointer object from a TYPEDEF_DECL node
 def create_cfuncsig_pointer(cnode):

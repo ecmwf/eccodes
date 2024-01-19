@@ -18,9 +18,9 @@
 
 namespace {{ c.nested_namespaces }} {
 
-// Global declarations - START
-{{ c.global_declarations.as_string() }}
-// Global declarations - END
+// Globals - START
+{{ c.global_function.as_string() }}
+// Globals - END
 
 {% for func in c.functions %}
 {{ func.as_string() }}
