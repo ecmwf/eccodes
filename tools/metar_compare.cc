@@ -219,10 +219,6 @@ int grib_tool_init(grib_runtime_options* options)
     else
         onlyListed = 1;
 
-    if (grib_options_on("H") && grib_options_on("c:")) {
-        printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
     if (grib_options_on("a") && !grib_options_on("c:")) {
         printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
