@@ -428,6 +428,8 @@ grib_handle* codes_handle_new_from_file(grib_context* c, FILE* f, ProductKind pr
         return metar_new_from_file(c, f, error);
     if (product == PRODUCT_GTS)
         return gts_new_from_file(c, f, error);
+    //if (product == PRODUCT_TAF)
+    //    return taf_new_from_file(c, f, error);
     if (product == PRODUCT_ANY)
         return any_new_from_file(c, f, error);
 
@@ -595,7 +597,8 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
     long edition            = 0;
     size_t seclen           = 0;
     unsigned char* secbegin = 0;
-    int secnum = 0, seccount = 0;
+    int secnum = 0;
+    // int seccount = 0;
     int err = 0, i = 0;
     grib_multi_support* gm = NULL;
 
@@ -629,9 +632,9 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         secbegin = gm->sections[gm->section_number];
         seclen   = gm->sections_length[gm->section_number];
         secnum   = gm->section_number;
-        seccount = 0;
+        // seccount = 0;
         while (grib2_get_next_section((unsigned char*)message, olen, &secbegin, &seclen, &secnum, &err)) {
-            seccount++;
+            // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
 
             gm->sections[secnum]        = secbegin;
@@ -714,7 +717,8 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     long edition            = 0;
     size_t seclen           = 0;
     unsigned char* secbegin = 0;
-    int secnum = 0, seccount = 0;
+    int secnum = 0;
+    // int seccount = 0;
     int err = 0, i = 0;
     grib_multi_support* gm  = NULL;
     off_t gts_header_offset = 0;
@@ -782,9 +786,9 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
         secbegin = gm->sections[gm->section_number];
         seclen   = gm->sections_length[gm->section_number];
         secnum   = gm->section_number;
-        seccount = 0;
+        // seccount = 0;
         while (grib2_get_next_section((unsigned char*)data, olen, &secbegin, &seclen, &secnum, &err)) {
-            seccount++;
+            // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
 
             gm->sections[secnum]        = secbegin;

@@ -131,7 +131,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     size_t size               = 0;
     int ret = 0, i = 0;
     grib_accessor_scale_values* self = (grib_accessor_scale_values*)a;
-    grib_context* c                  = a->context;
+    const grib_context* c            = a->context;
     grib_handle* h                   = grib_handle_of_accessor(a);
 
     if (*val == 1)

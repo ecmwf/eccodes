@@ -53,7 +53,7 @@ infile=${data_dir}/sample.grib2
 set +e
 ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp > $tempErr 2>&1
 set -e
-grep -q "Unable to set double array codedValues" $tempErr
+grep -q "Unable to set double array 'codedValues'" $tempErr
 
 # Nearest neighbour
 # ----------------------

@@ -2,6 +2,6 @@
 
 # TEMPLATE 3.42, Stretched Gaussian latitude/longitude
 
-include "grib2/template.3.shape_of_the_earth.def";
-include "grib2/template.3.gaussian.def";
-include "grib2/template.3.stretching.def";
+include "grib2/template.3.shape_of_the_earth.def"
+include "grib2/template.3.gaussian.def"
+include "grib2/template.3.stretching.def"

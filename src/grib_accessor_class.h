@@ -142,6 +142,7 @@ extern grib_accessor_class* grib_accessor_class_octahedral_gaussian;
 extern grib_accessor_class* grib_accessor_class_octet_number;
 extern grib_accessor_class* grib_accessor_class_offset_file;
 extern grib_accessor_class* grib_accessor_class_offset_values;
+extern grib_accessor_class* grib_accessor_class_optimal_step_units;
 extern grib_accessor_class* grib_accessor_class_pack_bufr_values;
 extern grib_accessor_class* grib_accessor_class_packing_type;
 extern grib_accessor_class* grib_accessor_class_pad;

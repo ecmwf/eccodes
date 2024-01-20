@@ -77,10 +77,12 @@ if( HAVE_BUILD_TOOLS )
        grib_clone
        grib_copy_message
        grib_ensemble_index
+       grib_index
        grib_set_pv
        grib_set_bitmap
        grib_list
        grib_get_data
+       grib_mars_param
        grib_nearest
        grib_nearest_multiple
        grib_multi

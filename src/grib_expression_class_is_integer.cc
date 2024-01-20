@@ -155,14 +155,14 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    printf("access('%s", e->name);
-    if (f) {
-        long s = 0;
-        grib_get_long(f, e->name, &s);
-        printf("=%ld", s);
-    }
-    printf("')");
+    // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    // printf("access('%s", e->name);
+    // if (f) {
+    //     long s = 0;
+    //     grib_get_long(f, e->name, &s);
+    //     printf("=%ld", s);
+    // }
+    // printf("')");
 }
 
 static void destroy(grib_context* c, grib_expression* g)

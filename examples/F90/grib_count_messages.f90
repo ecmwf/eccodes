@@ -9,7 +9,7 @@
 !  Description: Count messages before processing
 !
 !
-program get
+program grib_count_messages
    use eccodes
    implicit none
 
@@ -17,7 +17,7 @@ program get
    integer                            ::  iret
    integer                            ::  n
    integer                            ::  i
-   integer, dimension(:), allocatable   ::  igrib
+   integer, dimension(:), allocatable ::  igrib
    real                               ::  latitudeOfFirstPointInDegrees
    real                               ::  longitudeOfFirstPointInDegrees
    real                               ::  latitudeOfLastPointInDegrees
@@ -25,11 +25,10 @@ program get
    integer                            ::  numberOfPointsAlongAParallel
    integer                            ::  numberOfPointsAlongAMeridian
    real, dimension(:), allocatable    ::  values
-   integer                            ::  numberOfValues
+   integer(8)                         ::  numberOfValues
    real                               ::  average, min_val, max_val
 
-   call codes_open_file(ifile, &
-                        '../../data/tigge_pf_ecmwf.grib2', 'r')
+   call codes_open_file(ifile, '../../data/tigge_pf_ecmwf.grib2', 'r')
 
    ! count the messages in the file
    call codes_count_in_file(ifile, n)
@@ -106,4 +105,4 @@ program get
 
    deallocate (igrib)
 
-end program get
+end program

@@ -13,7 +13,8 @@ program set_data_force
    integer                         :: outfile
    integer                         :: i, igrib, iret, numberOfValues, cnt
    real                            :: d, e
-   real, dimension(:), allocatable :: values
+   real(4), dimension(:), allocatable :: values_real4
+   real(8), dimension(:), allocatable :: values_real8
    integer, parameter              :: max_strsize = 200
    character(len=max_strsize)      :: outfile_name
 
@@ -24,7 +25,8 @@ program set_data_force
 
    call codes_get_size(igrib, 'values', numberOfValues)
 
-   allocate (values(numberOfValues), stat=iret)
+   allocate (values_real4(numberOfValues), stat=iret)
+   allocate (values_real8(numberOfValues), stat=iret)
    d = 10e-8
    e = d
    cnt = 1
@@ -33,7 +35,8 @@ program set_data_force
          e = e*10
          cnt = 1
       end if
-      values(i) = d
+      values_real4(i) = d
+      values_real8(i) = d
       d = d + e
       cnt = cnt + 1
    end do
@@ -42,9 +45,11 @@ program set_data_force
    call codes_set(igrib, 'bitmapPresent', 1)
 
    ! set data values
-   call codes_set_force(igrib, 'codedValues', values)
+   call codes_set_force(igrib, 'codedValues', values_real4)
+   call codes_set_force(igrib, 'codedValues', values_real8)
    call codes_write(igrib, outfile)
    call codes_release(igrib)
-   deallocate (values)
+   deallocate (values_real4)
+   deallocate (values_real8)
 
 end program set_data_force

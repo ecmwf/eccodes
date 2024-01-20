@@ -236,7 +236,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
                 constantFieldHalfByte = 0;
             if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->half_byte, constantFieldHalfByte)) != GRIB_SUCCESS)
                 return ret;
-            grib_buffer_replace(a, NULL, 0, 1, 1);
+            ret = grib_buffer_replace(a, NULL, 0, 1, 1);
+            if (ret != GRIB_SUCCESS) return ret;
             return GRIB_SUCCESS;
             break;
         case GRIB_NO_VALUES:
@@ -252,7 +253,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
                 return ret;
             if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->half_byte, constantFieldHalfByte)) != GRIB_SUCCESS)
                 return ret;
-            grib_buffer_replace(a, NULL, 0, 1, 1);
+            ret = grib_buffer_replace(a, NULL, 0, 1, 1);
+            if (ret != GRIB_SUCCESS) return ret;
             return GRIB_SUCCESS;
             break;
         case GRIB_INVALID_BPV:
@@ -313,7 +315,8 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "grib_accessor_data_g1simple_packing : pack_double : packing %s, %d values", a->name, n_vals);
 
-    grib_buffer_replace(a, buf, buflen, 1, 1);
+    ret = grib_buffer_replace(a, buf, buflen, 1, 1);
+    if (ret != GRIB_SUCCESS) return ret;
 
     grib_context_buffer_free(a->context, buf);
 

@@ -137,6 +137,7 @@ int grib_tool_init(grib_runtime_options* options)
         int idx_overall    = -1;
         FILE* f            = fopen(options->latlon_mask, "r");
         if (!f) {
+            fprintf(stderr, "%s: unable to open mask file %s\n", tool_name, options->latlon_mask);
             perror(options->latlon_mask);
             exit(1);
         }

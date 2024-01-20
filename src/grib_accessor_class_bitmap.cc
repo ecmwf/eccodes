@@ -193,7 +193,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     long tlen         = 0;
     long i            = 0;
     int err           = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
+    const grib_handle* hand = grib_handle_of_accessor(a);
 
     err = grib_value_count(a, &tlen);
     if (err)

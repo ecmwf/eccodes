@@ -22,6 +22,8 @@ if( HAVE_BUILD_TOOLS )
     list( APPEND tests_extra
           grib_index
           codes_dump
+          codes_scan_file
+          codes_load_file
           grib_copy_message
           bufr_copy_message
           grib_get_keys
@@ -36,6 +38,7 @@ if( HAVE_BUILD_TOOLS )
           grib_elements
           grib_nearest
           grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_keys
@@ -47,6 +50,7 @@ if( HAVE_BUILD_TOOLS )
           grib_copy_namespace
           grib_read_message
           grib_read_from_file
+          grib_read_bytes
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316
@@ -89,6 +93,7 @@ else()
           grib_nearest
           grib_elements
           grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_missing

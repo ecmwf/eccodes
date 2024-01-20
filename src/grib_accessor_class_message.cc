@@ -118,19 +118,19 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
 static void update_size(grib_accessor* a, size_t new_size)
 {
-    /* printf("update_size: grib_accessor_class_message.c %ld %ld %s %s\n", (long)new_size,(long)a->length,a->cclass->name,a->name); */
     a->length = new_size;
 }
 
 static void resize(grib_accessor* a, size_t new_size)
 {
-    void* zero = grib_context_malloc_clear(a->context, new_size);
+    grib_context_log(a->context, GRIB_LOG_FATAL, "%s %s: Not supported", a->cclass->name, __func__);
 
-    grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
-    grib_context_free(a->context, zero);
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message %ld %ld %s %s",
-                    (long)new_size, (long)a->length, a->cclass->name, a->name);
-    Assert(new_size == a->length);
+    // void* zero = grib_context_malloc_clear(a->context, new_size);
+    // grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
+    // grib_context_free(a->context, zero);
+    // grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message %ld %ld %s %s",
+    //                 (long)new_size, (long)a->length, a->cclass->name, a->name);
+    // Assert(new_size == a->length);
 }
 
 static int value_count(grib_accessor* a, long* count)

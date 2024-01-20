@@ -345,7 +345,8 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
                 if (update) {
                     plen = length;
                     lret = grib_pack_long(s->aclength, &plen, &len);
-                    Assert(lret == GRIB_SUCCESS);
+                    if (lret != GRIB_SUCCESS)
+                        return lret;
                     s->padding = 0;
                 }
                 else {

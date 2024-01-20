@@ -1,6 +1,5 @@
 constant ECMWF = 98 : hidden;
-constant ECMWF_s = "ecmf" : hidden;
-constant WMO= 0;
+constant WMO = 0;
 constant conceptsMasterDir="grib1" : hidden;
 constant conceptsLocalDirECMF="grib1/localConcepts/ecmf" : hidden;
 constant conceptsLocalDirAll="grib1/localConcepts/[centre:s]" : hidden;
@@ -181,6 +180,8 @@ meta dataTime   time(hour,minute,second) : dump;
 meta julianDay  julian_day(dataDate,hour,minute,second) : edition_specific;
 
 codetable[1] stepUnits 'stepUnits.table' = 1 : transient,dump,no_copy;
+# The lowercase version is to unify it with the helper key in the MARS language
+alias stepunits = stepUnits;
 
 concept_nofail stepType (timeRangeIndicator, "stepType.def", conceptsDir2, conceptsDir1);
 
@@ -267,7 +268,6 @@ if(((section1Length > 40) or new() or setLocalDefinition> 0) and deleteLocalDefi
     }
 
     template_nofail marsKeywords "mars/grib.[stream:s].[type:s].def";
-
   }
   else
   {
@@ -314,12 +314,12 @@ alias time.stepType=stepType;
 # ECC-457: GRIB1 to GRIB2 conversion
 concept_nofail stepTypeForConversion (unknown, "stepTypeForConversion.def", conceptsDir2, conceptsDir1);
 if (stepTypeForConversion is "accum" ) {
-    if (productDefinitionTemplateNumber == 1) {
-        alias productDefinitionTemplateNumber=eleven;
-    }
-    else {
-        alias productDefinitionTemplateNumber=eight;
-    }
+   if (productDefinitionTemplateNumber == 1) {
+      alias productDefinitionTemplateNumber=eleven;
+   }
+   else {
+      alias productDefinitionTemplateNumber=eight;
+   }
 }
 
 meta md5Section1 md5(offsetSection1,section1Length);

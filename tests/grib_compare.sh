@@ -175,6 +175,16 @@ ${tools_dir}/grib_compare -b $BLACKLIST -R all=2 $temp1 $temp2
 cp ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
 ${tools_dir}/grib_compare -w typeOfLevel=surface ${data_dir}/tigge_cf_ecmwf.grib2 $temp1
 
+# ----------------------------------------
+# Summary mode (-f)
+# ----------------------------------------
+set +e
+${tools_dir}/grib_compare -f ${data_dir}/tigge_cf_ecmwf.grib2 ${data_dir}/tigge_pf_ecmwf.grib2 > $outfile 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "indicatorOfUnitForTimeIncrement . 7 different" $outfile
+
 
 # ----------------------------------------
 # ECC-651: Two-way (symmetric) comparison

@@ -99,15 +99,8 @@ static void check_code_gen_dump_mode(const char* language)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O");
-
     options->dump_mode = (char*)"default";
     options->strict    = 1; /* Must set here as bufr_dump has its own -S option */
-
-    if (opt > 1) {
-        printf("%s: simultaneous j/C/O options not allowed\n", tool_name);
-        exit(1);
-    }
 
     if (grib_options_on("j:")) {
         options->dump_mode = (char*)"json";
@@ -196,7 +189,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         const char* filename = options->current_infile->name;
         json = 0;
 
-        err = grib_index_dump_file(stdout, filename);
+        err = grib_index_dump_file(stdout, filename, options->dump_flags);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
                              tool_name,

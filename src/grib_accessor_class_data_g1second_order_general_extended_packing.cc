@@ -360,7 +360,8 @@ static int unpack_helper(grib_accessor* a, double* dvalues, float* fvalues, size
     double reference_value;
     long binary_scale_factor;
     long decimal_scale_factor;
-    long j, count = 0;
+    long j;
+    // long count = 0;
     long *groupWidths = NULL, *groupLengths = NULL;
     long orderOfSPD     = 0;
     long* SPD           = 0;
@@ -457,7 +458,7 @@ static int unpack_helper(grib_accessor* a, double* dvalues, float* fvalues, size
                                    &X[n]);
             for (j = 0; j < groupLengths[i]; j++) {
                 X[n] += firstOrderValues[i];
-                count++;
+                // count++;
                 n++;
             }
 
@@ -1351,10 +1352,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     /* ECC-259: Set correct number of values */
     ret = grib_set_long_internal(a->parent->h, self->number_of_values, *len);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
-    grib_buffer_replace(a, buffer, size, 1, 1);
+    ret = grib_buffer_replace(a, buffer, size, 1, 1);
+    if (ret) return ret;
 
     grib_context_free(a->context, buffer);
     grib_context_free(a->context, X);
