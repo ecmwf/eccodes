@@ -136,26 +136,25 @@ grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_clas
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    self->number_of_values     = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->reference_value      = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->binary_scale_factor  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->decimal_scale_factor = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->bits_per_value       = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-
-    self->ni = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->nj = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-
-    self->list_defining_points  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->number_of_data_points = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->scanning_mode         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->number_of_values      = grib_arguments_get_name(h, args, self->carg++);
+    self->reference_value       = grib_arguments_get_name(h, args, self->carg++);
+    self->binary_scale_factor   = grib_arguments_get_name(h, args, self->carg++);
+    self->decimal_scale_factor  = grib_arguments_get_name(h, args, self->carg++);
+    self->bits_per_value        = grib_arguments_get_name(h, args, self->carg++);
+    self->ni                    = grib_arguments_get_name(h, args, self->carg++);
+    self->nj                    = grib_arguments_get_name(h, args, self->carg++);
+    self->list_defining_points  = grib_arguments_get_name(h, args, self->carg++);
+    self->number_of_data_points = grib_arguments_get_name(h, args, self->carg++);
+    self->scanning_mode         = grib_arguments_get_name(h, args, self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
 static int value_count(grib_accessor* a, long* n_vals)
 {
     grib_accessor_data_png_packing* self = (grib_accessor_data_png_packing*)a;
-    *n_vals                              = 0;
+    *n_vals = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, n_vals);
 }
 
@@ -228,10 +227,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     self->dirty = 0;
 
-    err    = grib_value_count(a, &nn);
+    err = grib_value_count(a, &nn);
     n_vals = nn;
-    if (err)
-        return err;
+    if (err) return err;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
