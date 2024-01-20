@@ -99,22 +99,30 @@ CodeInterfaceConverterClasses = {
     virtual_member_function.VirtualMemberFunction   : virtual_member_function_converter.VirtualMemberFunctionConverter,
 }
 
+def get_debug_string(code_obj):
+    if code_obj:
+        return f"{code_obj if type(code_obj) is str else code_obj.as_string()}"
+    else:
+        return "None"
+
 # Convert a code_object into a C++ code_object
 def convert_ccode_object(ccode_object, conversion_data):
-    debug.line("convert_ccode_object", f"Converting ccode_object instance=[{ccode_object}]")
+    debug.line("convert_ccode_object", f"[IN] [{type(ccode_object).__name__}] {get_debug_string(ccode_object)}")
 
     if ccode_object is None:
-        debug.line("convert_ccode_object", f" -> Type=[None], returning None!")
-        return None
+        cpp_obj = None
     elif isinstance(ccode_object, str):
-        debug.line("convert_ccode_object", f" -> Type=[str], performing a basic name transform")
-        return transform_variable_name(ccode_object)
+        cpp_obj = transform_variable_name(ccode_object)
+    else:
+        converter_class = CodeInterfaceConverterClasses.get(type(ccode_object), code_interface_converter.CodeInterfaceConverter)
+        converter = converter_class(ccode_object)
+        cpp_obj = converter.to_cpp_code_object(conversion_data)
 
-    converter_class = CodeInterfaceConverterClasses.get(type(ccode_object), code_interface_converter.CodeInterfaceConverter)
-    debug.line("convert_ccode_object", f"converter_class=[{converter_class}]")
-    converter = converter_class(ccode_object)
-    cpp_obj = converter.to_cpp_code_object(conversion_data)
+    if cpp_obj:
+        dbg_txt = f"{cpp_obj if type(cpp_obj) is str else cpp_obj.as_string()}"
+    else:
+        dbg_txt = "None"
 
-    debug.line("convert_ccode_object", f"Converted cpp_obj instance=[{cpp_obj}]")
+    debug.line("convert_ccode_object", f"[OUT][{type(cpp_obj).__name__}] {get_debug_string(cpp_obj)}")
 
     return cpp_obj

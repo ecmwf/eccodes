@@ -2,6 +2,7 @@ import ast_object.cfile_parser as cfile_parser
 import default.default_ast_code_converter as default_ast_code_converter
 import default.default_ccode_converter as default_ccode_converter
 import default.default_cpp_writer as default_cpp_writer
+import utils.debug as debug
 
 # The main class for parsing a collection of C files and converting them to C++
 #
@@ -36,8 +37,11 @@ class DefaultConversionManager:
     def convert(self, files):
         self._files = files
 
+        debug.line("convert", f"[1] create_ast_code_list")
         ast_code_list = self.create_ast_code_list()
+        debug.line("convert", f"[2] convert_ast_to_ccode")
         ccode_list = self.convert_ast_to_ccode(ast_code_list)
+        debug.line("convert", f"[3] convert_ccode_to_cppcode")
         cppcode_list = self.convert_ccode_to_cppcode(ccode_list)
 
         self.write_files(cppcode_list)

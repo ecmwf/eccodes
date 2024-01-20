@@ -40,6 +40,8 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
             pass # ignore!
         elif node.spelling == self.base_class:
             pass # ignore!
+        elif node.kind == clang.cindex.CursorKind.UNEXPOSED_DECL:
+            pass # ignore - this is an #include !
         else:
             return self._ast_parser.to_ccode_objects(node, self._ast_code.macro_details)
 

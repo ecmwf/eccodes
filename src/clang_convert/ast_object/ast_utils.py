@@ -23,7 +23,7 @@ def dump_node(cnode, depth=0, tokens="flat"):
             debug.line("dump_node", f"{' ' * depth} -> token=[{token.spelling}] extent=[{token.extent.start.line}:{token.extent.start.column} -> {token.extent.end.line}:{token.extent.end.column}]")
 
     for child in cnode.get_children():
-        dump_node(child, depth+1)
+        dump_node(child, depth+1, tokens)
 
 # Create a C FuncSig object from a FUNCTION_DECL node
 def create_cfuncsig(cnode):

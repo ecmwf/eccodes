@@ -31,36 +31,29 @@ class AstParser:
     def __init__(self) -> None:
         pass
     
+    def get_debug_string(self, code_obj):
+        if code_obj:
+            return f"{code_obj if type(code_obj) is str else code_obj.as_string()}"
+        else:
+            return "None"
+    
     # Parse the AST and return a list of CodeInterface objects representing the C objects
     # CNode can be a single node or a list of nodes (for example, the global declaration is a list)
     # - A list will be treated as a single block of code
     def to_ccode_objects(self, cnode, macro_details):
         self._macro_details = macro_details
 
-        # Local override - resets the current debug state at function exit!
-        include_ast_parser_debugging = False
-        global_debug_enabled = debug.debug_enabled
+        assert not isinstance(cnode, list), "A list of AST nodes is no longer supported!"
 
-        if global_debug_enabled and not include_ast_parser_debugging:
-            debug.disable_debug()
+        debug.line("to_ccode_objects",f"[IN] Node details:")
+        ast_utils.dump_node(cnode, 2, "")
 
-        parsed_cnode = None
+        parsed_cnode = self.parse_ast_node(cnode)
+        if not parsed_cnode:
+            debug.line("to_ccode_objects", f"Code object is None for node spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] kind=[{cnode.kind}]")
 
-        if isinstance(cnode, list):
-            parsed_cnode = code_objects.CodeObjects()
-            for entry in cnode:
-                cnode_code_object = self.parse_ast_node(entry)
-                if cnode_code_object:
-                    parsed_cnode.add_code_object(cnode_code_object)
-                else:
-                    debug.line("to_ccode_objects", f"Code object is None for node spelling=[{entry.spelling}] type=[{entry.type.spelling}] kind=[{entry.kind}]")
-        else:
-            parsed_cnode = self.parse_ast_node(cnode)
-            if not parsed_cnode:
-                debug.line("to_ccode_objects", f"Code object is None for node spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] kind=[{cnode.kind}]")
-        
-        if global_debug_enabled and not include_ast_parser_debugging:
-            debug.enable_debug()
+        debug.line("to_ccode_objects", f"[OUT][{type(parsed_cnode).__name__}] {self.get_debug_string(parsed_cnode)}")
+        debug.line("to_ccode_objects", f"==========================================================================================")
 
         return parsed_cnode
 
@@ -156,9 +149,6 @@ class AstParser:
 
     # Just iteratively call parse_ast_node
     def parse_COMPOUND_STMT(self, node):
-
-        debug.line("parse_COMPOUND_STMT", f">>> spelling=[{node.spelling}] kind=[{node.kind}]")
-
         stmt_lines = compound_statement.CompoundStatement()
 
         for child in node.get_children():
@@ -172,7 +162,6 @@ class AstParser:
         stmt_lines = code_objects.CodeObjects()
 
         for child in node.get_children():
-            debug.line("parse_DECL_STMT", f"child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
             stmt_lines.add_code_object(self.parse_ast_node(child))
 
         return stmt_lines
@@ -197,8 +186,6 @@ class AstParser:
         return return_lines
 
     def parse_IF_STMT(self, node):
-        debug.line("parse_IF_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-
         children = list(node.get_children())
         child_count = len(children)
         assert child_count >= 2, f"Expected at least two children for if statement"
@@ -214,8 +201,6 @@ class AstParser:
         return if_stmt
 
     def parse_FOR_STMT(self, node):
-        debug.line("parse_FOR_STMT", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-
         init_statement = condition = iteration_expression = statement = None
 
         # A for loop can have empty sections (e.g. for(i=0;;++i){} ) but we don't know which missing nodes
@@ -280,8 +265,6 @@ class AstParser:
     }
     
     def parse_STMT_node(self, node):
-        debug.line("parse_STMT_node", f"[{node.kind}] spelling=[{node.spelling}]")
-
         if node.kind in self.parse_STMT_funcs.keys():
             return self.parse_STMT_funcs[node.kind](self, node)
         else:
@@ -313,20 +296,17 @@ class AstParser:
             if pointee.kind == clang.cindex.TypeKind.FUNCTIONPROTO:
                 # It's a function pointer
                 cfuncsig_pointer = ast_utils.create_cfuncsig_pointer(node)
-                debug.line("parse_TYPEDEF_DECL", f"cfuncsig_pointer   = [{cfuncsig_pointer.as_string()}]")
                 return cfuncsig_pointer
             
         elif typedef_type.kind == clang.cindex.TypeKind.ELABORATED:
             # We don't need to process e.g. "typedef struct proj_mapping proj_mapping;" as C++ doesn't need it!
             pass
 
-        debug.line("parse_TYPEDEF_DECL", f"Ignoring node spelling=[{node.spelling}] typedef_type.kind=[{typedef_type.kind}]")
         return None
 
     def parse_FIELD_DECL(self, node):
         carg = ast_utils.create_carg(node)
         
-        debug.line("parse_FIELD_DECL", f"Converted spelling=[{node.spelling}] to cpparg=[{carg.as_string()}]")
         return carg
 
     def parse_VAR_DECL(self, node):
@@ -352,8 +332,6 @@ class AstParser:
     }
 
     def parse_DECL_node(self, node):
-        debug.line("parse_DECL_node", f"[{node.kind}] spelling=[{node.spelling}]")
-
         if node.kind in self.parse_DECL_funcs.keys():
             return self.parse_DECL_funcs[node.kind](self, node)
         else:
@@ -368,14 +346,10 @@ class AstParser:
         # There should be a single child node...
         child = list(node.get_children())[0]
 
-        debug.line("parse_UNEXPOSED_EXPR", f"Passing to child: spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
-
         return self.parse_ast_node(child)
 
     # This is a recursive convertion...
     def parse_INIT_LIST_EXPR(self, node):
-        #return ast_utils.create_cinit_list(node)
-        debug.line("parse_INIT_LIST_EXPR", f"spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
         init_list_decl_spec = declaration_specifier.DeclSpec.from_decl_specifier_seq(node.type.spelling)
         cinit_list = init_list.InitList(init_list_decl_spec)
 
@@ -388,13 +362,11 @@ class AstParser:
 
     def parse_INTEGER_LITERAL(self, node):
         if node.spelling:
-            debug.line("parse_INTEGER_LITERAL", f"Got value from spelling=[{node.spelling}]")
             return literal.Literal(node.spelling)
         
         # We'll have to extract the value from the tokens
         tokens=[token.spelling for token in node.get_tokens()]
         if tokens:
-            debug.line("parse_INTEGER_LITERAL", f"Got value from tokens=[{tokens[0]}]")
             return literal.Literal(tokens[0])
         
         assert False, f"Could not extract integer literal"
@@ -432,9 +404,6 @@ class AstParser:
 
         # Find the operator by excluding operand tokens
         operator_tokens = [t for t in tokens if t not in right_tokens]
-        debug.line("parse_UNARY_OPERATOR", f"Unary Operator = [{operator_tokens}]")
-        #debug.line("parse_UNARY_OPERATOR", f"right_operand...")
-        #ast_utils.dump_node(right_operand)
 
         operator_str = "".join(t for t in operator_tokens)
         right_operand_cvalue = self.parse_ast_node(right_operand)
@@ -456,17 +425,16 @@ class AstParser:
         tokens_count = len(tokens)
         left_tokens_count = len(left_tokens)
         if left_tokens_count >= tokens_count:
-            debug.line("parse_BINARY_OPERATOR", f"operator_tokens is empty!")
-            debug.line("parse_BINARY_OPERATOR", f" -> tokens       = [{tokens}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> left_tokens  = [{left_tokens}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> right_tokens = [{right_tokens}]")
+            #debug.line("parse_BINARY_OPERATOR", f"operator_tokens is empty!")
+            #debug.line("parse_BINARY_OPERATOR", f" -> tokens       = [{tokens}]")
+            #debug.line("parse_BINARY_OPERATOR", f" -> left_tokens  = [{left_tokens}]")
+            #debug.line("parse_BINARY_OPERATOR", f" -> right_tokens = [{right_tokens}]")
             assert False, "Binary operator: operator_tokens array should not be empty!"
 
         #operator_tokens = [t for t in tokens if t not in left_tokens and t not in right_tokens]
         operator_tokens = tokens[left_tokens_count:]
 
         operator_token = operator_tokens[0]
-        debug.line("parse_BINARY_OPERATOR", f"operator_token=[{operator_token}] => operator_tokens=[{operator_tokens}]")
 
         left_operand_cvalue = self.parse_ast_node(left_operand)
 
@@ -483,7 +451,6 @@ class AstParser:
         return c_binary_op
 
     def parse_COMPOUND_ASSIGNMENT_OPERATOR(self, node):
-        debug.line("parse_COMPOUND_ASSIGNMENT_OPERATOR", f"Forwarding to parse_BINARY_OPERATOR spelling=[{node.spelling}] type=[{node.type.spelling}]")
         return self.parse_BINARY_OPERATOR(node)
 
     def parse_DECL_REF_EXPR(self, node):
@@ -508,18 +475,13 @@ class AstParser:
 
     def parse_CALL_EXPR(self, node):
         tokens = [token.spelling for token in node.get_tokens()]
-        debug.line("parse_CALL_EXPR", f"spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-        debug.line("parse_CALL_EXPR", f"CALL_EXPR tokens=[{tokens}]")
 
         if "(" in tokens:
-            debug.line("parse_CALL_EXPR", f"Found regular function call")
             cfunc_call = function_call.FunctionCall(node.spelling)
 
             for arg_node in node.get_arguments():
                 arg_entry = self.parse_ast_node(arg_node)
-                debug.line("parse_CALL_EXPR", f"arg_node spelling=[{arg_node.spelling}] type=[{arg_node.type.spelling}] kind=[{arg_node.kind}]")
                 if arg_entry:
-                    debug.line("parse_CALL_EXPR", f"arg_node arg_entry=[{arg_entry.as_string()}]")
                     cfunc_call.add_arg(arg_entry)
                 else:
                     debug.line("parse_CALL_EXPR", f"arg_node arg_entry=[{arg_entry}] - IS THIS AN ERROR?")
@@ -528,7 +490,6 @@ class AstParser:
         
         # No "(" in the tokens, so this is not really a function call!
         # It is probably a copy constructor, so we'll parse and return the (first) child node as whatever type it is...
-        debug.line("parse_CALL_EXPR", f"NOT a regular function call - parsing first child instead...")
         children = node.get_children()
         child = next(children, None)
         assert child, f"Expected a child node while parsing a non-regular function call!"
@@ -547,8 +508,6 @@ class AstParser:
         return None
 
     def parse_ARRAY_SUBSCRIPT_EXPR(self, node):
-        debug.line("parse_ARRAY_SUBSCRIPT_EXPR", f"IF spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-
         # We expect two children: the variable name and the index
         children = list(node.get_children())
         child_count = len(children)
@@ -562,8 +521,6 @@ class AstParser:
         return arr_access
 
     def parse_CONDITIONAL_OPERATOR(self, node):
-        debug.line("parse_CONDITIONAL_OPERATOR", f"spelling=[{node.spelling}] type=[{node.type.spelling}] kind=[{node.kind}]")
-
         # We expect three children: the condition, true branch and false branch
         children = list(node.get_children())
         child_count = len(children)
@@ -599,8 +556,6 @@ class AstParser:
     }
 
     def parse_EXPR_node(self, node):
-        debug.line("parse_EXPR_node", f"[{node.kind}] spelling=[{node.spelling}]")
-
         if node.kind in self.parse_EXPR_funcs.keys():
             return self.parse_EXPR_funcs[node.kind](self, node)
         else:
@@ -620,8 +575,6 @@ class AstParser:
     }
 
     def parse_REF_node(self, node):
-        debug.line("parse_REF_node", f"[{node.kind}] spelling=[{node.spelling}]")
-
         if node.kind in self.parse_REF_funcs.keys():
             return self.parse_REF_funcs[node.kind](self, node)
         else:

@@ -91,5 +91,5 @@ class DefaultCCodeConverter:
         debug.line("dump_function", f"Source=[{def_name}]")
         debug.line("dump_function", "--------------------------------------------------------------------------------")
         debug.line("dump_function", cppfunc.funcsig.as_string())
-        debug.line("dump_function", cppfunc.body)
+        debug.line("dump_function", cppfunc.body.as_lines())
         debug.line("dump_function", "================================================================================")
