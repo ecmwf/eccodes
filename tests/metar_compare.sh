@@ -136,5 +136,14 @@ set -e
 [ $status -ne 0 ]
 grep -q "No such file or directory" $fLog
 
+# Options
+set +e
+${tools_dir}/metar_compare -a $metar_file $metar_file > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "option requires" $fLog
+
+
 # Clean up
 rm -f $fLog $fMetarTmp
