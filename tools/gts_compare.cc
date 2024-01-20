@@ -20,7 +20,6 @@ grib_option grib_options[] = {
     { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
     { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
-    /*{"H",0,"Compare only message headers. Bit-by-bit compare on. Incompatible with -c option.\n",0,1,0},*/
     /*{"R:",0,0,0,1,0},*/
     /*{"A:",0,0,0,1,0},*/
     { "w:", 0, 0, 0, 1, 0 },
@@ -184,10 +183,6 @@ int grib_tool_init(grib_runtime_options* options)
     else
         onlyListed = 1;
 
-    if (grib_options_on("H") && grib_options_on("c:")) {
-        printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
     if (grib_options_on("a") && !grib_options_on("c:")) {
         printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
