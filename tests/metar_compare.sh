@@ -32,6 +32,13 @@ echo "Test: comparing the same files" >> $fLog
 echo "file: $metar_file" >> $fLog
 ${tools_dir}/metar_compare $metar_file $metar_file
 
+
+#----------------------------------------------------
+# Test: comparing with skip
+#----------------------------------------------------
+metar_file="metar.txt"
+${tools_dir}/metar_compare -w CCCC=VILK $metar_file $metar_file
+
 #----------------------------------------------------
 # Test: comparing two different files
 #----------------------------------------------------
