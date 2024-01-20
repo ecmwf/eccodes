@@ -43,17 +43,13 @@ class AstParser:
     def to_ccode_objects(self, cnode, macro_details):
         self._macro_details = macro_details
 
-        assert not isinstance(cnode, list), "A list of AST nodes is no longer supported!"
-
-        debug.line("to_ccode_objects",f"[IN] Node details:")
-        ast_utils.dump_node(cnode, 2, "")
+        debug.line("to_ccode_objects", f"[IN] ==========================================================================================")
 
         parsed_cnode = self.parse_ast_node(cnode)
         if not parsed_cnode:
             debug.line("to_ccode_objects", f"Code object is None for node spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] kind=[{cnode.kind}]")
 
-        debug.line("to_ccode_objects", f"[OUT][{type(parsed_cnode).__name__}] {self.get_debug_string(parsed_cnode)}")
-        debug.line("to_ccode_objects", f"==========================================================================================")
+        debug.line("to_ccode_objects", f"[OUT] ==========================================================================================")
 
         return parsed_cnode
 
@@ -265,10 +261,10 @@ class AstParser:
     }
     
     def parse_STMT_node(self, node):
-        if node.kind in self.parse_STMT_funcs.keys():
-            return self.parse_STMT_funcs[node.kind](self, node)
-        else:
-            return self.parse_node_ignored_kind(node)
+        debug.line("parse_STMT_node", f"[IN] [{node.kind}] {' '.join([token.spelling for token in node.get_tokens()])}")
+        parsed_node = self.parse_STMT_funcs[node.kind](self, node)
+        debug.line("parse_STMT_node", f"[OUT][{type(parsed_node).__name__}] {self.get_debug_string(parsed_node)}")
+        return parsed_node
 
     # =================================== parse_STMT_funcs [END]   ===================================
 
@@ -332,10 +328,10 @@ class AstParser:
     }
 
     def parse_DECL_node(self, node):
-        if node.kind in self.parse_DECL_funcs.keys():
-            return self.parse_DECL_funcs[node.kind](self, node)
-        else:
-            return self.parse_node_ignored_kind(node)
+        debug.line("parse_DECL_node", f"[IN] [{node.kind}] {' '.join([token.spelling for token in node.get_tokens()])}")
+        parsed_node = self.parse_DECL_funcs[node.kind](self, node)
+        debug.line("parse_DECL_node", f"[OUT][{type(parsed_node).__name__}] {self.get_debug_string(parsed_node)}")
+        return parsed_node
 
     # =================================== parse_DECL_funcs [END]   ===================================
 
@@ -424,26 +420,25 @@ class AstParser:
         # Find the operator by excluding operand tokens
         tokens_count = len(tokens)
         left_tokens_count = len(left_tokens)
-        if left_tokens_count >= tokens_count:
-            #debug.line("parse_BINARY_OPERATOR", f"operator_tokens is empty!")
-            #debug.line("parse_BINARY_OPERATOR", f" -> tokens       = [{tokens}]")
-            #debug.line("parse_BINARY_OPERATOR", f" -> left_tokens  = [{left_tokens}]")
-            #debug.line("parse_BINARY_OPERATOR", f" -> right_tokens = [{right_tokens}]")
-            assert False, "Binary operator: operator_tokens array should not be empty!"
-
-        #operator_tokens = [t for t in tokens if t not in left_tokens and t not in right_tokens]
-        operator_tokens = tokens[left_tokens_count:]
-
-        operator_token = operator_tokens[0]
+        operator_token = tokens[left_tokens_count]
 
         left_operand_cvalue = self.parse_ast_node(left_operand)
 
-        if len(operator_tokens) > 1:
+        right_tokens_count = len(right_tokens)
+        if tokens_count != left_tokens_count + right_tokens_count + 1:
             # The top level tokens don't match the right_operand tokens. This can happen if the top-level
             # contains (for example) a macro definition. 
-            # For now we'll just take the top-level tokens as a string
-            debug.line("parse_BINARY_OPERATOR", f"The top level tokens don't match the right_operand tokens: using the top-level tokens=[{operator_tokens[1:]}]")
-            right_operand_cvalue = literal.Literal(f"{' '.join(t for t in operator_tokens[1:])}")
+            # For now we'll just take the top-level tokens as a (string) literal
+            top_level_right_tokens = tokens[left_tokens_count+1:]
+            right_operand_cvalue = literal.Literal(f"{' '.join(t for t in top_level_right_tokens)}")
+            '''
+            debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: using top-level tokens, treating as a literal")
+            debug.line("parse_BINARY_OPERATOR", f" -> tokens                 = [{tokens}]")
+            debug.line("parse_BINARY_OPERATOR", f" -> left_tokens            = [{left_tokens}]")
+            debug.line("parse_BINARY_OPERATOR", f" -> operator_token         = [{operator_token}]")
+            debug.line("parse_BINARY_OPERATOR", f" -> right_tokens           = [{right_tokens}]")
+            debug.line("parse_BINARY_OPERATOR", f" -> top_level_right_tokens = [{top_level_right_tokens}]")
+            '''
         else:
             right_operand_cvalue = self.parse_ast_node(right_operand)
 
@@ -556,10 +551,10 @@ class AstParser:
     }
 
     def parse_EXPR_node(self, node):
-        if node.kind in self.parse_EXPR_funcs.keys():
-            return self.parse_EXPR_funcs[node.kind](self, node)
-        else:
-            return self.parse_node_ignored_kind(node)
+        debug.line("parse_EXPR_node", f"[IN] [{node.kind}] {' '.join([token.spelling for token in node.get_tokens()])}")
+        parsed_node = self.parse_EXPR_funcs[node.kind](self, node)
+        debug.line("parse_EXPR_node", f"[OUT][{type(parsed_node).__name__}] {self.get_debug_string(parsed_node)}")
+        return parsed_node
 
     # =================================== parse_EXPR_funcs [END]   ===================================
 
@@ -575,10 +570,10 @@ class AstParser:
     }
 
     def parse_REF_node(self, node):
-        if node.kind in self.parse_REF_funcs.keys():
-            return self.parse_REF_funcs[node.kind](self, node)
-        else:
-            return self.parse_node_ignored_kind(node)
+        debug.line("parse_REF_node", f"[IN] [{node.kind}] {' '.join([token.spelling for token in node.get_tokens()])}")
+        parsed_node = self.parse_REF_funcs[node.kind](self, node)
+        debug.line("parse_REF_node", f"[OUT][{type(parsed_node).__name__}] {self.get_debug_string(parsed_node)}")
+        return parsed_node
 
     # =================================== parse_REF_funcs [END]    ===================================
 
