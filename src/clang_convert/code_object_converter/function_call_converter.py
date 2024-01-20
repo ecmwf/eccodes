@@ -3,7 +3,6 @@ import utils.debug as debug
 import code_object.function_call as function_call
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.conversion_funcs as conversion_funcs
-from utils.standard_transforms import transform_function_name
 
 class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -11,7 +10,7 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
         assert isinstance(ccode_object, function_call.FunctionCall), f"Expected FunctionCall, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_data):
-        cpp_name = transform_function_name(self._ccode_object.name)
+        cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_data)
         cpp_args = []
         for arg_entry in self._ccode_object.args:
             cpp_arg_entry = conversion_funcs.convert_ccode_object(arg_entry, conversion_data)

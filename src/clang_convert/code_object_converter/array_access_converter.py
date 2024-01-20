@@ -14,6 +14,3 @@ class ArrayAccessConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_index = conversion_funcs.convert_ccode_object(self._ccode_object.index, conversion_data)
 
         return array_access.ArrayAccess(cpp_name, cpp_index)
-
-
-  
