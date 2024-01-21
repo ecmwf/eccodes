@@ -9,4 +9,5 @@
 
 . ./include.ctest.sh
 
+export ECCODES_DEBUG=-1
 ${examples_dir}/eccodes_f_grib_sections_copy
