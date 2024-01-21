@@ -193,8 +193,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* param)
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    int type = grib_accessor_get_native_type(a);
-
+    const int type = grib_accessor_get_native_type(a);
     switch (type) {
         case GRIB_TYPE_STRING:
             grib_dump_string(dumper, a, NULL);
@@ -246,8 +245,8 @@ static long byte_offset(grib_accessor* a)
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 {
     unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    long length        = grib_byte_count(a);
-    long offset        = grib_byte_offset(a);
+    const long length = grib_byte_count(a);
+    const long offset = grib_byte_offset(a);
 
     if (*len < length) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it is %ld bytes long", a->name, length);
@@ -264,8 +263,8 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 static int clear(grib_accessor* a)
 {
     unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    long length        = grib_byte_count(a);
-    long offset        = grib_byte_offset(a);
+    const long length = grib_byte_count(a);
+    const long offset = grib_byte_offset(a);
 
     memset(buf + offset, 0, length);
 
@@ -384,10 +383,9 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
 static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
 {
-    int err       = 0;
     size_t length = 0;
 
-    err = ecc__grib_get_string_length(a, &length);
+    int err = ecc__grib_get_string_length(a, &length);
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
@@ -519,13 +517,12 @@ static int pack_double(grib_accessor* a, const double* v, size_t* len)
 
 static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 {
-    long i;
     int err           = 0;
     size_t length     = 0;
     grib_accessor* as = 0;
 
     as = a;
-    i  = (long)*len - 1;
+    long i = (long)*len - 1;
     while (as && i >= 0) {
         length = strlen(v[i]);
         err    = grib_pack_string(as, v[i], &length);
@@ -599,9 +596,8 @@ static int notify_change(grib_accessor* self, grib_accessor* observed)
 
 static void update_size(grib_accessor* a, size_t s)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_FATAL,
                      "Accessor %s [%s] must implement 'update_size'", a->name, a->cclass->name);
-    Assert(0);
 }
 
 static grib_accessor* next(grib_accessor* a, int mod)
