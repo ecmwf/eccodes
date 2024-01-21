@@ -190,6 +190,16 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
     if (*err)
         return NULL;
 
+    if (hfrom->context->debug) {
+        fprintf(stderr, "ECCODES DEBUG %s: Copying the following sections: ", __func__);
+        if (what & GRIB_SECTION_GRID)    fprintf(stderr, "Grid, ");
+        if (what & GRIB_SECTION_PRODUCT) fprintf(stderr, "Product, ");
+        if (what & GRIB_SECTION_LOCAL)   fprintf(stderr, "Local, ");
+        if (what & GRIB_SECTION_DATA)    fprintf(stderr, "Data, ");
+        if (what & GRIB_SECTION_BITMAP)  fprintf(stderr, "Bitmap, ");
+        fprintf(stderr, "\n");
+    }
+
     if (edition_to != 1 && edition_to != 2) {
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
