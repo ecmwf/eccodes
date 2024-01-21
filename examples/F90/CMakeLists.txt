@@ -25,6 +25,7 @@ if( HAVE_BUILD_TOOLS )
           codes_scan_file
           codes_load_file
           grib_copy_message
+          grib_sections_copy
           bufr_copy_message
           grib_get_keys
           grib_get_data

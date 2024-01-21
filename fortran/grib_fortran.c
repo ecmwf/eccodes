@@ -1366,6 +1366,7 @@ int grib_f_new_from_message_int_(int* gid, int* buffer , size_t* bufsize)
     return grib_f_new_from_message_(gid, (void*)buffer, bufsize);
 }
 /*****************************************************************************/
+#if 0
 int grib_f_new_from_message_copy_(int* gid, void* buffer, size_t* bufsize)
 {
     grib_handle *h = NULL;
@@ -1377,7 +1378,7 @@ int grib_f_new_from_message_copy_(int* gid, void* buffer, size_t* bufsize)
     *gid = -1;
     return  GRIB_INTERNAL_ERROR;
 }
-
+#endif
 /*****************************************************************************/
 int grib_f_new_from_samples_(int* gid, char* name, int lname)
 {
@@ -1443,16 +1444,16 @@ int grib_f_copy_key_(int* gidsrc, char* key, int* giddest, int len)
 }
 
 /*****************************************************************************/
-int grib_f_util_sections_copy_(int* gidfrom,int* gidto,int* what,int *gidout)
+int grib_f_util_sections_copy_(int* gidfrom, int* gidto, int* what, int* gidout)
 {
-    int err=0;
-    grib_handle *hfrom  = get_handle(*gidfrom);
-    grib_handle *hto = get_handle(*gidto);
-    grib_handle *out =0;
+    int err = 0;
+    grib_handle* hfrom = get_handle(*gidfrom);
+    grib_handle* hto   = get_handle(*gidto);
+    grib_handle* out   = 0;
 
-    if(hfrom && hto) out=grib_util_sections_copy(hfrom,hto,*what,&err);
-    if(out){
-        push_handle(out,gidout);
+    if (hfrom && hto) out = grib_util_sections_copy(hfrom, hto, *what, &err);
+    if (out) {
+        push_handle(out, gidout);
         return GRIB_SUCCESS;
     }
 
