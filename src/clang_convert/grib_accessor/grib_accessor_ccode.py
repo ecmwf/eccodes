@@ -1,7 +1,7 @@
 
 import utils.debug as debug
 import default.default_ccode as default_ccode
-import grib_accessor.conversion_data.virtual_member_functions as virtual_member_functions
+import grib_accessor.supporting.virtual_member_functions as virtual_member_functions
 import re
 
 # Represents a grib_accessor_class_*cc file

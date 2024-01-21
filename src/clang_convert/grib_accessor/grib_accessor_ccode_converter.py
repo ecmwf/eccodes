@@ -1,13 +1,14 @@
 
 import utils.debug as debug
 import os
+import cpp_code.code_info as code_info
 import default.default_ccode_converter as default_ccode_converter
-import default.default_cppcode as default_cppcode
 import utils.standard_transforms as standard_transforms
-from grib_accessor.conversion_data.virtual_member_functions import grib_accessor_virtual_member_funcsig_mapping 
-from grib_accessor.conversion_data.member_functions import grib_accessor_member_funcsig_mapping
-import grib_accessor.conversion_data.member_functions as member_functions
-import grib_accessor.conversion_data.virtual_member_functions as virtual_member_functions
+from grib_accessor.supporting.virtual_member_functions import grib_accessor_virtual_member_funcsig_mapping 
+from grib_accessor.supporting.member_functions import grib_accessor_member_funcsig_mapping
+import grib_accessor.supporting.member_functions as member_functions
+import grib_accessor.supporting.virtual_member_functions as virtual_member_functions
+import grib_accessor.supporting.includes as includes
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -32,21 +33,48 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         name = standard_transforms.transform_type_name(name)
         return rename.get(name, name) + "Data"
 
-    # TODO update when the class is available...
-    def create_cpp_code(self):
+    def create_code_info(self):
         cpp_filename = self.transform_file_name(self._ccode.cfilename)
         cpp_class_name = self.transform_class_name(self._ccode.class_name)
         cpp_super_class_name = self.transform_class_name(self._ccode.super_class_name)
-        debug.line("create_cpp_code", f"cpp_filename=[{cpp_filename}] cpp_class_name=[{cpp_class_name}] cpp_super_class_name=[{cpp_super_class_name}]")
-        self._cppcode = default_cppcode.DefaultCppCode(cpp_filename, cpp_class_name, cpp_super_class_name)
+        debug.line("create_code_info", f"cpp_filename=[{cpp_filename}] cpp_class_name=[{cpp_class_name}] cpp_super_class_name=[{cpp_super_class_name}]")
+
+        info = code_info.CodeInfo(cpp_filename, cpp_class_name, cpp_super_class_name)
+        info.add_namespace("eccodes")
+        info.add_namespace("accessor")
+
+        return info
 
     def initialise_conversion_data(self):
-        self._conversion_data.set_funcsig_mappings(grib_accessor_virtual_member_funcsig_mapping)
         for mapping in grib_accessor_member_funcsig_mapping:
-            self._conversion_data.add_to_funcsig_mappings(mapping)
-        # Add the member functions
-        self._conversion_data.set_member_function_names(member_functions.member_function_names +
-                                                        virtual_member_functions.virtual_member_function_names)
+            self._conversion_data.add_member_funcsig_mapping(mapping)
+
+        for mapping in grib_accessor_virtual_member_funcsig_mapping:
+            self._conversion_data.add_virtual_member_funcsig_mapping(mapping)
 
     def set_function_specific_conversion_data(self, function_name):
         pass
+
+    def add_includes(self):
+        # Header includes
+        if self._conversion_data.info.super_class_name == "AccessorData":
+            self._conversion_data.info.header_includes.append("/".join(["AccessorData", self._conversion_data.info.super_class_name + ".h"]))
+        else:
+            self._conversion_data.info.header_includes.append(f"{self._conversion_data.info.super_class_name}.h")
+
+        for inc in includes.grib_accessor_header_includes:
+            self._conversion_data.info.header_includes.append(inc)
+
+        # Source includes
+        self._conversion_data.info.source_includes.append(f"\"{self._conversion_data.info.class_name}.h\"")
+        
+        for inc in includes.grib_accessor_source_includes:
+            self._conversion_data.info.source_includes.append(inc)
+
+
+        # TODO: Class-specific includes
+
+        return super().add_includes()
+    
+    def is_const_member_function(self, function_name):
+        return function_name in virtual_member_functions.const_virtual_member_function_names

@@ -129,3 +129,29 @@ grib_accessor_virtual_member_funcsig_mapping = [
 ]
 
 virtual_member_function_names = [mapping.cfuncsig.name for mapping in grib_accessor_virtual_member_funcsig_mapping]
+
+const_virtual_member_function_names = [
+    "unpack_string",
+    "unpack_long",
+    "unpack_double",
+    "unpack_float",
+    "unpack_string_array",
+    "unpack_bytes",
+    "unpack_double_element",
+    "unpack_float_element",
+    "unpack_double_element_set",
+    "unpack_float_element_set",
+    "unpack_double_subarray",
+    "value_count",
+    "preferred_size",
+    "resize",
+    "get_native_type",
+    "string_length",
+    "byte_count",
+    "byte_offset",
+    "dump",
+    "compare",
+    "make_clone",
+    "is_missing",
+    "next_offset",
+]

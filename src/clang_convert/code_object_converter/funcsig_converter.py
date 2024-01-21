@@ -49,7 +49,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
             # Add this to the conversion data mappings
             mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
-            self._conversion_data.add_to_funcsig_mappings(mapping)
+            self._conversion_data.add_funcsig_mapping(mapping)
 
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig.is_declaration = self._ccode_object.is_declaration

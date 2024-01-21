@@ -10,10 +10,7 @@
 
 #pragma once
 
-// DEBUG - REMOVE!
-#include "grib_api_internal.h"
-
-{% for i in c._header_file_includes -%}
+{% for i in c.header_file_includes -%}
 #include "{{ i }}"
 {%- endfor %}
 

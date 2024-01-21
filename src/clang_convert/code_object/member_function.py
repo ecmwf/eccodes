@@ -8,8 +8,6 @@ class MemberFunction(function.Function):
     def __init__(self, funcsig, body, class_name="") -> None:
         super().__init__(funcsig, body)
         self._class_name = class_name
-
-        self._const = False
         self.using = []
 
     @property
@@ -27,9 +25,8 @@ class MemberFunction(function.Function):
         return funcsig_string
 
     @property
-    def const(self):
-        return "const" if self._const else ""
+    def is_const(self):
+        return self._funcsig._is_const
 
-    @const.setter
-    def const(self, value):
-        self._const = value
+    def set_is_const(self, value):
+        self._funcsig._is_const = value

@@ -31,7 +31,7 @@ set(accessor_src_files
 	${accessor_dir}/AccessorTraits.h
 )
 
-add_subdirectory(converted)
+add_subdirectory(converted/eccodes/accessor)
 
 set(accessor_data_src_files
 	${accessor_data_dir}/AccessorData.cc

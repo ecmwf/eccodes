@@ -15,6 +15,7 @@ class FuncSig(code_interface.CodeInterface):
         self._args = args
         self._template = template
         self._is_declaration = False
+        self._is_const = False
 
     @property
     def return_type(self):
@@ -49,8 +50,18 @@ class FuncSig(code_interface.CodeInterface):
         assert isinstance(value, bool), f"value must be bool, current type=[{type(value)}]"
         self._is_declaration = value
 
+    @property
+    def is_const(self):
+        return self._is_const
+
+    @is_const.setter
+    def const(self, value):
+        self._is_const = value
+
     def as_lines(self):
         sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a])})"
+        if self._is_const:
+            sig_string += " const"
         if self._is_declaration:
             sig_string += ";"
         return [sig_string]

@@ -11,10 +11,14 @@ import utils.debug as debug
 # Override for specialised behaviour, e.g. GribAccessor
 class DefaultConversionManager:
     def __init__(self, output_path, cli_logger):
-        self._output_path = output_path
+        self._output_path = output_path + self.conversion_specific_path
         self._cli_logger = cli_logger
 
     # Conversion-specific : begin ========================================================
+    @property
+    def conversion_specific_path(self):
+        return ""
+
     @property
     def ast_code_converter_class(self):
         return default_ast_code_converter.DefaultAstCodeConverter
@@ -35,6 +39,7 @@ class DefaultConversionManager:
     # This is the main entry point (should only need to call this!)
     # Returns a list of cppcode objects that can be written to files
     def convert(self, files):
+        self._cli_logger.info("Output path=[%s]", self._output_path)
         self._files = files
 
         debug.line("convert", f"[1] create_ast_code_list")

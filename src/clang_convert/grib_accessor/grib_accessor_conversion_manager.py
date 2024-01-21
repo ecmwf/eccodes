@@ -12,6 +12,10 @@ class GribAccessorConversionManager(default_conversion_manager.DefaultConversion
 
     # Conversion-specific : begin ========================================================
     @property
+    def conversion_specific_path(self):
+        return "/eccodes/accessor"
+
+    @property
     def ast_code_converter_class(self):
         return grib_accessor_ast_code_converter.GribAccessorAstCodeConverter
 

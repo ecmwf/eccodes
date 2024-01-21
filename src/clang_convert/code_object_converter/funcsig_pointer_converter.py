@@ -27,7 +27,7 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
 
             # Add this to the conversion data mappings
             mapping = funcsig_pointer_mapping.FuncSigPointerMapping(self._ccode_object, cppfuncsig_pointer)
-            self._conversion_data.add_to_funcsig_pointer_mappings(mapping)
+            self._conversion_data.add_funcsig_pointer_mapping(mapping)
 
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig_pointer.is_declaration = self._ccode_object.is_declaration
