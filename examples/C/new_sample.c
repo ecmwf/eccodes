@@ -26,6 +26,9 @@ int main(int argc, char** argv)
     }
 
     /* h = codes_grib_handle_new_from_samples(NULL, "GRIB2"); */
+    h = codes_handle_new_from_samples(NULL, "just a test");
+    if (h) return 1;
+
     h = codes_handle_new_from_samples(NULL, "GRIB2");
     if (!h) {
         fprintf(stderr, "Cannot create grib handle\n");

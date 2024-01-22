@@ -229,12 +229,13 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
     }
 
     g = codes_external_template(c, PRODUCT_ANY, name);
-    if (!g)
+    if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
                          "                   from %s\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
+    }
 
     return g;
 }
@@ -514,7 +515,7 @@ grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const vo
 
     memcpy(copy, data, size);
 
-    g                   = grib_handle_new_from_partial_message(c, copy, size);
+    g = grib_handle_new_from_partial_message(c, copy, size);
     g->buffer->property = CODES_MY_BUFFER;
 
     return g;

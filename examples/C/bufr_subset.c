@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
             snprintf(key, sizeof(key), "/subsetNumber=%d/blockNumber", i);
 
             CODES_CHECK(codes_get_native_type(h, key, &ktype), 0);
-            //printf("Type = %d\n", ktype);
+            /* printf("Type = %d\n", ktype); */
 
             printf("  subsetNumber=%d", i);
             /* read and print some data values */
