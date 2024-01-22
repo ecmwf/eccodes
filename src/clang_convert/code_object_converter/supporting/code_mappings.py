@@ -1,16 +1,21 @@
 
 import utils.debug as debug
-from code_object.code_interface import as_debug_string
 
 # Stores C to C++ mappings to be used by conversion_data
 class CodeMappings:
     def __init__(self, ) -> None:
+        self._type_mappings = {}
         self._arg_mappings = {}
         self._function_arg_mappings = {}
         self._funcsig_mappings = []
         self._funcsig_pointer_mappings = []
         self._member_funcsig_mappings = []
         self._virtual_member_funcsig_mappings = []
+
+    # Note: Types are stored as declaration_specifiers objects for flexibility, but usually we just match type and pointer!
+    @property
+    def type_mappings(self):
+        return self._type_mappings
 
     @property
     def arg_mappings(self):

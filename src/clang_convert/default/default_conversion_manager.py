@@ -42,14 +42,21 @@ class DefaultConversionManager:
         self._cli_logger.info("Output path=[%s]", self._output_path)
         self._files = files
 
-        debug.line("convert", f"[1] create_ast_code_list")
+        debug.line("convert", f"\n\n============================== [PHASE 1: Create AST code ] BEGIN ==============================\n")
         ast_code_list = self.create_ast_code_list()
-        debug.line("convert", f"[2] convert_ast_to_ccode")
-        ccode_list = self.convert_ast_to_ccode(ast_code_list)
-        debug.line("convert", f"[3] convert_ccode_to_cppcode")
-        cppcode_list = self.convert_ccode_to_cppcode(ccode_list)
+        debug.line("convert", f"\n\n============================== [PHASE 1: Create AST code ] END   ==============================\n")
 
+        debug.line("convert", f"\n\n============================== [PHASE 2: Convert AST to C] BEGIN ==============================\n")
+        ccode_list = self.convert_ast_to_ccode(ast_code_list)
+        debug.line("convert", f"\n\n============================== [PHASE 2: Convert AST to C] END   ==============================\n")
+
+        debug.line("convert", f"\n\n============================== [PHASE 3: Convert C to C++] BEGIN ==============================\n")
+        cppcode_list = self.convert_ccode_to_cppcode(ccode_list)
+        debug.line("convert", f"\n\n============================== [PHASE 3: Convert C to C++] END   ==============================\n")
+
+        debug.line("convert", f"\n\n============================== [PHASE 4: Write C++ files ] BEGIN ==============================\n")
         self.write_files(cppcode_list)
+        debug.line("convert", f"\n\n============================== [PHASE 4: Write C++ files ] END   ==============================\n")
 
     def create_ast_code_list(self):
         parser = cfile_parser.CFileParser(self._cli_logger)

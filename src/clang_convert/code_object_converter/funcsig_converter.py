@@ -1,37 +1,17 @@
 
 import utils.debug as debug
 import code_object.funcsig as funcsig
-import code_object_converter.arg_converter as arg_converter
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
-from utils.standard_transforms import transform_function_name
+import code_object_converter.conversion_funcs as conversion_funcs
+import code_object.arg as arg
+import code_object.declaration_specifier as declaration_specifier
 
 # Convert a C Function Signature to C++
-
-# Generic function signature converter - provides basic C to C++ conversion
-# Sub-classes should populate the self._conversions list with specialised conversions
-#
-# The conversions list defines well-known conversions from C function name to the equivalent 
-# C++ function signature, and identifies arg indexes mapping C buffers {ptr,len} to C++ containers, for example:
-# sample_conversions = [
-#    FuncSigMapping(FuncSig("int", "pack_string", [Arg("grib_accessor*", "a"), Arg("const char*", "v"), Arg("size_t*", "len")]),
-#                FuncSig("GribStatus", "pack", [None, Arg("std::string const&", "value"),  None]),
-#                ArgIndexes(cbuffer=1, clength=2, cpp_container=1)),
-#
-# FuncSig           Signature for the C and C++ functions
-#                   The argument lists provide a 1:1 mapping from the C to C++ equivalent function - this map is also used 
-#                   when replacing the use of these in the function body
-#                   Note 1: some C args don't have a C++ equivalent, so are listed as None to maintain correct mapping
-#                   Note 2: If there is no C++ equivalent function, then FuncSig(None, None, [None]) will be returned 
-#                       (where the number of args in the third parameter will match the C FuncSig)
-# ArgIndexes        Provides the index for each arg in the buffer mappings from C {ptr,len} to C++ container
-#
 class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
         super().__init__(ccode_object)
         assert isinstance(ccode_object, funcsig.FuncSig), f"Expected FuncSig, got type=[{type(ccode_object)}]"
-
-        self._conversions = []
 
     def create_cpp_code_object(self, conversion_data):
         self._conversion_data = conversion_data
@@ -39,11 +19,12 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
         # If we have a mapping already stored, just use that!
         cppfuncsig = self._conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
         if not cppfuncsig:
-            cppfuncsig = funcsig.FuncSig(
-                self.to_cpp_return_type(), 
-                self.to_cpp_name(), 
-                self.to_cpp_args(),
-                self._ccode_object.template)
+            cppfunc_arg = self.to_cpp_func_arg()
+            cpp_args = self.to_cpp_args()
+            cppfuncsig = funcsig.FuncSig(cppfunc_arg.decl_spec,
+                                         cppfunc_arg.name,
+                                         cpp_args,
+                                         self._ccode_object.template)
 
             #cppfuncsig.static = self.is_cpp_static()
 
@@ -56,47 +37,32 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
         return cppfuncsig
 
-    # Override to customise the static behaviour
+    # The following functions are called when there isn't a stored mapping, so we need to work the mappings out!
+
     def is_cpp_static(self):
         return self._ccode_object.static
 
-    def to_cpp_return_type(self):
-        for entry in self._conversions:
-            if entry.cfuncsig.name == self._ccode_object.name:
-                return entry.cppfuncsig.return_type
-
-        if self._ccode_object.return_type == "int":
-            # We'll assume int means GribStatus
-            return "GribStatus"
-        else:
-            return self._ccode_object.return_type
-
-    def to_cpp_name(self):
-        for entry in self._conversions:
-            if entry.cfuncsig.name == self._ccode_object.name:
-                return entry.cppfuncsig.name
+    # Converts the name and return type internal representation to C++
+    def to_cpp_func_arg(self):
+        cfunc_arg = self._ccode_object.func_arg
+        cppfunc_arg = conversion_funcs.convert_ccode_object(cfunc_arg, self._conversion_data)
         
-        return transform_function_name(self._ccode_object.name)
+        if cppfunc_arg.decl_spec.type == "int":
+            # We'll assume int means GribStatus
+            cpp_decl_spec = declaration_specifier.DeclSpec(storage_class=cfunc_arg.decl_spec.storage_class,
+                                                           const_qualifier=cfunc_arg.decl_spec.const_qualifier,
+                                                           type="GribStatus",
+                                                           pointer=cfunc_arg.decl_spec.pointer)
+            cppfunc_arg = arg.Arg(cpp_decl_spec, cppfunc_arg.name)
+
+        return cppfunc_arg
 
     # This should return the same number of cppargs as there are cargs (set unused cppargs to None)
     def to_cpp_args(self):
-        for entry in self._conversions:
-            if entry.cfuncsig.name == self._ccode_object.name:
-                return entry.cppfuncsig.args
-
         cppargs = []
         for entry in self._ccode_object.args:
-            arg_conv = arg_converter.ArgConverter(entry)
-            cpparg = arg_conv.to_cpp_code_object(self._conversion_data)
+            cpparg = conversion_funcs.convert_ccode_object(entry, self._conversion_data)
             cppargs.append(cpparg)
 
         return cppargs
-    
-    # Get the buffer mappings from C {ptr,len} to C++ container, or None if there aren't any
-    def arg_indexes(self):
-        for entry in self._conversions:
-            if entry.cfuncsig.name == self._ccode_object.name:
-                return entry.arg_indexes
-        
-        return None
-  
+      

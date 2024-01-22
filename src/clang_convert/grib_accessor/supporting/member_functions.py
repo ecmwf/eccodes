@@ -8,13 +8,13 @@ from code_object_converter.supporting.arg_indexes import ArgIndexes
 grib_accessor_member_funcsig_mapping = [
     
     # Constructor: static void init(grib_accessor*, const long, grib_arguments*);
-    FuncSigMapping( FuncSig("", "init", [Arg("grib_context*", ""), Arg("const long", ""), Arg("grib_arguments*", "")]),
-                    FuncSig("", "Constructor",   [None, None, Arg("AccessorInitData const&", "initData")]),
+    FuncSigMapping( FuncSig("void", "init", [Arg("grib_context*", ""), Arg("const long", ""), Arg("grib_arguments*", "")]),
+                    FuncSig("void", "Constructor",   [Arg.NONE, Arg.NONE, Arg("AccessorInitData const&", "initData")]),
                     ArgIndexes(cbuffer=2, clength=1, cpp_container=2)),
 
     # Destructor: static void destroy(grib_context*, grib_accessor*);
-    FuncSigMapping( FuncSig("", "destroy", [Arg("grib_context*", ""), Arg("grib_accessor*", "")]),
-                    FuncSig("", "Destructor", [None, None]) ),
+    FuncSigMapping( FuncSig("void", "destroy", [Arg("grib_context*", ""), Arg("grib_accessor*", "")]),
+                    FuncSig("void", "Destructor", [Arg.NONE, Arg.NONE]) ),
 ]
 
 member_function_names = [mapping.cfuncsig.name for mapping in grib_accessor_member_funcsig_mapping]

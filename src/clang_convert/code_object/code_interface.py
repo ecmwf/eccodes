@@ -19,11 +19,4 @@ class CodeInterface:
         lines = self.as_lines()
         return "\n".join(lines)
 
-# Safe way to print a CodeInterface object even if it is None - useful for
-# debug output
-def as_debug_string(code_interface_inst):
-    if code_interface_inst:
-        return code_interface_inst.as_string()
-    else:
-        return "None"
     

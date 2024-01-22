@@ -57,8 +57,8 @@ class DefaultCCodeConverter:
         self._code_elements.global_function = conversion_funcs.convert_ccode_object(self._ccode.global_function, self._conversion_data)
         # Now set the conversion data state to local for the rest of the conversion
         self._conversion_data.set_local_state()
-        debug.line("convert_global_declarations", f"Converted C++ code [as_lines]...")
-        debug.line("convert_global_declarations", self._code_elements.global_function.as_lines())
+        debug.line("convert_global_function", f"Converted C++ code [as_lines]...")
+        debug.line("convert_global_function", self._code_elements.global_function.as_lines())
 
     def convert_data_members(self):
         for cmember in self._ccode.data_members:

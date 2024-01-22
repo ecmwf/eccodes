@@ -1,24 +1,15 @@
 
-from enum import Enum, auto
 import utils.debug as debug
 import cpp_code.code_info as code_info
 import code_object_converter.supporting.code_mappings as code_mappings
 import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
 import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_pointer_mapping
+import code_object.declaration_specifier as declaration_specifier
+from code_object_converter.supporting.conversion_data_helper import *
 
 # Store C to C++ conversion data to be used by the converters
 #
 # The converters will add/update the entries here as required
-#
-
-# Set the current state of the class:
-# GLOBAL    - any new data is added to the global section (i.e. global function)
-# LOCAL     - any new data is added to the local section, and can be erased (i.e. function-specific)
-class ConversionDataState(Enum):
-    GLOBAL = auto()
-    LOCAL = auto()
-
-
 class ConversionData:
     def __init__(self, info) -> None:
         self._state = ConversionDataState.GLOBAL
@@ -33,7 +24,8 @@ class ConversionData:
 
     # Clear out / reset local state data ready to convert a new function
     def reset_local_state(self):
-        pass
+        self._local_mappings = code_mappings.CodeMappings()
+
 
     # The info object can be manipulated directly
     @property
@@ -44,23 +36,30 @@ class ConversionData:
 
     @property
     def active_map(self):
-        if self._state == ConversionDataState.LOCAL:
+        if self._state is ConversionDataState.LOCAL:
             return self._local_mappings
         else:
             return self._global_mappings
+
+    def add_type_mapping(self, cdecl_spec, cppdecl_spec):
+        if cdecl_spec in self.active_map.type_mappings:
+            assert self.active_map.type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}] Previous arg=[{self.active_map.type_mappings[cdecl_spec]}]"
+        else:
+            self.active_map.type_mappings[cdecl_spec] = cppdecl_spec
+            debug.line("add_type_mapping", f"Adding decl_spec: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
 
     def add_arg_mapping(self, carg, cpparg):
         if carg in self.active_map.arg_mappings:
             assert self.active_map.arg_mappings[carg] == cpparg, f"Updating an existing arg: [{carg.as_string()}] -> [{cpparg.as_string()}] Previous arg=[{self.active_map.arg_mappings[carg]}]"
         else:
-            self.active_map.arg_mappings[carg] == cpparg
+            self.active_map.arg_mappings[carg] = cpparg
             debug.line("add_arg_mapping", f"Adding arg: [{carg.as_string()}] -> [{cpparg.as_string()}]")
 
     def add_function_arg_mapping(self, carg, cpparg):
         if carg in self.active_map.function_arg_mappings:
             assert self.active_map.function_arg_mappings[carg] == cpparg, f"Updating an existing function arg: [{carg.as_string()}] -> [{cpparg.as_string()}] Previous function arg=[{self.active_map.function_arg_mappings[carg]}]"
         else:
-            self.active_map.function_arg_mappings[carg] == cpparg
+            self.active_map.function_arg_mappings[carg] = cpparg
             debug.line("add_function_arg_mappings", f"Adding function arg: [{carg.as_string()}] -> [{cpparg.as_string()}]")
 
     def add_funcsig_mapping(self, mapping):
@@ -105,18 +104,40 @@ class ConversionData:
         else:
             return [self._global_mappings]
 
+    # Use this version if you only want to match type (and optionally pointer)
+    def closest_cppdecl_spec_for_ctype(self, type, pointer=None):
+        cdecl_spec = declaration_specifier.DeclSpec(type=type, pointer=pointer)
+        return self.closest_cppdecl_spec_for_cdecl_spec(cdecl_spec)
+
+    # Find the cppdecl_spec which most closely matches the supplied value
+    #
+    # Returns a value (or None) and a MatchType.
+    # See comversion_data_helper.find_best_matching_cdecl_spec() for more info
+    #
+    def closest_cppdecl_spec_for_cdecl_spec(self, cdecl_spec):
+        matches = []
+        for mapping in self.all_mappings():
+            for key, value in mapping.type_mappings.items():
+                debug.line("closest_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                if key == cdecl_spec:
+                    return value, DeclSpecMatchType.FULL
+                if key.type == cdecl_spec.type:
+                        matches.append(value)
+
+        return create_best_matching_cdecl_spec(cdecl_spec, matches)
+
     def cpparg_for_carg(self, carg):
         for mapping in self.all_mappings():
-            for entry in mapping.arg_mappings:
-                if entry.name == carg.name:
-                    return entry.cpp_arg
+            for key, value in mapping.arg_mappings.items():
+                if key.name == carg.name:
+                    return value
         return None
 
     def cppfunction_arg_for_carg(self, carg):
         for mapping in self.all_mappings():
-            for entry in mapping.function_arg_mappings:
-                if entry.name == carg.name:
-                    return entry.cpp_arg
+            for key, value in mapping.function_arg_mappings.items():
+                if key.name == carg.name:
+                    return value
         return None
 
     def cppfuncsig_for_cfuncsig(self, cfuncsig):

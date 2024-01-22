@@ -2,6 +2,8 @@
 import code_object.funcsig_pointer as funcsig_pointer
 import code_object_converter.funcsig_converter as funcsig_converter
 import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_pointer_mapping
+import code_object.declaration_specifier as declaration_specifier
+import utils.debug as debug
 
 # Convert a C Function Signature Pointer to C++
 #
@@ -18,16 +20,24 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
         # If we have a mapping already stored, just use that!
         cppfuncsig_pointer = self._conversion_data.cppfuncsig_pointer_for_cfuncsig_pointer(self._ccode_object)
         if not cppfuncsig_pointer:
-            cppfuncsig_pointer = funcsig_pointer.FuncSigPointer(
-                self.to_cpp_return_type(), 
-                self.to_cpp_name(), 
-                self.to_cpp_args())
+            cppfunc_arg = self.to_cpp_func_arg()
+            cpp_args = self.to_cpp_args()
+            cppfuncsig_pointer = funcsig_pointer.FuncSigPointer(cppfunc_arg.decl_spec,
+                                                                cppfunc_arg.name,
+                                                                cpp_args)
 
             #cppfuncsig.static = self.is_cpp_static()
 
             # Add this to the conversion data mappings
             mapping = funcsig_pointer_mapping.FuncSigPointerMapping(self._ccode_object, cppfuncsig_pointer)
             self._conversion_data.add_funcsig_pointer_mapping(mapping)
+
+            # We've also created a new type, so need to add this too!
+            cdecl_spec = declaration_specifier.DeclSpec(type=self._ccode_object.func_arg.name, pointer=self._ccode_object.func_arg.decl_spec.pointer)
+            cppdecl_spec = declaration_specifier.DeclSpec(type=cppfunc_arg.name, pointer=cppfunc_arg.decl_spec.pointer)
+            self._conversion_data.add_type_mapping(cdecl_spec, cppdecl_spec)
+            debug.line("create_cpp_code_object", f"FuncSigPointer conversion: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
+
 
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig_pointer.is_declaration = self._ccode_object.is_declaration

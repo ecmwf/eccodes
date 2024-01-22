@@ -19,11 +19,16 @@ class FuncSig(code_interface.CodeInterface):
 
     @property
     def return_type(self):
-        return self._func_arg.decl_spec.as_string()
+        return self._func_arg.decl_spec
 
     @property
     def name(self):
         return self._func_arg.name
+
+    # Get the name and return_type as the stored arg...
+    @property
+    def func_arg(self):
+        return self._func_arg
 
     @property
     def args(self):
@@ -59,7 +64,7 @@ class FuncSig(code_interface.CodeInterface):
         self._is_const = value
 
     def as_lines(self):
-        sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a])})"
+        sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a != arg.Arg.NONE])})"
         if self._is_const:
             sig_string += " const"
         if self._is_declaration:

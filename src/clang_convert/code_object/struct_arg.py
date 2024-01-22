@@ -4,6 +4,9 @@ import code_object.code_interface as code_interface
 
 # Represent a struct argument
 # Note - originally this was called struct.Struct but struct.py was causing a clash!
+#
+# Name is a string
+# members is a list of Arg classes
 class StructArg(code_interface.CodeInterface):
     def __init__(self, name, members=[]) -> None:
         self._name = name

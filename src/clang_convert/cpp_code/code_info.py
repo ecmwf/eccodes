@@ -1,6 +1,5 @@
 
 import utils.debug as debug
-from code_object.code_interface import as_debug_string
 
 # Stores info about the code, such as class name, includes etc
 class CodeInfo:

@@ -10,7 +10,7 @@ import re
 # Create using the separate components, or use from_decl_specifier_seq to pass a string representing the
 # full sequence, e.g. "static const unsigned int ** const"
 class DeclSpec(code_interface.CodeInterface):
-    def __init__(self, *, storage_class, const_qualifier, type, pointer) -> None:
+    def __init__(self, storage_class="", const_qualifier="", *, type, pointer) -> None:
         self._storage_class = storage_class
         self._const_qualifier = const_qualifier
         self._type = type
@@ -18,6 +18,7 @@ class DeclSpec(code_interface.CodeInterface):
 
     @classmethod
     def from_decl_specifier_seq(cls, decl_specifier_seq):
+        assert decl_specifier_seq, f"Unexpected decl_specifier_seq=[{decl_specifier_seq}]"
         decl_specifier_seq = decl_specifier_seq.strip()
         storage_class = ""
         const_qualifier = ""
@@ -38,14 +39,25 @@ class DeclSpec(code_interface.CodeInterface):
         m = re.match(r"[^\*]+", decl_specifier_seq[match_start:])
         if m:
             type = m.group(0).strip()
+
+            # If this is an array type, store the "[]" in the pointer variable
+            if type.endswith("]"):
+                type = re.sub(r"\[[^\]]+\]", "", type)
+                pointer = "[]"
+
             match_start += m.end()
 
         m = re.match(r"\*+.*", decl_specifier_seq[match_start:])
         if m:
+            assert pointer=="", f"Pointer is not empty, value=[{pointer}]"
             pointer = m.group(0).replace(" ", "")
             match_start += m.end()
 
         assert match_start == len(decl_specifier_seq), f"Error parsing decl_specifier_seq [{decl_specifier_seq}]"
+
+        #debug.line("from_decl_specifier_seq", f"decl_specifier_seq=[{decl_specifier_seq}]: storage_class=[{storage_class}] const_qualifier=[{const_qualifier}] type=[{type}] pointer=[{pointer}]")
+
+        assert type
 
         return cls(storage_class=storage_class, const_qualifier = const_qualifier, type = type, pointer = pointer)
 
@@ -62,13 +74,28 @@ class DeclSpec(code_interface.CodeInterface):
     def const_qualifier(self):
         return self._const_qualifier
 
+    @const_qualifier.setter
+    def const_qualifier(self, value):
+        self._const_qualifier = value
+
     @property
     def type(self):
         return self._type
+    
+    @type.setter
+    def type(self, value):
+        self._type = value
 
     @property
     def pointer(self):
         return self._pointer
+
+    @pointer.setter
+    def pointer(self, value):
+        self._pointer = value
+
+    def is_array_type(self):
+        return self.pointer == "[]"
 
     # Support for DeclSpec as a dict key
     def __hash__(self):
@@ -92,6 +119,6 @@ class DeclSpec(code_interface.CodeInterface):
         dss_string += self._type
 
         if self._pointer:
-            dss_string += " " + self._pointer
+            dss_string += self._pointer
 
         return [dss_string]

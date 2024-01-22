@@ -17,4 +17,4 @@ class FuncSigPointer(funcsig.FuncSig):
         super().__init__(return_type, name, args)
 
     def as_lines(self):
-        return [f"{self._func_arg.decl_spec.as_string()} (*{self._func_arg.name})({', '.join([a.as_string() for a in self.args if a])});"]
+        return [f"typedef {self._func_arg.decl_spec.as_string()} (*{self._func_arg.name})({', '.join([a.as_string() for a in self.args if a])});"]
