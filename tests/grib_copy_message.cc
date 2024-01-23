@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
     size_t totalLength = 0, size = 0;
     unsigned char* buffer        = NULL;
     codes_handle* new_handle     = NULL;
+    off_t offset = 0;
 
     assert (argc == 3);
 
@@ -30,6 +31,9 @@ int main(int argc, char* argv[])
 
     source_handle = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     assert(source_handle);
+
+    CODES_CHECK(codes_get_message_offset(source_handle, &offset), 0);
+    printf("offset = %lld\n", offset);
 
     // How big is the input GRIB message?
     CODES_CHECK(codes_get_message_size(source_handle, &totalLength), 0);
