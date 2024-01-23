@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from code_object.code_interface import CodeInterface
 
 func_pad = 40
 debug_enabled = True
@@ -57,13 +58,15 @@ def line(func, text):
     else:
         print(f"{func:{func_pad}}:{elapsed_time_str} {text}")
 
-# Safe way to print a CodeInterface object even if it is None - useful for
-# debug output
-def as_debug_string(code_interface_inst):
-    if code_interface_inst is not None:
-        if isinstance(code_interface_inst, str):
-            return code_interface_inst
+# Safe way to print a value even if it is None - useful for
+# CodeInstance classes etc
+def as_debug_string(value):
+    if value is not None:
+        if isinstance(value, str):
+            return value
+        elif isinstance(value, CodeInterface):
+            return value.as_string()
         else:
-            return code_interface_inst.as_string()
+            return f"[{value}]"
     else:
         return "None"

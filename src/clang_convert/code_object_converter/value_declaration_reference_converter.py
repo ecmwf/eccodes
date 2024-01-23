@@ -1,6 +1,7 @@
 
 import utils.debug as debug
 import code_object.value_declaration_reference as value_declaration_reference
+import code_object.arg as arg
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.conversion_funcs as conversion_funcs
 
@@ -19,7 +20,7 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
         
         # 2. Check if it is an arg
         cpparg = conversion_data.cpparg_for_carg_name(cdecl_ref_expr_value)
-        if cpparg:
+        if cpparg and cpparg != arg.Arg.NONE:
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
             
         # 3. Perform a default conversion

@@ -28,10 +28,13 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
                 conversion_data.add_type_mapping(carg.decl_spec, cpp_decl_spec)
                 debug.line("create_cpp_code_object", f"Arg conversion type mapping: carg.decl_spec=[{debug.as_debug_string(carg.decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}]")
 
-            cpp_name = standard_transforms.transform_variable_name(carg.name)
-            cpp_is_func_arg = carg.is_func_arg
+            if cpp_decl_spec == declaration_specifier.DeclSpec.NONE:
+                cpp_arg = arg.Arg.NONE
+            else:
+                cpp_name = standard_transforms.transform_variable_name(carg.name)
+                cpp_is_func_arg = carg.is_func_arg
 
-            cpp_arg = arg.Arg(cpp_decl_spec, cpp_name, cpp_is_func_arg)
+                cpp_arg = arg.Arg(cpp_decl_spec, cpp_name, cpp_is_func_arg)
 
             conversion_data.add_arg_mapping(carg, cpp_arg)
             debug.line("create_cpp_code_object", f"Arg conversion arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")

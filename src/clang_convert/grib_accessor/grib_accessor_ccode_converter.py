@@ -9,6 +9,7 @@ from grib_accessor.supporting.member_functions import grib_accessor_member_funcs
 import grib_accessor.supporting.member_functions as member_functions
 import grib_accessor.supporting.virtual_member_functions as virtual_member_functions
 import grib_accessor.supporting.includes as includes
+import grib_accessor.supporting.grib_types as grib_types
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -51,6 +52,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
             self._conversion_data.add_virtual_member_funcsig_mapping(mapping)
+
+        grib_types.add_grib_types_to_conversion_data(self._conversion_data)
 
     def set_function_specific_conversion_data(self, function_name):
         pass

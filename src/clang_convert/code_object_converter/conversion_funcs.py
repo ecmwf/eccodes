@@ -102,15 +102,9 @@ CodeInterfaceConverterClasses = {
     virtual_member_function.VirtualMemberFunction           : virtual_member_function_converter.VirtualMemberFunctionConverter,
 }
 
-def get_debug_string(code_obj):
-    if code_obj:
-        return f"{code_obj if type(code_obj) is str else code_obj.as_string()}"
-    else:
-        return "None"
-
 # Convert a code_object into a C++ code_object
 def convert_ccode_object(ccode_object, conversion_data):
-    debug.line("convert_ccode_object", f"[IN] [{type(ccode_object).__name__}] {get_debug_string(ccode_object)}")
+    debug.line("convert_ccode_object", f"[IN] [{type(ccode_object).__name__}] {debug.as_debug_string(ccode_object)}")
 
     if ccode_object is None:
         cpp_obj = None
@@ -121,6 +115,14 @@ def convert_ccode_object(ccode_object, conversion_data):
         converter = converter_class(ccode_object)
         cpp_obj = converter.to_cpp_code_object(conversion_data)
 
-    debug.line("convert_ccode_object", f"[OUT][{type(cpp_obj).__name__}] {get_debug_string(cpp_obj)}")
+    debug.line("convert_ccode_object", f"[OUT][{type(cpp_obj).__name__}] {debug.as_debug_string(cpp_obj)}")
 
     return cpp_obj
+
+def as_commented_out_code(ccode_object, prefix=""):
+    comment_string = "// "
+    if prefix:
+        comment_string += f"[{prefix}] "
+    comment_string += debug.as_debug_string(ccode_object)
+
+    return literal.Literal(comment_string)

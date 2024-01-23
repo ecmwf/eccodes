@@ -13,7 +13,8 @@ class VariableDeclaration(code_interface.CodeInterface):
         self._variable = variable
         self._value = value
 
-        assert isinstance(self._variable, arg.Arg), f"Variable must be an Arg class"
+        assert self._variable != arg.Arg.NONE, f"Variable can't be NoneArg!"
+        assert isinstance(self._variable, arg.Arg), f"Variable must be an Arg class, not=[{variable}]"
         assert isinstance(self._value, code_interface.CodeInterface), f"Value must be a CodeInterface class (or a string)"
 
     @property

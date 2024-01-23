@@ -12,8 +12,11 @@ class Arg(code_interface.CodeInterface):
     def __init__(self, decl_spec, name="", is_func_arg=False) -> None:
         if isinstance(decl_spec, DeclSpec):
             self._decl_spec = DeclSpec.from_instance(decl_spec)
-        else:
+        elif isinstance(decl_spec, str):
             self._decl_spec = DeclSpec.from_decl_specifier_seq(decl_spec)
+        else:
+            assert False, f"Unexpected decl_spec=[{decl_spec}]"
+
         self._name = name
         self._is_func_arg = is_func_arg # Support for processing function sig args differently to other args
 

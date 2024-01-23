@@ -43,10 +43,10 @@ class ConversionData:
 
     def add_type_mapping(self, cdecl_spec, cppdecl_spec):
         if cdecl_spec in self.active_map.type_mappings:
-            assert self.active_map.type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}] Previous arg=[{self.active_map.type_mappings[cdecl_spec]}]"
+            assert self.active_map.type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{self.active_map.type_mappings[cdecl_spec]}]"
         else:
             self.active_map.type_mappings[cdecl_spec] = cppdecl_spec
-            debug.line("add_type_mapping", f"Adding decl_spec: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
+            debug.line("add_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
 
     def add_arg_mapping(self, carg, cpparg):
         if not carg.name:
@@ -54,17 +54,17 @@ class ConversionData:
             return
 
         if carg in self.active_map.arg_mappings:
-            assert self.active_map.arg_mappings[carg] == cpparg, f"Updating an existing arg: [{carg.as_string()}] -> [{cpparg.as_string()}] Previous arg=[{self.active_map.arg_mappings[carg]}]"
+            assert self.active_map.arg_mappings[carg] == cpparg, f"Updating an existing arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous arg=[{self.active_map.arg_mappings[carg]}]"
         else:
             self.active_map.arg_mappings[carg] = cpparg
-            debug.line("add_arg_mapping", f"Adding arg: [{carg.as_string()}] -> [{cpparg.as_string()}]")
+            debug.line("add_arg_mapping", f"Adding arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
 
     def add_function_arg_mapping(self, carg, cpparg):
         if carg in self.active_map.function_arg_mappings:
-            assert self.active_map.function_arg_mappings[carg] == cpparg, f"Updating an existing function arg: [{carg.as_string()}] -> [{cpparg.as_string()}] Previous function arg=[{self.active_map.function_arg_mappings[carg]}]"
+            assert self.active_map.function_arg_mappings[carg] == cpparg, f"Updating an existing function arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{self.active_map.function_arg_mappings[carg]}]"
         else:
             self.active_map.function_arg_mappings[carg] = cpparg
-            debug.line("add_function_arg_mappings", f"Adding function arg: [{carg.as_string()}] -> [{cpparg.as_string()}]")
+            debug.line("add_function_arg_mappings", f"Adding function arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
 
     def add_funcsig_mapping(self, mapping):
         assert isinstance(mapping, funcsig_mapping.FuncSigMapping), f"Expected FuncSigMapping, got type=[{type(mapping).__name__}]"

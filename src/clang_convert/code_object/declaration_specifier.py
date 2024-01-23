@@ -16,9 +16,34 @@ class DeclSpec(code_interface.CodeInterface):
         self._type = type
         self._pointer = pointer
 
+    # ---------- Support for NoneDeclSpec: Begin ----------
+
+    # NoneDeclSpec is used when a C DeclSpec doesn't have a C++ equivalent (i.e. we don't want to convert it!)
+    class _NoneDeclSpec:
+        def __repr__(self):
+            return "<NoneDeclSpec>"
+
+        def __eq__(self, other):
+            # This version is required for testing DeclSpec.NONE = <VAR>
+            # As the DeclSpec.__eq__ version won't be called when self=DeclSpec.NONE !!!
+            return isinstance(other, DeclSpec._NoneDeclSpec)
+
+        def __ne__(self, other):
+            return not self.__eq__(other)
+
+    NONE = _NoneDeclSpec()  # The singleton instance to represent "None"
+    
+    # ---------- Support for NoneDeclSpec: End   ----------
+
+    # Create a DeclSpec from a string representing the sequence, e.g. "const char*"
+    # Pass None (or empty string) to return DeclSpec.NONE
     @classmethod
     def from_decl_specifier_seq(cls, decl_specifier_seq):
-        assert decl_specifier_seq, f"Unexpected decl_specifier_seq=[{decl_specifier_seq}]"
+        if not decl_specifier_seq:
+            return DeclSpec.NONE
+        
+        assert isinstance(decl_specifier_seq, str), f"Expected str, got [{decl_specifier_seq}]"
+
         decl_specifier_seq = decl_specifier_seq.strip()
         storage_class = ""
         const_qualifier = ""
@@ -97,15 +122,19 @@ class DeclSpec(code_interface.CodeInterface):
     def is_array_type(self):
         return self.pointer == "[]"
 
-    # Support for DeclSpec as a dict key
+    # ---------- Support for DeclSpec as a dict key: Begin ----------
     def __hash__(self):
         return hash((self._storage_class, self._const_qualifier, self.type, self._pointer))
 
     # Support for DeclSpec as a dict key
     def __eq__(self, other):
-        if isinstance(other, DeclSpec):
-            return self.storage_class == other.storage_class and self.const_qualifier == other.const_qualifier and self.pointer == other.pointer and self.type == other.type
-        return False
+        if self is DeclSpec.NONE or other is DeclSpec.NONE:
+            return self is other
+        return self.storage_class == other.storage_class and self.const_qualifier == other.const_qualifier and self.pointer == other.pointer and self.type == other.type
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    # ---------- Support for DeclSpec as a dict key: End   ----------
 
     # Return the full decl-specifier-seq as a (parsed) string (i.e. consistent spacing etc, not just what was passed in!)
     def as_lines(self):
