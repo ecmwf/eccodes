@@ -22,6 +22,7 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
         if not cppfuncsig_pointer:
             cppfunc_arg = self.to_cpp_func_arg()
             cpp_args = self.to_cpp_args()
+
             cppfuncsig_pointer = funcsig_pointer.FuncSigPointer(cppfunc_arg.decl_spec,
                                                                 cppfunc_arg.name,
                                                                 cpp_args)

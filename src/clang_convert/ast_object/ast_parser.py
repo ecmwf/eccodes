@@ -2,25 +2,26 @@
 import utils.debug as debug
 import clang.cindex
 import ast_object.ast_utils as ast_utils
-import code_object.code_objects as code_objects
-import code_object.variable_declaration as variable_declaration
-import code_object.init_list as init_list
-import code_object.declaration_specifier as declaration_specifier
-import code_object.paren_expression as paren_expression
-import code_object.unary_expression as unary_expression
-import code_object.unary_operation as unary_operation
+import code_object.array_access as array_access
 import code_object.binary_operation as binary_operation
-import code_object.struct_member_access as struct_member_access
+import code_object.code_objects as code_objects
+import code_object.compound_statement as compound_statement
+import code_object.conditional_operation as conditional_operation
+import code_object.declaration_specifier as declaration_specifier
+import code_object.for_statement as for_statement
 import code_object.function_call as function_call
 import code_object.if_statement as if_statement
-import code_object.for_statement as for_statement
-import code_object.array_access as array_access
-import code_object.conditional_operation as conditional_operation
-import code_object.compound_statement as compound_statement
+import code_object.init_list as init_list
 import code_object.macro_definition as macro_definition
 import code_object.macro_instantation as macro_instantation
-import code_object.return_statement as return_statement
 import code_object.literal as literal
+import code_object.paren_expression as paren_expression
+import code_object.return_statement as return_statement
+import code_object.struct_member_access as struct_member_access
+import code_object.unary_expression as unary_expression
+import code_object.unary_operation as unary_operation
+import code_object.value_declaration_reference as value_declaration_reference
+import code_object.variable_declaration as variable_declaration
 
 # Parse AstCode and create code interface objects: classes that implement the CodeInterface
 #
@@ -449,7 +450,7 @@ class AstParser:
         return self.parse_BINARY_OPERATOR(node)
 
     def parse_DECL_REF_EXPR(self, node):
-        return literal.Literal(node.spelling)
+        return value_declaration_reference.ValueDeclarationReference(node.spelling)
 
     # This is simplified for now, need to come back to...
     def parse_MEMBER_REF_EXPR(self, node):

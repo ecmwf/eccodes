@@ -27,6 +27,7 @@ import code_object.struct_arg as struct_arg
 import code_object.struct_member_access as struct_member_access
 import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
+import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
 import code_object.virtual_member_function as virtual_member_function
 
@@ -58,6 +59,7 @@ import code_object_converter.struct_arg_converter as struct_arg_converter
 import code_object_converter.struct_member_access_converter as struct_member_access_converter
 import code_object_converter.unary_expression_converter as unary_expression_converter
 import code_object_converter.unary_operation_converter as unary_operation_converter
+import code_object_converter.value_declaration_reference_converter as value_declaration_reference_converter
 import code_object_converter.variable_declaration_converter as variable_declaration_converter
 import code_object_converter.virtual_member_function_converter as virtual_member_function_converter
 
@@ -67,36 +69,37 @@ from utils.standard_transforms import transform_variable_name
 
 # Mapping from C code objects to their converters
 CodeInterfaceConverterClasses = {
-    arr_access.ArrayAccess                          : array_access_converter.ArrayAccessConverter,
-    arg.Arg                                         : arg_converter.ArgConverter,
-    binary_operation.BinaryOperation                : binary_operation_converter.BinaryOperationConverter,
-    code_objects.CodeObjects                        : code_objects_converter.CodeObjectsConverter,
-    compound_statement.CompoundStatement            : compound_statement_converter.CompoundStatementConverter,
-    conditional_operation.ConditionalOperation      : conditional_operation_converter.ConditionalOperationConverter,
-    constructor_function.ConstructorFunction        : constructor_function_converter.ConstructorFunctionConverter,
-    declaration_specifier.DeclSpec                  : declaration_specifier_converter.DeclSpecConverter,
-    destructor_function.DestructorFunction          : destructor_function_converter.DestructorFunctionConverter,
-    for_statement.ForStatement                      : for_statement_converter.ForStatementConverter,
-    funcsig.FuncSig                                 : funcsig_converter.FuncSigConverter,
-    funcsig_pointer.FuncSigPointer                  : funcsig_pointer_converter.FuncSigPointerConverter,
-    function_call.FunctionCall                      : function_call_converter.FunctionCallConverter,
-    function.Function                               : function_converter.FunctionConverter,
-    global_function.GlobalFunction                  : global_function_converter.GlobalFunctionConverter,
-    if_statement.IfStatement                        : if_statement_converter.IfStatementConverter,
-    init_list.InitList                              : init_list_converter.InitListConverter,
-    literal.Literal                                 : literal_converter.LiteralConverter,
-    member_function.MemberFunction                  : member_function_converter.MemberFunctionConverter,
-    macro_definition.MacroDefinition                : macro_definition_converter.MacroDefinitionConverter,
-    macro_instantation.MacroInstantation            : macro_instantiation_converter.MacroInstantiationConverter,
-    operation.Operation                             : operation_converter.OperationConverter,
-    paren_expression.ParenExpression                : paren_expression_converter.ParenExpressionConverter,
-    return_statement.ReturnStatement                : return_statement_converter.ReturnStatementConverter,
-    struct_arg.StructArg                            : struct_arg_converter.StructArgConverter,
-    struct_member_access.StructMemberAccess         : struct_member_access_converter.StructMemberAccessConverter,
-    unary_expression.UnaryExpression                : unary_expression_converter.UnaryExpressionConverter,
-    unary_operation.UnaryOperation                  : unary_operation_converter.UnaryOperationConverter,
-    variable_declaration.VariableDeclaration        : variable_declaration_converter.VariableDeclarationConverter,
-    virtual_member_function.VirtualMemberFunction   : virtual_member_function_converter.VirtualMemberFunctionConverter,
+    arr_access.ArrayAccess                                  : array_access_converter.ArrayAccessConverter,
+    arg.Arg                                                 : arg_converter.ArgConverter,
+    binary_operation.BinaryOperation                        : binary_operation_converter.BinaryOperationConverter,
+    code_objects.CodeObjects                                : code_objects_converter.CodeObjectsConverter,
+    compound_statement.CompoundStatement                    : compound_statement_converter.CompoundStatementConverter,
+    conditional_operation.ConditionalOperation              : conditional_operation_converter.ConditionalOperationConverter,
+    constructor_function.ConstructorFunction                : constructor_function_converter.ConstructorFunctionConverter,
+    declaration_specifier.DeclSpec                          : declaration_specifier_converter.DeclSpecConverter,
+    destructor_function.DestructorFunction                  : destructor_function_converter.DestructorFunctionConverter,
+    for_statement.ForStatement                              : for_statement_converter.ForStatementConverter,
+    funcsig.FuncSig                                         : funcsig_converter.FuncSigConverter,
+    funcsig_pointer.FuncSigPointer                          : funcsig_pointer_converter.FuncSigPointerConverter,
+    function_call.FunctionCall                              : function_call_converter.FunctionCallConverter,
+    function.Function                                       : function_converter.FunctionConverter,
+    global_function.GlobalFunction                          : global_function_converter.GlobalFunctionConverter,
+    if_statement.IfStatement                                : if_statement_converter.IfStatementConverter,
+    init_list.InitList                                      : init_list_converter.InitListConverter,
+    literal.Literal                                         : literal_converter.LiteralConverter,
+    member_function.MemberFunction                          : member_function_converter.MemberFunctionConverter,
+    macro_definition.MacroDefinition                        : macro_definition_converter.MacroDefinitionConverter,
+    macro_instantation.MacroInstantation                    : macro_instantiation_converter.MacroInstantiationConverter,
+    operation.Operation                                     : operation_converter.OperationConverter,
+    paren_expression.ParenExpression                        : paren_expression_converter.ParenExpressionConverter,
+    return_statement.ReturnStatement                        : return_statement_converter.ReturnStatementConverter,
+    struct_arg.StructArg                                    : struct_arg_converter.StructArgConverter,
+    struct_member_access.StructMemberAccess                 : struct_member_access_converter.StructMemberAccessConverter,
+    unary_expression.UnaryExpression                        : unary_expression_converter.UnaryExpressionConverter,
+    unary_operation.UnaryOperation                          : unary_operation_converter.UnaryOperationConverter,
+    value_declaration_reference.ValueDeclarationReference   : value_declaration_reference_converter.ValueDeclarationReferenceConverter,
+    variable_declaration.VariableDeclaration                : variable_declaration_converter.VariableDeclarationConverter,
+    virtual_member_function.VirtualMemberFunction           : virtual_member_function_converter.VirtualMemberFunctionConverter,
 }
 
 def get_debug_string(code_obj):
@@ -117,11 +120,6 @@ def convert_ccode_object(ccode_object, conversion_data):
         converter_class = CodeInterfaceConverterClasses.get(type(ccode_object), code_interface_converter.CodeInterfaceConverter)
         converter = converter_class(ccode_object)
         cpp_obj = converter.to_cpp_code_object(conversion_data)
-
-    if cpp_obj:
-        dbg_txt = f"{cpp_obj if type(cpp_obj) is str else cpp_obj.as_string()}"
-    else:
-        dbg_txt = "None"
 
     debug.line("convert_ccode_object", f"[OUT][{type(cpp_obj).__name__}] {get_debug_string(cpp_obj)}")
 

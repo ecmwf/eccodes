@@ -49,6 +49,10 @@ class ConversionData:
             debug.line("add_type_mapping", f"Adding decl_spec: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
 
     def add_arg_mapping(self, carg, cpparg):
+        if not carg.name:
+            debug.line("add_arg_mapping", f"carg name is empty, not adding mapping!")
+            return
+
         if carg in self.active_map.arg_mappings:
             assert self.active_map.arg_mappings[carg] == cpparg, f"Updating an existing arg: [{carg.as_string()}] -> [{cpparg.as_string()}] Previous arg=[{self.active_map.arg_mappings[carg]}]"
         else:
@@ -133,7 +137,20 @@ class ConversionData:
                     return value
         return None
 
+    def cpparg_for_carg_name(self, carg_name):
+        assert carg_name, f"carg_name can't be empty!"
+
+        for mapping in self.all_mappings():
+            for key, value in mapping.arg_mappings.items():
+                if key.name == carg_name:
+                    return value
+        return None
+
     def cppfunction_arg_for_carg(self, carg):
+        if not carg.name:
+            debug.line("cppfunction_arg_for_carg", f"carg has no name - can't look up a match")
+            return None
+
         for mapping in self.all_mappings():
             for key, value in mapping.function_arg_mappings.items():
                 if key.name == carg.name:

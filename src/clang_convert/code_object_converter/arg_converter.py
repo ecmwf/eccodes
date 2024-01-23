@@ -27,7 +27,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
             if match_type != DeclSpecMatchType.FULL:
                 conversion_data.add_type_mapping(carg.decl_spec, cpp_decl_spec)
                 debug.line("create_cpp_code_object", f"Arg conversion type mapping: carg.decl_spec=[{debug.as_debug_string(carg.decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}]")
-                
+
             cpp_name = standard_transforms.transform_variable_name(carg.name)
             cpp_is_func_arg = carg.is_func_arg
 
