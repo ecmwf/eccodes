@@ -28,6 +28,7 @@ grib_files=`cat ${data_dir}/grib_data_files.txt`
 for f in ${grib_files}; do
     ${test_dir}/grib_keys_iter $f > $tempOut
 done
+rm -f $tempOut
 
 cd ${data_dir}/tigge
 tigge_files=`cat ${data_dir}/tigge/tigge_data_files.txt`
