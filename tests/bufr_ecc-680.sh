@@ -91,6 +91,19 @@ set -e
 fgrep -q "number of overridden reference values (2) different from number of descriptors between operator 203YYY and 203255" $tempText
 
 
+# No overridden ref vals provided
+cat > $tempFilt <<EOF
+  set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+fgrep -q "Overridden Reference Values array is empty" $tempText
+
+
+# Ref val too large
 cat > $tempFilt <<EOF
   set inputOverriddenReferenceValues = { -50000000 }; # Value too large
   set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
