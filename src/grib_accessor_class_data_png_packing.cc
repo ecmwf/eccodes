@@ -465,6 +465,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     width  = ni;
     height = nj;
 
+    // jPointsAreConsecutive
     if ((scanning_mode & (1 << 5)) != 0) {
         long tmp = width;
         width    = height;
