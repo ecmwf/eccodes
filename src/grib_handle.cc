@@ -280,12 +280,13 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
     }
 
     g = codes_external_template(c, PRODUCT_BUFR, name);
-    if (!g)
+    if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"
                          "                   from %s\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
+    }
 
     return g;
 }

@@ -7,7 +7,12 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-#include <stdio.h>
+
+#include <iostream>
+using std::cerr;
+using std::cout;
+using std::endl;
+
 #undef NDEBUG
 #include <assert.h>
 #include "eccodes.h"
@@ -24,7 +29,7 @@ int main(int argc, char* argv[])
 
     assert (argc == 3);
 
-    printf("%ld\n", codes_get_api_version());
+    cout << codes_get_api_version() << endl;
 
     in = fopen(argv[1], "rb");
     assert(in);
@@ -33,7 +38,7 @@ int main(int argc, char* argv[])
     assert(source_handle);
 
     CODES_CHECK(codes_get_message_offset(source_handle, &offset), 0);
-    printf("offset = %lld\n", offset);
+    cout << "offset = "<< offset << endl;
 
     // How big is the input GRIB message?
     CODES_CHECK(codes_get_message_size(source_handle, &totalLength), 0);
