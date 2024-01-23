@@ -229,6 +229,9 @@ grep -q "invalid_type" $tempText
 ${tools_dir}/grib_ls -j -l0,0 -p nosuchkey $data_dir/sample.grib2 > $tempText 2>&1
 grep -q "nosuchkey.* null" $tempText
 
+# -M and -g options
+${tools_dir}/grib_ls -M -g $data_dir/gts.grib
+
 
 ${tools_dir}/grib_get -l0,0,4 $data_dir/sample.grib2
 
