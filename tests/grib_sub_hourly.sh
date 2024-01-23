@@ -44,8 +44,8 @@ grib_check_key_equals()
 }
 
 HOUR=""
-if (set -u; : ${ECCODES_GRIB_SHOW_HOUR_STEPUNIT?}) 2> /dev/null; then
-   if [ $ECCODES_GRIB_SHOW_HOUR_STEPUNIT -gt 0 ]; then
+if (set -u; : ${ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS?}) 2> /dev/null; then
+   if [ $ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS -gt 0 ]; then
       export HOUR="h"
    fi
 fi
@@ -491,13 +491,13 @@ grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange' '0'
 grib_check_key_equals $temp '-p forecastTime' '16'
 
 
-export ECCODES_GRIB_SHOW_HOUR_STEPUNIT=1
+export ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS=1
 cat >$tempFilt<<EOF
     assert ( step is "6h" );
 EOF
 cat $tempFilt
 ${tools_dir}/grib_filter $tempFilt $data_dir/constant_field.grib2
-unset ECCODES_GRIB_SHOW_HOUR_STEPUNIT
+unset ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS
 
 # Bad stepUnits
 set +e

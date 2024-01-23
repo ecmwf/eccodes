@@ -313,7 +313,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     long step_units = 0;
     char fp_format[128] = "%g";
     size_t fp_format_len = sizeof(fp_format);
-    int show_hours = a->context->show_hour_stepunit;
+    int show_hours = a->context->grib_hourly_steps_with_units;
 
     if ((ret = grib_get_long_internal(h, "startStep", &start_step_value)) != GRIB_SUCCESS)
         return ret;
@@ -350,7 +350,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 static int get_native_type(grib_accessor* a)
 {
     grib_handle* h = grib_handle_of_accessor(a);
-    const int show_units_for_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->grib_hourly_steps_with_units;
 
     if (!show_units_for_hours) {
         long step_units = 0;

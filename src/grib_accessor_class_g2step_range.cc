@@ -143,7 +143,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     double end_step_value = 0;
     long step_units;
 
-    int show_hours = a->context->show_hour_stepunit;
+    int show_hours = a->context->grib_hourly_steps_with_units;
 
     if ((ret = grib_get_double_internal(h, self->start_step, &start_step_value)) != GRIB_SUCCESS)
         return ret;

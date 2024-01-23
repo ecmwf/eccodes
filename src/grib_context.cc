@@ -417,7 +417,7 @@ grib_context* grib_context_get_default()
         no_big_group_split                  = codes_getenv("ECCODES_GRIB_NO_BIG_GROUP_SPLIT");
         no_spd                              = codes_getenv("ECCODES_GRIB_NO_SPD");
         keep_matrix                         = codes_getenv("ECCODES_GRIB_KEEP_MATRIX");
-        show_hour_stepunit                  = codes_getenv("ECCODES_GRIB_SHOW_HOUR_STEPUNIT");
+        show_hour_stepunit                  = codes_getenv("ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS");
         file_pool_max_opened_files          = getenv("ECCODES_FILE_POOL_MAX_OPENED_FILES");
 
         /* On UNIX, when we read from a file we get exactly what is in the file on disk.
@@ -432,7 +432,7 @@ grib_context* grib_context_get_default()
         default_grib_context.no_big_group_split = no_big_group_split ? atoi(no_big_group_split) : 0;
         default_grib_context.no_spd = no_spd ? atoi(no_spd) : 0;
         default_grib_context.keep_matrix = keep_matrix ? atoi(keep_matrix) : 1;
-        default_grib_context.show_hour_stepunit = show_hour_stepunit ? atoi(show_hour_stepunit) : 0;
+        default_grib_context.grib_hourly_steps_with_units = show_hour_stepunit ? atoi(show_hour_stepunit) : 0;
         default_grib_context.write_on_fail = write_on_fail ? atoi(write_on_fail) : 0;
         default_grib_context.no_abort = no_abort ? atoi(no_abort) : 0;
         default_grib_context.debug = debug ? atoi(debug) : 0;

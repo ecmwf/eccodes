@@ -540,7 +540,7 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
     long typeOfTimeIncrement;
 
     double dend, dstep;
-    const int show_units_for_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->grib_hourly_steps_with_units;
 
     eccodes::Step end_step{end_step_value, end_step_unit};
 
@@ -655,7 +655,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t step_len = 0;
     long step_value;
     long step_units;
-    const int show_units_for_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->grib_hourly_steps_with_units;
 
     if ((ret = unpack_long(a, &step_value, &step_len)) != GRIB_SUCCESS)
         return ret;
@@ -747,7 +747,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 static int get_native_type(grib_accessor* a)
 {
     grib_handle* h = grib_handle_of_accessor(a);
-    const int show_units_for_hours = a->context->show_hour_stepunit;
+    const int show_units_for_hours = a->context->grib_hourly_steps_with_units;
 
     if (!show_units_for_hours) {
         long step_units = 0;
