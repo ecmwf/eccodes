@@ -13,6 +13,8 @@ import grib_accessor.supporting.type_mappings as type_mappings
 from code_object.declaration_specifier import DeclSpec
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
+from grib_accessor.grib_accessor_conversion_assistant import GribAccessorConversionAssistant
+import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -50,6 +52,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         return info
 
     def initialise_conversion_data(self):
+        self._conversion_data.conversion_assistant_class = GribAccessorConversionAssistant()
+
         for mapping in grib_accessor_member_funcsig_mapping:
             self._conversion_data.add_member_funcsig_mapping(mapping)
 
@@ -59,6 +63,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_data)
 
         type_mappings.add_type_mappings_to_conversion_data(self._conversion_data)
+
+        grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(self._conversion_data)
 
         # Add C class name pointer as "do not convert" (e.g. grib_accessor_class_proj_string* -> NoneDeclSpec)
         debug.line("initialise_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")

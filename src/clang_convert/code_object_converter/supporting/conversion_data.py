@@ -7,6 +7,7 @@ import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_point
 from code_object.arg import Arg
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.supporting.conversion_data_helper import *
+from default.default_conversion_assistant import DefaultConversionAssistant
 
 # Store C to C++ conversion data to be used by the converters
 #
@@ -17,6 +18,7 @@ class ConversionData:
         self._info = info
         self._global_mappings = code_mappings.CodeMappings()
         self._local_mappings = None
+        self._conversion_assistant = None
 
     # Call this to ensure local state is set ready for function conversions
     def set_local_state(self):
@@ -32,6 +34,15 @@ class ConversionData:
     @property
     def info(self):
         return self._info
+    
+    @property 
+    def conversion_assistant(self):
+        return self._conversion_assistant
+    
+    @conversion_assistant.setter
+    def conversion_assistant(self, value):
+        assert isinstance(value, DefaultConversionAssistant), f"conversion_assistant is [{value}]"
+        self._conversion_assistant = value
 
     # ============================== Functions to update the mappings: start ==============================
 
@@ -113,6 +124,16 @@ class ConversionData:
                 assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
         
         self.active_map.virtual_member_funcsig_mappings.append(mapping)
+
+    def add_literal_mapping(self, cstring, cppstring):
+        assert isinstance(cstring, str), f"Expected str, got [{cstring}]"
+        assert isinstance(cppstring, str), f"Expected str, got [{cppstring}]"
+
+        if cstring in self.active_map.literal_mappings:
+            assert self.active_map.literal_mappings[cstring] == cppstring, f"Updating an existing literal: [{cstring}] -> [{cppstring}] Previous value=[{self.active_map.literal_mappings[cstring]}]"
+        else:
+            self.active_map.literal_mappings[cstring] = cppstring
+            debug.line("add_literal_mapping", f"Adding literal mapping: [{cstring}] -> [{cppstring}]")
 
     # ============================== Functions to update the mappings: end   ==============================
     
@@ -209,6 +230,14 @@ class ConversionData:
                     return entry.cppfuncsig_pointer
         return None
     
+    def cppstring_literal_for_cstring(self, cstring):
+        for mapping in self.all_mappings():
+            for key, value in mapping.literal_mappings.items():
+                if key == cstring:
+                    return value
+        return None
+
+
     # Searches both C and C++ member and virtual member maps
     def is_member_function(self, function_name):
         for mapping in self.all_mappings():

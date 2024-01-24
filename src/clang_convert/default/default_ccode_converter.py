@@ -5,7 +5,7 @@ import cpp_code.code_info as code_info
 import cpp_code.code_elements as code_elements
 import code_object_converter.supporting.conversion_data as conversion_data 
 import code_object_converter.conversion_funcs as conversion_funcs
-
+from default.default_conversion_assistant import DefaultConversionAssistant
 import code_object.member_function as member_function
 
 # Convert a CCode object into a CppCode object, using the cconverter and derived classes as helpers
@@ -42,7 +42,7 @@ class DefaultCCodeConverter:
 
     # Override to set required initial state
     def initialise_conversion_data(self):
-        pass
+        self._conversion_data.conversion_assistant_class = DefaultConversionAssistant()
 
     # ============================== Setup functions: end   ==============================
 

@@ -10,5 +10,11 @@ class LiteralConverter(code_interface_converter.CodeInterfaceConverter):
         assert isinstance(ccode_object, literal.Literal), f"Expected Literal, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_data):
-        # By default we just return a copy
+
+        # 1. Check for a literal mapping
+        cppliteral = conversion_data.cppstring_literal_for_cstring(self._ccode_object.value)
+        if cppliteral:
+            return literal.Literal(cppliteral)
+
+        # 2. Default is to just return a copy
         return literal.Literal(self._ccode_object.value)

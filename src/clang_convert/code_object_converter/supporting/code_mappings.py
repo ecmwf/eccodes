@@ -12,6 +12,7 @@ class CodeMappings:
         self._funcsig_pointer_mappings = []
         self._member_funcsig_mappings = []
         self._virtual_member_funcsig_mappings = []
+        self._literal_mappings = {}
 
     # Note: Types are stored as declaration_specifiers objects for flexibility, but usually we just match type and pointer!
     @property
@@ -49,3 +50,7 @@ class CodeMappings:
     @property
     def virtual_member_funcsig_mappings(self):
         return self._virtual_member_funcsig_mappings
+
+    @property
+    def literal_mappings(self):
+        return self._literal_mappings

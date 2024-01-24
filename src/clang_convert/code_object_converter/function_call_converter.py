@@ -22,6 +22,7 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
                 if arg_entry != NONE_VALUE:
                     cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_data)
                     if cpp_arg_entry != NONE_VALUE:
+                        cpp_arg_entry = conversion_data.conversion_assistant_class.validate_function_call_args(cpp_arg_entry, arg_entry)
                         cpp_args.append(cpp_arg_entry)
 
             return function_call.FunctionCall(cppfuncsig.name, cpp_args)

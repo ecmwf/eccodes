@@ -20,6 +20,10 @@ class ParenExpression(code_interface.CodeInterface):
         if self._expression:
             lines = self._expression.as_lines()
             lines[0] = "(" + lines[0]
+
+            if lines[-1].endswith(";"):
+                lines[-1] = lines[-1][:-1]
+
             lines[-1] += ")"
 
         return lines
