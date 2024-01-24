@@ -1933,44 +1933,6 @@ int grib_values_check(grib_handle* h, grib_values* values, int count)
     return 0;
 }
 
-int grib_key_equal(const grib_handle* h1, const grib_handle* h2, const char* key, int type, int* err)
-{
-    double d1 = 0, d2 = 0;
-    long l1 = 0, l2 = 0;
-    char s1[500] = {0,};
-    char s2[500] = {0,};
-    size_t len1, len2;
-
-    if (type != GRIB_TYPE_DOUBLE &&
-        type != GRIB_TYPE_LONG &&
-        type != GRIB_TYPE_STRING) {
-        *err = grib_get_native_type(h1, key, &type);
-    }
-    switch (type) {
-        case GRIB_TYPE_DOUBLE:
-            *err = grib_get_double(h1, key, &d1);
-            *err = grib_get_double(h2, key, &d2);
-            if (d1 != d2)
-                return 0;
-            break;
-        case GRIB_TYPE_LONG:
-            *err = grib_get_long(h1, key, &l1);
-            *err = grib_get_long(h2, key, &l2);
-            if (l1 != l2)
-                return 0;
-            break;
-        default:
-            len1 = sizeof(s1) / sizeof(*s1);
-            len2 = sizeof(s2) / sizeof(*s2);
-            *err = grib_get_string(h1, key, s1, &len1);
-            *err = grib_get_string(h2, key, s2, &len2);
-            if (grib_inline_strcmp(s1, s2))
-                return 0;
-            break;
-    }
-    return 1;
-}
-
 int codes_copy_key(grib_handle* h1, grib_handle* h2, const char* key, int type)
 {
     double d;
