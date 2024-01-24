@@ -12,6 +12,7 @@ import grib_accessor.supporting.includes as includes
 import grib_accessor.supporting.type_mappings as type_mappings
 from code_object.declaration_specifier import DeclSpec
 from code_object.code_interface import NONE_VALUE
+import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -54,6 +55,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
             self._conversion_data.add_virtual_member_funcsig_mapping(mapping)
+
+        all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_data)
 
         type_mappings.add_type_mappings_to_conversion_data(self._conversion_data)
 

@@ -14,17 +14,13 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
     def create_cpp_code_object(self, conversion_data):
         cdecl_ref_expr_value = self._ccode_object.as_string()
 
-        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [1] cdecl_ref_expr_value=[{cdecl_ref_expr_value}]")
-
         # 1. Check if it is a function name
         cppfuncsig = conversion_data.cppfuncsig_for_cfuncname(cdecl_ref_expr_value)
-        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [2] cppfuncsig=[{debug.as_debug_string(cppfuncsig)}]")
         if cppfuncsig:
             return value_declaration_reference.ValueDeclarationReference(cppfuncsig.name)
         
         # 2. Check if it is an arg
         cpparg = conversion_data.funcbody_cpparg_for_carg_name(cdecl_ref_expr_value)
-        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [3] cpparg=[{debug.as_debug_string(cpparg)}]")
         if cpparg == NONE_VALUE:
             return NONE_VALUE
         elif cpparg:
@@ -32,6 +28,5 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
             
         # 3. Perform a default conversion
         cdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_data)
-        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [4] cpparg=[{debug.as_debug_string(cdecl_ref_expr_value)}]")
 
         return value_declaration_reference.ValueDeclarationReference(cdecl_ref_expr_value)

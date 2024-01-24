@@ -12,12 +12,25 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
         assert isinstance(ccode_object, function_call.FunctionCall), f"Expected FunctionCall, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_data):
-        cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_data)
+        cfunction_call = self._ccode_object
+
+        # 1. Check if there is a function mapping defined
+        cppfuncsig = conversion_data.cppfuncsig_for_cfuncname(cfunction_call.name)
+        if cppfuncsig:
+            cpp_args = []
+            for i, arg_entry in enumerate(cppfuncsig.args):
+                if arg_entry != NONE_VALUE:
+                    cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_data)
+                    if cpp_arg_entry != NONE_VALUE:
+                        cpp_args.append(cpp_arg_entry)
+
+            return function_call.FunctionCall(cppfuncsig.name, cpp_args)
+
+        # 2. Perform a manual conversion
+        cpp_name = conversion_funcs.convert_ccode_object(cfunction_call.name, conversion_data)
         cpp_args = []
         for arg_entry in self._ccode_object.args:
-            debug.line("create_cpp_code_object", f"FunctionCallConverter [1] arg_entry=[{arg_entry}] as_string=[{debug.as_debug_string(arg_entry)}]")
             cpp_arg_entry = conversion_funcs.convert_ccode_object(arg_entry, conversion_data)
-            debug.line("create_cpp_code_object", f"FunctionCallConverter [2] cpp_arg_entry=[{arg_entry}] cpp_arg_entry=[{debug.as_debug_string(arg_entry)}]")
 
             if cpp_arg_entry != NONE_VALUE:
                 cpp_args.append(cpp_arg_entry)

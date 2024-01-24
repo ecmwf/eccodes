@@ -1,0 +1,20 @@
+
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.grib_bits_funcsig_mappings as grib_bits_funcsig_mappings
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.grib_common_funcsig_mappings as grib_common_funcsig_mappings
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.grib_query_funcsig_mappings as grib_query_funcsig_mappings
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.grib_value_funcsig_mappings as grib_value_funcsig_mappings
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.string_util_funcsig_mappings as string_util_funcsig_mappings
+import grib_accessor.supporting.funcsig_mappings.grib_cpp_funcsig_mappings.grib_scaling_funcsig_mappings as grib_scaling_funcsig_mappings
+
+grib_cpp_funcsig_mappings = [
+    grib_bits_funcsig_mappings.grib_bits_funcsig_mappings,
+    grib_common_funcsig_mappings.grib_common_funcsig_mappings,
+    grib_query_funcsig_mappings.grib_query_funcsig_mappings,
+    grib_value_funcsig_mappings.grib_value_funcsig_mappings,
+    string_util_funcsig_mappings.string_util_funcsig_mappings,
+    grib_scaling_funcsig_mappings.grib_scaling_funcsig_mappings,
+]
+
+# Return a list of all the funcsig conversions
+def all_grib_cpp_funcsig_mappings():
+    return grib_cpp_funcsig_mappings
