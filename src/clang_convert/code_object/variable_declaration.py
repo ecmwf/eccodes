@@ -1,6 +1,7 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
 import code_object.arg as arg
+from code_object.code_interface import NONE_VALUE
 
 # Represent a variable declaration of the form VAR = VALUE
 # Models the VAR_DECL CursorKind in libclang
@@ -13,7 +14,7 @@ class VariableDeclaration(code_interface.CodeInterface):
         self._variable = variable
         self._value = value
 
-        assert self._variable != arg.Arg.NONE, f"Variable can't be NoneArg!"
+        assert self._variable != NONE_VALUE, f"Variable can't be NoneValue!"
         assert isinstance(self._variable, arg.Arg), f"Variable must be an Arg class, not=[{variable}]"
         assert isinstance(self._value, code_interface.CodeInterface), f"Value must be a CodeInterface class (or a string)"
 

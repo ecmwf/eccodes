@@ -2,6 +2,7 @@
 import code_object.code_interface as code_interface
 import utils.debug as debug
 import re
+from code_object.code_interface import NONE_VALUE
 
 # Represents the full declaration specifier sequence (see C++ standard section 9.2 Specifiers) for an arg
 # 
@@ -16,31 +17,12 @@ class DeclSpec(code_interface.CodeInterface):
         self._type = type
         self._pointer = pointer
 
-    # ---------- Support for NoneDeclSpec: Begin ----------
-
-    # NoneDeclSpec is used when a C DeclSpec doesn't have a C++ equivalent (i.e. we don't want to convert it!)
-    class _NoneDeclSpec:
-        def __repr__(self):
-            return "<NoneDeclSpec>"
-
-        def __eq__(self, other):
-            # This version is required for testing DeclSpec.NONE = <VAR>
-            # As the DeclSpec.__eq__ version won't be called when self=DeclSpec.NONE !!!
-            return isinstance(other, DeclSpec._NoneDeclSpec)
-
-        def __ne__(self, other):
-            return not self.__eq__(other)
-
-    NONE = _NoneDeclSpec()  # The singleton instance to represent "None"
-    
-    # ---------- Support for NoneDeclSpec: End   ----------
-
     # Create a DeclSpec from a string representing the sequence, e.g. "const char*"
-    # Pass None (or empty string) to return DeclSpec.NONE
+    # Pass None (or empty string) to return NONE_VALUE
     @classmethod
     def from_decl_specifier_seq(cls, decl_specifier_seq):
-        if decl_specifier_seq == DeclSpec.NONE:
-            return DeclSpec.NONE
+        if decl_specifier_seq == NONE_VALUE:
+            return NONE_VALUE
         
         assert isinstance(decl_specifier_seq, str), f"Expected str, got [{decl_specifier_seq}]"
 
@@ -128,12 +110,14 @@ class DeclSpec(code_interface.CodeInterface):
 
     # Support for DeclSpec as a dict key
     def __eq__(self, other):
-        if self is DeclSpec.NONE or other is DeclSpec.NONE:
+        if self is NONE_VALUE or other is NONE_VALUE:
             return self is other
-        return self.storage_class == other.storage_class and self.const_qualifier == other.const_qualifier and self.pointer == other.pointer and self.type == other.type
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        # Ensure the other object is an instance of FunctionArg for comparison.
+        if not isinstance(other, DeclSpec):
+            return False
+
+        return self.storage_class == other.storage_class and self.const_qualifier == other.const_qualifier and self.pointer == other.pointer and self.type == other.type
     # ---------- Support for DeclSpec as a dict key: End   ----------
 
     # Return the full decl-specifier-seq as a (parsed) string (i.e. consistent spacing etc, not just what was passed in!)

@@ -1,6 +1,7 @@
 import utils.debug as debug
 import code_object.arg as arg
 import code_object.code_interface as code_interface
+from code_object.code_interface import NONE_VALUE
 
 # Represent a function signature
 #
@@ -64,7 +65,7 @@ class FuncSig(code_interface.CodeInterface):
         self._is_const = value
 
     def as_lines(self):
-        sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a != arg.Arg.NONE])})"
+        sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a != NONE_VALUE])})"
         if self._is_const:
             sig_string += " const"
         if self._is_declaration:

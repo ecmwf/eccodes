@@ -6,6 +6,7 @@ import code_object_converter.code_interface_converter as code_interface_converte
 import code_object_converter.conversion_funcs as conversion_funcs
 import utils.standard_transforms as standard_transforms
 from code_object_converter.supporting.conversion_data_helper import *
+from code_object.code_interface import NONE_VALUE
 
 class ArgConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -43,8 +44,10 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
 
         debug.line("convert_funcsig_arg", f"--[3]-- test_decl_spec=[{debug.as_debug_string(test_decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}] match_type=[{match_type}]")
 
-        if cpp_decl_spec == declaration_specifier.DeclSpec.NONE:
-            cpp_arg = arg.Arg.NONE
+        if cpp_decl_spec == NONE_VALUE:
+            cpp_arg = NONE_VALUE
+            self._conversion_data.add_funcbody_arg_mapping(carg, cpp_arg)
+            debug.line("convert_funcsig_arg", f"Arg conversion funcbody arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")
         else:
             if match_type != DeclSpecMatchType.FULL:
                 # 3. Convert the type with the pointer removed, as the default behaviour for a funcsig
@@ -102,8 +105,8 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
 
         debug.line("convert_funcbody_arg", f"==[3]== cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}] match_type=[{match_type}]")
 
-        if cpp_decl_spec == declaration_specifier.DeclSpec.NONE:
-            cpp_arg = arg.Arg.NONE
+        if cpp_decl_spec == NONE_VALUE:
+            cpp_arg = NONE_VALUE
         else:
             # 3. If we didn't match the pointer, and the converted pointer is not "", then convert the type to a vector
             if (not match_type.value and DeclSpecMatchType.POINTER) and cpp_decl_spec.pointer:

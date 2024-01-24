@@ -3,6 +3,7 @@ import code_object.code_interface as code_interface
 import utils.debug as debug
 from code_object.declaration_specifier import DeclSpec
 import re
+from code_object.code_interface import NONE_VALUE
 
 # Create an arg using a decl_specifier_seq string (see DeclSpec class) and (optional) name
 # name can be "" to represent a type only
@@ -19,25 +20,6 @@ class Arg(code_interface.CodeInterface):
 
         self._name = name
         self._is_func_arg = is_func_arg # Support for processing function sig args differently to other args
-
-    # ---------- Support for NoneArg: Begin ----------
-
-    # NoneArg is used when a C argument doesn't have an equivalent C++ argument
-    class _NoneArg:
-        def __repr__(self):
-            return "<NoneArg>"
-
-        def __eq__(self, other):
-            # This version is required for testing Arg.NONE = <VAR>
-            # As the Arg.__eq__ version won't be called when self=Arg.NONE !!!
-            return isinstance(other, Arg._NoneArg)
-
-        def __ne__(self, other):
-            return not self.__eq__(other)
-
-    NONE = _NoneArg()  # The singleton instance to represent "None"
-    
-    # ---------- Support for NoneArg: End   ----------
 
     # Create from an existing Arg
     @classmethod
@@ -62,12 +44,14 @@ class Arg(code_interface.CodeInterface):
         return hash((self.decl_spec, self.name))
 
     def __eq__(self, other):
-        if self is Arg.NONE or other is Arg.NONE:
+        if self is NONE_VALUE or other is NONE_VALUE:
             return self is other
-        return self.decl_spec == other.decl_spec and self.name == other.name
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+        # Ensure the other object is an instance of FunctionArg for comparison.
+        if not isinstance(other, Arg):
+            return False
+
+        return self.decl_spec == other.decl_spec and self.name == other.name
     # ---------- Support for Arg as a dict key: End   ----------
 
     def as_lines(self):

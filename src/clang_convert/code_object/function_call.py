@@ -1,7 +1,7 @@
 import utils.debug as debug
 import code_object.arg as arg
 import code_object.code_interface as code_interface
-
+import code_object.value_declaration_reference as value_declaration_reference
 # Represent a function call
 #
 # Note: Name is a string; args are CodeInterface instances

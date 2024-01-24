@@ -449,6 +449,7 @@ class AstParser:
     def parse_COMPOUND_ASSIGNMENT_OPERATOR(self, node):
         return self.parse_BINARY_OPERATOR(node)
 
+    # This is basically a string representing a value, e.g. a variable name
     def parse_DECL_REF_EXPR(self, node):
         return value_declaration_reference.ValueDeclarationReference(node.spelling)
 
