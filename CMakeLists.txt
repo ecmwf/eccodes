@@ -165,7 +165,7 @@ endif()
 ecbuild_add_option( FEATURE MEMFS
     DESCRIPTION "Memory based access to definitions/samples"
     DEFAULT OFF
-    REQUIRED_PACKAGES PythonInterp )
+    REQUIRED_PACKAGES Python3 )
 
 #if( HAVE_MEMFS AND "${CMAKE_C_COMPILER_ID}" STREQUAL "Cray")
 #  set( HAVE_MEMFS OFF )
