@@ -15,6 +15,7 @@ from code_object.code_interface import NONE_VALUE
 import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
 from grib_accessor.grib_accessor_conversion_assistant import GribAccessorConversionAssistant
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
+import grib_accessor.supporting.arg_mappings as arg_mappings
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -52,7 +53,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         return info
 
     def initialise_conversion_data(self):
-        self._conversion_data.conversion_assistant_class = GribAccessorConversionAssistant()
+        self._conversion_data.conversion_assistant = GribAccessorConversionAssistant()
 
         for mapping in grib_accessor_member_funcsig_mapping:
             self._conversion_data.add_member_funcsig_mapping(mapping)
@@ -61,6 +62,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             self._conversion_data.add_virtual_member_funcsig_mapping(mapping)
 
         all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_data)
+
+        arg_mappings.add_arg_mappings_to_conversion_data(self._conversion_data)
 
         type_mappings.add_type_mappings_to_conversion_data(self._conversion_data)
 

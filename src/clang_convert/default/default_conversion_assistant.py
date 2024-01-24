@@ -15,3 +15,8 @@ class DefaultConversionAssistant:
     def validate_function_call_args(self, calling_arg_value, target_arg):
         # Just return the passed in value!
         return calling_arg_value
+
+    # Extra checks for variables (such as casting if required)
+    def validate_variable_declaration(self, cpp_variable_declaration):
+        # Just return the passed in value!
+        return cpp_variable_declaration

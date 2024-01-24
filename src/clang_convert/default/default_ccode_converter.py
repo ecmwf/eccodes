@@ -42,7 +42,7 @@ class DefaultCCodeConverter:
 
     # Override to set required initial state
     def initialise_conversion_data(self):
-        self._conversion_data.conversion_assistant_class = DefaultConversionAssistant()
+        self._conversion_data.conversion_assistant = DefaultConversionAssistant()
 
     # ============================== Setup functions: end   ==============================
 
