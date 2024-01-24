@@ -2,7 +2,7 @@
 from datetime import datetime
 from code_object.code_interface import CodeInterface
 
-func_pad = 40
+func_pad = 30
 debug_enabled = True
 debug_filter_include = [] #["convert_global_declarations", "dump_function"]
 debug_filter_exclude = []
@@ -32,11 +32,6 @@ def line(func, text):
     if debug_filter_exclude and func in debug_filter_exclude:
         return
     
-    if len(func) > func_pad:
-        print(f">>>>>")
-        print(f">>>>> PADDING ({func_pad}) TOO SMALL FOR FUNC NAME: {func} - size={len(func)}")
-        print(f">>>>>")
-
     global start_time 
     elapsed_time_str = ""
     if show_time:

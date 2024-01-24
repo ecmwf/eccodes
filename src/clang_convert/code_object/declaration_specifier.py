@@ -39,7 +39,7 @@ class DeclSpec(code_interface.CodeInterface):
     # Pass None (or empty string) to return DeclSpec.NONE
     @classmethod
     def from_decl_specifier_seq(cls, decl_specifier_seq):
-        if not decl_specifier_seq:
+        if decl_specifier_seq == DeclSpec.NONE:
             return DeclSpec.NONE
         
         assert isinstance(decl_specifier_seq, str), f"Expected str, got [{decl_specifier_seq}]"

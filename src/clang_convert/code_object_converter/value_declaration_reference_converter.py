@@ -19,7 +19,7 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
             return value_declaration_reference.ValueDeclarationReference(cppfuncsig.name)
         
         # 2. Check if it is an arg
-        cpparg = conversion_data.cpparg_for_carg_name(cdecl_ref_expr_value)
+        cpparg = conversion_data.funcbody_cpparg_for_carg_name(cdecl_ref_expr_value)
         if cpparg and cpparg != arg.Arg.NONE:
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
             

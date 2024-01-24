@@ -22,6 +22,4 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
         cpp_variable_declaration = variable_declaration.VariableDeclaration(cpp_variable, cpp_value)
         
         return cpp_variable_declaration
-
-
   

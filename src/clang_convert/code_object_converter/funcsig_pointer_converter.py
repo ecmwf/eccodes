@@ -33,10 +33,10 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
             mapping = funcsig_pointer_mapping.FuncSigPointerMapping(self._ccode_object, cppfuncsig_pointer)
             self._conversion_data.add_funcsig_pointer_mapping(mapping)
 
-            # We've also created a new type, so need to add this too!
+            # We've also created a new type, so need to add this (to the funcbody map) too!
             cdecl_spec = declaration_specifier.DeclSpec(type=self._ccode_object.func_arg.name, pointer=self._ccode_object.func_arg.decl_spec.pointer)
             cppdecl_spec = declaration_specifier.DeclSpec(type=cppfunc_arg.name, pointer=cppfunc_arg.decl_spec.pointer)
-            self._conversion_data.add_type_mapping(cdecl_spec, cppdecl_spec)
+            self._conversion_data.add_funcbody_type_mapping(cdecl_spec, cppdecl_spec)
             debug.line("create_cpp_code_object", f"FuncSigPointer conversion: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
 
 

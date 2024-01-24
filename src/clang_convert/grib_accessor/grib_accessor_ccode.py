@@ -13,6 +13,10 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
         self._accessor_class_short_name = ""
 
     @property
+    def accessor_name(self):
+        return self._accessor_name
+
+    @property
     def parent_cfilename(self):
         if self._super_class_name:
             return self._super_class_name + ".cc"

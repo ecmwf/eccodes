@@ -67,4 +67,3 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
                         self._ccode._super_class_name = super_entry_child.spelling
                 name_entry = next(init_list_iter)
                 self._ccode._accessor_class_short_name = name_entry.spelling.replace("\"", "")
-

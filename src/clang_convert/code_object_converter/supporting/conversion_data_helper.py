@@ -14,7 +14,7 @@ class ConversionDataState(Enum):
     GLOBAL = auto()
     LOCAL = auto()
 
-# Define the match types for find_best_matching_cdecl_spec()
+# Define the match types for create_best_matching_cdecl_spec()
 class DeclSpecMatchType(Enum):
     NONE                = 0b0000
     TYPE                = 0b0001
@@ -41,16 +41,15 @@ class DeclSpecMatchType(Enum):
 #
 # NOTE: The entries in the matches list must already match the type
 def create_best_matching_cdecl_spec(cdecl_spec, matches):
-
+    key = 0
+    value = 1
     matches_count = len(matches)
 
-    pointer_match = const_match = None
-
-    debug.line("find_best_matching_cdecl_spec", f"cdecl_spec=[{debug.as_debug_string(cdecl_spec)}] cdecl_spec.type=[{debug.as_debug_string(cdecl_spec.type)}] cdecl_spec.pointer=[{debug.as_debug_string(cdecl_spec.pointer)}] ")
-    debug.line("find_best_matching_cdecl_spec", f"matches_count=[{matches_count}]")
+    debug.line("create_best_matching_cdecl_spec", f"cdecl_spec=[{debug.as_debug_string(cdecl_spec)}] cdecl_spec.type=[{debug.as_debug_string(cdecl_spec.type)}] cdecl_spec.pointer=[{debug.as_debug_string(cdecl_spec.pointer)}] ")
+    debug.line("create_best_matching_cdecl_spec", f"matches_count=[{matches_count}]")
 
     for match in matches:
-        debug.line("find_best_matching_cdecl_spec", f" Match=[{debug.as_debug_string(match)}]")
+        debug.line("create_best_matching_cdecl_spec", f" Match key=[{debug.as_debug_string(match[key])}] value=[{debug.as_debug_string(match[value])}]")
     if matches_count == 0:
         return None, DeclSpecMatchType.NONE
     
@@ -60,29 +59,29 @@ def create_best_matching_cdecl_spec(cdecl_spec, matches):
     for match in matches:
         score = DeclSpecMatchType.NONE.value
 
-        if cdecl_spec.pointer == match.pointer:
+        if cdecl_spec.pointer == match[key].pointer:
             score |= DeclSpecMatchType.POINTER.value
-            debug.line("find_best_matching_cdecl_spec", f" Pointer Match: entry=[{debug.as_debug_string(match)}] score=[{score}]")
-        if cdecl_spec.const_qualifier == match.const_qualifier:
+            debug.line("create_best_matching_cdecl_spec", f" Pointer Match: entry key=[{debug.as_debug_string(match[key])}] score=[{score}]")
+        if cdecl_spec.const_qualifier == match[key].const_qualifier:
             score |= DeclSpecMatchType.CONST.value
-            debug.line("find_best_matching_cdecl_spec", f" Const Match: entry=[{debug.as_debug_string(match)}] score=[{score}]")
+            debug.line("create_best_matching_cdecl_spec", f" Const Match: entry key=[{debug.as_debug_string(match[key])}] score=[{score}]")
         scored_matches[match] = score
 
     for k,v in scored_matches.items():
-        debug.line("find_best_matching_cdecl_spec", f" Scored Match: key=[{debug.as_debug_string(k)}] score=[{v}]")
+        debug.line("create_best_matching_cdecl_spec", f" Scored Match: key=[{debug.as_debug_string(k[key])}] score=[{v}]")
 
     # Rank the results
     ranked_scored_matches = sorted(scored_matches.items(), key=lambda x: x[1], reverse=True)
     result, score = ranked_scored_matches[0]
-    debug.line("find_best_matching_cdecl_spec", f" Result: key=[{debug.as_debug_string(result)}] match=[{score}]")
+    debug.line("create_best_matching_cdecl_spec", f" Result: key=[{debug.as_debug_string(result[key])}] value=[{debug.as_debug_string(result[value])}] match=[{score}]")
 
     # Create the new DeclSpec
-    new_decl_spec = declaration_specifier.DeclSpec.from_instance(result)
+    new_decl_spec = declaration_specifier.DeclSpec.from_instance(result[value])
     if not (score & DeclSpecMatchType.POINTER.value):
         new_decl_spec.pointer = cdecl_spec.pointer
 
     if not (score & DeclSpecMatchType.CONST.value):
         new_decl_spec.const_qualifier = cdecl_spec.const_qualifier
 
-    debug.line("find_best_matching_cdecl_spec", f" new_decl_spec=[{debug.as_debug_string(new_decl_spec)}] match=[{score}]")
+    debug.line("create_best_matching_cdecl_spec", f" new_decl_spec=[{debug.as_debug_string(new_decl_spec)}] match=[{score}]")
     return new_decl_spec, DeclSpecMatchType(score)

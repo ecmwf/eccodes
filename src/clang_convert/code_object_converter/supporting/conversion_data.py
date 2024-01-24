@@ -4,7 +4,8 @@ import cpp_code.code_info as code_info
 import code_object_converter.supporting.code_mappings as code_mappings
 import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
 import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_pointer_mapping
-import code_object.declaration_specifier as declaration_specifier
+from code_object.arg import Arg
+from code_object.declaration_specifier import DeclSpec
 from code_object_converter.supporting.conversion_data_helper import *
 
 # Store C to C++ conversion data to be used by the converters
@@ -41,30 +42,45 @@ class ConversionData:
         else:
             return self._global_mappings
 
-    def add_type_mapping(self, cdecl_spec, cppdecl_spec):
-        if cdecl_spec in self.active_map.type_mappings:
-            assert self.active_map.type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{self.active_map.type_mappings[cdecl_spec]}]"
+    def add_funcbody_type_mapping(self, cdecl_spec, cppdecl_spec):
+        assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
+        assert isinstance(cppdecl_spec, DeclSpec) or cppdecl_spec==DeclSpec.NONE, f"Expected DeclSpec, got [{cppdecl_spec}]"
+        if cdecl_spec in self.active_map.funcbody_type_mappings:
+            assert self.active_map.funcbody_type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{debug.as_debug_string(self.active_map.funcbody_type_mappings[cdecl_spec])}]"
         else:
-            self.active_map.type_mappings[cdecl_spec] = cppdecl_spec
-            debug.line("add_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
+            self.active_map.funcbody_type_mappings[cdecl_spec] = cppdecl_spec
+            debug.line("add_funcbody_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
 
-    def add_arg_mapping(self, carg, cpparg):
+    def add_funcsig_type_mapping(self, cdecl_spec, cppdecl_spec):
+        assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
+        assert isinstance(cppdecl_spec, DeclSpec) or cppdecl_spec==DeclSpec.NONE, f"Expected DeclSpec, got [{cppdecl_spec}]"
+        if cdecl_spec in self.active_map.funcsig_type_mappings:
+            assert self.active_map.funcsig_type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{debug.as_debug_string(self.active_map.funcbody_type_mappings[cdecl_spec])}]"
+        else:
+            self.active_map.funcsig_type_mappings[cdecl_spec] = cppdecl_spec
+            debug.line("add_funcsig_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
+
+    def add_funcbody_arg_mapping(self, carg, cpparg):
+        assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
+        assert isinstance(cpparg, Arg) or cpparg==Arg.NONE, f"Expected Arg, got [{cpparg}]"
         if not carg.name:
             debug.line("add_arg_mapping", f"carg name is empty, not adding mapping!")
             return
 
-        if carg in self.active_map.arg_mappings:
-            assert self.active_map.arg_mappings[carg] == cpparg, f"Updating an existing arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous arg=[{self.active_map.arg_mappings[carg]}]"
+        if carg in self.active_map.funcbody_arg_mappings:
+            assert self.active_map.funcbody_arg_mappings[carg] == cpparg, f"Updating an existing arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous arg=[{debug.as_debug_string(self.active_map.funcbody_arg_mappings[carg])}]"
         else:
-            self.active_map.arg_mappings[carg] = cpparg
+            self.active_map.funcbody_arg_mappings[carg] = cpparg
             debug.line("add_arg_mapping", f"Adding arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
 
-    def add_function_arg_mapping(self, carg, cpparg):
-        if carg in self.active_map.function_arg_mappings:
-            assert self.active_map.function_arg_mappings[carg] == cpparg, f"Updating an existing function arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{self.active_map.function_arg_mappings[carg]}]"
+    def add_funcsig_arg_mapping(self, carg, cpparg):
+        assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
+        assert isinstance(cpparg, Arg) or cpparg==Arg.NONE, f"Expected Arg, got [{cpparg}]"
+        if carg in self.active_map.funcsig_arg_mappings:
+            assert self.active_map.funcsig_arg_mappings[carg] == cpparg, f"Updating an existing funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{debug.as_debug_string(self.active_map.function_arg_mappings[carg])}]"
         else:
-            self.active_map.function_arg_mappings[carg] = cpparg
-            debug.line("add_function_arg_mappings", f"Adding function arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
+            self.active_map.funcsig_arg_mappings[carg] = cpparg
+            debug.line("add_funcsig_arg_mapping", f"Adding funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
 
     def add_funcsig_mapping(self, mapping):
         assert isinstance(mapping, funcsig_mapping.FuncSigMapping), f"Expected FuncSigMapping, got type=[{type(mapping).__name__}]"
@@ -102,57 +118,72 @@ class ConversionData:
     
     # ============================== Functions to query the mappings:  start ==============================
 
+    # NOTE: Local mappings are returned first so that they take precedence!
     def all_mappings(self):
         if self._local_mappings:
             return [self._local_mappings, self._global_mappings]
         else:
             return [self._global_mappings]
 
-    # Use this version if you only want to match type (and optionally pointer)
-    def closest_cppdecl_spec_for_ctype(self, type, pointer=None):
-        cdecl_spec = declaration_specifier.DeclSpec(type=type, pointer=pointer)
-        return self.closest_cppdecl_spec_for_cdecl_spec(cdecl_spec)
-
     # Find the cppdecl_spec which most closely matches the supplied value
     #
     # Returns a value (or None) and a MatchType.
-    # See comversion_data_helper.find_best_matching_cdecl_spec() for more info
+    # See conversion_data_helper.find_best_matching_cdecl_spec() for more info
     #
-    def closest_cppdecl_spec_for_cdecl_spec(self, cdecl_spec):
+    def closest_funcbody_cppdecl_spec_for_cdecl_spec(self, cdecl_spec):
         matches = []
         for mapping in self.all_mappings():
-            for key, value in mapping.type_mappings.items():
-                debug.line("closest_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+            for key, value in mapping.funcbody_type_mappings.items():
+                debug.line("closest_funcbody_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
                 if key == cdecl_spec:
                     return value, DeclSpecMatchType.FULL
                 if key.type == cdecl_spec.type:
-                        matches.append(value)
+                    matches.append( (key, value) )
 
         return create_best_matching_cdecl_spec(cdecl_spec, matches)
 
-    def cpparg_for_carg(self, carg):
+    # Funcsig equivalent of closest_cppdecl_spec_for_cdecl_spec
+    def closest_funcsig_cppdecl_spec_for_cdecl_spec(self, cdecl_spec):
+        matches = []
         for mapping in self.all_mappings():
-            for key, value in mapping.arg_mappings.items():
+            for key, value in mapping.funcsig_type_mappings.items():
+                debug.line("closest_funcsig_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                if key == cdecl_spec:
+                    return value, DeclSpecMatchType.FULL
+                if key.type == cdecl_spec.type:
+                    matches.append( (key, value) )
+
+        return create_best_matching_cdecl_spec(cdecl_spec, matches)
+
+    # Use this version if you only want to match type (and optionally pointer)
+    def closest_funcbody_cppdecl_spec_for_ctype(self, type, pointer=None):
+        cdecl_spec = DeclSpec(type=type, pointer=pointer)
+        return self.closest_funcbody_cppdecl_spec_for_cdecl_spec(cdecl_spec)
+
+    def funcbody_cpparg_for_carg(self, carg):
+        for mapping in self.all_mappings():
+            for key, value in mapping.funcbody_arg_mappings.items():
                 if key.name == carg.name:
                     return value
         return None
 
-    def cpparg_for_carg_name(self, carg_name):
+    def funcbody_cpparg_for_carg_name(self, carg_name):
         assert carg_name, f"carg_name can't be empty!"
 
         for mapping in self.all_mappings():
-            for key, value in mapping.arg_mappings.items():
+            for key, value in mapping.funcbody_arg_mappings.items():
                 if key.name == carg_name:
                     return value
         return None
 
-    def cppfunction_arg_for_carg(self, carg):
+    def funcsig_cpparg_for_carg(self, carg):
         if not carg.name:
-            debug.line("cppfunction_arg_for_carg", f"carg has no name - can't look up a match")
+            debug.line("funcsig_cpparg_for_carg", f"carg has no name - can't look up a match")
             return None
 
         for mapping in self.all_mappings():
-            for key, value in mapping.function_arg_mappings.items():
+            for key, value in mapping.funcsig_arg_mappings.items():
+                debug.line("funcsig_cpparg_for_carg", f"key=[{debug.as_debug_string(key)}] carg=[{debug.as_debug_string(carg)}]")
                 if key.name == carg.name:
                     return value
         return None
