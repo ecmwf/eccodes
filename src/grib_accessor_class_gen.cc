@@ -404,7 +404,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
-    switch (grib_accessor_get_native_type(a)) {
+    // Use the native type of the expression not the accessor
+    switch (grib_expression_native_type(hand, e)) {
         case GRIB_TYPE_LONG: {
             len = 1;
             ret = grib_expression_evaluate_long(hand, e, &lval);
@@ -542,7 +543,7 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
         double val = strtod(v, &endPtr);
         if (*endPtr) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "%s: Invalid value (%s) for %s. String cannot be converted to a double",
+                             "%s: Invalid value (%s) for key '%s'. String cannot be converted to a double",
                              __func__, v, a->name);
             return GRIB_WRONG_TYPE;
         }
