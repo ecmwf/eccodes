@@ -37,3 +37,7 @@ class DefaultConversionAssistant:
     def validate_variable_declaration(self, cpp_variable_declaration):
         # Just return the passed in value!
         return cpp_variable_declaration
+    
+    # Returns True is the name is a pointer to a class instance
+    def is_pointer_to_class_instance(self, arg_name):
+         return arg_name in ["self", "this"]

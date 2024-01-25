@@ -11,6 +11,14 @@ import code_object.function_call as function_call
 class GribAccessorConversionAssistant(default_conversion_assistant.DefaultConversionAssistant):
 
     def apply_special_function_call_conversions(self, cfunction_call, cppfunction_call):
+         if cfunction_call.name == "grib_arguments_get_name":
+             arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+             return function_call.FunctionCall(f"std::get<std::string>", [arg_entry])
+
+         if cfunction_call.name == "grib_arguments_get_long":
+             arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+             return function_call.FunctionCall(f"std::get<long>", [arg_entry])
+
          if cfunction_call.name == "snprintf":
              return function_call.FunctionCall("fmtString", cppfunction_call.args)
          
@@ -31,3 +39,8 @@ class GribAccessorConversionAssistant(default_conversion_assistant.DefaultConver
                 literal.Literal(f"GribStatus{{{cpp_variable_declaration.value.as_string()}}}"))
 
         return cpp_variable_declaration
+    
+    def is_pointer_to_class_instance(self, arg_name):
+         if arg_name in ["a"]:
+             return True
+         return super().is_pointer_to_class_instance(arg_name)

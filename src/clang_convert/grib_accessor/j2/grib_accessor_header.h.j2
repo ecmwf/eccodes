@@ -39,7 +39,7 @@ protected:
     {{ m.funcsig_as_declaration }};{% endfor %}
 
     // Data members
-    {% for m in c.data_members %} {{ m.as_declaration() }}{{ m.default_value }};
+    {% for m in c.data_members %} {{ m.as_string() }}{{ m.default_value }};
     {%- endfor %}
 
 private:

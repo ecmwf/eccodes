@@ -3,7 +3,7 @@ import default.default_ast_code_converter as default_ast_code_converter
 import code_object.code_objects as code_objects
 import grib_accessor.grib_accessor_ccode as grib_accessor_ccode
 import clang.cindex
-import code_object.arg as arg
+import code_object.data_member as data_member
 import utils.debug as debug
 
 class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConverter):
@@ -53,7 +53,7 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
                 continue
                 #debug.line("parse_grib_accessor_struct", f"Ignoring member=[{node.spelling}] kind=[{child.kind}]")
             else:
-                cmember = arg.Arg(child.type.spelling, child.spelling)
+                cmember = data_member.DataMember(child.type.spelling, child.spelling)
                 self._ccode.add_data_member(cmember)
 
     # Parse the first entry in the initializer list for the super class name, and the second entry for the string name

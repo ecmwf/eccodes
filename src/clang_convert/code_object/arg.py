@@ -47,7 +47,7 @@ class Arg(code_interface.CodeInterface):
         if self is NONE_VALUE or other is NONE_VALUE:
             return self is other
 
-        # Ensure the other object is an instance of FunctionArg for comparison.
+        # Ensure the other object is an instance of Arg for comparison.
         if not isinstance(other, Arg):
             return False
 

@@ -12,5 +12,5 @@ class ConstructorFunctionConverter(member_function_converter.MemberFunctionConve
     def create_cpp_code_object(self, conversion_data):
         cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_data)
         cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_data)
-        return constructor_function.ConstructorFunction(cpp_funcsig, cpp_body)
+        return constructor_function.ConstructorFunction(cpp_funcsig, cpp_body, conversion_data.info.class_name, conversion_data.info.super_class_name)
   

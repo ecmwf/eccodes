@@ -68,5 +68,5 @@ class CodeElements:
     def data_members(self):
         return self._data_members
 
-    def add_data_member_function(self, data_member):
+    def add_data_member(self, data_member):
         self._data_members.append(data_member)

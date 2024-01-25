@@ -6,6 +6,7 @@ import code_object.code_objects as code_objects
 import code_object.compound_statement as compound_statement
 import code_object.conditional_operation as conditional_operation
 import code_object.constructor_function as constructor_function
+import code_object.data_member as data_member
 import code_object.declaration_specifier as declaration_specifier
 import code_object.destructor_function as destructor_function
 import code_object.for_statement as for_statement
@@ -38,6 +39,7 @@ import code_object_converter.code_objects_converter as code_objects_converter
 import code_object_converter.compound_statement_converter as compound_statement_converter
 import code_object_converter.conditional_operation_converter as conditional_operation_converter
 import code_object_converter.constructor_function_converter as constructor_function_converter
+import code_object_converter.data_member_converter as data_member_converter
 import code_object_converter.declaration_specifier_converter as declaration_specifier_converter
 import code_object_converter.destructor_function_converter as destructor_function_converter
 import code_object_converter.for_statement_converter as for_statement_converter
@@ -76,6 +78,7 @@ CodeInterfaceConverterClasses = {
     compound_statement.CompoundStatement                    : compound_statement_converter.CompoundStatementConverter,
     conditional_operation.ConditionalOperation              : conditional_operation_converter.ConditionalOperationConverter,
     constructor_function.ConstructorFunction                : constructor_function_converter.ConstructorFunctionConverter,
+    data_member.DataMember                                  : data_member_converter.DataMemberConverter,
     declaration_specifier.DeclSpec                          : declaration_specifier_converter.DeclSpecConverter,
     destructor_function.DestructorFunction                  : destructor_function_converter.DestructorFunctionConverter,
     for_statement.ForStatement                              : for_statement_converter.ForStatementConverter,

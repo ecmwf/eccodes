@@ -15,7 +15,9 @@ from code_object.code_interface import NONE_VALUE
 import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
 from grib_accessor.grib_accessor_conversion_assistant import GribAccessorConversionAssistant
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
+import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.arg_mappings as arg_mappings
+import grib_accessor.supporting.data_member_mappings as data_member_mappings
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -68,6 +70,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         type_mappings.add_type_mappings_to_conversion_data(self._conversion_data)
 
         grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(self._conversion_data)
+
+        data_member_mappings.add_data_member_mappings_to_conversion_data(self._conversion_data)
 
         # Add C class name pointer as "do not convert" (e.g. grib_accessor_class_proj_string* -> NoneDeclSpec)
         debug.line("initialise_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")

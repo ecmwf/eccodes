@@ -5,9 +5,11 @@ import code_object_converter.supporting.code_mappings as code_mappings
 import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
 import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_pointer_mapping
 from code_object.arg import Arg
+from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.supporting.conversion_data_helper import *
 from default.default_conversion_assistant import DefaultConversionAssistant
+from code_object.code_interface import NONE_VALUE
 from copy import deepcopy
 
 # Store C to C++ conversion data to be used by the converters
@@ -76,7 +78,7 @@ class ConversionData:
 
     def add_funcbody_arg_mapping(self, carg, cpparg):
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
-        assert isinstance(cpparg, Arg) or cpparg==Arg.NONE, f"Expected Arg, got [{cpparg}]"
+        assert isinstance(cpparg, Arg) or cpparg==NONE_VALUE, f"Expected Arg, got [{cpparg}]"
         if not carg.name:
             debug.line("add_arg_mapping", f"carg name is empty, not adding mapping!")
             return
@@ -86,6 +88,19 @@ class ConversionData:
         else:
             self.active_map.funcbody_arg_mappings[carg] = cpparg
             debug.line("add_arg_mapping", f"Adding arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
+
+    def add_data_member_mapping(self, cmember, cppmember):
+        assert isinstance(cmember, DataMember), f"Expected DataMember, got [{cmember}]"
+        assert isinstance(cppmember, DataMember) or cppmember==NONE_VALUE, f"Expected DataMember, got [{cppmember}]"
+        if not cmember.name:
+            debug.line("add_data_member_mapping", f"cmember name is empty, not adding mapping!")
+            return
+
+        if cmember in self.active_map.data_member_mappings:
+            assert self.active_map.data_member_mappings[deepcopy(cmember)] == deepcopy(cppmember), f"Updating an existing data member: [{debug.as_debug_string(cmember)}] -> [{debug.as_debug_string(cppmember)}] Previous value=[{debug.as_debug_string(self.active_map.data_member_mappings[cmember])}]"
+        else:
+            self.active_map.data_member_mappings[cmember] = cppmember
+            debug.line("add_data_member_mapping", f"Adding data member: [{debug.as_debug_string(cmember)}] -> [{debug.as_debug_string(cppmember)}]")
 
     def add_funcsig_arg_mapping(self, carg, cpparg):
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
@@ -209,6 +224,21 @@ class ConversionData:
             for key, value in mapping.funcsig_arg_mappings.items():
                 debug.line("funcsig_cpparg_for_carg", f"key=[{debug.as_debug_string(key)}] carg=[{debug.as_debug_string(carg)}]")
                 if key.name == carg.name:
+                    return value
+        return None
+
+    def cppdata_member_for_cdata_member(self, cmember):
+        for mapping in self.all_mappings():
+            for key, value in mapping.data_member_mappings.items():
+                if key.name == cmember.name:
+                    return value
+        return None
+
+    def cppdata_member_for_cdata_member_name(self, cmember_name):
+        for mapping in self.all_mappings():
+            for key, value in mapping.data_member_mappings.items():
+                debug.line("cppdata_member_for_cdata_member_name", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                if key.name == cmember_name:
                     return value
         return None
 
