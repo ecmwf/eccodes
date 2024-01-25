@@ -13,7 +13,7 @@ import grib_accessor.supporting.type_mappings as type_mappings
 from code_object.declaration_specifier import DeclSpec
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
-from grib_accessor.grib_accessor_conversion_assistant import GribAccessorConversionAssistant
+from grib_accessor.grib_accessor_conversion_validation import GribAccessorConversionValidation
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.arg_mappings as arg_mappings
@@ -55,7 +55,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         return info
 
     def initialise_conversion_data(self):
-        self._conversion_data.conversion_assistant = GribAccessorConversionAssistant()
+        self._conversion_data.conversion_validation = GribAccessorConversionValidation()
 
         for mapping in grib_accessor_member_funcsig_mapping:
             self._conversion_data.add_member_funcsig_mapping(mapping)

@@ -13,7 +13,7 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
         debug.line("create_cpp_code_object",f" StructMemberAccessConverter [IN] self._ccode_object=[{debug.as_debug_string(self._ccode_object)}]")
 
         # Check if this is a pointer to a class instance
-        if conversion_data.conversion_assistant.is_pointer_to_class_instance(self._ccode_object.name):
+        if conversion_data.conversion_validation.is_pointer_to_class_instance(self._ccode_object.name):
             cstruct_member_access = self._ccode_object.member
             cpp_access = ""
             cpp_data_member = conversion_data.cppdata_member_for_cdata_member_name(cstruct_member_access.name)

@@ -16,18 +16,19 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
         cppfunction_call = None
 
         # 1. Check if there is a function mapping defined
-        cppfuncsig = conversion_data.cppfuncsig_for_cfuncname(cfunction_call.name)
-        if cppfuncsig:
+        mapping = conversion_data.funcsig_mapping_for_cfuncname(cfunction_call.name)
+        if mapping:
+            debug.line("create_cpp_code_object", f"FunctionCallConverter [1]")
             cpp_args = []
-            for i, arg_entry in enumerate(cppfuncsig.args):
+            for i, arg_entry in enumerate(mapping.cppfuncsig.args):
                 if arg_entry != NONE_VALUE:
                     cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_data)
-                    if cpp_arg_entry != NONE_VALUE:
-                        cpp_arg_entry = conversion_data.conversion_assistant.validate_function_call_args(cpp_arg_entry, arg_entry)
-                        cpp_args.append(cpp_arg_entry)
+                    assert cpp_arg_entry != NONE_VALUE, f"Expected cpp_arg_entry for carg=[{debug.as_debug_string(cfunction_call.args[i])}], got NoneValue!"
+                    cpp_args.append(cpp_arg_entry)
 
-            cppfunction_call = function_call.FunctionCall(cppfuncsig.name, cpp_args)
+            cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cpp_args)
         else:
+            debug.line("create_cpp_code_object", f"FunctionCallConverter [2]")
             # 2. Perform a manual conversion
             cpp_name = conversion_funcs.convert_ccode_object(cfunction_call.name, conversion_data)
             cpp_args = []
@@ -39,7 +40,5 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
 
             cppfunction_call = function_call.FunctionCall(cpp_name, cpp_args)
 
-        # 3. Check for any special handling
-        cppfunction_call = conversion_data.conversion_assistant.apply_special_function_call_conversions(cfunction_call, cppfunction_call)
-
-        return cppfunction_call
+        # 3. Apply validation (and special handling)
+        return conversion_data.conversion_validation.validate_function_call(cfunction_call, cppfunction_call, mapping)

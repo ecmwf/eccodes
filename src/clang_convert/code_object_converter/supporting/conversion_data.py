@@ -8,7 +8,7 @@ from code_object.arg import Arg
 from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.supporting.conversion_data_helper import *
-from default.default_conversion_assistant import DefaultConversionAssistant
+from code_object_converter.conversion_validation import ConversionValidation
 from code_object.code_interface import NONE_VALUE
 from copy import deepcopy
 
@@ -21,7 +21,7 @@ class ConversionData:
         self._info = info
         self._global_mappings = code_mappings.CodeMappings()
         self._local_mappings = None
-        self._conversion_assistant = None
+        self._conversion_validation = None
 
     # Call this to ensure local state is set ready for function conversions
     def set_local_state(self):
@@ -39,13 +39,13 @@ class ConversionData:
         return self._info
     
     @property 
-    def conversion_assistant(self):
-        return self._conversion_assistant
+    def conversion_validation(self):
+        return self._conversion_validation
     
-    @conversion_assistant.setter
-    def conversion_assistant(self, value):
-        assert isinstance(value, DefaultConversionAssistant), f"conversion_assistant is [{value}]"
-        self._conversion_assistant = value
+    @conversion_validation.setter
+    def conversion_validation(self, value):
+        assert isinstance(value, ConversionValidation), f"conversion_validation is [{value}]"
+        self._conversion_validation = value
 
     # ============================== Functions to update the mappings: start ==============================
 
@@ -254,6 +254,13 @@ class ConversionData:
             for entry in mapping.all_funcsig_mappings:
                 if entry.cfuncsig.name == cfuncname:
                     return entry.cppfuncsig
+        return None
+
+    def funcsig_mapping_for_cfuncname(self, cfuncname):
+        for mapping in self.all_mappings():
+            for entry in mapping.all_funcsig_mappings:
+                if entry.cfuncsig.name == cfuncname:
+                    return entry
         return None
 
     def cppfuncsig_pointer_for_cfuncsig_pointer(self, cfuncsig_pointer):

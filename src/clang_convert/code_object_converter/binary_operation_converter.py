@@ -18,17 +18,23 @@ class BinaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_binary_op = self._ccode_object.binary_op
         cpp_right_operand = conversion_funcs.convert_ccode_object(self._ccode_object.right_operand, conversion_data)
 
-        if isinstance(cpp_right_operand, literal.Literal):
-            cpptype = self.get_type(cpp_right_operand)
+        
+        # TODO ********************
+        
+        '''if isinstance(cpp_right_operand, literal.Literal):
+            cpptype = self.get_type(cpp_left_operand)
             if cpptype:
                 assert False
+        '''
 
         return binary_operation.BinaryOperation(cpp_left_operand, cpp_binary_op, cpp_right_operand)
     
-    def get_type(self, right_operand):
-        if isinstance(right_operand, arg.Arg):
-            return right_operand.decl_spec.type
-        if isinstance(right_operand, struct_member_access.StructMemberAccess):
-            cppmember = self._conversion_data.cppdata_member_for_cdata_member_name(right_operand.name)
+    def get_type(self, operand):
+        debug.line("get_type", f"operand=[{operand}] as_string=[{debug.as_debug_string(operand)}]")
+        if isinstance(operand, arg.Arg):
+            return operand.decl_spec.type
+        if isinstance(operand, struct_member_access.StructMemberAccess):
+            cppmember = self._conversion_data.cppdata_member_for_cdata_member_name(operand.name)
+
             return cppmember.decl_spec.type
         return None
