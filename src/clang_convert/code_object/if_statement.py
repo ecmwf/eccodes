@@ -1,5 +1,6 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
+from utils.string_funcs import strip_semicolon
 
 # Represents an if statement in the form:
 #
@@ -35,6 +36,7 @@ class IfStatement(code_interface.CodeInterface):
         if_lines = []
         if_lines.extend(self._expression.as_lines())
         if_lines[0] = "if (" + if_lines[0]
+        if_lines[-1] = strip_semicolon(if_lines[-1])
         if_lines[-1] += ")"
 
         action_lines = []

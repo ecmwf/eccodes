@@ -1,5 +1,6 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
+from utils.string_funcs import strip_semicolon
 
 # Represent an expression wrapped in a pair of parentheses, i.e. (EXPRESSION)
 # Models the PAREN_EXPR CursorKind in libclang
@@ -21,8 +22,7 @@ class ParenExpression(code_interface.CodeInterface):
             lines = self._expression.as_lines()
             lines[0] = "(" + lines[0]
 
-            if lines[-1].endswith(";"):
-                lines[-1] = lines[-1][:-1]
+            lines[-1] = strip_semicolon(lines[-1])
 
             lines[-1] += ")"
 

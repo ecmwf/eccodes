@@ -9,6 +9,10 @@ class DefaultConversionAssistant:
     def __init__(self) -> None:
         pass
 
+    # See if we have any special conversions to make...
+    def apply_special_function_call_conversions(self, cfunction_call, cppfunction_call):
+         return cppfunction_call
+
     # Check that the calling_arg_value (as a string) is correct when calling
     # as target_arg (Arg object)
     # For example, calling_arg_value of "foo" may need to become MyNamedType("foo")

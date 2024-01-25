@@ -23,4 +23,4 @@ class FunctionCall(code_interface.CodeInterface):
         self._args.append(arg_entry)
 
     def as_lines(self):
-        return [f"{self._name}({', '.join([a.as_string() for a in self._args])})"]
+        return [f"{self._name}({', '.join([a.as_string() for a in self._args])});"]
