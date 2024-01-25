@@ -62,7 +62,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
 
         if not match_type == DeclSpecMatchType.FULL:
             self._conversion_data.add_funcsig_type_mapping(carg.decl_spec, cpp_decl_spec)
-            debug.line("convert_funcsig_arg", f"Arg conversion type mapping: carg.decl_spec=[{debug.as_debug_string(carg.decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}]")
+            debug.line("convert_funcsig_arg", f"Arg conversion funcsig type mapping: carg.decl_spec=[{debug.as_debug_string(carg.decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}]")
 
         return cpp_arg
 
@@ -126,7 +126,12 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
     def convert_funcbody_decl_spec(self, test_decl_spec):
         assert test_decl_spec
 
+        debug.line("convert_funcbody_decl_spec", f"[1] test_decl_spec=[{debug.as_debug_string(test_decl_spec)}]")
+
         cpp_decl_spec, match_type = self._conversion_data.closest_funcbody_cppdecl_spec_for_cdecl_spec(test_decl_spec)
+
+        debug.line("convert_funcbody_decl_spec", f"[2.1] test_decl_spec=[{debug.as_debug_string(test_decl_spec)}]")
+        debug.line("convert_funcbody_decl_spec", f"[2.2] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}] match_type=[{match_type}]")
 
         if match_type == DeclSpecMatchType.NONE:
             cpp_decl_spec = conversion_funcs.convert_ccode_object(test_decl_spec, self._conversion_data)

@@ -11,6 +11,10 @@ class DeclSpecConverter(code_interface_converter.CodeInterfaceConverter):
 
     def create_cpp_code_object(self, conversion_data):
         cdecl_spec = self._ccode_object
+
+        debug.line("create_cpp_code_object", f"DeclSpecConverter [IN] [{cdecl_spec.as_string()}] [{cdecl_spec}]")
+
+
         cpp_decl_spec, _ = conversion_data.closest_funcbody_cppdecl_spec_for_cdecl_spec(cdecl_spec)
 
         if not cpp_decl_spec:
@@ -20,7 +24,7 @@ class DeclSpecConverter(code_interface_converter.CodeInterfaceConverter):
                                                            pointer=cdecl_spec.pointer)
 
             conversion_data.add_funcbody_type_mapping(cdecl_spec, cpp_decl_spec)
-            debug.line("create_cpp_code_object", f"DeclSpec conversion: [{cdecl_spec.as_string()}] -> [{cpp_decl_spec.as_string()}]")
+            debug.line("create_cpp_code_object", f"DeclSpecConverter [OUT] DeclSpec conversion: [{cdecl_spec.as_string()}] [{cdecl_spec}] -> [{cpp_decl_spec.as_string()}]")
 
         return cpp_decl_spec
   

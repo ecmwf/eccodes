@@ -8,6 +8,7 @@ from code_object.arg import Arg
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.supporting.conversion_data_helper import *
 from default.default_conversion_assistant import DefaultConversionAssistant
+from copy import deepcopy
 
 # Store C to C++ conversion data to be used by the converters
 #
@@ -56,11 +57,13 @@ class ConversionData:
     def add_funcbody_type_mapping(self, cdecl_spec, cppdecl_spec):
         assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
         assert isinstance(cppdecl_spec, DeclSpec) or cppdecl_spec==DeclSpec.NONE, f"Expected DeclSpec, got [{cppdecl_spec}]"
+
         if cdecl_spec in self.active_map.funcbody_type_mappings:
             assert self.active_map.funcbody_type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{debug.as_debug_string(self.active_map.funcbody_type_mappings[cdecl_spec])}]"
         else:
-            self.active_map.funcbody_type_mappings[cdecl_spec] = cppdecl_spec
+            self.active_map.funcbody_type_mappings[deepcopy(cdecl_spec)] = deepcopy(cppdecl_spec)
             debug.line("add_funcbody_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
+
 
     def add_funcsig_type_mapping(self, cdecl_spec, cppdecl_spec):
         assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
@@ -68,7 +71,7 @@ class ConversionData:
         if cdecl_spec in self.active_map.funcsig_type_mappings:
             assert self.active_map.funcsig_type_mappings[cdecl_spec] == cppdecl_spec, f"Updating an existing arg: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}] Previous arg=[{debug.as_debug_string(self.active_map.funcbody_type_mappings[cdecl_spec])}]"
         else:
-            self.active_map.funcsig_type_mappings[cdecl_spec] = cppdecl_spec
+            self.active_map.funcsig_type_mappings[deepcopy(cdecl_spec)] = deepcopy(cppdecl_spec)
             debug.line("add_funcsig_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
 
     def add_funcbody_arg_mapping(self, carg, cpparg):
@@ -155,7 +158,7 @@ class ConversionData:
         matches = []
         for mapping in self.all_mappings():
             for key, value in mapping.funcbody_type_mappings.items():
-                debug.line("closest_funcbody_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                debug.line("closest_funcbody_cppdecl_spec_for_cdecl_spec", f" Entry: key=[{debug.as_debug_string(key)}] [{key}] value=[{debug.as_debug_string(value)}]")
                 if key == cdecl_spec:
                     return value, DeclSpecMatchType.FULL
                 if key.type == cdecl_spec.type:
