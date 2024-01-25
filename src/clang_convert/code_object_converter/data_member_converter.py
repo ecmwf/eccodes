@@ -15,6 +15,29 @@ class DataMemberConverter(arg_converter.ArgConverter):
         assert isinstance(ccode_object, data_member.DataMember), f"Expected DataMember, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_pack):
-        cpparg = super().create_cpp_code_object(conversion_pack)
+        self._conversion_pack = conversion_pack
+        cmember = self._ccode_object
+        debug.line("create_cpp_code_object", f"DataMemberConverter [IN] cmember=[{debug.as_debug_string(cmember)}]")
 
-        return data_member.DataMember(cpparg.decl_spec, cpparg.name, self._ccode_object.mutable)
+        cppmember = self._conversion_pack.conversion_data.cppdata_member_for_cdata_member(self._ccode_object)
+        assert cppmember != NONE_VALUE
+
+        if cppmember:
+            return cppmember
+        else:
+            # Convert using the same rules as ArgConverter...
+            cpp_decl_spec, _ = super().convert_funcbody_decl_spec(cmember.decl_spec)
+            cpp_name = standard_transforms.transform_variable_name(cmember.name) + "_"
+
+            cppmember = data_member.DataMember(cpp_decl_spec, cpp_name, cmember.mutable)
+
+        # FOR NOW - MAKE ALL MEMBERS NON-CONST
+        if cppmember.decl_spec.const_qualifier:
+            cppmember.decl_spec.const_qualifier = ""
+            debug.line("create_cpp_code_object", f"DataMemberConverter *** SETTING DATA MEMBER TO NON-CONST ***")
+
+        self._conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
+        debug.line("create_cpp_code_object", f"Adding data member mapping cmember=[{debug.as_debug_string(cmember)}] cppmember=[{debug.as_debug_string(cppmember)}]")
+
+        debug.line("create_cpp_code_object", f"DataMemberConverter [OUT] cppmember=[{debug.as_debug_string(cppmember)}]")
+        return cppmember

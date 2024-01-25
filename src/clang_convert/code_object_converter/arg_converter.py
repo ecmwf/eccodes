@@ -90,6 +90,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
         debug.line("create_funcsig_cpparg", f"Arg conversion arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")
 
         return cpp_arg
+    
     def convert_funcbody_arg(self):
         carg = self._ccode_object
 

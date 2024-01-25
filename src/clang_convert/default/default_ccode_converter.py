@@ -75,17 +75,7 @@ class DefaultCCodeConverter:
     def convert_data_members(self):
         for cmember in self._ccode.data_members:
             cppmember = conversion_funcs.convert_ccode_object(cmember, self._conversion_pack)
-            cppmember = data_member.DataMember(cppmember.decl_spec, cppmember.name + "_")
-
-            # FOR NOW - MAKE ALL MEMBERS NON-CONST
-            if cppmember.decl_spec.const_qualifier:
-                cppmember.decl_spec.const_qualifier = ""
-                debug.line("convert_data_members", f"*** SETTING DATA MEMBER TO NON-CONST *** cppmember=[{debug.as_debug_string(cppmember)}]")
-
             self._code_elements.add_data_member(cppmember)
-            self._conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
-            debug.line("convert_data_members", f"cmember=[{debug.as_debug_string(cmember)}] cppmember=[{debug.as_debug_string(cppmember)}]")
-            
 
     # Override to return True if the member function should be marked const
     def is_const_member_function(self, function_name):
