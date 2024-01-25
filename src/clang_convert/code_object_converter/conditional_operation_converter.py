@@ -9,9 +9,9 @@ class ConditionalOperationConverter(code_interface_converter.CodeInterfaceConver
         super().__init__(ccode_object)
         assert isinstance(ccode_object, conditional_operation.ConditionalOperation), f"Expected ConditionalOperation, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_bool_expression = conversion_funcs.convert_ccode_object(self._ccode_object.bool_expression, conversion_data)
-        cpp_true_expression = conversion_funcs.convert_ccode_object(self._ccode_object.true_expression, conversion_data)
-        cpp_false_expression = conversion_funcs.convert_ccode_object(self._ccode_object.false_expression, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_bool_expression = conversion_funcs.convert_ccode_object(self._ccode_object.bool_expression, conversion_pack)
+        cpp_true_expression = conversion_funcs.convert_ccode_object(self._ccode_object.true_expression, conversion_pack)
+        cpp_false_expression = conversion_funcs.convert_ccode_object(self._ccode_object.false_expression, conversion_pack)
 
         return conditional_operation.ConditionalOperation(cpp_bool_expression, cpp_true_expression, cpp_false_expression)

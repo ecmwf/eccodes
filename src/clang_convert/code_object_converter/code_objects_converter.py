@@ -13,11 +13,11 @@ class CodeObjectsConverter(code_interface_converter.CodeInterfaceConverter):
     def code_objects_class(self):
         return code_objects.CodeObjects
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         cpp_code_objects = self.code_objects_class()
 
         for entry in self._ccode_object.code_objects:
-            converted_object = conversion_funcs.convert_ccode_object(entry, conversion_data)
+            converted_object = conversion_funcs.convert_ccode_object(entry, conversion_pack)
             cpp_code_objects.add_code_object(converted_object)
 
         return cpp_code_objects

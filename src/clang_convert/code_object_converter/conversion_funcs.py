@@ -106,7 +106,7 @@ CodeInterfaceConverterClasses = {
 }
 
 # Convert a code_object into a C++ code_object
-def convert_ccode_object(ccode_object, conversion_data):
+def convert_ccode_object(ccode_object, conversion_pack):
     debug.line("convert_ccode_object", f"[IN] [{type(ccode_object).__name__}] {debug.as_debug_string(ccode_object)}")
 
     if ccode_object is None:
@@ -116,7 +116,7 @@ def convert_ccode_object(ccode_object, conversion_data):
     else:
         converter_class = CodeInterfaceConverterClasses.get(type(ccode_object), code_interface_converter.CodeInterfaceConverter)
         converter = converter_class(ccode_object)
-        cpp_obj = converter.to_cpp_code_object(conversion_data)
+        cpp_obj = converter.to_cpp_code_object(conversion_pack)
 
     debug.line("convert_ccode_object", f"[OUT][{type(cpp_obj).__name__}] {debug.as_debug_string(cpp_obj)}")
 

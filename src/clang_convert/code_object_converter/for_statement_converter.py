@@ -9,11 +9,11 @@ class ForStatementConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, for_statement.ForStatement), f"Expected ForStatement, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_init_statement = conversion_funcs.convert_ccode_object(self._ccode_object.init_statement, conversion_data)
-        cpp_condition = conversion_funcs.convert_ccode_object(self._ccode_object.condition, conversion_data)
-        cpp_iteration_expression = conversion_funcs.convert_ccode_object(self._ccode_object.iteration_expression, conversion_data)
-        cpp_statement = conversion_funcs.convert_ccode_object(self._ccode_object.statement, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_init_statement = conversion_funcs.convert_ccode_object(self._ccode_object.init_statement, conversion_pack)
+        cpp_condition = conversion_funcs.convert_ccode_object(self._ccode_object.condition, conversion_pack)
+        cpp_iteration_expression = conversion_funcs.convert_ccode_object(self._ccode_object.iteration_expression, conversion_pack)
+        cpp_statement = conversion_funcs.convert_ccode_object(self._ccode_object.statement, conversion_pack)
 
         return for_statement.ForStatement(cpp_init_statement, cpp_condition, cpp_iteration_expression, cpp_statement)
   

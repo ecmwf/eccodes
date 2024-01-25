@@ -9,6 +9,6 @@ class MacroInstantiationConverter(code_interface_converter.CodeInterfaceConverte
         super().__init__(ccode_object)
         assert isinstance(ccode_object, macro_instantation.MacroInstantation), f"Expected MacroInstantation, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         # For now, just return a copy...
         return macro_instantation.MacroInstantation(self._ccode_object.as_lines())

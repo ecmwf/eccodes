@@ -11,17 +11,17 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
         super().__init__(ccode_object)
         assert isinstance(ccode_object, variable_declaration.VariableDeclaration), f"Expected VariableDeclaration, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
 
-        cpp_variable = conversion_funcs.convert_ccode_object(self._ccode_object.variable, conversion_data)
+        cpp_variable = conversion_funcs.convert_ccode_object(self._ccode_object.variable, conversion_pack)
 
         if cpp_variable == NONE_VALUE:
             return conversion_funcs.as_commented_out_code(self._ccode_object, f"Removed invalid variable")
 
-        cpp_value = conversion_funcs.convert_ccode_object(self._ccode_object.value, conversion_data)
+        cpp_value = conversion_funcs.convert_ccode_object(self._ccode_object.value, conversion_pack)
 
         cpp_variable_declaration = variable_declaration.VariableDeclaration(cpp_variable, cpp_value)
-        cpp_variable_declaration = conversion_data.conversion_validation.validate_variable_declaration(self._ccode_object, cpp_variable_declaration)
+        cpp_variable_declaration = conversion_pack.conversion_validation.validate_variable_declaration(self._ccode_object, cpp_variable_declaration)
         
         return cpp_variable_declaration
   

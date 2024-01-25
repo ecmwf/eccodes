@@ -10,20 +10,20 @@ class StructArgConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, struct_arg.StructArg), f"Expected StructArg, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         # Note: The struct name actually defines a type...
-        cpp_decl_spec, _ = conversion_data.closest_funcbody_cppdecl_spec_for_ctype(self._ccode_object.name)
+        cpp_decl_spec, _ = conversion_pack.conversion_data.closest_funcbody_cppdecl_spec_for_ctype(self._ccode_object.name)
 
         if not cpp_decl_spec:
-            cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_data)
+            cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_pack)
             cdecl_spec = declaration_specifier.DeclSpec(type=self._ccode_object.name, pointer="")
             cpp_decl_spec = declaration_specifier.DeclSpec(type=cpp_name, pointer="")
-            conversion_data.add_funcbody_type_mapping(cdecl_spec, cpp_decl_spec)
+            conversion_pack.conversion_data.add_funcbody_type_mapping(cdecl_spec, cpp_decl_spec)
             debug.line("create_cpp_code_object", f"StructArg type mapping: [{cdecl_spec.as_string()}] -> [{cpp_decl_spec.as_string()}]")
 
         cpp_members=[]
         for member in self._ccode_object.members:
-            cpp_member = conversion_funcs.convert_ccode_object(member, conversion_data)
+            cpp_member = conversion_funcs.convert_ccode_object(member, conversion_pack)
             cpp_members.append(cpp_member)
 
         return struct_arg.StructArg(cpp_decl_spec.type, cpp_members)

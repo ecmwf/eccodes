@@ -12,29 +12,13 @@ class BinaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, binary_operation.BinaryOperation), f"Expected BinaryOperation, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        self._conversion_data = conversion_data
-        cpp_left_operand = conversion_funcs.convert_ccode_object(self._ccode_object.left_operand, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        self._conversion_data = conversion_pack.conversion_data
+        cpp_left_operand = conversion_funcs.convert_ccode_object(self._ccode_object.left_operand, conversion_pack)
         cpp_binary_op = self._ccode_object.binary_op
-        cpp_right_operand = conversion_funcs.convert_ccode_object(self._ccode_object.right_operand, conversion_data)
+        cpp_right_operand = conversion_funcs.convert_ccode_object(self._ccode_object.right_operand, conversion_pack)
 
-        
-        # TODO ********************
-        
-        '''if isinstance(cpp_right_operand, literal.Literal):
-            cpptype = self.get_type(cpp_left_operand)
-            if cpptype:
-                assert False
-        '''
+        cppbinary_operation = binary_operation.BinaryOperation(cpp_left_operand, cpp_binary_op, cpp_right_operand)
 
-        return binary_operation.BinaryOperation(cpp_left_operand, cpp_binary_op, cpp_right_operand)
-    
-    def get_type(self, operand):
-        debug.line("get_type", f"operand=[{operand}] as_string=[{debug.as_debug_string(operand)}]")
-        if isinstance(operand, arg.Arg):
-            return operand.decl_spec.type
-        if isinstance(operand, struct_member_access.StructMemberAccess):
-            cppmember = self._conversion_data.cppdata_member_for_cdata_member_name(operand.name)
+        return conversion_pack.conversion_validation.validate_binary_operation(self._ccode_object, cppbinary_operation)
 
-            return cppmember.decl_spec.type
-        return None

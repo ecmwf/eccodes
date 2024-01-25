@@ -9,6 +9,6 @@ class MacroDefinitionConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, macro_definition.MacroDefinition), f"Expected MacroDefinition, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         # For now, just return a copy...
         return macro_definition.MacroDefinition(self._ccode_object.as_lines())

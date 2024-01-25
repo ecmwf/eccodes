@@ -9,8 +9,8 @@ class ConstructorFunctionConverter(member_function_converter.MemberFunctionConve
         super().__init__(ccode_object)
         assert isinstance(ccode_object, constructor_function.ConstructorFunction), f"Expected ConstructorFunction, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_data)
-        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_data)
-        return constructor_function.ConstructorFunction(cpp_funcsig, cpp_body, conversion_data.info.class_name, conversion_data.info.super_class_name)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
+        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
+        return constructor_function.ConstructorFunction(cpp_funcsig, cpp_body, conversion_pack.conversion_data.info.class_name, conversion_pack.conversion_data.info.super_class_name)
   

@@ -13,7 +13,7 @@ import grib_accessor.supporting.type_mappings as type_mappings
 from code_object.declaration_specifier import DeclSpec
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.supporting.funcsig_mappings.all_funcsig_mappings as all_funcsig_mappings
-from grib_accessor.grib_accessor_conversion_validation import GribAccessorConversionValidation
+from grib_accessor.grib_accessor_conversion_pack.grib_accessor_conversion_validation import GribAccessorConversionValidation
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.arg_mappings as arg_mappings
@@ -54,47 +54,48 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         return info
 
-    def initialise_conversion_data(self):
-        self._conversion_data.conversion_validation = GribAccessorConversionValidation()
+    def create_conversion_validation(self, conv_data):
+        return GribAccessorConversionValidation(conv_data)
 
+    def initialise_conversion_pack(self):
         for mapping in grib_accessor_member_funcsig_mapping:
-            self._conversion_data.add_member_funcsig_mapping(mapping)
+            self._conversion_pack.conversion_data.add_member_funcsig_mapping(mapping)
 
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
-            self._conversion_data.add_virtual_member_funcsig_mapping(mapping)
+            self._conversion_pack.conversion_data.add_virtual_member_funcsig_mapping(mapping)
 
-        all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_data)
+        all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_pack.conversion_data)
 
-        arg_mappings.add_arg_mappings_to_conversion_data(self._conversion_data)
+        arg_mappings.add_arg_mappings_to_conversion_data(self._conversion_pack.conversion_data)
 
-        type_mappings.add_type_mappings_to_conversion_data(self._conversion_data)
+        type_mappings.add_type_mappings_to_conversion_data(self._conversion_pack.conversion_data)
 
-        grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(self._conversion_data)
+        grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(self._conversion_pack.conversion_data)
 
-        data_member_mappings.add_data_member_mappings_to_conversion_data(self._conversion_data)
+        data_member_mappings.add_data_member_mappings_to_conversion_data(self._conversion_pack.conversion_data)
 
         # Add C class name pointer as "do not convert" (e.g. grib_accessor_class_proj_string* -> NoneDeclSpec)
         debug.line("initialise_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")
-        self._conversion_data.add_funcbody_type_mapping(DeclSpec.from_decl_specifier_seq(self._ccode.accessor_name+"*"), NONE_VALUE)
+        self._conversion_pack.conversion_data.add_funcbody_type_mapping(DeclSpec.from_decl_specifier_seq(self._ccode.accessor_name+"*"), NONE_VALUE)
 
     def set_function_specific_conversion_data(self, function_name):
         pass
 
     def add_includes(self):
         # Header includes
-        if self._conversion_data.info.super_class_name == "AccessorData":
-            self._conversion_data.info.header_includes.append("/".join(["AccessorData", self._conversion_data.info.super_class_name + ".h"]))
+        if self._conversion_pack.conversion_data.info.super_class_name == "AccessorData":
+            self._conversion_pack.conversion_data.info.header_includes.append("/".join(["AccessorData", self._conversion_pack.conversion_data.info.super_class_name + ".h"]))
         else:
-            self._conversion_data.info.header_includes.append(f"{self._conversion_data.info.super_class_name}.h")
+            self._conversion_pack.conversion_data.info.header_includes.append(f"{self._conversion_pack.conversion_data.info.super_class_name}.h")
 
         for inc in includes.grib_accessor_header_includes:
-            self._conversion_data.info.header_includes.append(inc)
+            self._conversion_pack.conversion_data.info.header_includes.append(inc)
 
         # Source includes
-        self._conversion_data.info.source_includes.append(f"\"{self._conversion_data.info.class_name}.h\"")
+        self._conversion_pack.conversion_data.info.source_includes.append(f"\"{self._conversion_pack.conversion_data.info.class_name}.h\"")
         
         for inc in includes.grib_accessor_source_includes:
-            self._conversion_data.info.source_includes.append(inc)
+            self._conversion_pack.conversion_data.info.source_includes.append(inc)
 
 
         # TODO: Class-specific includes

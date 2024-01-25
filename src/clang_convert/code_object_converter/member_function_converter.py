@@ -9,9 +9,9 @@ class MemberFunctionConverter(function_converter.FunctionConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, member_function.MemberFunction), f"Expected MemberFunction, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_data)
-        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
+        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
         return member_function.MemberFunction(cpp_funcsig, cpp_body)
   

@@ -1,14 +1,14 @@
 
 import utils.debug as debug
 import cpp_code.code_info as code_info
-import code_object_converter.supporting.code_mappings as code_mappings
-import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
-import code_object_converter.supporting.funcsig_pointer_mapping as funcsig_pointer_mapping
+import code_object_converter.conversion_pack.code_mappings as code_mappings
+import code_object_converter.conversion_pack.funcsig_mapping as funcsig_mapping
+import code_object_converter.conversion_pack.funcsig_pointer_mapping as funcsig_pointer_mapping
 from code_object.arg import Arg
 from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
-from code_object_converter.supporting.conversion_data_helper import *
-from code_object_converter.conversion_validation import ConversionValidation
+from code_object_converter.conversion_pack.conversion_data_helper import *
+from code_object_converter.conversion_pack.conversion_validation import ConversionValidation
 from code_object.code_interface import NONE_VALUE
 from copy import deepcopy
 

@@ -9,8 +9,8 @@ class UnaryExpressionConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, unary_expression.UnaryExpression), f"Expected UnaryExpression, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_keyword = conversion_funcs.convert_ccode_object(self._ccode_object.keyword, conversion_data)
-        cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_keyword = conversion_funcs.convert_ccode_object(self._ccode_object.keyword, conversion_pack)
+        cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_pack)
 
         return unary_expression.UnaryExpression(cpp_keyword, cpp_expression)

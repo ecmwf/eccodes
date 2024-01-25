@@ -9,12 +9,12 @@ class InitListConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, init_list.InitList), f"Expected InitList, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_decl_spec = conversion_funcs.convert_ccode_object(self._ccode_object.decl_spec, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_decl_spec = conversion_funcs.convert_ccode_object(self._ccode_object.decl_spec, conversion_pack)
         cpp_init_list = init_list.InitList(cpp_decl_spec)
 
         for entry in self._ccode_object.entries:
-            cpp_entry = conversion_funcs.convert_ccode_object(entry, conversion_data)
+            cpp_entry = conversion_funcs.convert_ccode_object(entry, conversion_pack)
             cpp_init_list.add_entry(cpp_entry)
 
         return cpp_init_list

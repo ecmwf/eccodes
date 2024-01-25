@@ -1,9 +1,11 @@
 
 import utils.debug as debug
-import code_object_converter.conversion_validation as conversion_validation
+import code_object_converter.conversion_pack.conversion_validation as conversion_validation
 import code_object.unary_operation as unary_operation
 from code_object.code_interface import NONE_VALUE
 import code_object.function_call as function_call
+import code_object.literal as literal
+import re
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
@@ -31,7 +33,32 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         # Just return the passed in value!
         return calling_arg_value
-    
+
+    def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
+        # Check for the sizeof(x)/sizeof(*x) idiom (in the C code), and if x is a container in C++, replace with x.size()
+        # Note we also check for sizeof(x)/sizeof(x[0])
+        cvalue = cbinary_operation.as_string()
+        m = re.search(rf"sizeof\(([^\)])\)/sizeof\((\*\1\)|(\1\[0\]\)))", cvalue)
+        if m:
+             cvariable = m.group(1)
+             cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(cvariable)
+             if cpparg and self.is_cpp_container_type(cpparg.decl_spec):
+                  return literal.Literal(f"{cpparg.name}.size()")
+
+        return cppbinary_operation
+
     # Returns True is the name is a pointer to a class instance
     def is_pointer_to_class_instance(self, arg_name):
          return arg_name in ["self", "this"]
+    
+    def is_cpp_container_type(self, cppdecl_spec):
+        for type in [
+            "std::string",
+            "std::array",
+            "std::vector",
+            "std::map",
+        ]:
+             if type in cppdecl_spec.type:
+                  return True
+
+        return False

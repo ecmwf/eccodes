@@ -9,8 +9,8 @@ class ArrayAccessConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, array_access.ArrayAccess), f"Expected ArrayAccess, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_data)
-        cpp_index = conversion_funcs.convert_ccode_object(self._ccode_object.index, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_pack)
+        cpp_index = conversion_funcs.convert_ccode_object(self._ccode_object.index, conversion_pack)
 
         return array_access.ArrayAccess(cpp_name, cpp_index)

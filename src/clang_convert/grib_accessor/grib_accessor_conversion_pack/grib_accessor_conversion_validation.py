@@ -1,10 +1,10 @@
 
 import utils.debug as debug
-import default.default_conversion_validation as default_conversion_validation
+import default.default_conversion_pack.default_conversion_validation as default_conversion_validation
 import code_object.literal as literal
 import code_object.variable_declaration as variable_declaration
-import code_object.function_call as function_call
-from grib_accessor.conversion_validation.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
+import code_object.binary_operation as binary_operation
+from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class GribAccessorConversionValidation(default_conversion_validation.DefaultConversionValidation):
@@ -31,8 +31,25 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             return updated_cpp_variable_declaration
 
         return super().validate_variable_declaration(cvariable_declaration, cppvariable_declaration)
-    
+
+    def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
+        if cppbinary_operation.left_operand.as_string() == "flags_":
+            if cppbinary_operation.right_operand.as_string().startswith("GribAccessorFlag"):
+                updated_right_operand = literal.Literal(f"toInt({cppbinary_operation.right_operand.as_string()})")
+                return binary_operation.BinaryOperation(cppbinary_operation.left_operand, cppbinary_operation.binary_op, updated_right_operand)
+            
+        return super().validate_binary_operation(cbinary_operation, cppbinary_operation)
+
     def is_pointer_to_class_instance(self, arg_name):
          if arg_name in ["a"]:
              return True
          return super().is_pointer_to_class_instance(arg_name)
+
+    def is_cpp_container_type(self, cppdecl_spec):
+        for type in [
+            "AccessorDataBuffer",
+        ]:
+             if type in cppdecl_spec.type:
+                  return True
+
+        return super().is_cpp_container_type(cppdecl_spec)

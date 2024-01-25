@@ -9,9 +9,9 @@ class FunctionConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, function.Function), f"Expected Function, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_data)
-        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
+        cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
         return function.Function(cpp_funcsig, cpp_body)
   

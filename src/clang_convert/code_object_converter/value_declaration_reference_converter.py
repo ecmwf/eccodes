@@ -11,22 +11,22 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
         super().__init__(ccode_object)
         assert isinstance(ccode_object, value_declaration_reference.ValueDeclarationReference), f"Expected ValueDeclarationReference, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         cdecl_ref_expr_value = self._ccode_object.as_string()
 
         # 1. Check if it is a function name
-        cppfuncsig = conversion_data.cppfuncsig_for_cfuncname(cdecl_ref_expr_value)
+        cppfuncsig = conversion_pack.conversion_data.cppfuncsig_for_cfuncname(cdecl_ref_expr_value)
         if cppfuncsig:
             return value_declaration_reference.ValueDeclarationReference(cppfuncsig.name)
         
         # 2. Check if it is an arg
-        cpparg = conversion_data.funcbody_cpparg_for_carg_name(cdecl_ref_expr_value)
+        cpparg = conversion_pack.conversion_data.funcbody_cpparg_for_carg_name(cdecl_ref_expr_value)
         if cpparg == NONE_VALUE:
             return NONE_VALUE
         elif cpparg:
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
             
         # 3. Perform a default conversion
-        cdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_data)
+        cdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_pack)
 
         return value_declaration_reference.ValueDeclarationReference(cdecl_ref_expr_value)

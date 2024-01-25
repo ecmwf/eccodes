@@ -1,7 +1,7 @@
 
 from code_object.arg import Arg
 from code_object.declaration_specifier import DeclSpec
-import code_object_converter.supporting.conversion_data as conversion_data
+import code_object_converter.conversion_pack.conversion_data as conversion_data
 
 common_grib_type_mappings = {
     "grib_accessor*"    : "AccessorPtr",

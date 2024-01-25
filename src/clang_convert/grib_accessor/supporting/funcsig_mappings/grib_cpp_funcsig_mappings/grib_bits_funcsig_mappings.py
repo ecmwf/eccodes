@@ -1,8 +1,8 @@
 
 from code_object.funcsig import FuncSig
-from code_object_converter.supporting.arg_indexes import ArgIndexes
+from code_object_converter.conversion_pack.arg_indexes import ArgIndexes
 from code_object.arg import Arg
-from code_object_converter.supporting.funcsig_mapping import FuncSigMapping
+from code_object_converter.conversion_pack.funcsig_mapping import FuncSigMapping
 
 grib_bits_funcsig_mappings = [
     FuncSigMapping( FuncSig("void", "grib_set_bit_on", [Arg("unsigned char*", "p"), Arg("long*", "bitp")]),

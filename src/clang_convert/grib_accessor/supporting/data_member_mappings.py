@@ -1,7 +1,7 @@
 
 from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
-import code_object_converter.supporting.conversion_data as conversion_data
+import code_object_converter.conversion_pack.conversion_data as conversion_data
 
 # Define base class member mapping
 grib_accessor_base_data_members_map = {

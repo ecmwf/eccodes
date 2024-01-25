@@ -382,6 +382,12 @@ class AstParser:
 
     def parse_CXX_UNARY_EXPR(self, node):
         keyword = node.spelling
+        if not keyword:
+            # Some unary expressions (e.g. sizeof) give an empty keyword, but we can extract it
+            # from the first token
+            tokens = [token.spelling for token in node.get_tokens()]
+            keyword = tokens[0]
+
         children = list(node.get_children())
         assert len(children) == 1, f"Expected exactly one child for unary expression"
         expression = children[0]

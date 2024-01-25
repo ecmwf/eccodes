@@ -11,16 +11,16 @@ class GlobalFunctionConverter(function_converter.FunctionConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, global_function.GlobalFunction), f"Expected GlobalFunction, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        self._conversion_data = conversion_data
+    def create_cpp_code_object(self, conversion_pack):
+        self._conversion_pack = conversion_pack
         cpp_body = code_objects.CodeObjects()
 
         for entry in self._ccode_object.body.code_objects:
-            if isinstance(entry, funcsig.FuncSig) and conversion_data.is_member_function(entry.name):
+            if isinstance(entry, funcsig.FuncSig) and self._conversion_pack.conversion_data.is_member_function(entry.name):
                 debug.line("create_cpp_code_object", f"Ignoring member function name=[{entry.name}]")
                 continue
 
-            cpp_code_obj = conversion_funcs.convert_ccode_object(entry, conversion_data)
+            cpp_code_obj = conversion_funcs.convert_ccode_object(entry, self._conversion_pack)
             cpp_body.add_code_object(cpp_code_obj)
 
         return global_function.GlobalFunction(cpp_body)

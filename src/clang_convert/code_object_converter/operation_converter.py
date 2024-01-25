@@ -9,6 +9,6 @@ class OperationConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, operation.Operation), f"Expected Operation, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         # By default we just return a copy of the value
         return operation.Operation(self._ccode_object.value)

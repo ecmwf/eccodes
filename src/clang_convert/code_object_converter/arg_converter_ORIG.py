@@ -129,7 +129,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
     # Returns the equivalent C++ arg (name and type), which could be None
     # Note there are some differences in what is produced if the arg is a function arg...
     #
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
     #def to_cpp_arg(self, transforms):
 
         # For now, just change the name

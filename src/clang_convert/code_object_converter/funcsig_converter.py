@@ -2,7 +2,7 @@
 import utils.debug as debug
 import code_object.funcsig as funcsig
 import code_object_converter.code_interface_converter as code_interface_converter
-import code_object_converter.supporting.funcsig_mapping as funcsig_mapping
+import code_object_converter.conversion_pack.funcsig_mapping as funcsig_mapping
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.arg as arg
 import code_object.declaration_specifier as declaration_specifier
@@ -13,11 +13,11 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, funcsig.FuncSig), f"Expected FuncSig, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        self._conversion_data = conversion_data
+    def create_cpp_code_object(self, conversion_pack):
+        self._conversion_pack = conversion_pack
 
         # If we have a mapping already stored, just use that!
-        cppfuncsig = self._conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
+        cppfuncsig = self._conversion_pack.conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
         if not cppfuncsig:
             cppfunc_arg = self.to_cpp_func_arg()
             cpp_args = self.to_cpp_args()
@@ -30,7 +30,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
             # Add this to the conversion data mappings
             mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
-            self._conversion_data.add_funcsig_mapping(mapping)
+            self._conversion_pack.conversion_data.add_funcsig_mapping(mapping)
 
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig.is_declaration = self._ccode_object.is_declaration
@@ -45,7 +45,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
     # Converts the name and return type internal representation to C++
     def to_cpp_func_arg(self):
         cfunc_arg = self._ccode_object.func_arg
-        cppfunc_arg = conversion_funcs.convert_ccode_object(cfunc_arg, self._conversion_data)
+        cppfunc_arg = conversion_funcs.convert_ccode_object(cfunc_arg, self._conversion_pack)
         
         if cppfunc_arg.decl_spec.type == "int":
             # We'll assume int means GribStatus
@@ -61,7 +61,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
     def to_cpp_args(self):
         cppargs = []
         for entry in self._ccode_object.args:
-            cpparg = conversion_funcs.convert_ccode_object(entry, self._conversion_data)
+            cpparg = conversion_funcs.convert_ccode_object(entry, self._conversion_pack)
             cppargs.append(cpparg)
 
         return cppargs

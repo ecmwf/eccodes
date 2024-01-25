@@ -1,11 +1,13 @@
 
 import utils.debug as debug
-import code_object.unary_operation as unary_operation
 
 # Provides functions to perform extra validation as part of a conversion operation
 #
+# Holds a reference to the conversion_data (part of the containing conversion_pack class)
 # This is the interface, override as required...
 class ConversionValidation:
+    def __init__(self, conversion_data):
+        self._conversion_data = conversion_data
 
     # ---------- CodeObject Validation : Begin -----------------------------------------------------
     # Perform full validation of converted C++ function call
@@ -15,6 +17,9 @@ class ConversionValidation:
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         return cppvariable_declaration
+
+    def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
+        return cppbinary_operation
     # ---------- CodeObject Validation : End   -----------------------------------------------------
     
 

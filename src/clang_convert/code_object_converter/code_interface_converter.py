@@ -17,12 +17,12 @@ class CodeInterfaceConverter:
     # prone to this!)
     # 
     # The real work is done in create_cpp_code_object() !!!
-    def to_cpp_code_object(self, conversion_data):
-        cpp_code_object = self.create_cpp_code_object(conversion_data)
+    def to_cpp_code_object(self, conversion_pack):
+        cpp_code_object = self.create_cpp_code_object(conversion_pack)
         return copy.deepcopy(cpp_code_object)
 
     # Actual implementation of to_cpp_code_object()
     # It must be overridden - this version just returns the passed in ccode_object!
-    def create_cpp_code_object(self, conversion_data):
+    def create_cpp_code_object(self, conversion_pack):
         debug.line("create_cpp_code_object", f"Base version - just returning the C code object")
         return self._ccode_object

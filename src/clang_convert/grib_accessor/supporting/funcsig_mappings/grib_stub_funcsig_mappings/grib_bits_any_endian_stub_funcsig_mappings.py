@@ -1,8 +1,8 @@
 
 from code_object.funcsig import FuncSig
-from code_object_converter.supporting.arg_indexes import ArgIndexes
+from code_object_converter.conversion_pack.arg_indexes import ArgIndexes
 from code_object.arg import Arg
-from code_object_converter.supporting.funcsig_mapping import FuncSigMapping
+from code_object_converter.conversion_pack.funcsig_mapping import FuncSigMapping
 
 grib_bits_any_endian_stub_funcsig_mappings = [
     FuncSigMapping( FuncSig("unsigned long", "grib_decode_unsigned_long", [Arg("const unsigned char*", "p"), Arg("long*", "p"), Arg("long", "nbits")]),

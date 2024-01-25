@@ -9,7 +9,7 @@ class ParenExpressionConverter(code_interface_converter.CodeInterfaceConverter):
         super().__init__(ccode_object)
         assert isinstance(ccode_object, paren_expression.ParenExpression), f"Expected ParenExpression, got type=[{type(ccode_object)}]"
 
-    def create_cpp_code_object(self, conversion_data):
-        cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_data)
+    def create_cpp_code_object(self, conversion_pack):
+        cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_pack)
 
         return paren_expression.ParenExpression(cpp_expression)

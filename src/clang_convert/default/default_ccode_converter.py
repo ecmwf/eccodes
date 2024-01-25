@@ -3,10 +3,11 @@ import utils.debug as debug
 import cpp_code.cppcode as cppcode
 import cpp_code.code_info as code_info
 import cpp_code.code_elements as code_elements
-import code_object_converter.supporting.conversion_data as conversion_data 
+import code_object_converter.conversion_pack.conversion_data as conversion_data
+import code_object_converter.conversion_pack.conversion_pack as conversion_pack
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.data_member as data_member
-from default.default_conversion_validation import DefaultConversionValidation
+from default.default_conversion_pack.default_conversion_validation import DefaultConversionValidation
 import code_object.member_function as member_function
 
 # Convert a CCode object into a CppCode object, using the cconverter and derived classes as helpers
@@ -16,13 +17,13 @@ class DefaultCCodeConverter:
         self._ccode = ccode_instance
 
     def convert(self):
-        self.setup_conversion_objects()
+        self.setup_conversion_pack()
         self.add_includes()
         self.convert_global_function()
         self.convert_data_members()
 
         # Now set the conversion data state to local for the rest of the conversion
-        self._conversion_data.set_local_state()
+        self._conversion_pack.conversion_data.set_local_state()
 
         self.convert_functions()
         self.convert_constructor_function()
@@ -34,20 +35,28 @@ class DefaultCCodeConverter:
 
     # ============================== Setup functions: start ==============================
 
-    def setup_conversion_objects(self):
+    def setup_conversion_pack(self):
         self._code_info = self.create_code_info()
         self._code_elements = code_elements.CodeElements()
-        self._conversion_data = conversion_data.ConversionData(self._code_info)
-        self.initialise_conversion_data()
+        conv_data = self.create_conversion_data()
+        conv_validation = self.create_conversion_validation(conv_data)
+        self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation)
+        self.initialise_conversion_pack()
 
     def create_code_info(self):
         cpp_filename = self._ccode.cfilename
         cpp_class_name = self._ccode.class_name
         return code_info.CodeInfo(cpp_filename, cpp_class_name)
+    
+    def create_conversion_data(self):
+        return conversion_data.ConversionData(self._code_info)
+
+    def create_conversion_validation(self, conv_data):
+        return DefaultConversionValidation(conv_data)
 
     # Override to set required initial state
-    def initialise_conversion_data(self):
-        self._conversion_data.conversion_validation = DefaultConversionValidation()
+    def initialise_conversion_pack(self):
+        pass
 
     # ============================== Setup functions: end   ==============================
 
@@ -59,13 +68,13 @@ class DefaultCCodeConverter:
         pass
 
     def convert_global_function(self):
-        self._code_elements.global_function = conversion_funcs.convert_ccode_object(self._ccode.global_function, self._conversion_data)
+        self._code_elements.global_function = conversion_funcs.convert_ccode_object(self._ccode.global_function, self._conversion_pack)
         debug.line("convert_global_function", f"Converted C++ code [as_lines]...")
         debug.line("convert_global_function", self._code_elements.global_function.as_lines())
 
     def convert_data_members(self):
         for cmember in self._ccode.data_members:
-            cppmember = conversion_funcs.convert_ccode_object(cmember, self._conversion_data)
+            cppmember = conversion_funcs.convert_ccode_object(cmember, self._conversion_pack)
             cppmember = data_member.DataMember(cppmember.decl_spec, cppmember.name + "_")
 
             # FOR NOW - MAKE ALL MEMBERS NON-CONST
@@ -74,7 +83,7 @@ class DefaultCCodeConverter:
                 debug.line("convert_data_members", f"*** SETTING DATA MEMBER TO NON-CONST *** cppmember=[{debug.as_debug_string(cppmember)}]")
 
             self._code_elements.add_data_member(cppmember)
-            self._conversion_data.add_data_member_mapping(cmember, cppmember)
+            self._conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
             debug.line("convert_data_members", f"cmember=[{debug.as_debug_string(cmember)}] cppmember=[{debug.as_debug_string(cppmember)}]")
             
 
@@ -84,16 +93,16 @@ class DefaultCCodeConverter:
 
     # Helper to ensure the function is converted correctly, including resetting the local conversion data!
     def to_cpp_function(self, func):
-        self._conversion_data.reset_local_state()
-        cpp_func = conversion_funcs.convert_ccode_object(func, self._conversion_data)
+        self._conversion_pack.conversion_data.reset_local_state()
+        cpp_func = conversion_funcs.convert_ccode_object(func, self._conversion_pack)
         if isinstance(cpp_func, member_function.MemberFunction):
-            cpp_func.class_name = self._conversion_data.info.class_name
+            cpp_func.class_name = self._conversion_pack.conversion_data.info.class_name
             cpp_func.set_is_const(self.is_const_member_function(func.funcsig.name))
         return cpp_func
 
     def convert_functions(self):
         for func in self._ccode.functions:
-            self._conversion_data.reset_local_state()
+            self._conversion_pack.conversion_data.reset_local_state()
             cppfunc = self.to_cpp_function(func)
             self._code_elements.add_function(cppfunc)
             self.dump_function("convert_functions", cppfunc)
