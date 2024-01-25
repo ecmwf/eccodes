@@ -468,6 +468,27 @@ grib_check_key_equals $temp "-p $keys_s" "18$HOUR-24$HOUR 18$HOUR 24$HOUR"
 grib_check_key_equals $temp "-p $keys_i" "24 18 24"
 grib_check_key_equals $temp "-p $keys_d" "24 18 24"
 
+# Pack expression
+cat >$tempFilt<<EOF
+    set step="16m"; write;
+EOF
+${tools_dir}/grib_filter -o $temp $tempFilt $sample_g2
+grib_check_key_equals $temp "-p indicatorOfUnitOfTimeRange,forecastTime" "0 16"
+
+cat >$tempFilt<<EOF
+    set stepUnits="s"; set step="16"; write;
+EOF
+${tools_dir}/grib_filter -o $temp $tempFilt $sample_g2
+grib_check_key_equals $temp "-p indicatorOfUnitOfTimeRange,forecastTime" "13 16"
+
+
+cat >$tempFilt<<EOF
+    set stepUnits="s"; set step=16; write;
+EOF
+${tools_dir}/grib_filter -o $temp $tempFilt $sample_g2
+grib_check_key_equals $temp "-p indicatorOfUnitOfTimeRange,forecastTime" "13 16"
+
+
 cat >$tempFilt<<EOF
     set stepUnits="m"; print "[step]";
 EOF
