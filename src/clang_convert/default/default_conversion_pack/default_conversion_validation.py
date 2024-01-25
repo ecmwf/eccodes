@@ -38,7 +38,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         # Check for the sizeof(x)/sizeof(*x) idiom (in the C code), and if x is a container in C++, replace with x.size()
         # Note we also check for sizeof(x)/sizeof(x[0])
         cvalue = cbinary_operation.as_string()
-        m = re.search(rf"sizeof\(([^\)])\)/sizeof\((\*\1\)|(\1\[0\]\)))", cvalue)
+        m = re.search(rf"sizeof\(([^\)]+)\)\s*/\s*sizeof\((\*\1\)|(\1\[0\]\)))", cvalue)
         if m:
              cvariable = m.group(1)
              cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(cvariable)
