@@ -1639,10 +1639,8 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
-    grib_multi_support* gm = NULL;
-    if (!c)
-        c = grib_context_get_default();
-    gm = c->multi_support;
+    if (!c) c = grib_context_get_default();
+    grib_multi_support* gm = c->multi_support;
     while (gm) {
         if (gm->file == f) {
             gm->file = NULL;
@@ -1691,23 +1689,23 @@ static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)
 
 void grib_multi_support_reset(grib_context* c)
 {
-    grib_multi_support* gm   = c->multi_support;
-    grib_multi_support* next = NULL;
-    int i                    = 0;
-    while (next) {
-        next = gm->next;
+    if (!c) c = grib_context_get_default();
+    const int GRIB2_END_SECTION = 8;
+
+    grib_multi_support* gm = c->multi_support;
+    while (gm) {
         if (gm->file)
             fclose(gm->file);
         if (gm->message)
             grib_context_free(c, gm->message);
         gm->message = NULL;
-        for (i = 0; i < 8; i++)
+        for (int i = 0; i < GRIB2_END_SECTION; i++)
             gm->sections[i] = 0;
         if (gm->bitmap_section)
             grib_context_free(c, gm->bitmap_section);
         gm->bitmap_section = NULL;
-        grib_context_free(c, gm);
-        gm = NULL;
+        //grib_context_free(c, gm);
+        gm = gm->next;
     }
 }
 
