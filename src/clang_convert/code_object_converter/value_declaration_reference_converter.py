@@ -16,17 +16,20 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
 
         # 1. Check if it is a function name
         cppfuncsig = conversion_pack.conversion_data.cppfuncsig_for_cfuncname(cdecl_ref_expr_value)
+        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [1] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cppfuncsig=[{debug.as_debug_string(cppfuncsig)}]")
         if cppfuncsig:
             return value_declaration_reference.ValueDeclarationReference(cppfuncsig.name)
         
         # 2. Check if it is an arg
         cpparg = conversion_pack.conversion_data.funcbody_cpparg_for_carg_name(cdecl_ref_expr_value)
+        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [2] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cpparg=[{debug.as_debug_string(cpparg)}]")
         if cpparg == NONE_VALUE:
             return NONE_VALUE
         elif cpparg:
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
-            
-        # 3. Perform a default conversion
-        cdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_pack)
 
-        return value_declaration_reference.ValueDeclarationReference(cdecl_ref_expr_value)
+        # 4. Perform a default conversion
+        cppdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_pack)
+        debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [4] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cppdecl_ref_expr_value=[{debug.as_debug_string(cppdecl_ref_expr_value)}]")
+
+        return value_declaration_reference.ValueDeclarationReference(cppdecl_ref_expr_value)

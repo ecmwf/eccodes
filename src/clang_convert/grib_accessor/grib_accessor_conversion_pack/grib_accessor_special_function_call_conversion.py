@@ -16,7 +16,4 @@ def apply_special_function_call_conversions(cfunction_call, cppfunction_call):
         if cfunction_call.name == "snprintf":
             return function_call.FunctionCall("fmtString", cppfunction_call.args)
 
-        if cfunction_call.name == "strlen":
-            return function_call.FunctionCall("fmtString", cppfunction_call.args)
-
         return None
