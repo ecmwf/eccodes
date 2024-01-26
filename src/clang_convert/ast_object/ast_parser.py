@@ -459,22 +459,18 @@ class AstParser:
     def parse_DECL_REF_EXPR(self, node):
         return value_declaration_reference.ValueDeclarationReference(node.spelling)
 
-    # This is simplified for now, need to come back to...
+    # The top-level node contains the tokens showing the access, e.g. [['self', '->', 'grid_type']]
+    # The child node defines the first parameter ("self" in this case)
+    # However, as we're just storing strings, we'll use the tokens directly!
     def parse_MEMBER_REF_EXPR(self, node):
-        member_name = node.spelling
-        cstruct_member_access = struct_member_access.StructMemberAccess(None, member_name, None)
+        tokens = [token.spelling for token in node.get_tokens()]
+        debug.line("parse_MEMBER_REF_EXPR", f"[IN] node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
+        assert len(tokens) == 3, f"Expected exactly 3 tokens for member ref, but got [{len(tokens)}]"
 
-        for child in node.get_children():
-            if child.kind == clang.cindex.CursorKind.UNEXPOSED_EXPR:
-                parent_name = child.spelling
-                cparent_struct_member_access = struct_member_access.StructMemberAccess(None, parent_name, None)
-                cstruct_member_access.access = "->"
-                cparent_struct_member_access.member = cstruct_member_access
-                return cparent_struct_member_access
-            
-            debug.line("parse_MEMBER_REF_EXPR", f"*** IGNORING *** child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
+        cstruct_member_access        = struct_member_access.StructMemberAccess(None, tokens[0], None)
+        cstruct_member_access.member = struct_member_access.StructMemberAccess(tokens[1], tokens[2], None)
 
-        return None
+        return cstruct_member_access
 
     def parse_CALL_EXPR(self, node):
         tokens = [token.spelling for token in node.get_tokens()]

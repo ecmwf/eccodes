@@ -1,6 +1,7 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
 import code_object.operation as operation
+from utils.string_funcs import strip_semicolon
 
 # Represent a binary operation of the form LEFT_OPERAND OP RIGHT_OPERAND
 # Models the BINARY_OPERATOR CursorKind in libclang
@@ -39,6 +40,8 @@ class BinaryOperation(code_interface.CodeInterface):
     def as_lines(self):
         lines = []
         lines.extend(self._left_operand.as_lines())
+        lines[-1] = strip_semicolon(lines[-1])
+
         lines[-1] += " " + self._binary_op.as_string()
 
         right_lines = []

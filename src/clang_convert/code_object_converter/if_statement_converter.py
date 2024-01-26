@@ -13,4 +13,6 @@ class IfStatementConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_pack)
         cpp_action = conversion_funcs.convert_ccode_object(self._ccode_object.action, conversion_pack)
 
-        return if_statement.IfStatement(cpp_expression, cpp_action)
+        cpp_if = if_statement.IfStatement(cpp_expression, cpp_action)
+
+        return conversion_pack.conversion_validation.validate_if_statement(self._ccode_object, cpp_if)

@@ -6,12 +6,13 @@ from code_object.code_interface import NONE_VALUE
 import code_object.function_call as function_call
 import code_object.literal as literal
 import re
+import code_object.binary_operation as binary_operation
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
     def validate_function_call(self, cfunction_call, cppfunction_call, callee_funcsig_mapping):
-         if callee_funcsig_mapping:
+        if callee_funcsig_mapping:
             cpp_args = []
             for arg_entry in callee_funcsig_mapping.cppfuncsig.args:
                 if arg_entry != NONE_VALUE:
@@ -20,7 +21,10 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                     cpp_args.append(cpp_arg_entry)
             return function_call.FunctionCall(cppfunction_call.name, cpp_args)
          
-         return cppfunction_call
+        if cfunction_call.name == "strcmp":
+            return binary_operation.BinaryOperation(cppfunction_call.args[0], "==", cppfunction_call.args[1])
+              
+        return cppfunction_call
 
     # Check use of references when calling functions...
     def validate_function_call_arg(self, calling_arg_value, target_arg):
@@ -44,6 +48,13 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
              cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(cvariable)
              if cpparg and self.is_cpp_container_type(cpparg.decl_spec):
                   return literal.Literal(f"{cpparg.name}.size()")
+
+        # If we've updated a strcmp function call, we need to remove the return value comparison
+        if cbinary_operation.left_operand.as_string().startswith("strcmp") and \
+            not cppbinary_operation.left_operand.as_string().startswith("strcmp"):
+                debug.line("validate_binary_operation", f"Removed strcmp return value comparison [{debug.as_debug_string(cppbinary_operation.binary_op)}][{debug.as_debug_string(cppbinary_operation.right_operand)}]")
+             
+                return cppbinary_operation.left_operand
 
         return cppbinary_operation
 

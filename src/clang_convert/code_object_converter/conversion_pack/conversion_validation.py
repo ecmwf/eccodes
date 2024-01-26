@@ -20,6 +20,10 @@ class ConversionValidation:
 
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
         return cppbinary_operation
+    
+    def validate_if_statement(self, cif_statement, cppif_statement):
+        return cppif_statement
+    
     # ---------- CodeObject Validation : End   -----------------------------------------------------
     
 
