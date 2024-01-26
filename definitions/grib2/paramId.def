@@ -4661,6 +4661,52 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Time-mean evapotranspiration flux
+'235074' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 39 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time integral of potential evapotranspiration rate
+'235075' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-mean potential evapotranspiration rate
+'235076' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 40 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean volumetric soil moisture
+'235077' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow depth water equivalent
+'235078' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean skin temperature
+'235079' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Cross sectional area of flow in channel
 '240011' = {
 	 discipline = 1 ;
@@ -6258,26 +6304,6 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 14 ;
 	}
-#Evaporation in the last 6 hours
-'260265' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 6 ;
-	}
-#Evaporation in the last 24 hours
-'260266' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 79 ;
-	 typeOfFirstFixedSurface = 1 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Fraction of snow cover
 '260289' = {
 	 discipline = 0 ;
@@ -6438,47 +6464,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 39 ;
 	}
-#Time-mean evapotranspiration rate in the last 24h
-'260435' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 39 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Potential evapotranspiration rate
 '260436' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 40 ;
-	}
-#Time-integrated potential evapotranspiration rate in the last 24h
-'260437' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 40 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean potential evapotranspiration rate in the last 24h
-'260438' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 40 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean volumetric soil moisture
-'260440' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 25 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
 	}
 #Water runoff and drainage rate
 '260443' = {
@@ -6486,56 +6476,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 42 ;
 	}
-#Time-integrated water runoff and drainage rate in the last 24h
-'260444' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 42 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean water runoff and drainage rate in the last 24h
-'260445' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 42 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean snow depth water equivalent
-'260472' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 60 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean skin temperature
-'260473' = {
-	 discipline = 0 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 17 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
 #Snow melt rate
 '260475' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 41 ;
-	}
-#Time-integrated snow melt rate in the last 24h
-'260476' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 41 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
 	}
 #Forecast albedo
 '260509' = {
