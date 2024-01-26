@@ -32,6 +32,7 @@ sub create_cfName {
     centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName from
     param,grib_encoding,grib,attribute,centre,units,cf where
     param.hide_def=0 and
+    param.retired=0 and
     grib_encoding.id=grib.encoding_id and
     param.id=grib_encoding.param_id and
     attribute.id=grib.attribute_id and
@@ -111,6 +112,7 @@ sub create_def {
         centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
         from param,grib_encoding,grib,attribute,centre,units where
         param.hide_def=0 and
+        param.retired=0 and
         grib_encoding.id=grib.encoding_id and
         param.id=grib_encoding.param_id and
         attribute.id=grib.attribute_id and
@@ -187,6 +189,7 @@ sub create_paramId_def {
     my $query="select edition,centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
     from param,grib_encoding,grib,attribute,centre where
     param.hide_def=0 and
+    param.retired=0 and
     grib_encoding.id=grib.encoding_id and
     param.id=grib_encoding.param_id and
     attribute.id=grib.attribute_id and
