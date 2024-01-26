@@ -1,0 +1,8 @@
+# (C) Copyright 2005- ECMWF.
+
+#concept modelName ("unknown", "modelNameConcept.def",conceptsDir2,conceptsDir1): no_copy, dump;
+
+#if (!(modelName is "unknown")) {
+#    concept modelVersion ("unknown", "modelVersionConcept.[modelName].def",conceptsDir2,conceptsDir1): no_copy, dump;
+#    alias mars.model = modelName;
+#}
