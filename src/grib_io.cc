@@ -689,7 +689,6 @@ static int read_WRAP(reader* r)
     tmp[i++] = 'P';
 
     if ((r->read(r->read_data, buf, 8, &err) != 8) || err) {
-        printf("error\n");
         return err;
     }
 
