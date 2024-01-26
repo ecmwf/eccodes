@@ -1705,57 +1705,49 @@ int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_
 //     return ret;
 // }
 
-int grib_get_values(grib_handle* h, grib_values* args, size_t count)
-{
-    int ret = 0;
-    int i   = 0;
-
-    for (i = 0; i < count; i++) {
-        char buff[1024] = {0,};
-        size_t len = sizeof(buff) / sizeof(*buff);
-
-        if (!args[i].name) {
-            args[i].error = GRIB_INVALID_ARGUMENT;
-            continue;
-        }
-
-        if (args[i].type == 0) {
-            args[i].error = grib_get_native_type(h, args[i].name, &(args[i].type));
-            if (args[i].error != GRIB_SUCCESS)
-                ret = args[i].error;
-        }
-
-        switch (args[i].type) {
-            case GRIB_TYPE_LONG:
-                args[i].error = grib_get_long(h, args[i].name, &(args[i].long_value));
-                if (args[i].error != GRIB_SUCCESS)
-                    ret = args[i].error;
-                break;
-
-            case GRIB_TYPE_DOUBLE:
-                args[i].error = grib_get_double(h, args[i].name, &(args[i].double_value));
-                if (args[i].error != GRIB_SUCCESS)
-                    ret = args[i].error;
-                break;
-
-            case GRIB_TYPE_STRING:
-                args[i].error        = grib_get_string(h, args[i].name, buff, &len);
-                args[i].string_value = strdup(buff);
-                if (args[i].error != GRIB_SUCCESS)
-                    ret = args[i].error;
-                break;
-
-            default:
-                args[i].error        = grib_get_string(h, args[i].name, buff, &len);
-                args[i].string_value = strdup(buff);
-                if (args[i].error != GRIB_SUCCESS)
-                    ret = args[i].error;
-                break;
-        }
-    }
-
-    return ret;
-}
+// int grib_get_values(grib_handle* h, grib_values* args, size_t count)
+// {
+//     int ret = 0;
+//     int i   = 0;
+//     for (i = 0; i < count; i++) {
+//         char buff[1024] = {0,};
+//         size_t len = sizeof(buff) / sizeof(*buff);
+//         if (!args[i].name) {
+//             args[i].error = GRIB_INVALID_ARGUMENT;
+//             continue;
+//         }
+//         if (args[i].type == 0) {
+//             args[i].error = grib_get_native_type(h, args[i].name, &(args[i].type));
+//             if (args[i].error != GRIB_SUCCESS)
+//                 ret = args[i].error;
+//         }
+//         switch (args[i].type) {
+//             case GRIB_TYPE_LONG:
+//                 args[i].error = grib_get_long(h, args[i].name, &(args[i].long_value));
+//                 if (args[i].error != GRIB_SUCCESS)
+//                     ret = args[i].error;
+//                 break;
+//             case GRIB_TYPE_DOUBLE:
+//                 args[i].error = grib_get_double(h, args[i].name, &(args[i].double_value));
+//                 if (args[i].error != GRIB_SUCCESS)
+//                     ret = args[i].error;
+//                 break;
+//             case GRIB_TYPE_STRING:
+//                 args[i].error        = grib_get_string(h, args[i].name, buff, &len);
+//                 args[i].string_value = strdup(buff);
+//                 if (args[i].error != GRIB_SUCCESS)
+//                     ret = args[i].error;
+//                 break;
+//             default:
+//                 args[i].error        = grib_get_string(h, args[i].name, buff, &len);
+//                 args[i].string_value = strdup(buff);
+//                 if (args[i].error != GRIB_SUCCESS)
+//                     ret = args[i].error;
+//                 break;
+//         }
+//     }
+//     return ret;
+// }
 
 int grib_set_values(grib_handle* h, grib_values* args, size_t count)
 {

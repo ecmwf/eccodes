@@ -1182,7 +1182,6 @@ int grib_get_string_array(const grib_handle* h, const char* name, char** val, si
 int ecc__grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length);
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
-int grib_get_values(grib_handle* h, grib_values* args, size_t count);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
 int grib_get_nearest_smaller_value(grib_handle* h, const char* name, double val, double* nearest);
 void grib_print_values(const char* title, grib_values* values, FILE* out);
