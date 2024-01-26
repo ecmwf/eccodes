@@ -10,6 +10,7 @@ from code_object.declaration_specifier import DeclSpec
 from code_object_converter.conversion_pack.conversion_data_helper import *
 from code_object_converter.conversion_pack.conversion_validation import ConversionValidation
 from code_object.code_interface import NONE_VALUE
+import code_object_converter.conversion_pack.buffer_mapping as buffer_mapping
 from copy import deepcopy
 
 # Store C to C++ conversion data to be used by the converters
@@ -66,7 +67,6 @@ class ConversionData:
             self.active_map.funcbody_type_mappings[deepcopy(cdecl_spec)] = deepcopy(cppdecl_spec)
             debug.line("add_funcbody_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
 
-
     def add_funcsig_type_mapping(self, cdecl_spec, cppdecl_spec):
         assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
         assert isinstance(cppdecl_spec, DeclSpec) or cppdecl_spec==DeclSpec.NONE, f"Expected DeclSpec, got [{cppdecl_spec}]"
@@ -75,6 +75,11 @@ class ConversionData:
         else:
             self.active_map.funcsig_type_mappings[deepcopy(cdecl_spec)] = deepcopy(cppdecl_spec)
             debug.line("add_funcsig_type_mapping", f"Adding decl_spec: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cppdecl_spec)}]")
+
+    def add_funcsig_buffer_mapping(self, cbuffer, clength, cpp_container):
+        mapping = buffer_mapping.BufferMapping(cbuffer=cbuffer, clength=clength, cpp_container=cpp_container)
+        debug.line("add_funcsig_buffer_mapping", f"Adding cbuffer=[{debug.as_debug_string(mapping.cbuffer)}] , clength=[{debug.as_debug_string(mapping.clength)}] -> cpp_container=[{debug.as_debug_string(mapping.cpp_container)}]")
+        self.active_map.funcsig_buffer_mappings.append(mapping)
 
     def add_funcbody_arg_mapping(self, carg, cpparg):
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
@@ -279,6 +284,7 @@ class ConversionData:
                     return value
         return None
 
+    #def funcsig_buffer_mapping_for
 
     # Searches both C and C++ member and virtual member maps
     def is_member_function(self, function_name):

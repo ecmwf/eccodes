@@ -92,7 +92,6 @@ class DefaultCCodeConverter:
 
     def convert_functions(self):
         for func in self._ccode.functions:
-            self._conversion_pack.conversion_data.reset_local_state()
             cppfunc = self.to_cpp_function(func)
             self._code_elements.add_function(cppfunc)
             self.dump_function("convert_functions", cppfunc)

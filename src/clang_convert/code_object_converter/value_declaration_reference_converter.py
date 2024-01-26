@@ -28,6 +28,9 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
         elif cpparg:
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
 
+        # 3. Check if it is a mapped buffer (e.g. char *c, int* len => std::string& str)
+        
+
         # 4. Perform a default conversion
         cppdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_pack)
         debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [4] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cppdecl_ref_expr_value=[{debug.as_debug_string(cppdecl_ref_expr_value)}]")

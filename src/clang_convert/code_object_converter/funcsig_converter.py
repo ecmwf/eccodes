@@ -15,10 +15,19 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
     def create_cpp_code_object(self, conversion_pack):
         self._conversion_pack = conversion_pack
+        cfuncsig = self._ccode_object
 
         # If we have a mapping already stored, just use that!
-        cppfuncsig = self._conversion_pack.conversion_data.cppfuncsig_for_cfuncsig(self._ccode_object)
-        if not cppfuncsig:
+        mapping = self._conversion_pack.conversion_data.funcsig_mapping_for_cfuncname(cfuncsig.name)
+        if mapping:
+            cppfuncsig = mapping.cppfuncsig
+            # Add any buffer mappings: {ptr, buffer} -> C++ Container 
+            if mapping.arg_indexes:
+                cbuffer = cfuncsig.args[mapping.arg_indexes.cbuffer]
+                clength = cfuncsig.args[mapping.arg_indexes.clength]
+                cpp_container = cfuncsig.args[mapping.arg_indexes.cpp_container]
+                self._conversion_pack.conversion_data.add_funcsig_buffer_mapping(cbuffer, clength, cpp_container)
+        else:
             cppfunc_arg = self.to_cpp_func_arg()
             cpp_args = self.to_cpp_args()
             cppfuncsig = funcsig.FuncSig(cppfunc_arg.decl_spec,
@@ -29,11 +38,11 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
             #cppfuncsig.static = self.is_cpp_static()
 
             # Add this to the conversion data mappings
-            mapping = funcsig_mapping.FuncSigMapping(self._ccode_object, cppfuncsig)
+            mapping = funcsig_mapping.FuncSigMapping(cfuncsig, cppfuncsig)
             self._conversion_pack.conversion_data.add_funcsig_mapping(mapping)
 
         # Update the settings that we don't need (want?) to store in the map
-        cppfuncsig.is_declaration = self._ccode_object.is_declaration
+        cppfuncsig.is_declaration = cfuncsig.is_declaration
 
         return cppfuncsig
 
