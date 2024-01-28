@@ -701,9 +701,18 @@ void test_grib2_select_PDTN()
     Assert( 0 == grib2_is_PDTN_EPS(0) );
 }
 
+void test_codes_get_error_message()
+{
+    printf("Running %s ...\n", __func__);
+    const char* errmsg = grib_get_error_message(6666);
+    Assert( STR_EQUAL(errmsg, "Unknown error -6666"));
+}
+
 int main(int argc, char** argv)
 {
     printf("Doing unit tests. ecCodes version = %ld\n", grib_get_api_version());
+
+    test_codes_get_error_message();
 
     test_iarray();
     test_darray();
