@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     fclose(in);
 
     for (i = 0; i < keys_count; i++) {
-        printf("Copy key: %s\n", keys[i]);
+        printf("Copying key: %s\n", keys[i]);
         err = codes_copy_key(hfrom, hto, keys[i], GRIB_TYPE_UNDEFINED);
         CODES_CHECK(err, 0);
     }
