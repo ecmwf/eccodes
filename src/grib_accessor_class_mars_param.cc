@@ -15,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
-   IMPLEMENTS = pack_string;unpack_string
+   IMPLEMENTS = unpack_string
    IMPLEMENTS = init; string_length
    MEMBERS=  const char* paramId
    MEMBERS=  const char* table
@@ -34,7 +34,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -77,7 +76,7 @@ static grib_accessor_class _grib_accessor_class_mars_param = {
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -114,14 +113,12 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->param                    = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-// For an alternative implementation of pack_string and unpack_string, see
+// For an implementation of pack_string, see
+//   src/deprecated/grib_accessor_class_mars_param.cc
+
+// For an alternative implementation of unpack_string, see
 //   src/deprecated/grib_accessor_class_mars_param.cc
 //
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_mars_param* self = (grib_accessor_mars_param*)a;
