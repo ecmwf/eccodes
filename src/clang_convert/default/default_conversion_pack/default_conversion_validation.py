@@ -7,6 +7,9 @@ import code_object.function_call as function_call
 import code_object.literal as literal
 import re
 import code_object.binary_operation as binary_operation
+import code_object.struct_member_access as struct_member_access
+import code_object_converter.conversion_pack.arg_utils as arg_utils
+import code_object_converter.conversion_pack.container_utils as container_utils
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
@@ -38,16 +41,27 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         # Just return the passed in value!
         return calling_arg_value
 
+    def validate_unary_operation(self, cunary_operation, cppunary_operation):
+        debug.line("validate_unary_operation", f"cppunary_operation.operand string=[{debug.as_debug_string(cppunary_operation.operand)}] type=[{type(cppunary_operation.operand).__name__}]")
+        
+        cpparg = arg_utils.to_cpparg(cppunary_operation.operand, self._conversion_data)
+        if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+            # C++ variable is a container, so we'll strip the *
+            debug.line("validate_unary_operation", f"Stripping [*] from cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
+            return cppunary_operation.operand
+        return cppunary_operation
+
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
         # Check for the sizeof(x)/sizeof(*x) idiom (in the C code), and if x is a container in C++, replace with x.size()
         # Note we also check for sizeof(x)/sizeof(x[0])
         cvalue = cbinary_operation.as_string()
         m = re.search(rf"sizeof\(([^\)]+)\)\s*/\s*sizeof\((\*\1\)|(\1\[0\]\)))", cvalue)
         if m:
-             cvariable = m.group(1)
-             cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(cvariable)
-             if cpparg and self.is_cpp_container_type(cpparg.decl_spec):
-                  return literal.Literal(f"{cpparg.name}.size()")
+            cname = m.group(1)
+            cpp_container_arg = container_utils.cname_to_cpp_container_length(cname, self._conversion_data)
+            debug.line("validate_binary_operation", f"sizeof(x)/sizeof(*x) x=[{cname}] cpp_container_arg=[{debug.as_debug_string(cpp_container_arg)}]")
+            if cpp_container_arg:
+                return cpp_container_arg
 
         # If we've updated a strcmp function call, we need to remove the return value comparison
         if cbinary_operation.left_operand.as_string().startswith("strcmp") and \
@@ -56,20 +70,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
              
                 return cppbinary_operation.left_operand
 
+        # If we've got a StructMemberAccess object with a .size(), then we need to tidy up!
+        #if isinstance()
+
         return cppbinary_operation
-
-    # Returns True is the name is a pointer to a class instance
-    def is_pointer_to_class_instance(self, arg_name):
-         return arg_name in ["self", "this"]
-    
-    def is_cpp_container_type(self, cppdecl_spec):
-        for type in [
-            "std::string",
-            "std::array",
-            "std::vector",
-            "std::map",
-        ]:
-             if type in cppdecl_spec.type:
-                  return True
-
-        return False

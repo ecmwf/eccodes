@@ -9,6 +9,7 @@ import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.data_member as data_member
 from default.default_conversion_pack.default_conversion_validation import DefaultConversionValidation
 import code_object.member_function as member_function
+import default.default_conversion_pack.default_type_info as default_type_info
 
 # Convert a CCode object into a CppCode object, using the cconverter and derived classes as helpers
 
@@ -41,7 +42,6 @@ class DefaultCCodeConverter:
         conv_data = self.create_conversion_data()
         conv_validation = self.create_conversion_validation(conv_data)
         self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation)
-        self.initialise_conversion_pack()
 
     def create_code_info(self):
         cpp_filename = self._ccode.cfilename
@@ -49,17 +49,32 @@ class DefaultCCodeConverter:
         return code_info.CodeInfo(cpp_filename, cpp_class_name)
     
     def create_conversion_data(self):
-        return conversion_data.ConversionData(self._code_info)
+        conv_data = conversion_data.ConversionData(self._code_info)
+        self.init_conversion_data(conv_data)
+        self.set_custom_conversion_data(conv_data)
+        return conv_data
+
+    def init_conversion_data(self, conv_data):
+        for entry in self.type_info.class_instance_pointer_names():
+            conv_data.add_class_pointer_name(entry)
+
+        for entry in self.type_info.cpp_container_types():
+            conv_data.add_container_type(entry)
+
+    # Override to set required initial state
+    def set_custom_conversion_data(self, conv_data):
+        pass
 
     def create_conversion_validation(self, conv_data):
         return DefaultConversionValidation(conv_data)
 
-    # Override to set required initial state
-    def initialise_conversion_pack(self):
-        pass
-
     # ============================== Setup functions: end   ==============================
 
+    # Override to extend the type-info...
+    @property
+    def type_info(self):
+         return default_type_info.DefaultTypeInfo()
+    
     # A chance to add specific data - override as required
     def set_function_specific_conversion_data(self, function_name):
         pass

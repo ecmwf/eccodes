@@ -25,7 +25,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
             if mapping.arg_indexes:
                 cbuffer = cfuncsig.args[mapping.arg_indexes.cbuffer]
                 clength = cfuncsig.args[mapping.arg_indexes.clength]
-                cpp_container = cfuncsig.args[mapping.arg_indexes.cpp_container]
+                cpp_container = cppfuncsig.args[mapping.arg_indexes.cpp_container]
                 self._conversion_pack.conversion_data.add_funcsig_buffer_mapping(cbuffer, clength, cpp_container)
         else:
             cppfunc_arg = self.to_cpp_func_arg()

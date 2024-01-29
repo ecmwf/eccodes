@@ -18,6 +18,7 @@ import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
+import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -57,27 +58,32 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
     def create_conversion_validation(self, conv_data):
         return GribAccessorConversionValidation(conv_data)
 
-    def initialise_conversion_pack(self):
+    def set_custom_conversion_data(self, conv_data):
         for mapping in grib_accessor_member_funcsig_mapping:
-            self._conversion_pack.conversion_data.add_member_funcsig_mapping(mapping)
+            conv_data.add_member_funcsig_mapping(mapping)
 
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
-            self._conversion_pack.conversion_data.add_virtual_member_funcsig_mapping(mapping)
+            conv_data.add_virtual_member_funcsig_mapping(mapping)
 
-        all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(self._conversion_pack.conversion_data)
+        all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(conv_data)
 
-        arg_mappings.add_arg_mappings_to_conversion_data(self._conversion_pack.conversion_data)
+        arg_mappings.add_arg_mappings_to_conversion_data(conv_data)
 
-        type_mappings.add_type_mappings_to_conversion_data(self._conversion_pack.conversion_data)
+        type_mappings.add_type_mappings_to_conversion_data(conv_data)
 
-        grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(self._conversion_pack.conversion_data)
+        grib_literal_mapping.add_grib_literal_mappings_to_conversion_data(conv_data)
 
-        data_member_mappings.add_data_member_mappings_to_conversion_data(self._conversion_pack.conversion_data)
+        data_member_mappings.add_data_member_mappings_to_conversion_data(conv_data)
 
         # Add C class name pointer as "do not convert" (e.g. grib_accessor_class_proj_string* -> NoneDeclSpec)
         debug.line("initialise_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")
-        self._conversion_pack.conversion_data.add_funcbody_type_mapping(DeclSpec.from_decl_specifier_seq(self._ccode.accessor_name+"*"), NONE_VALUE)
+        conv_data.add_funcbody_type_mapping(DeclSpec.from_decl_specifier_seq(self._ccode.accessor_name+"*"), NONE_VALUE)
 
+    # Override to extend the type-info...
+    @property
+    def type_info(self):
+         return grib_accessor_type_info.GribAccessorTypeInfo()
+    
     def set_function_specific_conversion_data(self, function_name):
         pass
 

@@ -78,7 +78,7 @@ class ConversionData:
 
     def add_funcsig_buffer_mapping(self, cbuffer, clength, cpp_container):
         mapping = buffer_mapping.BufferMapping(cbuffer=cbuffer, clength=clength, cpp_container=cpp_container)
-        debug.line("add_funcsig_buffer_mapping", f"Adding cbuffer=[{debug.as_debug_string(mapping.cbuffer)}] , clength=[{debug.as_debug_string(mapping.clength)}] -> cpp_container=[{debug.as_debug_string(mapping.cpp_container)}]")
+        debug.line("add_funcsig_buffer_mapping", f"Adding [{mapping.as_string()}]")
         self.active_map.funcsig_buffer_mappings.append(mapping)
 
     def add_funcbody_arg_mapping(self, carg, cpparg):
@@ -158,6 +158,14 @@ class ConversionData:
             self.active_map.literal_mappings[cstring] = cppstring
             debug.line("add_literal_mapping", f"Adding literal mapping: [{cstring}] -> [{cppstring}]")
 
+    def add_class_pointer_name(self, name):
+        assert isinstance(name, str), f"Expected str, got [{name}]"
+        self.active_map.class_pointer_names.append(name)
+
+    def add_container_type(self, type):
+        assert isinstance(type, str), f"Expected str, got [{type}]"
+        self.active_map.container_types.append(type)
+
     # ============================== Functions to update the mappings: end   ==============================
     
     # ============================== Functions to query the mappings:  start ==============================
@@ -220,6 +228,16 @@ class ConversionData:
                 if key.name == carg_name:
                     return value
         return None
+    
+    # Use this version when you only have a name and need to get the full arg (inc decl_type)
+    def funcbody_cpparg_for_cpparg_name(self, cpparg_name):
+        assert cpparg_name, f"cpparg_name can't be empty!"
+
+        for mapping in self.all_mappings():
+            for key, value in mapping.funcbody_arg_mappings.items():
+                if value != NONE_VALUE and value.name == cpparg_name:
+                    return value
+        return None
 
     def funcsig_cpparg_for_carg(self, carg):
         if not carg.name:
@@ -232,6 +250,33 @@ class ConversionData:
                 if key.name == carg.name:
                     return value
         return None
+
+    # Use this version when you only have a name and need to get the full arg (inc decl_type)
+    def funcsig_cpparg_for_cpparg_name(self, cpparg_name):
+        assert cpparg_name, f"cpparg_name can't be empty!"
+
+        for mapping in self.all_mappings():
+            for key, value in mapping.funcsig_arg_mappings.items():
+                if value != NONE_VALUE and value.name == cpparg_name:
+                    return value
+        return None
+
+    # Given the cppname, search all stores to see if an arg exists
+    def cpparg_for_cppname(self, cppname):
+        cpparg = self.funcbody_cpparg_for_cpparg_name(cppname)
+        if cpparg:
+            return cpparg
+        
+        cpparg = self.funcsig_cpparg_for_cpparg_name(cppname)
+        if cpparg:
+            return cpparg
+
+        buf_map = self.funcsig_buffer_mapping_for_cppname(cppname)
+        if buf_map:
+            return buf_map.cpp_container
+
+        return None
+
 
     def cppdata_member_for_cdata_member(self, cmember):
         for mapping in self.all_mappings():
@@ -270,6 +315,20 @@ class ConversionData:
                     return entry
         return None
 
+    def funcsig_buffer_mapping_for_cname(self, cname):
+        for mapping in self.all_mappings():
+            for entry in mapping.funcsig_buffer_mappings:
+                if entry.cbuffer.name == cname or entry.clength.name == cname:
+                    return entry
+        return None
+
+    def funcsig_buffer_mapping_for_cppname(self, cppname):
+        for mapping in self.all_mappings():
+            for entry in mapping.funcsig_buffer_mappings:
+                if entry.cpp_container.name == cppname:
+                    return entry
+        return None
+
     def cppfuncsig_pointer_for_cfuncsig_pointer(self, cfuncsig_pointer):
         for mapping in self.all_mappings():
             for entry in mapping.funcsig_pointer_mappings:
@@ -296,6 +355,27 @@ class ConversionData:
                 if entry.cfuncsig.name == function_name or entry.cppfuncsig.name == function_name:
                     return True
                 
+        return False
+
+    def is_class_pointer_name(self, name):
+        debug.line("is_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")
+        for mapping in self.all_mappings():
+            for entry in mapping.class_pointer_names:
+                debug.line("is_class_pointer_name", f" > Testing entry=[{debug.as_debug_string(entry)}]")
+                if entry == name:
+                    debug.line("is_class_pointer_name", f" RESULT: TRUE")
+                    return True
+
+        debug.line("is_class_pointer_name", f" RESULT: FALSE")
+        return False
+
+    def is_container_type(self, type):
+        for mapping in self.all_mappings():
+            for entry in mapping.container_types:
+                # NOTE: type may be a reference, std::string& versus std::string, but we still want to match...
+                if entry in type:
+                    return True
+
         return False
 
     # ============================== Functions to query the mappings:  end   ==============================

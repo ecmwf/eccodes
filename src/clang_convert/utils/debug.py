@@ -61,6 +61,8 @@ def as_debug_string(value):
             return value
         elif isinstance(value, CodeInterface):
             return value.as_string()
+        elif getattr(value, "as_string", None):
+            return value.as_string()
         else:
             return f"[{value}]"
     else:

@@ -11,6 +11,7 @@ class ArrayAccess(code_interface.CodeInterface):
         assert isinstance(self._name, code_interface.CodeInterface), f"Name must be a CodeInterface class"
         assert isinstance(self._index, code_interface.CodeInterface), f"Index must be a CodeInterface class"
 
+    # TODO - Should this be an Arg in order to access the decl_spec interface?
     @property
     def name(self):
         return self._name

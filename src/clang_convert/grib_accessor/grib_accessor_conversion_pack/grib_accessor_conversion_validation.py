@@ -8,9 +8,13 @@ import code_object.binary_operation as binary_operation
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
 import code_object.if_statement as if_statement
-
+import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class GribAccessorConversionValidation(default_conversion_validation.DefaultConversionValidation):
+
+    @property
+    def type_info(self):
+         return grib_accessor_type_info.GribAccessorTypeInfo()
 
     def validate_function_call(self, cfunction_call, cppfunction_call, callee_funcsig_mapping):
         special_function_call = apply_special_function_call_conversions(cfunction_call, cppfunction_call)
@@ -55,18 +59,3 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                 return updated_cppif_statement
 
         return super().validate_if_statement(cif_statement, cppif_statement)
-
-
-    def is_pointer_to_class_instance(self, arg_name):
-         if arg_name in ["a"]:
-             return True
-         return super().is_pointer_to_class_instance(arg_name)
-
-    def is_cpp_container_type(self, cppdecl_spec):
-        for type in [
-            "AccessorDataBuffer",
-        ]:
-             if type in cppdecl_spec.type:
-                  return True
-
-        return super().is_cpp_container_type(cppdecl_spec)

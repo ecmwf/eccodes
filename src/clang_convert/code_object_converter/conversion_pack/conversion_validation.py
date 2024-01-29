@@ -18,6 +18,9 @@ class ConversionValidation:
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         return cppvariable_declaration
 
+    def validate_unary_operation(self, cunary_operation, cppunary_operation):
+        return cppunary_operation
+
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
         return cppbinary_operation
     
@@ -25,12 +28,4 @@ class ConversionValidation:
         return cppif_statement
     
     # ---------- CodeObject Validation : End   -----------------------------------------------------
-    
-
-    # ---------- Miscellaneous Validation : Begin -----------------------------------------------------
-
-    # Returns True is the name is a pointer to a class instance
-    def is_pointer_to_class_instance(self, arg_name):
-         return False
-
-    # ---------- Miscellaneous Validation : End   -----------------------------------------------------
+   
