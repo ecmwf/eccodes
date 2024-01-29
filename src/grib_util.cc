@@ -2055,7 +2055,7 @@ int grib_is_earth_oblate(grib_handle* h)
     return 0;
 }
 
-int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val)
+int grib_check_data_values_minmax(grib_handle* h, const double min_val, const double max_val)
 {
     int result        = GRIB_SUCCESS;
     grib_context* ctx = h->context;
