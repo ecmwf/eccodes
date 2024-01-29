@@ -27,6 +27,10 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         if cfunction_call.name == "strcmp":
             return binary_operation.BinaryOperation(cppfunction_call.args[0], "==", cppfunction_call.args[1])
               
+        if cfunction_call.name == "strlen":
+            # Replace the function call with a StructMemberAccess representing the container.size() call...
+            return container_utils.create_cpp_container_length_arg(cppfunction_call.args[0].name)
+
         return cppfunction_call
 
     # Check use of references when calling functions...
@@ -71,6 +75,14 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 return cppbinary_operation.left_operand
 
         # If we've got a StructMemberAccess object with a .size(), then we need to tidy up!
-        #if isinstance()
+        cppleft = cppbinary_operation.left_operand
+        if isinstance(cppleft, struct_member_access.StructMemberAccess):
+             if cppleft.member and cppleft.member.name == "size()":
+                cppright = cppbinary_operation.right_operand
+                if cppright.as_string() == "0":
+                    cppleft.member.name = "clear()"
+                else:
+                    cppleft.member.name = f"resize({cppright.as_string()})"
+                return cppleft
 
         return cppbinary_operation

@@ -42,6 +42,10 @@ class StructMemberAccess(code_interface.CodeInterface):
     def name(self):
         return self._name
 
+    @name.setter
+    def name(self, value):
+        self._name = value
+
     @property
     def index(self):
         return self._index
@@ -65,5 +69,8 @@ class StructMemberAccess(code_interface.CodeInterface):
         access_str += self._index if self._index is not None else ""
         if self.member:
             access_str += self.member.as_string()
+
+        if access_str.endswith(")"):
+            access_str += ";"
 
         return [access_str]

@@ -32,6 +32,8 @@ class VariableDeclaration(code_interface.CodeInterface):
             value_lines = self._value.as_lines()
             lines[0] += f" = {value_lines[0]}"
             lines.extend(value_lines[1:])
-        lines[-1] += ";"
+
+        if not lines[-1].endswith(";"):
+            lines[-1] += ";"
 
         return lines
