@@ -156,5 +156,13 @@ set -e
 grep -q "missing bitmap" $tempOut
 
 
+# bitmap as string
+cat > $tempRules<<EOF
+  print "[bitmap:s]";
+EOF
+${tools_dir}/grib_filter $tempRules $data_dir/boustrophedonic.grib1
+${tools_dir}/grib_filter $tempRules $data_dir/missing_field.grib1
+
+
 # Clean up
 rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules $tempOut

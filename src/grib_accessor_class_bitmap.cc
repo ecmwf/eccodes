@@ -274,7 +274,7 @@ static void update_size(grib_accessor* a, size_t s)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int i             = 0;
+    long i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (len[0] < (a->length)) {
@@ -284,8 +284,9 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    for (i = 0; i < a->length; i++)
+    for (i = 0; i < a->length; i++) {
         val[i] = hand->buffer->data[a->offset + i];
+    }
 
     len[0] = a->length;
 
