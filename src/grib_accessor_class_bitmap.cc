@@ -17,12 +17,12 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_bytes
-
    IMPLEMENTS = next_offset
    IMPLEMENTS = unpack_double;unpack_double_element;unpack_double_element_set
    IMPLEMENTS = unpack_float
    IMPLEMENTS = unpack_long
    IMPLEMENTS = unpack_string
+   IMPLEMENTS = string_length
    IMPLEMENTS = init;dump;update_size
    MEMBERS=const char* tableReference
    MEMBERS=const char* missing_value
@@ -46,6 +46,7 @@ static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_float(grib_accessor*, float* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
+static size_t string_length(grib_accessor*);
 static long next_offset(grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
@@ -78,7 +79,7 @@ static grib_accessor_class _grib_accessor_class_bitmap = {
     0,                    /* destroy */
     &dump,                       /* dump */
     &next_offset,                /* next_offset */
-    0,              /* get length of string */
+    &string_length,              /* get length of string */
     0,                /* get number of values */
     0,                 /* get number of bytes */
     0,                /* get offset to bytes */
@@ -272,14 +273,19 @@ static void update_size(grib_accessor* a, size_t s)
     a->length = s;
 }
 
+static size_t string_length(grib_accessor* a)
+{
+    return a->length;
+}
+
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     long i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (len[0] < (a->length)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s, it contains %ld values",
+                __func__, len[0], a->name, a->length);
         len[0] = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

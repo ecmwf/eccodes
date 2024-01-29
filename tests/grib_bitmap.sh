@@ -160,9 +160,9 @@ grep -q "missing bitmap" $tempOut
 cat > $tempRules<<EOF
   print "[bitmap:s]";
 EOF
-${tools_dir}/grib_filter $tempRules $data_dir/boustrophedonic.grib1
-${tools_dir}/grib_filter $tempRules $data_dir/missing_field.grib1
-
+${tools_dir}/grib_filter $tempRules $data_dir/boustrophedonic.grib1 > $REDIRECT
+${tools_dir}/grib_filter $tempRules $data_dir/missing_field.grib1 > $REDIRECT
+${tools_dir}/grib_filter $tempRules $data_dir/reduced_latlon_surface.grib2 > $REDIRECT
 
 # Clean up
 rm -f  $tempData1 $tempData2 $temp1 $temp2 $tempRules $tempOut
