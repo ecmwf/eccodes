@@ -1862,13 +1862,11 @@ int parse_keyval_string(const char* grib_tool,
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for EPS (ensemble) products
 int grib2_is_PDTN_EPS(long pdtn)
 {
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
     static int eps_pdtns[] = { 1, 11, 33, 34, 41, 43, 45, 47,
                                49, 54, 56, 58, 59, 60, 61, 63, 68, 71, 73, 77, 79,
                                81, 83, 84, 85, 92, 94, 96, 98 };
-    size_t i;
-    for (i = 0; i < NUMBER(eps_pdtns); ++i) {
+    size_t i = 0, num_epss = (sizeof(eps_pdtns) / sizeof(eps_pdtns[0]));
+    for (i = 0; i < num_epss; ++i) {
         if (eps_pdtns[i] == pdtn) return 1;
     }
     return 0;

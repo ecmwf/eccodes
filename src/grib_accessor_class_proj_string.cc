@@ -275,7 +275,6 @@ static int proj_mercator(grib_handle* h, char* result)
     return err;
 }
 
-#define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
     { "regular_ll", &proj_unprojected },
     { "regular_gg", &proj_unprojected },
@@ -308,7 +307,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
 
-    for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
+    const size_t num_proj_mappings = sizeof(proj_mappings) / sizeof(proj_mappings[0]);
+    for (i = 0; !found && i < num_proj_mappings; ++i) {
         proj_mapping pm = proj_mappings[i];
         if (strcmp(grid_type, pm.gridType) == 0) {
             found = 1;

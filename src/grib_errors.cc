@@ -94,12 +94,11 @@ static const char *errors[] = {
 "Assertion failure",		/* -79 GRIB_ASSERTION_FAILURE */
 };
 
-#define NUMBER(a) sizeof(a)/sizeof(a[0])
-
 const char* grib_get_error_message(int code)
 {
     code = -code;
-    if (code < 0 || code >= NUMBER(errors)) {
+    const int num_errors = int( sizeof(errors)/sizeof(errors[0]) );
+    if (code < 0 || code >= num_errors) {
         static char mess[64];
         snprintf(mess, sizeof(mess), "Unknown error %d", code);
         return mess;
