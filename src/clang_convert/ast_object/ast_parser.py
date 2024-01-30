@@ -476,7 +476,16 @@ class AstParser:
         tokens = [token.spelling for token in node.get_tokens()]
 
         if "(" in tokens:
-            cfunc_call = function_call.FunctionCall(node.spelling)
+            # NOTE: The function call may be in a struct, so we need to extract it correctly!
+            children = node.get_children()
+            child = next(children, None)
+            assert child, f"Expected a child node while parsing a non-regular function call!"
+
+            cfunc_name = self.parse_ast_node(child)
+            debug.line("parse_CALL_EXPR", f"cfunc_name=[{cfunc_name.as_string()}] type=[{type(cfunc_name)}]")
+
+            # TODO: Consider changing the object to StructMemberAccess if the func name needs to be updated?
+            cfunc_call = function_call.FunctionCall(cfunc_name.as_string())
 
             for arg_node in node.get_arguments():
                 arg_entry = self.parse_ast_node(arg_node)

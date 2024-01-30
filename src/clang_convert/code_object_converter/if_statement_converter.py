@@ -15,4 +15,8 @@ class IfStatementConverter(code_interface_converter.CodeInterfaceConverter):
 
         cpp_if = if_statement.IfStatement(cpp_expression, cpp_action)
 
+        if self._ccode_object.else_statement:
+            cpp_else = conversion_funcs.convert_ccode_object(self._ccode_object.else_statement, conversion_pack)
+            cpp_if.add_else(cpp_else)
+
         return conversion_pack.conversion_validation.validate_if_statement(self._ccode_object, cpp_if)

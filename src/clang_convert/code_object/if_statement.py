@@ -27,8 +27,11 @@ class IfStatement(code_interface.CodeInterface):
     def action(self):
         return self._action
 
-    def add_else(self, else_statement):
+    @property
+    def else_statement(self):
+        return self._else
 
+    def add_else(self, else_statement):
         self._else = else_statement
         assert isinstance(self._else, code_interface.CodeInterface), f"Else statement must be a CodeInterface class"
 
