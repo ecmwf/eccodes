@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
         CODES_CHECK(err, 0);
     }
 
-    // codes_write_message(hto,  "temp.out", "w"); CODES_CHECK(err, 0);
+    /* codes_write_message(hto,  "temp.out", "w"); CODES_CHECK(err, 0); */
     {
         int dump_flags = GRIB_DUMP_FLAG_CODED | GRIB_DUMP_FLAG_OCTET | GRIB_DUMP_FLAG_VALUES | GRIB_DUMP_FLAG_READ_ONLY;
         codes_dump_content(hto, stdout, "wmo", dump_flags, NULL);
