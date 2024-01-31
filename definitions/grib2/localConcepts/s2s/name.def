@@ -84,6 +84,14 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Skin temperature
+'Skin temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Mean sea water potential temperature in the upper 300 m
 'Mean sea water potential temperature in the upper 300 m' = {
 	 discipline = 10 ;
