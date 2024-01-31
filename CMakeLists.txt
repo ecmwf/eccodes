@@ -74,9 +74,11 @@ endif()
 # some variables/options of this project
 
 if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
-    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
+    ecbuild_add_cxx_flags("-Wno-write-strings")
+    ecbuild_add_cxx_flags("-Wno-deprecated")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    ecbuild_add_cxx_flags("-Wno-write-strings -Wno-deprecated")
+    ecbuild_add_cxx_flags("-Wno-write-strings")
+    ecbuild_add_cxx_flags("-Wno-deprecated")
 elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
