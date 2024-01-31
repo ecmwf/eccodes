@@ -181,9 +181,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     struct grib_md5_state md5c;
 
     if (*len < 32) {
-        // grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_class_md5 unpack_string: Array too small");
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s", __func__, *len, a->name);
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offset, &offset)) != GRIB_SUCCESS)

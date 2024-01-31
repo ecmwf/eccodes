@@ -157,6 +157,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 
     if (*len < l) {
         *len = l;
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s", __func__, *len, a->name);
         return GRIB_BUFFER_TOO_SMALL;
     }
 

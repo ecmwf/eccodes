@@ -805,7 +805,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(handle, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                             "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &ret);

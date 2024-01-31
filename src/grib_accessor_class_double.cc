@@ -113,6 +113,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     char repres[1024];
     char format[32] = "%g";
     grib_handle* h = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
 
     grib_unpack_double(a, &val, &l);
 
@@ -127,8 +128,9 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     l = strlen(repres) + 1;
 
     if (l > *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name);
-
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

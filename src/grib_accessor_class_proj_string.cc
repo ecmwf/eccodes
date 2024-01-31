@@ -304,6 +304,11 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
 
+    if (*len < 100) { // Safe bet
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s", __func__, *len, a->name);
+        return GRIB_BUFFER_TOO_SMALL;
+    }
+
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
 
