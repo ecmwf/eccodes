@@ -14,16 +14,20 @@ label="codes_get_string_test"
 tempText=temp.$label.txt
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-keys="identifier md5Headers packingType"
+keys="identifier md5Headers packingType gridDefinitionDescription parameterUnits projString"
 for k in $keys; do
     $EXEC ${test_dir}/codes_get_string $input $k 2> $tempText
     grep -q "Wrong size" $tempText
 done
 
+input=$data_dir/reduced_latlon_surface.grib2
+$EXEC ${test_dir}/codes_get_string "$input" bitmap 2> $tempText
+grep -q "Wrong size" $tempText
 
 input=$ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
 $EXEC ${test_dir}/codes_get_string "$input" gridName 2> $tempText
-# TODO: No message
+grep -q "Wrong size" $tempText
+
 
 # shortName = swh
 input=$data_dir/reduced_latlon_surface.grib1
