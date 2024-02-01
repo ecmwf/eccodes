@@ -13,5 +13,6 @@ class FunctionConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
         cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
-        return function.Function(cpp_funcsig, cpp_body)
+        cppfunction = function.Function(cpp_funcsig, cpp_body)
+        return conversion_pack.conversion_validation.validate_function(self._ccode_object, cppfunction)
   

@@ -43,4 +43,4 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig_pointer.is_declaration = self._ccode_object.is_declaration
 
-        return cppfuncsig_pointer
+        return conversion_pack.conversion_validation.validate_funcsig_pointer(self._ccode_object, cppfuncsig_pointer)

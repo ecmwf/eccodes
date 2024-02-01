@@ -13,5 +13,6 @@ class VirtualMemberFunctionConverter(member_function_converter.MemberFunctionCon
         cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
         cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
-        return virtual_member_function.VirtualMemberFunction(cpp_funcsig, cpp_body)
+        cppvirtual_member_function = virtual_member_function.VirtualMemberFunction(cpp_funcsig, cpp_body)
+        return conversion_pack.conversion_validation.validate_virtual_member_function(self._ccode_object, cppvirtual_member_function)
   

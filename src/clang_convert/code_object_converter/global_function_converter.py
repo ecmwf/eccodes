@@ -23,5 +23,6 @@ class GlobalFunctionConverter(function_converter.FunctionConverter):
             cpp_code_obj = conversion_funcs.convert_ccode_object(entry, self._conversion_pack)
             cpp_body.add_code_object(cpp_code_obj)
 
-        return global_function.GlobalFunction(cpp_body)
+        cppglobal_function = global_function.GlobalFunction(cpp_body)
+        return conversion_pack.conversion_validation.validate_global_function(self._ccode_object, cppglobal_function)
   

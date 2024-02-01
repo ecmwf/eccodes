@@ -15,5 +15,6 @@ class ForStatementConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_iteration_expression = conversion_funcs.convert_ccode_object(self._ccode_object.iteration_expression, conversion_pack)
         cpp_statement = conversion_funcs.convert_ccode_object(self._ccode_object.statement, conversion_pack)
 
-        return for_statement.ForStatement(cpp_init_statement, cpp_condition, cpp_iteration_expression, cpp_statement)
+        cppfor_statement = for_statement.ForStatement(cpp_init_statement, cpp_condition, cpp_iteration_expression, cpp_statement)
+        return conversion_pack.conversion_validation.validate_for_statement(self._ccode_object, cppfor_statement)
   

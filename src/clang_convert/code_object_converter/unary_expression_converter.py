@@ -13,4 +13,5 @@ class UnaryExpressionConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_keyword = conversion_funcs.convert_ccode_object(self._ccode_object.keyword, conversion_pack)
         cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_pack)
 
-        return unary_expression.UnaryExpression(cpp_keyword, cpp_expression)
+        cppunary_expression = unary_expression.UnaryExpression(cpp_keyword, cpp_expression)
+        return conversion_pack.conversion_validation.validate_unary_expression(self._ccode_object, cppunary_expression)

@@ -13,5 +13,6 @@ class MemberFunctionConverter(function_converter.FunctionConverter):
         cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
         cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
-        return member_function.MemberFunction(cpp_funcsig, cpp_body)
+        cppmember_function = member_function.MemberFunction(cpp_funcsig, cpp_body)
+        return conversion_pack.conversion_validation.validate_member_function(self._ccode_object, cppmember_function)
   

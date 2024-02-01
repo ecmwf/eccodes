@@ -21,7 +21,5 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
         cpp_value = conversion_funcs.convert_ccode_object(self._ccode_object.value, conversion_pack)
 
         cpp_variable_declaration = variable_declaration.VariableDeclaration(cpp_variable, cpp_value)
-        cpp_variable_declaration = conversion_pack.conversion_validation.validate_variable_declaration(self._ccode_object, cpp_variable_declaration)
-        
-        return cpp_variable_declaration
+        return conversion_pack.conversion_validation.validate_variable_declaration(self._ccode_object, cpp_variable_declaration)
   

@@ -44,8 +44,8 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig.is_declaration = cfuncsig.is_declaration
 
-        return cppfuncsig
-
+        return conversion_pack.conversion_validation.validate_funcsig(cfuncsig, cppfuncsig)
+    
     # The following functions are called when there isn't a stored mapping, so we need to work the mappings out!
 
     def is_cpp_static(self):

@@ -14,4 +14,5 @@ class ConditionalOperationConverter(code_interface_converter.CodeInterfaceConver
         cpp_true_expression = conversion_funcs.convert_ccode_object(self._ccode_object.true_expression, conversion_pack)
         cpp_false_expression = conversion_funcs.convert_ccode_object(self._ccode_object.false_expression, conversion_pack)
 
-        return conditional_operation.ConditionalOperation(cpp_bool_expression, cpp_true_expression, cpp_false_expression)
+        cppconditional_operation = conditional_operation.ConditionalOperation(cpp_bool_expression, cpp_true_expression, cpp_false_expression)
+        return conversion_pack.conversion_validation.validate_conditional_operation(self._ccode_object, cppconditional_operation)        

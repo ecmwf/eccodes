@@ -26,4 +26,5 @@ class StructArgConverter(code_interface_converter.CodeInterfaceConverter):
             cpp_member = conversion_funcs.convert_ccode_object(member, conversion_pack)
             cpp_members.append(cpp_member)
 
-        return struct_arg.StructArg(cpp_decl_spec.type, cpp_members)
+        cppstruct_arg = struct_arg.StructArg(cpp_decl_spec.type, cpp_members)
+        return conversion_pack.conversion_validation.validate_struct_arg(self._ccode_object, cppstruct_arg)

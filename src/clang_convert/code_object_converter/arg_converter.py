@@ -26,7 +26,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
             cpp_arg = self.convert_funcbody_arg()
 
         debug.line("create_cpp_code_object", f"ArgConverter [OUT] cpp_arg=[{debug.as_debug_string(cpp_arg)}]")
-        return cpp_arg
+        return conversion_pack.conversion_validation.validate_arg(self._ccode_object, cpp_arg)
 
     def convert_funcsig_arg(self):
         carg = self._ccode_object

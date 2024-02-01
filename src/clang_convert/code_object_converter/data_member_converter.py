@@ -40,4 +40,4 @@ class DataMemberConverter(arg_converter.ArgConverter):
         debug.line("create_cpp_code_object", f"Adding data member mapping cmember=[{debug.as_debug_string(cmember)}] cppmember=[{debug.as_debug_string(cppmember)}]")
 
         debug.line("create_cpp_code_object", f"DataMemberConverter [OUT] cppmember=[{debug.as_debug_string(cppmember)}]")
-        return cppmember
+        return conversion_pack.conversion_validation.validate_data_member(cmember, cppmember)

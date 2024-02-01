@@ -11,4 +11,5 @@ class MacroDefinitionConverter(code_interface_converter.CodeInterfaceConverter):
 
     def create_cpp_code_object(self, conversion_pack):
         # For now, just return a copy...
-        return macro_definition.MacroDefinition(self._ccode_object.as_lines())
+        cppmacro_defintion = macro_definition.MacroDefinition(self._ccode_object.as_lines())
+        return conversion_pack.conversion_validation.validate_macro_definition(self._ccode_object, cppmacro_defintion)

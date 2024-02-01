@@ -28,4 +28,5 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
             cpp_index = conversion_funcs.convert_ccode_object(cstruct_member_access.index, conversion_pack)
             cpp_member = conversion_funcs.convert_ccode_object(cstruct_member_access.member, conversion_pack)
 
-        return struct_member_access.StructMemberAccess(cpp_access, cpp_name, cpp_index, cpp_member)
+        cppstruct_member_access = struct_member_access.StructMemberAccess(cpp_access, cpp_name, cpp_index, cpp_member)
+        return conversion_pack.conversion_validation.validate_struct_member_access(self._ccode_object, cppstruct_member_access)

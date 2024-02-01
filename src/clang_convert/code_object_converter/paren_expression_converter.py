@@ -12,4 +12,5 @@ class ParenExpressionConverter(code_interface_converter.CodeInterfaceConverter):
     def create_cpp_code_object(self, conversion_pack):
         cpp_expression = conversion_funcs.convert_ccode_object(self._ccode_object.expression, conversion_pack)
 
-        return paren_expression.ParenExpression(cpp_expression)
+        cppparen_expression = paren_expression.ParenExpression(cpp_expression)
+        return conversion_pack.conversion_validation.validate_paren_expression(self._ccode_object, cppparen_expression)

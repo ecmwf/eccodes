@@ -11,4 +11,5 @@ class OperationConverter(code_interface_converter.CodeInterfaceConverter):
 
     def create_cpp_code_object(self, conversion_pack):
         # By default we just return a copy of the value
-        return operation.Operation(self._ccode_object.value)
+        cppoperation = operation.Operation(self._ccode_object.value)
+        return conversion_pack.conversion_validation.validate_operation(self._ccode_object, cppoperation)

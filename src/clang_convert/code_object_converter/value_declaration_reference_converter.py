@@ -39,4 +39,5 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
         cppdecl_ref_expr_value = conversion_funcs.convert_ccode_object(cdecl_ref_expr_value, conversion_pack)
         debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [4] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cppdecl_ref_expr_value=[{debug.as_debug_string(cppdecl_ref_expr_value)}]")
 
-        return value_declaration_reference.ValueDeclarationReference(cppdecl_ref_expr_value)
+        cppvalue_declaration_reference = value_declaration_reference.ValueDeclarationReference(cppdecl_ref_expr_value)
+        return conversion_pack.conversion_validation.validate_value_declaration_reference(self._ccode_object, cppvalue_declaration_reference)

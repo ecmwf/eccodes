@@ -17,4 +17,4 @@ class InitListConverter(code_interface_converter.CodeInterfaceConverter):
             cpp_entry = conversion_funcs.convert_ccode_object(entry, conversion_pack)
             cpp_init_list.add_entry(cpp_entry)
 
-        return cpp_init_list
+        return conversion_pack.conversion_validation.validate_init_list(self._ccode_object, cpp_init_list)

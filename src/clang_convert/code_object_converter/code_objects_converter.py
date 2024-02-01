@@ -20,4 +20,4 @@ class CodeObjectsConverter(code_interface_converter.CodeInterfaceConverter):
             converted_object = conversion_funcs.convert_ccode_object(entry, conversion_pack)
             cpp_code_objects.add_code_object(converted_object)
 
-        return cpp_code_objects
+        return conversion_pack.conversion_validation.validate_code_objects(self._ccode_object, cpp_code_objects)

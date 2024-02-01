@@ -13,5 +13,6 @@ class DestructorFunctionConverter(member_function_converter.MemberFunctionConver
         cpp_funcsig = conversion_funcs.convert_ccode_object(self._ccode_object.funcsig, conversion_pack)
         cpp_body = conversion_funcs.convert_ccode_object(self._ccode_object.body, conversion_pack)
 
-        return destructor_function.DestructorFunction(cpp_funcsig, cpp_body)
+        cppdestructor_function = destructor_function.DestructorFunction(cpp_funcsig, cpp_body)
+        return conversion_pack.conversion_validation.validate_destructor_function(self._ccode_object, cppdestructor_function)
   

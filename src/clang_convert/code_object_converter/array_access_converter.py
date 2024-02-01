@@ -13,4 +13,5 @@ class ArrayAccessConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_name = conversion_funcs.convert_ccode_object(self._ccode_object.name, conversion_pack)
         cpp_index = conversion_funcs.convert_ccode_object(self._ccode_object.index, conversion_pack)
 
-        return array_access.ArrayAccess(cpp_name, cpp_index)
+        cpparray_access = array_access.ArrayAccess(cpp_name, cpp_index)
+        return conversion_pack.conversion_validation.validate_array_access(self._ccode_object, cpparray_access)
