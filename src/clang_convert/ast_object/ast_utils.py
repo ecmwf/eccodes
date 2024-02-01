@@ -13,14 +13,20 @@ import code_object.struct_arg as struct_arg
 # tokens string can be:
 # "flat" to show a flat summary
 # "list" to show a detailed list
+# "truncate" to show the first 10 tokens
 # "" to not show tokens
-def dump_node(cnode, depth=0, tokens="flat"):
+def dump_node(cnode, depth=0, tokens="truncate"):
+    truncate_depth = 10
     debug.line("dump_node", f"{' ' * depth}[{cnode.kind}] spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] extent=[{cnode.extent.start.line}:{cnode.extent.start.column}]->[{cnode.extent.end.line}:{cnode.extent.end.column}]")
     if tokens == "flat":
         debug.line("dump_node", f"{' ' * depth} -> tokens=[{[token.spelling for token in cnode.get_tokens()]}]")
     elif tokens == "list":
         for token in cnode.get_tokens():
             debug.line("dump_node", f"{' ' * depth} -> token=[{token.spelling}] extent=[{token.extent.start.line}:{token.extent.start.column} -> {token.extent.end.line}:{token.extent.end.column}]")
+    elif tokens == "truncate":
+        token_list = [token.spelling for token in cnode.get_tokens()]
+        debug.line("dump_node", f"{' ' * depth} -> tokens[:{truncate_depth}]=[{token_list[:truncate_depth]}]")
+
 
     for child in cnode.get_children():
         dump_node(child, depth+1, tokens)

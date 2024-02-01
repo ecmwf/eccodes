@@ -77,10 +77,25 @@ class AstCodeCreator:
         parse_options = clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD
         debug.line("parse", f"MACRO generation enabled [PARSE_DETAILED_PROCESSING_RECORD]")
 
-        self._translation_unit = index.parse(self._cfilepath + self._cfilename, 
-                                             args=self._parse_args,
-                                             unsaved_files=None,
-                                             options=parse_options)
+        # TEST - Set True to load file into memory (to allow macro manipulation etc)
+        load_file_into_memory = False
+
+        if load_file_into_memory:
+            with open(self._cfilepath + self._cfilename, 'r') as file:
+                file_contents = file.read()
+            
+            debug.line("FILE CONTENTS", file_contents)
+
+            unsaved_file = ('in_memory_file.c', file_contents)
+            self._translation_unit = index.parse('in_memory_file.c',
+                                                args=self._parse_args,
+                                                unsaved_files=[unsaved_file],
+                                                options=parse_options)
+        else:
+            self._translation_unit = index.parse(self._cfilepath + self._cfilename, 
+                                                args=self._parse_args,
+                                                unsaved_files=None,
+                                                options=parse_options)
 
         self._ast_code = ast_code.AstCode(self._cfilename)
 
@@ -90,6 +105,6 @@ class AstCodeCreator:
         for node in self._ast_code.macro_details.def_nodes:
             debug.line("parse", f"MACRO DEFN spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}]")
         for node in self._ast_code.macro_details.inst_nodes:
-            debug.line("parse", f"MACRO INST spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}]")
+            debug.line("parse", f"MACRO INST spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
 
         return self._ast_code

@@ -61,10 +61,12 @@ class AstParser:
     # Note - Prefer to call this as it handles macro expansions
     def parse_ast_node(self, node):
 
+        debug.line("parse_ast_node", f"[{node.kind}] spelling=[{node.spelling}] type=[{node.type.spelling}] extent=[{node.extent.start.line}:{node.extent.start.column}]->[{node.extent.end.line}:{node.extent.end.column}]")
+
         # Handle macros
         macro_instantiation_node = self._macro_details.instantiation_node_for(node)
         if macro_instantiation_node:
-            return self.parse_macro_instantiation(macro_instantiation_node)
+            return self.parse_macro_instantiation(macro_instantiation_node, node)
 
         if node.kind.is_statement():
             return self.parse_STMT_node(node)
@@ -131,13 +133,104 @@ class AstParser:
 
         return macro_def
 
-    def parse_macro_instantiation(self, node):
-        debug.line("parse_macro_instantiation", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
-        token_text = "".join([token.spelling for token in node.get_tokens()]) + ";"
-        debug.line("parse_macro_instantiation", f"MACRO token text=[{token_text}]")
-        macro_inst = macro_instantation.MacroInstantation()
-        macro_inst.add_line(token_text)
 
+    def find_root_macro_node(self, node):
+        for child in node.get_children():
+            child_tokens = [token.spelling for token in child.get_tokens()]
+            if len(child_tokens) > 0:
+                return child
+
+            node_with_tokens = self.find_root_macro_node(child)
+            if node_with_tokens:
+                return node_with_tokens
+
+        return None
+
+    # Attempt to match as many tokens as possible in the macro node hierarchy. 
+    # The node with the highest number of matches will be selected
+    # Returns the matched node (or None) and the number of tokens matched
+    def match_tokens(self, tokens, node, match_count):
+        new_tokens = [token.spelling for token in node.get_tokens()]
+        tokens_count = len(tokens)
+        new_node = None
+        new_tokens_count = len(new_tokens)
+        tokens_to_match = min(tokens_count, new_tokens_count)
+
+        best_match_count = 0
+        for i in range(tokens_to_match):
+            if new_tokens[i] == tokens[i]:
+                best_match_count += 1
+            else:
+                break
+
+        if best_match_count > 0:
+            new_node = node
+
+        if best_match_count != tokens_count:
+            for child in node.get_children():
+                child_node, child_match_count = self.match_tokens(tokens, child, best_match_count)
+                if child_match_count > best_match_count:
+                    best_match_count = child_match_count
+                    new_node = child_node
+                    break
+
+        if new_node:
+            debug.line("match_tokens", f"new_node [{new_node.kind}] spelling=[{new_node.spelling}] best_match_count=[{best_match_count}]")
+
+        return new_node, best_match_count
+
+    # Convert all the tokens of the macro, either by finding the appropriate child node and parsing it (match_tokens function),
+    # or creating a literal representation of the token.
+    # Returns the code_object (or None) and remaining (unmatched) tokens
+    def convert_tokens(self, tokens, root_expanded_node):
+        debug.line("convert_tokens", f"[IN] tokens=[{tokens}] root_expanded_node kind={root_expanded_node.kind} spelling=[{root_expanded_node.spelling}]")
+
+        matched_node, match_count = self.match_tokens(tokens, root_expanded_node, 0)
+        if matched_node:
+            converted_tokens = self.parse_ast_node(matched_node)
+            debug.line("convert_tokens", f"     MATCH - converted_tokens=[{converted_tokens.as_string()}] tokens=[{tokens}] match_count=[{match_count}]")
+            return converted_tokens, tokens[match_count:]
+        else:
+            converted_token = literal.Literal(tokens.pop(0))
+            debug.line("convert_tokens", f"     NO MATCH - converted_token=[{converted_token.as_string()}] tokens=[{tokens}]")
+            return converted_token, tokens
+
+
+    # macro_node is the original macro code in the C file
+    # expanded_node is the code after the pre-processor has applied the macro expansion
+    def parse_macro_instantiation(self, macro_node, expanded_node):
+        debug.line("parse_macro_instantiation", f"MACRO macro_node spelling=[{macro_node.spelling}] kind=[{macro_node.kind}] extent=[{macro_node.extent.start.line}:{macro_node.extent.start.column} -> {macro_node.extent.end.line}:{macro_node.extent.end.column}]")
+        debug.line("parse_macro_instantiation", f"MACRO macro_node dump:")
+        ast_utils.dump_node(macro_node, 2, "truncate")
+
+        debug.line("parse_macro_instantiation", f"MACRO expanded_node spelling=[{expanded_node.spelling}] kind=[{expanded_node.kind}] extent=[{expanded_node.extent.start.line}:{expanded_node.extent.start.column} -> {expanded_node.extent.end.line}:{expanded_node.extent.end.column}]")
+        debug.line("parse_macro_instantiation", f"MACRO expanded_node dump:")
+        ast_utils.dump_node(expanded_node, 2, "truncate")
+
+        macro_node_tokens = [token.spelling for token in macro_node.get_tokens()]
+
+        root_expanded_node = self.find_root_macro_node(expanded_node)
+
+        if not root_expanded_node:
+            debug.line("parse_macro_instantiation", f"Could not find root_expanded_node, treating macro_node contents as a literal")
+            return literal.Literal(f"{' '.join(t for t in macro_node_tokens)}")
+
+        macro_name = macro_node_tokens.pop(0)
+        macro_expression = code_objects.CodeObjects()
+        debug.line("parse_macro_instantiation", f"Found root_expanded_node, kind=[{root_expanded_node.kind}], parsing...")
+
+        # Remove the opening paren so it doesn't cause a double-parse of the top-level node (leading to odd results!)
+        if macro_node_tokens[0] == "(":
+            open_parens_literal = literal.Literal(macro_node_tokens.pop(0))
+            macro_expression.add_code_object(open_parens_literal)
+
+        while len(macro_node_tokens) > 0:
+            converted_node, macro_node_tokens = self.convert_tokens(macro_node_tokens, root_expanded_node)
+            debug.line("parse_macro_instantiation", f"converted_node=[{debug.as_debug_string(converted_node)}]")
+            macro_expression.add_code_object(converted_node)
+
+        macro_inst = macro_instantation.MacroInstantation(macro_name, macro_expression)
+        debug.line("parse_macro_instantiation", f"FINAL MACRO INST=[{macro_inst.as_string()}]")
         return macro_inst
 
     # =================================== Macros Convert functions [END]   ===================================
@@ -146,6 +239,10 @@ class AstParser:
 
     # Just iteratively call parse_ast_node
     def parse_COMPOUND_STMT(self, node):
+
+        debug.line("parse_COMPOUND_STMT", f"Dumping node for MACRO INFO:")
+        ast_utils.dump_node(node, 2)
+
         stmt_lines = compound_statement.CompoundStatement()
 
         for child in node.get_children():
@@ -419,6 +516,9 @@ class AstParser:
         assert len(children) == 2, f"Expected exactly two children for binary operator"
         left_operand, right_operand = children
 
+        debug.line("parse_BINARY_OPERATOR", f"BINARY left_operand [{left_operand.kind}] spelling=[{left_operand.spelling}] type=[{left_operand.type.spelling}] extent=[{left_operand.extent.start.line}:{left_operand.extent.start.column}]->[{left_operand.extent.end.line}:{left_operand.extent.end.column}]")
+        debug.line("parse_BINARY_OPERATOR", f"BINARY right_operand [{right_operand.kind}] spelling=[{right_operand.spelling}] type=[{right_operand.type.spelling}] extent=[{right_operand.extent.start.line}:{right_operand.extent.start.column}]->[{right_operand.extent.end.line}:{right_operand.extent.end.column}]")
+
         # Tokenize and find the operator
         tokens = [token.spelling for token in node.get_tokens()]
         left_tokens = [token.spelling for token in left_operand.get_tokens()]
@@ -433,12 +533,16 @@ class AstParser:
 
         right_tokens_count = len(right_tokens)
         if tokens_count != left_tokens_count + right_tokens_count + 1:
-            # The top level tokens don't match the right_operand tokens. This can happen if the top-level
-            # contains (for example) a macro definition. 
+            # The top level tokens don't match the right_operand tokens. This will happen if the top-level
+            # contains a macro definition. We should be able to handle this, so we'll just record the fact here!
+            debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: assuming a macro")
+            right_operand_cvalue = self.parse_ast_node(right_operand)
+
+            '''
             # For now we'll just take the top-level tokens as a (string) literal
             top_level_right_tokens = tokens[left_tokens_count+1:]
             right_operand_cvalue = literal.Literal(f"{' '.join(t for t in top_level_right_tokens)}")
-            '''
+            
             debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: using top-level tokens, treating as a literal")
             debug.line("parse_BINARY_OPERATOR", f" -> tokens                 = [{tokens}]")
             debug.line("parse_BINARY_OPERATOR", f" -> left_tokens            = [{left_tokens}]")
@@ -446,6 +550,7 @@ class AstParser:
             debug.line("parse_BINARY_OPERATOR", f" -> right_tokens           = [{right_tokens}]")
             debug.line("parse_BINARY_OPERATOR", f" -> top_level_right_tokens = [{top_level_right_tokens}]")
             '''
+            
         else:
             right_operand_cvalue = self.parse_ast_node(right_operand)
 

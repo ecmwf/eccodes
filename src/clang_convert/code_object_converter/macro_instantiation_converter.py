@@ -10,9 +10,7 @@ class MacroInstantiationConverter(code_interface_converter.CodeInterfaceConverte
         assert isinstance(ccode_object, macro_instantation.MacroInstantation), f"Expected MacroInstantation, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_pack):
-        # For now, just return a copy or comment out if not wanted...
+        cpp_macro = self._ccode_object
+        cpp_macro_expression = conversion_funcs.convert_ccode_object(cpp_macro.expression, conversion_pack)
 
-        if self._ccode_object.as_string().startswith("Assert"):
-            return conversion_funcs.as_commented_out_code(self._ccode_object, f"Ignoring Assert (for now!)")
-
-        return macro_instantation.MacroInstantation(self._ccode_object.as_lines())
+        return macro_instantation.MacroInstantation(cpp_macro.name, cpp_macro_expression)
