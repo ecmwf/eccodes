@@ -80,6 +80,8 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
         ecbuild_add_cxx_flags("-Wno-write-strings")
         ecbuild_add_cxx_flags("-Wno-deprecated")
+    else()
+        ecbuild_add_cxx_flags("-Wno-writable-strings")
     endif()
 elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
