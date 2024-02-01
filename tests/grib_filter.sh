@@ -445,6 +445,16 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+
+# Bad write
+set +e
+echo 'write "/";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to open file" $tempOut
+
+
 # Setting step
 # -------------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
