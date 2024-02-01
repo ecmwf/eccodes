@@ -1,6 +1,7 @@
 import utils.debug as debug
 import code_object.code_interface as code_interface
 import code_object.literal as literal
+from utils.string_funcs import strip_semicolon
 
 # Represents a for loop in the form:
 #
@@ -65,6 +66,7 @@ class ForStatement(code_interface.CodeInterface):
             cond_string += ";"
         if self._iteration_expression:
             iter_string = self._iteration_expression.as_string()
+            iter_string = strip_semicolon(iter_string)
 
         lines = [f"for({init_string}{cond_string}{iter_string})"]
 

@@ -13,6 +13,7 @@ class UnaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
     def create_cpp_code_object(self, conversion_pack):
         cpp_unary_op = conversion_funcs.convert_ccode_object(self._ccode_object.unary_op, conversion_pack)
         cpp_operand = conversion_funcs.convert_ccode_object(self._ccode_object.operand, conversion_pack)
+        cpp_op_position = self._ccode_object.op_position
 
-        cpp_unary_operation = unary_operation.UnaryOperation(cpp_unary_op, cpp_operand)
+        cpp_unary_operation = unary_operation.UnaryOperation(cpp_unary_op, cpp_operand, cpp_op_position)
         return conversion_pack.conversion_validation.validate_unary_operation(self._ccode_object, cpp_unary_operation)

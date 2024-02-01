@@ -39,8 +39,10 @@ class IfStatement(code_interface.CodeInterface):
         if_lines = []
         if_lines.extend(self._expression.as_lines())
         if_lines[0] = "if (" + if_lines[0]
-        if_lines[-1] = strip_semicolon(if_lines[-1])
         if_lines[-1] += ")"
+
+        for i in range(len(if_lines)):
+            if_lines[i] = if_lines[i].replace(";","")
 
         action_lines = []
         action_lines.extend(self._action.as_lines())

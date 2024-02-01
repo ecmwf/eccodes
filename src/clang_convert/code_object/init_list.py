@@ -40,6 +40,8 @@ class InitList(code_interface.CodeInterface):
         else:
             line = f"{{{', '.join(e.as_string() for e in self._entries)}}}"
     
+        line = line.replace(";", "")
+
         lines.append(line)
 
         return lines

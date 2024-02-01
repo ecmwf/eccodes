@@ -496,19 +496,29 @@ class AstParser:
     def parse_UNARY_OPERATOR(self, node):
         children = list(node.get_children())
         assert len(children) == 1, f"Expected exactly one child for unary operator"
-        right_operand = children[0]
+        operand = children[0]
 
         # Tokenize and find the operator
         tokens = [token.spelling for token in node.get_tokens()]
-        right_tokens = [token.spelling for token in right_operand.get_tokens()]
+        tokens_count = len(tokens)
+        operand_tokens = [token.spelling for token in operand.get_tokens()]
+        operand_tokens_count = len(operand_tokens)
+        assert tokens_count == operand_tokens_count+1, f"Expected tokens_count [{tokens_count}] to be 1 more than operand_tokens_count [{operand_tokens_count}]"
 
-        # Find the operator by excluding operand tokens
-        operator_tokens = [t for t in tokens if t not in right_tokens]
+        # Find the operator by eliminating the operand tokens
+        # Need to determine if it is prefix or postfix operator
+        if tokens[:operand_tokens_count] == operand_tokens[:operand_tokens_count]:
+            op_value = tokens[-1]
+            op_position = "postfix"
+        else:
+            op_value = tokens[0]
+            op_position = "prefix"
 
-        operator_str = "".join(t for t in operator_tokens)
-        right_operand_cvalue = self.parse_ast_node(right_operand)
+        debug.line("parse_UNARY_OPERATOR", f"op_position=[{op_position}] op_value=[{op_value}]")
 
-        c_unary_op = unary_operation.UnaryOperation(operator_str, right_operand_cvalue)
+        operand_cvalue = self.parse_ast_node(operand)
+        c_unary_op = unary_operation.UnaryOperation(op_value, operand_cvalue, op_position)
+
         return c_unary_op
 
     def parse_BINARY_OPERATOR(self, node):
