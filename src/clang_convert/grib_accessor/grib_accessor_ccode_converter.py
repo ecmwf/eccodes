@@ -1,5 +1,6 @@
 
 import utils.debug as debug
+import importlib
 import os
 import cpp_code.code_info as code_info
 import default.default_ccode_converter as default_ccode_converter
@@ -55,7 +56,30 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         return info
 
+    # 
+    def function_specific_conversion_pack_updates(self, cfunction_name):
+        super().function_specific_conversion_pack_updates(cfunction_name)
+        # See if we have a function-specific validator,
+        # Otherwise use the main-one
+
+    # See if we have an Accessor-specific validator (e.g. ProjStringValidation),
+    # Otherwise use the default
     def create_conversion_validation(self, conv_data):
+        validators_path="grib_accessor.grib_accessor_conversion_pack.validators"
+        cclass_short_name = self._ccode.class_name.replace(prefix, "")
+        accessor_validator_mod_name = f"{cclass_short_name}_validation"
+        accessor_validator_lib_name = f"{validators_path}.{accessor_validator_mod_name}"
+
+        try:
+            accessor_validator_lib = importlib.import_module(accessor_validator_lib_name)
+            debug.line("create_conversion_validation", f"Loaded accessor_validator lib name=[{accessor_validator_lib_name}]")
+            accessor_validator_class_name = standard_transforms.transform_type_name(accessor_validator_mod_name)
+            accessor_validation_class = getattr(accessor_validator_lib, accessor_validator_class_name)
+            debug.line("create_conversion_validation", f"Loaded accessor_validator class name=[{accessor_validator_class_name}]")
+            return accessor_validation_class(conv_data)
+        except ModuleNotFoundError:
+            debug.line("create_conversion_validation", f"Could not find accessor_validator lib name=[{accessor_validator_lib_name}] - using default")
+
         return GribAccessorConversionValidation(conv_data)
 
     def set_custom_conversion_data(self, conv_data):
@@ -83,9 +107,6 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
     @property
     def type_info(self):
          return grib_accessor_type_info.GribAccessorTypeInfo()
-    
-    def set_function_specific_conversion_data(self, function_name):
-        pass
 
     def add_includes(self):
         # Header includes

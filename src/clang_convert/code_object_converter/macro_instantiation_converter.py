@@ -13,4 +13,6 @@ class MacroInstantiationConverter(code_interface_converter.CodeInterfaceConverte
         cpp_macro = self._ccode_object
         cpp_macro_expression = conversion_funcs.convert_ccode_object(cpp_macro.expression, conversion_pack)
 
-        return macro_instantation.MacroInstantation(cpp_macro.name, cpp_macro_expression)
+        cpp_macro_inst = macro_instantation.MacroInstantation(cpp_macro.name, cpp_macro_expression)
+        
+        return conversion_pack.conversion_validation.validate_macro_instantiation(self._ccode_object, cpp_macro_inst)

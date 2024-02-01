@@ -27,5 +27,8 @@ class ConversionValidation:
     def validate_if_statement(self, cif_statement, cppif_statement):
         return cppif_statement
     
+    def validate_macro_instantiation(self, cmacro_instantiation, cppmacro_instantiation):
+        return cppmacro_instantiation
+    
     # ---------- CodeObject Validation : End   -----------------------------------------------------
    

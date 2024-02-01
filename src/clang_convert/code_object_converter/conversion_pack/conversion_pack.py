@@ -15,3 +15,8 @@ class ConversionPack:
     @property
     def conversion_validation(self):
         return self._conversion_validation
+
+    # Allow the validation to be updated (for example to provide function-specific validators)
+    @conversion_validation.setter
+    def conversion_validation(self, new_conversion_validation):
+        self._conversion_validation = new_conversion_validation

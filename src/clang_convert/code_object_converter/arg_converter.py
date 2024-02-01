@@ -112,7 +112,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
             cpp_arg = NONE_VALUE
         else:
             # 3. If we didn't match the pointer, and the converted pointer is not "", then convert the type to a vector
-            if (not match_type.value and DeclSpecMatchType.POINTER) and cpp_decl_spec.pointer:
+            if not (match_type.value & DeclSpecMatchType.POINTER.value) and cpp_decl_spec.pointer:
                 cpp_decl_spec.type = f"std::vector<{cpp_decl_spec.type}>"
                 cpp_decl_spec.pointer = ""
                 debug.line("convert_funcbody_arg", f"Type changed to std::vector, cpp_decl_spec=[{cpp_decl_spec}]")

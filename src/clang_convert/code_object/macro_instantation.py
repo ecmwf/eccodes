@@ -8,9 +8,10 @@ import code_object.code_objects as code_objects
 # name (str) is the Macro name
 # expression (CodeObjects) is the contents of the Macro call (inside the parens)
 class MacroInstantation(code_interface.CodeInterface):
-    def __init__(self, name, expression):
+    def __init__(self, name, expression=None):
         self._name = name
-        self._expression = expression
+        self._expression = expression if expression else code_objects.CodeObjects()
+
         assert isinstance(self._name, str), f"Name must be a str, not [{type(self._name).__name__}]"
         assert isinstance(self._expression, code_objects.CodeObjects), f"Expression must be a CodeObjects class, not [{type(self._expression).__name__}]"
 

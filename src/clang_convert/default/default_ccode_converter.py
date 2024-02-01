@@ -76,7 +76,7 @@ class DefaultCCodeConverter:
          return default_type_info.DefaultTypeInfo()
     
     # A chance to add specific data - override as required
-    def set_function_specific_conversion_data(self, function_name):
+    def function_specific_conversion_pack_updates(self, cfunction_name):
         pass
 
     def add_includes(self):
@@ -99,6 +99,7 @@ class DefaultCCodeConverter:
     # Helper to ensure the function is converted correctly, including resetting the local conversion data!
     def to_cpp_function(self, func):
         self._conversion_pack.conversion_data.reset_local_state()
+        self.function_specific_conversion_pack_updates(func.funcsig.name)
         cpp_func = conversion_funcs.convert_ccode_object(func, self._conversion_pack)
         if isinstance(cpp_func, member_function.MemberFunction):
             cpp_func.class_name = self._conversion_pack.conversion_data.info.class_name
