@@ -297,15 +297,20 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
     int err = 0, found = 0;
-    size_t i           = 0;
+    size_t i = 0;
     char grid_type[64] = {0,};
     grib_handle* h = grib_handle_of_accessor(a);
-    size_t size    = sizeof(grid_type) / sizeof(*grid_type);
+    size_t size = sizeof(grid_type) / sizeof(*grid_type);
 
     Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
 
-    if (*len < 100) { // Safe bet
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s", __func__, *len, a->name);
+    size_t l = 100; // Safe bet
+    if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
+        *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
 

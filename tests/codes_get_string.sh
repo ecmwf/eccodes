@@ -14,25 +14,28 @@ label="codes_get_string_test"
 tempText=temp.$label.txt
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-keys="identifier md5Headers packingType gridDefinitionDescription parameterUnits projString"
+keys="identifier md5Headers parameterUnits"
 for k in $keys; do
     $EXEC ${test_dir}/codes_get_string $input $k 2> $tempText
     grep -q "Wrong size" $tempText
 done
 
 input=$data_dir/reduced_latlon_surface.grib2
-$EXEC ${test_dir}/codes_get_string "$input" bitmap 2> $tempText
-grep -q "Wrong size" $tempText
+keys="projString bitmap class year gridDefinitionDescription packingType"
+for k in $keys; do
+    $EXEC ${test_dir}/codes_get_string $input $k 2> $tempText
+    grep -q "Buffer too small" $tempText
+done
 
 input=$ECCODES_SAMPLES_PATH/reduced_gg_ml_grib2.tmpl
 $EXEC ${test_dir}/codes_get_string "$input" gridName 2> $tempText
-grep -q "Wrong size" $tempText
+grep -q "Buffer too small" $tempText
 
 
 # shortName = swh
 input=$data_dir/reduced_latlon_surface.grib1
 $EXEC ${test_dir}/codes_get_string "$input" shortName 2> $tempText
-grep -q "Wrong size" $tempText
+grep -q "Buffer too small" $tempText
 
 
 rm -f $tempText

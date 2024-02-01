@@ -122,7 +122,6 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     char repres[1024];
     char format[32] = "%ld";
     grib_handle* h = grib_handle_of_accessor(a);
-    const char* cclass_name = a->cclass->name;
 
     err = grib_unpack_long(a, &val, &l);
     /* TODO: We should catch all errors but in this case the test ERA_Gen.sh will fail
@@ -140,7 +139,8 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     l = strlen(repres) + 1;
 
-    if (l > *len) {
+    if (*len < l) {
+        const char* cclass_name = a->cclass->name;
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
                          cclass_name, a->name, l, *len);

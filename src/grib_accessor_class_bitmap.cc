@@ -282,11 +282,14 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     long i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
+    const size_t l = a->length;
 
-    if (len[0] < (a->length)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s, it contains %ld values",
-                __func__, len[0], a->name, a->length);
-        len[0] = 0;
+    if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
+        *len = l;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
