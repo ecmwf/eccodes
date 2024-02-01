@@ -77,8 +77,10 @@ if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
     ecbuild_add_cxx_flags("-Wno-write-strings")
     ecbuild_add_cxx_flags("-Wno-deprecated")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    ecbuild_add_cxx_flags("-Wno-write-strings")
-    ecbuild_add_cxx_flags("-Wno-deprecated")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
+        ecbuild_add_cxx_flags("-Wno-write-strings")
+        ecbuild_add_cxx_flags("-Wno-deprecated")
+    endif()
 elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
@@ -480,10 +482,10 @@ endif()
 
 ###############################################################################
 # Debugging aid. Print all known CMake variables
-# get_cmake_property(_variableNames VARIABLES)
-# foreach( _variableName ${_variableNames} )
+#get_cmake_property(_variableNames VARIABLES)
+#foreach( _variableName ${_variableNames} )
 #   ecbuild_info("  ${_variableName}=${${_variableName}}")
-# endforeach()
+#endforeach()
 ###############################################################################
 # finalize
 
