@@ -190,6 +190,13 @@
 	 parameterCategory = 6 ;
 	 parameterNumber = 11 ;
 	}
+#Volumetric soil moisture
+'Volumetric soil moisture' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #2 metre relative humidity
 '2 metre relative humidity' = {
 	 discipline = 0 ;
