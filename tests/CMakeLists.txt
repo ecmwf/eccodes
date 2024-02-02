@@ -48,7 +48,6 @@ list(APPEND test_c_bins
     bufr_ecc-1288
     bufr_get_element
     bufr_extract_headers
-    extract_offsets
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
@@ -457,6 +456,13 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
+    endif()
+
+    if( NOT ECCODES_ON_WINDOWS )
+        ecbuild_add_executable( TARGET    extract_offsets
+                                NOINSTALL
+                                SOURCES   extract_offsets.cc
+                                LIBS      eccodes )
     endif()
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf
