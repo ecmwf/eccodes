@@ -19082,7 +19082,7 @@
 	 parameterNumber = 181 ;
 	}
 #Evaporation
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 182 ;
