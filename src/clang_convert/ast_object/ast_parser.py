@@ -22,6 +22,7 @@ import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
+from code_object.code_interface import NONE_VALUE
 
 # Parse AstCode and create code interface objects: classes that implement the CodeInterface
 #
@@ -408,10 +409,18 @@ class AstParser:
         cvalue = None
         for child in node.get_children():
             if child.kind.is_expression():
-                cvalue = self.parse_ast_node(child)                
+                cvalue = self.parse_ast_node(child)
             else:
                 debug.line("parse_VAR_DECL", f"Ignoring child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
         
+
+        debug.line("parse_VAR_DECL", f"DEBUG: cvariable type=[{type(cvariable)}.__NAME__] as_string=[{debug.as_debug_string(cvariable)}]")
+        debug.line("parse_VAR_DECL", f"DEBUG: cvalue    type=[{type(cvalue)}.__NAME__] as_string=[{debug.as_debug_string(cvalue)}]")
+
+        if not cvalue:
+            debug.line("parse_VAR_DECL", f"Ignoring cvalue with type=[{cvalue}]")
+            return None
+
         return variable_declaration.VariableDeclaration(cvariable, cvalue)
 
     parse_DECL_funcs = {

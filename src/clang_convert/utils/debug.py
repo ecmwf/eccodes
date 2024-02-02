@@ -4,7 +4,7 @@ from code_object.code_interface import CodeInterface
 
 func_pad = 30
 debug_enabled = True
-debug_filter_include = [] #["convert_global_declarations", "dump_function"]
+debug_filter_include = []
 debug_filter_exclude = []
 
 show_time = False
