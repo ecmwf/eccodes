@@ -19,15 +19,20 @@ tempLog="temp.${label}.log"
 echo "Multi-message BUFR..."
 # ---------------------------
 input=${data_dir}/bufr/aeolus_wmo_26.bufr
-$EXEC ${test_dir}/extract_offsets  $input > $temp1
+$EXEC ${test_dir}/extract_offsets -o $input > $temp1
 ${tools_dir}/bufr_get -p offset:i  $input > $temp2
 diff $temp1 $temp2
+
+$EXEC ${test_dir}/extract_offsets -s $input > $temp1
+${tools_dir}/bufr_get -p totalLength  $input > $temp2
+diff $temp1 $temp2
+
 
 echo "Multi-message GRIBs..."
 # --------------------------
 inputs="${data_dir}/mixed.grib ${data_dir}/test.grib1  ${data_dir}/v.grib2"
 for input in $inputs; do
-    $EXEC ${test_dir}/extract_offsets  $input > $temp1
+    $EXEC ${test_dir}/extract_offsets -o $input > $temp1
     ${tools_dir}/grib_get -p offset:i  $input > $temp2
     diff $temp1 $temp2
 done
@@ -35,21 +40,21 @@ done
 echo "Test with invalid inputs..."
 # ---------------------------------
 set +e
-$EXEC ${test_dir}/extract_offsets ${data_dir} > $tempLog 2>&1
+$EXEC ${test_dir}/extract_offsets -o ${data_dir} > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "is a directory" $tempLog
 
 set +e
-$EXEC ${test_dir}/extract_offsets ${data_dir}/bad.grib > $tempLog 2>&1
+$EXEC ${test_dir}/extract_offsets -o ${data_dir}/bad.grib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Wrong message length" $tempLog
 
 set +e
-$EXEC ${test_dir}/extract_offsets nonexistentfile > $tempLog 2>&1
+$EXEC ${test_dir}/extract_offsets -o nonexistentfile > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]

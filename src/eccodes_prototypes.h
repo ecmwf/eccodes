@@ -1025,7 +1025,9 @@ int grib_read_any_from_memory_alloc(grib_context* ctx, unsigned char** data, siz
 int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* data_length, void* buffer, size_t* len);
 int grib_count_in_file(grib_context* c, FILE* f, int* n);
 int grib_count_in_filename(grib_context* c, const char* filename, int* n);
-int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode);
+int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_sizes_malloc(grib_context* c, const char* filename, ProductKind product,
+                                       off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
 
 
 /* grib_trie.cc*/

@@ -15,23 +15,42 @@
 
 int main(int argc, char* argv[])
 {
-    char *filename;
+    char *filename = NULL;
+    char *what = NULL; // offsets or sizes
     int err = 0;
     int num_messages = 0, i =0;
     off_t* offsets = NULL;
+    size_t* sizes = NULL;
     codes_context* c = codes_context_get_default();
     const int strict_mode = 1;
 
-    /* Usage: prog file */
-    assert(argc == 2);
+    /* Usage: prog mode file */
+    assert(argc == 3);
 
-    filename = argv[1];
-    err = codes_extract_offsets_malloc(c, filename, PRODUCT_ANY, &offsets, &num_messages, strict_mode);
-    if (err) return err;
+    what = argv[1];
+    filename = argv[2];
 
-    for (i = 0; i < num_messages; ++i) {
-        printf("%lu\n", (unsigned long)offsets[i]);
+    if (strcmp(what, "-o")==0) {
+        err = codes_extract_offsets_malloc(c, filename, PRODUCT_ANY, &offsets, &num_messages, strict_mode);
+        if (err) return err;
+
+        for (i = 0; i < num_messages; ++i) {
+            printf("%lu\n", (unsigned long)offsets[i]);
+        }
+        free(offsets);
     }
-    free(offsets);
+
+    if (strcmp(what, "-s")==0) {
+        // Version getting offsets as well as sizes of messages
+        err = codes_extract_offsets_sizes_malloc(c, filename, PRODUCT_ANY, &offsets, &sizes, &num_messages, strict_mode);
+        if (err) return err;
+
+        for (i = 0; i < num_messages; ++i) {
+            printf("%zu\n", sizes[i]);
+        }
+        free(offsets);
+        free(sizes);
+    }
+
     return 0;
 }
