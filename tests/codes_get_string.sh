@@ -16,7 +16,8 @@ tempText=temp.$label.txt
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 input=$data_dir/reduced_latlon_surface.grib2
-keys="identifier projString bitmap class year gridDefinitionDescription packingType md5Headers parameterUnits"
+keys="identifier projString bitmap class year gridDefinitionDescription
+      time validityTime packingType md5Headers parameterUnits"
 for k in $keys; do
     $EXEC ${test_dir}/codes_get_string $input $k 2> $tempText
     grep -q "Buffer too small" $tempText

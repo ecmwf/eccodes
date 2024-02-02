@@ -141,19 +141,22 @@ static int value_count(grib_accessor* a, long* count)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int i = 0;
+    long i = 0;
+    size_t l = a->length + 1;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    if (len[0] < (a->length + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = a->length+1;
+    if (*len < l) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         a->cclass->name, a->name, l, *len);
+        *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < a->length; i++)
-        val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset + i];
+        val[i] = h->buffer->data[a->offset + i];
     val[i] = 0;
-    len[0] = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 

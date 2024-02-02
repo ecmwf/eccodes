@@ -185,7 +185,6 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
                          cclass_name, a->name, 32, *len);
-        // grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Wrong size (%zu) for %s", __func__, *len, a->name);
         *len = 32;
         return GRIB_BUFFER_TOO_SMALL;
     }
