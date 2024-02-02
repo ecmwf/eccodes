@@ -146,8 +146,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     if (len[0] < (a->length + 1)) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
                 len[0], a->name, a->length + 1);
-        len[0] = 0;
-        return GRIB_ARRAY_TOO_SMALL;
+        len[0] = a->length+1;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < a->length; i++)

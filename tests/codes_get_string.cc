@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 
     err = codes_get_string(h, key, kvalue, &len);
     printf("err=%d  kvalue=|%s|\n", err, kvalue);
-    assert(err == CODES_ARRAY_TOO_SMALL || err == CODES_BUFFER_TOO_SMALL);
+    assert(err == CODES_BUFFER_TOO_SMALL);
 
     codes_handle_delete(h);
     fclose(in);

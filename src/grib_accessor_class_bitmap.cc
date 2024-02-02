@@ -290,7 +290,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
                          cclass_name, a->name, l, *len);
         *len = l;
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < a->length; i++) {
