@@ -17,6 +17,11 @@ temp2="temp.${label}.2"
 tempLog="temp.${label}.log"
 tempRef="temp.${label}.ref"
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 echo "Multi-message BUFR..."
 # ---------------------------
 input=${data_dir}/bufr/aeolus_wmo_26.bufr

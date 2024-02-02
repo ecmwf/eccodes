@@ -12,7 +12,10 @@
 
 #undef NDEBUG
 #include <assert.h>
+
+#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
+#endif
 
 int main(int argc, char* argv[])
 {
