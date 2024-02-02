@@ -15,6 +15,7 @@ label="extract_offsets_test"
 temp1="temp.${label}.1"
 temp2="temp.${label}.2"
 tempLog="temp.${label}.log"
+tempRef="temp.${label}.ref"
 
 echo "Multi-message BUFR..."
 # ---------------------------
@@ -35,7 +36,27 @@ for input in $inputs; do
     $EXEC ${test_dir}/extract_offsets -o $input > $temp1
     ${tools_dir}/grib_get -p offset:i  $input > $temp2
     diff $temp1 $temp2
+
+    $EXEC ${test_dir}/extract_offsets -s $input > $temp1
+    ${tools_dir}/grib_get -p totalLength  $input > $temp2
+    diff $temp1 $temp2
 done
+
+echo "GTS headers and padding..."
+# -------------------------------
+input=${data_dir}/gts.grib
+$EXEC ${test_dir}/extract_offsets -o -s $input > $temp1
+cat > $tempRef << EOF
+41
+170
+299
+428
+84
+84
+84
+84
+EOF
+diff $tempRef $temp1
 
 echo "Test with invalid inputs..."
 # ---------------------------------
@@ -62,4 +83,4 @@ grep -q "Unable to read file" $tempLog
 
 
 # Clean up
-rm -f $temp1 $temp2 $tempLog
+rm -f $temp1 $temp2 $tempLog $tempRef

@@ -12,25 +12,38 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <unistd.h>
 
 int main(int argc, char* argv[])
 {
     char *filename = NULL;
-    char *what = NULL; // offsets or sizes
     int err = 0;
     int num_messages = 0, i =0;
     off_t* offsets = NULL;
     size_t* sizes = NULL;
     codes_context* c = codes_context_get_default();
     const int strict_mode = 1;
+    int do_offsets = 0;
+    int do_sizes = 0;
+    int index = 0, oc = 0;
 
-    /* Usage: prog mode file */
-    assert(argc == 3);
+    /* Usage: prog option file */
+    assert(argc == 3 || argc == 4);
 
-    what = argv[1];
-    filename = argv[2];
+    while ((oc = getopt(argc, argv, "os")) != -1) {
+        switch (oc) {
+            case 'o':
+                do_offsets = 1;
+                break;
+            case 's':
+                do_sizes = 1;
+                break;
+        }
+    }
+    index = optind;
+    filename = argv[index];
 
-    if (strcmp(what, "-o")==0) {
+    if (do_offsets) {
         err = codes_extract_offsets_malloc(c, filename, PRODUCT_ANY, &offsets, &num_messages, strict_mode);
         if (err) return err;
 
@@ -40,7 +53,7 @@ int main(int argc, char* argv[])
         free(offsets);
     }
 
-    if (strcmp(what, "-s")==0) {
+    if (do_sizes) {
         // Version getting offsets as well as sizes of messages
         err = codes_extract_offsets_sizes_malloc(c, filename, PRODUCT_ANY, &offsets, &sizes, &num_messages, strict_mode);
         if (err) return err;
