@@ -588,12 +588,20 @@ class AstParser:
     # However, as we're just storing strings, we'll use the tokens directly!
     def parse_MEMBER_REF_EXPR(self, node):
         tokens = [token.spelling for token in node.get_tokens()]
-        debug.line("parse_MEMBER_REF_EXPR", f"[IN] node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
-        assert len(tokens) == 3, f"Expected exactly 3 tokens for member ref, but got [{len(tokens)}]"
+        debug.line("parse_MEMBER_REF_EXPR", f"[IN]  node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
+        assert len(tokens) >= 3, f"Expected at least 3 tokens for member ref, but got [{len(tokens)}]"
 
-        cstruct_member_access        = struct_member_access.StructMemberAccess(None, tokens[0], None)
-        cstruct_member_access.member = struct_member_access.StructMemberAccess(tokens[1], tokens[2], None)
+        cstruct_member_access        = struct_member_access.StructMemberAccess(None, tokens.pop(0), None)
 
+        next_cmember = cstruct_member_access
+        while len(tokens) > 0:
+            debug.line("parse_MEMBER_REF_EXPR", f"      remaining tokens=[{tokens}]")
+
+            next_cmember.member = struct_member_access.StructMemberAccess(tokens[0], tokens[1], None)
+            tokens = tokens[2:]
+            next_cmember = next_cmember.member
+
+        debug.line("parse_MEMBER_REF_EXPR", f"[OUT] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
         return cstruct_member_access
 
     def parse_CALL_EXPR(self, node):
