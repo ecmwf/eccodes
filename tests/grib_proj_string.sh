@@ -106,7 +106,7 @@ for ug in $unsupported_grids; do
   status=$?
   set -e
   [ $status -ne 0 ]
-  grep -q "Not yet implemented" $tempText
+  grep -q "not yet implemented" $tempText
 done
 
 # Clean up
