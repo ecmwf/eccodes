@@ -148,9 +148,8 @@ ecbuild_add_option( FEATURE AEC
     DEFAULT ON
     CONDITION AEC_FOUND )
 
-ecbuild_find_python( VERSION 2.6 NO_LIBS )
-find_package( NumPy )
-set( HAVE_PYTHON 0 )
+ecbuild_find_python( VERSION 3.6 NO_LIBS )
+# find_package( NumPy )
 
 ## TODO REQUIRED_LANGUAGES Fortran
 ecbuild_add_option( FEATURE FORTRAN
