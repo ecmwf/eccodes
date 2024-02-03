@@ -1270,6 +1270,13 @@ diff $fRef $fLog
 rm -f $fRef
 
 
+# Decode expandedDescriptors as array of doubles
+cat > $fRules <<EOF
+ print "[expandedDescriptors:d]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules airc_142.bufr
+
+
 
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
