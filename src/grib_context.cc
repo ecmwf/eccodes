@@ -451,10 +451,16 @@ grib_context* grib_context_get_default()
             default_grib_context.log_stream = stdout;
         }
 
+        if (!default_grib_context.grib_samples_path) {
 #ifdef ECCODES_SAMPLES_PATH
-        if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH;
+            default_grib_context.grib_samples_path = strdup(ECCODES_SAMPLES_PATH);
+#else
+            default_grib_context.grib_samples_path = strdup("");
 #endif
+        }
+        else {
+            default_grib_context.grib_samples_path = strdup(default_grib_context.grib_samples_path);
+        }
 
         default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
 #ifdef ECCODES_DEFINITION_PATH
@@ -483,11 +489,12 @@ grib_context* grib_context_get_default()
             }
             if (test_samp) {
                 char buffer[ECC_PATH_MAXLEN]= {0,};
-                if (default_grib_context.grib_samples_path) {
+                if (default_grib_context.grib_samples_path[0]) {
                     strcpy(buffer, default_grib_context.grib_samples_path);
                     strcat(buffer, ":");
                 }
                 strcat(buffer, test_samp);
+                free(default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
@@ -519,9 +526,16 @@ grib_context* grib_context_get_default()
         {
             const char* samples_extra = getenv("ECCODES_EXTRA_SAMPLES_PATH");
             if (samples_extra) {
-                char buffer[ECC_PATH_MAXLEN];
-                snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
-                default_grib_context.grib_samples_path = strdup(buffer);
+                if(default_grib_context.grib_samples_path[0]) {
+                    char buffer[ECC_PATH_MAXLEN];
+                    snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", samples_extra, ECC_PATH_DELIMITER_CHAR, default_grib_context.grib_samples_path);
+                    free(default_grib_context.grib_samples_path);
+                    default_grib_context.grib_samples_path = strdup(buffer);
+                }
+                else {
+                    free(default_grib_context.grib_samples_path);
+                    default_grib_context.grib_samples_path = strdup(samples_extra);
+                }
             }
         }
 #ifdef ECCODES_SAMPLES_PATH
@@ -530,6 +544,7 @@ grib_context* grib_context_get_default()
                 char buffer[ECC_PATH_MAXLEN];
                 snprintf(buffer, ECC_PATH_MAXLEN, "%s%c%s", default_grib_context.grib_samples_path,
                              ECC_PATH_DELIMITER_CHAR, ECCODES_SAMPLES_PATH);
+                free(default_grib_context.grib_samples_path);
                 default_grib_context.grib_samples_path = strdup(buffer);
             }
         }
@@ -885,6 +900,7 @@ void grib_context_set_definitions_path(grib_context* c, const char* path)
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
+    free(c->grib_definition_files_path);
     c->grib_definition_files_path = strdup(path);
     grib_context_log(c, GRIB_LOG_DEBUG, "Definitions path changed to: %s", c->grib_definition_files_path);
 
@@ -897,6 +913,7 @@ void grib_context_set_samples_path(grib_context* c, const char* path)
     GRIB_MUTEX_INIT_ONCE(&once, &init);
     GRIB_MUTEX_LOCK(&mutex_c);
 
+    free(c->grib_samples_path);
     c->grib_samples_path = strdup(path);
     grib_context_log(c, GRIB_LOG_DEBUG, "Samples path changed to: %s", c->grib_samples_path);
 
