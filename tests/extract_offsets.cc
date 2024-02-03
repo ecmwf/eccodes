@@ -12,25 +12,18 @@
 
 #undef NDEBUG
 #include <assert.h>
-
-#ifndef ECCODES_ON_WINDOWS
 #include <unistd.h>
-#endif
 
 int main(int argc, char* argv[])
 {
     char *filename = NULL;
     int err = 0;
-    int num_messages = 0, i =0;
-    off_t* offsets = NULL;
-    size_t* sizes = NULL;
+    int num_messages = 0, i = 0, do_offsets = 0, do_sizes = 0, oc = 0;
+    off_t* offsets = NULL;  // array of message offsets
+    size_t* sizes = NULL;   // array of message sizes
     codes_context* c = codes_context_get_default();
     const int strict_mode = 1;
-    int do_offsets = 0;
-    int do_sizes = 0;
-    int index = 0, oc = 0;
 
-    /* Usage: prog option file */
     assert(argc == 3 || argc == 4);
 
     while ((oc = getopt(argc, argv, "os")) != -1) {
@@ -43,8 +36,7 @@ int main(int argc, char* argv[])
                 break;
         }
     }
-    index = optind;
-    filename = argv[index];
+    filename = argv[optind];
 
     if (do_offsets) {
         err = codes_extract_offsets_malloc(c, filename, PRODUCT_ANY, &offsets, &num_messages, strict_mode);
@@ -53,7 +45,6 @@ int main(int argc, char* argv[])
         for (i = 0; i < num_messages; ++i) {
             printf("%lu\n", (unsigned long)offsets[i]);
         }
-        free(offsets);
     }
 
     if (do_sizes) {
@@ -64,9 +55,9 @@ int main(int argc, char* argv[])
         for (i = 0; i < num_messages; ++i) {
             printf("%zu\n", sizes[i]);
         }
-        free(offsets);
         free(sizes);
     }
 
+    free(offsets);
     return 0;
 }
