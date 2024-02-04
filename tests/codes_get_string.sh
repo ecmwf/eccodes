@@ -13,7 +13,8 @@
 label="codes_get_string_test"
 tempText=temp.$label.txt
 
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+$EXEC ${test_dir}/codes_get_string $input dataDate 2> $tempText
 
 input=$data_dir/reduced_latlon_surface.grib2
 keys="identifier projString bitmap class year gridDefinitionDescription

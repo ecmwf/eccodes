@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/************************************
- *  Enrico Fucile
- ***********************************/
-
 #include "grib_api_internal.h"
 
 /*
@@ -259,7 +255,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     }
     else if (year == 255 && month >= 1 && month <= 12) {
         snprintf(tmp, sizeof(tmp), "%s-%02ld", months[month - 1], day);
-        /* snprintf(tmp,sizeof(tmp),"%02ld-%02ld",month,day); */
     }
     else {
         long x = ((century - 1) * 100 + year) * 10000 + month * 100 + day;
