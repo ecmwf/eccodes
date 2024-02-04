@@ -11,10 +11,15 @@
 . ./include.ctest.sh
 
 label="codes_get_string_test"
+tempGrib=temp.$label.grib
 tempText=temp.$label.txt
 
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-$EXEC ${test_dir}/codes_get_string $input dataDate 2> $tempText
+$EXEC ${test_dir}/codes_get_string $input dataDate
+
+${tools_dir}/grib_set -s marsType=s3,marsStream=mpic $input $tempGrib
+$EXEC ${test_dir}/codes_get_string $tempGrib dayOfTheYearDate # 2> $tempText
+
 
 input=$data_dir/reduced_latlon_surface.grib2
 keys="identifier projString bitmap class year gridDefinitionDescription
