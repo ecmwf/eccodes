@@ -37,10 +37,6 @@ class ConversionData:
     @property
     def info(self):
         return self._info
-    
-    @property
-    def current_cfuncname(self):
-        return self._info.current_cfuncname
 
     # ============================== Functions to update the mappings: start ==============================
 
@@ -50,8 +46,6 @@ class ConversionData:
             return self._local_mappings
         else:
             return self._global_mappings
-
-
 
     def add_funcbody_type_mapping(self, cdecl_spec, cppdecl_spec):
         assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"
@@ -335,6 +329,9 @@ class ConversionData:
                 if entry.cfuncsig.name == cfuncname:
                     return entry
         return None
+    
+    def funcsig_mapping_for_current_cfuncname(self):
+        return self.funcsig_mapping_for_cfuncname(self._info.current_cfuncname)
 
     def funcsig_buffer_mapping_for_cname(self, cname):
         for mapping in self.all_mappings():

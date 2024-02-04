@@ -5,6 +5,7 @@ import code_object.literal as literal
 import code_object.variable_declaration as variable_declaration
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.binary_operation as binary_operation
+import code_object.return_statement as return_statement
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
 import code_object.if_statement as if_statement
@@ -67,4 +68,16 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         return super().validate_if_statement(cif_statement, cppif_statement)
 
     def validate_return_statement(self, creturn_statement, cppreturn_statement):
+
+        mapping = self._conversion_data.funcsig_mapping_for_current_cfuncname()
+        if mapping:
+            if mapping.cppfuncsig.return_type.type == "GribStatus":
+                cpp_expression = cppreturn_statement.expression.as_string()
+                if cpp_expression == "0":
+                    updated_cpp_expression = literal.Literal("GribStatus::SUCCESS")
+                else:
+                    updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpp_expression})")
+
+                return return_statement.ReturnStatement(updated_cpp_expression)
+
         return super().validate_return_statement(creturn_statement, cppreturn_statement)
