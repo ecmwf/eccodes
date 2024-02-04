@@ -41,6 +41,16 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
             mapping = funcsig_mapping.FuncSigMapping(cfuncsig, cppfuncsig)
             self._conversion_pack.conversion_data.add_funcsig_mapping(mapping)
 
+        # Add all the arg mappings for the rest of the function to use
+        # NOTE: We use cfuncsig rather than mapping.cfuncsig as the former may not have variable names included which will
+        #       will cause confusion if multiple args have the same type!
+        for i in range(len(mapping.cfuncsig.args)):
+            debug.line("create_cpp_code_object", f"DEBUG FUNCSIG MAPPING: cfuncsig.args[{i}]=[{debug.as_debug_string(cfuncsig.args[i])}] mapping.cppfuncsig.args[{i}]=[{debug.as_debug_string(mapping.cppfuncsig.args[i])}]")
+            self._conversion_pack.conversion_data.add_funcsig_arg_mapping(
+                cfuncsig.args[i],
+                mapping.cppfuncsig.args[i]
+            )
+
         # Update the settings that we don't need (want?) to store in the map
         cppfuncsig.is_declaration = cfuncsig.is_declaration
 

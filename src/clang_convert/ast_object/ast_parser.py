@@ -22,6 +22,7 @@ import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
+import code_object.while_statement as while_statement
 from code_object.code_interface import NONE_VALUE
 
 # Parse AstCode and create code interface objects: classes that implement the CodeInterface
@@ -295,6 +296,20 @@ class AstParser:
 
         return if_stmt
 
+    def parse_WHILE_STMT(self, node):
+        debug.line("parse_WHILE_STMT", f"WHILE Nodes:")
+        ast_utils.dump_node(node)
+
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 2, f"Expected two children for while statement, not [{child_count}]"
+
+        while_expression = self.parse_ast_node(children[0])
+        while_action = self.parse_ast_node(children[1])
+
+        while_stmt = while_statement.WhileStatement(while_expression, while_action)
+        return while_stmt
+
     def parse_FOR_STMT(self, node):
         init_statement = condition = iteration_expression = statement = None
 
@@ -349,7 +364,7 @@ class AstParser:
         clang.cindex.CursorKind.DEFAULT_STMT:   parse_node_not_implemented,
         clang.cindex.CursorKind.IF_STMT:        parse_IF_STMT,
         clang.cindex.CursorKind.SWITCH_STMT:    parse_node_not_implemented,
-        clang.cindex.CursorKind.WHILE_STMT:     parse_node_not_implemented,
+        clang.cindex.CursorKind.WHILE_STMT:     parse_WHILE_STMT,
         clang.cindex.CursorKind.DO_STMT:        parse_node_not_implemented,
         clang.cindex.CursorKind.FOR_STMT:       parse_FOR_STMT,
         clang.cindex.CursorKind.GOTO_STMT:      parse_node_not_implemented,
@@ -477,6 +492,11 @@ class AstParser:
     def parse_STRING_LITERAL(self, node):
         return literal.Literal(node.spelling)
 
+    def parse_CHARACTER_LITERAL(self, node):
+        tokens = [token.spelling for token in node.get_tokens()]
+        assert len(tokens) == 1, f"Expected one token for character literal, not [{len(tokens)}]"
+        return literal.Literal(tokens[0])
+
     def parse_PAREN_EXPR(self, node):
         children = list(node.get_children())
         assert len(children) == 1, f"Expected exactly one child for paren expression"
@@ -512,7 +532,11 @@ class AstParser:
         tokens_count = len(tokens)
         operand_tokens = [token.spelling for token in operand.get_tokens()]
         operand_tokens_count = len(operand_tokens)
-        assert tokens_count == operand_tokens_count+1, f"Expected tokens_count [{tokens_count}] to be 1 more than operand_tokens_count [{operand_tokens_count}]"
+
+        if tokens_count != operand_tokens_count+1:
+            # The top level tokens don't match the operand tokens. This will happen if the top-level
+            # contains a macro definition. We should be able to handle this, so we'll just record the fact here!
+            debug.line("parse_UNARY_OPERATOR", f"Expected tokens_count [{tokens_count}] to be 1 more than operand_tokens_count [{operand_tokens_count}]: assuming a macro")
 
         # Find the operator by eliminating the operand tokens
         # Need to determine if it is prefix or postfix operator
@@ -555,23 +579,12 @@ class AstParser:
             # The top level tokens don't match the right_operand tokens. This will happen if the top-level
             # contains a macro definition. We should be able to handle this, so we'll just record the fact here!
             debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: assuming a macro")
-            right_operand_cvalue = self.parse_ast_node(right_operand)
+        right_operand_cvalue = self.parse_ast_node(right_operand)
 
-            '''
-            # For now we'll just take the top-level tokens as a (string) literal
-            top_level_right_tokens = tokens[left_tokens_count+1:]
-            right_operand_cvalue = literal.Literal(f"{' '.join(t for t in top_level_right_tokens)}")
-            
-            debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: using top-level tokens, treating as a literal")
-            debug.line("parse_BINARY_OPERATOR", f" -> tokens                 = [{tokens}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> left_tokens            = [{left_tokens}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> operator_token         = [{operator_token}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> right_tokens           = [{right_tokens}]")
-            debug.line("parse_BINARY_OPERATOR", f" -> top_level_right_tokens = [{top_level_right_tokens}]")
-            '''
-            
-        else:
-            right_operand_cvalue = self.parse_ast_node(right_operand)
+        debug.line("parse_BINARY_OPERATOR", f"Create c_binary_op: left_operand_cvalue=[{debug.as_debug_string(left_operand_cvalue)}] operator_token=[{debug.as_debug_string(operator_token)}] right_operand_cvalue=[{debug.as_debug_string(right_operand_cvalue)}]")
+
+        if not right_operand_cvalue:
+            return literal.Literal(f"// [Ignoring C Code] {' '.join([token.spelling for token in node.get_tokens()])}")
 
         c_binary_op = binary_operation.BinaryOperation(left_operand_cvalue, operator_token, right_operand_cvalue)
         return c_binary_op
@@ -686,7 +699,7 @@ class AstParser:
         clang.cindex.CursorKind.INTEGER_LITERAL:                parse_INTEGER_LITERAL,
         clang.cindex.CursorKind.FLOATING_LITERAL:               parse_node_not_implemented,
         clang.cindex.CursorKind.STRING_LITERAL:                 parse_STRING_LITERAL,
-        clang.cindex.CursorKind.CHARACTER_LITERAL:              parse_node_not_implemented,
+        clang.cindex.CursorKind.CHARACTER_LITERAL:              parse_CHARACTER_LITERAL,
         clang.cindex.CursorKind.PAREN_EXPR:                     parse_PAREN_EXPR,
         clang.cindex.CursorKind.CXX_UNARY_EXPR:                 parse_CXX_UNARY_EXPR,
         clang.cindex.CursorKind.UNARY_OPERATOR:                 parse_UNARY_OPERATOR,

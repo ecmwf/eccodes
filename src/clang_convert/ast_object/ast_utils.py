@@ -17,7 +17,7 @@ import code_object.struct_arg as struct_arg
 # "" to not show tokens
 def dump_node(cnode, depth=0, tokens="truncate"):
     truncate_depth = 10
-    debug.line("dump_node", f"{' ' * depth}[{cnode.kind}] spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] extent=[{cnode.extent.start.line}:{cnode.extent.start.column}]->[{cnode.extent.end.line}:{cnode.extent.end.column}]")
+    debug.line("dump_node", f"{' ' * depth}[{depth}:{cnode.kind}] spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] extent=[{cnode.extent.start.line}:{cnode.extent.start.column}]->[{cnode.extent.end.line}:{cnode.extent.end.column}]")
     if tokens == "flat":
         debug.line("dump_node", f"{' ' * depth} -> tokens=[{[token.spelling for token in cnode.get_tokens()]}]")
     elif tokens == "list":

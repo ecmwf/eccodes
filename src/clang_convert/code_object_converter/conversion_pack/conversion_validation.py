@@ -108,5 +108,8 @@ class ConversionValidation:
     def validate_virtual_member_function(self, cvirtual_member_function, cppvirtual_member_function):
         return cppvirtual_member_function
 
+    def validate_while_statement(self, cwhile_statement, cppwhile_statement):
+        return cppwhile_statement
+    
     # ---------- CodeObject Validation : End   -----------------------------------------------------
    

@@ -111,7 +111,7 @@ class ConversionData:
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
         assert isinstance(cpparg, Arg) or cpparg==Arg.NONE, f"Expected Arg, got [{cpparg}]"
         if carg in self.active_map.funcsig_arg_mappings:
-            assert self.active_map.funcsig_arg_mappings[carg] == cpparg, f"Updating an existing funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{debug.as_debug_string(self.active_map.function_arg_mappings[carg])}]"
+            assert self.active_map.funcsig_arg_mappings[carg] == cpparg, f"Updating an existing funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{debug.as_debug_string(self.active_map.funcsig_arg_mappings[carg])}]"
         else:
             self.active_map.funcsig_arg_mappings[carg] = cpparg
             debug.line("add_funcsig_arg_mapping", f"Adding funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}]")
@@ -252,6 +252,16 @@ class ConversionData:
         return None
 
     # Use this version when you only have a name and need to get the full arg (inc decl_type)
+    def funcsig_cpparg_for_carg_name(self, carg_name):
+        assert carg_name, f"carg_name can't be empty!"
+
+        for mapping in self.all_mappings():
+            for key, value in mapping.funcsig_arg_mappings.items():
+                if key.name == carg_name:
+                    return value
+        return None
+
+    # Use this version when you only have a name and need to get the full arg (inc decl_type)
     def funcsig_cpparg_for_cpparg_name(self, cpparg_name):
         assert cpparg_name, f"cpparg_name can't be empty!"
 
@@ -277,6 +287,21 @@ class ConversionData:
 
         return None
 
+    # Given the cname, search all stores to see if an arg exists
+    def cpparg_for_cname(self, cname):
+        cpparg = self.funcbody_cpparg_for_carg_name(cname)
+        if cpparg:
+            return cpparg
+        
+        cpparg = self.funcsig_cpparg_for_carg_name(cname)
+        if cpparg:
+            return cpparg
+
+        buf_map = self.funcsig_buffer_mapping_for_cname(cname)
+        if buf_map:
+            return buf_map.cpp_container
+
+        return None
 
     def cppdata_member_for_cdata_member(self, cmember):
         for mapping in self.all_mappings():

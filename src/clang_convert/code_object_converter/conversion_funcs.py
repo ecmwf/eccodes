@@ -31,6 +31,7 @@ import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
 import code_object.virtual_member_function as virtual_member_function
+import code_object.while_statement as while_statement
 
 import code_object_converter.array_access_converter as array_access_converter
 import code_object_converter.arg_converter as arg_converter
@@ -64,6 +65,7 @@ import code_object_converter.unary_operation_converter as unary_operation_conver
 import code_object_converter.value_declaration_reference_converter as value_declaration_reference_converter
 import code_object_converter.variable_declaration_converter as variable_declaration_converter
 import code_object_converter.virtual_member_function_converter as virtual_member_function_converter
+import code_object_converter.while_statement_converter as while_statement_converter
 
 import code_object_converter.code_interface_converter as code_interface_converter
 import utils.debug as debug
@@ -103,6 +105,7 @@ CodeInterfaceConverterClasses = {
     value_declaration_reference.ValueDeclarationReference   : value_declaration_reference_converter.ValueDeclarationReferenceConverter,
     variable_declaration.VariableDeclaration                : variable_declaration_converter.VariableDeclarationConverter,
     virtual_member_function.VirtualMemberFunction           : virtual_member_function_converter.VirtualMemberFunctionConverter,
+    while_statement.WhileStatement                          : while_statement_converter.WhileStatementConverter,
 }
 
 # Convert a code_object into a C++ code_object
