@@ -49,14 +49,17 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         debug.line("validate_unary_operation", f"cppunary_operation.operand string=[{debug.as_debug_string(cppunary_operation.operand)}] type=[{type(cppunary_operation.operand).__name__}]")
         
         cpparg = arg_utils.to_cpparg(cppunary_operation.operand, self._conversion_data)
+        debug.line("validate_unary_operation", f"cpparg=[{debug.as_debug_string(cpparg)}]")
+
         if cpparg:
             if self._conversion_data.is_container_type(cpparg.decl_spec.type):
                 # C++ variable is a container, so we'll strip the *
                 debug.line("validate_unary_operation", f"Stripping [*] from cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
                 return cppunary_operation.operand
             elif cpparg.decl_spec.pointer == "&":
-                debug.line("validate_unary_operation", f"Stripping [*] from ref type: cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
+                debug.line("validate_unary_operation", f"Stripping [*] from ref type: current cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
                 return cppunary_operation.operand
+
         return cppunary_operation
 
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):

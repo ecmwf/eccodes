@@ -43,7 +43,7 @@ class DeclSpec(code_interface.CodeInterface):
             const_qualifier = "const"
             match_start += m.end()
 
-        m = re.match(r"[^\*]+", decl_specifier_seq[match_start:])
+        m = re.match(r"[^\*&]+", decl_specifier_seq[match_start:])
         if m:
             type = m.group(0).strip()
 
@@ -54,7 +54,7 @@ class DeclSpec(code_interface.CodeInterface):
 
             match_start += m.end()
 
-        m = re.match(r"\*+.*", decl_specifier_seq[match_start:])
+        m = re.match(r"[\*&]+.*", decl_specifier_seq[match_start:])
         if m:
             assert pointer=="", f"Pointer is not empty, value=[{pointer}]"
             pointer = m.group(0).replace(" ", "")

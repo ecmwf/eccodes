@@ -65,3 +65,6 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                 return updated_cppif_statement
 
         return super().validate_if_statement(cif_statement, cppif_statement)
+
+    def validate_return_statement(self, creturn_statement, cppreturn_statement):
+        return super().validate_return_statement(creturn_statement, cppreturn_statement)

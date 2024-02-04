@@ -8,7 +8,6 @@ from code_object.arg import Arg
 from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.conversion_pack.conversion_data_helper import *
-from code_object_converter.conversion_pack.conversion_validation import ConversionValidation
 from code_object.code_interface import NONE_VALUE
 import code_object_converter.conversion_pack.buffer_mapping as buffer_mapping
 from copy import deepcopy
@@ -22,7 +21,6 @@ class ConversionData:
         self._info = info
         self._global_mappings = code_mappings.CodeMappings()
         self._local_mappings = None
-        self._conversion_validation = None
 
     # Call this to ensure local state is set ready for function conversions
     def set_local_state(self):
@@ -38,15 +36,6 @@ class ConversionData:
     @property
     def info(self):
         return self._info
-    
-    @property 
-    def conversion_validation(self):
-        return self._conversion_validation
-    
-    @conversion_validation.setter
-    def conversion_validation(self, value):
-        assert isinstance(value, ConversionValidation), f"conversion_validation is [{value}]"
-        self._conversion_validation = value
 
     # ============================== Functions to update the mappings: start ==============================
 
