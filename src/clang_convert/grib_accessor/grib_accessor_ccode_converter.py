@@ -64,7 +64,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
     # See if we have an Accessor-specific validator (e.g. ProjStringValidation),
     # Otherwise use the default
-    def create_conversion_validation(self, conv_data):
+    def create_conversion_validation(self,):
         validators_path="grib_accessor.grib_accessor_conversion_pack.validators"
         cclass_short_name = self._ccode.class_name.replace(prefix, "")
         accessor_validator_mod_name = f"{cclass_short_name}_validation"
@@ -76,11 +76,11 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             accessor_validator_class_name = standard_transforms.transform_type_name(accessor_validator_mod_name)
             accessor_validation_class = getattr(accessor_validator_lib, accessor_validator_class_name)
             debug.line("create_conversion_validation", f"Loaded accessor_validator class name=[{accessor_validator_class_name}]")
-            return accessor_validation_class(conv_data)
+            return accessor_validation_class()
         except ModuleNotFoundError:
             debug.line("create_conversion_validation", f"Could not find accessor_validator lib name=[{accessor_validator_lib_name}] - using default")
 
-        return GribAccessorConversionValidation(conv_data)
+        return GribAccessorConversionValidation()
 
     def create_container_utils(self):
         return grib_accessor_container_utils.GribAccessorContainerUtils()

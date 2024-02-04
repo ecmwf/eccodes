@@ -43,7 +43,7 @@ class DefaultCCodeConverter:
         self._code_info = self.create_code_info()
         self._code_elements = code_elements.CodeElements()
         conv_data = self.create_conversion_data()
-        conv_validation = self.create_conversion_validation(conv_data)
+        conv_validation = self.create_conversion_validation()
         container_utils = self.create_container_utils()
         self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation, container_utils)
 
@@ -69,8 +69,8 @@ class DefaultCCodeConverter:
     def set_custom_conversion_data(self, conv_data):
         pass
 
-    def create_conversion_validation(self, conv_data):
-        return DefaultConversionValidation(conv_data)
+    def create_conversion_validation(self):
+        return DefaultConversionValidation()
 
     def create_container_utils(self):
         return default_container_utils.DefaultContainerUtils()
@@ -105,7 +105,7 @@ class DefaultCCodeConverter:
 
     # Helper to ensure the function is converted correctly, including resetting the local conversion data!
     def to_cpp_function(self, func):
-        self._conversion_pack.conversion_data.reset_local_state()
+        self._conversion_pack.conversion_data.reset_local_state(func.funcsig.name)
         self.function_specific_conversion_pack_updates(func.funcsig.name)
         cpp_func = conversion_funcs.convert_ccode_object(func, self._conversion_pack)
         if isinstance(cpp_func, member_function.MemberFunction):

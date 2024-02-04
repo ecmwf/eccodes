@@ -16,12 +16,12 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
     def type_info(self):
          return grib_accessor_type_info.GribAccessorTypeInfo()
 
-    def validate_function_call(self, cfunction_call, cppfunction_call, callee_funcsig_mapping):
+    def validate_function_call(self, cfunction_call, cppfunction_call):
         special_function_call = apply_special_function_call_conversions(cfunction_call, cppfunction_call)
         if special_function_call:
             return special_function_call
         
-        return super().validate_function_call(cfunction_call, cppfunction_call, callee_funcsig_mapping)
+        return super().validate_function_call(cfunction_call, cppfunction_call)
 
     def validate_function_call_arg(self, calling_arg_value, target_arg):
 

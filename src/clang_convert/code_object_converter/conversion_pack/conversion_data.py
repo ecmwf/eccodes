@@ -25,17 +25,22 @@ class ConversionData:
     # Call this to ensure local state is set ready for function conversions
     def set_local_state(self):
         self._state = ConversionDataState.LOCAL
-        self.reset_local_state()
+        self.reset_local_state("")
 
-    # Clear out / reset local state data ready to convert a new function
-    def reset_local_state(self):
+    # Clear out / reset local state data ready to convert a new function (cfuncname)
+    def reset_local_state(self, cfuncname):
         self._local_mappings = code_mappings.CodeMappings()
-
+        self.info.current_cfuncname = cfuncname
+        debug.line("reset_local_state", f"cfuncname=[{cfuncname}]")
 
     # The info object can be manipulated directly
     @property
     def info(self):
         return self._info
+    
+    @property
+    def current_cfuncname(self):
+        return self._info.current_cfuncname
 
     # ============================== Functions to update the mappings: start ==============================
 
@@ -45,6 +50,8 @@ class ConversionData:
             return self._local_mappings
         else:
             return self._global_mappings
+
+
 
     def add_funcbody_type_mapping(self, cdecl_spec, cppdecl_spec):
         assert isinstance(cdecl_spec, DeclSpec), f"Expected DeclSpec, got [{cdecl_spec}]"

@@ -11,6 +11,9 @@ class CodeInfo:
         self._forward_declarations = []
         self._header_includes = []
         self._source_includes = []
+        
+        # Access directly to set/get the name of the c function currently being processed
+        self.current_cfuncname = ""
 
     @property
     def file_name(self):

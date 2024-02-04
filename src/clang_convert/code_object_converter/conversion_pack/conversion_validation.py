@@ -6,8 +6,14 @@ import utils.debug as debug
 # Holds a reference to the conversion_data (part of the containing conversion_pack class)
 # This is the interface, override as required...
 class ConversionValidation:
-    def __init__(self, conversion_data):
-        self._conversion_data = conversion_data
+    def __init__(self):
+        pass
+
+    # NOTE: This is a reference back to the containing conversion_pack!
+    def set_conversion_pack(self, conversion_pack):
+        self._conversion_pack = conversion_pack
+        self._conversion_data = self._conversion_pack.conversion_data
+        self._container_utils = self._conversion_pack.container_utils
 
     # ---------- CodeObject Validation : Begin -----------------------------------------------------
     # Perform full validation of converted C++ function call

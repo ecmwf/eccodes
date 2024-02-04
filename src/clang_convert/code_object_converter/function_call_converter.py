@@ -41,4 +41,4 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
             cppfunction_call = function_call.FunctionCall(cpp_name, cpp_args)
 
         # 3. Apply validation (and special handling)
-        return conversion_pack.conversion_validation.validate_function_call(cfunction_call, cppfunction_call, mapping)
+        return conversion_pack.conversion_validation.validate_function_call(cfunction_call, cppfunction_call)

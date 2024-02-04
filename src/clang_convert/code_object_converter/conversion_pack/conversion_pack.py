@@ -9,6 +9,8 @@ class ConversionPack:
         self._conversion_validation = conversion_validation
         self._container_utils = container_utils
 
+        self._conversion_validation.set_conversion_pack(self)
+
     @property
     def conversion_data(self):
         return self._conversion_data

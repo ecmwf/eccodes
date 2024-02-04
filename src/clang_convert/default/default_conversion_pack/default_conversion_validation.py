@@ -9,15 +9,21 @@ import re
 import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
-import code_object_converter.conversion_pack.container_utils as container_utils
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
-    def validate_function_call(self, cfunction_call, cppfunction_call, callee_funcsig_mapping):
-        if callee_funcsig_mapping:
+    def validate_function_call(self, cfunction_call, cppfunction_call):
+
+        # See if there is an existing mapping defined
+        mapping = self._conversion_data.funcsig_mapping_for_cfuncname(cfunction_call.name)
+
+        debug.line("validate_function_call", f"cfunction_call=[{debug.as_debug_string(cfunction_call)}] cppfunction_call=[{debug.as_debug_string(cppfunction_call)}] mapping=[{mapping}]")
+
+        if mapping:
+            debug.line("validate_function_call", f"mapping.cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] mapping.cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
             cpp_args = []
-            for arg_entry in callee_funcsig_mapping.cppfuncsig.args:
+            for arg_entry in mapping.cppfuncsig.args:
                 if arg_entry != NONE_VALUE:
                     # The size of cpp_args should be the same as the next valid index :-)
                     cpp_arg_entry = self.validate_function_call_arg(cppfunction_call.args[len(cpp_args)], arg_entry)
@@ -29,7 +35,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
               
         if cfunction_call.name == "strlen":
             # Replace the function call with a StructMemberAccess representing the container.size() call...
-            return container_utils.create_cpp_container_length_arg(cppfunction_call.args[0].name)
+            return self._container_utils.create_cpp_container_length_arg(cppfunction_call.args[0].name)
 
         return cppfunction_call
 
@@ -69,7 +75,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         m = re.search(rf"sizeof\(([^\)]+)\)\s*/\s*sizeof\((\*\1\)|(\1\[0\]\)))", cvalue)
         if m:
             cname = m.group(1)
-            cpp_container_arg = container_utils.cname_to_cpp_container_length(cname, self._conversion_data)
+            cpp_container_arg = self._container_utils.cname_to_cpp_container_length(cname, self._conversion_data)
             debug.line("validate_binary_operation", f"sizeof(x)/sizeof(*x) x=[{cname}] cpp_container_arg=[{debug.as_debug_string(cpp_container_arg)}]")
             if cpp_container_arg:
                 return cpp_container_arg
