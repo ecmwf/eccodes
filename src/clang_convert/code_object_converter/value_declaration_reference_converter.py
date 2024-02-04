@@ -30,7 +30,7 @@ class ValueDeclarationReferenceConverter(code_interface_converter.CodeInterfaceC
             return value_declaration_reference.ValueDeclarationReference(cpparg.name)
 
         # 3. Check if it is a mapped buffer (e.g. char *c, int* len => std::string& str)
-        cpp_container_arg = container_utils.cname_to_cpp_container(cdecl_ref_expr_value, conversion_pack.conversion_data)
+        cpp_container_arg = conversion_pack.container_utils.cname_to_cpp_container(cdecl_ref_expr_value, conversion_pack.conversion_data)
         debug.line("create_cpp_code_object", f"ValueDeclarationReferenceConverter [3] cdecl_ref_expr_value=[{debug.as_debug_string(cdecl_ref_expr_value)}] cpp_container_arg=[{debug.as_debug_string(cpp_container_arg)}]")
         if cpp_container_arg:
             return cpp_container_arg #value_declaration_reference.ValueDeclarationReference(cpp_container_arg.as_string())

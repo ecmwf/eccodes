@@ -20,7 +20,7 @@ import grib_accessor.supporting.grib_literal_mapping as grib_literal_mapping
 import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
-
+import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
 prefix = "grib_accessor_class_"
 rename = {
     "Gen": "Accessor",      # "Generic",
@@ -81,6 +81,9 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             debug.line("create_conversion_validation", f"Could not find accessor_validator lib name=[{accessor_validator_lib_name}] - using default")
 
         return GribAccessorConversionValidation(conv_data)
+
+    def create_container_utils(self):
+        return grib_accessor_container_utils.GribAccessorContainerUtils()
 
     def set_custom_conversion_data(self, conv_data):
         for mapping in grib_accessor_member_funcsig_mapping:

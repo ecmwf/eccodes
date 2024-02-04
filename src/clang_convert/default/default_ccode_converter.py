@@ -4,10 +4,13 @@ import cpp_code.cppcode as cppcode
 import cpp_code.code_info as code_info
 import cpp_code.code_elements as code_elements
 import code_object_converter.conversion_pack.conversion_data as conversion_data
+import code_object_converter.conversion_pack.container_utils as container_utils
 import code_object_converter.conversion_pack.conversion_pack as conversion_pack
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.data_member as data_member
 from default.default_conversion_pack.default_conversion_validation import DefaultConversionValidation
+import default.default_conversion_pack.default_container_utils as default_container_utils
+
 import code_object.member_function as member_function
 import default.default_conversion_pack.default_type_info as default_type_info
 
@@ -41,7 +44,8 @@ class DefaultCCodeConverter:
         self._code_elements = code_elements.CodeElements()
         conv_data = self.create_conversion_data()
         conv_validation = self.create_conversion_validation(conv_data)
-        self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation)
+        container_utils = self.create_container_utils()
+        self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation, container_utils)
 
     def create_code_info(self):
         cpp_filename = self._ccode.cfilename
@@ -67,6 +71,9 @@ class DefaultCCodeConverter:
 
     def create_conversion_validation(self, conv_data):
         return DefaultConversionValidation(conv_data)
+
+    def create_container_utils(self):
+        return default_container_utils.DefaultContainerUtils()
 
     # ============================== Setup functions: end   ==============================
 

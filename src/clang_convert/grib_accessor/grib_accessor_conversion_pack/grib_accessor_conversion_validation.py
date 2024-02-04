@@ -30,6 +30,12 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
         return super().validate_function_call_arg(calling_arg_value, target_arg)
 
+    '''def validate_struct_member_access(self, cstruct_member_access, cppstruct_member_access):
+        assert cppstruct_member_access.as_string() != "initData.size();"
+        debug.line("validate_struct_member_access", f"cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}] cppstruct_member_access=[{debug.as_debug_string(cppstruct_member_access)}]")
+        return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
+    '''
+
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         if "GribStatus" in cppvariable_declaration.variable.as_string():
             updated_cpp_variable_declaration = variable_declaration.VariableDeclaration(
