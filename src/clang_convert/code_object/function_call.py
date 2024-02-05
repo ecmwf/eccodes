@@ -2,6 +2,8 @@ import utils.debug as debug
 import code_object.arg as arg
 import code_object.code_interface as code_interface
 import code_object.value_declaration_reference as value_declaration_reference
+from utils.string_funcs import strip_semicolon
+
 # Represent a function call
 #
 # Note: Name is a string; args are CodeInterface instances
@@ -23,4 +25,4 @@ class FunctionCall(code_interface.CodeInterface):
         self._args.append(arg_entry)
 
     def as_lines(self):
-        return [f"{self._name}({', '.join([a.as_string() for a in self._args])});"]
+        return [f"{self._name}({', '.join([strip_semicolon(a.as_string()) for a in self._args])});"]

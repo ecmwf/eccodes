@@ -10,6 +10,7 @@ import code_object.binary_operation as binary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.if_statement as if_statement
 import code_object.virtual_member_function as virtual_member_function
+import code_object.constructor_function as constructor_function
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
@@ -21,6 +22,19 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
     @property
     def type_info(self):
          return grib_accessor_type_info.GribAccessorTypeInfo()
+
+    def validate_constructor_function(self, cconstructor_function, cppconstructor_function):
+        # We'll add a line to set the class name in the name_ data member
+        cpp_body = compound_statement.CompoundStatement()
+        cpp_body.add_code_object(literal.Literal(f"name_ = \"{cppconstructor_function.class_name}\";"))
+
+        for entry in cppconstructor_function.body.code_objects:
+            cpp_body.add_code_object(entry)
+
+        return constructor_function.ConstructorFunction(cppconstructor_function.funcsig,
+                                                        cpp_body,
+                                                        cppconstructor_function.class_name,
+                                                        cppconstructor_function.super_class_name)
 
     def validate_virtual_member_function(self, cvirtual_member_function, cppvirtual_member_function):
         if cvirtual_member_function.funcsig.name in ["dump", "compare"]:
@@ -39,10 +53,15 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
 
     def validate_function_call(self, cfunction_call, cppfunction_call):
+        debug.line("validate_function_call", f"cfunction_call=[{debug.as_debug_string(cfunction_call)}] cppfunction_call=[{debug.as_debug_string(cppfunction_call)}]")
+
         special_function_call = apply_special_function_call_conversions(cfunction_call, cppfunction_call)
         if special_function_call:
             return special_function_call
-        
+
+        if cfunction_call.name == "sscanf":
+            assert False, f"Need to add handling for sscanf from c_subs.py"
+
         return super().validate_function_call(cfunction_call, cppfunction_call)
 
     def validate_function_call_arg(self, calling_arg_value, target_arg):
@@ -51,12 +70,6 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             return literal.Literal(f"AccessorName({calling_arg_value.as_string()})")
 
         return super().validate_function_call_arg(calling_arg_value, target_arg)
-
-    '''def validate_struct_member_access(self, cstruct_member_access, cppstruct_member_access):
-        assert cppstruct_member_access.as_string() != "initData.size();"
-        debug.line("validate_struct_member_access", f"cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}] cppstruct_member_access=[{debug.as_debug_string(cppstruct_member_access)}]")
-        return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
-    '''
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         if "GribStatus" in cppvariable_declaration.variable.as_string():
@@ -68,6 +81,9 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         return super().validate_variable_declaration(cvariable_declaration, cppvariable_declaration)
 
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
+
+        debug.line("validate_binary_operation", f"cbinary_operation=[{debug.as_debug_string(cbinary_operation)}] cppbinary_operation=[{debug.as_debug_string(cppbinary_operation)}]")
+
         if cppbinary_operation.left_operand.as_string() == "flags_":
             if cppbinary_operation.right_operand.as_string().startswith("GribAccessorFlag"):
                 updated_right_operand = literal.Literal(f"toInt({cppbinary_operation.right_operand.as_string()})")

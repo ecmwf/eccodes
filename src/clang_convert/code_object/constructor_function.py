@@ -10,6 +10,10 @@ class ConstructorFunction(member_function.MemberFunction):
         super().__init__(funcsig, body, class_name)
         self._super_class_name = super_class_name
 
+    @property
+    def super_class_name(self):
+        return self._super_class_name
+
     # Overridden to set name to class_name::
     @property
     def funcsig_as_declaration(self):

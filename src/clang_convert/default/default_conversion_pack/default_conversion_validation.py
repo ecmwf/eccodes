@@ -32,7 +32,13 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
          
         if cfunction_call.name == "strcmp":
             return binary_operation.BinaryOperation(cppfunction_call.args[0], "==", cppfunction_call.args[1])
-              
+
+        if cfunction_call.name == "strcpy":
+            return binary_operation.BinaryOperation(cppfunction_call.args[0], "=", cppfunction_call.args[1])
+
+        if cfunction_call.name == "strcat":
+            return binary_operation.BinaryOperation(cppfunction_call.args[0], "+=", cppfunction_call.args[1])
+
         if cfunction_call.name == "strlen":
             # Replace the function call with a StructMemberAccess representing the container.size() call...
             return self._container_utils.create_cpp_container_length_arg(cppfunction_call.args[0].name)

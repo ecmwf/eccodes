@@ -82,6 +82,7 @@ public:
 // This will be revisited later...
 protected:
     AccessorDataView buffer_{};
+    std::string name_{};
     long length_{};
     long offset_{};
     unsigned long flags_{};

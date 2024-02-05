@@ -16,14 +16,17 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
         debug.line("create_cpp_code_object",f" StructMemberAccessConverter [IN] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
 
         # Check if this is a pointer to a class member
-        if conversion_pack.conversion_data.is_class_pointer_name(self._ccode_object.name):
-            cstruct_member_access = self._ccode_object.member
+        if conversion_pack.conversion_data.is_class_pointer_name(cstruct_member_access.name):
+            cclass_member_access = cstruct_member_access.member
             cpp_access = ""
-            cpp_data_member = conversion_pack.conversion_data.cppdata_member_for_cdata_member_name(cstruct_member_access.name)
+            cpp_data_member = conversion_pack.conversion_data.cppdata_member_for_cdata_member_name(cclass_member_access.name)
+
+            debug.line("create_cpp_code_object",f" TEST [1] cclass_member_access=[{debug.as_debug_string(cclass_member_access)}] cpp_data_member=[{debug.as_debug_string(cpp_data_member)}]")
+
             if cpp_data_member:
                 cpp_name = cpp_data_member.name
-                cpp_index = conversion_funcs.convert_ccode_object(cstruct_member_access.index, conversion_pack)
-                cpp_member = conversion_funcs.convert_ccode_object(cstruct_member_access.member, conversion_pack)
+                cpp_index = conversion_funcs.convert_ccode_object(cclass_member_access.index, conversion_pack)
+                cpp_member = conversion_funcs.convert_ccode_object(cclass_member_access.member, conversion_pack)
                 cppstruct_member_access = struct_member_access.StructMemberAccess(cpp_access, cpp_name, cpp_index, cpp_member)
 
         if not cppstruct_member_access:
@@ -33,7 +36,6 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
                 debug.line("create_cpp_code_object", f"IGNORING: cstruct_member_access.name=[{cstruct_member_access.name}] cpp_name=[{debug.as_debug_string(cpp_name)}]")
                 return NONE_VALUE
             else:
-                cstruct_member_access = self._ccode_object
                 cpp_access = conversion_funcs.convert_ccode_object(cstruct_member_access.access, conversion_pack)
                 cpp_name = conversion_funcs.convert_ccode_object(cstruct_member_access.name, conversion_pack)
                 cpp_index = conversion_funcs.convert_ccode_object(cstruct_member_access.index, conversion_pack)
@@ -41,4 +43,4 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
 
                 cppstruct_member_access = struct_member_access.StructMemberAccess(cpp_access, cpp_name, cpp_index, cpp_member)
 
-        return conversion_pack.conversion_validation.validate_struct_member_access(self._ccode_object, cppstruct_member_access)
+        return conversion_pack.conversion_validation.validate_struct_member_access(cstruct_member_access, cppstruct_member_access)

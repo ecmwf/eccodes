@@ -5,12 +5,13 @@ import code_object_converter.conversion_pack.conversion_data as conversion_data
 
 # Define base class member mapping
 grib_accessor_base_data_members_map = {
-    DataMember("long","length") : DataMember("long","length_"),
-    DataMember("long","offset") : DataMember("long","offset_"),
-    DataMember("unsigned long","flags") : DataMember("unsigned long","flags_"),
-    DataMember("int","dirty") : DataMember("int","dirty_", mutable=True),
-    DataMember("grib_virtual_value*","vvalue") : DataMember("GribVirtualValuePtr","vvalue_"),
-    DataMember("const char*","set") : DataMember("std::string","set_")
+    DataMember("const char*","name")            : DataMember("std::string","name_"),
+    DataMember("long","length")                 : DataMember("long","length_"),
+    DataMember("long","offset")                 : DataMember("long","offset_"),
+    DataMember("unsigned long","flags")         : DataMember("unsigned long","flags_"),
+    DataMember("int","dirty")                   : DataMember("int","dirty_", mutable=True),
+    DataMember("grib_virtual_value*","vvalue")  : DataMember("GribVirtualValuePtr","vvalue_"),
+    DataMember("const char*","set")             : DataMember("std::string","set_"),
     }
 
 def add_data_member_mappings_to_conversion_data(conversion_data):
