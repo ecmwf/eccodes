@@ -89,8 +89,9 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         # If we've got a StructMemberAccess object with a .size(), then we need to tidy up!
         cppleft = cppbinary_operation.left_operand
+        cppbinary_op = cppbinary_operation.binary_op
         if isinstance(cppleft, struct_member_access.StructMemberAccess):
-             if cppleft.member and cppleft.member.name == "size()":
+             if cppleft.member and cppleft.member.name == "size()" and cppbinary_op.is_assignment():
                 cppright = cppbinary_operation.right_operand
                 if cppright.as_string() == "0":
                     cppleft.member.name = "clear()"

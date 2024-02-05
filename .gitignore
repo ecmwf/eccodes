@@ -76,3 +76,4 @@ converted/
 *.pyc
 *-tmp.cc
 *-tmp.h
+src/debug.txt
