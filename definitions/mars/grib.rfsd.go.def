@@ -7,7 +7,7 @@ alias mars.time = timeOfForecast;
 
 alias mars.origin = inputOriginatingCentre;
 
-alias mars.anoffset=anoffset;
+# alias mars.anoffset=anoffset;
 
 # We need this because 'postProcessing' is defined later
 meta efas_model sprintf("%s", postProcessing) : no_copy;
