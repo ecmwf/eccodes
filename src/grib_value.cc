@@ -701,7 +701,7 @@ static int _grib_set_double_array_internal(grib_handle* h, grib_accessor* a,
                 *encoded_length += len;
                 if (err == GRIB_SUCCESS) {
                     /* See ECC-778 */
-                    return ecc__grib_dependency_notify_change(h, a);
+                    return grib_dependency_notify_change_h(h, a);
                 }
             }
             else {
@@ -739,7 +739,7 @@ static int _grib_set_double_array(grib_handle* h, const char* name,
         err = GRIB_ARRAY_TOO_SMALL;
 
     if (err == GRIB_SUCCESS)
-        return ecc__grib_dependency_notify_change(h, a); /* See ECC-778 */
+        return grib_dependency_notify_change_h(h, a); /* See ECC-778 */
 
     return err;
 }
