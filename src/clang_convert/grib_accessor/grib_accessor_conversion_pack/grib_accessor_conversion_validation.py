@@ -2,20 +2,41 @@
 import utils.debug as debug
 import default.default_conversion_pack.default_conversion_validation as default_conversion_validation
 import code_object.literal as literal
-import code_object.variable_declaration as variable_declaration
-import code_object.value_declaration_reference as value_declaration_reference
-import code_object.binary_operation as binary_operation
 import code_object.return_statement as return_statement
+import code_object.code_objects as code_objects
+import code_object.compound_statement as compound_statement
+import code_object.variable_declaration as variable_declaration
+import code_object.binary_operation as binary_operation
+import code_object.value_declaration_reference as value_declaration_reference
+import code_object.if_statement as if_statement
+import code_object.virtual_member_function as virtual_member_function
+
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
-import code_object.if_statement as if_statement
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
+from code_object_converter.conversion_funcs import as_commented_out_code
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class GribAccessorConversionValidation(default_conversion_validation.DefaultConversionValidation):
 
     @property
     def type_info(self):
          return grib_accessor_type_info.GribAccessorTypeInfo()
+
+    def validate_virtual_member_function(self, cvirtual_member_function, cppvirtual_member_function):
+        if cvirtual_member_function.funcsig.name in ["dump", "compare"]:
+            cpp_body = compound_statement.CompoundStatement()
+            
+            cpp_body.add_code_object(as_commented_out_code("C++ implementation not yet available."))
+            cpp_body.add_code_object(as_commented_out_code("Commented C body provided below for reference:\n"))
+            
+            for entry in cvirtual_member_function.body.code_objects:
+                cpp_body.add_code_object(as_commented_out_code(entry))
+
+            cpp_body.add_code_object(literal.Literal(f"\nreturn {self._conversion_data.info.super_class_name}::{cppvirtual_member_function.funcsig_as_call};"))
+            return virtual_member_function.VirtualMemberFunction(cppvirtual_member_function.funcsig, cpp_body, cppvirtual_member_function.class_name)
+
+        return super().validate_virtual_member_function(cvirtual_member_function, cppvirtual_member_function)
+
 
     def validate_function_call(self, cfunction_call, cppfunction_call):
         special_function_call = apply_special_function_call_conversions(cfunction_call, cppfunction_call)
