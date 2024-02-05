@@ -38,6 +38,7 @@ class DeclSpec(code_interface.CodeInterface):
             storage_class = "static"
             match_start += m.end()
         
+        # West const test...
         m = re.match(r"const\s+", decl_specifier_seq[match_start:])
         if m:
             const_qualifier = "const"
@@ -51,6 +52,12 @@ class DeclSpec(code_interface.CodeInterface):
             if type.endswith("]"):
                 type = re.sub(r"\[[^\]]+\]", "", type)
                 pointer = "[]"
+
+            # East const test...
+            if type.endswith(" const"):
+                assert not const_qualifier
+                const_qualifier = "const"
+                type = type[:-6]
 
             match_start += m.end()
 

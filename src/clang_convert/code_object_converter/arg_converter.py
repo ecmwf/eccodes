@@ -124,6 +124,11 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
             self._conversion_pack.conversion_data.add_funcbody_type_mapping(carg.decl_spec, cpp_decl_spec)
             debug.line("convert_funcbody_arg", f"Arg conversion type mapping: carg.decl_spec=[{debug.as_debug_string(carg.decl_spec)}] cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}]")
 
+        # At this point we should have a cpp_arg, and need to add the mapping...
+        assert cpp_arg is not None
+        self._conversion_pack.conversion_data.add_funcbody_arg_mapping(carg, cpp_arg)
+        debug.line("convert_funcbody_arg", f"Final arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")
+
         return cpp_arg
 
     def convert_funcbody_decl_spec(self, test_decl_spec):
@@ -149,8 +154,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
 
         cpp_arg = arg.Arg(new_decl_spec, cpp_name, cpp_is_func_arg)
 
-        self._conversion_pack.conversion_data.add_funcbody_arg_mapping(carg, cpp_arg)
-        debug.line("create_funcbody_cpparg", f"Arg conversion arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")
+        debug.line("create_funcbody_cpparg", f"Created arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")
 
         return cpp_arg
         

@@ -1,5 +1,6 @@
 
 import code_object.code_interface as code_interface
+from utils.string_funcs import strip_semicolon
 
 # Represents accessing an element in an array in the form: name[index]
 #
@@ -21,4 +22,4 @@ class ArrayAccess(code_interface.CodeInterface):
         return self._index
 
     def as_lines(self):
-        return [f"{self._name.as_string()}[{self._index.as_string()}]"]
+        return [f"{strip_semicolon(self._name.as_string())}[{self._index.as_string()}]"]

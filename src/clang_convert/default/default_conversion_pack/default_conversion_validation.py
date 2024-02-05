@@ -9,6 +9,7 @@ import re
 import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
+from code_object_converter.conversion_funcs import as_commented_out_code
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
@@ -97,12 +98,19 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         cppleft = cppbinary_operation.left_operand
         cppbinary_op = cppbinary_operation.binary_op
         if isinstance(cppleft, struct_member_access.StructMemberAccess):
-             if cppleft.member and cppleft.member.name == "size()" and cppbinary_op.is_assignment():
+            if cppleft.member and cppleft.member.name == "size()" and cppbinary_op.is_assignment():
                 cppright = cppbinary_operation.right_operand
                 if cppright.as_string() == "0":
                     cppleft.member.name = "clear()"
                 else:
                     cppleft.member.name = f"resize({cppright.as_string()})"
+
+                # Double-check it's not const!
+                cpparg = self._conversion_data.cpparg_for_cppname(cppleft.name)
+                debug.line("validate_binary_operation", f"Performing const check cppleft.name=[{debug.as_debug_string(cppleft.name)}] cpparg=[{debug.as_debug_string(cpparg)}]")
+                if cpparg and cpparg.decl_spec.const_qualifier == "const":
+                        return as_commented_out_code(cppleft, "Removing - conversion requires mutable operation on const type")
+                
                 return cppleft
 
         return cppbinary_operation

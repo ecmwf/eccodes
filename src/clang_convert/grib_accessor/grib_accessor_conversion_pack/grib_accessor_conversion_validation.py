@@ -118,3 +118,13 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                 return return_statement.ReturnStatement(updated_cpp_expression)
 
         return super().validate_return_statement(creturn_statement, cppreturn_statement)
+
+    def validate_struct_member_access(self, cstruct_member_access, cppstruct_member_access):
+        if cppstruct_member_access.name == "buffer_" and cppstruct_member_access.member.name == "data":
+            # Just need to change ->data to .data()
+            cppstruct_member_access.member.access = "."
+            cppstruct_member_access.member.name += "()"
+            return cppstruct_member_access
+
+        return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
+
