@@ -62,6 +62,8 @@ static int grib_filesid = -1;
 static int index_count;
 static long values_count = 0;
 
+static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type);
+
 static char* get_key(char** keys, int* type)
 {
     char* key = NULL;
@@ -1052,7 +1054,7 @@ int grib_index_add_file(grib_index* index, const char* filename)
     else if (index->product_kind == PRODUCT_BUFR) message_type = CODES_BUFR;
     else return GRIB_INVALID_ARGUMENT;
 
-    return ecc__codes_index_add_file(index, filename, message_type);
+    return codes_index_add_file_internal(index, filename, message_type);
 }
 
 static grib_handle* new_message_from_file(int message_type, grib_context* c, FILE* f, int* error)
@@ -1067,7 +1069,7 @@ static grib_handle* new_message_from_file(int message_type, grib_context* c, FIL
 
 #define MAX_NUM_KEYS 40
 
-int ecc__codes_index_add_file(grib_index* index, const char* filename, int message_type)
+static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type)
 {
     double dval;
     size_t svallen;

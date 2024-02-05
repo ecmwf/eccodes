@@ -642,7 +642,6 @@ int grib_index_write(grib_index* index, const char* filename);
 grib_index* grib_index_read(grib_context* c, const char* filename, int* err);
 int grib_index_search_same(grib_index* index, grib_handle* h);
 int grib_index_add_file(grib_index* index, const char* filename);
-int ecc__codes_index_add_file(grib_index* index, const char* filename, int message_type);
 grib_index* grib_index_new_from_file(grib_context* c, const char* filename, const char* keys, int* err);
 int grib_index_get_size(const grib_index* index, const char* key, size_t* size);
 int grib_index_get_string(const grib_index* index, const char* key, char** values, size_t* size);
@@ -1166,7 +1165,6 @@ int grib_get_string_internal(grib_handle* h, const char* name, char* val, size_t
 int grib_get_string(const grib_handle* h, const char* name, char* val, size_t* length);
 int grib_get_bytes(const grib_handle* h, const char* name, unsigned char* val, size_t* length);
 int grib_get_native_type(const grib_handle* h, const char* name, int* type);
-int ecc__grib_get_double_array_internal(const grib_handle* h, grib_accessor* a, double* val, size_t buffer_len, size_t* decoded_length);
 
 int grib_get_double_array_internal(const grib_handle* h, const char* name, double* val, size_t* length);
 int grib_get_double_array(const grib_handle* h, const char* name, double* val, size_t* length);
@@ -1175,13 +1173,11 @@ int grib_get_float_array(const grib_handle* h, const char* name, float* val, siz
 
 int grib_get_string_length_acc(grib_accessor* a, size_t* size);
 int grib_get_string_length(const grib_handle* h, const char* name, size_t* size);
-int ecc__grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size);
+int grib_get_size_acc(const grib_handle* h, grib_accessor* a, size_t* size);
 int grib_get_size(const grib_handle* h, const char* name, size_t* size);
 int grib_get_length(const grib_handle* h, const char* name, size_t* length);
 int grib_get_offset(const grib_handle* h, const char* key, size_t* val);
-int ecc__grib_get_string_array_internal(const grib_handle* h, grib_accessor* a, char** val, size_t buffer_len, size_t* decoded_length);
 int grib_get_string_array(const grib_handle* h, const char* name, char** val, size_t* length);
-int ecc__grib_get_long_array_internal(const grib_handle* h, grib_accessor* a, long* val, size_t buffer_len, size_t* decoded_length);
 int grib_get_long_array_internal(grib_handle* h, const char* name, long* val, size_t* length);
 int grib_get_long_array(const grib_handle* h, const char* name, long* val, size_t* length);
 int grib_set_values(grib_handle* h, grib_values* args, size_t count);
