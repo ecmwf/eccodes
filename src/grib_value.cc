@@ -1358,7 +1358,7 @@ int grib_get_array<double>(const grib_handle* h, const char* name, double* val, 
     return grib_get_double_array(h, name, val, length);
 }
 
-int ecc__grib_get_string_length(grib_accessor* a, size_t* size)
+int grib_get_string_length_acc(grib_accessor* a, size_t* size)
 {
     size_t s = 0;
 
@@ -1384,7 +1384,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         al = grib_find_accessors_list(h, name);
         if (!al)
             return GRIB_NOT_FOUND;
-        ret = ecc__grib_get_string_length(al->accessor, size);
+        ret = grib_get_string_length_acc(al->accessor, size);
         grib_context_free(h->context, al);
         return ret;
     }
@@ -1392,7 +1392,7 @@ int grib_get_string_length(const grib_handle* h, const char* name, size_t* size)
         a = grib_find_accessor(h, name);
         if (!a)
             return GRIB_NOT_FOUND;
-        return ecc__grib_get_string_length(a, size);
+        return grib_get_string_length_acc(a, size);
     }
 }
 

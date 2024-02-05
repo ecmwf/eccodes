@@ -1173,7 +1173,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
 int grib_get_float_array_internal(const grib_handle* h, const char* name, float* val, size_t* length);
 int grib_get_float_array(const grib_handle* h, const char* name, float* val, size_t* length);
 
-int ecc__grib_get_string_length(grib_accessor* a, size_t* size);
+int grib_get_string_length_acc(grib_accessor* a, size_t* size);
 int grib_get_string_length(const grib_handle* h, const char* name, size_t* size);
 int ecc__grib_get_size(const grib_handle* h, grib_accessor* a, size_t* size);
 int grib_get_size(const grib_handle* h, const char* name, size_t* size);

@@ -385,7 +385,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
 {
     size_t length = 0;
 
-    int err = ecc__grib_get_string_length(a, &length);
+    int err = grib_get_string_length_acc(a, &length);
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
