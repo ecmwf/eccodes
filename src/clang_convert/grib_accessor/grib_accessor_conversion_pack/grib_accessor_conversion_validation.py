@@ -11,6 +11,7 @@ import code_object.value_declaration_reference as value_declaration_reference
 import code_object.if_statement as if_statement
 import code_object.virtual_member_function as virtual_member_function
 import code_object.constructor_function as constructor_function
+import code_object.function_call as function_call
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
@@ -72,7 +73,8 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         return super().validate_function_call_arg(calling_arg_value, target_arg)
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
-        if "GribStatus" in cppvariable_declaration.variable.as_string():
+        if "GribStatus" in cppvariable_declaration.variable.as_string() and \
+            not isinstance(cppvariable_declaration.value, function_call.FunctionCall):
             updated_cpp_variable_declaration = variable_declaration.VariableDeclaration(
                 cppvariable_declaration.variable,
                 literal.Literal(f"GribStatus{{{cppvariable_declaration.value.as_string()}}}"))
