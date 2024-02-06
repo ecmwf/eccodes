@@ -43,10 +43,13 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             cpp_body = compound_statement.CompoundStatement()
             
             cpp_body.add_code_object(as_commented_out_code("C++ implementation not yet available."))
-            cpp_body.add_code_object(as_commented_out_code("Commented C body provided below for reference:\n"))
+            cpp_body.add_code_object(as_commented_out_code("Current C++ conversion provided below (disabled, for reference only):\n"))
+            cpp_body.add_code_object(literal.Literal(f"#if 0"))
             
-            for entry in cvirtual_member_function.body.code_objects:
-                cpp_body.add_code_object(as_commented_out_code(entry))
+            for entry in cppvirtual_member_function.body.code_objects:
+                cpp_body.add_code_object(entry)
+
+            cpp_body.add_code_object(literal.Literal(f"#endif // 0"))
 
             cpp_body.add_code_object(literal.Literal(f"\nreturn {self._conversion_data.info.super_class_name}::{cppvirtual_member_function.funcsig_as_call};"))
             return virtual_member_function.VirtualMemberFunction(cppvirtual_member_function.funcsig, cpp_body, cppvirtual_member_function.class_name)
@@ -124,7 +127,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                 cpp_expression = cppreturn_statement.expression.as_string()
                 if cpp_expression == "0":
                     updated_cpp_expression = literal.Literal("GribStatus::SUCCESS")
-                else:
+                elif not cpp_expression.startswith("GribStatus"):
                     updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpp_expression})")
 
             if updated_cpp_expression:

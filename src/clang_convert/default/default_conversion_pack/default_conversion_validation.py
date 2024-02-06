@@ -112,11 +112,11 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         # If we've got a StructMemberAccess object, we're probably dealing with a container...
         cppleft = cppbinary_operation.left_operand
-        if isinstance(cppleft, struct_member_access.StructMemberAccess):
-            cppbinary_op = cppbinary_operation.binary_op
-            cppright = cppbinary_operation.right_operand
+        cppbinary_op = cppbinary_operation.binary_op
+        cppright = cppbinary_operation.right_operand
 
-            if cppbinary_op.is_assignment():
+        if cppbinary_op.is_assignment():
+            if isinstance(cppleft, struct_member_access.StructMemberAccess):
                 cpparg = self._conversion_data.cpparg_for_cppname(cppleft.name)
                 if cppleft.member:
                     if cppleft.member.name == "size()":
@@ -140,6 +140,12 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                         cppleft.index = "[0]"
                         debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
                         return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
+                    
+        elif cppbinary_op.is_comparison():
+            cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)
+            if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+                cppleft = literal.Literal(f"{cpparg.name}.size()")
+                return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
         return cppbinary_operation
 
