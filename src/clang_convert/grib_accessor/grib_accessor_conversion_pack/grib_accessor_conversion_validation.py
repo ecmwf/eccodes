@@ -12,6 +12,7 @@ import code_object.if_statement as if_statement
 import code_object.virtual_member_function as virtual_member_function
 import code_object.constructor_function as constructor_function
 import code_object.function_call as function_call
+import code_object_converter.conversion_pack.arg_utils as arg_utils
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
 from code_object.code_interface import NONE_VALUE
@@ -108,15 +109,25 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
     def validate_return_statement(self, creturn_statement, cppreturn_statement):
 
+        debug.line("validate_return_statement", f"creturn_statement=[{debug.as_debug_string(creturn_statement)}] cppreturn_statement=[{debug.as_debug_string(cppreturn_statement)}]")
+
         mapping = self._conversion_data.funcsig_mapping_for_current_cfuncname()
         if mapping:
-            if mapping.cppfuncsig.return_type.type == "GribStatus":
+            cppfunc_return_type = mapping.cppfuncsig.return_type.type
+            cpparg = arg_utils.to_cpparg(cppreturn_statement.expression, self._conversion_data)
+            updated_cpp_expression = None
+
+            if cpparg:
+                if cpparg.decl_spec.type != cppfunc_return_type:
+                    updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpparg.name})")
+            elif cppfunc_return_type == "GribStatus":
                 cpp_expression = cppreturn_statement.expression.as_string()
                 if cpp_expression == "0":
                     updated_cpp_expression = literal.Literal("GribStatus::SUCCESS")
                 else:
                     updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpp_expression})")
 
+            if updated_cpp_expression:
                 return return_statement.ReturnStatement(updated_cpp_expression)
 
         return super().validate_return_statement(creturn_statement, cppreturn_statement)

@@ -10,6 +10,7 @@ import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.variable_declaration as variable_declaration
+import code_object.paren_expression as paren_expression
 from code_object_converter.conversion_funcs import as_commented_out_code
 from utils.string_funcs import is_number
 
@@ -59,6 +60,19 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         # Just return the passed in value!
         return calling_arg_value
+
+    def validate_unary_expression(self, cunary_expression, cppunary_expression):
+        debug.line("validate_unary_operation", f"cppunary_expression.keyword=[{debug.as_debug_string(cppunary_expression.keyword)}] cppunary_expression.expression=[{debug.as_debug_string(cppunary_expression.expression)}]")
+        
+        if cppunary_expression.keyword == "sizeof":
+            assert isinstance(cppunary_expression.expression, paren_expression.ParenExpression)
+            cpparg = arg_utils.to_cpparg(cppunary_expression.expression.expression, self._conversion_data)
+            if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+                cpp_size_call = literal.Literal(f"{cpparg.name}.size()")
+                debug.line("validate_unary_operation", f"Updating size evaluation: [{debug.as_debug_string(cppunary_expression)}]->[{debug.as_debug_string(cpp_size_call)}]")
+                return cpp_size_call
+
+        return cppunary_expression
 
     def validate_unary_operation(self, cunary_operation, cppunary_operation):
         debug.line("validate_unary_operation", f"cppunary_operation.operand string=[{debug.as_debug_string(cppunary_operation.operand)}] type=[{type(cppunary_operation.operand).__name__}]")

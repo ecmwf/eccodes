@@ -16,11 +16,13 @@ class ReturnStatement(code_interface.CodeInterface):
         return self._expression
 
     def as_lines(self):
-        lines = ["return"]
+        return_string = "return"
+
         if self._expression:
-            lines[-1] += " "
-            lines.extend(self._expression.as_lines())
+            return_string += " " + self._expression.as_string()
         
+        lines = [f"{return_string}"]
+
         if not lines[-1].endswith(";"):
             lines[-1] += ";"
 
