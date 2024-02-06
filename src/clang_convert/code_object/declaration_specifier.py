@@ -31,6 +31,7 @@ class DeclSpec(code_interface.CodeInterface):
         const_qualifier = ""
         type = ""
         pointer = ""
+        array_initial_capacity = "0"
 
         match_start = 0
         m = re.match(r"static\s+", decl_specifier_seq[match_start:])
@@ -50,8 +51,10 @@ class DeclSpec(code_interface.CodeInterface):
 
             # If this is an array type, store the "[]" in the pointer variable
             if type.endswith("]"):
-                type = re.sub(r"\[[^\]]+\]", "", type)
-                pointer = "[]"
+                array_match = re.search(r"\[[^\]]+\]", type)
+                if array_match:
+                    type = re.sub(re.escape(array_match.group(0)), "", type)
+                    pointer = array_match.group(0)
 
             # East const test...
             if type.endswith(" const"):
@@ -109,7 +112,13 @@ class DeclSpec(code_interface.CodeInterface):
         self._pointer = value
 
     def is_array_type(self):
-        return self.pointer == "[]"
+        return self._pointer.startswith("[")
+    
+    def array_size(self):
+        if self.is_array_type() and len(self._pointer) > 2:
+            return self._pointer[1:-1]
+
+        return ""
 
     # ---------- Support for DeclSpec as a dict key: Begin ----------
     def __hash__(self):

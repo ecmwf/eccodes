@@ -57,7 +57,7 @@ class Arg(code_interface.CodeInterface):
     def as_lines(self):
         arg_string = self.decl_spec.as_string()
         if self.decl_spec.is_array_type():
-            arg_string = arg_string.replace("[]", " ") + self.name + "[]"
+            arg_string = arg_string.replace(self.decl_spec.pointer, " ") + self.name + self.decl_spec.pointer
         else:
             arg_string += " " + self.name
         return [arg_string]

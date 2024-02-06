@@ -9,6 +9,7 @@ import re
 import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
+import code_object.variable_declaration as variable_declaration
 from code_object_converter.conversion_funcs import as_commented_out_code
 from utils.string_funcs import is_number
 
@@ -120,12 +121,33 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 # See if we're assigning a single value to a container type
                 if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
                     cppright_value = cppright.as_string()
+
                     if is_number(cppright_value) or not self.is_cppfunction_returning_container(cppright.name):
                         cppleft.index = "[0]"
                         debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
                         return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
         return cppbinary_operation
+
+    def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
+        cppvariable = cppvariable_declaration.variable
+
+        if self._conversion_data.is_container_type(cppvariable.decl_spec.type):
+            cppvalue = cppvariable_declaration.value
+            cvariable = cvariable_declaration.variable
+            if cppvalue.as_string() == "{}" and cvariable.decl_spec.is_array_type():
+                # We need to give the container an initial capacity!
+                # The consistent constructor is CONTAINER(SIZE, T) where T is a default value
+                cppcontainer_constructor_call = literal.Literal(f"{cppvariable.as_string()}({cvariable.decl_spec.array_size()},{{}});")
+                debug.line("validate_variable_declaration", f"Creating cppvariable=[{debug.as_debug_string(cppvariable)}] with initial size=[{cvariable.decl_spec.array_size()}] cppcontainer_constructor_call=[{debug.as_debug_string(cppcontainer_constructor_call)}]")
+                return cppcontainer_constructor_call
+            if cppvalue.as_string() == "NULL":
+                # Init as {}
+                debug.line("validate_variable_declaration", f"Changing NULL initialiser for container cppvariable=[{debug.as_debug_string(cppvariable)}] to [= {{}}")
+                cppvalue = literal.Literal("{}")
+                return variable_declaration.VariableDeclaration(cppvariable, cppvalue)
+
+        return cppvariable_declaration
 
     # Helper to determine how a container should receive the value returned by the function
     # Returns True if the function returns e.g. std::vector<int> instead of int

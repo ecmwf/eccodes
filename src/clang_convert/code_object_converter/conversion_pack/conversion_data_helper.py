@@ -62,7 +62,7 @@ def create_best_matching_cdecl_spec(cdecl_spec, matches):
         if cdecl_spec.pointer == match[key].pointer:
             score |= DeclSpecMatchType.POINTER.value
             debug.line("create_best_matching_cdecl_spec", f" Pointer Match: entry key=[{debug.as_debug_string(match[key])}] score=[{score}]")
-        elif cdecl_spec.pointer == "[]" and match[key].pointer == "*":
+        elif cdecl_spec.is_array_type() and match[key].pointer == "*":
             score |= DeclSpecMatchType.POINTER.value
             debug.line("create_best_matching_cdecl_spec", f" Pointer Match: entry key=[{debug.as_debug_string(match[key])}] score=[{score}]")
         if cdecl_spec.const_qualifier == match[key].const_qualifier:
