@@ -5,6 +5,7 @@ import grib_accessor.grib_accessor_ccode as grib_accessor_ccode
 import clang.cindex
 import code_object.data_member as data_member
 import utils.debug as debug
+import ast_object.ast_utils as ast_utils
 
 class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConverter):
     def __init__(self, ast_code) -> None:
@@ -31,6 +32,7 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
 
     # Return either the ccode to add, or None
     def parse_global_function_node(self, node):
+
         if node.spelling == self._accessor_name:
             if node.kind == clang.cindex.CursorKind.STRUCT_DECL:
                 self.parse_grib_accessor_struct(node)
@@ -40,6 +42,8 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
             pass # ignore!
         elif node.spelling == self.base_class:
             pass # ignore!
+        elif node.type.spelling == "grib_accessor_class *":
+            debug.line("parse_global_function_node", f"Parent class=[{node.spelling}]")
         elif node.kind == clang.cindex.CursorKind.UNEXPOSED_DECL:
             pass # ignore - this is an #include !
         else:

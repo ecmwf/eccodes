@@ -23,8 +23,10 @@ class DeclSpecConverter(code_interface_converter.CodeInterfaceConverter):
                                                            type=cdecl_spec.type, 
                                                            pointer=cdecl_spec.pointer)
 
-            conversion_pack.conversion_data.add_funcbody_type_mapping(cdecl_spec, cpp_decl_spec)
-            debug.line("create_cpp_code_object", f"DeclSpecConverter [OUT] DeclSpec conversion: [{cdecl_spec.as_string()}] [{cdecl_spec}] -> [{cpp_decl_spec.as_string()}]")
+            #conversion_pack.conversion_data.add_funcbody_type_mapping(cdecl_spec, cpp_decl_spec)
+            debug.line("create_cpp_code_object", f"DeclSpecConverter DEFAULT CONVERSION - NOT ADDED TO MAP!")
+        
+        debug.line("create_cpp_code_object", f"DeclSpecConverter [OUT] DeclSpec conversion: [{debug.as_debug_string(cdecl_spec)}] -> [{debug.as_debug_string(cpp_decl_spec)}]")
 
         return conversion_pack.conversion_validation.validate_declaration_specifier(cdecl_spec, cpp_decl_spec)
   

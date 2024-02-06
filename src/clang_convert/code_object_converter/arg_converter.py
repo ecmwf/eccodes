@@ -103,7 +103,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
         
         debug.line("convert_funcbody_arg", f"==[2]== carg=[{debug.as_debug_string(cpp_arg)}]")
         
-        # 2. Convert the type 
+        # 2. Convert the type
         cpp_decl_spec, match_type = self.convert_funcbody_decl_spec(carg.decl_spec)
 
         debug.line("convert_funcbody_arg", f"==[3]== cpp_decl_spec=[{debug.as_debug_string(cpp_decl_spec)}] match_type=[{match_type}]")
