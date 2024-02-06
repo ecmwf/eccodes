@@ -59,9 +59,39 @@ class DefaultConversionManager:
         debug.line("convert", f"\n\n============================== [PHASE 4: Write C++ files ] END   ==============================\n")
 
     def create_ast_code_list(self):
+        full_ast_code_list = []
+        full_file_list = []
+
+        current_file_list = self._files
+        while len(current_file_list) > 0:
+            additional_ast_code_list, additional_files = self.process_files(current_file_list)
+            full_file_list.extend(current_file_list)
+            full_ast_code_list.extend(additional_ast_code_list)
+
+            current_file_list = []
+            for file in additional_files:
+                if file not in full_file_list:
+                    self._cli_logger.info("Found parent file to process: %s", file)
+                    current_file_list.append(file)
+
+        return full_ast_code_list
+
+    def process_files(self, files):
+        additional_files = []
         parser = cfile_parser.CFileParser(self._cli_logger)
-        return parser.to_ast_code_list(self._files, self.ignore_file_list)
-    
+        ast_code_list = parser.to_ast_code_list(files, self.ignore_file_list)
+
+        for entry in ast_code_list:
+            parent_file = self.get_parent_filename(entry)
+            if parent_file and parent_file not in self.ignore_file_list and parent_file not in additional_files:
+                additional_files.append(parent_file)
+
+        return ast_code_list, additional_files
+
+    # Override as required...
+    def get_parent_filename(self, ast_code_instance):
+        return None
+
     def convert_ast_to_ccode(self, ast_code_list):
         ccode_list = []
 

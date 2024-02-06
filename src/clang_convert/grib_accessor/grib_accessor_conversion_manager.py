@@ -34,5 +34,11 @@ class GribAccessorConversionManager(default_conversion_manager.DefaultConversion
         ]
     # Conversion-specific : end ==========================================================
 
+    def get_parent_filename(self, ast_code_instance):
+        for node in ast_code_instance.global_function_nodes:
+            if node.type.spelling == "grib_accessor_class *":
+                return node.spelling + ".cc"
+        return None
+
 # Read by convert.py
 CONVERSION_MANAGER_CLASS=GribAccessorConversionManager
