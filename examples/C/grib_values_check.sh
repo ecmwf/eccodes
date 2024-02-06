@@ -16,8 +16,8 @@ tempErr=${label}.tmp.err
 tempRef=${label}.tmp.ref
 
 cat > $tempRef <<EOF
-Error: "level" Value is different
-Error: "levelll" Key/value not found
+Error: "level" - Value is different
+Error: "levelll" - Key/value not found
 EOF
 
 # Input GRIB file path is hard coded in the example

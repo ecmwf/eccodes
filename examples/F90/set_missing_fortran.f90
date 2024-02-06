@@ -9,7 +9,7 @@
 ! Description: how to set key values.
 !
 !
-program set
+program set_missing_fortran
    use eccodes
    implicit none
    integer              :: infile, outfile
@@ -40,4 +40,4 @@ program set
 
    call codes_close_file(outfile)
 
-end program set
+end program

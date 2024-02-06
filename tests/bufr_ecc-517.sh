@@ -10,16 +10,20 @@
 
 . ./include.ctest.sh
 
-OUTPUT=temp.ecc-517.bufr
-TEMP=temp.ecc-517.txt
+label="bufr_ecc-517_test"
+tempBufr=temp.$label.bufr
+tempText=temp.$label.txt
 
 # Run program to create output BUFR file with replication
-$EXEC ${test_dir}/bufr_ecc-517 $OUTPUT
+export ECCODES_DEBUG=-1
+$EXEC ${test_dir}/bufr_ecc-517 $tempBufr > $tempText 2>&1
+unset ECCODES_DEBUG
+rm -f $tempText
 
 # Check file is OK and has the expected number of descriptors
-${tools_dir}/bufr_dump -jf $OUTPUT > $TEMP
-count=`grep -c extendedVerticalSoundingSignificance $TEMP`
-[ $count -eq 487 ] 
+${tools_dir}/bufr_dump -jf $tempBufr > $tempText
+count=$(grep -c extendedVerticalSoundingSignificance $tempText)
+[ $count -eq 487 ]
 
-
-rm $OUTPUT $TEMP
+# Clean up
+rm $tempBufr $tempText

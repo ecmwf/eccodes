@@ -204,7 +204,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 
     size_t i    = 0;
     int ret     = GRIB_SUCCESS;
-    long hcount = 0, lcount = 0, hpos = 0, lup = 0, mmax = 0, n_vals = 0;
+    // long lup = 0;
+    long hcount = 0, lcount = 0, hpos = 0, mmax = 0, n_vals = 0;
     double* scals = NULL;
     /* double *pscals=NULL; */
 
@@ -330,12 +331,12 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     i = 0;
 
     while (maxv > 0) {
-        lup = mmax;
+        // lup = mmax;
         if (sub_k >= 0) {
             for (hcount = 0; hcount < sub_k + 1; hcount++) {
                 decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
                 decode_float(grib_decode_unsigned_long(hres, &hpos, 8 * bytes));
-                lup++;
+                // lup++;
             }
             sub_k--;
         }
@@ -352,7 +353,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
                                     reference_value);
             if (mmax == 0)
                 val[i - 1] = 0;
-            lup++;
+            // lup++;
         }
 
         maxv--;

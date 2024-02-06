@@ -29,10 +29,17 @@ sub create_cfName {
 
     my $query= <<"EOF";
     select $field,force128,edition,
-    centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
-    from param,grib,attribute,centre,units,cf where param.hide_def=0 and param.id=grib.param_id 
-    and attribute.id=grib.attribute_id and centre.id=grib.centre and units.id=param.units_id and param.id=cf.grib1_ecmwf
-    order by edition,centre,param.o,param.id,grib.param_version,attribute.o;
+    centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName from
+    param,grib_encoding,grib,attribute,centre,units,cf where
+    param.hide_def=0 and
+    param.retired=0 and
+    grib_encoding.id=grib.encoding_id and
+    param.id=grib_encoding.param_id and
+    attribute.id=grib.attribute_id and
+    centre.id=grib_encoding.centre_id and
+    units.id=param.units_id and
+    param.id=cf.grib1_ecmwf order by
+    edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
 
     my $qh=$dbh->prepare($query);
@@ -46,7 +53,7 @@ EOF
 
     while (my ($keyval,$force128,$edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
     {
-        if ($centre eq "all" ) { $conceptDir=""; }
+        if ($centre eq "wmo" ) { $conceptDir=""; }
         else { $conceptDir="/localConcepts/$centre"; }
 
         if ($filebase ne "$basedir/grib$edition$conceptDir") {
@@ -101,11 +108,17 @@ sub create_def {
     if ($key =~ /units/) { $field="units.name"; } 
 
     my $query= <<"EOF";
-    select $field,force128,edition,
+        select $field,force128,edition,
         centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
-    from param,grib,attribute,centre,units where param.hide_def=0 and param.id=grib.param_id 
-    and attribute.id=grib.attribute_id and centre.id=grib.centre and units.id=param.units_id
-    order by edition,centre,param.o,param.id,grib.param_version,attribute.o;
+        from param,grib_encoding,grib,attribute,centre,units where
+        param.hide_def=0 and
+        param.retired=0 and
+        grib_encoding.id=grib.encoding_id and
+        param.id=grib_encoding.param_id and
+        attribute.id=grib.attribute_id and
+        centre.id=grib_encoding.centre_id and
+        units.id=param.units_id
+        order by edition,centre_id,param.o,param.id,grib_encoding.param_version,attribute.o;
 EOF
 
     my $qh=$dbh->prepare($query);
@@ -119,7 +132,7 @@ EOF
 
     while (my ($keyval,$force128,$edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
     {
-        if ($centre eq "all" ) { $conceptDir=""; }
+        if ($centre eq "wmo" ) { $conceptDir=""; }
         else { $conceptDir="/localConcepts/$centre"; }
         #if ($key =~ /paramId/ && $force128==1 && $keyval >1000) {
         #  $keyval= $keyval % 1000;
@@ -174,16 +187,20 @@ sub create_paramId_def {
     my $p; my %seen; 
 
     my $query="select edition,centre.abbreviation,param_id,attribute.name,attribute_value,param.name,param.shortName
-    from param,grib,attribute,centre where param.hide_def=0 and param.id=grib.param_id 
-    and attribute.id=grib.attribute_id and centre.id=grib.centre
-    order by edition,centre,param.o,param.id,attribute.o";
-
+    from param,grib_encoding,grib,attribute,centre where
+    param.hide_def=0 and
+    param.retired=0 and
+    grib_encoding.id=grib.encoding_id and
+    param.id=grib_encoding.param_id and
+    attribute.id=grib.attribute_id and
+    centre.id=grib_encoding.centre_id
+    order by edition,centre_id,param.o,param.id,attribute.o";
     my $qh=$dbh->prepare($query);
     $qh->execute();
 
     while (my ($edition,$centre,$paramId,$attribute,$value,$name,$shortName)=$qh->fetchrow_array )
     {
-        if ($centre eq "all" ) { $conceptDir=""; }
+        if ($centre eq "wmo" ) { $conceptDir=""; }
         else { $conceptDir="/localConcepts/$centre"; }
 
         if ($filebase ne "$basedir/grib$edition$conceptDir") {
@@ -226,7 +243,7 @@ sub create_def_old {
 
     while (my ($edition,$centre,$paramId,$value)=$qh->fetchrow_array )
     {
-        if ($centre eq "all" ) { $conceptDir=""; }
+        if ($centre eq "wmo" ) { $conceptDir=""; }
         else { $conceptDir="/localConcepts/$centre"; }
 
         if ($filebase ne "$basedir/grib$edition$conceptDir") {
@@ -255,26 +272,33 @@ create_def("name");
 create_def("units");
 create_cfName("cfName");
 
-#create_paramId_def();
+# #create_paramId_def();
 
-$query="select distinct edition,centre.abbreviation,param_id,param.shortName 
-from param,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
-centre.id=grib.centre and shortName!='~' 
-order by centre,edition,param.o,param_id";
+# $query="select distinct edition,centre.abbreviation,param_id,param.shortName from param,grib_encoding,centre where
+#  param.hide_def=0 and 
+#  param.id=grib_encoding.param_id and 
+#  centre.id=grib_encoding.centre_id and 
+#  shortName!='~' order by abbreviation,edition,param.o,param.id,shortName";
 
-#create_def("shortName",$query);
 
-$query="select distinct edition,centre.abbreviation,param_id,param.name 
-from param,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
-centre.id=grib.centre and shortName!='~' 
-order by centre,edition,param.o,param_id";
+# #select distinct edition,centre.abbreviation,param_id,param.shortName 
+# #from param,grib_encoding,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
+# #centre.id=grib_encoding.centre_id and shortName!='~' 
+# #order by centre,edition,param.o,param_id";
 
-#create_def("name",$query);
+# #create_def("shortName",$query);
 
-$query="select distinct edition,centre.abbreviation,param_id,units.name 
-from param,grib,centre,units where param.hide_def=0 and param.id=grib.param_id and units.id=param.units_id
-and centre.id=grib.centre and shortName!='~' 
-order by centre,edition,param.o,param_id";
+# $query="select distinct edition,centre.abbreviation,param_id,param.name 
+# from param,grib,centre where param.hide_def=0 and param.id=grib.param_id and 
+# centre.id=grib.centre and shortName!='~' 
+# order by centre,edition,param.o,param_id";
 
-#create_def("units",$query);
+# #create_def("name",$query);
+
+# $query="select distinct edition,centre.abbreviation,param_id,units.name 
+# from param,grib,centre,units where param.hide_def=0 and param.id=grib.param_id and units.id=param.units_id
+# and centre.id=grib.centre and shortName!='~' 
+# order by centre,edition,param.o,param_id";
+
+# #create_def("units",$query);
 

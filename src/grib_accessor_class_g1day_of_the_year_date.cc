@@ -120,32 +120,26 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     /* special clim case where each mont have 30 days.. to comply with mars*/
     grib_accessor_g1day_of_the_year_date* self = (grib_accessor_g1day_of_the_year_date*)a;
-
+    grib_handle* hand = grib_handle_of_accessor(a);
     char tmp[1024];
 
     long year    = 0;
     long century = 0;
     long month   = 0;
     long day     = 0;
-
-    long fullyear         = 0;
+    long fullyear = 0;
     long fake_day_of_year = 0;
 
-    size_t l;
+    grib_get_long_internal(hand, self->century, &century);
+    grib_get_long_internal(hand, self->day, &day);
+    grib_get_long_internal(hand, self->month, &month);
+    grib_get_long_internal(hand, self->year, &year);
 
-    grib_get_long_internal(grib_handle_of_accessor(a), self->century, &century);
-    grib_get_long_internal(grib_handle_of_accessor(a), self->day, &day);
-    grib_get_long_internal(grib_handle_of_accessor(a), self->month, &month);
-    grib_get_long_internal(grib_handle_of_accessor(a), self->year, &year);
-
-    if (*len < 1)
-        return GRIB_BUFFER_TOO_SMALL;
-
-    fullyear         = ((century - 1) * 100 + year);
+    fullyear = ((century - 1) * 100 + year);
     fake_day_of_year = ((month - 1) * 30) + day;
     snprintf(tmp, sizeof(tmp), "%04ld-%03ld", fullyear, fake_day_of_year);
 
-    l = strlen(tmp) + 1;
+    size_t l = strlen(tmp) + 1;
     if (*len < l) {
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;

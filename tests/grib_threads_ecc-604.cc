@@ -24,7 +24,7 @@ int opt_dump                      = 0; /* If 1 then dump handle to /dev/null */
 int opt_clone                     = 0; /* If 1 then clone source handle */
 int opt_write                     = 0; /* If 1 write handle to file */
 
-static int encode_file(char* template_file, char* output_file)
+static int encode_file(const char* template_file, const char* output_file)
 {
     FILE *in, *out = NULL;
     grib_handle* source_handle = NULL;
@@ -138,11 +138,11 @@ int main(int argc, char** argv)
         parallel = 0;
     }
     if (parallel) {
-        printf("Running parallel in %ld threads. %ld iterations (prod=%ld)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS * FILES_PER_ITERATION);
+        printf("Running parallel in %zu threads. %zu iterations (prod=%zu)\n", NUM_THREADS, FILES_PER_ITERATION, NUM_THREADS * FILES_PER_ITERATION);
         printf("Options: dump=%d, clone=%d, write=%d\n", opt_dump, opt_clone, opt_write);
     }
     else {
-        printf("Running sequentially in %ld runs. %ld iterations\n", NUM_THREADS, FILES_PER_ITERATION);
+        printf("Running sequentially in %zu runs. %zu iterations\n", NUM_THREADS, FILES_PER_ITERATION);
     }
 
     {
@@ -193,7 +193,7 @@ void do_stuff(void* ptr)
 
     for (i = 0; i < FILES_PER_ITERATION; i++) {
         if (opt_write) {
-            snprintf(output_file, 50, "output/output_file_%ld-%ld.grib", data->number, i);
+            snprintf(output_file, 50, "output/output_file_%zu-%zu.grib", data->number, i);
             encode_file(INPUT_FILE, output_file);
         }
         else {
@@ -206,5 +206,5 @@ void do_stuff(void* ptr)
     strftime(stime, 32, "%H:%M:%S", &result); /* Try to get milliseconds here too*/
     /* asctime_r(&result, stime); */
 
-    printf("%s: Worker %ld finished.\n", stime, data->number);
+    printf("%s: Worker %zu finished.\n", stime, data->number);
 }

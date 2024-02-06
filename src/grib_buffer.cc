@@ -15,7 +15,7 @@
 
 static void grib_get_buffer_ownership(const grib_context* c, grib_buffer* b)
 {
-    unsigned char* newdata;
+    unsigned char* newdata = NULL;
     if (b->property == CODES_MY_BUFFER)
         return;
 
@@ -78,11 +78,9 @@ void grib_buffer_delete(const grib_context* c, grib_buffer* b)
 
 static void grib_grow_buffer_to(const grib_context* c, grib_buffer* b, size_t ns)
 {
-    unsigned char* newdata;
-
     if (ns > b->length) {
         grib_get_buffer_ownership(c, b);
-        newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
+        unsigned char* newdata = (unsigned char*)grib_context_malloc_clear(c, ns);
         memcpy(newdata, b->data, b->length);
         grib_context_free(c, b->data);
         b->data   = newdata;
@@ -159,7 +157,7 @@ static void update_offsets_after(grib_accessor* a, long len)
 //                 plen = grib_get_next_position_offset(s->block->last);
 //             if((ret = grib_pack_long(s->aclength, &plen, &len)) != GRIB_SUCCESS)
 //                 ;
-// 
+//
 //             if(s->h->context->debug)
 //                 printf("SECTION updating length %ld .. %s\n",plen,s->owner->name);
 //         }
@@ -197,8 +195,8 @@ static void update_offsets_after(grib_accessor* a, long len)
 //         update_sections_lengths(s->owner->parent);
 // }
 
-void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
-                         size_t newsize, int update_lengths, int update_paddings)
+int grib_buffer_replace(grib_accessor* a, const unsigned char* data,
+                        size_t newsize, int update_lengths, int update_paddings)
 {
     size_t offset = a->offset;
     long oldsize  = grib_get_next_position_offset(a) - offset;
@@ -234,11 +232,13 @@ void grib_buffer_replace(grib_accessor* a, const unsigned char* data,
         update_offsets_after(a, increase);
         if (update_lengths) {
             grib_update_size(a, newsize);
-            grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            int err = grib_section_adjust_sizes(grib_handle_of_accessor(a)->root, 1, 0);
+            if (err) return err;
             if (update_paddings)
                 grib_update_paddings(grib_handle_of_accessor(a)->root);
         }
     }
+    return GRIB_SUCCESS;
 }
 
 void grib_update_sections_lengths(grib_handle* h)

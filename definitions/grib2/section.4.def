@@ -28,6 +28,7 @@ concept datasetForLocal(unknown) {
   "tigge"   = {productionStatusOfProcessedData=5;}
   "s2s"     = {productionStatusOfProcessedData=6;}
   "s2s"     = {productionStatusOfProcessedData=7;}
+  "cerise"  = {marsClass="ci";}
   "era6"    = {marsClass="e6";} # for ERA6 parameters with constituentType
   "hydro"   = {marsClass="ce";} # EFAS/GLOFAS
   "hydro"   = {marsClass="ul";} # ULYSSES

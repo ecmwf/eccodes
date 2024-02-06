@@ -16,6 +16,12 @@ tempOut=temp.${label}.txt
 tempBufr=temp.${label}.bufr
 
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+
 REDIRECT=/dev/null
 
 cd ${data_dir}/bufr

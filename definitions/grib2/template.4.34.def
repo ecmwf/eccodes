@@ -5,7 +5,6 @@
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generating_process.def"
 include "grib2/template.4.forecast_time.def"
-include "grib2/template.4.point_in_time.def"
 include "grib2/template.4.satellite.def"
 include "grib2/template.4.eps.def"
 include "grib2/template.4.statistical.def"

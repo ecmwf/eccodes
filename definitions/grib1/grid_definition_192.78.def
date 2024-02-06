@@ -38,7 +38,7 @@ flags[1] scanningModeForOneDiamond 'grib1/grid.192.78.3.10.table';
 
 transient numberOfPoints= nd *(Ni + 1) * (Ni + 1);
 alias numberOfDataPoints=numberOfPoints;
- 
+
 meta numberOfValues
 number_of_values(values,bitsPerValue,numberOfDataPoints,
                  bitmapPresent,bitmap,numberOfCodedValues) : dump;

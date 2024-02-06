@@ -190,6 +190,16 @@ grib_handle* grib_util_sections_copy(grib_handle* hfrom, grib_handle* hto, int w
     if (*err)
         return NULL;
 
+    if (hfrom->context->debug) {
+        fprintf(stderr, "ECCODES DEBUG %s: Copying the following sections: ", __func__);
+        if (what & GRIB_SECTION_GRID)    fprintf(stderr, "Grid, ");
+        if (what & GRIB_SECTION_PRODUCT) fprintf(stderr, "Product, ");
+        if (what & GRIB_SECTION_LOCAL)   fprintf(stderr, "Local, ");
+        if (what & GRIB_SECTION_DATA)    fprintf(stderr, "Data, ");
+        if (what & GRIB_SECTION_BITMAP)  fprintf(stderr, "Bitmap, ");
+        fprintf(stderr, "\n");
+    }
+
     if (edition_to != 1 && edition_to != 2) {
         *err = GRIB_NOT_IMPLEMENTED;
         return NULL;
@@ -1852,13 +1862,11 @@ int parse_keyval_string(const char* grib_tool,
 // Return 1 if the productDefinitionTemplateNumber (GRIB2) is for EPS (ensemble) products
 int grib2_is_PDTN_EPS(long pdtn)
 {
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
     static int eps_pdtns[] = { 1, 11, 33, 34, 41, 43, 45, 47,
                                49, 54, 56, 58, 59, 60, 61, 63, 68, 71, 73, 77, 79,
                                81, 83, 84, 85, 92, 94, 96, 98 };
-    size_t i;
-    for (i = 0; i < NUMBER(eps_pdtns); ++i) {
+    size_t i = 0, num_epss = (sizeof(eps_pdtns) / sizeof(eps_pdtns[0]));
+    for (i = 0; i < num_epss; ++i) {
         if (eps_pdtns[i] == pdtn) return 1;
     }
     return 0;
@@ -2045,7 +2053,7 @@ int grib_is_earth_oblate(grib_handle* h)
     return 0;
 }
 
-int grib_check_data_values_range(grib_handle* h, const double min_val, const double max_val)
+int grib_check_data_values_minmax(grib_handle* h, const double min_val, const double max_val)
 {
     int result        = GRIB_SUCCESS;
     grib_context* ctx = h->context;

@@ -10,7 +10,7 @@
 ! Description: How to copy a BUFR message in memory
 !
 !
-program copy
+program bufr_copy_message
    use eccodes
    implicit none
    integer                            :: err, sub_centre
@@ -50,4 +50,4 @@ program copy
    call codes_close_file(outfile)
    deallocate (message)
 
-end program copy
+end program

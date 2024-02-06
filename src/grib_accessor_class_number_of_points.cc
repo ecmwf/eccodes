@@ -110,12 +110,14 @@ grib_accessor_class* grib_accessor_class_number_of_points = &_grib_accessor_clas
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
-    int n                                = 0;
+    int n = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+
     grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
-    self->ni                             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->nj                             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->plpresent                      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->pl                             = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->ni                             = grib_arguments_get_name(hand, c, n++);
+    self->nj                             = grib_arguments_get_name(hand, c, n++);
+    self->plpresent                      = grib_arguments_get_name(hand, c, n++);
+    self->pl                             = grib_arguments_get_name(hand, c, n++);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length = 0;
@@ -123,32 +125,41 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
+    grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
+
     int ret = GRIB_SUCCESS;
     long ni = 0, nj = 0, plpresent = 0;
     size_t plsize = 0;
-    long* pl;
-    int i;
-    grib_accessor_number_of_points* self = (grib_accessor_number_of_points*)a;
-    grib_context* c                      = a->context;
+    long* pl = NULL;
+    int i = 0;
+    grib_context* c = a->context;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->ni, &ni)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->ni, &ni)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->nj, &nj)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(hand, self->nj, &nj)) != GRIB_SUCCESS)
         return ret;
 
     if (self->plpresent &&
-        ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->plpresent, &plpresent)) != GRIB_SUCCESS))
+        ((ret = grib_get_long_internal(hand, self->plpresent, &plpresent)) != GRIB_SUCCESS))
         return ret;
 
-    if (nj == 0)
+    if (grib_is_missing(hand, self->nj, &ret) && ret == GRIB_SUCCESS) {
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_accessor_class_number_of_points: Key %s cannot be 'missing'!", self->nj);
         return GRIB_GEOCALCULUS_PROBLEM;
+    }
+
+    if (nj == 0) {
+        grib_context_log(c, GRIB_LOG_ERROR, "grib_accessor_class_number_of_points: Key %s cannot be 0!", self->nj);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
 
     if (plpresent) {
         /*reduced*/
         plsize = nj;
         pl     = (long*)grib_context_malloc(c, sizeof(long) * plsize);
-        grib_get_long_array_internal(grib_handle_of_accessor(a), self->pl, pl, &plsize);
+        grib_get_long_array_internal(hand, self->pl, pl, &plsize);
         *val = 0;
         for (i = 0; i < plsize; i++)
             *val += pl[i];

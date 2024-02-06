@@ -148,10 +148,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     const size_t alen = a->length;
 
     if (len[0] < (alen + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%zu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = 0;
-        return GRIB_ARRAY_TOO_SMALL;
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, alen+1, *len);
+        len[0] = alen + 1;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < alen; i++)

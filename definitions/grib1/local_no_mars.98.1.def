@@ -1,14 +1,14 @@
 #
-# Description            Octet    Code    Ksec1    Count
-# -----------            -----    ----    -----    -----
-#localDefinitionNumber           41      I1      37      -
-#class                           42      I1      38      -
-#type                            43      I1      39      -
-#stream                          44      I2      40      -
-#experimentVersionNumber         46      A4      41      -
-#number                          50      I1      42      -
-#total                           51      I1      43      -
-#spareSetToZero                  52      PAD     n/a     1
+# Description            Octet   Code    Ksec1   Count
+# -----------            -----   ----    -----   -----
+#localDefinitionNumber   41      I1      37      -
+#class                   42      I1      38      -
+#type                    43      I1      39      -
+#stream                  44      I2      40      -
+#experimentVersionNumber 46      A4      41      -
+#number                  50      I1      42      -
+#total                   51      I1      43      -
+#spareSetToZero          52      PAD     n/a     1
 #
 constant GRIBEXSection1Problem = 52 - section1Length ;
 

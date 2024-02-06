@@ -42,12 +42,14 @@ ${tools_dir}/grib_set -s scaleValuesBy=100 $input2 $tempOut
 echo "Data quality checks enabled. Repacking should fail..."
 # -----------------------------------------------------------
 export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+export ECCODES_DEBUG=-1
 set +e
 ${tools_dir}/grib_copy -r $tempOut /dev/null  2>$tempErr
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q 'more than the allowable limit' $tempErr
+unset ECCODES_DEBUG
 
 echo "Data quality checks enabled but only as a warning. Repacking should pass..."
 # --------------------------------------------------------------------------------

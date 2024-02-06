@@ -61,7 +61,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
+    const int opt = grib_options_on("C") + grib_options_on("O") + grib_options_on("D") + grib_options_on("j");
 
     options->dump_mode = (char*)"default";
 
@@ -141,7 +141,7 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
         grib_context* c      = grib_context_get_default();
         const char* filename = options->current_infile->name;
 
-        err = grib_index_dump_file(stdout, filename);
+        err = grib_index_dump_file(stdout, filename, options->dump_flags);
         if (err) {
             grib_context_log(c, GRIB_LOG_ERROR, "%s: Could not dump index file \"%s\".\n%s\n",
                              tool_name,
@@ -229,11 +229,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

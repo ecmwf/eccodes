@@ -32,6 +32,12 @@ echo "file: $gts_file" >> $fLog
 ${tools_dir}/gts_compare $gts_file $gts_file
 
 #----------------------------------------------------
+# Test: comparing with skip
+#----------------------------------------------------
+gts_file="EGRR20150317121020_00493212.DAT"
+${tools_dir}/gts_compare -w TT=SA $gts_file $gts_file
+
+#----------------------------------------------------
 # Test: comparing two different files
 #----------------------------------------------------
 cat > $fRules<<EOF
@@ -64,13 +70,58 @@ set -e
 # Add correct blocklist
 ${tools_dir}/gts_compare -b GG $gts_file $fGtsTmp
 
+#----------------------------------------------------
+# Compare using -c
+#----------------------------------------------------
+temp1=temp.$label.1.gts
+temp2=temp.$label.2.gts
+# Pick two messages which do have different contents
+${tools_dir}/gts_copy -w count=1 $gts_file $temp1
+${tools_dir}/gts_copy -w count=4 $gts_file $temp2
+${tools_dir}/gts_compare -c theMessage $temp1 $temp2
+${tools_dir}/gts_compare -c theMessage -a $temp1 $temp2
+
+set +e
+${tools_dir}/gts_compare -c ls:n $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+set +e
+${tools_dir}/gts_compare -c ls:n -a $temp1 $temp2
+status=$?
+set -e
+[ $status -eq 1 ]
+
+rm -f $temp1 $temp2
+
+#----------------------------------------------------
 # Test with file of the same name in a dir
+#----------------------------------------------------
 tempDir=temp.$label.dir
 rm -fr $tempDir
 mkdir $tempDir
 cp $gts_file $tempDir
 ${tools_dir}/gts_compare $gts_file $tempDir
 rm -r $tempDir
+
+# Options
+set +e
+${tools_dir}/gts_compare -a $gts_file $gts_file > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "option requires" $fLog
+
+
+# Non-existence
+set +e
+${tools_dir}/gts_compare non-exist1 non-exist2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No such file or directory" $fLog
+
 
 # Clean up
 rm -f $fLog $fGtsTmp $fRules

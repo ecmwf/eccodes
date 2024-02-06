@@ -150,6 +150,14 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#Skin temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Total column integrated water vapour
 'kg m**-2' = {
 	 discipline = 0 ;
@@ -181,6 +189,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 11 ;
+	}
+#Volumetric soil moisture
+'m**3 m**-3' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #2 metre relative humidity
 '%' = {
@@ -276,4 +291,11 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow depth water equivalent
+'kg m**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 0 ;
 }

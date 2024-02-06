@@ -151,9 +151,10 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     size_t buflen = 100;
     long step;
     grib_accessor* stepRangeAcc = grib_find_accessor(grib_handle_of_accessor(a), self->stepRange);
+    const char* cclass_name = a->cclass->name;
 
     if (!stepRangeAcc) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s not found", self->stepRange);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: %s not found", cclass_name, self->stepRange);
         return GRIB_NOT_FOUND;
     }
 
@@ -162,8 +163,8 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (*len < buflen) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "grib_accessor_class_mars_step: Buffer too small for %s. It is %ld bytes long (len=%ld)\n",
-                         a->name, buflen, *len);
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, buflen, *len);
         *len = buflen;
         return GRIB_BUFFER_TOO_SMALL;
     }

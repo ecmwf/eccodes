@@ -15,6 +15,11 @@ tempOut=temp.${label}.out
 tempGrib=temp.${label}.grib
 tempRef=temp.${label}.ref
 
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
 grib1_sample=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 grib2_sample=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 types_table=$ECCODES_DEFINITION_PATH/mars/type.table

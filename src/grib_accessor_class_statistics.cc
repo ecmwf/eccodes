@@ -313,10 +313,9 @@ static int compare(grib_accessor* a, grib_accessor* b)
     grib_unpack_double(a, aval, &alen);
     grib_unpack_double(b, bval, &blen);
 
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_DOUBLE_VALUE_MISMATCH;
-        alen--;
+    retval = GRIB_SUCCESS;
+    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);

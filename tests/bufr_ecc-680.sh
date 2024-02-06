@@ -72,9 +72,51 @@ EOF
 set +e
 ${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 2>$tempText
 status=$?
-[ $status -ne 0 ]
 set -e
+[ $status -ne 0 ]
 fgrep -q "Value (-416) out of range" $tempText
+
+# Error conditions
+# ------------------
+cat > $tempFilt <<EOF
+  set inputOverriddenReferenceValues = { -5000, 5000 };
+  set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
+  set pack = 1;
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+fgrep -q "number of overridden reference values (2) different from number of descriptors between operator 203YYY and 203255" $tempText
+
+
+# No overridden ref vals provided
+cat > $tempFilt <<EOF
+  set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+fgrep -q "Overridden Reference Values array is empty" $tempText
+
+
+# Ref val too large
+cat > $tempFilt <<EOF
+  set inputOverriddenReferenceValues = { -50000000 }; # Value too large
+  set unexpandedDescriptors = { 203014, 7030, 203255, 307080, 203000, 7030 };
+  set pack = 1;
+EOF
+set +e
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+fgrep -q "does not fit in 14 bits" $tempText
+
+
 
 # Clean up
 rm -f $tempBufr $tempFilt $tempText

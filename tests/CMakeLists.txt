@@ -10,6 +10,10 @@ execute_process( COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_S
 ################################################
 list(APPEND test_c_bins
     list_codetable_flagtable_keys
+    wmo_read_bufr_from_file
+    wmo_read_gts_from_file
+    wmo_read_any_from_file
+    wmo_read_any_from_stream
     grib_bpv_limit
     grib_double_cmp
     read_any
@@ -17,7 +21,9 @@ list(APPEND test_c_bins
     grib_indexing
     grib_fieldset
     grib_multi_from_message
+    grib_clone_headers_only
     grib_read_index
+    grib_set_large_message_fail
     unit_tests
     bufr_keys_iter
     grib_keys_iter
@@ -42,7 +48,6 @@ list(APPEND test_c_bins
     bufr_ecc-1288
     bufr_get_element
     bufr_extract_headers
-    extract_offsets
     bufr_check_descriptors
     bufr_coordinate_descriptors
     codes_new_from_samples
@@ -50,6 +55,8 @@ list(APPEND test_c_bins
     codes_set_samples_path
     codes_compare_keys
     codes_dump_content
+    codes_codetable
+    codes_get_string
     grib_sh_ieee64
     grib_ieee
     grib_set_bytes
@@ -94,6 +101,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_is_in_list
+        filter_transient_darray
         grib_uerra
         grib_ecpoint
         grib_s2s
@@ -125,6 +134,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1322
         grib_ecc-1319
         grib_ecc-1406
+        grib_ecc-1440
         grib_ecc-1560
         grib_ecc-1571
         grib_ecc-1654
@@ -141,7 +151,6 @@ if( HAVE_BUILD_TOOLS )
         bufr_json_samples
         bufr_ecc-359
         bufr_ecc-517
-        bufr_rdbSubTypes
         grib_efas
         grib_sh_imag
         grib_spectral
@@ -151,14 +160,16 @@ if( HAVE_BUILD_TOOLS )
         grib_grid_lambert_conformal
         grib_grid_polar_stereographic
         grib_grid_healpix
-        grib_g1monthlydate
         grib_g1day_of_the_year_date
-        grib_g1fcperiod)
+    )
 
     # These tests require data downloads
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_set_large_message_fail
+        grib_g1monthlydate
+        grib_g1fcperiod
         grib_bpv_limit
         grib_complex
         grib_double_cmp
@@ -170,7 +181,13 @@ if( HAVE_BUILD_TOOLS )
         grib_headers_only
         grib_unpack_subarray
         grib_count
+        grib_clone_headers_only
+        wmo_read_bufr_from_file
+        wmo_read_gts_from_file
+        wmo_read_any_from_file
+        wmo_read_any_from_stream
         bufr_templates
+        bufr_rdbSubTypes
         bufr_dump_data
         bufr_dump_descriptors
         bufr_coordinate_descriptors
@@ -185,6 +202,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_get
         bufr_operators
         bufr_filter_misc
+        bufr_filter_fail
         bufr_filter_extract_subsets
         bufr_filter_extract_datetime
         bufr_filter_extract_area
@@ -239,18 +257,24 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1397
         grib_ecc-1425
         grib_ecc-1467
+        grib_sub_hourly
         grib_set_bytes
         grib_set_force
         bufr_ecc-556
         codes_ecc-1698
+        codes_get_string
+        codes_codetable
         gts_get
         gts_ls
         gts_count
         gts_compare
+        gts_dump
         wrap
+        hdf5
         taf
         pseudo_diag
         metar_ls
+        metar_filter
         metar_get
         metar_dump
         metar_compare
@@ -290,6 +314,7 @@ if( HAVE_BUILD_TOOLS )
         grib_local
         grib_step
         grib_set
+        grib_set_fail
         grib_iterator
         grib_proj_string
         grib_compare
@@ -297,6 +322,7 @@ if( HAVE_BUILD_TOOLS )
         grib_level
         grib_indexing
         grib_bitmap
+        grib_secondary_bitmap
         grib_list
         grib_second_order
         grib_multi_from_message
@@ -350,6 +376,10 @@ if( HAVE_BUILD_TOOLS )
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS
                       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_check_gaussian_grids.sh )
+    ecbuild_add_test( TARGET eccodes_t_grib_repair
+                      TYPE SCRIPT
+                      CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)
@@ -426,6 +456,13 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
+    endif()
+
+    if( NOT ECCODES_ON_WINDOWS )
+        ecbuild_add_executable( TARGET    extract_offsets
+                                NOINSTALL
+                                SOURCES   extract_offsets.cc
+                                LIBS      eccodes )
     endif()
 
     ecbuild_add_test( TARGET eccodes_t_grib_to_netcdf

@@ -74,6 +74,7 @@ int main(int argc, char** argv)
     }
 
     fclose(fp);
+    codes_context_delete(NULL);
     printf("All OK\n");
     return 0;
 }

@@ -168,7 +168,7 @@ static char* get_condition(const char* name, codes_condition* condition)
 
     condition->rightType = GRIB_TYPE_UNDEFINED;
 
-    Assert(name[0] == '/');
+    DEBUG_ASSERT(name[0] == '/');
 
     while (*equal != 0 && *equal != '=')
         equal++;
@@ -569,7 +569,7 @@ char* grib_split_name_attribute(grib_context* c, const char* name, char* attribu
 grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
 {
     grib_accessor* aret = NULL;
-    Assert(h);
+    DEBUG_ASSERT(h);
     if (h->product_kind == PRODUCT_GRIB) {
         aret = _grib_find_accessor(h, name); /* ECC-144: Performance */
     }

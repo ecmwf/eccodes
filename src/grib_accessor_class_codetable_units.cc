@@ -117,9 +117,10 @@ typedef struct grib_accessor_codetable
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     grib_accessor_codetable_units* self = (grib_accessor_codetable_units*)a;
-    int n                               = 0;
-    self->codetable                     = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
-    a->length                           = 0;
+
+    int n           = 0;
+    self->codetable = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
+    a->length       = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
@@ -131,13 +132,13 @@ static int get_native_type(grib_accessor* a)
 static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_codetable_units* self = (grib_accessor_codetable_units*)a;
-    grib_codetable* table               = NULL;
+    grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;
     int err = GRIB_SUCCESS;
     char tmp[1024];
-    size_t l                    = 1024;
+    size_t l = sizeof(tmp);
     grib_accessor_codetable* ca = (grib_accessor_codetable*)grib_find_accessor(grib_handle_of_accessor(a), self->codetable);
 
     if ((err = grib_unpack_long((grib_accessor*)ca, &value, &size)) != GRIB_SUCCESS)
@@ -155,6 +156,10 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }

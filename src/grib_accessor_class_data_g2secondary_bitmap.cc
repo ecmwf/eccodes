@@ -108,35 +108,27 @@ grib_accessor_class* grib_accessor_class_data_g2secondary_bitmap = &_grib_access
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_g2secondary_bitmap* self = (grib_accessor_data_g2secondary_bitmap*)a;
-    self->number_of_values                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
+    self->number_of_values = grib_arguments_get_name(grib_handle_of_accessor(a), args, 4);
 }
 
 static int value_count(grib_accessor* a, long* len)
 {
     grib_accessor_data_g2secondary_bitmap* self = (grib_accessor_data_g2secondary_bitmap*)a;
-    *len                                        = 0;
-
+    *len = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, len);
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_g2secondary_bitmap* self = (grib_accessor_data_g2secondary_bitmap*)a;
-
     int err = 0;
 
-    long primary_len         = 0;
-    long secondary_len       = 0;
+    long primary_len = 0, secondary_len = 0;
     double* primary_bitmap   = NULL;
     double* secondary_bitmap = NULL;
-    long i                   = 0;
-    long j                   = 0;
-    long on                  = 0;
-    long k;
-    long m;
-    double missing_value = 0;
-    double present_value = 0;
-    long expand_by       = 0;
+    long i = 0, j = 0, k = 0, m = 0;
+    double missing_value = 0, present_value = 0;
+    long expand_by = 0;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -185,7 +177,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             primary_bitmap[k++] = present_value;
             for (j = 0; j < expand_by; j++)
                 secondary_bitmap[m++] = val[i + j];
-            on++;
+            //on++;
         }
     }
 

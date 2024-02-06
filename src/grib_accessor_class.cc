@@ -71,8 +71,6 @@ static struct table_entry table[] = {
 };
 #endif /* ACCESSOR_FACTORY_USE_TRIE */
 
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
 grib_section* grib_create_root_section(const grib_context* context, grib_handle* h)
 {
     char* fpath     = 0;
@@ -113,7 +111,7 @@ static GRIB_INLINE grib_accessor_class* get_class(grib_context* c, char* type)
     if ((the_class = (grib_accessor_class**)grib_trie_get(c->classes, type)) != NULL)
         return *(the_class);
 
-    table_count = NUMBER(table);
+    const int table_count = sizeof(table) / sizeof(table[0]);
     for (i = 0; i < table_count; i++) {
         if (grib_inline_strcmp(type, table[i].type) == 0) {
             grib_trie_insert(c->classes, type, table[i].cclass);
@@ -322,7 +320,8 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
                 if (update) {
                     plen = length;
                     lret = grib_pack_long(s->aclength, &plen, &len);
-                    Assert(lret == GRIB_SUCCESS);
+                    if (lret != GRIB_SUCCESS)
+                        return lret;
                     s->padding = 0;
                 }
                 else {

@@ -71,5 +71,19 @@ ${tools_dir}/codes_bufr_filter $fRules $f
 f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
 echo 'print "[expandedOriginalReferences:i]";' | ${tools_dir}/codes_bufr_filter - $f
 
+# Error decoding 'pack'
+# ----------------------
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+set +e
+echo 'print "[pack]";' | ${tools_dir}/codes_bufr_filter - $f 2>$temp
+status=$?
+set -e
+grep -q "Function not yet implemented" $temp
+
+# Pack using a double
+f=nos6_208.bufr
+${tools_dir}/bufr_set -s unpack=1,satelliteIdentifier=666,pack:d=1 $f $temp
+${tools_dir}/bufr_compare -b satelliteIdentifier $f $temp
+
 # Clean up
 rm -f $fRules $fLog $temp

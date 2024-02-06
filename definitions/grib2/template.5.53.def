@@ -3,7 +3,7 @@
 # TEMPLATE 5.53, BiFourier coefficients data - complex packing
 # Spectral data for limited area models - complex packing
 
-include "grib2/template.5.packing.def";
+include "grib2/template.5.packing.def"
 
 transient computeLaplacianOperator=1 : hidden;
 

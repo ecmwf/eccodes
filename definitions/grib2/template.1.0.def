@@ -2,4 +2,4 @@
 
 # TEMPLATE 1.0, Calendar Definition
 
-include "grib2/template.1.calendar.def";
+include "grib2/template.1.calendar.def"
