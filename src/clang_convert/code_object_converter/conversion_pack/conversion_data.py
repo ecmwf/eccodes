@@ -323,6 +323,13 @@ class ConversionData:
                     return entry.cppfuncsig
         return None
 
+    def cppfuncsig_for_cppfuncname(self, cppfuncname):
+        for mapping in self.all_mappings():
+            for entry in mapping.all_funcsig_mappings:
+                if entry.cppfuncsig.name == cppfuncname:
+                    return entry.cppfuncsig
+        return None
+
     def funcsig_mapping_for_cfuncname(self, cfuncname):
         for mapping in self.all_mappings():
             for entry in mapping.all_funcsig_mappings:

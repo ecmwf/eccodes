@@ -10,6 +10,7 @@ import code_object.binary_operation as binary_operation
 import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 from code_object_converter.conversion_funcs import as_commented_out_code
+from utils.string_funcs import is_number
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
@@ -94,23 +95,44 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
              
                 return cppbinary_operation.left_operand
 
-        # If we've got a StructMemberAccess object with a .size(), then we need to tidy up!
+        # If we've got a StructMemberAccess object, we're probably dealing with a container...
         cppleft = cppbinary_operation.left_operand
-        cppbinary_op = cppbinary_operation.binary_op
         if isinstance(cppleft, struct_member_access.StructMemberAccess):
-            if cppleft.member and cppleft.member.name == "size()" and cppbinary_op.is_assignment():
-                cppright = cppbinary_operation.right_operand
-                if cppright.as_string() == "0":
-                    cppleft.member.name = "clear()"
-                else:
-                    cppleft.member.name = f"resize({cppright.as_string()})"
+            cppbinary_op = cppbinary_operation.binary_op
+            cppright = cppbinary_operation.right_operand
 
-                # Double-check it's not const!
+            if cppbinary_op.is_assignment():
                 cpparg = self._conversion_data.cpparg_for_cppname(cppleft.name)
-                debug.line("validate_binary_operation", f"Performing const check cppleft.name=[{debug.as_debug_string(cppleft.name)}] cpparg=[{debug.as_debug_string(cpparg)}]")
-                if cpparg and cpparg.decl_spec.const_qualifier == "const":
-                        return as_commented_out_code(cppleft, "Removing - conversion requires mutable operation on const type")
+                if cppleft.member:
+                    if cppleft.member.name == "size()":
+                        if cppright.as_string() == "0":
+                            cppleft.member.name = "clear()"
+                        else:
+                            cppleft.member.name = f"resize({cppright.as_string()})"
+
+                        # Double-check it's not const!
+                        debug.line("validate_binary_operation", f"Performing const check cppleft.name=[{debug.as_debug_string(cppleft.name)}] cpparg=[{debug.as_debug_string(cpparg)}]")
+                        if cpparg and cpparg.decl_spec.const_qualifier == "const":
+                                return as_commented_out_code(cppleft, "Removing - conversion requires mutable operation on const type")
+                        
+                        return cppleft
                 
-                return cppleft
+                # See if we're assigning a single value to a container type
+                if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+                    cppright_value = cppright.as_string()
+                    if is_number(cppright_value) or not self.is_cppfunction_returning_container(cppright.name):
+                        cppleft.index = "[0]"
+                        debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
+                        return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
         return cppbinary_operation
+
+    # Helper to determine how a container should receive the value returned by the function
+    # Returns True if the function returns e.g. std::vector<int> instead of int
+    # Override as required...
+    def is_cppfunction_returning_container(self, cppfuncname):
+        cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppfuncname)
+        if cppfuncsig and self._conversion_data.is_container_type(cppfuncsig.return_type.type):
+            return True
+        
+        return False
