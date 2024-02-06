@@ -422,19 +422,27 @@ class AstParser:
     def parse_VAR_DECL(self, node):
         cvariable = ast_utils.create_carg(node)
         cvalue = None
-        for child in node.get_children():
-            if child.kind.is_expression():
-                cvalue = self.parse_ast_node(child)
-            else:
-                debug.line("parse_VAR_DECL", f"Ignoring child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
-        
 
-        debug.line("parse_VAR_DECL", f"DEBUG: cvariable type=[{type(cvariable)}.__NAME__] as_string=[{debug.as_debug_string(cvariable)}]")
-        debug.line("parse_VAR_DECL", f"DEBUG: cvalue    type=[{type(cvalue)}.__NAME__] as_string=[{debug.as_debug_string(cvalue)}]")
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count <= 2, f"Expected up to two children for variable declaration, got [{child_count}]"
+
+        # Check if we have an assignment...
+        tokens=[token.spelling for token in node.get_tokens()]
+        if "=" in tokens:
+            debug.line("parse_VAR_DECL", f"Assignment found [=] - parsing...")
+            cvalue_node = children[-1]
+            if cvalue_node.kind.is_expression():
+                cvalue = self.parse_ast_node(cvalue_node)
+            else:
+                debug.line("parse_VAR_DECL", f"Ignoring cvalue_node spelling=[{cvalue_node.spelling}] type=[{cvalue_node.type.spelling}] kind=[{cvalue_node.kind}]")
+        
+        debug.line("parse_VAR_DECL", f"DEBUG: cvariable type=[{type(cvariable)}] as_string=[{debug.as_debug_string(cvariable)}]")
+        debug.line("parse_VAR_DECL", f"DEBUG: cvalue    type=[{type(cvalue)}] as_string=[{debug.as_debug_string(cvalue)}]")
 
         if not cvalue:
-            debug.line("parse_VAR_DECL", f"Ignoring cvalue with type=[{cvalue}]")
-            return None
+            debug.line("parse_VAR_DECL", "No assigned value found, using default [{}]")
+            cvalue = literal.Literal("{}")
 
         return variable_declaration.VariableDeclaration(cvariable, cvalue)
 
