@@ -21,6 +21,9 @@ import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
+import code_object_converter.conversion_pack.arg_utils as arg_utils
+
+
 prefix = "grib_accessor_class_"
 rename = {
     "Gen": "Accessor",      # "Generic",
@@ -56,7 +59,6 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         return info
 
-    # 
     def function_specific_conversion_pack_updates(self, cfunction_name):
         super().function_specific_conversion_pack_updates(cfunction_name)
         # See if we have a function-specific validator,
@@ -134,3 +136,32 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
     
     def is_const_member_function(self, function_name):
         return function_name in virtual_member_functions.const_virtual_member_function_names
+
+    def post_process_function_calls(self):
+        debug.line("post_process_function_calls", f"Function calls summary:")
+
+        for funcsig_call in self._code_info.function_calls:
+            debug.line("post_process_function_calls", f" -> [{debug.as_debug_string(funcsig_call)}]")
+            # See if this is a virtual function that isn't defined for this class, and add a using
+            # statement for it...
+
+            mismatch_found = False
+            for virt_func in self._code_elements.virtual_member_functions:
+                debug.line("post_process_function_calls", f"CHECKING VIRT_FUNC funcsig=[{debug.as_debug_string(virt_func.funcsig)}]")
+
+                if funcsig_call.name == virt_func.funcsig.name:
+                    debug.line("post_process_function_calls", f"NAME MATCH -> funcsig_call=[{debug.as_debug_string(funcsig_call)}] virt_func.funcsig=[{debug.as_debug_string(virt_func.funcsig)}]")
+
+                    # Get just the valid (not NONE_VALUE) args for the virtual function under test
+                    virt_func_args = [a for a in virt_func.funcsig.args if a != NONE_VALUE]
+
+                    for i in range(len(funcsig_call.args)):
+                        if funcsig_call.args[i].decl_spec.type != virt_func_args[i].decl_spec.type:
+                            # MISMATCH: Add base function name
+                            debug.line("post_process_function_calls", f"MISMATCH FOUND, adding base function name=[{funcsig_call.name}]: i=[{i}] funcsig_call.args[i]=[{debug.as_debug_string(funcsig_call.args[i])}] virt_func_args[i]=[{debug.as_debug_string(virt_func_args[i])}]")
+                            self._code_info.add_base_function_name(funcsig_call.name)
+                            mismatch_found = True
+                            break
+                
+                if mismatch_found:
+                    break

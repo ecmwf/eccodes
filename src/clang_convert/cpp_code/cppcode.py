@@ -40,6 +40,10 @@ class CppCode:
         return self._code_info.forward_declarations
 
     @property
+    def base_function_names(self):
+        return self._code_info.base_function_names
+
+    @property
     def header_file_includes(self):
         return self._code_info.header_includes
 
@@ -78,10 +82,6 @@ class CppCode:
     @property
     def virtual_member_functions(self):
         return self._code_elements.virtual_member_functions
-
-    @property
-    def virtual_member_functions_using_list(self):
-        return []
 
     @property
     def data_members(self):

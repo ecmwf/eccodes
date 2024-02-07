@@ -5,11 +5,14 @@ import code_object_converter.conversion_pack.code_mappings as code_mappings
 import code_object_converter.conversion_pack.funcsig_mapping as funcsig_mapping
 import code_object_converter.conversion_pack.funcsig_pointer_mapping as funcsig_pointer_mapping
 from code_object.arg import Arg
+from code_object.function_call import FunctionCall
+from code_object.funcsig import FuncSig
 from code_object.data_member import DataMember
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.conversion_pack.conversion_data_helper import *
 from code_object.code_interface import NONE_VALUE
 import code_object_converter.conversion_pack.buffer_mapping as buffer_mapping
+import code_object_converter.conversion_pack.arg_utils as arg_utils
 from copy import deepcopy
 
 # Store C to C++ conversion data to be used by the converters
@@ -22,6 +25,9 @@ class ConversionData:
         self._global_mappings = code_mappings.CodeMappings()
         self._local_mappings = None
 
+        # The name of the c function currently being processed
+        self._current_cfuncname = ""
+
     # Call this to ensure local state is set ready for function conversions
     def set_local_state(self):
         self._state = ConversionDataState.LOCAL
@@ -30,7 +36,7 @@ class ConversionData:
     # Clear out / reset local state data ready to convert a new function (cfuncname)
     def reset_local_state(self, cfuncname):
         self._local_mappings = code_mappings.CodeMappings()
-        self.info.current_cfuncname = cfuncname
+        self._current_cfuncname = cfuncname
         debug.line("reset_local_state", f"cfuncname=[{cfuncname}]")
 
     # The info object can be manipulated directly
@@ -155,6 +161,26 @@ class ConversionData:
     def add_container_type(self, type):
         assert isinstance(type, str), f"Expected str, got [{type}]"
         self.active_map.container_types.append(type)
+
+    # Converts the function call into a funcsig object (with void return type) and stores in the info
+    # object. This allows all arg type information to be available (for example when post-processing)
+    def add_cppfunction_call(self, cppfunction_call):
+        assert isinstance(cppfunction_call, FunctionCall), f"Expected FunctionCall, got [{cppfunction_call}]"
+
+        cppargs = []
+        for entry in cppfunction_call.args:
+            cppname = arg_utils.extract_name(entry)
+            cpparg = self.cpparg_for_cname(cppname) if cppname else None
+            debug.line("add_cppfunction_call", f"[{debug.as_debug_string(cppfunction_call)}]---> entry type=[{type(entry)}] value=[{debug.as_debug_string(entry)}] cppname=[{debug.as_debug_string(cppname)}] cpparg=[{debug.as_debug_string(cpparg)}]")
+            assert cppname
+
+            if cpparg and cpparg != NONE_VALUE:
+                cppargs.append(cpparg)
+
+        cppfuncsig = FuncSig("void", cppfunction_call.name, cppargs)
+
+        self._info.add_function_call_entry(cppfuncsig)
+        debug.line("add_cppfunction_call", f"Added function call cppfunction_call=[{debug.as_debug_string(cppfunction_call)}] -> cppfuncsig=[{debug.as_debug_string(cppfuncsig)}]")
 
     # ============================== Functions to update the mappings: end   ==============================
     
@@ -338,7 +364,7 @@ class ConversionData:
         return None
     
     def funcsig_mapping_for_current_cfuncname(self):
-        return self.funcsig_mapping_for_cfuncname(self._info.current_cfuncname)
+        return self.funcsig_mapping_for_cfuncname(self._current_cfuncname)
 
     def funcsig_buffer_mapping_for_cname(self, cname):
         for mapping in self.all_mappings():

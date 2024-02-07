@@ -3,6 +3,7 @@ import code_object.arg as arg
 import code_object.code_interface as code_interface
 import code_object.value_declaration_reference as value_declaration_reference
 from utils.string_funcs import strip_semicolon
+from code_object.code_interface import NONE_VALUE
 
 # Represent a function call
 #

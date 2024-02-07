@@ -35,6 +35,9 @@ class DefaultCCodeConverter:
         self.convert_member_functions()
         self.convert_virtual_member_functions()
 
+        # Post-processing
+        self.run_post_processing()
+
         return cppcode.CppCode(self._code_info, self._code_elements)
 
     # ============================== Setup functions: start ==============================
@@ -111,6 +114,7 @@ class DefaultCCodeConverter:
         if isinstance(cpp_func, member_function.MemberFunction):
             cpp_func.class_name = self._conversion_pack.conversion_data.info.class_name
             cpp_func.set_is_const(self.is_const_member_function(func.funcsig.name))
+
         return cpp_func
 
     def convert_functions(self):
@@ -144,6 +148,18 @@ class DefaultCCodeConverter:
             virtual_member_func = self.to_cpp_function(func)
             self._code_elements.add_virtual_member_function(virtual_member_func)
             self.dump_function("convert_virtual_member_functions", virtual_member_func)
+
+    # ============================== Post-processing: begin ==============================
+
+    def run_post_processing(self):
+        self.post_process_function_calls()
+
+    # Override as required...
+    def post_process_function_calls(self):
+        pass
+
+    # ============================== Post-processing: end   ==============================
+
 
     # Helper for consistent debug output!
     def dump_function(self, def_name, cppfunc):

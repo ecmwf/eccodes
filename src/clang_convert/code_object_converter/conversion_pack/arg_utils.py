@@ -8,6 +8,7 @@ from code_object.variable_declaration import VariableDeclaration
 from code_object.array_access import ArrayAccess
 from code_object.struct_member_access import StructMemberAccess
 from code_object.value_declaration_reference import ValueDeclarationReference
+from code_object.unary_operation import UnaryOperation
 
 # Try to extract a name value from the object, else return ""
 def extract_name(cpp_obj):
@@ -28,6 +29,9 @@ def extract_name(cpp_obj):
         return cpp_obj.name
     elif isinstance(cpp_obj, ValueDeclarationReference):
         return cpp_obj.value
+    elif isinstance(cpp_obj, UnaryOperation):
+        # Operand will a CodeInterface, so we need to recurse!
+        return extract_name(cpp_obj.operand)
 
     return ""
 

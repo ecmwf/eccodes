@@ -35,10 +35,17 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
             for arg_entry in self._ccode_object.args:
                 cpp_arg_entry = conversion_funcs.convert_ccode_object(arg_entry, conversion_pack)
 
-                if cpp_arg_entry != NONE_VALUE:
+                if cpp_arg_entry and cpp_arg_entry != NONE_VALUE:
                     cpp_args.append(cpp_arg_entry)
 
             cppfunction_call = function_call.FunctionCall(cpp_name, cpp_args)
 
         # 3. Apply validation (and special handling)
-        return conversion_pack.conversion_validation.validate_function_call(cfunction_call, cppfunction_call)
+        updated_cppfunction_call = conversion_pack.conversion_validation.validate_function_call(cfunction_call, cppfunction_call)
+
+        # 4. Add the function call to the conversion data in case we need to process it later (e.g. for using C::x declarations)
+        # Only if function_call type!
+        if isinstance(updated_cppfunction_call, function_call.FunctionCall):
+            conversion_pack.conversion_data.add_cppfunction_call(updated_cppfunction_call)
+
+        return updated_cppfunction_call
