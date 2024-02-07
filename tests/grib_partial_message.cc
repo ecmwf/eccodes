@@ -48,6 +48,10 @@ int main(int argc, char** argv)
 
     grib_keys_iterator_delete(iter);
     grib_handle_delete(h_partial);
+
+    h_partial = grib_handle_new_from_partial_message_copy(h_full->context, msg1, size1);
+    grib_handle_delete(h_partial);
+
     grib_handle_delete(h_full);
     fclose(in);
     return 0;
