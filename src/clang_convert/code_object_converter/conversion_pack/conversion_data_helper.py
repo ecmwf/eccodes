@@ -2,7 +2,6 @@
 import utils.debug as debug
 from enum import Enum, auto
 
-import code_object_converter.conversion_pack.conversion_data as conversion_data
 import code_object.declaration_specifier as declaration_specifier
 
 # Functions and data to help the conversion data object

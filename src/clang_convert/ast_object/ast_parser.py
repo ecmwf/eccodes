@@ -24,6 +24,7 @@ import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
 import code_object.while_statement as while_statement
 from code_object.code_interface import NONE_VALUE
+from code_object_converter.conversion_funcs import as_commented_out_code
 
 # Parse AstCode and create code interface objects: classes that implement the CodeInterface
 #
@@ -676,7 +677,9 @@ class AstParser:
             
             debug.line("parse_CSTYLE_CAST_EXPR", f"*** IGNORING *** child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
 
-        return None
+        cast_expression = "".join([t.spelling for t in node.get_tokens()])
+        debug.line("parse_CSTYLE_CAST_EXPR", f"Commenting out cast expression [{cast_expression}]")
+        return as_commented_out_code(cast_expression, "Removing unecessary cast")
 
     def parse_ARRAY_SUBSCRIPT_EXPR(self, node):
         # We expect two children: the variable name and the index

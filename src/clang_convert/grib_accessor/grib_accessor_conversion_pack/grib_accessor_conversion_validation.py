@@ -14,7 +14,7 @@ import code_object.constructor_function as constructor_function
 import code_object.function_call as function_call
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 
-from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import apply_special_function_call_conversions
+from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 from code_object_converter.conversion_funcs import as_commented_out_code
@@ -60,7 +60,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
     def validate_function_call(self, cfunction_call, cppfunction_call):
         debug.line("validate_function_call", f"cfunction_call=[{debug.as_debug_string(cfunction_call)}] cppfunction_call=[{debug.as_debug_string(cppfunction_call)}]")
 
-        special_function_call = apply_special_function_call_conversions(cfunction_call, cppfunction_call)
+        special_function_call = self.apply_special_function_call_conversions(cfunction_call, cppfunction_call)
         if special_function_call:
             return special_function_call
 
@@ -75,6 +75,36 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             return literal.Literal(f"AccessorName({calling_arg_value.as_string()})")
 
         return super().validate_function_call_arg(calling_arg_value, target_arg)
+
+    def apply_special_function_call_conversions(self, cfunction_call, cppfunction_call):
+
+        if cfunction_call.name == "grib_arguments_get_name":
+            arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+            return function_call.FunctionCall(f"std::get<std::string>", [arg_entry])
+
+        if cfunction_call.name == "grib_arguments_get_long":
+            arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+            return function_call.FunctionCall(f"std::get<long>", [arg_entry])
+
+        # If we're calling gribPackXXX or gribUnpackXXX and the first argument is "a", then we're actually calling ourself!
+        if cfunction_call.name.startswith("grib_pack") or cfunction_call.name.startswith("grib_unpack"):
+           if len(cppfunction_call.args) > 0 and cppfunction_call.args[0].as_string() == "a":
+                updated_cfuncname = cfunction_call.name[5:]
+                mapping = self._conversion_data.funcsig_mapping_for_cfuncname(updated_cfuncname)
+                if mapping:
+                    updated_cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cppfunction_call.args[1:])
+                    updated_cppfunction_call = self.validate_function_call_args(updated_cppfunction_call, mapping.cppfuncsig)
+                    debug.line("apply_special_function_call_conversions", f"Updated C++ function call=[{debug.as_debug_string(cppfunction_call)}] to [{debug.as_debug_string(updated_cppfunction_call)}]")
+                    return updated_cppfunction_call
+
+        for cfuncname, cppfuncname in special_function_name_mapping.items():
+            if cfunction_call.name == cfuncname:
+                if cppfuncname:
+                    return function_call.FunctionCall(cppfuncname, cppfunction_call.args)
+                else:
+                    return as_commented_out_code(cfunction_call, f"Removed call to {cfuncname}")
+
+        return None
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         if "GribStatus" in cppvariable_declaration.variable.as_string() and \

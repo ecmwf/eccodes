@@ -9,6 +9,27 @@ from code_object.array_access import ArrayAccess
 from code_object.struct_member_access import StructMemberAccess
 from code_object.value_declaration_reference import ValueDeclarationReference
 
+# Try to extract a name value from the object, else return ""
+def extract_name(cpp_obj):
+
+    assert isinstance(cpp_obj, CodeInterface), f"Expected CodeInterfacce, got [{type(cpp_obj).__name__}]"
+
+    if isinstance(cpp_obj, Literal):
+        return cpp_obj.value
+    elif isinstance(cpp_obj, Arg):
+        return cpp_obj.name
+    elif isinstance(cpp_obj, StructArg):
+        return cpp_obj.name
+    elif isinstance(cpp_obj, VariableDeclaration):
+        return cpp_obj.variable
+    elif isinstance(cpp_obj, ArrayAccess):
+        return cpp_obj.name
+    elif isinstance(cpp_obj, StructMemberAccess):
+        return cpp_obj.name
+    elif isinstance(cpp_obj, ValueDeclarationReference):
+        return cpp_obj.value
+
+    return ""
 
 # If the code_object has an Arg representation, then this will be returned,
 # otherwise None
@@ -17,20 +38,9 @@ def to_cpparg(cpp_obj, conversion_data):
 
     assert isinstance(cpp_obj, CodeInterface), f"Expected CodeInterfacce, got [{type(cpp_obj).__name__}]"
 
-    if isinstance(cpp_obj, Literal):
-        cpparg = conversion_data.cpparg_for_cppname(cpp_obj.value)
-    elif isinstance(cpp_obj, Arg):
-        cpparg = cpp_obj
-    elif isinstance(cpp_obj, StructArg):
-        cpparg = conversion_data.cpparg_for_cppname(cpp_obj.name)
-    elif isinstance(cpp_obj, VariableDeclaration):
-        cpparg = cpp_obj.variable
-    elif isinstance(cpp_obj, ArrayAccess):
-        cpparg = conversion_data.cpparg_for_cppname(cpp_obj.name)
-    elif isinstance(cpp_obj, StructMemberAccess):
-        cpparg = conversion_data.cpparg_for_cppname(cpp_obj.name)
-    elif isinstance(cpp_obj, ValueDeclarationReference):
-        cpparg = conversion_data.cpparg_for_cppname(cpp_obj.value)
+    cppname = extract_name(cpp_obj)
+    if cppname:
+        cpparg = conversion_data.cpparg_for_cppname(cppname)
 
     assert cpparg is None or isinstance(cpparg, Arg), f"cpparg should be Arg, not [{type(cpparg).__name__}]"
 

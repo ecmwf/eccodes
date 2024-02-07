@@ -25,14 +25,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         debug.line("validate_function_call", f"cfunction_call=[{debug.as_debug_string(cfunction_call)}] cppfunction_call=[{debug.as_debug_string(cppfunction_call)}] mapping=[{mapping}]")
 
         if mapping:
-            debug.line("validate_function_call", f"mapping.cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] mapping.cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
-            cpp_args = []
-            for arg_entry in mapping.cppfuncsig.args:
-                if arg_entry != NONE_VALUE:
-                    # The size of cpp_args should be the same as the next valid index :-)
-                    cpp_arg_entry = self.validate_function_call_arg(cppfunction_call.args[len(cpp_args)], arg_entry)
-                    cpp_args.append(cpp_arg_entry)
-            return function_call.FunctionCall(cppfunction_call.name, cpp_args)
+            return self.validate_function_call_args(cppfunction_call, mapping.cppfuncsig)
          
         if cfunction_call.name == "strcmp":
             return binary_operation.BinaryOperation(cppfunction_call.args[0], "==", cppfunction_call.args[1])
@@ -45,9 +38,28 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         if cfunction_call.name == "strlen":
             # Replace the function call with a StructMemberAccess representing the container.size() call...
-            return self._container_utils.create_cpp_container_length_arg(cppfunction_call.args[0].name)
+            cpparg = arg_utils.to_cpparg(cppfunction_call.args[0], self._conversion_data)
+            assert cpparg
+            return self._container_utils.create_cpp_container_length_arg(cpparg.name)
 
         return cppfunction_call
+
+    # Confirm the args are correct for the target type
+    # Returns an updated cppfunction_call
+    #
+    # NOTE: This function assumes all NONE_VALUE args have already been removed from the C++ call!
+    def validate_function_call_args(self, cppfunction_call, target_cppfuncsig):
+        debug.line("validate_function_call_args", f"cppfunction_call=[{debug.as_debug_string(cppfunction_call)}] target_cppfuncsig=[{debug.as_debug_string(target_cppfuncsig)}]")
+        cpp_args = []
+        
+        arg_index = 0
+        for arg_entry in target_cppfuncsig.args:
+            if arg_entry != NONE_VALUE:
+                cpp_arg_entry = self.validate_function_call_arg(cppfunction_call.args[arg_index], arg_entry)
+                cpp_args.append(cpp_arg_entry)
+                arg_index += 1
+
+        return function_call.FunctionCall(cppfunction_call.name, cpp_args)
 
     # Check use of references when calling functions...
     def validate_function_call_arg(self, calling_arg_value, target_arg):
@@ -136,7 +148,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
                     cppright_value = cppright.as_string()
 
-                    if is_number(cppright_value) or not self.is_cppfunction_returning_container(cppright.name):
+                    if is_number(cppright_value) or not self.is_cppfunction_returning_container(cppright):
                         cppleft.index = "[0]"
                         debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
                         return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
@@ -172,9 +184,11 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
     # Helper to determine how a container should receive the value returned by the function
     # Returns True if the function returns e.g. std::vector<int> instead of int
     # Override as required...
-    def is_cppfunction_returning_container(self, cppfuncname):
-        cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppfuncname)
-        if cppfuncsig and self._conversion_data.is_container_type(cppfuncsig.return_type.type):
-            return True
+    def is_cppfunction_returning_container(self, cppfunc_object):
+        cppname = arg_utils.extract_name(cppfunc_object)
+        if cppname:
+            cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppname)
+            if cppfuncsig and self._conversion_data.is_container_type(cppfuncsig.return_type.type):
+                return True
         
         return False
