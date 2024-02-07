@@ -592,22 +592,20 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
     return aret;
 }
 
-grib_accessor* grib_find_attribute(grib_handle* h, const char* name, const char* attr_name, int* err)
-{
-    grib_accessor* a   = NULL;
-    grib_accessor* act = NULL;
-
-    if ((a = grib_find_accessor(h, name)) == NULL) {
-        *err = GRIB_NOT_FOUND;
-        return NULL;
-    }
-
-    if ((act = grib_accessor_get_attribute(a, attr_name)) == NULL) {
-        *err = GRIB_ATTRIBUTE_NOT_FOUND;
-        return NULL;
-    }
-    return act;
-}
+// grib_accessor* grib_find_attribute(grib_handle* h, const char* name, const char* attr_name, int* err)
+// {
+//     grib_accessor* a   = NULL;
+//     grib_accessor* act = NULL;
+//     if ((a = grib_find_accessor(h, name)) == NULL) {
+//         *err = GRIB_NOT_FOUND;
+//         return NULL;
+//     }
+//     if ((act = grib_accessor_get_attribute(a, attr_name)) == NULL) {
+//         *err = GRIB_ATTRIBUTE_NOT_FOUND;
+//         return NULL;
+//     }
+//     return act;
+// }
 
 /* Only look in trie. Used only in alias. Should not be used in other cases.*/
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name)

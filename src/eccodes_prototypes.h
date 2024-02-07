@@ -1097,7 +1097,6 @@ int grib_type_to_int(char id);
 grib_accessors_list* grib_find_accessors_list(const grib_handle* h, const char* name);
 char* grib_split_name_attribute(grib_context* c, const char* name, char* attribute_name);
 grib_accessor* grib_find_accessor(const grib_handle* h, const char* name);
-grib_accessor* grib_find_attribute(grib_handle* h, const char* name, const char* attr_name, int* err);
 grib_accessor* grib_find_accessor_fast(grib_handle* h, const char* name);
 
 /* grib_scaling.cc*/
