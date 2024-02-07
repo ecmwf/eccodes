@@ -170,9 +170,12 @@ class ConversionData:
         cppargs = []
         for entry in cppfunction_call.args:
             cppname = arg_utils.extract_name(entry)
-            cpparg = self.cpparg_for_cname(cppname) if cppname else None
+            if not cppname:
+                debug.line("add_cppfunction_call", f"Couldn't deduce name for entry=[{debug.as_debug_string(entry)}] cppfunction_call=[{debug.as_debug_string(cppfunction_call)}]")
+                return
+
+            cpparg = self.cpparg_for_cname(cppname)
             debug.line("add_cppfunction_call", f"[{debug.as_debug_string(cppfunction_call)}]---> entry type=[{type(entry)}] value=[{debug.as_debug_string(entry)}] cppname=[{debug.as_debug_string(cppname)}] cpparg=[{debug.as_debug_string(cpparg)}]")
-            assert cppname
 
             if cpparg and cpparg != NONE_VALUE:
                 cppargs.append(cpparg)

@@ -144,24 +144,29 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
         debug.line("validate_return_statement", f"creturn_statement=[{debug.as_debug_string(creturn_statement)}] cppreturn_statement=[{debug.as_debug_string(cppreturn_statement)}]")
 
-        mapping = self._conversion_data.funcsig_mapping_for_current_cfuncname()
-        if mapping:
-            cppfunc_return_type = mapping.cppfuncsig.return_type.type
-            cpparg = arg_utils.to_cpparg(cppreturn_statement.expression, self._conversion_data)
-            updated_cpp_expression = None
+        if isinstance(cppreturn_statement.expression, function_call.FunctionCall):
+            debug.line("validate_return_statement", f"cppreturn_statement.expression is a function call, assuming the function returns the correct type")
+        else:
+            mapping = self._conversion_data.funcsig_mapping_for_current_cfuncname()
+            if mapping:
+                cppfunc_return_type = mapping.cppfuncsig.return_type.type
+                cpparg = arg_utils.to_cpparg(cppreturn_statement.expression, self._conversion_data)
+                updated_cpp_expression = None
 
-            if cpparg:
-                if cpparg.decl_spec.type != cppfunc_return_type:
-                    updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpparg.name})")
-            elif cppfunc_return_type == "GribStatus":
-                cpp_expression = cppreturn_statement.expression.as_string()
-                if cpp_expression == "0":
-                    updated_cpp_expression = literal.Literal("GribStatus::SUCCESS")
-                elif not cpp_expression.startswith("GribStatus"):
-                    updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpp_expression})")
+                debug.line("validate_return_statement", f"RETURN DEBUG: cppreturn_statement.expression=[{type(cppreturn_statement.expression)}]")
 
-            if updated_cpp_expression:
-                return return_statement.ReturnStatement(updated_cpp_expression)
+                if cpparg:
+                    if cpparg.decl_spec.type != cppfunc_return_type:
+                        updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpparg.name})")
+                elif cppfunc_return_type == "GribStatus":
+                    cpp_expression = cppreturn_statement.expression.as_string()
+                    if cpp_expression == "0":
+                        updated_cpp_expression = literal.Literal("GribStatus::SUCCESS")
+                    elif not cpp_expression.startswith("GribStatus"):
+                        updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpp_expression})")
+
+                if updated_cpp_expression:
+                    return return_statement.ReturnStatement(updated_cpp_expression)
 
         return super().validate_return_statement(creturn_statement, cppreturn_statement)
 
