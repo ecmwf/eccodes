@@ -14,6 +14,7 @@ import code_object.constructor_function as constructor_function
 import code_object.function_call as function_call
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.cast_expression as cast_expression
+import code_object.macro_instantation as macro_instantation
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
 from code_object.code_interface import NONE_VALUE
@@ -193,3 +194,11 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
         return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
 
+    def validate_macro_instantiation(self, cmacro_instantiation, cppmacro_instantiation):
+
+        if cppmacro_instantiation.name == "STR_EQUAL_NOCASE":
+            updated_cppmacro_instantiation = macro_instantation.MacroInstantation("strcmpNoCase", cppmacro_instantiation.expression)
+            debug.line("validate_macro_instantiation", f"Updated macro, from=[{debug.as_debug_string(cppmacro_instantiation)}] to=[{debug.as_debug_string(updated_cppmacro_instantiation)}]")
+            return updated_cppmacro_instantiation
+
+        return super().validate_macro_instantiation(cmacro_instantiation, cppmacro_instantiation)

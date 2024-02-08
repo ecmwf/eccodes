@@ -58,4 +58,19 @@ long strAtoL(std::string input)
     return atol(input.c_str());
 }
 
+int strcmpNoCase(std::string const& s1, std::string const& s2)
+{
+    // For now, just using the (pointer) version from the C function:
+    // int strcmp_nocase(const char* s1, const char* s2);
+    
+    auto ps1 = (const unsigned char*)s1.data();
+    auto ps2 = (const unsigned char*)s2.data();
+
+    while (tolower(*ps1) == tolower(*ps2++)) {
+        if (*ps1++ == '\0')
+            return (0);
+    }
+    return (tolower(*ps1) - tolower(*--ps2));
+}
+
 }

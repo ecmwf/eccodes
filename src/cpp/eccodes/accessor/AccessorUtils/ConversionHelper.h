@@ -78,4 +78,6 @@ void gribLog(Args... args)
 
 }
 
+int strcmpNoCase(std::string const& s1, std::string const& s2);
+
 }
