@@ -38,6 +38,8 @@ class DefaultCCodeConverter:
         # Post-processing
         self.run_post_processing()
 
+        self.validate_code_elements()
+
         return cppcode.CppCode(self._code_info, self._code_elements)
 
     # ============================== Setup functions: start ==============================
@@ -160,6 +162,9 @@ class DefaultCCodeConverter:
 
     # ============================== Post-processing: end   ==============================
 
+    # Override for any final validation of the new cppcode object
+    def validate_code_elements(self):
+        pass
 
     # Helper for consistent debug output!
     def dump_function(self, def_name, cppfunc):
