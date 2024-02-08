@@ -108,7 +108,8 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
         if "GribStatus" in cppvariable_declaration.variable.as_string() and \
-            not isinstance(cppvariable_declaration.value, function_call.FunctionCall):
+           not isinstance(cppvariable_declaration.value, function_call.FunctionCall) and \
+           not cppvariable_declaration.value.as_string().startswith("GribStatus"):
             updated_cpp_variable_declaration = variable_declaration.VariableDeclaration(
                 cppvariable_declaration.variable,
                 literal.Literal(f"GribStatus{{{cppvariable_declaration.value.as_string()}}}"))

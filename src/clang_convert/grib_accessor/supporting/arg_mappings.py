@@ -6,6 +6,7 @@ import code_object_converter.conversion_pack.conversion_data as conversion_data
 # These will be used if no other supplied...
 common_funcbody_arg_mappings = {
     Arg("int", "err")   : Arg("GribStatus", "err"),
+    Arg("int", "ret")   : Arg("GribStatus", "ret"),
 }
 
 def add_arg_mappings_to_conversion_data(conversion_data):
