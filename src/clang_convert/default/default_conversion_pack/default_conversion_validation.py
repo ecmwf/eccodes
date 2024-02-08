@@ -78,10 +78,10 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         
         if cppunary_expression.keyword == "sizeof":
             assert isinstance(cppunary_expression.expression, paren_expression.ParenExpression)
-            cpparg = arg_utils.to_cpparg(cppunary_expression.expression.expression, self._conversion_data)
+            cpparg = arg_utils.to_cpparg(cppunary_expression.expression, self._conversion_data)
             if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
                 cpp_size_call = literal.Literal(f"{cpparg.name}.size()")
-                debug.line("validate_unary_operation", f"Updating size evaluation: [{debug.as_debug_string(cppunary_expression)}]->[{debug.as_debug_string(cpp_size_call)}]")
+                debug.line("validate_unary_expression", f"Updating size evaluation: [{debug.as_debug_string(cppunary_expression)}]->[{debug.as_debug_string(cpp_size_call)}]")
                 return cpp_size_call
 
         return cppunary_expression
@@ -94,9 +94,14 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         if cpparg:
             if self._conversion_data.is_container_type(cpparg.decl_spec.type):
-                # C++ variable is a container, so we'll strip the *
-                debug.line("validate_unary_operation", f"Stripping [*] from cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
-                return cppunary_operation.operand
+                if cppunary_operation.unary_op.value == "!":
+                    cpp_empty_call = literal.Literal(f"{cpparg.name}.empty()")
+                    debug.line("validate_unary_operation", f"Updating empty evaluation: [{debug.as_debug_string(cppunary_operation)}]->[{debug.as_debug_string(cpp_empty_call)}]")
+                    return cpp_empty_call
+                else:
+                    # C++ variable is a container, so we'll strip the *
+                    debug.line("validate_unary_operation", f"Stripping [*] from cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
+                    return cppunary_operation.operand
             elif cpparg.decl_spec.pointer == "&":
                 debug.line("validate_unary_operation", f"Stripping [*] from ref type: current cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
                 return cppunary_operation.operand

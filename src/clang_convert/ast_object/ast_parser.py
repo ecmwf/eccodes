@@ -508,6 +508,7 @@ class AstParser:
         return literal.Literal(tokens[0])
 
     def parse_PAREN_EXPR(self, node):
+
         children = list(node.get_children())
         assert len(children) == 1, f"Expected exactly one child for paren expression"
         expression = children[0]
@@ -521,16 +522,20 @@ class AstParser:
         keyword = node.spelling
         if not keyword:
             # Some unary expressions (e.g. sizeof) give an empty keyword, but we can extract it
-            # from the first token. In this case we have no child nodes and have to extract
-            # the expression from the tokens as well
+            # from the first token.
             tokens = [token.spelling for token in node.get_tokens()]
             keyword = tokens[0]
             assert keyword == "sizeof", f"Unexpected keyword [{keyword}] - not able to parse this (yet!)"
+
+        children = list(node.get_children())
+        child_count = len(children)
+
+        if child_count == 0:
+            # No child nodes so extract expression from tokens...
             expression_text = literal.Literal(" ".join([t for t in tokens[2:-1]]))
             expression = paren_expression.ParenExpression(expression_text)
         else:
-            children = list(node.get_children())
-            assert len(children) == 1, f"Expected exactly one child for unary expression, got [{len(children)}]"
+            assert child_count == 1, f"Expected a maximum of one child for unary expression, got [{child_count}]"
             expression = self.parse_ast_node(children[0])
 
         c_unary_expr = unary_expression.UnaryExpression(keyword, expression)
@@ -677,6 +682,9 @@ class AstParser:
 
     def parse_CSTYLE_CAST_EXPR(self, node):
 
+        debug.line("parse_CSTYLE_CAST_EXPR", f"Node dump:")
+        ast_utils.dump_node(node)
+
         tokens = [token.spelling for token in node.get_tokens()]
         assert tokens[0] == "("
 
@@ -687,9 +695,10 @@ class AstParser:
 
         children = list(node.get_children())
         child_count = len(children)
-        assert child_count == 1, f"Expected exactly one child node for cast expression, but got [{child_count}]"
+        if child_count != 1:
+            debug.line("parse_CSTYLE_CAST_EXPR", f"Expected exactly one child node for cast expression, but got [{child_count}] - we'll process the last node as the expression")
 
-        cexpression = self.parse_ast_node(children[0])
+        cexpression = self.parse_ast_node(children[-1])
 
         ccast_expression = cast_expression.CastExpression("C", ccast_value, cexpression)
 
