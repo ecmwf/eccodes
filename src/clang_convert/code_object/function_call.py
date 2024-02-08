@@ -21,6 +21,11 @@ class FunctionCall(code_interface.CodeInterface):
     def args(self):
         return self._args
 
+    # return the arguments as a comma-separated list
+    @property
+    def arg_string(self):
+        return ",".join([strip_semicolon(a.as_string()) for a in self._args])
+
     def add_arg(self, arg_entry):
         assert isinstance(arg_entry, code_interface.CodeInterface), f"arg_entry must be a CodeInterface class, supplied=[{arg_entry}]"
         self._args.append(arg_entry)

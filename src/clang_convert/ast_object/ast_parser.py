@@ -4,6 +4,7 @@ import clang.cindex
 import ast_object.ast_utils as ast_utils
 import code_object.array_access as array_access
 import code_object.binary_operation as binary_operation
+import code_object.cast_expression as cast_expression
 import code_object.code_objects as code_objects
 import code_object.compound_statement as compound_statement
 import code_object.conditional_operation as conditional_operation
@@ -516,19 +517,24 @@ class AstParser:
         return c_paren_expr
 
     def parse_CXX_UNARY_EXPR(self, node):
+
         keyword = node.spelling
         if not keyword:
             # Some unary expressions (e.g. sizeof) give an empty keyword, but we can extract it
-            # from the first token
+            # from the first token. In this case we have no child nodes and have to extract
+            # the expression from the tokens as well
             tokens = [token.spelling for token in node.get_tokens()]
             keyword = tokens[0]
+            assert keyword == "sizeof", f"Unexpected keyword [{keyword}] - not able to parse this (yet!)"
+            expression_text = literal.Literal(" ".join([t for t in tokens[2:-1]]))
+            expression = paren_expression.ParenExpression(expression_text)
+        else:
+            children = list(node.get_children())
+            assert len(children) == 1, f"Expected exactly one child for unary expression, got [{len(children)}]"
+            expression = self.parse_ast_node(children[0])
 
-        children = list(node.get_children())
-        assert len(children) == 1, f"Expected exactly one child for unary expression"
-        expression = children[0]
-
-        expression_value = self.parse_ast_node(expression)
-        c_unary_expr = unary_expression.UnaryExpression(keyword, expression_value)
+        c_unary_expr = unary_expression.UnaryExpression(keyword, expression)
+        debug.line("parse_CXX_UNARY_EXPR", f"Created c_unary_expr=[{debug.as_debug_string(c_unary_expr)}]")
         return c_unary_expr
 
     def parse_UNARY_OPERATOR(self, node):
@@ -670,16 +676,25 @@ class AstParser:
 
 
     def parse_CSTYLE_CAST_EXPR(self, node):
-        for child in node.get_children():
-            if child.kind == clang.cindex.CursorKind.UNEXPOSED_EXPR:
-                # We ignore the cast, and just return the object
-                return literal.Literal(child.spelling)
-            
-            debug.line("parse_CSTYLE_CAST_EXPR", f"*** IGNORING *** child spelling=[{child.spelling}] type=[{child.type.spelling}] kind=[{child.kind}]")
 
-        cast_expression = "".join([t.spelling for t in node.get_tokens()])
-        debug.line("parse_CSTYLE_CAST_EXPR", f"Commenting out cast expression [{cast_expression}]")
-        return as_commented_out_code(cast_expression, "Removing unecessary cast")
+        tokens = [token.spelling for token in node.get_tokens()]
+        assert tokens[0] == "("
+
+        # Extract the cast value by finding the first ')' [note this will throw if not found!]
+        cast_value_end_index = tokens.index(")")
+
+        ccast_value = literal.Literal(f"{' '.join([t for t in tokens[1:cast_value_end_index]])}")
+
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 1, f"Expected exactly one child node for cast expression, but got [{child_count}]"
+
+        cexpression = self.parse_ast_node(children[0])
+
+        ccast_expression = cast_expression.CastExpression("C", ccast_value, cexpression)
+
+        debug.line("parse_CSTYLE_CAST_EXPR", f"Created ccast_expression = [{debug.as_debug_string(ccast_expression)}]")
+        return ccast_expression
 
     def parse_ARRAY_SUBSCRIPT_EXPR(self, node):
         # We expect two children: the variable name and the index

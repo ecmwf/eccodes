@@ -13,11 +13,13 @@ import code_object.virtual_member_function as virtual_member_function
 import code_object.constructor_function as constructor_function
 import code_object.function_call as function_call
 import code_object_converter.conversion_pack.arg_utils as arg_utils
+import code_object.cast_expression as cast_expression
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 from code_object_converter.conversion_funcs import as_commented_out_code
+
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class GribAccessorConversionValidation(default_conversion_validation.DefaultConversionValidation):
 
@@ -126,6 +128,16 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             if cppbinary_operation.right_operand.as_string().startswith("GribAccessorFlag"):
                 updated_right_operand = literal.Literal(f"toInt({cppbinary_operation.right_operand.as_string()})")
                 return binary_operation.BinaryOperation(cppbinary_operation.left_operand, cppbinary_operation.binary_op, updated_right_operand)
+        
+        cppright = cppbinary_operation.right_operand
+        if isinstance(cppright, cast_expression.CastExpression):
+            cpp_func_call = cppright.expression
+            assert isinstance(cpp_func_call, function_call.FunctionCall), f"Expected cast expression to be a FunctionCall, not [{type(cpp_func_call)}]"
+            if cpp_func_call.name in ["gribContextMalloc", "gribContextRealloc"]:
+                # For now, we'll assume we're allocating a container (may need to revisit)
+                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppbinary_operation.left_operand)}.resize({cpp_func_call.arg_string});")
+                debug.line("validate_binary_operation", f"Changed allocation operation from=[{debug.as_debug_string(cppbinary_operation)}] to [{debug.as_debug_string(cpp_alloc)}]")
+                return cpp_alloc
 
         return super().validate_binary_operation(cbinary_operation, cppbinary_operation)
 

@@ -27,6 +27,9 @@ class ConversionValidation:
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
         return cppbinary_operation
     
+    def validate_cast_expression(self, ccast_expression, cppcast_expression):
+        return cppcast_expression
+
     def validate_code_objects(self, ccode_objects, cppcode_objects):
         return cppcode_objects
 
