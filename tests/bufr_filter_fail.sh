@@ -105,6 +105,24 @@ cat $tempErr
 grep -q "Input output problem" $tempErr
 
 
+#-----------------------------------------------------------
+# Test: with invalid operator
+#-----------------------------------------------------------
+cat > $fRules <<EOF
+ set unexpandedDescriptors={ 263000, 1001 };
+ set pack=1;
+ write;
+EOF
+
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+set +e
+${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unsupported operator 63" $fLog
+
+
 # ------------------------
 # Unreadable message
 # ------------------------

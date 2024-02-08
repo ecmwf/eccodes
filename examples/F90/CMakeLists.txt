@@ -25,6 +25,7 @@ if( HAVE_BUILD_TOOLS )
           codes_scan_file
           codes_load_file
           grib_copy_message
+          grib_sections_copy
           bufr_copy_message
           grib_get_keys
           grib_get_data
@@ -50,6 +51,7 @@ if( HAVE_BUILD_TOOLS )
           grib_copy_namespace
           grib_read_message
           grib_read_from_file
+          grib_read_bytes
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316

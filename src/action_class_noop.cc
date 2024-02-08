@@ -17,7 +17,7 @@
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump;destroy;execute
+   IMPLEMENTS = destroy;execute
    END_CLASS_DEF
 
  */
@@ -33,7 +33,6 @@ or edit "action.class" and rerun ./make_class.pl
 */
 
 static void init_class      (grib_action_class*);
-static void dump            (grib_action* d, FILE*,int);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -53,7 +52,7 @@ static grib_action_class _grib_action_class_noop = {
     0,                               /* init                      */
     &destroy,                            /* destroy */
 
-    &dump,                               /* dump                      */
+    0,                               /* dump                      */
     0,                               /* xref                      */
 
     0,             /* create_accessor*/
@@ -88,10 +87,6 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
     act->name = grib_context_strdup_persistent(context, buf);
 
     return act;
-}
-
-static void dump(grib_action* act, FILE* f, int lvl)
-{
 }
 
 static void destroy(grib_context* context, grib_action* act)

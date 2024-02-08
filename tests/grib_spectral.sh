@@ -24,4 +24,9 @@ input_simple=$label.simple.grib
 ${tools_dir}/grib_set  -rs packingType=spectral_simple $input_complex $input_simple
 $EXEC ${test_dir}/grib_spectral $input_simple $output
 
+# GRIB1: octet_number pack_long
+input_complex=$ECCODES_SAMPLES_PATH/sh_ml_grib1.tmpl
+${tools_dir}/grib_set  -s Nassigned=1 $input_complex $output
+
+
 rm -f $output $input_simple

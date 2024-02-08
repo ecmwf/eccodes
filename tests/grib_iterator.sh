@@ -75,14 +75,40 @@ grep -q "latlonvalues: Unable to create iterator" $tempText
 
 
 # -w option
-${tools_dir}/grib_get_data -w count=11 $data_dir/tigge_cf_ecmwf.grib2 > $tempText
+input=$data_dir/tigge_cf_ecmwf.grib2
+${tools_dir}/grib_get_data -w count=11 $input > $tempText
 
+# Skip missing
+input=$data_dir/simple_bitmap.grib
+grib_check_key_equals $input bitmapPresent 1
+${tools_dir}/grib_get_data $input > $tempText
+
+# Print a double key
+input=$data_dir/simple_bitmap.grib
+${tools_dir}/grib_get_data -p referenceValue $input > $tempText
+
+# Print a key with missing value
+input=$data_dir/sample.grib2
+${tools_dir}/grib_get_data -p scaleFactorOfEarthMajorAxis $input > $tempText
 
 # ------------------------
 # Bad key
 # ------------------------
-${tools_dir}/grib_get_data -f -p nonexistingkey $data_dir/sample.grib2 > $tempText
+input=$data_dir/sample.grib2
+${tools_dir}/grib_get_data -f -p nonexistingkey $input > $tempText
 grep -q "not found" $tempText
+
+
+# ------------------------
+# Bad options
+# ------------------------
+input=$data_dir/sample.grib2
+set +e
+${tools_dir}/grib_get_data -Lxxx $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid lats/lons format option" $tempText
 
 
 # ------------------------
@@ -100,7 +126,7 @@ grep -q "unreadable message" $tempText
 # Legacy Gaussian sub-area (produced by old ProdGen)
 # See ECC-906:
 #   grib_get_data not working correctly with old-style sub-areas of reduced grids
-# -------------------------------------------------
+# ------------------------------------------------------------------------------
 input=$data_dir/reduced_gaussian_sub_area.legacy.grib1
 if [ -f "$input" ]; then
   ${tools_dir}/grib_get_data $input > $tempText

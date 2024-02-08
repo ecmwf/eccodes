@@ -153,14 +153,14 @@ grib_handle* grib_new_handle(grib_context* c)
     g = (grib_handle*)grib_context_malloc_clear(c, sizeof(grib_handle));
 
     if (g == NULL) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_new_handle: cannot allocate handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot allocate handle", __func__);
     }
     else {
         g->context      = c;
         g->product_kind = PRODUCT_ANY; /* Default. Will later be set to a specific product */
     }
 
-    grib_context_log(c, GRIB_LOG_DEBUG, "grib_new_handle: allocated handle %p", (void*)g);
+    grib_context_log(c, GRIB_LOG_DEBUG, "%s: Allocated handle %p", __func__, (void*)g);
 
     return g;
 }
@@ -185,13 +185,13 @@ static grib_handle* grib_handle_create(grib_handle* gl, grib_context* c, const v
     gl->root = grib_create_root_section(gl->context, gl);
 
     if (!gl->root) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_create: cannot create root section");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create root section", __func__);
         grib_handle_delete(gl);
         return NULL;
     }
 
     if (!gl->context->grib_reader || !gl->context->grib_reader->first) {
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_create: cannot create handle, no definitions found");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle, no definitions found", __func__);
         grib_handle_delete(gl);
         return NULL;
     }
@@ -229,12 +229,13 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
     }
 
     g = codes_external_template(c, PRODUCT_ANY, name);
-    if (!g)
+    if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
                          "                   from %s\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
+    }
 
     return g;
 }
@@ -279,12 +280,13 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
     }
 
     g = codes_external_template(c, PRODUCT_BUFR, name);
-    if (!g)
+    if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"
                          "                   from %s\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
+    }
 
     return g;
 }
@@ -514,7 +516,7 @@ grib_handle* grib_handle_new_from_partial_message_copy(grib_context* c, const vo
 
     memcpy(copy, data, size);
 
-    g                   = grib_handle_new_from_partial_message(c, copy, size);
+    g = grib_handle_new_from_partial_message(c, copy, size);
     g->buffer->property = CODES_MY_BUFFER;
 
     return g;
@@ -551,7 +553,7 @@ grib_handle* grib_handle_new_from_message(grib_context* c, const void* data, siz
 
     if (h->product_kind == PRODUCT_GRIB) {
         if (!grib_is_defined(h, "7777")) {
-            grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_message: No final 7777 in message!");
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: No final 7777 in message!", __func__);
             /* TODO: Return NULL. An incomplete message is no use to anyone.
              * But first check the MARS Client and other applications
              */
@@ -597,7 +599,8 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
     long edition            = 0;
     size_t seclen           = 0;
     unsigned char* secbegin = 0;
-    int secnum = 0, seccount = 0;
+    int secnum = 0;
+    // int seccount = 0;
     int err = 0, i = 0;
     grib_multi_support* gm = NULL;
 
@@ -631,9 +634,9 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
         secbegin = gm->sections[gm->section_number];
         seclen   = gm->sections_length[gm->section_number];
         secnum   = gm->section_number;
-        seccount = 0;
+        // seccount = 0;
         while (grib2_get_next_section((unsigned char*)message, olen, &secbegin, &seclen, &secnum, &err)) {
-            seccount++;
+            // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
 
             gm->sections[secnum]        = secbegin;
@@ -644,7 +647,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
                 if (grib_decode_unsigned_byte_long(secbegin, 5, 1) == 254) {
                     if (!gm->bitmap_section) {
                         grib_context_log(c, GRIB_LOG_ERROR,
-                                         "grib_handle_new_multi : cannot create handle, missing bitmap");
+                                         "%s: Cannot create handle, missing bitmap", __func__);
                         return NULL;
                     }
                     gm->sections[secnum]        = gm->bitmap_section;
@@ -697,7 +700,7 @@ static grib_handle* grib_handle_new_multi(grib_context* c, unsigned char** data,
     gl = grib_handle_new_from_message(c, message, olen);
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_multi: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         return NULL;
     }
 
@@ -716,7 +719,8 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     long edition            = 0;
     size_t seclen           = 0;
     unsigned char* secbegin = 0;
-    int secnum = 0, seccount = 0;
+    int secnum = 0;
+    // int seccount = 0;
     int err = 0, i = 0;
     grib_multi_support* gm  = NULL;
     off_t gts_header_offset = 0;
@@ -784,9 +788,9 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
         secbegin = gm->sections[gm->section_number];
         seclen   = gm->sections_length[gm->section_number];
         secnum   = gm->section_number;
-        seccount = 0;
+        // seccount = 0;
         while (grib2_get_next_section((unsigned char*)data, olen, &secbegin, &seclen, &secnum, &err)) {
-            seccount++;
+            // seccount++;
             /*printf("   - %d - section %d length=%d\n",(int)seccount,(int)secnum,(int)seclen);*/
 
             gm->sections[secnum]        = secbegin;
@@ -796,7 +800,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
                 /* Special case for inherited bitmaps */
                 if (grib_decode_unsigned_byte_long(secbegin, 5, 1) == 254) {
                     if (!gm->bitmap_section) {
-                        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle, missing bitmap");
+                        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle, missing bitmap", __func__);
                         grib_context_free(c, data);
                         return NULL;
                     }
@@ -840,7 +844,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     }
     else if (edition == 3) {
         /* GRIB3: Multi-field mode not yet supported */
-        printf("WARNING: %s\n", "grib_handle_new_from_file_multi: GRIB3 multi-field mode not yet implemented! Reverting to single-field mode");
+        printf("WARNING: %s: GRIB3 multi-field mode not yet implemented! Reverting to single-field mode", __func__);
         gm->message_length = 0;
         gm->message        = NULL;
     }
@@ -852,7 +856,7 @@ static grib_handle* grib_handle_new_from_file_multi(grib_context* c, FILE* f, in
     gl = grib_handle_new_from_message(c, data, olen);
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_multi: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -932,7 +936,7 @@ grib_handle* gts_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "gts_new_from_file: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -973,7 +977,7 @@ grib_handle* taf_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "taf_new_from_file: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -1014,7 +1018,7 @@ grib_handle* metar_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "metar_new_from_file: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -1082,7 +1086,7 @@ grib_handle* bufr_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "bufr_new_from_file: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -1134,7 +1138,7 @@ grib_handle* any_new_from_file(grib_context* c, FILE* f, int* error)
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "any_new_from_file: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -1207,7 +1211,7 @@ static grib_handle* grib_handle_new_from_file_no_multi(grib_context* c, FILE* f,
 
     if (!gl) {
         *error = GRIB_DECODING_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "grib_handle_new_from_file_no_multi: cannot create handle");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Cannot create handle", __func__);
         grib_context_free(c, data);
         return NULL;
     }
@@ -1635,10 +1639,8 @@ static void grib2_build_message(grib_context* context, unsigned char* sections[]
 /* For multi support mode: Reset all file handles equal to f. See GRIB-249 */
 void grib_multi_support_reset_file(grib_context* c, FILE* f)
 {
-    grib_multi_support* gm = NULL;
-    if (!c)
-        c = grib_context_get_default();
-    gm = c->multi_support;
+    if (!c) c = grib_context_get_default();
+    grib_multi_support* gm = c->multi_support;
     while (gm) {
         if (gm->file == f) {
             gm->file = NULL;
@@ -1687,23 +1689,23 @@ static grib_multi_support* grib_get_multi_support(grib_context* c, FILE* f)
 
 void grib_multi_support_reset(grib_context* c)
 {
-    grib_multi_support* gm   = c->multi_support;
-    grib_multi_support* next = NULL;
-    int i                    = 0;
-    while (next) {
-        next = gm->next;
+    if (!c) c = grib_context_get_default();
+    const int GRIB2_END_SECTION = 8;
+
+    grib_multi_support* gm = c->multi_support;
+    while (gm) {
         if (gm->file)
             fclose(gm->file);
         if (gm->message)
             grib_context_free(c, gm->message);
         gm->message = NULL;
-        for (i = 0; i < 8; i++)
+        for (int i = 0; i < GRIB2_END_SECTION; i++)
             gm->sections[i] = 0;
         if (gm->bitmap_section)
             grib_context_free(c, gm->bitmap_section);
         gm->bitmap_section = NULL;
-        grib_context_free(c, gm);
-        gm = NULL;
+        //grib_context_free(c, gm);
+        gm = gm->next;
     }
 }
 

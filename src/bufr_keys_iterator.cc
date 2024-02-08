@@ -199,7 +199,7 @@ char* codes_bufr_keys_iterator_get_name(const bufr_keys_iterator* ckiter)
     bufr_keys_iterator* kiter = (bufr_keys_iterator*)ckiter;
     int* r                    = 0;
     char* ret                 = 0;
-    grib_context* c           = kiter->handle->context;
+    const grib_context* c     = kiter->handle->context;
     DEBUG_ASSERT(kiter->current);
 
     if (kiter->prefix) {
@@ -236,7 +236,7 @@ grib_accessor* codes_bufr_keys_iterator_get_accessor(bufr_keys_iterator* kiter)
 int codes_bufr_keys_iterator_delete(bufr_keys_iterator* kiter)
 {
     if (kiter) {
-        grib_context* c = kiter->handle->context;
+        const grib_context* c = kiter->handle->context;
         kiter->key_name = NULL;
         if (kiter->seen)
             grib_trie_delete(kiter->seen);

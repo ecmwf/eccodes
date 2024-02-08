@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -121,7 +117,6 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
 static void update_size(grib_accessor* a, size_t new_size)
 {
-    /* printf("update_size: grib_accessor_class_padding.c %ld %ld %s %s\n", (long)new_size,(long)a->length,a->cclass->name,a->name); */
     a->length = new_size;
 }
 
@@ -129,9 +124,13 @@ static void resize(grib_accessor* a, size_t new_size)
 {
     void* zero = grib_context_malloc_clear(a->context, new_size);
 
-    grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
+    grib_buffer_replace(a, (const unsigned char*)zero, new_size,
+                        /*update_lengths=*/1, /*update_paddings=*/0);
     grib_context_free(a->context, zero);
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_padding.c %ld %ld %s %s\n", (long)new_size, (long)a->length, a->cclass->name, a->name);
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG, 
+                "grib_accessor_class_padding::resize new_size=%zu a->length=%ld %s %s",
+                new_size, a->length, a->cclass->name, a->name);
     Assert(new_size == a->length);
 }
 
@@ -140,10 +139,12 @@ static int value_count(grib_accessor* a, long* c)
     *c = a->length;
     return 0;
 }
+
 static long byte_count(grib_accessor* a)
 {
     return a->length;
 }
+
 static size_t string_length(grib_accessor* a)
 {
     return (size_t)a->length;

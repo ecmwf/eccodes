@@ -25,6 +25,7 @@ list( APPEND test_bins
       grib_list
       grib_get_data
       grib_sections_copy
+      grib_copy_keys
       grib_iterator_bitmap
       grib_clone
       grib_copy_message
@@ -65,6 +66,7 @@ if( HAVE_BUILD_TOOLS )
          grib_set_data
          large_grib1
          grib_sections_copy
+         grib_copy_keys
          get_product_kind_samples)
     list(APPEND tests_extra
        grib_iterator
@@ -77,10 +79,12 @@ if( HAVE_BUILD_TOOLS )
        grib_clone
        grib_copy_message
        grib_ensemble_index
+       grib_index
        grib_set_pv
        grib_set_bitmap
        grib_list
        grib_get_data
+       grib_mars_param
        grib_nearest
        grib_nearest_multiple
        grib_multi

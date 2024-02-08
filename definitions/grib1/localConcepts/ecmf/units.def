@@ -3805,12 +3805,12 @@
 	 indicatorOfParameter = 122 ;
 	}
 #Mean surface runoff rate
-'m of water equivalent s**-1' = {
+'m s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 8 ;
 	}
 #Mean sub-surface runoff rate
-'m of water equivalent s**-1' = {
+'m s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 9 ;
 	}
@@ -15080,7 +15080,7 @@
 	 indicatorOfParameter = 181 ;
 	}
 #Evaporation
-'m of water s**-1' = {
+'m of water equivalent s**-1' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 182 ;
 	}

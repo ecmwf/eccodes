@@ -19,7 +19,7 @@
 
 static void usage(const char* prog)
 {
-    printf("usage: %s infile\n", prog);
+    printf("usage: %s gribfile indexfile\n", prog);
     exit(1);
 }
 
@@ -27,7 +27,8 @@ int main(int argc, char* argv[])
 {
     codes_index* index = NULL;
     codes_handle* h    = NULL;
-    char* infile       = NULL;
+    char* inputfile       = NULL;
+    char* indexfile       = NULL;
     long *steps, *levels, *numbers; /* arrays */
     char** shortName = NULL;
     int i, j, k, l;
@@ -37,8 +38,9 @@ int main(int argc, char* argv[])
     size_t lenshortName = sizeof(oshortName);
     int ret = 0, count = 0;
 
-    if (argc != 2) usage(argv[0]);
-    infile = argv[1];
+    if (argc != 3) usage(argv[0]);
+    inputfile = argv[1];
+    indexfile = argv[2];
 
     printf("indexing...\n");
 
@@ -50,7 +52,7 @@ int main(int argc, char* argv[])
     }
 
     /* indexes a file */
-    ret = codes_index_add_file(index, infile);
+    ret = codes_index_add_file(index, inputfile);
     if (ret) {
         fprintf(stderr, "Error: %s\n", codes_get_error_message(ret));
         exit(ret);
@@ -152,7 +154,7 @@ int main(int argc, char* argv[])
     }
     printf("  %d messages selected\n", count);
 
-    codes_index_write(index, "out.gribidx");
+    codes_index_write(index, indexfile);
     codes_index_delete(index);
 
     return 0;

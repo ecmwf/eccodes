@@ -15,20 +15,30 @@ tempText=temp.$label.txt
 tempGoodGribs=temp.$label.good.grib
 tempBadGribs=temp.$label.bad.grib
 
-if [ -e "${tools_dir}/grib_repair" ]; then
-    export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
-    ${tools_dir}/grib_repair $data_dir/bad.grib $tempGoodGribs $tempBadGribs > $tempText 2>&1
-    grep -q "Wrong message length" $tempText
-
-    count=$( ${tools_dir}/grib_count $tempGoodGribs )
-    [ $count -eq 1 ]
-
-    count=$( ${tools_dir}/grib_count $tempBadGribs )
-    [ $count -eq 3 ]
-
-    ${tools_dir}/grib_ls $tempGoodGribs
-    ${tools_dir}/grib_ls $tempBadGribs
+if [ ! -e "${tools_dir}/grib_repair" ]; then
+    exit 0
 fi
+
+set +e
+${tools_dir}/grib_repair
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
+export ECCODES_GRIB_REPAIR_MAX_NUM_MESSAGES=3
+${tools_dir}/grib_repair $data_dir/bad.grib $tempGoodGribs $tempBadGribs > $tempText 2>&1
+grep -q "Wrong message length" $tempText
+
+count=$( ${tools_dir}/grib_count $tempGoodGribs )
+[ $count -eq 1 ]
+
+count=$( ${tools_dir}/grib_count $tempBadGribs )
+[ $count -eq 3 ]
+
+${tools_dir}/grib_ls $tempGoodGribs
+${tools_dir}/grib_ls $tempBadGribs
+
 
 # Clean up
 rm -f $tempText $tempGoodGribs $tempBadGribs

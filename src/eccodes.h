@@ -1458,7 +1458,10 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product,
+                                 off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
+                                       off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus

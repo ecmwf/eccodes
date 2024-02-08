@@ -31,7 +31,6 @@ grib_option grib_options[] = {
       "double (key:d) or an integer (key:i)\n\t\ttype can be defined. Default type "
       "is string.\n",
       0, 1, 0 },
-    { "B:", 0, 0, 0, 1, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "W:", 0, 0, 0, 1, 0 },
     { "U", 0, 0, 1, 0, 0 },
@@ -73,14 +72,14 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    int err = 0;
-    if (!options->skip) {
-        if (options->set_values_count != 0)
-            err = grib_set_values(h, options->set_values, options->set_values_count);
+    // int err = 0;
+    // if (!options->skip) {
+    //     if (options->set_values_count != 0)
+    //         err = grib_set_values(h, options->set_values, options->set_values_count);
 
-        if (err != GRIB_SUCCESS && options->fail)
-            exit(err);
-    }
+    //     if (err != GRIB_SUCCESS && options->fail)
+    //         exit(err);
+    // }
 
     grib_tools_write_message(options, h);
     return 0;
@@ -90,11 +89,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

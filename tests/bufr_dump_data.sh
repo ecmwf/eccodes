@@ -55,6 +55,8 @@ export ECCODES_LOG_STREAM=stdout
 ${tools_dir}/bufr_dump -O ${data_dir}/bufr/$file > $fLog
 grep -q "parsing include file" $fLog
 
+${tools_dir}/bufr_dump -p ${data_dir}/bufr/$file > $fLog
+
 unset ECCODES_DEBUG
 unset ECCODES_LOG_STREAM
 

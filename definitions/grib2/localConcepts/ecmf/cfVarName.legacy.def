@@ -1351,3 +1351,21 @@
  parameterCategory = 190 ;
  parameterNumber = 141 ;
 }
+#Mean total snowfall rate
+'mtsfr' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 144 ;
+}
+#Evaporation
+'erate' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 182 ;
+}
+#Mean total precipitation rate
+'tprate' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 228 ;
+}

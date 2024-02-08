@@ -74,6 +74,22 @@ if [ $HAVE_AEC -eq 1 ]; then
     grib_check_key_equals $outfile packingType grid_simple
 fi
 
+if [ $ECCODES_ON_WINDOWS -eq 0 ]; then
+  infile=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+  $EXEC $grib_util_set_spec -p grid_ieee $infile $outfile
+  grib_check_key_equals $outfile 'packingType' 'grid_ieee'
+fi
+
+infile=${data_dir}/sample.grib2
+$EXEC $grib_util_set_spec -p grid_second_order $infile $outfile
+grib_check_key_equals $outfile 'packingType' 'grid_second_order'
+
+infile=${data_dir}/sample.grib2
+$EXEC $grib_util_set_spec -p grid_complex $infile $outfile
+# $tools_dir/grib_ls $outfile
+grib_check_key_equals $outfile 'packingType' 'grid_complex'
+
+
 # --------------------------------------------------
 # Reduced Gaussian Grid N=32 second order packing
 # --------------------------------------------------

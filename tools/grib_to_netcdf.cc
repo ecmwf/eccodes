@@ -1607,7 +1607,6 @@ static void cube_indexes(
     int i         = 0;
     int index     = 0;
     int n         = 1;
-    int ok        = 0;
 
     if (size < c) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Internal error in cube_indexes. size=%d < axis=%d", size, c);
@@ -1649,7 +1648,6 @@ static void cube_indexes(
             if (h->compare ? h->compare[i](w, v) : (w == v)) {
                 index += j * n;
                 n *= dims;
-                ok++;
                 ((hypercube*)h)->index_cache[i] = j;
                 break;
             }
@@ -4273,10 +4271,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

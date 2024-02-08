@@ -358,7 +358,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         snprintf(sval, sizeof(sval), "%g", dval);
         slen = strlen(sval);
         if (*len < slen)
-            return GRIB_ARRAY_TOO_SMALL;
+            return GRIB_BUFFER_TOO_SMALL;
         strcpy(val, sval);
         return GRIB_SUCCESS;
     }

@@ -7,10 +7,6 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 
 #include "grib_api_internal.h"
 /*
@@ -121,21 +117,22 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     size_t l   = 1;
     char repres[1024] = {0,};
     int err = 0;
+    const char* cclass_name = a->cclass->name;
 
     err = grib_unpack_double(a, &val, &l);
-    if (err)
-        return err;
+    if (err) return err;
 
     snprintf(repres, sizeof(repres), "%.0f", val);
 
     l = strlen(repres) + 1;
     if (l > *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_offset: unpack_string: Buffer too small for %s",
-                         a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "grib_accessor_offset: Casting double %s to string", a->name);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "%s: Casting double %s to string", __func__, a->name);
 
     *len = l;
 

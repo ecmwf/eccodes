@@ -1270,6 +1270,26 @@ diff $fRef $fLog
 rm -f $fRef
 
 
+# Decode expandedDescriptors as array of doubles
+cat > $fRules <<EOF
+ print "[expandedDescriptors:d]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules airc_142.bufr
+
+# Various expanded descriptors
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  meta expandedScales     expanded_descriptors(elemetsTable,expandedCodes,1);
+  meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
+  meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
+  meta expandedTypes      expanded_descriptors(elemetsTable,expandedCodes,4);
+  print "scales=[expandedScales]";
+  print "refs=[expandedReferences]";
+  print "widths=[expandedWidths]";
+  print "types=[expandedTypes]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules $f > $fLog
+
 
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules

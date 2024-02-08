@@ -700,6 +700,10 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -842,7 +846,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
+        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
         //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
         ret = grib_pack_long(a, &lval, &len);
     }

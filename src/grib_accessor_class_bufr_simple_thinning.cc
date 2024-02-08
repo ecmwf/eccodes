@@ -111,16 +111,17 @@ grib_accessor_class* grib_accessor_class_bufr_simple_thinning = &_grib_accessor_
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    int n                                    = 0;
     grib_accessor_bufr_simple_thinning* self = (grib_accessor_bufr_simple_thinning*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+    int n = 0;
 
     a->length                         = 0;
-    self->doExtractSubsets            = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->numberOfSubsets             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractSubsetList           = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->simpleThinningStart         = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->simpleThinningMissingRadius = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->simpleThinningSkip          = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
+    self->doExtractSubsets            = grib_arguments_get_name(h, arg, n++);
+    self->numberOfSubsets             = grib_arguments_get_name(h, arg, n++);
+    self->extractSubsetList           = grib_arguments_get_name(h, arg, n++);
+    self->simpleThinningStart         = grib_arguments_get_name(h, arg, n++);
+    self->simpleThinningMissingRadius = grib_arguments_get_name(h, arg, n++);
+    self->simpleThinningSkip          = grib_arguments_get_name(h, arg, n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }

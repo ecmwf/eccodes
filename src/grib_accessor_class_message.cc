@@ -118,19 +118,19 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
 
 static void update_size(grib_accessor* a, size_t new_size)
 {
-    /* printf("update_size: grib_accessor_class_message.c %ld %ld %s %s\n", (long)new_size,(long)a->length,a->cclass->name,a->name); */
     a->length = new_size;
 }
 
 static void resize(grib_accessor* a, size_t new_size)
 {
-    void* zero = grib_context_malloc_clear(a->context, new_size);
+    grib_context_log(a->context, GRIB_LOG_FATAL, "%s %s: Not supported", a->cclass->name, __func__);
 
-    grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
-    grib_context_free(a->context, zero);
-    grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message %ld %ld %s %s",
-                    (long)new_size, (long)a->length, a->cclass->name, a->name);
-    Assert(new_size == a->length);
+    // void* zero = grib_context_malloc_clear(a->context, new_size);
+    // grib_buffer_replace(a, (const unsigned char*)zero, new_size, 1, 0);
+    // grib_context_free(a->context, zero);
+    // grib_context_log(a->context, GRIB_LOG_DEBUG, "resize: grib_accessor_class_message %ld %ld %s %s",
+    //                 (long)new_size, (long)a->length, a->cclass->name, a->name);
+    // Assert(new_size == a->length);
 }
 
 static int value_count(grib_accessor* a, long* count)
@@ -141,19 +141,22 @@ static int value_count(grib_accessor* a, long* count)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int i = 0;
+    long i = 0;
+    size_t l = a->length + 1;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    if (len[0] < (a->length + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = 0;
-        return GRIB_ARRAY_TOO_SMALL;
+    if (*len < l) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         a->cclass->name, a->name, l, *len);
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < a->length; i++)
-        val[i] = grib_handle_of_accessor(a)->buffer->data[a->offset + i];
+        val[i] = h->buffer->data[a->offset + i];
     val[i] = 0;
-    len[0] = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 

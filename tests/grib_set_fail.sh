@@ -147,7 +147,7 @@ ${tools_dir}/grib_set -s stepUnits=d $input $outfile > $temp 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-grep -q "stepUnits: No such code table entry.*Did you mean" $temp
+grep -q "Unit not found" $temp
 
 set +e
 ${tools_dir}/grib_set -s centre=ECMF $input $outfile > $temp 2>&1

@@ -18,31 +18,4 @@
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	 lengthOfTimeRange = 24 ;
-	}
-#Time-integrated evapotranspiration rate in the last 24h
-'acc_et24' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 39 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 1 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean total precipitation rate
-'avg_tp24' = {
-	 discipline = 0 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 52 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
-	}
-#Time-mean snow melt rate in the last 24h
-'avg_smr24' = {
-	 discipline = 2 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 41 ;
-	 indicatorOfUnitForTimeRange = 1 ;
-	 typeOfStatisticalProcessing = 0 ;
-	 lengthOfTimeRange = 24 ;
 }

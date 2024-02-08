@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -109,8 +105,8 @@ grib_accessor_class* grib_accessor_class_octet_number = &_grib_accessor_class_oc
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_octet_number* self = (grib_accessor_octet_number*)a;
-    int n                             = 0;
 
+    int n = 0;
     self->left  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->right = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
 
@@ -120,17 +116,15 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_octet_number* self = (grib_accessor_octet_number*)a;
-    int ret                           = 0;
+    int ret = GRIB_SUCCESS;
     long offset;
 
     offset = a->offset + self->right;
 
-    /*printf("-------- setting %s to %ld\n", self->left,offset);*/
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->left, offset)) != GRIB_SUCCESS)
         return ret;
 
     *val = offset;
-
     *len = 1;
 
     return ret;
@@ -138,5 +132,5 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    return 0;
+    return GRIB_SUCCESS;
 }

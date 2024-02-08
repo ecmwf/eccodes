@@ -67,6 +67,12 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+set +e
+${tools_dir}/codes_export_resource -s GRIB2 /
+status=$?
+set -e
+[ $status -eq 1 ]
+
 
 # Clean up
 rm -f $temp

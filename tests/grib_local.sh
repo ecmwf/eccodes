@@ -125,6 +125,12 @@ ${tools_dir}/grib_set -s \
 grib_check_key_equals $temp "mars.levelist,roundedMarsLevelist:d,roundedMarsLevelist:s" "1 1.234 1.234"
 
 
+# Local Definition 192
+# ---------------------------------------
+${tools_dir}/grib_set -s setLocalDefinition=1,localDefinitionNumber=192 $sample_g2 $temp
+${tools_dir}/grib_set -s stepType=accum,setLocalDefinition=1,localDefinitionNumber=192 $sample_g2 $temp
+
+
 # Local Definition 5: Forecast probability data
 # ---------------------------------------------
 sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
@@ -206,6 +212,19 @@ ${tools_dir}/grib_set -s \
 grib_check_key_exists $temp mars.number,constituentType,sourceSinkChemicalPhysicalProcess
 ${tools_dir}/grib_set -s localDefinitionNumber=36 $temp $temp.1
 ${tools_dir}/grib_compare $temp $temp.1
+
+# Chemicals, aerosols etc (check GRIB2 templates are selected)
+${tools_dir}/grib_set -s paramId=211123,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber 40
+
+${tools_dir}/grib_set -s paramId=456000,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber 76
+
+${tools_dir}/grib_set -s paramId=215225,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber 48
+
+${tools_dir}/grib_set -s paramId=210251,setLocalDefinition=1,localDefinitionNumber=36 $sample_g2 $temp
+
 
 # Clean up
 rm -f $temp $temp.1 $temp.2 $temp.3

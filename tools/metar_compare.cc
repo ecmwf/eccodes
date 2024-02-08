@@ -219,10 +219,6 @@ int grib_tool_init(grib_runtime_options* options)
     else
         onlyListed = 1;
 
-    if (grib_options_on("H") && grib_options_on("c:")) {
-        printf("Error: -H and -c options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
     if (grib_options_on("a") && !grib_options_on("c:")) {
         printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
@@ -369,11 +365,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
     count++;
 
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)
@@ -523,11 +514,11 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
     }
 
-    if (options->mode != MODE_METAR) {
-        /* TODO: Ignore missing values for keys in METAR. Not yet implemented */
-        isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
-        isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    }
+    // if (options->mode != MODE_METAR) {
+    //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
+    //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
+    //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
+    // }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         if (verbose)
@@ -755,15 +746,11 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (verbose)
-                printf(" as bytes\n");
             if (options->mode == MODE_METAR)
                 return 0;
             break;
 
         case GRIB_TYPE_LABEL:
-            if (verbose)
-                printf(" as label\n");
             break;
 
         default:

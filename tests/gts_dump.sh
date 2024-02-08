@@ -20,8 +20,16 @@ cd ${data_dir}/gts
 
 gts_file=EGRR20150317121020_00493212.DAT
 ${tools_dir}/gts_dump -w count=1 $gts_file
+${tools_dir}/gts_dump -w count=2 $gts_file
 ${tools_dir}/gts_dump -Dat $gts_file
-${tools_dir}/gts_dump -OH $gts_file
+${tools_dir}/gts_dump -OH  $gts_file
+${tools_dir}/gts_dump -d   $gts_file
+
+set +e
+${tools_dir}/gts_dump -OD $gts_file
+status=$?
+set -e
+[ $status -ne 0 ]
 
 # Clean up
 rm -f $fLog $fTmp

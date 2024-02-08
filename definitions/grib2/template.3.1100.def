@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.1100, Hovmoller diagram grid with points equally spaced on the horizontal
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
 constant isGridded = true;
 
@@ -23,7 +23,7 @@ unsigned[4] longitudeOfFirstGridPoint : edition_specific,dump;
 
 alias Lo1  =longitudeOfFirstGridPoint;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 # La2 - latitude of last grid point
 signed[4] latitudeOfLastGridPoint : edition_specific,dump;

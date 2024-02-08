@@ -29,6 +29,14 @@ status=$?
 set -e
 [ $status -eq 1 ]
 
+# Wrong arguments
+set +e
+${tools_dir}/codes_info abcd > $tempLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+
+
 # Verbose debug output
 ECCODES_DEBUG=1 ${tools_dir}/codes_info
 
@@ -48,6 +56,13 @@ export _ECCODES_ECMWF_TEST_SAMPLES_PATH=def
 ECCODES_DEBUG=1 ${tools_dir}/codes_info
 unset _ECCODES_ECMWF_TEST_DEFINITION_PATH
 unset _ECCODES_ECMWF_TEST_SAMPLES_PATH
+
+${tools_dir}/codes_info -d
+${tools_dir}/codes_info -s
+
+export ECCODES_EXTRA_SAMPLES_PATH=abcd
+ECCODES_DEBUG=1 ${tools_dir}/codes_info
+unset ECCODES_EXTRA_SAMPLES_PATH
 
 
 # Clean up

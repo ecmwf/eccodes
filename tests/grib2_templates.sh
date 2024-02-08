@@ -32,6 +32,12 @@ awk '$1 !~ /#/ && $1 < 65000 {print $1}' $latest_codetable_file | while read pdt
     fi
 done
 
+# ECC-1746
+# -------------
+$tools_dir/grib_set -s tablesVersion=31,productDefinitionTemplateNumber=34 $sample2 $temp
+$tools_dir/grib_ls -j -n time $temp > $tempText
+grep -q "stepRange.: 0," $tempText
+grep -q "validityDate.: 20070323," $tempText
 
 # Template 4.86
 # -------------

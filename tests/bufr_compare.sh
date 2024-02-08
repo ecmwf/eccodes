@@ -177,10 +177,11 @@ ${tools_dir}/bufr_set -s section2Present=1 $f $fBufrTmp
 ${tools_dir}/bufr_compare $f $fBufrTmp
 # Compare with -2 option
 set +e
-${tools_dir}/bufr_compare -2 $f $fBufrTmp > $fLog 2>&1
+${tools_dir}/bufr_compare -2 -v $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep Swapping $fLog
 
 #----------------------------------------------------
 # ECC-656: using relative comparison (-R) with 'all'

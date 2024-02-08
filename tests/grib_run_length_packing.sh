@@ -34,7 +34,10 @@ grib_check_key_equals $input missingValuesPresent 1
 
 # Encoding
 # -----------------
+export ECCODES_DEBUG=-1
 $EXEC ${test_dir}/grib_run_length_packing $tempGrib
+unset ECCODES_DEBUG
+
 ${tools_dir}/grib_dump -O $tempGrib
 ${tools_dir}/grib_get_data -mXXX $tempGrib
 grib_check_key_equals $tempGrib packingType grid_run_length

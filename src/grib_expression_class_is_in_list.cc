@@ -173,22 +173,23 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
-    grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
-    int err                       = 0;
-    char mybuf[1024]              = {0,};
-    size_t size = 1024;
+    return GRIB_NOT_IMPLEMENTED;
+    // grib_expression_is_in_list* e = (grib_expression_is_in_list*)g;
+    // int err                       = 0;
+    // char mybuf[1024]              = {0,};
+    // size_t size = 1024;
 
-    grib_trie* list = load_list(h->context, g, &err);
+    // grib_trie* list = load_list(h->context, g, &err);
 
-    if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
-        return err;
+    // if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
+    //     return err;
 
-    if (grib_trie_get(list, mybuf))
-        *result = 1;
-    else
-        *result = 0;
+    // if (grib_trie_get(list, mybuf))
+    //     *result = 1;
+    // else
+    //     *result = 0;
 
-    return err;
+    // return err;
 }
 
 static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)

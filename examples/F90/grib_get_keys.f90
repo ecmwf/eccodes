@@ -21,8 +21,8 @@ program grib_get_keys
    real                               ::  longitudeOfFirstPointInDegrees
    real                               ::  latitudeOfLastPointInDegrees
    real                               ::  longitudeOfLastPointInDegrees
-   integer                            ::  numberOfPointsAlongAParallel
-   integer                            ::  numberOfPointsAlongAMeridian
+   integer(4)                         ::  numberOfPointsAlongAParallel
+   integer(8)                         ::  numberOfPointsAlongAMeridian
    real, dimension(:), allocatable    ::  values
    integer                            ::  numberOfValues
    real                               ::  average, min_val, max_val
