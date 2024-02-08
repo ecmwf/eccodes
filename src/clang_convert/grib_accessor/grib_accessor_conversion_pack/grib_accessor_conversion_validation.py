@@ -86,10 +86,11 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
             return function_call.FunctionCall(f"std::get<long>", [arg_entry])
 
-        # If we're calling gribPackXXX or gribUnpackXXX and the first argument is "a", then we're actually calling ourself!
-        if cfunction_call.name.startswith("grib_pack") or cfunction_call.name.startswith("grib_unpack"):
-           if len(cppfunction_call.args) > 0 and cppfunction_call.args[0].as_string() == "a":
-                updated_cfuncname = cfunction_call.name[5:]
+        # If we're calling grib_XXX which is a member function, and the first argument is "a", then we're actually calling ourself!
+        if cfunction_call.name.startswith("grib_"):
+            updated_cfuncname = cfunction_call.name[5:]
+            if self._conversion_data.is_member_function(updated_cfuncname) and \
+               len(cppfunction_call.args) > 0 and cppfunction_call.args[0].as_string() == "a":
                 mapping = self._conversion_data.funcsig_mapping_for_cfuncname(updated_cfuncname)
                 if mapping:
                     updated_cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cppfunction_call.args[1:])

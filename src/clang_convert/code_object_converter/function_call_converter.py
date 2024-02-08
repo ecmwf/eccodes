@@ -18,9 +18,10 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
         # 1. Check if there is a function mapping defined
         mapping = conversion_pack.conversion_data.funcsig_mapping_for_cfuncname(cfunction_call.name)
         if mapping:
-            debug.line("create_cpp_code_object", f"FunctionCallConverter [1]")
+            debug.line("create_cpp_code_object", f"FunctionCallConverter [1] mapping.cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] -> mapping.cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
             cpp_args = []
             for i, arg_entry in enumerate(mapping.cppfuncsig.args):
+                debug.line("create_cpp_code_object", f"FunctionCallConverter [1] --> i=[{i}] arg_entry=[{debug.as_debug_string(arg_entry)}]")
                 if arg_entry != NONE_VALUE:
                     cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_pack)
                     assert cpp_arg_entry != NONE_VALUE, f"Expected cpp_arg_entry for carg=[{debug.as_debug_string(cfunction_call.args[i])}], got NoneValue!"
