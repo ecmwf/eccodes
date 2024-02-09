@@ -2,6 +2,7 @@
 import utils.debug as debug
 import clang.cindex
 import ast_object.ast_utils as ast_utils
+import code_object.arg as arg
 import code_object.array_access as array_access
 import code_object.binary_operation as binary_operation
 import code_object.cast_expression as cast_expression
@@ -392,6 +393,13 @@ class AstParser:
         cfuncsig.is_declaration = True
         return cfuncsig
 
+    # Similar to FUNCTION_DECL, we assume we only need to parse the function signature as the body will 
+    # be converted via a function class
+    def parse_FUNCTION_TEMPLATE(self, node):
+        cfuncsig = ast_utils.create_template_cfuncsig(node)
+        cfuncsig.is_declaration = True
+        return cfuncsig
+
     def parse_STRUCT_DECL(self, node):
         cstruct_arg = ast_utils.create_cstruct_arg(node)
         return cstruct_arg
@@ -450,6 +458,7 @@ class AstParser:
 
     parse_DECL_funcs = {
         clang.cindex.CursorKind.FUNCTION_DECL:      parse_FUNCTION_DECL,
+        clang.cindex.CursorKind.FUNCTION_TEMPLATE:  parse_FUNCTION_TEMPLATE,
         clang.cindex.CursorKind.STRUCT_DECL:        parse_STRUCT_DECL,
         clang.cindex.CursorKind.UNION_DECL:         parse_node_not_implemented,
         clang.cindex.CursorKind.FIELD_DECL:         parse_FIELD_DECL,
@@ -471,10 +480,23 @@ class AstParser:
 
     # We just pass the request straight to the child...
     def parse_UNEXPOSED_EXPR(self, node):
-        # There should be a single child node...
-        child = list(node.get_children())[0]
+        children = list(node.get_children())
+        assert len(children) != 0
 
-        return self.parse_ast_node(child)
+        if children[0].kind == clang.cindex.CursorKind.DECL_REF_EXPR and \
+           children[0].type.spelling == "<overloaded function type>":
+            func_name = self.parse_ast_node(children[0])
+            cargs = []
+            for entry in children [1:]:
+                if entry.kind == clang.cindex.CursorKind.DECL_REF_EXPR:
+                    carg = arg.Arg(entry.type.spelling, entry.spelling)
+                    cargs.append(carg)
+            func_call = function_call.FunctionCall(func_name.as_string(), cargs)
+            debug.line("parse_UNEXPOSED_EXPR", f"Extracted func_call=[{debug.as_debug_string(func_call)}]")
+            return func_call
+
+        # Just parse the first child...
+        return self.parse_ast_node(children[0])
 
     # This is a recursive convertion...
     def parse_INIT_LIST_EXPR(self, node):
@@ -612,8 +634,12 @@ class AstParser:
     def parse_COMPOUND_ASSIGNMENT_OPERATOR(self, node):
         return self.parse_BINARY_OPERATOR(node)
 
-    # This is basically a string representing a value, e.g. a variable name
+    # This is usually a string representing a value, e.g. a variable name,
+    # but can also represent an unresolved overloaded function set
     def parse_DECL_REF_EXPR(self, node):
+        if node.type.spelling == "<overloaded function type>":
+            return literal.Literal("".join([token.spelling for token in node.get_tokens()]))
+        
         return value_declaration_reference.ValueDeclarationReference(node.spelling)
 
     # The top-level node contains the tokens showing the access, e.g. [['self', '->', 'grid_type']]

@@ -27,6 +27,11 @@ class CodeInterface:
 
         def __ne__(self, other):
             return not self.__eq__(other)
+        
+        # Support for use as a dict key
+        def __hash__(self):
+            return hash("<NoneValue>")
+        
 
     NONE = _NoneValue()  # The singleton instance to represent "None"
     

@@ -14,6 +14,8 @@ import default.default_conversion_pack.default_container_utils as default_contai
 import code_object.member_function as member_function
 import default.default_conversion_pack.default_type_info as default_type_info
 
+from code_object.code_interface import NONE_VALUE
+
 # Convert a CCode object into a CppCode object, using the cconverter and derived classes as helpers
 
 class DefaultCCodeConverter:
@@ -109,6 +111,9 @@ class DefaultCCodeConverter:
         return False
 
     # Helper to ensure the function is converted correctly, including resetting the local conversion data!
+    #
+    # NOTE: ***** This function will return NONE_VALUE if the function cannot be converted to C++ *****
+    #
     def to_cpp_function(self, func):
         self._conversion_pack.conversion_data.reset_local_state(func.funcsig.name)
         self.function_specific_conversion_pack_updates(func.funcsig.name)
@@ -122,34 +127,39 @@ class DefaultCCodeConverter:
     def convert_functions(self):
         for func in self._ccode.functions:
             cppfunc = self.to_cpp_function(func)
-            self._code_elements.add_function(cppfunc)
-            self.dump_function("convert_functions", cppfunc)
+            if cppfunc != NONE_VALUE:
+                self._code_elements.add_function(cppfunc)
+                self.dump_function("convert_functions", cppfunc)
 
     def convert_constructor_function(self):
         if self._ccode.constructor :
             constructor = self.to_cpp_function(self._ccode.constructor)
-            self._code_elements.add_constructor(constructor)
-            self.dump_function("convert_constructor_function", constructor)
+            if constructor != NONE_VALUE:
+                self._code_elements.add_constructor(constructor)
+                self.dump_function("convert_constructor_function", constructor)
 
     def convert_destructor_function(self):
         if self._ccode.destructor :
             destructor = self.to_cpp_function(self._ccode.destructor)
-            self._code_elements.add_destructor(destructor)
-            self.dump_function("convert_destructor_function", destructor)
+            if destructor != NONE_VALUE:
+                self._code_elements.add_destructor(destructor)
+                self.dump_function("convert_destructor_function", destructor)
 
     def convert_member_functions(self):
         debug.line("convert_member_functions", f"Converting member functions...")
         for func in self._ccode.member_functions:
             member_func = self.to_cpp_function(func)
-            self._code_elements.add_member_function(member_func)
-            self.dump_function("convert_member_functions", member_func)
+            if member_func != NONE_VALUE:
+                self._code_elements.add_member_function(member_func)
+                self.dump_function("convert_member_functions", member_func)
 
     def convert_virtual_member_functions(self):
         debug.line("convert_virtual_member_functions", f"Converting virtual member functions...")
         for func in self._ccode.virtual_member_functions:
             virtual_member_func = self.to_cpp_function(func)
-            self._code_elements.add_virtual_member_function(virtual_member_func)
-            self.dump_function("convert_virtual_member_functions", virtual_member_func)
+            if virtual_member_func != NONE_VALUE:
+                self._code_elements.add_virtual_member_function(virtual_member_func)
+                self.dump_function("convert_virtual_member_functions", virtual_member_func)
 
     # ============================== Post-processing: begin ==============================
 

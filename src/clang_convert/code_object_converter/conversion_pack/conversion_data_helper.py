@@ -3,6 +3,7 @@ import utils.debug as debug
 from enum import Enum, auto
 
 import code_object.declaration_specifier as declaration_specifier
+from code_object.code_interface import NONE_VALUE
 
 # Functions and data to help the conversion data object
 
@@ -78,12 +79,15 @@ def create_best_matching_cdecl_spec(cdecl_spec, matches):
     debug.line("create_best_matching_cdecl_spec", f" Result: key=[{debug.as_debug_string(result[key])}] value=[{debug.as_debug_string(result[value])}] match=[{score}]")
 
     # Create the new DeclSpec
-    new_decl_spec = declaration_specifier.DeclSpec.from_instance(result[value])
-    if not (score & DeclSpecMatchType.POINTER.value):
-        new_decl_spec.pointer = cdecl_spec.pointer
+    if result[value] == NONE_VALUE:
+        new_decl_spec = NONE_VALUE
+    else:
+        new_decl_spec = declaration_specifier.DeclSpec.from_instance(result[value])
+        if not (score & DeclSpecMatchType.POINTER.value):
+            new_decl_spec.pointer = cdecl_spec.pointer
 
-    if not (score & DeclSpecMatchType.CONST.value):
-        new_decl_spec.const_qualifier = cdecl_spec.const_qualifier
+        if not (score & DeclSpecMatchType.CONST.value):
+            new_decl_spec.const_qualifier = cdecl_spec.const_qualifier
 
     debug.line("create_best_matching_cdecl_spec", f" new_decl_spec=[{debug.as_debug_string(new_decl_spec)}] match=[{score}]")
     return new_decl_spec, DeclSpecMatchType(score)

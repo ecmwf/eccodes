@@ -33,6 +33,9 @@ def dump_node(cnode, depth=0, tokens="truncate"):
 
 # Create a C FuncSig object from a FUNCTION_DECL node
 def create_cfuncsig(cnode):
+    if cnode.kind == clang.cindex.CursorKind.FUNCTION_TEMPLATE:
+        return create_template_cfuncsig(cnode)
+
     assert cnode.kind == clang.cindex.CursorKind.FUNCTION_DECL, f"cnode kind=[{cnode.kind}], expected FUNCTION_DECL"
 
     cargs = []
@@ -41,6 +44,22 @@ def create_cfuncsig(cnode):
         cargs.append(carg)
 
     return funcsig.FuncSig(cnode.result_type.spelling, cnode.spelling, cargs)
+
+# Create a C FuncSig object from a FUNCTION_TEMPLATE node
+def create_template_cfuncsig(cnode):
+    assert cnode.kind == clang.cindex.CursorKind.FUNCTION_TEMPLATE, f"cnode kind=[{cnode.kind}], expected FUNCTION_TEMPLATE"
+
+    cargs = []
+    ctemplate_type_params = []
+
+    for child in cnode.get_children():
+        if child.kind == clang.cindex.CursorKind.TEMPLATE_TYPE_PARAMETER:
+            ctemplate_type_params.append(child.spelling)
+        elif child.kind == clang.cindex.CursorKind.PARM_DECL:
+            carg = arg.Arg(child.type.spelling, child.spelling, is_func_arg=True)
+            cargs.append(carg)
+
+    return funcsig.FuncSig(cnode.result_type.spelling, cnode.spelling, cargs, ctemplate_type_params)
 
 # Extract the node representing the body of a function, or assert!
 def find_function_body_node(cnode):

@@ -11,10 +11,10 @@ from code_object.code_interface import NONE_VALUE
 #
 # Set is_declaration to true to render as a declaration (i.e. produce a string with a trailing ";")
 class FuncSig(code_interface.CodeInterface):
-    def __init__(self, return_type, name, args, template=None) -> None:
+    def __init__(self, return_type, name, args, template_type_params=[]) -> None:
         self._func_arg = arg.Arg(return_type, name)
         self._args = args
-        self._template = template
+        self._template_type_params = template_type_params
         self._is_declaration = False
         self._is_const = False
 
@@ -40,12 +40,8 @@ class FuncSig(code_interface.CodeInterface):
         return self._func_arg.storage_class != ""
 
     @property
-    def template(self):
-        return self._template
-    
-    @template.setter
-    def template(self, value):
-        self._template = value
+    def template_type_params(self):
+        return self._template_type_params
 
     @property
     def is_declaration(self):
@@ -65,9 +61,17 @@ class FuncSig(code_interface.CodeInterface):
         self._is_const = value
 
     def as_lines(self):
+        lines = []
+        if len(self._template_type_params) > 0:
+            template_line = f"template<{','.join(['typename '+ t for t in self._template_type_params])}>"
+            lines.append(template_line)
+
         sig_string = f"{self._func_arg.as_string()}({', '.join([a.as_string() for a in self.args if a != NONE_VALUE])})"
         if self._is_const:
             sig_string += " const"
         if self._is_declaration:
             sig_string += ";"
-        return [sig_string]
+        
+        lines.append(sig_string)
+        
+        return lines

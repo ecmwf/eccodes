@@ -6,6 +6,7 @@ import code_object_converter.conversion_pack.funcsig_mapping as funcsig_mapping
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.arg as arg
 import code_object.declaration_specifier as declaration_specifier
+from code_object.code_interface import NONE_VALUE
 
 # Convert a C Function Signature to C++
 class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
@@ -21,6 +22,11 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
         mapping = self._conversion_pack.conversion_data.funcsig_mapping_for_cfuncname(cfuncsig.name)
         if mapping:
             cppfuncsig = mapping.cppfuncsig
+
+            if cppfuncsig == NONE_VALUE:
+                debug.line("", f"cppfuncsig is NONE_VALUE for cfuncsig.name=[{cfuncsig.name}] so won't be converted")
+                return NONE_VALUE
+
             # Add any buffer mappings: {ptr, buffer} -> C++ Container 
             if mapping.arg_indexes:
                 cbuffer = cfuncsig.args[mapping.arg_indexes.cbuffer]
@@ -33,7 +39,7 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
             cppfuncsig = funcsig.FuncSig(cppfunc_arg.decl_spec,
                                          cppfunc_arg.name,
                                          cpp_args,
-                                         self._ccode_object.template)
+                                         self._ccode_object.template_type_params)
 
             #cppfuncsig.static = self.is_cpp_static()
 

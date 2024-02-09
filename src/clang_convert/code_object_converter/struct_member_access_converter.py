@@ -49,7 +49,14 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
     def try_to_convert_data_member_access(self, candidate_member_access):
         debug.line("try_to_convert_data_member_access",f"[IN] candidate_member_access=[{debug.as_debug_string(candidate_member_access)}]")
         cppstruct_member_access = None
-        cpp_data_member = self._conversion_pack.conversion_data.cppdata_member_for_cdata_member_name(candidate_member_access.name)
+        search_name = candidate_member_access.name
+        debug.line("try_to_convert_data_member_access", f"Searching [1] for data member for name=[{search_name}]")
+        cpp_data_member = self._conversion_pack.conversion_data.cppdata_member_for_cdata_member_name(search_name)
+
+        if not cpp_data_member:
+            search_name = candidate_member_access.as_string()
+            debug.line("try_to_convert_data_member_access", f"Searching [2] for data member for name=[{search_name}]")
+            cpp_data_member = self._conversion_pack.conversion_data.cppdata_member_for_cdata_member_name(search_name)
 
         if cpp_data_member:
             cpp_access = ""

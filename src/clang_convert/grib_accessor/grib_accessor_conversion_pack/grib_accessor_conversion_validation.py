@@ -68,7 +68,25 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             return special_function_call
 
         if cfunction_call.name == "sscanf":
-            assert False, f"Need to add handling for sscanf from c_subs.py"
+            # Need to convert to using conversion helper function:
+            #   template <typename... Args>
+            #   int scanString(std::string buffer, size_t offset, std::string format, Args&... args)
+            # offset is used when indexing into buffer, e.g. val + 2*i, otherwise set to 0
+            cppargs = []
+            cpparg = cfunction_call.args[0]
+            if isinstance(cpparg, binary_operation.BinaryOperation):
+                cppargs.append(cpparg.left_operand)
+                cppargs.append(cpparg.right_operand)
+            else:
+                cppargs.append(cpparg)
+                cppargs.append(literal.Literal("0"))
+            for cpparg in cfunction_call.args[1:]:
+                cppargs.append(cpparg)
+            
+            updated_cppfunction_call = function_call.FunctionCall("scanString", cppargs)
+
+            debug.line("validate_function_call", f"sscanf conversion:[{debug.as_debug_string(cppfunction_call)}]->[{debug.as_debug_string(updated_cppfunction_call)}]")
+            return updated_cppfunction_call
 
         return super().validate_function_call(cfunction_call, cppfunction_call)
 
@@ -135,11 +153,11 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                 return binary_operation.BinaryOperation(cppleft, cppbinary_op, updated_right_operand)
         
         if isinstance(cppright, cast_expression.CastExpression):
-            cpp_func_call = cppright.expression
-            assert isinstance(cpp_func_call, function_call.FunctionCall), f"Expected cast expression to be a FunctionCall, not [{type(cpp_func_call)}]"
-            if cpp_func_call.name in ["gribContextMalloc", "gribContextRealloc"]:
+            cpp_right_expression = cppright.expression
+
+            if isinstance(cpp_right_expression, function_call.FunctionCall) and cpp_right_expression.name in ["gribContextMalloc", "gribContextRealloc"]:
                 # For now, we'll assume we're allocating a container (may need to revisit)
-                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppleft)}.resize({cpp_func_call.arg_string});")
+                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppleft)}.resize({cpp_right_expression.arg_string});")
                 debug.line("validate_binary_operation", f"Changed allocation operation from=[{debug.as_debug_string(cppbinary_operation)}] to [{debug.as_debug_string(cpp_alloc)}]")
                 return cpp_alloc
 

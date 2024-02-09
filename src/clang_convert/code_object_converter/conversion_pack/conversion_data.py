@@ -105,7 +105,7 @@ class ConversionData:
 
     def add_funcsig_arg_mapping(self, carg, cpparg):
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
-        assert isinstance(cpparg, Arg) or cpparg==Arg.NONE, f"Expected Arg, got [{cpparg}]"
+        assert isinstance(cpparg, Arg) or cpparg==NONE_VALUE, f"Expected Arg, got [{cpparg}]"
         if carg in self.active_map.funcsig_arg_mappings:
             assert self.active_map.funcsig_arg_mappings[carg] == cpparg, f"Updating an existing funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{debug.as_debug_string(self.active_map.funcsig_arg_mappings[carg])}]"
         else:
@@ -358,7 +358,7 @@ class ConversionData:
     def cppfuncsig_for_cppfuncname(self, cppfuncname):
         for mapping in self.all_mappings():
             for entry in mapping.all_funcsig_mappings:
-                if entry.cppfuncsig.name == cppfuncname:
+                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == cppfuncname:
                     return entry.cppfuncsig
         return None
 
@@ -406,10 +406,15 @@ class ConversionData:
     def is_member_function(self, function_name):
         for mapping in self.all_mappings():
             for entry in mapping.member_funcsig_mappings:
-                if entry.cfuncsig.name == function_name or entry.cppfuncsig.name == function_name:
+                if entry.cfuncsig.name == function_name:
                     return True
+                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
+                    return True
+                
             for entry in mapping.virtual_member_funcsig_mappings:
-                if entry.cfuncsig.name == function_name or entry.cppfuncsig.name == function_name:
+                if entry.cfuncsig.name == function_name:
+                    return True
+                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
                     return True
                 
         return False

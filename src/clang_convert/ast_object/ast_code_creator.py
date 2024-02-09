@@ -39,6 +39,8 @@ class AstCodeCreator:
         elif node.kind.is_declaration:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():
                 self._ast_code.add_function_node(node)
+            elif node.kind == clang.cindex.CursorKind.FUNCTION_TEMPLATE:
+                self._ast_code.add_function_node(node)
 
             # Parse *ALL* nodes to determine whether to add to the global declaration. 
             self._ast_code.add_global_function_entry(node)

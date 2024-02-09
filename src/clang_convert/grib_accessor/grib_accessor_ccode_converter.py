@@ -20,6 +20,7 @@ import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
+from code_object.data_member import DataMember
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -76,6 +77,11 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         except ModuleNotFoundError:
             debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
+
+        # Add cclass->super data member mapping
+        cmember = DataMember("grib_accessor_class**", "cclass->super")
+        cppmember = DataMember("AccessorData", self._conversion_pack.conversion_data.info.super_class_name)
+        self._conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
 
         super().function_specific_conversion_pack_updates(cfunction_name)
 
