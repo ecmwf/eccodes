@@ -542,7 +542,7 @@
 'aer_NO3' = {
 	constituentType = 62004 ;
 	}
-#Sea salt aerosol (03 - 0.5 um)
+#Sea salt aerosol (0.03 - 0.5 um)
 'aer_seasalt_003_05' = {
 	constituentType = 62008 ;
 	typeOfSizeInterval = 7 ;
@@ -569,7 +569,7 @@
 	scaleFactorOfSecondSize = 5 ;
 	scaledValueOfSecondSize = 2 ;
 	}
-#Dust aerosol (03 - 0.55 um)
+#Dust aerosol (0.03 - 0.55 um)
 'aer_dust_003_055' = {
 	constituentType = 62001 ;
 	typeOfSizeInterval = 7 ;
@@ -649,4 +649,8 @@
 #Secondary particulate organic matter dry
 'SOA' = {
 	constituentType = 62012 ;
+	}
+#Total aerosol
+'aer_total' = {
+	constituentType = 62000 ;
 	}

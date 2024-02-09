@@ -542,7 +542,7 @@
 '900' = {
 	constituentType = 62004 ;
 	}
-#Sea salt aerosol (03 - 0.5 um)
+#Sea salt aerosol (0.03 - 0.5 um)
 '901' = {
 	constituentType = 62008 ;
 	typeOfSizeInterval = 7 ;
@@ -569,7 +569,7 @@
 	scaleFactorOfSecondSize = 5 ;
 	scaledValueOfSecondSize = 2 ;
 	}
-#Dust aerosol (03 - 0.55 um)
+#Dust aerosol (0.03 - 0.55 um)
 '904' = {
 	constituentType = 62001 ;
 	typeOfSizeInterval = 7 ;
@@ -649,4 +649,8 @@
 #Secondary particulate organic matter dry
 '918' = {
 	constituentType = 62012 ;
+	}
+#Total aerosol
+'922' = {
+	constituentType = 62000 ;
 	}

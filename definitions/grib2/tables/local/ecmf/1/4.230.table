@@ -1,4 +1,10 @@
 # Code table 4.230 - Atmospheric chemical constituent type for ECMWF
+65507 65507 Volcanic sulphur dioxide
+65508 65508 Aerosol small mode
+65509 65509 Aerosol large mode
+65510 65510 SO2 precursor
+65511 65511 Biogenic secondary organic aerosol precursor
+65512 65512 Anthropogenic secondary organic aerosol precursor
 65513 65513 Hydrogen atom
 65514 65514 Nitrogen oxides Transp
 65515 65515 Acetone product

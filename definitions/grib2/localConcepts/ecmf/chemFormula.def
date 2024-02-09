@@ -3,6 +3,11 @@
 	constituentType = 2 ;
 	localTablesVersion = 1 ;
 	}
+#Volcanic sulphur dioxide
+'SO2_v' = {
+        constituentType = 65507 ;
+        localTablesVersion = 1 ;
+        }
 #Stratospheric ozone
 'O3S' = {
 	constituentType = 65524 ;
@@ -116,5 +121,30 @@
 #Stratospheric aerosol
 'strataer' = {
 	constituentType = 65517 ;
+	localTablesVersion = 1 ;
+	}
+#Biogenic secondary organic aerosol precursor
+'aer_biosecorg_pre' = {
+	constituentType = 65511 ;
+	localTablesVersion = 1 ;
+	}
+#Anthropogenic secondary organic aerosol precursor
+'aer_antsecorg_pre' = {
+	constituentType = 65512 ;
+	localTablesVersion = 1 ;
+	}
+#SO2 precursor
+'aer_so2_pre' = {
+	constituentType = 65510 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol small mode
+'aer_sm' = {
+	constituentType = 65508 ;
+	localTablesVersion = 1 ;
+	}
+#Aerosol large mode
+'aer_lm' = {
+	constituentType = 65509 ;
 	localTablesVersion = 1 ;
 	}
