@@ -22,6 +22,7 @@ class DefaultAstCodeConverter:
         self.convert_global_function_nodes()
         self.convert_function_nodes()
         self.convert_macro_details()
+        self.validate_ccode()
 
         return self._ccode
 
@@ -41,3 +42,7 @@ class DefaultAstCodeConverter:
     def convert_macro_details(self):
         # For now, just set the AST Node...
         self._ccode.macro_details = self._ast_code.macro_details
+
+    # Override to provide any validation
+    def validate_ccode(self):
+        pass

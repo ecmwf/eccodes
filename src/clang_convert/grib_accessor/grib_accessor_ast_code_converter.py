@@ -6,6 +6,8 @@ import clang.cindex
 import code_object.data_member as data_member
 import utils.debug as debug
 import ast_object.ast_utils as ast_utils
+from grib_accessor.supporting.member_functions import grib_accessor_member_funcsig_mapping
+import code_object.compound_statement as compound_statement
 
 class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConverter):
     def __init__(self, ast_code) -> None:
@@ -71,3 +73,19 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
                         self._ccode._super_class_name = super_entry_child.spelling
                 name_entry = next(init_list_iter)
                 self._ccode._accessor_class_short_name = name_entry.spelling.replace("\"", "")
+
+    def validate_ccode(self):
+        if not self._ccode.constructor:
+            # We need to create a default constructor to ensure init code is correctly created in C++ classes!
+            cconstructor_funcsig = None
+            for mapping in grib_accessor_member_funcsig_mapping:
+                if mapping.cfuncsig.name == "init":
+                    cconstructor_funcsig = mapping.cfuncsig
+                    break
+            assert cconstructor_funcsig
+            cconstructor_body = compound_statement.CompoundStatement()
+            self._ccode.add_function(cconstructor_funcsig, cconstructor_body)
+
+            debug.line("validate_ccode", f"No constructor found, adding a default version")
+
+        super().validate_ccode()

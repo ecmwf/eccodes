@@ -7,7 +7,6 @@ import default.default_ccode_converter as default_ccode_converter
 import utils.standard_transforms as standard_transforms
 from grib_accessor.supporting.virtual_member_functions import grib_accessor_virtual_member_funcsig_mapping 
 from grib_accessor.supporting.member_functions import grib_accessor_member_funcsig_mapping
-import grib_accessor.supporting.member_functions as member_functions
 import grib_accessor.supporting.virtual_member_functions as virtual_member_functions
 import grib_accessor.supporting.includes as includes
 import grib_accessor.supporting.type_mappings as type_mappings
@@ -21,9 +20,6 @@ import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
-import code_object_converter.conversion_pack.arg_utils as arg_utils
-import code_object.compound_statement as compound_statement
-import code_object.constructor_function as constructor_function
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -166,18 +162,3 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
                 
                 if mismatch_found:
                     break
-
-    def validate_code_elements(self):
-        if not self._code_elements.constructor:
-            # We need to create a default constructor to ensure the InitData is passed up the construction hierarchy correctly!
-            cppconstructor_funcsig = self._conversion_pack.conversion_data.cppfuncsig_for_cfuncname("init")
-            assert cppconstructor_funcsig
-            cppconstructor_body = compound_statement.CompoundStatement()
-            cppconstructor = constructor_function.ConstructorFunction(cppconstructor_funcsig, 
-                                                                      cppconstructor_body,
-                                                                      self._conversion_pack.conversion_data.info.class_name,
-                                                                      self._conversion_pack.conversion_data.info.super_class_name)
-            debug.line("validate_cppcode", f"No constructor found, adding a default=[{debug.as_debug_string(cppconstructor)}]")
-            self._code_elements.add_constructor(cppconstructor)
-
-        super().validate_code_elements()
