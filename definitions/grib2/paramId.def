@@ -5795,7 +5795,9 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 168 ;
-	 typeOfSecondFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	}
 #Sea water potential temperature tendency due to newtonian relaxation
 '262508' = {
@@ -6923,7 +6925,9 @@
 	 parameterCategory = 4 ;
 	 parameterNumber = 27 ;
 	 typeOfFirstFixedSurface = 168 ;
-	 typeOfSecondFixedSurface = 168 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfSecondFixedSurface = missing() ;
+	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea water potential temperature tendency due to newtonian relaxation

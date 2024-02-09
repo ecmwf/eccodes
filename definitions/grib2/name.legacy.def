@@ -52,3 +52,20 @@
   parameterCategory = 3 ;
   parameterNumber = 9 ;
  }
+#Upward sea water velocity
+'Upward sea water velocity' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+}
+#Time-mean upward sea water velocity
+'Time-mean upward sea water velocity' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+ typeOfStatisticalProcessing = 0 ;
+}
