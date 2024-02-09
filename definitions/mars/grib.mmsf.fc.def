@@ -17,3 +17,9 @@ if (centre == 80 && subCentre == 98 && class is "c3") {
 }
 
 if (class is "ci") { unalias mars.method; }
+
+if (levtype is "o2d" || levtype is "o3d") {
+   alias mars.step = stepRange;
+} else {
+   alias mars.step = endStep;
+}
