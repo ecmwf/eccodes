@@ -125,18 +125,21 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
         debug.line("validate_binary_operation", f"cbinary_operation=[{debug.as_debug_string(cbinary_operation)}] cppbinary_operation=[{debug.as_debug_string(cppbinary_operation)}]")
 
-        if cppbinary_operation.left_operand.as_string() == "flags_":
-            if cppbinary_operation.right_operand.as_string().startswith("GribAccessorFlag"):
-                updated_right_operand = literal.Literal(f"toInt({cppbinary_operation.right_operand.as_string()})")
-                return binary_operation.BinaryOperation(cppbinary_operation.left_operand, cppbinary_operation.binary_op, updated_right_operand)
-        
+        cppleft = cppbinary_operation.left_operand
+        cppbinary_op = cppbinary_operation.binary_op
         cppright = cppbinary_operation.right_operand
+
+        if cppbinary_operation.left_operand.as_string() == "flags_":
+            if cppright.as_string().startswith("GribAccessorFlag"):
+                updated_right_operand = literal.Literal(f"toInt({cppright.as_string()})")
+                return binary_operation.BinaryOperation(cppleft, cppbinary_op, updated_right_operand)
+        
         if isinstance(cppright, cast_expression.CastExpression):
             cpp_func_call = cppright.expression
             assert isinstance(cpp_func_call, function_call.FunctionCall), f"Expected cast expression to be a FunctionCall, not [{type(cpp_func_call)}]"
             if cpp_func_call.name in ["gribContextMalloc", "gribContextRealloc"]:
                 # For now, we'll assume we're allocating a container (may need to revisit)
-                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppbinary_operation.left_operand)}.resize({cpp_func_call.arg_string});")
+                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppleft)}.resize({cpp_func_call.arg_string});")
                 debug.line("validate_binary_operation", f"Changed allocation operation from=[{debug.as_debug_string(cppbinary_operation)}] to [{debug.as_debug_string(cpp_alloc)}]")
                 return cpp_alloc
 
@@ -191,6 +194,13 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             cppstruct_member_access.member.access = "."
             cppstruct_member_access.member.name += "()"
             return cppstruct_member_access
+        
+        # Handle AccessorPtr types
+        cpparg = self._conversion_data.cpparg_for_cppname(cppstruct_member_access.name)
+        if cpparg and cpparg.decl_spec.type == "AccessorPtr":
+            data_member = cppstruct_member_access.member
+            if data_member.name == "name":
+                data_member.name += "().get().c_str()" # It's read-only so this is ok!
 
         return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
 

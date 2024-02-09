@@ -1,12 +1,16 @@
 # Start the line with # to exclude the file
+#
+# Working conversions
+#
 grib_accessor_class_ascii.cc
 grib_accessor_class_bit.cc
 grib_accessor_class_long.cc
 grib_accessor_class_proj_string.cc
+#
+# Not-working conversions!
+#
 #grib_accessor_class_abstract_long_vector.cc
 #grib_accessor_class_abstract_vector.cc
-#grib_accessor_class_ascii.cc
-#grib_accessor_class_bit.cc
 #grib_accessor_class_bitmap.cc
 #grib_accessor_class_bits.cc
 #grib_accessor_class_bits_per_value.cc
@@ -124,7 +128,6 @@ grib_accessor_class_proj_string.cc
 #grib_accessor_class_latlonvalues.cc
 #grib_accessor_class_library_version.cc
 #grib_accessor_class_local_definition.cc
-#grib_accessor_class_long.cc
 #grib_accessor_class_long_vector.cc
 #grib_accessor_class_longitudes.cc
 #grib_accessor_class_lookup.cc
@@ -152,7 +155,6 @@ grib_accessor_class_proj_string.cc
 #grib_accessor_class_padtoeven.cc
 #grib_accessor_class_padtomultiple.cc
 #grib_accessor_class_position.cc
-#grib_accessor_class_proj_string.cc
 #grib_accessor_class_raw.cc
 #grib_accessor_class_rdbtime_guess_date.cc
 #grib_accessor_class_reference_value_error.cc

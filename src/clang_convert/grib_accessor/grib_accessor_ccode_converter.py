@@ -57,13 +57,31 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         return info
 
     def function_specific_conversion_pack_updates(self, cfunction_name):
-        super().function_specific_conversion_pack_updates(cfunction_name)
         # See if we have a function-specific validator,
         # Otherwise use the main-one
+        conversion_pack_updates_path="grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates"
+        cclass_short_name = self._ccode.class_name.replace(prefix, "")
+        accessor_conversion_pack_updates_mod_name = f"{cclass_short_name}_conversion_pack_updates"
+        accessor_conversion_pack_updates_lib_name = f"{conversion_pack_updates_path}.{accessor_conversion_pack_updates_mod_name}"
+
+        try:
+            accessor_conversion_pack_updates_lib = importlib.import_module(accessor_conversion_pack_updates_lib_name)
+            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
+            accessor_conversion_pack_updates_class_name = standard_transforms.transform_type_name(accessor_conversion_pack_updates_mod_name)
+            accessor_conversion_pack_updates_class = getattr(accessor_conversion_pack_updates_lib, accessor_conversion_pack_updates_class_name)
+            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_class_name=[{accessor_conversion_pack_updates_class_name}]")
+            
+            updates_class_inst = accessor_conversion_pack_updates_class()
+            updates_class_inst.apply_updates_for_cfunction(cfunction_name, self._conversion_pack)
+
+        except ModuleNotFoundError:
+            debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
+
+        super().function_specific_conversion_pack_updates(cfunction_name)
 
     # See if we have an Accessor-specific validator (e.g. ProjStringValidation),
     # Otherwise use the default
-    def create_conversion_validation(self,):
+    def create_conversion_validation(self):
         validators_path="grib_accessor.grib_accessor_conversion_pack.validators"
         cclass_short_name = self._ccode.class_name.replace(prefix, "")
         accessor_validator_mod_name = f"{cclass_short_name}_validation"

@@ -154,13 +154,16 @@ class ConversionData:
             self.active_map.literal_mappings[cstring] = cppstring
             debug.line("add_literal_mapping", f"Adding literal mapping: [{cstring}] -> [{cppstring}]")
 
-    def add_class_pointer_name(self, name):
+    # Names referring to self class
+    def add_self_class_pointer_name(self, name):
         assert isinstance(name, str), f"Expected str, got [{name}]"
-        self.active_map.class_pointer_names.append(name)
+        if name not in self.active_map.self_class_pointer_names:
+            self.active_map.self_class_pointer_names.append(name)
 
     def add_container_type(self, type):
         assert isinstance(type, str), f"Expected str, got [{type}]"
-        self.active_map.container_types.append(type)
+        if type not in self.active_map.container_types:
+            self.active_map.container_types.append(type)
 
     # Converts the function call into a funcsig object (with void return type) and stores in the info
     # object. This allows all arg type information to be available (for example when post-processing)
@@ -411,16 +414,16 @@ class ConversionData:
                 
         return False
 
-    def is_class_pointer_name(self, name):
-        debug.line("is_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")
+    def is_self_class_pointer_name(self, name):
+        debug.line("is_self_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")
         for mapping in self.all_mappings():
-            for entry in mapping.class_pointer_names:
-                debug.line("is_class_pointer_name", f" > Testing entry=[{debug.as_debug_string(entry)}]")
+            for entry in mapping.self_class_pointer_names:
+                debug.line("is_self_class_pointer_name", f" > Testing entry=[{debug.as_debug_string(entry)}]")
                 if entry == name:
-                    debug.line("is_class_pointer_name", f" RESULT: TRUE")
+                    debug.line("is_self_class_pointer_name", f" RESULT: TRUE")
                     return True
 
-        debug.line("is_class_pointer_name", f" RESULT: FALSE")
+        debug.line("is_self_class_pointer_name", f" RESULT: FALSE")
         return False
 
     def is_container_type(self, type):

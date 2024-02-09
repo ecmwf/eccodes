@@ -7,7 +7,7 @@ class GribAccessorTypeInfo(default_type_info.DefaultTypeInfo):
 
     # Returns a list of names representing class instances, e.g. self->
     def class_instance_pointer_names(self):
-         return super().class_instance_pointer_names() + ["a"]
+         return super().class_instance_pointer_names() + ["a", "grib_handle_of_accessor(a)"]
     
     def cpp_container_types(self):
         return super().cpp_container_types() + [

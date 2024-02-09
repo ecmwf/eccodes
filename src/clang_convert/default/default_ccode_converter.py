@@ -65,7 +65,7 @@ class DefaultCCodeConverter:
 
     def init_conversion_data(self, conv_data):
         for entry in self.type_info.class_instance_pointer_names():
-            conv_data.add_class_pointer_name(entry)
+            conv_data.add_self_class_pointer_name(entry)
 
         for entry in self.type_info.cpp_container_types():
             conv_data.add_container_type(entry)

@@ -15,7 +15,7 @@ class CodeMappings:
         self._member_funcsig_mappings = []
         self._virtual_member_funcsig_mappings = []
         self._literal_mappings = {}
-        self._class_pointer_names = [] # self, this, etc
+        self._self_class_pointer_names = [] # self, this, etc
         self._container_types = [] # std::vector etc
 
     # Note: Types are stored as declaration_specifiers objects for flexibility, but usually we just match type and pointer!
@@ -68,8 +68,8 @@ class CodeMappings:
         return self._literal_mappings
     
     @property
-    def class_pointer_names(self):
-        return self._class_pointer_names
+    def self_class_pointer_names(self):
+        return self._self_class_pointer_names
     
     @property
     def container_types(self):
