@@ -2579,9 +2579,10 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 groupNumber++;
                 incrementBitmapIndex = 0;
                 if (bitmapIndex >= MAX_NUMBER_OF_BITMAPS) {
-                    grib_context_log(c, GRIB_LOG_ERROR, "Bitmap error: bitmap index=%d, max num bitmaps=%d\n", bitmapIndex, MAX_NUMBER_OF_BITMAPS);
-                    err = GRIB_DECODING_ERROR;
-                    return err;
+                    //grib_context_log(c, GRIB_LOG_ERROR, "Bitmap error: bitmap index=%d, max num bitmaps=%d\n", bitmapIndex, MAX_NUMBER_OF_BITMAPS);
+                    //err = GRIB_DECODING_ERROR;
+                    //return err;
+                    bitmapIndex--;
                 }
                 bitmapStart[bitmapIndex] = grib_accessors_list_last(self->dataAccessors);
                 bitmapSize[bitmapIndex]  = 1;
