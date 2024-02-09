@@ -14,6 +14,9 @@
 
 . ./include.ctest.sh
 
+label="grib_double_cmp_test"
+tempGrib=temp.$label.grib
+
 infiles="
     grid_ieee.grib
     regular_latlon_surface_constant.grib2
@@ -25,6 +28,12 @@ if [ $HAVE_JPEG -eq 1 ]; then
     infiles="jpeg.grib2 "$infiles
 fi
 
+if [ $HAVE_PNG -eq 1 ]; then
+    infile=$data_dir/reduced_gaussian_model_level.grib2
+    ${tools_dir}/grib_set -r -s packingType=grid_png $infile $data_dir/$tempGrib
+    infiles="$tempGrib "$infiles
+fi
+
 if [ $HAVE_AEC -eq 1 ]; then
     infiles="ccsds.grib2 "$infiles
 fi
@@ -33,3 +42,5 @@ for f in $infiles; do
     infile=$data_dir/$f
     $EXEC ${test_dir}/grib_double_cmp ${infile}
 done
+
+rm -f $data_dir/$tempGrib

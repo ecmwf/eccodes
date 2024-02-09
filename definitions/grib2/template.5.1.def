@@ -4,7 +4,7 @@
 # Preliminary note:
 # This template was not validated at the time of publication and should be used with caution
 
-include "grib2/template.5.packing.def";
+include "grib2/template.5.packing.def"
 
 unsigned[1] matrixBitmapsPresent;
 # same as in edition 1

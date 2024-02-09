@@ -13825,6 +13825,174 @@
 	 typeOfSecondFixedSurface = 255 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Covariance between 2-metre temperature and volumetric soil water layer 1
+'covar_t2m_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 192 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 1
+'covar_rh2m_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 193 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 1
+'covar_ssm_swvl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 194 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 2
+'covar_t2m_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 195 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 2
+'covar_rh2m_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 196 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 2
+'covar_ssm_swvl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 197 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and volumetric soil water layer 3
+'covar_t2m_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 198 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and volumetric soil water layer 3
+'covar_rh2m_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 199 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between surface soil moisture and volumetric soil water layer 3
+'covar_ssm_swvl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 200 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 1
+'covar_t2m_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 201 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 1
+'covar_rh2m_stl1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 202 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 2
+'covar_t2m_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 203 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 2
+'covar_rh2m_stl2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 204 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and soil temperature layer 3
+'covar_t2m_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 205 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and soil temperature layer 3
+'covar_rh2m_stl3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 206 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 1
+'covar_t2m_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 207 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 1
+'covar_rh2m_tsn1' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 208 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 2
+'covar_t2m_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 209 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 2
+'covar_rh2m_tsn2' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 210 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre temperature and temperature of snow layer 3
+'covar_t2m_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 211 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
+#Covariance between 2-metre relative humidity and temperature of snow layer 3
+'covar_rh2m_tsn3' = {
+	 localTablesVersion = 1 ;
+	 discipline = 254 ;
+	 parameterCategory = 254 ;
+	 parameterNumber = 212 ;
+	 typeOfFirstFixedSurface = 254 ;
+	}
 #Surface roughness length for heat
 'srlh' = {
 	 localTablesVersion = 1 ;

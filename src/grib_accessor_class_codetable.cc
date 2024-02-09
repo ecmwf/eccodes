@@ -222,7 +222,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
                     p     = grib_expression_evaluate_string(grib_handle_of_accessor(a), expression, tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(a->context, GRIB_LOG_FATAL,
-                                         "unable to evaluate %s as string", a->name);
+                                         "Unable to evaluate %s as string", a->name);
                     }
                     s_len = strlen(p) + 1;
                     pack_string(a, p, &s_len);
@@ -700,6 +700,10 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -727,6 +731,12 @@ static bool is_number(const char* s)
     return true;
 }
 
+static bool strings_equal(const char* s1, const char* s2, bool case_sensitive)
+{
+    if (case_sensitive) return (strcmp(s1, s2) == 0);
+    return (strcmp_nocase(s1, s2) == 0);
+}
+
 static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
     long lValue = 0;
@@ -742,13 +752,9 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
     }
 
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
-    grib_codetable* table;
-    long i;
+    grib_codetable* table = NULL;
+    long i = 0;
     size_t size = 1;
-
-    typedef int (*cmpproc)(const char*, const char*);
-
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -765,10 +771,18 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
             return err;
     }
 
-    for (i = 0; i < table->size; i++)
-        if (table->entries[i].abbreviation)
-            if (cmp(table->entries[i].abbreviation, buffer) == 0)
+    // If the key has the "lowercase" flag set, then the string comparison
+    // should ignore the case
+    bool case_sensitive = true;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) case_sensitive = false;
+
+    for (i = 0; i < table->size; i++) {
+        if (table->entries[i].abbreviation) {
+            if (strings_equal(table->entries[i].abbreviation, buffer, case_sensitive)) {
                 return grib_pack_long(a, &i, &size);
+            }
+        }
+    }
 
     if (a->flags & GRIB_ACCESSOR_FLAG_NO_FAIL) {
         grib_action* act = (grib_action*)(a->creator);
@@ -832,8 +846,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
-        /*if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
+        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
+        //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
         ret = grib_pack_long(a, &lval, &len);
     }
     else {
@@ -841,12 +855,14 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
         len  = sizeof(tmp);
         cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n", grib_expression_get_name(e), a->name);
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
+                __func__, grib_expression_get_name(e), a->name);
             return ret;
         }
         len = strlen(cval) + 1;
-        /*if (hand->context->debug)
-            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);*/
+        //if (hand->context->debug)
+        //    printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);
         ret = grib_pack_string(a, cval, &len);
     }
     return ret;

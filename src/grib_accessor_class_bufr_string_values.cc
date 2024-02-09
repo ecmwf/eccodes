@@ -22,8 +22,8 @@ This is used by make_class.pl
 START_CLASS_DEF
 CLASS      = accessor
 SUPER      = grib_accessor_class_ascii
-IMPLEMENTS = unpack_string_array; pack_string_array
-IMPLEMENTS = unpack_string; pack_string
+IMPLEMENTS = unpack_string_array
+IMPLEMENTS = unpack_string
 IMPLEMENTS = init;dump;destroy
 IMPLEMENTS = value_count
 MEMBERS    = const char* dataAccessorName
@@ -43,8 +43,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_string(grib_accessor*, const char*, size_t* len);
-static int pack_string_array(grib_accessor*, const char**, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static int value_count(grib_accessor*, long*);
@@ -89,9 +87,9 @@ static grib_accessor_class _grib_accessor_class_bufr_string_values = {
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
-    &pack_string_array,          /* pack_string_array */
+    0,          /* pack_string_array */
     &unpack_string_array,        /* unpack_string_array */
     0,                 /* pack_bytes */
     0,               /* unpack_bytes */
@@ -148,7 +146,6 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     grib_vsarray* stringValues = NULL;
     size_t l = 0, tl;
     size_t i, j, n = 0;
-    /*char buf[25]={0,};*/
     char** b = buffer;
 
     data = get_accessor(a);
@@ -176,17 +173,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     return GRIB_NOT_IMPLEMENTED;
 }

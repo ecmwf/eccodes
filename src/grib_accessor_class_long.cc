@@ -139,8 +139,11 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     l = strlen(repres) + 1;
 
-    if (l > *len) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_long : unpack_string : Buffer too small for %s ", a->name);
+    if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -241,10 +244,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
     grib_unpack_long(b, bval, &blen);
 
     retval = GRIB_SUCCESS;
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_LONG_VALUE_MISMATCH;
-        alen--;
+    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_LONG_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);

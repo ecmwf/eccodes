@@ -106,7 +106,7 @@ grib_accessor_class* grib_accessor_class_g1_message_length = &_grib_accessor_cla
 static void init(grib_accessor* a, const long len, grib_arguments* args)
 {
     grib_accessor_g1_message_length* self = (grib_accessor_g1_message_length*)a;
-    self->sec4_length                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
+    self->sec4_length = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
 }
 
 int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s4,
@@ -134,15 +134,12 @@ int grib_get_g1_message_size(grib_handle* h, grib_accessor* tl, grib_accessor* s
 
     if (slen < 120 && (tlen & 0x800000)) {
         /* printf("DECODING large grib tlen=%ld slen=%ld\n",tlen,slen); */
-
         tlen &= 0x7fffff;
         tlen *= 120;
         tlen -= slen;
         tlen += 4;
 
         slen = tlen - s4->offset - 4; /* 4 is for 7777 */
-
-        /*printf("DECODING large grib total=%ld section4=%ld\n",tlen,slen);*/
     }
 
     *total_length = tlen;
@@ -184,7 +181,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     slen = t120 * 120 - tlen;
     tlen = 0x800000 | t120;
 
-    /* printf("ENCODING large grib total = %ld tlen=%ld slen=%ld \n",*val,tlen,slen);  */
     *len = 1;
     if ((ret = grib_pack_long(s4, &slen, len)) != GRIB_SUCCESS)
         return ret;
@@ -198,13 +194,18 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     {
         long total_length = -1, sec4_length = -1;
-        grib_get_g1_message_size(grib_handle_of_accessor(a),
-                                 a,
+        grib_get_g1_message_size(grib_handle_of_accessor(a), a,
                                  grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
-                                 &total_length,
-                                 &sec4_length);
-
-        Assert(total_length == *val);
+                                 &total_length, &sec4_length);
+        if (total_length != *val) {
+            const char* cclass_name = a->cclass->name;
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "%s %s: Failed to set GRIB1 message length to %ld"
+                             " (actual length=%ld)",
+                              cclass_name, __func__, *val, total_length);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try encoding as GRIB2\n");
+            return GRIB_ENCODING_ERROR;
+        }
     }
 
     return GRIB_SUCCESS;
@@ -214,16 +215,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_g1_message_length* self = (grib_accessor_g1_message_length*)a;
     int ret;
-
     long total_length, sec4_length;
 
-    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a),
-                                        a,
+    if ((ret = grib_get_g1_message_size(grib_handle_of_accessor(a), a,
                                         grib_find_accessor(grib_handle_of_accessor(a), self->sec4_length),
-                                        &total_length,
-                                        &sec4_length)) != GRIB_SUCCESS)
+                                        &total_length, &sec4_length)) != GRIB_SUCCESS)
+    {
         return ret;
-
+    }
 
     *val = total_length;
     return GRIB_SUCCESS;

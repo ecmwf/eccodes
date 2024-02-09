@@ -119,20 +119,21 @@ grib_accessor_class* grib_accessor_class_bufr_extract_area_subsets = &_grib_acce
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    int n                                         = 0;
     grib_accessor_bufr_extract_area_subsets* self = (grib_accessor_bufr_extract_area_subsets*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+    int n = 0;
 
     a->length                          = 0;
-    self->doExtractSubsets             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->numberOfSubsets              = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractSubsetList            = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaWestLongitude     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaEastLongitude     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaNorthLatitude     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaSouthLatitude     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaLongitudeRank     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractAreaLatitudeRank      = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
-    self->extractedAreaNumberOfSubsets = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
+    self->doExtractSubsets             = grib_arguments_get_name(h, arg, n++);
+    self->numberOfSubsets              = grib_arguments_get_name(h, arg, n++);
+    self->extractSubsetList            = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaWestLongitude     = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaEastLongitude     = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaNorthLatitude     = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaSouthLatitude     = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaLongitudeRank     = grib_arguments_get_name(h, arg, n++);
+    self->extractAreaLatitudeRank      = grib_arguments_get_name(h, arg, n++);
+    self->extractedAreaNumberOfSubsets = grib_arguments_get_name(h, arg, n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
@@ -152,11 +153,12 @@ static void fill_in(double a[], long length)
 
 static int select_area(grib_accessor* a)
 {
-    int ret                                       = 0;
-    long compressed                               = 0;
     grib_accessor_bufr_extract_area_subsets* self = (grib_accessor_bufr_extract_area_subsets*)a;
-    grib_handle* h                                = grib_handle_of_accessor(a);
-    grib_context* c                               = h->context;
+
+    int ret = 0;
+    long compressed = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
+    grib_context* c = h->context;
 
     double* lat = NULL;
     double* lon = NULL;

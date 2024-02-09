@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_scaling.h"
 #include "grib_api_internal.h"
 /*
@@ -116,13 +111,14 @@ grib_accessor_class* grib_accessor_class_simple_packing_error = &_grib_accessor_
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_simple_packing_error* self = (grib_accessor_simple_packing_error*)a;
-    int n                                    = 0;
+    int n = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    self->bitsPerValue       = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->binaryScaleFactor  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->decimalScaleFactor = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->referenceValue     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->floatType          = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->bitsPerValue       = grib_arguments_get_name(h, c, n++);
+    self->binaryScaleFactor  = grib_arguments_get_name(h, c, n++);
+    self->decimalScaleFactor = grib_arguments_get_name(h, c, n++);
+    self->referenceValue     = grib_arguments_get_name(h, c, n++);
+    self->floatType          = grib_arguments_get_name(h, c, n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
@@ -131,25 +127,23 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_simple_packing_error* self = (grib_accessor_simple_packing_error*)a;
-    int ret                                  = 0;
-    long binaryScaleFactor                   = 0;
-    long bitsPerValue                        = 0;
-    long decimalScaleFactor                  = 0;
-    double referenceValue                    = 0;
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a),
-                                      self->binaryScaleFactor, &binaryScaleFactor)) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a),
-                                      self->bitsPerValue, &bitsPerValue)) != GRIB_SUCCESS)
-        return ret;
+    int ret                 = 0;
+    long binaryScaleFactor  = 0;
+    long bitsPerValue       = 0;
+    long decimalScaleFactor = 0;
+    double referenceValue   = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
 
-    if ((ret = grib_get_long_internal(grib_handle_of_accessor(a),
-                                      self->decimalScaleFactor, &decimalScaleFactor)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, self->binaryScaleFactor, &binaryScaleFactor)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, self->bitsPerValue, &bitsPerValue)) != GRIB_SUCCESS)
         return ret;
 
-    if ((ret = grib_get_double_internal(grib_handle_of_accessor(a),
-                                        self->referenceValue, &referenceValue)) != GRIB_SUCCESS)
+    if ((ret = grib_get_long_internal(h, self->decimalScaleFactor, &decimalScaleFactor)) != GRIB_SUCCESS)
+        return ret;
+
+    if ((ret = grib_get_double_internal(h, self->referenceValue, &referenceValue)) != GRIB_SUCCESS)
         return ret;
 
     if (!strcmp(self->floatType, "ibm"))

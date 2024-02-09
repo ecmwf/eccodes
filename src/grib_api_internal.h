@@ -950,7 +950,7 @@ struct grib_multi_support
     unsigned char* sections[8];
     unsigned char* bitmap_section;
     size_t bitmap_section_length;
-    size_t sections_length[9];
+    size_t sections_length[9]; /* GRIB2 has 9 sections */
     int section_number;
     grib_multi_support* next;
 };
@@ -1004,6 +1004,7 @@ struct grib_context
     int no_big_group_split;
     int no_spd;
     int keep_matrix;
+    int grib_hourly_steps_with_units;
     char* grib_definition_files_path;
     char* grib_samples_path;
     char* grib_concept_path;

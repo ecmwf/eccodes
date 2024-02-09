@@ -689,7 +689,6 @@ static int read_WRAP(reader* r)
     tmp[i++] = 'P';
 
     if ((r->read(r->read_data, buf, 8, &err) != 8) || err) {
-        printf("error\n");
         return err;
     }
 
@@ -1267,57 +1266,49 @@ int wmo_read_gts_from_file(FILE* f, void* buffer, size_t* len)
     return err;
 }
 
-int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
-{
-    int err;
-    user_buffer_t u;
-    reader r;
+// int wmo_read_taf_from_file(FILE* f, void* buffer, size_t* len)
+// {
+//     int err;
+//     user_buffer_t u;
+//     reader r;
+//     u.user_buffer = buffer;
+//     u.buffer_size = *len;
+//     r.read_data       = f;
+//     r.read            = &stdio_read;
+//     r.alloc_data      = &u;
+//     r.alloc           = &user_provider_buffer;
+//     r.headers_only    = 0;
+//     r.seek            = &stdio_seek;
+//     r.seek_from_start = &stdio_seek_from_start;
+//     r.tell            = &stdio_tell;
+//     r.offset          = 0;
+//     r.message_size    = 0;
+//     err  = read_any_taf(&r);
+//     *len = r.message_size;
+//     return err;
+// }
 
-    u.user_buffer = buffer;
-    u.buffer_size = *len;
-
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
-    r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
-
-    err  = read_any_taf(&r);
-    *len = r.message_size;
-
-    return err;
-}
-
-int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len)
-{
-    int err;
-    user_buffer_t u;
-    reader r;
-
-    u.user_buffer = buffer;
-    u.buffer_size = *len;
-
-    r.read_data       = f;
-    r.read            = &stdio_read;
-    r.alloc_data      = &u;
-    r.alloc           = &user_provider_buffer;
-    r.headers_only    = 0;
-    r.seek            = &stdio_seek;
-    r.seek_from_start = &stdio_seek_from_start;
-    r.tell            = &stdio_tell;
-    r.offset          = 0;
-    r.message_size    = 0;
-
-    err  = read_any_metar(&r);
-    *len = r.message_size;
-
-    return err;
-}
+// int wmo_read_metar_from_file(FILE* f, void* buffer, size_t* len)
+// {
+//     int err;
+//     user_buffer_t u;
+//     reader r;
+//     u.user_buffer = buffer;
+//     u.buffer_size = *len;
+//     r.read_data       = f;
+//     r.read            = &stdio_read;
+//     r.alloc_data      = &u;
+//     r.alloc           = &user_provider_buffer;
+//     r.headers_only    = 0;
+//     r.seek            = &stdio_seek;
+//     r.seek_from_start = &stdio_seek_from_start;
+//     r.tell            = &stdio_tell;
+//     r.offset          = 0;
+//     r.message_size    = 0;
+//     err  = read_any_metar(&r);
+//     *len = r.message_size;
+//     return err;
+// }
 
 /*================== */
 
@@ -1731,7 +1722,6 @@ int grib_read_any_from_memory(grib_context* ctx, unsigned char** data, size_t* d
 
     err  = read_any(&r, /*no_alloc=*/0, 1, ECCODES_READS_BUFR, ECCODES_READS_HDF5, ECCODES_READS_WRAP);
     *len = r.message_size;
-
     *data_length = m.data_len;
     *data        = m.data;
 
@@ -1825,7 +1815,11 @@ static int count_product_in_file(grib_context* c, FILE* f, ProductKind product, 
     return err == GRIB_END_OF_FILE ? 0 : err;
 }
 
-int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductKind product, off_t** offsets, int* length, int strict_mode)
+static int codes_extract_offsets_malloc_internal(
+    grib_context* c, const char* filename, ProductKind product,
+    off_t** offsets, size_t** sizes,
+    int* number_of_elements,
+    int strict_mode)
 {
     int err      = 0;
     size_t size  = 0;
@@ -1858,7 +1852,7 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
         fclose(f);
         return err;
     }
-    *length = num_messages;
+    *number_of_elements = num_messages;
     if (num_messages == 0) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: No messages in file", __func__);
         fclose(f);
@@ -1869,6 +1863,13 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
         fclose(f);
         return GRIB_OUT_OF_MEMORY;
     }
+    if (sizes) {
+        *sizes = (size_t*)calloc(num_messages, sizeof(size_t));
+        if (!*sizes) {
+            fclose(f);
+            return GRIB_OUT_OF_MEMORY;
+        }
+    }
 
     i = 0;
     while (err != GRIB_END_OF_FILE) {
@@ -1878,6 +1879,9 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
         err = decoder(f, &size, &offset);
         if (!err) {
             (*offsets)[i] = offset;
+            if (sizes) {
+                (*sizes)[i] = size;
+            }
         }
         else {
             if (strict_mode && (err != GRIB_END_OF_FILE && err != GRIB_PREMATURE_END_OF_FILE)) {
@@ -1890,4 +1894,21 @@ int codes_extract_offsets_malloc(grib_context* c, const char* filename, ProductK
 
     fclose(f);
     return err;
+}
+
+// The lagacy version only did the offsets
+int codes_extract_offsets_malloc(
+    grib_context* c, const char* filename, ProductKind product,
+    off_t** offsets, int* number_of_elements, int strict_mode)
+{
+    // Call without doing the message sizes
+    return codes_extract_offsets_malloc_internal(c, filename, product, offsets, NULL, number_of_elements, strict_mode);
+}
+
+// New function does both message offsets and sizes
+int codes_extract_offsets_sizes_malloc(
+    grib_context* c, const char* filename, ProductKind product,
+    off_t** offsets, size_t** sizes, int* number_of_elements, int strict_mode)
+{
+    return codes_extract_offsets_malloc_internal(c, filename, product, offsets, sizes, number_of_elements, strict_mode);
 }

@@ -292,7 +292,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
         grib_tool_new_handle_action(options, h);
 
-        grib_tool_print_key_values(options, h);
+        grib_print_key_values(options, h);
 
         grib_handle_delete(h);
     }
@@ -450,7 +450,8 @@ static int navigate(grib_field_tree* fields, grib_runtime_options* options)
             message_type = CODES_BUFR;
             break;
         default:
-            Assert(0);
+            fprintf(stderr, "%s %s: Invalid mode", tool_name, __func__);
+            exit(1);
     }
 
     if (fields->field) {

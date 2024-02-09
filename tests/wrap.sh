@@ -22,5 +22,7 @@ ${tools_dir}/grib_dump -TA -O $input
 id=`${tools_dir}/grib_get -TA -p identifier $input`
 [ "$id" = "WRAP" ]
 
+echo 'print "[data]";' | ${tools_dir}/grib_filter -TA - $input
+
 # Clean up
 rm -f $tempOut $tempRef $tempTxt

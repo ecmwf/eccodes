@@ -13,11 +13,18 @@
 label="codes_dump_content_test"
 temp=temp.$label.txt
 
-infile=$data_dir/sample.grib2
+infiles="
+    sample.grib2
+    test_uuid.grib2
+"
 
 modes="default wmo json serialize debug grib_encode_C"
 for mode in $modes; do
-    $EXEC ${test_dir}/codes_dump_content $mode $infile
+    for gf in $infiles; do
+        echo Doing $gf
+        infile=$data_dir/$gf
+        $EXEC ${test_dir}/codes_dump_content $mode $infile > $temp
+    done
 done
 
 ${test_dir}/codes_dump_content rubbish $infile > $temp 2>&1

@@ -53,7 +53,7 @@ infile=${data_dir}/sample.grib2
 set +e
 ${tools_dir}/grib_set -r -s packingType=grid_png $infile $temp > $tempErr 2>&1
 set -e
-grep -q "unable to set double array codedValues" $tempErr
+grep -q "Unable to set double array 'codedValues'" $tempErr
 
 # Nearest neighbour
 # ----------------------
@@ -64,6 +64,10 @@ grep -q "224.455" $temp1
 
 ${tools_dir}/grib_ls -F%.6g -l 48.835,327.600 $temp > $temp1
 grep -q "Grid Point chosen #4 index=936 " $temp1
+
+# jPointsAreConsecutive
+infile=${data_dir}/reduced_gaussian_model_level.grib2
+${tools_dir}/grib_set -r -s jPointsAreConsecutive=1,packingType=grid_png $infile $temp
 
 
 # Conversion from IEEE to PNG

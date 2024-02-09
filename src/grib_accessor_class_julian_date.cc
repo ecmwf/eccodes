@@ -282,7 +282,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* h                  = grib_handle_of_accessor(a);
 
     if (*len < 15)
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
 
     if (self->ymd == NULL) {
         ret = grib_get_long(h, self->year, &year);
@@ -334,6 +334,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     else {
         snprintf(val, 1024, "%04ld%02ld%02ld%02ld%02ld%02ld", year, month, day, hour, minute, second);
     }
+    *len = strlen(val)+1;
     return ret;
 }
 

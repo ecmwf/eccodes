@@ -275,7 +275,6 @@ static int proj_mercator(grib_handle* h, char* result)
     return err;
 }
 
-#define NUMBER(a) (sizeof(a) / sizeof(a[0]))
 static proj_mapping proj_mappings[] = {
     { "regular_ll", &proj_unprojected },
     { "regular_gg", &proj_unprojected },
@@ -298,17 +297,28 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_proj_string* self = (grib_accessor_proj_string*)a;
     int err = 0, found = 0;
-    size_t i           = 0;
+    size_t i = 0;
     char grid_type[64] = {0,};
     grib_handle* h = grib_handle_of_accessor(a);
-    size_t size    = sizeof(grid_type) / sizeof(*grid_type);
+    size_t size = sizeof(grid_type) / sizeof(*grid_type);
 
     Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
+
+    size_t l = 100; // Safe bet
+    if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is at least %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
+        *len = l;
+        return GRIB_BUFFER_TOO_SMALL;
+    }
 
     err = grib_get_string(h, self->grid_type, grid_type, &size);
     if (err) return err;
 
-    for (i = 0; !found && i < NUMBER(proj_mappings); ++i) {
+    const size_t num_proj_mappings = sizeof(proj_mappings) / sizeof(proj_mappings[0]);
+    for (i = 0; !found && i < num_proj_mappings; ++i) {
         proj_mapping pm = proj_mappings[i];
         if (strcmp(grid_type, pm.gridType) == 0) {
             found = 1;

@@ -61,6 +61,16 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
+#2 metre temperature
+'2 metre temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Surface roughness (climatological)
 'Surface roughness (climatological)' = {
 	 discipline = 2 ;
@@ -140,6 +150,14 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#Skin temperature
+'Skin temperature' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 17 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Total column integrated water vapour
 'Total column integrated water vapour' = {
 	 discipline = 0 ;
@@ -171,6 +189,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 6 ;
 	 parameterNumber = 11 ;
+	}
+#Volumetric soil moisture
+'Volumetric soil moisture' = {
+	 discipline = 2 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 25 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #2 metre relative humidity
 '2 metre relative humidity' = {
@@ -266,4 +291,11 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	}
+#Snow depth water equivalent
+'Snow depth water equivalent' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 60 ;
+	 typeOfStatisticalProcessing = 0 ;
 }

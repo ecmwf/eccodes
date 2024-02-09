@@ -10,8 +10,6 @@
 
 . ./include.ctest.sh
 
-#set -x
-
 # Enter data dir
 cd ${data_dir}/bufr
 
@@ -26,10 +24,9 @@ touch $fLog
 # Define tmp bufr file
 fBufrTmp=${label}".bufr.tmp"
 
-#----------------------------------------------------
+#-----------------------------------------------
 # Test: setting header for single message file
-#----------------------------------------------------
-
+#-----------------------------------------------
 rm -f $fBufrTmp
 
 f="syno_1.bufr"
@@ -43,7 +40,6 @@ centre=`${tools_dir}/bufr_get -p bufrHeaderCentre $fBufrTmp`
 #----------------------------------------------------
 # Test: setting header for multi-message file
 #----------------------------------------------------
-
 rm -f $fBufrTmp
 
 f="syno_multi.bufr"
@@ -56,11 +52,15 @@ for i in 1 2 3 ;do
     [ $centre = "222" ]
 done
 
+# Strict option
+f=aeolus_wmo_26.bufr
+${tools_dir}/bufr_set -S -w localNumberOfObservations=40 -s rdbType=3 $f $fBufrTmp
+cnt=$( ${tools_dir}/bufr_count $fBufrTmp )
+[ $cnt -eq 3 ]
 
 #-----------------------------------------------------
 # Test: setting data values for single message file
 #-----------------------------------------------------
-
 # TODO: when ECC-37 is fixed we need to enable it.
 
 rm -f $fBufrTmp
@@ -77,7 +77,6 @@ echo "file: $f" >> $fLog
 #----------------------------------------------------
 # Test: setting header for multi-message file
 #----------------------------------------------------
-
 # TODO: when ECC-37 is fixed we need to enable it.
 
 rm -f $fBufrTmp
@@ -93,13 +92,22 @@ echo "file: $f" >> $fLog
 #done
 
 #-----------------------------------------------------------
-# Test: with nonexistent keys. 
+# Test: No keys set
+#-----------------------------------------------------------
+set +e
+${tools_dir}/bufr_set $f $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "provide some keys to set" $fLog
+
+#-----------------------------------------------------------
+# Test: with nonexistent keys
 #-----------------------------------------------------------
 # Key "center" does not exist!!
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
-
 f="syno_1.bufr"
 echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
@@ -117,12 +125,10 @@ ${tools_dir}/bufr_set -f -s center=98 $f $fBufrTmp 2>>$fLog 1>>$fLog
 #-----------------------------------------------------------
 # Test: with not allowed key values
 #-----------------------------------------------------------
-
 # Here 1024 is out of range for centre (it is 8-bit only for edition=3 files)
 
 # Invoke without -f i.e. should fail if error encountered
 set +e
-
 f="syno_1.bufr"
 echo "Test: nonexistent keys" >> $fLog
 echo "file: $f" >> $fLog
@@ -179,9 +185,45 @@ result=`${tools_dir}/bufr_get -p ident $fBufrTmp`
 #-----------------------------------------------------------
 # ECC-1359: string that can be converted to an integer
 # ----------------------------------------------------------
-${tools_dir}/bufr_set -s messageLength:s=333 $ECCODES_SAMPLES_PATH/BUFR4_local.tmpl $fBufrTmp
+sample=$ECCODES_SAMPLES_PATH/BUFR4_local.tmpl
+${tools_dir}/bufr_set -s messageLength:s=333 $sample $fBufrTmp
 result=`${tools_dir}/bufr_get -p messageLength $fBufrTmp`
 [ "$result" = "333" ]
+
+#-----------------------------------------------------------
+# Invalid masterTablesVersionNumber
+#-----------------------------------------------------------
+sample=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
+${tools_dir}/bufr_set -s masterTablesVersionNumber=255 $sample $fBufrTmp
+set +e
+${tools_dir}/bufr_dump -p $fBufrTmp 2>>$fLog 1>>$fLog
+if [ $? -eq 0 ]; then
+   echo "bufr_dump should have failed" >&2
+   exit 1
+fi
+set -e
+grep -q "unable to find definition file sequence.def.*bufr/tables/0/local/0/98/0/sequence.def" $fLog
+grep -q "ECCODES ERROR.*unable to get hash value for sequences" $fLog
+
+# ECC-1739
+sample=$ECCODES_SAMPLES_PATH/BUFR3.tmpl
+${tools_dir}/bufr_set -s masterTablesVersionNumber=255,localTablesVersionNumber=1 $sample $fBufrTmp
+set +e
+${tools_dir}/bufr_dump -p $fBufrTmp >$fLog 2>&1
+status=$?
+set -e
+grep -q "ECCODES ERROR.*unable to get hash value for sequences" $fLog
+
+
+# Unreadable message
+#-----------------------------------------------------------
+echo BUFR > $fBufrTmp
+set +e
+${tools_dir}/bufr_set -s masterTablesVersionNumber=10 $fBufrTmp /dev/null > $fLog 2>&1
+status=$?
+set -e
+grep -q "unreadable message" $fLog
+
 
 # Clean up
 rm -f $fLog 

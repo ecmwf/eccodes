@@ -11,7 +11,7 @@
 !
 !
 !
-program set
+program set_missing
    use eccodes
    implicit none
    integer              :: infile, outfile
@@ -48,4 +48,4 @@ program set
    call codes_close_file(infile)
    call codes_close_file(outfile)
 
-end program set
+end program

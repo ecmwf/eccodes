@@ -9,22 +9,23 @@
 
 . ./include.ctest.sh
 
+label="grib_grid_lamb_az_eq_area_test"
 
 GRIB_INFILE=${data_dir}/regular_gaussian_pressure_level_constant.grib2
 REF_FILE=grib_lamb_az_eq_area.ref
 
 # Temporary files created for this test
-FILTER_FILE=lamb_az_eq_area.filter
-GRIB_OUTFILE=lamb_az_eq_area.grib2
-DATA_OUTFILE=lamb_data.txt
+FILTER_FILE=temp.$label.filter
+GRIB_OUTFILE=temp.$label.grib2
+DATA_OUTFILE=temp.$label.txt
 rm -f $FILTER_FILE $GRIB_OUTFILE $DATA_OUTFILE
 
+# --------------------
 # Spherical Earth
-# ----------------
+# --------------------
 
 # Create a filter
 cat > $FILTER_FILE<<EOF
-set edition = 2;
 set gridType = "lambert_azimuthal_equal_area";
 set Nx = 10;
 set Ny = 10;
@@ -53,7 +54,7 @@ ${tools_dir}/grib_filter -o $GRIB_OUTFILE $FILTER_FILE $GRIB_INFILE
 ${tools_dir}/grib_get_data $GRIB_OUTFILE > $DATA_OUTFILE
 
 # Compare output with reference. If the diff fails, script will immediately exit with status 1
-diff $DATA_OUTFILE $REF_FILE
+diff $REF_FILE $DATA_OUTFILE
 
 grib_check_key_equals $GRIB_OUTFILE standardParallelInDegrees,centralLongitudeInDegrees '48 9'
 grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridLengthInMetres '5000 5000'
@@ -62,8 +63,20 @@ grib_check_key_equals $GRIB_OUTFILE xDirectionGridLengthInMetres,yDirectionGridL
 ${tools_dir}/grib_ls -l 67,-33,1 $GRIB_OUTFILE
 
 # jPointsAreConsecutive
-${tools_dir}/grib_get_data -s jPointsAreConsecutive=1 $GRIB_OUTFILE > $DATA_OUTFILE
+tempOutA=temp.$label.A.txt
+tempOutB=temp.$label.B.txt
+${tools_dir}/grib_get_data -s jPointsAreConsecutive=0 $GRIB_OUTFILE > $tempOutA
+${tools_dir}/grib_get_data -s jPointsAreConsecutive=1 $GRIB_OUTFILE > $tempOutB
+# Results should be different.
+set +e
+diff $tempOutA $tempOutB > /dev/null
+status=$?
+set -e
+[ $status -ne 0 ]
+rm -f $tempOutA $tempOutB
 
+
+# --------------------
 # Oblate spheroid
 # --------------------
 

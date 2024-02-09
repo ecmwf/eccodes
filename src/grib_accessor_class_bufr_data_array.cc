@@ -23,7 +23,6 @@
    IMPLEMENTS = byte_count; value_count
    IMPLEMENTS = byte_offset; unpack_double
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = compare
    IMPLEMENTS = pack_long; unpack_double; pack_double
    MEMBERS    = const char* bufrDataEncodedName
    MEMBERS    = const char* numberOfSubsetsName
@@ -98,7 +97,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_bufr_data_array
 {
@@ -194,7 +192,7 @@ static grib_accessor_class _grib_accessor_class_bufr_data_array = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -256,7 +254,7 @@ static size_t get_length(grib_accessor* a)
     grib_accessor_bufr_data_array* self = (grib_accessor_bufr_data_array*)a;
     size_t len                          = 0;
 
-    grib_handle* h = grib_handle_of_accessor(a);
+    const grib_handle* h = grib_handle_of_accessor(a);
 
     grib_get_size(h, self->bufrDataEncodedName, &len);
 
@@ -472,11 +470,6 @@ static long byte_offset(grib_accessor* a)
 static long next_offset(grib_accessor* a)
 {
     return a->offset;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    return GRIB_NOT_IMPLEMENTED;
 }
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
@@ -2434,7 +2427,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     bufr_descriptor* descriptor;
     /*grib_section* sectionUp=0;*/
     grib_section* groupSection = 0;
-    long groupNumber           = 0;
+    // long groupNumber           = 0;
     /*long indexOfGroupNumber=0;*/
     int depth;
     int max_depth = -1; /* highest value of depth */
@@ -2488,7 +2481,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
     self->tempStrings = self->numberOfSubsets? grib_sarray_new(c, self->numberOfSubsets, 500) : NULL;
 
     end         = self->compressedData ? 1 : self->numberOfSubsets;
-    groupNumber = 1;
+    // groupNumber = 1;
 
     gaGroup                    = grib_accessor_factory(self->dataKeys, &creatorGroup, 0, NULL);
     //gaGroup->bufr_group_number = groupNumber;
@@ -2532,7 +2525,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
                 self->unpackMode == CODES_BUFR_UNPACK_STRUCTURE) {
                 const int sidx = descriptor->Y + significanceQualifierIndexArray[descriptor->X] * NUMBER_OF_QUALIFIERS_PER_CATEGORY;
                 DEBUG_ASSERT(sidx > 0);
-                groupNumber++;
+                // groupNumber++;
                 add_coord_flag = 1;
 
                 if (significanceQualifierGroup[sidx]) {
@@ -2576,7 +2569,7 @@ static int create_keys(const grib_accessor* a, long onlySubset, long startSubset
             else if (descriptor->code == 31031 && incrementBitmapIndex != 0) {
                 /* bitmap */
                 bitmapIndex++;
-                groupNumber++;
+                // groupNumber++;
                 incrementBitmapIndex = 0;
                 if (bitmapIndex >= MAX_NUMBER_OF_BITMAPS) {
                     //grib_context_log(c, GRIB_LOG_ERROR, "Bitmap error: bitmap index=%d, max num bitmaps=%d\n", bitmapIndex, MAX_NUMBER_OF_BITMAPS);
