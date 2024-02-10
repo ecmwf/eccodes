@@ -1,5 +1,8 @@
 # (C) Copyright 2005- ECMWF.
 
+constant paramType = "optical" ;
+alias mars.paramtype = paramType ;
+
 codetable[1] typeOfWavelengthInterval ('4.91.table',masterDir,localDir) : dump;
 alias typeOfIntervalForFirstAndSecondWavelength=typeOfWavelengthInterval;
 
