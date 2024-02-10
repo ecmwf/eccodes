@@ -21,6 +21,7 @@ import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
 import grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates.base_conversion_pack_updates as base_conversion_pack_updates
+import code_object_converter.conversion_pack.funcsig_mapping as funcsig_mapping
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -57,7 +58,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         return info
 
-    def function_specific_conversion_pack_updates(self, cfunction_name):
+    def function_specific_conversion_pack_updates(self, cfunction_name, conv_pack):
         # See if we have a function-specific validator,
         # Otherwise use the main-one
         conversion_pack_updates_path="grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates"
@@ -77,9 +78,9 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}], using base version")
             updates_class_inst = base_conversion_pack_updates.BaseConversionPackUpdates()
 
-        updates_class_inst.apply_updates_for_cfunction(cfunction_name, self._conversion_pack)
+        updates_class_inst.apply_updates_for_cfunction(cfunction_name, conv_pack)
 
-        super().function_specific_conversion_pack_updates(cfunction_name)
+        super().function_specific_conversion_pack_updates(cfunction_name, conv_pack)
 
     # See if we have an Accessor-specific validator (e.g. ProjStringValidation),
     # Otherwise use the default
@@ -106,10 +107,19 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
     def set_custom_conversion_data(self, conv_data):
         for mapping in grib_accessor_member_funcsig_mapping:
-            conv_data.add_member_funcsig_mapping(mapping)
+            conv_data.add_global_member_funcsig_mapping(mapping)
+
+        # Store any member functions we have "discovered"
+        # We don't yet have the C++ conversion so we'll add the C funcsig for C++ (it's a hack, but should be ok unless we later look
+        # for the C++ name!)
+        for cfunc in self._ccode.member_functions:
+            if not conv_data.is_member_function(cfunc.funcsig.name):
+                mapping = funcsig_mapping.FuncSigMapping(cfunc.funcsig, None)
+                debug.line("set_custom_conversion_data", f"Adding <discovered> member function mapping (only cfuncsig available): [{debug.as_debug_string(cfunc.funcsig)}]->[None]")
+                conv_data.add_global_member_funcsig_mapping(mapping)
 
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
-            conv_data.add_virtual_member_funcsig_mapping(mapping)
+            conv_data.add_global_virtual_member_funcsig_mapping(mapping)
 
         all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(conv_data)
 
@@ -122,7 +132,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         data_member_mappings.add_data_member_mappings_to_conversion_data(conv_data)
 
         # Add C class name pointer as "do not convert" (e.g. grib_accessor_class_proj_string* -> NoneDeclSpec)
-        debug.line("initialise_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")
+        debug.line("set_custom_conversion_data", f"Adding funcbody mapping for Accessor name=[{self._ccode.accessor_name}]")
         conv_data.add_funcbody_type_mapping(DeclSpec.from_decl_specifier_seq(self._ccode.accessor_name+"*"), NONE_VALUE)
 
     # Override to extend the type-info...
@@ -130,26 +140,26 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
     def type_info(self):
          return grib_accessor_type_info.GribAccessorTypeInfo()
 
-    def add_includes(self):
+    def add_includes(self, conv_pack):
         # Header includes
-        if self._conversion_pack.conversion_data.info.super_class_name == "AccessorData":
-            self._conversion_pack.conversion_data.info.header_includes.append("/".join(["AccessorData", self._conversion_pack.conversion_data.info.super_class_name + ".h"]))
+        if conv_pack.conversion_data.info.super_class_name == "AccessorData":
+            conv_pack.conversion_data.info.header_includes.append("/".join(["AccessorData", conv_pack.conversion_data.info.super_class_name + ".h"]))
         else:
-            self._conversion_pack.conversion_data.info.header_includes.append(f"{self._conversion_pack.conversion_data.info.super_class_name}.h")
+            conv_pack.conversion_data.info.header_includes.append(f"{conv_pack.conversion_data.info.super_class_name}.h")
 
         for inc in includes.grib_accessor_header_includes:
-            self._conversion_pack.conversion_data.info.header_includes.append(inc)
+            conv_pack.conversion_data.info.header_includes.append(inc)
 
         # Source includes
-        self._conversion_pack.conversion_data.info.source_includes.append(f"\"{self._conversion_pack.conversion_data.info.class_name}.h\"")
+        conv_pack.conversion_data.info.source_includes.append(f"\"{conv_pack.conversion_data.info.class_name}.h\"")
         
         for inc in includes.grib_accessor_source_includes:
-            self._conversion_pack.conversion_data.info.source_includes.append(inc)
+            conv_pack.conversion_data.info.source_includes.append(inc)
 
 
         # TODO: Class-specific includes
 
-        return super().add_includes()
+        return super().add_includes(conv_pack)
     
     def is_const_member_function(self, function_name):
         return function_name in virtual_member_functions.const_virtual_member_function_names

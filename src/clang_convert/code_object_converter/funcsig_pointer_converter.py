@@ -15,13 +15,11 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
         assert isinstance(ccode_object, funcsig_pointer.FuncSigPointer), f"Expected FuncSigPointer, got type=[{type(ccode_object)}]"
 
     def create_cpp_code_object(self, conversion_pack):
-        self._conversion_pack = conversion_pack
-
         # If we have a mapping already stored, just use that!
-        cppfuncsig_pointer = self._conversion_pack.conversion_data.cppfuncsig_pointer_for_cfuncsig_pointer(self._ccode_object)
+        cppfuncsig_pointer = conversion_pack.conversion_data.cppfuncsig_pointer_for_cfuncsig_pointer(self._ccode_object)
         if not cppfuncsig_pointer:
-            cppfunc_arg = self.to_cpp_func_arg()
-            cpp_args = self.to_cpp_args()
+            cppfunc_arg = self.to_cpp_func_arg(conversion_pack)
+            cpp_args = self.to_cpp_args(conversion_pack)
 
             cppfuncsig_pointer = funcsig_pointer.FuncSigPointer(cppfunc_arg.decl_spec,
                                                                 cppfunc_arg.name,
@@ -31,12 +29,12 @@ class FuncSigPointerConverter(funcsig_converter.FuncSigConverter):
 
             # Add this to the conversion data mappings
             mapping = funcsig_pointer_mapping.FuncSigPointerMapping(self._ccode_object, cppfuncsig_pointer)
-            self._conversion_pack.conversion_data.add_funcsig_pointer_mapping(mapping)
+            conversion_pack.conversion_data.add_funcsig_pointer_mapping(mapping)
 
             # We've also created a new type, so need to add this (to the funcbody map) too!
             cdecl_spec = declaration_specifier.DeclSpec(type=self._ccode_object.func_arg.name, pointer=self._ccode_object.func_arg.decl_spec.pointer)
             cppdecl_spec = declaration_specifier.DeclSpec(type=cppfunc_arg.name, pointer=cppfunc_arg.decl_spec.pointer)
-            self._conversion_pack.conversion_data.add_funcbody_type_mapping(cdecl_spec, cppdecl_spec)
+            conversion_pack.conversion_data.add_funcbody_type_mapping(cdecl_spec, cppdecl_spec)
             debug.line("create_cpp_code_object", f"FuncSigPointer conversion: [{cdecl_spec.as_string()}] -> [{cppdecl_spec.as_string()}]")
 
 

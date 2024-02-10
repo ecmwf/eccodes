@@ -23,19 +23,25 @@ class DefaultCCodeConverter:
         self._ccode = ccode_instance
 
     def convert(self):
-        self.setup_conversion_pack()
-        self.add_includes()
-        self.convert_global_function()
-        self.convert_data_members()
+        conv_pack = self.setup_conversion_pack()
+        self.add_includes(conv_pack)
+        self.convert_global_function(conv_pack)
+        self.convert_data_members(conv_pack)
 
         # Now set the conversion data state to local for the rest of the conversion
-        self._conversion_pack.conversion_data.set_local_state()
+        conv_pack.conversion_data.set_local_state()
 
-        self.convert_functions()
-        self.convert_constructor_function()
-        self.convert_destructor_function()
-        self.convert_member_functions()
-        self.convert_virtual_member_functions()
+        # Function conversion order is:
+        # 1. Non-class functions
+        # 2. Member functions, as they may be called by:
+        # 3. Constructor (shouldn't call virtual member functions)
+        # 4. Virtual funcs
+        # 5. Destructor last!
+        self.convert_functions(conv_pack)
+        self.convert_member_functions(conv_pack)
+        self.convert_constructor_function(conv_pack)
+        self.convert_virtual_member_functions(conv_pack)
+        self.convert_destructor_function(conv_pack)
 
         # Post-processing
         self.run_post_processing()
@@ -52,7 +58,7 @@ class DefaultCCodeConverter:
         conv_data = self.create_conversion_data()
         conv_validation = self.create_conversion_validation()
         container_utils = self.create_container_utils()
-        self._conversion_pack = conversion_pack.ConversionPack(conv_data, conv_validation, container_utils)
+        return conversion_pack.ConversionPack(conv_data, conv_validation, container_utils)
 
     def create_code_info(self):
         cpp_filename = self._ccode.cfilename
@@ -90,20 +96,20 @@ class DefaultCCodeConverter:
          return default_type_info.DefaultTypeInfo()
     
     # A chance to add specific data - override as required
-    def function_specific_conversion_pack_updates(self, cfunction_name):
+    def function_specific_conversion_pack_updates(self, cfunction_name, conv_pack):
         pass
 
-    def add_includes(self):
+    def add_includes(self, conv_pack):
         pass
 
-    def convert_global_function(self):
-        self._code_elements.global_function = conversion_funcs.convert_ccode_object(self._ccode.global_function, self._conversion_pack)
+    def convert_global_function(self, conv_pack):
+        self._code_elements.global_function = conversion_funcs.convert_ccode_object(self._ccode.global_function, conv_pack)
         debug.line("convert_global_function", f"Converted C++ code [as_lines]...")
         debug.line("convert_global_function", self._code_elements.global_function.as_lines())
 
-    def convert_data_members(self):
+    def convert_data_members(self, conv_pack):
         for cmember in self._ccode.data_members:
-            cppmember = conversion_funcs.convert_ccode_object(cmember, self._conversion_pack)
+            cppmember = conversion_funcs.convert_ccode_object(cmember, conv_pack)
             self._code_elements.add_data_member(cppmember)
 
     # Override to return True if the member function should be marked const
@@ -114,49 +120,49 @@ class DefaultCCodeConverter:
     #
     # NOTE: ***** This function will return NONE_VALUE if the function cannot be converted to C++ *****
     #
-    def to_cpp_function(self, func):
-        self._conversion_pack.conversion_data.reset_local_state(func.funcsig.name)
-        self.function_specific_conversion_pack_updates(func.funcsig.name)
-        cpp_func = conversion_funcs.convert_ccode_object(func, self._conversion_pack)
+    def to_cpp_function(self, func, conv_pack):
+        conv_pack.conversion_data.reset_local_state(func.funcsig.name)
+        self.function_specific_conversion_pack_updates(func.funcsig.name, conv_pack)
+        cpp_func = conversion_funcs.convert_ccode_object(func, conv_pack)
         if isinstance(cpp_func, member_function.MemberFunction):
-            cpp_func.class_name = self._conversion_pack.conversion_data.info.class_name
+            cpp_func.class_name = conv_pack.conversion_data.info.class_name
             cpp_func.set_is_const(self.is_const_member_function(func.funcsig.name))
 
         return cpp_func
 
-    def convert_functions(self):
+    def convert_functions(self, conv_pack):
         for func in self._ccode.functions:
-            cppfunc = self.to_cpp_function(func)
+            cppfunc = self.to_cpp_function(func, conv_pack)
             if cppfunc != NONE_VALUE:
                 self._code_elements.add_function(cppfunc)
                 self.dump_function("convert_functions", cppfunc)
 
-    def convert_constructor_function(self):
+    def convert_constructor_function(self, conv_pack):
         if self._ccode.constructor :
-            constructor = self.to_cpp_function(self._ccode.constructor)
+            constructor = self.to_cpp_function(self._ccode.constructor, conv_pack)
             if constructor != NONE_VALUE:
                 self._code_elements.add_constructor(constructor)
                 self.dump_function("convert_constructor_function", constructor)
 
-    def convert_destructor_function(self):
+    def convert_destructor_function(self, conv_pack):
         if self._ccode.destructor :
-            destructor = self.to_cpp_function(self._ccode.destructor)
+            destructor = self.to_cpp_function(self._ccode.destructor, conv_pack)
             if destructor != NONE_VALUE:
                 self._code_elements.add_destructor(destructor)
                 self.dump_function("convert_destructor_function", destructor)
 
-    def convert_member_functions(self):
+    def convert_member_functions(self, conv_pack):
         debug.line("convert_member_functions", f"Converting member functions...")
         for func in self._ccode.member_functions:
-            member_func = self.to_cpp_function(func)
+            member_func = self.to_cpp_function(func, conv_pack)
             if member_func != NONE_VALUE:
                 self._code_elements.add_member_function(member_func)
                 self.dump_function("convert_member_functions", member_func)
 
-    def convert_virtual_member_functions(self):
+    def convert_virtual_member_functions(self, conv_pack):
         debug.line("convert_virtual_member_functions", f"Converting virtual member functions...")
         for func in self._ccode.virtual_member_functions:
-            virtual_member_func = self.to_cpp_function(func)
+            virtual_member_func = self.to_cpp_function(func, conv_pack)
             if virtual_member_func != NONE_VALUE:
                 self._code_elements.add_virtual_member_function(virtual_member_func)
                 self.dump_function("convert_virtual_member_functions", virtual_member_func)

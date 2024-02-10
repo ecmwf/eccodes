@@ -128,21 +128,29 @@ class ConversionData:
         
         self.active_map.funcsig_pointer_mappings.append(mapping)
 
-    def add_member_funcsig_mapping(self, mapping):
+    # These need to be global as all functions may access them...
+    def add_global_member_funcsig_mapping(self, mapping):
+        debug.line("add_global_member_funcsig_mapping", f">>>>> [IN:SELF]=[{self}]")
+        debug.line("add_global_member_funcsig_mapping", f">>>>> [IN] cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
         assert isinstance(mapping, funcsig_mapping.FuncSigMapping), f"Expected FuncSigMapping, got type=[{type(mapping).__name__}]"
-        for entry in self.active_map.member_funcsig_mappings:
-            if entry.cfuncsig.name == mapping.cfuncsig.name:
+        for entry in self._global_mappings.member_funcsig_mappings:
+
+            debug.line("add_global_member_funcsig_mapping", f">>>>> entry.cfuncsig.name=[{entry.cfuncsig.name}] mapping.cfuncsig.name=[{mapping.cfuncsig.name}]")
+
+            if entry.cfuncsig.name == mapping.cfuncsig.name and entry.cppfuncsig:
                 assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
 
-        self.active_map.member_funcsig_mappings.append(mapping)
+        self._global_mappings.member_funcsig_mappings.append(mapping)
 
-    def add_virtual_member_funcsig_mapping(self, mapping):
+        debug.line("add_global_member_funcsig_mapping", f">>>>> [OUT]")
+
+    def add_global_virtual_member_funcsig_mapping(self, mapping):
         assert isinstance(mapping, funcsig_mapping.FuncSigMapping), f"Expected FuncSigMapping, got type=[{type(mapping).__name__}]"
-        for entry in self.active_map.virtual_member_funcsig_mappings:
+        for entry in self._global_mappings.virtual_member_funcsig_mappings:
             if entry.cfuncsig.name == mapping.cfuncsig.name:
                 assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
         
-        self.active_map.virtual_member_funcsig_mappings.append(mapping)
+        self._global_mappings.virtual_member_funcsig_mappings.append(mapping)
 
     def add_literal_mapping(self, cstring, cppstring):
         assert isinstance(cstring, str), f"Expected str, got [{cstring}]"
@@ -365,7 +373,7 @@ class ConversionData:
     def funcsig_mapping_for_cfuncname(self, cfuncname):
         for mapping in self.all_mappings():
             for entry in mapping.all_funcsig_mappings:
-                if entry.cfuncsig.name == cfuncname:
+                if entry.cfuncsig.name == cfuncname and entry.cppfuncsig:
                     return entry
         return None
     
@@ -403,19 +411,20 @@ class ConversionData:
     #def funcsig_buffer_mapping_for
 
     # Searches both C and C++ member and virtual member maps
+    # NOTE: cppfuncsig will be none for "discovered" virtual functions until they have been converted!
     def is_member_function(self, function_name):
-        for mapping in self.all_mappings():
-            for entry in mapping.member_funcsig_mappings:
-                if entry.cfuncsig.name == function_name:
-                    return True
-                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
-                    return True
-                
-            for entry in mapping.virtual_member_funcsig_mappings:
-                if entry.cfuncsig.name == function_name:
-                    return True
-                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
-                    return True
+        
+        for entry in self._global_mappings.member_funcsig_mappings:
+            if entry.cfuncsig.name == function_name:
+                return True
+            if entry.cppfuncsig and entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
+                return True
+            
+        for entry in self._global_mappings.virtual_member_funcsig_mappings:
+            if entry.cfuncsig.name == function_name:
+                return True
+            if entry.cppfuncsig and entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
+                return True
                 
         return False
 

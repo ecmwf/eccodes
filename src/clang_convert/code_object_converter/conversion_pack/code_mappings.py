@@ -59,9 +59,17 @@ class CodeMappings:
     def member_funcsig_mappings(self):
         return self._member_funcsig_mappings
 
+    @member_funcsig_mappings.setter
+    def member_funcsig_mappings(self, new_member_funcsig_mappings):
+        self._member_funcsig_mappings = new_member_funcsig_mappings
+
     @property
     def virtual_member_funcsig_mappings(self):
         return self._virtual_member_funcsig_mappings
+
+    @virtual_member_funcsig_mappings.setter
+    def virtual_member_funcsig_mappings(self, new_virtual_member_funcsig_mappings):
+        self._virtual_member_funcsig_mappings = new_virtual_member_funcsig_mappings
 
     @property
     def literal_mappings(self):

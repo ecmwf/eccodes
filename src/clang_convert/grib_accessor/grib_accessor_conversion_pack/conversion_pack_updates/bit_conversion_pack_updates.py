@@ -7,7 +7,7 @@ class BitConversionPackUpdates(base_conversion_pack_updates.BaseConversionPackUp
     def __init__(self) -> None:
         super().__init__()
 
-        self._update_funcs.extend({
+        self._update_funcs.update({
             "pack_long": self.apply_updates_for_pack_long
         })
 
