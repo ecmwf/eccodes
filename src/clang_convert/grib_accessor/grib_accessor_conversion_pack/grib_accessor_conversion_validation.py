@@ -15,6 +15,7 @@ import code_object.function_call as function_call
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.cast_expression as cast_expression
 import code_object.macro_instantation as macro_instantation
+from utils.string_funcs import strip_semicolon
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
 from code_object.code_interface import NONE_VALUE
@@ -100,11 +101,13 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
     def apply_special_function_call_conversions(self, cfunction_call, cppfunction_call):
 
         if cfunction_call.name == "grib_arguments_get_name":
-            arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+            arg_string = strip_semicolon(cfunction_call.args[2].as_string())
+            arg_entry = literal.Literal(f"initData.args[{arg_string}].second")
             return function_call.FunctionCall(f"std::get<std::string>", [arg_entry])
 
         if cfunction_call.name == "grib_arguments_get_long":
-            arg_entry = literal.Literal(f"initData.args[{cfunction_call.args[2].as_string()}].second")
+            arg_string = strip_semicolon(cfunction_call.args[2].as_string())
+            arg_entry = literal.Literal(f"initData.args[{arg_string}].second")
             return function_call.FunctionCall(f"std::get<long>", [arg_entry])
 
         # If we're calling grib_XXX which is a member function, and the first argument is "a", then we're actually calling ourself!
