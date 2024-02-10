@@ -20,7 +20,7 @@ import grib_accessor.supporting.arg_mappings as arg_mappings
 import grib_accessor.supporting.data_member_mappings as data_member_mappings
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_container_utils as grib_accessor_container_utils
-from code_object.data_member import DataMember
+import grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates.base_conversion_pack_updates as base_conversion_pack_updates
 
 prefix = "grib_accessor_class_"
 rename = {
@@ -71,17 +71,13 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             accessor_conversion_pack_updates_class_name = standard_transforms.transform_type_name(accessor_conversion_pack_updates_mod_name)
             accessor_conversion_pack_updates_class = getattr(accessor_conversion_pack_updates_lib, accessor_conversion_pack_updates_class_name)
             debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_class_name=[{accessor_conversion_pack_updates_class_name}]")
-            
             updates_class_inst = accessor_conversion_pack_updates_class()
-            updates_class_inst.apply_updates_for_cfunction(cfunction_name, self._conversion_pack)
 
         except ModuleNotFoundError:
-            debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
+            debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}], using base version")
+            updates_class_inst = base_conversion_pack_updates.BaseConversionPackUpdates()
 
-        # Add cclass->super data member mapping
-        cmember = DataMember("grib_accessor_class**", "cclass->super")
-        cppmember = DataMember("AccessorData", self._conversion_pack.conversion_data.info.super_class_name)
-        self._conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
+        updates_class_inst.apply_updates_for_cfunction(cfunction_name, self._conversion_pack)
 
         super().function_specific_conversion_pack_updates(cfunction_name)
 

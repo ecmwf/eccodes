@@ -7,9 +7,9 @@ class BitConversionPackUpdates(base_conversion_pack_updates.BaseConversionPackUp
     def __init__(self) -> None:
         super().__init__()
 
-        self._update_funcs = {
+        self._update_funcs.extend({
             "pack_long": self.apply_updates_for_pack_long
-        }
+        })
 
     def apply_updates_for_pack_long(self, conversion_pack):
         conversion_pack.conversion_data.add_funcbody_arg_mapping(Arg("unsigned char*","mdata"), Arg("AccessorDataPointer","mdata"))
