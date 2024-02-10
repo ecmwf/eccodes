@@ -44,8 +44,6 @@ protected:
 
 private:
     // Member functions
-    {%- for m in c.template_member_functions %}
-    {{ m.funcsig_as_declaration }};{% endfor %}
     {%- for m in c.member_functions %}
     {{ m.funcsig_as_declaration }};{% endfor %}
 };

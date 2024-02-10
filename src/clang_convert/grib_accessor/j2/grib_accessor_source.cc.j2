@@ -30,10 +30,6 @@ namespace {{ c.nested_namespaces }} {
 {{ c.destructor.as_string() }}
 {% endif %}
 
-{% for func in c.template_member_functions %}
-{{ func.as_string() }}
-{% endfor %}
-
 {% for func in c.virtual_member_functions %}
 {{ func.as_string() }}
 {% endfor %}

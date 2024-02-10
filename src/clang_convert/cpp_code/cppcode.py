@@ -76,10 +76,6 @@ class CppCode:
         return self._code_elements.member_functions
 
     @property
-    def template_member_functions(self):
-        return self._code_elements.member_functions
-
-    @property
     def virtual_member_functions(self):
         return self._code_elements.virtual_member_functions
 
