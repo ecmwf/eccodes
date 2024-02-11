@@ -1,6 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
-constant paramType = "chemical" ;
+transient paramType="chemical";
+unalias mars.paramtype ;
 alias mars.paramtype = paramType ;
 
 # Atmospheric chemical or physical constituent type
