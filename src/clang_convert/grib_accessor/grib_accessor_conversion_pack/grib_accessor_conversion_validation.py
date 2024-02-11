@@ -69,6 +69,13 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         if special_function_call:
             return special_function_call
 
+        if cppfunction_call.name.startswith("super->"):
+            updated_func_name = cppfunction_call.name.replace("super->", f"{self._conversion_data.info.super_class_name}::")
+            updated_cppfunction_call = function_call.FunctionCall(updated_func_name, cppfunction_call.args)
+
+            debug.line("validate_function_call", f"updated func name: [{debug.as_debug_string(cppfunction_call)}]->[{debug.as_debug_string(updated_cppfunction_call)}]")
+            return updated_cppfunction_call
+        
         if cfunction_call.name == "sscanf":
             # Need to convert to using conversion helper function:
             #   template <typename... Args>

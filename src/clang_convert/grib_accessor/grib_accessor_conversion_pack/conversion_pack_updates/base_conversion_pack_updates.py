@@ -8,6 +8,7 @@ class BaseConversionPackUpdates:
     def __init__(self) -> None:
         self._update_funcs = {}
         self._funcsig_mappings = []
+        self._all_function_arg_mappings = {}
 
     def add_funcsig_mappings_to_conversion_data(self, conversion_data):
         for mapping in self._funcsig_mappings:
@@ -32,3 +33,7 @@ class BaseConversionPackUpdates:
             DataMember("grib_accessor_class**", "cclass->super"): DataMember("AccessorData", conversion_pack.conversion_data.info.super_class_name),
         }.items():
             conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
+
+        # All function arg mappings
+        for carg, cpparg in self._all_function_arg_mappings.items():
+            conversion_pack.conversion_data.add_funcbody_arg_mapping(carg, cpparg)

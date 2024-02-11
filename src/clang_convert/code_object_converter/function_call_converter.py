@@ -6,6 +6,7 @@ import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.arg as arg
 from code_object.code_interface import NONE_VALUE
 import code_object_converter.conversion_pack.arg_utils as arg_utils
+import re
 
 class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -17,6 +18,16 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
         cppfunction_call = None
 
         debug.line("create_cpp_code_object", f"FunctionCallConverter [IN] cfunction_call=[{debug.as_debug_string(cfunction_call)}]")
+
+        m = re.match(r".*->", cfunction_call.name)
+        if m:
+            # The function call is through a pointer. We'll remove the pointer part and convert the function
+            # The pointer will be converted elsewhere...
+            function_name_pointer = m.group(0)
+            cfunction_call = function_call.FunctionCall(cfunction_call.name[m.end():], cfunction_call.args)
+            debug.line("create_cpp_code_object", f"Converting [{debug.as_debug_string(self._ccode_object)}] without function name pointer [{function_name_pointer}] => [{debug.as_debug_string(cfunction_call)}]")
+        else:
+            function_name_pointer = ""
 
         # 1. Check if there is a function mapping defined
         mapping = conversion_pack.conversion_data.funcsig_mapping_for_cfuncname(cfunction_call.name)
@@ -64,12 +75,19 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
 
             cppfunction_call = function_call.FunctionCall(cpp_name, cpp_args)
 
-        # 3. Apply validation (and special handling)
+        # 3. Restore function name pointer before performing validation...
+        if function_name_pointer:
+            cppfunction_call = function_call.FunctionCall(function_name_pointer+cppfunction_call.name, cppfunction_call.args)
+            debug.line("create_cpp_code_object", f"Restoring function_name_pointer=[{function_name_pointer}] --> [{debug.as_debug_string(cppfunction_call)}]")
+
+        # 4. Apply validation (and special handling)
         updated_cppfunction_call = conversion_pack.conversion_validation.validate_function_call(cfunction_call, cppfunction_call)
 
-        # 4. Add the function call to the conversion data in case we need to process it later (e.g. for using C::x declarations)
+        # 5. Add the function call to the conversion data in case we need to process it later (e.g. for using C::x declarations)
         # Only if function_call type!
         if isinstance(updated_cppfunction_call, function_call.FunctionCall):
             conversion_pack.conversion_data.add_cppfunction_call(updated_cppfunction_call)
+
+
 
         return updated_cppfunction_call

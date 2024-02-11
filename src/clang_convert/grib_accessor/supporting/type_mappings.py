@@ -2,6 +2,7 @@
 from code_object.arg import Arg
 from code_object.declaration_specifier import DeclSpec
 import code_object_converter.conversion_pack.conversion_data as conversion_data
+from code_object.code_interface import NONE_VALUE
 
 # ==================== FUNCSIG TYPE MAPPINGS: Begin ====================
 
@@ -22,11 +23,12 @@ def add_funcsig_type_mappings_to_conversion_data(conversion_data):
 # ==================== FUNCBODY TYPE MAPPINGS: Begin ====================
 
 common_grib_funcbody_type_mappings = {
-    "grib_accessor*"    : "AccessorPtr",
-    "grib_handle*"      : DeclSpec.NONE,
-    "grib_context*"     : DeclSpec.NONE,
-    "grib_expression*"  : "GribExpressionPtr",
-    "grib_codetable*"   : "GribCodeTablePtr",
+    "grib_accessor*"        : "AccessorPtr",
+    "grib_accessor_class*"  : NONE_VALUE,
+    "grib_handle*"          : NONE_VALUE,
+    "grib_context*"         : NONE_VALUE,
+    "grib_expression*"      : "GribExpressionPtr",
+    "grib_codetable*"       : "GribCodeTablePtr",
 }
 
 grib_array_funcbody_type_mappings = {
