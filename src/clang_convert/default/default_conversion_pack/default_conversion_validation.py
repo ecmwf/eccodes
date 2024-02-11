@@ -11,6 +11,7 @@ import code_object.struct_member_access as struct_member_access
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.variable_declaration as variable_declaration
 import code_object.paren_expression as paren_expression
+import code_object.array_access as array_access
 from code_object_converter.conversion_funcs import as_commented_out_code
 from utils.string_funcs import is_number
 
@@ -170,6 +171,13 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
             if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
                 cppleft = literal.Literal(f"{cpparg.name}.size()")
                 return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
+            
+        elif cppbinary_op.value == "+":
+            cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)
+            if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+                # We're indexing into a container...
+                cpparray_access = array_access.ArrayAccess(literal.Literal(cpparg.name), cppright)
+                return cpparray_access
 
         return cppbinary_operation
 
