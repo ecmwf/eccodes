@@ -22,6 +22,7 @@ from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
 from code_object_converter.conversion_funcs import as_commented_out_code
+import re
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class GribAccessorConversionValidation(default_conversion_validation.DefaultConversionValidation):
@@ -82,14 +83,18 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             #   int scanString(std::string buffer, size_t offset, std::string format, Args&... args)
             # offset is used when indexing into buffer, e.g. val + 2*i, otherwise set to 0
             cppargs = []
-            cpparg = cfunction_call.args[0]
-            if isinstance(cpparg, binary_operation.BinaryOperation):
-                cppargs.append(cpparg.left_operand)
-                cppargs.append(cpparg.right_operand)
-            else:
-                cppargs.append(cpparg)
-                cppargs.append(literal.Literal("0"))
-            for cpparg in cfunction_call.args[1:]:
+            cppname = arg_utils.extract_function_call_name(cppfunction_call.args[0])
+
+            if "[" in cppname:
+                m = re.match(r"([^\[]+)\[([^\]]+)\]", cppname)
+                if m:
+                    cppargs.append(literal.Literal(m.group(1)))
+                    cppargs.append(literal.Literal(m.group(2)))
+                else:
+                    cppargs.append(cppfunction_call.args[0])
+                    cppargs.append(literal.Literal("0"))
+
+            for cpparg in cppfunction_call.args[1:]:
                 cppargs.append(cpparg)
             
             updated_cppfunction_call = function_call.FunctionCall("scanString", cppargs)

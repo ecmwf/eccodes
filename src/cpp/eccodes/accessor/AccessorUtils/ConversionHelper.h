@@ -38,10 +38,10 @@ std::string fmtString(std::string format);
 // Note: Arg 2 [offset] is provided for C code that passes "buf + 2*i" [so offset is 2*i]
 //       Pass 0 if not required (i.e. use start of buffer)
 template <typename... Args>
-int scanString(std::string buffer, size_t offset, std::string format, Args&... args) {
+int scanString(std::string buffer, size_t offset, std::string format, Args&&... args) {
     assert(offset >= buffer.size());
 
-    return sscanf(buffer.data() + offset, format.c_str(), &args...);
+    return sscanf(buffer.data() + offset, format.c_str(), std::forward<Args>(args)...);
 }
 
 // Helper to support memcpy from a C buffer into a std::vector
