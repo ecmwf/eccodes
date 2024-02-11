@@ -27,17 +27,23 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
             debug.line("create_cpp_code_object", f"FunctionCallConverter [1] mapping.cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] -> mapping.cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
             cpp_args = []
             for i, arg_entry in enumerate(mapping.cppfuncsig.args):
-                debug.line("create_cpp_code_object", f"FunctionCallConverter [1] --> i=[{i}] arg_entry=[{debug.as_debug_string(arg_entry)}]")
+                debug.line("create_cpp_code_object", f"FunctionCallConverter [2] --> i=[{i}] arg_entry=[{debug.as_debug_string(arg_entry)}]")
                 if arg_entry != NONE_VALUE:
+                    # We expect this argument to be converted to the C++ version, however, some calls don't always convert as expected. 
+                    # For example: [int grib_value_count(grib_accessor* a, long* count)] -> [GribStatus gribValueCount(AccessorPtr ptr, long& count)]
+                    # This can be called with an accessor pointer if we're calling a different class instance, however if we're calling ourself it will be NONE_VALUE
+                    # Therefore, if a value doesn't convert, we'll just use the C value (which we handle later)
                     cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_pack)
-                    assert cpp_arg_entry != NONE_VALUE, f"Expected cpp_arg_entry for carg=[{debug.as_debug_string(cfunction_call.args[i])}], got NoneValue!"
-
-                    # Check if we have a container arg
-                    cpp_arg_name = arg_utils.extract_name(cpp_arg_entry)
-                    if cpp_arg_name:
-                        cpp_container_arg = conversion_pack.container_utils.cname_to_cpp_container(cpp_arg_name, conversion_pack.conversion_data)
-                        if cpp_container_arg:
-                            cpp_arg_entry = cpp_container_arg
+                    if cpp_arg_entry == NONE_VALUE:
+                        cpp_arg_entry = arg_entry
+                        debug.line("create_cpp_code_object", f"FunctionCallConverter [3] carg=[{debug.as_debug_string(cfunction_call.args[i])}] has no C++ conversion (may be a <self> arg), setting cpp_arg_entry=[{debug.as_debug_string(cpp_arg_entry)}]")
+                    else:
+                        # Check if we have a container arg
+                        cpp_arg_name = arg_utils.extract_name(cpp_arg_entry)
+                        if cpp_arg_name:
+                            cpp_container_arg = conversion_pack.container_utils.cname_to_cpp_container(cpp_arg_name, conversion_pack.conversion_data)
+                            if cpp_container_arg:
+                                cpp_arg_entry = cpp_container_arg
 
                     cpp_args.append(cpp_arg_entry)
 
@@ -46,7 +52,7 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
             debug.line("create_cpp_code_object", f"cppfunction_call NOW EQUALS [{debug.as_debug_string(cppfunction_call)}]")
 
         else:
-            debug.line("create_cpp_code_object", f"FunctionCallConverter [2]")
+            debug.line("create_cpp_code_object", f"FunctionCallConverter [4]")
             # 2. Perform a manual conversion
             cpp_name = conversion_funcs.convert_ccode_object(cfunction_call.name, conversion_pack)
             cpp_args = []

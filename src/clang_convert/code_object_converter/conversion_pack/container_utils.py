@@ -5,6 +5,7 @@ from code_object.struct_member_access import StructMemberAccess
 from code_object.literal import Literal
 import code_object_converter.conversion_pack.buffer_mapping as buffer_mapping
 import code_object_converter.conversion_pack.arg_utils as arg_utils
+from code_object.code_interface import NONE_VALUE
 
 class ContainerUtils:
     def create_cpp_container_buffer_arg(self, name):
@@ -45,7 +46,7 @@ class ContainerUtils:
 
         # 2. Try standard arg conversions
         cpparg = conversion_data.funcbody_cpparg_for_carg_name(cname)
-        if cpparg and conversion_data.is_container_type(cpparg.decl_spec.type):
+        if cpparg and cpparg != NONE_VALUE and conversion_data.is_container_type(cpparg.decl_spec.type):
             return self.create_cpp_container_buffer_arg(cpparg.name)
 
         return None
