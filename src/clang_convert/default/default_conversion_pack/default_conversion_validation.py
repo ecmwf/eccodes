@@ -157,7 +157,14 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                         cppleft.index = "[0]"
                         debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
                         return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
+
+                # Check if we're assigning to a data member and need to ensure the function is non-const
+                data_member_name = cppleft.name
+                debug.line("validate_binary_operation", f"CHECK is_cppdata_member({data_member_name})")
                     
+                if self._conversion_data.is_cppdata_member(data_member_name):
+                    self._conversion_data.set_current_cfuncname_non_const()
+
         elif cppbinary_op.is_comparison():
             cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)
             if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):

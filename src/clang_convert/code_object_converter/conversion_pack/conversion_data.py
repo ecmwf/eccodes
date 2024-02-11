@@ -392,6 +392,11 @@ class ConversionData:
         self._info.add_function_call_entry(cppfuncsig)
         debug.line("add_cppfunction_call", f"Added function call cppfunction_call=[{debug.as_debug_string(cppfunction_call)}] -> cppfuncsig=[{debug.as_debug_string(cppfuncsig)}]")
 
+    def set_current_cfuncname_non_const(self):
+        self._info.add_non_const_member_function_name(self._current_cfuncname)
+        debug.line("set_current_cfuncname_non_const", f"Set function name=[{self._current_cfuncname}] to non-const")
+
+
     # ------------------------------ QUERY ------------------------------
 
     # Given the cppname, search all stores to see if an arg exists
@@ -425,6 +430,13 @@ class ConversionData:
             return buf_map.cpp_container
 
         return None
+
+    def is_cppdata_member(self, cppdata_member_name):
+        for mapping in self.all_mappings():
+            for key, value in mapping.data_member_mappings.items():
+                if value and value.name == cppdata_member_name:
+                    return True
+        return False
 
     def cppdata_member_for_cdata_member(self, cmember):
         for mapping in self.all_mappings():
@@ -479,7 +491,6 @@ class ConversionData:
                 return True
                 
         return False
-
 
     def is_self_class_pointer_name(self, name):
         debug.line("is_self_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")

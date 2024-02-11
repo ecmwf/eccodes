@@ -16,6 +16,7 @@ class CodeInfo:
         self._header_includes = []
         self._source_includes = []
         self._function_calls = [] # List all function calls made whilst converting (for post-processing)
+        self._non_const_member_function_names = [] # default to const unless told otherwise!
 
     @property
     def file_name(self):
@@ -53,6 +54,10 @@ class CodeInfo:
     def function_calls(self):
         return self._function_calls
 
+    @property
+    def non_const_member_function_names(self):
+        return self._non_const_member_function_names
+
     def add_namespace(self, entry):
         self._namespaces.append(entry)
 
@@ -77,3 +82,7 @@ class CodeInfo:
                 return # Duplicate
 
         self._function_calls.append(entry)
+
+    def add_non_const_member_function_name(self, name):
+        if name not in self._non_const_member_function_names:
+            self._non_const_member_function_names.append(name)

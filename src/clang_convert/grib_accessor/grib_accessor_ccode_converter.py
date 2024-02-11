@@ -171,6 +171,9 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         if conv_pack.conversion_data.is_virtual_member_function(function_name):
            return function_name in virtual_member_functions.const_virtual_member_function_names
         
+        if function_name in self._code_info.non_const_member_function_names:
+            return False
+
         if conv_pack.conversion_data.is_member_function(function_name):
             return True
         
