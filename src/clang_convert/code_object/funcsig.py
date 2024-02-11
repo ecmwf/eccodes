@@ -42,6 +42,11 @@ class FuncSig(code_interface.CodeInterface):
     @property
     def template_type_params(self):
         return self._template_type_params
+    
+    @template_type_params.setter
+    def template_type_params(self, new_template_type_params):
+        self._template_type_params = new_template_type_params
+
 
     @property
     def is_declaration(self):

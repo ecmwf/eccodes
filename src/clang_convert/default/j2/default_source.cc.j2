@@ -18,30 +18,8 @@ namespace {{ c.nested_namespaces }} {
 {{ c.global_function.as_string() }}
 // Globals - END
 
-{% for func in c.functions %}
+{% for func in c.all_functions %}
 {{ func.as_string() }}
 {% endfor %}
-
-{% if c.class_name %}
-
-{{ c.constructor.as_string() }}
-
-{% if c.destructor %}
-{{ c.destructor.as_string() }}
-{% endif %}
-
-{% for func in c.template_member_functions %}
-{{ func.as_string() }}
-{% endfor %}
-
-{% for func in c.virtual_member_functions %}
-{{ func.as_string() }}
-{% endfor %}
-
-{% for func in c.member_functions %}
-{{ func.as_string() }}
-{% endfor %}
-
-{% endif %}
 
 } // namespace {{ c.nested_namespaces }}

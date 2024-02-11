@@ -62,13 +62,13 @@ class ConversionData:
 
     # ------------------------------  SET  ------------------------------
 
-    def add_funcsig_mapping(self, mapping):
+    def add_global_funcsig_mapping(self, mapping):
         assert isinstance(mapping, funcsig_mapping.FuncSigMapping), f"Expected FuncSigMapping, got type=[{type(mapping).__name__}]"
-        for entry in self.active_map.funcsig_mappings:
+        for entry in self._global_mappings.funcsig_mappings:
             if entry.cfuncsig.name == mapping.cfuncsig.name:
                 assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
 
-        self.active_map.funcsig_mappings.append(mapping)
+        self._global_mappings.funcsig_mappings.append(mapping)
 
     # These need to be global as all functions may access them...
     def add_global_member_funcsig_mapping(self, mapping):
@@ -135,6 +135,14 @@ class ConversionData:
             for entry in mapping.all_funcsig_mappings:
                 if entry.cfuncsig.name == cfuncname and entry.cppfuncsig:
                     return entry
+
+        # is this a template?
+        if "<" in cfuncname:
+            template_index = cfuncname.index("<")
+            non_template_name = cfuncname[:template_index]
+            debug.line("funcsig_mapping_for_cfuncname", f"cfuncname=[{cfuncname}] is a template, checking non_template_name=[{non_template_name}]")
+            return self.funcsig_mapping_for_cfuncname(non_template_name)
+
         return None
     
     def funcsig_mapping_for_current_cfuncname(self):
@@ -460,6 +468,10 @@ class ConversionData:
             if entry.cppfuncsig and entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == function_name:
                 return True
             
+        return self.is_virtual_member_function(function_name)
+
+    def is_virtual_member_function(self, function_name):
+        
         for entry in self._global_mappings.virtual_member_funcsig_mappings:
             if entry.cfuncsig.name == function_name:
                 return True
@@ -467,6 +479,7 @@ class ConversionData:
                 return True
                 
         return False
+
 
     def is_self_class_pointer_name(self, name):
         debug.line("is_self_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")

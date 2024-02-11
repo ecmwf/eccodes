@@ -26,6 +26,8 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
                 debug.line("", f"cppfuncsig is NONE_VALUE for cfuncsig.name=[{cfuncsig.name}] so won't be converted")
                 return NONE_VALUE
 
+            cppfuncsig.template_type_params = cfuncsig.template_type_params
+
             # Add any buffer mappings: {ptr, buffer} -> C++ Container 
             if mapping.arg_indexes:
                 cbuffer = cfuncsig.args[mapping.arg_indexes.cbuffer]
@@ -38,23 +40,20 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
             cppfuncsig = funcsig.FuncSig(cppfunc_arg.decl_spec,
                                          cppfunc_arg.name,
                                          cpp_args,
-                                         self._ccode_object.template_type_params)
+                                         cfuncsig.template_type_params)
 
             #cppfuncsig.static = self.is_cpp_static()
 
             # Add this to the correct conversion data mappings
             mapping = funcsig_mapping.FuncSigMapping(cfuncsig, cppfuncsig)
 
-            # Debug info...
             is_mem_func = conversion_pack.conversion_data.is_member_function(cfuncsig.name)
-            debug.line("create_cpp_code_object", f"Member function test for [{cfuncsig.name}] is_member_function=[{is_mem_func}]")
             if is_mem_func:
                 stored_cppfuncsig = conversion_pack.conversion_data.cppfuncsig_for_cfuncname(cfuncsig.name)
                 if not stored_cppfuncsig:
-                    debug.line("create_cpp_code_object", f" -> stored_cppfuncsig=[{debug.as_debug_string(stored_cppfuncsig)}], updating member function mapping...")
                     conversion_pack.conversion_data.add_global_member_funcsig_mapping(mapping)
             else:
-                conversion_pack.conversion_data.add_funcsig_mapping(mapping)
+                conversion_pack.conversion_data.add_global_funcsig_mapping(mapping)
 
         # Add all the arg mappings for the rest of the function to use
         # NOTE: We use cfuncsig rather than mapping.cfuncsig as the former may not have variable names included which will

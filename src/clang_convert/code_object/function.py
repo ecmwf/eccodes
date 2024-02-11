@@ -38,6 +38,10 @@ class Function(code_interface.CodeInterface):
     def body(self, lines):
         self._body = lines
 
+    @property
+    def is_template(self):
+        return len(self._funcsig.template_type_params) > 0
+
     # The whole function will be returned: signature and body (in braces)
     def as_lines(self):
         lines = [self.funcsig_as_definition]

@@ -113,7 +113,7 @@ class DefaultCCodeConverter:
             self._code_elements.add_data_member(cppmember)
 
     # Override to return True if the member function should be marked const
-    def is_const_member_function(self, function_name):
+    def is_const_member_function(self, function_name, conv_pack):
         return False
 
     # Helper to ensure the function is converted correctly, including resetting the local conversion data!
@@ -126,7 +126,7 @@ class DefaultCCodeConverter:
         cpp_func = conversion_funcs.convert_ccode_object(func, conv_pack)
         if isinstance(cpp_func, member_function.MemberFunction):
             cpp_func.class_name = conv_pack.conversion_data.info.class_name
-            cpp_func.set_is_const(self.is_const_member_function(func.funcsig.name))
+            cpp_func.set_is_const(self.is_const_member_function(func.funcsig.name, conv_pack))
 
         return cpp_func
 

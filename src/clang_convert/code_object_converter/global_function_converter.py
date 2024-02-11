@@ -16,9 +16,13 @@ class GlobalFunctionConverter(function_converter.FunctionConverter):
         cpp_body = code_objects.CodeObjects()
 
         for entry in self._ccode_object.body.code_objects:
-            if isinstance(entry, funcsig.FuncSig) and self._conversion_pack.conversion_data.is_member_function(entry.name):
-                debug.line("create_cpp_code_object", f"Ignoring member function name=[{entry.name}]")
-                continue
+            if isinstance(entry, funcsig.FuncSig):
+                if self._conversion_pack.conversion_data.is_member_function(entry.name):
+                    debug.line("create_cpp_code_object", f"Ignoring member function name=[{entry.name}]")
+                    continue
+                if self._conversion_pack.conversion_data.is_virtual_member_function(entry.name):
+                    debug.line("create_cpp_code_object", f"Ignoring virtual member function name=[{entry.name}]")
+                    continue
 
             cpp_code_obj = conversion_funcs.convert_ccode_object(entry, self._conversion_pack)
             cpp_body.add_code_object(cpp_code_obj)

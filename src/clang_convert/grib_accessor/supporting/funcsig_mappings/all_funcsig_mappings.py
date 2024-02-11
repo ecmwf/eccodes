@@ -12,4 +12,4 @@ def add_all_funcsig_mappings_to_conversion_data(conversion_data):
     for mapping in all_funcsig_mappings():
         for entry in mapping:
             debug.line("add_all_funcsig_mappings_to_conversion_data", f"ADDING FUNCIG MAPPING: [{entry.cfuncsig.name}] -> [{entry.cppfuncsig.name}]")
-            conversion_data.add_funcsig_mapping(entry)
+            conversion_data.add_global_funcsig_mapping(entry)

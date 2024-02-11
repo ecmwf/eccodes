@@ -33,6 +33,26 @@ rename = {
 class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
     def __init__(self, ccode_instance) -> None:
         super().__init__(ccode_instance)
+        self.load_conversion_pack_updates_class()
+
+    # See if we have a function-specific updater, otherwise use the main-one
+    def load_conversion_pack_updates_class(self):
+        conversion_pack_updates_path="grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates"
+        cclass_short_name = self._ccode.class_name.replace(prefix, "")
+        accessor_conversion_pack_updates_mod_name = f"{cclass_short_name}_conversion_pack_updates"
+        accessor_conversion_pack_updates_lib_name = f"{conversion_pack_updates_path}.{accessor_conversion_pack_updates_mod_name}"
+
+        try:
+            accessor_conversion_pack_updates_lib = importlib.import_module(accessor_conversion_pack_updates_lib_name)
+            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
+            accessor_conversion_pack_updates_class_name = standard_transforms.transform_type_name(accessor_conversion_pack_updates_mod_name)
+            accessor_conversion_pack_updates_class = getattr(accessor_conversion_pack_updates_lib, accessor_conversion_pack_updates_class_name)
+            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_class_name=[{accessor_conversion_pack_updates_class_name}]")
+            self._conversion_pack_updates = accessor_conversion_pack_updates_class()
+
+        except ModuleNotFoundError:
+            debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}], using base version")
+            self._conversion_pack_updates = base_conversion_pack_updates.BaseConversionPackUpdates()
 
     # Convert e.g. grib_accessor_class_proj_string.cc to ProjStringData.cc
     def transform_file_name(self, name):
@@ -59,27 +79,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         return info
 
     def function_specific_conversion_pack_updates(self, cfunction_name, conv_pack):
-        # See if we have a function-specific validator,
-        # Otherwise use the main-one
-        conversion_pack_updates_path="grib_accessor.grib_accessor_conversion_pack.conversion_pack_updates"
-        cclass_short_name = self._ccode.class_name.replace(prefix, "")
-        accessor_conversion_pack_updates_mod_name = f"{cclass_short_name}_conversion_pack_updates"
-        accessor_conversion_pack_updates_lib_name = f"{conversion_pack_updates_path}.{accessor_conversion_pack_updates_mod_name}"
-
-        try:
-            accessor_conversion_pack_updates_lib = importlib.import_module(accessor_conversion_pack_updates_lib_name)
-            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}]")
-            accessor_conversion_pack_updates_class_name = standard_transforms.transform_type_name(accessor_conversion_pack_updates_mod_name)
-            accessor_conversion_pack_updates_class = getattr(accessor_conversion_pack_updates_lib, accessor_conversion_pack_updates_class_name)
-            debug.line("function_specific_conversion_pack_updates", f"Loaded accessor_conversion_pack_updates_class_name=[{accessor_conversion_pack_updates_class_name}]")
-            updates_class_inst = accessor_conversion_pack_updates_class()
-
-        except ModuleNotFoundError:
-            debug.line("function_specific_conversion_pack_updates", f"Could not find accessor_conversion_pack_updates_lib_name=[{accessor_conversion_pack_updates_lib_name}], using base version")
-            updates_class_inst = base_conversion_pack_updates.BaseConversionPackUpdates()
-
-        updates_class_inst.apply_updates_for_cfunction(cfunction_name, conv_pack)
-
+        self._conversion_pack_updates.apply_updates_for_cfunction(cfunction_name, conv_pack)
         super().function_specific_conversion_pack_updates(cfunction_name, conv_pack)
 
     # See if we have an Accessor-specific validator (e.g. ProjStringValidation),
@@ -121,6 +121,8 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
             conv_data.add_global_virtual_member_funcsig_mapping(mapping)
 
+        self._conversion_pack_updates.add_funcsig_mappings_to_conversion_data(conv_data)
+
         all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(conv_data)
 
         arg_mappings.add_arg_mappings_to_conversion_data(conv_data)
@@ -161,8 +163,18 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
 
         return super().add_includes(conv_pack)
     
-    def is_const_member_function(self, function_name):
-        return function_name in virtual_member_functions.const_virtual_member_function_names
+    def is_const_member_function(self, function_name, conv_pack):
+
+        if function_name in ["init", "destroy"]:
+            return False
+
+        if conv_pack.conversion_data.is_virtual_member_function(function_name):
+           return function_name in virtual_member_functions.const_virtual_member_function_names
+        
+        if conv_pack.conversion_data.is_member_function(function_name):
+            return True
+        
+        return False
 
     def post_process_function_calls(self):
         debug.line("post_process_function_calls", f"Function calls summary:")

@@ -5,6 +5,7 @@ import code_object_converter.code_interface_converter as code_interface_converte
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.arg as arg
 from code_object.code_interface import NONE_VALUE
+import code_object_converter.conversion_pack.arg_utils as arg_utils
 
 class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -30,9 +31,20 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
                 if arg_entry != NONE_VALUE:
                     cpp_arg_entry = conversion_funcs.convert_ccode_object(cfunction_call.args[i], conversion_pack)
                     assert cpp_arg_entry != NONE_VALUE, f"Expected cpp_arg_entry for carg=[{debug.as_debug_string(cfunction_call.args[i])}], got NoneValue!"
+
+                    # Check if we have a container arg
+                    cpp_arg_name = arg_utils.extract_name(cpp_arg_entry)
+                    if cpp_arg_name:
+                        cpp_container_arg = conversion_pack.container_utils.cname_to_cpp_container(cpp_arg_name, conversion_pack.conversion_data)
+                        if cpp_container_arg:
+                            cpp_arg_entry = cpp_container_arg
+
                     cpp_args.append(cpp_arg_entry)
 
             cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cpp_args)
+
+            debug.line("create_cpp_code_object", f"cppfunction_call NOW EQUALS [{debug.as_debug_string(cppfunction_call)}]")
+
         else:
             debug.line("create_cpp_code_object", f"FunctionCallConverter [2]")
             # 2. Perform a manual conversion

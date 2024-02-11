@@ -7,6 +7,12 @@ from code_object.code_interface import NONE_VALUE
 class BaseConversionPackUpdates:
     def __init__(self) -> None:
         self._update_funcs = {}
+        self._funcsig_mappings = []
+
+    def add_funcsig_mappings_to_conversion_data(self, conversion_data):
+        for mapping in self._funcsig_mappings:
+            debug.line("add_funcsig_mappings_to_conversion_data", f"Adding funcsig mapping: [{mapping.cfuncsig.name}] -> [{mapping.cppfuncsig.name}]")
+            conversion_data.add_global_funcsig_mapping(mapping)
 
     # Use this entry point to call the appropriate derived function
     def apply_updates_for_cfunction(self, cfuncname, conversion_pack):

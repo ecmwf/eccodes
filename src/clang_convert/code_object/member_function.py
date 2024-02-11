@@ -21,8 +21,13 @@ class MemberFunction(function.Function):
     # Overridden to add class_name::
     @property
     def funcsig_as_definition(self):
-        funcsig_string = re.sub(r"^(.*\s)([^\(]*\()", rf"\1{self._class_name}::\2", self._funcsig.as_string())
-        return funcsig_string
+        lines = self.funcsig.as_lines()
+        if lines[0].startswith("template"):
+            lines[1] = re.sub(r"^(.*\s)([^\(]*\()", rf"\1{self._class_name}::\2", lines[1])
+        else:
+            lines[0] = re.sub(r"^(.*\s)([^\(]*\()", rf"\1{self._class_name}::\2", lines[0])
+
+        return "\n".join(lines)
 
     @property
     def is_const(self):

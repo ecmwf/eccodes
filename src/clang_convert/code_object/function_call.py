@@ -2,6 +2,7 @@ import utils.debug as debug
 import code_object.arg as arg
 import code_object.code_interface as code_interface
 import code_object.value_declaration_reference as value_declaration_reference
+import code_object_converter.conversion_pack.arg_utils as arg_utils
 from utils.string_funcs import strip_semicolon
 from code_object.code_interface import NONE_VALUE
 
@@ -30,5 +31,7 @@ class FunctionCall(code_interface.CodeInterface):
         assert isinstance(arg_entry, code_interface.CodeInterface), f"arg_entry must be a CodeInterface class, supplied=[{arg_entry}]"
         self._args.append(arg_entry)
 
+
     def as_lines(self):
-        return [f"{self._name}({', '.join([strip_semicolon(a.as_string()) for a in self._args])});"]
+        return [f"{self._name}({', '.join([arg_utils.extract_function_call_name(a) for a in self._args])});"]
+        #return [f"{self._name}({', '.join([strip_semicolon(a.as_string()) for a in self._args])});"]

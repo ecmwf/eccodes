@@ -59,6 +59,19 @@ class CppCode:
     def global_function(self):
         return self._code_elements.global_function
 
+    # Returns all functions, in dependency order (as best as possible)
+    # Templates are returned ahead of others in each set
+    @property
+    def all_functions(self):
+
+        sorted_functions = sorted(self.functions, key=lambda instance: instance.is_template, reverse=True)
+        sorted_member_functions = sorted(self.member_functions, key=lambda instance: instance.is_template, reverse=True)
+        sorted_virtual_member_functions = sorted(self.virtual_member_functions, key=lambda instance: instance.is_template, reverse=True)
+        sorted_constructor = [self.constructor] if self.constructor else []
+        sorted_destructor = [self.destructor] if self.destructor else []
+
+        return sorted_functions + sorted_member_functions + sorted_constructor + sorted_virtual_member_functions + sorted_destructor
+
     @property
     def functions(self):
         return self._code_elements.functions
