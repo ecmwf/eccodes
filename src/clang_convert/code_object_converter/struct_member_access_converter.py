@@ -25,13 +25,15 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
             # Check if the primary member is valid...
             cpparg = conversion_pack.conversion_data.cpparg_for_cname(cstruct_member_access.name)
             if cpparg==NONE_VALUE:
-                debug.line("create_cpp_code_object", f"StructMemberAccessConverter [2] cstruct_member_access.name=[{cstruct_member_access.name}] cpparg=[{debug.as_debug_string(cpparg)}], attempting to convert member...")
-                # See if we can convert the member...
-                test_member_access = struct_member_access.StructMemberAccess("", 
-                                                                             cstruct_member_access.member.name,
-                                                                             cstruct_member_access.member.index,
-                                                                             cstruct_member_access.member.member)
-                cppstruct_member_access = self.try_to_convert_data_member_access(test_member_access)
+                debug.line("create_cpp_code_object", f"StructMemberAccessConverter [2] cstruct_member_access.name=[{cstruct_member_access.name}] cpparg=[{debug.as_debug_string(cpparg)}] cstruct_member_access.member=[{debug.as_debug_string(cstruct_member_access.member)}]")
+                if cstruct_member_access.member:
+                    # See if we can convert the member...
+                    debug.line("create_cpp_code_object", f"StructMemberAccessConverter [2.1] Attempting to convert cstruct_member_access.member=[{debug.as_debug_string(cstruct_member_access.member)}]...")
+                    test_member_access = struct_member_access.StructMemberAccess("", 
+                                                                                cstruct_member_access.member.name,
+                                                                                cstruct_member_access.member.index,
+                                                                                cstruct_member_access.member.member)
+                    cppstruct_member_access = self.try_to_convert_data_member_access(test_member_access)
             else:
                 cpp_access = conversion_funcs.convert_ccode_object(cstruct_member_access.access, conversion_pack)
                 cpp_name = conversion_funcs.convert_ccode_object(cstruct_member_access.name, conversion_pack)

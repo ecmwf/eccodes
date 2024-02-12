@@ -27,6 +27,9 @@ class ConversionValidation:
     def validate_binary_operation(self, cbinary_operation, cppbinary_operation):
         return cppbinary_operation
     
+    def validate_case_statement(self, ccase_statement, cppcase_statement):
+        return cppcase_statement
+    
     def validate_cast_expression(self, ccast_expression, cppcast_expression):
         return cppcast_expression
 
@@ -102,6 +105,9 @@ class ConversionValidation:
     def validate_struct_member_access(self, cstruct_member_access, cppstruct_member_access):
         return cppstruct_member_access
 
+    def validate_switch_statement(self, cswitch_statement, cppswitch_statement):
+        return cppswitch_statement
+    
     def validate_unary_expression(self, cunary_expression, cppunary_expression):
         return cppunary_expression
 

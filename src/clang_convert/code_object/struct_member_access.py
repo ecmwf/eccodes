@@ -1,6 +1,7 @@
 
 import code_object.code_interface as code_interface
 import utils.debug as debug
+from code_object.code_interface import NONE_VALUE
 
 # Represent the accessing of a struct member as defined in code, in order to manipulate/transform it
 #
@@ -67,7 +68,7 @@ class StructMemberAccess(code_interface.CodeInterface):
         access_str = self._access if self._access is not None else ""
         access_str += self._name if self._name is not None else ""
         access_str += self._index if self._index is not None else ""
-        if self.member:
+        if self.member and self.member != NONE_VALUE:
             access_str += self.member.as_string()
 
         if access_str.endswith(")"):

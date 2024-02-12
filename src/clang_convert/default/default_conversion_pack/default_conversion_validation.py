@@ -12,7 +12,7 @@ import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.variable_declaration as variable_declaration
 import code_object.paren_expression as paren_expression
 import code_object.array_access as array_access
-from code_object_converter.conversion_funcs import as_commented_out_code
+from code_object_converter.conversion_utils import as_commented_out_code
 from utils.string_funcs import is_number
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
@@ -138,7 +138,13 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 cpparg = self._conversion_data.cpparg_for_cppname(cppleft.name)
                 if cppleft.member:
                     if cppleft.member.name == "size()":
-                        if cppright.as_string() == "0":
+                        if cppleft.as_string() == cppright.as_string():
+                            # We've converted something like *len = strlen(v); where len and v are both mapped to (e.g.) stringValue,
+                            # resulting in the redundant call stringValue.size() = stringValue.size()!
+                            debug.line("validate_binary_operation", f"Removing redundant assignment: cppleft=[{debug.as_debug_string(cppleft)}] cppright=[{debug.as_debug_string(cppright)}]")
+                            return as_commented_out_code(cppbinary_operation, "Removing: C++ code is redundant")                            
+
+                        elif cppright.as_string() == "0":
                             cppleft.member.name = "clear()"
                         else:
                             cppleft.member.name = f"resize({cppright.as_string()})"

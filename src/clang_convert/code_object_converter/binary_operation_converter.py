@@ -6,6 +6,8 @@ import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.literal as literal
 import code_object.arg as arg
 import code_object.struct_member_access as struct_member_access
+from code_object.code_interface import NONE_VALUE
+from code_object_converter.conversion_utils import as_commented_out_code
 
 class BinaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -17,6 +19,10 @@ class BinaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_left_operand = conversion_funcs.convert_ccode_object(self._ccode_object.left_operand, conversion_pack)
         cpp_binary_op = self._ccode_object.binary_op
         cpp_right_operand = conversion_funcs.convert_ccode_object(self._ccode_object.right_operand, conversion_pack)
+
+        if cpp_left_operand is None or cpp_left_operand == NONE_VALUE:
+            debug.line("create_cpp_code_object", f"cpp_left_operand=[{debug.as_debug_string(cpp_left_operand)}] => returning commented out code")
+            return as_commented_out_code(self._ccode_object, f"Removed invalid binary operation")
 
         cppbinary_operation = binary_operation.BinaryOperation(cpp_left_operand, cpp_binary_op, cpp_right_operand)
 

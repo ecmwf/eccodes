@@ -6,18 +6,18 @@ grib_accessor_class_abstract_long_vector.cc
 grib_accessor_class_abstract_vector.cc
 grib_accessor_class_ascii.cc
 grib_accessor_class_bit.cc
+grib_accessor_class_bitmap.cc
+grib_accessor_class_bytes.cc
 grib_accessor_class_double.cc
 grib_accessor_class_long.cc
 grib_accessor_class_proj_string.cc
 #
 # WORK IN PROGRESS...
 #
-grib_accessor_class_bitmap.cc
-grib_accessor_class_bytes.cc
+#grib_accessor_class_bits.cc
 #
 # Not-working conversions!
 #
-#grib_accessor_class_bits.cc
 #grib_accessor_class_bits_per_value.cc
 #grib_accessor_class_blob.cc
 #grib_accessor_class_budgdate.cc

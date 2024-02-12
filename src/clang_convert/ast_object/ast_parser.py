@@ -5,6 +5,7 @@ import ast_object.ast_utils as ast_utils
 import code_object.arg as arg
 import code_object.array_access as array_access
 import code_object.binary_operation as binary_operation
+import code_object.case_statement as case_statement
 import code_object.cast_expression as cast_expression
 import code_object.code_objects as code_objects
 import code_object.compound_statement as compound_statement
@@ -20,13 +21,14 @@ import code_object.literal as literal
 import code_object.paren_expression as paren_expression
 import code_object.return_statement as return_statement
 import code_object.struct_member_access as struct_member_access
+import code_object.switch_statement as switch_statement
 import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.variable_declaration as variable_declaration
 import code_object.while_statement as while_statement
 from code_object.code_interface import NONE_VALUE
-from code_object_converter.conversion_funcs import as_commented_out_code
+from code_object_converter.conversion_utils import as_commented_out_code
 
 # Parse AstCode and create code interface objects: classes that implement the CodeInterface
 #
@@ -299,10 +301,18 @@ class AstParser:
 
         return if_stmt
 
-    def parse_WHILE_STMT(self, node):
-        debug.line("parse_WHILE_STMT", f"WHILE Nodes:")
-        ast_utils.dump_node(node)
+    def parse_SWITCH_STMT(self, node):
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 2, f"Expected two children for switch statement"
 
+        condition = self.parse_ast_node(children[0])
+        statement = self.parse_ast_node(children[1])
+
+        switch_stmt = switch_statement.SwitchStatement(condition, statement)
+        return switch_stmt
+
+    def parse_WHILE_STMT(self, node):
         children = list(node.get_children())
         child_count = len(children)
         assert child_count == 2, f"Expected two children for while statement, not [{child_count}]"
@@ -312,6 +322,27 @@ class AstParser:
 
         while_stmt = while_statement.WhileStatement(while_expression, while_action)
         return while_stmt
+
+    def parse_CASE_STMT(self, node):
+        # NOTE: The CASE_STMT only contains two nodes: the constant_expression and the next statement
+        # Any other statements under this case statement are parsed elsewhere!
+        children = list(node.get_children())
+        child_count = len(children)
+
+        if node.kind == clang.cindex.CursorKind.DEFAULT_STMT:
+            assert child_count == 1, f"Expected one child for default statement"
+            constant_expression = literal.Literal("default")
+        else:
+            assert child_count == 2, f"Expected two children for case statement"
+            constant_expression = self.parse_ast_node(children[0])
+
+        statement = self.parse_ast_node(children[-1])
+
+        switch_stmt = case_statement.CaseStatement(constant_expression, statement)
+        return switch_stmt
+
+    def parse_BREAK_STMT(self, node):
+        return literal.Literal("break;")
 
     def parse_FOR_STMT(self, node):
         init_statement = condition = iteration_expression = statement = None
@@ -363,16 +394,16 @@ class AstParser:
     parse_STMT_funcs = {
         clang.cindex.CursorKind.COMPOUND_STMT:  parse_COMPOUND_STMT,
         clang.cindex.CursorKind.DECL_STMT:      parse_DECL_STMT,
-        clang.cindex.CursorKind.CASE_STMT:      parse_node_not_implemented,
-        clang.cindex.CursorKind.DEFAULT_STMT:   parse_node_not_implemented,
+        clang.cindex.CursorKind.CASE_STMT:      parse_CASE_STMT,
+        clang.cindex.CursorKind.DEFAULT_STMT:   parse_CASE_STMT,
         clang.cindex.CursorKind.IF_STMT:        parse_IF_STMT,
-        clang.cindex.CursorKind.SWITCH_STMT:    parse_node_not_implemented,
+        clang.cindex.CursorKind.SWITCH_STMT:    parse_SWITCH_STMT,
         clang.cindex.CursorKind.WHILE_STMT:     parse_WHILE_STMT,
         clang.cindex.CursorKind.DO_STMT:        parse_node_not_implemented,
         clang.cindex.CursorKind.FOR_STMT:       parse_FOR_STMT,
         clang.cindex.CursorKind.GOTO_STMT:      parse_node_not_implemented,
         clang.cindex.CursorKind.CONTINUE_STMT:  parse_node_not_implemented,
-        clang.cindex.CursorKind.BREAK_STMT:     parse_node_not_implemented,
+        clang.cindex.CursorKind.BREAK_STMT:     parse_BREAK_STMT,
         clang.cindex.CursorKind.RETURN_STMT:    parse_RETURN_STMT,
         clang.cindex.CursorKind.NULL_STMT:      parse_node_not_implemented,
     }

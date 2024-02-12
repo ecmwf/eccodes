@@ -21,7 +21,7 @@ from utils.string_funcs import strip_semicolon
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
 from code_object.code_interface import NONE_VALUE
 import grib_accessor.grib_accessor_conversion_pack.grib_accessor_type_info as grib_accessor_type_info
-from code_object_converter.conversion_funcs import as_commented_out_code
+from code_object_converter.conversion_utils import as_commented_out_code
 import re
 
 # Pass this to the conversion_data object to be accessed by the conversion routines

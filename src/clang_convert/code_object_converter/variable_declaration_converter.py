@@ -5,6 +5,7 @@ import code_object.arg as arg
 import code_object_converter.code_interface_converter as code_interface_converter
 import code_object_converter.conversion_funcs as conversion_funcs
 from code_object.code_interface import NONE_VALUE
+from code_object_converter.conversion_utils import as_commented_out_code
 
 class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -16,7 +17,7 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
         cpp_variable = conversion_funcs.convert_ccode_object(self._ccode_object.variable, conversion_pack)
 
         if cpp_variable == NONE_VALUE:
-            return conversion_funcs.as_commented_out_code(self._ccode_object, f"Removed invalid variable")
+            return as_commented_out_code(self._ccode_object, f"Removed invalid variable")
 
         cpp_value = conversion_funcs.convert_ccode_object(self._ccode_object.value, conversion_pack)
 
