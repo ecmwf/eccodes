@@ -29,6 +29,7 @@ common_grib_funcbody_type_mappings = {
     "grib_context*"         : NONE_VALUE,
     "grib_expression*"      : "GribExpressionPtr",
     "grib_codetable*"       : "GribCodeTablePtr",
+    "grib_action*"          : "GribActionPtr"
 }
 
 grib_array_funcbody_type_mappings = {

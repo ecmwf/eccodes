@@ -126,7 +126,7 @@ class ConversionData:
     def cppfuncsig_for_cppfuncname(self, cppfuncname):
         for mapping in self.all_mappings():
             for entry in mapping.all_funcsig_mappings:
-                if entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == cppfuncname:
+                if entry.cppfuncsig and entry.cppfuncsig != NONE_VALUE and entry.cppfuncsig.name == cppfuncname:
                     return entry.cppfuncsig
         return None
 

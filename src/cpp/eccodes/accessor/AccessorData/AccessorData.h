@@ -7,7 +7,7 @@
 #include "GribCpp/GribType.h"
 #include "GribCpp/GribStatus.h"
 #include "GribStub/GribVirtualValueStub.h"
-
+#include "GribStub/GribActionStub.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -77,6 +77,7 @@ public:
 
     // Conversion helpers...
     AccessorLoaderPtr loader() const { return nullptr; }
+    GribActionPtr creator() const { return nullptr; }
 
 // Ideally these would be private, but that makes the conversion much harder so they are protected instead
 // This will be revisited later...

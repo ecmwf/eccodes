@@ -237,6 +237,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
     # Override as required...
     def is_cppfunction_returning_container(self, cppfunc_object):
         cppname = arg_utils.extract_name(cppfunc_object)
+
         if cppname:
             cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppname)
             if cppfuncsig and self._conversion_data.is_container_type(cppfuncsig.return_type.type):

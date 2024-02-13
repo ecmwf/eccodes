@@ -15,6 +15,7 @@ grib_accessor_base_data_members_map = {
     DataMember("const char*","set")             : DataMember("std::string","set_"),
     # This is a conversion helper!
     DataMember("grib_loader*","loader")         : DataMember("AccessorLoaderPtr","loader()"),
+    DataMember("grib_action*","creator")        : DataMember("GribActionPtr","creator()"),
     }
 
 def add_data_member_mappings_to_conversion_data(conversion_data):

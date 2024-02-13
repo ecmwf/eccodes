@@ -226,15 +226,16 @@ class AstParser:
         macro_expression = code_objects.CodeObjects()
         debug.line("parse_macro_instantiation", f"Found root_expanded_node, kind=[{root_expanded_node.kind}], parsing...")
 
-        # Remove the opening paren so it doesn't cause a double-parse of the top-level node (leading to odd results!)
-        if macro_node_tokens[0] == "(":
-            open_parens_literal = literal.Literal(macro_node_tokens.pop(0))
-            macro_expression.add_code_object(open_parens_literal)
+        if len(macro_node_tokens) > 0:
+            # Remove the opening paren so it doesn't cause a double-parse of the top-level node (leading to odd results!)
+            if macro_node_tokens[0] == "(":
+                open_parens_literal = literal.Literal(macro_node_tokens.pop(0))
+                macro_expression.add_code_object(open_parens_literal)
 
-        while len(macro_node_tokens) > 0:
-            converted_node, macro_node_tokens = self.convert_tokens(macro_node_tokens, root_expanded_node)
-            debug.line("parse_macro_instantiation", f"converted_node=[{debug.as_debug_string(converted_node)}]")
-            macro_expression.add_code_object(converted_node)
+            while len(macro_node_tokens) > 0:
+                converted_node, macro_node_tokens = self.convert_tokens(macro_node_tokens, root_expanded_node)
+                debug.line("parse_macro_instantiation", f"converted_node=[{debug.as_debug_string(converted_node)}]")
+                macro_expression.add_code_object(converted_node)
 
         macro_inst = macro_instantation.MacroInstantation(macro_name, macro_expression)
         debug.line("parse_macro_instantiation", f"FINAL MACRO INST=[{macro_inst.as_string()}]")
