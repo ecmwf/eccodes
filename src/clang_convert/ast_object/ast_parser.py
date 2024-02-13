@@ -692,33 +692,19 @@ class AstParser:
         
         return value_declaration_reference.ValueDeclarationReference(node.spelling)
 
+
     # The top-level node contains the tokens showing the access, e.g. [['self', '->', 'grid_type']]
     # The child node defines the first parameter ("self" in this case)
     # However, as we're just storing strings, we'll use the tokens directly!
     def parse_MEMBER_REF_EXPR(self, node):
+        debug.line("parse_MEMBER_REF_EXPR", f"Nodes...")
+        ast_utils.dump_node(node)
+
         tokens = [token.spelling for token in node.get_tokens()]
         debug.line("parse_MEMBER_REF_EXPR", f"[IN]  node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
         assert len(tokens) >= 3, f"Expected at least 3 tokens for member ref, but got [{len(tokens)}]"
 
-        # find the index of the first -> or .
-        pointer_index = -1
-        for i in range(len(tokens)):
-            if tokens[i] in ["->", "."]:
-                pointer_index = i
-                break
-
-        debug.line("parse_MEMBER_REF_EXPR", f"Matched [{tokens[pointer_index]}] at pointer_index=[{pointer_index}]")
-
-        cstruct_member_access = struct_member_access.StructMemberAccess(None, ''.join(t for t in tokens[:pointer_index]), None)
-        tokens = tokens[pointer_index:]
-
-        next_cmember = cstruct_member_access
-        while len(tokens) > 0:
-            debug.line("parse_MEMBER_REF_EXPR", f"      remaining tokens=[{tokens}]")
-
-            next_cmember.member = struct_member_access.StructMemberAccess(tokens[0], tokens[1], None)
-            tokens = tokens[2:]
-            next_cmember = next_cmember.member
+        cstruct_member_access = ast_utils.extract_struct_member_access(tokens)
 
         debug.line("parse_MEMBER_REF_EXPR", f"[OUT] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
         return cstruct_member_access

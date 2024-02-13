@@ -31,6 +31,7 @@ class BaseConversionPackUpdates:
         # Default data member mappings
         for cmember, cppmember in {
             DataMember("grib_accessor_class**", "cclass->super"): DataMember("AccessorData", conversion_pack.conversion_data.info.super_class_name),
+            DataMember("const char*", "cclass->name"): DataMember("std::string", "name_"),
         }.items():
             conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
 

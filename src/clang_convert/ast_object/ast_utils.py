@@ -7,6 +7,7 @@ import code_object.arg as arg
 import code_object.init_list as init_list
 import code_object.declaration_specifier as declaration_specifier
 import code_object.struct_arg as struct_arg
+import code_object.struct_member_access as struct_member_access
 
 # Utilities for working with C AST Nodes
 
@@ -128,4 +129,58 @@ def create_cinit_list(cnode):
         cinit_list.add_entry(entry_args)
 
     return cinit_list
+
+# Create a StructMemberAccess from the tokens
+def create_struct_member_access(tokens):
+    assert len(tokens) >= 1, f"Expected at least 1 token, got [{len(tokens)}]"
+
+    access = name = index = None
+
+    if tokens[0] in ["->", "."]:
+        access = tokens[0]
+        tokens = tokens[1:]
+    
+    name = tokens[0]
+    tokens = tokens[1:]
+
+    if len(tokens) > 0:
+        # Check for index token '[' or function call token '('
+        if tokens[0] == "[":
+            index = " ".join([t for t in tokens])
+        elif tokens[0] == "(":
+            name += " ".join([t for t in tokens])
+        else:
+            assert False, f"Unexpected token = [{tokens[0]}]"
+
+    return struct_member_access.StructMemberAccess(access, name, index)
+
+# Parse the tokens, extracting the members
+# Returns StructMemberAccess or None
+def extract_struct_member_access(tokens):
+    debug.line("extract_struct_member_access", f"[IN] tokens={tokens}")
+
+    pointer_indexes = []
+    for i in range(len(tokens)):
+        if tokens[i] in ["->", "."]:
+            pointer_indexes.append(i)
+
+    debug.line("extract_struct_member_access", f"pointer_indexes={pointer_indexes}")
+
+    if len(pointer_indexes) == 0:
+        assert False, f"No -> or . found: could not extract members!"
+
+    assert pointer_indexes[0] != 0, f"Member access should not start with -> or ."
+    
+    cstruct_member_access = create_struct_member_access(tokens[0:pointer_indexes[0]])
+
+    # Add end of token string as final index (to ensure all tokens are processed!)
+    pointer_indexes.append(len(tokens))
+
+    next_cmember = cstruct_member_access
+    while len(pointer_indexes) >= 2:
+        next_cmember.member = create_struct_member_access(tokens[pointer_indexes[0]:pointer_indexes[1]])
+        pointer_indexes = pointer_indexes[1:]
+        next_cmember = next_cmember.member
+
+    return cstruct_member_access
 
