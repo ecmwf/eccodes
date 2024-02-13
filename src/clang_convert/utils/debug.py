@@ -3,7 +3,7 @@ from datetime import datetime
 from code_object.code_interface import CodeInterface
 
 func_pad = 30
-debug_enabled = True
+debug_enabled = False
 debug_filter_include = []
 debug_filter_exclude = []
 

@@ -391,6 +391,9 @@ class AstParser:
 
         return for_stmt
 
+    def parse_NULL_STMT(self, node):
+        return literal.Literal(node.spelling)
+    
     parse_STMT_funcs = {
         clang.cindex.CursorKind.COMPOUND_STMT:  parse_COMPOUND_STMT,
         clang.cindex.CursorKind.DECL_STMT:      parse_DECL_STMT,
@@ -405,7 +408,7 @@ class AstParser:
         clang.cindex.CursorKind.CONTINUE_STMT:  parse_node_not_implemented,
         clang.cindex.CursorKind.BREAK_STMT:     parse_BREAK_STMT,
         clang.cindex.CursorKind.RETURN_STMT:    parse_RETURN_STMT,
-        clang.cindex.CursorKind.NULL_STMT:      parse_node_not_implemented,
+        clang.cindex.CursorKind.NULL_STMT:      parse_NULL_STMT,
     }
     
     def parse_STMT_node(self, node):
@@ -466,7 +469,7 @@ class AstParser:
 
         children = list(node.get_children())
         child_count = len(children)
-        assert child_count <= 2, f"Expected up to two children for variable declaration, got [{child_count}]"
+        assert child_count <= 3, f"Expected up to three children for variable declaration, got [{child_count}]"
 
         # Check if we have an assignment...
         tokens=[token.spelling for token in node.get_tokens()]
@@ -552,12 +555,28 @@ class AstParser:
         
         assert False, f"Could not extract integer literal"
 
+    def parse_FLOATING_LITERAL(self, node):
+        if node.spelling:
+            return literal.Literal(node.spelling)
+        
+        # We'll have to extract the value from the tokens
+        tokens=[token.spelling for token in node.get_tokens()]
+        if tokens:
+            return literal.Literal(tokens[0])
+        
+        assert False, f"Could not extract floating literal"
+
     def parse_STRING_LITERAL(self, node):
         return literal.Literal(node.spelling)
 
     def parse_CHARACTER_LITERAL(self, node):
         tokens = [token.spelling for token in node.get_tokens()]
         assert len(tokens) == 1, f"Expected one token for character literal, not [{len(tokens)}]"
+        return literal.Literal(tokens[0])
+
+    def parse_CXX_BOOL_LITERAL_EXPR(self, node):
+        tokens = [token.spelling for token in node.get_tokens()]
+        assert len(tokens) == 1, f"Expected one token for BOOL literal, not [{len(tokens)}]"
         return literal.Literal(tokens[0])
 
     def parse_PAREN_EXPR(self, node):
@@ -799,7 +818,7 @@ class AstParser:
         clang.cindex.CursorKind.COMPOUND_LITERAL_EXPR:          parse_node_not_implemented,
         clang.cindex.CursorKind.INIT_LIST_EXPR:                 parse_INIT_LIST_EXPR,
         clang.cindex.CursorKind.INTEGER_LITERAL:                parse_INTEGER_LITERAL,
-        clang.cindex.CursorKind.FLOATING_LITERAL:               parse_node_not_implemented,
+        clang.cindex.CursorKind.FLOATING_LITERAL:               parse_FLOATING_LITERAL,
         clang.cindex.CursorKind.STRING_LITERAL:                 parse_STRING_LITERAL,
         clang.cindex.CursorKind.CHARACTER_LITERAL:              parse_CHARACTER_LITERAL,
         clang.cindex.CursorKind.PAREN_EXPR:                     parse_PAREN_EXPR,
@@ -808,6 +827,7 @@ class AstParser:
         clang.cindex.CursorKind.BINARY_OPERATOR:                parse_BINARY_OPERATOR,
         clang.cindex.CursorKind.COMPOUND_ASSIGNMENT_OPERATOR:   parse_COMPOUND_ASSIGNMENT_OPERATOR,
         clang.cindex.CursorKind.CONDITIONAL_OPERATOR:           parse_CONDITIONAL_OPERATOR,
+        clang.cindex.CursorKind.CXX_BOOL_LITERAL_EXPR:          parse_CXX_BOOL_LITERAL_EXPR,
     }
 
     def parse_EXPR_node(self, node):
