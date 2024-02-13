@@ -40,7 +40,12 @@ class AstCodeCreator:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():
                 self._ast_code.add_function_node(node)
             elif node.kind == clang.cindex.CursorKind.FUNCTION_TEMPLATE:
-                self._ast_code.add_function_node(node)
+                if node.location.file.name == self._cfilepath + self._cfilename:
+                    self._ast_code.add_function_node(node)
+                else:
+                    debug.line("parse_node", f"Ignoring template node spelling=[{node.spelling}] as not defined locally: file name=[{os.path.basename(node.location.file.name)}]")
+                    # Don't add to global function
+                    return
 
             # Parse *ALL* nodes to determine whether to add to the global declaration. 
             self._ast_code.add_global_function_entry(node)

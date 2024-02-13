@@ -61,6 +61,7 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
             else:
                 cmember = data_member.DataMember(child.type.spelling, child.spelling)
                 self._ccode.add_data_member(cmember)
+                debug.line("parse_grib_accessor_struct", f"Adding DataMember=[{debug.as_debug_string(cmember)}]")
 
     # Parse the first entry in the initializer list for the super class name, and the second entry for the string name
     def parse_grib_accessor_class_struct(self, node):

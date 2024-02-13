@@ -516,7 +516,11 @@ class AstParser:
     # We just pass the request straight to the child...
     def parse_UNEXPOSED_EXPR(self, node):
         children = list(node.get_children())
-        assert len(children) != 0
+
+        if len(children) == 0:
+            value = " ".join([t.spelling for t in node.get_tokens()])
+            debug.line("parse_UNEXPOSED_EXPR", f"No children, just returning tokens as literal=[{value}]")
+            return literal.Literal(value)
 
         if children[0].kind == clang.cindex.CursorKind.DECL_REF_EXPR and \
            children[0].type.spelling == "<overloaded function type>":
@@ -610,6 +614,8 @@ class AstParser:
         else:
             assert child_count == 1, f"Expected a maximum of one child for unary expression, got [{child_count}]"
             expression = self.parse_ast_node(children[0])
+            if not isinstance(expression, paren_expression.ParenExpression):
+                expression = paren_expression.ParenExpression(expression)
 
         c_unary_expr = unary_expression.UnaryExpression(keyword, expression)
         debug.line("parse_CXX_UNARY_EXPR", f"Created c_unary_expr=[{debug.as_debug_string(c_unary_expr)}]")
@@ -828,7 +834,7 @@ class AstParser:
     # =================================== parse_REF_funcs [BEGIN]  ===================================
 
     def parse_TYPE_REF(self, node):
-        return None
+        return literal.Literal(node.spelling)
 
     parse_REF_funcs = {
         clang.cindex.CursorKind.TYPE_REF:       parse_TYPE_REF,
