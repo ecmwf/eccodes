@@ -72,7 +72,9 @@ class ContainerUtils:
     def cname_to_cpp_container(self, cname, conversion_data):
 
         buf_map = self.clength_to_buffer_mapping(cname, conversion_data)
+        debug.line("cname_to_cpp_container", f"[1] buf_map=[{buf_map}]")
         if buf_map:
+            debug.line("cname_to_cpp_container", f"[2] buf_map.cbuffer=[{buf_map.cbuffer}] buf_map.clength=[{buf_map.clength}] buf_map.cpp_container=[{debug.as_debug_string(buf_map.cpp_container)}]")
             return self.create_cpp_container_length_arg(buf_map.cpp_container.name)
         
         return self.cname_to_cpp_container_buffer(cname, conversion_data)

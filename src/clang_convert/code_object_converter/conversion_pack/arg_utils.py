@@ -12,6 +12,7 @@ from code_object.unary_operation import UnaryOperation
 from code_object.unary_expression import UnaryExpression
 from code_object.paren_expression import ParenExpression
 from utils.string_funcs import strip_semicolon
+from code_object.cast_expression import CastExpression
 
 # Try to extract a name value from the object, else return ""
 def extract_name(cpp_obj):
@@ -44,6 +45,9 @@ def extract_name(cpp_obj):
         cppname = extract_name(cpp_obj.expression)
     elif isinstance(cpp_obj, ParenExpression):
         # expression will a paren_expression, so we need to recurse!
+        cppname = extract_name(cpp_obj.expression)
+    elif isinstance(cpp_obj, CastExpression):
+        # expression will a CodeInterface, so we need to recurse!
         cppname = extract_name(cpp_obj.expression)
 
     if not isinstance(cppname, str):

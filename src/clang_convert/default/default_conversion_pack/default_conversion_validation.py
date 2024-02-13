@@ -14,6 +14,7 @@ import code_object.paren_expression as paren_expression
 import code_object.array_access as array_access
 from code_object_converter.conversion_utils import as_commented_out_code
 from utils.string_funcs import is_number
+import code_object.cast_expression as cast_expression
 
 # Pass this to the conversion_data object to be accessed by the conversion routines
 class DefaultConversionValidation(conversion_validation.ConversionValidation):
@@ -73,6 +74,18 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         # Just return the passed in value!
         return calling_arg_value
+
+    def validate_cast_expression(self, ccast_expression, cppcast_expression):
+        cpparg = arg_utils.to_cpparg(cppcast_expression, self._conversion_data)
+        if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+            cpparray_access = array_access.ArrayAccess(literal.Literal(cpparg.name), literal.Literal("0"))
+            updated_cppcast_expression = cast_expression.CastExpression(cppcast_expression.cast_type,
+                                                                        cppcast_expression.cast_value,
+                                                                        cpparray_access)
+            debug.line("validate_cast_expression", f"Updated container to access first element. updated_cppcast_expression=[{debug.as_debug_string(updated_cppcast_expression)}]")
+            return updated_cppcast_expression
+
+        return cppcast_expression
 
     def validate_unary_expression(self, cunary_expression, cppunary_expression):
         debug.line("validate_unary_operation", f"cppunary_expression.keyword=[{debug.as_debug_string(cppunary_expression.keyword)}] cppunary_expression.expression=[{debug.as_debug_string(cppunary_expression.expression)}]")
@@ -184,6 +197,18 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 # We're indexing into a container...
                 cpparray_access = array_access.ArrayAccess(literal.Literal(cpparg.name), cppright)
                 return cpparray_access
+
+        elif cppbinary_op.is_arithmetic:
+            cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)
+            if cpparg and self._conversion_data.is_container_type(cpparg.decl_spec.type):
+                # We'll assume the arithmetic is against index 0
+                cpparray_access = array_access.ArrayAccess(literal.Literal(cpparg.name), literal.Literal("0"))
+                updated_cppbinary_operation = binary_operation.BinaryOperation(cpparray_access,
+                                                                               cppbinary_op,
+                                                                               cppright)
+                debug.line("validate_binary_operation", f"Updated container to access first element. updated_cppbinary_operation=[{debug.as_debug_string(updated_cppbinary_operation)}]")
+
+                return updated_cppbinary_operation
 
         return cppbinary_operation
 

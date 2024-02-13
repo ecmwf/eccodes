@@ -7,6 +7,8 @@ import code_object.arg as arg
 from code_object.code_interface import NONE_VALUE
 import code_object_converter.conversion_pack.arg_utils as arg_utils
 import re
+import code_object.array_access as array_access
+import code_object.literal as literal
 
 class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -51,11 +53,21 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
                     else:
                         # Check if we have a container arg
                         cpp_arg_name = arg_utils.extract_name(cpp_arg_entry)
+                        debug.line("create_cpp_code_object", f"FunctionCallConverter [4] cpp_arg_name=[{cpp_arg_name}] cpp_arg_entry=[{debug.as_debug_string(cpp_arg_entry)}]")
+
                         if cpp_arg_name:
                             cpp_container_arg = conversion_pack.container_utils.cname_to_cpp_container(cpp_arg_name, conversion_pack.conversion_data)
+                            debug.line("create_cpp_code_object", f"FunctionCallConverter [5] cpp_container_arg=[{debug.as_debug_string(cpp_container_arg)}] for cpp_arg_name=[{cpp_arg_name}]")
                             if cpp_container_arg:
                                 cpp_arg_entry = cpp_container_arg
 
+                        cpparg = arg_utils.to_cpparg(cpp_arg_entry, conversion_pack.conversion_data)
+                        if cpparg: 
+                            if conversion_pack.conversion_data.is_container_type(cpparg.decl_spec.type) and not conversion_pack.conversion_data.is_container_type(mapping.cppfuncsig.args[i].decl_spec.type):
+                                cpp_arg_entry = array_access.ArrayAccess(literal.Literal(cpparg.name), literal.Literal("0"))
+                                debug.line("create_cpp_code_object", f"FunctionCallConverter [6] MISMATCH: cpparg=[{debug.as_debug_string(cpparg)}] is a container, C++ function arg=[{debug.as_debug_string(mapping.cppfuncsig.args[i])}] is NOT! Passing index 0, cpp_arg_entry=[{debug.as_debug_string(cpp_arg_entry)}]")
+
+                    debug.line("create_cpp_code_object", f"ADDING cpp_arg_entry=[{debug.as_debug_string(cpp_arg_entry)}] arg_entry=[{debug.as_debug_string(arg_entry)}]")
                     cpp_args.append(cpp_arg_entry)
 
             cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cpp_args)
@@ -63,7 +75,7 @@ class FunctionCallConverter(code_interface_converter.CodeInterfaceConverter):
             debug.line("create_cpp_code_object", f"cppfunction_call NOW EQUALS [{debug.as_debug_string(cppfunction_call)}]")
 
         else:
-            debug.line("create_cpp_code_object", f"FunctionCallConverter [4]")
+            debug.line("create_cpp_code_object", f"FunctionCallConverter [7]")
             # 2. Perform a manual conversion
             cpp_name = conversion_funcs.convert_ccode_object(cfunction_call.name, conversion_pack)
             cpp_args = []

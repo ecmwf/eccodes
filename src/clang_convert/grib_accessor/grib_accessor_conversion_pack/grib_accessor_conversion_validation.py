@@ -113,15 +113,18 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
     def apply_special_function_call_conversions(self, cfunction_call, cppfunction_call):
 
-        if cfunction_call.name == "grib_arguments_get_name":
+        # Convert grib_arguments_get_XXX calls
+        grib_arguments_get_cname = "grib_arguments_get_"
+        if cfunction_call.name.startswith(grib_arguments_get_cname):
+            cpptype = cfunction_call.name[len(grib_arguments_get_cname):]
+            if cpptype == "name":
+                cpptype = "std::string"
+            elif cpptype == "expression":
+                cpptype = "GribExpressionPtr"
+        
             arg_string = strip_semicolon(cfunction_call.args[2].as_string())
             arg_entry = literal.Literal(f"initData.args[{arg_string}].second")
-            return function_call.FunctionCall(f"std::get<std::string>", [arg_entry])
-
-        if cfunction_call.name == "grib_arguments_get_long":
-            arg_string = strip_semicolon(cfunction_call.args[2].as_string())
-            arg_entry = literal.Literal(f"initData.args[{arg_string}].second")
-            return function_call.FunctionCall(f"std::get<long>", [arg_entry])
+            return function_call.FunctionCall(f"std::get<{cpptype}>", [arg_entry])
 
         # If we're calling grib_XXX which is a virtual member function, and the first argument is "a", then we're actually calling ourself!
         if cfunction_call.name.startswith("grib_"):
