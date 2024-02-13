@@ -166,18 +166,17 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int err                       = 0;
     grib_accessor_to_double* self = (grib_accessor_to_double*)a;
-    char buff[512]                = {0,};
-    size_t length;
+
+    int err = 0;
+    char buff[512] = {0,};
     size_t size = 512;
+    size_t length = string_length(a);
 
-    length = string_length(a);
-
-    if (len[0] < length + 1) {
+    if (*len < length + 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = 0;
+                *len, a->name, a->length + 1);
+        *len = length + 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -192,7 +191,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     memcpy(val, buff + self->start, length);
 
     val[length] = 0;
-    len[0]      = length;
+    *len = length;
     return err;
 }
 

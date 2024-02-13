@@ -297,7 +297,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         val[i] = hand->buffer->data[a->offset + i];
     }
 
-    len[0] = a->length;
+    *len = a->length;
 
     return GRIB_SUCCESS;
 }
