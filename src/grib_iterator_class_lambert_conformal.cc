@@ -162,6 +162,25 @@ static double calculate_eccentricity(double minor, double major)
     return sqrt(1.0 - temp * temp);
 }
 
+static void inverse(double radius, double n, double f, double rho0_bare, double LoVInRadians, double x, double y,
+                    double* latDeg, double* lonDeg)
+{
+    x /= radius;
+    y /= radius;
+    y = rho0_bare - y;
+    double rho = hypot(x, y);
+    Assert(rho != 0.0);
+    if (n < 0.0) {
+        rho = -rho;
+        x = -x;
+        y = -y;
+    }
+    double lp_phi = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
+    double lp_lam = atan2(x, y) / n;
+    *lonDeg = lp_lam*RAD2DEG + LoVInRadians*RAD2DEG;
+    *latDeg = lp_phi*RAD2DEG;
+}
+
 static int init_sphere(grib_handle* h,
                        grib_iterator_lambert_conformal* self,
                        size_t nv, long nx, long ny,
@@ -171,8 +190,8 @@ static int init_sphere(grib_handle* h,
                        double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
                        double LaDInRadians)
 {
-    int i, j;
-    double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
+    long i, j;
+    double f, n, rho, rho0, angle, x0, y0, x, y;
     double latDeg, lonDeg, lonDiff;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
@@ -185,8 +204,10 @@ static int init_sphere(grib_handle* h,
     f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
     rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
     rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    if (n < 0) /* adjustment for southern hemisphere */
-        rho0 = -rho0;
+    double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+
+    //if (n < 0) /* adjustment for southern hemisphere */
+    //    rho0 = -rho0;
     lonDiff = lonFirstInRadians - LoVInRadians;
 
     /* Adjust longitude to range -180 to 180 */
@@ -212,21 +233,52 @@ static int init_sphere(grib_handle* h,
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-
+    
+    //------------PROJ lcc_e_inverse ------
+    //double x0_bare = x0/radius;
+    //double y0_bare = y0/radius;
+    // y0_bare = rho0_bare - y0_bare;
+//     rho = hypot(x0_bare, y0_bare);
+//     Assert(rho != 0.0);
+//     if (n < 0.0) {
+//         rho = -rho;
+//         x0_bare = -x0_bare;
+//         y0_bare = -y0_bare;
+//     }
+//     double lp_phi = 2. * atan(pow(f / rho, 1./n)) - M_PI_2;
+//     double lp_lam = atan2(x0_bare, y0_bare) / n;
+//     lonDeg = lp_lam * RAD2DEG + LoVInDegrees;
+//     latDeg = lp_phi * RAD2DEG;
+//     printf("phi=%g lam=%g\n", lp_phi ,lp_lam);
+    //--------------------------------------
+    //inverse(radius, n, f, rho0_bare, LoVInRadians, x0, y0, &latDeg, &lonDeg);
+    
+    for (j = 0; j < ny; j++) {
+        y = y0 + j * Dy;
+        for (i = 0; i < nx; i++) {
+            const long index = i + j * nx;
+            x = x0 + i * Dx;
+            inverse(radius, n, f, rho0_bare, LoVInRadians, x, y, &latDeg, &lonDeg);
+            self->lons[index] = lonDeg;
+            self->lats[index] = latDeg;
+        }
+    }
+#if 0
     /* Populate our arrays */
     for (j = 0; j < ny; j++) {
         y = y0 + j * Dy;
-        if (n < 0) { /* adjustment for southern hemisphere */
-            y = -y;
-        }
+        //if (n < 0) { /* adjustment for southern hemisphere */
+        //    y = -y;
+        //}
         tmp  = rho0 - y;
         tmp2 = tmp * tmp;
         for (i = 0; i < nx; i++) {
             int index = i + j * nx;
             x         = x0 + i * Dx;
-            if (n < 0) { /* adjustment for southern hemisphere */
-                x = -x;
-            }
+            //printf("j=%d i=%d   xy= %.6f  %.6f\t",j,i,x,y);
+            //if (n < 0) { /* adjustment for southern hemisphere */
+            //    x = -x;
+            //}
             angle = atan2(x, tmp); /* See ECC-524 */
             rho   = sqrt(x * x + tmp2);
             if (n <= 0) rho = -rho;
@@ -237,7 +289,7 @@ static int init_sphere(grib_handle* h,
             self->lats[index] = latDeg;
         }
     }
-
+#endif
     return GRIB_SUCCESS;
 }
 
