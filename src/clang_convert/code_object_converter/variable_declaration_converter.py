@@ -23,6 +23,9 @@ class VariableDeclarationConverter(code_interface_converter.CodeInterfaceConvert
 
         debug.line("create_cpp_code_object", f"VariableDeclarationConverter [1] cpp_value=[{debug.as_debug_string(cpp_value)}] for self._ccode_object.value=[{debug.as_debug_string(self._ccode_object.value)}]")
 
+        if cpp_value == NONE_VALUE:
+            return as_commented_out_code(self._ccode_object, f"Removed invalid value")
+
         cpp_variable_declaration = variable_declaration.VariableDeclaration(cpp_variable, cpp_value)
         return conversion_pack.conversion_validation.validate_variable_declaration(self._ccode_object, cpp_variable_declaration)
   
