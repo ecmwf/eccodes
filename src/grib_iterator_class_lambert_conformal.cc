@@ -162,26 +162,32 @@ static double calculate_eccentricity(double minor, double major)
     return sqrt(1.0 - temp * temp);
 }
 
-static void inverse(double radius, double n, double f, double rho0_bare, double LoVInRadians, double x, double y,
+static void xy2latlon(double radius, double n, double f, double rho0_bare, double LoVInRadians,
+                    double x, double y,
                     double* latDeg, double* lonDeg)
 {
     x /= radius;
     y /= radius;
     y = rho0_bare - y;
     double rho = hypot(x, y);
-    Assert(rho != 0.0);
-    if (n < 0.0) {
-        rho = -rho;
-        x = -x;
-        y = -y;
+    if (rho != 0.0) {
+        if (n < 0.0) {
+            rho = -rho;
+            x = -x;
+            y = -y;
+        }
+        double lp_phi = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
+        double lp_lam = atan2(x, y) / n;
+        *lonDeg = lp_lam*RAD2DEG + LoVInRadians*RAD2DEG;
+        *latDeg = lp_phi*RAD2DEG;
     }
-    double lp_phi = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
-    double lp_lam = atan2(x, y) / n;
-    *lonDeg = lp_lam*RAD2DEG + LoVInRadians*RAD2DEG;
-    *latDeg = lp_phi*RAD2DEG;
+    else {
+        *lonDeg = 0.0;
+        *latDeg = (n > 0.0 ? M_PI_2 : -M_PI_2) * RAD2DEG;
+    }
 }
 
-static int init_sphere(grib_handle* h,
+static int init_sphere(const grib_handle* h,
                        grib_iterator_lambert_conformal* self,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
@@ -190,9 +196,7 @@ static int init_sphere(grib_handle* h,
                        double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
                        double LaDInRadians)
 {
-    long i, j;
-    double f, n, rho, rho0, angle, x0, y0, x, y;
-    double latDeg, lonDeg, lonDiff;
+    double n, angle, x0, y0, x, y;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
@@ -201,14 +205,14 @@ static int init_sphere(grib_handle* h,
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
-    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    double f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    double rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
     double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    double rho0 = radius * rho0_bare;
 
     //if (n < 0) /* adjustment for southern hemisphere */
     //    rho0 = -rho0;
-    lonDiff = lonFirstInRadians - LoVInRadians;
+    double lonDiff = lonFirstInRadians - LoVInRadians;
 
     /* Adjust longitude to range -180 to 180 */
     if (lonDiff > M_PI)
@@ -233,32 +237,14 @@ static int init_sphere(grib_handle* h,
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
         return GRIB_OUT_OF_MEMORY;
     }
-    
-    //------------PROJ lcc_e_inverse ------
-    //double x0_bare = x0/radius;
-    //double y0_bare = y0/radius;
-    // y0_bare = rho0_bare - y0_bare;
-//     rho = hypot(x0_bare, y0_bare);
-//     Assert(rho != 0.0);
-//     if (n < 0.0) {
-//         rho = -rho;
-//         x0_bare = -x0_bare;
-//         y0_bare = -y0_bare;
-//     }
-//     double lp_phi = 2. * atan(pow(f / rho, 1./n)) - M_PI_2;
-//     double lp_lam = atan2(x0_bare, y0_bare) / n;
-//     lonDeg = lp_lam * RAD2DEG + LoVInDegrees;
-//     latDeg = lp_phi * RAD2DEG;
-//     printf("phi=%g lam=%g\n", lp_phi ,lp_lam);
-    //--------------------------------------
-    //inverse(radius, n, f, rho0_bare, LoVInRadians, x0, y0, &latDeg, &lonDeg);
-    
-    for (j = 0; j < ny; j++) {
+
+    double latDeg = 0, lonDeg = 0;
+    for (long j = 0; j < ny; j++) {
         y = y0 + j * Dy;
-        for (i = 0; i < nx; i++) {
+        for (long i = 0; i < nx; i++) {
             const long index = i + j * nx;
             x = x0 + i * Dx;
-            inverse(radius, n, f, rho0_bare, LoVInRadians, x, y, &latDeg, &lonDeg);
+            xy2latlon(radius, n, f, rho0_bare, LoVInRadians, x, y, &latDeg, &lonDeg);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
         }
@@ -294,7 +280,7 @@ static int init_sphere(grib_handle* h,
 }
 
 /* Oblate spheroid */
-static int init_oblate(grib_handle* h,
+static int init_oblate(const grib_handle* h,
                        grib_iterator_lambert_conformal* self,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
