@@ -25,9 +25,9 @@ program bufr_read_tempf
   integer            :: ibufr
   integer            :: i, count = 0
   integer            :: iflag
-  integer            :: status_id, status_ht, status_time = 0, status_p
-  integer            :: status_airt, status_dewt
-  integer            :: status_rsno, status_rssoft, status_balloonwt
+  integer            :: status_id, status_bl, status_num, status_ht, status_time = 0, status_p
+  integer            :: status_airt, status_dewt, status_wdir, status_wsp
+  integer            :: status_rsno, status_rssoft, status_balloonwt, statid_missing
   integer(kind=4)    :: sizews
   integer(kind=4)    :: blockNumber, stationNumber
   integer(kind=4)    :: ymd, hms
@@ -74,9 +74,10 @@ program bufr_read_tempf
     IF (status_id /= CODES_SUCCESS) statid = dropid
     ! call codes_is_missing(ibufr, 'shipOrMobileLandStationIdentifier', statid_missing)
     ! IF (statid_missing == 1) statid = "MISSING"
-    call codes_get(ibufr, 'blockNumber', blockNumber)
-    call codes_get(ibufr, 'stationNumber', stationNumber)
-    IF (blockNumber <= 99.0 .AND. stationNumber <= 1000) write (statid, '(I2.2,I3.3,3X)') blockNumber, stationNumber
+    blockNumber = 9999
+    call codes_get(ibufr, 'blockNumber', blockNumber, status_bl)
+    call codes_get(ibufr, 'stationNumber', stationNumber, status_num)
+    IF (blockNumber <= 99 .AND. stationNumber <= 1000) write (statid, '(I2.2,I3.3,3X)') blockNumber, stationNumber
 
     call codes_get(ibufr, 'year', year)
     call codes_get(ibufr, 'month', month)
@@ -118,8 +119,8 @@ program bufr_read_tempf
       call codes_get(ibufr, 'extendedVerticalSoundingSignificance', vssVal)
       call codes_get(ibufr, 'airTemperature', tVal, status_airt)
       call codes_get(ibufr, 'dewpointTemperature', tdVal, status_dewt)
-      call codes_get(ibufr, 'windDirection', wdirVal)
-      call codes_get(ibufr, 'windSpeed', wspVal)
+      call codes_get(ibufr, 'windDirection', wdirVal, status_wdir)
+      call codes_get(ibufr, 'windSpeed', wspVal, status_wsp)
 
       ! ---- Array sizes (pressure size can be larger - wind shear levels)
       sizews = size(wspVal)
@@ -140,13 +141,21 @@ program bufr_read_tempf
         allocate(tdVal(sizews))
         tdVal(:) = -999999999.0
       END IF
+      IF (status_wdir /= CODES_SUCCESS) THEN
+        allocate(wdirVal(sizews))
+        wdirVal(:) = -999999999.0
+      END IF
+      IF (status_wsp /= CODES_SUCCESS) THEN
+        allocate(wspVal(sizews))
+        wspVal(:) = -999999999.0
+      END IF
 
       ! ---- Print the values --------------------------------
       write (*, '(A,I7,A,A8,I9,I7.6,F9.3,F10.3,2F7.1,I4,I5)') 'Ob: ', count, &
         ' ', statid, ymd, hms, lat(1), lon(1), htg, htp, INT(sondeType), sizews
       IF (status_rsno == CODES_SUCCESS) write (*, '(A,A,A,F7.3)') &
         'RS number/software/balloonwt: ', rsnumber, rssoftware, balloonwt
-      IF (status_ht == CODES_SUCCESS .AND. SIZE(lat) > 1) write (*, '(A,A,F9.3,F10.3,F7.1)') &
+      IF (status_ht == CODES_SUCCESS .AND. SIZE(lat) > 1) write (*, '(A,A10,F9.3,F10.3,F7.1)') &
         'WMO list lat, lon, ht: ', statid, lat(2), lon(2), htec
       write (*, '(A)') 'level  dtime   dlat   dlon pressure geopotH airTemp  dewPtT windDir  windSp  signif'
       do i = 1, sizews
