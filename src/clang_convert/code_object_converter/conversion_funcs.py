@@ -2,6 +2,7 @@
 import code_object.array_access as arr_access
 import code_object.arg as arg
 import code_object.binary_operation as binary_operation
+import code_object.catch_statement as catch_statement
 import code_object.case_statement as case_statement
 import code_object.cast_expression as cast_expression
 import code_object.code_objects as code_objects
@@ -29,6 +30,8 @@ import code_object.return_statement as return_statement
 import code_object.struct_arg as struct_arg
 import code_object.struct_member_access as struct_member_access
 import code_object.switch_statement as switch_statement
+import code_object.try_block as try_block
+import code_object.try_statement as try_statement
 import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
@@ -39,6 +42,7 @@ import code_object.while_statement as while_statement
 import code_object_converter.array_access_converter as array_access_converter
 import code_object_converter.arg_converter as arg_converter
 import code_object_converter.binary_operation_converter as binary_operation_converter
+import code_object_converter.catch_statement_converter as catch_statement_converter
 import code_object_converter.case_statement_converter as case_statement_converter
 import code_object_converter.cast_expression_converter as cast_expression_converter
 import code_object_converter.code_objects_converter as code_objects_converter
@@ -66,6 +70,8 @@ import code_object_converter.return_statement_converter as return_statement_conv
 import code_object_converter.struct_arg_converter as struct_arg_converter
 import code_object_converter.struct_member_access_converter as struct_member_access_converter
 import code_object_converter.switch_statement_converter as switch_statement_converter
+import code_object_converter.try_block_converter as try_block_converter
+import code_object_converter.try_statement_converter as try_statement_converter
 import code_object_converter.unary_expression_converter as unary_expression_converter
 import code_object_converter.unary_operation_converter as unary_operation_converter
 import code_object_converter.value_declaration_reference_converter as value_declaration_reference_converter
@@ -82,6 +88,7 @@ CodeInterfaceConverterClasses = {
     arr_access.ArrayAccess                                  : array_access_converter.ArrayAccessConverter,
     arg.Arg                                                 : arg_converter.ArgConverter,
     binary_operation.BinaryOperation                        : binary_operation_converter.BinaryOperationConverter,
+    catch_statement.CatchStatement                          : catch_statement_converter.CatchStatementConverter,
     case_statement.CaseStatement                            : case_statement_converter.CaseStatementConverter,
     cast_expression.CastExpression                          : cast_expression_converter.CastExpressionConverter,
     code_objects.CodeObjects                                : code_objects_converter.CodeObjectsConverter,
@@ -109,6 +116,8 @@ CodeInterfaceConverterClasses = {
     struct_arg.StructArg                                    : struct_arg_converter.StructArgConverter,
     struct_member_access.StructMemberAccess                 : struct_member_access_converter.StructMemberAccessConverter,
     switch_statement.SwitchStatement                        : switch_statement_converter.SwitchStatementConverter,
+    try_statement.TryStatement                              : try_statement_converter.TryStatementConverter,
+    try_block.TryBlock                                      : try_block_converter.TryBlockConverter,
     unary_expression.UnaryExpression                        : unary_expression_converter.UnaryExpressionConverter,
     unary_operation.UnaryOperation                          : unary_operation_converter.UnaryOperationConverter,
     value_declaration_reference.ValueDeclarationReference   : value_declaration_reference_converter.ValueDeclarationReferenceConverter,

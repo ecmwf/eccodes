@@ -34,22 +34,22 @@ class AstCodeCreator:
         elif node.kind == clang.cindex.CursorKind.MACRO_INSTANTIATION:
             if node.location.file and node.location.file.name == self._cfilepath + self._cfilename:
                 self._ast_code.add_macro_instantiation(node)
-        elif node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
+
+        # We ignore any other nodes that aren't local...
+        if node.location.file and node.location.file.name != self._cfilepath + self._cfilename:
+            debug.line("parse_node", f"Ignoring non-local node spelling=[{node.spelling}] file=[{os.path.basename(node.location.file.name)}]")
+            return
+
+        if node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
             pass
         elif node.kind.is_declaration:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():
                 self._ast_code.add_function_node(node)
             elif node.kind == clang.cindex.CursorKind.FUNCTION_TEMPLATE:
-                if node.location.file.name == self._cfilepath + self._cfilename:
-                    self._ast_code.add_function_node(node)
-                else:
-                    debug.line("parse_node", f"Ignoring template node spelling=[{node.spelling}] as not defined locally: file name=[{os.path.basename(node.location.file.name)}]")
-                    # Don't add to global function
-                    return
+                self._ast_code.add_function_node(node)
 
             # Parse *ALL* nodes to determine whether to add to the global declaration. 
             self._ast_code.add_global_function_entry(node)
-
         else:
             assert False, f"Unexpected node kind=[{node.kind}] spelling=[{node.spelling}] line=[{node.location.line}] col=[{node.location.column}]"
 

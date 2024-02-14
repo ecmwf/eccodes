@@ -5,6 +5,7 @@ import ast_object.ast_utils as ast_utils
 import code_object.arg as arg
 import code_object.array_access as array_access
 import code_object.binary_operation as binary_operation
+import code_object.catch_statement as catch_statement
 import code_object.case_statement as case_statement
 import code_object.cast_expression as cast_expression
 import code_object.code_objects as code_objects
@@ -22,6 +23,8 @@ import code_object.paren_expression as paren_expression
 import code_object.return_statement as return_statement
 import code_object.struct_member_access as struct_member_access
 import code_object.switch_statement as switch_statement
+import code_object.try_statement as try_statement
+import code_object.try_block as try_block
 import code_object.unary_expression as unary_expression
 import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
@@ -395,6 +398,33 @@ class AstParser:
     def parse_NULL_STMT(self, node):
         return literal.Literal(node.spelling)
     
+    def parse_CXX_TRY_STMT(self, node):
+        ctry_statement = None
+        ccatch_statements = code_objects.CodeObjects()
+
+        for child in node.get_children():
+            if child.kind == clang.cindex.CursorKind.CXX_CATCH_STMT:
+                ccatch_statement = self.parse_ast_node(child)
+                assert ccatch_statement
+                ccatch_statements.add_code_object(ccatch_statement)
+            else:
+                # Assume it's the try statement (so there shoulkd be only one non-catch node)
+                assert ctry_statement is None, f"Unexpected additional try statement..."
+                try_stmt = self.parse_ast_node(child)
+                ctry_statement = try_statement.TryStatement(try_stmt)
+
+        assert ctry_statement, f"Could not find Try statement!"
+
+        return try_block.TryBlock(ctry_statement, ccatch_statements)
+
+    def parse_CXX_CATCH_STMT(self, node):
+        children = list(node.get_children())
+        assert len(children) == 2, f"Expected two child nodes, got [{len(children)}]"
+
+        expression = self.parse_ast_node(children[0])
+        statement = self.parse_ast_node(children[1])
+        return catch_statement.CatchStatement(expression, statement)
+
     parse_STMT_funcs = {
         clang.cindex.CursorKind.COMPOUND_STMT:  parse_COMPOUND_STMT,
         clang.cindex.CursorKind.DECL_STMT:      parse_DECL_STMT,
@@ -410,6 +440,8 @@ class AstParser:
         clang.cindex.CursorKind.BREAK_STMT:     parse_BREAK_STMT,
         clang.cindex.CursorKind.RETURN_STMT:    parse_RETURN_STMT,
         clang.cindex.CursorKind.NULL_STMT:      parse_NULL_STMT,
+        clang.cindex.CursorKind.CXX_TRY_STMT:   parse_CXX_TRY_STMT,
+        clang.cindex.CursorKind.CXX_CATCH_STMT: parse_CXX_CATCH_STMT,
     }
     
     def parse_STMT_node(self, node):
@@ -836,10 +868,16 @@ class AstParser:
     def parse_TYPE_REF(self, node):
         return literal.Literal(node.spelling)
 
+    def parse_NAMESPACE_REF(self, node):
+        debug.line("parse_NAMESPACE_REF", f"NODES:")
+        ast_utils.dump_node(node)
+        return literal.Literal("::".join([t.spelling for t in node.get_tokens()]))
+
     parse_REF_funcs = {
         clang.cindex.CursorKind.TYPE_REF:       parse_TYPE_REF,
         clang.cindex.CursorKind.TEMPLATE_REF:   parse_node_not_implemented,
         clang.cindex.CursorKind.MEMBER_REF:     parse_node_not_implemented,
+        clang.cindex.CursorKind.NAMESPACE_REF:  parse_NAMESPACE_REF,
     }
 
     def parse_REF_node(self, node):

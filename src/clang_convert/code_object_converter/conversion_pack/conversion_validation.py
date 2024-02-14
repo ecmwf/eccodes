@@ -33,6 +33,9 @@ class ConversionValidation:
     def validate_cast_expression(self, ccast_expression, cppcast_expression):
         return cppcast_expression
 
+    def validate_catch_statement(self, ccatch_statement, cppcatch_statement):
+        return cppcatch_statement
+
     def validate_code_objects(self, ccode_objects, cppcode_objects):
         return cppcode_objects
 
@@ -108,6 +111,12 @@ class ConversionValidation:
     def validate_switch_statement(self, cswitch_statement, cppswitch_statement):
         return cppswitch_statement
     
+    def validate_try_statement(self, ctry_statement, cpptry_statement):
+        return cpptry_statement
+
+    def validate_try_block(self, ctry_block, cpptry_block):
+        return cpptry_block
+
     def validate_unary_expression(self, cunary_expression, cppunary_expression):
         return cppunary_expression
 

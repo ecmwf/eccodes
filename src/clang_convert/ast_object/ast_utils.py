@@ -144,10 +144,12 @@ def create_struct_member_access(tokens):
     tokens = tokens[1:]
 
     if len(tokens) > 0:
-        # Check for index token '[' or function call token '('
+        # Check for index token '[', function call token '(' or template token '<'
         if tokens[0] == "[":
             index = " ".join([t for t in tokens])
         elif tokens[0] == "(":
+            name += " ".join([t for t in tokens])
+        elif tokens[0] == "<":
             name += " ".join([t for t in tokens])
         else:
             assert False, f"Unexpected token = [{tokens[0]}]"
