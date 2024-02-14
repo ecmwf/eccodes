@@ -6,19 +6,19 @@ class CFileParser:
         self._cli_logger = cli_logger
 
     def to_ast_code_list(self, files, ignore_file_list):
-        file_parse_list = []
+        processed_files_list = []
 
         if files[0].endswith("input_files"):
             f = open(files[0], "r")
             for entry in f:
                 if not entry.startswith("#"):
-                    file_parse_list.append(entry.rstrip())
+                    processed_files_list.append(entry.rstrip())
         else:
-            file_parse_list = files
+            processed_files_list = files
 
         ast_code_list = []
 
-        for f in file_parse_list:
+        for f in processed_files_list:
             if f in ignore_file_list:
                 self._cli_logger.info("Ignoring C file %s", f)
             else:
@@ -27,4 +27,4 @@ class CFileParser:
                 ast_code = creator.create()
                 ast_code_list.append(ast_code)
 
-        return ast_code_list
+        return ast_code_list, processed_files_list

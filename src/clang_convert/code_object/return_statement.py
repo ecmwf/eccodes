@@ -4,7 +4,7 @@ import code_object.arg as arg
 
 # Represent a return statement of the form return EXPR;
 #
-# EXPR is the expression being returned...
+# EXPR is the expression being returned, which can be None to mean: return;
 class ReturnStatement(code_interface.CodeInterface):
     def __init__(self, expression) -> None:
         self._expression = expression

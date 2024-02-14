@@ -24,6 +24,10 @@ class BinaryOperationConverter(code_interface_converter.CodeInterfaceConverter):
             debug.line("create_cpp_code_object", f"cpp_left_operand=[{debug.as_debug_string(cpp_left_operand)}] => returning commented out code")
             return as_commented_out_code(self._ccode_object, f"Removed invalid binary operation")
 
+        if cpp_right_operand is None or cpp_right_operand == NONE_VALUE:
+            debug.line("create_cpp_code_object", f"cpp_right_operand=[{debug.as_debug_string(cpp_left_operand)}] => returning commented out code")
+            return as_commented_out_code(self._ccode_object, f"Removed invalid binary operation")
+
         cppbinary_operation = binary_operation.BinaryOperation(cpp_left_operand, cpp_binary_op, cpp_right_operand)
 
         return conversion_pack.conversion_validation.validate_binary_operation(self._ccode_object, cppbinary_operation)

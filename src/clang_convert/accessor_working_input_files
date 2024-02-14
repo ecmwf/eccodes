@@ -47,16 +47,16 @@ grib_accessor_class_label.cc
 #grib_accessor_class_md5.cc
 grib_accessor_class_message_copy.cc
 grib_accessor_class_nearest.cc
-#grib_accessor_class_non_alpha.cc
+grib_accessor_class_non_alpha.cc
 grib_accessor_class_number_of_values_data_raw_packing.cc
 grib_accessor_class_pack_bufr_values.cc
 grib_accessor_class_packing_type.cc
 grib_accessor_class_position.cc
 grib_accessor_class_raw.cc
-#grib_accessor_class_section.cc
+grib_accessor_class_section.cc
 grib_accessor_class_section_pointer.cc
 grib_accessor_class_smart_table_column.cc
-#grib_accessor_class_step_human_readable.cc
+grib_accessor_class_step_human_readable.cc
 grib_accessor_class_to_double.cc
 grib_accessor_class_to_integer.cc
 grib_accessor_class_to_string.cc
@@ -69,7 +69,7 @@ grib_accessor_class_uint64_little_endian.cc
 grib_accessor_class_uint8.cc
 grib_accessor_class_unpack_bufr_values.cc
 grib_accessor_class_values.cc
-#grib_accessor_class_variable.cc
+grib_accessor_class_variable.cc
 grib_accessor_class_when.cc
 #
 # LEVEL 3

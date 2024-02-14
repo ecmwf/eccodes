@@ -33,7 +33,6 @@ public:
     // Required to support C -> C++ Conversion - Start
     long                byteCount() const;
     long                byteOffset() const;
-
     // Required to support C -> C++ Conversion - End
 
     template<typename T>

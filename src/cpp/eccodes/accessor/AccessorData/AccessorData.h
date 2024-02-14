@@ -8,6 +8,7 @@
 #include "GribCpp/GribStatus.h"
 #include "GribStub/GribVirtualValueStub.h"
 #include "GribStub/GribActionStub.h"
+#include "GribStub/GribSectionStub.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -76,8 +77,10 @@ public:
     virtual GribStatus unpackSubArray(std::vector<double> &values, std::size_t start) const;
 
     // Conversion helpers...
-    AccessorLoaderPtr loader() const { return nullptr; }
-    GribActionPtr creator() const { return nullptr; }
+    AccessorLoaderPtr   loader() const { return nullptr; }
+    GribActionPtr       creator() const { return nullptr; }
+    GribSectionPtr      subSection() const { return nullptr; }
+    AccessorPtr         next() const { return nullptr; }
 
 // Ideally these would be private, but that makes the conversion much harder so they are protected instead
 // This will be revisited later...
@@ -90,6 +93,9 @@ protected:
     int dirty_{};
     GribVirtualValuePtr vvalue_{};
     std::string set_{};
+
+    // Conversion helpers...
+    std::vector<AccessorPtr> attributes_;
 };
 
 template<typename T>

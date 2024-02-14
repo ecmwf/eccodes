@@ -13,9 +13,13 @@ grib_accessor_base_data_members_map = {
     DataMember("int","dirty")                   : DataMember("int","dirty_", mutable=True),
     DataMember("grib_virtual_value*","vvalue")  : DataMember("GribVirtualValuePtr","vvalue_"),
     DataMember("const char*","set")             : DataMember("std::string","set_"),
-    # This is a conversion helper!
+    # These are conversion helpers!
     DataMember("grib_loader*","loader")         : DataMember("AccessorLoaderPtr","loader()"),
     DataMember("grib_action*","creator")        : DataMember("GribActionPtr","creator()"),
+    DataMember("grib_section*","sub_section")   : DataMember("GribSectionPtr","subSection()"),
+    DataMember("grib_section*","sub_section")   : DataMember("GribSectionPtr","subSection()"),
+    DataMember("grib_accessor*","next")         : DataMember("AccessorPtr","next()"),
+    DataMember("grib_accessor*","attributes")   : DataMember("std::vector<AccessorPtr>","attributes_"),
     }
 
 def add_data_member_mappings_to_conversion_data(conversion_data):

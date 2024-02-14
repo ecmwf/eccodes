@@ -273,7 +273,13 @@ class AstParser:
 
     def parse_RETURN_STMT(self, node):
         children = list(node.get_children())
-        assert len(children) == 1, f"Expected exactly one child for return statement"
+        child_count = len(children)
+
+        if child_count == 0:
+            # Empty return statement, i.e. return;
+            return return_statement.ReturnStatement(literal.Literal(""))
+
+        assert child_count == 1, f"Expected at most one child for return statement, not [{child_count}]"
         return_value = children[0]
 
         tokens = [token.spelling for token in node.get_tokens()]
