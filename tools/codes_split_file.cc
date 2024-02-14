@@ -20,13 +20,18 @@
 #include "grib_api_internal.h"
 #include <assert.h>
 
-static int verbose                        = 0;
+static bool verbose = false;
 static const char* OUTPUT_FILENAME_FORMAT = "%s_%03d"; /* x_001, x_002 etc */
 static void usage(const char* prog)
 {
     printf("Usage: %s [-v] nchunks infile\n", prog);
     printf("Setting nchunks=-1 splits infile into individual messages\n");
     exit(1);
+}
+
+static void print_num_messages_written(const char* output_filename, size_t n)
+{
+    printf("Wrote output file %s (%zu message%s)\n", output_filename, n, n==1?"":"s");
 }
 
 static int split_file(FILE* in, const char* filename, const int nchunks, unsigned long* count)
@@ -76,8 +81,9 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             read_size += size;
             msg_size += size;
             if (read_size > chunk_size && msg_size < insize) {
-                if (verbose)
-                    printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg);
+                if (verbose) {
+                    print_num_messages_written(ofilename, num_msg);
+                }
                 fclose(out);
                 i++;
                 /* Start writing to the next file */
@@ -95,8 +101,9 @@ static int split_file(FILE* in, const char* filename, const int nchunks, unsigne
             (*count)++;
         }
     }
-    if (verbose)
-        printf("Wrote output file %s (%zu msgs)\n", ofilename, num_msg - 1);
+    if (verbose) {
+        print_num_messages_written(ofilename, num_msg - 1);
+    }
     fclose(out);
     free(ofilename);
 
@@ -118,7 +125,7 @@ int main(int argc, char* argv[])
     i = 1;
     if (strcmp(argv[i], "-v") == 0) {
         i++;
-        verbose = 1;
+        verbose = true;
         if (argc != 4)
             usage(argv[0]);
     }
