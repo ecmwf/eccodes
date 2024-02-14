@@ -31,16 +31,16 @@ class AstCodeCreator:
                     # Note: the preprocessor necessarily parses macros before everything else, so these will
                     #       ALWAYS appear at the top of the global declaration
                     self._ast_code.add_global_function_entry(node)
+            else:
+                debug.line("parse_node", f"Ignoring [no file info] node spelling=[{node.spelling}] kind=[{node.kind}]")
+                return
         elif node.kind == clang.cindex.CursorKind.MACRO_INSTANTIATION:
             if node.location.file and node.location.file.name == self._cfilepath + self._cfilename:
                 self._ast_code.add_macro_instantiation(node)
-
-        # We ignore any other nodes that aren't local...
-        if node.location.file and node.location.file.name != self._cfilepath + self._cfilename:
-            debug.line("parse_node", f"Ignoring non-local node spelling=[{node.spelling}] file=[{os.path.basename(node.location.file.name)}]")
+        elif node.location.file and node.location.file.name != self._cfilepath + self._cfilename:
+            debug.line("parse_node", f"Ignoring [non-local] node spelling=[{node.spelling}] file=[{os.path.basename(node.location.file.name)}]")
             return
-
-        if node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
+        elif node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
             pass
         elif node.kind.is_declaration:
             if node.kind == clang.cindex.CursorKind.FUNCTION_DECL and node.is_definition():

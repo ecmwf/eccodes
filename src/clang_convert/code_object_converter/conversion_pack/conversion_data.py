@@ -409,6 +409,10 @@ class ConversionData:
         if cpparg:
             return cpparg
 
+        cppmember = self.cppdata_member_for_cppname(cppname)
+        if cppmember:
+            return cppmember
+
         buf_map = self.funcsig_buffer_mapping_for_cppname(cppname)
         if buf_map:
             return buf_map.cpp_container
@@ -437,6 +441,13 @@ class ConversionData:
                 if value and value.name == cppdata_member_name:
                     return True
         return False
+
+    def cppdata_member_for_cppname(self, cppname):
+        for mapping in self.all_mappings():
+            for key, value in mapping.data_member_mappings.items():
+                if value and value.name == cppname:
+                    return value
+        return None
 
     def cppdata_member_for_cdata_member(self, cmember):
         for mapping in self.all_mappings():

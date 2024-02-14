@@ -236,16 +236,17 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         cpparg = self._conversion_data.cpparg_for_cppname(cppstruct_member_access.name)
         if cpparg and cpparg.decl_spec.type == "AccessorPtr":
             data_member = cppstruct_member_access.member
-            if data_member.name == "name":
-                data_member.name += "().get().c_str()" # It's read-only so this is ok!
-            if data_member.name == "parent":
-                # For now we'll strip off the parent bit as that is accessing the grib_section, which we'll probably get
-                # another way!
-                updated_cppstruct_member_access = struct_member_access.StructMemberAccess(cppstruct_member_access.access,
-                                                                                          cppstruct_member_access.name,
-                                                                                          cppstruct_member_access.index)
-                debug.line("validate_struct_member_access", f"Updating AccessorPtr grib_section access: [{debug.as_debug_string(cppstruct_member_access)}]->[{updated_cppstruct_member_access}]")
-                return updated_cppstruct_member_access
+            if data_member:
+                if data_member.name == "name":
+                    data_member.name += "().get().c_str()" # It's read-only so this is ok!
+                if data_member.name == "parent":
+                    # For now we'll strip off the parent bit as that is accessing the grib_section, which we'll probably get
+                    # another way!
+                    updated_cppstruct_member_access = struct_member_access.StructMemberAccess(cppstruct_member_access.access,
+                                                                                            cppstruct_member_access.name,
+                                                                                            cppstruct_member_access.index)
+                    debug.line("validate_struct_member_access", f"Updating AccessorPtr grib_section access: [{debug.as_debug_string(cppstruct_member_access)}]->[{updated_cppstruct_member_access}]")
+                    return updated_cppstruct_member_access
 
         return super().validate_struct_member_access(cstruct_member_access, cppstruct_member_access)
 
