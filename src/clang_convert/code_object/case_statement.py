@@ -14,8 +14,6 @@ class CaseStatement(code_interface.CodeInterface):
         self._statement = statement
         assert isinstance(self._statement, code_interface.CodeInterface), f"Statement must be a CodeInterface class"
 
-        self._else = None
-
     @property
     def constant_expression(self):
         return self._constant_expression

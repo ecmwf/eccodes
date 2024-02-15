@@ -33,5 +33,7 @@ class FunctionCall(code_interface.CodeInterface):
 
 
     def as_lines(self):
-        return [f"{self._name}({', '.join([arg_utils.extract_function_call_name(a) for a in self._args])});"]
+        func_call_string = f"{self._name}({', '.join([arg_utils.extract_function_call_name(a) for a in self._args])});"
+        debug.line("as_lines", f"func_call_string=[{func_call_string}]")
+        return [func_call_string]
         #return [f"{self._name}({', '.join([strip_semicolon(a.as_string()) for a in self._args])});"]

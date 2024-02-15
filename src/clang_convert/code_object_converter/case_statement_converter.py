@@ -13,6 +13,6 @@ class CaseStatementConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_constant_expression = conversion_funcs.convert_ccode_object(self._ccode_object.constant_expression, conversion_pack)
         cpp_statement = conversion_funcs.convert_ccode_object(self._ccode_object.statement, conversion_pack)
 
-        cpp_while = case_statement.CaseStatement(cpp_constant_expression, cpp_statement)
+        cpp_case = case_statement.CaseStatement(cpp_constant_expression, cpp_statement)
 
-        return conversion_pack.conversion_validation.validate_case_statement(self._ccode_object, cpp_while)
+        return conversion_pack.conversion_validation.validate_case_statement(self._ccode_object, cpp_case)

@@ -116,7 +116,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                     # C++ variable is a container, so we'll strip the *
                     debug.line("validate_unary_operation", f"Stripping [*] from cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
                     return cppunary_operation.operand
-            elif cpparg.decl_spec.pointer == "&":
+            elif cpparg.decl_spec.pointer == "&" and cppunary_operation.unary_op.is_member_access():
                 debug.line("validate_unary_operation", f"Stripping [*] from ref type: current cppunary_operation=[{debug.as_debug_string(cppunary_operation)}]")
                 return cppunary_operation.operand
 

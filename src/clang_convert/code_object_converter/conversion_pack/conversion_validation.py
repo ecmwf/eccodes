@@ -75,11 +75,17 @@ class ConversionValidation:
     def validate_global_function(self, cglobal_function, cppglobal_function):
         return cppglobal_function
 
+    def validate_goto_statement(self, cgoto_statement, cppgoto_statement):
+        return cppgoto_statement
+
     def validate_if_statement(self, cif_statement, cppif_statement):
         return cppif_statement
     
     def validate_init_list(self, cinit_list, cppinit_list):
         return cppinit_list
+
+    def validate_label_statement(self, clabel, cpplabel):
+        return cpplabel
 
     def validate_literal(self, cliteral, cppliteral):
         return cppliteral

@@ -14,10 +14,12 @@ import code_object.conditional_operation as conditional_operation
 import code_object.declaration_specifier as declaration_specifier
 import code_object.for_statement as for_statement
 import code_object.function_call as function_call
+import code_object.goto_statement as goto_statement
 import code_object.if_statement as if_statement
 import code_object.init_list as init_list
 import code_object.macro_definition as macro_definition
 import code_object.macro_instantation as macro_instantation
+import code_object.label_statement as label_statement
 import code_object.literal as literal
 import code_object.paren_expression as paren_expression
 import code_object.return_statement as return_statement
@@ -271,6 +273,30 @@ class AstParser:
 
         return stmt_lines
 
+    def parse_GOTO_STMT(self, node):
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 1, f"Expected one child for goto statement, not [{child_count}]"
+
+        label = self.parse_ast_node(children[0])
+
+        return goto_statement.GotoStatement(label)
+
+    def parse_LABEL_STMT(self, node):
+        children = list(node.get_children())
+        child_count = len(children)
+        assert child_count == 1, f"Expected one child for label statement, not [{child_count}]"
+
+        label = literal.Literal(node.spelling)
+        statement = self.parse_ast_node(children[0])
+
+        label_stmt = label_statement.LabelStatement(label, statement)
+        debug.line("parse_LABEL_STMT", f"label_stmt=[{debug.as_debug_string(label_stmt)}]")
+        #ast_utils.dump_node(node)
+        #assert False
+        
+        return label_stmt
+
     def parse_RETURN_STMT(self, node):
         children = list(node.get_children())
         child_count = len(children)
@@ -353,6 +379,9 @@ class AstParser:
 
     def parse_BREAK_STMT(self, node):
         return literal.Literal("break;")
+
+    def parse_CONTINUE_STMT(self, node):
+        return literal.Literal("continue;")
 
     def parse_FOR_STMT(self, node):
         init_statement = condition = iteration_expression = statement = None
@@ -437,12 +466,13 @@ class AstParser:
         clang.cindex.CursorKind.CASE_STMT:      parse_CASE_STMT,
         clang.cindex.CursorKind.DEFAULT_STMT:   parse_CASE_STMT,
         clang.cindex.CursorKind.IF_STMT:        parse_IF_STMT,
+        clang.cindex.CursorKind.LABEL_STMT:     parse_LABEL_STMT,
         clang.cindex.CursorKind.SWITCH_STMT:    parse_SWITCH_STMT,
         clang.cindex.CursorKind.WHILE_STMT:     parse_WHILE_STMT,
         clang.cindex.CursorKind.DO_STMT:        parse_node_not_implemented,
         clang.cindex.CursorKind.FOR_STMT:       parse_FOR_STMT,
-        clang.cindex.CursorKind.GOTO_STMT:      parse_node_not_implemented,
-        clang.cindex.CursorKind.CONTINUE_STMT:  parse_node_not_implemented,
+        clang.cindex.CursorKind.GOTO_STMT:      parse_GOTO_STMT,
+        clang.cindex.CursorKind.CONTINUE_STMT:  parse_CONTINUE_STMT,
         clang.cindex.CursorKind.BREAK_STMT:     parse_BREAK_STMT,
         clang.cindex.CursorKind.RETURN_STMT:    parse_RETURN_STMT,
         clang.cindex.CursorKind.NULL_STMT:      parse_NULL_STMT,
@@ -565,9 +595,11 @@ class AstParser:
             func_name = self.parse_ast_node(children[0])
             cargs = []
             for entry in children [1:]:
-                if entry.kind == clang.cindex.CursorKind.DECL_REF_EXPR:
+                carg = self.parse_ast_node(entry)
+                cargs.append(carg)
+                '''if entry.kind == clang.cindex.CursorKind.DECL_REF_EXPR:
                     carg = arg.Arg(entry.type.spelling, entry.spelling)
-                    cargs.append(carg)
+                    cargs.append(carg)'''
             func_call = function_call.FunctionCall(func_name.as_string(), cargs)
             debug.line("parse_UNEXPOSED_EXPR", f"Extracted func_call=[{debug.as_debug_string(func_call)}]")
             return func_call
@@ -882,11 +914,15 @@ class AstParser:
         ast_utils.dump_node(node)
         return literal.Literal("::".join([t.spelling for t in node.get_tokens()]))
 
+    def parse_LABEL_REF(self, node):
+        return literal.Literal(node.spelling)
+
     parse_REF_funcs = {
         clang.cindex.CursorKind.TYPE_REF:       parse_TYPE_REF,
         clang.cindex.CursorKind.TEMPLATE_REF:   parse_node_not_implemented,
         clang.cindex.CursorKind.MEMBER_REF:     parse_node_not_implemented,
         clang.cindex.CursorKind.NAMESPACE_REF:  parse_NAMESPACE_REF,
+        clang.cindex.CursorKind.LABEL_REF:      parse_LABEL_REF,
     }
 
     def parse_REF_node(self, node):

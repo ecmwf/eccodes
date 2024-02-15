@@ -111,6 +111,6 @@ def extract_function_call_name(cpp_obj):
     if not cppname:
         cppname = strip_semicolon(cpp_obj.as_string())
 
-    debug.line("function_call_name", f"Converted cpp_obj: [{debug.as_debug_string(cpp_obj)}] -> [{cppname}] cpp_ob type=[{type(cpp_obj)}]")
+    debug.line("extract_function_call_name", f"Converted cpp_obj: [{debug.as_debug_string(cpp_obj)}] -> [{cppname}] cpp_ob type=[{type(cpp_obj)}]")
 
     return cppname
