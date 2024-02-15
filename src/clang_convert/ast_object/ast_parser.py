@@ -294,7 +294,7 @@ class AstParser:
         debug.line("parse_LABEL_STMT", f"label_stmt=[{debug.as_debug_string(label_stmt)}]")
         #ast_utils.dump_node(node)
         #assert False
-        
+
         return label_stmt
 
     def parse_RETURN_STMT(self, node):
@@ -823,10 +823,6 @@ class AstParser:
 
 
     def parse_CSTYLE_CAST_EXPR(self, node):
-
-        debug.line("parse_CSTYLE_CAST_EXPR", f"Node dump:")
-        ast_utils.dump_node(node)
-
         tokens = [token.spelling for token in node.get_tokens()]
         assert tokens[0] == "("
 
@@ -846,6 +842,31 @@ class AstParser:
 
         debug.line("parse_CSTYLE_CAST_EXPR", f"Created ccast_expression = [{debug.as_debug_string(ccast_expression)}]")
         return ccast_expression
+
+    def parse_CXX_CAST_EXPR(self, node):
+        children = list(node.get_children())
+        child_count = len(children)
+
+        assert child_count >= 1, f"Expected at least one child for reinterpret_cast, got [{child_count}]"
+
+        if node.kind == clang.cindex.CursorKind.CXX_REINTERPRET_CAST_EXPR:
+            cxx_cast_type = "reinterpret"
+        elif node.kind == clang.cindex.CursorKind.CXX_STATIC_CAST_EXPR:
+            cxx_cast_type = "static"
+        else:
+            assert False, f"Unrecognized C++ cast type: kind=[{node.kind}]"
+
+        # Extract the cast value by finding the first '<' and '>' [note this will throw if not found!]
+        tokens = [token.spelling for token in node.get_tokens()]
+        cast_start_index = tokens.index("<") + 1
+        cast_end_index = tokens.index(">")
+        cxx_cast_value = literal.Literal(f"{' '.join([t for t in tokens[cast_start_index:cast_end_index]])}")
+
+        cxx_expression = self.parse_ast_node(children[-1])
+        cxx_cast_expression = cast_expression.CastExpression(cxx_cast_type, cxx_cast_value, cxx_expression)
+
+        debug.line("parse_CXX_REINTERPRET_CAST_EXPR", f"Created cxx_cast_expression = [{debug.as_debug_string(cxx_cast_expression)}]")
+        return cxx_cast_expression
 
     def parse_ARRAY_SUBSCRIPT_EXPR(self, node):
         # We expect two children: the variable name and the index
@@ -881,6 +902,8 @@ class AstParser:
         clang.cindex.CursorKind.CALL_EXPR:                      parse_CALL_EXPR,
         clang.cindex.CursorKind.ARRAY_SUBSCRIPT_EXPR:           parse_ARRAY_SUBSCRIPT_EXPR,
         clang.cindex.CursorKind.CSTYLE_CAST_EXPR:               parse_CSTYLE_CAST_EXPR,
+        clang.cindex.CursorKind.CXX_REINTERPRET_CAST_EXPR:      parse_CXX_CAST_EXPR,
+        clang.cindex.CursorKind.CXX_STATIC_CAST_EXPR:           parse_CXX_CAST_EXPR,
         clang.cindex.CursorKind.COMPOUND_LITERAL_EXPR:          parse_node_not_implemented,
         clang.cindex.CursorKind.INIT_LIST_EXPR:                 parse_INIT_LIST_EXPR,
         clang.cindex.CursorKind.INTEGER_LITERAL:                parse_INTEGER_LITERAL,
