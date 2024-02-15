@@ -13,6 +13,7 @@ class SwitchStatementConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_condition = conversion_funcs.convert_ccode_object(self._ccode_object.condition, conversion_pack)
         cpp_statement = conversion_funcs.convert_ccode_object(self._ccode_object.statement, conversion_pack)
 
+        debug.line("create_cpp_code_object", f"cpp_condition=[{debug.as_debug_string(cpp_condition)}] for self._ccode_object.condition=[{debug.as_debug_string(self._ccode_object.condition)}]")
         cpp_while = switch_statement.SwitchStatement(cpp_condition, cpp_statement)
 
         return conversion_pack.conversion_validation.validate_while_statement(self._ccode_object, cpp_while)

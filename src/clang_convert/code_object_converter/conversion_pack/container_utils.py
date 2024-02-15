@@ -9,13 +9,13 @@ from code_object.code_interface import NONE_VALUE
 
 class ContainerUtils:
     def create_cpp_container_buffer_arg(self, name):
-        cpp_member = StructMemberAccess(None, name, None)
+        cpp_member = StructMemberAccess(None, Literal(name), None)
         debug.line("create_cpp_container_buffer_arg", f"cpp_member=[{debug.as_debug_string(cpp_member)}]")
         return cpp_member
 
     def create_cpp_container_length_arg(self, name):
         cpp_member = self.create_cpp_container_buffer_arg(name)
-        cpp_member.member = StructMemberAccess(".", "size()", None)
+        cpp_member.member = StructMemberAccess(".", Literal("size()"), None)
         debug.line("create_cpp_container_length_arg", f"cpp_member=[{debug.as_debug_string(cpp_member)}]")
         return cpp_member
 

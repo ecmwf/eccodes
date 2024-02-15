@@ -8,6 +8,8 @@ import code_object.init_list as init_list
 import code_object.declaration_specifier as declaration_specifier
 import code_object.struct_arg as struct_arg
 import code_object.struct_member_access as struct_member_access
+import code_object.literal as literal
+import code_object.array_access as array_access
 
 # Utilities for working with C AST Nodes
 
@@ -130,59 +132,61 @@ def create_cinit_list(cnode):
 
     return cinit_list
 
-# Create a StructMemberAccess from the tokens
-def create_struct_member_access(tokens):
-    assert len(tokens) >= 1, f"Expected at least 1 token, got [{len(tokens)}]"
 
-    access = name = index = None
+symbol_tokens = ["[", "]", "->", "."]
+# Iterate over list of tokens and create the appropriate code_objects
+def create_code_object_from_tokens(tokens, depth=0):
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}:IN] tokens={tokens}")
 
-    if tokens[0] in ["->", "."]:
-        access = tokens[0]
-        tokens = tokens[1:]
-    
-    name = tokens[0]
-    tokens = tokens[1:]
+    assert len(tokens) != 0
+    name = ""
 
-    if len(tokens) > 0:
-        # Check for index token '[', function call token '(' or template token '<'
-        if tokens[0] == "[":
-            index = " ".join([t for t in tokens])
-        elif tokens[0] == "(":
-            name += " ".join([t for t in tokens])
-        elif tokens[0] == "<":
-            name += " ".join([t for t in tokens])
+    # Build the name from the non-symbol token(s)
+    for tok in list(tokens):
+        if tok not in symbol_tokens:
+            name += tokens.pop(0)
         else:
-            assert False, f"Unexpected token = [{tokens[0]}]"
+            debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] name = [{debug.as_debug_string(name)}] tokens={tokens}")
+            break
+       
+    assert name and name not in symbol_tokens, f"Name token can't be in {symbol_tokens}!"
+    name_obj = literal.Literal(name)
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] name_obj=[{debug.as_debug_string(name_obj)}] [{type(name_obj)}]")
 
-    return struct_member_access.StructMemberAccess(access, name, index)
-
-# Parse the tokens, extracting the members
-# Returns StructMemberAccess or None
-def extract_struct_member_access(tokens):
-    debug.line("extract_struct_member_access", f"[IN] tokens={tokens}")
-
-    pointer_indexes = []
-    for i in range(len(tokens)):
-        if tokens[i] in ["->", "."]:
-            pointer_indexes.append(i)
-
-    debug.line("extract_struct_member_access", f"pointer_indexes={pointer_indexes}")
-
-    if len(pointer_indexes) == 0:
-        assert False, f"No -> or . found: could not extract members!"
-
-    assert pointer_indexes[0] != 0, f"Member access should not start with -> or ."
+    if len(tokens) == 0:
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}:OUT] No more tokens: name_obj=[{debug.as_debug_string(name_obj)}] [{type(name_obj)}]")
+        return name_obj
     
-    cstruct_member_access = create_struct_member_access(tokens[0:pointer_indexes[0]])
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}.1] tokens={tokens}")
+    symbol = tokens.pop(0)
 
-    # Add end of token string as final index (to ensure all tokens are processed!)
-    pointer_indexes.append(len(tokens))
+    if symbol == "[":
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] Found a [ - creating an array access object, tokens={tokens}")
+        index_obj = create_code_object_from_tokens(tokens, depth+1)
+        array_access_obj = array_access.ArrayAccess(name_obj, index_obj)
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] array_access_obj=[{debug.as_debug_string(array_access_obj)}] [{type(array_access_obj)}] tokens={tokens}")
+        name_obj = array_access_obj
+        if len(tokens) == 0:
+            return name_obj
+        symbol = tokens.pop(0)
 
-    next_cmember = cstruct_member_access
-    while len(pointer_indexes) >= 2:
-        next_cmember.member = create_struct_member_access(tokens[pointer_indexes[0]:pointer_indexes[1]])
-        pointer_indexes = pointer_indexes[1:]
-        next_cmember = next_cmember.member
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}.2] tokens={tokens}")
 
-    return cstruct_member_access
+    if symbol == "]":
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}:OUT] Found ], name_obj=[{debug.as_debug_string(name_obj)}] tokens={tokens}")
+        return name_obj
 
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}.3] tokens={tokens}")
+
+    if symbol in ["->", "."]:
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] [{symbol}] Creating StructMemberAccess from tokens={tokens}")
+        member_name_obj = create_code_object_from_tokens(tokens, depth+1)
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] [{symbol}] member_name_obj=[{debug.as_debug_string(member_name_obj)}]")
+        member_obj = struct_member_access.StructMemberAccess(symbol, member_name_obj)
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}] [{symbol}] member_obj=[{debug.as_debug_string(member_obj)}]")
+        struct_member_access_obj = struct_member_access.StructMemberAccess("", name_obj, member_obj)
+        debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}:OUT] struct_member_access_obj=[{debug.as_debug_string(struct_member_access_obj)}] [{type(struct_member_access_obj)}]")
+        return struct_member_access_obj
+
+    debug.line("create_code_object_from_tokens", f"{' ' * depth}[{depth}.4] tokens={tokens}")
+    assert False, "Didn't expect to get here! tokens={tokens}"

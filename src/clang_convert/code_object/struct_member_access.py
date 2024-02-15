@@ -10,26 +10,25 @@ from code_object.code_interface import NONE_VALUE
 # For example: *foo->bar->baz[4]
 #
 # At the top level: StructMemberAccess sa:
-#   sa.access  = "*"
-#   sa.name    = "foo"
-#   sa.index   = ""
+#   sa.access   = "*"
+#   sa.variable = "foo"
 #
 # Then, one level down, is sa.member:
-#   sa.member.access  = "->"
-#   sa.member.name    = "bar"
-#   sa.member.index   = ""
+#   sa.member.access    = "->"
+#   sa.member.variable  = "bar"
 #
 # There is one more level in this example: sa.member.member:
-#   sa.member.member.access  = "->"
-#   sa.member.member.name    = "baz"
-#   sa.member.member.index   = "[4]"
+#   sa.member.member.access     = "->"
+#   sa.member.member.variable   = "baz[4]"
 #
 class StructMemberAccess(code_interface.CodeInterface):
-    def __init__(self, access, name, index, member=None) -> None:
+    def __init__(self, access, variable, member=None) -> None:
         self._access = access
-        self._name = name
-        self._index = index
+        self._variable = variable
         self._member = member
+
+        assert isinstance(self._variable, code_interface.CodeInterface), f"Variable must be a CodeInterface class"
+        assert self._member is None or isinstance(self._member, code_interface.CodeInterface), f"Member must be a CodeInterface class"
 
     @property
     def access(self):
@@ -40,21 +39,13 @@ class StructMemberAccess(code_interface.CodeInterface):
         self._access = value
 
     @property
-    def name(self):
-        return self._name
+    def variable(self):
+        return self._variable
 
-    @name.setter
+    @variable.setter
     def name(self, value):
-        self._name = value
-
-    @property
-    def index(self):
-        return self._index
-    
-    @index.setter
-    def index(self, value):
-        assert value[0] == "[" and value[-1] == "]", f"Invalid index [{value}]"
-        self._index = value
+        assert isinstance(value, code_interface.CodeInterface), f"Variable must be a CodeInterface class"
+        self._variable = value
 
     @property
     def member(self):
@@ -62,12 +53,12 @@ class StructMemberAccess(code_interface.CodeInterface):
     
     @member.setter
     def member(self, value):
+        assert isinstance(value, StructMemberAccess), f"Member must be a StructMemberAccess class"
         self._member = value
 
     def as_lines(self):
         access_str = self._access if self._access is not None else ""
-        access_str += self._name if self._name is not None else ""
-        access_str += self._index if self._index is not None else ""
+        access_str += self._variable.as_string() if self._variable is not None else ""
         if self.member and self.member != NONE_VALUE:
             access_str += self.member.as_string()
 

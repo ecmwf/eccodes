@@ -32,9 +32,13 @@ def extract_name(cpp_obj):
     elif isinstance(cpp_obj, VariableDeclaration):
         cppname = cpp_obj.variable
     elif isinstance(cpp_obj, ArrayAccess):
-        cppname = cpp_obj.name
+        cppname = extract_name(cpp_obj.name)
     elif isinstance(cpp_obj, StructMemberAccess):
-        cppname = cpp_obj.name
+        if cpp_obj.name:
+            cppname = extract_name(cpp_obj.name)
+            
+        if not cppname and cpp_obj.member.name:
+            cppname = extract_name(cpp_obj.member.name)
     elif isinstance(cpp_obj, ValueDeclarationReference):
         cppname = cpp_obj.value
     elif isinstance(cpp_obj, UnaryOperation):
@@ -71,7 +75,7 @@ def to_cpparg(cpp_obj, conversion_data):
         if not cpparg:
             cpparg = conversion_data.cpparg_for_cname(name)
 
-    assert cpparg is None or isinstance(cpparg, Arg), f"cpparg should be Arg, not [{type(cpparg).__name__}]"
+    assert cpparg is None or isinstance(cpparg, Arg), f"cpp_obj=[{debug.as_debug_string(cpp_obj)}] : cpparg should be Arg, not [{type(cpparg).__name__}]"
 
     debug.line("to_cpparg", f"cpp_obj=[{debug.as_debug_string(cpp_obj)}] -> cpparg=[{debug.as_debug_string(cpparg)}]")
     return cpparg

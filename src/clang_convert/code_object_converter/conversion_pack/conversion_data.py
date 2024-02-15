@@ -401,6 +401,9 @@ class ConversionData:
 
     # Given the cppname, search all stores to see if an arg exists
     def cpparg_for_cppname(self, cppname):
+        if not isinstance(cppname, str):
+            cppname = arg_utils.extract_name(cppname)
+
         cpparg = self.funcbody_cpparg_for_cpparg_name(cppname)
         if cpparg:
             return cpparg
@@ -421,6 +424,9 @@ class ConversionData:
 
     # Given the cname, search all stores to see if an arg exists
     def cpparg_for_cname(self, cname):
+        if not isinstance(cname, str):
+            cname = arg_utils.extract_name(cname)
+
         cpparg = self.funcbody_cpparg_for_carg_name(cname)
         if cpparg:
             return cpparg
@@ -436,6 +442,9 @@ class ConversionData:
         return None
 
     def is_cppdata_member(self, cppdata_member_name):
+        if not isinstance(cppdata_member_name, str):
+            cppdata_member_name = arg_utils.extract_name(cppdata_member_name)
+
         for mapping in self.all_mappings():
             for key, value in mapping.data_member_mappings.items():
                 if value and value.name == cppdata_member_name:
@@ -443,6 +452,9 @@ class ConversionData:
         return False
 
     def cppdata_member_for_cppname(self, cppname):
+        if not isinstance(cppname, str):
+            cppname = arg_utils.extract_name(cppname)
+
         for mapping in self.all_mappings():
             for key, value in mapping.data_member_mappings.items():
                 if value and value.name == cppname:
@@ -504,6 +516,9 @@ class ConversionData:
         return False
 
     def is_self_class_pointer_name(self, name):
+        if not isinstance(name, str):
+            name = arg_utils.extract_name(name)
+
         debug.line("is_self_class_pointer_name", f"Testing name=[{debug.as_debug_string(name)}]")
         for mapping in self.all_mappings():
             for entry in mapping.self_class_pointer_names:

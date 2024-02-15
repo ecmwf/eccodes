@@ -692,6 +692,10 @@ class AstParser:
         return c_unary_op
 
     def parse_BINARY_OPERATOR(self, node):
+
+        debug.line("parse_BINARY_OPERATOR", f"DEBUG NODE DUMP:")
+        ast_utils.dump_node(node)
+
         children = list(node.get_children())
         assert len(children) == 2, f"Expected exactly two children for binary operator"
         left_operand, right_operand = children
@@ -742,16 +746,15 @@ class AstParser:
     # The child node defines the first parameter ("self" in this case)
     # However, as we're just storing strings, we'll use the tokens directly!
     def parse_MEMBER_REF_EXPR(self, node):
-        debug.line("parse_MEMBER_REF_EXPR", f"Nodes...")
-        ast_utils.dump_node(node)
 
         tokens = [token.spelling for token in node.get_tokens()]
         debug.line("parse_MEMBER_REF_EXPR", f"[IN]  node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
         assert len(tokens) >= 3, f"Expected at least 3 tokens for member ref, but got [{len(tokens)}]"
 
-        cstruct_member_access = ast_utils.extract_struct_member_access(tokens)
+        cstruct_member_access = ast_utils.create_code_object_from_tokens(tokens)
 
         debug.line("parse_MEMBER_REF_EXPR", f"[OUT] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
+
         return cstruct_member_access
 
     def parse_CALL_EXPR(self, node):

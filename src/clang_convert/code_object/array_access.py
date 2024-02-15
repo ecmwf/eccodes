@@ -9,8 +9,8 @@ class ArrayAccess(code_interface.CodeInterface):
     def __init__(self, name, index) -> None:
         self._name = name
         self._index = index
-        assert isinstance(self._name, code_interface.CodeInterface), f"Name must be a CodeInterface class"
-        assert isinstance(self._index, code_interface.CodeInterface), f"Index must be a CodeInterface class"
+        assert isinstance(self._name, code_interface.CodeInterface), f"Name must be a CodeInterface class, not [{type(self._name)}]"
+        assert isinstance(self._index, code_interface.CodeInterface), f"Index must be a CodeInterface class, not [{type(self._index)}]"
 
     # TODO - Should this be an Arg in order to access the decl_spec interface?
     @property
