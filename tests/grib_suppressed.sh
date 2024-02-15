@@ -39,6 +39,29 @@ EOF
 
 diff $tempRef $tempErr
 
+# Try decoding as int and double too
+cat > $tempFilt <<EOF
+  meta a_deprecated_key suppressed(typeOfOriginalFieldValues);
+  print "[a_deprecated_key:i]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $sample2 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "is unavailable" $tempErr
+
+
+cat > $tempFilt <<EOF
+  meta a_deprecated_key suppressed(typeOfOriginalFieldValues);
+  print "[a_deprecated_key:d]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $sample2 2>$tempErr
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "is unavailable" $tempErr
 
 # Clean up
 rm -f $tempFilt $tempErr $tempRef
