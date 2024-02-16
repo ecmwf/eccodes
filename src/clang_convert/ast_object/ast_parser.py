@@ -73,7 +73,7 @@ class AstParser:
     # Note - Prefer to call this as it handles macro expansions
     def parse_ast_node(self, node):
 
-        debug.line("parse_ast_node", f"[{node.kind}] spelling=[{node.spelling}] type=[{node.type.spelling}] extent=[{node.extent.start.line}:{node.extent.start.column}]->[{node.extent.end.line}:{node.extent.end.column}]")
+        debug.line("parse_ast_node", f"[{node.kind}] spelling=[{node.spelling}] type=[{node.type.spelling}] extent={ast_utils.node_extent(node)}")
 
         # Handle macros
         macro_instantiation_node = self._macro_details.instantiation_node_for(node)
@@ -116,7 +116,7 @@ class AstParser:
     # =================================== Macros Convert functions [BEGIN] ===================================
 
     def parse_macro_definition(self, node):
-        debug.line("parse_macro_definition", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
+        debug.line("parse_macro_definition", f"MACRO spelling=[{node.spelling}] kind=[{node.kind}] extent={ast_utils.node_extent(node)}")
         tokens = [token.spelling for token in node.get_tokens()]
         debug.line("parse_macro_definition", f"MACRO tokens=[{tokens}]")
         tokens_count = len(tokens)
@@ -211,11 +211,11 @@ class AstParser:
     # macro_node is the original macro code in the C file
     # expanded_node is the code after the pre-processor has applied the macro expansion
     def parse_macro_instantiation(self, macro_node, expanded_node):
-        debug.line("parse_macro_instantiation", f"MACRO macro_node spelling=[{macro_node.spelling}] kind=[{macro_node.kind}] extent=[{macro_node.extent.start.line}:{macro_node.extent.start.column} -> {macro_node.extent.end.line}:{macro_node.extent.end.column}]")
+        debug.line("parse_macro_instantiation", f"MACRO macro_node spelling=[{macro_node.spelling}] kind=[{macro_node.kind}] extent={ast_utils.node_extent(expanded_node)}")
         debug.line("parse_macro_instantiation", f"MACRO macro_node dump:")
         ast_utils.dump_node(macro_node, 2, "truncate")
 
-        debug.line("parse_macro_instantiation", f"MACRO expanded_node spelling=[{expanded_node.spelling}] kind=[{expanded_node.kind}] extent=[{expanded_node.extent.start.line}:{expanded_node.extent.start.column} -> {expanded_node.extent.end.line}:{expanded_node.extent.end.column}]")
+        debug.line("parse_macro_instantiation", f"MACRO expanded_node spelling=[{expanded_node.spelling}] kind=[{expanded_node.kind}] extent={ast_utils.node_extent(expanded_node)}")
         debug.line("parse_macro_instantiation", f"MACRO expanded_node dump:")
         ast_utils.dump_node(expanded_node, 2, "truncate")
 
@@ -253,8 +253,8 @@ class AstParser:
     # Just iteratively call parse_ast_node
     def parse_COMPOUND_STMT(self, node):
 
-        debug.line("parse_COMPOUND_STMT", f"Dumping node for MACRO INFO:")
-        ast_utils.dump_node(node, 2)
+        #debug.line("parse_COMPOUND_STMT", f"Dumping node for MACRO INFO:")
+        #ast_utils.dump_node(node, 2)
 
         stmt_lines = compound_statement.CompoundStatement()
 
@@ -724,42 +724,60 @@ class AstParser:
         return c_unary_op
 
     def parse_BINARY_OPERATOR(self, node):
-
-        debug.line("parse_BINARY_OPERATOR", f"DEBUG NODE DUMP:")
-        ast_utils.dump_node(node)
+        #debug.line("parse_BINARY_OPERATOR", f"DEBUG NODE DUMP:")
+        #ast_utils.dump_node(node)
 
         children = list(node.get_children())
         assert len(children) == 2, f"Expected exactly two children for binary operator"
+
         left_operand, right_operand = children
+        node_tokens = list(node.get_tokens())
+        left_operand_tokens = list(left_operand.get_tokens())
+        right_operand_tokens = list(right_operand.get_tokens())
 
-        debug.line("parse_BINARY_OPERATOR", f"BINARY left_operand [{left_operand.kind}] spelling=[{left_operand.spelling}] type=[{left_operand.type.spelling}] extent=[{left_operand.extent.start.line}:{left_operand.extent.start.column}]->[{left_operand.extent.end.line}:{left_operand.extent.end.column}]")
-        debug.line("parse_BINARY_OPERATOR", f"BINARY right_operand [{right_operand.kind}] spelling=[{right_operand.spelling}] type=[{right_operand.type.spelling}] extent=[{right_operand.extent.start.line}:{right_operand.extent.start.column}]->[{right_operand.extent.end.line}:{right_operand.extent.end.column}]")
-
-        # Tokenize and find the operator
-        tokens = [token.spelling for token in node.get_tokens()]
-        left_tokens = [token.spelling for token in left_operand.get_tokens()]
-        right_tokens = [token.spelling for token in right_operand.get_tokens()]
-
-        # Find the operator by excluding operand tokens
-        tokens_count = len(tokens)
-        left_tokens_count = len(left_tokens)
-        operator_token = tokens[left_tokens_count]
+        debug.line("parse_BINARY_OPERATOR", f"Node spelling=[{node.spelling}] tokens=[{[token.spelling for token in node_tokens]}] extent={ast_utils.node_extent(node)}")
+        debug.line("parse_BINARY_OPERATOR", f"left_operand [{left_operand.kind}] spelling=[{left_operand.spelling}] tokens=[{[token.spelling for token in left_operand_tokens]}] type=[{left_operand.type.spelling}] extent={ast_utils.node_extent(left_operand)}")
+        debug.line("parse_BINARY_OPERATOR", f"right_operand [{right_operand.kind}] spelling=[{right_operand.spelling}] tokens=[{[token.spelling for token in right_operand_tokens]}] type=[{right_operand.type.spelling}] extent={ast_utils.node_extent(right_operand)}")
 
         left_operand_cvalue = self.parse_ast_node(left_operand)
-
-        right_tokens_count = len(right_tokens)
-        if tokens_count != left_tokens_count + right_tokens_count + 1:
-            # The top level tokens don't match the right_operand tokens. This will happen if the top-level
-            # contains a macro definition. We should be able to handle this, so we'll just record the fact here!
-            debug.line("parse_BINARY_OPERATOR", f"Right operand tokens don't match: assuming a macro")
         right_operand_cvalue = self.parse_ast_node(right_operand)
-
-        debug.line("parse_BINARY_OPERATOR", f"Create c_binary_op: left_operand_cvalue=[{debug.as_debug_string(left_operand_cvalue)}] operator_token=[{debug.as_debug_string(operator_token)}] right_operand_cvalue=[{debug.as_debug_string(right_operand_cvalue)}]")
-
         if not right_operand_cvalue:
-            return literal.Literal(f"// [Ignoring C Code] {' '.join([token.spelling for token in node.get_tokens()])}")
+            return literal.Literal(f"// [Ignoring C Code] {' '.join([token.spelling for token in node_tokens])}")
 
-        c_binary_op = binary_operation.BinaryOperation(left_operand_cvalue, operator_token, right_operand_cvalue)
+        debug.line("parse_BINARY_OPERATOR", f"left_operand_cvalue=[{debug.as_debug_string(left_operand_cvalue)}]")
+        debug.line("parse_BINARY_OPERATOR", f"right_operand_cvalue=[{debug.as_debug_string(right_operand_cvalue)}]")
+
+        # Get operator
+        operator_token = None
+
+        # Step 1: See if we have child node tokens
+        node_tokens_count = len(node_tokens)
+        left_tokens_count = len(left_operand_tokens)
+        right_tokens_count = len(right_operand_tokens)
+
+        if node_tokens_count > 0 and left_tokens_count > 0:
+            if node_tokens_count >= left_tokens_count + right_tokens_count + 1:
+                operator_token = node_tokens[left_tokens_count]
+
+        debug.line("parse_BINARY_OPERATOR", f"[Step 1] [child tokens] node_tokens_count=[{node_tokens_count}] left_tokens_count=[{left_tokens_count}] right_tokens_count=[{right_tokens_count}]")
+        debug.line("parse_BINARY_OPERATOR", f"[Step 1] [child tokens] operator_token=[{operator_token.spelling if operator_token else None}]")
+
+        if not operator_token:
+            # Step 2: Deduce it from the node tokens
+            operator_extent = clang.cindex.SourceRange.from_locations(left_operand.extent.end, right_operand.extent.start)
+            debug.line("parse_BINARY_OPERATOR", f"operator_extent=[{ast_utils.source_range_string(operator_extent)}]")
+            operator_token = ast_utils.find_token_from_extent(node_tokens, operator_extent)
+
+        debug.line("parse_BINARY_OPERATOR", f"[Step 2] [node_tokens] operator_token=[{operator_token.spelling if operator_token else None}]")
+
+        if not operator_token:
+            # Step 3: Search ALL translation unit tokens (this will be slow for large C files - may need to optimise)
+            operator_token = ast_utils.find_token_from_extent(node.translation_unit.cursor.get_tokens(), operator_extent)
+
+        debug.line("parse_BINARY_OPERATOR", f"[Step 3] [ALL tokens] operator_token=[{operator_token.spelling if operator_token else None}]")
+        assert operator_token
+
+        c_binary_op = binary_operation.BinaryOperation(left_operand_cvalue, operator_token.spelling, right_operand_cvalue)
         return c_binary_op
 
     def parse_COMPOUND_ASSIGNMENT_OPERATOR(self, node):

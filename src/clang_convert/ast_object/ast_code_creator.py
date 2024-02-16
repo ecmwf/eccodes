@@ -32,13 +32,13 @@ class AstCodeCreator:
                     #       ALWAYS appear at the top of the global declaration
                     self._ast_code.add_global_function_entry(node)
             else:
-                debug.line("parse_node", f"Ignoring [no file info] node spelling=[{node.spelling}] kind=[{node.kind}]")
+                #debug.line("parse_node", f"Ignoring [no file info] node spelling=[{node.spelling}] kind=[{node.kind}]")
                 return
         elif node.kind == clang.cindex.CursorKind.MACRO_INSTANTIATION:
             if node.location.file and node.location.file.name == self._cfilepath + self._cfilename:
                 self._ast_code.add_macro_instantiation(node)
         elif node.location.file and node.location.file.name != self._cfilepath + self._cfilename:
-            debug.line("parse_node", f"Ignoring [non-local] node spelling=[{node.spelling}] file=[{os.path.basename(node.location.file.name)}]")
+            #debug.line("parse_node", f"Ignoring [non-local] node spelling=[{node.spelling}] file=[{os.path.basename(node.location.file.name)}]")
             return
         elif node.kind == clang.cindex.CursorKind.INCLUSION_DIRECTIVE:
             pass
@@ -107,11 +107,5 @@ class AstCodeCreator:
         self._ast_code = ast_code.AstCode(self._cfilename)
 
         self.parse_root()
-
-        # Debug - dump macros
-        for node in self._ast_code.macro_details.def_nodes:
-            debug.line("parse", f"MACRO DEFN spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}]")
-        for node in self._ast_code.macro_details.inst_nodes:
-            debug.line("parse", f"MACRO INST spelling=[{node.spelling}] loc=[{os.path.basename(node.location.file.name)}] extent=[{node.extent.start.line}:{node.extent.start.column} -> {node.extent.end.line}:{node.extent.end.column}]")
 
         return self._ast_code

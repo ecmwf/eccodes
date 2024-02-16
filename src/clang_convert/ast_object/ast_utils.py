@@ -13,6 +13,17 @@ import code_object.array_access as array_access
 
 # Utilities for working with C AST Nodes
 
+# Return a string representation e.g. [117:10->117:45]
+
+def node_extent(node):
+    return f"[{node.extent.start.line}:{node.extent.start.column}->{node.extent.end.line}:{node.extent.end.column}]"
+
+def token_extent(node):
+    return f"[{node.extent.start.line}:{node.extent.start.column}->{node.extent.end.line}:{node.extent.end.column}]"
+
+def source_range_string(src_range):
+    return f"[{src_range.start.line}:{src_range.start.column}->{src_range.end.line}:{src_range.end.column}]"
+
 # tokens string can be:
 # "flat" to show a flat summary
 # "list" to show a detailed list
@@ -20,12 +31,12 @@ import code_object.array_access as array_access
 # "" to not show tokens
 def dump_node(cnode, depth=0, tokens="truncate"):
     truncate_depth = 10
-    debug.line("dump_node", f"{' ' * depth}[{depth}:{cnode.kind}] spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] extent=[{cnode.extent.start.line}:{cnode.extent.start.column}]->[{cnode.extent.end.line}:{cnode.extent.end.column}]")
+    debug.line("dump_node", f"{' ' * depth}[{depth}:{cnode.kind}] spelling=[{cnode.spelling}] type=[{cnode.type.spelling}] extent={node_extent(cnode)}")
     if tokens == "flat":
         debug.line("dump_node", f"{' ' * depth} -> tokens=[{[token.spelling for token in cnode.get_tokens()]}]")
     elif tokens == "list":
         for token in cnode.get_tokens():
-            debug.line("dump_node", f"{' ' * depth} -> token=[{token.spelling}] extent=[{token.extent.start.line}:{token.extent.start.column} -> {token.extent.end.line}:{token.extent.end.column}]")
+            debug.line("dump_node", f"{' ' * depth} -> token=[{token.spelling}] extent={token_extent(token)}")
     elif tokens == "truncate":
         token_list = [token.spelling for token in cnode.get_tokens()]
         debug.line("dump_node", f"{' ' * depth} -> tokens[:{truncate_depth}]=[{token_list[:truncate_depth]}]")
@@ -33,6 +44,16 @@ def dump_node(cnode, depth=0, tokens="truncate"):
 
     for child in cnode.get_children():
         dump_node(child, depth+1, tokens)
+
+def find_token_from_extent(tokens, extent):
+    for t in tokens:
+        if t.extent.start.line == extent.start.line and \
+           t.extent.end.line == extent.end.line and \
+           t.extent.start.column >= extent.start.column and \
+           t.extent.end.column <= extent.end.column:
+            return t
+
+    return None
 
 # Create a C FuncSig object from a FUNCTION_DECL node
 def create_cfuncsig(cnode):
