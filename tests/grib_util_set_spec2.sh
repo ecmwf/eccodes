@@ -10,9 +10,4 @@
 
 . ./include.ctest.sh
 
-grib_util_set_spec=${test_dir}/grib_util_set_spec2
-$EXEC $grib_util_set_spec
-
-
-### Clean up
-
+$EXEC ${test_dir}/grib_util_set_spec2
