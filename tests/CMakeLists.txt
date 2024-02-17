@@ -32,6 +32,7 @@ list(APPEND test_c_bins
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
+    grib_util_set_spec2
     grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
@@ -356,6 +357,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
+        list(APPEND tests_extra grib_util_set_spec2)
         list(APPEND tests_extra grib_padding)
         list(APPEND tests_extra grib_tigge_conversions1)
         list(APPEND tests_extra grib_tigge_conversions2)
