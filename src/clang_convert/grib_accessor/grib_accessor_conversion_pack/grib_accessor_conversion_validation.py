@@ -117,6 +117,9 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         grib_arguments_get_cname = "grib_arguments_get_"
         if cfunction_call.name.startswith(grib_arguments_get_cname):
             cpptype = cfunction_call.name[len(grib_arguments_get_cname):]
+            if cpptype == "count":
+                return literal.Literal(f"initData.args.size()")
+
             if cpptype == "name":
                 cpptype = "std::string"
             elif cpptype == "expression":

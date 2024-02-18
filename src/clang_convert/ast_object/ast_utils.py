@@ -45,12 +45,11 @@ def dump_node(cnode, depth=0, tokens="truncate"):
     for child in cnode.get_children():
         dump_node(child, depth+1, tokens)
 
-def find_token_from_extent(tokens, extent):
+
+def find_token_from_source_range(tokens, source_range):
+
     for t in tokens:
-        if t.extent.start.line == extent.start.line and \
-           t.extent.end.line == extent.end.line and \
-           t.extent.start.column >= extent.start.column and \
-           t.extent.end.column <= extent.end.column:
+        if t.extent.start in source_range and t.extent.end in source_range:
             return t
 
     return None

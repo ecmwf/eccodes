@@ -724,8 +724,8 @@ class AstParser:
         return c_unary_op
 
     def parse_BINARY_OPERATOR(self, node):
-        #debug.line("parse_BINARY_OPERATOR", f"DEBUG NODE DUMP:")
-        #ast_utils.dump_node(node)
+        debug.line("parse_BINARY_OPERATOR", f"DEBUG NODE DUMP:")
+        ast_utils.dump_node(node)
 
         children = list(node.get_children())
         assert len(children) == 2, f"Expected exactly two children for binary operator"
@@ -764,15 +764,15 @@ class AstParser:
 
         if not operator_token:
             # Step 2: Deduce it from the node tokens
-            operator_extent = clang.cindex.SourceRange.from_locations(left_operand.extent.end, right_operand.extent.start)
-            debug.line("parse_BINARY_OPERATOR", f"operator_extent=[{ast_utils.source_range_string(operator_extent)}]")
-            operator_token = ast_utils.find_token_from_extent(node_tokens, operator_extent)
+            operator_source_range = clang.cindex.SourceRange.from_locations(left_operand.extent.end, right_operand.extent.start)
+            debug.line("parse_BINARY_OPERATOR", f"operator_source_range=[{ast_utils.source_range_string(operator_source_range)}]")
+            operator_token = ast_utils.find_token_from_source_range(node_tokens, operator_source_range)
 
         debug.line("parse_BINARY_OPERATOR", f"[Step 2] [node_tokens] operator_token=[{operator_token.spelling if operator_token else None}]")
 
         if not operator_token:
             # Step 3: Search ALL translation unit tokens (this will be slow for large C files - may need to optimise)
-            operator_token = ast_utils.find_token_from_extent(node.translation_unit.cursor.get_tokens(), operator_extent)
+            operator_token = ast_utils.find_token_from_source_range(node.translation_unit.cursor.get_tokens(), operator_source_range)
 
         debug.line("parse_BINARY_OPERATOR", f"[Step 3] [ALL tokens] operator_token=[{operator_token.spelling if operator_token else None}]")
         assert operator_token
