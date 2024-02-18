@@ -102,8 +102,8 @@ class ConversionData:
     def add_funcsig_pointer_mapping(self, mapping):
         assert isinstance(mapping, funcsig_pointer_mapping.FuncSigPointerMapping), f"Expected FuncSigPointerMapping, got type=[{type(mapping).__name__}]"
         for entry in self.active_map.funcsig_pointer_mappings:
-            if entry.cfuncsig.name == mapping.cfuncsig.name:
-                assert False, f"Mapping for [{mapping.cfuncsig.name}] already exists!"
+            if entry.cfuncsig_pointer.name == mapping.cfuncsig_pointer.name:
+                assert False, f"Mapping for [{mapping.cfuncsig_pointer.name}] already exists!"
         
         self.active_map.funcsig_pointer_mappings.append(mapping)
 
@@ -480,7 +480,7 @@ class ConversionData:
     def cppfuncsig_pointer_for_cfuncsig_pointer(self, cfuncsig_pointer):
         for mapping in self.all_mappings():
             for entry in mapping.funcsig_pointer_mappings:
-                if entry.cfuncsig.name == cfuncsig_pointer.name:
+                if entry.cfuncsig_pointer.name == cfuncsig_pointer.name:
                     return entry.cppfuncsig_pointer
         return None
     
