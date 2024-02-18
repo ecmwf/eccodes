@@ -115,14 +115,14 @@ grib_accessor_class_g1verificationdate.cc
 grib_accessor_class_g2bitmap_present.cc
 grib_accessor_class_g2date.cc
 grib_accessor_class_g2end_step.cc
-#grib_accessor_class_g2grid.cc
+grib_accessor_class_g2grid.cc
 grib_accessor_class_g2latlon.cc
 grib_accessor_class_g2level.cc
 grib_accessor_class_g2lon.cc
 grib_accessor_class_gds_is_present.cc
 grib_accessor_class_getenv.cc
 grib_accessor_class_global_gaussian.cc
-#grib_accessor_class_gts_header.cc
+grib_accessor_class_gts_header.cc
 grib_accessor_class_ibmfloat.cc
 grib_accessor_class_ieeefloat.cc
 grib_accessor_class_julian_date.cc
@@ -160,7 +160,7 @@ grib_accessor_class_size.cc
 grib_accessor_class_spd.cc
 grib_accessor_class_spectral_truncation.cc
 grib_accessor_class_sprintf.cc
-#grib_accessor_class_step_in_units.cc
+grib_accessor_class_step_in_units.cc
 grib_accessor_class_sum.cc
 grib_accessor_class_suppressed.cc
 grib_accessor_class_time.cc

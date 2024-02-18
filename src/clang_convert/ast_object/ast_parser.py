@@ -559,6 +559,42 @@ class AstParser:
 
         return variable_declaration.VariableDeclaration(cvariable, cvalue)
 
+    # We need to do some specialist handling...
+    def parse_UNEXPOSED_DECL(self, node):
+        children = list(node.get_children())
+
+        assert len(children) > 0, f"Expected at least one child node for UNEXPOSED_DECL"
+
+        if node.type.spelling == "auto":
+            # We assume this is a complex assignment e.g. auto [x,y] = foo();
+            tokens = node.get_tokens()
+
+            # [1] Find equals token and build up left operand of binary operation
+            equals_token = None
+            auto_string = ""
+            for t in tokens:
+                if t.spelling == "=":
+                    equals_token = t
+                    break
+                else:
+                    auto_string += t.spelling + " "
+
+            assert equals_token
+            left_operand = literal.Literal(auto_string)
+
+            # [2] We assume the last child node is the right_operand
+            right_operand = self.parse_ast_node(children[-1])
+
+            auto_asignment = binary_operation.BinaryOperation(left_operand, "=", right_operand)
+
+            debug.line("parse_UNEXPOSED_DECL", f"Created auto_assignment=[{debug.as_debug_string(auto_asignment)}]")
+
+            return auto_asignment
+        else:
+            assert False, f"Don't know how to parse UNEXPOSED_DECL with type=[{node.type.spelling}]"
+
+        return None
+
     parse_DECL_funcs = {
         clang.cindex.CursorKind.FUNCTION_DECL:      parse_FUNCTION_DECL,
         clang.cindex.CursorKind.FUNCTION_TEMPLATE:  parse_FUNCTION_TEMPLATE,
@@ -569,6 +605,7 @@ class AstParser:
         clang.cindex.CursorKind.PARM_DECL:          parse_PARM_DECL,
         clang.cindex.CursorKind.TYPEDEF_DECL:       parse_TYPEDEF_DECL,
         clang.cindex.CursorKind.TYPE_ALIAS_DECL:    parse_node_not_implemented,
+        clang.cindex.CursorKind.UNEXPOSED_DECL:     parse_UNEXPOSED_DECL,
     }
 
     def parse_DECL_node(self, node):
