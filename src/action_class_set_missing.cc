@@ -73,8 +73,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_set_missing(grib_context* context,
-                                            const char* name)
+grib_action* grib_action_create_set_missing(grib_context* context, const char* name)
 {
     char buf[1024];
 
@@ -98,15 +97,14 @@ grib_action* grib_action_create_set_missing(grib_context* context,
 
 static int execute(grib_action* a, grib_handle* h)
 {
-    grib_action_set_missing* self = (grib_action_set_missing*)a;
-
+    const grib_action_set_missing* self = (grib_action_set_missing*)a;
     return grib_set_missing(h, self->name);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i                         = 0;
-    grib_action_set_missing* self = (grib_action_set_missing*)act;
+    int i = 0;
+    const grib_action_set_missing* self = (grib_action_set_missing*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);
