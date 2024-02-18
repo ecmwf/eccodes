@@ -467,6 +467,18 @@ set -e
 [ $status -ne 0 ]
 grep -q "Unable to open file" $tempOut
 
+# Signed bits
+# -----------
+cat >$tempFilt <<EOF
+  meta _sb signed_bits(widthOfWidths, numberOfGroups);
+  print "[_sb]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $data_dir/boustrophedonic.grib1 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 # Setting step
 # -------------
