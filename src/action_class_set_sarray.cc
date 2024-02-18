@@ -72,9 +72,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_set_sarray(grib_context* context,
-                                           const char* name,
-                                           grib_sarray* sarray)
+grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray)
 {
     char buf[1024];
 
@@ -100,14 +98,13 @@ grib_action* grib_action_create_set_sarray(grib_context* context,
 static int execute(grib_action* a, grib_handle* h)
 {
     grib_action_set_sarray* self = (grib_action_set_sarray*)a;
-
     return grib_set_string_array(h, self->name, (const char**)self->sarray->v, self->sarray->n);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i                        = 0;
-    grib_action_set_sarray* self = (grib_action_set_sarray*)act;
+    int i = 0;
+    const grib_action_set_sarray* self = (grib_action_set_sarray*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);
