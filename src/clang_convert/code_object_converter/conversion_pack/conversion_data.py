@@ -217,7 +217,7 @@ class ConversionData:
         for mapping in self.all_mappings():
             for key, value in mapping.funcsig_arg_mappings.items():
                 debug.line("funcsig_cpparg_for_carg", f"key=[{debug.as_debug_string(key)}] carg=[{debug.as_debug_string(carg)}]")
-                if key.name == carg.name:
+                if key == carg:
                     return value
         return None
 
@@ -306,7 +306,7 @@ class ConversionData:
         for mapping in self.all_mappings():
             for key, value in mapping.funcbody_arg_mappings.items():
                 debug.line("funcbody_cpparg_for_carg", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
-                if key.name == carg.name:
+                if key == carg:
                     return value
         return None
 

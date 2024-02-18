@@ -20,6 +20,8 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
         # If we have a mapping already stored, just use that!
         mapping = conversion_pack.conversion_data.funcsig_mapping_for_cfuncname(cfuncsig.name)
         if mapping:
+            debug.line("create_cpp_code_object", f"funcsig [1] using existing mapping cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
+
             cppfuncsig = mapping.cppfuncsig
 
             if cppfuncsig == NONE_VALUE:
@@ -46,6 +48,8 @@ class FuncSigConverter(code_interface_converter.CodeInterfaceConverter):
 
             # Add this to the correct conversion data mappings
             mapping = funcsig_mapping.FuncSigMapping(cfuncsig, cppfuncsig)
+
+            debug.line("create_cpp_code_object", f"funcsig [2] created new mapping cfuncsig=[{debug.as_debug_string(mapping.cfuncsig)}] cppfuncsig=[{debug.as_debug_string(mapping.cppfuncsig)}]")
 
             is_mem_func = conversion_pack.conversion_data.is_member_function(cfuncsig.name)
             if is_mem_func:
