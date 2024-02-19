@@ -112,7 +112,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_accessor_multdouble* self = (grib_accessor_multdouble*)a;
+    const grib_accessor_multdouble* self = (grib_accessor_multdouble*)a;
     int ret = GRIB_SUCCESS;
     double value = 0;
 
