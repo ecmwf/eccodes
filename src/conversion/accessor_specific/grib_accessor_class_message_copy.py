@@ -8,4 +8,3 @@ class MessageCopyDataAccessorSpecific(AccessorSpecific):
         self._custom_arg_transforms["ALL"] = {
             arg.Arg("unsigned char*","v") : arg.Arg("AccessorDataPointer","v"),
             }
-

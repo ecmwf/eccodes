@@ -9,6 +9,7 @@ class BaseConversionPackUpdates:
         self._update_funcs = {}
         self._funcsig_mappings = []
         self._all_function_arg_mappings = {}
+        self._include_files = []
 
     def add_funcsig_mappings_to_conversion_data(self, conversion_data):
         for mapping in self._funcsig_mappings:
