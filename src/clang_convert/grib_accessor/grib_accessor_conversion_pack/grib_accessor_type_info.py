@@ -11,5 +11,6 @@ class GribAccessorTypeInfo(default_type_info.DefaultTypeInfo):
     
     def cpp_container_types(self):
         return super().cpp_container_types() + [
+            "AccessorName",
             "AccessorDataBuffer",
         ]

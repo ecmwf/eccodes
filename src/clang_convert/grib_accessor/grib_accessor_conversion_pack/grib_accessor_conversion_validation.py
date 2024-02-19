@@ -266,3 +266,11 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             return updated_cppmacro_instantiation
 
         return super().validate_macro_instantiation(cmacro_instantiation, cppmacro_instantiation)
+
+    def is_cppfunction_returning_container(self, cppfunc_object):
+        if "initData" in cppfunc_object.as_string():
+            debug.line("is_cppfunction_returning_container", f"Assuming initData returns the correct container: cppfunc_object=[{debug.as_debug_string(cppfunc_object)}]")
+            return True
+        
+        return super().is_cppfunction_returning_container(cppfunc_object)
+
