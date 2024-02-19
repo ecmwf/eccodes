@@ -16,9 +16,9 @@ constant tablesVersionLatest = 32 : edition_specific;
 constant false = 0 : hidden;
 constant true = 1 : hidden;
 constant million = 1000000 : hidden;
-constant grib2divider   = 1000000;
-alias extraDimensionPresent=zero;
-transient angleSubdivisions=grib2divider;  # micro degrees
+constant grib2divider = 1000000;
+alias extraDimensionPresent = zero;
+transient angleSubdivisions = grib2divider; # micro degrees
 transient forceStepUnits = 255 : hidden;
 
 meta gts_header gts_header() : no_copy,hidden,read_only;
@@ -26,8 +26,8 @@ meta gts_TTAAii gts_header(20,6) : no_copy,hidden,read_only;
 meta gts_CCCC gts_header(27,4) : no_copy,hidden,read_only;
 meta gts_ddhh00 gts_header(32,6) : no_copy,hidden,read_only;
 
-transient  missingValue   = 9999;
-constant ieeeFloats   = 1 : edition_specific;
+transient missingValue = 9999;
+constant ieeeFloats = 1 : edition_specific;
 constant isHindcast = 0;
 
 include "grib2/section.0.def"
