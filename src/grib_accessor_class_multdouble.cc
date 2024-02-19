@@ -7,6 +7,7 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
+
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -17,7 +18,7 @@
    IMPLEMENTS = unpack_double
    IMPLEMENTS = init
    MEMBERS    = const char* val
-   MEMBERS    = double divisor
+   MEMBERS    = double multiplier
    END_CLASS_DEF
 
  */
@@ -35,22 +36,22 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static void init(grib_accessor*, const long, grib_arguments*);
 
-typedef struct grib_accessor_divdouble
+typedef struct grib_accessor_multdouble
 {
     grib_accessor att;
     /* Members defined in gen */
     /* Members defined in double */
-    /* Members defined in divdouble */
+    /* Members defined in multdouble */
     const char* val;
-    double divisor;
-} grib_accessor_divdouble;
+    double multiplier;
+} grib_accessor_multdouble;
 
 extern grib_accessor_class* grib_accessor_class_double;
 
-static grib_accessor_class _grib_accessor_class_divdouble = {
+static grib_accessor_class _grib_accessor_class_multdouble = {
     &grib_accessor_class_double,                      /* super */
-    "divdouble",                      /* name */
-    sizeof(grib_accessor_divdouble),  /* size */
+    "multdouble",                      /* name */
+    sizeof(grib_accessor_multdouble),  /* size */
     0,                           /* inited */
     0,                           /* init_class */
     &init,                       /* init */
@@ -96,22 +97,22 @@ static grib_accessor_class _grib_accessor_class_divdouble = {
 };
 
 
-grib_accessor_class* grib_accessor_class_divdouble = &_grib_accessor_class_divdouble;
+grib_accessor_class* grib_accessor_class_multdouble = &_grib_accessor_class_multdouble;
 
 /* END_CLASS_IMP */
 
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
-    grib_accessor_divdouble* self = (grib_accessor_divdouble*)a;
+    grib_accessor_multdouble* self = (grib_accessor_multdouble*)a;
     int n = 0;
 
-    self->val     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-    self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a), c, n++);
+    self->val = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
+    self->multiplier = grib_arguments_get_double(grib_handle_of_accessor(a), c, n++);
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    const grib_accessor_divdouble* self = (grib_accessor_divdouble*)a;
+    grib_accessor_multdouble* self = (grib_accessor_multdouble*)a;
     int ret = GRIB_SUCCESS;
     double value = 0;
 
@@ -125,10 +126,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     if (ret != GRIB_SUCCESS)
         return ret;
 
-    if (self->divisor == 0) {
-        return GRIB_INVALID_ARGUMENT;
-    }
-    *val = value / self->divisor;
+    *val = value * self->multiplier;
 
     *len = 1;
     return GRIB_SUCCESS;

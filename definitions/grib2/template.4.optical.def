@@ -14,6 +14,6 @@ meta secondWavelength from_scale_factor_scaled_value(scaleFactorOfSecondWaveleng
 alias firstWavelengthInMetres = firstWavelength;
 alias secondWavelengthInMetres = secondWavelength;
 
-constant oneBillionth = 1.0 / 1000000000 : hidden;
-meta firstWavelengthInNanometres  divdouble(firstWavelength, oneBillionth);
-meta secondWavelengthInNanometres divdouble(secondWavelength, oneBillionth);
+constant billion = 1000000000 : hidden;
+meta firstWavelengthInNanometres  multdouble(firstWavelength, billion);
+meta secondWavelengthInNanometres multdouble(secondWavelength, billion);
