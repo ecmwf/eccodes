@@ -150,7 +150,8 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
             if isinstance(cppleft, struct_member_access.StructMemberAccess):
                 cpparg = self._conversion_data.cpparg_for_cppname(cppleft.name)
                 if cppleft.member:
-                    if cppleft.member.name == "size()":
+                    cppleft_member_name = arg_utils.extract_name(cppleft.member)
+                    if cppleft_member_name and cppleft_member_name == "size()":
                         if cppleft.as_string() == cppright.as_string():
                             # We've converted something like *len = strlen(v); where len and v are both mapped to (e.g.) stringValue,
                             # resulting in the redundant call stringValue.size() = stringValue.size()!
@@ -158,9 +159,9 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                             return as_commented_out_code(cppbinary_operation, "Removing: C++ code is redundant")                            
 
                         elif cppright.as_string() == "0":
-                            cppleft.member.name = "clear()"
+                            cppleft.member.name = literal.Literal("clear()")
                         else:
-                            cppleft.member.name = f"resize({cppright.as_string()})"
+                            cppleft.member.name = literal.Literal(f"resize({cppright.as_string()})")
 
                         # Double-check it's not const!
                         debug.line("validate_binary_operation", f"Performing const check cppleft.name=[{debug.as_debug_string(cppleft.name)}] cpparg=[{debug.as_debug_string(cpparg)}]")
@@ -174,12 +175,12 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                     cppright_value = cppright.as_string()
 
                     if is_number(cppright_value) or not self.is_cppfunction_returning_container(cppright):
-                        cppleft.index = "[0]"
+                        cppleft = array_access.ArrayAccess(cppleft.name, literal.Literal("0"))
                         debug.line("validate_binary_operation", f"Assigning number to container, so updating it to access first element: cppleft=[{debug.as_debug_string(cppleft)}] cppright_value=[{cppright_value}]")
                         return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
                 # Check if we're assigning to a data member and need to ensure the function is non-const
-                data_member_name = cppleft.name
+                data_member_name = arg_utils.extract_name(cppleft.name)
                 debug.line("validate_binary_operation", f"CHECK is_cppdata_member({data_member_name})")
                     
                 if self._conversion_data.is_cppdata_member(data_member_name):

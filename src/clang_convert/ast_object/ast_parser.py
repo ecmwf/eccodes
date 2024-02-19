@@ -932,6 +932,9 @@ class AstParser:
         name = self.parse_ast_node(children[0])
         index = self.parse_ast_node(children[1])
 
+        if isinstance(name, struct_member_access.StructMemberAccess):
+            debug.line("parse_ARRAY_SUBSCRIPT_EXPR", f"[FOR INFO] Array name is StructMemberAccess [{debug.as_debug_string(name)}]")
+
         arr_access = array_access.ArrayAccess(name, index)
 
         return arr_access

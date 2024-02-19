@@ -5,6 +5,7 @@ import code_object_converter.code_interface_converter as code_interface_converte
 import code_object_converter.conversion_funcs as conversion_funcs
 import code_object.struct_member_access as struct_member_access
 from code_object.code_interface import NONE_VALUE
+import code_object_converter.conversion_pack.arg_utils as arg_utils
 
 class ArrayAccessConverter(code_interface_converter.CodeInterfaceConverter):
     def __init__(self, ccode_object) -> None:
@@ -22,14 +23,18 @@ class ArrayAccessConverter(code_interface_converter.CodeInterfaceConverter):
         # If the name has been converted to a struct_member_access, representing a container size, e.g. foo.size(), 
         # then we need to deal with the array access part!
         if isinstance(cpp_name, struct_member_access.StructMemberAccess):
-             if cpp_name.member and cpp_name.member.name == "size()":
-                # If we're accessing index 0, then we can just remove the [0] part,
-                # otherwise something unexpected has happened!
-                if cpp_index.as_string() == "0":
-                    debug.line("create_cpp_code_object", f"Stripping array access, from=[{debug.as_debug_string(self._ccode_object)}] to=[{debug.as_debug_string(cpp_name)}]")
-                    return cpp_name
-                else:
-                    assert False, f"Unexpected array access=[{debug.as_debug_string(self._ccode_object)}]"
+             
+             if cpp_name.member:
+                cpp_member_name = arg_utils.extract_name(cpp_name.member)
+                if cpp_member_name and cpp_member_name == "size()":
+                    # If we're accessing index 0, then we can just remove the [0] part,
+                    # otherwise something unexpected has happened!
+                    if cpp_index.as_string() == "0":
+                        debug.line("create_cpp_code_object", f"Stripping array access, from=[{debug.as_debug_string(self._ccode_object)}] to=[{debug.as_debug_string(cpp_name)}]")
+                        return cpp_name
+                    else:
+                        assert False, f"Unexpected array access=[{debug.as_debug_string(self._ccode_object)}]"
 
         cpparray_access = array_access.ArrayAccess(cpp_name, cpp_index)
+
         return conversion_pack.conversion_validation.validate_array_access(self._ccode_object, cpparray_access)

@@ -16,6 +16,7 @@ import code_object_converter.conversion_pack.arg_utils as arg_utils
 import code_object.cast_expression as cast_expression
 import code_object.macro_instantation as macro_instantation
 import code_object.struct_member_access as struct_member_access
+import code_object.array_access as array_access
 from utils.string_funcs import strip_semicolon
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
@@ -215,7 +216,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
 
                 if cpparg:
                     if cpparg.decl_spec.type != cppfunc_return_type:
-                        updated_cpp_expression = literal.Literal(f"static_cast<GribStatus>({cpparg.name})")
+                        updated_cpp_expression = literal.Literal(f"static_cast<{cppfunc_return_type}>({cpparg.name})")
                 elif cppfunc_return_type == "GribStatus":
                     cpp_expression = cppreturn_statement.expression.as_string()
                     if cpp_expression == "0":
@@ -229,25 +230,29 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         return super().validate_return_statement(creturn_statement, cppreturn_statement)
 
     def validate_struct_member_access(self, cstruct_member_access, cppstruct_member_access):
-        if cppstruct_member_access.name == "buffer_" and cppstruct_member_access.member.name == "data":
-            # Just need to change ->data to .data()
-            cppstruct_member_access.member.access = "."
-            cppstruct_member_access.member.name += "()"
-            return cppstruct_member_access
+
+        cppstruct_member_access_name = arg_utils.extract_name(cppstruct_member_access.name)
+        if cppstruct_member_access_name == "buffer_":
+            if cstruct_member_access.as_string().endswith("->data"):
+                # Just need to change ->data to .data()
+                cppstruct_member_access_member = struct_member_access.StructMemberAccess(".", literal.Literal("data()"))
+                return struct_member_access.StructMemberAccess(cppstruct_member_access.access,
+                                                               cppstruct_member_access.variable,
+                                                               cppstruct_member_access_member)
         
         # Handle AccessorPtr types
         cpparg = self._conversion_data.cpparg_for_cppname(cppstruct_member_access.name)
         if cpparg and cpparg.decl_spec.type == "AccessorPtr":
             data_member = cppstruct_member_access.member
             if data_member:
-                if data_member.name == "name":
-                    data_member.name += "().get().c_str()" # It's read-only so this is ok!
-                if data_member.name == "parent":
+                data_member_name = arg_utils.extract_name(data_member.name)
+                if data_member_name == "name":
+                    data_member.name = literal.Literal(f"{data_member_name}().get().c_str()") # It's read-only so this is ok!
+                if data_member_name == "parent":
                     # For now we'll strip off the parent bit as that is accessing the grib_section, which we'll probably get
                     # another way!
                     updated_cppstruct_member_access = struct_member_access.StructMemberAccess(cppstruct_member_access.access,
-                                                                                            cppstruct_member_access.name,
-                                                                                            cppstruct_member_access.index)
+                                                                                              cppstruct_member_access.name)
                     debug.line("validate_struct_member_access", f"Updating AccessorPtr grib_section access: [{debug.as_debug_string(cppstruct_member_access)}]->[{updated_cppstruct_member_access}]")
                     return updated_cppstruct_member_access
 
