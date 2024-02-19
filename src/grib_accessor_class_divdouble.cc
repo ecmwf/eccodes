@@ -115,13 +115,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     int ret = GRIB_SUCCESS;
     double value = 0;
 
-    if (*len < 1) {
-        *len = 1;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
     ret = grib_get_double_internal(grib_handle_of_accessor(a), self->val, &value);
-
     if (ret != GRIB_SUCCESS)
         return ret;
 
