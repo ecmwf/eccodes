@@ -1311,7 +1311,6 @@ const char* grib_expression_get_name(grib_expression* g);
 void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f);
 void grib_expression_free(grib_context* ctx, grib_expression* g);
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
-int grib_expression_set_value(grib_handle* h, grib_expression* g, grib_values* v);
 grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
 void grib_arguments_free(grib_context* c, grib_arguments* g);
 void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);

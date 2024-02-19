@@ -19,8 +19,7 @@ int grib_expression_native_type(grib_handle* h, grib_expression* g)
         c = c->super ? *(c->super) : NULL;
     }
     if (g->cclass)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "No native_type() in %s", g->cclass->name);
-    Assert(1 == 0);
+        grib_context_log(h->context, GRIB_LOG_FATAL, "%s: No native_type() in %s", __func__, g->cclass->name);
     return 0;
 }
 
@@ -55,7 +54,7 @@ const char* grib_expression_evaluate_string(grib_handle* h, grib_expression* g, 
         c = c->super ? *(c->super) : NULL;
     }
     if (g->cclass)
-        grib_context_log(h->context, GRIB_LOG_ERROR, "No evaluate_string() in %s", g->cclass->name);
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: No evaluate_string() in %s", __func__, g->cclass->name);
     *err = GRIB_INVALID_TYPE;
 
     return 0;
@@ -69,8 +68,9 @@ const char* grib_expression_get_name(grib_expression* g)
             return c->get_name(g);
         c = c->super ? *(c->super) : NULL;
     }
-    if (g->cclass) printf("No expression_get_name() in %s\n", g->cclass->name);
-    Assert(1 == 0);
+    if (g->cclass) {
+        grib_context_log(grib_context_get_default(), GRIB_LOG_FATAL, "%s: No get_name() in %s", __func__, g->cclass->name);
+    }
     return 0;
 }
 
@@ -84,7 +84,6 @@ void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(1 == 0);
 }
 
 void grib_expression_free(grib_context* ctx, grib_expression* g)
@@ -110,43 +109,37 @@ void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer)
         }
         c = c->super ? *(c->super) : NULL;
     }
-    Assert(1 == 0);
 }
 
-/*----------------------------------------*/
-int grib_expression_set_value(grib_handle* h, grib_expression* g, grib_values* v)
-{
-    char buffer[1024];
-    int ret     = 0;
-    size_t size = sizeof(buffer);
-
-    switch (v->type = grib_expression_native_type(h, g)) {
-        case GRIB_TYPE_LONG:
-            return grib_expression_evaluate_long(h, g, &v->long_value);
-            break;
-
-        case GRIB_TYPE_DOUBLE:
-            return grib_expression_evaluate_double(h, g, &v->double_value);
-            break;
-
-        case GRIB_TYPE_STRING:
-            v->string_value = grib_expression_evaluate_string(h, g, buffer, &size, &ret);
-            if (ret != GRIB_SUCCESS) {
-                grib_context_log(h->context, GRIB_LOG_ERROR,
-                                 "grib_expression_set_value: unable to evaluate %s as string",
-                                 grib_expression_get_name(g));
-                return ret;
-            }
-            Assert(v->string_value != buffer);
-            Assert(v->string_value);
-            break;
-
-        default:
-            Assert(1 == 0);
-            break;
-    }
-    return 0;
-}
+// int grib_expression_set_value(grib_handle* h, grib_expression* g, grib_values* v)
+// {
+//     char buffer[1024];
+//     int ret     = 0;
+//     size_t size = sizeof(buffer);
+//     switch (v->type = grib_expression_native_type(h, g)) {
+//         case GRIB_TYPE_LONG:
+//             return grib_expression_evaluate_long(h, g, &v->long_value);
+//             break;
+//         case GRIB_TYPE_DOUBLE:
+//             return grib_expression_evaluate_double(h, g, &v->double_value);
+//             break;
+//         case GRIB_TYPE_STRING:
+//             v->string_value = grib_expression_evaluate_string(h, g, buffer, &size, &ret);
+//             if (ret != GRIB_SUCCESS) {
+//                 grib_context_log(h->context, GRIB_LOG_ERROR,
+//                                  "grib_expression_set_value: unable to evaluate %s as string",
+//                                  grib_expression_get_name(g));
+//                 return ret;
+//             }
+//             Assert(v->string_value != buffer);
+//             Assert(v->string_value);
+//             break;
+//         default:
+//             Assert(!"grib_expression_set_value");
+//             break;
+//     }
+//     return 0;
+// }
 
 /*----------------------------------------*/
 grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n)
