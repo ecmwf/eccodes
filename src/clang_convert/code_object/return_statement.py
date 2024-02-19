@@ -9,7 +9,7 @@ class ReturnStatement(code_interface.CodeInterface):
     def __init__(self, expression) -> None:
         self._expression = expression
 
-        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class (or a string)"
+        assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class"
 
     @property
     def expression(self):

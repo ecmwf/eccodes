@@ -28,7 +28,7 @@ class StructMemberAccess(code_interface.CodeInterface):
         self._member = member
 
         assert isinstance(self._variable, code_interface.CodeInterface), f"Variable must be a CodeInterface class"
-        assert self._member is None or isinstance(self._member, code_interface.CodeInterface), f"Member must be a CodeInterface class"
+        assert self._member is None or isinstance(self._member, code_interface.CodeInterface), f"Member must be a CodeInterface class, not [{type(self._member)}]"
 
     @property
     def access(self):

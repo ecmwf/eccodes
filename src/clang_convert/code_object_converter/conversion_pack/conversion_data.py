@@ -464,7 +464,7 @@ class ConversionData:
     def cppdata_member_for_cdata_member(self, cmember):
         for mapping in self.all_mappings():
             for key, value in mapping.data_member_mappings.items():
-                debug.line("cppdata_member_for_cdata_member", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                #debug.line("cppdata_member_for_cdata_member", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
                 if key.name == cmember.name:
                     return value
         return None
@@ -472,7 +472,7 @@ class ConversionData:
     def cppdata_member_for_cdata_member_name(self, cmember_name):
         for mapping in self.all_mappings():
             for key, value in mapping.data_member_mappings.items():
-                debug.line("cppdata_member_for_cdata_member_name", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
+                #debug.line("cppdata_member_for_cdata_member_name", f"key=[{debug.as_debug_string(key)}] value=[{debug.as_debug_string(value)}]")
                 if key.name == cmember_name:
                     return value
         return None

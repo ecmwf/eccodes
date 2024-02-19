@@ -41,6 +41,11 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
                 cpp_variable = conversion_funcs.convert_ccode_object(cstruct_member_access.variable, conversion_pack)
                 cpp_member = conversion_funcs.convert_ccode_object(cstruct_member_access.member, conversion_pack)
 
+                if cpp_member == NONE_VALUE:
+                    # Unexpected: for now, just report this for further investigation and set to None
+                    debug.line("create_cpp_code_object", f"StructMemberAccessConverter [3] *** WARNING *** cpp_member is [NONE_VALUE] - this may indicate a conversion error. Setting to [None] for now...")
+                    cpp_member = None
+
                 cppstruct_member_access = struct_member_access.StructMemberAccess(cpp_access, cpp_variable, cpp_member)
 
         if not cppstruct_member_access:

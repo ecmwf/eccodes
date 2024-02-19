@@ -139,7 +139,7 @@ def convert_ccode_object(ccode_object, conversion_pack):
     global convert_depth
     local_depth = convert_depth
     convert_depth += 1
-    debug.line("convert_ccode_object", f"[{local_depth}:IN] [{type(ccode_object).__name__}] {debug.as_debug_string(ccode_object)}")
+    debug.line("convert_ccode_object", f"[{local_depth}:IN ][{type(ccode_object).__name__}]:[{debug.as_debug_string(ccode_object)}]")
 
     if ccode_object is None:
         cpp_obj = None
@@ -150,7 +150,7 @@ def convert_ccode_object(ccode_object, conversion_pack):
         converter = converter_class(ccode_object)
         cpp_obj = converter.to_cpp_code_object(conversion_pack)
 
-    debug.line("convert_ccode_object", f"[{local_depth}:OUT][{type(ccode_object).__name__}]->[{type(cpp_obj).__name__}] {debug.as_debug_string(cpp_obj)}")
+    debug.line("convert_ccode_object", f"[{local_depth}:OUT][{type(ccode_object).__name__}]:[{debug.as_debug_string(ccode_object)}]->[{type(cpp_obj).__name__}]:[{debug.as_debug_string(cpp_obj)}]")
 
     convert_depth -= 1
     assert convert_depth >= 0
