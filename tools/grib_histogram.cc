@@ -58,10 +58,11 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 */
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 {
-    size_t i, j, err = 0;
+    size_t i, j;
     size_t last_size = 0;
     long missingValuesPresent;
     double delta;
+    int err = 0;
 
     double* values = NULL;
     size_t size;

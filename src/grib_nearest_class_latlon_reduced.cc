@@ -409,7 +409,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
             if (values) { /* ECC-499 */
                 grib_get_double_element_internal(h, self->values_key, self->k[kk], &(values[kk]));
             }
-            indexes[kk] = self->k[kk];
+            indexes[kk] = (int)self->k[kk];
             kk++;
         }
     }
