@@ -16,7 +16,7 @@ temp_dir=tempdir.${label}
 NUM_THREADS=3
 NUM_ITER=10
 OUTPUT=output
-PROG="${test_dir}/grib_threads_ecc-604"
+PROG="${test_dir}/grib_encode_pthreads2"
 
 validate()
 {
