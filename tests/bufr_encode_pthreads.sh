@@ -10,13 +10,13 @@
 
 . ./include.ctest.sh
 
-label="bufr_threads_ecc-604"
+label="bufr_encode_pthreads_test"
 temp_dir=tempdir.${label}
 
 NUM_THREADS=3
 NUM_ITER=5
 OUTPUT=output
-PROG="${test_dir}/bufr_threads_ecc-604"
+PROG="${test_dir}/bufr_encode_pthreads"
 
 validate()
 {
