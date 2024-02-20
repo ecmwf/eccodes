@@ -223,7 +223,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
     bufr_descriptor* ur[65]                  = {0,};
     bufr_descriptor* urc                     = NULL;
-    int idx;
+    size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
     grib_context* c                          = a->context;
     bufr_descriptor* us                      = NULL;

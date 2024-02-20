@@ -351,7 +351,7 @@ static int find(grib_nearest* nearest, grib_handle* h,
                 grib_context_log(h->context, GRIB_LOG_ERROR, "grib_nearest_regular: Unable to compute index. Value too large");
                 return GRIB_OUT_OF_RANGE;
             } else {
-                indexes[kk] = self->k[kk];
+                indexes[kk] = (int)self->k[kk];
             }
             kk++;
         }

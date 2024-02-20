@@ -157,3 +157,20 @@
  typeOfStatisticalProcessing = 1 ;
  lengthOfTimeRange = 24 ;
 }
+#Upward sea water velocity
+'wo' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+}
+#Time-mean upward sea water velocity
+'avg_wo' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+ typeOfStatisticalProcessing = 0 ;
+}

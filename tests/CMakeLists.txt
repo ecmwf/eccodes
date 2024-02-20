@@ -32,6 +32,7 @@ list(APPEND test_c_bins
     gauss_sub
     grib_nearest_test
     grib_util_set_spec
+    grib_util_set_spec2
     grib_check_param_concepts
     grib_local_MeteoFrance
     grib_2nd_order_numValues
@@ -254,6 +255,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1000
         grib_ecc-1001
         grib_ecc-1030
+        grib_ecc-1364
         grib_ecc-1397
         grib_ecc-1425
         grib_ecc-1467
@@ -355,6 +357,7 @@ if( HAVE_BUILD_TOOLS )
     endif()
     if( ENABLE_EXTRA_TESTS )
         list(APPEND tests_extra grib_util_set_spec)
+        list(APPEND tests_extra grib_util_set_spec2)
         list(APPEND tests_extra grib_padding)
         list(APPEND tests_extra grib_tigge_conversions1)
         list(APPEND tests_extra grib_tigge_conversions2)
@@ -442,20 +445,20 @@ if( HAVE_BUILD_TOOLS )
                           TYPE SCRIPT
                           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads.sh )
 
-        foreach( test grib_threads_ecc-604 grib_threads_ecc-604-encode bufr_threads_ecc-604 )
+        foreach( test grib_encode_pthreads2 grib_threads_ecc-604-encode bufr_encode_pthreads )
             ecbuild_add_executable( TARGET    ${test}
                                     NOINSTALL
                                     SOURCES   ${test}.cc
                                     LIBS      eccodes ${CMAKE_THREAD_LIBS_INIT} )
         endforeach()
-        ecbuild_add_test( TARGET eccodes_t_grib_threads_ecc-604
+        ecbuild_add_test( TARGET eccodes_t_grib_encode_pthreads2
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_gribs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_threads_ecc-604.sh )
-        ecbuild_add_test( TARGET eccodes_t_bufr_threads_ecc-604
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_encode_pthreads2.sh )
+        ecbuild_add_test( TARGET eccodes_t_bufr_encode_pthreads
                           TYPE SCRIPT
                           TEST_DEPENDS eccodes_download_bufrs
-                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_threads_ecc-604.sh )
+                          COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/bufr_encode_pthreads.sh )
     endif()
 
     if( NOT ECCODES_ON_WINDOWS )
