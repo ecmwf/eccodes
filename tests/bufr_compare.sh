@@ -351,6 +351,31 @@ set -e
 [ $status -ne 0 ]
 grep -q "unreadable message" $fLog
 
+###???
+f1="aaen_55.bufr"
+f2="aaen_55.bufr"
+set +e
+${tools_dir}/bufr_compare -H -c edition $f1 $f2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "options are incompatible" $fLog
+
+set +e
+${tools_dir}/bufr_compare -a edition $f1 $f2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "a option requires -c option" $fLog
+
+
+set +e
+${tools_dir}/bufr_compare nosuchfile $f1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
 
 # Clean up
 # -------------
