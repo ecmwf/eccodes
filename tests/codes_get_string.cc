@@ -35,8 +35,10 @@ int main(int argc, char* argv[])
     len = 1; // Cause it to fail
 
     err = codes_get_string(h, key, kvalue, &len);
-    printf("err=%d  kvalue=|%s|\n", err, kvalue);
+    //printf("err=%d  kvalue=|%s|\n", err, kvalue);
     assert(err == CODES_BUFFER_TOO_SMALL);
+    // The correct len should have been set
+    assert(len > 1);
 
     codes_handle_delete(h);
     fclose(in);

@@ -340,7 +340,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (options->infile_offset) {
 #ifndef ECCODES_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
-            COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+            static_assert(sizeof(options->infile_offset) >= 8);
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {

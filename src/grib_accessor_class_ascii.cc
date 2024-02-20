@@ -147,19 +147,19 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* hand = grib_handle_of_accessor(a);
     const size_t alen = a->length;
 
-    if (len[0] < (alen + 1)) {
+    if (*len < (alen + 1)) {
         const char* cclass_name = a->cclass->name;
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
                          cclass_name, a->name, alen+1, *len);
-        len[0] = alen + 1;
+        *len = alen + 1;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < alen; i++)
         val[i] = hand->buffer->data[a->offset + i];
     val[i] = 0;
-    len[0] = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 
