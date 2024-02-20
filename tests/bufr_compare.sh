@@ -351,7 +351,8 @@ set -e
 [ $status -ne 0 ]
 grep -q "unreadable message" $fLog
 
-###???
+# Options
+# ----------
 f1="aaen_55.bufr"
 f2="aaen_55.bufr"
 set +e
@@ -367,7 +368,6 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "a option requires -c option" $fLog
-
 
 set +e
 ${tools_dir}/bufr_compare nosuchfile $f1 > $fLog 2>&1
