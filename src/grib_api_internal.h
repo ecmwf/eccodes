@@ -1225,41 +1225,37 @@ struct grib_fieldset
 
 /* concept index structures */
 
-typedef struct grib_concept_index_key grib_concept_index_key;
-typedef struct grib_concept_index grib_concept_index;
-typedef struct grib_conditions_tree grib_conditions_tree;
-typedef struct grib_concept_entry grib_concept_entry;
-typedef struct grib_concept_key grib_concept_key;
+//typedef struct grib_concept_index_key grib_concept_index_key;
+//typedef struct grib_concept_index grib_concept_index;
+//typedef struct grib_conditions_tree grib_conditions_tree;
+//typedef struct grib_concept_entry grib_concept_entry;
+//typedef struct grib_concept_key grib_concept_key;
 
-struct grib_concept_index_entry
-{
-    char* name;
-    char* value;
-    int type;
-    grib_concept_entry* next;
-};
+// struct grib_concept_index_entry {
+//     char* name;
+//     char* value;
+//     int type;
+//     grib_concept_entry* next;
+// };
 
-struct grib_concept_index_key
-{
-    char* name;
-    int type;
-    grib_concept_key* next;
-};
+// struct grib_concept_index_key {
+//     char* name;
+//     int type;
+//     grib_concept_key* next;
+// };
 
-struct grib_concept_index
-{
-    grib_context* context;
-    grib_concept_key* keys;
-    grib_conditions_tree* conditions;
-};
+// struct grib_concept_index {
+//     grib_context* context;
+//     grib_concept_key* keys;
+//     grib_conditions_tree* conditions;
+// };
 
-struct grib_conditions_tree
-{
-    char* value;
-    void* object;
-    grib_conditions_tree* next;
-    grib_conditions_tree* next_key;
-};
+// struct grib_conditions_tree {
+//     char* value;
+//     void* object;
+//     grib_conditions_tree* next;
+//     grib_conditions_tree* next_key;
+// };
 
 /* support for in-memory definition and tables */
 

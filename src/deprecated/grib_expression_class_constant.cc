@@ -17,7 +17,7 @@
    CLASS      = expression
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
-   IMPLEMENTS = evaluate;print
+   IMPLEMENTS = print
    IMPLEMENTS = add_dependency
    MEMBERS    = long value
    END_CLASS_DEF
@@ -77,12 +77,6 @@ static void init_class(grib_expression_class* c)
 {
 }
 /* END_CLASS_IMP */
-
-static long evaluate(grib_expression* g, grib_handle* h)
-{
-    const grib_expression_constant* e = (grib_expression_constant*)g;
-    return e->value;
-}
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
