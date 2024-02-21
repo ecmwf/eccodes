@@ -12,7 +12,7 @@
 # Define a common label for all the tmp files
 label="grib_mercator_test"
 tempOut="temp.${label}.out"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 
 input=${data_dir}/mercator.grib2
 grib_check_key_equals $input "gridType" "mercator"
@@ -22,17 +22,17 @@ numlines=`wc -l $tempOut | awk '{print $1}'`
 
 
 # Check other iterator-related keys
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  print "[latLonValues]";
  print "[distinctLatitudes]";
  print "[distinctLongitudes]";
 EOF
 
-${tools_dir}/grib_filter $tempFilter $input
+${tools_dir}/grib_filter $tempFilt $input
 
 # Nearest function
 ${tools_dir}/grib_ls -l 19,-97,1 $input > $tempOut
 grep -q "Point chosen #1 index=618" $tempOut
 
 # Clean up
-rm -f $tempFilter $tempOut
+rm -f $tempFilt $tempOut

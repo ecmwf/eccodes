@@ -134,7 +134,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         const char* p = grib_arguments_get_name(h, e->args, 0);
 
         if (p) {
-            grib_accessor* a = grib_find_accessor(h, p);
+            const grib_accessor* a = grib_find_accessor(h, p);
             *lres            = a != NULL ? 1 : 0;
             return GRIB_SUCCESS;
         }
@@ -149,7 +149,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         // 2. Cannot deal with string values
         const char* p = grib_arguments_get_name(h, e->args, 0);
         if (p) {
-            char* env = getenv(p);
+            const char* env = getenv(p);
             if (env) {
                 long lval = 0;
                 if (string_to_long(env, &lval, 1) == GRIB_SUCCESS) {
@@ -177,7 +177,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_functor* e = (grib_expression_functor*)g;
+    const grib_expression_functor* e = (grib_expression_functor*)g;
     printf("%s(", e->name);
     // grib_expression_print(c,e->args,f);
     printf(")");

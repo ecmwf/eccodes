@@ -171,20 +171,6 @@ extern int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
         if (!(a)) codes_assertion_failed(#a, __FILE__, __LINE__); \
     } while (0)
 
-#ifdef __gnu_hurd__
-#define COMPILE_TIME_ASSERT(condition) \
-    extern int compile_time_assert[!!(condition)-1]
-#else
-/* Compile time assertion - Thanks to Ralf Holly */
-#define COMPILE_TIME_ASSERT(condition)        \
-    do {                                      \
-        enum                                  \
-        {                                     \
-            assert_static__ = 1 / (condition) \
-        };                                    \
-    } while (0)
-#endif
-
 #ifdef DEBUG
 #define DEBUG_ASSERT(a) Assert(a)
 #define DEBUG_ASSERT_ACCESS(array, index, size)                                                                             \

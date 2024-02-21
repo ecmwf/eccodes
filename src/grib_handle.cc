@@ -375,7 +375,7 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
     result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
     if (!result || err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone: Unable to copy sections");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s failed: Unable to copy sections (%s)", __func__, grib_get_error_message(err));
         grib_handle_delete(h_sample);
         return NULL;
     }

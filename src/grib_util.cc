@@ -897,6 +897,9 @@ static int get_grib_sample_name(grib_handle* h, long editionNumber,
         case GRIB_UTIL_GRID_SPEC_HEALPIX:
             snprintf(sample_name, sample_name_len, "GRIB%ld", editionNumber);
             break;
+        case GRIB_UTIL_GRID_SPEC_REDUCED_LL:
+            snprintf(sample_name, sample_name_len, "%s_sfc_grib%ld", grid_type, editionNumber);
+            break;
         default:
             snprintf(sample_name, sample_name_len, "%s_pl_grib%ld", grid_type, editionNumber);
     }

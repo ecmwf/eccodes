@@ -45,6 +45,12 @@ grib_check_key_equals $temp scaleFactorOfLowerWavePeriodLimit,scaledValueOfLower
 ${tools_dir}/grib_set -s tablesVersion=$latest,productDefinitionTemplateNumber=104 $sample2 $temp
 grib_check_key_equals $temp scaleFactorOfLowerWavePeriodLimit,scaledValueOfLowerWavePeriodLimit,perturbationNumber 'MISSING MISSING 0'
 
+${tools_dir}/grib_set -s \
+  tablesVersion=$latest,productDefinitionTemplateNumber=108,scaleFactorOfFirstWavelength=9,scaledValueOfFirstWavelength=12 \
+$sample2 $temp
+grib_check_key_equals $temp firstWavelengthInNanometres '12'
+grib_check_key_equals $temp firstWavelengthInMetres     '1.2e-08'
+
 
 # Clean up
 rm -f $tempSample $temp
