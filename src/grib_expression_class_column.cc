@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 
 /*
@@ -89,7 +84,7 @@ static void init_class(grib_expression_class* c)
 
 static const char* get_name(grib_expression* g)
 {
-    grib_expression_column* e = (grib_expression_column*)g;
+    const grib_expression_column* e = (grib_expression_column*)g;
     return e->name;
 }
 
@@ -130,7 +125,6 @@ static void destroy(grib_context* c, grib_expression* g)
     grib_expression_column* e = (grib_expression_column*)g;
     grib_context_free_persistent(c, e->name);
 }
-
 
 grib_expression* new_column_expression(grib_context* c, const char* name)
 {
