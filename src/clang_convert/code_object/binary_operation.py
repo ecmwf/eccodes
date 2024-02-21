@@ -51,7 +51,8 @@ class BinaryOperation(code_interface.CodeInterface):
         lines.extend(right_lines[1:])
 
         # Determine whether to add a ;
-        if self._binary_op.is_assignment() and not lines[-1].endswith(";"):
-            lines[-1] += ";"
+        if self._binary_op.is_assignment() or self._binary_op.is_arithmetic():
+            if not lines[-1].endswith(";"):
+                lines[-1] += ";"
 
         return lines

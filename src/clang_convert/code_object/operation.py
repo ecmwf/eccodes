@@ -19,14 +19,16 @@ class Operation(code_interface.CodeInterface):
         return [f"{self._value}"]
 
     def is_assignment(self):
-        return self._value in ["=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="]
+        return self._value in ["="]
+        #return self._value in ["=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="]
     
     def is_inc_dec(self):
         return self._value in ["++", "--"]
     
     def is_arithmetic(self):
-        return self._value in ["+", "-", "*", "/", "%", "~", "&", "|", "^", "<<", ">>"]
-
+        return self._value in ["+", "-", "*", "/", "%", "~", "&", "|", "^", "<<", ">>", #]
+                               "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="]
+    
     def is_logical(self):
         return self._value in ["!", "&&", "||"]
 

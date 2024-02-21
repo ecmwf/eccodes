@@ -13,9 +13,9 @@ struct GribAction
     std::string op_;
     std::string nameSpace_;
     unsigned long flags_;
-    //char* defaultkey;              /** name of the key used as default if not found */
+    std::string defaultkey;              /** name of the key used as default if not found */
     //grib_arguments* default_value; /** default expression as in .def file */
-    //char* set;
+    std::string set;
     //char* debug_info; /** purely for debugging and tracing */
 };
 

@@ -15,14 +15,20 @@ class StructMemberAccessConverter(code_interface_converter.CodeInterfaceConverte
     def create_cpp_code_object(self, conversion_pack):
         self._conversion_pack = conversion_pack
         cstruct_member_access = self._ccode_object
-        cppstruct_member_access = None
+        
         debug.line("create_cpp_code_object",f"StructMemberAccessConverter [IN] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
 
-        # Check if this is a pointer to a class member
-        variable_name = arg_utils.extract_name(cstruct_member_access.variable)
-        if conversion_pack.conversion_data.is_self_class_pointer_name(variable_name):
-            debug.line("create_cpp_code_object",f"StructMemberAccessConverter [1] cstruct_member_access.variable=[{debug.as_debug_string(cstruct_member_access.variable)}] is a self class pointer variable")
-            cppstruct_member_access = self.try_to_convert_data_member_access(cstruct_member_access.member)
+        # Do we have a mapping?
+        cppstruct_member_access = conversion_pack.conversion_data.get_cppstruct_member_access(cstruct_member_access)
+        debug.line("create_cpp_code_object",f"StructMemberAccessConverter Mapping check: cppstruct_member_access=[{debug.as_debug_string(cppstruct_member_access)}]")
+
+        if not cppstruct_member_access:
+            # Check if this is a pointer to a class member
+            variable_name = arg_utils.extract_name(cstruct_member_access.variable)
+            debug.line("create_cpp_code_object",f"StructMemberAccessConverter [1.1] variable_name=[{debug.as_debug_string(variable_name)}]")
+            if conversion_pack.conversion_data.is_self_class_pointer_name(variable_name):
+                debug.line("create_cpp_code_object",f"StructMemberAccessConverter [1.2] cstruct_member_access.variable=[{debug.as_debug_string(cstruct_member_access.variable)}] is a self class pointer variable")
+                cppstruct_member_access = self.try_to_convert_data_member_access(cstruct_member_access.member)
         
         if not cppstruct_member_access:
             # Check if the primary member is valid...

@@ -17,7 +17,8 @@ class GribAccessorAstCodeConverter(default_ast_code_converter.DefaultAstCodeConv
 
     def create_ccode(self):
         cfilename = self._ast_code.cfilename
-        self._accessor_class_name = cfilename.rstrip(".cc")
+        assert cfilename.endswith(".cc"), f"Expected filename=[{cfilename}] to have .cc extension"
+        self._accessor_class_name = cfilename[:-3]
         self._accessor_name = self._accessor_class_name.replace("grib_accessor_class", "grib_accessor")
         self._ccode = grib_accessor_ccode.GribAccessorCCode(cfilename, self._accessor_name, self._accessor_class_name)
 

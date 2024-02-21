@@ -11,6 +11,6 @@ class ClosestDateConversionPackUpdates(base_conversion_pack_updates.BaseConversi
     def __init__(self) -> None:
         super().__init__()
 
-        self._include_files.extend([
+        self._source_includes.extend([
             "<float.h>",
         ])

@@ -20,5 +20,8 @@ grib_value_stub_funcsig_mappings = [
 
     FuncSigMapping( FuncSig("int", "grib_get_nearest_smaller_value", [Arg("grib_handle*", "h"), Arg("const char*", "name"), Arg("double", "val"), Arg("double*", "nearest")]),
                     FuncSig("GribStatus", "gribGetNearestSmallerValue", [NONE_VALUE, Arg("AccessorName const&", "name"), Arg("double", "val"), Arg("double&", "nearest")])),
+
+    FuncSigMapping( FuncSig("int", "grib_is_missing", [Arg("grib_handle*", "h"), Arg("const char*", "name"), Arg("int*", "err")]),
+                    FuncSig("GribStatus", "gribIsMissing", [NONE_VALUE, Arg("AccessorName", "name"), Arg("int", "err")])),
 ]
 

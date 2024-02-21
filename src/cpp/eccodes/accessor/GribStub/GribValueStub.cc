@@ -34,4 +34,10 @@ GribStatus gribGetNearestSmallerValue(AccessorName name, double val, double& nea
     return GribStatus::NOT_IMPLEMENTED;
 }
 
+GribStatus gribIsMissing(AccessorName name, GribStatus& err)
+{
+    assert(false);
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
 }

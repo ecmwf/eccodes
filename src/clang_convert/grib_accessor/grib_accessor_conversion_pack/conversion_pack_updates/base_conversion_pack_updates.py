@@ -9,12 +9,27 @@ class BaseConversionPackUpdates:
         self._update_funcs = {}
         self._funcsig_mappings = []
         self._all_function_arg_mappings = {}
-        self._include_files = []
+        self._header_includes = []
+        self._source_includes = []
+        self._data_member_mappings = {
+            DataMember("const char*", "cclass->name"): DataMember("std::string", "name_"),
+        }
+        self._all_function_struct_member_access_mappings = {}
 
-    def add_funcsig_mappings_to_conversion_data(self, conversion_data):
+    def add_accessor_wide_conversion_data(self, conversion_data):
         for mapping in self._funcsig_mappings:
             debug.line("add_funcsig_mappings_to_conversion_data", f"Adding funcsig mapping: [{mapping.cfuncsig.name}] -> [{mapping.cppfuncsig.name}]")
             conversion_data.add_global_funcsig_mapping(mapping)
+
+        for cmember, cppmember in self._data_member_mappings.items():
+            conversion_data.add_data_member_mapping(cmember, cppmember)
+
+        for entry in self._header_includes:
+            conversion_data.info.add_header_include(entry)
+
+        for entry in self._source_includes:
+            conversion_data.info.add_source_include(entry)
+
 
     # Use this entry point to call the appropriate derived function
     def apply_updates_for_cfunction(self, cfuncname, conversion_pack):
@@ -29,13 +44,14 @@ class BaseConversionPackUpdates:
     # Override to set the same update for all functions
     # NOTE: Doesn't apply to global definition
     def apply_updates_for_all_functions(self, conversion_pack):
-        # Default data member mappings
-        for cmember, cppmember in {
-            DataMember("grib_accessor_class**", "cclass->super"): DataMember("AccessorData", conversion_pack.conversion_data.info.super_class_name),
-            DataMember("const char*", "cclass->name"): DataMember("std::string", "name_"),
-        }.items():
-            conversion_pack.conversion_data.add_data_member_mapping(cmember, cppmember)
+        # Add super class as data member
+        conversion_pack.conversion_data.add_data_member_mapping(DataMember("grib_accessor_class**", "cclass->super"),
+                                                                DataMember("AccessorData", 
+                                                                           conversion_pack.conversion_data.info.super_class_name))
 
         # All function arg mappings
         for carg, cpparg in self._all_function_arg_mappings.items():
             conversion_pack.conversion_data.add_funcbody_arg_mapping(carg, cpparg)
+
+        for cstruct_member_access, cppstruct_member_access in self._all_function_struct_member_access_mappings.items():
+            conversion_pack.conversion_data.add_struct_member_access_mapping(cstruct_member_access, cppstruct_member_access)

@@ -121,7 +121,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         for mapping in grib_accessor_virtual_member_funcsig_mapping:
             conv_data.add_global_virtual_member_funcsig_mapping(mapping)
 
-        self._conversion_pack_updates.add_funcsig_mappings_to_conversion_data(conv_data)
+        self._conversion_pack_updates.add_accessor_wide_conversion_data(conv_data)
 
         all_funcsig_mappings.add_all_funcsig_mappings_to_conversion_data(conv_data)
 
@@ -153,6 +153,7 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
             conv_pack.conversion_data.info.header_includes.append(inc)
 
         # Source includes
+        debug.line("SOURCE INCLUDE", f"class_name=[{conv_pack.conversion_data.info.class_name}] Header Entry=[\"{conv_pack.conversion_data.info.class_name}.h\"]")
         conv_pack.conversion_data.info.source_includes.append(f"\"{conv_pack.conversion_data.info.class_name}.h\"")
         
         for inc in includes.grib_accessor_source_includes:

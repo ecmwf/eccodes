@@ -10,7 +10,7 @@ void griBufferDelete(AccessorDataBuffer& b)
     assert(false);
 }
 
-void gribBufferReplace(AccessorDataBuffer& data, size_t newsize, int update_lengths, int update_paddings)
+void gribBufferReplace(const AccessorDataBuffer& data, size_t newsize, int update_lengths, int update_paddings)
 {
     assert(false);
 }

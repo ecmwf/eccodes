@@ -113,7 +113,10 @@ class DeclSpec(code_interface.CodeInterface):
 
     def is_array_type(self):
         return self._pointer.startswith("[")
-    
+
+    def is_raw_pointer(self):
+        return self._pointer.startswith("*")
+
     def array_size(self):
         if self.is_array_type() and len(self._pointer) > 2:
             return self._pointer[1:-1]

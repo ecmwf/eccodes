@@ -7,6 +7,7 @@ import code_object.code_objects as code_objects
 import code_object.compound_statement as compound_statement
 import code_object.variable_declaration as variable_declaration
 import code_object.binary_operation as binary_operation
+import code_object.unary_operation as unary_operation
 import code_object.value_declaration_reference as value_declaration_reference
 import code_object.if_statement as if_statement
 import code_object.virtual_member_function as virtual_member_function
@@ -133,14 +134,14 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         # If we're calling grib_XXX which is a virtual member function, and the first argument is "a", then we're actually calling ourself!
         if cfunction_call.name.startswith("grib_"):
             updated_cfuncname = cfunction_call.name[5:]
-            if self._conversion_data.is_virtual_member_function(updated_cfuncname) and \
-               len(cfunction_call.args) > 0 and cfunction_call.args[0].as_string() == "a":
-                mapping = self._conversion_data.funcsig_mapping_for_cfuncname(updated_cfuncname)
-                if mapping:
-                    updated_cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cppfunction_call.args[1:])
-                    updated_cppfunction_call = self.validate_function_call_args(updated_cppfunction_call, mapping.cppfuncsig)
-                    debug.line("apply_special_function_call_conversions", f"Updated C++ function call=[{debug.as_debug_string(cppfunction_call)}] to [{debug.as_debug_string(updated_cppfunction_call)}]")
-                    return updated_cppfunction_call
+            if self._conversion_data.is_virtual_member_function(updated_cfuncname):
+                if len(cfunction_call.args) > 0 and cfunction_call.args[0].as_string() in ["a"]:
+                    mapping = self._conversion_data.funcsig_mapping_for_cfuncname(updated_cfuncname)
+                    if mapping:
+                        updated_cppfunction_call = function_call.FunctionCall(mapping.cppfuncsig.name, cppfunction_call.args[1:])
+                        updated_cppfunction_call = self.validate_function_call_args(updated_cppfunction_call, mapping.cppfuncsig)
+                        debug.line("apply_special_function_call_conversions", f"Updated C++ function call=[{debug.as_debug_string(cppfunction_call)}] to [{debug.as_debug_string(updated_cppfunction_call)}]")
+                        return updated_cppfunction_call
 
         for cfuncname, cppfuncname in special_function_name_mapping.items():
             if cfunction_call.name == cfuncname:
@@ -152,13 +153,15 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         return None
 
     def validate_variable_declaration(self, cvariable_declaration, cppvariable_declaration):
-        if "GribStatus" in cppvariable_declaration.variable.as_string() and \
-           not isinstance(cppvariable_declaration.value, function_call.FunctionCall) and \
-           not cppvariable_declaration.value.as_string().startswith("GribStatus"):
-            updated_cpp_variable_declaration = variable_declaration.VariableDeclaration(
-                cppvariable_declaration.variable,
-                literal.Literal(f"GribStatus{{{cppvariable_declaration.value.as_string()}}}"))
-            return updated_cpp_variable_declaration
+        if "GribStatus" in cppvariable_declaration.variable.as_string():
+            if not (isinstance(cppvariable_declaration.value, function_call.FunctionCall) or
+                    cppvariable_declaration.value.as_string().startswith("GribStatus") or
+                    cppvariable_declaration.value.as_string() == "{}"):
+                debug.line("validate_binary_operation", f"GribStatus variable [{debug.as_debug_string(cppvariable_declaration.variable)}] is assigned incorrect value type [{debug.as_debug_string(cppvariable_declaration.value)}] - updating")
+                updated_cpp_variable_declaration = variable_declaration.VariableDeclaration(
+                    cppvariable_declaration.variable,
+                    literal.Literal(f"GribStatus{{{cppvariable_declaration.value.as_string()}}}"))
+                return updated_cpp_variable_declaration
 
         return super().validate_variable_declaration(cvariable_declaration, cppvariable_declaration)
 
@@ -178,9 +181,9 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         if isinstance(cppright, cast_expression.CastExpression):
             cpp_right_expression = cppright.expression
 
-            if isinstance(cpp_right_expression, function_call.FunctionCall) and cpp_right_expression.name in ["gribContextMalloc", "gribContextRealloc"]:
+            if isinstance(cpp_right_expression, function_call.FunctionCall) and cpp_right_expression.name in ["gribContextMalloc", "gribContextMallocClear", "gribContextRealloc"]:
                 # For now, we'll assume we're allocating a container (may need to revisit)
-                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppleft)}.resize({cpp_right_expression.arg_string});")
+                cpp_alloc = literal.Literal(f"{arg_utils.extract_name(cppleft)}.resize({strip_semicolon(cpp_right_expression.arg_string)});")
                 debug.line("validate_binary_operation", f"Changed allocation operation from=[{debug.as_debug_string(cppbinary_operation)}] to [{debug.as_debug_string(cpp_alloc)}]")
                 return cpp_alloc
 
@@ -192,7 +195,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             expression_value = cppif_statement.expression.as_string()
             cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(expression_value)
             if cpparg and cpparg != NONE_VALUE and cpparg.decl_spec.type == "GribStatus":
-                updated_expression = literal.Literal(f"isError({cpparg.name})")
+                updated_expression = literal.Literal(f"GribStatusSuccess({cpparg.name})")
                 updated_cppif_statement = if_statement.IfStatement(updated_expression, cppif_statement.action)
                 debug.line("validate_if_statement", f"updated_cppif_statement=[{debug.as_debug_string(updated_cppif_statement)}]")
                 return updated_cppif_statement
@@ -274,3 +277,25 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
         
         return super().is_cppfunction_returning_container(cppfunc_object)
 
+    def try_to_make_boolean(self, cppcode_object):
+
+        if isinstance(cppcode_object, unary_operation.UnaryOperation):
+            cpparg = arg_utils.to_cpparg(cppcode_object.operand, self._conversion_data)
+            if cpparg:
+                if cpparg.decl_spec.type == "GribStatus":
+                    if cppcode_object.unary_op.value == "!":
+                        updated_expression = literal.Literal(f"GribStatusSuccess({cpparg.name})")
+                    else:
+                        updated_expression = literal.Literal(f"!GribStatusSuccess({cpparg.name})")
+
+                    debug.line("apply_special_unary_operation_conversion", f"Updating GribStatus error: [{debug.as_debug_string(cppcode_object)}]->[{debug.as_debug_string(updated_expression)}]")
+                    return updated_expression
+
+        if isinstance(cppcode_object, function_call.FunctionCall):
+            cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppcode_object.name)
+            if cppfuncsig:
+                if cppfuncsig.return_type.type == "GribStatus":
+                    updated_cppcode_object = literal.Literal(f"GribStatusSuccess({cppcode_object.as_string()})")
+                    return updated_cppcode_object
+
+        return super().try_to_make_boolean(cppcode_object)

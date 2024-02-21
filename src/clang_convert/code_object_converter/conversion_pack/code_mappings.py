@@ -10,6 +10,7 @@ class CodeMappings:
         self._funcsig_type_mappings = {}
         self._funcsig_buffer_mappings = []  # Don't expect more than one entry, but just in case!
         self._data_member_mappings = {}
+        self._struct_member_access_mappings = {}
         self._funcsig_mappings = []
         self._funcsig_pointer_mappings = []
         self._member_funcsig_mappings = []
@@ -42,6 +43,10 @@ class CodeMappings:
     @property
     def data_member_mappings(self):
         return self._data_member_mappings
+
+    @property
+    def struct_member_access_mappings(self):
+        return self._struct_member_access_mappings
 
     @property
     def all_funcsig_mappings(self):

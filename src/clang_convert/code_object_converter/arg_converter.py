@@ -38,7 +38,7 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
         if cpp_arg:
             return cpp_arg
 
-        debug.line("convert_funcsig_arg", f"--[2]-- carg=[{debug.as_debug_string(cpp_arg)}]")
+        debug.line("convert_funcsig_arg", f"--[2]-- cpp_arg=[{debug.as_debug_string(cpp_arg)}]")
 
         # 2. Check if the C type should not be converted (e.g. grib_handle*)
         test_decl_spec = declaration_specifier.DeclSpec.from_instance(carg.decl_spec)
@@ -85,6 +85,8 @@ class ArgConverter(code_interface_converter.CodeInterfaceConverter):
         cpp_is_func_arg = carg.is_func_arg
 
         cpp_arg = arg.Arg(new_decl_spec, cpp_name, cpp_is_func_arg)
+
+        debug.line("create_funcsig_cpparg", f"Created cpp_arg=[{debug.as_debug_string(cpp_arg)}] from carg=[{debug.as_debug_string(carg)}]")
 
         self._conversion_pack.conversion_data.add_funcsig_arg_mapping(carg, cpp_arg)
         debug.line("create_funcsig_cpparg", f"Arg conversion arg mapping: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpp_arg)}]")

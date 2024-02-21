@@ -1,5 +1,6 @@
 import code_object.code_interface as code_interface
 import code_object.code_objects as code_objects
+from utils import debug
 
 # Represents a group of code objects (CodeInterface classes) that make up a coherent collection of code (e.g. a function body)
 # Provides convenient ways of accessing the underlying code

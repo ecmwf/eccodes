@@ -76,13 +76,26 @@ def create_best_matching_cdecl_spec(cdecl_spec, matches):
     # Rank the results
     ranked_scored_matches = sorted(scored_matches.items(), key=lambda x: x[1], reverse=True)
     result, score = ranked_scored_matches[0]
-    debug.line("create_best_matching_cdecl_spec", f" Result: key=[{debug.as_debug_string(result[key])}] value=[{debug.as_debug_string(result[value])}] match=[{score}]")
+
+    result_decl_spec = result[value]
+    debug.line("create_best_matching_cdecl_spec", f" Result: key=[{debug.as_debug_string(result[key])}] value=[{debug.as_debug_string(result_decl_spec)}] match=[{score}]")
 
     # Create the new DeclSpec
-    if result[value] == NONE_VALUE:
+    if result_decl_spec == NONE_VALUE:
         new_decl_spec = NONE_VALUE
     else:
-        new_decl_spec = declaration_specifier.DeclSpec.from_instance(result[value])
+        # Check we're not assigning a container to a non-container type
+        if cdecl_spec.pointer == "" and result_decl_spec.type.startswith("std::"):
+            if result_decl_spec.type == "std::string":
+                new_decl_spec = declaration_specifier.DeclSpec.from_decl_specifier_seq("char")
+            else:
+                # Assume it is std::CONTAINER<TYPE>
+                start = result_decl_spec.type.index("<") + 1
+                end = result_decl_spec.type.index(">")
+                new_decl_spec = declaration_specifier.DeclSpec.from_decl_specifier_seq(result_decl_spec.type[start:end])
+        else:
+            new_decl_spec = declaration_specifier.DeclSpec.from_instance(result_decl_spec)
+            
         if not (score & DeclSpecMatchType.POINTER.value):
             new_decl_spec.pointer = cdecl_spec.pointer
 

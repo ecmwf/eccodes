@@ -838,7 +838,7 @@ class AstParser:
         debug.line("parse_MEMBER_REF_EXPR", f"[IN]  node spelling=[{node.spelling}] type=[{node.type.spelling}] tokens=[{tokens}]")
         assert len(tokens) >= 3, f"Expected at least 3 tokens for member ref, but got [{len(tokens)}]"
 
-        cstruct_member_access = ast_utils.create_code_object_from_tokens(tokens)
+        cstruct_member_access = ast_utils.create_struct_member_access_from_tokens(tokens)
 
         debug.line("parse_MEMBER_REF_EXPR", f"[OUT] cstruct_member_access=[{debug.as_debug_string(cstruct_member_access)}]")
 

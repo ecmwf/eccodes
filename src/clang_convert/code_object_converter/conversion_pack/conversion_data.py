@@ -8,6 +8,7 @@ from code_object.arg import Arg
 from code_object.function_call import FunctionCall
 from code_object.funcsig import FuncSig
 from code_object.data_member import DataMember
+from code_object.struct_member_access import StructMemberAccess
 from code_object.declaration_specifier import DeclSpec
 from code_object_converter.conversion_pack.conversion_data_helper import *
 from code_object.code_interface import NONE_VALUE
@@ -57,6 +58,10 @@ class ConversionData:
             return [self._local_mappings, self._global_mappings]
         else:
             return [self._global_mappings]
+
+    @property
+    def current_cfuncname(self):
+        return self._current_cfuncname
 
     # ============================== Funcsig mappings: start ==============================
 
@@ -201,6 +206,11 @@ class ConversionData:
     def add_funcsig_arg_mapping(self, carg, cpparg):
         assert isinstance(carg, Arg), f"Expected Arg, got [{carg}]"
         assert isinstance(cpparg, Arg) or cpparg==NONE_VALUE, f"Expected Arg, got [{cpparg}]"
+
+        if not carg.name or (cpparg and cpparg != NONE_VALUE and not cpparg.name):
+            debug.line("add_funcsig_arg_mapping", f"*** WARNING *** Not adding arg mapping due to missing name (must be an anonymous/unused funcsig arg) : carg=[{debug.as_debug_string(carg)}] cpparg=[{debug.as_debug_string(cpparg)}]")
+            return
+
         if carg in self.active_map.funcsig_arg_mappings:
             assert self.active_map.funcsig_arg_mappings[carg] == cpparg, f"Updating an existing funcsig arg: [{debug.as_debug_string(carg)}] -> [{debug.as_debug_string(cpparg)}] Previous function arg=[{debug.as_debug_string(self.active_map.funcsig_arg_mappings[carg])}]"
         else:
@@ -265,6 +275,7 @@ class ConversionData:
     # See conversion_data_helper.find_best_matching_cdecl_spec() for more info
     #
     def closest_funcbody_cppdecl_spec_for_cdecl_spec(self, cdecl_spec):
+
         matches = []
         for mapping in self.all_mappings():
             for key, value in mapping.funcbody_type_mappings.items():
@@ -347,6 +358,16 @@ class ConversionData:
         else:
             self.active_map.data_member_mappings[cmember] = cppmember
             debug.line("add_data_member_mapping", f"Adding data member: [{debug.as_debug_string(cmember)}] -> [{debug.as_debug_string(cppmember)}]")
+
+    def add_struct_member_access_mapping(self, cstruct_member_access, cppstruct_member_access):
+        assert isinstance(cstruct_member_access, StructMemberAccess), f"Expected StructMemberAccess, got [{cstruct_member_access}]"
+        assert isinstance(cppstruct_member_access, StructMemberAccess) or cppstruct_member_access==NONE_VALUE, f"Expected StructMemberAccess, got [{cppstruct_member_access}]"
+
+        if cstruct_member_access in self.active_map.struct_member_access_mappings:
+            assert self.active_map.struct_member_access_mappings[cstruct_member_access] == cppstruct_member_access, f"Updating an existing data member: [{debug.as_debug_string(cstruct_member_access)}] -> [{debug.as_debug_string(cppstruct_member_access)}] Previous value=[{debug.as_debug_string(self.active_map.data_member_mappings[cstruct_member_access])}]"
+        else:
+            self.active_map.struct_member_access_mappings[cstruct_member_access] = cppstruct_member_access
+            debug.line("add_struct_member_access_mapping", f"Adding StructMemberAccess: [{debug.as_debug_string(cstruct_member_access)}] -> [{debug.as_debug_string(cppstruct_member_access)}]")
 
     def add_literal_mapping(self, cstring, cppstring):
         assert isinstance(cstring, str), f"Expected str, got [{cstring}]"
@@ -491,7 +512,14 @@ class ConversionData:
                     return value
         return None
 
-    #def funcsig_buffer_mapping_for
+    def get_cppstruct_member_access(self, cstruct_member_access):
+
+        for mapping in self.all_mappings():
+            for key, value in mapping.struct_member_access_mappings.items():
+                if key == cstruct_member_access:
+                    return value
+
+        return None
 
     # Searches both C and C++ member and virtual member maps
     # NOTE: cppfuncsig will be none for "discovered" virtual functions until they have been converted!

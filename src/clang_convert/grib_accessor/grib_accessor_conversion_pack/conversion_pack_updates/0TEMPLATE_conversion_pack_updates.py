@@ -6,6 +6,8 @@ from code_object_converter.conversion_pack.funcsig_mapping import FuncSigMapping
 from code_object_converter.conversion_pack.arg_indexes import ArgIndexes
 from code_object.funcsig import FuncSig
 from code_object.code_interface import NONE_VALUE
+from code_object.data_member import DataMember
+from code_object.struct_member_access import create_struct_member_access_from_tokenstring
 
 class TemplateConversionPackUpdates(base_conversion_pack_updates.BaseConversionPackUpdates):
     def __init__(self) -> None:
@@ -15,7 +17,11 @@ class TemplateConversionPackUpdates(base_conversion_pack_updates.BaseConversionP
             "pack_long": self.apply_updates_for_pack_long
         })
 
-        self._include_files.extend([
+        self._header_includes.extend([
+            "BufrDefs.h",
+        ])
+
+        self._source_includes.extend([
             "<float.h>",
         ])
 
@@ -28,6 +34,14 @@ class TemplateConversionPackUpdates(base_conversion_pack_updates.BaseConversionP
 
         self._all_function_arg_mappings.update({
             Arg("unsigned char*","p") : Arg("AccessorDataPointer","p"),
+        })
+
+        self._data_member_mappings.update({
+            DataMember("foo*", "bar"): DataMember("Foo", "bar_"),
+            })
+
+        self._all_function_struct_member_access_mappings.update({
+            create_struct_member_access_from_tokenstring("foo->bar"): create_struct_member_access_from_tokenstring("foo_.bar_"),
         })
 
     def apply_updates_for_pack_long(self, conversion_pack):

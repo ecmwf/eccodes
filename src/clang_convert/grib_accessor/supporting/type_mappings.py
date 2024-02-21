@@ -7,6 +7,7 @@ from code_object.code_interface import NONE_VALUE
 # ==================== FUNCSIG TYPE MAPPINGS: Begin ====================
 
 common_funcsig_type_mappings = {
+    #"grib_accessor*"        : "AccessorDataPtr",
     "char*"   : "std::string&",
     "char[]"  : "std::string&",
 }
@@ -23,13 +24,14 @@ def add_funcsig_type_mappings_to_conversion_data(conversion_data):
 # ==================== FUNCBODY TYPE MAPPINGS: Begin ====================
 
 common_grib_funcbody_type_mappings = {
-    "grib_accessor*"        : "AccessorPtr",
-    "grib_accessor_class*"  : NONE_VALUE,
-    "grib_handle*"          : NONE_VALUE,
-    "grib_context*"         : NONE_VALUE,
-    "grib_expression*"      : "GribExpressionPtr",
-    "grib_codetable*"       : "GribCodeTablePtr",
-    "grib_action*"          : "GribActionPtr"
+    "grib_accessor*"            : "AccessorPtr",
+    "grib_accessor_class*"      : NONE_VALUE,
+    "grib_handle*"              : NONE_VALUE,
+    "grib_context*"             : NONE_VALUE,
+    "grib_expression*"          : "GribExpressionPtr",
+    "grib_codetable*"           : "GribCodeTablePtr",
+    "grib_action*"              : "GribActionPtr",
+    "bufr_descriptors_array"    : "BufrDescriptorsArray",
 }
 
 grib_array_funcbody_type_mappings = {

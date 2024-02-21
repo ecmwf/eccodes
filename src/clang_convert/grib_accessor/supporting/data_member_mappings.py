@@ -23,8 +23,13 @@ grib_accessor_base_data_members_map = {
     DataMember("grib_accessor*","attributes")   : DataMember("std::vector<AccessorPtr>","attributes_"),
     # grib_handle conversion helpers
     DataMember("grib_loader*","loader")         : DataMember("AccessorLoaderPtr","loader()"),
-    DataMember("char*","gts_header")            : DataMember("std::string","gtsHeader"),
-    DataMember("size_t","gts_header_len")       : DataMember("std::string","gtsHeader"),
+    DataMember("int","partial")                 : DataMember("int","partial_"),
+    DataMember("int","header_mode")             : DataMember("int","headerMode_"),
+    DataMember("char*","gts_header")            : DataMember("std::string","gtsHeader_"),
+    DataMember("size_t","gts_header_len")       : DataMember("std::string","gtsHeader_"),
+    DataMember("char*","section_offset")        : DataMember("std::vector<std::string>","sectionOffsetList_"),
+    DataMember("char*","section_length")        : DataMember("std::vector<std::string>","sectionLengthList_"),
+    DataMember("int","sections_count")          : DataMember("std::vector<std::string>","sectionsCount_"),
     }
 
 def add_data_member_mappings_to_conversion_data(conversion_data):

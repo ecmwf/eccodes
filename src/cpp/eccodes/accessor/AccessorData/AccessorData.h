@@ -96,6 +96,12 @@ protected:
 
     // Conversion helpers...
     std::vector<AccessorPtr> attributes_;
+    int partial_{};
+    int headerMode_{};
+    std::string gtsHeader_;
+    std::vector<std::string> sectionOffsetList_;
+    std::vector<std::string> sectionLengthList_;
+    std::vector<std::string> sectionsCount_;
 };
 
 template<typename T>

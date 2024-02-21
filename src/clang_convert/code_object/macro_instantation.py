@@ -1,5 +1,6 @@
 import code_object.code_interface as code_interface
 import code_object.code_objects as code_objects
+from utils import debug
 
 # Represents a macro instantiation, for example
 #   BAR(42)
@@ -24,7 +25,12 @@ class MacroInstantation(code_interface.CodeInterface):
         return self._expression
     
     def as_lines(self):
-        text = f"{self._name}{self._expression.as_string()};"
+
         # Ensure it is all on one line!
-        text = text.replace("\n", "")
+        expression_string = self._expression.as_string().replace("\n", "")
+
+        if expression_string.endswith(";)"):
+            expression_string = expression_string[:-2] + ")"
+
+        text = f"{self._name}{expression_string};"
         return [text]

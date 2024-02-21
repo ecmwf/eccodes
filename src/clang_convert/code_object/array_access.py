@@ -22,4 +22,4 @@ class ArrayAccess(code_interface.CodeInterface):
         return self._index
 
     def as_lines(self):
-        return [f"{strip_semicolon(self._name.as_string())}[{self._index.as_string()}]"]
+        return [f"{strip_semicolon(self._name.as_string())}[{strip_semicolon(self._index.as_string())}]"]

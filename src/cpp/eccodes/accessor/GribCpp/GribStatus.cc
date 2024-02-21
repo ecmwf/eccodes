@@ -3,9 +3,9 @@
 namespace eccodes::accessor {
 
 // Helper for the conversion process
-bool isError(GribStatus stat) 
+bool GribStatusSuccess(GribStatus stat) 
 { 
-    return stat != GribStatus::SUCCESS; 
+    return stat == GribStatus::SUCCESS; 
 }
 
 }

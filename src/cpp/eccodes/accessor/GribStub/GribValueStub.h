@@ -16,4 +16,5 @@ GribStatus gribGetDoubleElementSet(AccessorName const& name, const std::vector<s
 GribStatus gribGetDoubleElementSetInternal(AccessorName const& name, const std::vector<size_t> indexArray, size_t len, std::vector<double>& valArray);
 GribStatus gribGetNearestSmallerValue(AccessorName name, double val, double& nearest);
 
+GribStatus gribIsMissing(AccessorName name, GribStatus& err);
 }

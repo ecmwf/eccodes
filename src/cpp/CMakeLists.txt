@@ -53,6 +53,7 @@ set(accessor_utils_src_files
 )
 
 set(accessor_grib_cpp_src_files
+	${accessor_grib_cpp_dir}/BufrDefs.h
 	${accessor_grib_cpp_dir}/GribCppIncludes.h
 	${accessor_grib_cpp_dir}/GribBits.cc
 	${accessor_grib_cpp_dir}/GribBits.h

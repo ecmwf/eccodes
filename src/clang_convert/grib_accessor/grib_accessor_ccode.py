@@ -34,9 +34,9 @@ class GribAccessorCCode(default_ccode.DefaultCCode):
 
     def is_member_function(self, cfuncsig):
         if not self.is_virtual_member_function(cfuncsig):
-            # If any arg starts with a "ptr type name", then it's a member function (as we've already extracted virtual functions)
-            for arg_entry in cfuncsig.args:
-                if re.search(r"grib_accessor(\w*)?\s*\*", arg_entry.decl_spec.as_string()):
+            # If first arg starts with a "ptr type name", then it's a member function (as we've already extracted virtual functions)
+            if len(cfuncsig.args) > 0:
+                if re.search(r"grib_accessor(\w*)?\s*\*", cfuncsig.args[0].decl_spec.as_string()):
                     return True
 
         return False
