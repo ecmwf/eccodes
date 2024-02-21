@@ -94,10 +94,10 @@ static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
     char* filename  = NULL;
     char line[1024] = {0,};
     char key[1024] = {0,};
-    char* list            = 0;
+    char* list = 0;
     grib_trie* dictionary = NULL;
-    FILE* f               = NULL;
-    int i                 = 0;
+    FILE* f = NULL;
+    int i = 0;
 
     *err = GRIB_SUCCESS;
 
@@ -148,15 +148,15 @@ static grib_trie* load_dictionary(grib_context* c, grib_expression* e, int* err)
 
 static const char* get_name(grib_expression* g)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    const grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
     return e->key;
 }
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    int err                       = 0;
-    char mybuf[1024]              = {0,};
+    const grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    int err = 0;
+    char mybuf[1024] = {0,};
     size_t size = 1024;
 
     grib_trie* dict = load_dictionary(h->context, g, &err);
@@ -213,7 +213,7 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    const grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
     printf("access('%s", e->key);
     if (f) {
         long s = 0;
@@ -239,8 +239,8 @@ static int native_type(grib_expression* g, grib_handle* h)
 
 static void add_dependency(grib_expression* g, grib_accessor* observer)
 {
-    grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
-    grib_accessor* observed       = grib_find_accessor(grib_handle_of_accessor(observer), e->key);
+    const grib_expression_is_in_dict* e = (grib_expression_is_in_dict*)g;
+    grib_accessor* observed = grib_find_accessor(grib_handle_of_accessor(observer), e->key);
 
     if (!observed) {
         /* grib_context_log(observer->context, GRIB_LOG_ERROR, */

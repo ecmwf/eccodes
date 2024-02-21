@@ -84,21 +84,21 @@ static void init_class(grib_expression_class* c)
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
-    grib_expression_double* e = (grib_expression_double*)g;
-    *lres                     = e->value;
+    const grib_expression_double* e = (grib_expression_double*)g;
+    *lres = e->value;
     return GRIB_SUCCESS;
 }
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
-    grib_expression_double* e = (grib_expression_double*)g;
-    *dres                     = e->value;
+    const grib_expression_double* e = (grib_expression_double*)g;
+    *dres = e->value;
     return GRIB_SUCCESS;
 }
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_double* e = (grib_expression_double*)g;
+    const grib_expression_double* e = (grib_expression_double*)g;
     printf("double(%g)", e->value);
 }
 
@@ -115,8 +115,8 @@ static void add_dependency(grib_expression* g, grib_accessor* observer)
 grib_expression* new_double_expression(grib_context* c, double value)
 {
     grib_expression_double* e = (grib_expression_double*)grib_context_malloc_clear_persistent(c, sizeof(grib_expression_double));
-    e->base.cclass            = grib_expression_class_double;
-    e->value                  = value;
+    e->base.cclass = grib_expression_class_double;
+    e->value = value;
     return (grib_expression*)e;
 }
 

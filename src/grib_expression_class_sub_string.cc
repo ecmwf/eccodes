@@ -82,14 +82,14 @@ static void init_class(grib_expression_class* c)
 
 static const char* evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
-    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-    *err                          = 0;
+    const grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    *err = 0;
     return e->value;
 }
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    const grib_expression_sub_string* e = (grib_expression_sub_string*)g;
     printf("string('%s')", e->value);
 }
 
