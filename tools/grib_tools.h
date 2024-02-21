@@ -200,7 +200,6 @@ int grib_tool_init(grib_runtime_options* options);
 int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* file);
 int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h);
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h);
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h);
 int grib_tool_finalise_action(grib_runtime_options* options);
 void grib_skip_check(grib_runtime_options* options, grib_handle* h);
 void grib_print_key_values(grib_runtime_options* options, grib_handle* h);

@@ -75,6 +75,7 @@ int main(int argc, char* argv[])
     fout = fopen(out_file, "wb");
     if (!fout) {
         fprintf(stderr, "Failed to open output file '%s'\n", out_file);
+        perror(out_file);
         return 1;
     }
     fin = codes_fopen(full_path, "r");

@@ -1,4 +1,9 @@
-alias mars.step   = endStep;
+if (levtype is "o2d" || levtype is "o3d") {
+   alias mars.step = stepRange;
+} else {
+   alias mars.step = endStep;
+}
+
 if (class is "od") { alias mars.system = systemNumber; }
 if (class is "me") { alias mars.system = systemNumber; }
 if (class is "en") { alias mars.system = systemNumber; }
@@ -15,3 +20,6 @@ if (centre == 80 && subCentre == 98 && class is "c3") {
   constant cnmc_cmcc = 'cmcc';
   alias mars.origin = cnmc_cmcc;
 }
+
+if (class is "ci") { unalias mars.method; }
+

@@ -237,6 +237,19 @@ grib_check_key_equals $tempGrib scaleFactorOfFirstFixedSurface MISSING
 grib_check_key_equals $tempGrib scaledValueOfFirstFixedSurface MISSING
 
 
+echo "Test for the sum accessor"
+# -------------------------------
+input="${samp_dir}/reduced_gg_pl_32_grib2.tmpl"
+cat >$tempFilt <<EOF
+  meta sum_of_pl_array sum(pl);
+  # Default is double
+  print "sum_of_pl_array =[sum_of_pl_array]";
+  print "sum_of_pl_array as ints=[sum_of_pl_array:i]";
+  print "sum_of_pl_array as strs=[sum_of_pl_array:s]";
+EOF
+${tools_dir}/grib_filter $tempFilt $input > $tempOut
+
+
 echo "Test from_scale_factor_scaled_value"
 # -----------------------------------------
 input="${samp_dir}/reduced_gg_pl_32_grib2.tmpl"
@@ -394,8 +407,8 @@ ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2
 cat $tempOut
 grep "rubbish must fail" $tempOut
 grep "garbage must fail" $tempOut
-grep "unable to get rubbish as string" $tempOut
-grep "unable to get garbage as string" $tempOut
+grep "Unable to get rubbish as string" $tempOut
+grep "Unable to get garbage as string" $tempOut
 
 
 # Use of "abs"
@@ -404,6 +417,89 @@ cat >$tempFilt <<EOF
  assert(abs_twice_bsf == 20);
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
+# Write statement with padding
+# ------------------------------------------------------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+echo 'write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+cmp $input $tempGrib # No padding added
+
+echo 'write(0);' | ${tools_dir}/grib_filter -o $tempGrib - $input
+cmp $input $tempGrib # zero bytes padding
+
+echo 'write(10);' | ${tools_dir}/grib_filter -o $tempGrib - $input
+set +e
+cmp $input $tempGrib # output should be different byte-wise
+status=$?
+set -e
+[ $status -ne 0 ]
+${tools_dir}/grib_compare $input $tempGrib # compare should succeed
+
+set +e
+echo 'write(-10);' | ${tools_dir}/grib_filter -o $tempGrib - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Invalid argument" $tempOut
+
+
+# GTS header
+# ---------------
+input=$data_dir/gts.grib
+echo 'write;' | ${tools_dir}/grib_filter -g -o $tempGrib - $input
+cmp $input $tempGrib
+
+echo 'write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+set +e
+cmp $input $tempGrib
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
+# Bad write
+set +e
+echo 'write "/";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to open file" $tempOut
+
+# Signed bits
+# -----------
+cat >$tempFilt <<EOF
+  meta _sb signed_bits(widthOfWidths, numberOfGroups);
+  print "[_sb]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $data_dir/boustrophedonic.grib1 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
+# Setting step
+# -------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+echo 'set step = 12; write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+${tools_dir}/grib_compare -b forecastTime $input $tempGrib
+grib_check_key_equals $tempGrib step 12
+grib_check_key_equals $tempGrib forecastTime 12
+echo 'set endStep = 12; write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
+grib_check_key_equals $tempGrib step 12
+grib_check_key_equals $tempGrib forecastTime 12
+
+
+# Bad filter
+# ----------------
+set +e
+${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot include file" $tempOut
 
 
 # Clean up

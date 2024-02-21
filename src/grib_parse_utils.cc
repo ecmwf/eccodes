@@ -210,7 +210,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
 //                 size = count;
 //             }
 //             else {
-//                 ret = ecc__grib_get_size(h, a, &size);
+//                 ret = grib_get_size_(h, a, &size);
 //             }
 //             if (ret) return ret;
 //             dval = (double*)grib_context_malloc_clear(h->context, sizeof(double) * size);
@@ -251,7 +251,7 @@ int grib_recompose_name(grib_handle* h, grib_accessor* observer, const char* una
 //                 size = count;
 //             }
 //             else {
-//                 ret = ecc__grib_get_size(h, a, &size);
+//                 ret = grib_get_size_(h, a, &size);
 //             }
 //             if (ret) return ret;
 //             lval = (long*)grib_context_malloc_clear(h->context, sizeof(long) * size);

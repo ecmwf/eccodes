@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     size_t stringLen;
     char stringVal[100] = {0,};
     int i, err = 0;
-    int cnt            = 0;
+    int cnt = 0, ktype = 0;
     const char* infile = "../../data/bufr/synop_multi_subset.bufr";
 
     in = fopen(infile, "rb");
@@ -61,6 +61,9 @@ int main(int argc, char* argv[])
         /* loop over the subsets */
         for (i = 1; i <= numberOfSubsets; i++) {
             snprintf(key, sizeof(key), "/subsetNumber=%d/blockNumber", i);
+
+            CODES_CHECK(codes_get_native_type(h, key, &ktype), 0);
+            /* printf("Type = %d\n", ktype); */
 
             printf("  subsetNumber=%d", i);
             /* read and print some data values */

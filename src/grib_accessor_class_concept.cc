@@ -559,7 +559,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     slen = strlen(p) + 1;
     if (*len < slen) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                        "Concept unpack_string. Wrong size for %s, value='%s' which requires %lu bytes (len=%lu)",
+                        "Concept unpack_string. Buffer too small for %s, value='%s' which requires %lu bytes (len=%lu)",
                          a->name, p, slen, *len);
         *len = slen;
         return GRIB_BUFFER_TOO_SMALL;

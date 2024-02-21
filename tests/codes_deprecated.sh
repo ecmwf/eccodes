@@ -24,11 +24,7 @@ echo "Deprecated while statement"
 cat >$tempFilt <<EOF
   while (edition < 2) { print "woo"; }
 EOF
-set +e
 ${tools_dir}/grib_filter $tempFilt $input > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
 grep -q "statement is deprecated" $tempOut
 
 
@@ -37,12 +33,17 @@ echo "Deprecated trigger statement"
 cat >$tempFilt <<EOF
   trigger (edition) { print "woo"; }
 EOF
-set +e
 ${tools_dir}/grib_filter $tempFilt $input > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
 grep -q "statement is deprecated" $tempOut
+
+
+echo "Deprecated export statement"
+# -----------------------------------------
+cat >$tempFilt <<EOF
+  export abcd (edition);
+EOF
+${tools_dir}/grib_filter $tempFilt $input > $tempOut 2>&1
+grep -q "is deprecated" $tempOut
 
 
 # Clean up

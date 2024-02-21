@@ -26,12 +26,11 @@ static struct table_entry table[] = {
 #include "grib_dumper_factory.h"
 };
 
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
-
 grib_dumper* grib_dumper_factory(const char* op, const grib_handle* h, FILE* out, unsigned long option_flags, void* arg)
 {
-    int i;
-    for (i = 0; i < NUMBER(table); i++)
+    size_t i = 0;
+    const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
+    for (i = 0; i < num_table_entries; i++)
         if (strcmp(op, table[i].type) == 0) {
             grib_dumper_class* c = *(table[i].cclass);
             grib_dumper* d       = (grib_dumper*)grib_context_malloc_clear(h->context, c->size);
@@ -83,7 +82,8 @@ void grib_dump_content(const grib_handle* h, FILE* f, const char* mode, unsigned
     dumper = grib_dumper_factory(mode ? mode : "serialize", h, f, flags, data);
     if (!dumper) {
         fprintf(stderr, "Here are some possible values for the dumper mode:\n");
-        for (size_t i = 0; i < NUMBER(table); i++) {
+        const size_t num_table_entries = sizeof(table) / sizeof(table[0]);
+        for (size_t i = 0; i < num_table_entries; i++) {
             const char* t = table[i].type;
             if (strstr(t, "bufr") == NULL && strstr(t, "grib") == NULL) {
                 fprintf(stderr, "\t%s\n", t);

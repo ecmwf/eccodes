@@ -2,8 +2,8 @@
 
 # TEMPLATE 5.40, Grid point data - JPEG 2000 Code Stream Format
 
-include "grib2/template.5.packing.def";
-include "grib2/template.5.original_values.def";
+include "grib2/template.5.packing.def"
+include "grib2/template.5.original_values.def"
 
 codetable[1] typeOfCompressionUsed ('5.40.table',masterDir,localDir) ;
 

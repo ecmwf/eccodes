@@ -9,14 +9,17 @@
 #
 
 . ./include.ctest.sh
-TEMP_ERR=temp.grib_set_bytes.log
-TEMP_OUT=temp.grib_set_bytes.grib
 
-$EXEC ${test_dir}/grib_set_bytes 2>$TEMP_ERR
+label="grib_set_bytes_test"
 
-grep -q "Wrong size.*for uuidOfVGrid. It is 16 bytes long" $TEMP_ERR
+tempErr=temp.$label.log
+tempOut=temp.$label.grib
 
-uuid=`${tools_dir}/grib_get -p uuidOfVGrid $TEMP_OUT`
+$EXEC ${test_dir}/grib_set_bytes 2>$tempErr
+
+grep -q "Wrong size.*for uuidOfVGrid. It is 16 bytes long" $tempErr
+
+uuid=`${tools_dir}/grib_get -p uuidOfVGrid $tempOut`
 [ "$uuid" = "07204051072040510720405207204053" ]
 
-rm -f $TEMP_OUT $TEMP_ERR
+rm -f $tempOut $tempErr

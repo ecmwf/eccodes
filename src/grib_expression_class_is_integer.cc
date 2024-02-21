@@ -92,15 +92,15 @@ static void init_class(grib_expression_class* c)
 
 static const char* get_name(grib_expression* g)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    const grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     return e->name;
 }
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 {
     grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    int err                       = 0;
-    char mybuf[1024]              = {0,};
+    int err = 0;
+    char mybuf[1024] = {0,};
     size_t size = 1024;
     char* p     = 0;
     long val    = 0;
@@ -127,10 +127,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* result)
 {
-    int err      = 0;
+    int err = 0;
     long lresult = 0;
 
-    err     = evaluate_long(g, h, &lresult);
+    err = evaluate_long(g, h, &lresult);
     *result = lresult;
     return err;
 }
@@ -155,14 +155,14 @@ static string evaluate_string(grib_expression* g, grib_handle* h, char* buf, siz
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
-    printf("access('%s", e->name);
-    if (f) {
-        long s = 0;
-        grib_get_long(f, e->name, &s);
-        printf("=%ld", s);
-    }
-    printf("')");
+    // grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    // printf("access('%s", e->name);
+    // if (f) {
+    //     long s = 0;
+    //     grib_get_long(f, e->name, &s);
+    //     printf("=%ld", s);
+    // }
+    // printf("')");
 }
 
 static void destroy(grib_context* c, grib_expression* g)
@@ -174,7 +174,7 @@ static void destroy(grib_context* c, grib_expression* g)
 
 static void add_dependency(grib_expression* g, grib_accessor* observer)
 {
-    grib_expression_is_integer* e = (grib_expression_is_integer*)g;
+    const grib_expression_is_integer* e = (grib_expression_is_integer*)g;
     grib_accessor* observed       = grib_find_accessor(grib_handle_of_accessor(observer), e->name);
 
     if (!observed) {

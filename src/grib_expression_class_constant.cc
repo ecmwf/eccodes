@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 
 /*
@@ -85,13 +80,13 @@ static void init_class(grib_expression_class* c)
 
 static long evaluate(grib_expression* g, grib_handle* h)
 {
-    grib_expression_constant* e = (grib_expression_constant*)g;
+    const grib_expression_constant* e = (grib_expression_constant*)g;
     return e->value;
 }
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_constant* e = (grib_expression_constant*)g;
+    const grib_expression_constant* e = (grib_expression_constant*)g;
     printf("constant(%ld)", e->value);
 }
 
@@ -99,7 +94,6 @@ static void destroy(grib_context* c, grib_expression* g)
 {
     /* grib_expression_constant* e = (grib_expression_constant*)g; */
 }
-
 
 static void add_dependency(grib_expression* g, grib_accessor* observer)
 {

@@ -17,6 +17,8 @@ if [ ! -d "$ECCODES_DEFINITION_PATH" ]; then
 fi
 
 temp=temp.$label.grib2
+tempFilt=temp.$label.filt
+tempText=temp.$label.txt
 sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 tables_dir="$ECCODES_DEFINITION_PATH/grib2/tables"
@@ -34,7 +36,6 @@ fi
 cd $test_dir
 # Check table 1.0
 # Check it has the latest with description matching "Version implemented on DD MM YYYY"
-tempText=temp.$label.txt
 ${tools_dir}/grib_set -s tablesVersion=$latest $sample2 $temp
 ${tools_dir}/grib_dump -O -p tablesVersion $temp > $tempText
 grep -q "Version implemented on" $tempText
@@ -50,4 +51,18 @@ if [ "$tablesVersion" != "$latestOfficial" ]; then
     exit 1
 fi
 
-rm -f $temp
+# Library and definitions versions
+cat >$tempFilt<<EOF
+  transient _iv = 31;
+  meta _checkit check_internal_version(_iv);
+  print "checkit=[_checkit]";
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $sample2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempText
+grep -q "Definition files version .* is greater than engine version" $tempText
+
+rm -f $tempFilt $temp $tempText

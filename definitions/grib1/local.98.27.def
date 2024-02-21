@@ -12,7 +12,7 @@ constant wrongPadding=1 : hidden;
 unsigned[1] perturbationNumber : dump;
 unsigned[1] numberOfForecastsInEnsemble : dump;
 alias totalNumber=numberOfForecastsInEnsemble;
-alias number = perturbationNumber; 
+alias number = perturbationNumber;
 
 unsigned[1] oceanAtmosphereCoupling : dump;
 

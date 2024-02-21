@@ -12,6 +12,9 @@ program grib_ecc_1316
    implicit none
 
    integer              :: iret, ostep, olevel, onumber
+   ! Test both interfaces: 4 byte and 8 byte integers
+   integer(4)           :: step_int = 96, level_int = 0, number_int = 0
+   integer(8)           :: step_long = 96, level_long = 0, number_long = 0
    character(len=80)    :: parameterName
    integer              :: idx, igrib, count1 = 0
 
@@ -19,9 +22,12 @@ program grib_ecc_1316
    call codes_index_create(idx, '../../data/tigge_cf_ecmwf.grib2', &
                                 'parameterName,number,level,step')
 
-   call codes_index_select(idx, 'step',   96)
-   call codes_index_select(idx, 'level',  0)
-   call codes_index_select(idx, 'number', 0)
+   call codes_index_select(idx, 'step',   step_int)
+   call codes_index_select(idx, 'level',  level_int)
+   call codes_index_select(idx, 'number', number_int)
+   call codes_index_select(idx, 'step',   step_long)
+   call codes_index_select(idx, 'level',  level_long)
+   call codes_index_select(idx, 'number', number_long)
    call codes_index_select(idx, 'parameterName', 'Soil moisture')
 
    do while (.true.)

@@ -131,6 +131,7 @@ mars_step, &grib_accessor_class_mars_step
 md5, &grib_accessor_class_md5
 message, &grib_accessor_class_message
 message_copy, &grib_accessor_class_message_copy
+multdouble, &grib_accessor_class_multdouble
 nearest, &grib_accessor_class_nearest
 non_alpha, &grib_accessor_class_non_alpha
 number_of_coded_values, &grib_accessor_class_number_of_coded_values
@@ -142,6 +143,7 @@ octahedral_gaussian, &grib_accessor_class_octahedral_gaussian
 octet_number, &grib_accessor_class_octet_number
 offset_file, &grib_accessor_class_offset_file
 offset_values, &grib_accessor_class_offset_values
+optimal_step_units, &grib_accessor_class_optimal_step_units
 pack_bufr_values, &grib_accessor_class_pack_bufr_values
 packing_type, &grib_accessor_class_packing_type
 pad, &grib_accessor_class_pad

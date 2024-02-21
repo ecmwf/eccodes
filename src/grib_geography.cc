@@ -16,7 +16,6 @@
 #include <cmath>
 #include <algorithm>
 
-#define NUMBER(x) (sizeof(x) / sizeof(x[0]))
 #define MAXITER 10
 
 #define RAD2DEG 57.29577951308232087684 /* 180 over pi */
@@ -28,7 +27,7 @@
 
 static void gauss_first_guess(long trunc, double* vals)
 {
-    long i                = 0, numVals;
+    long i = 0, numVals;
     static double gvals[] = {
         2.4048255577E0,
         5.5200781103E0,
@@ -82,7 +81,7 @@ static void gauss_first_guess(long trunc, double* vals)
         156.2950342685E0,
     };
 
-    numVals = NUMBER(gvals);
+    numVals = sizeof(gvals) / sizeof(gvals[0]);
     for (i = 0; i < trunc; i++) {
         if (i < numVals)
             vals[i] = gvals[i];

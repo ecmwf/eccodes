@@ -134,7 +134,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
     if (*len < (size_t)slength) {
         *len = slength;
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     p = grib_handle_of_accessor(a)->buffer->data + grib_byte_offset(a);

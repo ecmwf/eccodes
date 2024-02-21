@@ -133,6 +133,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         if (v[i] > 126)
             v[i] = 32;
     memcpy(val, grib_handle_of_accessor(a)->buffer->data, slen);
+    val[i] = 0;
 
     *len = slen;
 

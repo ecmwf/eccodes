@@ -10,7 +10,10 @@
 
 . ./include.ctest.sh
 
-TEMP=output.grib_sh_imag.grib
-$EXEC ${test_dir}/grib_sh_imag $TEMP
+# Check that first coefficient have an imaginary part equal to zero.
+# philippe.marguinaud@meteo.fr, 2016/02
 
-rm -f $TEMP
+tempGrib=output.grib_sh_imag.grib
+$EXEC ${test_dir}/grib_sh_imag $tempGrib
+
+rm -f $tempGrib

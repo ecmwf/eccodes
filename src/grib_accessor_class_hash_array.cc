@@ -203,6 +203,11 @@ static grib_hash_array_value* find_hash_value(grib_accessor* a, int* err)
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "hash_array: no match for %s=%s",
                          a->creator->name, self->key);
+        const char* full_path = get_hash_array_full_path(a->creator);
+        if (full_path) {
+            grib_context_log(a->context, GRIB_LOG_ERROR, "hash_array: file path = %s", full_path);
+        }
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Check the key 'masterTablesVersionNumber'");
         return NULL;
     }
     return ha_ret;

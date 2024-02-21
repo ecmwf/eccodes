@@ -151,7 +151,6 @@ static int get_native_type(grib_accessor* a)
 
 static grib_section* sub_section(grib_accessor* a)
 {
-    /* grib_accessor_section* self = (grib_accessor_section*)a; */
     return a->sub_section;
 }
 
@@ -163,17 +162,15 @@ static void update_size(grib_accessor* a, size_t length)
     if (a->sub_section->aclength) {
         int e = grib_pack_long(a->sub_section->aclength, &len, &size);
         Assert(e == GRIB_SUCCESS);
-        printf("update_length %s %ld %ld\n", a->sub_section->aclength->name,
-               (long)a->sub_section->aclength->offset,
-               (long)a->sub_section->aclength->length
-
-        );
+        // printf("update_length %s %ld %ld\n", a->sub_section->aclength->name,
+        //        (long)a->sub_section->aclength->offset,
+        //        (long)a->sub_section->aclength->length);
     }
 
     a->sub_section->length = a->length = length;
     a->sub_section->padding            = 0;
 
-    printf("update_size %s %ld\n", a->name, a->length);
+    // printf("update_size %s %ld\n", a->name, a->length);
 
     Assert(a->length >= 0);
 }

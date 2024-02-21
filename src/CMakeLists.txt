@@ -9,7 +9,11 @@
 # nor does it submit to any jurisdiction.
 #
 list( APPEND eccodes_src_files
+    step_unit.cc
+    step.cc
+    step_utilities.cc
     grib_api.h
+    grib_timer.cc
     eccodes.h
     action.cc
     action_class_alias.cc
@@ -76,6 +80,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_hash_array.cc
     grib_accessor_class_decimal_precision.cc
     grib_accessor_class_divdouble.cc
+    grib_accessor_class_multdouble.cc
     grib_accessor_class_budgdate.cc
     grib_accessor_class_validity_date.cc
     grib_accessor_class_validity_time.cc
@@ -158,6 +163,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_signed_bits.cc
     grib_accessor_class_section.cc
     grib_accessor_class_step_in_units.cc
+    grib_accessor_class_optimal_step_units.cc
     grib_accessor_class_section_length.cc
     grib_accessor_class_g1_message_length.cc
     grib_accessor_class_g1_section4_length.cc
@@ -253,7 +259,6 @@ list( APPEND eccodes_src_files
     grib_accessor_class_abstract_long_vector.cc
     grib_loader_from_handle.cc
     grib_bits.cc
-    grib_timer.cc
     grib_ibmfloat.cc
     grib_ieeefloat.cc
     grib_accessor_class_reference_value_error.cc

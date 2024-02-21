@@ -122,12 +122,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)
-            return GRIB_ARRAY_TOO_SMALL;
+            return GRIB_BUFFER_TOO_SMALL;
         snprintf(val, 1024, "missing");
         return GRIB_SUCCESS;
     }
     if (*len < h->gts_header_len)
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
 
     offset = self->gts_offset > 0 ? self->gts_offset : 0;
     length = self->gts_length > 0 ? self->gts_length : h->gts_header_len;

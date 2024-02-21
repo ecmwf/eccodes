@@ -157,6 +157,10 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     length = strlen(tmp) + 1;
 
     if (*len < length) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, length, *len);
         *len = length;
         return GRIB_BUFFER_TOO_SMALL;
     }

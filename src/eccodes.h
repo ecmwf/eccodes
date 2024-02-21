@@ -495,6 +495,7 @@ codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_clone(const codes_handle* h);
+codes_handle* codes_handle_clone_headers_only(const codes_handle* h);
 
 /**
  *  Frees a handle, also frees the message if it is not a user message
@@ -1457,7 +1458,10 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product,
+                                 off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
+                                       off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus
@@ -1527,7 +1531,7 @@ Error codes returned by the eccodes functions.
 #define CODES_WRONG_STEP_UNIT		GRIB_WRONG_STEP_UNIT
 /** Invalid file id */
 #define CODES_INVALID_FILE		GRIB_INVALID_FILE
-/** Invalid grib id */
+/** Invalid GRIB id */
 #define CODES_INVALID_GRIB		GRIB_INVALID_GRIB
 /** Invalid index id */
 #define CODES_INVALID_INDEX		GRIB_INVALID_INDEX

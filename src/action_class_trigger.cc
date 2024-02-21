@@ -10,8 +10,10 @@
 
 #include "grib_api_internal.h"
 
+// No longer used: For the original intent see
+// src/deprecated/action_class_trigger.cc
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block)
 {
-    grib_context_log(context, GRIB_LOG_FATAL, "The 'trigger' statement is deprecated");
+    grib_context_log(context, GRIB_LOG_ERROR, "The 'trigger' statement is deprecated");
     return NULL;
 }

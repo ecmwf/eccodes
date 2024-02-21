@@ -85,7 +85,6 @@ grib_dumper_class* grib_dumper_class_wmo = &_grib_dumper_class_wmo;
 
 /* END_CLASS_IMP */
 static void set_begin_end(grib_dumper* d, grib_accessor* a);
-static void print_offset(FILE* out, long begin, long theEnd);
 static void print_hexadecimal(FILE* out, unsigned long flags, grib_accessor* a);
 
 static void init_class(grib_dumper_class* c) {}
@@ -101,6 +100,18 @@ static int init(grib_dumper* d)
 static int destroy(grib_dumper* d)
 {
     return GRIB_SUCCESS;
+}
+
+static void print_offset(FILE* out, long begin, long theEnd, int width=10)
+{
+    char tmp[50];
+
+    if (begin == theEnd)
+        fprintf(out, "%-*ld", width, begin);
+    else {
+        snprintf(tmp, sizeof(tmp), "%ld-%ld", begin, theEnd);
+        fprintf(out, "%-*s", width, tmp);
+    }
 }
 
 static void aliases(grib_dumper* d, grib_accessor* a)
@@ -300,7 +311,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     value = (char*)grib_context_malloc_clear(a->context, size);
     if (!value) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);
@@ -438,7 +449,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
         is_char = 1;
     }
 
-    print_offset(self->dumper.out, self->begin, self->theEnd);
+    print_offset(self->dumper.out, self->begin, self->theEnd, 12); // ECC-1749
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         char type_name[32]     = "";
         const long native_type = grib_accessor_get_native_type(a);
@@ -560,17 +571,6 @@ static void set_begin_end(grib_dumper* d, grib_accessor* a)
     else {
         self->begin  = a->offset;
         self->theEnd = grib_get_next_position_offset(a);
-    }
-}
-
-static void print_offset(FILE* out, long begin, long theEnd)
-{
-    char tmp[50];
-    if (begin == theEnd)
-        fprintf(out, "%-10ld", begin);
-    else {
-        snprintf(tmp, sizeof(tmp), "%ld-%ld", begin, theEnd);
-        fprintf(out, "%-10s", tmp);
     }
 }
 

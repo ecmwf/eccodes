@@ -182,28 +182,28 @@ result=$( ${tools_dir}/grib_get -p dataTime -s hour=2,minute=255 $input )
 # Various step units
 # --------------------
 input=${data_dir}/tigge_cf_ecmwf.grib2
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=h $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=h $input)
 [ $result = 96 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=30m $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=30m $input)
 [ $result = 192 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=15m $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=15m $input)
 [ $result = 384 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=s   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=s   $input)
 [ $result = 345600 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=12h $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=12h $input)
 [ $result = 8 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=6h  $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=6h  $input)
 [ $result = 16 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=D   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=D   $input)
 [ $result = 4 ]
 
-result=$(${tools_dir}/grib_get -w count=1 -p step -s stepUnits=m   $input)
+result=$(${tools_dir}/grib_get -w count=1 -p step:i -s stepUnits=m   $input)
 [ $result = 5760 ]
 
 # GRIB1 stepRange and timeRangeIndicator=10
@@ -219,6 +219,26 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Unable to set stepRange" $templog
+
+
+# GRIB1: sub-hourly
+# -----------------
+${tools_dir}/grib_set -s unitOfTimeRange=0,P1=5 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$templog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unable to represent the step in h" $templog
+
+# GRIB1: Unknown timeRangeIndicator
+${tools_dir}/grib_set -s timeRangeIndicator=138 $grib1_sample $temp
+set +e
+${tools_dir}/grib_get -p step $temp 2>$templog
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unknown stepType" $templog
 
 
 # Clean up

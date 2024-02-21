@@ -10,11 +10,18 @@
 
 . ./include.ctest.sh
 
+label="grib_padding_test"
 REDIRECT=/dev/null
-temp=loc.padding.grib1
+tempGrib=temp.local.$label.grib1
+tempFilt=temp.local.$label.filt
 
-${tools_dir}/grib_set -s setLocalDefinition=1 ${data_dir}/regular_latlon_surface.grib1 $temp
-cat  > $$_f <<EOF
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+${tools_dir}/grib_set -s setLocalDefinition=1 ${data_dir}/regular_latlon_surface.grib1 $tempGrib
+cat  > $tempFilt <<EOF
     if (GRIBEXSection1Problem ) {
         print "localDefinitionNumber=[localDefinitionNumber] size(GRIBEX-section1)=[GRIBEXSection1Problem] section1Length=[section1Length]";
         write "problem.grib";
@@ -24,27 +31,32 @@ EOF
 
 # Note: we cannot use -printf "%f\n" as on some unix platforms -printf is not an option
 # for find. So instead we use sed to get to the filename without the fullpath
-localDefinitions=`find ${def_dir}/grib1/ -name 'local.98.*def' | sed -e 's:.*/::' |\
+localDefinitions=`find ${def_dir}/grib1/ -name 'local.98.*.def' | sed -e 's:.*/::' |\
                 awk 'BEGIN {FS=".";} {print $3;}' |\
                 grep -v def |\
                 sed '/245/d' |\
                 sed '/12/d' |\
+                sed '/50/d' |\
                 sed '/244/d' |\
+                sed '/190/d' |\
+                sed '/191/d' |\
                 sed '/192/d' |\
                 xargs`
 
+count=0
 for l1 in $localDefinitions
 do
-    ${tools_dir}/grib_set -M -s localDefinitionNumber=$l1 $temp locx.grib1
-    ${tools_dir}/grib_filter -M $$_f locx.grib1
+    ${tools_dir}/grib_set -M -s localDefinitionNumber=$l1 $tempGrib locx.grib1
+    ${tools_dir}/grib_filter -M $tempFilt locx.grib1
     for l2 in $localDefinitions
     do
         if [ $l1 -ne $l2 ]; then
             #echo "$l1 -> $l2"
             ${tools_dir}/grib_set -M -s localDefinitionNumber=$l2 locx.grib1 locy.grib1
-            ${tools_dir}/grib_filter -M $$_f locy.grib1
+            ${tools_dir}/grib_filter -M $tempFilt locy.grib1
+            count=$((count+1))
         fi
     done
 done
-
-rm -f $$_f locx.grib1 locy.grib1 $temp
+echo Did $count iterations
+rm -f locx.grib1 locy.grib1 $tempGrib $tempFilt

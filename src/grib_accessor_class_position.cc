@@ -8,11 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/**************************************
- *  Enrico Fucile
- **************************************/
-
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -23,7 +18,6 @@
    IMPLEMENTS = unpack_long
    IMPLEMENTS = get_native_type
    IMPLEMENTS = init;dump
-   IMPLEMENTS = compare
    END_CLASS_DEF
 
  */
@@ -42,7 +36,6 @@ static int get_native_type(grib_accessor*);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_position
 {
@@ -91,7 +84,7 @@ static grib_accessor_class _grib_accessor_class_position = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -136,9 +129,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    if (a->offset != b->offset)
-        return GRIB_OFFSET_MISMATCH;
-    return GRIB_SUCCESS;
-}
+// static int compare(grib_accessor* a, grib_accessor* b)
+// {
+//     if (a->offset != b->offset)
+//         return GRIB_OFFSET_MISMATCH;
+//     return GRIB_SUCCESS;
+// }

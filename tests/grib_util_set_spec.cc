@@ -27,6 +27,8 @@ static int get_packing_type_code(const char* packingType)
         return GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
     else if (STR_EQUAL(packingType, "grid_ieee"))
         return GRIB_UTIL_PACKING_TYPE_IEEE;
+    else if (STR_EQUAL(packingType, "grid_complex"))
+        return GRIB_UTIL_PACKING_TYPE_GRID_COMPLEX;
 
     Assert(!"Invalid packingType");
     return result;

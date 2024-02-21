@@ -35,7 +35,6 @@ ${tools_dir}/grib_index_build -N -o $tempIndex ${infile} >/dev/null
 
 # Must remove first two lines (filename specifics)
 ${tools_dir}/grib_dump ${tempIndex} | sed '1,2d' > $tempOut
-#cat $tempOut
 
 cat > $tempRef <<EOF
 Index keys:
@@ -92,6 +91,12 @@ EOF
 
 diff $tempRef $tempOut
 
+# ECC-1748
+${tools_dir}/grib_dump -t ${tempIndex} > $tempOut
+grep -q "key type = string" $tempOut
+grep -q "key type = long" $tempOut
+
+
 ${tools_dir}/grib_index_build -N -k mars.levtype -o $tempIndex ${data_dir}/tigge_cf_ecmwf.grib2 |\
    grep -q "mars.levtype = { sfc, pl, pv, pt }"
 
@@ -118,7 +123,6 @@ ${tools_dir}/grib_compare -v $tempIndex1 $tempIndex2 2>$tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempOut
 grep -q "Indexes contained in the input files have different keys" $tempOut
 rm -f $tempIndex1 $tempIndex2 $tempOut
 
@@ -130,7 +134,6 @@ ${tools_dir}/grib_compare -v $tempIndex2 $tempIndex1 2>$tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempOut
 grep -q "Indexes contained in the input files have different keys" $tempOut
 rm -f $tempIndex1 $tempIndex2 $tempOut
 
@@ -154,6 +157,18 @@ rm -rf $temp_dir_A
 # ---------
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 ${tools_dir}/grib_dump $tempIndex1 >/dev/null
+
+
+# ------------------
+# Error conditions
+# ------------------
+echo GRIB > $tempGribFile1
+set +e
+${tools_dir}/grib_index_build $tempGribFile1 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "End of resource reached" $tempOut
 
 
 # Clean up

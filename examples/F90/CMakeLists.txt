@@ -11,8 +11,10 @@ if( HAVE_BUILD_TOOLS )
           codes_ecc-1392
           codes_datetime_julian
           codes_set_paths
+          codes_f90_misc
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           bufr_ecc-1284
           bufr_ecc-1019
           get_native_type
@@ -20,16 +22,24 @@ if( HAVE_BUILD_TOOLS )
     list( APPEND tests_extra
           grib_index
           codes_dump
+          codes_scan_file
+          codes_load_file
           grib_copy_message
+          grib_sections_copy
           bufr_copy_message
           grib_get_keys
           grib_get_data
+          grib_get_data_real4
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi_write
           grib_multi
+          grib_elements
           grib_nearest
+          grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_keys
@@ -41,11 +51,11 @@ if( HAVE_BUILD_TOOLS )
           grib_copy_namespace
           grib_read_message
           grib_read_from_file
+          grib_read_bytes
           grib_get_set_uuid
           grib_clone
           grib_ecc-1316
           bufr_attributes
-          bufr_copy_data
           bufr_clone
           bufr_expanded
           bufr_get_keys
@@ -66,7 +76,9 @@ else()
     list( APPEND tests_sanity
           grib_set_pv
           grib_set_data
+          grib_set_data_force
           codes_set_paths
+          codes_f90_misc
           get_native_type
           grib_ecc-671 )
     list( APPEND tests_extra
@@ -76,8 +88,12 @@ else()
           grib_get_pl
           grib_get_pv
           grib_keys_iterator
+          grib_keys_iterator_skip
           grib_multi
           grib_nearest
+          grib_elements
+          grib_nearest_single
+          grib_nearest_four_single
           grib_precision
           grib_print_data
           grib_set_missing
@@ -113,6 +129,12 @@ foreach( atest ${tests_sanity} )
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh )
 endforeach()
+
+if( HAVE_BUILD_TOOLS AND NOT CMAKE_CXX_COMPILER_ID MATCHES NVHPC )
+      # Test which fails on Leonardo
+      list( APPEND tests_extra bufr_copy_data )
+endif()
+
 foreach( atest ${tests_extra} )
     ecbuild_add_test( TARGET          eccodes_f_${atest}
                       SOURCES         ${atest}.f90

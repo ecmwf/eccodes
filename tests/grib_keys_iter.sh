@@ -19,10 +19,16 @@ cd ${data_dir}
 f='tigge/tiggelam_cnmc_sfc.grib'
 $EXEC ${test_dir}/grib_keys_iter $f > /dev/null
 
+# Samples
+$EXEC ${test_dir}/grib_keys_iter $ECCODES_SAMPLES_PATH/GRIB1.tmpl > /dev/null
+$EXEC ${test_dir}/grib_keys_iter $ECCODES_SAMPLES_PATH/GRIB2.tmpl > /dev/null
+$EXEC ${test_dir}/grib_keys_iter $ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl > /dev/null
+
 grib_files=`cat ${data_dir}/grib_data_files.txt`
 for f in ${grib_files}; do
     ${test_dir}/grib_keys_iter $f > $tempOut
 done
+rm -f $tempOut
 
 cd ${data_dir}/tigge
 tigge_files=`cat ${data_dir}/tigge/tigge_data_files.txt`

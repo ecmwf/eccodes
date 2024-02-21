@@ -11,7 +11,7 @@
 
 # Define a common label for all the tmp files
 label="grib_space_view_test"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 tempGrib1="temp.${label}.grib1"
 tempGrib2="temp.${label}.grib2"
 tempOut="temp.${label}.out"
@@ -20,7 +20,7 @@ tempOut="temp.${label}.out"
 # GRIB2
 # -----------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="space_view";
  set Nx=1900;
  set Ny=900;
@@ -35,7 +35,7 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use filter on input to create a new GRIB
-${tools_dir}/grib_filter -o $tempGrib2 $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib2 $tempFilt $input
 if [ ! -f "$tempGrib2" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
@@ -66,7 +66,7 @@ rm -f $tempGrib2 $tempOut
 # GRIB1
 # -----------
 input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="space_view";
  set Nx=550;
  set Ny=550;
@@ -77,7 +77,7 @@ cat > $tempFilter <<EOF
  set Nr=6610710;
  write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib1 $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib1 $tempFilt $input
 ${tools_dir}/grib_get_data $tempGrib1 > $tempOut
 
 ${tools_dir}/grib_set -s edition=2 $tempGrib1 $tempGrib2
@@ -85,4 +85,4 @@ ${tools_dir}/grib_compare -e -b param $tempGrib1 $tempGrib2
 
 
 # Clean up
-rm -f $tempFilter $tempGrib1 $tempGrib2 $tempOut
+rm -f $tempFilt $tempGrib1 $tempGrib2 $tempOut

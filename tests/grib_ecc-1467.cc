@@ -23,8 +23,7 @@ int main(int argc, char** argv)
     double abs_error     = 0;
     const double max_abs_error = 1e-03;
     const double tolerance     = 1e-03;
-    double dmin;
-    double dmax;
+    double dmin, dmax, dval;
     float fval;
 
     FILE* in             = NULL;
@@ -43,6 +42,10 @@ int main(int argc, char** argv)
 
     h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     Assert(h);
+
+    CODES_CHECK(codes_get_float(h, "referenceValue", &fval), 0);
+    CODES_CHECK(codes_get_double(h, "referenceValue", &dval), 0);
+    printf("dval = %g, fval = %g\n", dval, fval);
 
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 

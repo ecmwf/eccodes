@@ -6,3 +6,4 @@
 'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101;numberOfGridUsed=5;}
 'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101;numberOfGridUsed=6;}
 'o2d'  = {typeOfFirstFixedSurface=102; typeOfSecondFixedSurface=255;gridDefinitionTemplateNumber=101;numberOfGridUsed=7;}
+'sfc'  = {typeOfFirstFixedSurface=254;}

@@ -175,6 +175,6 @@ if(matrixOfValues == 0)
 }
 meta packingError simple_packing_error(bitsPerValue,binaryScaleFactor,decimalScaleFactor,referenceValue,ibm) : no_copy;
 meta numberOfCodedValues number_of_coded_values(bitsPerValue,offsetBeforeData,offsetAfterData,halfByte,numberOfValues) : dump;
- 
+
 template statistics "common/statistics_grid.def";
 template missing_values "common/missing_values_grid.def";
