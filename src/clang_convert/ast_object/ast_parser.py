@@ -595,6 +595,13 @@ class AstParser:
 
         return None
 
+    def parse_STATIC_ASSERT(self, node):
+        # static_assert isn't detected on some systems, so until this can be resolved we'll
+        # just return the tokens as a literal string...
+        assert False
+        debug.line("parse_STATIC_ASSERT", f"***WARNING*** Proper conversion not yet supported for static_assert - using the raw tokens...")
+        return literal.Literal(f"{' '.join(t.spelling for t in node.get_tokens())}")
+
     parse_DECL_funcs = {
         clang.cindex.CursorKind.FUNCTION_DECL:      parse_FUNCTION_DECL,
         clang.cindex.CursorKind.FUNCTION_TEMPLATE:  parse_FUNCTION_TEMPLATE,
@@ -606,6 +613,7 @@ class AstParser:
         clang.cindex.CursorKind.TYPEDEF_DECL:       parse_TYPEDEF_DECL,
         clang.cindex.CursorKind.TYPE_ALIAS_DECL:    parse_node_not_implemented,
         clang.cindex.CursorKind.UNEXPOSED_DECL:     parse_UNEXPOSED_DECL,
+        clang.cindex.CursorKind.STATIC_ASSERT:      parse_STATIC_ASSERT,
     }
 
     def parse_DECL_node(self, node):
