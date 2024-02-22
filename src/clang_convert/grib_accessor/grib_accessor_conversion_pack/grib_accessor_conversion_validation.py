@@ -18,6 +18,7 @@ import code_object.cast_expression as cast_expression
 import code_object.macro_instantation as macro_instantation
 import code_object.struct_member_access as struct_member_access
 import code_object.array_access as array_access
+from code_object.arg import Arg
 from utils.string_funcs import strip_semicolon
 
 from grib_accessor.grib_accessor_conversion_pack.grib_accessor_special_function_call_conversion import special_function_name_mapping
@@ -142,6 +143,11 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                         updated_cppfunction_call = self.validate_function_call_args(updated_cppfunction_call, mapping.cppfuncsig)
                         debug.line("apply_special_function_call_conversions", f"Updated C++ function call=[{debug.as_debug_string(cppfunction_call)}] to [{debug.as_debug_string(updated_cppfunction_call)}]")
                         return updated_cppfunction_call
+        
+        if cppfunction_call.name == "eccGribGetStringLength":
+            updated_args = [literal.Literal("AccessorName(name_)")]
+            updated_args.append(cppfunction_call.args[1].operand)   # strip leading & - so this arg is a unary_operation
+            return function_call.FunctionCall(cppfunction_call.name, updated_args)
 
         for cfuncname, cppfuncname in special_function_name_mapping.items():
             if cfunction_call.name == cfuncname:
@@ -149,6 +155,20 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                     return function_call.FunctionCall(cppfuncname, cppfunction_call.args)
                 else:
                     return as_commented_out_code(cfunction_call, f"Removed call to {cfuncname}")
+
+        if cppfunction_call.name == "memcpy":
+            updated_args = [arg for arg in cppfunction_call.args]
+            if isinstance(updated_args[1], array_access.ArrayAccess):
+                argname = arg_utils.extract_name(updated_args[1])
+                assert argname
+                argvalue = strip_semicolon(updated_args[1].index.as_string())
+                updated_args[1] = binary_operation.BinaryOperation(literal.Literal(f"{argname}.data()"),
+                                                                   "+",
+                                                                   literal.Literal(argvalue))
+            updated_cppfunction_call = function_call.FunctionCall("copyBuffer", updated_args)
+            debug.line("apply_special_function_call_conversions", f"Updated memcpy: [{debug.as_debug_string(cppfunction_call)}]->[{debug.as_debug_string(updated_cppfunction_call)}]")
+            return  updated_cppfunction_call
+            
 
         return None
 

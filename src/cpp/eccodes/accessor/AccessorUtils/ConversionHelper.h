@@ -46,14 +46,28 @@ int scanString(std::string buffer, size_t offset, std::string format, Args&&... 
 
 // Helper to support memcpy from a C buffer into a std::vector
 template<typename OUT_TYPE, typename IN_TYPE>
-void copyBuffer(std::vector<OUT_TYPE>& out, IN_TYPE* in, size_t numBytes)
+//void copyBuffer(std::vector<OUT_TYPE>& out, IN_TYPE const* in, size_t numBytes)
+void copyBuffer(OUT_TYPE& out, IN_TYPE const* in, size_t numBytes)
 {
-    assert(sizeof(OUT_TYPE)==sizeof(IN_TYPE));
-
     size_t numEntries = numBytes/sizeof(IN_TYPE);
-    
-    std::copy(out.begin(), out.begin() + numEntries, in);
+
+    std::vector<IN_TYPE> inVec(in, in + numEntries);
+
+    // TODO: Check if back_inserter required
+    std::copy(inVec.begin(), inVec.end(), out.begin());
 }
+
+// Helper to support memcpy from a C buffer into a std::string
+/*
+void copyBuffer(std::string& out, char const* in, size_t numBytes)
+{
+    size_t numEntries = numBytes/sizeof(char);
+    
+    std::string inStr(in, in + numEntries);
+
+    // TODO: Check if back_inserter required
+    std::copy(inStr.begin(), inStr.end(), out.begin());
+}*/
 
 // Helper to replace strncpy
 void copyString(std::string& dest, std::string src, size_t count);

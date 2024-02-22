@@ -225,6 +225,9 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                 # We're indexing into a container...
                 cpparray_access = array_access.ArrayAccess(literal.Literal(cpparg.name), cppright)
                 return cpparray_access
+                # .data() version causes issues
+                #cppleft = literal.Literal(f"{cpparg.name}.data()")
+                #return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
         elif cppbinary_op.is_arithmetic():
             cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)

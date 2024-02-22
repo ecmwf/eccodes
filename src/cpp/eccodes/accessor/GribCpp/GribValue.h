@@ -56,4 +56,8 @@ GribStatus gribSetArray(AccessorName const& name, std::vector<T> const& value)
     }
 }
 
+// Stub functions (TO DO)
+GribStatus gribGetStringLength(AccessorName const& name, size_t& size);
+GribStatus eccGribGetStringLength(AccessorName const& name, size_t& size);
+
 }

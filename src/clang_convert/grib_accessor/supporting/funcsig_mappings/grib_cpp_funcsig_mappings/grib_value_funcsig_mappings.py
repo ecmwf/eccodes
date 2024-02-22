@@ -81,4 +81,10 @@ grib_value_funcsig_mappings = [
 
     FuncSigMapping( FuncSig("int", "grib_set_long_array_internal", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("long*", "val"), Arg("size_t*", "length")]),
                     FuncSig("GribStatus", "gribSetLong", [NONE_VALUE, Arg("AccessorName const&", "name"),  Arg("std::vector<long> const&", "value")])),
+
+    FuncSigMapping( FuncSig("int", "grib_get_string_length", [Arg("const grib_handle*", "h"), Arg("const char*", "name"), Arg("size_t*", "size")]),
+                    FuncSig("GribStatus", "gribGetStringLength", [NONE_VALUE, Arg("AccessorName const&", "name"),  Arg("size_t&", "size")])),
+
+    FuncSigMapping( FuncSig("int", "ecc__grib_get_string_length", [Arg("grib_accessor*", "a"), Arg("size_t*", "size")]),
+                    FuncSig("GribStatus", "eccGribGetStringLength", [Arg("AccessorName const&", "name"),  Arg("size_t&", "size")])),
 ]

@@ -248,4 +248,16 @@ GribStatus gribSetString(AccessorName const& name, std::string value)
     return GribStatus{ret};
 }
 
+GribStatus gribGetStringLength(AccessorName const& name, size_t& size)
+{
+    Assert(false);
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
+GribStatus eccGribGetStringLength(AccessorName const& name, size_t& size)
+{
+    Assert(false);
+    return GribStatus::NOT_IMPLEMENTED;
+}
+
 }

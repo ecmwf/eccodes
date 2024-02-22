@@ -7,7 +7,6 @@ special_function_name_mapping = {
     "fgets"                         : "fgetsFromString",
     "grib_context_log"              : "gribLog",
     "codes_fopen"                   : "fopenFromString",
-    "memcpy"                        : "copyBuffer",
     "strncpy"                       : "copyString",
     # Deleted functions
     "grib_context_free"             : "",
