@@ -126,6 +126,12 @@ grib_accessor_class* grib_accessor_class_variable = &_grib_accessor_class_variab
 
 /* END_CLASS_IMP */
 
+//
+// This accessor is used for:
+//  constant
+//  transient
+//
+
 #define MAX_VARIABLE_STRING_LENGTH 255
 
 static void init(grib_accessor* a, const long length, grib_arguments* args)

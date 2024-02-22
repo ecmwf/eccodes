@@ -22,7 +22,7 @@ $EXEC ${test_dir}/codes_get_string GRIB $tempGrib dayOfTheYearDate # 2> $tempTex
 
 
 input=$data_dir/reduced_latlon_surface.grib2
-keys="identifier projString bitmap class year gridDefinitionDescription
+keys="hundred identifier projString bitmap class year gridDefinitionDescription
       time validityTime packingType md5Headers parameterUnits"
 for k in $keys; do
     $EXEC ${test_dir}/codes_get_string GRIB $input $k 2> $tempText
