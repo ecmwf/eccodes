@@ -8,7 +8,7 @@ module unload ecmwf-toolbox
 module load cdo/new
 module load numdiff
 module load nccmp
-module load netcdf4/new
+module load netcdf4
 module load gnuparallel/new
 module load python3
 

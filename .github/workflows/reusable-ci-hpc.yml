@@ -23,7 +23,7 @@ jobs:
           ecbuild
           ninja
           aec
-          netcdf4/new
+          netcdf4
         --parallel: 64
         --cmake-options: |
           -DENABLE_EXTRA_TESTS=1
