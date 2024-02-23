@@ -315,8 +315,9 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
             int ret = c->unpack_string(a, v, len);
             if(auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name)); accessorPtr)
             {
-                std::string value = accessorPtr->unpack<std::string>();
-                if(value != std::string(v, *len)) { Assert(false); }
+                std::string cvalue = std::string(v, *len);
+                std::string cppvalue = accessorPtr->unpack<std::string>();
+                if(cvalue != cppvalue) { Assert(false); }
             }
             return ret;
 #else

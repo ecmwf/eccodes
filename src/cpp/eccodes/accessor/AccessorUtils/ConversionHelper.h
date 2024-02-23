@@ -22,8 +22,8 @@ std::string fmtString(std::string format, Args... args) {
     // Determine buffer size
     size_t formatSize = snprintf(nullptr, 0, format.c_str(), args...);
 
-    char buf[formatSize];
-    snprintf(buf, formatSize, format.c_str(), args...);
+    char buf[formatSize+1];
+    snprintf(buf, sizeof(buf), format.c_str(), args...);
 
     return std::string(buf);
 }

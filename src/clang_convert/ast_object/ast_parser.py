@@ -329,12 +329,13 @@ class AstParser:
 
         if_expression = self.parse_ast_node(children[0])
         if_action = self.parse_ast_node(children[1])
-        if_stmt = if_statement.IfStatement(if_expression, if_action)
 
         if child_count == 3:
             else_statement = self.parse_ast_node(children[2])
-            if_stmt.add_else(else_statement)
+        else:
+            else_statement = None
 
+        if_stmt = if_statement.IfStatement(if_expression, if_action, else_statement)
         return if_stmt
 
     def parse_SWITCH_STMT(self, node):

@@ -87,5 +87,6 @@ enum class GribStatus{
 
 // Helper for the conversion process
 bool GribStatusSuccess(GribStatus stat);
+bool GribStatusError(GribStatus stat);
 
 }
