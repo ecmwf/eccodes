@@ -14,6 +14,8 @@ class AstCodeCreator:
         self._global_function_body = []
 
         self._parse_args = [
+                #"-std=c11",
+                #"-v",
                 #"-fparse-all-comments",
                 #"-fdebug-macro",
                 #"-fmacro-backtrace-limit=0",
@@ -103,6 +105,12 @@ class AstCodeCreator:
                                                 args=self._parse_args,
                                                 unsaved_files=None,
                                                 options=parse_options)
+
+        # Diagnostics:
+        for diag in self._translation_unit.diagnostics:
+            debug.line("DIAGNOSTICS", f"Severity: {diag.severity}")
+            debug.line("DIAGNOSTICS", f"Location: {diag.location}")
+            debug.line("DIAGNOSTICS", f"Message: {diag.spelling}")
 
         self._ast_code = ast_code.AstCode(self._cfilename)
 

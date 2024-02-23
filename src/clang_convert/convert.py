@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--type", default="")
 parser.add_argument("--target", default="cpp/converted")
 parser.add_argument("--debug", action="store_true")
-parser.add_argument("--libclang", default="/usr/lib/llvm-16/lib/libclang.so")
+parser.add_argument("--libclang", default="/usr/lib/llvm-17/lib/libclang.so")
 parser.add_argument("path", nargs="+")
 
 ARGS = parser.parse_args()
