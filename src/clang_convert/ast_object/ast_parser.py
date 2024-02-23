@@ -598,7 +598,6 @@ class AstParser:
     def parse_STATIC_ASSERT(self, node):
         # static_assert isn't detected on some systems, so until this can be resolved we'll
         # just return the tokens as a literal string...
-        assert False
         debug.line("parse_STATIC_ASSERT", f"***WARNING*** Proper conversion not yet supported for static_assert - using the raw tokens...")
         return literal.Literal(f"{' '.join(t.spelling for t in node.get_tokens())}")
 
