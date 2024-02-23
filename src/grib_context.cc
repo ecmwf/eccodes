@@ -535,11 +535,10 @@ grib_context* grib_context_get_default()
         }
 #endif
 
-        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
-                         default_grib_context.grib_definition_files_path);
-        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
-                         default_grib_context.grib_samples_path);
-
+        if (default_grib_context.debug) {
+            fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
+            fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
+        }
         default_grib_context.keys_count = 0;
         default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
 
