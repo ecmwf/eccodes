@@ -172,7 +172,6 @@ void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.cc*/
 grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array);
-void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 
 /* grib_bufr_descriptor.cc*/
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
