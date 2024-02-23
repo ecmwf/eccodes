@@ -39,7 +39,7 @@ std::size_t AccessorData::stringLength() const
 GribStatus AccessorData::valueCount(long& count) const
 {
     count = 1;
-    return GribStatus::NOT_IMPLEMENTED;
+    return GribStatus::SUCCESS;
 }
 
 long AccessorData::byteCount() const

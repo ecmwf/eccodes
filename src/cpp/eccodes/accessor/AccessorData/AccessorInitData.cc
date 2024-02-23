@@ -4,22 +4,22 @@
 
 namespace eccodes::accessor {
 
-AccessorInitData makeInitData(grib_section* section,  long len, grib_arguments* args)
+AccessorInitData makeInitData(grib_section* section, long len, grib_arguments* args)
 {
     AccessorInitData initData{len};
 
     grib_arguments* next_arg = args;
 
-    while(next_arg)
+    while (next_arg)
     {
-        if(strcmp(next_arg->expression->cclass->name, "accessor")==0)
+        if (strcmp(next_arg->expression->cclass->name, "accessor") == 0)
         {
             initData.args.emplace_back(next_arg->expression->cclass->name,
                                   grib_expression_get_name(next_arg->expression));
         }
-        else switch(grib_expression_native_type(section->h, next_arg->expression))
+        else switch (grib_expression_native_type(section->h, next_arg->expression))
         {
-            case GRIB_TYPE_LONG: 
+            case GRIB_TYPE_LONG:
             {
                 long result{};
                 grib_expression_evaluate_long(section->h, next_arg->expression, &result);
@@ -43,7 +43,7 @@ AccessorInitData makeInitData(grib_section* section,  long len, grib_arguments* 
                 initData.args.emplace_back(toString(GribType::STRING), buf);
                 break;
             }
-            default: 
+            default:
             {
                 initData.args.emplace_back(toString(GribType::UNDEFINED), 0);
                 break;
@@ -56,4 +56,4 @@ AccessorInitData makeInitData(grib_section* section,  long len, grib_arguments* 
     return initData;
 }
 
-}
+} // namespace eccodes::accessor

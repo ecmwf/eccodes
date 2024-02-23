@@ -21,6 +21,9 @@
 #include "cpp/eccodes/accessor/AccessorFactory.h"
 #include "cpp/eccodes/accessor/AccessorStore.h"
 
+#include <iostream>
+#include <cassert>
+
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;
 static pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
@@ -142,7 +145,11 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 #ifdef USE_CPP_ACCESSORS
     using namespace eccodes::accessor;
     auto accessorType = AccessorType(creator->op);
-    if(auto& factory = AccessorFactory::instance(); factory.has(accessorType))
+    if (strcmp(creator->op, "unsigned") == 0) {
+        std::cerr << "unsigned accessor" << std::endl;
+    }
+
+    if (auto& factory = AccessorFactory::instance(); factory.has(accessorType))
     {
         auto accessorName = AccessorName(creator->name);
         auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
@@ -158,6 +165,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     /* Use the hash table built with gperf (See make_accessor_class_hash.sh) */
     c = *((grib_accessor_classes_hash(creator->op, strlen(creator->op)))->cclass);
 #endif
+
+
 
     a = (grib_accessor*)grib_context_malloc_clear(p->h->context, c->size);
 

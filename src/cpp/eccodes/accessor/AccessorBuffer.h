@@ -27,7 +27,7 @@ public:
     constexpr AccessorDataView(AccessorDataView const&) noexcept = default;
     constexpr AccessorDataView& operator=(AccessorDataView const&) noexcept = default;
 
-    constexpr AccessorDataView(value_type *const buffer, const size_type num_elements) noexcept
+    AccessorDataView(value_type *const buffer, const size_type num_elements) noexcept
         : data_(reinterpret_cast<pointer>(buffer)), size_(sizeof(value_type) * num_elements) {}
 
     [[nodiscard]] constexpr size_type size_bytes() const noexcept {

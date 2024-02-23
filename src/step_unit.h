@@ -68,7 +68,7 @@ public:
 
     explicit Unit(const std::string& unit_value) {
         try {
-            internal_value_ = map_.name_to_unit(unit_value);
+            internal_value_ = get_converter().name_to_unit(unit_value);
         } catch (std::exception& e) {
             throw std::runtime_error(std::string{"Unit not found "} + e.what());
         }
@@ -76,15 +76,15 @@ public:
 
     explicit Unit(long unit_value) {
         try {
-            internal_value_ = map_.long_to_unit(unit_value);
+            internal_value_ = get_converter().long_to_unit(unit_value);
         } catch (std::exception& e) {
             throw std::runtime_error(std::string{"Unit not found "} + e.what());
         }
     }
 
-    bool operator>(const Unit& other) const {return map_.unit_to_duration(internal_value_) > map_.unit_to_duration(other.internal_value_);}
-    bool operator==(const Value value) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(value);}
-    bool operator==(const Unit& unit) const {return map_.unit_to_duration(internal_value_) == map_.unit_to_duration(unit.internal_value_);}
+    bool operator>(const Unit& other) const {return get_converter().unit_to_duration(internal_value_) > get_converter().unit_to_duration(other.internal_value_);}
+    bool operator==(const Value value) const {return get_converter().unit_to_duration(internal_value_) == get_converter().unit_to_duration(value);}
+    bool operator==(const Unit& unit) const {return get_converter().unit_to_duration(internal_value_) == get_converter().unit_to_duration(unit.internal_value_);}
     bool operator!=(const Unit& unit) const {return !(*this == unit);}
     bool operator!=(const Value value) const {return !(*this == value);}
 
@@ -177,9 +177,11 @@ private:
 
 
     Value internal_value_;
-    static Map map_;
 public:
-    static Map& get_converter() {return map_;}
+    static Map& get_converter() {
+        static Map map;
+        return map;
+    }
 };
 
 

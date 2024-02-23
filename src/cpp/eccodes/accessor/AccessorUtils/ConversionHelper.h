@@ -22,10 +22,11 @@ std::string fmtString(std::string format, Args... args) {
     // Determine buffer size
     size_t formatSize = snprintf(nullptr, 0, format.c_str(), args...);
 
-    char buf[formatSize];
-    snprintf(buf, formatSize, format.c_str(), args...);
+    std::vector<char> buf(formatSize);
+    //char buf[formatSize];
+    snprintf(buf.data(), formatSize, format.c_str(), args...);
 
-    return std::string(buf);
+    return std::string(buf.data());
 }
 
 // Overload for when the format string doesn't contain any format specifiers, 

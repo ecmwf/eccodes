@@ -96,6 +96,7 @@ int grib_pack_double(grib_accessor* a, const double* v, size_t* len)
             return c->pack_double(a, v, len);
         }
         c = c->super ? *(c->super) : NULL;
+
     }
     DEBUG_ASSERT(0);
     return 0;
@@ -414,6 +415,14 @@ int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
 {
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+#ifdef USE_CPP_ACCESSORS
+    if(auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name)); accessorPtr)
+    {
+        long value = accessorPtr->unpack<long>();
+        printf("value=%ld\n", value);
+                    if(value != *v) { Assert(false); }
+    }
+#endif
     while (c) {
         if (c->unpack_long) {
             return c->unpack_long(a, v, len);

@@ -19,14 +19,24 @@ unsigned long gribDecodeUnsignedLong(const AccessorDataBuffer& input, long& bitP
 
 GribStatus gribEncodeUnsignedLong(AccessorDataPointer p, unsigned long val, long& bitPos, long numBits)
 {
-    assert(false); // TODO
-    return GribStatus::NOT_IMPLEMENTED;
+    GribStatus status = GribStatus::SUCCESS;
+
+    if (grib_encode_unsigned_long(p, val, &bitPos, numBits) != GRIB_SUCCESS) {
+        status = GribStatus::ENCODING_ERROR;
+    }
+
+    return status;
 }
 
 GribStatus gribEncodeUnsignedLong(AccessorDataBuffer& p, unsigned long val, long& bitPos, long numBits)
 {
-    assert(false); // TODO
-    return GribStatus::NOT_IMPLEMENTED;
+    GribStatus status = GribStatus::SUCCESS;
+
+    if (grib_encode_unsigned_long(p.data(), val, &bitPos, numBits) != GRIB_SUCCESS) {
+        status = GribStatus::ENCODING_ERROR;
+    }
+
+    return status;
 }
 
 GribStatus gribEncodeUnsignedLongb(AccessorDataPointer p, unsigned long val, long& bitPos, long nnumBitsb)

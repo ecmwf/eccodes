@@ -143,7 +143,7 @@ GribStatus gribGetString(AccessorName const& name, std::string& value)
     grib_accessor* a = get_grib_accessor(name);
     Assert(a);
     size_t len{512};
-    char buffer[len] = {0,};
+    char buffer[512] = {0, };
     int ret = grib_get_string_internal(grib_handle_of_accessor(a), name.get().c_str(), buffer, &len);
     value = buffer;
     return GribStatus{ret};
