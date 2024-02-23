@@ -85,21 +85,21 @@ static void init_class(grib_iterator_class* c)
 #define EPSILON 1.0e-10
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846 /* Whole pie */
+#define M_PI 3.14159265358979323846 // Whole pie
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923 /* Half a pie */
+#define M_PI_2 1.57079632679489661923 // Half a pie
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4 0.78539816339744830962 /* Quarter of a pie */
+#define M_PI_4 0.78539816339744830962 // Quarter of a pie
 #endif
 
-#define RAD2DEG 57.29577951308232087684 /* 180 over pi */
-#define DEG2RAD 0.01745329251994329576  /* pi over 180 */
+#define RAD2DEG 57.29577951308232087684 // 180 over pi
+#define DEG2RAD 0.01745329251994329576  // pi over 180
 
-/* Adjust longitude (in radians) to range -180 to 180 */
+// Adjust longitude (in radians) to range -180 to 180
 static double adjust_lon_radians(double lon)
 {
     if (lon > M_PI)  lon -= 2 * M_PI;
@@ -107,16 +107,15 @@ static double adjust_lon_radians(double lon)
     return lon;
 }
 
-/* Function to compute the latitude angle, phi2, for the inverse
- * From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
- * Equation (7-9) involves rapidly converging iteration: Calculate t from (15-11)
- * Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7-9),
- * calculate phi on the left side. Substitute the calculated phi) into the right side,
- * calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
- */
+// Function to compute the latitude angle, phi2, for the inverse
+// From the book "Map Projections-A Working Manual-John P. Snyder (1987)"
+// Equation (7-9) involves rapidly converging iteration: Calculate t from (15-11)
+// Then, assuming an initial trial phi equal to (pi/2 - 2*arctan t) in the right side of equation (7-9),
+// calculate phi on the left side. Substitute the calculated phi) into the right side,
+// calculate a new phi, etc., until phi does not change significantly from the preceding trial value of phi
 static double compute_phi(
-    double eccent, /* Spheroid eccentricity */
-    double ts,     /* Constant value t */
+    double eccent, // Spheroid eccentricity
+    double ts,     // Constant value t
     int* error)
 {
     double eccnth, phi, con, dphi, sinpi;
@@ -136,19 +135,19 @@ static double compute_phi(
     return 0;
 }
 
-/* Compute the constant small m which is the radius of
-   a parallel of latitude, phi, divided by the semimajor axis */
+// Compute the constant small m which is the radius of
+// a parallel of latitude, phi, divided by the semimajor axis
 static double compute_m(double eccent, double sinphi, double cosphi)
 {
     const double con = eccent * sinphi;
     return ((cosphi / (sqrt(1.0 - con * con))));
 }
 
-/* Compute the constant small t for use in the forward computations */
+// Compute the constant small t for use in the forward computations
 static double compute_t(
-    double eccent, /* Eccentricity of the spheroid */
-    double phi,    /* Latitude phi */
-    double sinphi) /* Sine of the latitude */
+    double eccent, // Eccentricity of the spheroid
+    double phi,    // Latitude phi
+    double sinphi) // Sine of the latitude
 {
     double con = eccent * sinphi;
     double com = 0.5 * eccent;
@@ -162,7 +161,34 @@ static double calculate_eccentricity(double minor, double major)
     return sqrt(1.0 - temp * temp);
 }
 
-static int init_sphere(grib_handle* h,
+static void xy2lonlat(double radius, double n, double f, double rho0_bare, double LoVInRadians,
+                    double x, double y,
+                    double* lonDeg, double* latDeg)
+{
+    DEBUG_ASSERT(radius > 0);
+    DEBUG_ASSERT(n != 0.0);
+    x /= radius;
+    y /= radius;
+    y = rho0_bare - y;
+    double rho = hypot(x, y);
+    if (rho != 0.0) {
+        if (n < 0.0) {
+            rho = -rho;
+            x = -x;
+            y = -y;
+        }
+        double latRadians = 2. * atan(pow(f / rho, 1.0/n)) - M_PI_2;
+        double lonRadians = atan2(x, y) / n;
+        *lonDeg = (lonRadians + LoVInRadians) * RAD2DEG;
+        *latDeg = latRadians * RAD2DEG;
+    }
+    else {
+        *lonDeg = 0.0;
+        *latDeg = (n > 0.0 ? M_PI_2 : -M_PI_2) * RAD2DEG;
+    }
+}
+
+static int init_sphere(const grib_handle* h,
                        grib_iterator_lambert_conformal* self,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
@@ -171,9 +197,7 @@ static int init_sphere(grib_handle* h,
                        double LoVInRadians, double Latin1InRadians, double Latin2InRadians,
                        double LaDInRadians)
 {
-    int i, j;
-    double f, n, rho, rho0, angle, x0, y0, x, y, tmp, tmp2;
-    double latDeg, lonDeg, lonDiff;
+    double n, x, y;
 
     if (fabs(Latin1InRadians - Latin2InRadians) < 1E-09) {
         n = sin(Latin1InRadians);
@@ -182,26 +206,25 @@ static int init_sphere(grib_handle* h,
             log(tan(M_PI_4 + Latin2InRadians / 2.0) / tan(M_PI_4 + Latin1InRadians / 2.0));
     }
 
-    f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
-    rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
-    rho0 = radius * f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
-    if (n < 0) /* adjustment for southern hemisphere */
-        rho0 = -rho0;
-    lonDiff = lonFirstInRadians - LoVInRadians;
+    double f    = (cos(Latin1InRadians) * pow(tan(M_PI_4 + Latin1InRadians / 2.0), n)) / n;
+    double rho  = radius * f * pow(tan(M_PI_4 + latFirstInRadians / 2.0), -n);
+    double rho0_bare = f * pow(tan(M_PI_4 + LaDInRadians / 2.0), -n);
+    double rho0 = radius * rho0_bare; // scaled
+    double lonDiff = lonFirstInRadians - LoVInRadians;
 
-    /* Adjust longitude to range -180 to 180 */
+    // Adjust longitude to range -180 to 180
     if (lonDiff > M_PI)
         lonDiff -= 2 * M_PI;
     if (lonDiff < -M_PI)
         lonDiff += 2 * M_PI;
-    angle = n * lonDiff;
-    x0    = rho * sin(angle);
-    y0    = rho0 - rho * cos(angle);
-    /*Dx = iScansNegatively == 0 ? Dx : -Dx;*/
-    /* GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint */
-    /*Dy = jScansPositively == 1 ? Dy : -Dy;*/
+    double angle = n * lonDiff;
+    double x0    = rho * sin(angle);
+    double y0    = rho0 - rho * cos(angle);
+    // Dx = iScansNegatively == 0 ? Dx : -Dx;
+    // GRIB-405: Don't change sign of Dy. Latitudes ALWAYS increase from latitudeOfFirstGridPoint
+    // Dy = jScansPositively == 1 ? Dy : -Dy;
 
-    /* Allocate latitude and longitude arrays */
+    // Allocate latitude and longitude arrays
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
@@ -213,20 +236,32 @@ static int init_sphere(grib_handle* h,
         return GRIB_OUT_OF_MEMORY;
     }
 
-    /* Populate our arrays */
+    double latDeg = 0, lonDeg = 0;
+    for (long j = 0; j < ny; j++) {
+        y = y0 + j * Dy;
+        for (long i = 0; i < nx; i++) {
+            const long index = i + j * nx;
+            x = x0 + i * Dx;
+            xy2lonlat(radius, n, f, rho0_bare, LoVInRadians, x, y, &lonDeg, &latDeg);
+            self->lons[index] = lonDeg;
+            self->lats[index] = latDeg;
+        }
+    }
+
+#if 0
     for (j = 0; j < ny; j++) {
         y = y0 + j * Dy;
-        if (n < 0) { /* adjustment for southern hemisphere */
-            y = -y;
-        }
+        //if (n < 0) { /* adjustment for southern hemisphere */
+        //    y = -y;
+        //}
         tmp  = rho0 - y;
         tmp2 = tmp * tmp;
         for (i = 0; i < nx; i++) {
             int index = i + j * nx;
-            x         = x0 + i * Dx;
-            if (n < 0) { /* adjustment for southern hemisphere */
-                x = -x;
-            }
+            x = x0 + i * Dx;
+            //if (n < 0) { /* adjustment for southern hemisphere */
+            //    x = -x;
+            //}
             angle = atan2(x, tmp); /* See ECC-524 */
             rho   = sqrt(x * x + tmp2);
             if (n <= 0) rho = -rho;
@@ -237,12 +272,12 @@ static int init_sphere(grib_handle* h,
             self->lats[index] = latDeg;
         }
     }
-
+#endif
     return GRIB_SUCCESS;
 }
 
-/* Oblate spheroid */
-static int init_oblate(grib_handle* h,
+// Oblate spheroid
+static int init_oblate(const grib_handle* h,
                        grib_iterator_lambert_conformal* self,
                        size_t nv, long nx, long ny,
                        double LoVInDegrees,
@@ -254,20 +289,20 @@ static int init_oblate(grib_handle* h,
 {
     int i, j, err = 0;
     double x0, y0, x, y, latRad, lonRad, latDeg, lonDeg, sinphi, ts, rh1, theta;
-    double false_easting;  /* x offset in meters */
-    double false_northing; /* y offset in meters */
+    double false_easting;  // x offset in meters
+    double false_northing; // y offset in meters
 
-    double ns;     /* ratio of angle between meridian */
-    double F;      /* flattening of ellipsoid */
-    double rh;     /* height above ellipsoid  */
-    double sin_po; /* sin value */
-    double cos_po; /* cos value */
-    double con;    /* temporary variable */
-    double ms1;    /* small m 1 */
-    double ms2;    /* small m 2 */
-    double ts0;    /* small t 0 */
-    double ts1;    /* small t 1 */
-    double ts2;    /* small t 2 */
+    double ns;     // ratio of angle between meridian
+    double F;      // flattening of ellipsoid
+    double rh;     // height above ellipsoid 
+    double sin_po; // sin value
+    double cos_po; // cos value
+    double con;    // temporary variable
+    double ms1;    // small m 1
+    double ms2;    // small m 2
+    double ts0;    // small t 0
+    double ts1;    // small t 1
+    double ts2;    // small t 2
 
     double e = calculate_eccentricity(earthMinorAxisInMetres, earthMajorAxisInMetres);
 
@@ -292,7 +327,7 @@ static int init_oblate(grib_handle* h,
     F = ms1 / (ns * pow(ts1, ns));
     rh = earthMajorAxisInMetres * F * pow(ts0, ns);
 
-    /* Forward projection: convert lat,lon to x,y */
+    // Forward projection: convert lat,lon to x,y
     con = fabs(fabs(latFirstInRadians) - M_PI_2);
     if (con > EPSILON) {
         sinphi = sin(latFirstInRadians);
@@ -312,7 +347,7 @@ static int init_oblate(grib_handle* h,
     x0    = -x0;
     y0    = -y0;
 
-    /* Allocate latitude and longitude arrays */
+    // Allocate latitude and longitude arrays
     self->lats = (double*)grib_context_malloc(h->context, nv * sizeof(double));
     if (!self->lats) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Error allocating %zu bytes", ITER, nv * sizeof(double));
@@ -324,7 +359,7 @@ static int init_oblate(grib_handle* h,
         return GRIB_OUT_OF_MEMORY;
     }
 
-    /* Populate our arrays */
+    // Populate our arrays
     false_easting  = x0;
     false_northing = y0;
     for (j = 0; j < ny; j++) {
@@ -333,7 +368,7 @@ static int init_oblate(grib_handle* h,
             const int index = i + j * nx;
             double _x, _y;
             x = i * Dx;
-            /* Inverse projection to convert from x,y to lat,lon */
+            // Inverse projection to convert from x,y to lat,lon
             _x = x - false_easting;
             _y = rh - y + false_northing;
             rh1 = sqrt(_x * _x + _y * _y);
@@ -363,7 +398,7 @@ static int init_oblate(grib_handle* h,
             if (i == 0 && j == 0) {
                 DEBUG_ASSERT(fabs(latFirstInRadians - latRad) <= EPSILON);
             }
-            latDeg = latRad * RAD2DEG;  /* Convert to degrees */
+            latDeg = latRad * RAD2DEG;  // Convert to degrees
             lonDeg = normalise_longitude_in_degrees(lonRad * RAD2DEG);
             self->lons[index] = lonDeg;
             self->lats[index] = latDeg;
@@ -393,7 +428,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* sLatin2InDegrees   = grib_arguments_get_name(h, args, self->carg++);
     const char* slatFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
     const char* slonFirstInDegrees = grib_arguments_get_name(h, args, self->carg++);
-    /* Dx and Dy are in Metres */
+    // Dx and Dy are in Metres
     const char* sDx                     = grib_arguments_get_name(h, args, self->carg++);
     const char* sDy                     = grib_arguments_get_name(h, args, self->carg++);
     const char* siScansNegatively       = grib_arguments_get_name(h, args, self->carg++);
@@ -443,16 +478,16 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     if ((err = grib_get_long_internal(h, salternativeRowScanning, &alternativeRowScanning)) != GRIB_SUCCESS)
         return err;
 
-    /* Standard Parallels cannot be equal and on opposite sides of the equator */
+    // Standard Parallels cannot be equal and on opposite sides of the equator
     if (fabs(Latin1InDegrees + Latin2InDegrees) < EPSILON) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
                          "%s: Cannot have equal latitudes for standard parallels on opposite sides of equator", ITER);
         return GRIB_WRONG_GRID;
     }
 
-    /*
-     * See Wolfram MathWorld: http://mathworld.wolfram.com/LambertConformalConicProjection.html
-     */
+    //
+    // See Wolfram MathWorld: http://mathworld.wolfram.com/LambertConformalConicProjection.html
+    //
     latFirstInRadians = latFirstInDegrees * DEG2RAD;
     lonFirstInRadians = lonFirstInDegrees * DEG2RAD;
     Latin1InRadians   = Latin1InDegrees * DEG2RAD;
@@ -478,7 +513,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     iter->e = -1;
 
-    /* Apply the scanning mode flags which may require data array to be transformed */
+    // Apply the scanning mode flags which may require data array to be transformed
     err = transform_iterator_data(h->context, iter->data,
                                   iScansNegatively, jScansPositively, jPointsAreConsecutive, alternativeRowScanning,
                                   iter->nv, nx, ny);
