@@ -18,6 +18,7 @@
 #include "AccessorStore.h"
 
 #include <iostream>
+#include <cassert>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -310,19 +311,17 @@ int grib_unpack_string(grib_accessor* a, char* v, size_t* len)
 {
     grib_accessor_class* c = a->cclass;
     /* grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (string)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
+    auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name));
     while (c) {
         if (c->unpack_string) {
-#ifdef USE_CPP_ACCESSORS
-            int ret = c->unpack_string(a, v, len);
-            if(auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name)); accessorPtr)
-            {
+            if (accessorPtr) {
                 std::string value = accessorPtr->unpack<std::string>();
-                if(value != std::string(v, *len)) { Assert(false); }
+                strncpy(v, value.c_str(), *len);
+                return GRIB_SUCCESS;
             }
-            return ret;
-#else
-            return c->unpack_string(a, v, len);
-#endif
+            else {
+                return c->unpack_string(a, v, len);
+            }
         }
         c = c->super ? *(c->super) : NULL;
     }
@@ -415,20 +414,22 @@ int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
 {
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
-#ifdef USE_CPP_ACCESSORS
-    if(auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name)); accessorPtr)
-    {
-        long value = accessorPtr->unpack<long>();
-        printf("value=%ld\n", value);
-                    if(value != *v) { Assert(false); }
-    }
-#endif
+
+    auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name));
+
     while (c) {
         if (c->unpack_long) {
-            return c->unpack_long(a, v, len);
+            int ret = c->unpack_long(a, v, len);
+            if (accessorPtr) {
+                long cxx_value = accessorPtr->unpack<long>();
+                std::cout << "*v != cxx_value: " << *v << " " << cxx_value << std::endl;
+                assert(*v == cxx_value);
+            }
+            return ret;
         }
         c = c->super ? *(c->super) : NULL;
     }
+
     DEBUG_ASSERT(0);
     return 0;
 }
