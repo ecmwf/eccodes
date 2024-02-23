@@ -18,6 +18,9 @@ class CodeInfo:
         self._function_calls = [] # List all function calls made whilst converting (for post-processing)
         self._non_const_member_function_names = [] # default to const unless told otherwise!
 
+        # A place to add any specific data, usually as "identifier", data pairs
+        self._custom_data = {}
+
     @property
     def file_name(self):
         return self._file_name
@@ -86,3 +89,10 @@ class CodeInfo:
     def add_non_const_member_function_name(self, name):
         if name not in self._non_const_member_function_names:
             self._non_const_member_function_names.append(name)
+
+    @property
+    def custom_data(self):
+        return self._custom_data
+    
+    def add_custom_data(self, identifier, data):
+        self._custom_data[identifier] = data

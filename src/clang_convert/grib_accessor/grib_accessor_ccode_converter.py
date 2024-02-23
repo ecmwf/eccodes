@@ -76,6 +76,10 @@ class GribAccessorCCodeConverter(default_ccode_converter.DefaultCCodeConverter):
         info.add_namespace("eccodes")
         info.add_namespace("accessor")
 
+        factory_name = self._ccode.class_name.replace(prefix, "")
+        info.add_custom_data("factory_name", factory_name)
+        debug.line("create_code_info", f"Set factory_name=[{factory_name}]")
+
         return info
 
     def function_specific_conversion_pack_updates(self, cfunction_name, conv_pack):
