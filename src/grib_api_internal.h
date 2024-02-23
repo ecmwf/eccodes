@@ -1086,7 +1086,6 @@ struct grib_expression_class
     size_t size;
     int inited;
 
-    expression_class_init_proc init_class;
     expression_init_proc init;
     expression_destroy_proc destroy;
 

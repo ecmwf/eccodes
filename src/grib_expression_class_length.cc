@@ -41,20 +41,14 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-static string get_name(grib_expression* e);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
-static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static string  get_name(grib_expression* e);
+static int     native_type(grib_expression*,grib_handle*);
+static int     evaluate_long(grib_expression*,grib_handle*,long*);
+static int     evaluate_double(grib_expression*,grib_handle*,double*);
+static string  evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
 
 typedef struct grib_expression_length{
   grib_expression base;
@@ -70,7 +64,6 @@ static grib_expression_class _grib_expression_class_length = {
     "length",                    /* name                      */
     sizeof(grib_expression_length),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -84,10 +77,6 @@ static grib_expression_class _grib_expression_class_length = {
 
 grib_expression_class* grib_expression_class_length = &_grib_expression_class_length;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 static const char* get_name(grib_expression* g)
