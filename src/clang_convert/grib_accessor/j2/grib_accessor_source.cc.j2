@@ -22,4 +22,8 @@ namespace {{ c.nested_namespaces }} {
 {{ func.as_string() }}
 {% endfor %}
 
+namespace {
+AccessorBuilder<{{ c.class_name }}> {{ c.class_name_camel_case }}Builder(AccessorType("{{ c.custom_data["factory_name"] }}"));
+}
+
 } // namespace {{ c.nested_namespaces }}

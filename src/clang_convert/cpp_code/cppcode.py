@@ -28,6 +28,10 @@ class CppCode:
         return self._code_info.class_name
 
     @property
+    def class_name_camel_case(self):
+        return self.class_name[0].lower() + self.class_name[1:]
+
+    @property
     def super_class_name(self):
         return self._code_info.super_class_name
 
@@ -51,6 +55,10 @@ class CppCode:
     def source_file_includes(self):
         return self._code_info.source_includes
 
+    @property
+    def custom_data(self):
+        return self._code_info.custom_data
+    
     # ============================== CodeInfo properties: end   ==============================
 
     # ============================== CodeElements properties: start ==============================
