@@ -1379,8 +1379,6 @@ long grib_op_eq(long a, long b);
 long grib_op_ne(long a, long b);
 long grib_op_lt(long a, long b);
 long grib_op_gt(long a, long b);
-long grib_op_and(long a, long b);
-long grib_op_or(long a, long b);
 long grib_op_ge(long a, long b);
 long grib_op_le(long a, long b);
 long grib_op_bit(long a, long b);

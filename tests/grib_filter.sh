@@ -491,6 +491,15 @@ echo 'set endStep = 12; write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
 grib_check_key_equals $tempGrib step 12
 grib_check_key_equals $tempGrib forecastTime 12
 
+# Functions: grib_op_ne_d
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+cat >$tempFilt <<EOF
+  assert( referenceValue != 99 );
+  if (referenceValue != 9) { print "it is different"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $input
+
 
 # Bad filter
 # ----------------
