@@ -37,7 +37,7 @@ static grib_handle* test0()
     // packing_spec.accuracy = GRIB_UTIL_ACCURACY_USE_PROVIDED_BITS_PER_VALUES;
     // packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
 
-    grib_handle* finalh = grib_util_set_spec(
+    grib_handle* finalh = codes_grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
     Assert(err == 0);

@@ -41,12 +41,23 @@ static void check_float_representation(const double val, const double expected, 
     compare_doubles(out, expected, tolerance);
 }
 
+static void test_get_package_name()
+{
+    printf("Running %s ...\n", __func__);
+
+    const char* pn = codes_get_package_name();
+    Assert(pn != NULL);
+    Assert(strlen(pn) > 1);
+    printf("Package name = %s\n", pn);
+}
+
 static void test_get_git_sha1()
 {
     printf("Running %s ...\n", __func__);
 
-    const char* sha1 = grib_get_git_sha1();
+    const char* sha1 = codes_get_git_sha1();
     Assert(sha1 != NULL);
+    printf("Git SHA1 = %s\n", sha1);
 }
 
 static void test_get_build_date()
@@ -650,7 +661,7 @@ void test_codes_get_product_name()
 void test_codes_get_type_name()
 {
     printf("Running %s ...\n", __func__);
-    Assert( STR_EQUAL("long",    grib_get_type_name(GRIB_TYPE_LONG)) );
+    Assert( STR_EQUAL("long",    codes_get_type_name(GRIB_TYPE_LONG)) );
     Assert( STR_EQUAL("string",  grib_get_type_name(GRIB_TYPE_STRING)) );
     Assert( STR_EQUAL("double",  grib_get_type_name(GRIB_TYPE_DOUBLE)) );
     Assert( STR_EQUAL("bytes",   grib_get_type_name(GRIB_TYPE_BYTES)) );
@@ -728,6 +739,7 @@ int main(int argc, char** argv)
     test_parse_keyval_string();
 
     test_get_git_sha1();
+    test_get_package_name();
     test_get_build_date();
     test_gribex_mode();
     test_gts_header_mode();
