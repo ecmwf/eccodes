@@ -458,7 +458,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
      * if (size==0) return;
      * value=(char*)grib_context_malloc_clear(a->context,size);
      * if (!value) {
-     *   grib_context_log(a->context,GRIB_LOG_ERROR,"unable to allocate %d bytes",(int)size);
+     *   grib_context_log(a->context,GRIB_LOG_ERROR,"Unable to allocate %zu bytes",size);
      *   return;
      * }
     */

@@ -242,17 +242,13 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
 
     next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     if (!next) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_index_key));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_index_key));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_string_list));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -1908,7 +1904,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
                                                                       sizeof(grib_field_list));
         if (!index->fieldset) {
             grib_context_log(index->context, GRIB_LOG_ERROR,
-                             "unable to allocate %lu bytes", sizeof(grib_field_list));
+                             "Unable to allocate %zu bytes", sizeof(grib_field_list));
             return NULL;
         }
         index->current = index->fieldset;
