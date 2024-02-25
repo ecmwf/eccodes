@@ -656,6 +656,7 @@ void test_codes_get_product_name()
     Assert( STR_EQUAL("BUFR",  codes_get_product_name(PRODUCT_BUFR)) );
     Assert( STR_EQUAL("GTS",   codes_get_product_name(PRODUCT_GTS)) );
     Assert( STR_EQUAL("METAR", codes_get_product_name(PRODUCT_METAR)) );
+    Assert( STR_EQUAL("TAF",   codes_get_product_name(PRODUCT_TAF)) );
 }
 
 void test_codes_get_type_name()
