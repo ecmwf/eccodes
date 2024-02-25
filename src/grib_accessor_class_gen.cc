@@ -455,16 +455,14 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
     grib_context* c = a->context;
     if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
-        int i = 0, ret = 0;
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
-            grib_context_log(c, GRIB_LOG_ERROR,
-                             "Unable to allocate %zu bytes", *len * (sizeof(double)));
+            grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
-        for (i = 0; i < *len; i++)
-            val[i] = (long)v[i];
-        ret = grib_pack_double(a, val, len);
+        for (size_t i = 0; i < *len; i++)
+            val[i] = v[i];
+        int ret = grib_pack_double(a, val, len);
         grib_context_free(c, val);
         return ret;
     }
