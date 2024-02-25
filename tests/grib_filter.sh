@@ -206,10 +206,14 @@ ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB1.tmpl $ECCODES_SAM
 
 cat >$tempFilt <<EOF
 switch (packingType) {
-  case "grid_simple": print "simple";
-  case "grid_ccsds":  print "ccsds";
+  case "grid_simple":      print "simple";
+  case "grid_ccsds":       print "ccsds";
   case "spectral_complex": print "spectral";
   default: print "[file]: what is this?"; assert(0);
+}
+switch (referenceValue) {
+  case 42.0: print "42.0";
+  default: print "default case";
 }
 EOF
 ${tools_dir}/grib_filter $tempFilt $data_dir/sample.grib2 ${data_dir}/ccsds.grib2 $data_dir/spherical_model_level.grib2
