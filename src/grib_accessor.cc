@@ -162,6 +162,14 @@ int grib_pack_long(grib_accessor* a, const long* v, size_t* len)
 {
     grib_accessor_class* c = a->cclass;
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (long) %d",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0); */
+
+    auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name));
+    if (accessorPtr) {
+        const std::vector<long> values{*v};
+        if (accessorPtr->pack(values) == eccodes::accessor::GribStatus::SUCCESS)
+            return GRIB_SUCCESS;
+    }
+
     while (c) {
         if (c->pack_long) {
             return c->pack_long(a, v, len);
@@ -416,15 +424,15 @@ int grib_unpack_long(grib_accessor* a, long* v, size_t* len)
     /*grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is unpacking (long)",(a->parent->owner)?(a->parent->owner->name):"root", a->name ); */
 
     auto accessorPtr = eccodes::accessor::get(eccodes::accessor::AccessorName(a->name));
+    if (accessorPtr) {
+        *v = accessorPtr->unpack<long>();
+        *len = 1;
+        return GRIB_SUCCESS;
+    }
 
     while (c) {
         if (c->unpack_long) {
             int ret = c->unpack_long(a, v, len);
-            if (accessorPtr) {
-                long cxx_value = accessorPtr->unpack<long>();
-                std::cout << "*v != cxx_value: " << *v << " " << cxx_value << std::endl;
-                assert(*v == cxx_value);
-            }
             return ret;
         }
         c = c->super ? *(c->super) : NULL;

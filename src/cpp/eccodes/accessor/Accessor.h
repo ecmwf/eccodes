@@ -55,7 +55,7 @@ public:
     std::vector<double> unpackSubArray(std::size_t start) const;
 
 private:
-    AccessorDataPtr data_{};
+    AccessorDataPtr data_ = nullptr;
     AccessorName name_;
     AccessorNameSpace nameSpace_;
     std::vector<AccessorName> allNames_{};
@@ -116,4 +116,4 @@ std::vector<T> Accessor::unpackElementSet(std::vector<std::size_t> const& indexA
     return data_->unpackElementSet(indexArray, valArray) ? valArray : std::vector<T>{};
 }
 
-}
+} // namespace eccodes::accessor

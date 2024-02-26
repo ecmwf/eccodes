@@ -9,7 +9,7 @@ struct grib_accessor;
 
 namespace eccodes::accessor {
 
-using AccessorEntry = std::pair<eccodes::accessor::AccessorName, eccodes::accessor::AccessorPtr>;
+using AccessorEntry = std::pair<AccessorName, AccessorPtr>;
 
 class AccessorStore {
     std::vector<AccessorEntry> store_{};

@@ -10,6 +10,10 @@ namespace eccodes::accessor {
 
 AccessorData::AccessorData(AccessorInitData const& initData)
 {
+    buffer_ = initData.buffer;
+    length_ = initData.length;
+    offset_ = initData.offset;
+    flags_ = initData.flags;
     // TO DO - FULL INIT()
 }
 

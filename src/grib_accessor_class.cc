@@ -18,8 +18,8 @@
 #include "grib_accessor_class.h"
 
 // C++ Support
-#include "cpp/eccodes/accessor/AccessorFactory.h"
-#include "cpp/eccodes/accessor/AccessorStore.h"
+#include "AccessorFactory.h"
+#include "AccessorStore.h"
 
 #include <iostream>
 #include <cassert>
@@ -141,24 +141,6 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     grib_accessor* a       = NULL;
     size_t size            = 0;
 
-    // C++ Accessors
-#ifdef USE_CPP_ACCESSORS
-    using namespace eccodes::accessor;
-    auto accessorType = AccessorType(creator->op);
-    if (strcmp(creator->op, "unsigned") == 0) {
-        std::cerr << "unsigned accessor" << std::endl;
-    }
-
-    if (auto& factory = AccessorFactory::instance(); factory.has(accessorType))
-    {
-        auto accessorName = AccessorName(creator->name);
-        auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
-        auto initData = makeInitData(p, len, params);
-        auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
-        Assert(accessorPtr);
-    }
-#endif // USE_CPP_ACCESSORS
-
 #ifdef ACCESSOR_FACTORY_USE_TRIE
     c = get_class(p->h->context, creator->op);
 #else
@@ -166,14 +148,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     c = *((grib_accessor_classes_hash(creator->op, strlen(creator->op)))->cclass);
 #endif
 
-
-
     a = (grib_accessor*)grib_context_malloc_clear(p->h->context, c->size);
 
-    // C++ - we'll keep a copy of the grib_accessor pointer for any accessors not yet implemented
-#ifdef USE_CPP_ACCESSORS
-    add_grib_accessor(AccessorName(creator->name), a);
-#endif // USE_CPP_ACCESSORS
 
     a->name       = creator->name;
     a->name_space = creator->name_space;
@@ -246,6 +222,30 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
                              "Creating root %s of %s at offset %d [len=%d]",
                              a->name, creator->op, a->offset, len, p->block);
     }
+
+
+
+    // C++ Accessors
+#ifdef USE_CPP_ACCESSORS
+    using namespace eccodes::accessor;
+    auto accessorType = AccessorType(creator->op);
+
+    if (auto& factory = AccessorFactory::instance(); factory.has(accessorType))
+    {
+        //std::cout << "AccessorFactory has " << creator->op << std::endl;
+        //std::cout << "\t - Offset: " << a->offset << " Length: " << a->length << std::endl;
+
+        long section_count = p->h->sections_count;
+        auto accessorName = AccessorName(creator->name);
+        auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
+        auto initData = makeInitData(p, len, params, a, creator, p);
+        auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
+        Assert(accessorPtr);
+    }
+
+    // C++ - we'll keep a copy of the grib_accessor pointer for any accessors not yet implemented
+    add_grib_accessor(AccessorName(creator->name), a);
+#endif // USE_CPP_ACCESSORS
 
     return a;
 }

@@ -7,14 +7,12 @@ namespace eccodes::accessor {
 
 unsigned long gribDecodeUnsignedLong(const AccessorDataPointer input, long& bitPos, long numBits)
 {
-    assert(false); // TODO
-    return 0;
+    return grib_decode_unsigned_long(input, &bitPos, numBits);
 }
 
 unsigned long gribDecodeUnsignedLong(const AccessorDataBuffer& input, long& bitPos, long numBits)
 {
-    assert(false); // TODO
-    return 0;
+    return grib_decode_unsigned_long(input.data(), &bitPos, numBits);
 }
 
 GribStatus gribEncodeUnsignedLong(AccessorDataPointer p, unsigned long val, long& bitPos, long numBits)

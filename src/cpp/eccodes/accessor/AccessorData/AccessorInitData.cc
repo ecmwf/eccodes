@@ -1,12 +1,16 @@
 #include "AccessorInitData.h"
 #include "GribCpp/GribType.h"
-#include "grib_api_internal.h"
+
+#include <iostream>
 
 namespace eccodes::accessor {
 
-AccessorInitData makeInitData(grib_section* section, long len, grib_arguments* args)
+AccessorInitData makeInitData(grib_section* section, long len, grib_arguments* args, grib_accessor* a, grib_action* act, grib_section* s)
 {
     AccessorInitData initData{len};
+    initData.offset = a->offset;
+    initData.flags = a->flags;
+    initData.buffer = AccessorDataView((unsigned char*) s->h->buffer->data, s->h->buffer->length);
 
     grib_arguments* next_arg = args;
 
@@ -51,6 +55,19 @@ AccessorInitData makeInitData(grib_section* section, long len, grib_arguments* a
         }
 
         next_arg = next_arg->next;
+    }
+
+    // print arguments
+    for (auto const& [name, value] : initData.args)
+    {
+        if (std::holds_alternative<long>(value))
+            std::cout << "\t- AccessorInitData: " << name << " = " << std::get<long>(value) << std::endl;
+        else if (std::holds_alternative<double>(value))
+            std::cout << "\t- AccessorInitData: " << name << " = " << std::get<double>(value) << std::endl;
+        else if (std::holds_alternative<std::string>(value))
+            std::cout << "\t- AccessorInitData: " << name << " = " << std::get<std::string>(value) << std::endl;
+        else
+            std::cout << "\t- AccessorInitData: " << name << " = " << "undefined" << std::endl;
     }
 
     return initData;

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "grib_api_internal.h"
-
 #include <type_traits>
 #include <string>
 #include <vector>
 
 // Trait definitions for accessor templates 
+
+struct grib_expression;
 
 namespace eccodes::accessor {
 
@@ -38,4 +38,4 @@ struct isAllowedUnpackType : std::integral_constant<bool,
                                     isAllowedBufferType<T>::value
                                     > {};
 
-}
+} // namespace eccodes::accessor

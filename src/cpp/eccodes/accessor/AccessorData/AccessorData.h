@@ -1,14 +1,14 @@
 #pragma once
 
-#include "AccessorDefs.h"
-#include "AccessorData/AccessorInitData.h"
-#include "AccessorBuffer.h"
-#include "AccessorTraits.h"
-#include "GribCpp/GribType.h"
-#include "GribCpp/GribStatus.h"
-#include "GribStub/GribVirtualValueStub.h"
-#include "GribStub/GribActionStub.h"
-#include "GribStub/GribSectionStub.h"
+#include "../AccessorDefs.h"
+#include "AccessorInitData.h"
+#include "../AccessorBuffer.h"
+#include "../AccessorTraits.h"
+#include "../GribCpp/GribType.h"
+#include "../GribCpp/GribStatus.h"
+#include "../GribStub/GribVirtualValueStub.h"
+#include "../GribStub/GribActionStub.h"
+#include "../GribStub/GribSectionStub.h"
 #include <string>
 #include <memory>
 #include <vector>
@@ -112,12 +112,12 @@ GribStatus AccessorData::unpack(T &value) const
     std::vector<T> values;
     unpack(values);
 
-    if(values.size() == 1) {
+    if (values.size() == 1) {
         value = values[0];
-        return GribStatus::SUCCESS; 
+        return GribStatus::SUCCESS;
     }
 
     return GribStatus::COUNT_MISMATCH;
 }
 
-}
+} // namespace eccodes::accessor
