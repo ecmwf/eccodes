@@ -839,7 +839,6 @@ void grib_context_reset(grib_context* c)
 
 void grib_context_delete(grib_context* c)
 {
-    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -851,7 +850,7 @@ void grib_context_delete(grib_context* c)
     if (c != &default_grib_context)
         grib_context_free_persistent(&default_grib_context, c);
 
-    for(i=0; i<MAX_NUM_HASH_ARRAY; ++i)
+    for(size_t i=0; i<MAX_NUM_HASH_ARRAY; ++i)
         c->hash_array[i] = NULL;
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);
