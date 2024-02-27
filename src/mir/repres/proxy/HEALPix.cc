@@ -212,7 +212,7 @@ int HEALPix::Reorder::nest_to_ring(int n) const {
 HEALPix::HEALPix(size_t Nside, const std::string& orderingConvention) :
     Nside_(Nside), orderingConvention_(orderingConvention) {
     ASSERT(Nside_ > 0);
-    ASSERT(orderingConvention_ == "ring");
+    ASSERT(orderingConvention_ == "ring" || orderingConvention_ == "nested");
 }
 
 
@@ -220,7 +220,7 @@ HEALPix::HEALPix(const param::MIRParametrisation& param) : Nside_(0), orderingCo
     param.get("Nside", Nside_);
     ASSERT(Nside_ > 0);
     ASSERT(param.get("orderingConvention", orderingConvention_));
-    ASSERT(orderingConvention_ == "ring");
+    ASSERT(orderingConvention_ == "ring" || orderingConvention_ == "nested");
 
     double lon1 = 0.;
     ASSERT(param.get("longitudeOfFirstGridPointInDegrees", lon1));
@@ -232,8 +232,11 @@ HEALPix::~HEALPix() = default;
 
 
 const ::atlas::Grid& HEALPix::atlasGridRef() const {
+    ASSERT(orderingConvention_ == "ring");
+
     if (!grid_) {
         grid_ = atlas::HealpixGrid(Nside_, orderingConvention_);
+        ASSERT(grid_.size() == numberOfPoints());
     }
     return grid_;
 }
@@ -246,7 +249,7 @@ bool HEALPix::sameAs(const Representation& other) const {
 
 
 std::string HEALPix::name() const {
-    return "H" + std::to_string(Nside_);
+    return "H" + std::to_string(Nside_) + (orderingConvention_ == "ring" ? "" : "n");
 }
 
 
@@ -284,12 +287,29 @@ void HEALPix::print(std::ostream& out) const {
 
 
 std::vector<util::GridBox> HEALPix::gridBoxes() const {
+    ASSERT(orderingConvention_ == "ring");
+
     ::atlas::interpolation::method::GridBoxes boxes(atlasGridRef(), false);
     std::vector<util::GridBox> mirBoxes(boxes.size());
     std::transform(boxes.cbegin(), boxes.cend(), mirBoxes.begin(), [](const auto& other) {
         return util::GridBox{other.north(), other.west(), other.south(), other.east()};
     });
     return mirBoxes;
+}
+
+
+size_t HEALPix::numberOfPoints() const {
+    return 12 * Nside_ * Nside_;
+}
+
+
+Iterator* HEALPix::iterator() const {
+    if (orderingConvention_ == "ring") {
+        return ProxyGrid::iterator();
+    }
+
+    ASSERT(orderingConvention_ == "nested");
+    NOTIMP;
 }
 
 

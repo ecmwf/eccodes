@@ -59,9 +59,11 @@ public:
 
     // -- Constructors
 
-    HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
-    HEALPix(const param::MIRParametrisation&);
+    explicit HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
+    explicit HEALPix(const param::MIRParametrisation&);
+
     HEALPix(const HEALPix&) = delete;
+    HEALPix(HEALPix&&)      = delete;
 
     // -- Destructor
 
@@ -73,6 +75,7 @@ public:
     // -- Operators
 
     HEALPix& operator=(const HEALPix&) = delete;
+    HEALPix&& operator=(HEALPix&&)     = delete;
 
     // -- Methods
     // None
@@ -113,6 +116,9 @@ private:
     const ::atlas::Grid& atlasGridRef() const override;
 
     std::vector<util::GridBox> gridBoxes() const override;
+
+    size_t numberOfPoints() const override;
+    Iterator* iterator() const override;
 
     // -- Class members
     // None
