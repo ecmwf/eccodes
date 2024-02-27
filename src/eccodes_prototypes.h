@@ -655,7 +655,6 @@ void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags);
 char* grib_get_field_file(grib_index* index, off_t* offset);
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
-void grib_index_rewind(grib_index* index);
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
 int codes_index_set_unpack_bufr(grib_index* index, int unpack);
 int is_index_file(const char* filename);
