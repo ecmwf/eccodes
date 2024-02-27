@@ -1,5 +1,7 @@
 #pragma once
 
+#undef UNDERFLOW
+
 namespace eccodes::accessor {
 
 enum class GribStatus{

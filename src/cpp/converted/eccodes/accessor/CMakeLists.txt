@@ -15,8 +15,8 @@ set(converted_accessor_data_dir	${CMAKE_CURRENT_LIST_DIR})
 # Note the PARENT_SCOPE option sets the variable in the calling CMakeLists.txt
 # file - it remains undefined in this file: https://cmake.org/cmake/help/latest/command/set.html
 set(converted_accessor_data_src_files
-    ${converted_accessor_data_dir}/CodeflagData.cc
-    ${converted_accessor_data_dir}/CodeflagData.h
+    #${converted_accessor_data_dir}/CodeflagData.cc
+    #${converted_accessor_data_dir}/CodeflagData.h
     ${converted_accessor_data_dir}/UnsignedData.cc
     ${converted_accessor_data_dir}/UnsignedData.h
     ${converted_accessor_data_dir}/LongData.cc
