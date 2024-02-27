@@ -8,4 +8,9 @@ bool GribStatusSuccess(GribStatus stat)
     return stat == GribStatus::SUCCESS; 
 }
 
+bool GribStatusError(GribStatus stat) 
+{ 
+    return stat != GribStatus::SUCCESS; 
+}
+
 }

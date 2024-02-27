@@ -168,7 +168,15 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             updated_cppfunction_call = function_call.FunctionCall("copyBuffer", updated_args)
             debug.line("apply_special_function_call_conversions", f"Updated memcpy: [{debug.as_debug_string(cppfunction_call)}]->[{debug.as_debug_string(updated_cppfunction_call)}]")
             return  updated_cppfunction_call
-            
+
+        # Convert from: snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs", ...);
+        #         to  : result = fmtString("+proj=longlat +datum=WGS84 +no_defs +type=crs", ...);
+        if cppfunction_call.name == "snprintf":
+            fmtString_call = function_call.FunctionCall("fmtString", cppfunction_call.args[2:])
+            snprintf_call = binary_operation.BinaryOperation(cppfunction_call.args[0], "=", fmtString_call)
+
+            debug.line("apply_special_function_call_conversions", f"Updated snprintf: [{debug.as_debug_string(cppfunction_call)}]->[{debug.as_debug_string(snprintf_call)}]")
+            return snprintf_call
 
         return None
 
@@ -215,8 +223,8 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             expression_value = cppif_statement.expression.as_string()
             cpparg = self._conversion_data.funcbody_cpparg_for_carg_name(expression_value)
             if cpparg and cpparg != NONE_VALUE and cpparg.decl_spec.type == "GribStatus":
-                updated_expression = literal.Literal(f"GribStatusSuccess({cpparg.name})")
-                updated_cppif_statement = if_statement.IfStatement(updated_expression, cppif_statement.action)
+                updated_expression = literal.Literal(f"GribStatusError({cpparg.name})")
+                updated_cppif_statement = if_statement.IfStatement(updated_expression, cppif_statement.action, cppif_statement.else_statement)
                 debug.line("validate_if_statement", f"updated_cppif_statement=[{debug.as_debug_string(updated_cppif_statement)}]")
                 return updated_cppif_statement
 
@@ -306,7 +314,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
                     if cppcode_object.unary_op.value == "!":
                         updated_expression = literal.Literal(f"GribStatusSuccess({cpparg.name})")
                     else:
-                        updated_expression = literal.Literal(f"!GribStatusSuccess({cpparg.name})")
+                        updated_expression = literal.Literal(f"GribStatusError({cpparg.name})")
 
                     debug.line("apply_special_unary_operation_conversion", f"Updating GribStatus error: [{debug.as_debug_string(cppcode_object)}]->[{debug.as_debug_string(updated_expression)}]")
                     return updated_expression
@@ -315,7 +323,7 @@ class GribAccessorConversionValidation(default_conversion_validation.DefaultConv
             cppfuncsig = self._conversion_data.cppfuncsig_for_cppfuncname(cppcode_object.name)
             if cppfuncsig:
                 if cppfuncsig.return_type.type == "GribStatus":
-                    updated_cppcode_object = literal.Literal(f"GribStatusSuccess({cppcode_object.as_string()})")
+                    updated_cppcode_object = literal.Literal(f"GribStatusError({cppcode_object.as_string()})")
                     return updated_cppcode_object
 
         return super().try_to_make_boolean(cppcode_object)

@@ -13,6 +13,7 @@ import code_object.variable_declaration as variable_declaration
 import code_object.paren_expression as paren_expression
 import code_object.array_access as array_access
 import code_object.if_statement as if_statement
+import code_object.struct_member_access as struct_member_access
 from code_object_converter.conversion_utils import as_commented_out_code
 from utils.string_funcs import is_number
 import code_object.cast_expression as cast_expression
@@ -205,10 +206,15 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                             # We are assigning a container value to a pointer arg, so need to call .data()
                             cppright = literal.Literal(f"{right_cpparg.name}.data()")
                             return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
+                        
                         if not left_cpparg.decl_spec.pointer:
-                            # We are assigning a container value to a basic variable, so use index 0
-                            cppright = array_access.ArrayAccess(literal.Literal(right_cpparg.name), literal.Literal("0"))
-                            return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
+                            if isinstance(cppright, array_access.ArrayAccess) or \
+                            isinstance(cppright, struct_member_access.StructMemberAccess):
+                                debug.line("validate_binary_operation", f"Container assignment check OK, using cppbinary_operation=[{debug.as_debug_string(cppbinary_operation)}]")
+                            else:
+                                # We are assigning a container value to a basic variable, so use index 0
+                                cppright = array_access.ArrayAccess(literal.Literal(right_cpparg.name), literal.Literal("0"))
+                                return binary_operation.BinaryOperation(cppleft, cppbinary_op, cppright)
 
         elif cppbinary_op.is_comparison():
             cpparg = arg_utils.to_cpparg(cppleft, self._conversion_data)
@@ -271,7 +277,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
         value_cpparg = arg_utils.to_cpparg(cppvariable_declaration.value, self._conversion_data)
 
         if variable_cpparg and value_cpparg:
-            debug.line("validate_variable_declaration", f"Container assignment check: variable_cpparg=[{debug.as_debug_string(variable_cpparg)}] value_cpparg=[{debug.as_debug_string(value_cpparg)}] ")
+            debug.line("validate_variable_declaration", f"Container assignment check [1]: variable_cpparg=[{debug.as_debug_string(variable_cpparg)}] value_cpparg=[{debug.as_debug_string(value_cpparg)}]")
             if self._conversion_data.is_container_type(value_cpparg.decl_spec.type) and \
                 not self._conversion_data.is_container_type(variable_cpparg.decl_spec.type):
                 if variable_cpparg.decl_spec.is_raw_pointer():
@@ -279,9 +285,14 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
                     updated_value = literal.Literal(f"{value_cpparg.name}.data()")
                     return variable_declaration.VariableDeclaration(cppvariable, updated_value)
                 if not variable_cpparg.decl_spec.pointer:
-                    # We are assigning a container value to a basic variable, so use index 0
-                    updated_value = array_access.ArrayAccess(literal.Literal(value_cpparg.name), literal.Literal("0"))
-                    return variable_declaration.VariableDeclaration(cppvariable, updated_value)
+                    if isinstance(cppvariable_declaration.value, array_access.ArrayAccess) or \
+                       isinstance(cppvariable_declaration.value, struct_member_access.StructMemberAccess):
+                        pass
+                    else:
+                        # We are assigning a container value to a basic variable, so use index 0
+                        updated_value = array_access.ArrayAccess(literal.Literal(value_cpparg.name), literal.Literal("0"))
+                        debug.line("validate_variable_declaration", f"Container assignment check [2]: updated_value=[{debug.as_debug_string(updated_value)}] because cppvariable_declaration.value type=[{cppvariable_declaration.value}]")
+                        return variable_declaration.VariableDeclaration(cppvariable, updated_value)
 
         return cppvariable_declaration
 
@@ -289,7 +300,7 @@ class DefaultConversionValidation(conversion_validation.ConversionValidation):
 
         cppexpression = self.try_to_make_boolean(cppif_statement.expression)
 
-        return if_statement.IfStatement(cppexpression, cppif_statement.action)
+        return if_statement.IfStatement(cppexpression, cppif_statement.action, cppif_statement.else_statement)
 
 
     # Helper to determine how a container should receive the value returned by the function

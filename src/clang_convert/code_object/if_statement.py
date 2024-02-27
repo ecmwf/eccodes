@@ -10,14 +10,15 @@ from utils.string_funcs import strip_semicolon
 #
 # expression & action can be a string or a code_interface subclass (or None)
 class IfStatement(code_interface.CodeInterface):
-    def __init__(self, expression, action) -> None:
+    def __init__(self, expression, action, else_statement) -> None:
         self._expression = expression
         assert isinstance(self._expression, code_interface.CodeInterface), f"Expression must be a CodeInterface class"
 
         self._action = action
         assert isinstance(self._action, code_interface.CodeInterface), f"Action must be a CodeInterface class"
 
-        self._else = None
+        self._else_statement = else_statement
+        assert self._else_statement is None or isinstance(self._else_statement, code_interface.CodeInterface), f"Else statement must be a CodeInterface class"
 
     @property
     def expression(self):
@@ -29,11 +30,7 @@ class IfStatement(code_interface.CodeInterface):
 
     @property
     def else_statement(self):
-        return self._else
-
-    def add_else(self, else_statement):
-        self._else = else_statement
-        assert isinstance(self._else, code_interface.CodeInterface), f"Else statement must be a CodeInterface class"
+        return self._else_statement
 
     def as_lines(self):
         if_lines = []
@@ -48,8 +45,8 @@ class IfStatement(code_interface.CodeInterface):
         action_lines.extend(self._action.as_lines())
 
         else_lines = []
-        if self._else:
-            else_lines.extend(self._else.as_lines())
+        if self._else_statement:
+            else_lines.extend(self._else_statement.as_lines())
             else_lines[0] = "else " + else_lines[0]
 
         return if_lines + action_lines + else_lines

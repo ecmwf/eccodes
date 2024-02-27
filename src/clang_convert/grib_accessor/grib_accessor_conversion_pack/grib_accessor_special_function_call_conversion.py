@@ -1,6 +1,5 @@
 
 special_function_name_mapping = {
-    "snprintf"                      : "fmtString",
     "strtol"                        : "strToLong",
     "strtod"                        : "strToDouble",
     "atol"                          : "strAtoL",
