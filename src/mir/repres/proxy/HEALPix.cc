@@ -12,12 +12,11 @@
 
 #include "mir/repres/proxy/HEALPix.h"
 
-#include <cmath>
-#include <bitset>
-#include <vector>
 #include <algorithm>
-#include <tuple>
+#include <bitset>
+#include <cmath>
 #include <ostream>
+#include <tuple>
 
 #include "eckit/types/FloatCompare.h"
 
@@ -99,32 +98,20 @@ inline int pll(int f) {
 }
 
 
-class Reorder {
-public:
-    explicit Reorder(int Nside) :
-        Nside_(Nside),
-        Npix_(size()),
-        Ncap_((Nside * (Nside - 1)) << 1),
-        k_(is_power_of_2(Nside_) ? static_cast<int>(std::log2(Nside)) : -1) {
-        ASSERT(0 <= k_);  // (specific to nested ordering)
-        ASSERT(0 < Nside_);
-    }
-
-    int size() const { return 12 * Nside_ * Nside_; }
-    int nside() const { return Nside_; }
-
-    int nest_to_ring(int) const;
-    int ring_to_nest(int) const;
-
-private:
-    const int Nside_;  // up to 2^13
-    const int Npix_;
-    const int Ncap_;
-    const int k_;
-};
+}  // namespace
 
 
-int Reorder::ring_to_nest(int r) const {
+HEALPix::Reorder::Reorder(int Nside) :
+    Nside_(Nside),
+    Npix_(size()),
+    Ncap_((Nside * (Nside - 1)) << 1),
+    k_(is_power_of_2(Nside_) ? static_cast<int>(std::log2(Nside)) : -1) {
+    ASSERT(0 <= k_);  // (specific to nested ordering)
+    ASSERT(0 < Nside_);
+}
+
+
+int HEALPix::Reorder::ring_to_nest(int r) const {
     auto to_nest = [&](int f,      //!< base pixel index
                        int ring,   //!< 1-based ring number
                        int Nring,  //!< number of pixels in ring
@@ -180,7 +167,7 @@ int Reorder::ring_to_nest(int r) const {
 }
 
 
-int Reorder::nest_to_ring(int n) const {
+int HEALPix::Reorder::nest_to_ring(int n) const {
     auto [f, i, j] = CodecFijNest::nest_to_fij(n, k_);
     ASSERT(f < 12 && i < Nside_ && j < Nside_);
 
@@ -220,9 +207,6 @@ int Reorder::nest_to_ring(int n) const {
 
     return r0 + to_ring_local(f, i, j, Nring, 0);
 }
-
-
-}  // namespace
 
 
 HEALPix::HEALPix(size_t Nside, const std::string& orderingConvention) :
