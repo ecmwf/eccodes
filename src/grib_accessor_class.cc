@@ -168,6 +168,7 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     a->flags    = creator->flags;
     a->set      = creator->set;
 
+
     if (p->block->last) {
         a->offset = grib_get_next_position_offset(p->block->last);
 
@@ -185,6 +186,25 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     }
 
     a->cclass = c;
+
+    // C++ Accessors
+#ifdef USE_CPP_ACCESSORS
+    using namespace eccodes::accessor;
+    auto accessorType = AccessorType(creator->op);
+
+    if (auto& factory = AccessorFactory::instance(); factory.has(accessorType))
+    {
+        long section_count = p->h->sections_count;
+        auto accessorName = AccessorName(creator->name);
+        auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
+        auto initData = makeInitData(p, len, params, a, creator, p);
+        auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
+        Assert(accessorPtr);
+    }
+
+    // C++ - we'll keep a copy of the grib_accessor pointer for any accessors not yet implemented
+    //add_grib_accessor(AccessorName(creator->name), a);
+#endif // USE_CPP_ACCESSORS
 
     grib_init_accessor(a, len, params);
     size = grib_get_next_position_offset(a);
@@ -225,27 +245,6 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
 
 
 
-    // C++ Accessors
-#ifdef USE_CPP_ACCESSORS
-    using namespace eccodes::accessor;
-    auto accessorType = AccessorType(creator->op);
-
-    if (auto& factory = AccessorFactory::instance(); factory.has(accessorType))
-    {
-        //std::cout << "AccessorFactory has " << creator->op << std::endl;
-        //std::cout << "\t - Offset: " << a->offset << " Length: " << a->length << std::endl;
-
-        long section_count = p->h->sections_count;
-        auto accessorName = AccessorName(creator->name);
-        auto accessorNameSpace = AccessorNameSpace(creator->name_space ? creator->name_space : "");
-        auto initData = makeInitData(p, len, params, a, creator, p);
-        auto accessorPtr = factory.build(accessorType, accessorName, accessorNameSpace, initData);
-        Assert(accessorPtr);
-    }
-
-    // C++ - we'll keep a copy of the grib_accessor pointer for any accessors not yet implemented
-    add_grib_accessor(AccessorName(creator->name), a);
-#endif // USE_CPP_ACCESSORS
 
     return a;
 }

@@ -35,7 +35,7 @@ AccessorPtr AccessorStore::getAccessor(AccessorName const& name)
       return it->second;
    }
 
-   return {};
+   return nullptr;
 }
 
 bool AccessorStore::destroyAccessor(AccessorName const& name)

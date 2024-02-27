@@ -17,7 +17,6 @@
 #include "Accessor.h"
 #include "AccessorStore.h"
 
-#include <iostream>
 #include <cassert>
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
