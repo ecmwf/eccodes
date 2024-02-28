@@ -54,8 +54,8 @@ Iterator* ProxyGrid::iterator() const {
         decltype(lonlat_)::iterator::value_type p_;
 
         const size_t total_;
-        size_t index_;
-        bool first_;
+        size_t index_{0};
+        bool first_{true};
 
         void print(std::ostream& out) const override {
             out << "AtlasIterator[";
@@ -87,13 +87,8 @@ Iterator* ProxyGrid::iterator() const {
         size_t index() const override { return index_; }
 
     public:
-        AtlasIterator(const ::atlas::Grid& grid) :
-            grid_(grid),
-            lonlat_(grid.lonlat()),
-            it_(lonlat_.begin()),
-            total_(size_t(grid.size())),
-            index_(0),
-            first_(true) {}
+        explicit AtlasIterator(const ::atlas::Grid& grid) :
+            grid_(grid), lonlat_(grid.lonlat()), it_(lonlat_.begin()), total_(static_cast<size_t>(grid.size())) {}
 
         ~AtlasIterator() override = default;
 

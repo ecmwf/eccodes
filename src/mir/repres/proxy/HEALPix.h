@@ -56,20 +56,14 @@ public:
     explicit HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
     explicit HEALPix(const param::MIRParametrisation&);
 
-    HEALPix(const HEALPix&) = delete;
-    HEALPix(HEALPix&&)      = delete;
-
     // -- Destructor
-
-    ~HEALPix() override;
+    // None
 
     // -- Convertors
     // None
 
     // -- Operators
-
-    HEALPix& operator=(const HEALPix&) = delete;
-    HEALPix& operator=(HEALPix&&)      = delete;
+    // None
 
     // -- Methods
 
@@ -108,9 +102,10 @@ private:
 
     void print(std::ostream&) const override;
 
-    const ::atlas::Grid& atlasGridRef() const override;
-
     std::vector<util::GridBox> gridBoxes() const override;
+
+    // from ProxyGrid
+    const ::atlas::Grid& atlasGridRef() const override;
 
     // -- Class members
     // None

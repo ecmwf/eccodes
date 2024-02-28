@@ -228,12 +228,9 @@ HEALPix::HEALPix(const param::MIRParametrisation& param) : Nside_(0), orderingCo
 }
 
 
-HEALPix::~HEALPix() = default;
-
-
 const ::atlas::Grid& HEALPix::atlasGridRef() const {
     if (!grid_) {
-        grid_ = atlas::HealpixGrid(Nside_, orderingConvention_);
+        grid_ = atlas::HealpixGrid(static_cast<int>(Nside_), orderingConvention_);
     }
     return grid_;
 }
