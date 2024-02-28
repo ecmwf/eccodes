@@ -95,6 +95,18 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+# Bad date
+# ---------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s dataDate=20180229 $input $outfile > $temp 2>&1
+cat $temp
+grep -q "Date is not valid" $temp
+
+${tools_dir}/grib_set -s dataTime=4261 $input $outfile > $temp 2>&1
+cat $temp
+grep -q "Time is not valid" $temp
+
+
 # ECC-1359: string that can be converted to an integer
 # ---------------------------------------------------
 ${tools_dir}/grib_set -s month:s=6 $ECCODES_SAMPLES_PATH/GRIB2.tmpl $outfile

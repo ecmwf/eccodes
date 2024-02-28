@@ -126,12 +126,11 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                  = 0;
-    grib_accessor_time* self = (grib_accessor_time*)a;
-    long hour                = 0;
-    long minute              = 0;
-    long second              = 0;
-    grib_handle* hand        = grib_handle_of_accessor(a);
+    const grib_accessor_time* self = (grib_accessor_time*)a;
+
+    int ret = 0;
+    long hour = 0, minute = 0, second = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if ((ret = grib_get_long_internal(hand, self->hour, &hour)) != GRIB_SUCCESS)
         return ret;
@@ -160,54 +159,24 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-// In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
-// and the last minute of the day begins at 23:59.
-// Where convenient, the notation 24:00 may also be used to refer to midnight
-// at the end of a given date — that is, 24:00 of one day is the same time
-// as 00:00 of the following day
-#if 0
-static bool isValidTime(long number)
-{
-    // Check if the number is a four-digit integer
-    if (number < 0 || number > 9999) {
-        return false;
-    }
-
-    // Extract hours and minutes
-    long hours   = number / 100;  // Get the first two digits as hours
-    long minutes = number % 100;  // Get the last two digits as minutes
-
-    // Check if hours are within the valid range (00-23)
-    if (hours < 0 || hours > 24) {
-        return false;
-    }
-
-    // Check if minutes are within the valid range (00-59)
-    if (minutes < 0 || minutes > 59) {
-        return false;
-    }
-
-    // All checks pass
-    return true;
-}
-#endif
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret                  = 0;
-    long v                   = val[0];
-    grib_accessor_time* self = (grib_accessor_time*)a;
-    grib_handle* hand        = grib_handle_of_accessor(a);
-    long hour                = 0;
-    long minute              = 0;
-    long second              = 0;
+    const grib_accessor_time* self = (grib_accessor_time*)a;
+
+    int ret = 0;
+    long v = val[0];
+    grib_handle* hand = grib_handle_of_accessor(a);
+    long hour = 0, minute = 0, second = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    // if (!isValidTime(v)) {
-    //     return GRIB_ENCODING_ERROR;
-    // }
+    if (!is_time_valid(v)) {
+        // ECC-1777: For now just a warning. Will later change to an error
+        fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
+                a->cclass->name, __func__, hour, minute, second);
+        // return GRIB_ENCODING_ERROR;
+    }
 
     hour   = v / 100;
     minute = v % 100;
