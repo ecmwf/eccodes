@@ -221,8 +221,7 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
 // as 00:00 of the following day
 int is_time_valid(long number)
 {
-    // number should be 4 digits i.e., HHMM
-    // Check if the number is a four-digit integer
+    // Number should be 4 digits i.e., HHMM
     if (number < 0 || number > 9999) {
         return 0;
     }

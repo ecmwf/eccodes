@@ -129,14 +129,11 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                    = 0;
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    long year    = 0;
-    long century = 0;
-    long month   = 0;
-    long day     = 0;
+    int ret = 0;
+    long year = 0, century = 0, month = 0, day = 0;
 
     if ((ret = grib_get_long_internal(hand, self->century, &century)) != GRIB_SUCCESS)
         return ret;
@@ -165,25 +162,20 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret                    = 0;
-    long v                     = val[0];
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
-    long year    = 0;
-    long century = 0;
-    long month   = 0;
-    long day     = 0;
+    int ret = 0;
+    long v = val[0];
+    long year = 0, century = 0, month = 0, day = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
 
-    {
-        long d = grib_julian_to_date((long)grib_date_to_julian(v));
-        if (v != d) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_g1date: pack_long invalid date %ld, changed to %ld", v, d);
-            return GRIB_ENCODING_ERROR;
-        }
+    long d = grib_julian_to_date(grib_date_to_julian(v));
+    if (v != d) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_g1date: pack_long invalid date %ld, changed to %ld", v, d);
+        return GRIB_ENCODING_ERROR;
     }
 
     century = v / 1000000;
@@ -228,15 +220,12 @@ static const char* months[] = {
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int ret = 0;
-    char tmp[1024];
     grib_accessor_g1date* self = (grib_accessor_g1date*)a;
     grib_handle* hand          = grib_handle_of_accessor(a);
-    long year                  = 0;
-    long century               = 0;
-    long month                 = 0;
-    long day                   = 0;
-    size_t l;
+
+    int ret = 0;
+    char tmp[1024];
+    long year = 0, century = 0, month = 0, day = 0;
 
     if ((ret = grib_get_long_internal(hand, self->century, &century)) != GRIB_SUCCESS)
         return ret;
@@ -261,7 +250,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         snprintf(tmp, sizeof(tmp), "%ld", x);
     }
 
-    l = strlen(tmp) + 1;
+    size_t l = strlen(tmp) + 1;
     if (*len < l) {
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
