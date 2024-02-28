@@ -12,68 +12,43 @@
 
 #pragma once
 
+#include "mir/repres/Gridded.h"
 
-#include <string>
-#include <vector>
-
-#include "mir/repres/proxy/ProxyGrid.h"
+#include "mir/repres/proxy/HEALPix.h"
 
 
 namespace mir::repres::unsupported {
-class HEALPixNested;
-}
 
 
-namespace mir::repres::proxy {
-
-
-class HEALPix final : public ProxyGrid {
+class HEALPixNested final : public Gridded {
 public:
     // -- Types
-
-    class Reorder {
-    public:
-        explicit Reorder(int Nside);
-
-        int size() const { return 12 * Nside_ * Nside_; }
-        int nside() const { return Nside_; }
-
-        int nest_to_ring(int) const;
-        int ring_to_nest(int) const;
-
-    private:
-        const int Nside_;  // up to 2^13
-        const int Npix_;
-        const int Ncap_;
-        const int k_;
-    };
+    // None
 
     // -- Exceptions
     // None
 
     // -- Constructors
 
-    explicit HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
-    explicit HEALPix(const param::MIRParametrisation&);
+    explicit HEALPixNested(size_t Nside) : ring_(Nside) {}
+    explicit HEALPixNested(const param::MIRParametrisation& param) : ring_(param) {}
 
-    HEALPix(const HEALPix&) = delete;
-    HEALPix(HEALPix&&)      = delete;
+    HEALPixNested(const HEALPixNested&) = delete;
+    HEALPixNested(HEALPixNested&&)      = delete;
 
     // -- Destructor
-
-    ~HEALPix() override;
+    // None
 
     // -- Convertors
     // None
 
     // -- Operators
 
-    HEALPix& operator=(const HEALPix&) = delete;
-    HEALPix& operator=(HEALPix&&)      = delete;
+    HEALPixNested& operator=(const HEALPixNested&) = delete;
+    HEALPixNested& operator=(HEALPixNested&&)      = delete;
 
     // -- Methods
-
-    size_t Nside() const { return Nside_; }
+    // None
 
     // -- Overridden methods
     // None
@@ -87,18 +62,13 @@ public:
 private:
     // -- Members
 
-    const ::atlas::Grid::Spec spec_;
-    mutable ::atlas::Grid grid_;
-    size_t Nside_;
-    std::string orderingConvention_;
+    proxy::HEALPix ring_;
 
     // -- Methods
-
-    std::string name() const;
+    // None
 
     // -- Overridden methods
 
-    // from Representation
     bool sameAs(const Representation&) const override;
     void makeName(std::ostream&) const override;
 
@@ -108,9 +78,19 @@ private:
 
     void print(std::ostream&) const override;
 
-    const ::atlas::Grid& atlasGridRef() const override;
-
     std::vector<util::GridBox> gridBoxes() const override;
+
+    ::atlas::Grid atlasGrid() const override;
+
+    void validate(const MIRValuesVector&) const override;
+
+    size_t numberOfPoints() const override;
+
+    bool includesNorthPole() const override { return true; }
+    bool includesSouthPole() const override { return true; }
+    bool isPeriodicWestEast() const override { return true; }
+
+    Iterator* iterator() const override;
 
     // -- Class members
     // None
@@ -123,4 +103,4 @@ private:
 };
 
 
-}  // namespace mir::repres::proxy
+}  // namespace mir::repres::unsupported
