@@ -12,81 +12,67 @@
 
 #include "mir/repres/unsupported/HEALPixNested.h"
 
-// #include <algorithm>
-// #include <bitset>
-// #include <cmath>
-// #include <ostream>
-// #include <tuple>
-//
-// #include "eckit/types/FloatCompare.h"
-//
-// #include "mir/repres/proxy/HEALPix.h"
-// #include "mir/repres/Iterator.h"
-// #include "mir/util/Atlas.h"
-// #include "mir/util/Grib.h"
-// #include "mir/util/MeshGeneratorParameters.h"
-//
-//
-// #include "atlas/interpolation/method/knn/GridBox.h"
-//
-// #include "mir/util/Exceptions.h"
+#include <ostream>
+
+#include "mir/iterator/UnstructuredIterator.h"
+#include "mir/util/Exceptions.h"
+#include "mir/util/GridBox.h"
 
 
 namespace mir::repres::unsupported {
 
 
-bool HEALPixNested::sameAs(const Representation&) const {
-    NOTIMP;
+void HEALPixNested::makeName(std::ostream& out) const {
+    out << "H" << std::to_string(ring_.Nside()) << "_nested";
 }
 
 
-void HEALPixNested::makeName(std::ostream&) const {
-    NOTIMP;
-}
-
-
-void HEALPixNested::fillGrib(grib_info&) const {
-    NOTIMP;
-}
-
-
-void HEALPixNested::fillMeshGen(util::MeshGeneratorParameters&) const {
-    NOTIMP;
-}
-
-
-void HEALPixNested::fillJob(api::MIRJob&) const {
-    NOTIMP;
-}
-
-
-void HEALPixNested::print(std::ostream&) const {
-    NOTIMP;
+void HEALPixNested::print(std::ostream& out) const {
+    out << "HEALPixNested[name=" << "H" << std::to_string(ring_.Nside()) << "_nested" << "]";
 }
 
 
 std::vector<util::GridBox> HEALPixNested::gridBoxes() const {
-    NOTIMP;
+    const proxy::HEALPix::Reorder reorder(static_cast<int>(ring_.Nside()));
+    const auto N = numberOfPoints();
+
+    std::vector<util::GridBox> boxes(N);
+
+    int i = 0;
+    for (const auto& box : ring().gridBoxes()) {
+        auto j      = reorder.ring_to_nest(i++);
+        boxes.at(j) = box;
+    }
+    ASSERT(i == N);
+
+    return boxes;
 }
 
 
 ::atlas::Grid HEALPixNested::atlasGrid() const {
-    NOTIMP;
-}
-
-
-void HEALPixNested::validate(const MIRValuesVector& values) const {
-    NOTIMP;
-}
-
-
-size_t HEALPixNested::numberOfPoints() const {
+    // NOTE: delete class altogether once we can build HEALPix nested-ordering atlas::Grid
     NOTIMP;
 }
 
 
 Iterator* HEALPixNested::iterator() const {
-    NOTIMP;
+    if (longitudes_.empty()) {
+        const proxy::HEALPix::Reorder reorder(static_cast<int>(ring_.Nside()));
+        const auto N = numberOfPoints();
+
+        longitudes_.resize(N);
+        latitudes_.resize(N);
+
+        int i = 0;
+        for (const auto& point : ring().atlasGrid().lonlat()) {
+            auto j            = reorder.ring_to_nest(i++);
+            longitudes_.at(j) = point.lon();
+            latitudes_.at(j)  = point.lat();
+        }
+        ASSERT(i == N);
+    }
+
+    return new iterator::UnstructuredIterator(latitudes_, longitudes_);
 }
 
 

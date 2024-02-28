@@ -31,10 +31,6 @@ public:
     // -- Constructors
 
     explicit HEALPixNested(size_t Nside) : ring_(Nside) {}
-    explicit HEALPixNested(const param::MIRParametrisation& param) : ring_(param) {}
-
-    HEALPixNested(const HEALPixNested&) = delete;
-    HEALPixNested(HEALPixNested&&)      = delete;
 
     // -- Destructor
     // None
@@ -43,9 +39,7 @@ public:
     // None
 
     // -- Operators
-
-    HEALPixNested& operator=(const HEALPixNested&) = delete;
-    HEALPixNested& operator=(HEALPixNested&&)      = delete;
+    // None
 
     // -- Methods
     // None
@@ -63,18 +57,25 @@ private:
     // -- Members
 
     proxy::HEALPix ring_;
+    mutable std::vector<double> longitudes_;
+    mutable std::vector<double> latitudes_;
 
     // -- Methods
-    // None
+
+    inline const Representation& ring() const { return static_cast<const Representation&>(ring_); }
 
     // -- Overridden methods
 
-    bool sameAs(const Representation&) const override;
-    void makeName(std::ostream&) const override;
+    bool sameAs(const Representation& other) const override {
+        const auto* o = dynamic_cast<const HEALPixNested*>(&other);
+        return (o != nullptr) && ring_.Nside() == o->ring_.Nside();
+    }
 
-    void fillGrib(grib_info&) const override;
-    void fillMeshGen(util::MeshGeneratorParameters&) const override;
-    void fillJob(api::MIRJob&) const override;
+    void makeName(std::ostream& out) const override;
+
+    void fillGrib(grib_info& info) const override { ring().fillGrib(info); }
+    void fillMeshGen(util::MeshGeneratorParameters& param) const override { ring().fillMeshGen(param); }
+    void fillJob(api::MIRJob& job) const override { ring().fillJob(job); }
 
     void print(std::ostream&) const override;
 
@@ -82,13 +83,13 @@ private:
 
     ::atlas::Grid atlasGrid() const override;
 
-    void validate(const MIRValuesVector&) const override;
+    void validate(const MIRValuesVector& values) const override { ring().validate(values); }
 
-    size_t numberOfPoints() const override;
+    size_t numberOfPoints() const override { return ring().numberOfPoints(); }
 
-    bool includesNorthPole() const override { return true; }
-    bool includesSouthPole() const override { return true; }
-    bool isPeriodicWestEast() const override { return true; }
+    bool includesNorthPole() const override { return ring().includesNorthPole(); }
+    bool includesSouthPole() const override { return ring().includesSouthPole(); }
+    bool isPeriodicWestEast() const override { return ring().isPeriodicWestEast(); }
 
     Iterator* iterator() const override;
 
