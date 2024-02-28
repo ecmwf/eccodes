@@ -29,20 +29,17 @@ public:
 
     // -- Constructors
 
-    ORCA(const std::string& uid);
-    ORCA(const param::MIRParametrisation&);
-    ORCA(const ORCA&) = delete;
+    explicit ORCA(const std::string& uid);
+    explicit ORCA(const param::MIRParametrisation&);
 
     // -- Destructor
-
-    ~ORCA() override;
+    // None
 
     // -- Convertors
     // None
 
     // -- Operators
-
-    ORCA& operator=(const ORCA&) = delete;
+    // None
 
     // -- Methods
     // None

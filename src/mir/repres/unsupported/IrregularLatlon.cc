@@ -1,4 +1,4 @@
-/*
+/*::unsupported
  * (C) Copyright 1996- ECMWF.
  *
  * This software is licensed under the terms of the Apache Licence Version 2.0
@@ -26,7 +26,7 @@
 #include "mir/util/Types.h"
 
 
-namespace mir::repres {
+namespace mir::repres::unsupported {
 
 
 static void range(const std::vector<double>& v, double& mn, double& mx, double& dmax) {
@@ -259,4 +259,4 @@ atlas::Grid IrregularLatlon::atlasGrid() const {
 static const RepresentationBuilder<IrregularLatlon> irregularLatlon("irregular_latlon");
 
 
-}  // namespace mir::repres
+}  // namespace mir::repres::unsupported

@@ -14,10 +14,14 @@
 
 
 #include <string>
+#include <vector>
 
-#include "mir/param/MIRParametrisation.h"
 #include "mir/repres/proxy/ProxyGrid.h"
-#include "mir/util/GridBox.h"
+
+
+namespace mir::repres::unsupported {
+class HEALPixNested;
+}
 
 
 namespace mir::repres::proxy {
@@ -25,28 +29,45 @@ namespace mir::repres::proxy {
 
 class HEALPix final : public ProxyGrid {
 public:
+    // -- Types
+
+    class Reorder {
+    public:
+        explicit Reorder(int Nside);
+
+        int size() const { return 12 * Nside_ * Nside_; }
+        int nside() const { return Nside_; }
+
+        int nest_to_ring(int) const;
+        int ring_to_nest(int) const;
+
+    private:
+        const int Nside_;  // up to 2^13
+        const int Npix_;
+        const int Ncap_;
+        const int k_;
+    };
+
     // -- Exceptions
     // None
 
     // -- Constructors
 
-    HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
-    HEALPix(const param::MIRParametrisation&);
-    HEALPix(const HEALPix&) = delete;
+    explicit HEALPix(size_t Nside, const std::string& orderingConvention = "ring");
+    explicit HEALPix(const param::MIRParametrisation&);
 
     // -- Destructor
-
-    ~HEALPix() override;
+    // None
 
     // -- Convertors
     // None
 
     // -- Operators
-
-    HEALPix& operator=(const HEALPix&) = delete;
+    // None
 
     // -- Methods
-    // None
+
+    size_t Nside() const { return Nside_; }
 
     // -- Overridden methods
     // None
@@ -81,9 +102,10 @@ private:
 
     void print(std::ostream&) const override;
 
-    const ::atlas::Grid& atlasGridRef() const override;
-
     std::vector<util::GridBox> gridBoxes() const override;
+
+    // from ProxyGrid
+    const ::atlas::Grid& atlasGridRef() const override;
 
     // -- Class members
     // None

@@ -42,9 +42,6 @@ ORCA::ORCA(const param::MIRParametrisation& param) :
     }()) {}
 
 
-ORCA::~ORCA() = default;
-
-
 bool ORCA::sameAs(const Representation& other) const {
     const auto* o = dynamic_cast<const ORCA*>(&other);
     return (o != nullptr) && spec_.getString("uid") == o->spec_.getString("uid");

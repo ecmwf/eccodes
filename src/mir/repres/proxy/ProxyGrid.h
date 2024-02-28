@@ -28,10 +28,11 @@ public:
     // -- Constructors
 
     ProxyGrid(const ProxyGrid&) = delete;
+    ProxyGrid(ProxyGrid&&)      = delete;
 
     // -- Destructor
 
-    ~ProxyGrid() = default;
+    ~ProxyGrid() override = default;
 
     // -- Convertors
     // None
@@ -39,6 +40,7 @@ public:
     // -- Operators
 
     ProxyGrid& operator=(const ProxyGrid&) = delete;
+    ProxyGrid& operator=(ProxyGrid&&)      = delete;
 
     // -- Methods
     // None

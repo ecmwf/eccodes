@@ -543,8 +543,7 @@ std::string Reduced::factory() const {
 
 void Reduced::json(eckit::JSON& s) const {
     s.startObject();
-    s << "type"
-      << "reduced_gg";
+    s << "type" << "reduced_gg";
     s << "pl" << pls();
     Gaussian::json(s);
     s.endObject();

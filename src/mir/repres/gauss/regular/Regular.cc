@@ -38,8 +38,7 @@ Regular::Regular(const param::MIRParametrisation& parametrisation) : Gaussian(pa
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
 
-    Log::debug() << "Regular::Regular: BoundingBox:"
-                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
+    Log::debug() << "Regular::Regular: BoundingBox:" << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
     setNiNj();
 }
 
@@ -154,8 +153,7 @@ bool Regular::getLongestElementDiagonal(double& d) const {
 
 void Regular::json(eckit::JSON& s) const {
     s.startObject();
-    s << "type"
-      << "regular_gg";
+    s << "type" << "regular_gg";
     Gaussian::json(s);
     s.endObject();
 }
