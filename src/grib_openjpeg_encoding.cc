@@ -13,6 +13,7 @@
 #if HAVE_LIBOPENJPEG
 
 #include "openjpeg.h"
+#include "opj_config.h"
 
 static void openjpeg_warning(const char* msg, void* client_data)
 {
