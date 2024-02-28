@@ -84,6 +84,9 @@ static grib_handle* test2()
     packing_spec.extra_settings[0].name = "tablesVersion";
     packing_spec.extra_settings[0].long_value = 32;
 
+    packing_spec.packing_type = GRIB_UTIL_PACKING_TYPE_GRID_SECOND_ORDER;
+    packing_spec.packing  = GRIB_UTIL_PACKING_USE_PROVIDED;
+
     grib_handle* finalh = grib_util_set_spec(
         handle, &spec, &packing_spec, set_spec_flags,
         values, outlen, &err);
