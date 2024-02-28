@@ -31,6 +31,12 @@ class HEALPix final : public ProxyGrid {
 public:
     // -- Types
 
+    enum Ordering
+    {
+        healpix_ring,
+        healpix_nested,
+    };
+
     class Reorder {
     public:
         explicit Reorder(int Nside);
