@@ -37,8 +37,7 @@ Classic::Classic(size_t N, const util::BoundingBox& bbox, double angularPrecisio
 
     auto old(bbox_);
     bbox_ = util::BoundingBox(n, w, s, e);
-    Log::debug() << "Classic BoundingBox:"
-                 << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
+    Log::debug() << "Classic BoundingBox:" << "\n\t   " << old << "\n\t > " << bbox_ << std::endl;
 }
 
 

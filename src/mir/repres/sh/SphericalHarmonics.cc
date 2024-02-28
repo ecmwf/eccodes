@@ -37,8 +37,7 @@ SphericalHarmonics::~SphericalHarmonics() = default;
 
 
 void SphericalHarmonics::print(std::ostream& out) const {
-    out << "SphericalHarmonics["
-        << "truncation=" << truncation_ << "]";
+    out << "SphericalHarmonics[" << "truncation=" << truncation_ << "]";
 }
 
 

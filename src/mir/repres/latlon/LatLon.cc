@@ -77,8 +77,7 @@ void LatLon::reorder(long scanningMode, MIRValuesVector& values) const {
 
 
 void LatLon::print(std::ostream& out) const {
-    out << "LatLon["
-        << "bbox=" << bbox_ << ",increments=" << increments_ << ",ni=" << ni_ << ",nj=" << nj_ << "]";
+    out << "LatLon[" << "bbox=" << bbox_ << ",increments=" << increments_ << ",ni=" << ni_ << ",nj=" << nj_ << "]";
 }
 
 
@@ -307,9 +306,8 @@ LatLon::LatLonIterator::~LatLonIterator() {
 
 
 void LatLon::LatLonIterator::print(std::ostream& out) const {
-    out << "LatLonIterator["
-        << "ni=" << ni_ << ",nj=" << nj_ << ",north=" << north_ << ",west=" << west_ << ",we=" << we_ << ",ns=" << ns_
-        << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
+    out << "LatLonIterator[" << "ni=" << ni_ << ",nj=" << nj_ << ",north=" << north_ << ",west=" << west_
+        << ",we=" << we_ << ",ns=" << ns_ << ",i=" << i_ << ",j=" << j_ << ",count=" << count_ << "]";
 }
 
 
