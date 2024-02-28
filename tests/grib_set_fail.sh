@@ -95,16 +95,29 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
-# Bad date
-# ---------
+# ECC-1777: Bad date/time
+# -------------------------
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s dataDate=20180229 $input $outfile > $temp 2>&1
-cat $temp
 grep -q "Date is not valid" $temp
 
 ${tools_dir}/grib_set -s dataTime=4261 $input $outfile > $temp 2>&1
-cat $temp
 grep -q "Time is not valid" $temp
+
+${tools_dir}/grib_set -s dataTime=2501 $input $outfile > $temp 2>&1
+grep -q "Time is not valid" $temp
+
+# Note for GRIB1 we DO fail on a bad date! This need to be consistent across editions
+input=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+set +e
+${tools_dir}/grib_set -s dataDate=20180229 $input $outfile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "invalid date 20180229" $temp
+
+# 2016 did have 29th Feb
+${tools_dir}/grib_set -s dataDate=20160229 $input $outfile
 
 
 # ECC-1359: string that can be converted to an integer
