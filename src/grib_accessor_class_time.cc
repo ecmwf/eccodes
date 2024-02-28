@@ -160,7 +160,37 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-/* TODO: Check for a valid date */
+// In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
+// and the last minute of the day begins at 23:59.
+// Where convenient, the notation 24:00 may also be used to refer to midnight
+// at the end of a given date — that is, 24:00 of one day is the same time
+// as 00:00 of the following day
+#if 0
+static bool isValidTime(long number)
+{
+    // Check if the number is a four-digit integer
+    if (number < 0 || number > 9999) {
+        return false;
+    }
+
+    // Extract hours and minutes
+    long hours   = number / 100;  // Get the first two digits as hours
+    long minutes = number % 100;  // Get the last two digits as minutes
+
+    // Check if hours are within the valid range (00-23)
+    if (hours < 0 || hours > 24) {
+        return false;
+    }
+
+    // Check if minutes are within the valid range (00-59)
+    if (minutes < 0 || minutes > 59) {
+        return false;
+    }
+
+    // All checks pass
+    return true;
+}
+#endif
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
@@ -174,6 +204,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
+
+    // if (!isValidTime(v)) {
+    //     return GRIB_ENCODING_ERROR;
+    // }
 
     hour   = v / 100;
     minute = v % 100;

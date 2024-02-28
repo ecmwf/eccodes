@@ -10,4 +10,5 @@
 
 . ./include.ctest.sh
 
+export ECCODES_DEBUG=-1
 $EXEC ${test_dir}/grib_util_set_spec2
