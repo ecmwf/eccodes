@@ -16,6 +16,7 @@
 
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/util/Exceptions.h"
+#include "mir/util/Grib.h"
 #include "mir/util/GridBox.h"
 
 
@@ -24,6 +25,16 @@ namespace mir::repres::unsupported {
 
 void HEALPixNested::makeName(std::ostream& out) const {
     out << "H" << std::to_string(ring_.Nside()) << "_nested";
+}
+
+
+void HEALPixNested::fillGrib(grib_info& info) const {
+    info.grid.grid_type = GRIB_UTIL_GRID_SPEC_HEALPIX;
+    info.grid.N         = static_cast<long>(ring_.Nside());
+
+    info.grid.longitudeOfFirstGridPointInDegrees = 45.;  // Not sure what this should be
+
+    info.extra_set("orderingConvention", "nested");
 }
 
 

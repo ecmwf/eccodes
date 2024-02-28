@@ -73,7 +73,7 @@ private:
 
     void makeName(std::ostream& out) const override;
 
-    void fillGrib(grib_info& info) const override { ring().fillGrib(info); }
+    void fillGrib(grib_info& info) const override;
     void fillMeshGen(util::MeshGeneratorParameters& param) const override { ring().fillMeshGen(param); }
     void fillJob(api::MIRJob& job) const override { ring().fillJob(job); }
 
