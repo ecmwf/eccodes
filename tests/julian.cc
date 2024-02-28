@@ -215,6 +215,9 @@ static void Test4()
 static void Test5()
 {
     printf("Test5...\n");
+
+    // Also see function is_date_valid()
+
     double jd = 0.0;
     long year=2017, month=2, day=29, hour=0, min=0, sec=0; // Feb 2017 had 28 days
     long year1, month1, day1, hour1, min1, sec1;
