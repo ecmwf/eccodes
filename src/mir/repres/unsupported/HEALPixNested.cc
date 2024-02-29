@@ -46,7 +46,9 @@ void HEALPixNested::fillGrib(grib_info& info) const {
 
 
 void HEALPixNested::json(eckit::JSON& j) const {
+    j.startObject();
     j << "grid" << name();
+    j.endObject();
 }
 
 
