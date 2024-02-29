@@ -230,7 +230,7 @@ int is_time_valid(long number)
     long hours   = number / 100;  // Get the first two digits as hours
     long minutes = number % 100;  // Get the last two digits as minutes
 
-    // Check if hours are within the valid range (00-23)
+    // Check if hours are within the valid range (00-24)
     if (hours < 0 || hours > 24) {
         return 0;
     }
