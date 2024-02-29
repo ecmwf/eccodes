@@ -643,7 +643,6 @@ static int check_geometry(grib_handle* handle, const grib_util_grid_spec* spec,
     return err;
 }
 
-
 #if defined(CHECK_HANDLE_AGAINST_SPEC)
 /* Check what is coded in the handle is what is requested by the spec. */
 /* Return GRIB_SUCCESS if the geometry matches, otherwise the error code */
@@ -830,10 +829,10 @@ static const char* get_grid_type_name(const int spec_grid_type)
     return NULL;
 }
 
-static int is_constant_field(const double missingValue, const double* data_values, size_t data_values_count)
+static bool is_constant_field(const double missingValue, const double* data_values, size_t data_values_count)
 {
     size_t ii    = 0;
-    int constant = 1;
+    bool constant = true;
     double value = missingValue;
 
     for (ii = 0; ii < data_values_count; ii++) {
@@ -843,7 +842,7 @@ static int is_constant_field(const double missingValue, const double* data_value
             }
             else {
                 if (value != data_values[ii]) {
-                    constant = 0;
+                    constant = false;
                     break;
                 }
             }
@@ -1497,10 +1496,9 @@ grib_handle* grib_util_set_spec(grib_handle* h,
     //grib_dump_content(h_out, stdout,"debug", ~0, NULL);
     // convert to second_order if not constant field. (Also see ECC-326)
     if (setSecondOrder) {
-        int constant        = 0;
         double missingValue = 0;
         grib_get_double(h_out, "missingValue", &missingValue);
-        constant = is_constant_field(missingValue, data_values, data_values_count);
+        bool constant = is_constant_field(missingValue, data_values, data_values_count);
 
         if (!constant) {
             if (editionNumber == 1) {
