@@ -43,3 +43,10 @@ template core "grib2/sections.def";
 #}
 
 template section_8 "grib2/section.8.def";
+
+concept isTemplateDeprecated(false) {
+    1 = { template_is_deprecated = 1; }
+}
+concept isTemplateExperimental(false) {
+    1 = { template_is_experimental = 1; }
+}

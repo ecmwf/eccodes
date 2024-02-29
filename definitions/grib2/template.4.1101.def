@@ -4,6 +4,7 @@
 
 # This template is experimental, was not validated at the time of publication and should be used only for bilateral previously agreed tests.
 # (Octets 35-50 are very similar to octets 43-58 of product definition template 4.8, but the meaning of some fields differs slightly)
+transient template_is_experimental = 1 : hidden;
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generating_process.def"
