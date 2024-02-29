@@ -820,6 +820,9 @@ static int read_BUFR(reader* r, int no_alloc)
             GROW_BUF_IF_REQUIRED(sec1len + sec2len + sec3len + 4 + 3);
 
             /* Read section 3 */
+            if (sec3len < 5) {
+                return GRIB_INVALID_MESSAGE; // ECC-1778
+            }
             if ((r->read(r->read_data, tmp + i, sec3len - 3, &err) != sec3len - 3) || err)
                 return err;
             i += sec3len - 3;
