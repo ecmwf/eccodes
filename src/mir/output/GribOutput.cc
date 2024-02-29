@@ -430,8 +430,7 @@ size_t GribOutput::save(const param::MIRParametrisation& param, context::Context
                 // util::BoundingBox after(g);
 
                 if (user != before /*|| user != after || before != after*/) {
-                    Log::info() << "MIR_CHECK_AREA:"
-                                << " request=" << user << " result="
+                    Log::info() << "MIR_CHECK_AREA:" << " request=" << user << " result="
                                 << before
                                 // << " grib=" << after
                                 << std::endl;
