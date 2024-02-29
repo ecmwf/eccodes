@@ -18,6 +18,7 @@
 #include <ostream>
 #include <tuple>
 
+#include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "atlas/interpolation/method/knn/GridBox.h"
@@ -272,6 +273,11 @@ void HEALPix::fillMeshGen(util::MeshGeneratorParameters& params) const {
 void HEALPix::fillJob(api::MIRJob&) const {
     // Nothing to do. Just declare the method to avoid
     // a call to the default one
+}
+
+
+void HEALPix::json(eckit::JSON& j) const {
+    j << "grid" << name();
 }
 
 

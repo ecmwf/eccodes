@@ -14,6 +14,8 @@
 
 #include <ostream>
 
+#include "eckit/log/JSON.h"
+
 #include "mir/iterator/UnstructuredIterator.h"
 #include "mir/util/Exceptions.h"
 #include "mir/util/Grib.h"
@@ -23,8 +25,13 @@
 namespace mir::repres::unsupported {
 
 
+std::string HEALPixNested::name() const {
+    return "H" + std::to_string(ring_.Nside()) + "_nested";
+}
+
+
 void HEALPixNested::makeName(std::ostream& out) const {
-    out << "H" << std::to_string(ring_.Nside()) << "_nested";
+    out << name();
 }
 
 
@@ -38,8 +45,13 @@ void HEALPixNested::fillGrib(grib_info& info) const {
 }
 
 
+void HEALPixNested::json(eckit::JSON& j) const {
+    j << "grid" << name();
+}
+
+
 void HEALPixNested::print(std::ostream& out) const {
-    out << "HEALPixNested[name=" << "H" << std::to_string(ring_.Nside()) << "_nested" << "]";
+    out << "HEALPixNested[name=" << name() << "]";
 }
 
 

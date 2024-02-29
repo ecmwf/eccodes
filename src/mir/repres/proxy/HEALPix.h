@@ -106,6 +106,7 @@ private:
     void fillMeshGen(util::MeshGeneratorParameters&) const override;
     void fillJob(api::MIRJob&) const override;
 
+    void json(eckit::JSON&) const override;
     void print(std::ostream&) const override;
 
     std::vector<util::GridBox> gridBoxes() const override;

@@ -63,6 +63,7 @@ private:
     // -- Methods
 
     inline const Representation& ring() const { return static_cast<const Representation&>(ring_); }
+    std::string name() const;
 
     // -- Overridden methods
 
@@ -77,6 +78,7 @@ private:
     void fillMeshGen(util::MeshGeneratorParameters& param) const override { ring().fillMeshGen(param); }
     void fillJob(api::MIRJob& job) const override { ring().fillJob(job); }
 
+    void json(eckit::JSON&) const override;
     void print(std::ostream&) const override;
 
     std::vector<util::GridBox> gridBoxes() const override;
