@@ -63,7 +63,6 @@ private:
     // -- Methods
 
     inline const Representation& ring() const { return static_cast<const Representation&>(ring_); }
-    std::string name() const;
 
     // -- Overridden methods
 

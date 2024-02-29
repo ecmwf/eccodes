@@ -286,7 +286,7 @@ void HEALPix::json(eckit::JSON& j) const {
 
 
 void HEALPix::print(std::ostream& out) const {
-    out << "HEALPix[name=" << name() << "]";
+    out << "HEALPix[name=" << name() << ",ordering=" << orderingConvention_ << "]";
 }
 
 

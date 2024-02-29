@@ -25,13 +25,8 @@
 namespace mir::repres::unsupported {
 
 
-std::string HEALPixNested::name() const {
-    return "H" + std::to_string(ring_.Nside()) + "_nested";
-}
-
-
 void HEALPixNested::makeName(std::ostream& out) const {
-    out << name();
+    out << "H" << std::to_string(ring_.Nside()) << "_nested";
 }
 
 
@@ -47,7 +42,7 @@ void HEALPixNested::fillGrib(grib_info& info) const {
 
 void HEALPixNested::json(eckit::JSON& j) const {
     j.startObject();
-    j << "grid" << name();
+    j << "grid" << ring_.uniqueName();
     j << "type" << "healpix";
     j << "ordering" << "nested";
     j.endObject();
@@ -55,7 +50,7 @@ void HEALPixNested::json(eckit::JSON& j) const {
 
 
 void HEALPixNested::print(std::ostream& out) const {
-    out << "HEALPixNested[name=" << name() << "]";
+    out << "HEALPixNested[name=" << ring_.uniqueName() << "]";
 }
 
 
