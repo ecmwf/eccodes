@@ -57,7 +57,6 @@ grib_action* grib_action_create_assert(grib_context* context, grib_expression* e
 
 /* action_class_template.cc*/
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1);
-grib_action* get_empty_template(grib_context* c, int* err);
 
 /* action_class_trigger.cc*/
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block);
