@@ -439,12 +439,10 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         save_error(c, name);
         return err;
     }
-
-    //if (options->mode != MODE_GTS) {
+    Assert(options->mode == MODE_GTS);
         /* TODO: Ignore missing values for keys in GTS. Not yet implemented */
         //isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    //}
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         if (verbose)
@@ -573,10 +571,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_GTS) {
-                // We do not want to compare the message itself
-                return 0;
-            }
+            // We do not want to compare the message itself
+            return 0;
             break;
 
         case GRIB_TYPE_LABEL:

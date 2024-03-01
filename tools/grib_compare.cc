@@ -330,18 +330,7 @@ int grib_tool_init(grib_runtime_options* options)
     global_tolerance = 0;
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
-        int i;
         global_tolerance = 0;
-        for (i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -374,9 +363,9 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("T:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);

@@ -236,7 +236,7 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 
 int grib_tool_init(grib_runtime_options* options)
 {
-    int ret               = 0, i;
+    int ret = 0;
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
@@ -315,16 +315,6 @@ int grib_tool_init(grib_runtime_options* options)
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
         global_tolerance = 0;
-        for (i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -342,9 +332,9 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("t:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
@@ -771,11 +761,10 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
           return GRIB_COUNT_MISMATCH;
         } */
 
-    if (options->mode != MODE_BUFR) {
+    Assert(options->mode == MODE_BUFR);
         /* TODO: Ignore missing values for keys in BUFR. Not yet implemented */
         //isMissing1 = ((grib_is_missing(handle1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(handle2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         // if (verbose) printf(" is set to missing in both fields\n");
@@ -1081,16 +1070,14 @@ static int compare_values(grib_runtime_options* options, grib_handle* handle1, g
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_BUFR)
-                return 0;
+            return 0; // Not in BUFR
             break;
 
         case GRIB_TYPE_LABEL:
             break;
 
         default:
-            if (verbose)
-                printf("\n");
+            if (verbose) printf("\n");
             printInfo(handle1);
             save_error(c, name);
             printf("Cannot compare [%s], unsupported type %d\n", name, type1);
