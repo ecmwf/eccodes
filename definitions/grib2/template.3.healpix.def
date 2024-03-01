@@ -27,7 +27,7 @@ concept orderingConvention(unknown) {
  "ring"   = { ordering = 0; }
  "nested" = { ordering = 1; }
 } : dump;
-alias geography.pointsOrdering = orderingConvention;
+alias geography.orderingConvention = orderingConvention;
 
 flags[1] scanningMode 'grib2/tables/[tablesVersion]/3.13.table';
 flagbit iScansNegatively(scanningMode,7) : dump; # WMO bit 1

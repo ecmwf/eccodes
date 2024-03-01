@@ -42,7 +42,8 @@ if [ $latest -gt 31 ]; then
 fi
 
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
-${tools_dir}/grib_ls -jn geography $tempGrib
+${tools_dir}/grib_ls -jn geography $tempGrib > $tempLog
+grep -q "orderingConvention.*ring" $tempLog
 
 # Geoiterator
 # -------------

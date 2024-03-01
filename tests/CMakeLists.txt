@@ -169,6 +169,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
         grib_g1fcperiod
