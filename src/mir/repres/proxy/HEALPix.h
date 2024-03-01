@@ -19,6 +19,11 @@
 #include "mir/repres/proxy/ProxyGrid.h"
 
 
+namespace mir::repres::unsupported {
+class HEALPixNested;
+}
+
+
 namespace mir::repres::proxy {
 
 
@@ -99,7 +104,8 @@ private:
     // None
 
     // -- Friends
-    // None
+
+    friend class unsupported::HEALPixNested;
 };
 
 

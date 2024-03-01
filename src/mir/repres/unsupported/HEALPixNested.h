@@ -20,6 +20,7 @@
 namespace mir::repres::unsupported {
 
 
+// NOTE: delete class altogether once we can build HEALPix nested-ordering atlas::Grid
 class HEALPixNested final : public Gridded {
 public:
     // -- Types
