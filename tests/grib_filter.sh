@@ -36,24 +36,6 @@ rm -f ${data_dir}/split/*
 rmdir ${data_dir}/split
 rm -f ${data_dir}/f.rules
 
-echo "Test with nonexistent keys. Note spelling of centre!"
-# ---------------------------------------------------------
-cat >${data_dir}/nonexkey.rules <<EOF
- set center="john";
-EOF
-# Invoke without -f i.e. should fail if error encountered
-set +e
-${tools_dir}/grib_filter ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
-if [ $? -eq 0 ]; then
-   echo "grib_filter should have failed if key not found" >&2
-   exit 1
-fi
-set -e
-# Now repeat with -f option (do not exit on error)
-${tools_dir}/grib_filter -f ${data_dir}/nonexkey.rules ${data_dir}/tigge_pf_ecmwf.grib2 2> $REDIRECT > $REDIRECT
-
-rm -f ${data_dir}/nonexkey.rules
-
 echo "Test GRIB-308: format specifier for integer keys"
 # ----------------------------------------------------
 cat > ${data_dir}/formatint.rules <<EOF
@@ -300,21 +282,6 @@ CDS=-42 ${tools_dir}/grib_filter $tempFilt $input > $tempOut
 grep -q "defined and equal to -42" $tempOut
 
 
-echo "Test IEEE float overflow"
-# -----------------------------------------
-input="${samp_dir}/GRIB2.tmpl"
-cat >$tempFilt <<EOF
-  set values={ 5.4e100 };
-  write;
-EOF
-set +e
-${tools_dir}/grib_filter $tempFilt $input 2> $tempOut
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "ECCODES ERROR.*Number is too large" $tempOut
-
-
 echo "Padded count for filenames"
 # -----------------------------------------
 input=${data_dir}/tigge_af_ecmwf.grib2
@@ -378,16 +345,6 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
 
 
-cat >$tempFilt <<EOF
- assert(edition == 0);
-EOF
-set +e
-${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2> $tempOut
-status=$?
-set -e
-[ $status -ne 0 ]
-grep "Assertion failure" $tempOut
-
 # Use of the "length" expression
 cat >$tempFilt <<EOF
  assert( length(identifier) == 4 );
@@ -441,13 +398,6 @@ set -e
 [ $status -ne 0 ]
 ${tools_dir}/grib_compare $input $tempGrib # compare should succeed
 
-set +e
-echo 'write(-10);' | ${tools_dir}/grib_filter -o $tempGrib - $input > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Invalid argument" $tempOut
-
 
 # GTS header
 # ---------------
@@ -458,27 +408,6 @@ cmp $input $tempGrib
 echo 'write;' | ${tools_dir}/grib_filter -o $tempGrib - $input
 set +e
 cmp $input $tempGrib
-status=$?
-set -e
-[ $status -ne 0 ]
-
-
-# Bad write
-set +e
-echo 'write "/";' | ${tools_dir}/grib_filter - $input > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Unable to open file" $tempOut
-
-# Signed bits
-# -----------
-cat >$tempFilt <<EOF
-  meta _sb signed_bits(widthOfWidths, numberOfGroups);
-  print "[_sb]";
-EOF
-set +e
-${tools_dir}/grib_filter $tempFilt $data_dir/boustrophedonic.grib1 > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -503,16 +432,6 @@ cat >$tempFilt <<EOF
   if (referenceValue != 9) { print "it is different"; }
 EOF
 ${tools_dir}/grib_filter $tempFilt $input
-
-
-# Bad filter
-# ----------------
-set +e
-${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Cannot include file" $tempOut
 
 
 # Clean up

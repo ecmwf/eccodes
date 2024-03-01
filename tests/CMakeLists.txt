@@ -301,6 +301,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ls
         grib_ls_json
         grib_filter
+        grib_filter_fail
         grib_multi
         grib_nearest_test
         pseudo_budg
