@@ -19,11 +19,6 @@
 #include "mir/repres/proxy/ProxyGrid.h"
 
 
-namespace mir::repres::unsupported {
-class HEALPixNested;
-}
-
-
 namespace mir::repres::proxy {
 
 
@@ -35,23 +30,6 @@ public:
     {
         healpix_ring,
         healpix_nested,
-    };
-
-    class Reorder {
-    public:
-        explicit Reorder(int Nside);
-
-        int size() const { return 12 * Nside_ * Nside_; }
-        int nside() const { return Nside_; }
-
-        int nest_to_ring(int) const;
-        int ring_to_nest(int) const;
-
-    private:
-        const int Nside_;  // up to 2^13
-        const int Npix_;
-        const int Ncap_;
-        const int k_;
     };
 
     // -- Exceptions
