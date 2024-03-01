@@ -44,6 +44,9 @@ template core "grib2/sections.def";
 
 template section_8 "grib2/section.8.def";
 
+# ECC-1779: Add keys to identify experimental and deprecated templates
+# The low-level transient keys template_is_XXX
+# are set inside the template definition files
 concept isTemplateDeprecated(false) {
     1 = { template_is_deprecated = 1; }
 }
