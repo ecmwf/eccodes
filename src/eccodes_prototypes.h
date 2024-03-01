@@ -1101,8 +1101,8 @@ double grib_power(long s, long n);
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* error);
 
 /* grib_templates.cc*/
-grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
-char* get_external_template_path(grib_context* c, const char* name);
+grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, const char* name);
+char* get_external_sample_path(grib_context* c, const char* name);
 
 /* grib_dependency.cc*/
 grib_handle* grib_handle_of_accessor(const grib_accessor* a);
