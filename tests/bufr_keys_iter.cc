@@ -12,12 +12,6 @@
 #undef NDEBUG
 #include <assert.h>
 
-static void usage(const char* prog)
-{
-    printf("usage: %s [-a|-d] infile\n", prog);
-    exit(1);
-}
-
 #define ITER_ALL_KEYS 1
 #define ITER_DATA_KEYS 2
 
@@ -28,12 +22,11 @@ int main(int argc, char* argv[])
     codes_handle* h                 = NULL;
     codes_bufr_keys_iterator* kiter = NULL;
     char* input_filename            = NULL;
-    const char* prog                = argv[0];
     FILE* f                         = NULL;
     int iterator_mode               = ITER_ALL_KEYS;
 
     if (argc == 1 || argc > 3)
-        usage(prog);
+        return 1; // usage: prog [-a|-d] infile
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-a") == 0) {

@@ -12,11 +12,6 @@
 #undef NDEBUG
 #include <assert.h>
 
-static void usage(const char* app)
-{
-    fprintf(stderr, "Usage is: %s input_file ouput_file\n", app);
-}
-
 int main(int argc, char* argv[])
 {
     FILE* in                    = NULL;
@@ -32,7 +27,7 @@ int main(int argc, char* argv[])
     size_t messageLength_src = 0, messageLength_dst = 0;
 
     if (argc != 3) {
-        usage(argv[0]);
+        // Usage: prog input_file ouput_file
         return 1;
     }
 
@@ -73,7 +68,7 @@ int main(int argc, char* argv[])
             assert(isConstant_dst == 1);
         }
 
-        /* write out the cloned buffer */
+        // write out the cloned buffer
         if (fwrite(buffer, 1, messageLength_dst, out) != messageLength_dst) {
             perror(argv[1]);
             return 1;

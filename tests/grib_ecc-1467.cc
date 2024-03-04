@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+//
+// ECC-1467: Support data values array decoded as "floats" (single-precision)
+//
 #include <math.h>
 #include "eccodes.h"
 #include "grib_api_internal.h"
@@ -60,8 +63,7 @@ int main(int argc, char** argv)
         fval = fvalues[i];
 
         if (!((dmin <= fval) && (fval <= dmax))) {
-            fprintf(stderr, "Error:\n");
-            fprintf(stderr, "dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
+            fprintf(stderr, "Error: dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
             fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n",
                     dmin, fvalues[i], dmax);
             fprintf(stderr, "\tfvalue - min = %.20e (%s)\n",

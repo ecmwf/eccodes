@@ -14,12 +14,6 @@
 #include <unistd.h>
 #endif
 
-void usage(const char* prog)
-{
-    printf("usage: %s filename\n", prog);
-    exit(1);
-}
-
 int main(int argc, char* argv[])
 {
     off_t offsetin = 0, offsetout = 0;
@@ -30,7 +24,7 @@ int main(int argc, char* argv[])
     char str[10];
     int i;
 
-    if (argc != 2) usage(argv[0]);
+    if (argc != 2) return 1;
 
     printf("sizeof(off_t)=%zu sizeof(long)=%zu\n", sizeof(off_t), sizeof(long));
 
