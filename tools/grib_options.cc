@@ -357,12 +357,6 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
     else
         grib_gts_header_off(context);
 
-    if (grib_options_on("V")) {
-        printf("\necCodes Version ");
-        grib_print_api_version(stdout);
-        printf("\n\n");
-    }
-
     if (grib_options_on("s:")) {
         sarg                      = grib_options_get_option("s:");
         options->set_values_count = MAX_KEYS;
