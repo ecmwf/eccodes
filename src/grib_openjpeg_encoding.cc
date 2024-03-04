@@ -13,8 +13,10 @@
 #if HAVE_LIBOPENJPEG
 
 #include "openjpeg.h"
+
 // The older versions did not have the opj_config.h file
-// So we use a more recent macro to detect whether it is there
+// So we use a more recent macro to detect whether it is there.
+// Also see https://github.com/uclouvain/openjpeg/issues/1514
 #if defined(OPJ_IMG_INFO)
     #include "opj_config.h"
 #endif
