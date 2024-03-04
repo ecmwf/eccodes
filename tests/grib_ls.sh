@@ -32,6 +32,24 @@ set -e
 grep -q "Full documentation and examples at" $tempLog
 grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
 
+set +e
+${tools_dir}/grib_ls -? > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_ls -h > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+DOXYGEN_USAGE=1 ${tools_dir}/grib_ls > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
