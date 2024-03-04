@@ -172,6 +172,14 @@ grep -q "0 of 38 messages" $tempText
 ${tools_dir}/grib_ls -w units!=K $file > $tempText
 grep -q "30 of 38 messages" $tempText
 
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface=missing $file > $tempText
+grep -q "36 of 38 messages" $tempText
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface!=missing $file > $tempText
+grep -q "2 of 38 messages" $tempText
+
+${tools_dir}/grib_ls -w referenceValue=0 $file > $tempText
+grep -q "11 of 38 messages" $tempText
+
 file=mixed.grib # Has 14 messages
 ${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $tempText
 grep -q "12 of 14 messages" $tempText
