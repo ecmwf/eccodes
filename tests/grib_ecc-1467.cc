@@ -26,21 +26,14 @@ int main(int argc, char** argv)
     double dmin, dmax, dval;
     float fval;
 
-    FILE* in             = NULL;
-    const char* filename = 0;
-    codes_handle* h      = NULL;
-
-    if (argc != 2) {
-        fprintf(stderr, "usage: %s file\n", argv[0]);
-        return 1;
-    }
-    filename = argv[1];
+    Assert(argc == 2);
+    const char* filename = argv[1];
 
     printf("Opening %s\n", filename);
-    in = fopen(filename, "rb");
+    FILE* in = fopen(filename, "rb");
     Assert(in);
 
-    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
+    codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     Assert(h);
 
     CODES_CHECK(codes_get_float(h, "referenceValue", &fval), 0);
