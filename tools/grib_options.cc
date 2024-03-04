@@ -139,7 +139,7 @@ char* grib_options_get_option(const char* id)
     int i = 0;
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id))
-            return grib_options[i].value;
+            return (char*)grib_options[i].value;
     }
     return NULL;
 }
