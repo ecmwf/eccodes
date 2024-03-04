@@ -31,7 +31,7 @@
 
 
 #include "grib_api_internal.h"
-struct grib_keys_hash { char* name; int id;};
+struct grib_keys_hash { const char* name; int id;};
 #include <string.h>
 
 #define TOTAL_KEYWORDS 2535

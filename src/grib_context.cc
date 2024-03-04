@@ -453,7 +453,7 @@ grib_context* grib_context_get_default()
 
 #ifdef ECCODES_SAMPLES_PATH
         if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH;
+            default_grib_context.grib_samples_path = (char*)ECCODES_SAMPLES_PATH;
 #endif
 
         default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
