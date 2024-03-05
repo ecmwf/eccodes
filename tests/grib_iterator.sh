@@ -45,6 +45,12 @@ grep -q "Latitude Longitude Value shortName level" $tempText
 ${tools_dir}/grib_get_data "$samp_dir/sh_ml_grib2.tmpl" > $tempText
 
 
+# ECC-1781: Reduced Gaussian grid with rotation
+# ---------------------------------------------
+${tools_dir}/grib_get_data $samp_dir/reduced_rotated_gg_pl_320_grib1.tmpl > $tempText
+${tools_dir}/grib_get_data $samp_dir/reduced_rotated_gg_pl_320_grib2.tmpl > $tempText
+
+
 # ECC-1642: badly encoded regular grids
 # -------------------------------------
 ${tools_dir}/grib_set -s Ni=33 $samp_dir/GRIB2.tmpl $tempGrib
