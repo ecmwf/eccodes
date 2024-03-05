@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     int err                     = 0;
 
     long totalLength_src = 0, totalLength_dst = 0;
-    long edition = 0, isGridded = 0, bitmapPresent = 0;
+    long edition = 0, isGridded_src = 0, bitmapPresent = 0;
     long isConstant_src = 0, isConstant_dst = 0;
     long dataSectionLength_src = 0, dataSectionLength_dst = 0;
     size_t messageLength_src = 0, messageLength_dst = 0;
@@ -41,8 +41,8 @@ int main(int argc, char* argv[])
         assert(clone_handle);
 
         codes_get_long(source_handle, "isConstant", &isConstant_src);
-        codes_get_long(source_handle, "isGridded", &isGridded);
-        if (isGridded && !isConstant_src) {
+        codes_get_long(source_handle, "isGridded", &isGridded_src);
+        if (isGridded_src && !isConstant_src) {
 
             CODES_CHECK(codes_get_message(source_handle, &buffer, &messageLength_src), 0);
             CODES_CHECK(codes_get_message(clone_handle, &buffer, &messageLength_dst), 0);
