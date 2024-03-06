@@ -18,6 +18,7 @@ list(APPEND test_c_bins
     grib_double_cmp
     read_any
     julian
+    grib_update_sections_lengths
     grib_indexing
     grib_fieldset
     grib_multi_from_message
@@ -169,6 +170,7 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_update_sections_lengths
         grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate

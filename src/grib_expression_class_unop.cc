@@ -77,10 +77,9 @@ grib_expression_class* grib_expression_class_unop = &_grib_expression_class_unop
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
-    int ret;
-    long v                  = 0;
+    long v = 0;
     grib_expression_unop* e = (grib_expression_unop*)g;
-    ret                     = grib_expression_evaluate_long(h, e->exp, &v);
+    int ret = grib_expression_evaluate_long(h, e->exp, &v);
     if (ret != GRIB_SUCCESS)
         return ret;
     *lres = e->long_func(v);
@@ -89,10 +88,9 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
-    int ret;
-    double v                = 0;
+    double v = 0;
     grib_expression_unop* e = (grib_expression_unop*)g;
-    ret                     = grib_expression_evaluate_double(h, e->exp, &v);
+    int ret = grib_expression_evaluate_double(h, e->exp, &v);
     if (ret != GRIB_SUCCESS)
         return ret;
     *dres = e->double_func ? e->double_func(v) : e->long_func(v);

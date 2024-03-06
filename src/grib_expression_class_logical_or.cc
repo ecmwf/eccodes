@@ -129,9 +129,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     long lres = 0;
-    int ret   = 0;
 
-    ret   = evaluate_long(g, h, &lres);
+    int ret = evaluate_long(g, h, &lres);
     *dres = (double)lres;
 
     return ret;
