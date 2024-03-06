@@ -22,6 +22,11 @@
    MEMBERS     =   double *las
    MEMBERS     =   double *los
    MEMBERS     =   long Nj
+   MEMBERS     =   long isRotated
+   MEMBERS     =   double angleOfRotation
+   MEMBERS     =   double southPoleLat
+   MEMBERS     =   double southPoleLon
+   MEMBERS     =   long disableUnrotate
    END_CLASS_DEF
 
  */
@@ -81,9 +86,9 @@ grib_iterator_class* grib_iterator_class_gaussian_reduced = &_grib_iterator_clas
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
