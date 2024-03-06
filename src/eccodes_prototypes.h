@@ -108,7 +108,6 @@ grib_action* grib_action_create_transient_darray(grib_context* context, const ch
 /* grib_accessor.cc*/
 void grib_accessor_dump(grib_accessor* a, grib_dumper* f);
 int grib_pack_missing(grib_accessor* a);
-int grib_pack_zero(grib_accessor* a);
 int grib_is_missing_internal(grib_accessor* a);
 int grib_pack_double(grib_accessor* a, const double* v, size_t* len);
 int grib_pack_float(grib_accessor* a, const float* v, size_t* len);
@@ -150,17 +149,12 @@ grib_accessor* grib_next_accessor(grib_accessor* a);
 void grib_resize(grib_accessor* a, size_t new_size);
 int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags);
 int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash);
-int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr);
-int grib_accessor_delete_attribute(grib_accessor* a, const char* name);
-grib_accessor* grib_accessor_get_attribute_by_index(grib_accessor* a, int index);
-const char* grib_accessor_get_name(grib_accessor* a);
 grib_accessor* grib_accessor_get_attribute_index(grib_accessor* a, const char* name, int* index);
 int grib_accessor_has_attributes(grib_accessor* a);
 grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name);
 grib_accessors_list* grib_accessors_list_create(grib_context* c);
 void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
 grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a);
 void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 
 /* grib_concept.cc*/
