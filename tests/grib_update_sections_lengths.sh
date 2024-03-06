@@ -16,7 +16,7 @@ tempGrib=temp.$label.grib
 gfiles="$data_dir/sample.grib2 $data_dir/missing_field.grib1"
 for f in $gfiles; do
     $EXEC ${test_dir}/grib_update_sections_lengths $f $tempGrib
-    cmp $f $tempGrib
+    ${tools_dir}/grib_compare $f $tempGrib
 done
 
 rm -f $tempGrib
