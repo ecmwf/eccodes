@@ -251,7 +251,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
             return err;
         }
         while (grib_iterator_next(iter, &lat, &lon, NULL)) {
-            if (olat != lat) {
+            if (ilat < self->lats_count && olat != lat) {
                 self->lats[ilat++] = lat;
                 olat               = lat;
             }
@@ -262,6 +262,7 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
                     if (lon > 180 && lon < 360)
                         lon -= 360;
             }
+            DEBUG_ASSERT_ACCESS(self->lons, (long)ilon, (long)nearest->values_count);
             self->lons[ilon++] = lon;
         }
         self->lats_count = ilat;
