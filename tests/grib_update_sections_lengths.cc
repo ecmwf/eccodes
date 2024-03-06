@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     char* infile   = 0;
     char* oufile   = 0;
     int err        = 0;
-    size_t size;
+    size_t size    = 0;
     const void* buffer = NULL;
 
     if (argc < 3) return 1; // prog in out
@@ -26,15 +26,16 @@ int main(int argc, char* argv[])
     infile = argv[1];
     oufile = argv[2];
 
-    inf = fopen(infile, "r");
+    inf = fopen(infile, "rb");
     Assert(inf);
 
-    ouf = fopen(oufile, "w");
+    ouf = fopen(oufile, "wb");
     Assert(ouf);
 
     while ((h = grib_handle_new_from_file(0, inf, &err)) != NULL) {
         grib_update_sections_lengths(h);
         GRIB_CHECK(grib_get_message(h, &buffer, &size), 0);
+        printf("size = %zu\n", size);
         if (fwrite(buffer, 1, size, ouf) != size) {
             perror(oufile);
             exit(1);
