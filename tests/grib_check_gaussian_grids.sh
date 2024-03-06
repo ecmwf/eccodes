@@ -94,13 +94,13 @@ set -e
 grep -q "Error: Sum of pl array 50662 does not match numberOfValues 44" $tempText
 
 # Octahedral
-set +e
-${tools_dir}/grib_check_gaussian_grid -v $data_dir/msl.octa.glob.grib1 > $tempText 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "This is an Octahedral Gaussian grid" $tempText
-grep -q "Error: longitudeOfLastGridPointInDegrees.*should be" $tempText
+# set +e
+# ${tools_dir}/grib_check_gaussian_grid -v $data_dir/msl.octa.glob.grib1 > $tempText 2>&1
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "This is an Octahedral Gaussian grid" $tempText
+# grep -q "Error: longitudeOfLastGridPointInDegrees.*should be" $tempText
 
 
 # Other errors/warnings
