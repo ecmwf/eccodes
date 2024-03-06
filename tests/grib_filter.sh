@@ -324,6 +324,20 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
 grep -q "No args: false" $tempOut
 
+# Bit on off
+cat >$tempFilt <<EOF
+  transient xx1 = 7 bit 0;    print "xx1=[xx1]";
+  transient xx2 = 7 notbit 0; print "xx2=[xx2]";
+  transient yy1 = 6 bit 0;    print "yy1=[yy1]";
+  transient yy2 = 6 notbit 0; print "yy2=[yy2]";
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+cat $tempOut
+grep -q "xx1=1" $tempOut
+grep -q "xx2=0" $tempOut
+grep -q "yy1=0" $tempOut
+grep -q "yy2=1" $tempOut
+
 
 # Use of dummy expression (=true)
 cat >$tempFilt <<EOF
