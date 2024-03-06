@@ -199,8 +199,9 @@ static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_hash_array* self = (grib_action_hash_array*)act;
 
-    grib_hash_array_value* v = self->hash_array;
-    Assert(!v); // not implemented
+    // This is currently unset. So assert that it is NULL
+    const grib_hash_array_value* v = self->hash_array;
+    Assert(v == NULL);
     // if (v)
     //     grib_trie_delete(v->index);
     // while (v) {
@@ -335,6 +336,6 @@ grib_hash_array_value* get_hash_array(grib_handle* h, grib_action* a)
 
 const char* get_hash_array_full_path(grib_action* a)
 {
-    grib_action_hash_array* self = (grib_action_hash_array*)a;
+    const grib_action_hash_array* self = (grib_action_hash_array*)a;
     return self->full_path;
 }

@@ -117,7 +117,7 @@ static void dump(grib_action* act, FILE* f, int lvl)
 static grib_action* get_empty_template(grib_context* c, int* err)
 {
     char fname[] = "empty_template.def";
-    char* path   = grib_context_full_defs_path(c, fname);
+    const char* path = grib_context_full_defs_path(c, fname);
     if (path) {
         *err = GRIB_SUCCESS;
         return grib_parse_file(c, path);
