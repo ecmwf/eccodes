@@ -152,8 +152,10 @@ static int find(grib_nearest* nearest, grib_handle* h,
 {
     int err = 0;
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
+    long isRotated = 0;
+    err = grib_get_long(h, "isRotatedGrid", &isRotated);
 
-    if (self->global) {
+    if (self->global && !isRotated) {
         err = find_global(nearest, h,
                 inlat, inlon, flags,
                 outlats, outlons, values,
