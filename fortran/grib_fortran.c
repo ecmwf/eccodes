@@ -2103,12 +2103,13 @@ int grib_f_index_get_string_(int* index_id, char* key, char* val, int *eachsize,
 /*****************************************************************************/
 int grib_f_index_get_long_(int* index_id, char* key, long *val, int* size, int len)
 {
+    int err = 0;
     grib_index* h = get_index(*index_id);
     char buf[1024];
     size_t lsize = *size;
 
     if (!h) return GRIB_INVALID_GRIB;
-    int err = grib_index_get_long(h, cast_char(buf,key,len), val, &lsize);
+    err = grib_index_get_long(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
     return err;
 }
@@ -2138,12 +2139,13 @@ int grib_f_index_get_int_(int* index_id, char* key, int *val, int* size, int len
 /*****************************************************************************/
 int grib_f_index_get_real8_(int* index_id, char* key, double *val, int* size, int len)
 {
+    int err = 0;
     grib_index* h = get_index(*index_id);
     char buf[1024];
     size_t lsize = *size;
 
     if (!h) return GRIB_INVALID_GRIB;
-    int err = grib_index_get_double(h, cast_char(buf,key,len), val, &lsize);
+    err = grib_index_get_double(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
     return err;
 }
