@@ -29,6 +29,7 @@
    MEMBERS    = double lon_first
    MEMBERS    = double lon_last
    MEMBERS    = int legacy
+   MEMBERS    = int rotated
    END_CLASS_DEF
 
  */
@@ -69,6 +70,7 @@ typedef struct grib_nearest_reduced{
     double lon_first;
     double lon_last;
     int legacy;
+    int rotated;
 } grib_nearest_reduced;
 
 extern grib_nearest_class* grib_nearest_class_gen;
@@ -101,6 +103,7 @@ static int init(grib_nearest* nearest, grib_handle* h, grib_arguments* args)
     self->pl                   = grib_arguments_get_name(h, args, self->cargs++);
     self->j                    = (size_t*)grib_context_malloc(h->context, 2 * sizeof(size_t));
     self->legacy               = -1;
+    self->rotated              = -1;
     if (!self->j)
         return GRIB_OUT_OF_MEMORY;
     self->k = (size_t*)grib_context_malloc(nearest->context, NUM_NEIGHBOURS * sizeof(size_t));
@@ -138,10 +141,21 @@ static int find_global(grib_nearest* nearest, grib_handle* h,
 static int is_legacy(grib_handle* h, int* legacy)
 {
     int err = 0;
-    long lLegacy = 0;
-    err = grib_get_long(h, "legacyGaussSubarea", &lLegacy);
+    long lVal = 0;
+    *legacy = 0; // false by default
+    err = grib_get_long(h, "legacyGaussSubarea", &lVal);
     if (err) return err;
-    *legacy = (int)lLegacy;
+    *legacy = (int)lVal;
+    return GRIB_SUCCESS;
+}
+static int is_rotated(grib_handle* h, int* rotated)
+{
+    int err = 0;
+    long lVal = 0;
+    *rotated = 0; // false by default
+    err = grib_get_long(h, "isRotatedGrid", &lVal);
+    if (err) return err;
+    *rotated = (int)lVal;
     return GRIB_SUCCESS;
 }
 
@@ -152,10 +166,13 @@ static int find(grib_nearest* nearest, grib_handle* h,
 {
     int err = 0;
     grib_nearest_reduced* self = (grib_nearest_reduced*)nearest;
-    long isRotated = 0;
-    err = grib_get_long(h, "isRotatedGrid", &isRotated);
 
-    if (self->global && !isRotated) {
+    if (self->rotated == -1 || (flags & GRIB_NEAREST_SAME_GRID) == 0) {
+        err = is_rotated(h, &(self->rotated));
+        if (err) return err;
+    }
+
+    if (self->global && self->rotated == 0) {
         err = find_global(nearest, h,
                 inlat, inlon, flags,
                 outlats, outlons, values,
