@@ -75,7 +75,7 @@ std::vector<util::GridBox> HEALPixNested::gridBoxes() const {
 
 
 ::atlas::Grid HEALPixNested::atlasGrid() const {
-    Log::warning() << "HEALPixNested::atlasGrid() unsupported" << std::endl;
+    Log::warning() << "HEALPixNested::atlasGrid() unsupported, returning {type=healpix, ordering=ring}" << std::endl;
     return ring_.atlasGrid();
 }
 
