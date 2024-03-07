@@ -1748,6 +1748,13 @@ static void set_value(grib_values* value, char* str, int equal)
         case GRIB_TYPE_UNDEFINED:
             value->long_value = strtol(buf, &p, 10);
             if (*p == 0) {
+                // check the conversion from string to long
+                if ((errno == ERANGE && (value->long_value == LONG_MAX || value->long_value == LONG_MIN)) ||
+                    (errno != 0 && value->long_value == 0)) {
+                    fprintf(stderr, "ECCODES WARNING :  Setting %s=%s causes overflow/underflow\n", value->name, buf);
+                    fprintf(stderr, "ECCODES WARNING :  Value adjusted to %ld\n", value->long_value);
+                    //perror("strtol");
+                }
                 value->type      = GRIB_TYPE_LONG;
                 value->has_value = 1;
             }
