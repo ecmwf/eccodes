@@ -22,7 +22,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = init
    MEMBERS=const char* date
    END_CLASS_DEF
 
@@ -39,7 +39,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_g1monthlydate
@@ -62,7 +61,7 @@ static grib_accessor_class _grib_accessor_class_g1monthlydate = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -113,11 +112,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
     self->date = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)

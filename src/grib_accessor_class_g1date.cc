@@ -17,7 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long;pack_long;unpack_string
-   IMPLEMENTS = init;dump;value_count
+   IMPLEMENTS = init;value_count
    MEMBERS=const char* century
    MEMBERS=const char* year
    MEMBERS=const char* month
@@ -40,7 +40,6 @@ static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static int value_count(grib_accessor*, long*);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_g1date
@@ -66,7 +65,7 @@ static grib_accessor_class _grib_accessor_class_g1date = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
@@ -120,11 +119,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->year    = grib_arguments_get_name(hand, c, n++);
     self->month   = grib_arguments_get_name(hand, c, n++);
     self->day     = grib_arguments_get_name(hand, c, n++);
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)

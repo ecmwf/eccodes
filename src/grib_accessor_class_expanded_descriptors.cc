@@ -26,7 +26,7 @@ SUPER      = grib_accessor_class_long
 IMPLEMENTS = unpack_long;pack_long
 IMPLEMENTS = unpack_double
 IMPLEMENTS = unpack_string_array
-IMPLEMENTS = init;dump;destroy
+IMPLEMENTS = init;destroy
 IMPLEMENTS = value_count; get_native_type
 MEMBERS    = const char* unexpandedDescriptors
 MEMBERS    = const char* sequence
@@ -59,7 +59,6 @@ static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_expanded_descriptors
@@ -90,7 +89,7 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
     &init,                       /* init */
     0,                  /* post_init */
     &destroy,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
@@ -178,11 +177,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
     self->do_expand             = 1;
     self->expanded              = 0;
     a->length                   = 0;
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
