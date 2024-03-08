@@ -155,9 +155,9 @@
 # 10fg3
 "max"={gribTablesVersionNo=228;indicatorOfParameter=28;centre=98;}
 # litota1
-""={gribTablesVersionNo=228;indicatorOfParameter=51;centre=98;}
+"avg"={gribTablesVersionNo=228;indicatorOfParameter=51;centre=98;}
 # licga1
-""={gribTablesVersionNo=228;indicatorOfParameter=53;centre=98;}
+"avg"={gribTablesVersionNo=228;indicatorOfParameter=53;centre=98;}
 # ssrdc
 "accum"={gribTablesVersionNo=228;indicatorOfParameter=129;centre=98;}
 # strdc
