@@ -12,7 +12,7 @@
 
 #include "mir/repres/gauss/regular/Regular.h"
 
-#include "eckit/parser/JSON.h"
+#include "eckit/log/JSON.h"
 #include "eckit/types/FloatCompare.h"
 
 #include "mir/api/MIRJob.h"
