@@ -22,6 +22,11 @@ logfile=temp.$label.log
 
 rm -f $outfile1 $outfile2
 
+# Debug info
+ECCODES_DEBUG=-1 ${tools_dir}/grib_copy -r $infile $outfile1 > $logfile 2>&1
+grep -q "ECCODES DEBUG CCSDS .* aec_stream.flags" $logfile
+
+
 # Convert a non-constant grib2 file (Note: not using -r)
 grib2_sample=$ECCODES_SAMPLES_PATH/gg_sfc_grib2.tmpl
 ${tools_dir}/grib_set -s packingType=grid_ccsds $grib2_sample $outfile1
