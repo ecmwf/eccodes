@@ -321,6 +321,22 @@ if (stepTypeForConversion is "accum" ) {
       alias productDefinitionTemplateNumber=eight;
    }
 }
+if (stepTypeForConversion is "max" ) {
+   if (productDefinitionTemplateNumber == 1) {
+      alias productDefinitionTemplateNumber=eleven;
+   }
+   else {
+      alias productDefinitionTemplateNumber=eight;
+   }
+}
+if (stepTypeForConversion is "min" ) {
+   if (productDefinitionTemplateNumber == 1) {
+      alias productDefinitionTemplateNumber=eleven;
+   }
+   else {
+      alias productDefinitionTemplateNumber=eight;
+   }
+}
 
 meta md5Section1 md5(offsetSection1,section1Length);
 # md5(start,length,blacklisted1,blacklisted2,...);
