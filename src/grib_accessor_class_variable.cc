@@ -208,10 +208,15 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     const double dval = *val;
 
     if (*len != 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", a->name, 1);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
+
+    //if (std::isnan(dval)) {
+    //    grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Invalid number for %s: %g", __func__, a->name, dval);
+    //    return GRIB_INVALID_ARGUMENT;
+    //}
 
     self->dval = dval;
     if (dval < (double)LONG_MIN || dval > (double)LONG_MAX)

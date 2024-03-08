@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_long;pack_long;init;dump
+   IMPLEMENTS = unpack_long;pack_long;init
    MEMBERS=const char* century
    MEMBERS=const char* year
    MEMBERS=const char* month
@@ -37,7 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_g2date
@@ -63,7 +62,7 @@ static grib_accessor_class _grib_accessor_class_g2date = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -114,11 +113,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->year  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->month = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->day   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
