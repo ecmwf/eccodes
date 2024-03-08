@@ -19,7 +19,7 @@ temp=${data_dir}/temp.$label.out
 infile=${data_dir}/regular_gaussian_surface.grib2
 
 
-# Set without -s. Expected to fail
+# Set without -s
 # ----------------------------------------------------
 set +e
 ${tools_dir}/grib_set -p levtype $infile $outfile > $temp 2>&1
@@ -28,7 +28,7 @@ set -e
 [ $status -ne 0 ]
 grep -q "provide some keys to set" $temp
 
-# Set with empty -s. Expected to fail
+# Set with empty -s
 # ----------------------------------------------------
 set +e
 ${tools_dir}/grib_set -s '' $infile $outfile > $temp 2>&1
@@ -37,7 +37,7 @@ set -e
 [ $status -ne 0 ]
 grep -q "provide some keys to set" $temp
 
-# Out-of-bounds value. Expected to fail
+# Out-of-bounds value
 # ----------------------------------------------------
 input=${data_dir}/reduced_gaussian_sub_area.grib2
 set +e
@@ -47,7 +47,7 @@ set -e
 [ $status -ne 0 ]
 grep -q "Trying to encode value of 1000 but the maximum allowable value is 255 (number of bits=8)" $temp
 
-# Negative value for an unsigned key. Expected to fail
+# Negative value for an unsigned key
 # ----------------------------------------------------
 input=${data_dir}/reduced_gaussian_sub_area.grib2
 set +e
@@ -181,6 +181,11 @@ set -e
 [ $status -ne 0 ]
 grep -q "centre: No such code table entry.*Did you mean.*ecmf" $temp
 
+# Overflow/Underflow
+# ------------------------
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s missingValue=9223372036854776666 $input $outfile > $temp 2>&1
+grep -q "ECCODES WARNING :  Setting .* causes overflow/underflow" $temp
 
 # ------------------------
 # Unreadable message

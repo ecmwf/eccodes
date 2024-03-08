@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     }
 
     /* open output file */
-    of = fopen(ofilename, "w");
+    of = fopen(ofilename, "wb");
     if (!of) {
         fprintf(stderr, "ERROR: unable to open output file %s\n", ofilename);
         exit(1);

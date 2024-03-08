@@ -28,6 +28,13 @@ sample_ccsds=$ECCODES_SAMPLES_PATH/ccsds_grib2.tmpl
 unset ECCODES_GRIB_DATA_QUALITY_CHECKS
 unset ECCODES_EXTRA_DEFINITION_PATH
 
+echo "Data quality checks enabled. Packing samples should work"
+# -------------------------------------------------------------
+export ECCODES_GRIB_DATA_QUALITY_CHECKS=1
+${tools_dir}/grib_copy -r $sample_g1 /dev/null
+${tools_dir}/grib_copy -r $sample_g2 /dev/null
+unset ECCODES_GRIB_DATA_QUALITY_CHECKS
+
 # These input files are 2m temperature with min=221.76 and max=311.619
 input1=${data_dir}/reduced_gaussian_surface.grib1
 input2=${data_dir}/reduced_gaussian_surface.grib2
@@ -50,6 +57,7 @@ set -e
 [ $status -ne 0 ]
 grep -q 'more than the allowable limit' $tempErr
 unset ECCODES_DEBUG
+
 
 echo "Data quality checks enabled but only as a warning. Repacking should pass..."
 # --------------------------------------------------------------------------------
@@ -110,7 +118,8 @@ ${tools_dir}/grib_set -s paramId=$pid,scaleValuesBy=0.01 $input2 $tempOut
 
 echo "Test close to the limit..."
 # ---------------------------------
-${tools_dir}/grib_set -s paramId=$pid $sample_g2 $tempGrib2
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
+${tools_dir}/grib_set -s paramId=$pid,values=1 $sample_g2 $tempGrib2
 ${tools_dir}/grib_set -s scaleValuesBy=3 $tempGrib2 $tempOut # OK
 set +e
 ${tools_dir}/grib_set -s scaleValuesBy=3.6 $tempGrib2 $tempOut
@@ -189,11 +198,13 @@ cat > $tempDir/param_limits.def <<EOF
  } : double_type, hidden;
 EOF
 # Step of 12 satisfies the condition: it is even and > 4
-${tools_dir}/grib_set -s paramId=260509,step=12,scaleValuesBy=1000 $sample_g2 $tempGrib2
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
+${tools_dir}/grib_set -s paramId=260509,step=12,values=1,scaleValuesBy=1000 $sample_g2 $tempGrib2
 
 # Step of 0 doesn't satisfy the condition so will use 400
+# The GRIB2 sample has max values of 273. We need to use 1 for this test
 set +e
-${tools_dir}/grib_set -s paramId=260509,scaleValuesBy=1000 $sample_g2 $tempGrib2
+${tools_dir}/grib_set -s paramId=260509,values=1,scaleValuesBy=1000 $sample_g2 $tempGrib2
 status=$?
 set -e
 [ $status -ne 0 ]

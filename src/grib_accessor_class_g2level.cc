@@ -17,7 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_double;pack_double
-   IMPLEMENTS = unpack_long;pack_long;init;dump;is_missing
+   IMPLEMENTS = unpack_long;pack_long;init;is_missing
    MEMBERS=const char* type_first
    MEMBERS=const char* scale_first
    MEMBERS=const char* value_first
@@ -41,7 +41,6 @@ static int pack_double(grib_accessor*, const double* val, size_t* len);
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_double(grib_accessor*, double* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_g2level
@@ -67,7 +66,7 @@ static grib_accessor_class _grib_accessor_class_g2level = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -124,11 +123,6 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
     // See ECC-1644
     a->flags |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static bool is_tigge(grib_handle* h)

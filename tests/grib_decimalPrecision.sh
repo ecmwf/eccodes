@@ -10,6 +10,9 @@
 
 . ./include.ctest.sh
 
+label="grib_decimalPrecision_test"
+
+temp=temp.$label.grib
 REDIRECT=/dev/null
 
 files="regular_latlon_surface.grib2 \
@@ -29,7 +32,6 @@ for file in $files; do
 done
 
 # ECC-458: spectral_complex packing
-temp=temp.grib_decimalPrecision.grib
 infile=${data_dir}/spectral_complex.grib1
 # Catch errors re negative values
 export ECCODES_FAIL_IF_LOG_MESSAGE=1
@@ -42,7 +44,7 @@ sample2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s decimalScaleFactor=3 $sample1 $temp
 grib_check_key_equals $temp min,max,const,decimalScaleFactor,referenceValue '47485.4 47485.4 1 3 47485.4'
 ${tools_dir}/grib_set -s decimalScaleFactor=3 $sample2 $temp
-grib_check_key_equals $temp min,max,const,decimalScaleFactor,referenceValue '1 1 1 3 1'
+grib_check_key_equals $temp min,max,const,decimalScaleFactor,referenceValue '273 273 1 3 273'
 
-
+# Clean up
 rm -f $temp

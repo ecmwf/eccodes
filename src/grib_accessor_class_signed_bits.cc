@@ -16,7 +16,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = init
    IMPLEMENTS = next_offset
    IMPLEMENTS = byte_count
    IMPLEMENTS = value_count
@@ -45,7 +45,6 @@ static long byte_count(grib_accessor*);
 static long byte_offset(grib_accessor*);
 static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 static void update_size(grib_accessor*, size_t);
 
@@ -70,7 +69,7 @@ static grib_accessor_class _grib_accessor_class_signed_bits = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     &next_offset,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
@@ -150,11 +149,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
     self->numberOfBits              = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     self->numberOfElements          = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     a->length                       = compute_byte_count(a);
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
