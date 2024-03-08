@@ -63,7 +63,8 @@ if (productDefinitionTemplateNumber >= 32768) {
 }
 
 if (defined(marsStream) && defined(marsType)) {
-   template_nofail marsKeywords1 "mars/grib.[marsStream:s].[marsType:s].def";
+   template_nofail marsKeywordsByClass "mars/grib.[marsClass:s].def";
+   template_nofail marsKeywordsByStreamAndType "mars/grib.[marsStream:s].[marsType:s].def";
 }
 
 template parameters "grib2/parameters.def";
