@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 
     /* write the buffer in a file*/
     if (fwrite(buffer, 1, size, out) != size) {
-        perror(argv[1]);
+        perror(outfile);
         exit(1);
     }
 
