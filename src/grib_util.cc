@@ -1723,6 +1723,7 @@ static void set_value(grib_values* value, char* str, int equal)
             }
             break;
         case GRIB_TYPE_LONG:
+            errno = 0; // must clear errno before calling strtol
             value->long_value = strtol(buf, &p, 10);
             if (*p != 0)
                 value->has_value = 1;
@@ -1746,6 +1747,7 @@ static void set_value(grib_values* value, char* str, int equal)
             }
             break;
         case GRIB_TYPE_UNDEFINED:
+            errno = 0; // must clear errno before calling strtol
             value->long_value = strtol(buf, &p, 10);
             if (*p == 0) {
                 // check the conversion from string to long
