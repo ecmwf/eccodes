@@ -918,7 +918,6 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.cc*/
 void grib_file_pool_clean(void);
-grib_file* grib_file_pool_get_files(void);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
 void grib_file_close(const char* filename, int force, int* err);
