@@ -241,17 +241,6 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
     // Equator
     latitudes[2 * N - 1] = 0.0;
 
-    size_t k = 0;
-    for (size_t i = 0; i < Ny; i++) {
-        // Compute the longitudes at a given latitude
-        std::vector<double> longitudes = HEALPix_longitudes(N, i);
-        for (double longitude : longitudes) {
-            self->lons[k] = longitude;
-            self->lats[k] = latitudes[i];
-            ++k;
-        }
-    }
-
     if (self->nested) {
         Assert(is_power_of_2(N));
 
@@ -316,7 +305,23 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
             ring_to_nest[r] = to_nest(f, ring, Nside, phi, ring & 1);
         }
 
-        Assert(false);  // TODO
+        for (size_t i = 0, j=0; i < Ny; i++) {
+            // Compute the longitudes at a given latitude
+            for (double longitude : HEALPix_longitudes(N, i)) {
+                self->lons[ring_to_nest.at(j)] = longitude;
+                self->lats[ring_to_nest.at(j)] = latitudes[i];
+                ++j;
+            }
+        }
+    } else {
+        for (size_t i = 0, j = 0; i < Ny; i++) {
+            // Compute the longitudes at a given latitude
+            for (double longitude : HEALPix_longitudes(N, i)) {
+                self->lons[j] = longitude;
+                self->lats[j] = latitudes[i];
+                ++j;
+            }
+        }
     }
 
     return GRIB_SUCCESS;
