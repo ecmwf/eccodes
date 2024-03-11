@@ -72,21 +72,65 @@ EOF
 
 ${tools_dir}/grib_filter $tempFilt $tempGrib
 
-# Invalid cases
-# --------------
+
+# Nested ordering
+# ---------------
+rm -f $tempGrib
+cat > $tempFilt <<EOF
+  set tablesVersion = $latest;
+  set gridType = "healpix";
+  set longitudeOfFirstGridPointInDegrees = 45;
+  set numberOfPointsAlongASide = 2;
+  set orderingConvention = "nested";
+  set values = { 0,1,2,3,4,5,6,7,
+    8,9,10,11,12,13,14,15,
+    16,17,18,19,20,21,22,23,
+    24,25,26,27,28,29,30,31,
+    32,33,34,35,36,37,38,39,
+    40,41,42,43,44,45,46,47};
+  # count of values = 48 = 12 * N * N
+  write;
+EOF
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
+${tools_dir}/grib_get_data $tempGrib > $tempLog
+
+# Nested: N must be a power of 2
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s gridType=healpix,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Nside must be a power of 2" $tempLog
+
+
+# Nested. Bad N
+${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempLog
+grep -q "N must be greater than 1" $tempLog
+
+# Bad ordering
+${tools_dir}/grib_set -s gridType=healpix,Nside=1,ordering=6 $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Only orderingConvention.*are supported" $tempLog
+
+# N = 0
 set +e
 ${tools_dir}/grib_get_data -sN=0 $tempGrib > $tempLog 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Nside must be greater than zero" $tempLog
-
-set +e
-${tools_dir}/grib_get_data -s orderingConvention=nested $tempGrib > $tempLog 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-grep -q "Only ring ordering is supported" $tempLog
 
 
 # Clean up
