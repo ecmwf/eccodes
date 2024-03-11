@@ -199,4 +199,38 @@ status=$?
 set -e
 [ $status -ne 0 ]
 
+
+echo "Test with nonexistent file..."
+# ---------------------------------
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre nosuchfile > $temp1 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to read file" $temp1
+
+
+echo "Test with bad BUFR file..."
+# ---------------------------------
+echo BUFR > $temp1
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre $temp1 > $temp2 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to count BUFR messages" $temp2
+
+
+echo "Test with GRIB file..."
+# ---------------------------------
+input=${data_dir}/sample.grib2
+set +e
+$EXEC ${test_dir}/bufr_extract_headers centre $input > $temp2 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "No BUFR messages in file" $temp2
+
+
+# Clean up
 rm -f $temp1 $temp2
