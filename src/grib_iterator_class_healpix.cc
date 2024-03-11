@@ -9,9 +9,13 @@
  */
 
 #include "grib_api_internal.h"
-#include <cmath>
-#include <vector>
+
 #include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <cstdint>
+#include <tuple>
+#include <vector>
 
 /*
    This is used by make_class.pl
@@ -84,6 +88,76 @@ static void init_class(grib_iterator_class* c)
     c->has_next = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
+
+namespace
+{
+
+struct CodecFijNest
+{
+    static constexpr uint64_t __masks[] = { 0x00000000ffffffff, 0x0000ffff0000ffff, 0x00ff00ff00ff00ff,
+                                            0x0f0f0f0f0f0f0f0f, 0x3333333333333333, 0x5555555555555555 };
+
+    inline static int nest_encode_bits(int n)
+    {
+        auto b = static_cast<uint64_t>(n) & __masks[0];
+        b      = (b ^ (b << 16)) & __masks[1];
+        b      = (b ^ (b << 8)) & __masks[2];
+        b      = (b ^ (b << 4)) & __masks[3];
+        b      = (b ^ (b << 2)) & __masks[4];
+        b      = (b ^ (b << 1)) & __masks[5];
+        return static_cast<int>(b);
+    }
+
+    inline static int nest_decode_bits(int n)
+    {
+        auto b = static_cast<uint64_t>(n) & __masks[5];
+        b      = (b ^ (b >> 1)) & __masks[4];
+        b      = (b ^ (b >> 2)) & __masks[3];
+        b      = (b ^ (b >> 4)) & __masks[2];
+        b      = (b ^ (b >> 8)) & __masks[1];
+        b      = (b ^ (b >> 16)) & __masks[0];
+        return static_cast<int>(b);
+    }
+
+    static std::tuple<int, int, int> nest_to_fij(int n, int k)
+    {
+        Assert(0 <= n);
+        auto f = n >> (2 * k);    // f = n / (Nside * Nside)
+        n &= (1 << (2 * k)) - 1;  // n = n % (Nside * Nside)
+        auto i = nest_decode_bits(n);
+        auto j = nest_decode_bits(n >> 1);
+        return { f, i, j };
+    }
+
+    static int fij_to_nest(int f, int i, int j, int k)
+    {
+        return (f << (2 * k)) + nest_encode_bits(i) + (nest_encode_bits(j) << 1);
+    }
+};
+
+inline int int_sqrt(int n)
+{
+    return static_cast<int>(std::sqrt(static_cast<double>(n) + 0.5));
+}
+
+// for division result within [0; 3]
+inline int div_03(int a, int b)
+{
+    int t = (a >= (b << 1)) ? 1 : 0;
+    a -= t * (b << 1);
+    return (t << 1) + (a >= b ? 1 : 0);
+}
+
+inline bool is_power_of_2(int n)
+{
+    return std::bitset<sizeof(int) * 8>(n).count() == 1;
+}
+
+inline int pll(int f)
+{
+    constexpr int __pll[] = { 1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
+    return __pll[f];
+}
 
 #define ITER "HEALPix Geoiterator"
 constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
@@ -179,11 +253,76 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
     }
 
     if (self->nested) {
+        Assert(is_power_of_2(N));
+
+        const auto Nside = static_cast<int>(N);
+        const auto k     = static_cast<int>(std::log2(Nside));
+        const int Npix   = 12 * Nside * Nside;
+        const int Ncap   = (Nside * (Nside - 1)) << 1;
+
+        auto to_nest = [&](int f,      //!< base pixel index
+                           int ring,   //!< 1-based ring number
+                           int Nring,  //!< number of pixels in ring
+                           int phi,    //!< index in longitude
+                           int shift   //!< if ring's first pixel is not at phi=0
+                           ) -> int {
+            int r = ((2 + (f >> 2)) << k) - ring - 1;
+            int p = 2 * phi - pll(f) * Nring - shift - 1;
+            if (p >= 2 * Nside) {
+                p -= 8 * Nside;
+            }
+
+            int i = (r + p) >> 1;
+            int j = (r - p) >> 1;
+
+            Assert(f < 12 && i < Nside && j < Nside);
+            return CodecFijNest::fij_to_nest(f, i, j, k);
+        };
+
+        std::vector<size_t> ring_to_nest(Npix);
+        for (int r = 0; r < Npix; ++r) {
+            if (r < Ncap) {
+                // North polar cap
+                int Nring = (1 + int_sqrt(2 * r + 1)) >> 1;
+                int phi   = 1 + r - 2 * Nring * (Nring - 1);
+                int f     = div_03(phi - 1, Nring);
+
+                ring_to_nest[r] = to_nest(f, Nring, Nring, phi, 0);
+                continue;
+            }
+
+            if (Npix - Ncap <= r) {
+                // South polar cap
+                int Nring = (1 + int_sqrt(2 * Npix - 2 * r - 1)) >> 1;
+                int phi   = 1 + r + 2 * Nring * (Nring - 1) + 4 * Nring - Npix;
+                int ring  = 4 * Nside - Nring;  // (from South pole)
+                int f     = div_03(phi - 1, Nring) + 8;
+
+                ring_to_nest[r] = to_nest(f, ring, Nring, phi, 0);
+                continue;
+            }
+
+            // Equatorial belt
+            int ip  = r - Ncap;
+            int tmp = ip >> (k + 2);
+
+            int phi  = ip - tmp * 4 * Nside + 1;
+            int ring = tmp + Nside;
+
+            int ifm = 1 + ((phi - 1 - ((1 + tmp) >> 1)) >> k);
+            int ifp = 1 + ((phi - 1 - ((1 - tmp + 2 * Nside) >> 1)) >> k);
+            int f   = (ifp == ifm) ? (ifp | 4) : ((ifp < ifm) ? ifp : (ifm + 8));
+
+            ring_to_nest[r] = to_nest(f, ring, Nside, phi, ring & 1);
+        }
+
         Assert(false);  // TODO
     }
 
     return GRIB_SUCCESS;
 }
+
+}  // anonymous namespace
 
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
