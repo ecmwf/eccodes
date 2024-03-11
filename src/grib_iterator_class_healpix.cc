@@ -28,6 +28,7 @@
    MEMBERS     =   double *lats
    MEMBERS     =   double *lons
    MEMBERS     =   long Nsides
+   MEMBERS     =   bool nested
    END_CLASS_DEF
 */
 
@@ -42,40 +43,39 @@ or edit "iterator.class" and rerun ./make_class.pl
 */
 
 
-static void init_class(grib_iterator_class*);
+static void init_class              (grib_iterator_class*);
 
-static int init(grib_iterator* i, grib_handle*, grib_arguments*);
-static int next(grib_iterator* i, double* lat, double* lon, double* val);
-static int destroy(grib_iterator* i);
+static int init               (grib_iterator* i,grib_handle*,grib_arguments*);
+static int next               (grib_iterator* i, double *lat, double *lon, double *val);
+static int destroy            (grib_iterator* i);
 
 
-struct grib_iterator_healpix
-{
-    grib_iterator it;
+typedef struct grib_iterator_healpix{
+  grib_iterator it;
     /* Members defined in gen */
     int carg;
     const char* missingValue;
     /* Members defined in healpix */
-    double* lats;
-    double* lons;
+    double *lats;
+    double *lons;
     long Nsides;
     bool nested;
-};
+} grib_iterator_healpix;
 
 extern grib_iterator_class* grib_iterator_class_gen;
 
 static grib_iterator_class _grib_iterator_class_healpix = {
-    &grib_iterator_class_gen,      /* super                     */
-    "healpix",                     /* name                      */
-    sizeof(grib_iterator_healpix), /* size of instance          */
-    0,                             /* inited */
-    &init_class,                   /* init_class */
-    &init,                         /* constructor               */
-    &destroy,                      /* destructor                */
-    &next,                         /* Next Value                */
-    nullptr,                       /*  Previous Value           */
-    nullptr,                       /* Reset the counter         */
-    nullptr,                       /* has next values           */
+    &grib_iterator_class_gen,                    /* super                     */
+    "healpix",                    /* name                      */
+    sizeof(grib_iterator_healpix),/* size of instance          */
+    0,                           /* inited */
+    &init_class,                 /* init_class */
+    &init,                     /* constructor               */
+    &destroy,                  /* destructor                */
+    &next,                     /* Next Value                */
+    0,                 /*  Previous Value           */
+    0,                    /* Reset the counter         */
+    0,                 /* has next values           */
 };
 
 grib_iterator_class* grib_iterator_class_healpix = &_grib_iterator_class_healpix;
@@ -88,6 +88,9 @@ static void init_class(grib_iterator_class* c)
     c->has_next = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
+
+#define ITER "HEALPix Geoiterator"
+constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
 
 namespace
 {
@@ -158,9 +161,6 @@ inline int pll(int f)
     constexpr int __pll[] = { 1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
     return __pll[f];
 }
-
-#define ITER "HEALPix Geoiterator"
-constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
 
 size_t HEALPix_nj(size_t N, size_t i)
 {
@@ -337,7 +337,7 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
     int err    = 0;
-    auto* self = (grib_iterator_healpix*)iter;
+    grib_iterator_healpix* self = (grib_iterator_healpix*)iter;
 
     const char* snside = grib_arguments_get_name(h, args, self->carg++);
     const char* sorder = grib_arguments_get_name(h, args, self->carg++);
@@ -367,7 +367,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
-    if (grib_is_earth_oblate(h) != 0) {
+    if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only spherical earth is supported", ITER);
         return GRIB_WRONG_GRID;
     }
@@ -378,12 +378,12 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    self->lats = static_cast<double*>(grib_context_malloc(h->context, iter->nv * sizeof(double)));
+    self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (self->lats == nullptr) {
         return GRIB_OUT_OF_MEMORY;
     }
 
-    self->lons = static_cast<double*>(grib_context_malloc(h->context, iter->nv * sizeof(double)));
+    self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
     if (self->lons == nullptr) {
         return GRIB_OUT_OF_MEMORY;
     }
