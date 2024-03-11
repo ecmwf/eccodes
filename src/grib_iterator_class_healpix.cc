@@ -55,6 +55,7 @@ struct grib_iterator_healpix
     double* lats;
     double* lons;
     long Nsides;
+    bool nested;
 };
 
 extern grib_iterator_class* grib_iterator_class_gen;
@@ -177,6 +178,10 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
         }
     }
 
+    if (self->nested) {
+        Assert(false);  // TODO
+    }
+
     return GRIB_SUCCESS;
 }
 
@@ -205,8 +210,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return err;
     }
 
-    if (!STR_EQUAL(ordering, "ring")) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ring ordering is supported", ITER);
+    self->nested = STR_EQUAL(ordering, "nested");
+    if (!STR_EQUAL(ordering, "ring") && !self->nested) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
