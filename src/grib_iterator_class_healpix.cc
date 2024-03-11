@@ -111,16 +111,16 @@ struct CodecFijNest
         return static_cast<int>(b);
     }
 
-    inline static int nest_decode_bits(int n)
-    {
-        auto b = static_cast<uint64_t>(n) & __masks[5];
-        b      = (b ^ (b >> 1)) & __masks[4];
-        b      = (b ^ (b >> 2)) & __masks[3];
-        b      = (b ^ (b >> 4)) & __masks[2];
-        b      = (b ^ (b >> 8)) & __masks[1];
-        b      = (b ^ (b >> 16)) & __masks[0];
-        return static_cast<int>(b);
-    }
+    // inline static int nest_decode_bits(int n)
+    // {
+    //     auto b = static_cast<uint64_t>(n) & __masks[5];
+    //     b      = (b ^ (b >> 1)) & __masks[4];
+    //     b      = (b ^ (b >> 2)) & __masks[3];
+    //     b      = (b ^ (b >> 4)) & __masks[2];
+    //     b      = (b ^ (b >> 8)) & __masks[1];
+    //     b      = (b ^ (b >> 16)) & __masks[0];
+    //     return static_cast<int>(b);
+    // }
 
     // static std::tuple<int, int, int> nest_to_fij(int n, int k)
     // {
