@@ -119,15 +119,15 @@ struct CodecFijNest
         return static_cast<int>(b);
     }
 
-    static std::tuple<int, int, int> nest_to_fij(int n, int k)
-    {
-        Assert(0 <= n);
-        auto f = n >> (2 * k);    // f = n / (Nside * Nside)
-        n &= (1 << (2 * k)) - 1;  // n = n % (Nside * Nside)
-        auto i = nest_decode_bits(n);
-        auto j = nest_decode_bits(n >> 1);
-        return { f, i, j };
-    }
+    // static std::tuple<int, int, int> nest_to_fij(int n, int k)
+    // {
+    //     Assert(0 <= n);
+    //     auto f = n >> (2 * k);    // f = n / (Nside * Nside)
+    //     n &= (1 << (2 * k)) - 1;  // n = n % (Nside * Nside)
+    //     auto i = nest_decode_bits(n);
+    //     auto j = nest_decode_bits(n >> 1);
+    //     return { f, i, j };
+    // }
 
     static int fij_to_nest(int f, int i, int j, int k)
     {
@@ -242,7 +242,11 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
     latitudes[2 * N - 1] = 0.0;
 
     if (self->nested) {
-        Assert(is_power_of_2(N));
+        if (!is_power_of_2(N)) {
+            grib_context* c = grib_context_get_default();
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: For nested ordering, Nside must be a power of 2", ITER);
+            return GRIB_WRONG_GRID;
+        }
 
         const auto Nside = static_cast<int>(N);
         const auto k     = static_cast<int>(std::log2(Nside));
@@ -308,6 +312,7 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
         for (size_t i = 0, j=0; i < Ny; i++) {
             // Compute the longitudes at a given latitude
             for (double longitude : HEALPix_longitudes(N, i)) {
+                Assert( ring_to_nest.at(j) < Npix );
                 self->lons[ring_to_nest.at(j)] = longitude;
                 self->lats[ring_to_nest.at(j)] = latitudes[i];
                 ++j;
@@ -346,9 +351,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return GRIB_WRONG_GRID;
     }
 
-    char ordering[32] = {
-        0,
-    };
+    char ordering[32] = {0,};
     size_t slen = sizeof(ordering);
     if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;
@@ -357,6 +360,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     self->nested = STR_EQUAL(ordering, "nested");
     if (!STR_EQUAL(ordering, "ring") && !self->nested) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    if (self->nested && N == 1) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: For orderingConvention=nested, N must be greater than 1", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
 
