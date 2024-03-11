@@ -120,8 +120,17 @@ int main(int argc, char** argv)
     }
 
     fclose(fout);
+
+    // expandedOriginalCodes
+    long orig[100];
+    size = 100;
+    CODES_CHECK(codes_get_long_array(h, "expandedOriginalCodes", orig, &size), 0);
+    printf("Size of expandedOriginalCodes = %zu\n", size);
+
     codes_handle_delete(h);
     free(ivalues);
+
+    codes_context_delete(0);
 
     return 0;
 }

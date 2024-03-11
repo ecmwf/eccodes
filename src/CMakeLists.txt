@@ -80,6 +80,7 @@ list( APPEND eccodes_src_files
     grib_accessor_class_hash_array.cc
     grib_accessor_class_decimal_precision.cc
     grib_accessor_class_divdouble.cc
+    grib_accessor_class_multdouble.cc
     grib_accessor_class_budgdate.cc
     grib_accessor_class_validity_date.cc
     grib_accessor_class_validity_time.cc

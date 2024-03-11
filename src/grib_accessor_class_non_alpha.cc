@@ -190,7 +190,6 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 
     *v = strtol(val, &last, 10);
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
     return GRIB_SUCCESS;
 }
 
@@ -204,7 +203,6 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     *v = strtod(val, &last);
 
     if (*last == 0) {
-        grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
         return GRIB_SUCCESS;
     }
 

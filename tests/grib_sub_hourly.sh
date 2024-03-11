@@ -520,6 +520,20 @@ cat $tempFilt
 ${tools_dir}/grib_filter $tempFilt $data_dir/constant_field.grib2
 unset ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS
 
+
+# Changing the product definition template
+# ----------------------------------------
+# See ECC-1768
+${tools_dir}/grib_set -s step=62m $sample_g2 $temp
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8 $temp $temp2
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,stepUnits=s,step=0 $sample_g2 $temp
+grib_check_key_equals $temp '-p stepUnits:s,startStep,productDefinitionTemplateNumber' 's 0s 8'
+
+${tools_dir}/grib_set -s productDefinitionTemplateNumber=8,stepUnits=m,step=60 $sample_g2 $temp
+grib_check_key_equals $temp '-p stepUnits:s,productDefinitionTemplateNumber' 'h 8'
+
+
 # Bad stepUnits
 set +e
 ${tools_dir}/grib_set -s stepUnits=190 $sample_g2 $temp > $tempText 2>&1

@@ -5,12 +5,12 @@
 meta groupWidths unsigned_bits(widthOfWidths,numberOfGroups) : read_only;
 meta groupLengths unsigned_bits(widthOfLengths,numberOfGroups) : read_only;
 meta firstOrderValues unsigned_bits(widthOfFirstOrderValues,numberOfGroups) : read_only;
-meta countOfGroupLengths sum(groupLengths);
+# meta countOfGroupLengths sum(groupLengths);
 transient halfByte=0;
 
 position offsetBeforeData;
 
-if(bitmapPresent)   {
+if(bitmapPresent) {
    meta codedValues data_g1second_order_general_extended_packing(
 	#simple_packing args
      section7Length,
@@ -47,7 +47,6 @@ if(bitmapPresent)   {
 	 widthOfSPD,
 	 orderOfSPD,
 	 numberOfPoints
-
    ): read_only;
    alias data.packedValues = codedValues;
 
@@ -96,8 +95,7 @@ if(bitmapPresent)   {
 		 widthOfSPD,
 		 orderOfSPD,
 		 numberOfPoints
-
-		 ) : dump;
+		) : dump;
 
 		meta values data_apply_boustrophedonic(codedValues,numberOfRows,numberOfColumns,numberOfPoints,pl) : dump;
 
@@ -138,7 +136,6 @@ if(bitmapPresent)   {
 		 widthOfSPD,
 		 orderOfSPD,
 		 numberOfPoints
-
 		 ) : dump;
 		 alias codedValues=values;
 	}

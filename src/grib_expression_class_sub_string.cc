@@ -36,17 +36,11 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static string evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static int     native_type(grib_expression*,grib_handle*);
+static string  evaluate_string(grib_expression*,grib_handle*,char*,size_t*,int*);
 
 typedef struct grib_expression_sub_string{
   grib_expression base;
@@ -60,7 +54,6 @@ static grib_expression_class _grib_expression_class_sub_string = {
     "sub_string",                    /* name                      */
     sizeof(grib_expression_sub_string),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -74,22 +67,18 @@ static grib_expression_class _grib_expression_class_sub_string = {
 
 grib_expression_class* grib_expression_class_sub_string = &_grib_expression_class_sub_string;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 static const char* evaluate_string(grib_expression* g, grib_handle* h, char* buf, size_t* size, int* err)
 {
-    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
-    *err                          = 0;
+    const grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    *err = 0;
     return e->value;
 }
 
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
-    grib_expression_sub_string* e = (grib_expression_sub_string*)g;
+    const grib_expression_sub_string* e = (grib_expression_sub_string*)g;
     printf("string('%s')", e->value);
 }
 

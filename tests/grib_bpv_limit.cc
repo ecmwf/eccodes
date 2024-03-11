@@ -25,12 +25,6 @@ static double compare_double_absolute(double a, double b, double tolerance)
     return ret;
 }
 
-static void usage(const char* prog)
-{
-    fprintf(stderr, "usage: %s input\n", prog);
-    exit(1);
-}
-
 static int check_error_code(int err)
 {
     if (err == GRIB_INVALID_BPV || err == GRIB_DECODING_ERROR)
@@ -49,7 +43,7 @@ int main(int argc, char** argv)
     grib_handle* h;
     char* filename;
 
-    if (argc < 2) usage(argv[0]);
+    Assert(argc == 2);
     filename = argv[1];
 
     for (i = 0; i < 255; i++) {

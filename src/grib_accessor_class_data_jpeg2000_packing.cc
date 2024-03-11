@@ -225,7 +225,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_accessor_data_jpeg2000_packing* self = (grib_accessor_data_jpeg2000_packing*)a;
 
     int err = GRIB_SUCCESS;
-    int i;
+    size_t i = 0;
     size_t buflen = grib_byte_count(a);
 
     double bscale      = 0;
@@ -304,16 +304,21 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         val[i] = (val[i] * bscale + reference_value) * dscale;
     }
     if (units_factor != 1.0) {
-        if (units_bias != 0.0)
-            for (i = 0; i < n_vals; i++)
+        if (units_bias != 0.0) {
+            for (i = 0; i < n_vals; i++) {
                 val[i] = val[i] * units_factor + units_bias;
-        else
-            for (i = 0; i < n_vals; i++)
+            }
+        } else {
+            for (i = 0; i < n_vals; i++) {
                 val[i] *= units_factor;
+            }
+        }
     }
-    else if (units_bias != 0.0)
-        for (i = 0; i < n_vals; i++)
+    else if (units_bias != 0.0) {
+        for (i = 0; i < n_vals; i++) {
             val[i] += units_bias;
+        }
+    }
 
     return err;
 }

@@ -9,7 +9,6 @@
  */
 
 /***************************************************************************
- *   Enrico Fucile                                                         *
  *   Jean Baptiste Filippi - 01.11.2005                                    *
  ***************************************************************************/
 #include "grib_api_internal.h"
@@ -71,7 +70,8 @@ int grib_iterator_next(grib_iterator* i, double* lat, double* lon, double* value
             return c->next(i, lat, lon, value);
         c = s;
     }
-    Assert(0);
+
+    grib_context_log(i->h->context, GRIB_LOG_FATAL, "%s: No next() function in iterator '%s'", __func__, i->cclass->name);
     return 0;
 }
 
@@ -84,7 +84,7 @@ int grib_iterator_has_next(grib_iterator* i)
             return c->has_next(i);
         c = s;
     }
-    Assert(0);
+    grib_context_log(i->h->context, GRIB_LOG_FATAL, "%s: No has_next() function in iterator '%s'", __func__, i->cclass->name);
     return 0;
 }
 
@@ -97,7 +97,7 @@ int grib_iterator_previous(grib_iterator* i, double* lat, double* lon, double* v
             return c->previous(i, lat, lon, value);
         c = s;
     }
-    Assert(0);
+    grib_context_log(i->h->context, GRIB_LOG_FATAL, "%s: No previous() function in iterator '%s'", __func__, i->cclass->name);
     return 0;
 }
 
@@ -110,7 +110,7 @@ int grib_iterator_reset(grib_iterator* i)
             return c->reset(i);
         c = s;
     }
-    Assert(0);
+    grib_context_log(i->h->context, GRIB_LOG_FATAL, "%s: No reset() function in iterator '%s'", __func__, i->cclass->name);
     return 0;
 }
 

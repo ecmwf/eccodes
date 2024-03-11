@@ -11,7 +11,7 @@
 
 # Define a common label for all the tmp files
 label="grib_healpix_test"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 tempGrib="temp.${label}.grib"
 tempLog="temp.${label}.log"
 
@@ -20,7 +20,7 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $input`
 
 # Create a filter
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
   set tablesVersion = $latest;
   set gridType = "healpix";
   set longitudeOfFirstGridPointInDegrees = 45;
@@ -28,9 +28,9 @@ cat > $tempFilter <<EOF
   write;
 EOF
 
-cat $tempFilter
+cat $tempFilt
 # Use filter on input to create a new HEALPix GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
@@ -42,12 +42,13 @@ if [ $latest -gt 31 ]; then
 fi
 
 ${tools_dir}/grib_dump -O -p section_3 $tempGrib
-${tools_dir}/grib_ls -jn geography $tempGrib
+${tools_dir}/grib_ls -jn geography $tempGrib > $tempLog
+grep -q "orderingConvention.*ring" $tempLog
 
 # Geoiterator
 # -------------
 rm -f $tempGrib
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
   set tablesVersion = $latest;
   set gridType = "healpix";
   set longitudeOfFirstGridPointInDegrees = 45;
@@ -55,13 +56,13 @@ cat > $tempFilter <<EOF
   set values = {1,2,3,4,5,6,7,8,9,10,11,12}; # count=12*N*N
   write;
 EOF
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 ${tools_dir}/grib_get_data $tempGrib
 val=$(${tools_dir}/grib_get -l 0,0,1 $tempGrib | tr -d ' ')
 [ "$val" = 5 ]
 
 # Check other iterator-related keys
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  print "latLonValues=[latLonValues]";
  print "latitudes=[latitudes]";
  print "longitudes=[longitudes]";
@@ -69,7 +70,7 @@ cat > $tempFilter <<EOF
  print "distinctLongitudes=[distinctLongitudes]";
 EOF
 
-${tools_dir}/grib_filter $tempFilter $tempGrib
+${tools_dir}/grib_filter $tempFilt $tempGrib
 
 # Invalid cases
 # --------------
@@ -89,4 +90,4 @@ grep -q "Only ring ordering is supported" $tempLog
 
 
 # Clean up
-rm -f $tempFilter $tempGrib $tempLog
+rm -f $tempFilt $tempGrib $tempLog

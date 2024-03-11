@@ -180,6 +180,21 @@ test_PDTN_conversions 57 67
 test_PDTN_conversions 58 68
 test_PDTN_conversions 71 73
 
+# ECC-1779: Deprecated and experimental templates
+# ------------------------------------------------
+grib_check_key_equals $sample2 isTemplateDeprecated,isTemplateExperimental '0 0'
+
+$tools_dir/grib_set -s productDefinitionTemplateNumber=44 $sample2 $temp
+grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '1 0'
+
+$tools_dir/grib_set -s productDefinitionTemplateNumber=10 $sample2 $temp
+grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '0 1'
+
+$tools_dir/grib_set -s gridType=cross_section $sample2 $temp
+grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '0 1'
+$tools_dir/grib_set -s gridType=time_section $sample2 $temp
+grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '0 1'
+
 
 # Clean up
 rm -f $temp $temp1 $temp2 $tempFilt $tempText

@@ -1772,7 +1772,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     unsigned char* sec7 = reinterpret_cast<unsigned char*>(grib_context_malloc(a->context, size_sec7));
     if (sec7 == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: unable to allocate %d bytes", cclass_name, size_sec7);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s: Unable to allocate %d bytes", cclass_name, size_sec7);
         return GRIB_OUT_OF_MEMORY;
     }
 

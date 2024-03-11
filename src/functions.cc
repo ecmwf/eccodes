@@ -27,14 +27,14 @@ long grib_op_gt(long a, long b)
 {
     return a > b;
 }
-long grib_op_and(long a, long b)
-{
-    return a && b;
-}
-long grib_op_or(long a, long b)
-{
-    return a || b;
-}
+// long grib_op_and(long a, long b)
+// {
+//     return a && b;
+// }
+// long grib_op_or(long a, long b)
+// {
+//     return a || b;
+// }
 long grib_op_ge(long a, long b)
 {
     return a >= b;
@@ -43,7 +43,6 @@ long grib_op_le(long a, long b)
 {
     return a <= b;
 }
-
 long grib_op_bit(long a, long b)
 {
     return a & (1 << b);
@@ -52,7 +51,6 @@ long grib_op_bitoff(long a, long b)
 {
     return !grib_op_bit(a, b);
 }
-
 long grib_op_not(long a)
 {
     return !a;
@@ -61,15 +59,14 @@ long grib_op_neg(long a)
 {
     return -a;
 }
-
 double grib_op_neg_d(double a)
 {
     return -a;
 }
 
+// Note: This is actually 'a' to the power 'b'
 long grib_op_pow(long a, long b)
 {
-    /* Note: This is actually 'a' to the power 'b' */
     return codes_power<double>(b, a);
 }
 
@@ -93,7 +90,6 @@ long grib_op_modulo(long a, long b)
 {
     return a % b;
 }
-
 double grib_op_mul_d(double a, double b)
 {
     return a * b;
@@ -102,7 +98,6 @@ double grib_op_div_d(double a, double b)
 {
     return a / b;
 }
-
 double grib_op_add_d(double a, double b)
 {
     return a + b;
@@ -111,7 +106,6 @@ double grib_op_sub_d(double a, double b)
 {
     return a - b;
 }
-
 double grib_op_eq_d(double a, double b)
 {
     return a == b;

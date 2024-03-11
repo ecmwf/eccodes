@@ -195,7 +195,7 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     if (!STR_EQUAL(ordering, "ring")) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ring ordering is supported", ITER);
-        return GRIB_WRONG_GRID;
+        return GRIB_GEOCALCULUS_PROBLEM;
     }
 
     if (grib_is_earth_oblate(h)) {

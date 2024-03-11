@@ -164,6 +164,14 @@ if [ $HAVE_LIBJASPER -eq 0 ]; then
     set -e
     [ $status -ne 0 ]
     grep -q "JasPer JPEG support not enabled" $tempDump
+
+    infile=$data_dir/sample.grib2
+    set +e
+    ECCODES_GRIB_JPEG=jasper ${tools_dir}/grib_set -rs packingType=grid_jpeg $infile $outfile1 > $tempDump 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "JasPer JPEG support not enabled" $tempDump
 fi
 
 # Clean up

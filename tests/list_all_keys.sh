@@ -32,7 +32,7 @@ cat >keys <<EOF
 %{
 #include "grib_api_internal.h"
 %}
-struct grib_keys_hash { char* name; int id;};
+struct grib_keys_hash { const char* name; int id;};
 %%
 EOF
 cat tmp$$ | sort | uniq | awk 'BEGIN{x=0;}{print $1","++x}' >> keys

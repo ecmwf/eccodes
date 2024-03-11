@@ -18,7 +18,6 @@ program operator_3_test
 
   call codes_bufr_new_from_samples(ibufr,'BUFR4',iret)
   if (iret /= CODES_SUCCESS) then
-    print *,'ERROR creating BUFR from BUFR4'
     stop 1
   endif
 

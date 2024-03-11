@@ -165,9 +165,9 @@ static int grib_load_smart_table(grib_context* c, const char* filename, const ch
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
-    int n                           = 0;
+    int n = 0;
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-    grib_handle* hand               = grib_handle_of_accessor(a);
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     self->values      = grib_arguments_get_name(hand, params, n++);
     self->tablename   = grib_arguments_get_string(hand, params, n++);
@@ -179,25 +179,25 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
 
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
-    self->dirty          = 1;
+    self->dirty = 1;
     self->tableCodesSize = 0;
-    self->tableCodes     = 0;
+    self->tableCodes = 0;
 }
 
 static grib_smart_table* load_table(grib_accessor* a)
 {
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-    size_t size            = 0;
-    grib_handle* h         = ((grib_accessor*)self)->parent->h;
-    grib_context* c        = h->context;
-    grib_smart_table* t    = NULL;
+    size_t size = 0;
+    grib_handle* h = ((grib_accessor*)self)->parent->h;
+    grib_context* c = h->context;
+    grib_smart_table* t = NULL;
     grib_smart_table* next = NULL;
-    char* filename         = 0;
+    char* filename = 0;
     char recomposed[1024] = {0,};
     char localRecomposed[1024] = {0,};
-    char* localFilename        = 0;
+    char* localFilename = 0;
     char extraRecomposed[1024] = {0,};
-    char* extraFilename  = 0;
+    char* extraFilename = 0;
     char masterDir[1024] = {0,};
     char localDir[1024] = {0,};
     char extraDir[1024] = {0,};
@@ -258,8 +258,8 @@ static grib_smart_table* load_table(grib_accessor* a)
      */
     size = (1ULL << self->widthOfCode); /* = 2^self->widthOfCode (as a 64 bit number) */
 
-    t                  = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
-    t->entries         = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
+    t = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
+    t->entries = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
     t->numberOfEntries = size;
 
     if (filename != 0)
@@ -296,21 +296,21 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
     Assert(t != NULL);
 
     if (t->filename[0] == NULL) {
-        t->filename[0]        = grib_context_strdup_persistent(c, filename);
+        t->filename[0] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[0] = grib_context_strdup_persistent(c, recomposed_name);
-        t->next               = c->smart_table;
-        t->numberOfEntries    = size;
+        t->next = c->smart_table;
+        t->numberOfEntries = size;
         GRIB_MUTEX_INIT_ONCE(&once, &thread_init);
         GRIB_MUTEX_LOCK(&mutex);
         c->smart_table = t;
         GRIB_MUTEX_UNLOCK(&mutex);
     }
     else if (t->filename[1] == NULL) {
-        t->filename[1]        = grib_context_strdup_persistent(c, filename);
+        t->filename[1] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[1] = grib_context_strdup_persistent(c, recomposed_name);
     }
     else {
-        t->filename[2]        = grib_context_strdup_persistent(c, filename);
+        t->filename[2] = grib_context_strdup_persistent(c, filename);
         t->recomposed_name[2] = grib_context_strdup_persistent(c, recomposed_name);
     }
 
@@ -405,7 +405,7 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-    grib_smart_table* table         = NULL;
+    grib_smart_table* table = NULL;
 
     size_t size = 1;
     long value;
@@ -435,7 +435,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     }
 
     strcpy(buffer, tmp);
-    *len        = l;
+    *len = l;
     self->dirty = 0;
 
     return GRIB_SUCCESS;
@@ -444,9 +444,9 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
 static int get_table_codes(grib_accessor* a)
 {
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-    size_t size                     = 0;
-    long* v                         = 0;
-    int err                         = 0;
+    size_t size = 0;
+    long* v = 0;
+    int err = 0;
     int count, j;
     size_t i;
 
@@ -479,7 +479,7 @@ static int get_table_codes(grib_accessor* a)
     if (self->tableCodes)
         grib_context_free(a->context, self->tableCodes);
     self->tableCodes = (long*)grib_context_malloc_clear(a->context, count * sizeof(long));
-    j                = 0;
+    j = 0;
     for (i = 0; i < size; i++) {
         if (v[i] < table_size)
             self->tableCodes[j++] = v[i];
@@ -488,16 +488,16 @@ static int get_table_codes(grib_accessor* a)
     grib_context_free(a->context, v);
 
     self->tableCodesSize = count;
-    self->dirty          = 0;
+    self->dirty = 0;
 
     return 0;
 }
 
 static int value_count(grib_accessor* a, long* count)
 {
-    int err                         = 0;
+    int err = 0;
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
-    *count                          = 0;
+    *count = 0;
 
     if (!self->values)
         return 0;
@@ -532,7 +532,7 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int err                         = 0;
+    int err = 0;
     grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
     size_t i;
 
@@ -545,7 +545,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     if (*len < self->tableCodesSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "Wrong size (%lu) for %s it contains %lu values", *len, a->name, self->tableCodesSize);
+                         "Wrong size (%zu) for %s, it contains %zu values", *len, a->name, self->tableCodesSize);
         *len = 0;
         return GRIB_ARRAY_TOO_SMALL;
     }

@@ -73,16 +73,15 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
 {
     char buf[1024];
 
-    grib_action_noop* a;
     grib_action_class* c = grib_action_class_noop;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
     act->op              = grib_context_strdup_persistent(context, "section");
 
     act->cclass  = c;
-    a            = (grib_action_noop*)act;
+    grib_action_noop* a = (grib_action_noop*)act;
     act->context = context;
 
-    snprintf(buf, 1024, "_noop%p", (void*)a);
+    snprintf(buf, sizeof(buf), "_noop%p", (void*)a);
 
     act->name = grib_context_strdup_persistent(context, buf);
 

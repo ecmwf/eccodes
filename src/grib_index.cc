@@ -63,6 +63,7 @@ static int index_count;
 static long values_count = 0;
 
 static int codes_index_add_file_internal(grib_index* index, const char* filename, int message_type);
+static void grib_index_rewind(grib_index* index);
 
 static char* get_key(char** keys, int* type)
 {
@@ -242,17 +243,13 @@ static grib_index_key* grib_index_new_key(grib_context* c, grib_index_key* keys,
 
     next = (grib_index_key*)grib_context_malloc_clear(c, sizeof(grib_index_key));
     if (!next) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_index_key));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_index_key));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
     values = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
     if (!values) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "unable to allocate %ld bytes",
-                         sizeof(grib_string_list));
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", sizeof(grib_string_list));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -546,7 +543,7 @@ grib_index* grib_index_new(grib_context* c, const char* key, int* err)
 
     index = (grib_index*)grib_context_malloc_clear(c, sizeof(grib_index));
     if (!index) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to create index");
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to create index");
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }
@@ -1036,7 +1033,7 @@ int grib_index_search_same(grib_index* index, grib_handle* h)
         }
         if (err && err != GRIB_NOT_FOUND) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                             "unable to create index. \"%s\": %s",
+                             "Unable to create index. \"%s\": %s",
                              keys->name, grib_get_error_message(err));
             return err;
         }
@@ -1141,7 +1138,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
                 if (!error && set_values_count != 0) {
                     err = grib_set_values(h, set_values, set_values_count);
                     if (err) {
-                        grib_context_log(c, GRIB_LOG_ERROR,"codes_index_add_file: unable to set %s\n", envsetkeys);
+                        grib_context_log(c, GRIB_LOG_ERROR,"codes_index_add_file: Unable to set %s\n", envsetkeys);
                         return err;
                     }
                 }
@@ -1151,7 +1148,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         if (index->product_kind == PRODUCT_BUFR && index->unpack_bufr) {
             err = grib_set_long(h, "unpack", 1);
             if (err) {
-                grib_context_log(c, GRIB_LOG_ERROR, "unable to unpack BUFR to create index. \"%s\": %s",
+                grib_context_log(c, GRIB_LOG_ERROR, "Unable to unpack BUFR to create index. \"%s\": %s",
                                  index_key->name, grib_get_error_message(err));
                 return err;
             }
@@ -1189,7 +1186,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
                     return err;
             }
             if (err && err != GRIB_NOT_FOUND) {
-                grib_context_log(c, GRIB_LOG_ERROR, "unable to create index. key=\"%s\" (message #%lu): %s",
+                grib_context_log(c, GRIB_LOG_ERROR, "Unable to create index. key=\"%s\" (message #%lu): %s",
                                  index_key->name, message_count, grib_get_error_message(err));
                 return err;
             }
@@ -1362,7 +1359,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 //                 return err;
 //             }
 //             if (err && err != GRIB_NOT_FOUND) {
-//                 grib_context_log(c,GRIB_LOG_ERROR,"unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
+//                 grib_context_log(c,GRIB_LOG_ERROR,"Unable to create index. \"%s\": %s",index_key->name,grib_get_error_message(err));
 //                 return err;
 //             }
 
@@ -1498,7 +1495,7 @@ int grib_index_get_long(const grib_index* index, const char* key, long* values, 
     if (!k)
         return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_LONG) {
-        grib_context_log(index->context, GRIB_LOG_ERROR, "unable to get index %s as long", key);
+        grib_context_log(index->context, GRIB_LOG_ERROR, "Unable to get index %s as long", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count > *size)
@@ -1527,7 +1524,7 @@ int grib_index_get_double(const grib_index* index, const char* key, double* valu
     if (!k)
         return GRIB_NOT_FOUND;
     if (k->type != GRIB_TYPE_DOUBLE) {
-        grib_context_log(index->context, GRIB_LOG_ERROR, "unable to get index %s as double", key);
+        grib_context_log(index->context, GRIB_LOG_ERROR, "Unable to get index %s as double", key);
         return GRIB_WRONG_TYPE;
     }
     if (k->values_count > *size)
@@ -1885,7 +1882,8 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
         return NULL;
     c = index->context;
     if (!index->rewind) {
-        if (!index->current) {
+        // ECC-1764
+        if (!index->current || !index->current->field) {
             *err = GRIB_END_OF_INDEX;
             return NULL;
         }
@@ -1908,7 +1906,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
                                                                       sizeof(grib_field_list));
         if (!index->fieldset) {
             grib_context_log(index->context, GRIB_LOG_ERROR,
-                             "unable to allocate %lu bytes", sizeof(grib_field_list));
+                             "Unable to allocate %zu bytes", sizeof(grib_field_list));
             return NULL;
         }
         index->current = index->fieldset;
@@ -1941,7 +1939,7 @@ grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err)
     return h;
 }
 
-void grib_index_rewind(grib_index* index)
+static void grib_index_rewind(grib_index* index)
 {
     index->rewind = 1;
 }
