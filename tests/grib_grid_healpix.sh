@@ -94,7 +94,7 @@ EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 ${tools_dir}/grib_get_data $tempGrib > $tempLog
 
-# Nested ordering: N must be a power of 2
+# Nested: N must be a power of 2
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -s gridType=healpix,Nside=3,orderingConvention=nested,numberOfDataPoints=108,numberOfValues=108 $input $tempGrib
 set +e
@@ -105,8 +105,26 @@ set -e
 grep -q "Nside must be a power of 2" $tempLog
 
 
-# Invalid cases
-# --------------
+# Nested. Bad N
+${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+cat $tempLog
+grep -q "N must be greater than 1" $tempLog
+
+# Bad ordering
+${tools_dir}/grib_set -s gridType=healpix,Nside=1,ordering=6 $input $tempGrib
+set +e
+${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Only orderingConvention.*are supported" $tempLog
+
+# N = 0
 set +e
 ${tools_dir}/grib_get_data -sN=0 $tempGrib > $tempLog 2>&1
 status=$?
