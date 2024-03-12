@@ -265,8 +265,8 @@ static int iterate_healpix(grib_iterator_healpix* self, long N)
                 p -= 8 * Nside;
             }
 
-            int i = (r + p) >> 1;
-            int j = (r - p) >> 1;
+            int i = std::max(0, (r + p)) >> 1;
+            int j = std::max(0, (r - p)) >> 1;
 
             Assert(f < 12 && i < Nside && j < Nside);
             return CodecFijNest::fij_to_nest(f, i, j, k);
@@ -362,10 +362,10 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
         return GRIB_GEOCALCULUS_PROBLEM;
     }
-    if (self->nested && N == 1) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: For orderingConvention=nested, N must be greater than 1", ITER);
-        return GRIB_GEOCALCULUS_PROBLEM;
-    }
+    // if (self->nested && N == 1) {
+    //     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: For orderingConvention=nested, N must be greater than 1", ITER);
+    //     return GRIB_GEOCALCULUS_PROBLEM;
+    // }
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only spherical earth is supported", ITER);

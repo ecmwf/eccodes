@@ -19,7 +19,8 @@ input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 latest=`${tools_dir}/grib_get -p tablesVersionLatest $input`
 
-# Create a filter
+# Check basic keys and grid template
+# -----------------------------------
 cat > $tempFilt <<EOF
   set tablesVersion = $latest;
   set gridType = "healpix";
@@ -45,8 +46,8 @@ ${tools_dir}/grib_dump -O -p section_3 $tempGrib
 ${tools_dir}/grib_ls -jn geography $tempGrib > $tempLog
 grep -q "orderingConvention.*ring" $tempLog
 
-# Geoiterator
-# -------------
+# Geoiterator ring-ordering
+# --------------------------
 rm -f $tempGrib
 cat > $tempFilt <<EOF
   set tablesVersion = $latest;
@@ -73,8 +74,8 @@ EOF
 ${tools_dir}/grib_filter $tempFilt $tempGrib
 
 
-# Nested ordering
-# ---------------
+# Geoiterator Nested ordering
+# ---------------------------
 rm -f $tempGrib
 cat > $tempFilt <<EOF
   set tablesVersion = $latest;
@@ -105,16 +106,13 @@ set -e
 grep -q "Nside must be a power of 2" $tempLog
 
 
-# Nested. Bad N
-${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested $input $tempGrib
-set +e
-${tools_dir}/grib_get_data $tempGrib > $tempLog 2>&1
-status=$?
-set -e
-[ $status -ne 0 ]
-cat $tempLog
-grep -q "N must be greater than 1" $tempLog
+# Nested N=1
+input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_set -s gridType=healpix,Nside=1,orderingConvention=nested,numberOfDataPoints=12,numberOfValues=12 $input $tempGrib
+${tools_dir}/grib_get_data $tempGrib > $tempLog
 
+# Invalid cases
+# ------------------
 # Bad ordering
 ${tools_dir}/grib_set -s gridType=healpix,Nside=1,ordering=6 $input $tempGrib
 set +e
