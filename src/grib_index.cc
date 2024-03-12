@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include <map>
 
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
@@ -1083,6 +1084,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
     grib_field_tree* field_tree;
     grib_file* file = NULL;
     grib_context* c;
+    bool warn_about_duplicates = true;
 
     if (!index)
         return GRIB_NULL_INDEX;
@@ -1121,6 +1123,7 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
 
     fseeko(file->handle, 0, SEEK_SET);
 
+    std::map<off_t, grib_handle*> map_of_offsets;
     while ((h = new_message_from_file(message_type, c, file->handle, &err)) != NULL) {
         grib_string_list* v = 0;
         index_key           = index->keys;
@@ -1240,6 +1243,18 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         field->file = file;
         index->count++;
         field->offset = h->offset;
+        if (warn_about_duplicates) {
+            const bool offset_is_unique = map_of_offsets.insert( std::pair<off_t, grib_handle*>(h->offset, h) ).second;
+            if (!offset_is_unique) {
+                fprintf(stderr, "ECCODES WARNING :  File '%s': field offset %lld is not unique.\n", filename, h->offset);
+                long edition = 0;
+                if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
+                    fprintf(stderr, "ECCODES WARNING :  This can happen if the file contains multi-field GRIB messages.\n");
+                    fprintf(stderr, "ECCODES WARNING :  Indexing multi-field messages is not fully supported.\n");
+                }
+                warn_about_duplicates = false;
+            }
+        }
 
         err = grib_get_long(h, "totalLength", &length);
         if (err)
