@@ -45,6 +45,15 @@ ${tools_dir}/bufr_index_build -k mars.ident -o $tempIndex $infile |\
 # ------------------
 # Error conditions
 # ------------------
+infile=${data_dir}/bufr/vos308014_v3_26.bufr
+set +e
+${tools_dir}/bufr_index_build -o $tempIndex $infile > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to unpack BUFR to create index" $tempOut
+
+
 echo BUFR > $tempBufr
 set +e
 ${tools_dir}/bufr_index_build $tempBufr > $tempOut 2>&1
