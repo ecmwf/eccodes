@@ -10,6 +10,8 @@
 
 #include "grib_api_internal.h"
 #include <float.h>
+#include <string>
+#include <sstream>
 
 typedef enum
 {
@@ -2104,6 +2106,30 @@ int grib_producing_large_constant_fields(const grib_handle* h, int edition)
     return c->large_constant_fields;
 }
 
+static std::string grib_data_quality_check_extra_info(const grib_handle* h)
+{
+    char step[32]       = "unknown";
+    char marsClass[32]  = {0,};
+    char marsStream[32] = {0,};
+    char marsType[32]   = {0,};
+    std::string result;
+    std::stringstream ss;
+    size_t len = 32;
+    int err1 = grib_get_string(h, "step", step, &len);
+    len = 32;
+    int err2 = grib_get_string(h, "class", marsClass, &len);
+    len = 32;
+    int err3 = grib_get_string(h, "stream", marsStream, &len);
+    len = 32;
+    int err4 = grib_get_string(h, "type", marsType, &len);
+    if (!err1 && !err2 && !err3 && !err4) {
+        ss << "step=" << step << ", class=" << marsClass << ", stream=" << marsStream << ", type=" << marsType;
+        result = ss.str();
+    }
+
+    return result;
+}
+
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val)
 {
     int err = 0;
@@ -2112,7 +2138,6 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     const grib_context* ctx = h->context;
     bool is_error          = true;
     char description[1024] = {0,};
-    char step[32]          = "unknown";
     char shortName[64]     = {0,};
     char name[526]         = {0,};
     size_t len             = 0;
@@ -2128,8 +2153,9 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
     len = sizeof(shortName);
     err = grib_get_string(h, "shortName", shortName, &len);
     if (err || STR_EQUAL(shortName, invalid_shortName)) {
-        fprintf(stderr, "ECCODES %s   :  Invalid metadata: shortName='%s'\n",
-                    (is_error ? "ERROR" : "WARNING"), invalid_shortName);
+        std::string info( grib_data_quality_check_extra_info(h) );
+        fprintf(stderr, "ECCODES %s   :  (%s) Invalid metadata: shortName='%s'\n",
+                    (is_error ? "ERROR" : "WARNING"), info.c_str(), invalid_shortName);
         if (is_error) return GRIB_INVALID_MESSAGE;
     }
 
@@ -2157,21 +2183,20 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
         if (get_concept_condition_string(h, "param_value_max", NULL, description) == GRIB_SUCCESS) {
             printf("ECCODES DEBUG grib_data_quality_check: Checking condition '%s' (allowed=%g, %g) (actual=%g, %g)\n",
                    description, min_field_value_allowed, max_field_value_allowed,
-                   min_val, max_val
-                  );
+                   min_val, max_val);
         }
     }
 
     if (min_val < min_field_value_allowed) {
-        grib_get_string(h, "step", step, &len);
+        std::string info( grib_data_quality_check_extra_info(h) );
         if (get_concept_condition_string(h, "param_value_min", NULL, description) == GRIB_SUCCESS) {
-            fprintf(stderr, "ECCODES %s   :  (%s, step=%s): minimum (%g) is less than the allowable limit (%g)\n",
-                    (is_error ? "ERROR" : "WARNING"), description, step, min_val, min_field_value_allowed);
+            fprintf(stderr, "ECCODES %s   :  (%s, %s): minimum (%g) is less than the allowable limit (%g)\n",
+                    (is_error ? "ERROR" : "WARNING"), description, info.c_str(), min_val, min_field_value_allowed);
         }
         else {
             if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
-                fprintf(stderr, "ECCODES %s   :  (paramId=%ld, step=%s): minimum (%g) is less than the default allowable limit (%g)\n",
-                        (is_error ? "ERROR" : "WARNING"), paramId, step, min_val, min_field_value_allowed);
+                fprintf(stderr, "ECCODES %s   :  (paramId=%ld, %s): minimum (%g) is less than the default allowable limit (%g)\n",
+                        (is_error ? "ERROR" : "WARNING"), paramId, info.c_str(), min_val, min_field_value_allowed);
             }
         }
         if (is_error) {
@@ -2179,15 +2204,15 @@ int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max
         }
     }
     if (max_val > max_field_value_allowed) {
-        grib_get_string(h, "step", step, &len);
+        std::string info( grib_data_quality_check_extra_info(h) );
         if (get_concept_condition_string(h, "param_value_max", NULL, description) == GRIB_SUCCESS) {
-            fprintf(stderr, "ECCODES %s   :  (%s, step=%s): maximum (%g) is more than the allowable limit (%g)\n",
-                    (is_error ? "ERROR" : "WARNING"), description, step, max_val, max_field_value_allowed);
+            fprintf(stderr, "ECCODES %s   :  (%s, %s): maximum (%g) is more than the allowable limit (%g)\n",
+                    (is_error ? "ERROR" : "WARNING"), description, info.c_str(), max_val, max_field_value_allowed);
         }
         else {
             if (grib_get_long(h, "paramId", &paramId) == GRIB_SUCCESS) {
-                fprintf(stderr, "ECCODES %s   :  (paramId=%ld, step=%s): maximum (%g) is more than the default allowable limit (%g)\n",
-                        (is_error ? "ERROR" : "WARNING"), paramId, step, max_val, max_field_value_allowed);
+                fprintf(stderr, "ECCODES %s   :  (paramId=%ld, %s): maximum (%g) is more than the default allowable limit (%g)\n",
+                        (is_error ? "ERROR" : "WARNING"), paramId, info.c_str(), max_val, max_field_value_allowed);
             }
         }
         if (is_error) {
