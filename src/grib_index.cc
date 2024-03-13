@@ -10,6 +10,7 @@
 
 #include "grib_api_internal.h"
 #include <map>
+#include <string>
 
 #define UNDEF_LONG   -99999
 #define UNDEF_DOUBLE -99999
@@ -1132,18 +1133,25 @@ static int codes_index_add_file_internal(grib_index* index, const char* filename
         message_count++;
 
         {
-            char* envsetkeys = getenv("ECCODES_INDEX_SET_KEYS");
+            const char* set_keys_env_var = "ECCODES_INDEX_SET_KEYS";
+            char* envsetkeys = getenv(set_keys_env_var);
             if (envsetkeys) {
                 grib_values set_values[MAX_NUM_KEYS];
                 int set_values_count = MAX_NUM_KEYS;
+                std::string copy_of_env(envsetkeys); //parse_keyval_string changes envsetkeys!
                 int error = parse_keyval_string(NULL, envsetkeys, 1, GRIB_TYPE_UNDEFINED,
                         set_values, &set_values_count);
                 if (!error && set_values_count != 0) {
                     err = grib_set_values(h, set_values, set_values_count);
                     if (err) {
-                        grib_context_log(c, GRIB_LOG_ERROR,"codes_index_add_file: Unable to set %s\n", envsetkeys);
+                        grib_context_log(c, GRIB_LOG_ERROR,
+                                        "codes_index_add_file: Unable to set %s", copy_of_env.c_str());
                         return err;
                     }
+                } else {
+                    grib_context_log(c, GRIB_LOG_ERROR, "codes_index_add_file: Unable to parse %s (%s)",
+                                     set_keys_env_var, grib_get_error_message(error));
+                    return error;
                 }
             }
         }

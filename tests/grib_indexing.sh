@@ -147,8 +147,8 @@ mkdir $temp_dir_B
 cp ${data_dir}/tigge/tigge_rjtd_pl_*grib  $temp_dir_A
 cp ${data_dir}/tigge/tigge_rjtd_sfc_*grib $temp_dir_B
 
-${tools_dir}/grib_index_build -o $tempIndex1 $temp_dir_A
-${tools_dir}/grib_dump $tempIndex1
+${tools_dir}/grib_index_build -o $tempIndex1 $temp_dir_A > /dev/null
+${tools_dir}/grib_dump $tempIndex1 > /dev/null
 
 rm -rf $temp_dir_A
 
@@ -157,6 +157,39 @@ rm -rf $temp_dir_A
 # ---------
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 ${tools_dir}/grib_dump $tempIndex1 >/dev/null
+
+
+# ECC-1773: GRIB2 multi-field messages
+# -------------------------------------
+infile=$data_dir/multi.grib2
+${tools_dir}/grib_index_build -o $tempIndex1 $infile > $temp 2>&1
+grep -q "Indexing multi-field messages is not fully supported" $temp
+
+# Change keys before indexing
+# ----------------------------
+infile=$data_dir/tigge_pf_ecmwf.grib2
+
+${tools_dir}/grib_index_build -N -o $tempIndex1 $infile > $temp
+grep -q "mars.stream = { enfo }" $temp
+grep -q "mars.type = { pf }" $temp
+
+ECCODES_INDEX_SET_KEYS='typeOfProcessedData=af' ${tools_dir}/grib_index_build -N -o $tempIndex1 $infile > $temp
+grep -q "mars.stream = { oper }" $temp
+grep -q "mars.type = { fc }" $temp
+
+set +e
+ECCODES_INDEX_SET_KEYS='nosuchkey=1,typeOfProcessedData=af' ${tools_dir}/grib_index_build -N -o $tempIndex1 $infile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to set nosuchkey=1,typeOfProcessedData=af" $temp
+
+set +e
+ECCODES_INDEX_SET_KEYS='rubbish' ${tools_dir}/grib_index_build -N -o $tempIndex1 $infile > $temp 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Unable to parse" $temp
 
 
 # ------------------
