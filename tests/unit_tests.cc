@@ -679,7 +679,7 @@ void test_grib2_select_PDTN()
     int chemical_srcsink = 1;
     int chemical_distfn = 1;
     int aerosol = 1;
-    //int aerosol_optical = 1;
+    int aerosol_optical = 1;
 
     // arguments = eps instant chemical chemical_srcsink chemical_distfn aerosol aerosol_optical
 
@@ -690,19 +690,29 @@ void test_grib2_select_PDTN()
     Assert( 43 == grib2_select_PDTN(eps,  !instant, chemical, 0, 0, 0, 0) );
 
     // Chemical source/sink
-    Assert( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink,0,0,0) );
-    Assert( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink,0,0,0) );
-    Assert( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink,0,0,0) );
-    Assert( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink,0,0,0) );
+    Assert( 76 == grib2_select_PDTN(!eps, instant,  !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 77 == grib2_select_PDTN(eps,  instant,  !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 78 == grib2_select_PDTN(!eps, !instant, !chemical, chemical_srcsink, 0,0,0) );
+    Assert( 79 == grib2_select_PDTN(eps,  !instant, !chemical, chemical_srcsink, 0,0,0) );
+
+    // Chemical distrib. function
+    Assert( 58 == grib2_select_PDTN(eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 68 == grib2_select_PDTN(eps, !instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 57 == grib2_select_PDTN(!eps, instant,  0, 0, chemical_distfn, 0, 0) );
+    Assert( 67 == grib2_select_PDTN(!eps, !instant,  0, 0, chemical_distfn, 0, 0) );
 
     // Aerosols
-    Assert( 48 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
-    Assert( 46 == grib2_select_PDTN(!eps, !instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
-    Assert( 45 == grib2_select_PDTN(eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
-    Assert( 85 == grib2_select_PDTN(eps, !instant,  !chemical, !chemical_srcsink, !chemical_distfn, aerosol, 0) );
+    Assert( 48 == grib2_select_PDTN(!eps, instant,  0, 0, 0, aerosol, 0) );
+    Assert( 46 == grib2_select_PDTN(!eps, !instant, 0, 0, 0, aerosol, 0) );
+    Assert( 45 == grib2_select_PDTN(eps, instant,   0, 0, 0, aerosol, 0) );
+    Assert( 85 == grib2_select_PDTN(eps, !instant,  0, 0, 0, aerosol, 0) );
+
+    // Aerosol optical
+    Assert( 49 == grib2_select_PDTN(eps, instant,  0, 0, 0, 0, aerosol_optical) );
+    Assert( 48 == grib2_select_PDTN(!eps, instant, 0, 0, 0, 0, aerosol_optical) );
 
     // Plain vanilla
-    Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol,0) );
+    Assert(  0 == grib2_select_PDTN(!eps, instant,  !chemical, !chemical_srcsink, !chemical_distfn, !aerosol, 0) );
     Assert(  1 == grib2_select_PDTN(1,1,0,0,0, !aerosol,0) );
     Assert(  8 == grib2_select_PDTN(0,0,0,0,0, !aerosol,0) );
     Assert( 11 == grib2_select_PDTN(1,0,0,0,0, !aerosol,0) );
