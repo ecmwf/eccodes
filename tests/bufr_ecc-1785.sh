@@ -20,7 +20,6 @@ label="bufr_ecc-1785_test"
 tempBufr=temp.$label.bufr
 tempFilt=temp.$label.filt
 tempLog=temp.$label.log
-tempRef=temp.$label.ref
 
 sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR3_local_satellite.tmpl
 
@@ -32,4 +31,4 @@ result=$(${tools_dir}/bufr_get -p isSatelliteType,isSatellite,satelliteID $tempB
 [ "$result" = "1 1 78" ]
 
 # Clean up
-rm -f $tempBufr $tempFilt $tempLog $tempRef
+rm -f $tempBufr $tempFilt $tempLog
