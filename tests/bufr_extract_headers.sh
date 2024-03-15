@@ -14,6 +14,8 @@
 label="bufr_extract_headers_test"
 temp1="temp.${label}.1"
 temp2="temp.${label}.2"
+tempBufr=temp.$label.bufr
+tempFilt=temp.$label.filt
 
 # Multi-message BUFR
 # --------------------
@@ -190,6 +192,14 @@ ${tools_dir}/bufr_set -s restricted=1 $input $temp1
 r=`$EXEC ${test_dir}/bufr_extract_headers restricted $temp1`
 [ "$r" = "1" ]
 
+# ECC-1785 Allow encoding satelliteID when rdbType=30
+# ----------------------------------------------------
+sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR3_local_satellite.tmpl
+echo 'set numberOfSubsets=1; set rdbType=30; set satelliteID=78; write;' > $tempFilt
+${tools_dir}/codes_bufr_filter -o $tempBufr $tempFilt $sample_bufr4
+r=$(${test_dir}/bufr_extract_headers isSatellite,satelliteID $tempBufr)
+[ "$r" = "1 78" ]
+
 
 echo "Test with invalid inputs..."
 # ---------------------------------
@@ -234,3 +244,4 @@ grep -q "No BUFR messages in file" $temp2
 
 # Clean up
 rm -f $temp1 $temp2
+rm -f $tempBufr $tempFilt
