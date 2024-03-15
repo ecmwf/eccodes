@@ -88,5 +88,16 @@ grep -q "unreadable message" $tempText
 rm -f $outfile
 
 
+# ----------------------
+# Wrong message type
+# ----------------------
+set +e
+${tools_dir}/grib_get -p edition $ECCODES_SAMPLES_PATH/BUFR3.tmpl > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Input file seems to be BUFR" $tempText
+
+
 # Clean up
 rm -f $tempText
