@@ -133,18 +133,17 @@ static int get_native_type(grib_accessor* a)
 
 static int apply_thinning(grib_accessor* a)
 {
-    grib_accessor_bufr_simple_thinning* self = (grib_accessor_bufr_simple_thinning*)a;
-    int ret                                  = 0;
+    const grib_accessor_bufr_simple_thinning* self = (grib_accessor_bufr_simple_thinning*)a;
+
     long skip;
     grib_handle* h  = grib_handle_of_accessor(a);
     grib_context* c = h->context;
     long compressed = 0, nsubsets;
-    long i;
     grib_iarray* subsets;
     long* subsets_ar = 0;
     long start = 0, radius = 0;
 
-    ret = grib_get_long(h, "compressedData", &compressed);
+    int ret = grib_get_long(h, "compressedData", &compressed);
     if (ret)
         return ret;
     if (compressed) {
@@ -168,7 +167,7 @@ static int apply_thinning(grib_accessor* a)
             return ret;
 
         subsets = grib_iarray_new(c, numberOfSubsets / skip + 1, 10);
-        for (i = 0; i < numberOfSubsets; i += skip + 1) {
+        for (long i = 0; i < numberOfSubsets; i += skip + 1) {
             grib_iarray_push(subsets, i + 1);
         }
 
@@ -200,12 +199,11 @@ static int apply_thinning(grib_accessor* a)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int err                                  = 0;
-    grib_accessor_bufr_simple_thinning* self = (grib_accessor_bufr_simple_thinning*)a;
+    const grib_accessor_bufr_simple_thinning* self = (grib_accessor_bufr_simple_thinning*)a;
 
     if (*len == 0)
         return GRIB_SUCCESS;
-    err = apply_thinning(a);
+    int err = apply_thinning(a);
     if (err)
         return err;
 

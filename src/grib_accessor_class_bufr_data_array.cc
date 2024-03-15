@@ -1523,10 +1523,10 @@ static int build_bitmap(grib_accessor_bufr_data_array* self, unsigned char* data
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, localReference, width, bitmapEndElementsDescriptorsIndex;
     long ppos, n;
-    grib_accessor* a              = (grib_accessor*)self;
-    grib_context* c               = a->context;
+    grib_accessor* a = (grib_accessor*)self;
+    const grib_context* c = a->context;
     bufr_descriptor** descriptors = self->expanded->v;
-    long* edi                     = elementsDescriptorsIndex->v;
+    const long* edi = elementsDescriptorsIndex->v;
     /* int iel=grib_iarray_used_size(elementsDescriptorsIndex)-1; */
     int err = 0;
 
@@ -1652,10 +1652,10 @@ static int build_bitmap_new_data(grib_accessor_bufr_data_array* self, unsigned c
     int bitmapSize = 0, iDelayedReplication = 0;
     int i, bitmapEndElementsDescriptorsIndex;
     long n;
-    grib_accessor* a              = (grib_accessor*)self;
-    grib_context* c               = a->context;
+    grib_accessor* a = (grib_accessor*)self;
+    const grib_context* c = a->context;
     bufr_descriptor** descriptors = self->expanded->v;
-    long* edi                     = elementsDescriptorsIndex->v;
+    const long* edi = elementsDescriptorsIndex->v;
 
     switch (descriptors[iBitmapOperator]->code) {
         case 222000:
