@@ -84,7 +84,6 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 
 static int error     = 0;
 static int count     = 0;
-static int lastPrint = 0;
 static int force     = 0;
 
 /* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
@@ -379,7 +378,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static void print_index_key_values(grib_index* index, int icounter, const char* error_message)

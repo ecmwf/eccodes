@@ -160,10 +160,10 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
 {
     grib_action_list* self = (grib_action_list*)a;
 
-    int ret  = 0;
     long val = 0;
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &val)) != GRIB_SUCCESS) {
+    int ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &val);
+    if (ret != GRIB_SUCCESS) {
         grib_context_log(acc->context, GRIB_LOG_ERROR,
                 "List %s creating %ld values: Unable to evaluate long", acc->name, val);
     }

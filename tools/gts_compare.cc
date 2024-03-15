@@ -74,7 +74,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
 int error               = 0;
 int count               = 0;
-int lastPrint           = 0;
 int force               = 0;
 double maxAbsoluteError = 1e-19;
 int onlyListed          = 1;
@@ -245,7 +244,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static grib_handle* gts_handle_new_from_file_x(

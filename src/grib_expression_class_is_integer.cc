@@ -92,7 +92,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
     char mybuf[1024] = {0,};
     size_t size = 1024;
     char* p     = 0;
-    long val    = 0;
     char* start = 0;
 
     if ((err = grib_get_string_internal(h, e->name, mybuf, &size)) != GRIB_SUCCESS)
@@ -103,14 +102,13 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* result)
     if (e->length > 0)
         start[e->length] = 0;
 
-    val = strtol(start, &p, 10);
+    strtol(start, &p, 10);
 
     if (*p != 0)
         *result = 0;
     else
         *result = 1;
 
-    (void)val;
     return err;
 }
 

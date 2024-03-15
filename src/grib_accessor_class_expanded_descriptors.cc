@@ -786,7 +786,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             break;
         case 2:
             return GRIB_INVALID_TYPE;
-            break;
         case 3:
             for (i = 0; i < *len; i++)
                 val[i] = self->expanded->v[i]->width;

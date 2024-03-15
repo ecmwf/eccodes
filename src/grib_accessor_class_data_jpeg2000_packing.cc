@@ -389,7 +389,6 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             grib_buffer_replace(a, NULL, 0, 1, 1);
             err = grib_set_long_internal(grib_handle_of_accessor(a), self->number_of_values, *len);
             return err;
-            break;
         case GRIB_SUCCESS:
             break;
         default:

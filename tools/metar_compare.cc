@@ -74,7 +74,6 @@ static int compareAbsolute         = 1;
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
 static int error               = 0;
 static int count               = 0;
-static int lastPrint           = 0;
 static int force               = 0;
 static double maxAbsoluteError = 1e-19;
 static int onlyListed          = 1;
@@ -306,7 +305,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static grib_handle* metar_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
