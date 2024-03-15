@@ -1301,7 +1301,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
                 fprintf(stderr, "%s: invalid packing_spec.packing_type (%ld)\n", __func__, packing_spec->packing_type);
                 *err = GRIB_INTERNAL_ERROR;
                 goto cleanup;
-                break;
         }
     }
     if (strcmp(input_packing_type, "grid_simple_matrix") == 0) {
@@ -1363,7 +1362,6 @@ grib_handle* grib_util_set_spec(grib_handle* h,
             grib_handle_delete(h_sample);
             *err = GRIB_INTERNAL_ERROR;
             goto cleanup;
-            break;
     }
 
     if (packing_spec->extra_settings_count) {
