@@ -9,10 +9,21 @@
  */
 
 #include <pthread.h>
-#include "grib_api_internal.h"
+#include <stdio.h>
+#include <stdlib.h>
+/*#include "grib_api_internal.h"*/
 
 #include "eccodes.h"
 #define NUM_THREADS 4
+
+void Assert(int condition)
+{
+    if (!condition) {
+        printf("Assertion failed\n");
+        exit(1);
+    }
+}
+
 
 /* Return 0 if numbers considered equal, otherwise 1 */
 static int compare_doubles(double a, double b, double tolerance)

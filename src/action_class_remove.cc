@@ -110,7 +110,7 @@ static void remove_accessor(grib_accessor* a)
 
     a->next->previous = a->previous;
 
-    grib_accessor_delete(s->h->context, a);
+    a->destroy(s->h->context);
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)

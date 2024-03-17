@@ -99,7 +99,7 @@ void grib_empty_section(grib_context* c, grib_section* b)
             grib_section_delete(c, current->sub_section);
             current->sub_section = 0;
         }
-        grib_accessor_delete(c, current);
+        current->destroy(c);
         current = next;
     }
     b->block->first = b->block->last = 0;

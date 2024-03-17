@@ -8,117 +8,17 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
-/*
-   This is used by make_class.pl
-
-   START_CLASS_DEF
-   CLASS      = accessor
-   SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = init;dump;is_missing
-   IMPLEMENTS = next_offset
-   IMPLEMENTS = byte_count
-   IMPLEMENTS = value_count
-   IMPLEMENTS = byte_offset
-   IMPLEMENTS = update_size; destroy
-   MEMBERS    = long nbytes
-   MEMBERS    = grib_arguments* arg
-   END_CLASS_DEF
-
- */
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "accessor.class" and rerun ./make_class.pl
-
-*/
-
-static int is_missing(grib_accessor*);
-static int pack_long(grib_accessor*, const long* val, size_t* len);
-static int unpack_long(grib_accessor*, long* val, size_t* len);
-static long byte_count(grib_accessor*);
-static long byte_offset(grib_accessor*);
-static long next_offset(grib_accessor*);
-static int value_count(grib_accessor*, long*);
-static void destroy(grib_context*, grib_accessor*);
-static void dump(grib_accessor*, grib_dumper*);
-static void init(grib_accessor*, const long, grib_arguments*);
-static void update_size(grib_accessor*, size_t);
-
-typedef struct grib_accessor_unsigned
-{
-    grib_accessor att;
-    /* Members defined in gen */
-    /* Members defined in long */
-    /* Members defined in unsigned */
-    long nbytes;
-    grib_arguments* arg;
-} grib_accessor_unsigned;
-
-extern grib_accessor_class* grib_accessor_class_long;
-
-static grib_accessor_class _grib_accessor_class_unsigned = {
-    &grib_accessor_class_long,                      /* super */
-    "unsigned",                      /* name */
-    sizeof(grib_accessor_unsigned),  /* size */
-    0,                           /* inited */
-    0,                           /* init_class */
-    &init,                       /* init */
-    0,                  /* post_init */
-    &destroy,                    /* destroy */
-    &dump,                       /* dump */
-    &next_offset,                /* next_offset */
-    0,              /* get length of string */
-    &value_count,                /* get number of values */
-    &byte_count,                 /* get number of bytes */
-    &byte_offset,                /* get offset to bytes */
-    0,            /* get native type */
-    0,                /* get sub_section */
-    0,               /* pack_missing */
-    &is_missing,                 /* is_missing */
-    &pack_long,                  /* pack_long */
-    &unpack_long,                /* unpack_long */
-    0,                /* pack_double */
-    0,                 /* pack_float */
-    0,              /* unpack_double */
-    0,               /* unpack_float */
-    0,                /* pack_string */
-    0,              /* unpack_string */
-    0,          /* pack_string_array */
-    0,        /* unpack_string_array */
-    0,                 /* pack_bytes */
-    0,               /* unpack_bytes */
-    0,            /* pack_expression */
-    0,              /* notify_change */
-    &update_size,                /* update_size */
-    0,             /* preferred_size */
-    0,                     /* resize */
-    0,      /* nearest_smaller_value */
-    0,                       /* next accessor */
-    0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value (double) */
-    0,       /* unpack only ith value (float) */
-    0,  /* unpack a given set of elements (double) */
-    0,   /* unpack a given set of elements (float) */
-    0,     /* unpack a subarray */
-    0,                      /* clear */
-    0,                 /* clone accessor */
-};
+#include "grib_accessor_class_unsigned.h"
 
 
+grib_accessor_class_unsigned_t _grib_accessor_class_unsigned("unsigned");
 grib_accessor_class* grib_accessor_class_unsigned = &_grib_accessor_class_unsigned;
 
-/* END_CLASS_IMP */
 
-static void init(grib_accessor* a, const long len, grib_arguments* arg)
+void grib_accessor_class_unsigned_t::init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
-    self->arg                    = NULL;
+    grib_accessor_class_long_t::init(a, len, arg);
+    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
     self->arg                    = arg;
     self->nbytes                 = len;
 
@@ -131,17 +31,17 @@ static void init(grib_accessor* a, const long len, grib_arguments* arg)
     }
     else {
         long count = 0;
-        grib_value_count(a, &count);
+        a->value_count(&count);
 
         a->length = len * count;
         a->vvalue = NULL;
     }
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_class_unsigned_t::dump(grib_accessor* a, grib_dumper* dumper)
 {
     long rlen = 0;
-    grib_value_count(a, &rlen);
+    a->value_count(&rlen);
     if (rlen == 1)
         grib_dump_long(dumper, a, NULL);
     else
@@ -158,14 +58,15 @@ static const unsigned long ones[] = {
 
 /* See GRIB-490 */
 static const unsigned long all_ones = -1;
-static int value_is_missing(long val)
+
+int value_is_missing(long val)
 {
     return (val == GRIB_MISSING_LONG || val == all_ones);
 }
 
 int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, int check)
 {
-    grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
+    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
     int ret                      = 0;
     long off                     = 0;
     long rlen                    = 0;
@@ -176,7 +77,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
     unsigned long i       = 0;
     unsigned long missing = 0;
 
-    err = grib_value_count(a, &rlen);
+    err = a->value_count(&rlen);
     if (err)
         return err;
 
@@ -260,9 +161,9 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
     return ret;
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_class_unsigned_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
+    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
     long rlen                    = 0;
     unsigned long i              = 0;
     unsigned long missing        = 0;
@@ -271,7 +172,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     long pos                     = a->offset * 8;
     grib_handle* hand            = grib_handle_of_accessor(a);
 
-    err = grib_value_count(a, &count);
+    err = a->value_count(&count);
     if (err)
         return err;
     rlen = count;
@@ -304,20 +205,20 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int pack_long(grib_accessor* a, const long* val, size_t* len)
+int grib_accessor_class_unsigned_t::pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     /* See GRIB-262 as example of why we do the checks */
     return pack_long_unsigned_helper(a, val, len, /*check=*/1);
 }
 
-static long byte_count(grib_accessor* a)
+long grib_accessor_class_unsigned_t::byte_count(grib_accessor* a)
 {
     return a->length;
 }
 
-static int value_count(grib_accessor* a, long* len)
+int grib_accessor_class_unsigned_t::value_count(grib_accessor* a, long* len)
 {
-    grib_accessor_unsigned* self = (grib_accessor_unsigned*)a;
+    grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
     if (!self->arg) {
         *len = 1;
         return 0;
@@ -325,22 +226,22 @@ static int value_count(grib_accessor* a, long* len)
     return grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, self->arg, 0), len);
 }
 
-static long byte_offset(grib_accessor* a)
+long grib_accessor_class_unsigned_t::byte_offset(grib_accessor* a)
 {
     return a->offset;
 }
 
-static void update_size(grib_accessor* a, size_t s)
+void grib_accessor_class_unsigned_t::update_size(grib_accessor* a, size_t s)
 {
     a->length = s;
 }
 
-static long next_offset(grib_accessor* a)
+long grib_accessor_class_unsigned_t::next_offset(grib_accessor* a)
 {
-    return grib_byte_offset(a) + grib_byte_count(a);
+    return a->byte_offset() + a->byte_count();
 }
 
-static int is_missing(grib_accessor* a)
+int grib_accessor_class_unsigned_t::is_missing(grib_accessor* a)
 {
     int i                = 0;
     unsigned char ff     = 0xff;
@@ -361,7 +262,7 @@ static int is_missing(grib_accessor* a)
     return 1;
 }
 
-static void destroy(grib_context* context, grib_accessor* a)
+void grib_accessor_class_unsigned_t::destroy(grib_context* context, grib_accessor* a)
 {
     if (a->vvalue != NULL)
         grib_context_free(context, a->vvalue);

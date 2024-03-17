@@ -14,7 +14,11 @@
 
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err)
 {
-    bufr_descriptor* ret = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, err);
+    // ===== TODO(maee): Enable this when grib_accessor_class_bufr_elements_table.cc is moved to C++ =====
+    throw std::runtime_error("grib_bufr_descriptor_new not implemented");
+    bufr_descriptor* ret = NULL;
+    //bufr_descriptor* ret = accessor_bufr_elements_table_get_descriptor(tables_accessor, code, err);
+    // ===== END TODO =====
     if (!silent && *err)
         grib_context_log(tables_accessor->context, GRIB_LOG_ERROR,
                          "unable to get descriptor %06d from table", code);

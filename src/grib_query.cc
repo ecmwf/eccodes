@@ -213,7 +213,11 @@ static char* get_condition(const char* name, codes_condition* condition)
 
 static grib_accessor* _search_by_rank(grib_accessor* a, const char* name, int rank)
 {
-    grib_trie_with_rank* t = accessor_bufr_data_array_get_dataAccessorsTrie(a);
+    // ===== TODO(maee): Enable when grib_accessor_class_bufr_data_array.cc is moved to C++ =====
+    throw "grib_accessor_class_bufr_data_array.cc is not yet moved to C++";
+    grib_trie_with_rank* t = NULL;
+    //grib_trie_with_rank* t = accessor_bufr_data_array_get_dataAccessorsTrie(a);
+    // ===== END TODO =====
     grib_accessor* ret     = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
     return ret;
 }
@@ -257,14 +261,14 @@ static int get_single_long_val(grib_accessor* a, long* result)
     size_t size     = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
-        grib_value_count(a, &count);
+        a->value_count(&count);
         if (count > 1) {
             size_t i        = 0;
             long val0       = 0;
             int is_constant = 1;
             long* values    = (long*)grib_context_malloc_clear(c, sizeof(long) * count);
             size            = count;
-            err             = grib_unpack_long(a, values, &size);
+            err             = a->unpack_long(values, &size);
             val0            = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
@@ -281,11 +285,11 @@ static int get_single_long_val(grib_accessor* a, long* result)
             }
         }
         else {
-            err = grib_unpack_long(a, result, &size);
+            err = a->unpack_long(result, &size);
         }
     }
     else {
-        err = grib_unpack_long(a, result, &size);
+        err = a->unpack_long(result, &size);
     }
     return err;
 }
@@ -296,14 +300,14 @@ static int get_single_double_val(grib_accessor* a, double* result)
     size_t size     = 1;
     if (c->bufr_multi_element_constant_arrays) {
         long count = 0;
-        grib_value_count(a, &count);
+        a->value_count(&count);
         if (count > 1) {
             size_t i        = 0;
             double val0     = 0;
             int is_constant = 1;
             double* values  = (double*)grib_context_malloc_clear(c, sizeof(double) * count);
             size            = count;
-            err             = grib_unpack_double(a, values, &size);
+            err             = a->unpack_double(values, &size);
             val0            = values[0];
             for (i = 0; i < size; i++) {
                 if (val0 != values[i]) {
@@ -320,11 +324,11 @@ static int get_single_double_val(grib_accessor* a, double* result)
             }
         }
         else {
-            err = grib_unpack_double(a, result, &size);
+            err = a->unpack_double(result, &size);
         }
     }
     else {
-        err = grib_unpack_double(a, result, &size);
+        err = a->unpack_double(result, &size);
     }
     return err;
 }
@@ -377,27 +381,27 @@ static void search_from_accessors_list(grib_accessors_list* al, const grib_acces
     while (al && al != end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name, accessor_name) == 0) {
             if (attribute_name[0]) {
-                accessor_result = grib_accessor_get_attribute(al->accessor, attribute_name);
+                accessor_result = al->accessor->get_attribute(attribute_name);
             }
             else {
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                grib_accessors_list_push(result, accessor_result, al->rank);
+                result->push(accessor_result, al->rank);
             }
         }
-        al = al->next;
+        al = al->next_;
     }
     if (al == end && al->accessor) {
         if (grib_inline_strcmp(al->accessor->name, accessor_name) == 0) {
             if (attribute_name[0]) {
-                accessor_result = grib_accessor_get_attribute(al->accessor, attribute_name);
+                accessor_result = al->accessor->get_attribute(attribute_name);
             }
             else {
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                grib_accessors_list_push(result, accessor_result, al->rank);
+                result->push(accessor_result, al->rank);
             }
         }
     }
@@ -416,7 +420,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al, const ch
             if (start && !condition_true(al->accessor, condition))
                 end = al;
         }
-        if (start != NULL && (end != NULL || al->next == NULL)) {
+        if (start != NULL && (end != NULL || al->next_ == NULL)) {
             if (end == NULL)
                 end = al;
             search_from_accessors_list(start, end, name, result);
@@ -424,7 +428,7 @@ static void search_accessors_list_by_condition(grib_accessors_list* al, const ch
             start = NULL;
             end   = NULL;
         }
-        al = al->next;
+        al = al->next_;
     }
 }
 
@@ -434,7 +438,10 @@ static grib_accessors_list* search_by_condition(grib_handle* h, const char* name
     grib_accessors_list* result = NULL;
     grib_accessor* data         = search_and_cache(h, "dataAccessors", 0);
     if (data && condition->left) {
-        al = accessor_bufr_data_array_get_dataAccessors(data);
+        // ===== TODO(maee): Enable when grib_accessor_class_bufr_data_array.cc is moved to C++ =====
+        //al = accessor_bufr_data_array_get_dataAccessors(data);
+        throw "grib_accessor_class_bufr_data_array.cc is not yet moved to C++";
+        // ===== END TODO =====
         if (!al)
             return NULL;
         result = (grib_accessors_list*)grib_context_malloc_clear(al->accessor->context, sizeof(grib_accessors_list));
@@ -452,7 +459,7 @@ static void grib_find_same_and_push(grib_accessors_list* al, grib_accessor* a)
 {
     if (a) {
         grib_find_same_and_push(al, a->same);
-        grib_accessors_list_push(al, a, al->rank);
+        al->push(a, al->rank);
     }
 }
 
@@ -484,7 +491,7 @@ grib_accessors_list* grib_find_accessors_list(const grib_handle* ch, const char*
             int r;
             al   = (grib_accessors_list*)grib_context_malloc_clear(h->context, sizeof(grib_accessors_list));
             str2 = get_rank(h->context, name, &r);
-            grib_accessors_list_push(al, a, r);
+            al->push(a, r);
             grib_context_free(h->context, str2);
         }
     }
@@ -585,7 +592,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
             aret = a;
         }
         else if (a) {
-            aret = grib_accessor_get_attribute(a, attribute_name);
+            aret = a->get_attribute(attribute_name);
             grib_context_free(h->context, accessor_name);
         }
     }
@@ -600,7 +607,7 @@ grib_accessor* grib_find_accessor(const grib_handle* h, const char* name)
 //         *err = GRIB_NOT_FOUND;
 //         return NULL;
 //     }
-//     if ((act = grib_accessor_get_attribute(a, attr_name)) == NULL) {
+//     if ((act = a->get_attribute(attr_name)) == NULL) {
 //         *err = GRIB_ATTRIBUTE_NOT_FOUND;
 //         return NULL;
 //     }

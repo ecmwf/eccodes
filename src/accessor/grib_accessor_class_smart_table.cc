@@ -12,126 +12,11 @@
  *  Enrico Fucile
  ****************************************/
 
-#include "grib_api_internal.h"
+#include "grib_accessor_class_smart_table.h"
 #include <cctype>
 
-/*
-   This is used by make_class.pl
-
-   START_CLASS_DEF
-   CLASS      = accessor
-   SUPER      = grib_accessor_class_unsigned
-   IMPLEMENTS = init;dump;unpack_string;unpack_long
-   IMPLEMENTS = value_count; destroy; get_native_type;
-   MEMBERS    =  const char* values
-   MEMBERS    =  const char* tablename
-   MEMBERS    =  const char* masterDir
-   MEMBERS    =  const char* localDir
-   MEMBERS    =  const char* extraDir
-   MEMBERS    =  const char* extraTable
-   MEMBERS    =  int widthOfCode
-   MEMBERS    =  long* tableCodes
-   MEMBERS    =  size_t tableCodesSize
-   MEMBERS    =  grib_smart_table* table
-   MEMBERS    =  int dirty
-   END_CLASS_DEF
-
- */
-
-/* START_CLASS_IMP */
-
-/*
-
-Don't edit anything between START_CLASS_IMP and END_CLASS_IMP
-Instead edit values between START_CLASS_DEF and END_CLASS_DEF
-or edit "accessor.class" and rerun ./make_class.pl
-
-*/
-
-static int get_native_type(grib_accessor*);
-static int unpack_long(grib_accessor*, long* val, size_t* len);
-static int unpack_string(grib_accessor*, char*, size_t* len);
-static int value_count(grib_accessor*, long*);
-static void destroy(grib_context*, grib_accessor*);
-static void dump(grib_accessor*, grib_dumper*);
-static void init(grib_accessor*, const long, grib_arguments*);
-
-typedef struct grib_accessor_smart_table
-{
-    grib_accessor att;
-    /* Members defined in gen */
-    /* Members defined in long */
-    /* Members defined in unsigned */
-    long nbytes;
-    grib_arguments* arg;
-    /* Members defined in smart_table */
-    const char* values;
-    const char* tablename;
-    const char* masterDir;
-    const char* localDir;
-    const char* extraDir;
-    const char* extraTable;
-    int widthOfCode;
-    long* tableCodes;
-    size_t tableCodesSize;
-    grib_smart_table* table;
-    int dirty;
-} grib_accessor_smart_table;
-
-extern grib_accessor_class* grib_accessor_class_unsigned;
-
-static grib_accessor_class _grib_accessor_class_smart_table = {
-    &grib_accessor_class_unsigned,                      /* super */
-    "smart_table",                      /* name */
-    sizeof(grib_accessor_smart_table),  /* size */
-    0,                           /* inited */
-    0,                           /* init_class */
-    &init,                       /* init */
-    0,                  /* post_init */
-    &destroy,                    /* destroy */
-    &dump,                       /* dump */
-    0,                /* next_offset */
-    0,              /* get length of string */
-    &value_count,                /* get number of values */
-    0,                 /* get number of bytes */
-    0,                /* get offset to bytes */
-    &get_native_type,            /* get native type */
-    0,                /* get sub_section */
-    0,               /* pack_missing */
-    0,                 /* is_missing */
-    0,                  /* pack_long */
-    &unpack_long,                /* unpack_long */
-    0,                /* pack_double */
-    0,                 /* pack_float */
-    0,              /* unpack_double */
-    0,               /* unpack_float */
-    0,                /* pack_string */
-    &unpack_string,              /* unpack_string */
-    0,          /* pack_string_array */
-    0,        /* unpack_string_array */
-    0,                 /* pack_bytes */
-    0,               /* unpack_bytes */
-    0,            /* pack_expression */
-    0,              /* notify_change */
-    0,                /* update_size */
-    0,             /* preferred_size */
-    0,                     /* resize */
-    0,      /* nearest_smaller_value */
-    0,                       /* next accessor */
-    0,                    /* compare vs. another accessor */
-    0,      /* unpack only ith value (double) */
-    0,       /* unpack only ith value (float) */
-    0,  /* unpack a given set of elements (double) */
-    0,   /* unpack a given set of elements (float) */
-    0,     /* unpack a subarray */
-    0,                      /* clear */
-    0,                 /* clone accessor */
-};
-
-
+grib_accessor_class_smart_table_t _grib_accessor_class_smart_table{"smart_table"};
 grib_accessor_class* grib_accessor_class_smart_table = &_grib_accessor_class_smart_table;
-
-/* END_CLASS_IMP */
 
 #if GRIB_PTHREADS
 static pthread_once_t once   = PTHREAD_ONCE_INIT;
@@ -149,7 +34,7 @@ static void thread_init()
 static int once = 0;
 static omp_nest_lock_t mutex;
 
-static void thread_init()
+void thread_init()
 {
     GRIB_OMP_CRITICAL(lock_grib_accessor_class_smart_table_c)
     {
@@ -161,12 +46,14 @@ static void thread_init()
 }
 #endif
 
-static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
+int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
-static void init(grib_accessor* a, const long len, grib_arguments* params)
+void grib_accessor_class_smart_table_t::init(grib_accessor* a, const long len, grib_arguments* params)
 {
+    grib_accessor_class_unsigned_t::init(a, len, params);
+
     int n = 0;
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     self->values      = grib_arguments_get_name(hand, params, n++);
@@ -184,9 +71,9 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
     self->tableCodes = 0;
 }
 
-static grib_smart_table* load_table(grib_accessor* a)
+grib_smart_table* load_table(grib_accessor* a)
 {
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t size = 0;
     grib_handle* h = ((grib_accessor*)self)->parent->h;
     grib_context* c = h->context;
@@ -279,7 +166,7 @@ static grib_smart_table* load_table(grib_accessor* a)
     return t;
 }
 
-static int grib_load_smart_table(grib_context* c, const char* filename,
+int grib_load_smart_table(grib_context* c, const char* filename,
                                  const char* recomposed_name, size_t size, grib_smart_table* t)
 {
     char line[1024] = {0,};
@@ -397,14 +284,14 @@ void grib_smart_table_delete(grib_context* c)
     }
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
+void grib_accessor_class_smart_table_t::dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_dump_long(dumper, a, NULL);
 }
 
-static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
+int grib_accessor_class_smart_table_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     grib_smart_table* table = NULL;
 
     size_t size = 1;
@@ -413,7 +300,7 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     char tmp[1024];
     size_t l = 0;
 
-    if ((err = grib_unpack_long(a, &value, &size)) != GRIB_SUCCESS)
+    if ((err = a->unpack_long(&value, &size)) != GRIB_SUCCESS)
         return err;
 
     if (!self->table)
@@ -441,9 +328,9 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     return GRIB_SUCCESS;
 }
 
-static int get_table_codes(grib_accessor* a)
+int get_table_codes(grib_accessor* a)
 {
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t size = 0;
     long* v = 0;
     int err = 0;
@@ -493,10 +380,10 @@ static int get_table_codes(grib_accessor* a)
     return 0;
 }
 
-static int value_count(grib_accessor* a, long* count)
+int grib_accessor_class_smart_table_t::value_count(grib_accessor* a, long* count)
 {
     int err = 0;
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     *count = 0;
 
     if (!self->values)
@@ -509,9 +396,9 @@ static int value_count(grib_accessor* a, long* count)
     return GRIB_SUCCESS;
 }
 
-static void destroy(grib_context* context, grib_accessor* a)
+void grib_accessor_class_smart_table_t::destroy(grib_context* context, grib_accessor* a)
 {
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     if (a->vvalue != NULL) {
         grib_context_free(context, a->vvalue);
         a->vvalue = NULL;
@@ -520,7 +407,7 @@ static void destroy(grib_context* context, grib_accessor* a)
         grib_context_free(a->context, self->tableCodes);
 }
 
-static int get_native_type(grib_accessor* a)
+int grib_accessor_class_smart_table_t::get_native_type(grib_accessor* a)
 {
     int type = GRIB_TYPE_LONG;
     /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
@@ -530,10 +417,10 @@ static int get_native_type(grib_accessor* a)
     return type;
 }
 
-static int unpack_long(grib_accessor* a, long* val, size_t* len)
+int grib_accessor_class_smart_table_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     int err = 0;
-    grib_accessor_smart_table* self = (grib_accessor_smart_table*)a;
+    grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t i;
 
     if (!self->values)

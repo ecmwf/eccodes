@@ -189,9 +189,10 @@ void grib_accessor_gen_t::resize(size_t new_size)
 }
 
 // For this one, ALL destroy are called
-void grib_accessor_delete(grib_context* ct, grib_accessor* a)
+void grib_accessor_gen_t::destroy(grib_context* ct)
 {
-    free(a);
+    cclass->destroy(ct, this);
+    delete this;
 }
 
 
