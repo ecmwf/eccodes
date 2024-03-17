@@ -821,10 +821,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
         }
 

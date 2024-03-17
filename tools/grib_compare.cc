@@ -1201,8 +1201,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         grib_handle *h11, *h22;
         GRIB_CHECK_NOLINE(grib_get_message_headers(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message_headers(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
+        }
 
         err = 0;
         h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
@@ -1268,8 +1269,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         size_t size1 = 0, size2 = 0;
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
+        }
 
         iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
         if (!iter) {

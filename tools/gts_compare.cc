@@ -658,33 +658,12 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         /* int ii=0; */
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
         }
-
-//         else {
-//             int lcount=count,ii;
-//             if (options->current_infile) lcount=options->current_infile->filter_handle_count;
-//             if (size1 != size2) {
-//                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
-//             }
-//             if (memcmp_ret) {
-//                 unsigned char *m1=(unsigned char*)msg1;
-//                 unsigned char *m2=(unsigned char*)msg2;
-//                 printf("=== list of different bytes for message %d\n",lcount);
-//                 for (ii=0;ii<size1;ii++) {
-//                     if (memcmp(m1,m2,1)) {
-//                         printf("  %d 0x%.2X != 0x%.2X\n",ii,*m1,*m2);
-//                     }
-//                     m1++; m2++;
-//                 }
-//             }
-//             return err;
-//         }
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {
