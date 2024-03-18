@@ -206,13 +206,6 @@ void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 /* grib_accessor_class_bits_per_value.cc*/
 
 /* grib_accessor_class_bufr_data_array.cc*/
-// ===== TODO(maee): Reenable these functions =====
-//grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a);
-//grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a);
-//grib_trie_with_rank* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a);
-//void accessor_bufr_data_array_set_unpackMode(grib_accessor* a, int unpackMode);
-// ===== END =====
-
 
 /* grib_accessor_class_bufr_data_element.cc*/
 void accessor_bufr_data_element_set_index(grib_accessor* a, long index);

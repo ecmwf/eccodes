@@ -1,0 +1,98 @@
+
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
+#include "grib_api_internal.h"
+#include "grib_accessor_class_unpack_bufr_values.h"
+#include "grib_accessor_class_bufr_data_array.h"
+
+
+
+grib_accessor_class_unpack_bufr_values_t _grib_accessor_class_unpack_bufr_values{"unpack_bufr_values"};
+grib_accessor_class* grib_accessor_class_unpack_bufr_values = &_grib_accessor_class_unpack_bufr_values;
+
+
+void grib_accessor_class_unpack_bufr_values_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    char* key;
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    key                                    = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), params, 0);
+    self->data_accessor                    = grib_find_accessor(grib_handle_of_accessor(a), key);
+
+    a->length = 0;
+}
+
+void grib_accessor_class_unpack_bufr_values_t::dump(grib_accessor* a, grib_dumper* dumper){
+}
+
+int grib_accessor_class_unpack_bufr_values_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len){
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+
+    return data->unpack_double(0, 0);}
+
+int grib_accessor_class_unpack_bufr_values_t::unpack_string(grib_accessor* a, char* buffer, size_t* len){
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+    strcpy(buffer, "0");
+    *len=1;
+
+    return data->unpack_double(0, 0);}
+
+int grib_accessor_class_unpack_bufr_values_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+
+    return data->unpack_double(0, 0);}
+
+int grib_accessor_class_unpack_bufr_values_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+
+    return data->unpack_double(0, 0);}
+
+int grib_accessor_class_unpack_bufr_values_t::value_count(grib_accessor* a, long* count){
+    *count = 1;
+    return 0;
+}
+
+void grib_accessor_class_unpack_bufr_values_t::destroy(grib_context* context, grib_accessor* a){
+}
+
+int grib_accessor_class_unpack_bufr_values_t::get_native_type(grib_accessor* a){
+    return GRIB_TYPE_LONG;
+}
+
+// static const char* mode_to_str(int p)
+// {
+//     if (p==CODES_BUFR_UNPACK_STRUCTURE) return "CODES_BUFR_UNPACK_STRUCTURE";
+//     if (p==CODES_BUFR_UNPACK_FLAT)      return "CODES_BUFR_UNPACK_FLAT";
+//     if (p==CODES_BUFR_NEW_DATA)         return "CODES_BUFR_NEW_DATA";
+//     return "unknown proc flag";
+// }
+
+int grib_accessor_class_unpack_bufr_values_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+    int unpackMode                         = CODES_BUFR_UNPACK_STRUCTURE;
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+
+    if (*val == 2)
+        unpackMode = CODES_BUFR_UNPACK_FLAT;
+    if (*val == 3)
+        unpackMode = CODES_BUFR_NEW_DATA;
+
+    accessor_bufr_data_array_set_unpackMode(data, unpackMode);
+
+    return data->unpack_double(0, 0);}
+
+int grib_accessor_class_unpack_bufr_values_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+    grib_accessor_unpack_bufr_values_t* self = (grib_accessor_unpack_bufr_values_t*)a;
+    grib_accessor* data                    = (grib_accessor*)self->data_accessor;
+
+    return data->unpack_double(0, 0);}

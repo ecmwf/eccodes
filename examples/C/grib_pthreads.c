@@ -51,7 +51,7 @@ static void* process_grib(void* threadID)
     ProductKind prod_kind = 0;
 
     codes_handle* h = codes_grib_handle_new_from_samples(0, "regular_ll_pl_grib2");
-    Assert(h);
+    Assert(h != NULL);
     CODES_CHECK(codes_get_product_kind(h, &prod_kind), 0);
     Assert(prod_kind == PRODUCT_GRIB);
     printf("Thread %ld running\n", tid);
