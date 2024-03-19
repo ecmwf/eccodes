@@ -14,6 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
+#include "accessor/grib_accessor_class_bufr_data_array.h"
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
 /* 0 means input strings are equal and 1 means not equal */
@@ -213,11 +214,7 @@ static char* get_condition(const char* name, codes_condition* condition)
 
 static grib_accessor* _search_by_rank(grib_accessor* a, const char* name, int rank)
 {
-    // ===== TODO(maee): Enable when grib_accessor_class_bufr_data_array.cc is moved to C++ =====
-    throw "grib_accessor_class_bufr_data_array.cc is not yet moved to C++";
-    grib_trie_with_rank* t = NULL;
-    //grib_trie_with_rank* t = accessor_bufr_data_array_get_dataAccessorsTrie(a);
-    // ===== END TODO =====
+    grib_trie_with_rank* t = accessor_bufr_data_array_get_dataAccessorsTrie(a);
     grib_accessor* ret     = (grib_accessor*)grib_trie_with_rank_get(t, name, rank);
     return ret;
 }
@@ -438,10 +435,7 @@ static grib_accessors_list* search_by_condition(grib_handle* h, const char* name
     grib_accessors_list* result = NULL;
     grib_accessor* data         = search_and_cache(h, "dataAccessors", 0);
     if (data && condition->left) {
-        // ===== TODO(maee): Enable when grib_accessor_class_bufr_data_array.cc is moved to C++ =====
-        //al = accessor_bufr_data_array_get_dataAccessors(data);
-        throw "grib_accessor_class_bufr_data_array.cc is not yet moved to C++";
-        // ===== END TODO =====
+        al = accessor_bufr_data_array_get_dataAccessors(data);
         if (!al)
             return NULL;
         result = (grib_accessors_list*)grib_context_malloc_clear(al->accessor->context, sizeof(grib_accessors_list));
