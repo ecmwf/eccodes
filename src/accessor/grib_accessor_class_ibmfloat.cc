@@ -82,7 +82,7 @@ int grib_accessor_class_ibmfloat_t::pack_double(grib_accessor* a, const double* 
         //double y = grib_long_to_ibm(grib_ibm_to_long(val[0]));
         //printf("IBMFLOAT val=%.20f nearest_smaller_ibm_float=%.20f long_to_ibm=%.20f\n",val[0],x ,y);
 
-        off = byte_offset(a) * 8;
+        off = a->byte_offset() * 8;
         ret = grib_encode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, grib_ibm_to_long(val[0]), &off, 32);
         if (*len > 1)
             grib_context_log(a->context, GRIB_LOG_WARNING, "ibmfloat: Trying to pack %zu values in a scalar %s, packing first value",
@@ -108,7 +108,7 @@ int grib_accessor_class_ibmfloat_t::pack_double(grib_accessor* a, const double* 
 
     grib_context_free(a->context, buf);
 
-    a->length = byte_count(a);
+    a->length = a->byte_count();
 
     return ret;
 }

@@ -41,7 +41,7 @@ long grib_accessor_class_section_t::byte_count(grib_accessor* a){
 }
 
 long grib_accessor_class_section_t::next_offset(grib_accessor* a){
-    return a->offset + byte_count(a);
+    return a->offset + a->byte_count();
 }
 
 void grib_accessor_class_section_t::destroy(grib_context* ct, grib_accessor* a){

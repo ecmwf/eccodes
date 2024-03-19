@@ -148,5 +148,5 @@ void grib_accessor_class_signed_bits_t::update_size(grib_accessor* a, size_t s){
 }
 
 long grib_accessor_class_signed_bits_t::next_offset(grib_accessor* a){
-    return byte_offset(a) + byte_count(a);
+    return a->byte_offset() + a->byte_count();
 }

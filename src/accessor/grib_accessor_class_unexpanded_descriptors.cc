@@ -128,5 +128,5 @@ void grib_accessor_class_unexpanded_descriptors_t::update_size(grib_accessor* a,
 }
 
 long grib_accessor_class_unexpanded_descriptors_t::next_offset(grib_accessor* a){
-    return byte_offset(a) + a->length;
+    return a->byte_offset() + a->length;
 }
