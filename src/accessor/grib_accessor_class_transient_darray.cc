@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_transient_darray = &_grib_accessor_clas
 
 
 void grib_accessor_class_transient_darray_t::init(grib_accessor* a, const long length, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, length, args);
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     self->arr                            = NULL;
     self->type                           = GRIB_TYPE_DOUBLE;

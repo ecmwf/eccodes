@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g1_half_byte_codeflag = &_grib_accessor
 
 
 void grib_accessor_class_g1_half_byte_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;

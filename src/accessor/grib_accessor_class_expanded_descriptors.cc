@@ -43,6 +43,7 @@ typedef struct change_coding_params
     }
 
 void grib_accessor_class_expanded_descriptors_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int n = 0;
     grib_handle* hand        = grib_handle_of_accessor(a);

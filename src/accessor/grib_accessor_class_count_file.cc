@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_count_file = &_grib_accessor_class_coun
 
 
 void grib_accessor_class_count_file_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }

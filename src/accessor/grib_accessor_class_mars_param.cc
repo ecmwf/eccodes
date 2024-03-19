@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_mars_param = &_grib_accessor_class_mars
 
 
 void grib_accessor_class_mars_param_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_ascii_t::init(a, l, c);
     int n                          = 0;
     grib_accessor_mars_param_t* self = (grib_accessor_mars_param_t*)a;
     self->paramId                  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);

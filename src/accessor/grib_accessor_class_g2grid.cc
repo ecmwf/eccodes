@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g2grid = &_grib_accessor_class_g2grid;
 
 
 void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
     grib_handle* hand          = grib_handle_of_accessor(a);
     int n                      = 0;

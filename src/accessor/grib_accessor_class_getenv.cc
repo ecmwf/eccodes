@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_getenv = &_grib_accessor_class_getenv;
 
 
 void grib_accessor_class_getenv_t::init(grib_accessor* a, const long l, grib_arguments* args){
+    grib_accessor_class_ascii_t::init(a, l, args);
     grib_accessor_getenv_t* self = (grib_accessor_getenv_t*)a;
     static char undefined[]    = "undefined";
 

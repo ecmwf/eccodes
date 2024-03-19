@@ -157,6 +157,7 @@ int check_overridden_reference_values(const grib_context* c, long* refValList, s
 #define DYN_ARRAY_SIZE_INCR 1000 /* Increment size for grib_iarray_new and grib_darray_new */
 
 void grib_accessor_class_bufr_data_array_t::init(grib_accessor* a, const long v, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, v, params);
     grib_accessor_bufr_data_array_t* self = (grib_accessor_bufr_data_array_t*)a;
     int n                               = 0;
     const char* dataKeysName            = NULL;

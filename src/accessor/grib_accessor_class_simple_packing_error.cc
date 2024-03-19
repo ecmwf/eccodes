@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_simple_packing_error = &_grib_accessor_
 
 
 void grib_accessor_class_simple_packing_error_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_simple_packing_error_t* self = (grib_accessor_simple_packing_error_t*)a;
     int n = 0;
     grib_handle* h = grib_handle_of_accessor(a);

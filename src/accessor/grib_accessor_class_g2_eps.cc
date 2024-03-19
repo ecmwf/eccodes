@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g2_eps = &_grib_accessor_class_g2_eps;
 
 
 void grib_accessor_class_g2_eps_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_unsigned_t::init(a, l, c);
     grib_accessor_g2_eps_t* self = (grib_accessor_g2_eps_t*)a;
     int n                      = 0;
 

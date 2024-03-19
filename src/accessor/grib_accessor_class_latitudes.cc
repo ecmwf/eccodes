@@ -43,6 +43,7 @@ int compare_doubles_descending(const void* a, const void* b){
 }
 
 void grib_accessor_class_latitudes_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_latitudes_t* self = (grib_accessor_latitudes_t*)a;
     int n                         = 0;
 

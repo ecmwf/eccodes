@@ -22,6 +22,7 @@ grib_accessor_class* grib_accessor_class_check_internal_version = &_grib_accesso
 #define LATEST_ENGINE_VERSION 30
 
 void grib_accessor_class_check_internal_version_t::init(grib_accessor* a, const long l, grib_arguments* args){
+    grib_accessor_class_ascii_t::init(a, l, args);
     /* Check version of definition files is compatible with the engine */
     int err                    = 0;
     long defs_file_version     = 0;

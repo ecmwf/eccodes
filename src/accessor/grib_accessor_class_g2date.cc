@@ -16,6 +16,7 @@ grib_accessor_class_g2date_t _grib_accessor_class_g2date{"g2date"};
 grib_accessor_class* grib_accessor_class_g2date = &_grib_accessor_class_g2date;
 
 void grib_accessor_class_g2date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_g2date_t* self = (grib_accessor_g2date_t*)a;
     int n                      = 0;
 

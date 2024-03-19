@@ -27,6 +27,7 @@ void get_accessors(grib_accessor* a){
 }
 
 void grib_accessor_class_bufr_extract_subsets_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     int n = 0;
     grib_accessor_bufr_extract_subsets_t* self = (grib_accessor_bufr_extract_subsets_t*)a;
 

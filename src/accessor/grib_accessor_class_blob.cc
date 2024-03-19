@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_blob = &_grib_accessor_class_blob;
 
 
 void grib_accessor_class_blob_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, arg, 0), &a->length);
     Assert(a->length >= 0);
 }

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_bufr_simple_thinning = &_grib_accessor_
 
 
 void grib_accessor_class_bufr_simple_thinning_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     int n = 0;

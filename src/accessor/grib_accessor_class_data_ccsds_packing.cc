@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_cl
 
 
 void grib_accessor_class_data_ccsds_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
     grib_handle* h                         = grib_handle_of_accessor(a);
 

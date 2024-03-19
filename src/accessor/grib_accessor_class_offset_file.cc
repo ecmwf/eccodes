@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_offset_file = &_grib_accessor_class_off
 
 
 void grib_accessor_class_offset_file_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }

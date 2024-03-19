@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_data_g2shsimple_packing = &_grib_access
 
 
 void grib_accessor_class_data_g2shsimple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_data_shsimple_packing_t::init(a, v, args);
     grib_accessor_data_g2shsimple_packing_t* self = (grib_accessor_data_g2shsimple_packing_t*)a;
 
     self->numberOfValues     = grib_arguments_get_name(grib_handle_of_accessor(a), args, 2);

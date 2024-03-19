@@ -19,6 +19,7 @@ grib_accessor_class* grib_accessor_class_smart_table_column = &_grib_accessor_cl
 
 
 void grib_accessor_class_smart_table_column_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     int n = 0;
     grib_accessor_smart_table_column_t* self = (grib_accessor_smart_table_column_t*)a;
 

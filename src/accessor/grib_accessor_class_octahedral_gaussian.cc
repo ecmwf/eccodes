@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_octahedral_gaussian = &_grib_accessor_c
 
 
 void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_octahedral_gaussian_t* self = (grib_accessor_octahedral_gaussian_t*)a;
     int n                                   = 0;
     grib_handle* hand                       = grib_handle_of_accessor(a);

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_julian_day = &_grib_accessor_class_juli
 
 
 void grib_accessor_class_julian_day_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_julian_day_t* self = (grib_accessor_julian_day_t*)a;
     int n                          = 0;
 

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_step_human_readable = &_grib_accessor_c
 
 
 void grib_accessor_class_step_human_readable_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
     int n                              = 0;
     grib_handle* h = grib_handle_of_accessor(a);

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_budgdate = &_grib_accessor_class_budgda
 
 
 void grib_accessor_class_budgdate_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_budgdate_t* self = (grib_accessor_budgdate_t*)a;
     int n                        = 0;
 

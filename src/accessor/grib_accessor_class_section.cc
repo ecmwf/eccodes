@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_section = &_grib_accessor_class_section
 
 
 void grib_accessor_class_section_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     a->sub_section = grib_section_create(grib_handle_of_accessor(a), a);
     a->length      = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

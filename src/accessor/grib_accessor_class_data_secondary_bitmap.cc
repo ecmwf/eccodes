@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_data_secondary_bitmap = &_grib_accessor
 
 
 void grib_accessor_class_data_secondary_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, v, args);
     grib_accessor_data_secondary_bitmap_t* self = (grib_accessor_data_secondary_bitmap_t*)a;
     self->primary_bitmap                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, 0);
     self->secondary_bitmap                    = grib_arguments_get_name(grib_handle_of_accessor(a), args, 1);

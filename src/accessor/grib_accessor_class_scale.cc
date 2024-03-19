@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_scale = &_grib_accessor_class_scale;
 
 
 void grib_accessor_class_scale_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
     int n                     = 0;
 

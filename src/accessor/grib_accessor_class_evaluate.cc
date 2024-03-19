@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_evaluate = &_grib_accessor_class_evalua
 
 
 void grib_accessor_class_evaluate_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_evaluate_t* self = (grib_accessor_evaluate_t*)a;
     self->arg                    = c;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

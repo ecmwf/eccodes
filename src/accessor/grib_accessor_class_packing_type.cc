@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_packing_type = &_grib_accessor_class_pa
 
 
 void grib_accessor_class_packing_type_t::init(grib_accessor* a, const long l, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, l, args);
     int n                              = 0;
     grib_accessor_packing_type_t* self = (grib_accessor_packing_type_t*)a;
     self->values                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);

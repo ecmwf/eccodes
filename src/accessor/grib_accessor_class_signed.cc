@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_signed = &_grib_accessor_class_signed;
 
 
 void grib_accessor_class_signed_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_signed_t* self = (grib_accessor_signed_t*)a;
     long count                 = 0;
 

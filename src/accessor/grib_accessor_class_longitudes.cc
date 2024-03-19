@@ -20,6 +20,7 @@ grib_accessor_class* grib_accessor_class_longitudes = &_grib_accessor_class_long
 static int get_distinct(grib_accessor* a, double** val, long* len);
 int compare_doubles(const void* a, const void* b);
 void grib_accessor_class_longitudes_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_longitudes_t* self = (grib_accessor_longitudes_t*)a;
     int n = 0;
 

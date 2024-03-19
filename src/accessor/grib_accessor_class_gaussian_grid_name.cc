@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_gaussian_grid_name = &_grib_accessor_cl
 
 
 void grib_accessor_class_gaussian_grid_name_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_gaussian_grid_name_t* self = (grib_accessor_gaussian_grid_name_t*)a;
     int n                                  = 0;
 

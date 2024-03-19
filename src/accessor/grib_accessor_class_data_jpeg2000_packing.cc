@@ -22,6 +22,7 @@ static int first = 1;
 #define OPENJPEG_LIB 2
 
 void grib_accessor_class_data_jpeg2000_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_data_simple_packing_t::init(a, v, args);
     const char* user_lib                      = NULL;
     grib_accessor_data_jpeg2000_packing_t* self = (grib_accessor_data_jpeg2000_packing_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);

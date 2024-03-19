@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_g1bitmap = &_grib_accessor_class_g1bitm
 
 
 void grib_accessor_class_g1bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_bitmap_t::init(a, len, arg);
     grib_accessor_g1bitmap_t* self = (grib_accessor_g1bitmap_t*)a;
     self->unusedBits             = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 4);
 }

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_raw = &_grib_accessor_class_raw;
 
 
 void grib_accessor_class_raw_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     int n   = 0;
     int err = 0;
     long sectionLength;

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_data_apply_bitmap = &_grib_accessor_cla
 
 
 void grib_accessor_class_data_apply_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, v, args);
     int n                                 = 0;
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
 

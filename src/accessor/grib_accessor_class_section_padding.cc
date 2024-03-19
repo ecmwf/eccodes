@@ -64,6 +64,7 @@ size_t grib_accessor_class_section_padding_t::preferred_size(grib_accessor* a, i
 }
 
 void grib_accessor_class_section_padding_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_padding_t::init(a, len, arg);
     grib_accessor_section_padding_t* self = (grib_accessor_section_padding_t*)a;
     self->preserve                      = 1; /* This should be a parameter */
     a->length                           = preferred_size(a, 1);

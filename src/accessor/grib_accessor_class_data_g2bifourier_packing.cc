@@ -21,6 +21,7 @@ typedef unsigned long (*encode_float_proc)(double);
 typedef double (*decode_float_proc)(unsigned long);
 
 void grib_accessor_class_data_g2bifourier_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g2bifourier_packing_t* self = (grib_accessor_data_g2bifourier_packing_t*)a;
     grib_handle* gh                              = grib_handle_of_accessor(a);
 

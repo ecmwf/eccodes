@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_ieeefloat = &_grib_accessor_class_ieeef
 
 
 void grib_accessor_class_ieeefloat_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_double_t::init(a, len, arg);
     grib_accessor_ieeefloat_t* self = (grib_accessor_ieeefloat_t*)a;
     long count                    = 0;
     self->arg                     = arg;

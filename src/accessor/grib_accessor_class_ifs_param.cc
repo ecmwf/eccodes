@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_ifs_param = &_grib_accessor_class_ifs_p
 
 
 void grib_accessor_class_ifs_param_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_gen_t::init(a, l, c);
     grib_accessor_ifs_param_t* self = (grib_accessor_ifs_param_t*)a;
     int n                         = 0;
 

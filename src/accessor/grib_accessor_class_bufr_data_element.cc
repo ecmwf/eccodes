@@ -119,6 +119,7 @@ void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, g
 }
 
 void grib_accessor_class_bufr_data_element_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;

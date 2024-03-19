@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_sum = &_grib_accessor_class_sum;
 
 
 void grib_accessor_class_sum_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_sum_t* self = (grib_accessor_sum_t*)a;
     int n                   = 0;
     self->values            = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);

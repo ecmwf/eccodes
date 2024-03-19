@@ -19,6 +19,7 @@ grib_accessor_class* grib_accessor_class_hash_array = &_grib_accessor_class_hash
 #define MAX_HASH_ARRAY_STRING_LENGTH 255
 
 void grib_accessor_class_hash_array_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, len, args);
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
     a->length                      = 0;
     self->key                      = 0;

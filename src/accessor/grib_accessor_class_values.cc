@@ -48,6 +48,7 @@ long init_length(grib_accessor* a){
 }
 
 void grib_accessor_class_values_t::init(grib_accessor* a, const long v, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, v, params);
     grib_accessor_values_t* self = (grib_accessor_values_t*)a;
     self->carg                 = 0;
 

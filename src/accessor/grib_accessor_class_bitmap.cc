@@ -53,6 +53,7 @@ void compute_size(grib_accessor* a){
 }
 
 void grib_accessor_class_bitmap_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_bytes_t::init(a, len, arg);
     grib_accessor_bitmap_t* self = (grib_accessor_bitmap_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;

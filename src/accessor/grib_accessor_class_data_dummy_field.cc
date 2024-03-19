@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_data_dummy_field = &_grib_accessor_clas
 
 
 void grib_accessor_class_data_dummy_field_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_data_g1simple_packing_t::init(a, v, args);
     grib_accessor_data_dummy_field_t* self = (grib_accessor_data_dummy_field_t*)a;
     self->missing_value  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
     self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);

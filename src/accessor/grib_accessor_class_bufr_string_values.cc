@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_bufr_string_values = &_grib_accessor_cl
 
 
 void grib_accessor_class_bufr_string_values_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_ascii_t::init(a, len, args);
     grib_accessor_bufr_string_values_t* self = (grib_accessor_bufr_string_values_t*)a;
     int n                                  = 0;
     self->dataAccessorName                 = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);

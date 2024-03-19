@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_gts_header = &_grib_accessor_class_gts_
 
 
 void grib_accessor_class_gts_header_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_ascii_t::init(a, l, c);
     grib_accessor_gts_header_t* self = (grib_accessor_gts_header_t*)a;
     self->gts_offset = -1;
     self->gts_length = -1;

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_decimal_precision = &_grib_accessor_cla
 
 
 void grib_accessor_class_decimal_precision_t::init(grib_accessor* a, const long l, grib_arguments* args){
+    grib_accessor_class_long_t::init(a, l, args);
     int n                                 = 0;
     grib_accessor_decimal_precision_t* self = (grib_accessor_decimal_precision_t*)a;
 

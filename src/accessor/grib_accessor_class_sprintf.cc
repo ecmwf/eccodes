@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_sprintf = &_grib_accessor_class_sprintf
 
 
 void grib_accessor_class_sprintf_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_ascii_t::init(a, l, c);
     grib_accessor_sprintf_t* self = (grib_accessor_sprintf_t*)a;
     self->args                  = c;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

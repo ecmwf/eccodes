@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_ksec1expver = &_grib_accessor_class_kse
 
 
 void grib_accessor_class_ksec1expver_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_ascii_t::init(a, len, arg);
     a->length = len;
     Assert(a->length >= 0);
 }

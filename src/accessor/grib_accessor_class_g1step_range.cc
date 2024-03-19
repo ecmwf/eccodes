@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g1step_range = &_grib_accessor_class_g1
 
 
 void grib_accessor_class_g1step_range_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_abstract_long_vector_t::init(a, l, c);
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     grib_handle* h                   = grib_handle_of_accessor(a);
     int n                            = 0;

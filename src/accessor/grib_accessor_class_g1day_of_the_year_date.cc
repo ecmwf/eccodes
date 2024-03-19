@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_g1day_of_the_year_date = &_grib_accesso
 
 
 void grib_accessor_class_g1day_of_the_year_date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_g1date_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

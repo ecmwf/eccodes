@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g1verificationdate = &_grib_accessor_cl
 
 
 void grib_accessor_class_g1verificationdate_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_g1verificationdate_t* self = (grib_accessor_g1verificationdate_t*)a;
     int n                                  = 0;
 

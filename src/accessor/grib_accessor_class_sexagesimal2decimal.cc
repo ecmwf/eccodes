@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_sexagesimal2decimal = &_grib_accessor_c
 
 
 void grib_accessor_class_sexagesimal2decimal_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_to_double_t::init(a, len, arg);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 

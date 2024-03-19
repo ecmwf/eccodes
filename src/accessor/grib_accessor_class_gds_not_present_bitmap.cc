@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_gds_not_present_bitmap = &_grib_accesso
 
 
 void grib_accessor_class_gds_not_present_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, v, args);
     int n                                      = 0;
     grib_accessor_gds_not_present_bitmap_t* self = (grib_accessor_gds_not_present_bitmap_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_change_alternative_row_scanning = &_gri
 
 
 void grib_accessor_class_change_alternative_row_scanning_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, len, args);
     int n                                               = 0;
     grib_accessor_change_alternative_row_scanning_t* self = (grib_accessor_change_alternative_row_scanning_t*)a;
 

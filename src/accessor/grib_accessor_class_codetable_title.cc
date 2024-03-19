@@ -17,6 +17,7 @@ grib_accessor_class_codetable_title_t _grib_accessor_class_codetable_title{"code
 grib_accessor_class* grib_accessor_class_codetable_title = &_grib_accessor_class_codetable_title;
 
 void grib_accessor_class_codetable_title_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_codetable_title_t* self = (grib_accessor_codetable_title_t*)a;
     int n                               = 0;
     self->codetable                     = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);

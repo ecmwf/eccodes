@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_section_length = &_grib_accessor_class_
 
 
 void grib_accessor_class_section_length_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_unsigned_t::init(a, len, arg);
     a->parent->aclength = a;
     a->length           = len;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

@@ -20,6 +20,7 @@ grib_accessor_class* grib_accessor_class_step_in_units = &_grib_accessor_class_s
 
 
 void grib_accessor_class_step_in_units_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int n = 0;

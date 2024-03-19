@@ -56,6 +56,7 @@ long number_of_bits(grib_handle* h, unsigned long x){
 }
 
 void grib_accessor_class_data_g1second_order_general_extended_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
     grib_handle* handle                                              = grib_handle_of_accessor(a);
 

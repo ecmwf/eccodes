@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_trim = &_grib_accessor_class_trim;
 
 
 void grib_accessor_class_trim_t::init(grib_accessor* a, const long l, grib_arguments* arg){
+    grib_accessor_class_ascii_t::init(a, l, arg);
     int n                    = 0;
     grib_accessor_trim_t* self = (grib_accessor_trim_t*)a;
     grib_handle* h           = grib_handle_of_accessor(a);

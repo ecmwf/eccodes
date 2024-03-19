@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_offset_values = &_grib_accessor_class_o
 
 
 void grib_accessor_class_offset_values_t::init(grib_accessor* a, const long l, grib_arguments* args){
+    grib_accessor_class_double_t::init(a, l, args);
     int n                             = 0;
     grib_accessor_offset_values_t* self = (grib_accessor_offset_values_t*)a;
     self->values                      = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);

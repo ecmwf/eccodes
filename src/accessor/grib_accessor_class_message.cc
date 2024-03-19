@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_message = &_grib_accessor_class_message
 
 
 void grib_accessor_class_message_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_bytes_t::init(a, len, arg);
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = grib_handle_of_accessor(a)->buffer->ulength - len - a->offset;

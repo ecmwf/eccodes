@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g1end_of_interval_monthly = &_grib_acce
 
 
 void grib_accessor_class_g1end_of_interval_monthly_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_abstract_vector_t::init(a, l, c);
     grib_accessor_g1end_of_interval_monthly_t* self = (grib_accessor_g1end_of_interval_monthly_t*)a;
     int n                                         = 0;
 

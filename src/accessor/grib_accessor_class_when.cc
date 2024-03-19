@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_when = &_grib_accessor_class_when;
 
 
 void grib_accessor_class_when_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

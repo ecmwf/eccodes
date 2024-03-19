@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_position = &_grib_accessor_class_positi
 
 
 void grib_accessor_class_position_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;

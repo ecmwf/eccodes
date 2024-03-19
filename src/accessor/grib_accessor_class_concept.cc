@@ -35,6 +35,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 }
 
 void grib_accessor_class_concept_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, len, args);
     a->length = 0;
 }
 

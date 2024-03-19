@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_to_integer = &_grib_accessor_class_to_i
 
 
 void grib_accessor_class_to_integer_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_to_integer_t* self = (grib_accessor_to_integer_t*)a;
 
     self->key    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);

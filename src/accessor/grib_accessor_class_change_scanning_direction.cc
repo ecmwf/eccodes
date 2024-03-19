@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_change_scanning_direction = &_grib_acce
 
 
 void grib_accessor_class_change_scanning_direction_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, len, args);
     grib_accessor_change_scanning_direction_t* self = (grib_accessor_change_scanning_direction_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     int n = 0;

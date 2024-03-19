@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_octet_number = &_grib_accessor_class_oc
 
 
 void grib_accessor_class_octet_number_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_octet_number_t* self = (grib_accessor_octet_number_t*)a;
 
     int n = 0;

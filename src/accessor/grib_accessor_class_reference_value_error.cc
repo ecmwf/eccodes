@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_reference_value_error = &_grib_accessor
 
 
 void grib_accessor_class_reference_value_error_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_reference_value_error_t* self = (grib_accessor_reference_value_error_t*)a;
     int n                                     = 0;
 

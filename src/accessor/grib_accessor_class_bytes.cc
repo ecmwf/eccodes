@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_bytes = &_grib_accessor_class_bytes;
 
 
 void grib_accessor_class_bytes_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     /*grib_accessor_signed* self = (grib_accessor_signed*)a;  */
     a->length = len;
     Assert(a->length >= 0);

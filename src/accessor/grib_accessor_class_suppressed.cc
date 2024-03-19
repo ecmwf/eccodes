@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_suppressed = &_grib_accessor_class_supp
 
 
 void grib_accessor_class_suppressed_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_suppressed_t* self = (grib_accessor_suppressed_t*)a;
     self->args                     = c;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;

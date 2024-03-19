@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_lookup = &_grib_accessor_class_lookup;
 
 
 void grib_accessor_class_lookup_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_lookup_t* self = (grib_accessor_lookup_t*)a;
     a->length                  = 0;
     self->llength              = len;

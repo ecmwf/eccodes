@@ -48,6 +48,7 @@ grib_accessor_class* grib_accessor_class_bufr_elements_table = &_grib_accessor_c
 
 
 void grib_accessor_class_bufr_elements_table_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     int n                                   = 0;
     grib_accessor_bufr_elements_table_t* self = (grib_accessor_bufr_elements_table_t*)a;
 

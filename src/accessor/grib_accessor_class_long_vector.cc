@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_long_vector = &_grib_accessor_class_lon
 
 
 void grib_accessor_class_long_vector_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_abstract_long_vector_t::init(a, l, c);
     grib_accessor_long_vector_t* self       = (grib_accessor_long_vector_t*)a;
     grib_accessor* va                     = NULL;
     grib_accessor_abstract_long_vector_t* v = NULL;

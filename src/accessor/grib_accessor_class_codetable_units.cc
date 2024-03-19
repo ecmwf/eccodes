@@ -17,6 +17,7 @@ grib_accessor_class_codetable_units_t _grib_accessor_class_codetable_units{"code
 grib_accessor_class* grib_accessor_class_codetable_units = &_grib_accessor_class_codetable_units;
 
 void grib_accessor_class_codetable_units_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_codetable_units_t* self = (grib_accessor_codetable_units_t*)a;
 
     int n           = 0;

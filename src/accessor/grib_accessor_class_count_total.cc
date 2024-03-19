@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_count_total = &_grib_accessor_class_cou
 
 
 void grib_accessor_class_count_total_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }

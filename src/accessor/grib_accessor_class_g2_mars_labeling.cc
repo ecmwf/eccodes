@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g2_mars_labeling = &_grib_accessor_clas
 
 
 void grib_accessor_class_g2_mars_labeling_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_gen_t::init(a, l, c);
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
     int n                                = 0;
     grib_handle* hand                    = grib_handle_of_accessor(a);

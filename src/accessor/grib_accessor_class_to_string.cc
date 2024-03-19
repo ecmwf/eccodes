@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_to_string = &_grib_accessor_class_to_st
 
 
 void grib_accessor_class_to_string_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_to_string_t* self = (grib_accessor_to_string_t*)a;
 
     self->key    = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);

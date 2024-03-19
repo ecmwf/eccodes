@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_g2bitmap_present = &_grib_accessor_clas
 
 
 void grib_accessor_class_g2bitmap_present_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     int n                                = 0;
     grib_accessor_g2bitmap_present_t* self = (grib_accessor_g2bitmap_present_t*)a;
     self->bitmapIndicator                = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);

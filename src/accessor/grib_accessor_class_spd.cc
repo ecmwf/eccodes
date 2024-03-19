@@ -45,6 +45,7 @@ static long compute_byte_count(grib_accessor* a){
 }
 
 void grib_accessor_class_spd_t::init(grib_accessor* a, const long len, grib_arguments* args){
+    grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
     int n                   = 0;
     self->numberOfBits      = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);

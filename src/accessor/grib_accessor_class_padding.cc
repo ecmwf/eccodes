@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_padding = &_grib_accessor_class_padding
 
 
 void grib_accessor_class_padding_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_bytes_t::init(a, len, arg);
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }

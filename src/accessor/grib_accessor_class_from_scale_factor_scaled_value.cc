@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_from_scale_factor_scaled_value = &_grib
 
 
 void grib_accessor_class_from_scale_factor_scaled_value_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_from_scale_factor_scaled_value_t* self = (grib_accessor_from_scale_factor_scaled_value_t*)a;
     int n                                              = 0;
     grib_handle* hand                                  = grib_handle_of_accessor(a);

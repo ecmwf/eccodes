@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_data_g22order_packing = &_grib_accessor
 
 
 void grib_accessor_class_data_g22order_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
     grib_handle* gh                           = grib_handle_of_accessor(a);
 

@@ -18,6 +18,7 @@ grib_accessor_class* grib_accessor_class_data_run_length_packing = &_grib_access
 
 
 void grib_accessor_class_data_run_length_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+    grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_run_length_packing_t* self = (grib_accessor_data_run_length_packing_t*)a;
     grib_handle* gh                             = grib_handle_of_accessor(a);
     self->number_of_values                      = grib_arguments_get_name(gh, args, self->carg++);

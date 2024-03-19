@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_message_copy = &_grib_accessor_class_me
 
 
 void grib_accessor_class_message_copy_t::init(grib_accessor* a, const long length, grib_arguments* args){
+    grib_accessor_class_gen_t::init(a, length, args);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets = &_grib_
 
 
 void grib_accessor_class_bufr_extract_datetime_subsets_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_gen_t::init(a, len, arg);
     int n                                             = 0;
     grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
 

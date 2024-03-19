@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_statistics = &_grib_accessor_class_stat
 
 
 void grib_accessor_class_statistics_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_abstract_vector_t::init(a, l, c);
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
     int n                          = 0;
 

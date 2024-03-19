@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_pack_bufr_values = &_grib_accessor_clas
 
 
 void grib_accessor_class_pack_bufr_values_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     char* key;
     grib_accessor_pack_bufr_values_t* self = (grib_accessor_pack_bufr_values_t*)a;
     key                                  = (char*)grib_arguments_get_name(grib_handle_of_accessor(a), params, 0);

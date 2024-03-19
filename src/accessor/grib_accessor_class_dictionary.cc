@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_dictionary = &_grib_accessor_class_dict
 
 
 void grib_accessor_class_dictionary_t::init(grib_accessor* a, const long len, grib_arguments* params){
+    grib_accessor_class_gen_t::init(a, len, params);
     int n                          = 0;
     grib_accessor_dictionary_t* self = (grib_accessor_dictionary_t*)a;
 

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_number_of_values = &_grib_accessor_clas
 
 
 void grib_accessor_class_number_of_values_t::init(grib_accessor* a, const long l, grib_arguments* c){
+    grib_accessor_class_long_t::init(a, l, c);
     int n                                = 0;
     grib_accessor_number_of_values_t* self = (grib_accessor_number_of_values_t*)a;
     grib_handle* hand                    = grib_handle_of_accessor(a);

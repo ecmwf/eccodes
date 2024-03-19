@@ -29,6 +29,7 @@ size_t grib_accessor_class_pad_t::preferred_size(grib_accessor* a, int from_hand
 
 
 void grib_accessor_class_pad_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_padding_t::init(a, len, arg);
     grib_accessor_pad_t* self = (grib_accessor_pad_t*)a;
 
     self->expression = grib_arguments_get_expression(grib_handle_of_accessor(a), arg, 0);

@@ -17,6 +17,7 @@ grib_accessor_class* grib_accessor_class_ibmfloat = &_grib_accessor_class_ibmflo
 
 
 void grib_accessor_class_ibmfloat_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+    grib_accessor_class_double_t::init(a, len, arg);
     grib_accessor_ibmfloat_t* self = (grib_accessor_ibmfloat_t*)a;
     long count = 0;
 
