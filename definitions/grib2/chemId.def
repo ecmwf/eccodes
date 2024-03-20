@@ -654,3 +654,39 @@
 '922' = {
 	constituentType = 62000 ;
 	}
+#Dust aerosol (0.9 - 2.5 um)
+'925' = {
+        scaleFactorOfSecondSize = 7 ;
+        scaledValueOfFirstSize = 9 ;
+        scaleFactorOfFirstSize = 7 ;
+        typeOfSizeInterval = 7 ;
+        scaledValueOfSecondSize = 25 ;
+        constituentType = 62001 ;
+        }
+#Dust aerosol (2.5 - 5.0 um)
+'926' = {
+        scaleFactorOfSecondSize = 6 ;
+        scaledValueOfFirstSize = 25 ;
+        scaleFactorOfFirstSize = 7 ;
+        typeOfSizeInterval = 7 ;
+        scaledValueOfSecondSize = 5 ;
+        constituentType = 62001 ;
+        }
+#Dust aerosol (5.0 - 10.0 um)
+'927' = {
+        scaleFactorOfSecondSize = 5 ;
+        scaledValueOfFirstSize = 5 ;
+        scaleFactorOfFirstSize = 6 ;
+        typeOfSizeInterval = 7 ;
+        scaledValueOfSecondSize = 1 ;
+        constituentType = 62001 ;
+        }
+#Dust aerosol (10.0 - 20.0 um)
+'928' = {
+        scaleFactorOfSecondSize = 5 ;
+        scaledValueOfFirstSize = 1 ;
+        scaleFactorOfFirstSize = 5 ;
+        typeOfSizeInterval = 7 ;
+        scaledValueOfSecondSize = 2 ;
+        constituentType = 62001 ;
+        }
