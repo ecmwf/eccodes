@@ -16,7 +16,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
-   IMPLEMENTS = unpack_long;pack_long;init;dump
+   IMPLEMENTS = unpack_long;pack_long;init
    MEMBERS=const char* century
    MEMBERS=const char* year
    MEMBERS=const char* month
@@ -37,7 +37,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_g2date
@@ -63,7 +62,7 @@ static grib_accessor_class _grib_accessor_class_g2date = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -116,16 +115,11 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->day   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
-}
-
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                    = 0;
-    grib_accessor_g2date* self = (grib_accessor_g2date*)a;
+    const grib_accessor_g2date* self = (grib_accessor_g2date*)a;
 
+    int ret = 0;
     long year  = 0;
     long month = 0;
     long day   = 0;
@@ -145,13 +139,12 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     return GRIB_SUCCESS;
 }
 
-/* TODO: Check for a valid date */
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret;
-    long v                     = val[0];
-    grib_accessor_g2date* self = (grib_accessor_g2date*)a;
+    const grib_accessor_g2date* self = (grib_accessor_g2date*)a;
 
+    int ret = GRIB_SUCCESS;
+    long v = val[0];
     long year  = 0;
     long month = 0;
     long day   = 0;
@@ -164,6 +157,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     month = v / 100;
     v %= 100;
     day = v;
+
+    if (!is_date_valid(year, month, day, 0, 0, 0)) {
+        // ECC-1777: For now just a warning. Will later change to an error
+        fprintf(stderr, "ECCODES WARNING :  %s:%s: Date is not valid! year=%ld month=%ld day=%ld\n",
+                a->cclass->name, __func__, year, month, day);
+    }
 
     if ((ret = grib_set_long_internal(grib_handle_of_accessor(a), self->day, day)) != GRIB_SUCCESS)
         return ret;

@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 /*
@@ -107,7 +106,7 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
     long val          = 0;
 
     if ((ret = grib_expression_evaluate_long(p->h, a->expression, &val)) != GRIB_SUCCESS) {
-        grib_context_log(p->h->context, GRIB_LOG_DEBUG, "List %s creating %d values unable to evaluate long", act->name, val);
+        grib_context_log(p->h->context, GRIB_LOG_DEBUG, "List %s creating %ld values: Unable to evaluate long", act->name, val);
         return ret;
     }
 
@@ -161,12 +160,12 @@ static grib_action* reparse(grib_action* a, grib_accessor* acc, int* doit)
 {
     grib_action_list* self = (grib_action_list*)a;
 
-    int ret  = 0;
     long val = 0;
 
-    if ((ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &val)) != GRIB_SUCCESS) {
+    int ret = grib_expression_evaluate_long(grib_handle_of_accessor(acc), self->expression, &val);
+    if (ret != GRIB_SUCCESS) {
         grib_context_log(acc->context, GRIB_LOG_ERROR,
-                "List %s creating %ld values, unable to evaluate long", acc->name, val);
+                "List %s creating %ld values: Unable to evaluate long", acc->name, val);
     }
 
     *doit = (val != acc->loop);

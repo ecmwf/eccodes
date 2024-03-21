@@ -10,6 +10,7 @@
 
 #include "grib_tools.h"
 #include <stdlib.h>
+#include <string>
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -308,6 +309,29 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
 static char iobuf[1024 * 1024];
 
+// Read the first few bytes of the file to guess what kind of product
+// it could be. Returns an empty string if it fails
+static std::string guess_file_product(const std::string& filename)
+{
+    std::string result;
+    char buffer[5] = {0,};
+    FILE* fin = fopen(filename.c_str(), "rb");
+    if (fin) {
+        size_t bytes = fread(buffer, 1, sizeof(buffer), fin);
+        if (bytes == sizeof(buffer)) {
+            if (strncmp(buffer, "GRIB", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUDG", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUFR", 4)==0) {
+                result = "BUFR";
+            }
+        }
+        fclose(fin);
+    }
+    return result;
+}
+
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
     int err = 0;
@@ -340,7 +364,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (options->infile_offset) {
 #ifndef ECCODES_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
-            COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+            static_assert(sizeof(options->infile_offset) >= 8);
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
@@ -419,6 +443,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
         if (infile->handle_count == 0) {
             fprintf(stderr, "%s: No messages found in %s\n", tool_name, infile->name);
+            std::string product = guess_file_product(infile->name);
+            if (!product.empty()) {
+                fprintf(stderr, "%s: Input file seems to be %s\n", tool_name, product.c_str());
+            }
             if (options->fail)
                 exit(1);
         }

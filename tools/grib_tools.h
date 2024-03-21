@@ -83,7 +83,7 @@ typedef struct grib_option
     const char* help;
     int on;
     int command_line;
-    char* value;
+    const char* value;
 } grib_option;
 
 typedef struct grib_failed grib_failed;

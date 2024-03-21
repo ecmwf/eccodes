@@ -9,9 +9,13 @@
  */
 
 #include "grib_api_internal.h"
-#include <cmath>
-#include <vector>
+
 #include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <cstdint>
+#include <tuple>
+#include <vector>
 
 /*
    This is used by make_class.pl
@@ -24,6 +28,7 @@
    MEMBERS     =   double *lats
    MEMBERS     =   double *lons
    MEMBERS     =   long Nsides
+   MEMBERS     =   bool nested
    END_CLASS_DEF
 */
 
@@ -54,6 +59,7 @@ typedef struct grib_iterator_healpix{
     double *lats;
     double *lons;
     long Nsides;
+    bool nested;
 } grib_iterator_healpix;
 
 extern grib_iterator_class* grib_iterator_class_gen;
@@ -77,14 +83,84 @@ grib_iterator_class* grib_iterator_class_healpix = &_grib_iterator_class_healpix
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous    =    (*(c->super))->previous;
-    c->reset    =    (*(c->super))->reset;
-    c->has_next    =    (*(c->super))->has_next;
+    c->previous = (*(c->super))->previous;
+    c->reset    = (*(c->super))->reset;
+    c->has_next = (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
 #define ITER "HEALPix Geoiterator"
-#define RAD2DEG 57.29577951308232087684 // 180 over pi
+constexpr double RAD2DEG = 57.29577951308232087684;  // 180 over pi
+
+namespace
+{
+
+struct CodecFijNest
+{
+    static constexpr uint64_t __masks[] = { 0x00000000ffffffff, 0x0000ffff0000ffff, 0x00ff00ff00ff00ff,
+                                            0x0f0f0f0f0f0f0f0f, 0x3333333333333333, 0x5555555555555555 };
+
+    inline static int nest_encode_bits(int n)
+    {
+        auto b = static_cast<uint64_t>(n) & __masks[0];
+        b      = (b ^ (b << 16)) & __masks[1];
+        b      = (b ^ (b << 8)) & __masks[2];
+        b      = (b ^ (b << 4)) & __masks[3];
+        b      = (b ^ (b << 2)) & __masks[4];
+        b      = (b ^ (b << 1)) & __masks[5];
+        return static_cast<int>(b);
+    }
+
+    // inline static int nest_decode_bits(int n)
+    // {
+    //     auto b = static_cast<uint64_t>(n) & __masks[5];
+    //     b      = (b ^ (b >> 1)) & __masks[4];
+    //     b      = (b ^ (b >> 2)) & __masks[3];
+    //     b      = (b ^ (b >> 4)) & __masks[2];
+    //     b      = (b ^ (b >> 8)) & __masks[1];
+    //     b      = (b ^ (b >> 16)) & __masks[0];
+    //     return static_cast<int>(b);
+    // }
+
+    // static std::tuple<int, int, int> nest_to_fij(int n, int k)
+    // {
+    //     Assert(0 <= n);
+    //     auto f = n >> (2 * k);    // f = n / (Nside * Nside)
+    //     n &= (1 << (2 * k)) - 1;  // n = n % (Nside * Nside)
+    //     auto i = nest_decode_bits(n);
+    //     auto j = nest_decode_bits(n >> 1);
+    //     return { f, i, j };
+    // }
+
+    static int fij_to_nest(int f, int i, int j, int k)
+    {
+        return (f << (2 * k)) + nest_encode_bits(i) + (nest_encode_bits(j) << 1);
+    }
+};
+
+inline int int_sqrt(int n)
+{
+    return static_cast<int>(std::sqrt(static_cast<double>(n) + 0.5));
+}
+
+// for division result within [0; 3]
+inline int div_03(int a, int b)
+{
+    int t = (a >= (b << 1)) ? 1 : 0;
+    a -= t * (b << 1);
+    return (t << 1) + (a >= b ? 1 : 0);
+}
+
+inline bool is_power_of_2(int n)
+{
+    return std::bitset<sizeof(int) * 8>(n).count() == 1;
+}
+
+inline int pll(int f)
+{
+    constexpr int __pll[] = { 1, 3, 5, 7, 0, 2, 4, 6, 1, 3, 5, 7 };
+    return __pll[f];
+}
 
 size_t HEALPix_nj(size_t N, size_t i)
 {
@@ -92,7 +168,7 @@ size_t HEALPix_nj(size_t N, size_t i)
     size_t ni = 4 * N - 1;
     Assert(i < ni);
     return i < N ? 4 * (i + 1) : i < 3 * N ? 4 * N
-                               : HEALPix_nj(N, ni - 1 - i);
+                                           : HEALPix_nj(N, ni - 1 - i);
 }
 
 // Thanks to Willem Deconinck and Pedro Maciel
@@ -137,52 +213,139 @@ static std::vector<double> HEALPix_longitudes(size_t N, size_t i)
 
 static int iterate_healpix(grib_iterator_healpix* self, long N)
 {
-    size_t ny, nx;
-    ny = nx = 4*N - 1;
-    std::vector<double> latitudes(ny);
+    size_t Ny = 4 * static_cast<size_t>(N) - 1;
+    auto Nd   = static_cast<double>(N);
+
+    std::vector<double> latitudes(Ny);
 
     for (long r = 1; r < N; r++) {
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - r * r / (3.0 * N * N));
+        auto rd                  = static_cast<double>(r);
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
+
     // Polar caps
     for (long r = 1; r < N; r++) {
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - r * r / (3.0 * N * N));
+        auto rd                  = static_cast<double>(r);
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos(1.0 - rd * rd / (3.0 * Nd * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
+
     // Equatorial belt
     for (long r = N; r < 2 * N; r++) {
-        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos((4.0 * N - 2.0 * r) / (3.0 * N));
+        auto rd                  = static_cast<double>(r);
+        latitudes[r - 1]         = 90.0 - RAD2DEG * std::acos((4.0 * Nd - 2.0 * rd) / (3.0 * Nd));
         latitudes[4 * N - 1 - r] = -latitudes[r - 1];
     }
 
     // Equator
     latitudes[2 * N - 1] = 0.0;
 
-    size_t k = 0;
-    for (size_t i = 0; i < ny; i++) {
-        // Compute the longitudes at a given latitude
-        std::vector<double> longitudes = HEALPix_longitudes(N, i);
-        for (size_t j = 0; j < longitudes.size(); j++) {
-            self->lons[k] = longitudes[j];
-            self->lats[k] = latitudes[i];
-            ++k;
+    if (self->nested) {
+        if (!is_power_of_2(N)) {
+            grib_context* c = grib_context_get_default();
+            grib_context_log(c, GRIB_LOG_ERROR, "%s: For nested ordering, Nside must be a power of 2", ITER);
+            return GRIB_WRONG_GRID;
+        }
+
+        const auto Nside = static_cast<int>(N);
+        const auto k     = static_cast<int>(std::log2(Nside));
+        const int Npix   = 12 * Nside * Nside;
+        const int Ncap   = (Nside * (Nside - 1)) << 1;
+
+        auto to_nest = [&](int f,      //!< base pixel index
+                           int ring,   //!< 1-based ring number
+                           int Nring,  //!< number of pixels in ring
+                           int phi,    //!< index in longitude
+                           int shift   //!< if ring's first pixel is not at phi=0
+                           ) -> int {
+            int r = ((2 + (f >> 2)) << k) - ring - 1;
+            int p = 2 * phi - pll(f) * Nring - shift - 1;
+            if (p >= 2 * Nside) {
+                p -= 8 * Nside;
+            }
+
+            int i = std::max(0, (r + p)) >> 1;
+            int j = std::max(0, (r - p)) >> 1;
+
+            Assert(f < 12 && i < Nside && j < Nside);
+            return CodecFijNest::fij_to_nest(f, i, j, k);
+        };
+
+        std::vector<size_t> ring_to_nest(Npix);
+        for (int r = 0; r < Npix; ++r) {
+            if (r < Ncap) {
+                // North polar cap
+                int Nring = (1 + int_sqrt(2 * r + 1)) >> 1;
+                int phi   = 1 + r - 2 * Nring * (Nring - 1);
+                int f     = div_03(phi - 1, Nring);
+
+                ring_to_nest[r] = to_nest(f, Nring, Nring, phi, 0);
+                continue;
+            }
+
+            if (Npix - Ncap <= r) {
+                // South polar cap
+                int Nring = (1 + int_sqrt(2 * Npix - 2 * r - 1)) >> 1;
+                int phi   = 1 + r + 2 * Nring * (Nring - 1) + 4 * Nring - Npix;
+                int ring  = 4 * Nside - Nring;  // (from South pole)
+                int f     = div_03(phi - 1, Nring) + 8;
+
+                ring_to_nest[r] = to_nest(f, ring, Nring, phi, 0);
+                continue;
+            }
+
+            // Equatorial belt
+            int ip  = r - Ncap;
+            int tmp = ip >> (k + 2);
+
+            int phi  = ip - tmp * 4 * Nside + 1;
+            int ring = tmp + Nside;
+
+            int ifm = 1 + ((phi - 1 - ((1 + tmp) >> 1)) >> k);
+            int ifp = 1 + ((phi - 1 - ((1 - tmp + 2 * Nside) >> 1)) >> k);
+            int f   = (ifp == ifm) ? (ifp | 4) : ((ifp < ifm) ? ifp : (ifm + 8));
+
+            ring_to_nest[r] = to_nest(f, ring, Nside, phi, ring & 1);
+        }
+
+        for (size_t i = 0, j=0; i < Ny; i++) {
+            // Compute the longitudes at a given latitude
+            for (double longitude : HEALPix_longitudes(N, i)) {
+                Assert( ring_to_nest.at(j) < Npix );
+                self->lons[ring_to_nest.at(j)] = longitude;
+                self->lats[ring_to_nest.at(j)] = latitudes[i];
+                ++j;
+            }
+        }
+    } else {
+        for (size_t i = 0, j = 0; i < Ny; i++) {
+            // Compute the longitudes at a given latitude
+            for (double longitude : HEALPix_longitudes(N, i)) {
+                self->lons[j] = longitude;
+                self->lats[j] = latitudes[i];
+                ++j;
+            }
         }
     }
 
     return GRIB_SUCCESS;
 }
 
+}  // anonymous namespace
+
 static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 {
-    int err = 0;
+    int err    = 0;
     grib_iterator_healpix* self = (grib_iterator_healpix*)iter;
 
     const char* snside = grib_arguments_get_name(h, args, self->carg++);
     const char* sorder = grib_arguments_get_name(h, args, self->carg++);
 
     long N = 0;
-    if ((err = grib_get_long_internal(h, snside, &N)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long_internal(h, snside, &N)) != GRIB_SUCCESS) {
+        return err;
+    }
     if (N <= 0) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Key %s must be greater than zero", ITER, snside);
         return GRIB_WRONG_GRID;
@@ -190,13 +353,19 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     char ordering[32] = {0,};
     size_t slen = sizeof(ordering);
-    if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS)
+    if ((err = grib_get_string_internal(h, sorder, ordering, &slen)) != GRIB_SUCCESS) {
         return err;
-
-    if (!STR_EQUAL(ordering, "ring")) {
-        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only ring ordering is supported", ITER);
-        return GRIB_WRONG_GRID;
     }
+
+    self->nested = STR_EQUAL(ordering, "nested");
+    if (!STR_EQUAL(ordering, "ring") && !self->nested) {
+        grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only orderingConvention=(ring|nested) are supported", ITER);
+        return GRIB_GEOCALCULUS_PROBLEM;
+    }
+    // if (self->nested && N == 1) {
+    //     grib_context_log(h->context, GRIB_LOG_ERROR, "%s: For orderingConvention=nested, N must be greater than 1", ITER);
+    //     return GRIB_GEOCALCULUS_PROBLEM;
+    // }
 
     if (grib_is_earth_oblate(h)) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Only spherical earth is supported", ITER);
@@ -205,14 +374,19 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
     if (iter->nv != 12 * N * N) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "%s: Wrong number of points (%zu!=12x%ldx%ld)",
-                ITER, iter->nv, N, N);
+                         ITER, iter->nv, N, N);
         return GRIB_WRONG_GRID;
     }
 
     self->lats = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (self->lats == NULL) return GRIB_OUT_OF_MEMORY;
+    if (self->lats == nullptr) {
+        return GRIB_OUT_OF_MEMORY;
+    }
+
     self->lons = (double*)grib_context_malloc(h->context, iter->nv * sizeof(double));
-    if (self->lons == NULL) return GRIB_OUT_OF_MEMORY;
+    if (self->lons == nullptr) {
+        return GRIB_OUT_OF_MEMORY;
+    }
 
     try {
         err = iterate_healpix(self, N);
@@ -228,24 +402,26 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
 
 static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
-    grib_iterator_healpix* self = (grib_iterator_healpix*)iter;
+    auto* self = (grib_iterator_healpix*)iter;
 
-    if ((long)iter->e >= (long)(iter->nv - 1))
+    if (iter->e >= static_cast<long>(iter->nv - 1)) {
         return 0;
+    }
+
     iter->e++;
 
     *lat = self->lats[iter->e];
     *lon = self->lons[iter->e];
-    if (val && iter->data) {
+    if (val != nullptr && iter->data != nullptr) {
         *val = iter->data[iter->e];
     }
     return 1;
 }
 
-static int destroy(grib_iterator* i)
+static int destroy(grib_iterator* iter)
 {
-    grib_iterator_healpix* self = (grib_iterator_healpix*)i;
-    const grib_context* c       = i->h->context;
+    auto* self    = (grib_iterator_healpix*)iter;
+    const auto* c = iter->h->context;
 
     grib_context_free(c, self->lats);
     grib_context_free(c, self->lons);

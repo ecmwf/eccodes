@@ -74,7 +74,6 @@ static int compareAbsolute         = 1;
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
 static int error               = 0;
 static int count               = 0;
-static int lastPrint           = 0;
 static int force               = 0;
 static double maxAbsoluteError = 1e-19;
 static int onlyListed          = 1;
@@ -249,16 +248,6 @@ int grib_tool_init(grib_runtime_options* options)
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
         global_tolerance = 0;
-        for (int i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -276,7 +265,7 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("t:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
         int err = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (err == GRIB_INVALID_ARGUMENT) {
@@ -316,7 +305,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static grib_handle* metar_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
@@ -514,11 +502,10 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
     }
 
-    // if (options->mode != MODE_METAR) {
+    Assert(options->mode == MODE_METAR);
     //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
     //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
     //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    // }
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         if (verbose)
@@ -746,8 +733,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_METAR)
-                return 0;
+            return 0; // No such type for METAR
             break;
 
         case GRIB_TYPE_LABEL:
@@ -835,10 +821,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
         }
 

@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     }
 
     if (resource_type == SAMPLE) {
-        full_path = get_external_template_path(c, resource_path);
+        full_path = get_external_sample_path(c, resource_path);
     }
     else if (resource_type == DEFINITION) {
         full_path = grib_context_full_defs_path(c, resource_path);

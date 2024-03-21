@@ -220,7 +220,7 @@ static int bufr_decode_extra_rdb_keys(const void* message, long offset_section2,
 
     DEBUG_ASSERT(hdr->ecmwfLocalSectionPresent);
 
-    if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12) {
+    if (hdr->rdbType == 2 || hdr->rdbType == 3 || hdr->rdbType == 8 || hdr->rdbType == 12 || hdr->rdbType == 30) {
         isSatelliteType = true;
     }
     if (isSatelliteType || hdr->numberOfSubsets > 1) {

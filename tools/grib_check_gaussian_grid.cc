@@ -227,7 +227,8 @@ static int process_file(const char* filename)
         }
 
         if (fabs(lon2 - expected_lon2) > angular_tolerance) {
-            error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f\n", lon2, expected_lon2);
+            error(filename, msg_num, "longitudeOfLastGridPointInDegrees=%f but should be %f (= 360 - 360/max(pl) )\n",
+                  lon2, expected_lon2);
         }
 
         GRIB_CHECK(grib_get_size(h, "values", &sizeOfValuesArray), 0);

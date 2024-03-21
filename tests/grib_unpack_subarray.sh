@@ -13,6 +13,9 @@
 label="grib_unpack_subarray_test"
 temp=${label}".grib.tmp"
 
+infile=$data_dir/constant_field.grib2
+$EXEC ${test_dir}/grib_unpack_subarray $infile
+
 infile=$data_dir/sample.grib2
 $EXEC ${test_dir}/grib_unpack_subarray $infile
 

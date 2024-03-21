@@ -485,7 +485,7 @@ int grib_trie_with_rank_insert(grib_trie_with_rank* t, const char* key, void* da
     grib_oarray_push(t->context, t->objs, data);
     /* grib_trie_with_rank_insert_in_list(t,data); */
     GRIB_MUTEX_UNLOCK(&mutex);
-    return t->objs->n;
+    return (int)t->objs->n;
 }
 
 /*

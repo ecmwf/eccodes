@@ -7,11 +7,6 @@
  * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
-
-/*****************************************
- *  Enrico Fucile
- ****************************************/
-
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -108,7 +103,7 @@ grib_accessor_class* grib_accessor_class_divdouble = &_grib_accessor_class_divdo
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_divdouble* self = (grib_accessor_divdouble*)a;
-    int n                         = 0;
+    int n = 0;
 
     self->val     = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->divisor = grib_arguments_get_double(grib_handle_of_accessor(a), c, n++);
@@ -116,22 +111,17 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
-    grib_accessor_divdouble* self = (grib_accessor_divdouble*)a;
-    int ret                       = GRIB_SUCCESS;
-    double value                  = 0;
-
-    if (*len < 1) {
-        *len = 1;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
+    const grib_accessor_divdouble* self = (grib_accessor_divdouble*)a;
+    int ret = GRIB_SUCCESS;
+    double value = 0;
 
     ret = grib_get_double_internal(grib_handle_of_accessor(a), self->val, &value);
-
     if (ret != GRIB_SUCCESS)
         return ret;
 
-    /*  fprintf(stdout,"\nname %s %s %g/%g\n",a->name ,self->val,value,divisor);*/
-    Assert(self->divisor != 0);
+    if (self->divisor == 0) {
+        return GRIB_INVALID_ARGUMENT;
+    }
     *val = value / self->divisor;
 
     *len = 1;

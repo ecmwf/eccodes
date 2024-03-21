@@ -139,7 +139,7 @@ char* grib_options_get_option(const char* id)
     int i = 0;
     for (i = 0; i < grib_options_count; i++) {
         if (!strcmp(id, grib_options[i].id))
-            return grib_options[i].value;
+            return (char*)grib_options[i].value;
     }
     return NULL;
 }
@@ -256,7 +256,7 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
 
 #ifndef ECCODES_ON_WINDOWS
     /* Check at compile time to ensure our file offset is at least 64 bits */
-    COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+    static_assert(sizeof(options->infile_offset) >= 8);
 #endif
 
     has_output      = grib_options_on("U");
@@ -356,12 +356,6 @@ int grib_process_runtime_options(grib_context* context, int argc, char** argv, g
         grib_gts_header_on(context);
     else
         grib_gts_header_off(context);
-
-    if (grib_options_on("V")) {
-        printf("\necCodes Version ");
-        grib_print_api_version(stdout);
-        printf("\n\n");
-    }
 
     if (grib_options_on("s:")) {
         sarg                      = grib_options_get_option("s:");

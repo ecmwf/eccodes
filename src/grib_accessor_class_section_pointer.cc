@@ -107,7 +107,7 @@ grib_accessor_class* grib_accessor_class_section_pointer = &_grib_accessor_class
 
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
-    int n                               = 0;
+    int n = 0;
     grib_accessor_section_pointer* self = (grib_accessor_section_pointer*)a;
 
     self->sectionOffset = grib_arguments_get_name(grib_handle_of_accessor(a), arg, n++);
@@ -162,13 +162,13 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 static long byte_count(grib_accessor* a)
 {
     grib_accessor_section_pointer* self = (grib_accessor_section_pointer*)a;
-    long sectionLength                  = 0;
-    int ret                             = 0;
+    long sectionLength = 0;
+    int ret = 0;
 
     ret = grib_get_long(grib_handle_of_accessor(a), self->sectionLength, &sectionLength);
     if (ret) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to get %s %s",
+                         "Unable to get %s %s",
                          self->sectionLength, grib_get_error_message(ret));
         return -1;
     }
@@ -179,13 +179,13 @@ static long byte_count(grib_accessor* a)
 static long byte_offset(grib_accessor* a)
 {
     grib_accessor_section_pointer* self = (grib_accessor_section_pointer*)a;
-    long sectionOffset                  = 0;
-    int ret                             = 0;
+    long sectionOffset = 0;
+    int ret = 0;
 
     ret = grib_get_long(grib_handle_of_accessor(a), self->sectionOffset, &sectionOffset);
     if (ret) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to get %s %s",
+                         "Unable to get %s %s",
                          self->sectionOffset, grib_get_error_message(ret));
         return -1;
     }

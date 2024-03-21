@@ -460,19 +460,17 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     try {
         if (numberOfTimeRange == 1) {
             ret =  unpack_one_time_range_long_(a, val, len);
-            return ret;
         }
         else {
             ret = unpack_multiple_time_ranges_long_(a, val, len);
-            return ret;
         }
     }
     catch (std::exception& e) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::unpack_long: %s", e.what());
-        return GRIB_DECODING_ERROR;
+        ret = GRIB_DECODING_ERROR;
     }
 
-    return GRIB_SUCCESS;
+    return ret;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
@@ -500,19 +498,17 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     try {
         if (numberOfTimeRange == 1) {
             ret =  unpack_one_time_range_double_(a, val, len);
-            return ret;
         }
         else {
             ret = unpack_multiple_time_ranges_double_(a, val, len);
-            return ret;
         }
     }
     catch (std::exception& e) {
         grib_context_log(h->context, GRIB_LOG_ERROR, "grib_accessor_g2end_step::unpack_double: %s", e.what());
-        return GRIB_DECODING_ERROR;
+        ret = GRIB_DECODING_ERROR;
     }
 
-    return GRIB_SUCCESS;
+    return ret;
 }
 
 static int pack_long_(grib_accessor* a, const long end_step_value, const long end_step_unit)

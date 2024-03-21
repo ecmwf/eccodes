@@ -161,8 +161,8 @@ static void compute_size(grib_accessor* a)
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_bitmap* self = (grib_accessor_bitmap*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int n                      = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
     self->tableReference = grib_arguments_get_name(hand, arg, n++);
     self->missing_value  = grib_arguments_get_name(hand, arg, n++);
@@ -190,23 +190,21 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    long pos          = a->offset * 8;
-    long tlen         = 0;
-    long i            = 0;
-    int err           = 0;
+    long pos  = a->offset * 8;
+    long tlen = 0;
     const grib_handle* hand = grib_handle_of_accessor(a);
 
-    err = grib_value_count(a, &tlen);
+    int err = grib_value_count(a, &tlen);
     if (err)
         return err;
 
     if (*len < tlen) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
-        *len = 0;
+        *len = tlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    for (i = 0; i < tlen; i++) {
+    for (long i = 0; i < tlen; i++) {
         val[i] = (long)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
     }
     *len = tlen;
@@ -219,21 +217,19 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;
     long tlen;
-    long i;
-    int err           = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
-    err = grib_value_count(a, &tlen);
+    int err = grib_value_count(a, &tlen);
     if (err)
         return err;
 
     if (*len < tlen) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %ld values", a->name, tlen);
-        *len = 0;
+        *len = tlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    for (i = 0; i < tlen; i++) {
+    for (long i = 0; i < tlen; i++) {
         val[i] = (T)grib_decode_unsigned_long(hand->buffer->data, &pos, 1);
     }
     *len = tlen;
@@ -261,8 +257,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 }
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    size_t i = 0;
-    for (i=0; i<len; ++i) {
+    for (size_t i=0; i<len; ++i) {
         unpack_double_element(a, index_array[i], val_array + i);
     }
     return GRIB_SUCCESS;
@@ -280,7 +275,6 @@ static size_t string_length(grib_accessor* a)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    long i = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
     const size_t l = a->length;
 
@@ -293,11 +287,11 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         return GRIB_BUFFER_TOO_SMALL;
     }
 
-    for (i = 0; i < a->length; i++) {
+    for (long i = 0; i < a->length; i++) {
         val[i] = hand->buffer->data[a->offset + i];
     }
 
-    len[0] = a->length;
+    *len = a->length;
 
     return GRIB_SUCCESS;
 }

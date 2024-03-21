@@ -1,30 +1,49 @@
-/*
- * (C) Copyright 2005- ECMWF.
- *
- * This software is licensed under the terms of the Apache Licence Version 2.0
- * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
- */
-
-/*
- * Description: concept index
- *
- */
-
 #include "grib_api_internal.h"
+
+typedef struct grib_concept_index_keys grib_concept_index_keys;
+typedef struct grib_concept_index grib_concept_index;
+typedef struct grib_conditions_tree grib_conditions_tree;
+typedef struct grib_concept_index_entry grib_concept_index_entry;
+typedef struct grib_concept_index_keys grib_concept_index_keys;
+
+struct grib_concept_index_entry {
+    char* name;
+    char* value;
+    int type;
+    grib_concept_index_entry* next;
+};
+
+struct grib_concept_index_keys {
+    char* name;
+    int type;
+    grib_concept_index_keys* next;
+};
+
+struct grib_concept_index {
+    grib_context* context;
+    grib_concept_index_keys* keys;
+    grib_conditions_tree* conditions;
+};
+
+struct grib_conditions_tree {
+    char* value;
+    void* object;
+    grib_conditions_tree* next;
+    grib_conditions_tree* next_key;
+};
+
 
 static grib_concept_index_entry* index_entry_new(grib_context* c, grib_concept_index_keys* keys)
 {
     grib_concept_index_entry* entry = NULL;
+    grib_concept_index_entry* e;
 
     Assert(keys);
 
     if (!c)
         c = grib_context_get_default();
 
-    entry = grib_context_malloc_clear(c, sizeof(grib_concept_index_entry));
+    entry = (grib_concept_index_entry*)grib_context_malloc_clear(c, sizeof(grib_concept_index_entry));
     if (!entry)
         grib_context_log(c, GRIB_LOG_FATAL, "grib_concept_index_entry unable to allocate");
     e = entry;
@@ -32,7 +51,7 @@ static grib_concept_index_entry* index_entry_new(grib_context* c, grib_concept_i
     while (keys && keys->name) {
         e->name = grib_context_strdup(c, keys->name);
         e->type = keys->type;
-        e->next = grib_context_malloc_clear(c, sizeof(grib_concept_index_entry));
+        e->next = (grib_concept_index_entry*)grib_context_malloc_clear(c, sizeof(grib_concept_index_entry));
         if (!e->next)
             grib_context_log(c, GRIB_LOG_FATAL, "grib_concept_index_entry unable to allocate");
 
@@ -65,17 +84,17 @@ static int index_insert_entry(grib_concept_index* index, grib_concept_index_entr
 
     while (keys->name) {
         if (!cur) {
-            cur = grib_context_malloc_clear_persistent(index->context, sizeof(grib_conditions_tree));
+            cur = (grib_conditions_tree*)grib_context_malloc_clear_persistent(index->context, sizeof(grib_conditions_tree));
             if (!cur)
                 grib_context_log(index->context, GRIB_LOG_FATAL, "index_insert_entry unable to allocate");
             prev->next = cur;
         }
-        value = entry->value ? entry->value : "*";
+        char* value = entry->value ? entry->value : (char*)"*";
         while (cur && (!cur->value || (found = !strcmp(cur->value, value)) == 0))
             cur = cur->next;
 
         if (!found) {
-            cur->next = grib_context_malloc_clear_persistent(index->context, sizeof(grib_conditions_tree));
+            cur->next = (grib_conditions_tree*)grib_context_malloc_clear_persistent(index->context, sizeof(grib_conditions_tree));
             Assert(cur->next);
             cur = cur->next;
         }
@@ -103,6 +122,9 @@ static void index_add_conditions(grib_concept_index* index, grib_concept_conditi
     char s[512]               = {0,};
     grib_concept_index_entry* e;
     grib_concept_index_entry* entry = index_entry_new(index->context, index->keys);
+    long lres;
+    double dres;
+    int err = 0;
 
     while (c) {
         size_t size = 512;
@@ -136,7 +158,7 @@ static void index_add_conditions(grib_concept_index* index, grib_concept_conditi
         e->value = grib_context_strdup(index->context, s);
         if (!e->name) {
             e->name = grib_context_strdup(index->context, c->name);
-            e->next = grib_context_malloc_clear_persistent(index->context, sizeof(grib_concept_index_entry));
+            e->next = (grib_concept_index_entry*)grib_context_malloc_clear_persistent(index->context, sizeof(grib_concept_index_entry));
             if (!e->next)
                 grib_context_log(index->context, GRIB_LOG_FATAL, "index_add_conditions unable to allocate");
         }
@@ -156,14 +178,13 @@ grib_concept_index* grib_concept_index_new_from_concept(grib_context* c, grib_co
     if (!c)
         c = grib_context_get_default();
 
-    index             = grib_context_malloc_clear_persistent(c, sizeof(grib_concept_index));
-    index->keys       = grib_context_malloc_clear_persistent(c, sizeof(grib_concept_index_key));
-    index->conditions = grib_context_malloc_clear_persistent(c, sizeof(grib_conditions_tree));
-    index->conditions = grib_context_malloc_clear_persistent(c, sizeof(grib_conditions_tree));
+    index             = (grib_concept_index*)grib_context_malloc_clear_persistent(c, sizeof(grib_concept_index));
+    index->keys       = (grib_concept_index_keys*)grib_context_malloc_clear_persistent(c, sizeof(grib_concept_index_keys));
+    index->conditions = (grib_conditions_tree*)grib_context_malloc_clear_persistent(c, sizeof(grib_conditions_tree));
     index->context    = c;
 
     while (concept) {
-        index_add_conditions(index, concept->conditions, err);
+        index_add_conditions(index, concept->conditions);
         concept = concept->next;
     }
 

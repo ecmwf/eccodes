@@ -73,17 +73,11 @@ endif()
 ###############################################################################
 # some variables/options of this project
 
-if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
-    ecbuild_add_cxx_flags("-Wno-write-strings")
-    ecbuild_add_cxx_flags("-Wno-deprecated")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
-        ecbuild_add_cxx_flags("-Wno-write-strings")
-        ecbuild_add_cxx_flags("-Wno-deprecated")
-    else()
-        ecbuild_add_cxx_flags("-Wno-writable-strings")
-    endif()
-elseif( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
+# ecbuild_add_cxx_flags("-Wno-write-strings" NO_FAIL)
+# ecbuild_add_cxx_flags("-Wno-writable-strings" NO_FAIL)
+# ecbuild_add_cxx_flags("-Wno-deprecated" NO_FAIL)
+
+if( CMAKE_CXX_COMPILER_ID STREQUAL "Cray" )
     set(CMAKE_CXX_FLAGS "-hstd=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 
@@ -201,8 +195,8 @@ ecbuild_add_option( FEATURE INSTALL_ECCODES_SAMPLES
 ecbuild_add_option( FEATURE MEMORY_MANAGEMENT   DESCRIPTION "Enable memory management" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE ALIGN_MEMORY        DESCRIPTION "Enable memory alignment"  DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE TIMER               DESCRIPTION "Enable timer" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable POSIX threads" DEFAULT OFF ADVANCED )
-ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable OpenMP threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_THREADS     DESCRIPTION "Enable thread-safety using POSIX threads" DEFAULT OFF ADVANCED )
+ecbuild_add_option( FEATURE ECCODES_OMP_THREADS DESCRIPTION "Enable thread-safety using OpenMP threads" DEFAULT OFF ADVANCED )
 ecbuild_add_option( FEATURE EXTRA_TESTS         DESCRIPTION "Enable extended regression testing" DEFAULT OFF ADVANCED )
 
 ###############################################################################

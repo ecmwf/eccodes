@@ -131,6 +131,7 @@ extern grib_accessor_class* grib_accessor_class_mars_step;
 extern grib_accessor_class* grib_accessor_class_md5;
 extern grib_accessor_class* grib_accessor_class_message;
 extern grib_accessor_class* grib_accessor_class_message_copy;
+extern grib_accessor_class* grib_accessor_class_multdouble;
 extern grib_accessor_class* grib_accessor_class_nearest;
 extern grib_accessor_class* grib_accessor_class_non_alpha;
 extern grib_accessor_class* grib_accessor_class_number_of_coded_values;

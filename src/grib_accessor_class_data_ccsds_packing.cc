@@ -650,7 +650,7 @@ static int unpack_float(grib_accessor* a, float* val, size_t* len)
 static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     // The index idx relates to codedValues NOT values!
-    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
+    const grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     int err = 0;
     size_t size    = 0;
@@ -686,7 +686,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
 static int unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
 {
-    grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
+    const grib_accessor_data_ccsds_packing* self = (grib_accessor_data_ccsds_packing*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     size_t size = 0, i = 0;
     double* values = NULL;

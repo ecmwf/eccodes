@@ -872,19 +872,14 @@ int grib_type_to_int(char id)
     switch (id) {
         case 'd':
             return GRIB_TYPE_DOUBLE;
-            break;
         case 'f':
             return GRIB_TYPE_DOUBLE;
-            break;
         case 'l':
             return GRIB_TYPE_LONG;
-            break;
         case 'i':
             return GRIB_TYPE_LONG;
-            break;
         case 's':
             return GRIB_TYPE_STRING;
-            break;
     }
     return GRIB_TYPE_UNDEFINED;
 }

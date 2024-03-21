@@ -125,7 +125,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     int err = 0;
     grib_accessor_change_alternative_row_scanning* self = (grib_accessor_change_alternative_row_scanning*)a;
-    grib_context* c = a->context;
+    const grib_context* c = a->context;
     grib_handle* h  = grib_handle_of_accessor(a);
     long i, j, jr, theEnd, Ni, Nj, k, kp, alternativeRowScanning;
     size_t size = 0;

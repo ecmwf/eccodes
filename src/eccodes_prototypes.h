@@ -1,3 +1,13 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
 #pragma once
 
 #ifdef ECCODES_ON_WINDOWS
@@ -57,7 +67,6 @@ grib_action* grib_action_create_assert(grib_context* context, grib_expression* e
 
 /* action_class_template.cc*/
 grib_action* grib_action_create_template(grib_context* context, int nofail, const char* name, const char* arg1);
-grib_action* get_empty_template(grib_context* c, int* err);
 
 /* action_class_trigger.cc*/
 grib_action* grib_action_create_trigger(grib_context* context, grib_arguments* args, grib_action* block);
@@ -109,7 +118,6 @@ grib_action* grib_action_create_transient_darray(grib_context* context, const ch
 /* grib_accessor.cc*/
 void grib_accessor_dump(grib_accessor* a, grib_dumper* f);
 int grib_pack_missing(grib_accessor* a);
-int grib_pack_zero(grib_accessor* a);
 int grib_is_missing_internal(grib_accessor* a);
 int grib_pack_double(grib_accessor* a, const double* v, size_t* len);
 int grib_pack_float(grib_accessor* a, const float* v, size_t* len);
@@ -151,17 +159,12 @@ grib_accessor* grib_next_accessor(grib_accessor* a);
 void grib_resize(grib_accessor* a, size_t new_size);
 int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags);
 int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash);
-int grib_accessor_replace_attribute(grib_accessor* a, grib_accessor* attr);
-int grib_accessor_delete_attribute(grib_accessor* a, const char* name);
-grib_accessor* grib_accessor_get_attribute_by_index(grib_accessor* a, int index);
-const char* grib_accessor_get_name(grib_accessor* a);
 grib_accessor* grib_accessor_get_attribute_index(grib_accessor* a, const char* name, int* index);
 int grib_accessor_has_attributes(grib_accessor* a);
 grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name);
 grib_accessors_list* grib_accessors_list_create(grib_context* c);
 void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
 grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-grib_accessors_list* grib_accessors_list_find(grib_accessors_list* al, const grib_accessor* a);
 void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 
 /* grib_concept.cc*/
@@ -172,7 +175,6 @@ void grib_concept_condition_delete(grib_context* c, grib_concept_condition* v);
 
 /* grib_hash_array.cc*/
 grib_hash_array_value* grib_integer_hash_array_value_new(grib_context* c, const char* name, grib_iarray* array);
-void grib_hash_array_value_delete(grib_context* c, grib_hash_array_value* v);
 
 /* grib_bufr_descriptor.cc*/
 bufr_descriptor* grib_bufr_descriptor_new(grib_accessor* tables_accessor, int code, int silent, int* err);
@@ -656,7 +658,6 @@ void grib_index_dump(FILE* fout, grib_index* index, unsigned long flags);
 char* grib_get_field_file(grib_index* index, off_t* offset);
 grib_handle* grib_handle_new_from_index(grib_index* index, int* err);
 grib_handle* codes_new_from_index(grib_index* index, int message_type, int* err);
-void grib_index_rewind(grib_index* index);
 int codes_index_set_product_kind(grib_index* index, ProductKind product_kind);
 int codes_index_set_unpack_bufr(grib_index* index, int unpack);
 int is_index_file(const char* filename);
@@ -927,7 +928,6 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.cc*/
 void grib_file_pool_clean(void);
-grib_file* grib_file_pool_get_files(void);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
 void grib_file_close(const char* filename, int force, int* err);
@@ -1104,10 +1104,10 @@ double grib_power(long s, long n);
 long grib_get_binary_scale_fact(double max, double min, long bpval, int* error);
 
 /* grib_templates.cc*/
-grib_handle* codes_external_template(grib_context* c, ProductKind product_kind, const char* name);
-char* get_external_template_path(grib_context* c, const char* name);
+grib_handle* codes_external_sample(grib_context* c, ProductKind product_kind, const char* name);
+char* get_external_sample_path(grib_context* c, const char* name);
 
-/* grib_dependency.cc*/
+/* grib_dependency.cc */
 grib_handle* grib_handle_of_accessor(const grib_accessor* a);
 void grib_dependency_add(grib_accessor* observer, grib_accessor* observed);
 void grib_dependency_remove_observed(grib_accessor* observed);
@@ -1311,7 +1311,6 @@ const char* grib_expression_get_name(grib_expression* g);
 void grib_expression_print(grib_context* ctx, grib_expression* g, grib_handle* f);
 void grib_expression_free(grib_context* ctx, grib_expression* g);
 void grib_expression_add_dependency(grib_expression* e, grib_accessor* observer);
-int grib_expression_set_value(grib_handle* h, grib_expression* g, grib_values* v);
 grib_arguments* grib_arguments_new(grib_context* c, grib_expression* g, grib_arguments* n);
 void grib_arguments_free(grib_context* c, grib_arguments* g);
 void grib_arguments_print(grib_context* c, grib_arguments* g, grib_handle* f);
@@ -1331,6 +1330,7 @@ char* codes_getenv(const char* name);
 int codes_check_grib_ieee_packing_value(int value);
 int codes_flush_sync_close_file(FILE* f);
 int is_date_valid(long year, long month, long day, long hour, long minute, double second);
+int is_time_valid(long number); // number is HHMM
 int compute_scaled_value_and_scale_factor(double input, int64_t scaled_value_max, int64_t scale_factor_max, int64_t* ret_value, int64_t* ret_factor);
 
 /* grib_util.cc*/
@@ -1347,9 +1347,9 @@ int grib2_is_PDTN_Aerosol(long productDefinitionTemplateNumber);
 int grib2_is_PDTN_AerosolOptical(long productDefinitionTemplateNumber);
 int grib2_select_PDTN(int is_eps, int is_instant, int is_chemical, int is_chemical_srcsink, int is_chemical_distfn, int is_aerosol, int is_aerosol_optical);
 size_t sum_of_pl_array(const long* pl, size_t plsize);
-int grib_is_earth_oblate(grib_handle* h);
+int grib_is_earth_oblate(const grib_handle* h);
 int grib_check_data_values_minmax(grib_handle* h, const double min_val, const double max_val);
-int grib_producing_large_constant_fields(grib_handle* h, int edition);
+int grib_producing_large_constant_fields(const grib_handle* h, int edition);
 int grib_util_grib_data_quality_check(grib_handle* h, double min_val, double max_val);
 
 /* bufr_util.cc*/
@@ -1381,8 +1381,6 @@ long grib_op_eq(long a, long b);
 long grib_op_ne(long a, long b);
 long grib_op_lt(long a, long b);
 long grib_op_gt(long a, long b);
-long grib_op_and(long a, long b);
-long grib_op_or(long a, long b);
 long grib_op_ge(long a, long b);
 long grib_op_le(long a, long b);
 long grib_op_bit(long a, long b);

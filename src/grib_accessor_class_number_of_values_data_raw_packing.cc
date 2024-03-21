@@ -152,7 +152,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
         default:
             return GRIB_NOT_IMPLEMENTED;
-            break;
     }
 
     *val = byte_count / bytes;

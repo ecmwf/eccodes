@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 #include "grib_api_internal.h"
 
@@ -228,7 +227,7 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG codes_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_ANY, name);
+    g = codes_external_sample(c, PRODUCT_ANY, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
@@ -256,7 +255,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* name)
         fprintf(stderr, "ECCODES DEBUG grib_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_GRIB, name);
+    g = codes_external_sample(c, PRODUCT_GRIB, name);
     if (!g)
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load GRIB sample file '%s.tmpl'\n"
@@ -279,7 +278,7 @@ grib_handle* codes_bufr_handle_new_from_samples(grib_context* c, const char* nam
         fprintf(stderr, "ECCODES DEBUG bufr_handle_new_from_samples '%s'\n", name);
     }
 
-    g = codes_external_template(c, PRODUCT_BUFR, name);
+    g = codes_external_sample(c, PRODUCT_BUFR, name);
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load BUFR sample file '%s.tmpl'\n"
@@ -375,7 +374,7 @@ grib_handle* grib_handle_clone_headers_only(const grib_handle* h)
     const int sections_to_copy = GRIB_SECTION_PRODUCT | GRIB_SECTION_LOCAL | GRIB_SECTION_GRID;
     result = grib_util_sections_copy((grib_handle*)h, h_sample, sections_to_copy, &err);
     if (!result || err) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Failed to create headers_only clone: Unable to copy sections");
+        grib_context_log(c, GRIB_LOG_ERROR, "%s failed: Unable to copy sections (%s)", __func__, grib_get_error_message(err));
         grib_handle_delete(h_sample);
         return NULL;
     }

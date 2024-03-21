@@ -17,7 +17,7 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long;pack_long
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = init
    MEMBERS    = const char* owner
    MEMBERS    = int bit_index
    END_CLASS_DEF
@@ -36,7 +36,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_bit
@@ -60,7 +59,7 @@ static grib_accessor_class _grib_accessor_class_bit = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -107,26 +106,20 @@ grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
 static void init(grib_accessor* a, const long len, grib_arguments* arg)
 {
     grib_accessor_bit* self = (grib_accessor_bit*)a;
-    a->length             = 0;
-    self->owner           = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
-    self->bit_index       = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
+    a->length       = 0;
+    self->owner     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
+    self->bit_index = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
 }
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_bit* self = (grib_accessor_bit*)a;
-    int ret               = 0;
-
+    int ret = 0;
     long data = 0;
 
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : unpack_long : Wrong size for %s it contains %d values ", a->name, 1);
-        *len = 0;
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit: unpack_long: Wrong size for %s, it contains %d values ", a->name, 1);
+        *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -147,23 +140,22 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_bit* self = (grib_accessor_bit*)a;
-    grib_accessor* owner  = NULL;
-    unsigned char* mdata  = 0;
+
     if (*len < 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : pack_long : At least one value to pack for %s", a->name);
-        *len = 0;
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit: pack_long: At least one value to pack for %s", a->name);
+        *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
-    owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
-
+    grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
     if (!owner) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit : Cannot get the owner %s for computing the bit value of %s ", self->owner, a->name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit: Cannot get the owner %s for computing the bit value of %s",
+                        self->owner, a->name);
         *len = 0;
         return GRIB_NOT_FOUND;
     }
 
-    mdata = grib_handle_of_accessor(a)->buffer->data;
+    unsigned char* mdata = grib_handle_of_accessor(a)->buffer->data;
     mdata += grib_byte_offset(owner);
 
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */

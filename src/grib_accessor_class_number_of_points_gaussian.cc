@@ -276,7 +276,7 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
     if (plpresent) {
         long max_pl          = 0;
         int j                = 0;
-        double lon_first_row = 0, lon_last_row = 0;
+        // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
         if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
@@ -324,11 +324,9 @@ static int unpack_long_new(grib_accessor* a, long* val, size_t* len)
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
-                lon_first_row = ((ilon_first)*360.0) / pl[j];
-                lon_last_row  = ((ilon_last)*360.0) / pl[j];
+                //lon_first_row = ((ilon_first)*360.0) / pl[j];
+                //lon_last_row  = ((ilon_last)*360.0) / pl[j];
                 *val += row_count;
-                (void)lon_last_row;
-                (void)lon_first_row;
             }
         }
         else {
@@ -388,7 +386,7 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
     if (plpresent) {
         long max_pl = 0;
         int j                = 0;
-        double lon_first_row = 0, lon_last_row = 0;
+        // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
         if ((err = grib_get_long_internal(h, self->order, &order)) != GRIB_SUCCESS)
@@ -452,11 +450,9 @@ static int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* 
 //                 if ( row_count != pl[j] ) {
 //                     printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);
 //                 }
-                lon_first_row = ((ilon_first)*360.0) / pl[j];
-                lon_last_row  = ((ilon_last)*360.0) / pl[j];
+                // lon_first_row = ((ilon_first)*360.0) / pl[j];
+                // lon_last_row  = ((ilon_last)*360.0) / pl[j];
                 *val += row_count;
-                (void)lon_last_row;
-                (void)lon_first_row;
 #if EFDEBUG
                 printf("        ilon_first=%ld lon_first=%.10e ilon_last=%ld lon_last=%.10e count=%ld row_count=%ld\n",
                        ilon_first, lon_first_row, ilon_last, lon_last_row, *val, row_count);
