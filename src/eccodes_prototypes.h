@@ -1,3 +1,13 @@
+/*
+ * (C) Copyright 2005- ECMWF.
+ *
+ * This software is licensed under the terms of the Apache Licence Version 2.0
+ * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
+ * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
+ */
+
 #pragma once
 
 #ifdef ECCODES_ON_WINDOWS
@@ -918,7 +928,6 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.cc*/
 void grib_file_pool_clean(void);
-grib_file* grib_file_pool_get_files(void);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
 void grib_file_close(const char* filename, int force, int* err);

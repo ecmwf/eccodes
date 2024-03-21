@@ -421,7 +421,6 @@ static int read_GRIB(reader* r, int no_alloc)
             r->seek_from_start(r->read_data, r->offset + 4);
             grib_buffer_delete(c, buf);
             return GRIB_UNSUPPORTED_EDITION;
-            break;
     }
 
     /* Assert(i <= buf->length); */
@@ -1232,12 +1231,12 @@ int wmo_read_bufr_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 int wmo_read_gts_from_file_fast(FILE* f, size_t* msg_len, off_t* msg_offset)
 {
     //TODO(masn): Needs proper implementation; no malloc
-    unsigned char buffer[1024] = {0,};
+    //unsigned char buffer[1024] = {0,};
     void* mesg   = NULL;
     int err      = GRIB_SUCCESS;
     grib_context* c = grib_context_get_default();
 
-    *msg_len = sizeof(buffer);
+    *msg_len = 1024; // sizeof(buffer)
     mesg = wmo_read_gts_from_file_malloc(f, 0, msg_len, msg_offset, &err);
     grib_context_free(c, mesg);
     return err;
@@ -1339,7 +1338,7 @@ static size_t stream_read(void* data, void* buffer, size_t len, int* err)
     if (len > LONG_MAX) {
         /* size_t cannot be coded into long */
         *err = GRIB_INTERNAL_ERROR;
-        return -1;
+        return 0;
     }
 
     n = s->stream_proc(s->stream_data, buffer, len);

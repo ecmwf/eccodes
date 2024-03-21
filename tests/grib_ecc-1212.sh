@@ -112,6 +112,8 @@ ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib selectedFcIndex,step '1 4'
 grib_check_key_equals $tempGrib mars.date,mars.time  '20220607 300'
 
+${tools_dir}/grib_dump -Dat $tempGrib > $tempOut
+
 for pdtn in 88 92 93 94 95 96 97 98; do
   ${tools_dir}/grib_set -s \
      tablesVersion=30,productDefinitionTemplateNumber=$pdtn,numberOfForecastsUsedInLocalTime=1 \

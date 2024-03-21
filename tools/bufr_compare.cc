@@ -84,7 +84,6 @@ static int compare_attribute(grib_handle* handle1, grib_handle* handle2, grib_ru
 
 static int error     = 0;
 static int count     = 0;
-static int lastPrint = 0;
 static int force     = 0;
 
 /* ECC-651: Boolean 'two_way' set to 1 when '-2' option used */
@@ -379,7 +378,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static void print_index_key_values(grib_index* index, int icounter, const char* error_message)
@@ -1259,10 +1257,9 @@ static int compare_handles(grib_handle* handle1, grib_handle* handle2, grib_runt
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         GRIB_CHECK_NOLINE(grib_get_message(handle1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(handle2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if (size1 == size2 && 0 == memcmp(msg1, msg2, size1)) {
             return 0;
         }
 #if defined(BUFR_COMPARE_BYTES)

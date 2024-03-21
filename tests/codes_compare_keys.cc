@@ -54,6 +54,8 @@ int main(int argc, char* argv[])
         codes_compare_key(h1, h2, "computeStatistics", 0); // statistics
         codes_compare_key(h1, h2, "paramId", 0);    // concept
         codes_compare_key(h1, h2, "identifier", 0); // ascii
+        err = codes_compare_key(h1, h2, "abcdefghij", 0); // no such key
+        Assert(err == GRIB_NOT_FOUND);
 
         if (list_provided_keys) {
             for (i = 0; list_provided_keys[i] != NULL; ++i) {

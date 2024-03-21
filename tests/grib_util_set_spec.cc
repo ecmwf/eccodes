@@ -132,6 +132,12 @@ static void test_reduced_gg(int remove_local_def, int edition, const char* packi
         Assert(err == GRIB_ENCODING_ERROR);
         Assert(!h2);
         if (h2) exit(1);
+
+        values[0]             = -INFINITY;
+        h2                    = grib_util_set_spec(handle, &spec, &packing_spec, set_spec_flags, values, outlen, &err);
+        Assert(err == GRIB_ENCODING_ERROR);
+        Assert(!h2);
+        if (h2) exit(1);
 #endif
     }
 

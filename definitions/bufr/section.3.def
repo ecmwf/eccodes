@@ -51,7 +51,7 @@ unsigned[2]     numberOfSubsets : dump;
 alias ls.numberOfSubsets=numberOfSubsets;
 
 if (section2Present && bufrHeaderCentre==98 && section2Length==52) {
-    if ( rdbType == 2 || rdbType == 3 || rdbType == 8 || rdbType == 12 ) {
+    if ( rdbType == 2 || rdbType == 3 || rdbType == 8 || rdbType == 12 || rdbType == 30 ) {
         transient isSatelliteType=1;
     } else {
         transient isSatelliteType=0;

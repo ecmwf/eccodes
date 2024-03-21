@@ -195,6 +195,46 @@ grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '0 1'
 $tools_dir/grib_set -s gridType=time_section $sample2 $temp
 grib_check_key_equals $temp isTemplateDeprecated,isTemplateExperimental '0 1'
 
+# Use of eps key (for local section)
+# -----------------------------------
+input=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
+$tools_dir/grib_set -s stepType=accum,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '11'
+
+#17 Ensemble mean
+#18 Ensemble standard deviation
+$tools_dir/grib_set -s type=17,stepType=accum,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,derivedForecast '12 0'
+
+$tools_dir/grib_set -s type=18,stepType=accum,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber,derivedForecast '12 4'
+
+# Chemicals
+$tools_dir/grib_set -s paramId=217019,stepType=instant,eps=0 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '40'
+
+$tools_dir/grib_set -s paramId=217019,stepType=instant,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '41'
+
+$tools_dir/grib_set -s paramId=217019,stepType=accum,eps=0 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '42'
+
+$tools_dir/grib_set -s paramId=217019,stepType=accum,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '43'
+
+# Aerosol 210072
+$tools_dir/grib_set -s paramId=210072,stepType=instant,eps=0 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '48'
+
+$tools_dir/grib_set -s paramId=210072,stepType=instant,eps=1 $input $temp
+grib_check_key_equals $temp productDefinitionTemplateNumber '45'
+
+#$tools_dir/grib_set -s paramId=210072,stepType=accum,eps=0 $input $temp
+#grib_check_key_equals $temp productDefinitionTemplateNumber '42'
+
+#$tools_dir/grib_set -s paramId=210072,stepType=accum,eps=1 $input $temp
+#grib_check_key_equals $temp productDefinitionTemplateNumber '43'
+
 
 # Clean up
 rm -f $temp $temp1 $temp2 $tempFilt $tempText

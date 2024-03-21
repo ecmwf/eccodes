@@ -208,7 +208,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     const double dval = *val;
 
     if (*len != 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains 1 value", a->name);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -233,7 +233,7 @@ static int pack_float(grib_accessor* a, const float* val, size_t* len)
     const double fval = *val;
 
     if (*len != 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains %d values", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it contains 1 value", a->name);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
@@ -252,7 +252,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_accessor_variable* self = (grib_accessor_variable*)a;
 
     if (*len != 1) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains %d values ", a->name, 1);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s it contains 1 value", a->name);
         *len = 1;
         return GRIB_ARRAY_TOO_SMALL;
     }

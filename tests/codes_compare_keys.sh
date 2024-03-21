@@ -37,6 +37,7 @@ key: hoursAfterDataCutoff  (Long values are different)
 key: minutesAfterDataCutoff  (Long values are different)
 key: numberOfValues  (Long values are different)
 key: referenceValue  (Double values are different)
+ECCODES ERROR   :  Key abcdefghij not found in first message
 
 Comparison failed: 13 differences
 EOF
@@ -57,6 +58,7 @@ cat $tempLog
 cat > $tempRef <<EOF
 key: referenceValue  (Double values are different)
 key: codedValues  (Double values are different)
+ECCODES ERROR   :  Key abcdefghij not found in first message
 
 Comparison failed: 2 differences
 EOF

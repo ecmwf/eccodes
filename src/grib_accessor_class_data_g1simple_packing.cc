@@ -245,7 +245,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             ret = grib_buffer_replace(a, NULL, 0, 1, 1);
             if (ret != GRIB_SUCCESS) return ret;
             return GRIB_SUCCESS;
-            break;
+
         case GRIB_NO_VALUES:
             ret = grib_get_long(grib_handle_of_accessor(a), "constantFieldHalfByte", &constantFieldHalfByte);
             if (ret)
@@ -262,7 +262,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             ret = grib_buffer_replace(a, NULL, 0, 1, 1);
             if (ret != GRIB_SUCCESS) return ret;
             return GRIB_SUCCESS;
-            break;
+
         case GRIB_INVALID_BPV:
             grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to compute packing parameters. Invalid bits per value");
             return ret;

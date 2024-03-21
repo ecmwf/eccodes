@@ -165,7 +165,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     return grib_get_long(grib_handle_of_accessor(a), key, val);
@@ -190,7 +189,6 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     return grib_get_string(grib_handle_of_accessor(a), key, val, len);
@@ -226,7 +224,6 @@ static int extra_set(grib_accessor* a, long val)
         case 0:
             /* class */
             return ret;
-            break;
         case 1:
             /* type */
             switch (val) {
@@ -400,7 +397,6 @@ static int extra_set(grib_accessor* a, long val)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     if (productDefinitionTemplateNumberNew >= 0) {
@@ -442,7 +438,6 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     ret = grib_set_string(grib_handle_of_accessor(a), key, val, len);
@@ -476,7 +471,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     ret = grib_set_long(grib_handle_of_accessor(a), key, *val);
@@ -513,7 +507,6 @@ static int get_native_type(grib_accessor* a)
             grib_context_log(a->context, GRIB_LOG_ERROR,
                              "invalid first argument of g2_mars_labeling in %s", a->name);
             return GRIB_INTERNAL_ERROR;
-            break;
     }
 
     ret = grib_get_native_type(grib_handle_of_accessor(a), key, &type);
