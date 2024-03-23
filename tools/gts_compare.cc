@@ -183,7 +183,7 @@ int grib_tool_init(grib_runtime_options* options)
         onlyListed = 1;
 
     if (grib_options_on("a") && !grib_options_on("c:")) {
-        printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
+        fprintf(stderr, "Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
     }
 
@@ -571,7 +571,6 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         case GRIB_TYPE_BYTES:
             // We do not want to compare the message itself
             return 0;
-            break;
 
         case GRIB_TYPE_LABEL:
             break;
@@ -580,9 +579,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             if (verbose) printf("\n");
             printInfo(h1);
             save_error(c, name);
-            printf("Cannot compare [%s], unsupported type %d\n", name, type1);
+            fprintf(stderr, "Cannot compare [%s], unsupported type %d\n", name, type1);
             return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-            break;
     }
 
     return GRIB_SUCCESS;

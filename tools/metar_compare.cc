@@ -16,8 +16,6 @@ grib_option grib_options[] = {
     { "d", 0, "Write different messages on files\n", 0, 1, 0 },
     { "T:", 0, 0, 1, 0, "M" }, /* METAR */
     { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
@@ -84,8 +82,6 @@ static int verbose                = 0;
 static double tolerance_factor    = 1;
 static int write_error            = 0;
 static grib_handle* global_handle = NULL;
-static int start                  = -1;
-static int end                    = -1;
 static int write_count            = 0;
 
 GRIB_INLINE static double compare_double_absolute(const double* a, const double* b, const double* err)
@@ -191,11 +187,6 @@ int grib_tool_init(grib_runtime_options* options)
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
-    if (grib_options_on("S:"))
-        start = atoi(grib_options_get_option("S:"));
-
-    if (grib_options_on("E:"))
-        end = atoi(grib_options_get_option("E:"));
 
     if (grib_options_on("f"))
         force = 1;
@@ -734,7 +725,6 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 
         case GRIB_TYPE_BYTES:
             return 0; // No such type for METAR
-            break;
 
         case GRIB_TYPE_LABEL:
             break;
@@ -744,9 +734,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
                 printf("\n");
             printInfo(h1);
             save_error(c, name);
-            printf("Cannot compare [%s], unsupported type %d\n", name, type1);
+            fprintf(stderr, "Cannot compare [%s], unsupported type %d\n", name, type1);
             return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-            break;
     }
 
     return GRIB_SUCCESS;
