@@ -192,7 +192,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             val[i] += units_bias;
         }
     }
-
+#if 0
     /* IEEE packing */
     if (c->ieee_packing) {
         grib_handle* h = grib_handle_of_accessor(a);
@@ -230,6 +230,7 @@ static int pack_double(grib_accessor* a, const double* cval, size_t* len)
             grib_context_log(a->context, GRIB_LOG_ERROR, "GRIB2 simple packing: unable to set values (%s)", grib_get_error_message(ret));
             return ret;
     }
+#endif
 
     if ((ret = grib_get_double_internal(grib_handle_of_accessor(a), self->reference_value, &reference_value)) != GRIB_SUCCESS)
         return ret;
