@@ -1239,12 +1239,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 52 ;
 	}
-#Envelope-maximum individual wave height
-'envhmax' = {
-	 discipline = 10 ;
-	 parameterCategory = 0 ;
-	 parameterNumber = 93 ;
-	}
 #Time domain maximum individual crest height
 'tdcmax' = {
 	 discipline = 10 ;
@@ -10023,11 +10017,11 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 23 ;
 	}
-#Maximum individual wave height
+#Envelop-maximum individual wave height
 'hmax' = {
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
-	 parameterNumber = 24 ;
+	 parameterNumber = 93 ;
 	}
 #Model bathymetry
 'wmb' = {
