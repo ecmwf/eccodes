@@ -266,6 +266,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1425
         grib_ecc-1467
         grib_ecc-1764
+        grib_ecc-1792
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
