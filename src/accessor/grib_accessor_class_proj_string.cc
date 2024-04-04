@@ -42,7 +42,7 @@ struct proj_mapping
 typedef struct proj_mapping proj_mapping;
 
 // This should only be called for GRID POINT data (not spherical harmonics etc)
-int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor){
+static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor){
     int err = 0;
     if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", pMinor)) != GRIB_SUCCESS) return err;
@@ -57,7 +57,7 @@ int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor){
 }
 
 // Caller must have allocated enough space in the 'result' argument
-int get_earth_shape(grib_handle* h, char* result){
+static int get_earth_shape(grib_handle* h, char* result){
     int err      = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
@@ -69,7 +69,7 @@ int get_earth_shape(grib_handle* h, char* result){
     return err;
 }
 
-int proj_space_view(grib_handle* h, char* result){
+static int proj_space_view(grib_handle* h, char* result){
     return GRIB_NOT_IMPLEMENTED;
     //     int err        = 0;
     //     char shape[128] = {0,};
@@ -85,17 +85,17 @@ int proj_space_view(grib_handle* h, char* result){
     //     return err;
 }
 
-int proj_albers(grib_handle* h, char* result){
+static int proj_albers(grib_handle* h, char* result){
     return GRIB_NOT_IMPLEMENTED;
 }
-int proj_transverse_mercator(grib_handle* h, char* result){
+static int proj_transverse_mercator(grib_handle* h, char* result){
     return GRIB_NOT_IMPLEMENTED;
 }
-int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result){
+static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result){
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int proj_lambert_conformal(grib_handle* h, char* result){
+static int proj_lambert_conformal(grib_handle* h, char* result){
     int err        = 0;
     char shape[128] = {0,};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
@@ -115,7 +115,7 @@ int proj_lambert_conformal(grib_handle* h, char* result){
     return err;
 }
 
-int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result){
+static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result){
     int err        = 0;
     char shape[128] = {0,};
     double standardParallel = 0, centralLongitude = 0;
@@ -131,7 +131,7 @@ int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result){
     return err;
 }
 
-int proj_polar_stereographic(grib_handle* h, char* result){
+static int proj_polar_stereographic(grib_handle* h, char* result){
     int err                 = 0;
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
@@ -154,7 +154,7 @@ int proj_polar_stereographic(grib_handle* h, char* result){
 
 // ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
 //           These are not 'projected' grids!
-int proj_unprojected(grib_handle* h, char* result){
+static int proj_unprojected(grib_handle* h, char* result){
     int err = 0;
     //char shape[128] = {0,};
     //if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
@@ -164,7 +164,7 @@ int proj_unprojected(grib_handle* h, char* result){
     return err;
 }
 
-int proj_mercator(grib_handle* h, char* result){
+static int proj_mercator(grib_handle* h, char* result){
     int err             = 0;
     double LaDInDegrees = 0;
     char shape[128]      = {0,};
