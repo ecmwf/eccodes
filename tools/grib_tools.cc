@@ -77,7 +77,6 @@ static grib_runtime_options global_options = {
     0, /* grib_tools_file* infile */
     0, /* grib_tools_file* outfile */
     0, /* grib_action* action */
-    0, /* grib_rule* rules */
     0, /* int dump_flags; */
     0, /* char* dump_mode; */
     0, /* repack    */

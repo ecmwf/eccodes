@@ -823,7 +823,6 @@ struct grib_handle
     grib_context* context;         /** < context attached to this handle */
     grib_buffer* buffer;           /** < buffer attached to the handle */
     grib_section* root;            /**  the root section*/
-    grib_section* rules;           /** the rules section*/
     grib_dependency* dependencies; /** List of dependencies */
     grib_handle* main;             /** Used during reparsing */
     grib_handle* kid;              /** Used during reparsing */
