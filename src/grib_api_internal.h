@@ -244,7 +244,6 @@ typedef struct grib_accessor_class grib_accessor_class;
 typedef struct grib_action grib_action;
 typedef struct grib_action_class grib_action_class;
 typedef struct grib_section grib_section;
-typedef struct grib_packer grib_packer;
 typedef struct grib_codetable grib_codetable;
 typedef struct grib_smart_table grib_smart_table;
 
@@ -254,7 +253,6 @@ typedef struct grib_nearest_class grib_nearest_class;
 typedef struct grib_dumper grib_dumper;
 typedef struct grib_dumper_class grib_dumper_class;
 typedef struct grib_dependency grib_dependency;
-typedef struct string_feed string_feed;
 
 typedef struct codes_condition codes_condition;
 
@@ -337,9 +335,6 @@ typedef double (*grib_unop_double_proc)(double);
 
 typedef int (*grib_binop_string_proc)(char*, char*);
 
-typedef struct second_order_packed second_order_packed;
-typedef void grib_expression_visit_proc(void* udata, grib_expression* e);
-
 struct grib_key_value_list
 {
     const char* name;
@@ -354,7 +349,7 @@ struct grib_key_value_list
     grib_key_value_list* next;
 };
 
-struct second_order_packed
+/* struct second_order_packed
 {
     unsigned long nbits_per_widths;
     unsigned long nbits_per_group_size;
@@ -363,18 +358,7 @@ struct second_order_packed
     unsigned long* array_of_group_size;
     unsigned long* array_of_group_width;
     long* array_of_group_refs;
-};
-
-/**
-*  an grib_compression
-*  Structure supporting the packing and unpacking procedures
-*/
-struct grib_packer
-{
-    const char* name;
-    grib_pack_proc pack;     /** <  packing procedure */
-    grib_unpack_proc unpack; /** < unpacking procedure */
-};
+}; */
 
 /* --------------- */
 typedef struct grib_loader grib_loader;
@@ -564,17 +548,14 @@ struct grib_iterator_class
     grib_iterator_class** super;
     const char* name;
     size_t size;
-
     int inited;
     iterator_init_class_proc init_class;
-
-    iterator_init_proc init;
-    iterator_destroy_proc destroy;
-
-    iterator_next_proc next;
-    iterator_previous_proc previous;
-    iterator_reset_proc reset;
-    iterator_has_next_proc has_next;
+    iterator_init_proc       init;
+    iterator_destroy_proc    destroy;
+    iterator_next_proc       next;
+    iterator_previous_proc   previous;
+    iterator_reset_proc      reset;
+    iterator_has_next_proc   has_next;
 };
 
 struct grib_nearest_class
@@ -582,14 +563,11 @@ struct grib_nearest_class
     grib_nearest_class** super;
     const char* name;
     size_t size;
-
     int inited;
     nearest_init_class_proc init_class;
-
-    nearest_init_proc init;
-    nearest_destroy_proc destroy;
-
-    nearest_find_proc find;
+    nearest_init_proc       init;
+    nearest_destroy_proc    destroy;
+    nearest_find_proc       find;
 };
 
 /* --------------- */
@@ -1084,17 +1062,13 @@ struct grib_expression_class
     const char* name;
     size_t size;
     int inited;
-
-    expression_init_proc init;
-    expression_destroy_proc destroy;
-
-    expression_print_proc print;
-    expression_add_dependency_proc add_dependency;
-
-    expression_native_type_proc native_type;
-    expression_get_name_proc get_name;
-
-    expression_evaluate_long_proc evaluate_long;
+    expression_init_proc            init;
+    expression_destroy_proc         destroy;
+    expression_print_proc           print;
+    expression_add_dependency_proc  add_dependency;
+    expression_native_type_proc     native_type;
+    expression_get_name_proc        get_name;
+    expression_evaluate_long_proc   evaluate_long;
     expression_evaluate_double_proc evaluate_double;
     expression_evaluate_string_proc evaluate_string;
 };
