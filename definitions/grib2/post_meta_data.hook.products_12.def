@@ -5,5 +5,5 @@
 concept gridSpecification(unknown, "gridSpecificationConcept.def", conceptsDir2, conceptsDir1): no_copy, read_only, dump;
 concept destineOrigin(unknown, "destineOriginConcept.def", conceptsDir2, conceptsDir1): no_copy, dump;
 
-# DestinE data does not have the domain key
+# ECC-1794: DestinE data does not have the domain key
 unalias mars.domain;
