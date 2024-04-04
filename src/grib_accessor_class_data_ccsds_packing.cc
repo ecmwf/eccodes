@@ -315,6 +315,8 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if ((err = grib_get_long_internal(hand, self->number_of_data_points, &number_of_data_points)) != GRIB_SUCCESS)
         return err;
 
+
+#if 0
     if (bits_per_value == 0 || (binary_scale_factor == 0 && decimal_scale_factor != 0)) {
         d = codes_power<double>(decimal_scale_factor, 10);
         min *= d;
@@ -375,6 +377,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &err);
     divisor             = codes_power<double>(-binary_scale_factor, 2);
+#else
+    d       = codes_power<double>(decimal_scale_factor, 10);
+    divisor = codes_power<double>(-binary_scale_factor, 2);
+#endif
 
     size_t nbytes = (bits_per_value + 7) / 8;
     // ECC-1602: use native a data type (4 bytes for uint32_t) for values that require only 3 bytes
