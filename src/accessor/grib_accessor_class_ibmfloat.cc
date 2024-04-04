@@ -26,32 +26,6 @@ void grib_accessor_class_ibmfloat_t::init(grib_accessor* a, const long len, grib
     Assert(a->length >= 0);
 }
 
-template <typename T>
-int unpack(grib_accessor* a, T* val, size_t* len){
-    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    unsigned long rlen = 0;
-    long count         = 0;
-    int err            = 0;
-    unsigned long i    = 0;
-    long bitp          = a->offset * 8;
-    grib_handle* hand  = grib_handle_of_accessor(a);
-
-    err = a->value_count(&count);    if (err)
-        return err;
-    rlen = count;
-
-    if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %lu values", *len, a->name, rlen);
-        *len = 0;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    for (i = 0; i < rlen; i++)
-        val[i] = (T)grib_long_to_ibm(grib_decode_unsigned_long(hand->buffer->data, &bitp, 32));
-
-    *len = rlen;
-    return GRIB_SUCCESS;
-}
 
 int grib_accessor_class_ibmfloat_t::unpack_double(grib_accessor* a, double* val, size_t* len){
     return unpack<double>(a, val, len);

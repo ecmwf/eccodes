@@ -20,16 +20,16 @@ void grib_accessor_class_bufr_group_t::dump(grib_accessor* a, grib_dumper* dumpe
     grib_dump_section(dumper, a, a->sub_section->block);
 }
 
-static grib_accessor* next(grib_accessor* a, int explore)
+grib_accessor* grib_accessor_class_bufr_group_t::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {
         next = a->sub_section->block->first;
         if (!next)
-            next = a->next;
+            next = a->next_;
     }
     else {
-        next = a->next;
+        next = a->next_;
     }
     if (!next) {
         if (a->parent->owner)

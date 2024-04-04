@@ -2,6 +2,7 @@
 
 #include "../grib_api_internal.h"
 #include "grib_accessor.h"
+#include <bitset>
 
 class grib_accessor_gen_t : public grib_accessor {
     void init_accessor(const long, grib_arguments*) override;
@@ -90,4 +91,68 @@ public:
     int unpack_double_subarray(grib_accessor*, double* val, size_t start, size_t len) override;
     int clear(grib_accessor*) override;
     grib_accessor* make_clone(grib_accessor*, grib_section*, int*) override;
+
+    template <typename T>
+    int unpack_helper(grib_accessor* a, T* v, size_t* len);
+
+private:
+    enum {
+        PACK_DOUBLE,
+        PACK_FLOAT,
+        PACK_LONG,
+        PACK_STRING,
+        UNPACK_DOUBLE,
+        UNPACK_FLOAT,
+        UNPACK_LONG,
+        UNPACK_STRING,
+    };
+    std::bitset<8> is_overridden_ = 0b11111111;
 };
+
+
+template <typename T>
+int grib_accessor_class_gen_t::unpack_helper(grib_accessor* a, T* v, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    int type = GRIB_TYPE_UNDEFINED;
+    const char* Tname = type_to_string<T>(*v);
+
+    if constexpr (std::is_same_v<T, float>) {
+        is_overridden_[UNPACK_FLOAT] = 0;
+    }
+    else if constexpr (std::is_same_v<T, double>) {
+        is_overridden_[UNPACK_DOUBLE] = 0;
+    }
+
+    if (is_overridden_[UNPACK_LONG]) {
+        long val = 0;
+        size_t l = 1;
+        a->unpack_long(&val, &l);
+        if (is_overridden_[UNPACK_LONG]) {
+            *v = val;
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, Tname);
+            return GRIB_SUCCESS;
+        }
+    }
+
+    if (is_overridden_[UNPACK_STRING]) {
+        char val[1024];
+        size_t l   = sizeof(val);
+        char* last = NULL;
+        a->unpack_string(val, &l);
+        if (is_overridden_[UNPACK_STRING]) {
+            *v = strtod(val, &last);
+            if (*last == 0) { /* conversion of string to double worked */
+                grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to %s", a->name, Tname);
+                return GRIB_SUCCESS;
+            }
+        }
+    }
+
+    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name, Tname);
+    if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
+    }
+
+    return GRIB_NOT_IMPLEMENTED;
+}

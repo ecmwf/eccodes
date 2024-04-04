@@ -123,14 +123,14 @@ static void update_offsets(grib_accessor* a, long len)
         grib_context_log(a->context, GRIB_LOG_DEBUG, "::::: grib_buffer : accessor %s is moving by %d bytes to %ld", a->name, len, a->offset);
         if (s)
             update_offsets(s->block->first, len);
-        a = a->next;
+        a = a->next_;
     }
 }
 
 static void update_offsets_after(grib_accessor* a, long len)
 {
     while (a) {
-        update_offsets(a->next, len);
+        update_offsets(a->next_, len);
         a = a->parent->owner;
     }
 }

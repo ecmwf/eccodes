@@ -15,9 +15,6 @@ void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al) {
     }
 }
 
-
-
-
 int grib_accessors_list::value_count(size_t* count)
 {
     long lcount = 0;

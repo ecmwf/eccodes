@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_ieeefloat_h
 #define eccodes_accessor_ieeefloat_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_double.h"
 
 class grib_accessor_ieeefloat_t : public grib_accessor_double_t
@@ -33,5 +32,35 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
     void update_size(grib_accessor*, size_t) override;
     int nearest_smaller_value(grib_accessor* a, double val, double* nearest) override;
+
+private:
+    template <typename T> int unpack(grib_accessor*, T*, size_t*);
 };
+
+
+template <typename T>
+int grib_accessor_class_ieeefloat_t::unpack(grib_accessor* a, T* val, size_t* len){
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    long rlen = 0;
+    int err   = 0;
+    long i    = 0;
+    long bitp = a->offset * 8;
+    grib_handle* hand  = grib_handle_of_accessor(a);
+
+    err = a->value_count(&rlen);    if (err)
+        return err;
+
+    if (*len < (size_t)rlen) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %ld values", *len, a->name, rlen);
+        *len = 0;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    for (i = 0; i < rlen; i++)
+        val[i] = (T)grib_long_to_ieee(grib_decode_unsigned_long(hand->buffer->data, &bitp, 32));
+
+    *len = rlen;
+    return GRIB_SUCCESS;
+}
+
 #endif /* eccodes_accessor_ieeefloat_h */

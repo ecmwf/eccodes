@@ -177,7 +177,7 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_d
     return GRIB_SUCCESS;
 }
 
-int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len){
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
     int ret = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;

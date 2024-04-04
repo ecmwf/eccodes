@@ -12,15 +12,12 @@
 
 #include "../grib_api_internal.h"
 #include "../grib_value.h"
-#include <stdexcept>
 
 class grib_accessor
 {
 public:
-    grib_accessor() : name(nullptr), name_space(nullptr), context(nullptr), h(nullptr), creator(nullptr), length(0), offset(0), parent(nullptr), next(nullptr), previous(nullptr), cclass(nullptr), flags(0), sub_section(nullptr), dirty(0), same(nullptr), loop(0), vvalue(nullptr), set(nullptr), parent_as_attribute(nullptr) {}
+    grib_accessor() : name(nullptr), name_space(nullptr), context(nullptr), h(nullptr), creator(nullptr), length(0), offset(0), parent(nullptr), next_(nullptr), previous_(nullptr), cclass(nullptr), flags(0), sub_section(nullptr), dirty(0), same(nullptr), loop(0), vvalue(nullptr), set(nullptr), parent_as_attribute(nullptr) {}
     virtual ~grib_accessor() {}
-
-    template <typename T> int unpack(T* v, size_t* len);
 
     virtual void init_accessor(const long, grib_arguments*) = 0;
     virtual void dump(grib_dumper* f) = 0;
@@ -75,8 +72,8 @@ public:
     long length;                 /** < byte length of the accessor */
     long offset;                 /** < offset of the data in the buffer */
     grib_section* parent;        /** < section to which the accessor is attached */
-    grib_accessor* next;         /** < next accessor in list */
-    grib_accessor* previous;     /** < next accessor in list */
+    grib_accessor* next_;         /** < next accessor in list */
+    grib_accessor* previous_;     /** < next accessor in list */
     grib_accessor_class* cclass; /** < behaviour of the accessor */
     unsigned long flags;         /** < Various flags */
     grib_section* sub_section;
@@ -92,6 +89,7 @@ public:
     grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
     grib_accessor* parent_as_attribute;
 };
+
 
 class grib_accessor_class
 {
@@ -144,48 +142,4 @@ public:
     virtual grib_accessor* make_clone(grib_accessor*, grib_section*, int*) = 0;
 };
 
-
-template <typename T>
-int unpack_helper(grib_accessor* a, T* v, size_t* len)
-{
-    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    int type = GRIB_TYPE_UNDEFINED;
-    const char* Tname = type_to_string<T>(*v);
-    //if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
-    try {
-        long val = 0;
-        size_t l = 1;
-        a->unpack_long(&val, &l);
-        *v = val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to %s", a->name, Tname);
-        return GRIB_SUCCESS;
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
-    }
-
-    //if (a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string) {
-    try {
-        char val[1024];
-        size_t l   = sizeof(val);
-        char* last = NULL;
-        a->unpack_string(val, &l);
-
-        *v = strtod(val, &last);
-        if (*last == 0) { /* conversion of string to double worked */
-            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to %s", a->name, Tname);
-            return GRIB_SUCCESS;
-        }
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
-    }
-
-    grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as %s", a->name, Tname);
-    if (grib_get_native_type(grib_handle_of_accessor(a), a->name, &type) == GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Hint: Try unpacking as %s", grib_get_type_name(type));
-    }
-
-    return GRIB_NOT_IMPLEMENTED;
-}
 

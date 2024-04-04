@@ -192,7 +192,6 @@ int grib_accessor_class_bits_t::unpack_string(grib_accessor* a, char* v, size_t*
     double dval                = 0;
     long lval                  = 0;
     size_t llen                = 1;
-    grib_accessor_class* super = NULL;
 
     switch (get_native_type(a)) {
         case GRIB_TYPE_LONG:

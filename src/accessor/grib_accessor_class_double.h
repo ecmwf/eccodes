@@ -12,14 +12,9 @@
 #ifndef eccodes_accessor_double_h
 #define eccodes_accessor_double_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
-class grib_accessor_double_t : public grib_accessor_gen_t
-{
-public:
-    /* Members defined in double */
-};
+class grib_accessor_double_t : public grib_accessor_gen_t {};
 
 class grib_accessor_class_double_t : public grib_accessor_class_gen_t
 {

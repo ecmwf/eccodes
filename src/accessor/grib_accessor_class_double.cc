@@ -101,5 +101,6 @@ int grib_accessor_class_double_t::pack_missing(grib_accessor* a){
     double value = GRIB_MISSING_DOUBLE;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING)
-        return a->pack_double(&value, &len);    return GRIB_VALUE_CANNOT_BE_MISSING;
+        return a->pack_double(&value, &len);
+    return GRIB_VALUE_CANNOT_BE_MISSING;
 }

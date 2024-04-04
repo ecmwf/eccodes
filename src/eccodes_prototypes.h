@@ -106,10 +106,6 @@ grib_action* grib_action_create_modify(grib_context* context, const char* name, 
 grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray, int flags);
 
 /* grib_accessor.cc*/
-grib_accessors_list* grib_accessors_list_create(grib_context* c);
-void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
-grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
 
 /* grib_concept.cc*/
 grib_concept_value* grib_concept_value_new(grib_context* c, const char* name, grib_concept_condition* conditions);

@@ -53,7 +53,7 @@ void grib_dump_accessors_block(grib_dumper* dumper, grib_block_of_accessors* blo
     grib_accessor* a = block->first;
     while (a) {
         a->dump(dumper);
-        a = a->next;
+        a = a->next_;
     }
 }
 

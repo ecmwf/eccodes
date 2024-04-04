@@ -12,13 +12,11 @@
 #ifndef eccodes_accessor_lookup_h
 #define eccodes_accessor_lookup_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_lookup_t : public grib_accessor_long_t
 {
 public:
-    /* Members defined in lookup */
     long llength;
     long loffset;
     grib_expression* real_name;

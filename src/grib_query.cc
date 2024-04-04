@@ -64,7 +64,7 @@ static grib_accessor* search(grib_section* s, const char* name, const char* name
         if ((b = search(sub, name, name_space)) != NULL)
             match = b;
 
-        a = a->next;
+        a = a->next_;
     }
 
     return match;
@@ -95,7 +95,7 @@ static void rebuild_hash_keys(grib_handle* h, grib_section* s)
             i++;
         }
         rebuild_hash_keys(h, sub);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -229,7 +229,7 @@ static grib_accessor* _search_by_rank(grib_accessor* a,const char* name,long ran
             if (r==rank) return al->accessor;
             r++;
         }
-        al=al->next;
+        al=al->next_;
     }
 
     return NULL;

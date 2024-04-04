@@ -61,5 +61,8 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
     int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
+
+private:
+    int unpack(grib_accessor* a, double*, float*, size_t*);
 };
 #endif /* eccodes_accessor_data_g1second_order_general_extended_packing_h */

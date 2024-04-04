@@ -81,31 +81,6 @@ int grib_accessor_class_ieeefloat_t::pack_double(grib_accessor* a, const double*
     return ret;
 }
 
-template <typename T>
-int unpack(grib_accessor* a, T* val, size_t* len){
-    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
-    long rlen = 0;
-    int err   = 0;
-    long i    = 0;
-    long bitp = a->offset * 8;
-    grib_handle* hand  = grib_handle_of_accessor(a);
-
-    err = a->value_count(&rlen);    if (err)
-        return err;
-
-    if (*len < (size_t)rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %ld values", *len, a->name, rlen);
-        *len = 0;
-        return GRIB_ARRAY_TOO_SMALL;
-    }
-
-    for (i = 0; i < rlen; i++)
-        val[i] = (T)grib_long_to_ieee(grib_decode_unsigned_long(hand->buffer->data, &bitp, 32));
-
-    *len = rlen;
-    return GRIB_SUCCESS;
-}
-
 int grib_accessor_class_ieeefloat_t::unpack_double(grib_accessor* a, double* val, size_t* len){
     return unpack<double>(a, val, len);
 }

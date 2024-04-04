@@ -194,7 +194,6 @@ int grib_accessor_class_data_jpeg2000_packing_t::unpack_double(grib_accessor* a,
 
 int grib_accessor_class_data_jpeg2000_packing_t::pack_double(grib_accessor* a, const double* cval, size_t* len){
     grib_accessor_data_jpeg2000_packing_t* self = (grib_accessor_data_jpeg2000_packing_t*)a;
-    grib_accessor_class* super                = *(a->cclass->super);
     size_t n_vals                             = *len;
     int err                                   = 0;
     int i;
@@ -251,7 +250,8 @@ int grib_accessor_class_data_jpeg2000_packing_t::pack_double(grib_accessor* a, c
         for (i = 0; i < n_vals; i++)
             val[i] += units_bias;
 
-    ret = super->pack_double(a, val, len);
+    ret = grib_accessor_class_data_simple_packing_t::pack_double(a, val, len);
+
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             grib_buffer_replace(a, NULL, 0, 1, 1);

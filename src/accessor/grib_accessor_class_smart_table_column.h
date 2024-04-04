@@ -12,13 +12,11 @@
 #ifndef eccodes_accessor_smart_table_column_h
 #define eccodes_accessor_smart_table_column_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_smart_table_column_t : public grib_accessor_gen_t
 {
 public:
-    /* Members defined in smart_table_column */
     const char* smartTable;
     int index;
 };

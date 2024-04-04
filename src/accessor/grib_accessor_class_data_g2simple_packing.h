@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,14 +11,9 @@
 #ifndef eccodes_accessor_data_g2simple_packing_h
 #define eccodes_accessor_data_g2simple_packing_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_data_simple_packing.h"
 
-class grib_accessor_data_g2simple_packing_t : public grib_accessor_data_simple_packing_t
-{
-public:
-    /* Members defined in data_g2simple_packing */
-};
+class grib_accessor_data_g2simple_packing_t : public grib_accessor_data_simple_packing_t {};
 
 class grib_accessor_class_data_g2simple_packing_t : public grib_accessor_class_data_simple_packing_t
 {

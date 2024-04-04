@@ -11,6 +11,7 @@
 
 #include "grib_api_internal.h"
 #include "grib_accessor_classes_hash.cc"
+#include <iostream>
 /*     grib level     */
 
 
@@ -150,8 +151,8 @@ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
     a->creator  = creator;
     a->context  = p->h->context;
     a->h        = NULL;
-    a->next     = NULL;
-    a->previous = NULL;
+    a->next_     = NULL;
+    a->previous_ = NULL;
     a->parent   = p;
     a->length   = 0;
     a->offset   = 0;
@@ -240,8 +241,8 @@ void grib_push_accessor(grib_accessor* a, grib_block_of_accessors* l)
     if (!l->first)
         l->first = l->last = a;
     else {
-        l->last->next = a;
-        a->previous   = l->last;
+        l->last->next_ = a;
+        a->previous_   = l->last;
     }
     l->last = a;
 
@@ -270,13 +271,11 @@ void grib_section_post_init(grib_section* s)
 
     while (a) {
         grib_accessor_class* c = a->cclass;
-        //if (c->post_init)
-        //    c->post_init(a);
         c->post_init(a);
 
         if (a->sub_section)
             grib_section_post_init(a->sub_section);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -308,7 +307,7 @@ int grib_section_adjust_sizes(grib_section* s, int update, int depth)
         }
         length += l;
         offset += l;
-        a = a->next;
+        a = a->next_;
     }
 
     if (s) {
@@ -402,7 +401,7 @@ grib_accessor* find_paddings(grib_section* s)
         if (a->preferred_size(0) != a->length)
             return a;
 
-        a = a->next;
+        a = a->next_;
     }
 
     return NULL;

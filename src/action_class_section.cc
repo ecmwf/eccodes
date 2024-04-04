@@ -171,7 +171,8 @@ static int notify_change(grib_action* act, grib_accessor* notified,
             /*err = GRIB_SUCCESS;*/
         }
         else {
-            grib_handle_delete(tmp_handle);
+            // TODO(maee): segmentation fault
+            //grib_handle_delete(tmp_handle);
             h->kid = NULL; /* ECC-1314: must set to NULL for grib_handle_delete(h) to work */
             return err;
         }
@@ -203,7 +204,8 @@ static int notify_change(grib_action* act, grib_accessor* notified,
     Assert(tmp_handle->dependencies == NULL);
     /* printf("grib_handle_delete %p\n",(void*)tmp_handle); */
 
-    grib_handle_delete(tmp_handle);
+     //TODO(maee): causes segmentation fault
+    //grib_handle_delete(tmp_handle);
 
     h->use_trie     = 1;
     h->trie_invalid = 1;

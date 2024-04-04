@@ -1274,13 +1274,18 @@ int grib_get_native_type(const grib_handle* h, const char* name, int* type)
 template <typename T>
 static int _grib_get_array_internal(const grib_handle* h, grib_accessor* a, T* val, size_t buffer_len, size_t* decoded_length)
 {
-    //static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     if (a) {
         int err = _grib_get_array_internal<T>(h, a->same, val, buffer_len, decoded_length);
 
         if (err == GRIB_SUCCESS) {
             size_t len = buffer_len - *decoded_length;
-            err        = a->unpack<T>(val + *decoded_length, &len);
+            if constexpr (std::is_same<T, double>::value) {
+                err = a->unpack_double(val + *decoded_length, &len);
+            }
+            else if constexpr (std::is_same<T, float>::value) {
+                err = a->unpack_float(val + *decoded_length, &len);
+            }
             *decoded_length += len;
         }
 
@@ -1321,7 +1326,7 @@ int grib_get_double_array(const grib_handle* h, const char* name, double* val, s
         if (!a)
             return GRIB_NOT_FOUND;
         if (name[0] == '#') {
-            return a->unpack<double>(val, length);
+            return a->unpack_double(val, length);
         }
         else {
             *length = 0;

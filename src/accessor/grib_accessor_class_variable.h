@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "../grib_api_internal.h"
 #include "grib_accessor.h"
 #include "grib_accessor_class_gen.h"
 

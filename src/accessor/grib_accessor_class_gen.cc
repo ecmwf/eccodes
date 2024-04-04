@@ -77,8 +77,7 @@ int grib_accessor_gen_t::unpack_double(double* v, size_t* len)
 
 int grib_accessor_gen_t::unpack_float(float* v, size_t* len)
 {
-    // return cclass->unpack_float(this, v, len);
-    return GRIB_NOT_IMPLEMENTED;
+    return cclass->unpack_float(this, v, len);
 }
 
 int grib_accessor_gen_t::unpack_double_element(size_t i, double* v)
@@ -180,7 +179,7 @@ size_t grib_accessor_gen_t::preferred_size(int from_handle)
 
 grib_accessor* grib_accessor_gen_t::next_accessor()
 {
-    return cclass->next(this, 0);
+    return cclass->next(this, 1);
 }
 
 void grib_accessor_gen_t::resize(size_t new_size)
@@ -192,7 +191,7 @@ void grib_accessor_gen_t::resize(size_t new_size)
 void grib_accessor_gen_t::destroy(grib_context* ct)
 {
     cclass->destroy(ct, this);
-    delete this;
+    //delete this;
 }
 
 
@@ -223,6 +222,7 @@ void grib_accessor_class_gen_t::init(grib_accessor* a, const long len, grib_argu
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(a), act->default_value, 0);
             int type                    = grib_expression_native_type(grib_handle_of_accessor(a), expression);
             switch (type) {
+                // TODO(maee): single-precision
                 case GRIB_TYPE_DOUBLE:
                     grib_expression_evaluate_double(grib_handle_of_accessor(a), expression, &d);
                     a->pack_double(&d, &s_len);
@@ -333,39 +333,38 @@ int grib_accessor_class_gen_t::clear(grib_accessor* a)
 
 int grib_accessor_class_gen_t::unpack_long(grib_accessor* a, long* v, size_t* len)
 {
+    is_overridden_[UNPACK_LONG] = 0;
     int type = GRIB_TYPE_UNDEFINED;
     //if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
-    try {
+    if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
         size_t l   = 1;
         a->unpack_double(&val, &l);
-        if (val == GRIB_MISSING_DOUBLE)
-            *v = GRIB_MISSING_LONG;
-        else
-            *v = (long)val;
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to long", a->name);
-        return GRIB_SUCCESS;
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
+        if (is_overridden_[UNPACK_DOUBLE] == 1) {
+            if (val == GRIB_MISSING_DOUBLE)
+                *v = GRIB_MISSING_LONG;
+            else
+                *v = (long)val;
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to long", a->name);
+            return GRIB_SUCCESS;
+        }
     }
 
     //if (a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string) {
-    try {
+    if (is_overridden_[UNPACK_STRING] == 1) {
         char val[1024];
         size_t l   = sizeof(val);
         char* last = NULL;
         a->unpack_string(val, &l);
 
-        *v = strtol(val, &last, 10);
+        if (is_overridden_[UNPACK_STRING] == 1) {
+            *v = strtol(val, &last, 10);
 
-        if (*last == 0) {
-            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
-            return GRIB_SUCCESS;
+            if (*last == 0) {
+                grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting string %s to long", a->name);
+                return GRIB_SUCCESS;
+            }
         }
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
     }
 
     grib_context_log(a->context, GRIB_LOG_ERROR, "Cannot unpack key '%s' as long", a->name);
@@ -387,35 +386,33 @@ int grib_accessor_class_gen_t::unpack_float(grib_accessor* a, float* v, size_t* 
 
 int grib_accessor_class_gen_t::unpack_string(grib_accessor* a, char* v, size_t* len)
 {
+    is_overridden_[UNPACK_STRING] = 0;
+
     int err = 0;
-    //if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
-    try {
+    if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
         size_t l   = 1;
         err = a->unpack_double(&val, &l);
-        if (err) return err;
-        snprintf(v, 64, "%g", val);
-        *len = strlen(v);
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
-        return GRIB_SUCCESS;
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
+        if (is_overridden_[UNPACK_DOUBLE] == 1) {
+            if (err) return err;
+            snprintf(v, 64, "%g", val);
+            *len = strlen(v);
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting double %s to string", a->name);
+            return GRIB_SUCCESS;
+        }
     }
 
-    //if (a->cclass->unpack_long && a->cclass->unpack_long != &unpack_long) {
-    try {
+    if (is_overridden_[UNPACK_LONG] == 1) {
         long val = 0;
         size_t l = 1;
         err = a->unpack_long(&val, &l);
-        if (err) return err;
-        snprintf(v, 64, "%ld", val);
-        *len = strlen(v);
-        grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string\n", a->name);
-        return GRIB_SUCCESS;
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
+        if (is_overridden_[UNPACK_LONG] == 1) {
+            if (err) return err;
+            snprintf(v, 64, "%ld", val);
+            *len = strlen(v);
+            grib_context_log(a->context, GRIB_LOG_DEBUG, "Casting long %s to string\n", a->name);
+            return GRIB_SUCCESS;
+        }
     }
 
     return GRIB_NOT_IMPLEMENTED;
@@ -493,9 +490,9 @@ int grib_accessor_class_gen_t::pack_expression(grib_accessor* a, grib_expression
 
 int grib_accessor_class_gen_t::pack_long(grib_accessor* a, const long* v, size_t* len)
 {
+    is_overridden_[PACK_LONG] = 0;
     grib_context* c = a->context;
-    //if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
-    try {
+    if (is_overridden_[PACK_DOUBLE]) {
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
             grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
@@ -505,19 +502,16 @@ int grib_accessor_class_gen_t::pack_long(grib_accessor* a, const long* v, size_t
             val[i] = v[i];
         int ret = a->pack_double(val, len);
         grib_context_free(c, val);
-        return ret;
+        if (is_overridden_[PACK_DOUBLE]) {
+            return ret;
+        }
     }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
-    }
+
     grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as an integer", a->name);
-    //if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
-    try {
+    if (is_overridden_[PACK_STRING]) {
         grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
     }
-    catch (std::runtime_error& e) {
-        // TODO(maee): log error
-    }
+
     return GRIB_NOT_IMPLEMENTED;
 }
 
@@ -540,30 +534,36 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
 
 int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, size_t* len)
 {
+    static int check_pack_long = 1;
+    if (check_pack_long) {
+        const long v_tmp = 0;
+        size_t l_tmp = 0;
+        pack_long(a, &v_tmp, &l_tmp);
+        check_pack_long = 0;
+    }
+
+    is_overridden_[PACK_DOUBLE] = 0;
+
     int do_pack_as_long = 0;
     grib_context* c     = a->context;
     //if (a->cclass->pack_long && a->cclass->pack_long != &pack_long) {
-    try {
+    if (is_overridden_[PACK_LONG]) {
         do_pack_as_long = 1;
     }
-    //else {
-    catch (std::runtime_error& e) {
+    else {
         /* ECC-648: Special case of codetable */
         if (strcmp(a->cclass->name, "codetable") == 0) {
             do_pack_as_long = 1;
         }
-        // TODO(maee): replace try-catch logic
     }
+
     if (do_pack_as_long) {
         return pack_double_array_as_long(a, v, len);
     }
     grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", a->name);
-    //if (a->cclass->pack_string && a->cclass->pack_string != &pack_string) {
-    try {
+
+    if (is_overridden_[PACK_STRING]) {
         grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): replace try-catch logic
     }
     return GRIB_NOT_IMPLEMENTED;
 }
@@ -589,8 +589,8 @@ int grib_accessor_class_gen_t::pack_string_array(grib_accessor* a, const char** 
 
 int grib_accessor_class_gen_t::pack_string(grib_accessor* a, const char* v, size_t* len)
 {
-    //if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
-    try {
+    is_overridden_[PACK_STRING] = 0;
+    if (is_overridden_[PACK_DOUBLE]) {
         size_t l   = 1;
         char* endPtr = NULL; /* for error handling */
         double val = strtod(v, &endPtr);
@@ -600,20 +600,19 @@ int grib_accessor_class_gen_t::pack_string(grib_accessor* a, const char* v, size
                              __func__, v, a->name);
             return GRIB_WRONG_TYPE;
         }
-        return a->pack_double(&val, &l);
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): replace try-catch logic
+        int err = a->pack_double(&val, &l);
+        if (is_overridden_[PACK_DOUBLE]) {
+            return err;
+        }
     }
 
-    //if (a->cclass->pack_long && a->cclass->pack_long != &pack_long) {
-    try {
+    if (is_overridden_[PACK_LONG]) {
         size_t l = 1;
         long val = atol(v);
-        return a->pack_long(&val, &l);
-    }
-    catch (std::runtime_error& e) {
-        // TODO(maee): replace try-catch logic
+        int err = a->pack_long(&val, &l);
+        if (is_overridden_[PACK_LONG]) {
+            return err;
+        }
     }
 
     grib_context_log(a->context, GRIB_LOG_ERROR, "Should not pack '%s' as string", a->name);
@@ -664,8 +663,8 @@ void grib_accessor_class_gen_t::update_size(grib_accessor* a, size_t s)
 grib_accessor* grib_accessor_class_gen_t::next(grib_accessor* a, int mod)
 {
     grib_accessor* next = NULL;
-    if (a->next) {
-        next = a->next;
+    if (a->next_) {
+        next = a->next_;
     }
     else {
         if (a->parent->owner)

@@ -28,18 +28,6 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
-template <>
-int grib_accessor::unpack<double>(double* v, size_t* len)
-{
-    return unpack_double(v, len);
-}
-
-template <>
-int grib_accessor::unpack<float>(float* v, size_t* len)
-{
-    return unpack_float(v, len);
-}
-
 int grib_accessor::compare_accessors(grib_accessor* a2, int compare_flags)
 {
     int ret                 = 0;

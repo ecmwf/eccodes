@@ -12,14 +12,9 @@
 #ifndef eccodes_accessor_section_h
 #define eccodes_accessor_section_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
-class grib_accessor_section_t : public grib_accessor_gen_t
-{
-public:
-    /* Members defined in section */
-};
+class grib_accessor_section_t : public grib_accessor_gen_t {};
 
 class grib_accessor_class_section_t : public grib_accessor_class_gen_t
 {
@@ -33,5 +28,7 @@ public:
     void dump(grib_accessor*, grib_dumper*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
     void update_size(grib_accessor*, size_t) override;
+    grib_section* sub_section(grib_accessor*) override;
+    grib_accessor* next(grib_accessor*, int) override;
 };
 #endif /* eccodes_accessor_section_h */

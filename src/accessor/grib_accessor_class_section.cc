@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_section.h"
 
 grib_accessor_class_section_t _grib_accessor_class_section{"section"};
@@ -53,7 +52,7 @@ int grib_accessor_class_section_t::get_native_type(grib_accessor* a){
     return GRIB_TYPE_SECTION;
 }
 
-static grib_section* sub_section(grib_accessor* a)
+grib_section* grib_accessor_class_section_t::sub_section(grib_accessor* a)
 {
     return a->sub_section;
 }
@@ -77,16 +76,16 @@ void grib_accessor_class_section_t::update_size(grib_accessor* a, size_t length)
     Assert(a->length >= 0);
 }
 
-static grib_accessor* next(grib_accessor* a, int explore)
+grib_accessor* grib_accessor_class_section_t::next(grib_accessor* a, int explore)
 {
     grib_accessor* next = NULL;
     if (explore) {
         next = a->sub_section->block->first;
         if (!next)
-            next = a->next;
+            next = a->next_;
     }
     else {
-        next = a->next;
+        next = a->next_;
     }
     if (!next) {
         if (a->parent->owner)

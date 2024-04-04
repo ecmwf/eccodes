@@ -54,7 +54,7 @@ static void update_sections(grib_section* s, grib_handle* h, long offset)
         a->offset += offset;
         /* update_sections ( grib_get_sub_section ( a ),h,offset ); */
         update_sections(a->sub_section, h, offset);
-        a = a->next;
+        a = a->next_;
     }
 }
 
@@ -74,7 +74,7 @@ void grib_swap_sections(grib_section* the_old, grib_section* the_new)
     a = the_old->block->first;
     while (a) {
         a->parent = the_old;
-        a         = a->next;
+        a         = a->next_;
     }
 
     update_sections(the_old, the_old->h, the_old->owner->offset);
@@ -94,7 +94,7 @@ void grib_empty_section(grib_context* c, grib_section* b)
     current = b->block->first;
 
     while (current) {
-        grib_accessor* next = current->next;
+        grib_accessor* next = current->next_;
         if (current->sub_section) {
             grib_section_delete(c, current->sub_section);
             current->sub_section = 0;

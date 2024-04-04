@@ -27,5 +27,6 @@ public:
     grib_accessor_class_bufr_group_t(const char* name) : grib_accessor_class_variable_t(name) {}
     grib_accessor* create_empty_accessor() override { return new grib_accessor_bufr_group_t{}; }
     void dump(grib_accessor*, grib_dumper*) override;
+    grib_accessor* next(grib_accessor* a, int explore) override;
 };
 #endif /* eccodes_accessor_bufr_group_h */

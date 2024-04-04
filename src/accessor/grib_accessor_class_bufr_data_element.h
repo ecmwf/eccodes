@@ -52,5 +52,6 @@ public:
     void dump(grib_accessor*, grib_dumper*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
+    grib_accessor* make_clone(grib_accessor*, grib_section*, int*) override;
 };
 #endif /* eccodes_accessor_bufr_data_element_h */

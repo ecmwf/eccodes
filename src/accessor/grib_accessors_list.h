@@ -2,7 +2,7 @@
 
 #include "grib_accessor.h"
 
-struct grib_accessors_list
+class grib_accessors_list
 {
 public:
     grib_accessors_list();
@@ -23,6 +23,5 @@ public:
     grib_accessors_list* last_;
 };
 
-//grib_accessors_list* grib_accessors_list_create(grib_context* c);
-//void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
-
+grib_accessors_list* grib_accessors_list_create(grib_context* c);
+void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);

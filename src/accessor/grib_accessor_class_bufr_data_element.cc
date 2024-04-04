@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,14 +8,12 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_bufr_data_element.h"
 
 grib_accessor_class_bufr_data_element_t _grib_accessor_class_bufr_data_element{"bufr_data_element"};
 grib_accessor_class* grib_accessor_class_bufr_data_element = &_grib_accessor_class_bufr_data_element;
 
-
-static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
+grib_accessor* grib_accessor_class_bufr_data_element_t::make_clone(grib_accessor* a, grib_section* s, int* err)
 {
     grib_accessor* the_clone = NULL;
     grib_accessor* attribute = NULL;
