@@ -7,3 +7,8 @@ concept destineOrigin(unknown, "destineOriginConcept.def", conceptsDir2, concept
 
 # ECC-1794: DestinE data does not have the domain key
 unalias mars.domain;
+
+# ECC-1796: stepRange indexing for DestinE ExtremesDT and On-Demand ExtremesDT data
+if (!(dataset is "climate-dt")) {
+    alias mars.step=stepRange;
+}
