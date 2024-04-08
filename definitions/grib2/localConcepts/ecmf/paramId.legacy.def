@@ -1369,3 +1369,27 @@
  parameterCategory = 172 ;
  parameterNumber = 228 ;
 }
+#Mean large-scale precipitation rate
+'172142' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 142 ;
+}
+#Mean convective precipitation rate
+'172143' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 143 ;
+}
+#Mean runoff rate
+'172205' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 205 ;
+}
+#Mean total cloud cover
+'228006' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 6 ;
+}
