@@ -21917,12 +21917,6 @@
 	 parameterCategory = 220 ;
 	 parameterNumber = 228 ;
 	}
-#Mean of 10 metre wind speed
-'Mean of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 228 ;
-	 parameterNumber = 5 ;
-	}
 #Mean total cloud cover
 'Mean total cloud cover' = {
 	 localTablesVersion = 1 ;
