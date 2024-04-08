@@ -17,6 +17,30 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
 	}
+#Maximum temperature at 2 metres in the last 24 hours
+'51' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 2 ;
+	 lengthOfTimeRange = 24 ;
+	}
+#Minimum temperature at 2 metres in the last 24 hours
+'52' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 indicatorOfUnitForTimeRange = 1 ;
+	 typeOfStatisticalProcessing = 3 ;
+	 lengthOfTimeRange = 24 ;
+	}
 #Snow depth
 '141' = {
 	 localTablesVersion = 1 ;
