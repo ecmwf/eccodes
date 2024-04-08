@@ -1393,3 +1393,9 @@
  parameterCategory = 228 ;
  parameterNumber = 6 ;
 }
+#Mean of 10 metre wind speed
+'228005' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 5 ;
+}
