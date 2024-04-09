@@ -176,6 +176,7 @@ int grib_accessor_class_statistics_t::value_count(grib_accessor* a, long* count)
 void grib_accessor_class_statistics_t::destroy(grib_context* c, grib_accessor* a){
     grib_accessor_statistics_t* self = (grib_accessor_statistics_t*)a;
     grib_context_free(c, self->v);
+    grib_accessor_class_abstract_vector_t::destroy(c, a);
 }
 
 int grib_accessor_class_statistics_t::compare(grib_accessor* a, grib_accessor* b){

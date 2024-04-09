@@ -635,4 +635,5 @@ int grib_accessor_class_g1step_range_t::get_native_type(grib_accessor* a){
 void grib_accessor_class_g1step_range_t::destroy(grib_context* c, grib_accessor* a){
     grib_accessor_g1step_range_t* self = (grib_accessor_g1step_range_t*)a;
     grib_context_free(c, self->v);
+    grib_accessor_class_abstract_long_vector_t::destroy(c, a);
 }

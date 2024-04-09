@@ -146,6 +146,7 @@ void grib_accessor_class_hash_array_t::destroy(grib_context* c, grib_accessor* a
     grib_accessor_hash_array_t* self = (grib_accessor_hash_array_t*)a;
     if (self->key)
         grib_context_free(c, self->key);
+    grib_accessor_class_gen_t::destroy(c, a);
 }
 
 int grib_accessor_class_hash_array_t::unpack_string(grib_accessor* a, char* val, size_t* len){

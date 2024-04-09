@@ -124,6 +124,7 @@ int grib_accessor_class_statistics_spectral_t::value_count(grib_accessor* a, lon
 void grib_accessor_class_statistics_spectral_t::destroy(grib_context* c, grib_accessor* a){
     grib_accessor_statistics_spectral_t* self = (grib_accessor_statistics_spectral_t*)a;
     grib_context_free(c, self->v);
+    grib_accessor_class_abstract_vector_t::destroy(c, a);
 }
 
 int grib_accessor_class_statistics_spectral_t::compare(grib_accessor* a, grib_accessor* b){

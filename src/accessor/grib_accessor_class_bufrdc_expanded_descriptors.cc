@@ -96,4 +96,5 @@ int grib_accessor_class_bufrdc_expanded_descriptors_t::value_count(grib_accessor
     return descriptors->value_count(rlen);}
 
 void grib_accessor_class_bufrdc_expanded_descriptors_t::destroy(grib_context* c, grib_accessor* a){
+    grib_accessor_class_long_t::destroy(c, a);
 }

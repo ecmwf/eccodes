@@ -268,4 +268,6 @@ void grib_accessor_class_unsigned_t::destroy(grib_context* context, grib_accesso
         grib_context_free(context, a->vvalue);
 
     a->vvalue = NULL;
+
+    grib_accessor_class_long_t::destroy(context, a);
 }

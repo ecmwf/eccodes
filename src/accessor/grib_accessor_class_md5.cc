@@ -143,6 +143,7 @@ void grib_accessor_class_md5_t::destroy(grib_context* c, grib_accessor* a){
             grib_context_free(c, cur);
         }
     }
+    grib_accessor_class_gen_t::destroy(c, a);
 }
 
 int grib_accessor_class_md5_t::value_count(grib_accessor* a, long* count){

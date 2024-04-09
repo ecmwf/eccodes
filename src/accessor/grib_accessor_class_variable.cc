@@ -218,6 +218,8 @@ void grib_accessor_class_variable_t::destroy(grib_context* c, grib_accessor* a)
         a->attributes[i] = NULL;
         ++i;
     }
+
+    grib_accessor_class_gen_t::destroy(c, a);
 }
 
 int grib_accessor_class_variable_t::unpack_string(grib_accessor* a, char* val, size_t* len)

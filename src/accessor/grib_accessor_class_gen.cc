@@ -335,7 +335,6 @@ int grib_accessor_class_gen_t::unpack_long(grib_accessor* a, long* v, size_t* le
 {
     is_overridden_[UNPACK_LONG] = 0;
     int type = GRIB_TYPE_UNDEFINED;
-    //if (a->cclass->unpack_double && a->cclass->unpack_double != &unpack_double) {
     if (is_overridden_[UNPACK_DOUBLE] == 1) {
         double val = 0.0;
         size_t l   = 1;
@@ -350,7 +349,6 @@ int grib_accessor_class_gen_t::unpack_long(grib_accessor* a, long* v, size_t* le
         }
     }
 
-    //if (a->cclass->unpack_string && a->cclass->unpack_string != &unpack_string) {
     if (is_overridden_[UNPACK_STRING] == 1) {
         char val[1024];
         size_t l   = sizeof(val);
@@ -536,7 +534,7 @@ int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, si
 {
     static int check_pack_long = 1;
     if (check_pack_long) {
-        const long v_tmp = 0;
+        const long v_tmp = (long) (*v);
         size_t l_tmp = 0;
         pack_long(a, &v_tmp, &l_tmp);
         check_pack_long = 0;
@@ -546,7 +544,6 @@ int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, si
 
     int do_pack_as_long = 0;
     grib_context* c     = a->context;
-    //if (a->cclass->pack_long && a->cclass->pack_long != &pack_long) {
     if (is_overridden_[PACK_LONG]) {
         do_pack_as_long = 1;
     }

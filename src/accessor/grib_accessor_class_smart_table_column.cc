@@ -166,6 +166,8 @@ void grib_accessor_class_smart_table_column_t::destroy(grib_context* context, gr
         grib_context_free(context, a->vvalue);
         a->vvalue = NULL;
     }
+
+    grib_accessor_class_gen_t::destroy(context, a);
 }
 
 int grib_accessor_class_smart_table_column_t::get_native_type(grib_accessor* a){

@@ -64,6 +64,7 @@ int grib_accessor_class_unpack_bufr_values_t::value_count(grib_accessor* a, long
 }
 
 void grib_accessor_class_unpack_bufr_values_t::destroy(grib_context* context, grib_accessor* a){
+    grib_accessor_class_gen_t::destroy(context, a);
 }
 
 int grib_accessor_class_unpack_bufr_values_t::get_native_type(grib_accessor* a){

@@ -46,6 +46,7 @@ long grib_accessor_class_section_t::next_offset(grib_accessor* a){
 
 void grib_accessor_class_section_t::destroy(grib_context* ct, grib_accessor* a){
     grib_section_delete(ct, a->sub_section);
+    grib_accessor_class_gen_t::destroy(ct, a);
 }
 
 int grib_accessor_class_section_t::get_native_type(grib_accessor* a){

@@ -94,6 +94,7 @@ void grib_accessor_class_transient_darray_t::destroy(grib_context* c, grib_acces
     grib_accessor_transient_darray_t* self = (grib_accessor_transient_darray_t*)a;
     if (self->arr)
         grib_darray_delete(a->context, self->arr);
+    grib_accessor_class_gen_t::destroy(c, a);
 }
 
 int grib_accessor_class_transient_darray_t::value_count(grib_accessor* a, long* count){
