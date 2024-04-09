@@ -426,19 +426,17 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 {
     size_t len1 = 0;
     size_t len2 = 0;
-    int err = 0, i = 0;
-    int err1;
-    int err2;
+    int err = 0, i = 0, err1 = 0, err2 = 0;
     int type1, type2;
     int countdiff;
-    int isMissing1 = 0, isMissing2 = 0;
+    //int isMissing1 = 0, isMissing2 = 0;
 
     char *sval1 = NULL, *sval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
-    double maxdiff       = 0;
+    double maxdiff = 0;
     double value_tolerance = 0;
-    grib_context* c        = h1->context;
+    grib_context* c = h1->context;
 
     type1 = type;
     type2 = type;
@@ -497,32 +495,6 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
     //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
     //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
     //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-
-    if ((isMissing1 == 1) && (isMissing2 == 1)) {
-        if (verbose)
-            printf(" is set to missing in both fields\n");
-        return GRIB_SUCCESS;
-    }
-
-    if (isMissing1 == 1) {
-        if (verbose)
-            printf(" is set to missing in 1st field\n");
-        printInfo(h1);
-        printf("%s is set to missing in 1st field but is not missing in 2nd field\n", name);
-        err1 = GRIB_VALUE_MISMATCH;
-        save_error(c, name);
-        return GRIB_VALUE_MISMATCH;
-    }
-
-    if (isMissing2 == 1) {
-        if (verbose)
-            printf(" is set to missing in 1st field\n");
-        printInfo(h1);
-        printf("%s is set to missing in 2nd field but is not missing in 1st field\n", name);
-        err1 = GRIB_VALUE_MISMATCH;
-        save_error(c, name);
-        return GRIB_VALUE_MISMATCH;
-    }
 
     switch (type1) {
         case GRIB_TYPE_STRING:
