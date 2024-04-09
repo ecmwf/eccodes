@@ -191,7 +191,7 @@ void grib_accessor_gen_t::resize(size_t new_size)
 void grib_accessor_gen_t::destroy(grib_context* ct)
 {
     cclass->destroy(ct, this);
-    //delete this;
+    delete this;
 }
 
 
