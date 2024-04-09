@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,16 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_png_packing_h
-#define eccodes_accessor_data_png_packing_h
+#pragma once
 
 #include "grib_accessor_class_values.h"
-#include "grib_scaling.h"
 
 class grib_accessor_data_png_packing_t : public grib_accessor_values_t
 {
 public:
-    /* Members defined in data_png_packing */
     const char*   number_of_values;
     const char*   reference_value;
     const char*   binary_scale_factor;
@@ -43,4 +39,3 @@ public:
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
     int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
 };
-#endif /* eccodes_accessor_data_png_packing_h */
