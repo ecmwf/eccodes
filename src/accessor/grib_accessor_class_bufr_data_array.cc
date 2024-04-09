@@ -3242,4 +3242,5 @@ void grib_accessor_class_bufr_data_array_t::destroy(grib_context* c, grib_access
     }
 
     grib_iarray_delete(self->iss_list);
+    grib_accessor_class_gen_t::destroy(c, a);
 }

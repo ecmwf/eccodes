@@ -424,6 +424,7 @@ int grib_accessor_class_concept_t::get_native_type(grib_accessor* a){
 void grib_accessor_class_concept_t::destroy(grib_context* c, grib_accessor* a){
     //grib_accessor_concept_t *self = (grib_accessor_concept_t*)a;
     //grib_context_free(c,self->cval);
+    grib_accessor_class_gen_t::destroy(c, a);
 }
 
 int grib_accessor_class_concept_t::unpack_string(grib_accessor* a, char* val, size_t* len){

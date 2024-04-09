@@ -82,4 +82,5 @@ int grib_accessor_class_bufr_string_values_t::value_count(grib_accessor* a, long
     return descriptors->value_count(rlen);}
 
 void grib_accessor_class_bufr_string_values_t::destroy(grib_context* c, grib_accessor* a){
+    grib_accessor_class_ascii_t::destroy(c, a);
 }

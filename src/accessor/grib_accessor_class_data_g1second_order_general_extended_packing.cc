@@ -1203,4 +1203,5 @@ void grib_accessor_class_data_g1second_order_general_extended_packing_t::destroy
         grib_context_free(context, self->fvalues);
         self->fvalues = NULL;
     }
+    grib_accessor_class_data_simple_packing_t::destroy(context, a);
 }

@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,13 +11,11 @@
 #ifndef eccodes_accessor_getenv_h
 #define eccodes_accessor_getenv_h
 
-#include "../grib_api_internal.h"
 #include "grib_accessor_class_ascii.h"
 
 class grib_accessor_getenv_t : public grib_accessor_ascii_t
 {
 public:
-    /* Members defined in getenv */
     const char* name;
     char* value;
     const char* default_value;
@@ -35,4 +32,5 @@ public:
     int value_count(grib_accessor*, long*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
+
 #endif /* eccodes_accessor_getenv_h */

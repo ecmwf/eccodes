@@ -775,6 +775,7 @@ void grib_accessor_class_codetable_t::destroy(grib_context* context, grib_access
         grib_context_free(context, a->vvalue);
         a->vvalue = NULL;
     }
+    grib_accessor_class_unsigned_t::destroy(context, a);
 }
 
 int grib_accessor_class_codetable_t::get_native_type(grib_accessor* a)

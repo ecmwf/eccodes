@@ -497,6 +497,7 @@ void grib_accessor_class_bufr_data_element_t::destroy(grib_context* ct, grib_acc
         a->attributes[i] = NULL;
         i++;
     }
+    grib_accessor_class_gen_t::destroy(ct, a);
 }
 
 #define MAX_STRING_SIZE 4096
