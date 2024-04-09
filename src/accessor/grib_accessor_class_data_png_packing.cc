@@ -11,6 +11,7 @@
 
 #include "grib_api_internal.h"
 #include "grib_accessor_class_data_png_packing.h"
+#define PNG_ANYBITS
 
 grib_accessor_class_data_png_packing_t _grib_accessor_class_data_png_packing{"data_png_packing"};
 grib_accessor_class* grib_accessor_class_data_png_packing = &_grib_accessor_class_data_png_packing;
