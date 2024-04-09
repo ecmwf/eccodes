@@ -129,7 +129,7 @@ int grib_accessor_class_long_t::compare(grib_accessor* a, grib_accessor* b)
         return err;
     alen = count;
 
-    err = a->value_count(&count);
+    err = b->value_count(&count);
     if (err)
         return err;
     blen = count;
