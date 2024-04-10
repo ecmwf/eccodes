@@ -11,4 +11,9 @@ categories list(numberOfCategories) {
   unsigned[4] scaledValueOfLowerLimit : can_be_missing,dump ;
   unsigned[1] scaleFactorOfUpperLimit : can_be_missing,dump;
   unsigned[4] scaledValueOfUpperLimit : can_be_missing,dump;
+
+  alias scaleFactorOfFirstLimit = scaleFactorOfLowerLimit;
+  alias scaledValueOfFirstLimit = scaledValueOfLowerLimit;
+  alias scaleFactorOfSecondLimit = scaleFactorOfUpperLimit;
+  alias scaledValueOfSecondLimit = scaledValueOfUpperLimit;
 }
