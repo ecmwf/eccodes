@@ -2,6 +2,9 @@
 
 # TEMPLATE 4.10, Percentile forecasts at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 
+# This template was not validated at the time of publication and should be used with caution.
+transient template_is_experimental = 1 : hidden;
+
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.generating_process.def"
 include "grib2/template.4.forecast_time.def"

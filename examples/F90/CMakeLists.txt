@@ -56,7 +56,6 @@ if( HAVE_BUILD_TOOLS )
           grib_clone
           grib_ecc-1316
           bufr_attributes
-          bufr_copy_data
           bufr_clone
           bufr_expanded
           bufr_get_keys
@@ -130,6 +129,12 @@ foreach( atest ${tests_sanity} )
                       RESOURCES       bufr_read_scatterometer_f.ref
                       COMMAND         ${CMAKE_CURRENT_SOURCE_DIR}/${atest}.sh )
 endforeach()
+
+if( HAVE_BUILD_TOOLS AND NOT CMAKE_CXX_COMPILER_ID MATCHES NVHPC )
+      # Test which fails on Leonardo
+      list( APPEND tests_extra bufr_copy_data )
+endif()
+
 foreach( atest ${tests_extra} )
     ecbuild_add_test( TARGET          eccodes_f_${atest}
                       SOURCES         ${atest}.f90

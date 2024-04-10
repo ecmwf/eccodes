@@ -60,11 +60,6 @@ To add the Python3 bindings, use pip3 install from PyPI as follows:
    ```
    pip3 install eccodes
    ```
-   or
-   ```
-   pip3 install --install-option="--prefix=/path/to/where/you/install/eccodes" eccodes
-   ```
-
 
 For more details, please see:
 https://confluence.ecmwf.int/display/ECC/ecCodes+installation

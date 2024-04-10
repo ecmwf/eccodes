@@ -26,9 +26,9 @@ sample_bufr4=$ECCODES_SAMPLES_PATH/BUFR4.tmpl
 # ------------------
 infile=$sample_grib2
 result=$(${tools_dir}/grib_get -p maximum:s $infile)
-[ "$result" = "1" ]
+[ "$result" = "273" ]
 result=$(${tools_dir}/grib_get -s formatForDoubles=%e -p maximum:s $infile)
-[ "$result" = "1.000000e+00" ]
+[ "$result" = "2.730000e+02" ]
 
 infile=${data_dir}/sample.grib2
 result=$(${tools_dir}/grib_get -s formatForDoubles=%e -p minimum:s $infile)

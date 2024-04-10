@@ -12659,7 +12659,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 217 ;
 	}
-#Maximum individual wave height
+#Envelop-maximum individual wave height
 '140218' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 218 ;

@@ -408,11 +408,10 @@ static void dump_label(grib_dumper* d, grib_accessor* a, const char* comment)
 
 static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accessors* block)
 {
-    const char* secstr          = "section";
-    int len                     = 0;
+    const char* secstr = "section";
     grib_dumper_serialize* self = (grib_dumper_serialize*)d;
 
-    len = strlen(secstr);
+    size_t len = strlen(secstr);
 
     if (a->name[0] == '_') {
         grib_dump_accessors_block(d, block);

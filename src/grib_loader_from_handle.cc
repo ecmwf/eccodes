@@ -24,16 +24,13 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
                     switch (h->values[j][i].type) {
                         case GRIB_TYPE_LONG:
                             return grib_pack_long(ga, &h->values[j][i].long_value, &len);
-                            break;
 
                         case GRIB_TYPE_DOUBLE:
                             return grib_pack_double(ga, &h->values[j][i].double_value, &len);
-                            break;
 
                         case GRIB_TYPE_STRING:
                             len = strlen(h->values[j][i].string_value);
                             return grib_pack_string(ga, h->values[j][i].string_value, &len);
-                            break;
                     }
                 }
             }
@@ -166,7 +163,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
     switch (ga_type) {
         case GRIB_TYPE_STRING:
-            /*ecc__grib_get_string_length(ga,&len);  See ECC-490 */
+            /*grib_get_string_length_acc(ga,&len);  See ECC-490 */
             grib_get_string_length(h, name, &len);
             sval = (char*)grib_context_malloc(h->context, len);
             ret  = grib_get_string_internal(h, name, sval, &len);

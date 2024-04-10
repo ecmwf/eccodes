@@ -22,6 +22,11 @@
    MEMBERS     =   double *las
    MEMBERS     =   double *los
    MEMBERS     =   long Nj
+   MEMBERS     =   long isRotated
+   MEMBERS     =   double angleOfRotation
+   MEMBERS     =   double southPoleLat
+   MEMBERS     =   double southPoleLon
+   MEMBERS     =   long disableUnrotate
    END_CLASS_DEF
 
  */
@@ -53,6 +58,11 @@ typedef struct grib_iterator_gaussian_reduced{
     double *las;
     double *los;
     long Nj;
+    long isRotated;
+    double angleOfRotation;
+    double southPoleLat;
+    double southPoleLon;
+    long disableUnrotate;
 } grib_iterator_gaussian_reduced;
 
 extern grib_iterator_class* grib_iterator_class_gen;
@@ -87,16 +97,29 @@ static void init_class(grib_iterator_class* c)
 static int next(grib_iterator* iter, double* lat, double* lon, double* val)
 {
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
+    double ret_lat=0, ret_lon=0;
 
     if (iter->e >= (long)(iter->nv - 1))
         return 0;
     iter->e++;
 
-    *lat = self->las[iter->e];
-    *lon = self->los[iter->e];
+    ret_lat = self->las[iter->e];
+    ret_lon = self->los[iter->e];
     if (val && iter->data) {
         *val = iter->data[iter->e];
     }
+
+    if (self->isRotated && !self->disableUnrotate) {
+        double new_lat = 0, new_lon = 0;
+        unrotate(ret_lat, ret_lon,
+                 self->angleOfRotation, self->southPoleLat, self->southPoleLon,
+                 &new_lat, &new_lon);
+        ret_lat = new_lat;
+        ret_lon = new_lon;
+    }
+    *lat = ret_lat;
+    *lon = ret_lon;
+
     return 1;
 }
 
@@ -104,7 +127,7 @@ typedef void (*get_reduced_row_proc)(long pl, double lon_first, double lon_last,
 
 /* For a reduced Gaussian grid which is GLOBAL, the number of points is the sum of the 'pl' array */
 /* i.e. the total number of points on all latitudes */
-static size_t count_global_points(long* pl, size_t plsize)
+static size_t count_global_points(const long* pl, size_t plsize)
 {
     return sum_of_pl_array(pl, plsize);
 }
@@ -288,9 +311,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     long* pl;
     long max_pl = 0;
     long nj = 0, order = 0, i;
-    long row_count                       = 0;
-    long angleSubdivisions               = 0;
-    grib_context* c                      = h->context;
+    long row_count = 0;
+    long angleSubdivisions = 0;
+    const grib_context* c = h->context;
     grib_iterator_gaussian_reduced* self = (grib_iterator_gaussian_reduced*)iter;
     const char* slat_first               = grib_arguments_get_name(h, args, self->carg++);
     const char* slon_first               = grib_arguments_get_name(h, args, self->carg++);
@@ -299,6 +322,22 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     const char* sorder                   = grib_arguments_get_name(h, args, self->carg++);
     const char* spl                      = grib_arguments_get_name(h, args, self->carg++);
     const char* snj                      = grib_arguments_get_name(h, args, self->carg++);
+
+    self->angleOfRotation  = 0;
+    self->isRotated        = 0;
+    self->southPoleLat     = 0;
+    self->southPoleLon     = 0;
+    self->disableUnrotate  = 0; /* unrotate enabled by default */
+
+    ret = grib_get_long(h, "isRotatedGrid", &self->isRotated);
+    if (ret == GRIB_SUCCESS && self->isRotated) {
+        if ((ret = grib_get_double_internal(h, "angleOfRotation", &self->angleOfRotation)))
+            return ret;
+        if ((ret = grib_get_double_internal(h, "latitudeOfSouthernPoleInDegrees", &self->southPoleLat)))
+            return ret;
+        if ((ret = grib_get_double_internal(h, "longitudeOfSouthernPoleInDegrees", &self->southPoleLon)))
+            return ret;
+    }
 
     if ((ret = grib_get_double_internal(h, slat_first, &lat_first)) != GRIB_SUCCESS)
         return ret;

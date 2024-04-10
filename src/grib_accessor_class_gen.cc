@@ -385,7 +385,7 @@ static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
 {
     size_t length = 0;
 
-    int err = ecc__grib_get_string_length(a, &length);
+    int err = grib_get_string_length_acc(a, &length);
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
@@ -455,16 +455,14 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
     grib_context* c = a->context;
     if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
-        int i = 0, ret = 0;
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
-            grib_context_log(c, GRIB_LOG_ERROR,
-                             "Unable to allocate %zu bytes", *len * (sizeof(double)));
+            grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
-        for (i = 0; i < *len; i++)
-            val[i] = (long)v[i];
-        ret = grib_pack_double(a, val, len);
+        for (size_t i = 0; i < *len; i++)
+            val[i] = v[i];
+        int ret = grib_pack_double(a, val, len);
         grib_context_free(c, val);
         return ret;
     }
@@ -479,14 +477,13 @@ static int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* 
 {
     grib_context* c = a->context;
     int ret         = GRIB_SUCCESS;
-    size_t i        = 0;
     size_t numBytes = *len * (sizeof(long));
     long* lValues   = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
         grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
         return GRIB_OUT_OF_MEMORY;
     }
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         lValues[i] = (long)v[i]; /* convert from double to long */
     ret = grib_pack_long(a, lValues, len);
     grib_context_free(c, lValues);

@@ -330,18 +330,7 @@ int grib_tool_init(grib_runtime_options* options)
     global_tolerance = 0;
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
-        int i;
         global_tolerance = 0;
-        for (i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -374,9 +363,9 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("T:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
-        ret                      = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
+        ret = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (ret == GRIB_INVALID_ARGUMENT) {
             usage();
             exit(1);
@@ -1212,8 +1201,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         grib_handle *h11, *h22;
         GRIB_CHECK_NOLINE(grib_get_message_headers(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message_headers(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
+        }
 
         err = 0;
         h11 = grib_handle_new_from_partial_message(h1->context, msg1, size1);
@@ -1279,8 +1269,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
         size_t size1 = 0, size2 = 0;
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !memcmp(msg1, msg2, size1))
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
+        }
 
         iter = grib_keys_iterator_new(h1, GRIB_KEYS_ITERATOR_SKIP_COMPUTED, NULL);
         if (!iter) {

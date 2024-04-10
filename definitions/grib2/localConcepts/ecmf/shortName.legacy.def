@@ -1369,3 +1369,33 @@
  parameterCategory = 172 ;
  parameterNumber = 228 ;
 }
+#Mean large-scale precipitation rate
+'mlsprt' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 142 ;
+}
+#Mean convective precipitation rate
+'cprate' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 143 ;
+}
+#Mean runoff rate
+'mrort' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 205 ;
+}
+#Mean total cloud cover
+'meantcc' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 6 ;
+}
+#Mean of 10 metre wind speed
+'mean10ws' = {
+ discipline = 192 ;
+ parameterCategory = 228 ;
+ parameterNumber = 5 ;
+}

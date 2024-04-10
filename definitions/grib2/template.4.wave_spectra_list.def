@@ -3,11 +3,15 @@
 ## Direction part
 signed[1] scaleFactorOfWaveDirections : dump;
 alias integerScalingFactorAppliedToDirections = scaleFactorOfWaveDirections;
+alias directionScalingFactor = integerScalingFactorAppliedToDirections;
 
 unsigned[4] scaledValuesOfWaveDirections[numberOfWaveDirections] : dump;
+alias scaledDirections = scaledValuesOfWaveDirections ;
 
 ## Frequency part
 signed[1] scaleFactorOfWaveFrequencies : dump;
 alias integerScalingFactorAppliedToFrequencies = scaleFactorOfWaveFrequencies;
+alias frequencyScalingFactor = integerScalingFactorAppliedToFrequencies;
 
 unsigned[4] scaledValuesOfWaveFrequencies[numberOfWaveFrequencies] : dump;
+alias scaledFrequencies = scaledValuesOfWaveFrequencies;

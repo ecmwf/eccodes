@@ -379,8 +379,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "accessor_bufr_elements_table_get_descriptor: unable to allocate %ld bytes\n", sizeof(bufr_descriptor));
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(bufr_descriptor));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }

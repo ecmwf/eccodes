@@ -10,7 +10,6 @@
 
 /***************************************************************************
  *   Jean Baptiste Filippi - 01.11.2005                                    *
- *   Enrico Fucile                                                         *
  ***************************************************************************/
 
 #include "grib_api_internal.h"
@@ -115,19 +114,17 @@ static void dump(grib_action* act, FILE* f, int lvl)
     grib_context_print(act->context, f, "Template %s  %s\n", act->name, a->arg);
 }
 
-grib_action* get_empty_template(grib_context* c, int* err)
+static grib_action* get_empty_template(grib_context* c, int* err)
 {
     char fname[] = "empty_template.def";
-    char* path   = 0;
-
-    path = grib_context_full_defs_path(c, fname);
+    const char* path = grib_context_full_defs_path(c, fname);
     if (path) {
         *err = GRIB_SUCCESS;
         return grib_parse_file(c, path);
     }
     else {
         *err = GRIB_INTERNAL_ERROR;
-        grib_context_log(c, GRIB_LOG_ERROR, "get_empty_template: unable to get template %s", fname);
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to get template %s", __func__, fname);
         return NULL;
     }
 }

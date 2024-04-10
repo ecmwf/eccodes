@@ -1604,9 +1604,8 @@ int any_f_new_from_loaded_(int* msgid, int* gid)
 /*****************************************************************************/
 int codes_f_clear_loaded_from_file_(void)
 {
-    grib_context* c = grib_context_get_default();
     /* grib_oarray_delete_content(c,binary_messages); */
-    grib_oarray_delete(c, binary_messages);
+    grib_oarray_delete(grib_context_get_default(), binary_messages);
     return GRIB_SUCCESS;
 }
 
@@ -1711,10 +1710,10 @@ int grib_f_headers_only_new_from_file_(int* fid, int* gid)
 }
 
 /*****************************************************************************/
-int grib_f_new_from_index_(int* iid, int* gid)
+int grib_f_new_from_index_(int* index_id, int* gid)
 {
     int err = 0;
-    grib_index* i = get_index(*iid);
+    grib_index* i = get_index(*index_id);
     grib_handle *h = NULL;
 
     if (i) {
@@ -1757,16 +1756,15 @@ int grib_f_index_new_from_file_(char* file, char* keys, int* gid, int lfile, int
 }
 
 /*****************************************************************************/
-int grib_f_index_add_file_(int* iid, char* file, int lfile)
+int grib_f_index_add_file_(int* index_id, char* file, int lfile)
 {
-    grib_index *i = get_index(*iid);
-    int err = GRIB_SUCCESS;
+    grib_index *i = get_index(*index_id);
     char buf[1024];
 
     if (!i) {
         return GRIB_INVALID_INDEX;
     } else {
-        err = grib_index_add_file(i,cast_char(buf,file,lfile));
+        int err = grib_index_add_file(i,cast_char(buf,file,lfile));
         return err;
     }
 }
@@ -1928,9 +1926,9 @@ int grib_f_get_size_long_(int* gid, char* key, long* val, int len)
 }
 
 /*****************************************************************************/
-int grib_f_index_get_size_int_(int* gid, char* key, int* val, int len)
+int grib_f_index_get_size_int_(int* index_id, char* key, int* val, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     int err = GRIB_SUCCESS;
     char buf[1024];
     size_t tsize = 0;
@@ -1944,19 +1942,18 @@ int grib_f_index_get_size_int_(int* gid, char* key, int* val, int len)
     }
 }
 
-int grib_f_index_get_size_long_(int* gid, char* key, long* val, int len)
+int grib_f_index_get_size_long_(int* index_id, char* key, long* val, int len)
 {
-    grib_index *h = get_index(*gid);
-    int err = GRIB_SUCCESS;
+    grib_index *h = get_index(*index_id);
     char buf[1024];
     size_t tsize = 0;
 
-    if(!h){
+    if (!h){
         return GRIB_INVALID_GRIB;
-    }else{
-        err = grib_index_get_size(h, cast_char(buf,key,len), &tsize);
+    } else{
+        int err = grib_index_get_size(h, cast_char(buf,key,len), &tsize);
         *val = tsize;
-        return  err;
+        return err;
     }
 }
 
@@ -2063,9 +2060,9 @@ int grib_f_get_byte_array_(int* gid, char* key, unsigned char *val, int* size, i
 }
 
 /*****************************************************************************/
-int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* size, int len)
+int grib_f_index_get_string_(int* index_id, char* key, char* val, int *eachsize,int* size, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     int err = GRIB_SUCCESS;
     int i;
     char buf[1024];
@@ -2104,23 +2101,23 @@ int grib_f_index_get_string_(int* gid, char* key, char* val, int *eachsize,int* 
 }
 
 /*****************************************************************************/
-int grib_f_index_get_long_(int* gid, char* key, long *val, int* size, int len)
+int grib_f_index_get_long_(int* index_id, char* key, long *val, int* size, int len)
 {
-    grib_index *h = get_index(*gid);
-    int err = GRIB_SUCCESS;
+    int err = 0;
+    grib_index* h = get_index(*index_id);
     char buf[1024];
     size_t lsize = *size;
 
-    if(!h)  return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
     err = grib_index_get_long(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
-    return  err;
+    return err;
 }
 
 /*****************************************************************************/
-int grib_f_index_get_int_(int* gid, char* key, int *val, int* size, int len)
+int grib_f_index_get_int_(int* index_id, char* key, int *val, int* size, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     int err = GRIB_SUCCESS;
     char buf[1024];
     size_t lsize = *size, i = 0;
@@ -2140,17 +2137,17 @@ int grib_f_index_get_int_(int* gid, char* key, int *val, int* size, int len)
 }
 
 /*****************************************************************************/
-int grib_f_index_get_real8_(int* gid, char* key, double *val, int* size, int len)
+int grib_f_index_get_real8_(int* index_id, char* key, double *val, int* size, int len)
 {
-    grib_index *h = get_index(*gid);
-    int err = GRIB_SUCCESS;
+    int err = 0;
+    grib_index* h = get_index(*index_id);
     char buf[1024];
     size_t lsize = *size;
 
-    if(!h)  return GRIB_INVALID_GRIB;
+    if (!h) return GRIB_INVALID_GRIB;
     err = grib_index_get_double(h, cast_char(buf,key,len), val, &lsize);
     *size = lsize;
-    return  err;
+    return err;
 }
 
 /*****************************************************************************/
@@ -2438,9 +2435,9 @@ int grib_f_set_real4_array_(int* gid, char* key, float* val, int* size, int len)
 }
 
 /*****************************************************************************/
-int grib_f_index_select_real8_(int* gid, char* key, double* val, int len)
+int grib_f_index_select_real8_(int* index_id, char* key, double* val, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     char buf[1024];
 
     if(!h) return GRIB_INVALID_GRIB;
@@ -2448,9 +2445,9 @@ int grib_f_index_select_real8_(int* gid, char* key, double* val, int len)
 }
 
 /*****************************************************************************/
-int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int vallen)
+int grib_f_index_select_string_(int* index_id, char* key, char* val, int len, int vallen)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
 
     char buf[1024];
     char bufval[1024];
@@ -2465,9 +2462,9 @@ int grib_f_index_select_string_(int* gid, char* key, char* val, int len, int val
 }
 
 /*****************************************************************************/
-int grib_f_index_select_int_(int* gid, char* key, int* val, int len)
+int grib_f_index_select_int_(int* index_id, char* key, int* val, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     long lval = *val;
     char buf[1024] = {0,};
 
@@ -2476,9 +2473,9 @@ int grib_f_index_select_int_(int* gid, char* key, int* val, int len)
 }
 
 /*****************************************************************************/
-int grib_f_index_select_long_(int* gid, char* key, long* val, int len)
+int grib_f_index_select_long_(int* index_id, char* key, long* val, int len)
 {
-    grib_index *h = get_index(*gid);
+    grib_index *h = get_index(*index_id);
     char buf[1024] = {0,};
 
     if (!h) return GRIB_INVALID_GRIB;

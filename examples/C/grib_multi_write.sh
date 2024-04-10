@@ -9,20 +9,20 @@
 
 . ./include.ctest.sh
 
-#if [ ! -f "${data_dir}/sample.grib2" ] 
-#then
-#  echo SKIP: $0
-#  exit
-#fi
+label="grib_multi_write_c"
+tempGrib=temp.$label.grib
+tempText=temp.$label.txt
 
-${examples_dir}/c_grib_multi_write ${data_dir}/sample.grib2 ${data_dir}/multi_sample.grib2 > /dev/null
+${examples_dir}/c_grib_multi_write ${data_dir}/sample.grib2 $tempGrib > /dev/null
 
-${tools_dir}/grib_get -p step ${data_dir}/multi_sample.grib2 > ${data_dir}/multi_step.test
+${tools_dir}/grib_get -p step $tempGrib > $tempText
 
-diff ${data_dir}/multi_step.test ${data_dir}/multi_step.txt
+reference=${data_dir}/multi_step.txt
+diff $reference $tempText 
 
-step=`${tools_dir}/grib_get -M -p step ${data_dir}/multi_sample.grib2`
-
+# -M = Turn multi-field support off
+step=`${tools_dir}/grib_get -M -p step $tempGrib`
 [ $step -eq 12 ]
 
-rm -f ${data_dir}/multi_sample.grib2 ${data_dir}/multi_step.test
+# Clean up
+rm -f $tempGrib $tempText

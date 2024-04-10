@@ -159,6 +159,8 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 /* Sets val to the 'index' of the closes date */
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
+    const grib_accessor_closest_date* self = (grib_accessor_closest_date*)a;
+
     int err = 0;
     long num_forecasts = 0; /* numberOfForecastsUsedInLocalTime */
     /* These relate to the date and time in Section 1 */
@@ -171,9 +173,8 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     /* These relate to the forecast dates and times in Section 4 */
     long *yearArray, *monthArray, *dayArray, *hourArray, *minuteArray, *secondArray;
 
-    grib_accessor_closest_date* self = (grib_accessor_closest_date*)a;
     grib_handle* h = grib_handle_of_accessor(a);
-    grib_context* c = a->context;
+    const grib_context* c = a->context;
     *val = -1; /* initialise to an invalid index */
 
     if ((err = grib_get_long_internal(h, self->numForecasts, &num_forecasts)) != GRIB_SUCCESS) return err;

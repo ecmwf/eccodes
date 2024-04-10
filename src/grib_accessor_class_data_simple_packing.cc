@@ -406,16 +406,21 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     *len = (long)n_vals;
 
     if (units_factor != 1.0) {
-        if (units_bias != 0.0)
-            for (i = 0; i < n_vals; i++)
+        if (units_bias != 0.0) {
+            for (i = 0; i < n_vals; i++) {
                 val[i] = val[i] * units_factor + units_bias;
-        else
-            for (i = 0; i < n_vals; i++)
+            }
+        } else {
+            for (i = 0; i < n_vals; i++) {
                 val[i] *= units_factor;
+            }
+        }
     }
-    else if (units_bias != 0.0)
-        for (i = 0; i < n_vals; i++)
+    else if (units_bias != 0.0) {
+        for (i = 0; i < n_vals; i++) {
             val[i] += units_bias;
+        }
+    }
     return err;
 }
 

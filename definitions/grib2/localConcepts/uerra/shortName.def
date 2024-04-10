@@ -17,6 +17,29 @@
 	 scaledValueOfFirstFixedSurface = 200 ;
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	}
+#Sea ice area fraction
+'ci' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Snow density
+'rsn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Sea surface temperature
+'sst' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Maximum 10 metre wind gust since previous post-processing
 '10fg' = {
 	 discipline = 0 ;
@@ -51,6 +74,81 @@
 	 scaleFactorOfFirstFixedSurface = 0 ;
 	 indicatorOfUnitForTimeRange = 1 ;
 	 typeOfStatisticalProcessing = 2 ;
+	}
+#Total column cloud liquid water
+'tclw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 69 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Total column cloud ice water
+'tciw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 70 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#U component of wind
+'u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#V component of wind
+'v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Surface pressure
+'sp' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Mean sea level pressure
+'msl' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 101 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Relative humidity
+'r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#10 metre U wind component
+'10u' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#10 metre V wind component
+'10v' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #2 metre temperature
 '2t' = {
@@ -150,12 +248,33 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#10 metre wind speed
+'10si' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 10 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Skin temperature
 'skt' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 17 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#2 metre specific humidity
+'2sh' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 typeOfSecondFixedSurface = 255 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Total column integrated water vapour
@@ -165,6 +284,15 @@
 	 parameterNumber = 64 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
+	}
+#Total column integrated water vapour
+'tciwv' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 64 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Momentum flux, u component
 'uflx' = {
@@ -206,6 +334,16 @@
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
 	}
+#2 metre relative humidity
+'2r' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 1 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Evaporation
 'eva' = {
 	 discipline = 0 ;
@@ -233,6 +371,13 @@
 	 parameterNumber = 13 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 1 ;
+	}
+#Fraction of snow cover
+'fscov' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 121 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Accumulated surface downward short-wave radiation flux, clear sky
 'adswrf_cs' = {

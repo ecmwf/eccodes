@@ -226,7 +226,7 @@ static void link_same_attributes(grib_accessor* a, grib_accessor* b)
     if (!grib_accessor_has_attributes(b))
         return;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
-        bAttribute = ecc__grib_accessor_get_attribute(b, a->attributes[i]->name, &idx);
+        bAttribute = grib_accessor_get_attribute_index(b, a->attributes[i]->name, &idx);
         if (bAttribute)
             a->attributes[i]->same = bAttribute;
         i++;

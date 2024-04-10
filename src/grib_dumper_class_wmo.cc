@@ -311,7 +311,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     value = (char*)grib_context_malloc_clear(a->context, size);
     if (!value) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unable to allocate %zu bytes", size);

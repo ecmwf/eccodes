@@ -15,7 +15,6 @@
 
    START_CLASS_DEF
    CLASS      = expression
-   IMPLEMENTS = init_class
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
    IMPLEMENTS = evaluate_long
@@ -39,18 +38,12 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static int     native_type(grib_expression*,grib_handle*);
+static int     evaluate_long(grib_expression*,grib_handle*,long*);
+static int     evaluate_double(grib_expression*,grib_handle*,double*);
 
 typedef struct grib_expression_logical_and{
   grib_expression base;
@@ -65,7 +58,6 @@ static grib_expression_class _grib_expression_class_logical_and = {
     "logical_and",                    /* name                      */
     sizeof(grib_expression_logical_and),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -79,10 +71,6 @@ static grib_expression_class _grib_expression_class_logical_and = {
 
 grib_expression_class* grib_expression_class_logical_and = &_grib_expression_class_logical_and;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
@@ -93,7 +81,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     double dv2 = 0;
     int ret;
     grib_expression_logical_and* e = (grib_expression_logical_and*)g;
-
 
     switch (grib_expression_native_type(h, e->left)) {
         case GRIB_TYPE_LONG:
@@ -141,11 +128,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     long lres = 0;
-    int ret   = 0;
-
-    ret   = evaluate_long(g, h, &lres);
+    int ret = evaluate_long(g, h, &lres);
     *dres = (double)lres;
-
     return ret;
 }
 

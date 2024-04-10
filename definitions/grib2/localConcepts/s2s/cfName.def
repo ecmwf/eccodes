@@ -6,6 +6,14 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Sea ice area fraction
+'sea_ice_area_fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-integrated eastward turbulent surface stress
 'surface_downward_eastward_stress' = {
 	 discipline = 0 ;

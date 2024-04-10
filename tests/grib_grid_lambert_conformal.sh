@@ -11,14 +11,14 @@
 
 # Define a common label for all the tmp files
 label="grib_lambert_conformal_test"
-tempFilter="temp.${label}.filt"
+tempFilt="temp.${label}.filt"
 tempGrib="temp.${label}.grib"
 tempOut="temp.${label}.out"
 
 input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 # Create a filter
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="lambert";
  set numberOfDataPoints=294000;
  set shapeOfTheEarth=6;
@@ -37,7 +37,7 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use filter on input to create a new Lambert conformal GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
@@ -49,7 +49,7 @@ ${tools_dir}/grib_ls -l 50,0 $tempGrib
 
 # Oblate earth
 # --------------
-cat > $tempFilter <<EOF
+cat > $tempFilt <<EOF
  set gridType="lambert";
  set numberOfDataPoints=294000;
  set Nx=588;
@@ -68,7 +68,7 @@ cat > $tempFilter <<EOF
 EOF
 
 # Use this filter and the input GRIB to create a new GRIB
-${tools_dir}/grib_filter -o $tempGrib $tempFilter $input
+${tools_dir}/grib_filter -o $tempGrib $tempFilt $input
 if [ ! -f "$tempGrib" ]; then
    echo 'Failed to create output GRIB from filter' >&2
    exit 1
@@ -83,4 +83,4 @@ ${tools_dir}/grib_ls -l 40.44,353.56 $tempGrib
 
 
 # Clean up
-rm -f $tempFilter $tempGrib $tempOut
+rm -f $tempFilt $tempGrib $tempOut

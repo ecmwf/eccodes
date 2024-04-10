@@ -149,20 +149,20 @@ static int get_native_type(grib_accessor* a)
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_handle* hand = grib_handle_of_accessor(a);
-    int i             = 0;
+    long i = 0;
 
-    if (len[0] < (a->length + 1)) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = 0;
-        return GRIB_ARRAY_TOO_SMALL;
+    if (*len < (a->length + 1)) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
+                *len, a->name, a->length + 1);
+        *len = a->length + 1;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     for (i = 0; i < a->length; i++) {
         val[i] = hand->buffer->data[a->offset + i];
     }
     val[i] = 0;
-    len[0] = i;
+    *len = i;
     return GRIB_SUCCESS;
 }
 
@@ -190,7 +190,6 @@ static int unpack_long(grib_accessor* a, long* v, size_t* len)
 
     *v = strtol(val, &last, 10);
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
     return GRIB_SUCCESS;
 }
 
@@ -204,7 +203,6 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
     *v = strtod(val, &last);
 
     if (*last == 0) {
-        grib_context_log(a->context, GRIB_LOG_DEBUG, " Casting string %s to long", a->name);
         return GRIB_SUCCESS;
     }
 

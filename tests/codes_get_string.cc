@@ -18,15 +18,20 @@ int main(int argc, char* argv[])
     size_t len = 0;
     int err = 0;
 
-    assert(argc == 3);
+    assert(argc == 4);
 
-    const char* infile = argv[1];
+    const char* prod = argv[1];
+    const char* infile = argv[2];
     FILE* in = fopen(infile, "rb");
     assert(in);
-    char* key = argv[2];
+    char* key = argv[3];
     char kvalue[2] = {0,}; // deliberately short
+    ProductKind productKind = PRODUCT_GRIB;
+    if (strcmp(prod, "BUFR")==0) productKind = PRODUCT_BUFR;
+    if (strcmp(prod, "GTS")==0) productKind = PRODUCT_GTS;
+    if (strcmp(prod, "ANY")==0) productKind = PRODUCT_ANY;
 
-    h = codes_handle_new_from_file(NULL, in, PRODUCT_ANY, &err);
+    h = codes_handle_new_from_file(NULL, in, productKind, &err);
     assert(h);
     assert(!err);
 
@@ -35,8 +40,10 @@ int main(int argc, char* argv[])
     len = 1; // Cause it to fail
 
     err = codes_get_string(h, key, kvalue, &len);
-    printf("err=%d  kvalue=|%s|\n", err, kvalue);
+    //printf("err=%d  kvalue=|%s|\n", err, kvalue);
     assert(err == CODES_BUFFER_TOO_SMALL);
+    // The correct len should have been set
+    assert(len > 1);
 
     codes_handle_delete(h);
     fclose(in);

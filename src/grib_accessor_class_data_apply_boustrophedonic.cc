@@ -119,7 +119,7 @@ grib_accessor_class* grib_accessor_class_data_apply_boustrophedonic = &_grib_acc
 
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
-    int n                                          = 0;
+    int n = 0;
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
 
     self->values          = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
@@ -138,10 +138,10 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int value_count(grib_accessor* a, long* numberOfPoints)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
-    int ret                                        = 0;
+    int ret = 0;
 
     *numberOfPoints = 0;
-    ret             = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints);
+    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints);
 
     return ret;
 }
@@ -150,12 +150,13 @@ template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
-    size_t plSize                                  = 0;
-    long* pl                                       = 0;
-    double* values                                 = 0;
-    double* pvalues                                = 0;
-    T* pval                                        = 0;
-    size_t valuesSize                              = 0;
+
+    size_t plSize     = 0;
+    long* pl          = 0;
+    double* values    = 0;
+    double* pvalues   = 0;
+    T* pval           = 0;
+    size_t valuesSize = 0;
     long i, j;
     int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
@@ -306,12 +307,13 @@ static int unpack_double_element_set(grib_accessor* a, const size_t* index_array
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_apply_boustrophedonic* self = (grib_accessor_data_apply_boustrophedonic*)a;
-    size_t plSize                                  = 0;
-    long* pl                                       = 0;
-    double* values                                 = 0;
-    double* pvalues                                = 0;
-    double* pval                                   = 0;
-    size_t valuesSize                              = 0;
+
+    size_t plSize     = 0;
+    long* pl          = 0;
+    double* values    = 0;
+    double* pvalues   = 0;
+    double* pval      = 0;
+    size_t valuesSize = 0;
     long i, j;
     int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;

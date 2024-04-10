@@ -16,8 +16,6 @@ grib_option grib_options[] = {
     { "d", 0, "Write different messages on files\n", 0, 1, 0 },
     { "T:", 0, 0, 1, 0, "M" }, /* METAR */
     { "c:", 0, 0, 0, 1, 0 },
-    { "S:", "start", "First field to be processed.\n", 0, 1, 0 },
-    { "E:", "end", "Last field to be processed.\n", 0, 1, 0 },
     { "a", 0, "-c option modifier. The keys listed with the option -c will be added to the list of keys compared without -c.\n", 0, 1, 0 },
     { "R:", 0, 0, 0, 1, 0 },
     { "A:", 0, 0, 0, 1, 0 },
@@ -74,7 +72,6 @@ static int compareAbsolute         = 1;
 static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_options* options);
 static int error               = 0;
 static int count               = 0;
-static int lastPrint           = 0;
 static int force               = 0;
 static double maxAbsoluteError = 1e-19;
 static int onlyListed          = 1;
@@ -85,8 +82,6 @@ static int verbose                = 0;
 static double tolerance_factor    = 1;
 static int write_error            = 0;
 static grib_handle* global_handle = NULL;
-static int start                  = -1;
-static int end                    = -1;
 static int write_count            = 0;
 
 GRIB_INLINE static double compare_double_absolute(const double* a, const double* b, const double* err)
@@ -192,11 +187,6 @@ int grib_tool_init(grib_runtime_options* options)
     grib_context* context = grib_context_get_default();
 
     options->strict = 1;
-    if (grib_options_on("S:"))
-        start = atoi(grib_options_get_option("S:"));
-
-    if (grib_options_on("E:"))
-        end = atoi(grib_options_get_option("E:"));
 
     if (grib_options_on("f"))
         force = 1;
@@ -249,16 +239,6 @@ int grib_tool_init(grib_runtime_options* options)
     compare_double   = &compare_double_absolute;
     if (grib_options_on("R:")) {
         global_tolerance = 0;
-        for (int i = 0; i < options->tolerance_count; i++) {
-            if (!strcmp((options->tolerance[i]).name, "all")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-            if (!strcmp((options->tolerance[i]).name, "global")) {
-                global_tolerance = (options->tolerance[i]).double_value;
-                break;
-            }
-        }
         compare_double  = &compare_double_relative;
         compareAbsolute = 0;
     }
@@ -276,7 +256,7 @@ int grib_tool_init(grib_runtime_options* options)
         tolerance_factor = atof(grib_options_get_option("t:"));
 
     if (grib_options_on("R:")) {
-        char* sarg               = grib_options_get_option("R:");
+        char* sarg = grib_options_get_option("R:");
         options->tolerance_count = MAX_KEYS;
         int err = parse_keyval_string(tool_name, sarg, 1, GRIB_TYPE_DOUBLE, options->tolerance, &(options->tolerance_count));
         if (err == GRIB_INVALID_ARGUMENT) {
@@ -316,7 +296,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static grib_handle* metar_handle_new_from_file_x(grib_context* c, FILE* f, int mode, int headers_only, int* err)
@@ -447,19 +426,17 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
 {
     size_t len1 = 0;
     size_t len2 = 0;
-    int err = 0, i = 0;
-    int err1;
-    int err2;
+    int err = 0, i = 0, err1 = 0, err2 = 0;
     int type1, type2;
     int countdiff;
-    int isMissing1 = 0, isMissing2 = 0;
+    //int isMissing1 = 0, isMissing2 = 0;
 
     char *sval1 = NULL, *sval2 = NULL;
     double *dval1 = NULL, *dval2 = NULL;
     long *lval1 = NULL, *lval2 = NULL;
-    double maxdiff       = 0;
+    double maxdiff = 0;
     double value_tolerance = 0;
-    grib_context* c        = h1->context;
+    grib_context* c = h1->context;
 
     type1 = type;
     type2 = type;
@@ -514,37 +491,10 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         return err;
     }
 
-    // if (options->mode != MODE_METAR) {
+    Assert(options->mode == MODE_METAR);
     //     // TODO: Ignore missing values for keys in METAR. Not yet implemented
     //     isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
     //     isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    // }
-
-    if ((isMissing1 == 1) && (isMissing2 == 1)) {
-        if (verbose)
-            printf(" is set to missing in both fields\n");
-        return GRIB_SUCCESS;
-    }
-
-    if (isMissing1 == 1) {
-        if (verbose)
-            printf(" is set to missing in 1st field\n");
-        printInfo(h1);
-        printf("%s is set to missing in 1st field but is not missing in 2nd field\n", name);
-        err1 = GRIB_VALUE_MISMATCH;
-        save_error(c, name);
-        return GRIB_VALUE_MISMATCH;
-    }
-
-    if (isMissing2 == 1) {
-        if (verbose)
-            printf(" is set to missing in 1st field\n");
-        printInfo(h1);
-        printf("%s is set to missing in 2nd field but is not missing in 1st field\n", name);
-        err1 = GRIB_VALUE_MISMATCH;
-        save_error(c, name);
-        return GRIB_VALUE_MISMATCH;
-    }
 
     switch (type1) {
         case GRIB_TYPE_STRING:
@@ -746,9 +696,7 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_METAR)
-                return 0;
-            break;
+            return 0; // No such type for METAR
 
         case GRIB_TYPE_LABEL:
             break;
@@ -758,9 +706,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
                 printf("\n");
             printInfo(h1);
             save_error(c, name);
-            printf("Cannot compare [%s], unsupported type %d\n", name, type1);
+            fprintf(stderr, "Cannot compare [%s], unsupported type %d\n", name, type1);
             return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-            break;
     }
 
     return GRIB_SUCCESS;
@@ -835,10 +782,9 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
         }
 
