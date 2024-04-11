@@ -391,7 +391,8 @@ if( HAVE_BUILD_TOOLS )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh
+                      TEST_DEPENDS eccodes_download_gribs )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)
