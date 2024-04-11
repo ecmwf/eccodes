@@ -542,5 +542,24 @@ set -e
 [ $status -ne 0 ]
 grep -q "Invalid unit" $tempText
 
+
+# ECC-1800: Set stepUnits before paramIds, which cause changes in the PTDN
+${tools_dir}/grib_set -s stepUnits=s,paramId=210203 $sample_g2 $temp # is_chemical
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 40'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=131060 $sample_g2 $temp # probability forecasts
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 9'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=210073 $sample_g2 $temp # is_aerosol
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 48'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=210170 $sample_g2 $temp # is_chemical_srcsink
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 76'
+
+# Add a case with filter too
+echo "set stepUnits='s'; set paramId=210203; write;" | ${tools_dir}/grib_filter -o $temp - $sample_g2
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 40'
+
+
 # Clean up
 rm -f $temp $temp2 $tempFilt $tempText
