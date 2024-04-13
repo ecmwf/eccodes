@@ -46,7 +46,7 @@ INSTALLATION
    ```
    cmake  ../eccodes-x.y.z-Source -DCMAKE_INSTALL_PREFIX=/path/to/where/you/install/eccodes
    ```
-   
+
    It is strongly recommended that you install into a clean directory
 
 5. Compile, test and install:
