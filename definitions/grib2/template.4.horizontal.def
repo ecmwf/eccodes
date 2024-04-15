@@ -66,7 +66,9 @@ if (extraDim) {
 } else {
     # See GRIB-74 why we store the pressureUnits in a transient
     transient tempPressureUnits=pressureUnits;
-    if (!(typeOfLevel is "surface")) {
+    # Same as typeOfLevel != "surface" but much quicker to evaluate
+    # than via the concept
+    if ( ! (typeOfFirstFixedSurface == 1 && typeOfSecondFixedSurface == 255) ) {
         if (tempPressureUnits is "Pa") {
             meta marsLevel scale(level,one,hundred) : read_only;
             alias mars.levelist=marsLevel;
