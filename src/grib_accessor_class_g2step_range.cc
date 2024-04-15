@@ -211,6 +211,12 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
+    // Note:
+    // forceStepUnits is a special key that is used to identify the origin of the defined units
+    // i.e., whether they have been defined by the user.
+    // If this key is defined (!= 255), it indicates that the stepUnits have been defined by the user.
+    // Once this key is set, it has the highest priority: it automatically overrides certain units and the default value in stepUnits
+
     if (h->loader) { // h->loader is set only when rebuilding or reparsing
         force_step_units = 255; // See ECC-1768 and ECC-1800
     }
