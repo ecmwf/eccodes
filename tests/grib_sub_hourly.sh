@@ -13,6 +13,14 @@
 # See JIRA issues ECC-1620, ECC-1238
 # -----------------------------------
 
+label="grib_sub_hourly"
+temp=temp.1.$label
+temp2=temp.2.$label
+tempFilt=temp.$label.filt
+tempText=temp.$label.txt
+
+sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
 grib_expect_failure() 
 {
    a_file=$1
@@ -50,14 +58,6 @@ if (set -u; : ${ECCODES_GRIB_HOURLY_STEPS_WITH_UNITS?}) 2> /dev/null; then
    fi
 fi
 
-
-label="grib_sub_hourly"
-temp=temp.1.$label
-temp2=temp.2.$label
-tempFilt=temp.$label.filt
-tempText=temp.$label.txt
-
-sample_g2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
@@ -541,6 +541,31 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Invalid unit" $tempText
+
+
+# ECC-1800: Set stepUnits before paramIds, which cause changes in the PTDN
+${tools_dir}/grib_set -s stepUnits=m,productDefinitionTemplateNumber=40 $sample_g2 $temp
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '0 m 40'
+
+${tools_dir}/grib_set -s stepUnits=m,step=6,productDefinitionTemplateNumber=40 $sample_g2 $temp
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,forecastTime' '0 m 6'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=210203 $sample_g2 $temp # is_chemical
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 40'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=131060 $sample_g2 $temp # probability forecasts
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 9'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=210073 $sample_g2 $temp # is_aerosol
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 48'
+
+${tools_dir}/grib_set -s stepUnits=s,paramId=210170 $sample_g2 $temp # is_chemical_srcsink
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 76'
+
+# Add a case with filter too
+echo "set stepUnits='s'; set paramId=210203; write;" | ${tools_dir}/grib_filter -o $temp - $sample_g2
+grib_check_key_equals $temp '-p indicatorOfUnitOfTimeRange,stepUnits:s,productDefinitionTemplateNumber' '13 s 40'
+
 
 # Clean up
 rm -f $temp $temp2 $tempFilt $tempText
