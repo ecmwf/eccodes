@@ -93,5 +93,9 @@ ${tools_dir}/grib_ls -jm $temp_grib_a
 [ $( ${tools_dir}/grib_get -f -p mars.time $temp_grib_a ) = "not_found" ]
 [ $( ${tools_dir}/grib_get -f -p mars.step $temp_grib_a ) = "not_found" ]
 
+# ECC-1801
+${tools_dir}/grib_set -s productionStatusOfProcessedData=12 $sample_grib2 $temp_grib_a
+${tools_dir}/grib_compare -b productionStatusOfProcessedData $sample_grib2 $temp_grib_a
+
 # Clean up
 rm -f $temp_grib_a $temp_grib_b $destine_sample
