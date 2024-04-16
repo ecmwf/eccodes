@@ -41,7 +41,7 @@ template <typename T>
 std::vector<long> pl_convert(const T& nx) {
     ASSERT(!nx.empty());
     std::vector<long> pl(nx.size());
-    std::transform(nx.begin(), nx.end(), pl.begin(), [](typename T::value_type p) { return long(p); });
+    std::transform(nx.begin(), nx.end(), pl.begin(), [](typename T::value_type p) { return static_cast<long>(p); });
     return pl;
 }
 
