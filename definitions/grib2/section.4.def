@@ -39,6 +39,15 @@ concept datasetForLocal(unknown) {
   "uerra"   = {productionStatusOfProcessedData=11;}
   "destine" = {productionStatusOfProcessedData=12;} # Destination Earth
   "destine" = {productionStatusOfProcessedData=13;}
+  "era"     = {marsClass="e2";}
+  "era"     = {marsClass="e4";}
+  "era"     = {marsClass="ea";}
+  "era"     = {marsClass="ei";}
+  "era"     = {marsClass="em";}
+  "era"     = {marsClass="ep";}
+  "era"     = {marsClass="er";}
+  "era"     = {marsClass="et";}
+  "era"     = {marsClass="l5";}
   "unknown" = { dummy=1; }
 }
 
