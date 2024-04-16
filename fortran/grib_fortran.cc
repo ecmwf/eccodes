@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "grib_fortran_prototypes.h"
 
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
