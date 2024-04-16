@@ -1399,3 +1399,231 @@
  parameterCategory = 228 ;
  parameterNumber = 5 ;
 }
+#Sea water potential temperature
+'deg C' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 129 ;
+}
+#Sea water practical salinity
+'psu' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 130 ;
+}
+#Upward sea water velocity
+'m s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 133 ;
+}
+#Sea water sigma theta
+'kg m**-3' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 138 ;
+}
+#Surface downward eastward stress
+'N m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 153 ;
+}
+#Surface downward northward stress
+'N m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 154 ;
+}
+#Surface geopotential
+'m**2 s**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 51 ;
+}
+#Vertical integral of temperature
+'K kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 54 ;
+}
+#Vertical integral of cloud liquid water
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 56 ;
+}
+#Vertical integral of cloud frozen water
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 57 ;
+}
+#Vertical integral of ozone
+'kg m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 58 ;
+}
+#Vertical integral of energy conversion
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 64 ;
+}
+#Vertical integral of eastward mass flux
+'kg m**-1 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 65 ;
+}
+#Vertical integral of northward mass flux
+'kg m**-1 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 66 ;
+}
+#Vertical integral of eastward kinetic energy flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 67 ;
+}
+#Vertical integral of northward kinetic energy flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 68 ;
+}
+#Vertical integral of eastward geopotential flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 73 ;
+}
+#Vertical integral of northward geopotential flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 74 ;
+}
+#Vertical integral of eastward total energy flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 75 ;
+}
+#Vertical integral of northward total energy flux
+'W m**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 76 ;
+}
+#Vertical integral of eastward ozone flux
+'kg m**-1 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 77 ;
+}
+#Vertical integral of northward ozone flux
+'kg m**-1 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 78 ;
+}
+#Vertical integral of divergence of mass flux
+'kg m**-2 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 81 ;
+}
+#Vertical integral of divergence of kinetic energy flux
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 82 ;
+}
+#Vertical integral of divergence of thermal energy flux
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 83 ;
+}
+#Vertical integral of divergence of geopotential flux
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 85 ;
+}
+#Vertical integral of divergence of total energy flux
+'W m**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 86 ;
+}
+#Vertical integral of divergence of ozone flux
+'kg m**-2 s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 87 ;
+}
+#Variance of geopotential
+'m**4 s**-4' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 206 ;
+}
+#Covariance of geopotential/temperature
+'m**2 K s**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 207 ;
+}
+#Variance of temperature
+'K**2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 208 ;
+}
+#Covariance of geopotential/specific humidity
+'m**2 s**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 209 ;
+}
+#Covariance of temperature/specific humidity
+'K' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 210 ;
+}
+#Variance of specific humidity
+'~' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 211 ;
+}
+#Covariance of u component/geopotential
+'m**3 s**-3' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 212 ;
+}
+#Covariance of u component/temperature
+'m s**-1 K' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 213 ;
+}
+#Covariance of u component/specific humidity
+'m s**-1' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 214 ;
+}
+#Variance of u component
+'m**2 s**-2' = {
+ discipline = 192 ;
+ parameterCategory = 162 ;
+ parameterNumber = 215 ;
+}
