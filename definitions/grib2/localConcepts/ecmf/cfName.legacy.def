@@ -148,3 +148,39 @@
  parameterCategory = 128 ;
  parameterNumber = 206 ;
 }
+#Sea water potential temperature
+'sea_water_potential_temperature' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 129 ;
+}
+#Sea water practical salinity
+'sea_water_practical_salinity' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 130 ;
+}
+#Upward sea water velocity
+'upward_sea_water_velocity' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 133 ;
+}
+#Sea water sigma theta
+'sea_water_sigma_theta' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 138 ;
+}
+#Surface downward eastward stress
+'surface_downward_eastward_stress' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 153 ;
+}
+#Surface downward northward stress
+'surface_downward_northward_stress' = {
+ discipline = 192 ;
+ parameterCategory = 151 ;
+ parameterNumber = 154 ;
+}
