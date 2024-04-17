@@ -237,6 +237,7 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
+    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
     while (c) {
         grib_concept_condition* e = c->conditions;
         int cnt                   = 0;
