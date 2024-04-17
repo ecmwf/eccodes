@@ -1627,3 +1627,147 @@
  parameterCategory = 162 ;
  parameterNumber = 215 ;
 }
+#Mean vertical velocity
+'130232' = {
+ discipline = 192 ;
+ parameterCategory = 130 ;
+ parameterNumber = 232 ;
+}
+#Mean surface sensible heat flux
+'172146' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 146 ;
+}
+#Mean surface latent heat flux
+'172147' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 147 ;
+}
+#Mean temperature at 2 metres in the last 24 hours
+'55' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 55 ;
+}
+#Mean 2 metre temperature in the last 24 hours gradient
+'129055' = {
+ discipline = 192 ;
+ parameterCategory = 129 ;
+ parameterNumber = 55 ;
+}
+#Mean 2 metre dewpoint temperature in the last 24 hours
+'56' = {
+ discipline = 192 ;
+ parameterCategory = 128 ;
+ parameterNumber = 56 ;
+}
+#Mean 2 metre dewpoint temperature in the last 24 hours gradient
+'129056' = {
+ discipline = 192 ;
+ parameterCategory = 129 ;
+ parameterNumber = 56 ;
+}
+#Mean surface downward solar radiation flux
+'172169' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 169 ;
+}
+#Mean surface downward thermal radiation flux
+'172175' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 175 ;
+}
+#Mean surface net solar radiation flux
+'172176' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 176 ;
+}
+#Mean surface net thermal radiation flux
+'172177' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 177 ;
+}
+#Mean top net solar radiation flux
+'172178' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 178 ;
+}
+#Mean top net thermal radiation flux
+'172179' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 179 ;
+}
+#East-West surface stress rate of accumulation
+'172180' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 180 ;
+}
+#North-South surface stress rate of accumulation
+'172181' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 181 ;
+}
+#Standard deviation wave height
+'140240' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 240 ;
+}
+#Mean of 10 metre wind speed
+'140241' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 241 ;
+}
+#Mean wind direction
+'140242' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 242 ;
+}
+#Standard deviation of 10 metre wind speed
+'140243' = {
+ discipline = 192 ;
+ parameterCategory = 140 ;
+ parameterNumber = 243 ;
+}
+#Top net solar radiation, clear sky
+'172208' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 208 ;
+}
+#Top net thermal radiation, clear sky
+'172209' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 209 ;
+}
+#Surface net solar radiation, clear sky
+'172210' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 210 ;
+}
+#Surface net thermal radiation, clear sky
+'172211' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 211 ;
+}
+#Solar insolation rate of accumulation
+'172212' = {
+ discipline = 192 ;
+ parameterCategory = 172 ;
+ parameterNumber = 212 ;
+}

@@ -224,18 +224,6 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 24 ;
 	}
-#Mean temperature at 2 metres in the last 24 hours
-'Mean temperature at 2 metres in the last 24 hours' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours
-'Mean 2 metre dewpoint temperature in the last 24 hours' = {
-	 discipline = 192 ;
-	 parameterCategory = 128 ;
-	 parameterNumber = 56 ;
-	}
 #Observation count
 'Observation count' = {
 	 discipline = 192 ;
@@ -14443,18 +14431,6 @@
 	 parameterCategory = 129 ;
 	 parameterNumber = 54 ;
 	}
-#Mean 2 metre temperature in the last 24 hours gradient
-'Mean 2 metre temperature in the last 24 hours gradient' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 55 ;
-	}
-#Mean 2 metre dewpoint temperature in the last 24 hours gradient
-'Mean 2 metre dewpoint temperature in the last 24 hours gradient' = {
-	 discipline = 192 ;
-	 parameterCategory = 129 ;
-	 parameterNumber = 56 ;
-	}
 #Downward UV radiation at the surface gradient
 'Downward UV radiation at the surface gradient' = {
 	 discipline = 192 ;
@@ -15727,12 +15703,6 @@
 	 parameterCategory = 130 ;
 	 parameterNumber = 231 ;
 	}
-#Mean vertical velocity
-'Mean vertical velocity' = {
-	 discipline = 192 ;
-	 parameterCategory = 130 ;
-	 parameterNumber = 232 ;
-	}
 #2m temperature anomaly of at least +2K
 '2m temperature anomaly of at least +2K' = {
 	 discipline = 192 ;
@@ -16630,30 +16600,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 140 ;
 	 parameterNumber = 200 ;
-	}
-#Standard deviation wave height
-'Standard deviation wave height' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 240 ;
-	}
-#Mean of 10 metre wind speed
-'Mean of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 241 ;
-	}
-#Mean wind direction
-'Mean wind direction' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 242 ;
-	}
-#Standard deviation of 10 metre wind speed
-'Standard deviation of 10 metre wind speed' = {
-	 discipline = 192 ;
-	 parameterCategory = 140 ;
-	 parameterNumber = 243 ;
 	}
 #2D wave spectra (multiple)
 '2D wave spectra (multiple)' = {
@@ -18848,18 +18794,6 @@
 	 parameterCategory = 172 ;
 	 parameterNumber = 145 ;
 	}
-#Mean surface sensible heat flux
-'Mean surface sensible heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 146 ;
-	}
-#Mean surface latent heat flux
-'Mean surface latent heat flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 147 ;
-	}
 #Mean short-wave heating rate
 'Mean short-wave heating rate' = {
 	 discipline = 192 ;
@@ -18871,54 +18805,6 @@
 	 discipline = 192 ;
 	 parameterCategory = 172 ;
 	 parameterNumber = 154 ;
-	}
-#Mean surface downward solar radiation flux
-'Mean surface downward solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 169 ;
-	}
-#Mean surface downward thermal radiation flux
-'Mean surface downward thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 175 ;
-	}
-#Mean surface net solar radiation flux
-'Mean surface net solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 176 ;
-	}
-#Mean surface net thermal radiation flux
-'Mean surface net thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 177 ;
-	}
-#Mean top net solar radiation flux
-'Mean top net solar radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 178 ;
-	}
-#Mean top net thermal radiation flux
-'Mean top net thermal radiation flux' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 179 ;
-	}
-#East-West surface stress rate of accumulation
-'East-West surface stress rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 180 ;
-	}
-#North-South surface stress rate of accumulation
-'North-South surface stress rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 181 ;
 	}
 #Evaporation
 'Evaporation' = {
@@ -18961,36 +18847,6 @@
 	 parameterNumber = 201 ;
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
-	}
-#Top net solar radiation, clear sky
-'Top net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 208 ;
-	}
-#Top net thermal radiation, clear sky
-'Top net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 209 ;
-	}
-#Surface net solar radiation, clear sky
-'Surface net solar radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 210 ;
-	}
-#Surface net thermal radiation, clear sky
-'Surface net thermal radiation, clear sky' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 211 ;
-	}
-#Solar insolation rate of accumulation
-'Solar insolation rate of accumulation' = {
-	 discipline = 192 ;
-	 parameterCategory = 172 ;
-	 parameterNumber = 212 ;
 	}
 #Mean total precipitation rate
 'Mean total precipitation rate' = {
