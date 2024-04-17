@@ -92,6 +92,19 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return ret;
     }
 
+    if (STR_EQUAL(e->name, "size")) {
+        *lres = 0;
+        const char* p = grib_arguments_get_name(h, e->args, 0);
+        if (p) {
+            size_t size = 0;
+            int err = grib_get_size(h, p, &size);
+            if (err) return err;
+            *lres = (long)size;
+            return GRIB_SUCCESS;
+        }
+        return GRIB_INVALID_ARGUMENT;
+    }
+
     if (STR_EQUAL(e->name, "missing")) {
         const char* p = grib_arguments_get_name(h, e->args, 0);
         if (p) {

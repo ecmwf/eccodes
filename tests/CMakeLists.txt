@@ -104,6 +104,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_size
         filter_is_in_list
         filter_transient_darray
         grib_uerra
