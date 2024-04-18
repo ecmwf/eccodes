@@ -174,6 +174,7 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
+    grib_context_log(h->context, GRIB_LOG_ERROR, "grib_expression_class_functor::%s failed for '%s'", __func__, e->name);
     return GRIB_NOT_IMPLEMENTED;
 }
 
