@@ -171,7 +171,6 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
 }
 
 static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
-static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
