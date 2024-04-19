@@ -17,8 +17,8 @@ tempGrib1=temp.$label.1.grib
 tempGrib2=temp.$label.2.grib
 tempLog=temp.$label.log
 
-sample_grib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
-sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+sampleGrib1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+sampleGrib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 
 test_conversion()
 {
@@ -26,20 +26,13 @@ test_conversion()
     param2=$2 # new paramId in GRIB2
     short=$3  # new shortName
 
-    ${tools_dir}/grib_set -s paramId=$param1 $sample_grib1 $tempGrib1
-
-    set +e
-    ${tools_dir}/grib_set -s edition=2 $tempGrib1 $tempGrib2  2>$REDIRECT
-    status=$?
-    set -e
-    if [ $status -ne 0 ]; then
-        ${tools_dir}/grib_set -s stepType=avg,edition=2 $tempGrib1 $tempGrib2
-    fi
+    ${tools_dir}/grib_set -s paramId=$param1 $sampleGrib1 $tempGrib1
+    ${tools_dir}/grib_set -s edition=2       $tempGrib1   $tempGrib2
     grib_check_key_equals $tempGrib2 paramId,shortName "$param2 $short"
 
     # Check the old paramId has been removed from GRIB2
     set +e
-    ${tools_dir}/grib_set -s paramId=$param1 $sample_grib2 $tempGrib2 >$tempLog 2>&1
+    ${tools_dir}/grib_set -s paramId=$param1 $sampleGrib2 $tempGrib2 >$tempLog 2>&1
     status=$?
     set -e
     [ $status -ne 0 ]
