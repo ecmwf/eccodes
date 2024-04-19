@@ -456,15 +456,18 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     //    return GRIB_NOT_IMPLEMENTED;
 
     // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
-    if (STR_EQUAL(a->name,"paramId")) {
+    if (STR_EQUAL(a->name, "paramId")) {
         grib_handle* h = grib_handle_of_accessor(a);
         long edition = 0;
         if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
             long newParamId = 0;
-            if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS) {
-                if (newParamId > 0) {
-                    snprintf(buf, sizeof(buf), "%ld", newParamId);
+            if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
+                if (a->context->debug) {
+                    const char* cclass_name = a->cclass->name;
+                    fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
+                                    cclass_name, __func__, a->name, *val, newParamId);
                 }
+                snprintf(buf, sizeof(buf), "%ld", newParamId);
             }
         }
     }
