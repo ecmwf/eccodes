@@ -325,3 +325,10 @@ if (stepTypeForConversion is "accum" || stepTypeForConversion is "max" || stepTy
 meta md5Section1 md5(offsetSection1,section1Length);
 # md5(start,length,blacklisted1,blacklisted2,...);
 meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,decimalScaleFactor);
+
+# ECC-1806
+concept_nofail paramIdForConversion(zero) {
+    262000 = {gribTablesVersionNo=174;indicatorOfParameter=98; centre=98;} # 174098 -> 262000
+    262104 = {gribTablesVersionNo=151;indicatorOfParameter=163;centre=98;} # 151163 -> 262104
+    262124 = {gribTablesVersionNo=151;indicatorOfParameter=145;centre=98;} # 151145 -> 262124
+} : long_type;
