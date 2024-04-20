@@ -53,3 +53,6 @@ concept isTemplateDeprecated(false) {
 concept isTemplateExperimental(false) {
     1 = { template_is_experimental = 1; }
 }
+
+# ECC-1806
+transient paramIdForConversion = 0;
