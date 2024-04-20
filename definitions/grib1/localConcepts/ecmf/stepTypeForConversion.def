@@ -1,8 +1,6 @@
 # Concept stepTypeForConversion for ECMWF
-# set uses the FIRST one
-# get returns the LAST match
 
-# ECC-457: ECMWF Total Precipitation
+# ECC-457: total precipitation
 "accum"={timeRangeIndicator=0;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
 "accum"={timeRangeIndicator=1;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
 "accum"={timeRangeIndicator=10;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
