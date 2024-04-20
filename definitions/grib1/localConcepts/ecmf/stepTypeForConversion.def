@@ -3,9 +3,9 @@
 # get returns the LAST match
 
 # ECC-457: ECMWF Total Precipitation
-"accum" = {timeRangeIndicator=0;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
-"accum" = {timeRangeIndicator=1;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
-"accum" = {timeRangeIndicator=10;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
+"accum"={timeRangeIndicator=0;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
+"accum"={timeRangeIndicator=1;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
+"accum"={timeRangeIndicator=10;indicatorOfParameter=228;gribTablesVersionNo=128;centre=98;}
 
 # sro
 "accum"={gribTablesVersionNo=128;indicatorOfParameter=8;centre=98;}
@@ -201,14 +201,22 @@
 # mvv
 "avg"={gribTablesVersionNo=130;indicatorOfParameter=232;centre=98;}
 # msshfl
-"avg"={gribTablesVersionNo=172; indicatorOfParameter=146;centre=98;}
+"avg"={gribTablesVersionNo=172;indicatorOfParameter=146;centre=98;}
 # mslhfl
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=147;centre=98;}
+# mean2t24
 "avg"={gribTablesVersionNo=128;indicatorOfParameter=55;centre=98;}
+# mn2d24
 "avg"={gribTablesVersionNo=128;indicatorOfParameter=56;centre=98;}
+# msdsrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=169;centre=98;}
+# msdtrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=175;centre=98;}
+# msnsrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=176;centre=98;}
+# msntrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=177;centre=98;}
+# mtnsrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=178;centre=98;}
+# mtntrf
 "avg"={gribTablesVersionNo=172;indicatorOfParameter=179;centre=98;}
