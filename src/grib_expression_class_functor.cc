@@ -94,10 +94,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 
     if (STR_EQUAL(e->name, "size")) {
         *lres = 0;
-        const char* p = grib_arguments_get_name(h, e->args, 0);
-        if (p) {
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (keyName) {
             size_t size = 0;
-            int err = grib_get_size(h, p, &size);
+            int err = grib_get_size(h, keyName, &size);
             if (err) return err;
             *lres = (long)size;
             return GRIB_SUCCESS;
@@ -106,17 +106,17 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     }
 
     if (STR_EQUAL(e->name, "missing")) {
-        const char* p = grib_arguments_get_name(h, e->args, 0);
-        if (p) {
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (keyName) {
             long val = 0;
             int err  = 0;
             if (h->product_kind == PRODUCT_BUFR) {
-                int ismiss = grib_is_missing(h, p, &err);
+                int ismiss = grib_is_missing(h, keyName, &err);
                 if (err) return err;
                 *lres = ismiss;
                 return GRIB_SUCCESS;
             }
-            err = grib_get_long_internal(h, p, &val);
+            err = grib_get_long_internal(h, keyName, &val);
             if (err) return err;
             // Note: This does not cope with keys like typeOfSecondFixedSurface
             // which are codetable entries with values like 255: this value is
@@ -133,11 +133,10 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     }
 
     if (STR_EQUAL(e->name, "defined")) {
-        const char* p = grib_arguments_get_name(h, e->args, 0);
-
-        if (p) {
-            const grib_accessor* a = grib_find_accessor(h, p);
-            *lres            = a != NULL ? 1 : 0;
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (keyName) {
+            const grib_accessor* a = grib_find_accessor(h, keyName);
+            *lres = a != NULL ? 1 : 0;
             return GRIB_SUCCESS;
         }
         *lres = 0;
@@ -176,15 +175,15 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         int type = 0;
         int err = grib_get_native_type(h, keyName, &type);
         if (err) return err;
+        int n = grib_arguments_get_count(e->args);
         if (type == GRIB_TYPE_STRING) {
-            int n = 1; // skip the 1st argument which is the key
             char keyValue[254] = {0,};
             size_t len = sizeof(keyValue);
             err = grib_get_string(h, keyName, keyValue, &len);
             if (err) return err;
-            const char* sValue = 0;
-            while (( sValue = grib_arguments_get_string(h, e->args, n++)) != NULL ) {
-                if (STR_EQUAL(keyValue, sValue)) {
+            for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
+                const char* sValue = grib_arguments_get_string(h, e->args, i);
+                if (sValue && STR_EQUAL(keyValue, sValue)) {
                     *lres = 1;
                     return GRIB_SUCCESS;
                 }
@@ -194,7 +193,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
             long keyValue = 0;
             err = grib_get_long(h, keyName, &keyValue);
             if (err) return err;
-            int n = grib_arguments_get_count(e->args);
             for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
                 long lValue = grib_arguments_get_long(h, e->args, i);
                 if (keyValue == lValue) {
