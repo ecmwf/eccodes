@@ -105,6 +105,7 @@ if( HAVE_BUILD_TOOLS )
         grib_packing_order
         filter_substr
         filter_size
+        filter_is_one_of
         filter_is_in_list
         filter_transient_darray
         grib_uerra

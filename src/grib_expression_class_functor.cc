@@ -169,6 +169,46 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
         return GRIB_SUCCESS;
     }
 
+    if (STR_EQUAL(e->name, "is_one_of")) {
+        *lres = 0;
+        const char* keyName = grib_arguments_get_name(h, e->args, 0);
+        if (!keyName) return GRIB_INVALID_ARGUMENT;
+        int type = 0;
+        int err = grib_get_native_type(h, keyName, &type);
+        if (err) return err;
+        if (type == GRIB_TYPE_STRING) {
+            int n = 1; // skip the 1st argument which is the key
+            char keyValue[254] = {0,};
+            size_t len = sizeof(keyValue);
+            err = grib_get_string(h, keyName, keyValue, &len);
+            if (err) return err;
+            const char* sValue = 0;
+            while (( sValue = grib_arguments_get_string(h, e->args, n++)) != NULL ) {
+                if (STR_EQUAL(keyValue, sValue)) {
+                    *lres = 1;
+                    return GRIB_SUCCESS;
+                }
+            }
+        }
+        else if (type == GRIB_TYPE_LONG) {
+            long keyValue = 0;
+            err = grib_get_long(h, keyName, &keyValue);
+            if (err) return err;
+            int n = grib_arguments_get_count(e->args);
+            for (int i = 1; i < n; ++i) { // skip 1st argument which is the key
+                long lValue = grib_arguments_get_long(h, e->args, i);
+                if (keyValue == lValue) {
+                    *lres = 1;
+                    return GRIB_SUCCESS;
+                }
+            }
+        }
+        else if (type == GRIB_TYPE_DOUBLE) {
+            return GRIB_NOT_IMPLEMENTED;
+        }
+        return GRIB_SUCCESS;
+    }
+
     if (STR_EQUAL(e->name, "gribex_mode_on")) {
         *lres = h->context->gribex_mode_on ? 1 : 0;
         return GRIB_SUCCESS;
