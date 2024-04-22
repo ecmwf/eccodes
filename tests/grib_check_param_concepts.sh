@@ -36,6 +36,12 @@ for a_dataset in $datasets; do
     $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
 done
 
+# Check WMO name.def etc
+$EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+
+
 # Check the group: name.def paramId.def shortName.def units.def cfVarName.def
 # ----------------------------------------------------------------------------
 # Check whether the Test::More Perl module is available
@@ -56,11 +62,8 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ecmf
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
 
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/ammc
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/eidb
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ekmi
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/enmi
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/eswi
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lfpw
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lowm
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd

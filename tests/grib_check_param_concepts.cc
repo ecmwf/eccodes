@@ -59,6 +59,7 @@ static int scale_factor_missing(const char* value)
 static int grib_check_param_concepts(const char* key, const char* filename)
 {
     int isLocal = 0;
+    int count = 0;
     grib_concept_value* concept_value = grib_parse_concept_file(NULL, filename);
     if (!concept_value)
         return GRIB_IO_PROBLEM;
@@ -67,6 +68,11 @@ static int grib_check_param_concepts(const char* key, const char* filename)
         isLocal = 1;
     }
     while (concept_value) {
+        count++;
+        if (strlen(concept_value->name) == 0) {
+            fprintf(stderr, "%s %s: Empty concept value (count=%d)\n", key, concept_value->name, count);
+            Assert(0);
+        }
         grib_concept_condition* concept_condition = concept_value->conditions;
         /* Convention:
          *  -1 key not present
