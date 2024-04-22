@@ -10,6 +10,10 @@
 
 #include "grib_api_internal.h"
 
+#if defined DEBUG && ! defined GRIB_PTHREADS
+  #define MY_DEBUG
+#endif
+
 static int copy_values(grib_handle* h, grib_accessor* ga)
 {
     int i, j, k;
@@ -24,16 +28,13 @@ static int copy_values(grib_handle* h, grib_accessor* ga)
                     switch (h->values[j][i].type) {
                         case GRIB_TYPE_LONG:
                             return grib_pack_long(ga, &h->values[j][i].long_value, &len);
-                            break;
 
                         case GRIB_TYPE_DOUBLE:
                             return grib_pack_double(ga, &h->values[j][i].double_value, &len);
-                            break;
 
                         case GRIB_TYPE_STRING:
                             len = strlen(h->values[j][i].string_value);
                             return grib_pack_string(ga, h->values[j][i].string_value, &len);
-                            break;
                     }
                 }
             }
@@ -65,7 +66,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
     unsigned char* uval = NULL;
     long* lval          = NULL;
     double* dval        = NULL;
-#ifdef DEBUG
+#ifdef MY_DEBUG
     static int first           = 1;
     static const char* missing = 0;
 #endif
@@ -126,7 +127,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 
     if (ret != GRIB_SUCCESS) {
         name = ga->name;
-#ifdef DEBUG
+#ifdef MY_DEBUG
         if (first) {
             missing = codes_getenv("ECCODES_PRINT_MISSING");
             first   = 0;
@@ -134,7 +135,7 @@ int grib_init_accessor_from_handle(grib_loader* loader, grib_accessor* ga, grib_
 #endif
         grib_context_log(h->context, GRIB_LOG_DEBUG, "Copying [%s] failed: %s",
                          name, grib_get_error_message(ret));
-#ifdef DEBUG
+#ifdef MY_DEBUG
         if (missing) {
             fprintf(stdout, "REPARSE: no value for %s", name);
             if (default_value)
