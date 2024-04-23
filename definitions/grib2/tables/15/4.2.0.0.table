@@ -21,6 +21,6 @@
 19 19 Turbulent transfer coefficient for heat (Numeric)
 20 20 Turbulent diffusion coefficient for heat (m2/s)
 21 21 Apparent temperature (K)
-# 22-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 22-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing
