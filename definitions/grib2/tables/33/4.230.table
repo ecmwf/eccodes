@@ -424,7 +424,74 @@
 30296 30296 Lead Pb
 30297 30297 Tellurium 131 Te-131
 30298 30298 Neodymium 137 Nd-137
-# 30299-39999 Reserved
+30299 30299 Pseudo radionuclide
+30300 30300 Silver 112 Ag-112
+30301 30301 Silver 115 Ag-115
+30302 30302 Barium 139 Ba-139
+30303 30303 Barium 141 Ba-141
+30304 30304 Barium 142 Ba-142
+30305 30305 Bromine 84 Br-84
+30306 30306 Cadminum 115 Cd-115
+30307 30307 Cadminum 117 Cd-117
+30308 30308 Cadminum 117 metastable Cd-117m
+30309 30309 Cerium 145 Ce-145
+30310 30310 Cerium 146 Ce-146
+30311 30311 Cobalt 58 metastable Co-58m
+30312 30312 Ceasium 138 Cs-138
+30313 30313 Ceasium 139 Cs-139
+30314 30314 Iodine 130 aerosol I-130a
+30315 30315 Iodine 130 elementary gaseous I-130e
+30316 30316 Iodine 130 organic bounded I-130o
+30317 30317 Iodine 132 metastable I-132m
+30318 30318 Iodine 134 metastable I-134m
+30319 30319 Indium 115 metastable In-115m
+30320 30320 Indium 117 metastable In-117m
+30321 30321 Krypton 83 metastable Kr-83m
+30322 30322 Lanthanum 142 La-142
+30323 30323 Lanthanum 143 La-143
+30324 30324 Manganese 56 Mn-56
+30325 30325 Molybdenum 101 Mo-101
+30326 30326 Molybdenum 102 Mo-102
+30327 30327 Neodymium 149 Nd-149
+30328 30328 Neodymium 151 Nd-151
+30329 30329 Palladium 109 Pd-109
+30330 30330 Palladium 112 Pd-112
+30331 30331 Praseodymium 145 Pr-145
+30332 30332 Praseodymium 146 Pr-146
+30333 30333 Praseodymium 147 Pr-147
+30334 30334 Rubidium 89 Rb-89
+30335 30335 Rubidium 90 Rb-90
+30336 30336 Rubidium 90 metastable Rb-90m
+30337 30337 Rhodium 105 metastable Rh-105m
+30338 30338 Rhodium 107 Rh-107
+30339 30339 Antimony 128 Sb-128
+30340 30340 Antimony 128 metastable Sb-128m
+30341 30341 Antimony 129 metastable Sb-129m
+30342 30342 Antimony 130 Sb-130
+30343 30343 Antimony 130 metastable Sb-130m
+30344 30344 Antimony 131 Sb-131
+30345 30345 Antimony 132 Sb-132
+30346 30346 Antimony 132 metastable Sb-132m
+30347 30347 Antimony 133 Sb-133
+30348 30348 Selenium 83 Se-83
+30349 30349 Tin 127 Sn-127
+30350 30350 Tin 127 metastable Sn-127m
+30351 30351 Tin 128 Sn-128
+30352 30352 Tin 129 metastable Sn-129m
+30353 30353 Tin 130 Sn-130
+30354 30354 Strontium 93 Sr-93
+30355 30355 Technetium 101 Tc-101
+30356 30356 Technetium 102 Tc-102
+30357 30357 Technetium 104 Tc-104
+30358 30358 Technetium 105 Tc-105
+30359 30359 Tellurium 133 Te-133
+30360 30360 Tellurium 133 metastable Te-133m
+30361 30361 Tellurium 134 Te-134
+30362 30362 Yttrium 93 metastable Y-93m
+30363 30363 Yttrium 94 Y-94
+30364 30364 Yttrium 95 Y-95
+30365 30365 Zirconium 96 Zr-96
+# 30366-39999 Reserved
 40000 40000 Singlet sigma oxygen (dioxygen (sigma singlet)) O2
 40001 40001 Singlet delta oxygen (dioxygen (delta singlet)) O2
 40002 40002 Singlet excited oxygen atom O(1D)
