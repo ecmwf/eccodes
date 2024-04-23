@@ -208,5 +208,5 @@ grep -q "End of resource reached" $tempOut
 
 
 # Clean up
-rm -f $tempOut $tempRef
+rm -f $temp $tempOut $tempRef
 rm -f $tempIndex $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2
