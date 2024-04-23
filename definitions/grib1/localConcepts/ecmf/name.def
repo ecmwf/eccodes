@@ -13244,8 +13244,8 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Average salinity in the upper 300m
-'Average salinity in the upper 300m' = {
+#Average sea water practical salinity in the upper 300m
+'Average sea water practical salinity in the upper 300m' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 175 ;
 	}

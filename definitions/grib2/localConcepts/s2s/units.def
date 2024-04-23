@@ -199,7 +199,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 'psu' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;
