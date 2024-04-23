@@ -10565,20 +10565,6 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 44 ;
 	}
-#Eastward sea water velocity
-'m s**-1' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 2 ;
-	 typeOfFirstFixedSurface = 160 ;
-	}
-#Northward sea water velocity
-'m s**-1' = {
-	 discipline = 10 ;
-	 parameterCategory = 1 ;
-	 parameterNumber = 3 ;
-	 typeOfFirstFixedSurface = 160 ;
-	}
 #Skin reservoir content
 'kg m**-2' = {
 	 discipline = 2 ;

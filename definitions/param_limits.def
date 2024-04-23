@@ -18,6 +18,7 @@ concept param_value_min(default_min_val) {
     -60000 = { paramId=228001; }
     0 = { paramId=151163; }
     -3.5 = { paramId=151131; }
+    -3.5 = { paramId=262140; }
     -10 = { paramId=260259; }
     -13000 = { paramId=129; }
     -1300 = { paramId=156; }
@@ -103,6 +104,7 @@ concept param_value_max(default_max_val) {
     1000 = { paramId=228001; }
     1500 = { paramId=151163; }
     3.5 = { paramId=151131; }
+    3.5 = { paramId=262140; }
     5 = { paramId=260259; }
     3500000 = { paramId=129; }
     35000 = { paramId=156; }

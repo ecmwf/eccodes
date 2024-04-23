@@ -173,6 +173,22 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Eastward surface sea water velocity
+'151131' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Northward surface sea water velocity
+'151132' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea surface height
 '151145' = {
 	 discipline = 10 ;
