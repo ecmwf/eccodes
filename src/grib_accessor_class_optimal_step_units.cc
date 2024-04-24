@@ -178,6 +178,12 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
 
+    long start_step;
+    long start_step_unit;
+    long end_step;
+    long end_step_unit;
+    int ret;
+
     auto supported_units = eccodes::Unit::list_supported_units();
     try {
         eccodes::Unit unit{*val}; // throws if not supported
@@ -198,11 +204,35 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_INVALID_ARGUMENT;
     }
 
-    int ret;
+
     self->overwriteStepUnits = *val;
-    if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS) {
+    if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS)
         return ret;
-    }
+
+    if ((ret = grib_get_long_internal(h, "startStep", &start_step)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "endStep", &end_step)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
+        return ret;
+
+    //printf("start_step: %ld, start_step_unit: %ld, end_step: %ld, end_step_unit: %ld\n", start_step, start_step_unit, end_step, end_step_unit);
+
+    eccodes::Step start{start_step, start_step_unit};
+    start = start.set_unit(*val);
+    eccodes::Step end{end_step, end_step_unit};
+    end = end.set_unit(*val);
+
+    if ((ret = grib_set_long_internal(h, "startStepUnit", start.unit().value<long>())) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_set_long_internal(h, "startStep", start.value<long>())) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_set_long_internal(h, "endStepUnit", end.unit().value<long>())) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_set_long_internal(h, "endStep", end.value<long>())) != GRIB_SUCCESS)
+        return ret;
 
     return GRIB_SUCCESS;
 }
