@@ -63,6 +63,7 @@ instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
 
+# ECC-1813: Test that we can set the stepUnits without setting the step
 fn="$instantaneous_field"
 low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
 ${tools_dir}/grib_set -s stepUnits=m,step=60 $fn $temp
