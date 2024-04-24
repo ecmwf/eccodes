@@ -32,7 +32,7 @@
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 25 ;
-	 typeOfStatisticalProcessing = 105 ;
+	 typeOfFirstFixedSurface = 105 ;
 	}
 #Temperature difference
 'Temperature difference' = {
