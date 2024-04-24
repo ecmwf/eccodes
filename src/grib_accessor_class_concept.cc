@@ -381,6 +381,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
+            char dataset_s[80];
+            size_t dataset_len = sizeof(dataset_s);
+            if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
+                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
+            }
             if (strcmp(act->name, "paramId") == 0) {
                 if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
                     // The paramId value is an integer. Show them the param DB
