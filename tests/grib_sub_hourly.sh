@@ -63,7 +63,23 @@ instantaneous_field=$data_dir/reduced_gaussian_surface.grib2
 accumulated_field=$data_dir/reduced_gaussian_sub_area.grib2
 
 
+fn="$instantaneous_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s"
+${tools_dir}/grib_set -s stepUnits=m,step=60 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m"
+${tools_dir}/grib_set -s stepUnits=s $temp $temp2
+grib_check_key_equals $temp2 "-p $low_level_keys" "3600 s"
+${tools_dir}/grib_set -s stepUnits=h $temp $temp2
+grib_check_key_equals $temp2 "-p $low_level_keys" "1 h"
 
+fn="$accumulated_field"
+low_level_keys="forecastTime,indicatorOfUnitOfTimeRange:s,lengthOfTimeRange,indicatorOfUnitForTimeRange:s"
+${tools_dir}/grib_set -s stepUnits=m,stepRange=60-180 $fn $temp
+grib_check_key_equals $temp "-p $low_level_keys" "60 m 120 m"
+${tools_dir}/grib_set -s stepUnits=s $temp $temp2
+grib_check_key_equals $temp2 "-p $low_level_keys" "3600 s 7200 s"
+${tools_dir}/grib_set -s stepUnits=h $temp $temp2
+grib_check_key_equals $temp2 "-p $low_level_keys" "1 h 2 h"
 
 # Check the lowercase alias 'stepunits' for a variety of step types (instant, accum etc)
 ${tools_dir}/grib_get -p stepunits $data_dir/tigge_cf_ecmwf.grib2
@@ -91,13 +107,6 @@ grib_check_key_equals $temp "-p $keys_step" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_step_range" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_start_step" "59m 59m 59 59 m"
 grib_check_key_equals $temp "-p $keys_end_step" "59m 59m 59 59 m"
-
-${tools_dir}/grib_set -s stepUnits=m,step=60 $fn $temp
-grib_check_key_equals $temp "-p $low_level_keys" "60 m"
-${tools_dir}/grib_set -s stepUnits=s $temp $temp2
-grib_check_key_equals $temp2 "-p $low_level_keys" "3600 s"
-${tools_dir}/grib_set -s stepUnits=h $temp $temp2
-grib_check_key_equals $temp2 "-p $low_level_keys" "1 h"
 
 #### stepUnits overrides the units in the low level keys
 # if stepUnits=UNIT is set, then set the low level keys to UNIT
