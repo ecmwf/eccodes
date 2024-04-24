@@ -204,7 +204,6 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         return GRIB_INVALID_ARGUMENT;
     }
 
-
     self->overwriteStepUnits = *val;
     if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS)
         return ret;
@@ -218,21 +217,26 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
         return ret;
 
-    //printf("start_step: %ld, start_step_unit: %ld, end_step: %ld, end_step_unit: %ld\n", start_step, start_step_unit, end_step, end_step_unit);
+    try {
+        eccodes::Step start{start_step, start_step_unit};
+        start.set_unit(*val);
+        eccodes::Step end{end_step, end_step_unit};
+        end.set_unit(*val);
 
-    eccodes::Step start{start_step, start_step_unit};
-    start = start.set_unit(*val);
-    eccodes::Step end{end_step, end_step_unit};
-    end = end.set_unit(*val);
-
-    if ((ret = grib_set_long_internal(h, "startStepUnit", start.unit().value<long>())) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_set_long_internal(h, "startStep", start.value<long>())) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_set_long_internal(h, "endStepUnit", end.unit().value<long>())) != GRIB_SUCCESS)
-        return ret;
-    if ((ret = grib_set_long_internal(h, "endStep", end.value<long>())) != GRIB_SUCCESS)
-        return ret;
+        if ((ret = grib_set_long_internal(h, "startStepUnit", start.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "startStep", start.value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "endStepUnit", end.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "endStep", end.value<long>())) != GRIB_SUCCESS)
+            return ret;
+    }
+    catch (std::exception& e) {
+        std::string msg = std::string{"Failed to convert steps to: "} + std::to_string(*val) + " (" + e.what() + ")";
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s", msg.c_str());
+        return GRIB_INTERNAL_ERROR;
+    }
 
     return GRIB_SUCCESS;
 }
