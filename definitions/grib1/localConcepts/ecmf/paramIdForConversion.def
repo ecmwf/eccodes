@@ -31,3 +31,7 @@
 262000 = {gribTablesVersionNo=174; indicatorOfParameter=98;  centre=98;}
 # 151175 -> 262118
 262118 = {gribTablesVersionNo=151; indicatorOfParameter=175; centre=98;}
+# 151132 -> 262139
+262139 = {gribTablesVersionNo=151; indicatorOfParameter=132; centre=98;}
+# 151131 -> 262140
+262140 = {gribTablesVersionNo=151; indicatorOfParameter=131; centre=98;}
