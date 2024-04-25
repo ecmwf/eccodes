@@ -37,6 +37,6 @@
 35 35 Surface short-wave effective total cloudiness (Numeric)
 36 36 Fraction of stratiform precipitation cover (Proportion)
 37 37 Fraction of convective precipitation cover (Proportion)
-# 38-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 38-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

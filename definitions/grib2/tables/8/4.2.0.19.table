@@ -26,6 +26,6 @@
 24 24 Convective turbulent kinetic energy (J/kg)
 25 25 Weather Interpretation ww (WMO) (-)
 26 26 Convective outlook (Code table 4.224)
-# 27-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 27-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

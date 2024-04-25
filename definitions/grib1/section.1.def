@@ -325,3 +325,6 @@ if (stepTypeForConversion is "accum" || stepTypeForConversion is "max" || stepTy
 meta md5Section1 md5(offsetSection1,section1Length);
 # md5(start,length,blacklisted1,blacklisted2,...);
 meta md5Product md5(offsetSection1,section1Length,gridDefinition,section1Flags,decimalScaleFactor);
+
+# ECC-1806
+concept_nofail paramIdForConversion(zero, "paramIdForConversion.def", conceptsDir2, conceptsDir1) : long_type,read_only;

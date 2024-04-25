@@ -26,25 +26,21 @@ fi
 # First check the GRIB2 paramId.def and shortName.def
 # ----------------------------------------------------
 $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/cerise/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6/paramId.def
-$EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine/paramId.def
-
+datasets="ecmf uerra cerise hydro s2s tigge era6 destine era"
+for a_dataset in $datasets; do
+    $EXEC ${test_dir}/grib_check_param_concepts paramId $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/paramId.def
+done
 
 $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/uerra/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/hydro/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/cerise/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6/shortName.def
-$EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine/shortName.def
+for a_dataset in $datasets; do
+    $EXEC ${test_dir}/grib_check_param_concepts shortName $ECCODES_DEFINITION_PATH/grib2/localConcepts/$a_dataset/shortName.def
+done
+
+# Check WMO name.def etc
+$EXEC ${test_dir}/grib_check_param_concepts name  $ECCODES_DEFINITION_PATH/grib2/name.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/units.def
+$EXEC ${test_dir}/grib_check_param_concepts units $ECCODES_DEFINITION_PATH/grib2/cfVarName.def
+
 
 # Check the group: name.def paramId.def shortName.def units.def cfVarName.def
 # ----------------------------------------------------------------------------
@@ -66,11 +62,8 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ecmf
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/ecmf
 
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/ammc
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/eidb
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/ekmi
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/enmi
- $ECCODES_DEFINITION_PATH/grib1/localConcepts/eswi
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lfpw
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/lowm
  $ECCODES_DEFINITION_PATH/grib1/localConcepts/rjtd
@@ -81,6 +74,7 @@ defs_dirs="
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/tigge
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/s2s
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/era6
+ $ECCODES_DEFINITION_PATH/grib2/localConcepts/era
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/destine
 
  $ECCODES_DEFINITION_PATH/grib2/localConcepts/egrr

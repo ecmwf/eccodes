@@ -137,7 +137,6 @@ typedef struct grib_runtime_options
     grib_tools_file* infile;
     grib_tools_file* outfile;
     grib_action* action;
-    grib_rule* rules;
     int dump_flags;
     char* dump_mode;
     int repack;

@@ -13,10 +13,10 @@ program grib_count_messages_multi
    use eccodes
    implicit none
 
-   integer                            ::  ifile
-   character(len=100)                 ::  grib_file
-   integer                            ::  n, stat
-   character(len=1)                   ::  multi_flag
+   integer                    ::  ifile
+   character(len=100)         ::  multi_flag
+   character(len=100)         ::  grib_file
+   integer                    ::  n, stat
 
    call getarg(1, multi_flag)
    call getarg(2, grib_file)

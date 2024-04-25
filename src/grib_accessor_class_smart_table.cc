@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*****************************************
- *  Enrico Fucile
- ****************************************/
-
 #include "grib_api_internal.h"
 #include <cctype>
 
@@ -253,10 +249,10 @@ static grib_smart_table* load_table(grib_accessor* a)
         next = next->next;
     }
 
-    /* Note: self->widthOfCode is chosen so that 2^width is bigger than the maximum descriptor code,
-     * which for BUFR4 is the Table C operator 243255
-     */
-    size = (1ULL << self->widthOfCode); /* = 2^self->widthOfCode (as a 64 bit number) */
+    // Note: self->widthOfCode is chosen so that 2^width is bigger than the maximum descriptor code,
+    //  which for BUFR4 is the Table C operator 243255
+    //
+    size = (1ULL << self->widthOfCode); // = 2^self->widthOfCode (as a 64 bit number)
 
     t = (grib_smart_table*)grib_context_malloc_clear_persistent(c, sizeof(grib_smart_table));
     t->entries = (grib_smart_table_entry*)grib_context_malloc_clear_persistent(c, size * sizeof(grib_smart_table_entry));
@@ -344,7 +340,7 @@ static int grib_load_smart_table(grib_context* c, const char* filename,
         *p = 0;
 
         numberOfColumns = 0;
-        /* The highest possible descriptor code must fit into t->numberOfEntries */
+        // The highest possible descriptor code must fit into t->numberOfEntries
         DEBUG_ASSERT(code < t->numberOfEntries);
         while (*s) {
             char* tcol = t->entries[code].column[numberOfColumns];
@@ -455,7 +451,7 @@ static int get_table_codes(grib_accessor* a)
     if (!self->dirty)
         return 0;
 
-    table_size = (1 << self->widthOfCode); /* 2 ^ self->widthOfCode */
+    table_size = (1 << self->widthOfCode); // 2 ^ self->widthOfCode
 
     if (!self->table)
         self->table = load_table(a);
@@ -523,8 +519,8 @@ static void destroy(grib_context* context, grib_accessor* a)
 static int get_native_type(grib_accessor* a)
 {
     int type = GRIB_TYPE_LONG;
-    /*printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
-         a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);*/
+    //printf("---------- %s flags=%ld GRIB_ACCESSOR_FLAG_STRING_TYPE=%d\n",
+    //        a->name,a->flags,GRIB_ACCESSOR_FLAG_STRING_TYPE);
     if (a->flags & GRIB_ACCESSOR_FLAG_STRING_TYPE)
         type = GRIB_TYPE_STRING;
     return type;
@@ -546,7 +542,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     if (*len < self->tableCodesSize) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "Wrong size (%zu) for %s, it contains %zu values", *len, a->name, self->tableCodesSize);
-        *len = 0;
+        *len = self->tableCodesSize;
         return GRIB_ARRAY_TOO_SMALL;
     }
 

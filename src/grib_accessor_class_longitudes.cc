@@ -196,6 +196,13 @@ static int value_count(grib_accessor* a, long* len)
     }
     *len = size;
 
+    // See ECC-1792
+    // Give priority to the Grid Section (rather than the Data Section)
+    long numberOfDataPoints = 0;
+    if (grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints) == GRIB_SUCCESS) {
+        *len = numberOfDataPoints;
+    }
+
     if (self->distinct) {
         ret = get_distinct(a, &val, len);
         if (ret != GRIB_SUCCESS)

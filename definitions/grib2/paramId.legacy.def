@@ -174,3 +174,9 @@
  typeOfSecondFixedSurface = 168 ;
  typeOfStatisticalProcessing = 0 ;
 }
+#Maximum individual wave height
+'140218' = {
+ discipline = 10 ;
+ parameterCategory = 0 ;
+ parameterNumber = 24 ;
+}

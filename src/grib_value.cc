@@ -46,7 +46,7 @@ static void print_debug_info__set_array(grib_handle* h, const char* func, const 
 
     if (length <= N)
         N = length;
-    fprintf(stderr, "ECCODES DEBUG %s key=%s, %zu entries (", func, name, length);
+    fprintf(stderr, "ECCODES DEBUG %s h=%p key=%s, %zu entries (", func, (void*)h, name, length);
     for (i = 0; i < N; ++i) {
         if (i != 0) fprintf(stderr,", ");
         fprintf(stderr, "%.10g", val[i]);
@@ -89,7 +89,7 @@ int grib_set_long_internal(grib_handle* h, const char* name, long val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal %s=%ld\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long_internal h=%p %s=%ld\n", (void*)h, name, val);
 
     if (a) {
         ret = grib_pack_long(a, &val, &l);
@@ -117,9 +117,9 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (a->name=%s)\n", (void*)h, name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld\n", (void*)h, name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -133,7 +133,7 @@ int grib_set_long(grib_handle* h, const char* name, long val)
     }
 
     if (h->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG grib_set_long %s=%ld (Key not found)\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_long h=%p %s=%ld (Key not found)\n", (void*)h, name, val);
     }
 
     return GRIB_NOT_FOUND;
@@ -148,7 +148,7 @@ int grib_set_double_internal(grib_handle* h, const char* name, double val)
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal %s=%.10g\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_double_internal h=%p %s=%.10g\n", (void*)h, name, val);
 
     if (a) {
         ret = grib_pack_double(a, &val, &l);
@@ -349,9 +349,9 @@ int grib_set_double(grib_handle* h, const char* name, double val)
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double h=%p %s=%.10g (a->name=%s)\n", (void*)h, name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_double %s=%.10g\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_double h=%p %s=%.10g\n", (void*)h, name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -375,7 +375,7 @@ int grib_set_string_internal(grib_handle* h, const char* name,
     a = grib_find_accessor(h, name);
 
     if (h->context->debug)
-        fprintf(stderr, "ECCODES DEBUG grib_set_string_internal %s=%s\n", name, val);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_internal h=%p %s=%s\n", (void*)h, name, val);
 
     if (a) {
         ret = grib_pack_string(a, val, length);
@@ -467,9 +467,9 @@ int grib_set_string(grib_handle* h, const char* name, const char* val, size_t* l
     if (a) {
         if (h->context->debug) {
             if (strcmp(name, a->name)!=0)
-                fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s| (a->name=%s)\n", name, val, a->name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_string h=%p %s=|%s| (a->name=%s)\n", (void*)h, name, val, a->name);
             else
-                fprintf(stderr, "ECCODES DEBUG grib_set_string %s=|%s|\n", name, val);
+                fprintf(stderr, "ECCODES DEBUG grib_set_string h=%p %s=|%s|\n", (void*)h, name, val);
         }
 
         if (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY)
@@ -497,7 +497,7 @@ int grib_set_string_array(grib_handle* h, const char* name, const char** val, si
     a = grib_find_accessor(h, name);
 
     if (h->context->debug) {
-        fprintf(stderr, "ECCODES DEBUG grib_set_string_array key=%s %zu values\n", name, length);
+        fprintf(stderr, "ECCODES DEBUG grib_set_string_array h=%p key=%s %zu values\n", (void*)h, name, length);
     }
 
     if (a) {
@@ -579,7 +579,7 @@ int grib_set_missing(grib_handle* h, const char* name)
 
         if (grib_accessor_can_be_missing(a, &ret)) {
             if (h->context->debug)
-                fprintf(stderr, "ECCODES DEBUG grib_set_missing %s\n", name);
+                fprintf(stderr, "ECCODES DEBUG grib_set_missing h=%p %s\n", (void*)h, name);
 
             ret = grib_pack_missing(a);
             if (ret == GRIB_SUCCESS)
@@ -903,7 +903,7 @@ static int _grib_set_long_array(grib_handle* h, const char* name, const long* va
         size_t N = 5;
         if (length <= N)
             N = length;
-        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array key=%s %zu values (", name, length);
+        fprintf(stderr, "ECCODES DEBUG _grib_set_long_array h=%p key=%s %zu values (", (void*)h, name, length);
         for (i = 0; i < N; ++i)
             fprintf(stderr, " %ld,", val[i]);
         if (N >= length)

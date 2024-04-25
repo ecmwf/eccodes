@@ -366,6 +366,14 @@ cat >$tempFilt <<EOF
 EOF
 ${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl #> $tempOut
 
+
+# Logical OR with doubles
+cat >$tempFilt <<EOF
+ if (referenceValue > 45.01 || referenceValue < 1.1) { print "yes"; }
+EOF
+${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl #> $tempOut
+
+
 # Decode an integer key as string
 cat >$tempFilt <<EOF
  print "[scaleFactorOfSecondFixedSurface:s]";
