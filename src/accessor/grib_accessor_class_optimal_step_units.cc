@@ -68,7 +68,6 @@ int grib_accessor_class_optimal_step_units_t::pack_expression(grib_accessor* a, 
 }
 
 static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
-static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 
 int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const long* val, size_t* len){
     grib_handle* h = grib_handle_of_accessor(a);
