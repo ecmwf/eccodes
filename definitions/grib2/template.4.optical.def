@@ -18,5 +18,5 @@ alias firstWavelengthInMetres = firstWavelength;
 alias secondWavelengthInMetres = secondWavelength;
 
 constant billion = 1000000000 : hidden;
-meta firstWavelengthInNanometres  multdouble(firstWavelength, billion);
-meta secondWavelengthInNanometres multdouble(secondWavelength, billion);
+meta firstWavelengthInNanometres  multdouble(firstWavelength, billion) : read_only;
+meta secondWavelengthInNanometres multdouble(secondWavelength, billion) : read_only;

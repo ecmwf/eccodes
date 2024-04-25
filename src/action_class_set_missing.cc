@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile                                                          *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -103,12 +100,13 @@ static int execute(grib_action* a, grib_handle* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i = 0;
-    const grib_action_set_missing* self = (grib_action_set_missing*)act;
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-    grib_context_print(act->context, f, self->name);
-    printf("\n");
+    grib_context_log(act->context, GRIB_LOG_ERROR, "%s %s(): Not implemented", __FILE__, __func__);
+    // int i = 0;
+    // const grib_action_set_missing* self = (grib_action_set_missing*)act;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_context_print(act->context, f, self->name);
+    // printf("\n");
 }
 
 static void destroy(grib_context* context, grib_action* act)

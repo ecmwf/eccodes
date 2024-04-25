@@ -453,7 +453,7 @@ grib_context* grib_context_get_default()
 
 #ifdef ECCODES_SAMPLES_PATH
         if (!default_grib_context.grib_samples_path)
-            default_grib_context.grib_samples_path = ECCODES_SAMPLES_PATH;
+            default_grib_context.grib_samples_path = (char*)ECCODES_SAMPLES_PATH;
 #endif
 
         default_grib_context.grib_definition_files_path = codes_getenv("ECCODES_DEFINITION_PATH");
@@ -535,11 +535,10 @@ grib_context* grib_context_get_default()
         }
 #endif
 
-        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Definitions path: %s",
-                         default_grib_context.grib_definition_files_path);
-        grib_context_log(&default_grib_context, GRIB_LOG_DEBUG, "Samples path:     %s",
-                         default_grib_context.grib_samples_path);
-
+        if (default_grib_context.debug) {
+            fprintf(stderr, "ECCODES DEBUG Definitions path: %s\n", default_grib_context.grib_definition_files_path);
+            fprintf(stderr, "ECCODES DEBUG Samples path:     %s\n", default_grib_context.grib_samples_path);
+        }
         default_grib_context.keys_count = 0;
         default_grib_context.keys       = grib_hash_keys_new(&(default_grib_context), &(default_grib_context.keys_count));
 
@@ -840,7 +839,6 @@ void grib_context_reset(grib_context* c)
 
 void grib_context_delete(grib_context* c)
 {
-    size_t i = 0;
     if (!c)
         c = grib_context_get_default();
 
@@ -852,7 +850,7 @@ void grib_context_delete(grib_context* c)
     if (c != &default_grib_context)
         grib_context_free_persistent(&default_grib_context, c);
 
-    for(i=0; i<MAX_NUM_HASH_ARRAY; ++i)
+    for(size_t i=0; i<MAX_NUM_HASH_ARRAY; ++i)
         c->hash_array[i] = NULL;
     c->hash_array_count = 0;
     grib_itrie_delete(c->hash_array_index);

@@ -290,7 +290,6 @@ static int concept_conditions_expression_apply(grib_handle* h, grib_concept_cond
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
-            break;
     }
     (*n)++;
     return err;

@@ -35,7 +35,7 @@
 #include "grib_accessor_class.h"
 
 #line 6 "accessor_class_list.gperf"
-struct accessor_class_hash { char *name; grib_accessor_class **cclass;};
+struct accessor_class_hash { const char *name; grib_accessor_class **cclass;};
 
 #define TOTAL_KEYWORDS 205
 #define MIN_WORD_LENGTH 1

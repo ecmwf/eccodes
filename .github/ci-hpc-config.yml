@@ -3,7 +3,7 @@ build:
     - ecbuild
     - ninja
     - aec
-    - netcdf4/new
+    - netcdf4
   parallel: 64
   cmake_options:
     - -DENABLE_EXTRA_TESTS=1

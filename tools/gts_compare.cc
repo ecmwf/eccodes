@@ -74,7 +74,6 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
 
 int error               = 0;
 int count               = 0;
-int lastPrint           = 0;
 int force               = 0;
 double maxAbsoluteError = 1e-19;
 int onlyListed          = 1;
@@ -184,7 +183,7 @@ int grib_tool_init(grib_runtime_options* options)
         onlyListed = 1;
 
     if (grib_options_on("a") && !grib_options_on("c:")) {
-        printf("Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
+        fprintf(stderr, "Error: -a option requires -c option. Please define a list of keys with the -c option.\n");
         exit(1);
     }
 
@@ -245,7 +244,6 @@ int grib_tool_new_file_action(grib_runtime_options* options, grib_tools_file* fi
 static void printInfo(grib_handle* h)
 {
     printf("== %d == DIFFERENCE == ", count);
-    lastPrint = count;
 }
 
 static grib_handle* gts_handle_new_from_file_x(
@@ -439,12 +437,10 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
         save_error(c, name);
         return err;
     }
-
-    //if (options->mode != MODE_GTS) {
+    Assert(options->mode == MODE_GTS);
         /* TODO: Ignore missing values for keys in GTS. Not yet implemented */
         //isMissing1 = ((grib_is_missing(h1, name, &err1) == 1) && (err1 == 0)) ? 1 : 0;
         //isMissing2 = ((grib_is_missing(h2, name, &err2) == 1) && (err2 == 0)) ? 1 : 0;
-    //}
 
     if ((isMissing1 == 1) && (isMissing2 == 1)) {
         if (verbose)
@@ -573,11 +569,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             break;
 
         case GRIB_TYPE_BYTES:
-            if (options->mode == MODE_GTS) {
-                // We do not want to compare the message itself
-                return 0;
-            }
-            break;
+            // We do not want to compare the message itself
+            return 0;
 
         case GRIB_TYPE_LABEL:
             break;
@@ -586,9 +579,8 @@ static int compare_values(const grib_runtime_options* options, grib_handle* h1, 
             if (verbose) printf("\n");
             printInfo(h1);
             save_error(c, name);
-            printf("Cannot compare [%s], unsupported type %d\n", name, type1);
+            fprintf(stderr, "Cannot compare [%s], unsupported type %d\n", name, type1);
             return GRIB_UNABLE_TO_COMPARE_ACCESSORS;
-            break;
     }
 
     return GRIB_SUCCESS;
@@ -664,33 +656,12 @@ static int compare_handles(grib_handle* h1, grib_handle* h2, grib_runtime_option
     else {
         const void *msg1 = NULL, *msg2 = NULL;
         size_t size1 = 0, size2 = 0;
-        int memcmp_ret = 0;
         /* int ii=0; */
         GRIB_CHECK_NOLINE(grib_get_message(h1, &msg1, &size1), 0);
         GRIB_CHECK_NOLINE(grib_get_message(h2, &msg2, &size2), 0);
-        if (size1 == size2 && !(memcmp_ret = memcmp(msg1, msg2, size1))) {
+        if ( size1 == size2 && (0 == memcmp(msg1, msg2, size1)) ) {
             return 0;
         }
-
-//         else {
-//             int lcount=count,ii;
-//             if (options->current_infile) lcount=options->current_infile->filter_handle_count;
-//             if (size1 != size2) {
-//                 printf("#%d different size: %d!=%d\n",lcount,(int)size1,(int)size2);
-//             }
-//             if (memcmp_ret) {
-//                 unsigned char *m1=(unsigned char*)msg1;
-//                 unsigned char *m2=(unsigned char*)msg2;
-//                 printf("=== list of different bytes for message %d\n",lcount);
-//                 for (ii=0;ii<size1;ii++) {
-//                     if (memcmp(m1,m2,1)) {
-//                         printf("  %d 0x%.2X != 0x%.2X\n",ii,*m1,*m2);
-//                     }
-//                     m1++; m2++;
-//                 }
-//             }
-//             return err;
-//         }
 
         if (listFromCommandLine) {
             for (i = 0; i < options->compare_count; i++) {

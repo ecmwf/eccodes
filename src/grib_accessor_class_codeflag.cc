@@ -110,8 +110,8 @@ grib_accessor_class* grib_accessor_class_codeflag = &_grib_accessor_class_codefl
 static void init(grib_accessor* a, const long len, grib_arguments* param)
 {
     grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-    a->length                    = len;
-    self->tablename              = grib_arguments_get_string(grib_handle_of_accessor(a), param, 0);
+    a->length = len;
+    self->tablename = grib_arguments_get_string(grib_handle_of_accessor(a), param, 0);
     Assert(a->length >= 0);
 }
 
@@ -123,8 +123,8 @@ static int test_bit(long a, long b)
 
 static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
 {
-    grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-    FILE* f                      = NULL;
+    const grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
+    FILE* f = NULL;
     char fname[1024];
     char bval[50];
     char num[50];
@@ -200,10 +200,10 @@ static int value_count(grib_accessor* a, long* count)
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
-    long v;
-    char flagname[1024];
-    char fname[1024];
+    const grib_accessor_codeflag* self = (grib_accessor_codeflag*)a;
+    long v = 0;
+    char flagname[1024] = {0,};
+    char fname[1024] = {0,};
 
     size_t llen = 1;
 

@@ -908,9 +908,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %ld values",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %ld values",
                 *len, a->name, rlen);
-        *len = 0;
+        *len = rlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
 

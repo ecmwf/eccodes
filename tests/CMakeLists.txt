@@ -18,6 +18,7 @@ list(APPEND test_c_bins
     grib_double_cmp
     read_any
     julian
+    grib_update_sections_lengths
     grib_indexing
     grib_fieldset
     grib_multi_from_message
@@ -45,6 +46,7 @@ list(APPEND test_c_bins
     grib_ecc-1467
     grib_ecc-1431
     grib_ecc-1433
+    grib_ecc-1764
     bufr_ecc-517
     bufr_ecc-1288
     bufr_get_element
@@ -142,6 +144,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1671
         grib_ecc-1708
         grib_ecc-1691
+        grib_ecc-1766
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -168,6 +171,8 @@ if( HAVE_BUILD_TOOLS )
     # and/or take much longer
     list(APPEND tests_extra
         grib_data_quality_checks
+        grib_update_sections_lengths
+        grib_units_bias_factor
         grib_set_large_message_fail
         grib_g1monthlydate
         grib_g1fcperiod
@@ -244,6 +249,7 @@ if( HAVE_BUILD_TOOLS )
         bufr_ecc-1305
         bufr_ecc-1476
         bufr_ecc-1623
+        bufr_ecc-1785
         grib_ecc-490
         grib_ecc-756
         grib_ecc-806
@@ -259,6 +265,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1397
         grib_ecc-1425
         grib_ecc-1467
+        grib_ecc-1764
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
@@ -299,6 +306,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ls
         grib_ls_json
         grib_filter
+        grib_filter_fail
         grib_multi
         grib_nearest_test
         pseudo_budg
