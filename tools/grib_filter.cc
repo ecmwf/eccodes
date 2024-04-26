@@ -24,7 +24,8 @@ grib_option grib_options[] = {
     { "G", 0, 0, 0, 1, 0 },
     { "T:", 0, 0, 0, 1, 0 },
     { "7", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 const char* tool_description =
     "Apply the rules defined in rules_file to each GRIB "
@@ -53,7 +54,7 @@ int grib_tool_init(grib_runtime_options* options)
     if (!options->action) {
         const char* filt = options->infile_extra->name;
         if (strcmp(filt, "-") == 0) filt = "stdin";
-        fprintf(stderr, "Error: %s: unable to create action\n", filt);
+        fprintf(stderr, "ERROR: %s: unable to create action\n", filt);
         exit(1);
     }
 
@@ -85,7 +86,8 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 
     err = grib_handle_apply_action(h, options->action);
     if (err != GRIB_SUCCESS && options->fail) {
-        printf("ERROR: %s\n", grib_get_error_message(err));
+        fprintf(stderr, "ERROR: %s (message %d)\n",
+                grib_get_error_message(err), h->context->handle_file_count);
         exit(err);
     }
     return 0;
@@ -95,11 +97,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

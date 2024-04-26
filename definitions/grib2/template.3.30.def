@@ -1,9 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.30, Lambert conformal
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
-constant isGridded = one;
+constant isGridded = true;
 
 unsigned[4] Nx : dump;
 alias Ni = Nx;
@@ -32,7 +32,7 @@ meta geography.longitudeOfFirstGridPointInDegrees
 alias Lo1InDegrees = longitudeOfFirstGridPointInDegrees;
 #meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,oneConstant) : no_copy;
 
-include "grib2/template.3.resolution_flags.def";
+include "grib2/template.3.resolution_flags.def"
 
 # LaD - Latitude where Dx and Dy are specified
 signed[4] LaD : edition_specific;
@@ -58,16 +58,16 @@ meta geography.DyInMetres scale(Dy,one,thousand) : dump;
 # Projection centre flag
 flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 # Latin 1 - first latitude from the pole at which the secant cone cuts the sphere
 signed[4] Latin1   : edition_specific;
-alias FirstLatitude=Latin1;
+alias firstLatitude=Latin1;
 meta geography.Latin1InDegrees scale(Latin1,one,grib2divider,truncateDegrees) : dump;
 
 # Latin 2 - second latitude from the pole at which the secant cone cuts the sphere
 signed[4] Latin2  : dump;
-alias SecondLatitude=Latin2;
+alias secondLatitude=Latin2;
 meta geography.Latin2InDegrees scale(Latin2,one,grib2divider,truncateDegrees) : dump;
 
 # Latitude of the southern pole of projection

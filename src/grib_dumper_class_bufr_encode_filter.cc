@@ -451,9 +451,11 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
     }
     else {
         /* int r=compute_bufr_key_rank(h,self->keys,a->name); */
-        if (!grib_is_missing_long(a, value)) {
-            fprintf(self->dumper.out, "set %s->%s = ", prefix, a->name);
-            fprintf(self->dumper.out, "%ld ;\n", value);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            if (!grib_is_missing_long(a, value)) {
+                fprintf(self->dumper.out, "set %s->%s = ", prefix, a->name);
+                fprintf(self->dumper.out, "%ld ;\n", value);
+            }
         }
     }
 
@@ -609,7 +611,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0 || (a->flags & GRIB_ACCESSOR_FLAG_READ_ONLY) != 0)
         return;
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     if (size == 0)
         return;
 

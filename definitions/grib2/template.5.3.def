@@ -2,8 +2,8 @@
 
 # TEMPLATE 5.3, Grid point data - complex packing and spatial differencing
 
-include "grib2/template.5.packing.def";
-include "grib2/template.5.original_values.def";
+include "grib2/template.5.packing.def"
+include "grib2/template.5.original_values.def"
 
 # Group splitting method used
 codetable[1] groupSplittingMethodUsed ('5.4.table',masterDir,localDir);
@@ -20,7 +20,7 @@ unsigned[4] secondaryMissingValueSubstitute ;
 # NG - Number of groups of data values into which field is split
 unsigned[4] numberOfGroupsOfDataValues ;
 
-alias NG =  numberOfGroupsOfDataValues;
+alias NG = numberOfGroupsOfDataValues;
 # Reference for group widths
 unsigned[1] referenceForGroupWidths ;
 

@@ -8,12 +8,14 @@ module unload ecmwf-toolbox
 module load cdo/new
 module load numdiff
 module load nccmp
-module load netcdf4/new
+module load netcdf4
 module load gnuparallel/new
 module load python3
 
+version=$(cat $TMPDIR/eccodes/VERSION)
+
 cd ~masn/REGRESSION_TESTING/ecCodes
-./par-suite.sh -w $TMPDIR/install/eccodes
+./par-suite.sh -w $TMPDIR/install/eccodes/$version
 
 # For debugging specific test(s)
-# ./seq-suite.sh -w $TMPDIR/install/eccodes -d -t py_
+# ./seq-suite.sh -w $TMPDIR/install/eccodes/$version -d -t py_

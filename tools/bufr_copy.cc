@@ -44,7 +44,8 @@ grib_option grib_options[] = {
     { "g", 0, 0, 0, 1, 0 },
     { "7", 0, 0, 0, 1, 0 },
     { "X:", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count = sizeof(grib_options) / sizeof(grib_option);
@@ -100,11 +101,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

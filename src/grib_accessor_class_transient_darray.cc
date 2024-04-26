@@ -19,7 +19,7 @@
    IMPLEMENTS = unpack_double;pack_double
    IMPLEMENTS = unpack_long;pack_long;destroy
    IMPLEMENTS = init;dump;value_count
-   IMPLEMENTS = compare;get_native_type
+   IMPLEMENTS = get_native_type
    MEMBERS=grib_darray* arr
    MEMBERS=int type;
    END_CLASS_DEF
@@ -45,7 +45,6 @@ static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_transient_darray
 {
@@ -96,7 +95,7 @@ static grib_accessor_class _grib_accessor_class_transient_darray = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -119,23 +118,20 @@ static void init(grib_accessor* a, const long length, grib_arguments* args)
     a->length                            = 0;
 }
 
-
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    /* grib_accessor_transient_darray *self = (grib_accessor_transient_darray*)a; */
     grib_dump_double(dumper, a, NULL);
 }
 
 static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
-    size_t i;
 
     if (self->arr)
         grib_darray_delete(a->context, self->arr);
     self->arr = grib_darray_new(a->context, *len, 10);
 
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         grib_darray_push(a->context, self->arr, val[i]);
 
     return GRIB_SUCCESS;
@@ -144,13 +140,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
-    size_t i;
 
     if (self->arr)
         grib_darray_delete(a->context, self->arr);
     self->arr = grib_darray_new(a->context, *len, 10);
 
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         grib_darray_push(a->context, self->arr, (double)val[i]);
 
     return GRIB_SUCCESS;
@@ -159,44 +154,42 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
-    long count                           = 0;
-    size_t i;
+    long count = 0;
 
     value_count(a, &count);
 
     if (*len < count) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", a->name, *len, count);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %zu, required %ld)", a->name, *len, count);
+        *len = count;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     *len = count;
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         val[i] = self->arr->v[i];
-
 
     return GRIB_SUCCESS;
 }
+
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
-    long count                           = 0;
-    size_t i;
+    long count = 0;
 
     value_count(a, &count);
 
     if (*len < count) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %ld, required %ld) ", a->name, *len, count);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s (setting %zu, required %ld)", a->name, *len, count);
+        *len = count;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
     *len = count;
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         val[i] = (long)self->arr->v[i];
-
 
     return GRIB_SUCCESS;
 }
-
 
 static void destroy(grib_context* c, grib_accessor* a)
 {
@@ -216,51 +209,8 @@ static int value_count(grib_accessor* a, long* count)
     return 0;
 }
 
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    int retval   = 0;
-    double* aval = 0;
-    double* bval = 0;
-
-    size_t alen = 0;
-    size_t blen = 0;
-    int err     = 0;
-    long count  = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    alen = count;
-
-    err = grib_value_count(b, &count);
-    if (err)
-        return err;
-    blen = count;
-
-    if (alen != blen)
-        return GRIB_COUNT_MISMATCH;
-
-    aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
-    bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
-
-    grib_unpack_double(a, aval, &alen);
-    grib_unpack_double(b, bval, &blen);
-
-    retval = GRIB_SUCCESS;
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_DOUBLE_VALUE_MISMATCH;
-        alen--;
-    }
-
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
-
-    return retval;
-}
-
 static int get_native_type(grib_accessor* a)
 {
-    grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
+    const grib_accessor_transient_darray* self = (grib_accessor_transient_darray*)a;
     return self->type;
 }

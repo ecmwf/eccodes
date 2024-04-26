@@ -28,6 +28,17 @@ for gg in ${samples_dir}/reduced_gg_*tmpl; do
 done
 
 
+# Set wrong Nj. Should fail
+input=$samples_dir/reduced_gg_pl_32_grib2.tmpl
+${tools_dir}/grib_set -s Nj=1 $input $tempGrib
+set +e
+${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Nj is 1 but should be 2\*N" $tempText
+
+
 # Set wrong N. Should fail
 input=$samples_dir/reduced_gg_pl_32_grib2.tmpl
 ${tools_dir}/grib_set -s N=0 $input $tempGrib
@@ -38,6 +49,7 @@ set -e
 [ $status -eq 1 ]
 grep -q "Error: N should be > 0" $tempText
 
+
 # Set wrong angle. Should fail
 input=$samples_dir/reduced_gg_pl_1280_grib2.tmpl
 ${tools_dir}/grib_set -s longitudeOfLastGridPoint=359929680 $input $tempGrib
@@ -47,6 +59,17 @@ status=$?
 set -e
 [ $status -eq 1 ]
 grep -q "Error: longitudeOfLastGridPointInDegrees.*but should be" $tempText
+
+
+# Set wrong lat2. Should fail
+input=$samples_dir/reduced_gg_pl_1280_grib2.tmpl
+${tools_dir}/grib_set -s latitudeOfLastGridPointInDegrees=9 $input $tempGrib
+set +e
+${tools_dir}/grib_check_gaussian_grid -v $tempGrib 2> $tempText
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "First latitude must be = last latitude but opposite in sign" $tempText
 
 
 # Set wrong numberOfDataPoints. Should fail
@@ -68,8 +91,16 @@ ${tools_dir}/grib_check_gaussian_grid -f -v $tempGrib 2> $tempText
 status=$?
 set -e
 [ $status -eq 1 ]
-cat $tempText
 grep -q "Error: Sum of pl array 50662 does not match numberOfValues 44" $tempText
+
+# Octahedral
+# set +e
+# ${tools_dir}/grib_check_gaussian_grid -v $data_dir/msl.octa.glob.grib1 > $tempText 2>&1
+# status=$?
+# set -e
+# [ $status -ne 0 ]
+# grep -q "This is an Octahedral Gaussian grid" $tempText
+# grep -q "Error: longitudeOfLastGridPointInDegrees.*should be" $tempText
 
 
 # Other errors/warnings

@@ -406,16 +406,21 @@ static int unpack(grib_accessor* a, T* val, size_t* len)
     *len = (long)n_vals;
 
     if (units_factor != 1.0) {
-        if (units_bias != 0.0)
-            for (i = 0; i < n_vals; i++)
+        if (units_bias != 0.0) {
+            for (i = 0; i < n_vals; i++) {
                 val[i] = val[i] * units_factor + units_bias;
-        else
-            for (i = 0; i < n_vals; i++)
+            }
+        } else {
+            for (i = 0; i < n_vals; i++) {
                 val[i] *= units_factor;
+            }
+        }
     }
-    else if (units_bias != 0.0)
-        for (i = 0; i < n_vals; i++)
+    else if (units_bias != 0.0) {
+        for (i = 0; i < n_vals; i++) {
             val[i] += units_bias;
+        }
+    }
     return err;
 }
 
@@ -632,7 +637,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         else if (val[i] < min) min = val[i];
     }
 
-    if ((err = grib_check_data_values_range(gh, min, max)) != GRIB_SUCCESS) {
+    if ((err = grib_check_data_values_minmax(gh, min, max)) != GRIB_SUCCESS) {
         return err;
     }
 
@@ -640,7 +645,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     if (max == min) {
         int large_constant_fields = 0;
         if (grib_get_nearest_smaller_value(gh, self->reference_value, val[0], &reference_value) != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         if ((err = grib_set_double_internal(gh, self->reference_value, reference_value)) != GRIB_SUCCESS)
@@ -722,7 +727,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             return err;
         if (grib_get_nearest_smaller_value(gh, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                             "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         /* divisor=1; */
@@ -737,7 +742,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
             /* divisor=1; */
             if (grib_get_nearest_smaller_value(gh, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                                 "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                                 "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
         }
@@ -776,7 +781,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
             if (grib_get_nearest_smaller_value(gh, self->reference_value,
                                                min, &reference_value) != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
                 return GRIB_INTERNAL_ERROR;
             }
 

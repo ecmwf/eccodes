@@ -35,7 +35,8 @@ grib_option grib_options[] = {
     { "7", 0, 0, 0, 1, 0 },
     { "v", 0, 0, 1, 0, 0 },
     { "X:", 0, 0, 0, 1, 0 },
-    { "x", 0, 0, 0, 1, 0 }
+    { "x", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -136,6 +137,7 @@ int grib_tool_init(grib_runtime_options* options)
         int idx_overall    = -1;
         FILE* f            = fopen(options->latlon_mask, "r");
         if (!f) {
+            fprintf(stderr, "%s: unable to open mask file %s\n", tool_name, options->latlon_mask);
             perror(options->latlon_mask);
             exit(1);
         }
@@ -393,12 +395,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-/* key values can be printed here. Headers are already printed if requested */
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 /* This is executed after the last message in the last file is processed */

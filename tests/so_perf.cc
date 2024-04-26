@@ -206,7 +206,7 @@ void gribex_check(int err) {
 
 
 
-void usage(char* prog) {
+void usage(const char* prog) {
   printf("usage: %s [-a outfile | -w outfile ] grib_file repetitions bitsPerValue\n",prog);
   exit(1);
 }

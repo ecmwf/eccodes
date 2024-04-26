@@ -16,7 +16,6 @@
    CLASS      = accessor
    SUPER      = grib_accessor_class_gen
    IMPLEMENTS = init;dump;get_native_type;unpack_string
-   IMPLEMENTS = compare
    END_CLASS_DEF
 
  */
@@ -35,7 +34,6 @@ static int get_native_type(grib_accessor*);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_label
 {
@@ -84,7 +82,7 @@ static grib_accessor_class _grib_accessor_class_label = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -114,11 +112,6 @@ static void dump(grib_accessor* a, grib_dumper* dumper)
 static int get_native_type(grib_accessor* a)
 {
     return GRIB_TYPE_LABEL;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    return GRIB_SUCCESS;
 }
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)

@@ -191,61 +191,61 @@ static grib_accessor* make_clone(grib_accessor* a, grib_section* s, int* err)
 void accessor_bufr_data_element_set_index(grib_accessor* a, long index)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->index                           = index;
+    self->index = index;
 }
 
 void accessor_bufr_data_element_set_type(grib_accessor* a, int type)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->type                            = type;
+    self->type = type;
 }
 
 void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->numberOfSubsets                 = numberOfSubsets;
+    self->numberOfSubsets = numberOfSubsets;
 }
 
 void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->subsetNumber                    = subsetNumber;
+    self->subsetNumber = subsetNumber;
 }
 
 void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->compressedData                  = compressedData;
+    self->compressedData = compressedData;
 }
 
 void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->descriptors                     = descriptors;
+    self->descriptors = descriptors;
 }
 
 void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->numericValues                   = numericValues;
+    self->numericValues = numericValues;
 }
 
 void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->stringValues                    = stringValues;
+    self->stringValues = stringValues;
 }
 
 void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    self->elementsDescriptorsIndex        = elementsDescriptorsIndex;
+    self->elementsDescriptorsIndex = elementsDescriptorsIndex;
 }
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    a->length                             = 0;
+    a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
     self->cname = NULL;
@@ -272,8 +272,8 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-    int ret         = 0, i, idx;
-    long count      = 0;
+    int ret = 0, idx = 0;
+    size_t count = 0, i = 0;
     grib_context* c = a->context;
 
     if (self->compressedData) {
@@ -289,7 +289,7 @@ static int unpack_string_array(grib_accessor* a, char** val, size_t* len)
     else {
         DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
         DEBUG_ASSERT(self->index < self->numericValues->v[self->subsetNumber]->n);
-        idx    = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
         val[0] = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
         *len   = 1;
     }
@@ -308,7 +308,7 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 
     if (self->compressedData) {
         idx = ((int)self->numericValues->v[self->index]->v[0] / 1000 - 1) / self->numberOfSubsets;
-        if (*len != 1 && *len != self->numberOfSubsets) {
+        if (*len != 1 && *len != (size_t)self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld strings provided but expected %ld (=number of subsets)",
                              self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[idx]]->shortName, *len, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
@@ -323,7 +323,7 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
     }
     else {
         //ECC-1623
-        if (*len != self->numberOfSubsets) {
+        if (*len != (size_t)self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR,
                 "Number of values mismatch for '%s': %zu strings provided but expected %ld (=number of subsets)",
                 a->name, *len, self->numberOfSubsets);
@@ -343,8 +343,8 @@ static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    char* str   = NULL;
-    char* p     = 0;
+    char* str = NULL;
+    char* p = 0;
     size_t slen = 0;
     double dval = 0;
     size_t dlen = 1;
@@ -358,7 +358,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
         snprintf(sval, sizeof(sval), "%g", dval);
         slen = strlen(sval);
         if (*len < slen)
-            return GRIB_ARRAY_TOO_SMALL;
+            return GRIB_BUFFER_TOO_SMALL;
         strcpy(val, sval);
         return GRIB_SUCCESS;
     }
@@ -413,8 +413,8 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
-    int ret         = GRIB_SUCCESS, idx = 0;
-    char* s         = NULL;
+    int ret = GRIB_SUCCESS, idx = 0;
+    char* s = NULL;
     grib_context* c = a->context;
 
     if (self->compressedData) {
@@ -426,7 +426,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     grib_sarray_delete_content(c, self->stringValues->v[idx]); /* ECC-1172 */
     grib_sarray_delete(c, self->stringValues->v[idx]);
     self->stringValues->v[idx] = grib_sarray_new(c, 1, 1);
-    s                          = grib_context_strdup(c, val);
+    s = grib_context_strdup(c, val);
     grib_sarray_push(c, self->stringValues->v[idx], s);
 
     return ret;
@@ -435,7 +435,7 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret    = GRIB_SUCCESS;
+    int ret = GRIB_SUCCESS;
     long count = 0, i = 0;
 
     value_count(a, &count);
@@ -494,12 +494,12 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
     int ret = GRIB_SUCCESS;
-    long count = 1, i = 0;
+    size_t count = 1, i = 0;
     grib_context* c = a->context;
 
     if (self->compressedData) {
         count = *len;
-        if (count != 1 && count != self->numberOfSubsets) {
+        if (count != 1 && count != (size_t)self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld doubles provided but expected %ld (=number of subsets)",
                              self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
@@ -514,7 +514,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
     }
     else {
         self->numericValues->v[self->subsetNumber]->v[self->index] = val[0];
-        *len                                                       = 1;
+        *len = 1;
     }
 
     return ret;
@@ -523,14 +523,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = 0, i;
-    long count                            = 1;
-    grib_context* c                       = a->context;
+    int ret = 0;
+    size_t count = 1, i = 0;
+    grib_context* c = a->context;
 
     if (self->compressedData) {
         count = *len;
-        if (count != 1 && count != self->numberOfSubsets) {
-            grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %ld integers provided but expected %ld (=number of subsets)",
+        if (count != 1 && count != (size_t)self->numberOfSubsets) {
+            grib_context_log(c, GRIB_LOG_ERROR, "Number of values mismatch for '%s': %zu integers provided but expected %ld (=number of subsets)",
                              self->descriptors->v[self->elementsDescriptorsIndex->v[0]->v[self->index]]->shortName, count, self->numberOfSubsets);
             return GRIB_ARRAY_TOO_SMALL;
         }
@@ -544,7 +544,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
     else {
         self->numericValues->v[self->subsetNumber]->v[self->index] = val[0] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
-        *len                                                       = 1;
+        *len = 1;
     }
 
     return ret;
@@ -552,7 +552,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int value_count(grib_accessor* a, long* count)
 {
-    int ret     = 0, type = 0, idx = 0;
+    int ret = 0, type = 0, idx = 0;
     size_t size = 0;
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
 
@@ -581,8 +581,8 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 {
     /* ECC-415 */
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret       = GRIB_SUCCESS;
-    long count    = 0;
+    int ret = GRIB_SUCCESS;
+    long count = 0;
 
     value_count(a, &count);
     if (idx >= (size_t)count) {
@@ -601,7 +601,7 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 static int get_native_type(grib_accessor* a)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int ret                               = GRIB_TYPE_DOUBLE;
+    int ret = GRIB_TYPE_DOUBLE;
     DEBUG_ASSERT(self);
     switch (self->type) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
@@ -627,7 +627,7 @@ static int get_native_type(grib_accessor* a)
 static void destroy(grib_context* ct, grib_accessor* a)
 {
     grib_accessor_bufr_data_element* self = (grib_accessor_bufr_data_element*)a;
-    int i                                 = 0;
+    int i = 0;
     if (self->cname)
         grib_context_free(ct, self->cname); /* ECC-765 */
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
@@ -650,14 +650,14 @@ static int is_missing(grib_accessor* a)
     grib_context* c = a->context;
 
     if (ktype == GRIB_TYPE_LONG) {
-        long* values           = NULL;
-        long value             = 0;
+        long* values = NULL;
+        long value = 0;
 
         value_count(a, &count);
         size = size2 = count;
         if (size > 1) {
             values = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-            err    = grib_unpack_long(a, values, &size2);
+            err = grib_unpack_long(a, values, &size2);
         }
         else {
             err = grib_unpack_long(a, &value, &size2);
@@ -677,14 +677,14 @@ static int is_missing(grib_accessor* a)
         }
     }
     else if (ktype == GRIB_TYPE_DOUBLE) {
-        double value           = 0;
-        double* values         = NULL;
+        double value = 0;
+        double* values = NULL;
 
         value_count(a, &count);
         size = size2 = count;
         if (size > 1) {
             values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-            err    = grib_unpack_double(a, values, &size2);
+            err = grib_unpack_double(a, values, &size2);
         }
         else {
             err = grib_unpack_double(a, &value, &size2);
@@ -705,7 +705,7 @@ static int is_missing(grib_accessor* a)
         }
     }
     else if (ktype == GRIB_TYPE_STRING) {
-        char** values          = NULL;
+        char** values = NULL;
         value_count(a, &count);
         size = count;
         if (size > 1) {

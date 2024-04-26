@@ -30,7 +30,7 @@ echo "Test: copy synop messages ..."
 rm -f $fBufrTmp
 
 echo "Test: copy synop messages " >> $fLog
-${tools_dir}/bufr_copy -w dataCategory=0 $fBufrInput $fBufrTmp >> $fLog
+${tools_dir}/bufr_copy -p typicalDate -w dataCategory=0 $fBufrInput $fBufrTmp >> $fLog
 
 for i in 1 2 3 ;do
     category=`${tools_dir}/bufr_get -w count=$i -p dataCategory:l $fBufrTmp`

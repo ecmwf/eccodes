@@ -44,6 +44,8 @@ meta md5Headers md5(startOfHeaders,lengthOfHeaders);
 
 lookup[1] sectionNumber(4) ;
 
+template_nofail hook_post_meta_data "grib2/post_meta_data.hook.products_[productionStatusOfProcessedData].def";
+
 if (!headersOnly) {
   if (sectionNumber == 5 or new() ) {
     position sectionPosition;

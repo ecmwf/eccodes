@@ -20,7 +20,7 @@ cd ${data_dir}
 encoding=1
 simple_no_bitmap=simple.grib
 simple_bitmap=simple_bitmap.grib
-test_filter=temp.$label.filter
+tempFilt=temp.$label.filter
 
 files_no_bitmap="gen_ext.grib \
 gen_ext_boust.grib \
@@ -41,11 +41,11 @@ simple_bitmap.grib"
 no_packing="gen.grib|row.grib|gen_bitmap.grib|constant_width_bitmap.grib|constant_width_boust_bitmap.grib"
 
 test_data() {
-    ${tools_dir}/grib_filter $test_filter $simple > $simple.data
+    ${tools_dir}/grib_filter $tempFilt $simple > $simple.data
 
     for f in $files
     do 
-        ${tools_dir}/grib_filter $test_filter $f > $f.data
+        ${tools_dir}/grib_filter $tempFilt $f > $f.data
         diff $simple.data $f.data > /dev/null
         ${tools_dir}/grib_compare -cvalues $f $simple
         echo $f decoding test passed > $REDIRECT
@@ -55,7 +55,7 @@ test_data() {
         then
             rm -f $f.copied
             ${tools_dir}/grib_copy -r $f $f.copied
-            ${tools_dir}/grib_filter $test_filter $f.copied > $f.copied.data
+            ${tools_dir}/grib_filter $tempFilt $f.copied > $f.copied.data
             diff $simple.data $f.copied.data > /dev/null
             ${tools_dir}/grib_compare -cvalues $f.copied $simple
             echo $f encoding test passed > $REDIRECT
@@ -67,7 +67,7 @@ test_data() {
 }
 
 
-cat > $test_filter<<EOF
+cat > $tempFilt<<EOF
 print "[values!1]!";
 EOF
 
@@ -132,21 +132,21 @@ done
 # Two coded values: Should stay as grid_simple
 temp2=temp2.$label.grib
 temp3=temp3.$label.grib
-cat > $test_filter<<EOF
+cat > $tempFilt<<EOF
  set values={ 2.1, 3.4 };
  write;
 EOF
-${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_filter -o $temp2 $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ECCODES_DEBUG=1 ${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3 2>$tempText
 grib_check_key_equals $temp3 packingType,accuracy 'grid_simple 24'
 grep -q "Packing not changed" $tempText
 
 # Three coded values: Now we can change to 2nd order
-cat > $test_filter<<EOF
+cat > $tempFilt<<EOF
  set values={ 2.1, 3.4, 8.9 };
  write;
 EOF
-${tools_dir}/grib_filter -o $temp2 $test_filter $ECCODES_SAMPLES_PATH/GRIB2.tmpl
+${tools_dir}/grib_filter -o $temp2 $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/grib_set -r -s packingType=grid_second_order $temp2 $temp3
 grib_check_key_equals $temp3 packingType,accuracy 'grid_second_order 24'
 
@@ -201,7 +201,14 @@ ${tools_dir}/grib_ls -l46,1 $temp1 > $REDIRECT
 ${tools_dir}/grib_ls -j -l46,1,1 $temp1 > $REDIRECT
 
 
+# Encoding
+input=second_ord_rbr.grib1
+${tools_dir}/grib_set -s scaleValuesBy=1.01 $input $temp1
+${tools_dir}/grib_dump $temp1
+grib_check_key_equals $temp1 packingType grid_second_order
+
+
 # Clean up
 rm -f $temp_stat1 $temp_stat2
 rm -f $temp1 $temp2 $temp3 $sec_ord_bmp
-rm -f $test_filter $tempText
+rm -f $tempFilt $tempText

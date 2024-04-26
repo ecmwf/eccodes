@@ -1054,12 +1054,12 @@
 	 table2Version = 128 ;
 	 indicatorOfParameter = 148 ;
 	}
-#Surface net radiation
+#Surface net radiation (SW and LW)
 '149' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 149 ;
 	}
-#Top net radiation
+#Top net radiation (SW and LW)
 '150' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 150 ;
@@ -1459,32 +1459,32 @@
 	 table2Version = 190 ;
 	 indicatorOfParameter = 179 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Eastward turbulent surface stress
+#Time-integrated eastward turbulent surface stress
 '180' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 180 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 128 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 170 ;
 	 indicatorOfParameter = 181 ;
 	}
-#Northward turbulent surface stress
+#Time-integrated northward turbulent surface stress
 '181' = {
 	 table2Version = 180 ;
 	 indicatorOfParameter = 181 ;
@@ -12659,7 +12659,7 @@
 	 table2Version = 140 ;
 	 indicatorOfParameter = 217 ;
 	}
-#Maximum individual wave height
+#Envelop-maximum individual wave height
 '140218' = {
 	 table2Version = 140 ;
 	 indicatorOfParameter = 218 ;
@@ -13024,12 +13024,12 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 130 ;
 	}
-#Eastward sea water velocity
+#Eastward surface sea water velocity
 '151131' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 131 ;
 	}
-#Northward sea water velocity
+#Northward surface sea water velocity
 '151132' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 132 ;
@@ -13244,7 +13244,7 @@
 	 table2Version = 151 ;
 	 indicatorOfParameter = 174 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 '151175' = {
 	 table2Version = 151 ;
 	 indicatorOfParameter = 175 ;
@@ -15024,7 +15024,7 @@
 	 table2Version = 172 ;
 	 indicatorOfParameter = 147 ;
 	}
-#Mean surface net radiation flux
+#Time-mean surface net radiation flux (SW and LW)
 '172149' = {
 	 table2Version = 172 ;
 	 indicatorOfParameter = 149 ;
@@ -17509,7 +17509,7 @@
 	 table2Version = 228 ;
 	 indicatorOfParameter = 3 ;
 	}
-#Mean temperature at 2 metres
+#Mean 2 metre temperature
 '228004' = {
 	 table2Version = 228 ;
 	 indicatorOfParameter = 4 ;

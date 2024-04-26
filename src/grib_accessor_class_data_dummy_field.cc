@@ -132,19 +132,18 @@ grib_accessor_class* grib_accessor_class_data_dummy_field = &_grib_accessor_clas
 static void init(grib_accessor* a, const long v, grib_arguments* args)
 {
     grib_accessor_data_dummy_field* self = (grib_accessor_data_dummy_field*)a;
-    self->missing_value                  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->numberOfPoints                 = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
-    self->bitmap                         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->missing_value  = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->numberOfPoints = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
+    self->bitmap         = grib_arguments_get_name(grib_handle_of_accessor(a), args, self->carg++);
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_data_dummy_field* self = (grib_accessor_data_dummy_field*)a;
-    size_t i                             = 0;
-    size_t n_vals                        = 0;
+    size_t i = 0, n_vals = 0;
     long numberOfPoints;
     double missing_value = 0;
-    int err              = 0;
+    int err = 0;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, &numberOfPoints)) != GRIB_SUCCESS)
         return err;
@@ -174,15 +173,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_data_dummy_field* self = (grib_accessor_data_dummy_field*)a;
 
-
     size_t n_vals = *len;
     int err       = 0;
-
     long bits_per_value = 0;
-
     long half_byte = 0;
-
-    size_t buflen      = 0;
+    size_t buflen  = 0;
     unsigned char* buf = NULL;
 
     if (*len == 0)
@@ -213,11 +208,11 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 static int value_count(grib_accessor* a, long* numberOfPoints)
 {
     grib_accessor_data_dummy_field* self = (grib_accessor_data_dummy_field*)a;
-    int err                              = 0;
-    *numberOfPoints                      = 0;
+    int err = 0;
+    *numberOfPoints = 0;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints)) != GRIB_SUCCESS) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "unable to get count of %s (%s)", a->name, grib_get_error_message(err));
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to get count of %s (%s)", a->name, grib_get_error_message(err));
     }
 
     return err;

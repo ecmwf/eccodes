@@ -26,7 +26,7 @@ SUPER      = grib_accessor_class_long
 IMPLEMENTS = unpack_long;pack_long
 IMPLEMENTS = unpack_double
 IMPLEMENTS = unpack_string_array
-IMPLEMENTS = init;dump;destroy
+IMPLEMENTS = init;destroy
 IMPLEMENTS = value_count; get_native_type
 MEMBERS    = const char* unexpandedDescriptors
 MEMBERS    = const char* sequence
@@ -59,7 +59,6 @@ static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string_array(grib_accessor*, char**, size_t* len);
 static int value_count(grib_accessor*, long*);
 static void destroy(grib_context*, grib_accessor*);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_expanded_descriptors
@@ -90,7 +89,7 @@ static grib_accessor_class _grib_accessor_class_expanded_descriptors = {
     &init,                       /* init */
     0,                  /* post_init */
     &destroy,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     &value_count,                /* get number of values */
@@ -162,11 +161,11 @@ typedef struct change_coding_params
 static void init(grib_accessor* a, const long len, grib_arguments* args)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    int n                                    = 0;
-    grib_handle* hand                        = grib_handle_of_accessor(a);
-    self->tablesAccessorName                 = grib_arguments_get_name(hand, args, n++);
-    self->expandedName                       = grib_arguments_get_name(hand, args, n++);
-    self->rank                               = grib_arguments_get_long(hand, args, n++);
+    int n = 0;
+    grib_handle* hand        = grib_handle_of_accessor(a);
+    self->tablesAccessorName = grib_arguments_get_name(hand, args, n++);
+    self->expandedName       = grib_arguments_get_name(hand, args, n++);
+    self->rank               = grib_arguments_get_long(hand, args, n++);
     if (self->rank != 0) {
         self->expandedAccessor = grib_find_accessor(hand, self->expandedName);
     }
@@ -178,11 +177,6 @@ static void init(grib_accessor* a, const long len, grib_arguments* args)
     self->do_expand             = 1;
     self->expanded              = 0;
     a->length                   = 0;
-}
-
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
 }
 
 static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_array* unexpanded, change_coding_params* ccp, int* err);
@@ -223,7 +217,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
      * Its max size is X (from FXY) which is 6 bits so no need for malloc */
     bufr_descriptor* ur[65]                  = {0,};
     bufr_descriptor* urc                     = NULL;
-    int idx;
+    size_t idx                               = 0;
     bufr_descriptor* u0                      = NULL;
     grib_context* c                          = a->context;
     bufr_descriptor* us                      = NULL;
@@ -237,7 +231,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
     if (BUFR_DESCRIPTORS_ARRAY_USED_SIZE(unexpanded) == 0)
         return;
 
-    us          = grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded, 0));
+    us = grib_bufr_descriptor_clone(grib_bufr_descriptors_array_get(unexpanded, 0));
     us->context = c;
 
     *err = 0;
@@ -268,7 +262,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
 
             inner_unexpanded = grib_bufr_descriptors_array_new(c, DESC_SIZE_INIT, DESC_SIZE_INCR);
             for (i = 0; i < size; i++) {
-                vv               = grib_bufr_descriptor_new(self->tablesAccessor, v_array[i], !SILENT, err);
+                vv = grib_bufr_descriptor_new(self->tablesAccessor, v_array[i], !SILENT, err);
                 inner_unexpanded = grib_bufr_descriptors_array_push(inner_unexpanded, vv);
             }
             grib_context_free(c, v_array);
@@ -343,7 +337,7 @@ static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_
                     *err = GRIB_DECODING_ERROR;
                     return;
                 }
-                grib_bufr_descriptor_set_code(0, (size - 1) * 1000 + 100000, uidx);
+                grib_bufr_descriptor_set_code(uidx, (size - 1) * 1000 + 100000);
                 size++;
             }
             else {
@@ -602,7 +596,7 @@ static int expand(grib_accessor* a)
     bufr_descriptors_array* unexpanded_copy = NULL;
     bufr_descriptors_array* expanded        = NULL;
     grib_context* c                         = a->context;
-    grib_handle* h                          = grib_handle_of_accessor(a);
+    const grib_handle* h                    = grib_handle_of_accessor(a);
     int operator206yyy_width                = 0; /* width specified by operator 206YYY */
 
     if (!self->do_expand) {
@@ -713,27 +707,27 @@ static int expand(grib_accessor* a)
 int grib_accessor_class_expanded_descriptors_set_do_expand(grib_accessor* a, long do_expand)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    self->do_expand                          = do_expand;
+    self->do_expand = do_expand;
     return 0;
 }
 
 bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(grib_accessor* a, int* err)
 {
-    grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    *err                                     = expand(a);
+    const grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
+    *err = expand(a);
     return self->expanded;
 }
 
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    int ret                                  = 0;
-    int i;
+    int ret = 0;
+    size_t i = 0;
     size_t expandedSize;
 
     if (self->rank != 2) {
         long* lval = (long*)grib_context_malloc_clear(a->context, *len * sizeof(long));
-        ret        = unpack_long(a, lval, len);
+        ret = unpack_long(a, lval, len);
         if (ret)
             return ret;
         for (i = 0; i < *len; i++)
@@ -762,9 +756,9 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    int ret                                  = 0;
-    size_t rlen                              = 0;
-    size_t i;
+    int ret     = 0;
+    size_t rlen = 0;
+    size_t i    = 0;
 
     ret = expand(a);
     if (ret)
@@ -792,7 +786,6 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
             break;
         case 2:
             return GRIB_INVALID_TYPE;
-            break;
         case 3:
             for (i = 0; i < *len; i++)
                 val[i] = self->expanded->v[i]->width;
@@ -813,7 +806,7 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
     char buf[25] = {0,};
     long llen = 0;
     size_t i = 0, size = 0;
-    grib_context* c = a->context;
+    const grib_context* c = a->context;
 
     err = grib_value_count(a, &llen);
     if (err) return err;
@@ -836,15 +829,15 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    self->do_expand                          = 1;
+    self->do_expand = 1;
     return GRIB_NOT_IMPLEMENTED;
 }
 
 static int value_count(grib_accessor* a, long* rlen)
 {
     grib_accessor_expanded_descriptors* self = (grib_accessor_expanded_descriptors*)a;
-    int err                                  = 0;
-    *rlen                                    = 0;
+    int err = 0;
+    *rlen   = 0;
 
     err = expand(a);
     if (err) {

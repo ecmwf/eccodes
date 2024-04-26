@@ -37,6 +37,7 @@ key: hoursAfterDataCutoff  (Long values are different)
 key: minutesAfterDataCutoff  (Long values are different)
 key: numberOfValues  (Long values are different)
 key: referenceValue  (Double values are different)
+ECCODES ERROR   :  Key abcdefghij not found in first message
 
 Comparison failed: 13 differences
 EOF
@@ -57,11 +58,38 @@ cat $tempLog
 cat > $tempRef <<EOF
 key: referenceValue  (Double values are different)
 key: codedValues  (Double values are different)
+ECCODES ERROR   :  Key abcdefghij not found in first message
 
 Comparison failed: 2 differences
 EOF
 
 diff $tempRef $tempLog
+
+# Spectral
+# ----------
+sample_spectral=$ECCODES_SAMPLES_PATH/sh_ml_grib2.tmpl
+${test_dir}/codes_compare_keys $sample_spectral $sample_spectral enorm,avg
+
+# Do some constant and transient keys
+${test_dir}/codes_compare_keys $sample_spectral $sample_spectral marsDir,truncateLaplacian
+
+
+# Local definitions
+# ----------------------
+sample1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+tempGribA=temp.${label}.A.grib
+tempGribB=temp.${label}.B.grib
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=2 $sample1 $tempGribA
+${tools_dir}/grib_set -s localDefinitionNumber=16,verifyingMonth=5 $sample1 $tempGribB
+set +e
+${test_dir}/codes_compare_keys $tempGribA $tempGribB endOfInterval > $tempLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "2 differences" $tempLog
+
+rm -f $tempGribA $tempGribB
+
 
 # Clean up
 rm -f $tempLog $tempRef $tempGrib

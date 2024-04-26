@@ -176,14 +176,17 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     unsigned char* p;
     long offset = 0, length = 0;
     grib_string_list* blocklist = NULL;
-    grib_accessor* b            = NULL;
-    int ret                     = 0;
-    int i                       = 0;
+    int ret = GRIB_SUCCESS;
+    long i = 0;
     struct grib_md5_state md5c;
 
     if (*len < 32) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "md5: array too small");
-        return GRIB_ARRAY_TOO_SMALL;
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %d bytes long (len=%zu)",
+                         cclass_name, a->name, 32, *len);
+        *len = 32;
+        return GRIB_BUFFER_TOO_SMALL;
     }
 
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), self->offset, &offset)) != GRIB_SUCCESS)
@@ -201,7 +204,7 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
     if (self->blocklist)
         blocklist = self->blocklist;
     while (blocklist && blocklist->value) {
-        b = grib_find_accessor(grib_handle_of_accessor(a), blocklist->value);
+        const grib_accessor* b = grib_find_accessor(grib_handle_of_accessor(a), blocklist->value);
         if (!b) {
             grib_context_free(a->context, mess);
             return GRIB_NOT_FOUND;

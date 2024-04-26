@@ -175,6 +175,11 @@ grib_handle* codes_handle_clone(const grib_handle* h)
 {
     return grib_handle_clone(h);
 }
+grib_handle* codes_handle_clone_headers_only(const grib_handle* h)
+{
+    return grib_handle_clone_headers_only(h);
+}
+
 int codes_handle_delete(grib_handle* h)
 {
     return grib_handle_delete(h);
@@ -321,6 +326,10 @@ int codes_set_missing(grib_handle* h, const char* key)
 {
     return grib_set_missing(h, key);
 }
+int codes_get_offset(const codes_handle* h, const char* key, size_t* offset)
+{
+    return grib_get_offset(h, key, offset);
+}
 int codes_get_size(const grib_handle* h, const char* key, size_t* size)
 {
     return grib_get_size(h, key, size);
@@ -457,6 +466,11 @@ void codes_gts_header_off(grib_context* c)
 {
     grib_gts_header_off(c);
 }
+void codes_gts_header_on(grib_context* c)
+{
+    grib_gts_header_on(c);
+}
+
 void codes_gribex_mode_on(grib_context* c)
 {
     grib_gribex_mode_on(c);

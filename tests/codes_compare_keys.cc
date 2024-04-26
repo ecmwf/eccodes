@@ -17,12 +17,18 @@ int main(int argc, char* argv[])
     grib_handle* h1 = NULL;
     grib_handle* h2 = NULL;
     int err       = 0;
-    size_t count  = 0;
+    size_t num_diffs = 0, i = 0;
+    char** list_provided_keys = NULL;
 
-    Assert(argc == 3);
     f1 = fopen(argv[1], "rb");
     f2 = fopen(argv[2], "rb");
     Assert(f1 && f2);
+
+    if (argc == 4) {
+        // List of keys is also given on the command line
+        char* input = argv[3];
+        list_provided_keys = string_split(input, ",");
+    }
 
     while ((h1 = grib_handle_new_from_file(0, f1, &err)) != NULL && (h2 = grib_handle_new_from_file(0, f2, &err)) != NULL) {
         grib_keys_iterator* kiter = NULL;
@@ -39,7 +45,27 @@ int main(int argc, char* argv[])
             err = codes_compare_key(h1, h2, name, 0);
             if (err) {
                 fprintf(stderr, "key: %s  (%s)\n", name, grib_get_error_message(err));
-                ++count;
+                ++num_diffs;
+            }
+        }
+
+        // Some specific keys
+        codes_compare_key(h1, h2, "md5Headers", 0); // md5
+        codes_compare_key(h1, h2, "computeStatistics", 0); // statistics
+        codes_compare_key(h1, h2, "paramId", 0);    // concept
+        codes_compare_key(h1, h2, "identifier", 0); // ascii
+        err = codes_compare_key(h1, h2, "abcdefghij", 0); // no such key
+        Assert(err == GRIB_NOT_FOUND);
+
+        if (list_provided_keys) {
+            for (i = 0; list_provided_keys[i] != NULL; ++i) {
+                const char* pkey = list_provided_keys[i];
+                //printf("Comparing provided key %s ...\n", list_provided_keys[i]);
+                err = codes_compare_key(h1, h2, pkey, 0);
+                if (err) {
+                    fprintf(stderr, "key: %s  (%s)\n", pkey, grib_get_error_message(err));
+                    ++num_diffs;
+                }
             }
         }
 
@@ -47,10 +73,17 @@ int main(int argc, char* argv[])
         grib_handle_delete(h1);
         grib_handle_delete(h2);
     }
+
     fclose(f1);
     fclose(f2);
-    if (count > 0) {
-        fprintf(stderr, "\nComparison failed: %zu differences\n", count);
+
+    if (list_provided_keys) {
+        for (i = 0; list_provided_keys[i] != NULL; ++i) free(list_provided_keys[i]);
+        free(list_provided_keys);
+    }
+
+    if (num_diffs > 0) {
+        fprintf(stderr, "\nComparison failed: %zu differences\n", num_diffs);
         return 1;
     }
     return 0;

@@ -8,9 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile                                                          *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
@@ -18,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = action
    SUPER      = action_class_gen
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy;execute
    MEMBERS    = grib_darray *darray
    MEMBERS    = char *name
@@ -38,7 +35,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -65,7 +61,7 @@ static grib_action_class _grib_action_class_transient_darray = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -78,6 +74,7 @@ grib_action_class* grib_action_class_transient_darray = &_grib_action_class_tran
 
 static void init_class(grib_action_class* c)
 {
+    c->xref    =    (*(c->super))->xref;
     c->create_accessor    =    (*(c->super))->create_accessor;
     c->notify_change    =    (*(c->super))->notify_change;
     c->reparse    =    (*(c->super))->reparse;
@@ -125,8 +122,8 @@ static int execute(grib_action* act, grib_handle* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i                              = 0;
-    grib_action_transient_darray* self = (grib_action_transient_darray*)act;
+    int i = 0;
+    const grib_action_transient_darray* self = (grib_action_transient_darray*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);
@@ -139,8 +136,4 @@ static void destroy(grib_context* context, grib_action* act)
 
     grib_context_free_persistent(context, a->name);
     grib_darray_delete(context, a->darray);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

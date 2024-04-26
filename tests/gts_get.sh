@@ -13,14 +13,11 @@
 #Enter data dir
 cd ${data_dir}/gts
 
-#Define a common label for all the tmp files
 label="gts_get_test"
 
-#Create log file
 fLog=${label}".log"
 rm -f $fLog
 
-#Define tmp file
 fTmp=${label}".tmp.txt"
 
 #----------------------------------------------
@@ -29,4 +26,39 @@ fTmp=${label}".tmp.txt"
 gts_file=EGRR20150317121020_00493212.DAT
 ${tools_dir}/gts_get -p TT,AA,II,CCCC,YY,GG,gg,BBB $gts_file >/dev/null
 
-rm -f $fLog
+#----------------------------------------------
+# Test "-w" switch
+#----------------------------------------------
+${tools_dir}/gts_get -p TT -w count=3 $gts_file
+
+
+#----------------------------------------------
+# Test "-s" switch
+#----------------------------------------------
+result=$( ${tools_dir}/gts_get -s YY=ab -p YY -w count=3 $gts_file )
+[ "$result" = "ab" ]
+
+
+gts_file=${data_dir}/gts.grib
+result=$( ${tools_dir}/grib_get -wcount=1 -p gts_CCCC -g $gts_file )
+[ "$result" = "ECMG" ]
+
+${tools_dir}/grib_get -wcount=1 -p gts_header -g $gts_file
+
+# Encoding should be disabled
+# -----------------------------
+set +e
+${tools_dir}/grib_set -s gts_CCCC=xxx -g $gts_file $fTmp
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_set -s gts_header=yyy -g $gts_file $fTmp
+status=$?
+set -e
+[ $status -ne 0 ]
+
+
+# Clean up
+rm -f $fLog $fTmp

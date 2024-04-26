@@ -30,7 +30,7 @@ grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
     v = (grib_sarray*)grib_context_malloc_clear(c, sizeof(grib_sarray));
     if (!v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_new unable to allocate %lu bytes\n", sizeof(grib_sarray));
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(grib_sarray));
         return NULL;
     }
     v->size    = size;
@@ -40,7 +40,7 @@ grib_sarray* grib_sarray_new(grib_context* c, size_t size, size_t incsize)
     v->v       = (char**)grib_context_malloc_clear(c, sizeof(char*) * size);
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_new unable to allocate %lu bytes\n", sizeof(char*) * size);
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(char*) * size);
         return NULL;
     }
     return v;
@@ -57,7 +57,7 @@ static grib_sarray* grib_sarray_resize(grib_sarray* v)
     v->size = newsize;
     if (!v->v) {
         grib_context_log(c, GRIB_LOG_ERROR,
-                         "grib_sarray_resize unable to allocate %lu bytes\n", sizeof(char*) * newsize);
+                         "%s: Unable to allocate %zu bytes", __func__, sizeof(char*) * newsize);
         return NULL;
     }
     return v;

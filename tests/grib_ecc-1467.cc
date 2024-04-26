@@ -8,6 +8,9 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
+//
+// ECC-1467: Support data values array decoded as "floats" (single-precision)
+//
 #include <math.h>
 #include "eccodes.h"
 #include "grib_api_internal.h"
@@ -23,26 +26,22 @@ int main(int argc, char** argv)
     double abs_error     = 0;
     const double max_abs_error = 1e-03;
     const double tolerance     = 1e-03;
-    double dmin;
-    double dmax;
+    double dmin, dmax, dval;
     float fval;
 
-    FILE* in             = NULL;
-    const char* filename = 0;
-    codes_handle* h      = NULL;
-
-    if (argc != 2) {
-        fprintf(stderr, "usage: %s file\n", argv[0]);
-        return 1;
-    }
-    filename = argv[1];
+    Assert(argc == 2);
+    const char* filename = argv[1];
 
     printf("Opening %s\n", filename);
-    in = fopen(filename, "rb");
+    FILE* in = fopen(filename, "rb");
     Assert(in);
 
-    h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
+    codes_handle* h = codes_handle_new_from_file(0, in, PRODUCT_GRIB, &err);
     Assert(h);
+
+    CODES_CHECK(codes_get_float(h, "referenceValue", &fval), 0);
+    CODES_CHECK(codes_get_double(h, "referenceValue", &dval), 0);
+    printf("dval = %g, fval = %g\n", dval, fval);
 
     CODES_CHECK(codes_get_size(h, "values", &values_len), 0);
 
@@ -64,8 +63,7 @@ int main(int argc, char** argv)
         fval = fvalues[i];
 
         if (!((dmin <= fval) && (fval <= dmax))) {
-            fprintf(stderr, "Error:\n");
-            fprintf(stderr, "dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
+            fprintf(stderr, "Error: dvalue: %f, fvalue: %f\n", dvalues[i], fvalues[i]);
             fprintf(stderr, "\tmin < fvalue < max = %.20e < %.20e < %.20e FAILED\n",
                     dmin, fvalues[i], dmax);
             fprintf(stderr, "\tfvalue - min = %.20e (%s)\n",

@@ -207,7 +207,7 @@ static grib_trie* load_bufr_elements_table(grib_accessor* a, int* err)
     }
 
     if (!filename) {
-        grib_context_log(c, GRIB_LOG_ERROR, "unable to find definition file %s", self->dictionary);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to find definition file %s", self->dictionary);
         if (strlen(masterRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG,"master path=%s", masterRecomposed);
         if (strlen(localRecomposed) > 0) grib_context_log(c, GRIB_LOG_DEBUG, "local path=%s", localRecomposed);
         *err = GRIB_FILE_NOT_FOUND;
@@ -379,8 +379,7 @@ bufr_descriptor* accessor_bufr_elements_table_get_descriptor(grib_accessor* a, i
     DEBUG_ASSERT(c);
     v = (bufr_descriptor*)grib_context_malloc_clear(c, sizeof(bufr_descriptor));
     if (!v) {
-        grib_context_log(c, GRIB_LOG_ERROR,
-                         "accessor_bufr_elements_table_get_descriptor: unable to allocate %ld bytes\n", sizeof(bufr_descriptor));
+        grib_context_log(c, GRIB_LOG_ERROR, "%s: Unable to allocate %zu bytes", __func__, sizeof(bufr_descriptor));
         *err = GRIB_OUT_OF_MEMORY;
         return NULL;
     }

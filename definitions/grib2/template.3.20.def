@@ -1,9 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.20, Polar stereographic projection
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Nx - number of points along X-axis
 unsigned[4] Nx : dump;
@@ -63,7 +63,7 @@ flags[1] projectionCentreFlag 'grib2/tables/[tablesVersion]/3.5.table' : dump;
 # If bit 1 is 1, then the South Pole is on the projection plane
 flagbit southPoleOnProjectionPlane(projectionCentreFlag,7) : dump;   # WMO bit 1
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 iterator polar_stereographic(numberOfPoints,missingValue,values,
           radius,Nx,Ny,

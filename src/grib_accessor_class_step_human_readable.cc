@@ -9,6 +9,7 @@
  */
 
 #include "grib_api_internal.h"
+#include "step.h"
 
 /*
    This is used by make_class.pl
@@ -127,10 +128,10 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
     /* Change units to seconds (highest resolution)
      * before computing the step value
      */
-    err = grib_set_string(h, "stepUnits", "s", &slen);
-    if (err) return err;
-    err = grib_get_long(h, "step", &step);
-    if (err) return err;
+    if ((err = grib_set_string(h, "stepUnits", "s", &slen)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long(h, "step", &step)) != GRIB_SUCCESS) 
+        return err;
 
     hour = step/3600;
     minute = step/60 % 60;

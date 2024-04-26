@@ -8,16 +8,13 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************************************************************
- *  Enrico Fucile                                                          *
- ***************************************************************************/
 #include "grib_api_internal.h"
 /*
    This is used by make_class.pl
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy;execute
    MEMBERS    = grib_sarray *sarray
    MEMBERS    = char *name
@@ -37,7 +34,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -60,7 +56,7 @@ static grib_action_class _grib_action_class_set_sarray = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -76,9 +72,7 @@ static void init_class(grib_action_class* c)
 }
 /* END_CLASS_IMP */
 
-grib_action* grib_action_create_set_sarray(grib_context* context,
-                                           const char* name,
-                                           grib_sarray* sarray)
+grib_action* grib_action_create_set_sarray(grib_context* context, const char* name, grib_sarray* sarray)
 {
     char buf[1024];
 
@@ -104,14 +98,13 @@ grib_action* grib_action_create_set_sarray(grib_context* context,
 static int execute(grib_action* a, grib_handle* h)
 {
     grib_action_set_sarray* self = (grib_action_set_sarray*)a;
-
     return grib_set_string_array(h, self->name, (const char**)self->sarray->v, self->sarray->n);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    int i                        = 0;
-    grib_action_set_sarray* self = (grib_action_set_sarray*)act;
+    int i = 0;
+    const grib_action_set_sarray* self = (grib_action_set_sarray*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);
@@ -126,8 +119,4 @@ static void destroy(grib_context* context, grib_action* act)
     grib_sarray_delete(context, a->sarray);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

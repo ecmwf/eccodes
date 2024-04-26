@@ -507,6 +507,7 @@ grib_handle* grib_handle_new_from_samples(grib_context* c, const char* sample_na
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 grib_handle* grib_handle_clone(const grib_handle* h);
+grib_handle* grib_handle_clone_headers_only(const grib_handle* h);
 
 /**
  *  Frees a handle, also frees the message if it is not a user message
@@ -732,7 +733,7 @@ int grib_nearest_find_multiple(const grib_handle* h, int is_lsm,
 /*! \defgroup get_set Accessing header and data values   */
 /*! @{ */
 /**
- *  Get the number offset of a key, in a message if several keys of the same name
+ *  Get the byte offset of a key. If several keys of the same name
  *  are present, the offset of the last one is returned
  *
  * @param h           : the handle to get the offset from
@@ -745,7 +746,7 @@ int grib_get_offset(const grib_handle* h, const char* key, size_t* offset);
 /**
  *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param size        : the address of a size_t where the size will be set
  * @return            0 if OK, integer value on error
@@ -755,7 +756,7 @@ int grib_get_size(const grib_handle* h, const char* key, size_t* size);
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length      : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error
@@ -1658,7 +1659,7 @@ Error codes returned by the grib_api functions.
 #define GRIB_WRONG_STEP_UNIT		-26
 /** Invalid file id */
 #define GRIB_INVALID_FILE		-27
-/** Invalid grib id */
+/** Invalid GRIB id */
 #define GRIB_INVALID_GRIB		-28
 /** Invalid index id */
 #define GRIB_INVALID_INDEX		-29

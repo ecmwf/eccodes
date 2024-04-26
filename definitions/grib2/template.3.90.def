@@ -1,9 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.90, Space view perspective or orthographic
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
-constant isGridded = one;
+constant isGridded = true;
 
 unsigned[4] Nx : dump;
 alias Ni = Nx;
@@ -25,7 +25,7 @@ signed[4] longitudeOfSubSatellitePoint;
 meta geography.latitudeOfSubSatellitePointInDegrees   scale(latitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
 meta geography.longitudeOfSubSatellitePointInDegrees   scale(longitudeOfSubSatellitePoint,one,grib2divider,truncateDegrees) : dump;
 
-include "grib2/template.3.resolution_flags.def";
+include "grib2/template.3.resolution_flags.def"
 
 # dx - apparent diameter of Earth in grid lengths, in X-direction
 unsigned[4] dx : dump;
@@ -47,7 +47,7 @@ unsigned[4] Yp : no_copy;
 meta geography.YpInGridLengths scale(Yp,one,thousand) : dump;
 alias yCoordinateOfSubSatellitePoint=YpInGridLengths;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 # Orientation of the grid; i.e. the angle between the increasing Y-axis and the meridian
 # of the sub-satellite point in the direction of increasing latitude

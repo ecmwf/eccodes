@@ -10,6 +10,7 @@
 
 #include "grib_tools.h"
 #include <stdlib.h>
+#include <string>
 
 #if HAVE_LIBJASPER
 /* Remove compiler warnings re macros being redefined */
@@ -76,7 +77,6 @@ static grib_runtime_options global_options = {
     0, /* grib_tools_file* infile */
     0, /* grib_tools_file* outfile */
     0, /* grib_action* action */
-    0, /* grib_rule* rules */
     0, /* int dump_flags; */
     0, /* char* dump_mode; */
     0, /* repack    */
@@ -292,7 +292,7 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 
         grib_tool_new_handle_action(options, h);
 
-        grib_tool_print_key_values(options, h);
+        grib_print_key_values(options, h);
 
         grib_handle_delete(h);
     }
@@ -307,6 +307,29 @@ static int grib_tool_with_orderby(grib_runtime_options* options)
 }
 
 static char iobuf[1024 * 1024];
+
+// Read the first few bytes of the file to guess what kind of product
+// it could be. Returns an empty string if it fails
+static std::string guess_file_product(const std::string& filename)
+{
+    std::string result;
+    char buffer[5] = {0,};
+    FILE* fin = fopen(filename.c_str(), "rb");
+    if (fin) {
+        size_t bytes = fread(buffer, 1, sizeof(buffer), fin);
+        if (bytes == sizeof(buffer)) {
+            if (strncmp(buffer, "GRIB", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUDG", 4)==0) {
+                result = "GRIB";
+            } else if (strncmp(buffer, "BUFR", 4)==0) {
+                result = "BUFR";
+            }
+        }
+        fclose(fin);
+    }
+    return result;
+}
 
 static int grib_tool_without_orderby(grib_runtime_options* options)
 {
@@ -340,7 +363,7 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
         if (options->infile_offset) {
 #ifndef ECCODES_ON_WINDOWS
             /* Check at compile time to ensure our file offset is at least 64 bits */
-            COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+            static_assert(sizeof(options->infile_offset) >= 8);
 #endif
             err = fseeko(infile->file, options->infile_offset, SEEK_SET);
             if (err) {
@@ -419,6 +442,10 @@ static int grib_tool_without_orderby(grib_runtime_options* options)
 
         if (infile->handle_count == 0) {
             fprintf(stderr, "%s: No messages found in %s\n", tool_name, infile->name);
+            std::string product = guess_file_product(infile->name);
+            if (!product.empty()) {
+                fprintf(stderr, "%s: Input file seems to be %s\n", tool_name, product.c_str());
+            }
             if (options->fail)
                 exit(1);
         }
@@ -450,7 +477,8 @@ static int navigate(grib_field_tree* fields, grib_runtime_options* options)
             message_type = CODES_BUFR;
             break;
         default:
-            Assert(0);
+            fprintf(stderr, "%s %s: Invalid mode", tool_name, __func__);
+            exit(1);
     }
 
     if (fields->field) {
@@ -511,17 +539,17 @@ static int grib_tool_index(grib_runtime_options* options)
             k2 = k2->next;
         }
         if (!found) {
-            printf("Indexes contained in the input files have different keys\n");
-            printf("keys in file %s:\n", f1);
+            fprintf(stderr, "Indexes contained in the input files have different keys!\n");
+            fprintf(stderr, "keys in file %s:\n", f1);
             k1 = options->index1->keys;
             while (k1) {
-                printf("\t%s\n", k1->name);
+                fprintf(stderr, "\t%s\n", k1->name);
                 k1 = k1->next;
             }
-            printf("keys in file %s:\n", f2);
+            fprintf(stderr, "keys in file %s:\n", f2);
             k2 = options->index2->keys;
             while (k2) {
-                printf("\t%s\n", k2->name);
+                fprintf(stderr, "\t%s\n", k2->name);
                 k2 = k2->next;
             }
             exit(1);
@@ -543,17 +571,17 @@ static int grib_tool_index(grib_runtime_options* options)
             k1 = k1->next;
         }
         if (!found) {
-            printf("Indexes contained in the input files have different keys\n");
-            printf("keys in file %s:\n", f2);
+            fprintf(stderr,"Indexes contained in the input files have different keys!\n");
+            fprintf(stderr, "keys in file %s:\n", f2);
             k2 = options->index2->keys;
             while (k2) {
-                printf("\t%s\n", k2->name);
+                fprintf(stderr, "\t%s\n", k2->name);
                 k2 = k2->next;
             }
-            printf("keys in file %s:\n", f1);
+            fprintf(stderr, "keys in file %s:\n", f1);
             k1 = options->index1->keys;
             while (k1) {
-                printf("\t%s\n", k1->name);
+                fprintf(stderr, "\t%s\n", k1->name);
                 k1 = k1->next;
             }
 
@@ -1079,7 +1107,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
     int strlenvalue = 0;
     double dvalue   = 0;
     long lvalue     = 0;
-    char value[MAX_STRING_LEN];
+    char value[MAX_STRING_LEN] = {0,};
     const char* notfound = "not_found";
     int written_to_dump  = 0; /* boolean */
     grib_accessor* acc   = NULL;
@@ -1285,7 +1313,7 @@ void grib_print_key_values(grib_runtime_options* options, grib_handle* h)
         snprintf(value, 32, options->format, v);
         strlenvalue = (int)strlen(value);
         width       = strlenvalue < options->default_print_width ? options->default_print_width + 2 : strlenvalue + 2;
-        fprintf(dump_file, "%-*s", (int)width, value);
+        fprintf(dump_file, "%s%-*s", (written_to_dump?" ":""),  (int)width, value);
         written_to_dump = 1;
     }
     if (written_to_dump) {
@@ -1311,16 +1339,15 @@ void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* 
             file->name);
     if (!failed)
         return;
-    /*
-       fprintf(dump_file,"Following bad messages found in %s\n", file->name);
-       fprintf(dump_file,"N      Error\n");
-       while (failed){
-           fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
-           grib_get_error_message(failed->error));
-           failed=failed->next;
-       }
-       fprintf(dump_file,"\n");
-     */
+
+    //  fprintf(dump_file,"Following bad messages found in %s\n", file->name);
+    //  fprintf(dump_file,"N      Error\n");
+    //  while (failed){
+    //      fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
+    //      grib_get_error_message(failed->error));
+    //      failed=failed->next;
+    //  }
+    //  fprintf(dump_file,"\n");
 }
 
 void grib_print_full_statistics(grib_runtime_options* options)
@@ -1394,7 +1421,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     if (options->gts && h->gts_header) {
-        char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
+        const char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
             grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing GTS trailer to %s", filename);

@@ -19,7 +19,7 @@
    CLASS      = action
    IMPLEMENTS = create_accessor
    IMPLEMENTS = dump
-   IMPLEMENTS = destroy; xref
+   IMPLEMENTS = destroy
    MEMBERS    = grib_arguments* args
    END_CLASS_DEF
 
@@ -37,7 +37,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int create_accessor(grib_section*,grib_action*,grib_loader*);
 
@@ -59,7 +58,7 @@ static grib_action_class _grib_action_class_remove = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     &create_accessor,             /* create_accessor*/
 
@@ -112,17 +111,13 @@ static void remove_accessor(grib_accessor* a)
     a->next->previous = a->previous;
 
     grib_accessor_delete(s->h->context, a);
-
-    return;
 }
 
 static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 {
     grib_action_remove* a = (grib_action_remove*)act;
 
-    grib_accessor* ga = NULL;
-
-    ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 0));
+    grib_accessor* ga = grib_find_accessor(p->h, grib_arguments_get_name(p->h, a->args, 0));
 
     if (ga) {
         remove_accessor(ga);
@@ -135,15 +130,15 @@ static int create_accessor(grib_section* p, grib_action* act, grib_loader* h)
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
-    grib_action_remove* a = (grib_action_remove*)act;
-
-    int i = 0;
-
-    for (i = 0; i < lvl; i++)
-        grib_context_print(act->context, f, "     ");
-
-    grib_context_print(act->context, f, "remove %s as %s in %s\n", grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
+    grib_context_log(act->context, GRIB_LOG_ERROR, "%s: dump not implemented", act->name);
+    // grib_action_remove* a = (grib_action_remove*)act;
+    // int i = 0;
+    // for (i = 0; i < lvl; i++)
+    //     grib_context_print(act->context, f, "     ");
+    // grib_context_print(act->context, f, "remove %s as %s in %s\n",
+    //     grib_arguments_get_name(0, a->args, 0), act->name, grib_arguments_get_name(0, a->args, 1));
 }
+
 static void destroy(grib_context* context, grib_action* act)
 {
     grib_action_remove* a = (grib_action_remove*)act;
@@ -151,8 +146,4 @@ static void destroy(grib_context* context, grib_action* act)
     grib_arguments_free(context, a->args);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

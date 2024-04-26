@@ -14,6 +14,13 @@
 
 #include "openjpeg.h"
 
+// The older versions did not have the opj_config.h file
+// So we use a more recent macro to detect whether it is there.
+// Also see https://github.com/uclouvain/openjpeg/issues/1514
+#if defined(OPJ_IMG_INFO)
+    #include "opj_config.h"
+#endif
+
 static void openjpeg_warning(const char* msg, void* client_data)
 {
     grib_context_log((grib_context*)client_data, GRIB_LOG_WARNING, "openjpeg: %s", msg);
@@ -546,13 +553,13 @@ cleanup:
 
 int grib_openjpeg_decode(grib_context* c, unsigned char* buf, const size_t* buflen, double* val, const size_t* n_vals)
 {
-    grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_encoding.c: OpenJPEG JPEG support not enabled.");
+    grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_decode: OpenJPEG JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 
 int grib_openjpeg_encode(grib_context* c, j2k_encode_helper* helper)
 {
-    grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_encoding.c: OpenJPEG JPEG support not enabled.");
+    grib_context_log(c, GRIB_LOG_ERROR, "grib_openjpeg_encode: OpenJPEG JPEG support not enabled.");
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
 

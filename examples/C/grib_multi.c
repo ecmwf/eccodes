@@ -30,11 +30,11 @@ int main(int argc, char** argv)
     codes_handle* h      = NULL;
     int mcount           = 0;
 
+    /* turn off support for GRIB2 multi-field messages */
+    codes_grib_multi_support_off(NULL);
+
     /* turn on support for GRIB2 multi-field messages */
     codes_grib_multi_support_on(NULL);
-
-    /* turn off support for GRIB2 multi-field messages */
-    /* codes_multi_support_off(NULL); */
 
     in = fopen(filename, "rb");
     if (!in) {

@@ -69,6 +69,9 @@
 1095 wamf Wave monthly forecast
 1096 wmfm Wave monthly forecast means
 1097 smma Seasonal monthly means anomalies
+1098 clte Climate run output
+1099 clmn Climate run monthly means output
+1100 dame Daily means
 1110 seap Sensitive area prediction
 1120 eefh Extended ensemble forecast hindcast
 1121 eehs Extended ensemble forecast hindcast statistics
@@ -113,6 +116,7 @@
 1253 ocda Ocean data assimilation
 1254 olda Ocean Long window data assimilation
 1255 gfra Global fire assimilation system reanalysis
+1256 rfsd Retrospective forcing and simulation data
 2231 cnrm Meteo France climate centre
 2232 mpic Max Plank Institute
 2233 ukmo UKMO climate centre

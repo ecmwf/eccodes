@@ -52,3 +52,131 @@
   parameterCategory = 3 ;
   parameterNumber = 9 ;
  }
+#Instantaneous eastward turbulent surface stress
+'Instantaneous eastward turbulent surface stress' = {
+ discipline = 0 ;
+ parameterCategory = 2 ;
+ parameterNumber = 38 ;
+ typeOfFirstFixedSurface = 1 ;
+}
+#Instantaneous northward turbulent surface stress
+'Instantaneous northward turbulent surface stress' = {
+ discipline = 0 ;
+ parameterCategory = 2 ;
+ parameterNumber = 37 ;
+ typeOfFirstFixedSurface = 1 ;
+}
+#Evaporation in the last 6 hours
+'Evaporation in the last 6 hours' = {
+ discipline = 0 ;
+ parameterCategory = 1 ;
+ parameterNumber = 79 ;
+ typeOfFirstFixedSurface = 1 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 1 ;
+ lengthOfTimeRange = 6 ;
+}
+#Time-mean evapotranspiration rate in the last 24h
+'Time-mean evapotranspiration rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 39 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-integrated potential evapotranspiration rate in the last 24h
+'Time-integrated potential evapotranspiration rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 40 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 1 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-mean potential evapotranspiration rate in the last 24h
+'Time-mean potential evapotranspiration rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 40 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-mean volumetric soil moisture
+'Time-mean volumetric soil moisture' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 25 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-integrated water runoff and drainage rate in the last 24h
+'Time-integrated water runoff and drainage rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 42 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 1 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-mean water runoff and drainage rate in the last 24h
+'Time-mean water runoff and drainage rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 42 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-mean snow depth water equivalent
+'Time-mean snow depth water equivalent' = {
+ discipline = 0 ;
+ parameterCategory = 1 ;
+ parameterNumber = 60 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-mean skin temperature
+'Time-mean skin temperature' = {
+ discipline = 0 ;
+ parameterCategory = 0 ;
+ parameterNumber = 17 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 0 ;
+ lengthOfTimeRange = 24 ;
+}
+#Time-integrated snow melt rate in the last 24h
+'Time-integrated snow melt rate in the last 24h' = {
+ discipline = 2 ;
+ parameterCategory = 0 ;
+ parameterNumber = 41 ;
+ indicatorOfUnitForTimeRange = 1 ;
+ typeOfStatisticalProcessing = 1 ;
+ lengthOfTimeRange = 24 ;
+}
+#Upward sea water velocity
+'Upward sea water velocity' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+}
+#Time-mean upward sea water velocity
+'Time-mean upward sea water velocity' = {
+ discipline = 10 ;
+ parameterCategory = 4 ;
+ parameterNumber = 27 ;
+ typeOfFirstFixedSurface = 168 ;
+ typeOfSecondFixedSurface = 168 ;
+ typeOfStatisticalProcessing = 0 ;
+}
+#Maximum individual wave height
+'Maximum individual wave height' = {
+ discipline = 10 ;
+ parameterCategory = 0 ;
+ parameterNumber = 24 ;
+}

@@ -13,9 +13,6 @@
 grib_option grib_options[] = {
     /*  {id, args, help}, on, command_line, value*/
     { "s:", 0, 0, 1, 1, 0 },
-    /*     {"r",0,0,0,1,0}, */
-    /*     {"d:",0,0,0,1,0},*/
-    /*     {"n:","noise percentage","\n\t\tAdd noise to the data values. The noise added is the given percentage of the data value.\n",0,1,0},*/
     { "p:", 0, 0, 1, 1, 0 },
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", "key[:{s|d|i}]=value,key[:{s|d|i}]=value,...",
@@ -32,10 +29,10 @@ grib_option grib_options[] = {
     { "U", 0, 0, 1, 0, 0 },
     { "V", 0, 0, 0, 1, 0 },
     { "g", 0, 0, 0, 1, 0 },
-    /*      {"G",0,0,0,1,0}, */
     { "T:", 0, 0, 1, 0, "B" },
     { "f", 0, 0, 0, 1, 0 },
-    { "v", 0, 0, 0, 1, 0 }
+    { "v", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -61,20 +58,11 @@ int grib_tool_before_getopt(grib_runtime_options* options)
 int grib_tool_init(grib_runtime_options* options)
 {
     if (options->set_values_count == 0 && !options->repack && !options->constant) {
-        printf("ERROR: please provide some keys to set through the -s option or use the -r/-d options\n");
+        fprintf(stderr, "ERROR: Please provide some keys to set through the -s option or use the -r/-d options\n");
         exit(1);
     }
     if (options->verbose)
         options->print_header = 1;
-    /*if (grib_options_on("n:")) {
-    noise=atof(grib_options_get_option("n:"));
-    options->repack=1;
-  }*/
-
-    if (grib_options_on("n:") && grib_options_on("d:")) {
-        printf("Error: -n and -d options are incompatible. Choose one of the two please.\n");
-        exit(1);
-    }
 
     // if (options->outfile && options->outfile->name) {
     //     options->outfile->file = fopen(options->outfile->name,"w");
@@ -120,11 +108,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

@@ -148,6 +148,29 @@ set -e
 [ $status -ne 0 ]
 grep -q "Wrong number of fields" $tempText
 
+
+echo "Not a regular grid ..."
+# --------------------------
+input=${data_dir}/reduced_gaussian_pressure_level.grib2
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "not on a regular lat/lon grid or on a regular Gaussian grid" $tempText
+
+
+# ECC-1783: No error message when input file has invalid fields
+input=$data_dir/bad.grib
+set +e
+${tools_dir}/grib_to_netcdf -o $tempNetcdf $input > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong message length" $tempText
+
+
+# Validity time check
 export GRIB_TO_NETCDF_CHECKVALIDTIME=0
 ${tools_dir}/grib_to_netcdf -o $tempNetcdf $tempGrib
 [ -f "$tempNetcdf" ]

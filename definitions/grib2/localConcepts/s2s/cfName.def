@@ -6,6 +6,30 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Sea ice area fraction
+'sea_ice_area_fraction' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-integrated eastward turbulent surface stress
+'surface_downward_eastward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 38 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
+#Time-integrated northward turbulent surface stress
+'surface_downward_northward_stress' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 37 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 1 ;
+	}
 #Sea surface practical salinity
 'sea_surface_salinity' = {
 	 discipline = 10 ;
@@ -30,6 +54,22 @@
 	 scaleFactorOfFirstFixedSurface = 2 ;
 	 scaledValueOfSecondFixedSurface = missing() ;
 	 scaleFactorOfSecondFixedSurface = missing() ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Eastward surface sea water velocity
+'eastward_sea_water_velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Northward surface sea water velocity
+'northward_sea_water_velocity' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Sea surface height

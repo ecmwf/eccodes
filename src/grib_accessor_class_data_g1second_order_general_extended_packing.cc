@@ -359,7 +359,8 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
     double reference_value;
     long binary_scale_factor;
     long decimal_scale_factor;
-    long j, count = 0;
+    long j;
+    // long count = 0;
     long *groupWidths = NULL, *groupLengths = NULL;
     long orderOfSPD     = 0;
     long* SPD           = 0;
@@ -456,7 +457,7 @@ static int unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len
                                    &X[n]);
             for (j = 0; j < groupLengths[i]; j++) {
                 X[n] += firstOrderValues[i];
-                count++;
+                // count++;
                 n++;
             }
 
@@ -804,7 +805,7 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
         if (grib_get_nearest_smaller_value(handle, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
+                             "Unable to find nearest_smaller_value of %g for %s", min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
         binary_scale_factor = grib_get_binary_scale_fact(max, reference_value, bits_per_value, &ret);
@@ -1350,10 +1351,10 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 
     /* ECC-259: Set correct number of values */
     ret = grib_set_long_internal(a->parent->h, self->number_of_values, *len);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
-    grib_buffer_replace(a, buffer, size, 1, 1);
+    ret = grib_buffer_replace(a, buffer, size, 1, 1);
+    if (ret) return ret;
 
     grib_context_free(a->context, buffer);
     grib_context_free(a->context, X);

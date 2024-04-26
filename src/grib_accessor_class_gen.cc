@@ -193,8 +193,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* param)
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
-    int type = grib_accessor_get_native_type(a);
-
+    const int type = grib_accessor_get_native_type(a);
     switch (type) {
         case GRIB_TYPE_STRING:
             grib_dump_string(dumper, a, NULL);
@@ -246,8 +245,8 @@ static long byte_offset(grib_accessor* a)
 static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 {
     unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    long length        = grib_byte_count(a);
-    long offset        = grib_byte_offset(a);
+    const long length = grib_byte_count(a);
+    const long offset = grib_byte_offset(a);
 
     if (*len < length) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size for %s, it is %ld bytes long", a->name, length);
@@ -264,8 +263,8 @@ static int unpack_bytes(grib_accessor* a, unsigned char* val, size_t* len)
 static int clear(grib_accessor* a)
 {
     unsigned char* buf = grib_handle_of_accessor(a)->buffer->data;
-    long length        = grib_byte_count(a);
-    long offset        = grib_byte_offset(a);
+    const long length = grib_byte_count(a);
+    const long offset = grib_byte_offset(a);
 
     memset(buf + offset, 0, length);
 
@@ -384,10 +383,9 @@ static int unpack_string(grib_accessor* a, char* v, size_t* len)
 
 static int unpack_string_array(grib_accessor* a, char** v, size_t* len)
 {
-    int err       = 0;
     size_t length = 0;
 
-    err = ecc__grib_get_string_length(a, &length);
+    int err = grib_get_string_length_acc(a, &length);
     if (err)
         return err;
     v[0] = (char*)grib_context_malloc_clear(a->context, length);
@@ -406,7 +404,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     int ret           = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
 
-    switch (grib_accessor_get_native_type(a)) {
+    // Use the native type of the expression not the accessor
+    switch (grib_expression_native_type(hand, e)) {
         case GRIB_TYPE_LONG: {
             len = 1;
             ret = grib_expression_evaluate_long(hand, e, &lval);
@@ -424,7 +423,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len = 1;
             ret = grib_expression_evaluate_double(hand, e, &dval);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as double (from %s)",
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as double (from %s)",
                                  a->name, e->cclass->name);
                 return ret;
             }
@@ -438,7 +437,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len  = sizeof(tmp);
             cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string (from %s)",
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as string (from %s)",
                                  a->name, e->cclass->name);
                 return ret;
             }
@@ -456,16 +455,14 @@ static int pack_long(grib_accessor* a, const long* v, size_t* len)
 {
     grib_context* c = a->context;
     if (a->cclass->pack_double && a->cclass->pack_double != &pack_double) {
-        int i = 0, ret = 0;
         double* val = (double*)grib_context_malloc(c, *len * (sizeof(double)));
         if (!val) {
-            grib_context_log(c, GRIB_LOG_ERROR,
-                             "Unable to allocate %zu bytes", *len * (sizeof(double)));
+            grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %zu bytes", *len * (sizeof(double)));
             return GRIB_OUT_OF_MEMORY;
         }
-        for (i = 0; i < *len; i++)
-            val[i] = (long)v[i];
-        ret = grib_pack_double(a, val, len);
+        for (size_t i = 0; i < *len; i++)
+            val[i] = v[i];
+        int ret = grib_pack_double(a, val, len);
         grib_context_free(c, val);
         return ret;
     }
@@ -480,14 +477,13 @@ static int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* 
 {
     grib_context* c = a->context;
     int ret         = GRIB_SUCCESS;
-    size_t i        = 0;
     size_t numBytes = *len * (sizeof(long));
     long* lValues   = (long*)grib_context_malloc(c, numBytes);
     if (!lValues) {
-        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes\n", numBytes);
+        grib_context_log(c, GRIB_LOG_ERROR, "Unable to allocate %ld bytes", numBytes);
         return GRIB_OUT_OF_MEMORY;
     }
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         lValues[i] = (long)v[i]; /* convert from double to long */
     ret = grib_pack_long(a, lValues, len);
     grib_context_free(c, lValues);
@@ -519,13 +515,12 @@ static int pack_double(grib_accessor* a, const double* v, size_t* len)
 
 static int pack_string_array(grib_accessor* a, const char** v, size_t* len)
 {
-    long i;
     int err           = 0;
     size_t length     = 0;
     grib_accessor* as = 0;
 
     as = a;
-    i  = (long)*len - 1;
+    long i = (long)*len - 1;
     while (as && i >= 0) {
         length = strlen(v[i]);
         err    = grib_pack_string(as, v[i], &length);
@@ -545,7 +540,7 @@ static int pack_string(grib_accessor* a, const char* v, size_t* len)
         double val = strtod(v, &endPtr);
         if (*endPtr) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                             "%s: Invalid value (%s) for %s. String cannot be converted to a double",
+                             "%s: Invalid value (%s) for key '%s'. String cannot be converted to a double",
                              __func__, v, a->name);
             return GRIB_WRONG_TYPE;
         }
@@ -599,9 +594,8 @@ static int notify_change(grib_accessor* self, grib_accessor* observed)
 
 static void update_size(grib_accessor* a, size_t s)
 {
-    grib_context_log(a->context, GRIB_LOG_ERROR,
+    grib_context_log(a->context, GRIB_LOG_FATAL,
                      "Accessor %s [%s] must implement 'update_size'", a->name, a->cclass->name);
-    Assert(0);
 }
 
 static grib_accessor* next(grib_accessor* a, int mod)

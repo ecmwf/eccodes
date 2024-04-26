@@ -15,7 +15,7 @@
    START_CLASS_DEF
    CLASS      = accessor
    SUPER      = grib_accessor_class_ascii
-   IMPLEMENTS = pack_string;unpack_string;value_count
+   IMPLEMENTS = unpack_string;value_count
    IMPLEMENTS = init;string_length
    MEMBERS =  int gts_offset
    MEMBERS =  int gts_length
@@ -33,7 +33,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 
 */
 
-static int pack_string(grib_accessor*, const char*, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
 static size_t string_length(grib_accessor*);
 static int value_count(grib_accessor*, long*);
@@ -76,7 +75,7 @@ static grib_accessor_class _grib_accessor_class_gts_header = {
     0,                 /* pack_float */
     0,              /* unpack_double */
     0,               /* unpack_float */
-    &pack_string,                /* pack_string */
+    0,                /* pack_string */
     &unpack_string,              /* unpack_string */
     0,          /* pack_string_array */
     0,        /* unpack_string_array */
@@ -107,17 +106,12 @@ grib_accessor_class* grib_accessor_class_gts_header = &_grib_accessor_class_gts_
 static void init(grib_accessor* a, const long l, grib_arguments* c)
 {
     grib_accessor_gts_header* self = (grib_accessor_gts_header*)a;
-    self->gts_offset               = -1;
-    self->gts_length               = -1;
-    self->gts_offset               = grib_arguments_get_long(grib_handle_of_accessor(a), c, 0);
-    self->gts_length               = grib_arguments_get_long(grib_handle_of_accessor(a), c, 1);
+    self->gts_offset = -1;
+    self->gts_length = -1;
+    self->gts_offset = grib_arguments_get_long(grib_handle_of_accessor(a), c, 0);
+    self->gts_length = grib_arguments_get_long(grib_handle_of_accessor(a), c, 1);
+    a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
-
-static int pack_string(grib_accessor* a, const char* val, size_t* len)
-{
-    return GRIB_NOT_IMPLEMENTED;
-}
-
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
@@ -128,12 +122,12 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
 
     if (h->gts_header == NULL || h->gts_header_len < 8) {
         if (*len < 8)
-            return GRIB_ARRAY_TOO_SMALL;
+            return GRIB_BUFFER_TOO_SMALL;
         snprintf(val, 1024, "missing");
         return GRIB_SUCCESS;
     }
     if (*len < h->gts_header_len)
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
 
     offset = self->gts_offset > 0 ? self->gts_offset : 0;
     length = self->gts_length > 0 ? self->gts_length : h->gts_header_len;

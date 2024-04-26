@@ -1,7 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.1200, Time section grid
-constant isGridded = one;
+# This template is simply experimental, was not validated at the time of publication
+# and should be used only for bilateral previously agreed tests
+transient template_is_experimental = 1 : hidden;
+
+constant isGridded = true;
 
 #  NT - Number of time steps
 unsigned[4] numberOfTimeSteps  : dump;

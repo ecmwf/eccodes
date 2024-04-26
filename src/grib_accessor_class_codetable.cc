@@ -50,7 +50,7 @@ static void thread_init()
    CLASS      = accessor
    SUPER      = grib_accessor_class_unsigned
    IMPLEMENTS = init;dump;unpack_string;pack_expression;unpack_long
-   IMPLEMENTS = value_count;pack_string; destroy; get_native_type;
+   IMPLEMENTS = value_count;pack_string; destroy; get_native_type;pack_missing
    MEMBERS    =  const char* tablename
    MEMBERS    =  const char* masterDir
    MEMBERS    =  const char* localDir
@@ -71,6 +71,7 @@ or edit "accessor.class" and rerun ./make_class.pl
 */
 
 static int get_native_type(grib_accessor*);
+static int pack_missing(grib_accessor*);
 static int pack_string(grib_accessor*, const char*, size_t* len);
 static int pack_expression(grib_accessor*, grib_expression*);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
@@ -115,7 +116,7 @@ static grib_accessor_class _grib_accessor_class_codetable = {
     0,                /* get offset to bytes */
     &get_native_type,            /* get native type */
     0,                /* get sub_section */
-    0,               /* pack_missing */
+    &pack_missing,               /* pack_missing */
     0,                 /* is_missing */
     0,                  /* pack_long */
     &unpack_long,                /* unpack_long */
@@ -221,7 +222,7 @@ static void init(grib_accessor* a, const long len, grib_arguments* params)
                     p     = grib_expression_evaluate_string(grib_handle_of_accessor(a), expression, tmp, &s_len, &ret);
                     if (ret != GRIB_SUCCESS) {
                         grib_context_log(a->context, GRIB_LOG_FATAL,
-                                         "unable to evaluate %s as string", a->name);
+                                         "Unable to evaluate %s as string", a->name);
                     }
                     s_len = strlen(p) + 1;
                     pack_string(a, p, &s_len);
@@ -523,6 +524,94 @@ void grib_codetable_delete(grib_context* c)
     }
 }
 
+int codes_codetable_get_contents_malloc(const grib_handle* h, const char* key, code_table_entry** entries, size_t* num_entries)
+{
+    long lvalue = 0;
+    size_t size = 1;
+    int err = 0;
+    grib_context* c = h->context;
+
+    grib_accessor* aa = grib_find_accessor(h, key);
+    if (!aa) return GRIB_NOT_FOUND;
+
+    if (!STR_EQUAL(aa->cclass->name, "codetable")) {
+        return GRIB_INVALID_ARGUMENT; // key is not a codetable
+    }
+
+    const grib_accessor_codetable* ca = (const grib_accessor_codetable*)aa; // could be dynamic_cast
+
+    // Decode the key itself. This will either fetch it from the cache or place it there
+    if ((err = grib_unpack_long(aa, &lvalue, &size)) != GRIB_SUCCESS) {
+        return err;
+    }
+
+    const grib_codetable* table = ca->table;
+    if (!table) return GRIB_INTERNAL_ERROR;
+
+    grib_codetable* cached_table = c->codetable; // Access the codetable cache
+    while (cached_table) {
+        if (STR_EQUAL(table->recomposed_name[0], cached_table->recomposed_name[0])) {
+            // Found a cache entry that matches the recomposed name of ours
+            *num_entries = cached_table->size;
+            *entries = (code_table_entry*)calloc(cached_table->size, sizeof(code_table_entry));
+            if (!*entries) {
+                return GRIB_OUT_OF_MEMORY;
+            }
+            for (size_t i = 0; i < cached_table->size; i++) {
+                (*entries)[i] = cached_table->entries[i];
+            }
+            return GRIB_SUCCESS;
+        }
+        cached_table = cached_table->next;
+    }
+
+    return GRIB_CODE_NOT_FOUND_IN_TABLE;
+}
+
+int codes_codetable_check_code_figure(const grib_handle* h, const char* key, long code_figure)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    if (code_figure < 0 || (size_t)code_figure >= num_entries) {
+        err = GRIB_OUT_OF_RANGE;
+        goto cleanup;
+    }
+
+    if (entries[code_figure].abbreviation == NULL) {
+        err = GRIB_INVALID_KEY_VALUE;
+        goto cleanup;
+    }
+cleanup:
+    free(entries);
+    return err;
+}
+
+int codes_codetable_check_abbreviation(const grib_handle* h, const char* key, const char* abbreviation)
+{
+    code_table_entry* entries = NULL;
+    size_t num_entries = 0;
+    int err = 0;
+    err = codes_codetable_get_contents_malloc(h, key, &entries, &num_entries);
+    if (err) return err;
+
+    bool found = false;
+    for (size_t i=0; i<num_entries; ++i) {
+        const char* abbrev = entries[i].abbreviation;
+        if (abbrev && STR_EQUAL(abbrev, abbreviation)) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) err = GRIB_INVALID_KEY_VALUE;
+
+    free(entries);
+    return err;
+}
+
 static void dump(grib_accessor* a, grib_dumper* dumper)
 {
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
@@ -611,6 +700,10 @@ static int unpack_string(grib_accessor* a, char* buffer, size_t* len)
     l = strlen(tmp) + 1;
 
     if (*len < l) {
+        const char* cclass_name = a->cclass->name;
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         cclass_name, a->name, l, *len);
         *len = l;
         return GRIB_BUFFER_TOO_SMALL;
     }
@@ -638,6 +731,12 @@ static bool is_number(const char* s)
     return true;
 }
 
+static bool strings_equal(const char* s1, const char* s2, bool case_sensitive)
+{
+    if (case_sensitive) return (strcmp(s1, s2) == 0);
+    return (strcmp_nocase(s1, s2) == 0);
+}
+
 static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
 {
     long lValue = 0;
@@ -648,14 +747,14 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
         return grib_pack_long(a, &lValue, &l);
     }
 
+    if (STR_EQUAL_NOCASE(buffer, "missing")) {
+        return pack_missing(a);
+    }
+
     grib_accessor_codetable* self = (grib_accessor_codetable*)a;
-    grib_codetable* table;
-    long i;
+    grib_codetable* table = NULL;
+    long i = 0;
     size_t size = 1;
-
-    typedef int (*cmpproc)(const char*, const char*);
-
-    cmpproc cmp = (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) ? strcmp_nocase : strcmp;
 
     if (!self->table_loaded) {
         self->table        = load_table(a); /* may return NULL */
@@ -672,10 +771,18 @@ static int pack_string(grib_accessor* a, const char* buffer, size_t* len)
             return err;
     }
 
-    for (i = 0; i < table->size; i++)
-        if (table->entries[i].abbreviation)
-            if (cmp(table->entries[i].abbreviation, buffer) == 0)
+    // If the key has the "lowercase" flag set, then the string comparison
+    // should ignore the case
+    bool case_sensitive = true;
+    if (a->flags & GRIB_ACCESSOR_FLAG_LOWERCASE) case_sensitive = false;
+
+    for (i = 0; i < table->size; i++) {
+        if (table->entries[i].abbreviation) {
+            if (strings_equal(table->entries[i].abbreviation, buffer, case_sensitive)) {
                 return grib_pack_long(a, &i, &size);
+            }
+        }
+    }
 
     if (a->flags & GRIB_ACCESSOR_FLAG_NO_FAIL) {
         grib_action* act = (grib_action*)(a->creator);
@@ -739,8 +846,8 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (strcmp(e->cclass->name, "long") == 0) {
-        grib_expression_evaluate_long(hand, e, &lval); /* TDOD: check return value */
-        /*if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);*/
+        grib_expression_evaluate_long(hand, e, &lval); /* TODO: check return value */
+        //if (hand->context->debug) printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %ld\n", a->name,lval);
         ret = grib_pack_long(a, &lval, &len);
     }
     else {
@@ -748,12 +855,14 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
         len  = sizeof(tmp);
         cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
         if (ret != GRIB_SUCCESS) {
-            grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_codetable.pack_expression: unable to evaluate string %s to be set in %s\n", grib_expression_get_name(e), a->name);
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                "grib_accessor_codetable.%s: Unable to evaluate string %s to be set in %s",
+                __func__, grib_expression_get_name(e), a->name);
             return ret;
         }
         len = strlen(cval) + 1;
-        /*if (hand->context->debug)
-            printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);*/
+        //if (hand->context->debug)
+        //    printf("ECCODES DEBUG grib_accessor_class_codetable::pack_expression %s %s\n", a->name, cval);
         ret = grib_pack_string(a, cval, &len);
     }
     return ret;
@@ -799,9 +908,9 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     }
 
     if (*len < rlen) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%lu) for %s, it contains %ld values",
+        grib_context_log(a->context, GRIB_LOG_ERROR, "Wrong size (%zu) for %s, it contains %ld values",
                 *len, a->name, rlen);
-        *len = 0;
+        *len = rlen;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -823,4 +932,28 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *len = rlen;
     return GRIB_SUCCESS;
+}
+
+static int pack_missing(grib_accessor* a)
+{
+    // Many of the code tables do have a 'Missing' entry (all bits = 1)
+    // So it is more user-friendly to allow setting codetable keys to
+    // missing. For tables that do not have such an entry, an error is issued
+    grib_accessor_codetable* self = (grib_accessor_codetable*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+
+    const long nbytes = a->length;
+    const long nbits = nbytes*8;
+    const long maxVal = (1<<nbits) - 1;
+
+    int err = codes_codetable_check_code_figure(h, a->name, maxVal);
+    if (!err) {
+        size_t l = 1;
+        return grib_pack_long(a, &maxVal, &l);
+    }
+
+    grib_context_log(a->context, GRIB_LOG_ERROR, "There is no 'missing' entry in Code Table %s (%s)",
+            self->tablename, grib_get_error_message(err));
+
+    return err;
 }

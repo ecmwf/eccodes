@@ -2,11 +2,11 @@
 
 # TEMPLATE 3.130, Irregular Latitude/longitude grid
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Note: This template is deprecated.
 
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
 points list(numberOfDataPoints) {
     signed[4] latitude;

@@ -104,8 +104,61 @@ ${tools_dir}/grib_dump -s year=1909 $file > $temp 2>&1
 grep -q "dataDate = 19090206" $temp
 
 # Skip handle
+file=$data_dir/sample.grib2
 ${tools_dir}/grib_dump -w count=4 $file > $temp 2>&1
 
+file=$data_dir/sample.grib2
+ECCODES_DEBUG=1 ${tools_dir}/grib_dump $file > $temp 2>&1
+
+
+# Repeated key numberOfSection
+file=$data_dir/sample.grib2
+${tools_dir}/grib_dump -O $file > $temp
+grep -q "numberOfSection = 1" $temp
+grep -q "numberOfSection = 3" $temp
+grep -q "numberOfSection = 4" $temp
+grep -q "numberOfSection = 5" $temp
+grep -q "numberOfSection = 7" $temp
+
+
+# Dump long array
+# ----------------
+input=$data_dir/lfpw.grib1
+${tools_dir}/grib_dump -w count=1 -p SPD $input
+
+
+# ECC-1749: grib_dump: No gap between offsets and key name
+#-----------------------------------------------------------
+file=$data_dir/sst_globus0083.grib
+${tools_dir}/grib_dump -O $file > $temp 2>&1
+grep -q "12-10227752 codedValues" $temp
+
+
+# Error conditions
+#-----------------------------------------------------------
+file=$data_dir/sample.grib2
+${tools_dir}/grib_dump -p nonexist $file > $temp 2>&1
+grep -q "Key/value not found" $temp
+
+
+# Unreadable message
+#-----------------------------------------------------------
+tempOut=temp.$label.out
+echo GRIB > $temp
+
+set +e
+${tools_dir}/grib_dump $temp > $tempOut 2>&1
+status=$?
+set -e
+grep -q "unreadable message" $tempOut
+
+set +e
+${tools_dir}/grib_dump -j $temp > $tempOut 2>&1
+status=$?
+set -e
+grep -q "unreadable message" $tempOut
+
+rm -f $tempOut
 
 # Clean up
 rm -f $temp

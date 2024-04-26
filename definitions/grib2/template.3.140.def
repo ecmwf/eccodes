@@ -1,9 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
-constant isGridded = one;
+constant isGridded = true;
 
 # Nx - number of points along X-axis
 unsigned[4] numberOfPointsAlongXAxis : dump;
@@ -19,16 +19,15 @@ alias Nj = Ny;
 # La1 - latitude of first grid point
 signed[4] latitudeOfFirstGridPoint: edition_specific;
 alias La1 = latitudeOfFirstGridPoint;
-meta geography.latitudeOfFirstGridPointInDegrees scale(latitudeOfFirstGridPoint,
-                                                 one,grib2divider,truncateDegrees) : dump;
+meta geography.latitudeOfFirstGridPointInDegrees scale(
+    latitudeOfFirstGridPoint, one,grib2divider,truncateDegrees) : dump;
 #meta latitudeOfFirstGridPointInMicrodegrees times(latitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor): no_copy;
 
 # Lo1 - longitude of first grid point
 signed[4] longitudeOfFirstGridPoint: edition_specific ;
 alias La1 = longitudeOfFirstGridPoint;
-meta geography.longitudeOfFirstGridPointInDegrees scale(longitudeOfFirstGridPoint,
-                                                 one,grib2divider,truncateDegrees) : dump;
-#meta longitudeOfFirstGridPointInMicrodegrees times(longitudeOfFirstGridPoint,mAngleMultiplier,angleDivisor) : no_copy;
+meta geography.longitudeOfFirstGridPointInDegrees scale(
+    longitudeOfFirstGridPoint,one,grib2divider,truncateDegrees) : dump;
 
 signed[4] standardParallelInMicrodegrees : dump;
 alias standardParallel=standardParallelInMicrodegrees;
@@ -53,15 +52,16 @@ alias Dy  = yDirectionGridLengthInMillimetres ;
 meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 alias DyInMetres = yDirectionGridLengthInMetres;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
-iterator lambert_azimuthal_equal_area(numberOfPoints,missingValue,values,
-          radius,Nx,Ny,
-          latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-          standardParallelInDegrees,centralLongitudeInDegrees,
-          Dx,Dy,
-          iScansNegatively, jScansPositively,
-          jPointsAreConsecutive, alternativeRowScanning);
+iterator lambert_azimuthal_equal_area(
+    numberOfPoints,missingValue,values,
+    radius,Nx,Ny,
+    latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+    standardParallelInDegrees,centralLongitudeInDegrees,
+    Dx,Dy,
+    iScansNegatively, jScansPositively,
+    jPointsAreConsecutive, alternativeRowScanning);
 
 nearest lambert_azimuthal_equal_area(values,radius,Nx,Ny);
 

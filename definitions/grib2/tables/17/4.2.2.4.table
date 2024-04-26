@@ -11,6 +11,6 @@
 9 9 Initial Fire Spread Index (Canadian Forest Service) (Numeric)
 10 10 Fire Buildup Index (Canadian Forest Service) (Numeric)
 11 11 Fire Daily Severity Rating (Canadian Forest Service) (Numeric)
-# 12-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 12-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

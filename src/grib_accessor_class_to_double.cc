@@ -22,7 +22,6 @@
    IMPLEMENTS = value_count
    IMPLEMENTS = next_offset
    IMPLEMENTS = get_native_type
-   IMPLEMENTS = compare
    MEMBERS = const char* key
    MEMBERS = long start
    MEMBERS = size_t length
@@ -50,7 +49,6 @@ static long next_offset(grib_accessor*);
 static int value_count(grib_accessor*, long*);
 static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
-static int compare(grib_accessor*, grib_accessor*);
 
 typedef struct grib_accessor_to_double
 {
@@ -103,7 +101,7 @@ static grib_accessor_class _grib_accessor_class_to_double = {
     0,                     /* resize */
     0,      /* nearest_smaller_value */
     0,                       /* next accessor */
-    &compare,                    /* compare vs. another accessor */
+    0,                    /* compare vs. another accessor */
     0,      /* unpack only ith value (double) */
     0,       /* unpack only ith value (float) */
     0,  /* unpack a given set of elements (double) */
@@ -152,7 +150,7 @@ static size_t string_length(grib_accessor* a)
     if (self->length)
         return self->length;
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     return size;
 }
 
@@ -168,18 +166,17 @@ static int get_native_type(grib_accessor* a)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    int err                       = 0;
     grib_accessor_to_double* self = (grib_accessor_to_double*)a;
-    char buff[512]                = {0,};
-    size_t length;
+
+    int err = 0;
+    char buff[512] = {0,};
     size_t size = 512;
+    size_t length = string_length(a);
 
-    length = string_length(a);
-
-    if (len[0] < length + 1) {
+    if (*len < length + 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "unpack_string: Wrong size (%lu) for %s, it contains %ld values",
-                len[0], a->name, a->length + 1);
-        len[0] = 0;
+                *len, a->name, a->length + 1);
+        *len = length + 1;
         return GRIB_ARRAY_TOO_SMALL;
     }
 
@@ -194,7 +191,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     memcpy(val, buff + self->start, length);
 
     val[length] = 0;
-    len[0]      = length;
+    *len = length;
     return err;
 }
 
@@ -241,44 +238,4 @@ static int unpack_double(grib_accessor* a, double* v, size_t* len)
 static long next_offset(grib_accessor* a)
 {
     return a->offset + a->length;
-}
-
-static int compare(grib_accessor* a, grib_accessor* b)
-{
-    int retval = 0;
-    char* aval = 0;
-    char* bval = 0;
-    int err    = 0;
-
-    size_t alen = 0;
-    size_t blen = 0;
-    long count  = 0;
-
-    err = grib_value_count(a, &count);
-    if (err)
-        return err;
-    alen = count;
-
-    err = grib_value_count(b, &count);
-    if (err)
-        return err;
-    blen = count;
-
-    if (alen != blen)
-        return GRIB_COUNT_MISMATCH;
-
-    aval = (char*)grib_context_malloc(a->context, alen * sizeof(char));
-    bval = (char*)grib_context_malloc(b->context, blen * sizeof(char));
-
-    grib_unpack_string(a, aval, &alen);
-    grib_unpack_string(b, bval, &blen);
-
-    retval = GRIB_SUCCESS;
-    if (strcmp(aval, bval))
-        retval = GRIB_STRING_VALUE_MISMATCH;
-
-    grib_context_free(a->context, aval);
-    grib_context_free(b->context, bval);
-
-    return retval;
 }

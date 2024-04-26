@@ -103,13 +103,14 @@ static void init_class(grib_dumper_class* c) {}
 static int init(grib_dumper* d)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    grib_context* c                       = d->context;
-    self->section_offset                  = 0;
-    self->empty                           = 1;
-    d->count                              = 1;
-    self->isLeaf                          = 0;
-    self->isAttribute                     = 0;
-    self->keys                            = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
+
+    grib_context* c      = d->context;
+    self->section_offset = 0;
+    self->empty          = 1;
+    d->count             = 1;
+    self->isLeaf         = 0;
+    self->isAttribute    = 0;
+    self->keys           = (grib_string_list*)grib_context_malloc_clear(c, sizeof(grib_string_list));
 
     return GRIB_SUCCESS;
 }
@@ -117,9 +118,10 @@ static int init(grib_dumper* d)
 static int destroy(grib_dumper* d)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    grib_string_list* next                = self->keys;
-    grib_string_list* cur                 = NULL;
-    grib_context* c                       = d->context;
+
+    grib_string_list* next = self->keys;
+    grib_string_list* cur  = NULL;
+    grib_context* c        = d->context;
     while (next) {
         cur  = next;
         next = next->next;
@@ -200,10 +202,11 @@ static char* break_line(grib_context* c, const char* input)
 static void dump_values(grib_dumper* d, grib_accessor* a)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    double value                          = 0;
+
+    double value = 0;
     size_t size = 0, size2 = 0;
-    double* values                        = NULL;
-    int err                               = 0;
+    double* values = NULL;
+    int err        = 0;
     int i, r, icount;
     int cols   = 2;
     long count = 0;
@@ -295,10 +298,11 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 static void dump_values_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    double value                          = 0;
+
+    double value = 0;
     size_t size = 0, size2 = 0;
-    double* values                        = NULL;
-    int err                               = 0;
+    double* values = NULL;
+    int err        = 0;
     int i, icount;
     int cols   = 2;
     long count = 0;
@@ -381,16 +385,17 @@ static int is_hidden(grib_accessor* a)
 static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    long value                            = 0;
+
+    long value  = 0;
     size_t size = 0, size2 = 0;
-    long* values                          = NULL;
-    int err                               = 0;
+    long* values = NULL;
+    int err      = 0;
     int i, r, icount;
-    int cols                        = 4;
-    long count                      = 0;
-    char* sval                      = NULL;
-    grib_context* c                 = a->context;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    int cols = 4;
+    long count = 0;
+    char* sval = NULL;
+    grib_context* c = a->context;
+    grib_handle* h = grib_handle_of_accessor(a);
     int doing_unexpandedDescriptors = 0;
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0) { /* key does not have the dump attribute */
@@ -516,10 +521,11 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    long value                            = 0;
+
+    long value  = 0;
     size_t size = 0, size2 = 0;
-    long* values                          = NULL;
-    int err                               = 0;
+    long* values = NULL;
+    int err      = 0;
     int i, icount;
     int cols        = 4;
     long count      = 0;
@@ -573,10 +579,12 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out, "  call codes_set(ibufr,'%s->%s' &\n,ivalues)\n", pref, a->name);
     }
     else {
-        char* sval = lval_to_string(c, value);
-        fprintf(self->dumper.out, "  call codes_set(ibufr,'%s->%s'&\n,", pref, a->name);
-        fprintf(self->dumper.out, "%s)\n", sval);
-        grib_context_free(c, sval);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            char* sval = lval_to_string(c, value);
+            fprintf(self->dumper.out, "  call codes_set(ibufr,'%s->%s'&\n,", pref, a->name);
+            fprintf(self->dumper.out, "%s)\n", sval);
+            grib_context_free(c, sval);
+        }
     }
 
     if (self->isLeaf == 0) {
@@ -601,8 +609,9 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
 static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    double value                          = 0;
-    size_t size                           = 1;
+
+    double value = 0;
+    size_t size  = 1;
     int r;
     char* sval;
     grib_handle* h  = grib_handle_of_accessor(a);
@@ -713,16 +722,17 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
 static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    char* value                           = NULL;
-    char* p                               = NULL;
-    size_t size                           = 0;
-    grib_context* c                       = a->context;
+
+    char* value     = NULL;
+    char* p         = NULL;
+    size_t size     = 0;
+    grib_context* c = a->context;
     int r;
     int err = 0;
     grib_handle* h       = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     if (size == 0)
         return;
 
@@ -858,7 +868,7 @@ static void dump_section(grib_dumper* d, grib_accessor* a, grib_block_of_accesso
 
 static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix)
 {
-    int i                                 = 0;
+    int i = 0;
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
     unsigned long flags;
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
@@ -890,7 +900,7 @@ static void dump_attributes(grib_dumper* d, grib_accessor* a, const char* prefix
 static void header(grib_dumper* d, grib_handle* h)
 {
     grib_dumper_bufr_encode_fortran* self = (grib_dumper_bufr_encode_fortran*)d;
-    char sampleName[200]                  = { 0 };
+    char sampleName[200] = { 0 };
     long localSectionPresent, edition, bufrHeaderCentre, isSatellite;
 
     grib_get_long(h, "localSectionPresent", &localSectionPresent);

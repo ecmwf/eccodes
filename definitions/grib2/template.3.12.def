@@ -1,9 +1,9 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.12, Transverse Mercator
-include "grib2/template.3.shape_of_the_earth.def";
+include "grib2/template.3.shape_of_the_earth.def"
 
-constant isGridded = one;
+constant isGridded = true;
 
 unsigned[4] Ni : dump;
 alias numberOfPointsAlongAParallel = Ni;
@@ -27,7 +27,7 @@ signed[4] longitudeOfReferencePoint : edition_specific,no_copy;
 alias LoR = longitudeOfReferencePoint;
 meta geography.longitudeOfReferencePointInDegrees scale(longitudeOfReferencePoint,oneConstant,grib2divider,truncateDegrees) : dump;
 
-include "grib2/template.3.resolution_flags.def";
+include "grib2/template.3.resolution_flags.def"
 
 # m - scale factor at reference point ratio of distance on map to distance on spheroid
 # (IEEE 32-bit floating-point values)
@@ -45,7 +45,7 @@ signed[4] YR : edition_specific,no_copy ;
 alias falseNorthing = YR;
 meta geography.YRInMetres scale(YR,one,hundred) : dump;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 # Di - i-direction increment length in units of 10-2 m
 unsigned[4] Di : edition_specific,no_copy;

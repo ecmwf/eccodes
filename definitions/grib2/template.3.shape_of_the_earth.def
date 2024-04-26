@@ -24,13 +24,13 @@ alias scaleFactorOfMinorAxisOfOblateSpheroidEarth=scaleFactorOfEarthMinorAxis ;
 unsigned[4] scaledValueOfEarthMinorAxis = missing(): can_be_missing, edition_specific;
 alias scaledValueOfMinorAxisOfOblateSpheroidEarth=scaledValueOfEarthMinorAxis;
 
-alias earthIsOblate=one;
+alias earthIsOblate = true;
 
 _if (shapeOfTheEarth == 0) {
   transient radius=6367470;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 _if (shapeOfTheEarth == 1){
   meta radius from_scale_factor_scaled_value(
@@ -38,20 +38,20 @@ _if (shapeOfTheEarth == 1){
                           scaledValueOfRadiusOfSphericalEarth);
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 _if (shapeOfTheEarth == 6){
   transient radius=6371229;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 
 _if (shapeOfTheEarth == 8){
   transient radius=6371200;
   alias radiusOfTheEarth=radius;
   alias radiusInMetres=radius;
-  alias earthIsOblate=zero;
+  alias earthIsOblate=false;
 }
 
 
@@ -73,12 +73,12 @@ _if (shapeOfTheEarth == 3){
   # ECC-979
   # The 'scale' accessor works with integers so rounds its first argument
   # which is not what we want because the inputs are doubles with decimal
-  # expansions. So use the trick of dividing by 0.001 to multiply by 1000
+  # expansions.
   #
   # meta earthMajorAxisInMetres scale(earthMajorAxis, thousand, one, zero);
   # meta earthMinorAxisInMetres scale(earthMinorAxis, thousand, one, zero);
-  meta earthMajorAxisInMetres divdouble(earthMajorAxis, 0.001);
-  meta earthMinorAxisInMetres divdouble(earthMinorAxis, 0.001);
+  meta earthMajorAxisInMetres multdouble(earthMajorAxis, 1000);
+  meta earthMinorAxisInMetres multdouble(earthMinorAxis, 1000);
 }
 _if (shapeOfTheEarth == 7){
   # Major and minor axes specified (in m) by data producer

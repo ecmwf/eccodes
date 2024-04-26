@@ -519,10 +519,12 @@ static void dump_long_attribute(grib_dumper* d, grib_accessor* a, const char* pr
         fprintf(self->dumper.out, "    codes_set_array(ibufr, '%s->%s', ivalues)\n", prefix, a->name);
     }
     else {
-        char* sval = lval_to_string(c, value);
-        fprintf(self->dumper.out, "    codes_set(ibufr, '%s->%s', ", prefix, a->name);
-        fprintf(self->dumper.out, "%s)\n", sval);
-        grib_context_free(c, sval);
+        if (!codes_bufr_key_exclude_from_dump(prefix)) {
+            char* sval = lval_to_string(c, value);
+            fprintf(self->dumper.out, "    codes_set(ibufr, '%s->%s', ", prefix, a->name);
+            fprintf(self->dumper.out, "%s)\n", sval);
+            grib_context_free(c, sval);
+        }
     }
 
     if (self->isLeaf == 0) {
@@ -663,7 +665,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_handle* h       = grib_handle_of_accessor(a);
     const char* acc_name = a->name;
 
-    ecc__grib_get_string_length(a, &size);
+    grib_get_string_length_acc(a, &size);
     if (size == 0)
         return;
 

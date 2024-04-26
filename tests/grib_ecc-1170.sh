@@ -30,7 +30,7 @@ set -e
 [ $status -ne 0 ]
 
 #cat $tempErr
-grep -q "unable to set values as double" $tempErr
+grep -q "String cannot be converted to a double" $tempErr
 
 
 # Clean up

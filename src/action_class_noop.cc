@@ -17,7 +17,7 @@
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump;destroy;xref;execute
+   IMPLEMENTS = destroy;execute
    END_CLASS_DEF
 
  */
@@ -33,8 +33,6 @@ or edit "action.class" and rerun ./make_class.pl
 */
 
 static void init_class      (grib_action_class*);
-static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -54,8 +52,8 @@ static grib_action_class _grib_action_class_noop = {
     0,                               /* init                      */
     &destroy,                            /* destroy */
 
-    &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* dump                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -75,34 +73,25 @@ grib_action* grib_action_create_noop(grib_context* context, const char* fname)
 {
     char buf[1024];
 
-    grib_action_noop* a;
     grib_action_class* c = grib_action_class_noop;
     grib_action* act     = (grib_action*)grib_context_malloc_clear_persistent(context, c->size);
     act->op              = grib_context_strdup_persistent(context, "section");
 
     act->cclass  = c;
-    a            = (grib_action_noop*)act;
+    grib_action_noop* a = (grib_action_noop*)act;
     act->context = context;
 
-    snprintf(buf, 1024, "_noop%p", (void*)a);
+    snprintf(buf, sizeof(buf), "_noop%p", (void*)a);
 
     act->name = grib_context_strdup_persistent(context, buf);
 
     return act;
 }
 
-static void dump(grib_action* act, FILE* f, int lvl)
-{
-}
-
 static void destroy(grib_context* context, grib_action* act)
 {
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }
 
 static int execute(grib_action* act, grib_handle* h)

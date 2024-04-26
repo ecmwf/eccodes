@@ -25,14 +25,24 @@ touch $fLog
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
-#----------------------------------------------
-# Test default "ls" on all the gts data files
-#----------------------------------------------
+#-------------------------------------------
+# Test default "ls" on the gts data file
+#-------------------------------------------
 gts_file=EGRR20150317121020_00493212.DAT
 f=$gts_file
 
 echo $f >> $fLog
 ${tools_dir}/gts_ls $f >> $fLog
+
+#-------------------------------------------
+# Test "-s" switch
+#-------------------------------------------
+${tools_dir}/gts_ls -s YY=abc $f >> $fLog
+
+#-------------------------------------------
+# Test "-w" switch
+#-------------------------------------------
+${tools_dir}/gts_ls -w AA=IY $f >> $fLog
 
 #-------------------------------------------
 # Test "-p" switch
@@ -51,6 +61,19 @@ diff $ref_ls $res_ls >$REDIRECT 2> $REDIRECT
 echo 'print "[theMessage]";' | ${tools_dir}/gts_filter - $gts_file
 
 ${tools_dir}/gts_ls -wcount=1 -p theMessage $f
+
+gts_file=${data_dir}/gts.grib
+result=$( ${tools_dir}/grib_ls -wcount=1 -p gts_CCCC -g $gts_file )
+
+
+# Bad filter
+set +e
+${tools_dir}/gts_filter a_non_existent_filter_file $gts_file > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Cannot include file" $fLog
+
 
 # Clean up
 rm -f $fLog $res_ls 

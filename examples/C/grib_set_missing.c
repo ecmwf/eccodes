@@ -59,6 +59,12 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_missing(h, "scaleFactorOfFirstFixedSurface"), 0);
     CODES_CHECK(codes_set_missing(h, "scaledValueOfFirstFixedSurface"), 0);
 
+    /* Can also set to MISSING via codes_set_string */
+    CODES_CHECK(codes_set_string(h, "scaleFactorOfFirstFixedSurface", "missing", &str_len), 0);
+    CODES_CHECK(codes_set_string(h, "scaledValueOfFirstFixedSurface", "missing", &str_len), 0);
+    /* Set a Code Table key to missing via codes_set_string */
+    CODES_CHECK(codes_set_string(h, "typeOfFirstFixedSurface", "missing", &str_len), 0);
+
     /* see GRIB-490 */
     CODES_CHECK(codes_get_long(h, "Ni", &Ni), 0);
     is_missing = codes_is_missing(h, "Ni", &err);
@@ -71,7 +77,7 @@ int main(int argc, char** argv)
 
     /* write the buffer in a file*/
     if (fwrite(buffer, 1, size, out) != size) {
-        perror(argv[1]);
+        perror(outfile);
         exit(1);
     }
 

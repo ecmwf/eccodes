@@ -38,6 +38,6 @@
 36 36 Amplitude function for Rossby wave envelope for meridional wind (m/s)
 37 37 Northward turbulent surface stress (N m-2 s)
 38 38 Eastward turbulent surface stress (N m-2 s)
-# 39-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 39-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

@@ -130,11 +130,11 @@ typedef struct grib_accessor_smart_table
 
 static void init(grib_accessor* a, const long len, grib_arguments* params)
 {
-    int n                                  = 0;
+    int n = 0;
     grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
 
     self->smartTable = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
-    self->index      = grib_arguments_get_long(grib_handle_of_accessor(a), params, n++);
+    self->index = grib_arguments_get_long(grib_handle_of_accessor(a), params, n++);
 
     a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
@@ -158,22 +158,22 @@ static int unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
 {
     grib_accessor_smart_table_column* self   = (grib_accessor_smart_table_column*)a;
     grib_accessor_smart_table* tableAccessor = NULL;
-    grib_smart_table* table                  = NULL;
+    grib_smart_table* table = NULL;
 
     size_t size = 1;
     long* code;
-    int err        = GRIB_SUCCESS;
+    int err = GRIB_SUCCESS;
     char tmp[1024] = {0,};
     int i = 0;
 
     tableAccessor = (grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a), self->smartTable);
     if (!tableAccessor) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to find accessor %s", self->smartTable);
+                         "Unable to find accessor %s", self->smartTable);
         return GRIB_NOT_FOUND;
     }
 
-    err = ecc__grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -213,7 +213,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_smart_table_column* self   = (grib_accessor_smart_table_column*)a;
     grib_accessor_smart_table* tableAccessor = NULL;
-    grib_smart_table* table                  = NULL;
+    grib_smart_table* table = NULL;
 
     size_t size = 1;
     long* code;
@@ -226,11 +226,11 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     tableAccessor = (grib_accessor_smart_table*)grib_find_accessor(grib_handle_of_accessor(a), self->smartTable);
     if (!tableAccessor) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                         "unable to find accessor %s", self->smartTable);
+                         "Unable to find accessor %s", self->smartTable);
         return GRIB_NOT_FOUND;
     }
 
-    err = ecc__grib_get_size(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
+    err = grib_get_size_acc(grib_handle_of_accessor(a), (grib_accessor*)tableAccessor, &size);
     if (err)
         return err;
     if (*len < size) {
@@ -263,14 +263,14 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 static int value_count(grib_accessor* a, long* count)
 {
     grib_accessor_smart_table_column* self = (grib_accessor_smart_table_column*)a;
-    size_t size                            = 0;
-    int err                                = 0;
-    *count                                 = 0;
+    size_t size = 0;
+    int err = 0;
+    *count = 0;
 
     if (!self->smartTable)
         return 0;
 
-    err    = grib_get_size(grib_handle_of_accessor(a), self->smartTable, &size);
+    err = grib_get_size(grib_handle_of_accessor(a), self->smartTable, &size);
     *count = size;
     return err;
 }

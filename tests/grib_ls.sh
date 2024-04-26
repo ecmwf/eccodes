@@ -32,6 +32,24 @@ set -e
 grep -q "Full documentation and examples at" $tempLog
 grep -q "https://confluence.ecmwf.int/display/ECC/grib_ls" $tempLog
 
+set +e
+${tools_dir}/grib_ls -? > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+${tools_dir}/grib_ls -h > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
+set +e
+DOXYGEN_USAGE=1 ${tools_dir}/grib_ls > $tempLog
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 ${tools_dir}/grib_ls -P count $infile       >  $tempLog
 ${tools_dir}/grib_ls -p count,step $infile  >> $tempLog
@@ -40,7 +58,13 @@ ${tools_dir}/grib_ls -l 0,0,1 $infile       >> $tempLog
 ${tools_dir}/grib_get -l 0,0,1 $infile      >> $tempLog
 ${tools_dir}/grib_get -p count,step $infile >> $tempLog
 ${tools_dir}/grib_get -P count $infile      >> $tempLog
-${tools_dir}/grib_get -i 0 $infile
+
+# ECC-786 and ECC-791
+result=$( ${tools_dir}/grib_get -p shortName -i 0 $infile )
+[ "$result" = "t 199.078  " ]
+result=$( ${tools_dir}/grib_get -i 8191 $infile )
+[ "$result" = "160.852  " ]
+
 
 files=" reduced_gaussian_lsm.grib1
 reduced_gaussian_model_level.grib1
@@ -166,6 +190,14 @@ grep -q "0 of 38 messages" $tempText
 ${tools_dir}/grib_ls -w units!=K $file > $tempText
 grep -q "30 of 38 messages" $tempText
 
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface=missing $file > $tempText
+grep -q "36 of 38 messages" $tempText
+${tools_dir}/grib_ls -w scaleFactorOfSecondFixedSurface!=missing $file > $tempText
+grep -q "2 of 38 messages" $tempText
+
+${tools_dir}/grib_ls -w referenceValue:d=0 $file > $tempText
+grep -q "5 of 38 messages" $tempText
+
 file=mixed.grib # Has 14 messages
 ${tools_dir}/grib_ls -w packingType=grid_simple,gridType=regular_ll/regular_gg $file > $tempText
 grep -q "12 of 14 messages" $tempText
@@ -215,9 +247,19 @@ file=$ECCODES_SAMPLES_PATH/reduced_gg_pl_32_grib2.tmpl
 grib_check_key_equals $file 'expver:d' 1
 grib_check_key_equals $file 'expver:s' '0001'
 
-
+# JSON and lat/lon
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:d $data_dir/sample.grib2
 ${tools_dir}/grib_ls -j -l0,0 -p referenceValue:i $data_dir/sample.grib2
+${tools_dir}/grib_ls -j -l0,0 -p bitmap $data_dir/simple_bitmap.grib > $tempText 2>&1
+grep -q "invalid_type" $tempText
+${tools_dir}/grib_ls -j -l0,0 -p nosuchkey $data_dir/sample.grib2 > $tempText 2>&1
+grep -q "nosuchkey.* null" $tempText
+
+# -M and -g options
+${tools_dir}/grib_ls -M -g $data_dir/gts.grib
+
+
+${tools_dir}/grib_get -l0,0,4 $data_dir/sample.grib2
 
 set +e
 ${tools_dir}/grib_ls -l0,0,666 $data_dir/sample.grib2 > $tempText 2>&1
@@ -225,6 +267,21 @@ status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Wrong mode given" $tempText
+
+set +e
+${tools_dir}/grib_ls -l poo $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Wrong latitude value" $tempText
+
+
+set +e
+${tools_dir}/grib_ls -l0,0,1,nonexistingmask $data_dir/sample.grib2 > $tempText 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unable to open mask file" $tempText
 
 
 # Clean up

@@ -495,6 +495,7 @@ codes_handle* codes_handle_new_from_samples(codes_context* c, const char* sample
  * @return            the new handle, NULL if the message is invalid or a problem is encountered
  */
 codes_handle* codes_handle_clone(const codes_handle* h);
+codes_handle* codes_handle_clone_headers_only(const codes_handle* h);
 
 /**
  *  Frees a handle, also frees the message if it is not a user message
@@ -724,7 +725,7 @@ int codes_grib_nearest_find_multiple(const codes_handle* h, int is_lsm,
 /*! \defgroup get_set Accessing header and data values   */
 /*! @{ */
 /**
- *  Get the number offset of a key, in a message if several keys of the same name
+ *  Get the byte offset of a key, if several keys of the same name
  *  are present, the offset of the last one is returned
  *
  * @param h           : the handle to get the offset from
@@ -737,7 +738,7 @@ int codes_get_offset(const codes_handle* h, const char* key, size_t* offset);
 /**
  *  Get the number of coded value from a key, if several keys of the same name are present, the total sum is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param size        : the address of a size_t where the size will be set
  * @return            0 if OK, integer value on error
@@ -747,7 +748,7 @@ int codes_get_size(const codes_handle* h, const char* key, size_t* size);
 /**
  *  Get the length of the string representation of the key, if several keys of the same name are present, the maximum length is returned
  *
- * @param h           : the handle to get the offset from
+ * @param h           : the handle to get the data from
  * @param key         : the key to be searched
  * @param length        : the address of a size_t where the length will be set
  * @return            0 if OK, integer value on error
@@ -809,7 +810,8 @@ int codes_get_float_elements(const codes_handle* h, const char* key, const int* 
  * @param h         : the handle to get the data from
  * @param key       : the key to be searched
  * @param mesg      : the address of a string where the data will be retrieved
- * @param length    : the address of a size_t that contains allocated length of the string on input, and that contains the actual length of the string on output
+ * @param length    : the address of a size_t that contains allocated length of the string on input,
+ *                    and that contains the actual length of the string on output
  * @return          0 if OK, integer value on error
  */
 int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t* length);
@@ -821,7 +823,8 @@ int codes_get_string(const codes_handle* h, const char* key, char* mesg, size_t*
  * @param h       : the handle to get the data from
  * @param key     : the key to be searched
  * @param vals    : the address of a string array where the data will be retrieved
- * @param length  : the address of a size_t that contains allocated length of the array on input, and that contains the actual length of the array on output
+ * @param length  : the address of a size_t that contains allocated length of the array on input,
+ *                  and that contains the actual length of the array on output
  * @return        0 if OK, integer value on error
  */
 int codes_get_string_array(const codes_handle* h, const char* key, char** vals, size_t* length);
@@ -830,11 +833,12 @@ int codes_get_string_array(const codes_handle* h, const char* key, char** vals, 
  *  Get raw bytes values from a key. If several keys of the same name are present, the last one is returned
  * @see  codes_set_bytes
  *
- * @param h           : the handle to get the data from
- * @param key         : the key to be searched
- * @param bytes       : the address of a byte array where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the byte array on input, and that contains the actual length of the byte array on output
- * @return            0 if OK, integer value on error
+ * @param h         : the handle to get the data from
+ * @param key       : the key to be searched
+ * @param bytes     : the address of a byte array where the data will be retrieved
+ * @param length    : the address of a size_t that contains allocated length of the byte array on input,
+ *                    and that contains the actual length of the byte array on output
+ * @return          0 if OK, integer value on error
  */
 int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes, size_t* length);
 
@@ -845,7 +849,8 @@ int codes_get_bytes(const codes_handle* h, const char* key, unsigned char* bytes
  * @param h        : the handle to get the data from
  * @param key      : the key to be searched
  * @param vals     : the address of a double array where the data will be retrieved
- * @param length   : the address of a size_t that contains allocated length of the double array on input, and that contains the actual length of the double array on output
+ * @param length   : the address of a size_t that contains allocated length of the double array on input,
+ *                   and that contains the actual length of the double array on output
  * @return         0 if OK, integer value on error
  */
 int codes_get_double_array(const codes_handle* h, const char* key, double* vals, size_t* length);
@@ -857,8 +862,9 @@ int codes_get_float_array(const codes_handle* h, const char* key, float* vals, s
  *
  * @param h           : the handle to get the data from
  * @param key         : the key to be searched
- * @param vals       : the address of a long array where the data will be retrieved
- * @param length      : the address of a size_t that contains allocated length of the long array on input, and that contains the actual length of the long array on output
+ * @param vals        : the address of a long array where the data will be retrieved
+ * @param length      : the address of a size_t that contains allocated length of the long array on input,
+ *                      and that contains the actual length of the long array on output
  * @return            0 if OK, integer value on error
  */
 int codes_get_long_array(const codes_handle* h, const char* key, long* vals, size_t* length);
@@ -891,10 +897,10 @@ int codes_set_long(codes_handle* h, const char* key, long val);
  *  Set a double value from a key. If several keys of the same name are present, the last one is set
  *  @see  codes_get_double
  *
- * @param h           : the handle to set the data to
- * @param key         : the key to be searched
+ * @param h         : the handle to set the data to
+ * @param key       : the key to be searched
  * @param val       : a double where the data will be read
- * @return            0 if OK, integer value on error
+ * @return          0 if OK, integer value on error
  */
 int codes_set_double(codes_handle* h, const char* key, double val);
 
@@ -902,11 +908,12 @@ int codes_set_double(codes_handle* h, const char* key, double val);
  *  Set a string value from a key. If several keys of the same name are present, the last one is set
  *  @see  codes_get_string
  *
- * @param h           : the handle to set the data to
- * @param key         : the key to be searched
+ * @param h          : the handle to set the data to
+ * @param key        : the key to be searched
  * @param mesg       : the address of a string where the data will be read
- * @param length      : the address of a size_t that contains the length of the string on input, and that contains the actual packed length of the string on output
- * @return            0 if OK, integer value on error
+ * @param length     : the address of a size_t that contains the length of the string on input,
+ *                     and that contains the actual packed length of the string on output
+ * @return           0 if OK, integer value on error
  */
 int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t* length);
 
@@ -917,7 +924,8 @@ int codes_set_string(codes_handle* h, const char* key, const char* mesg, size_t*
  * @param h           : the handle to set the data to
  * @param key         : the key to be searched
  * @param bytes       : the address of a byte array where the data will be read
- * @param length      : the address of a size_t that contains the length of the byte array on input, and that contains the actual packed length of the byte array  on output
+ * @param length      : the address of a size_t that contains the length of the byte array on input,
+ *                      and that contains the actual packed length of the byte array  on output
  * @return            0 if OK, integer value on error
  */
 int codes_set_bytes(codes_handle* h, const char* key, const unsigned char* bytes, size_t* length);
@@ -1450,7 +1458,10 @@ int codes_bufr_header_get_string(codes_bufr_header* bh, const char* key, char* v
  * strict_mode  = If 1 means fail if any message is invalid.
  * returns 0 if OK, integer value on error.
  */
-int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product, off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_malloc(codes_context* c, const char* filename, ProductKind product,
+                                 off_t** offsets, int* num_messages, int strict_mode);
+int codes_extract_offsets_sizes_malloc(codes_context* c, const char* filename, ProductKind product,
+                                       off_t** offsets, size_t** sizes, int* num_messages, int strict_mode);
 
 /* --------------------------------------- */
 #ifdef __cplusplus
@@ -1520,7 +1531,7 @@ Error codes returned by the eccodes functions.
 #define CODES_WRONG_STEP_UNIT		GRIB_WRONG_STEP_UNIT
 /** Invalid file id */
 #define CODES_INVALID_FILE		GRIB_INVALID_FILE
-/** Invalid grib id */
+/** Invalid GRIB id */
 #define CODES_INVALID_GRIB		GRIB_INVALID_GRIB
 /** Invalid index id */
 #define CODES_INVALID_INDEX		GRIB_INVALID_INDEX

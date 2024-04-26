@@ -8,13 +8,14 @@
 # virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
 #
 
-set -x
 . ./include.ctest.sh
-
-cd ${data_dir}/bufr
 
 # Define a common label for all the tmp files
 label="bufr_filter_misc_test"
+
+tempErr=temp.$label.err
+
+cd ${data_dir}/bufr
 
 # Create log file
 fLog=${label}".log"
@@ -515,75 +516,6 @@ EOF
 diff ${f}.ref ${f}.log 
 
 rm -f ${f}.ref ${f}.log
-
-#-----------------------------------------------------------
-# Test: with nonexistent keys.
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set center="98";   #Here centre is misspelled
-EOF
-
-# Invoke without -f i.e. should fail if error encountered
-set +e
-
-f="syno_1.bufr"
-echo "Test: nonexistent keys" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key not found" >&2
-   exit 1
-fi
-set -e
-
-# Now repeat with -f option (do not exit on error)
-${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
-
-
-#-----------------------------------------------------------
-# Test: with not allowed key values
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set centre=1024;  #1024 is out of range (it is 8-bit only)
-EOF
-
-# Invoke without -f i.e. should fail if error encountered
-set +e
-
-f="syno_1.bufr"
-echo "Test: not allowed key values" >> $fLog
-echo "file: $f" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if key value is not allowed" >&2
-   exit 1
-fi
-set -e
-
-# Now repeat with -f option (do not exit on error)
-${tools_dir}/codes_bufr_filter -f $fRules $f 2>>$fLog 1>>$fLog
-
-
-#-----------------------------------------------------------
-# Test: with invalid string key
-#-----------------------------------------------------------
-cat > $fRules <<EOF
- set unexpandedDescriptors={1015};
- set stationOrSiteName="Caesar non supra grammaticos"; # Too long
- set pack=1;
- write;
-EOF
-
-set +e
-f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
-echo "Test: Invalid string key" >> $fLog
-${tools_dir}/codes_bufr_filter $fRules $f 2>> $fLog 1>> $fLog
-if [ $? -eq 0 ]; then
-   echo "bufr_filter should have failed if string key is invalid" >&2
-   exit 1
-fi
-set -e
-
 
 #----------------------------------------------------
 # Test: format specifier for integer keys
@@ -1337,5 +1269,37 @@ EOF
 diff $fRef $fLog
 rm -f $fRef
 
+
+# Decode expandedDescriptors as array of doubles
+cat > $fRules <<EOF
+ print "[expandedDescriptors:d]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules airc_142.bufr
+
+# Various expanded descriptors
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  meta expandedScales     expanded_descriptors(elemetsTable,expandedCodes,1);
+  meta expandedReferences expanded_descriptors(elemetsTable,expandedCodes,2);
+  meta expandedWidths     expanded_descriptors(elemetsTable,expandedCodes,3);
+  meta expandedTypes      expanded_descriptors(elemetsTable,expandedCodes,4);
+  print "scales=[expandedScales]";
+  print "refs=[expandedReferences]";
+  print "widths=[expandedWidths]";
+  print "types=[expandedTypes]";
+EOF
+${tools_dir}/codes_bufr_filter $fRules $f > $fLog
+
+# smart table unpack_string
+tempBufr=temp.$label.bufr
+f="$ECCODES_SAMPLES_PATH/BUFR4.tmpl"
+cat > $fRules <<EOF
+  set unexpandedDescriptors = { 1031 };
+  print "[expandedOriginalCodes:s]";
+EOF
+${tools_dir}/codes_bufr_filter -o $tempBufr $fRules $f
+rm -f $tempBufr
+
 # Clean up
 rm -f ${f}.log ${f}.log.ref ${f}.out $fLog $fRules
+rm -f $tempErr

@@ -2,19 +2,26 @@
 0 0 WMO Secretariat
 1 ammc Melbourne (WMC)
 2 2 Melbourne (WMC)
+3 3 Melbourne (WMC)
 4 rums Moscow (WMC)
 5 5 Moscow (WMC)
+6 6 Moscow (WMC)
 7 kwbc US National Weather Service - NCEP (WMC)
 8 8 US National Weather Service - NWSTG (WMC)
 9 9 US National Weather Service - Other (WMC)
 10 10 Cairo (RSMC/RAFC)
+11 11 Cairo (RSMC/RAFC)
 12 12 Dakar (RSMC/RAFC)
+13 13 Dakar (RSMC/RAFC)
 14 14 Nairobi (RSMC/RAFC)
-16 16 Atananarivo (RSMC)
+15 15 Nairobi (RSMC/RAFC)
+16 16 Casablanca (RSMC)
+17 17 Tunis (RSMC)
 18 18 Tunis-Casablanca (RSMC)
 20 20 Las Palmas (RAFC)
 21 21 Algiers (RSMC)
-22 22 Lagos (RSMC)
+22 22 ACMAD
+23 23 Mozambique (NMC)
 24 fapr Pretoria (RSMC)
 26 26 Khabarovsk (RSMC)
 28 vabb New Delhi (IMD)
@@ -23,27 +30,38 @@
 32 32 Tashkent (RSMC)
 33 33 Jeddah (RSMC)
 34 rjtd Japanese Meteorological Agency - Tokyo (RSMC)
-36 36 Bankok
-37 37 Ulan Bator
+36 36 Bangkok
+37 37 Ulaanbaatar
 38 babj Beijing (RSMC)
 40 rksl Seoul
 41 sabm Buenos Aires (RSMC/RAFC)
 43 43 Brasilia (RSMC/RAFC)
 45 45 Santiago
 46 sbsj Brasilian Space Agency - INPE
+47 47 Colombia (NMC)
+48 48 Ecuador (NMC)
+49 49 Peru (NMC)
+50 50 Venezuela (Bolivarian Republic of) (NMC)
 51 51 Miami (RSMC/RAFC)
 52 52 National Hurricane Center, Miami
 53 53 Canadian Meteorological Service - Montreal (RSMC)
 54 cwao Canadian Meteorological Service - Montreal (RSMC)
 55 55 San Francisco
+56 56 ARINC Centre
 57 57 U.S. Air Force - Global Weather Center
 58 fnmo US Navy - Fleet Numerical Oceanography Center
 59 59 NOAA Forecast Systems Lab, Boulder CO
 60 60 National Center for Atmospheric Research (NCAR), Boulder, CO
+61 61 Service ARGOS - Landover
+62 62 US Naval Oceanographic Office
+63 63 International Research Institute for Climate and Society (IRI)
 64 64 Honolulu
 65 65 Darwin (RSMC)
 67 67 Melbourne (RSMC)
 69 nzkl Wellington (RSMC/RAFC)
+71 71 Nadi (RSMC)
+72 72 Singapore
+73 73 Malaysia (NMC)
 74 egrr U.K. Met Office - Exeter
 76 76 Moscow (RSMC/RAFC)
 78 edzw Offenbach (RSMC)
@@ -65,9 +83,34 @@
 97 97 European Space Agency (ESA)
 98 ecmf European Centre for Medium-Range Weather Forecasts
 99 99 DeBilt, Netherlands
+100 100 Brazzaville
+101 101 Abidjan
+102 102 Libya (NMC)
+103 103 Madagascar (NMC)
+104 104 Mauritius (NMC)
+105 105 Niger (NMC)
+106 106 Seychelles (NMC)
+107 107 Uganda (NMC)
+108 108 United Republic of Tanzania (NMC)
+109 109 Zimbabwe (NMC)
 110 110 Hong-Kong
+145 145 French Guiana
+146 146 Brazilian Navy Hydrographic Centre
+147 147 National Commission on Space Activities (CONAE) - Argentina
+148 148 Brazilian Department of Airspace Control - DECEA
 160 160 US NOAA/NESDIS
+161 161 US NOAA Office of Oceanic and Atmospheric Research
 173 nasa US National Aeronautics and Space Administration (NASA)
+
+174 174 Integrated Science Data Management/Marine Environmental Data Service (ISDM/MEDS - Canada)
+175 175 University Corporation for Atmospheric Research (UCAR) - United States
+176 176 Cooperative Institute for Meteorological Satellite Studies (CIMSS) - United States
+177 177 NOAA National Ocean Service - United States
+178 178 Spire Global, Inc.
+179 179 GeoOptics, Inc.
+180 180 PlanetiQ
+181 181 Atmospheric and Environmental Research (AER)
+
 195 wiix Indonesia (NMC)
 204 niwa  National Institute of Water and Atmospheric Research (NIWA - New Zealand)
 210 210  Frascati (ESA/ESRIN)
@@ -85,6 +128,8 @@
 222 222 Albania (NMC)
 223 223 Armenia (NMC)
 224 lowm Austria
+225 225 Azerbaijan (NMC)
+226 226 Belarus (NMC)
 227 ebum Belgium (NMC)
 228 228 Bosnia and Herzegovina (NMC)
 229 229 Bulgaria (NMC)
@@ -94,6 +139,7 @@
 233 eidb Dublin
 234 234 Israel (NMC)
 235 ingv INGV
+238 238 Lithuania (NMC)
 239 crfc CERFAX
 240 240 Malta (NMC)
 241 241 Monaco
@@ -143,4 +189,11 @@
 289 289 Zambia (NMC)
 291 anso Alliance of International Science Organizations (Beijing, China)
 292 ufz Helmholtz Centre for Environmental Research
+293 293 University of Bremen
+294 294 Netherlands Institute for Space Research (SRON)
+295 295 The Royal Belgian Institute for Space Aeronomy (BIRA-IASB)
+296 296 The French National Centre for Scientific Research (CNRS)
+297 297 The Nanjing Institute of Environmental Sciences (NIES)
+298 298 Dynamic Meteorology Laboratory (LMD)
+299 299 The Rutherford Appleton Laboratory (RAL)
 65535 65535 Missing value

@@ -231,10 +231,8 @@ static int compare(grib_accessor* a, grib_accessor* b)
     grib_unpack_double(b, bval, &blen);
 
     retval = GRIB_SUCCESS;
-    while (alen != 0) {
-        if (*bval != *aval)
-            retval = GRIB_DOUBLE_VALUE_MISMATCH;
-        alen--;
+    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+        if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
     grib_context_free(a->context, aval);
@@ -245,15 +243,13 @@ static int compare(grib_accessor* a, grib_accessor* b)
 
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret                    = 0;
     grib_accessor_values* self = (grib_accessor_values*)a;
-    int i;
     double* dval = (double*)grib_context_malloc(a->context, *len * sizeof(double));
 
-    for (i = 0; i < *len; i++)
+    for (size_t i = 0; i < *len; i++)
         dval[i] = (double)val[i];
 
-    ret = grib_pack_double(a, dval, len);
+    int ret = grib_pack_double(a, dval, len);
 
     grib_context_free(a->context, dval);
 

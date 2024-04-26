@@ -123,7 +123,8 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
     double *lats, *lons; /* arrays for latitudes and longitudes */
     double lonFirstInDegrees, latFirstInDegrees, radius;
     double x, y, Dx, Dy;
-    long nx, ny, centralLongitudeInDegrees, centralLatitudeInDegrees;
+    long nx, ny;
+    double centralLongitudeInDegrees, centralLatitudeInDegrees;
     long alternativeRowScanning, iScansNegatively, i, j;
     long jScansPositively, jPointsAreConsecutive, southPoleOnPlane;
     double centralLongitude, centralLatitude; /* in radians */
@@ -173,9 +174,9 @@ static int init(grib_iterator* iter, grib_handle* h, grib_arguments* args)
         return ret;
     if ((ret = grib_get_long_internal(h, s_southPoleOnPlane, &southPoleOnPlane)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, s_centralLongitude, &centralLongitudeInDegrees)) != GRIB_SUCCESS)
         return ret;
-    if ((ret = grib_get_long_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS)
+    if ((ret = grib_get_double_internal(h, s_centralLatitude, &centralLatitudeInDegrees)) != GRIB_SUCCESS)
         return ret;
     if ((ret = grib_get_double_internal(h, s_Dx, &Dx)) != GRIB_SUCCESS)
         return ret;

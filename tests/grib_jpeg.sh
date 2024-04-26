@@ -156,5 +156,23 @@ ECCODES_GRIB_DUMP_JPG_FILE=$tempDump  ${tools_dir}/grib_copy -r $data_dir/jpeg.g
 [ -f $tempDump ]
 rm -f $tempDump
 
+# Check Jasper decoding when it is disabled
+if [ $HAVE_LIBJASPER -eq 0 ]; then
+    set +e
+    ECCODES_GRIB_JPEG=jasper ${tools_dir}/grib_get -n statistics $data_dir/jpeg.grib2 > $tempDump 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "JasPer JPEG support not enabled" $tempDump
+
+    infile=$data_dir/sample.grib2
+    set +e
+    ECCODES_GRIB_JPEG=jasper ${tools_dir}/grib_set -rs packingType=grid_jpeg $infile $outfile1 > $tempDump 2>&1
+    status=$?
+    set -e
+    [ $status -ne 0 ]
+    grep -q "JasPer JPEG support not enabled" $tempDump
+fi
+
 # Clean up
-rm -f $tempFilt $tempGrib
+rm -f $tempFilt $tempGrib $tempDump

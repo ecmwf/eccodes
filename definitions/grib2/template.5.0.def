@@ -2,6 +2,6 @@
 
 # TEMPLATE 5.0, Grid point data - simple packing
 
-include "grib2/template.5.packing.def";
-include "grib2/template.5.original_values.def";
+include "grib2/template.5.packing.def"
+include "grib2/template.5.original_values.def"
 

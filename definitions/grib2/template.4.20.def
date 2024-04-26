@@ -1,7 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 4.20, Radar product
-# Parameter category
 codetable[1] parameterCategory ('4.1.[discipline:l].table',masterDir,localDir) : dump;
 
 # Parameter number
@@ -9,22 +8,19 @@ codetable[1] parameterNumber ('4.2.[discipline:l].[parameterCategory:l].table',m
 meta parameterUnits codetable_units(parameterNumber) : dump;
 meta parameterName  codetable_title(parameterNumber) : dump;
 
-# Type of generating process
 codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
 
 # Number of radar sites used
 unsigned[1] numberOfRadarSitesUsed  : dump;
 
-# Indicator of unit of time range
 codetable[1] indicatorOfUnitOfTimeRange ('4.4.table',masterDir,localDir)  : dump;
-alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
-template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
-codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
+alias indicatorOfUnitForForecastTime = indicatorOfUnitOfTimeRange;
+include "grib2/stepUnits.def"
 
-# Site latitude (in 10-6 degree)
+# Site latitude (in microdegrees)
 unsigned[4] siteLatitude  : dump;
 
-# Site longitude (in 10-6 degree)
+# Site longitude (in microdegrees)
 unsigned[4] siteLongitude  : dump;
 
 # Site elevation (meters)

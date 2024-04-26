@@ -45,12 +45,23 @@ f1="syno_1.bufr"
 f2="aaen_55.bufr"
 echo "Test: comparing two completely different files" >> $fLog
 echo "file: $f" >> $fLog
-${tools_dir}/bufr_compare $f1 $f2 >> $fLog
+${tools_dir}/bufr_compare -v $f1 $f2 >> $fLog
 if [ $? -eq 0 ]; then
    echo "bufr_compare should have failed if files are completely different" >&2
    exit 1
 fi
 set -e
+
+# Namespace options
+set +e
+${tools_dir}/bufr_compare -c ls:n $f1 $f2 >> $fLog
+statusA=$?
+${tools_dir}/bufr_compare -a -c ls:n $f1 $f2 >> $fLog
+statusB=$?
+set -e
+[ $statusA -ne 0 ]
+[ $statusB -ne 0 ]
+
 
 #----------------------------------------------------
 # Test: comparing with and without the -b switch
@@ -166,10 +177,11 @@ ${tools_dir}/bufr_set -s section2Present=1 $f $fBufrTmp
 ${tools_dir}/bufr_compare $f $fBufrTmp
 # Compare with -2 option
 set +e
-${tools_dir}/bufr_compare -2 $f $fBufrTmp > $fLog 2>&1
+${tools_dir}/bufr_compare -2 -v $f $fBufrTmp > $fLog 2>&1
 status=$?
 set -e
 [ $status -eq 1 ]
+grep Swapping $fLog
 
 #----------------------------------------------------
 # ECC-656: using relative comparison (-R) with 'all'
@@ -298,6 +310,71 @@ set -e
 
 ${tools_dir}/bufr_compare -bident -v $tempIndex1 $tempIndex2
 rm -f $tempIndex1 $tempIndex2
+
+# Fail to unpack
+# ---------------
+bufr1=vos308014_v3_26.bufr
+bufr2=aaen_55.bufr
+set +e
+${tools_dir}/bufr_compare $bufr1 $bufr2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Failed to unpack 1st message" $fLog
+
+set +e
+${tools_dir}/bufr_compare $bufr2 $bufr1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "Failed to unpack 2nd message" $fLog
+
+# ----------------------------------------
+# Summary mode (-f)
+# ----------------------------------------
+set +e
+${tools_dir}/bufr_compare -f aaen_55.bufr aben_55.bufr > $fLog 2>&1
+status=$?
+set -e
+[ $status -eq 1 ]
+grep -q "Summary of different key values" $fLog
+
+
+# ----------------------------------------
+# Unreadable message
+# ----------------------------------------
+echo BUFR > $fBufrTmp
+set +e
+${tools_dir}/bufr_compare $fBufrTmp $fBufrTmp > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "unreadable message" $fLog
+
+# Options
+# ----------
+f1="aaen_55.bufr"
+f2="aaen_55.bufr"
+set +e
+${tools_dir}/bufr_compare -H -c edition $f1 $f2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "options are incompatible" $fLog
+
+set +e
+${tools_dir}/bufr_compare -a edition $f1 $f2 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "a option requires -c option" $fLog
+
+set +e
+${tools_dir}/bufr_compare nosuchfile $f1 > $fLog 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+
 
 
 # Clean up

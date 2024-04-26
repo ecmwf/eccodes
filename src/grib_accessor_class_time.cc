@@ -18,7 +18,7 @@
    SUPER      = grib_accessor_class_long
    IMPLEMENTS = unpack_long;pack_long
    IMPLEMENTS = unpack_string
-   IMPLEMENTS = init;dump
+   IMPLEMENTS = init
    MEMBERS=const char* hour
    MEMBERS=const char* minute
    MEMBERS=const char* second
@@ -39,7 +39,6 @@ or edit "accessor.class" and rerun ./make_class.pl
 static int pack_long(grib_accessor*, const long* val, size_t* len);
 static int unpack_long(grib_accessor*, long* val, size_t* len);
 static int unpack_string(grib_accessor*, char*, size_t* len);
-static void dump(grib_accessor*, grib_dumper*);
 static void init(grib_accessor*, const long, grib_arguments*);
 
 typedef struct grib_accessor_time
@@ -64,7 +63,7 @@ static grib_accessor_class _grib_accessor_class_time = {
     &init,                       /* init */
     0,                  /* post_init */
     0,                    /* destroy */
-    &dump,                       /* dump */
+    0,                       /* dump */
     0,                /* next_offset */
     0,              /* get length of string */
     0,                /* get number of values */
@@ -119,19 +118,13 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->second = grib_arguments_get_name(hand, c, n++);
 }
 
-static void dump(grib_accessor* a, grib_dumper* dumper)
-{
-    grib_dump_long(dumper, a, NULL);
-}
-
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
-    int ret                  = 0;
-    grib_accessor_time* self = (grib_accessor_time*)a;
-    long hour                = 0;
-    long minute              = 0;
-    long second              = 0;
-    grib_handle* hand        = grib_handle_of_accessor(a);
+    const grib_accessor_time* self = (grib_accessor_time*)a;
+
+    int ret = 0;
+    long hour = 0, minute = 0, second = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
 
     if ((ret = grib_get_long_internal(hand, self->hour, &hour)) != GRIB_SUCCESS)
         return ret;
@@ -143,7 +136,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     /* We ignore the 'seconds' in our time calculation! */
     if (second != 0) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
-                "Key %s (unpack_long): Truncating time: non-zero seconds(%ld) ignored", a->name, second);
+                "Key %s (%s): Truncating time: non-zero seconds(%ld) ignored", a->name, __func__, second);
     }
 
     if (*len < 1)
@@ -151,29 +144,33 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 
     *val = hour * 100 + minute;
 
-    if (hour == 255)
+    if (hour == 255) {
         *val = 12 * 100;
-
-    if (hour != 255 && minute == 255)
+    }
+    if (hour != 255 && minute == 255) {
         *val = hour * 100;
-
+    }
     return GRIB_SUCCESS;
 }
 
-/* TODO: Check for a valid date */
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
-    int ret                  = 0;
-    long v                   = val[0];
-    grib_accessor_time* self = (grib_accessor_time*)a;
-    grib_handle* hand        = grib_handle_of_accessor(a);
-    long hour                = 0;
-    long minute              = 0;
-    long second              = 0;
+    const grib_accessor_time* self = (grib_accessor_time*)a;
+
+    int ret = 0;
+    long v = val[0];
+    grib_handle* hand = grib_handle_of_accessor(a);
+    long hour = 0, minute = 0, second = 0;
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
+
+    if (!is_time_valid(v)) {
+        // ECC-1777: For now just a warning. Will later change to an error
+        fprintf(stderr, "ECCODES WARNING :  %s:%s: Time is not valid! hour=%ld min=%ld sec=%ld\n",
+                a->cclass->name, __func__, hour, minute, second);
+        // return GRIB_ENCODING_ERROR;
+    }
 
     hour   = v / 100;
     minute = v % 100;
@@ -191,20 +188,21 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_string(grib_accessor* a, char* val, size_t* len)
 {
-    long v       = 0;
-    size_t lsize = 1;
+    long v = 0;
+    size_t lsize = 1, lmin = 5;
 
     unpack_long(a, &v, &lsize);
 
-    if (*len < 5) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "Key %s (unpack_string): Buffer too small", a->name);
-
-        *len = 5;
+    if (*len < lmin) {
+        grib_context_log(a->context, GRIB_LOG_ERROR,
+                         "%s: Buffer too small for %s. It is %zu bytes long (len=%zu)",
+                         a->cclass->name, a->name, lmin, *len);
+        *len = lmin;
         return GRIB_BUFFER_TOO_SMALL;
     }
 
     snprintf(val, 64, "%04ld", v);
 
-    len[0] = 5;
+    len[0] = lmin;
     return GRIB_SUCCESS;
 }

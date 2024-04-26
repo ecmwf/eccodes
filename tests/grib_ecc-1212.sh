@@ -66,7 +66,6 @@ cat > $tempRef <<EOF
   }
 ]}
 EOF
-cat $tempOut
 diff $tempRef $tempOut
 grib_check_key_equals $tempGrib dateOfForecastUsedInLocalTime '20200804'
 grib_check_key_equals $tempGrib timeOfForecastUsedInLocalTime '0'
@@ -76,14 +75,12 @@ grib_check_key_equals $tempGrib timeOfForecastUsedInLocalTime '0'
 ${tools_dir}/grib_get -n ls $tempGrib > $tempOut
 #     edition centre date     time dataType gridType   typeOfLevel level shortName packingType
 echo "2       ecmf   20200805 1200 an       regular_ll surface     0     t         grid_simple" > $tempRef
-cat $tempOut
 diff -w $tempRef $tempOut
 
 # Check "time" namespace
 ${tools_dir}/grib_get -n time $tempGrib > $tempOut
 echo "h 20200804 0000 36" > $tempRef
 diff -w $tempRef $tempOut
-
 
 # numberOfForecastsUsedInLocalTime > 1
 # ------------------------------------
@@ -114,6 +111,8 @@ EOF
 ${tools_dir}/grib_filter -o $tempGrib $tempFilt $sample_grib2
 grib_check_key_equals $tempGrib selectedFcIndex,step '1 4'
 grib_check_key_equals $tempGrib mars.date,mars.time  '20220607 300'
+
+${tools_dir}/grib_dump -Dat $tempGrib > $tempOut
 
 for pdtn in 88 92 93 94 95 96 97 98; do
   ${tools_dir}/grib_set -s \

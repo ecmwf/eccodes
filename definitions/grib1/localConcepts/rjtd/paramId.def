@@ -665,16 +665,6 @@
 	 table2Version = 200 ;
 	 indicatorOfParameter = 48 ;
 	}
-#U-component of current
-'3049' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 49 ;
-	}
-#V-component of current
-'3050' = {
-	 table2Version = 200 ;
-	 indicatorOfParameter = 50 ;
-	}
 #Humidity mixing ratio
 '3053' = {
 	 table2Version = 200 ;

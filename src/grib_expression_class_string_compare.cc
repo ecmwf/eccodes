@@ -38,18 +38,12 @@ or edit "expression.class" and rerun ./make_class.pl
 
 typedef const char* string; /* to keep make_class.pl happy */
 
-
-static void init_class              (grib_expression_class*);
-
-static void        destroy(grib_context*,grib_expression* e);
-
-static void        print(grib_context*,grib_expression*,grib_handle*);
-static void        add_dependency(grib_expression* e, grib_accessor* observer);
-
-static int        native_type(grib_expression*,grib_handle*);
-
-static int        evaluate_long(grib_expression*,grib_handle*,long*);
-static int      evaluate_double(grib_expression*,grib_handle*,double*);
+static void    destroy(grib_context*,grib_expression* e);
+static void    print(grib_context*,grib_expression*,grib_handle*);
+static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static int     native_type(grib_expression*,grib_handle*);
+static int     evaluate_long(grib_expression*,grib_handle*,long*);
+static int     evaluate_double(grib_expression*,grib_handle*,double*);
 
 typedef struct grib_expression_string_compare{
   grib_expression base;
@@ -64,7 +58,6 @@ static grib_expression_class _grib_expression_class_string_compare = {
     "string_compare",                    /* name                      */
     sizeof(grib_expression_string_compare),/* size of instance        */
     0,                           /* inited */
-    &init_class,                 /* init_class */
     0,                     /* constructor               */
     &destroy,                  /* destructor                */
     &print,
@@ -78,10 +71,6 @@ static grib_expression_class _grib_expression_class_string_compare = {
 
 grib_expression_class* grib_expression_class_string_compare = &_grib_expression_class_string_compare;
 
-
-static void init_class(grib_expression_class* c)
-{
-}
 /* END_CLASS_IMP */
 
 /* Note: A fast cut-down version of strcmp which does NOT return -1 */
@@ -100,9 +89,9 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
 static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 {
     int ret = 0;
-    char b1[1024];
+    char b1[1024] = {0,};
     size_t l1 = sizeof(b1);
-    char b2[1024];
+    char b2[1024] = {0,};
     size_t l2 = sizeof(b2);
     const char* v1 = NULL;
     const char* v2 = NULL;

@@ -1317,8 +1317,9 @@ static int axisindex(const char* name)
 {
     size_t i = 0;
     for (i = 0; i < NUMBER(global_axis); i++) {
-        if (strcmp(name, global_axis[i].name) == 0)
-            return i;
+        if (STR_EQUAL(name, global_axis[i].name)){
+            return (int)i;
+        }
     }
     return -1;
 }
@@ -1335,7 +1336,7 @@ static namecmp comparator(const char* name)
     }
 
     if (dontcompare != NULL) {
-        if (strcmp(dontcompare, name) == 0)
+        if (STR_EQUAL(dontcompare, name))
             return eq_null;
     }
 
@@ -1434,7 +1435,7 @@ static void unset_value(request* r, const char* parname)
 
     p = r->params;
     while (p) {
-        if (strcmp(parname, p->name) == 0) {
+        if (STR_EQUAL(parname, p->name)) {
             if (q)
                 q->next = p->next;
             else
@@ -1606,7 +1607,6 @@ static void cube_indexes(
     int i         = 0;
     int index     = 0;
     int n         = 1;
-    int ok        = 0;
 
     if (size < c) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Internal error in cube_indexes. size=%d < axis=%d", size, c);
@@ -1624,7 +1624,7 @@ static void cube_indexes(
         int k                      = 0;
         int count                  = count_values(cube, axis);
         int last                   = h->index_cache[i];
-        const bool is_time_axis = (strcmp(axis, "time") == 0);
+        const bool is_time_axis = (STR_EQUAL(axis, "time"));
         if (is_time_axis) {
             Assert(times_array);
             Assert(times_array_size == count);
@@ -1648,7 +1648,6 @@ static void cube_indexes(
             if (h->compare ? h->compare[i](w, v) : (w == v)) {
                 index += j * n;
                 n *= dims;
-                ok++;
                 ((hypercube*)h)->index_cache[i] = j;
                 break;
             }
@@ -1956,9 +1955,9 @@ static long monthnumber(const char* m)
 static int check_stepUnits(const char* step_units_str)
 {
     /* Only hours, minutes and seconds supported */
-    if (strcmp(step_units_str, "h") == 0 ||
-        strcmp(step_units_str, "m") == 0 ||
-        strcmp(step_units_str, "s") == 0) {
+    if (STR_EQUAL(step_units_str, "h") ||
+        STR_EQUAL(step_units_str, "m") ||
+        STR_EQUAL(step_units_str, "s")) {
         return GRIB_SUCCESS;
     }
     return GRIB_WRONG_STEP_UNIT;
@@ -2051,10 +2050,10 @@ static void validation_time(request* r)
             grib_context_log(ctx, GRIB_LOG_ERROR,
                              "Cannot convert stepUnits of '%s'. Only hours, minutes and seconds supported.", step_units);
         }
-        if (strcmp("m", step_units) == 0) {
+        if (STR_EQUAL("m", step_units)) {
             step /= 60;
         }
-        else if (strcmp("s", step_units) == 0) {
+        else if (STR_EQUAL("s", step_units)) {
             step /= 3600;
         }
     }
@@ -2121,19 +2120,19 @@ static nc_type translate_nctype(const char* name)
     if (!name)
         return NC_SHORT;
 
-    if (strcmp(name, "NC_BYTE") == 0)
+    if (STR_EQUAL(name, "NC_BYTE"))
         return NC_BYTE;
 
-    if (strcmp(name, "NC_SHORT") == 0)
+    if (STR_EQUAL(name, "NC_SHORT"))
         return NC_SHORT;
 
-    if (strcmp(name, "NC_INT") == 0)
+    if (STR_EQUAL(name, "NC_INT"))
         return NC_INT;
 
-    if (strcmp(name, "NC_FLOAT") == 0)
+    if (STR_EQUAL(name, "NC_FLOAT"))
         return NC_FLOAT;
 
-    if (strcmp(name, "NC_DOUBLE") == 0)
+    if (STR_EQUAL(name, "NC_DOUBLE"))
         return NC_DOUBLE;
 
     grib_context_log(ctx, GRIB_LOG_ERROR, "Unknown netCDF type '%s'. Using NC_SHORT", name);
@@ -2163,7 +2162,7 @@ static int set_dimension(int ncid, const char* name, int n, int xtype, const cha
     int dim_id = DIM_ID;
     int dim_vec[DIM_ID];
 
-    if (setup.unlimited && (strcmp(name, setup.unlimited) == 0))
+    if ( setup.unlimited && (STR_EQUAL(name, setup.unlimited)) )
         n = NC_UNLIMITED;
 
     stat = nc_def_dim(ncid, name, n, &dim_id);
@@ -2197,7 +2196,7 @@ static int check_grid(field* f)
         return e;
     }
 
-    if (strcmp(grid_type, "regular_ll") != 0 && (strcmp(grid_type, "regular_gg") != 0)) {
+    if ( !STR_EQUAL(grid_type, "regular_ll") && !STR_EQUAL(grid_type, "regular_gg") ) {
         grib_context_log(ctx, GRIB_LOG_ERROR, "Grid type = %s", grid_type);
         grib_context_log(ctx, GRIB_LOG_ERROR, "First GRIB is not on a regular lat/lon grid or on a regular Gaussian grid. Exiting.\n");
         return GRIB_GEOCALCULUS_PROBLEM;
@@ -3935,7 +3934,8 @@ grib_option grib_options[] = {
       "\n\t\tChunking strategy based on GRIB message.\n",
       0, 1, "6" },
     { "s", 0, "Shuffle data before deflation compression.\n", 0, 1, 0 },
-    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" }
+    { "u:", "dimension", "\n\t\tSet dimension to be an unlimited dimension.\n", 0, 1, "time" },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 int grib_options_count    = sizeof(grib_options) / sizeof(grib_option);
@@ -4225,7 +4225,15 @@ int grib_tool_new_filename_action(grib_runtime_options* options, const char* fil
         grib_handle_delete(h);
     }
 
-    grib_file_close(file->name, 0, &e);
+    if (e != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "%s (message %d)", grib_get_error_message(e), i);
+    }
+
+    int e2 = 0;
+    grib_file_close(file->name, 0, &e2);
+    if (e2 != GRIB_SUCCESS) {
+        grib_context_log(ctx, GRIB_LOG_ERROR, "Failed to close file %s (%s)", file->name, grib_get_error_message(e2));
+    }
 
     {
         /* Now do some checks */
@@ -4271,10 +4279,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
 int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

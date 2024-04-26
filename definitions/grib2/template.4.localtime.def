@@ -3,9 +3,8 @@
 remove is_localtime;
 transient is_localtime=1;
 
-alias defaultStepUnits = one; # 1 means Hour. See code table 4.4
-template_nofail default_step_units "grib2/localConcepts/[centre:s]/default_step_units.def";
-codetable[1] stepUnits 'stepUnits.table' = defaultStepUnits : transient,dump,no_copy;
+include "grib2/stepUnits.def"
+
 alias time.stepUnits = stepUnits;
 
 # Method used to calculate the field value at the local time specified in section 1
@@ -82,7 +81,6 @@ if (numberOfForecastsUsedInLocalTime == 1) {
   alias mars.date = dateOfForecastUsedInLocalTime : dump;
   alias mars.time = timeOfForecastUsedInLocalTime : dump;
   alias mars.step = endStep;
-
   alias time.dataDate = dateOfForecastUsedInLocalTime;
   alias time.dataTime = timeOfForecastUsedInLocalTime;
   alias time.endStep = endStep;

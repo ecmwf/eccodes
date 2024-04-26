@@ -2,6 +2,8 @@
 
 # DWD local grid definition 192 - triangular grid base on icosahedron subdivision
 
+constant isGridded = true;
+
 #  n2 - exponent of 2 for the number of intervals on main triangle sides
 unsigned[2] n2  : dump ;
 
@@ -36,7 +38,7 @@ flags[1] scanningModeForOneDiamond 'grib1/grid.192.78.3.10.table';
 
 transient numberOfPoints= nd *(Ni + 1) * (Ni + 1);
 alias numberOfDataPoints=numberOfPoints;
- 
+
 meta numberOfValues
 number_of_values(values,bitsPerValue,numberOfDataPoints,
                  bitmapPresent,bitmap,numberOfCodedValues) : dump;

@@ -1,10 +1,11 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 5.1, Matrix values at grid point - simple packing
-# Preliminary note:
-# This template was not validated at the time of publication and should be used with caution
 
-include "grib2/template.5.packing.def";
+# This template was not validated at the time of publication and should be used with caution
+transient template_is_experimental = 1 : hidden;
+
+include "grib2/template.5.packing.def"
 
 unsigned[1] matrixBitmapsPresent;
 # same as in edition 1
@@ -20,7 +21,7 @@ alias NR = firstDimension;
 # NC - second dimension (columns)
 unsigned[2] secondDimension;
 
-alias NC =  secondDimension;
+alias NC = secondDimension;
 # First dimension coordinate value definition (Code Table 5.2)
 unsigned[1] firstDimensionCoordinateValueDefinition;
 
@@ -41,7 +42,7 @@ unsigned[1] firstDimensionPhysicalSignificance ;
 # Second dimension physical significance (Code Table 5.3)
 unsigned[1] secondDimensionPhysicalSignificance ;
 
-ieeefloat coefsFirst[NC1];  # TODO: find proper names
+ieeefloat coefsFirst[NC1]; # TODO: find proper names
 ieeefloat coefsSecond[NC2]; # TODO: find proper names
 
 alias data.coefsFirst = coefsFirst;

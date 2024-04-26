@@ -1,6 +1,6 @@
 # (C) Copyright 2005- ECMWF.
 
-include "grib2/template.3.grid.def";
+include "grib2/template.3.grid.def"
 
 #  Di - i direction increment
 unsigned[4] iDirectionIncrement : can_be_missing;
@@ -11,7 +11,7 @@ unsigned[4] N  : dump;
 alias numberOfParallelsBetweenAPoleAndTheEquator=N ;
 alias geography.N=N;
 
-include "grib2/template.3.scanning_mode.def";
+include "grib2/template.3.scanning_mode.def"
 
 modify Ni : can_be_missing,dump;
 
@@ -24,22 +24,24 @@ meta g2grid g2grid(
     null,
     basicAngleOfTheInitialProductionDomain,
     subdivisionsOfBasicAngle
-    );
+);
 
-meta geography.latitudeOfFirstGridPointInDegrees    g2latlon(g2grid,0) : dump;
-meta geography.longitudeOfFirstGridPointInDegrees   g2latlon(g2grid,1) : dump;
-meta geography.latitudeOfLastGridPointInDegrees     g2latlon(g2grid,2) : dump;
-meta geography.longitudeOfLastGridPointInDegrees    g2latlon(g2grid,3) : dump;
-meta geography.iDirectionIncrementInDegrees         g2latlon(g2grid,4,iDirectionIncrementGiven) : can_be_missing,dump;
+meta geography.latitudeOfFirstGridPointInDegrees   g2latlon(g2grid,0) : dump;
+meta geography.longitudeOfFirstGridPointInDegrees  g2latlon(g2grid,1) : dump;
+meta geography.latitudeOfLastGridPointInDegrees    g2latlon(g2grid,2) : dump;
+meta geography.longitudeOfLastGridPointInDegrees   g2latlon(g2grid,3) : dump;
+meta geography.iDirectionIncrementInDegrees        g2latlon(g2grid,4,iDirectionIncrementGiven) : can_be_missing,dump;
 
-meta global global_gaussian(N,Ni,iDirectionIncrement,
-                            latitudeOfFirstGridPoint,
-                            longitudeOfFirstGridPoint,
-                            latitudeOfLastGridPoint,
-                            longitudeOfLastGridPoint,
-                            PLPresent, pl,
-                            basicAngleOfTheInitialProductionDomain,
-                            subdivisionsOfBasicAngle) = 0 : dump;
+meta global global_gaussian(
+    N,Ni,iDirectionIncrement,
+    latitudeOfFirstGridPoint,
+    longitudeOfFirstGridPoint,
+    latitudeOfLastGridPoint,
+    longitudeOfLastGridPoint,
+    PLPresent, pl,
+    basicAngleOfTheInitialProductionDomain,
+    subdivisionsOfBasicAngle
+) = 0 : dump;
 
 alias xFirst=longitudeOfFirstGridPointInDegrees;
 alias yFirst=latitudeOfFirstGridPointInDegrees;
@@ -52,22 +54,22 @@ alias latitudeLastInDegrees   = latitudeOfLastGridPointInDegrees;
 alias longitudeLastInDegrees  = longitudeOfLastGridPointInDegrees;
 alias DiInDegrees             = iDirectionIncrementInDegrees;
 
-if(missing(Ni) && PLPresent == 1){
+if (missing(Ni) && PLPresent == 1) {
   iterator gaussian_reduced(numberOfPoints,missingValue,values,
-    latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
-    latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
-      N,pl,Nj);
+        latitudeOfFirstGridPointInDegrees,longitudeOfFirstGridPointInDegrees,
+        latitudeOfLastGridPointInDegrees,longitudeOfLastGridPointInDegrees,
+        N,pl,Nj);
   nearest reduced(values,radius,Nj,pl);
 
   #meta sumPlArray sum(pl);
   #meta dataGlobal evaluate( sumPlArray == (numberOfValues+numberOfMissing) );
 } else {
-    iterator gaussian(numberOfPoints,missingValue,values,
-              longitudeFirstInDegrees,DiInDegrees  ,
-              Ni,Nj,iScansNegatively,
-              latitudeFirstInDegrees, latitudeLastInDegrees,
-              N,jScansPositively);
-    nearest regular(values,radius,Ni,Nj);
+  iterator gaussian(numberOfPoints,missingValue,values,
+        longitudeFirstInDegrees,DiInDegrees,
+        Ni,Nj,iScansNegatively,
+        latitudeFirstInDegrees, latitudeLastInDegrees,
+        N,jScansPositively);
+  nearest regular(values,radius,Ni,Nj);
 }
 meta latLonValues latlonvalues(values);
 alias latitudeLongitudeValues=latLonValues;

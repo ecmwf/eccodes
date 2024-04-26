@@ -31,7 +31,8 @@ grib_option grib_options[] = {
     { "G", 0, 0, 0, 1, 0 },
     { "7", 0, 0, 0, 1, 0 },
     { "X:", 0, 0, 0, 1, 0 },
-    { "V", 0, 0, 0, 1, 0 }
+    { "V", 0, 0, 0, 1, 0 },
+    { "h", 0, 0, 0, 1, 0 },
 };
 
 const char* tool_description =
@@ -91,7 +92,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
     long* bitmap                 = NULL; /* bitmap array */
     size_t bmp_len               = 0;
     double *data_values = 0, *lats = 0, *lons = 0;
-    int n       = 0;
     size_t size = 0, num_bytes = 0;
     long hasMissingValues = 0;
 
@@ -238,7 +238,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
             if (print_keys)
                 print_key_values(values, options->print_keys_count);
             fprintf(dump_file, "\n");
-            n++;
         }
     }
     else if (skip_missing == 1) {
@@ -258,7 +257,6 @@ int grib_tool_new_handle_action(grib_runtime_options* options, grib_handle* h)
                 if (print_keys)
                     print_key_values(values, options->print_keys_count);
                 fprintf(dump_file, "\n");
-                n++;
             }
         }
     }
@@ -282,11 +280,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

@@ -23,6 +23,6 @@ $sample_grib2 $temp
 
 grib_check_key_equals $temp Ni,Nj "16 31"
 grib_check_key_equals $temp centreLatitudeInDegrees,centreLongitudeInDegrees "0 30"
-grib_check_key_equals $temp minimum,maximum "1 1"
+grib_check_key_equals $temp minimum,maximum "273 273"
 
 rm -f $temp

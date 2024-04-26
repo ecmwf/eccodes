@@ -13,6 +13,13 @@ REGUL_GRID_FILE=${proj_dir}/samples/regular_ll_sfc_grib2.tmpl
 GAUSS_GRID_FILE=${proj_dir}/samples/reduced_gg_pl_640_grib2.tmpl
 OUTPUT=temp.sections.grib
 
+
+sample_pv=$ECCODES_SAMPLES_PATH/reduced_gg_ml_grib1.tmpl
+sample_g1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
+${examples_dir}/c_grib_sections_copy $sample_pv $sample_g1 l $OUTPUT
+${examples_dir}/c_grib_sections_copy $sample_pv $sample_pv g $OUTPUT
+
+
 ##################
 # Copy the GRID section from REGUL_GRID_FILE
 ${examples_dir}/c_grib_sections_copy $REGUL_GRID_FILE $GAUSS_GRID_FILE g $OUTPUT >/dev/null

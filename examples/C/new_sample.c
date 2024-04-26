@@ -26,6 +26,9 @@ int main(int argc, char** argv)
     }
 
     /* h = codes_grib_handle_new_from_samples(NULL, "GRIB2"); */
+    h = codes_handle_new_from_samples(NULL, "just a test");
+    if (h) return 1;
+
     h = codes_handle_new_from_samples(NULL, "GRIB2");
     if (!h) {
         fprintf(stderr, "Cannot create grib handle\n");
@@ -196,6 +199,7 @@ int main(int argc, char** argv)
 
     /* 255 = Missing (grib2/tables/4/4.5.table)  */
     CODES_CHECK(codes_set_long(h, "typeOfSecondFixedSurface", 255), 0);
+    CODES_CHECK(codes_set_missing(h, "typeOfSecondFixedSurface"), 0);
 
     CODES_CHECK(codes_set_missing(h, "scaleFactorOfSecondFixedSurface"), 0);
     CODES_CHECK(codes_set_missing(h, "scaledValueOfSecondFixedSurface"), 0);

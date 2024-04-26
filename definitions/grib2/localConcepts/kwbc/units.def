@@ -930,7 +930,7 @@
 	 parameterNumber = 197 ;
 	}
 #Leaf Area Index
-'~' = {
+'Numeric' = {
 	 discipline = 0 ;
 	 parameterCategory = 7 ;
 	 parameterNumber = 198 ;

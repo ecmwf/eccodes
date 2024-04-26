@@ -14,7 +14,7 @@
 
    START_CLASS_DEF
    CLASS      = action
-   IMPLEMENTS = dump;xref
+   IMPLEMENTS = dump
    IMPLEMENTS = destroy;execute
    MEMBERS    = grib_darray *darray
    MEMBERS    = char *name
@@ -34,7 +34,6 @@ or edit "action.class" and rerun ./make_class.pl
 
 static void init_class      (grib_action_class*);
 static void dump            (grib_action* d, FILE*,int);
-static void xref            (grib_action* d, FILE* f,const char* path);
 static void destroy         (grib_context*,grib_action*);
 static int execute(grib_action* a,grib_handle* h);
 
@@ -57,7 +56,7 @@ static grib_action_class _grib_action_class_set_darray = {
     &destroy,                            /* destroy */
 
     &dump,                               /* dump                      */
-    &xref,                               /* xref                      */
+    0,                               /* xref                      */
 
     0,             /* create_accessor*/
 
@@ -99,15 +98,14 @@ grib_action* grib_action_create_set_darray(grib_context* context,
 
 static int execute(grib_action* a, grib_handle* h)
 {
-    grib_action_set_darray* self = (grib_action_set_darray*)a;
-
+    const grib_action_set_darray* self = (grib_action_set_darray*)a;
     return grib_set_double_array(h, self->name, self->darray->v, self->darray->n);
 }
 
 static void dump(grib_action* act, FILE* f, int lvl)
 {
     int i                        = 0;
-    grib_action_set_darray* self = (grib_action_set_darray*)act;
+    const grib_action_set_darray* self = (grib_action_set_darray*)act;
     for (i = 0; i < lvl; i++)
         grib_context_print(act->context, f, "     ");
     grib_context_print(act->context, f, self->name);
@@ -122,8 +120,4 @@ static void destroy(grib_context* context, grib_action* act)
     grib_darray_delete(context, a->darray);
     grib_context_free_persistent(context, act->name);
     grib_context_free_persistent(context, act->op);
-}
-
-static void xref(grib_action* d, FILE* f, const char* path)
-{
 }

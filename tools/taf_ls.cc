@@ -18,7 +18,6 @@ grib_option grib_options[] = {
     { "P:", 0, 0, 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
     { "j", 0, "json output\n", 0, 1, 0 },
-    { "B:", 0, 0, 0, 1, 0 },
     { "l:", 0, 0, 0, 1, 0 },
     { "s:", 0, 0, 0, 1, 0 },
     { "i:", 0, 0, 0, 1, 0 },
@@ -144,11 +143,6 @@ int grib_tool_skip_handle(grib_runtime_options* options, grib_handle* h)
 {
     grib_handle_delete(h);
     return 0;
-}
-
-void grib_tool_print_key_values(grib_runtime_options* options, grib_handle* h)
-{
-    grib_print_key_values(options, h);
 }
 
 int grib_tool_finalise_action(grib_runtime_options* options)

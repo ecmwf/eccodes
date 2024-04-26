@@ -164,7 +164,6 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
             break;
         default:
             return GRIB_NOT_IMPLEMENTED;
-            break;
     }
 
     nvals = inlen / bytes;
@@ -218,7 +217,6 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
         default:
             code = GRIB_NOT_IMPLEMENTED;
             goto clean_up;
-            break;
     }
 
     bufsize = bytes * inlen;
@@ -282,7 +280,6 @@ static int unpack_double_element(grib_accessor* a, size_t idx, double* val)
 
         default:
             return GRIB_NOT_IMPLEMENTED;
-            break;
     }
 
     pos = bytes * idx;

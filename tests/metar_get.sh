@@ -25,14 +25,26 @@ touch $fLog
 fTmp=${label}".tmp.txt"
 rm -f $fTmp
 
-#----------------------------------------------
-# Test default "ls" on all the metar data files
-#----------------------------------------------
+#-----------------------------------------
+# Test default "ls" on the metar data file
+#-----------------------------------------
 metar_file=metar.txt
 export METAR_YEAR=2015
 export METAR_MONTH=4
 
 ${tools_dir}/metar_get -n ls $metar_file >/dev/null
 ${tools_dir}/metar_get -w count=1/2/3 -p CCCC,latitude,longitude,dateTime,elevation,temperature,dewPointTemperature,qnh $metar_file
+${tools_dir}/metar_get -w count=2 -p CCCC $metar_file
 
+# Decode a 'group' key as int and double
+result=$( ${tools_dir}/metar_get -p visibilityInMetres:i,visibilityInMetres:d -w count=1 $metar_file )
+[ "$result" = "6000 6000" ]
+
+# non-alpha keys
+# ----------------
+result=$(${tools_dir}/metar_get -w count=1 -p na:i,na:d $metar_file)
+[ "$result" = "0 0" ]
+
+
+# Clean up
 rm -f $fLog

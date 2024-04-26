@@ -20,19 +20,20 @@ int main(int argc, char** argv)
     codes_handle* h        = NULL;
     long* ivalues          = NULL;
     const char* sampleName = "BUFR3_local";
-    char* outfilename      = NULL;
 
     assert(argc == 2);
-    outfilename = argv[1];
+    char* outfilename = argv[1];
+
+    // Test non-existent sample file. Should fail
+    h = codes_bufr_handle_new_from_samples(NULL, "some rubbish");
+    assert(!h);
 
     h = codes_bufr_handle_new_from_samples(NULL, sampleName);
     assert(h);
 
     ivalues = (long*)malloc(1 * sizeof(long));
-    if (!ivalues) {
-        fprintf(stderr, "Failed to allocate memory (ivalues).\n");
-        return 1;
-    }
+    assert(ivalues);
+
     size       = 1;
     ivalues[0] = 1;
     CODES_CHECK(codes_set_long_array(h, "inputDelayedDescriptorReplicationFactor", ivalues, size), 0);
@@ -85,10 +86,8 @@ int main(int argc, char** argv)
 
     free(ivalues);
     ivalues = (long*)malloc(9 * sizeof(long));
-    if (!ivalues) {
-        fprintf(stderr, "Failed to allocate memory (ivalues).\n");
-        return 1;
-    }
+    assert(ivalues);
+
     size       = 4;
     ivalues[0] = 309052;
     ivalues[1] = 5001;
@@ -100,11 +99,8 @@ int main(int argc, char** argv)
     CODES_CHECK(codes_set_long(h, "pack", 1), 0);
 
     fout = fopen(outfilename, "wb");
-    if (!fout) {
-        fprintf(stderr, "Failed to open (create) output file.\n");
-        free(ivalues);
-        return 1;
-    }
+    assert(fout);
+
     CODES_CHECK(codes_get_message(h, &buffer, &size), 0);
     CODES_CHECK(codes_check_message_header(buffer, size, PRODUCT_BUFR), 0);
     CODES_CHECK(codes_check_message_footer(buffer, size, PRODUCT_BUFR), 0);
@@ -116,8 +112,17 @@ int main(int argc, char** argv)
     }
 
     fclose(fout);
+
+    // expandedOriginalCodes
+    long orig[100];
+    size = 100;
+    CODES_CHECK(codes_get_long_array(h, "expandedOriginalCodes", orig, &size), 0);
+    printf("Size of expandedOriginalCodes = %zu\n", size);
+
     codes_handle_delete(h);
     free(ivalues);
+
+    codes_context_delete(0);
 
     return 0;
 }

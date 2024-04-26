@@ -6,7 +6,7 @@ meta section1Pointer section_pointer(offsetSection1,section1Length,1);
 
 unsigned[1] numberOfSection = 1 :read_only;
 
-codetable[2] centre  'common/c-11.table' : dump,string_type;
+codetable[2] centre 'common/c-11.table' : dump,string_type;
 alias identificationOfOriginatingGeneratingCentre=centre;
 meta centreDescription codetable_title(centre);
 
@@ -14,7 +14,7 @@ alias parameter.centre=centre;
 alias ls.centre=centre;
 alias originatingCentre=centre;
 
-unsigned[2] subCentre  : dump;
+unsigned[2] subCentre : dump;
 
 _if (subCentre==98 ) {
   alias centreForLocal=subCentre;
@@ -54,20 +54,20 @@ unsigned[1] hour;
 unsigned[1] minute;
 unsigned[1] second;
 
-meta  dataDate  g2date(year,month,day) : dump;
+meta dataDate g2date(year,month,day) : dump;
 alias mars.date = dataDate;
 alias ls.date = dataDate;
 
 meta julianDay julian_day(dataDate,hour,minute,second) : edition_specific;
 
-meta  dataTime  time(hour,minute,second) : dump;
+meta dataTime time(hour,minute,second) : dump;
 alias mars.time = dataTime;
 
 # Production status of processed data in this GRIB message
 codetable[1] productionStatusOfProcessedData ('1.3.table',masterDir,localDir) : dump;
 
 # Type of processed data in this GRIB message
-codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255  : dump,string_type,no_fail;
+codetable[1] typeOfProcessedData ('1.4.table',masterDir,localDir) = 255 : dump,string_type,no_fail;
 
 alias ls.dataType=typeOfProcessedData;
 
@@ -111,7 +111,7 @@ meta is_aerosol_optical  g2_aerosol(productDefinitionTemplateNumber, stepType, 1
 
 transient setCalendarId = 0 ;
 transient deleteCalendarId = 0 ;
-alias calendarIdPresent = zero;
+alias calendarIdPresent = false;
 if ( ((section1Length > 21) or setCalendarId > 0) and deleteCalendarId == 0) {
   alias calendarIdPresent = present;
   codetable[2] calendarIdentificationTemplateNumber ('1.5.table',masterDir,localDir) : dump,string_type,no_fail;

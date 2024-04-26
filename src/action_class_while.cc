@@ -14,6 +14,6 @@
 // src/deprecated/action_class_while.cc
 grib_action* grib_action_create_while(grib_context* context, grib_expression* expression, grib_action* block)
 {
-    grib_context_log(context, GRIB_LOG_FATAL, "The 'while' statement is deprecated");
+    grib_context_log(context, GRIB_LOG_ERROR, "The 'while' statement is deprecated");
     return NULL;
 }

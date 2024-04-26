@@ -3,10 +3,10 @@
 1 1 Geographical latitude (deg N)
 2 2 Geographical longitude (deg E)
 3 3 Days since last observation (d)
-# 4-4 Reserved
-5 5 Hurricane track in spatiotemporal vicinity [boolean]
-6 6 Tropical Storm track in spatiotemporal vicinity [boolean]
-7 7 Tropical Depression track in spatiotemporal vicinity [boolean]
+4 4 Tropical cyclone density track (Numeric)
+5 5 Hurricane track in spatiotemporal vicinity (boolean)
+6 6 Tropical storm track in spatiotemporal vicinity (boolean)
+7 7 Tropical depression track in spatiotemporal vicinity (boolean)
 # 8-191 Reserved
 # 192-254 Reserved for local use
 255 255 Missing

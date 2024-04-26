@@ -133,7 +133,7 @@ char* codes_getenv(const char* name)
 
 int codes_check_grib_ieee_packing_value(int value)
 {
-    grib_context* c = grib_context_get_default();
+    const grib_context* c = grib_context_get_default();
     if (value != 32 && value != 64) {
         grib_context_log(c, GRIB_LOG_ERROR, "Invalid value for ECCODES_GRIB_IEEE_PACKING: should be 32 or 64");
         return GRIB_INVALID_ARGUMENT;
@@ -146,7 +146,7 @@ int codes_flush_sync_close_file(FILE* f)
 {
     int err = 0;
     int fd  = 0;
-    grib_context* c = grib_context_get_default();
+    const grib_context* c = grib_context_get_default();
     Assert(f);
 
     fd = fileno(f);
@@ -210,6 +210,37 @@ int is_date_valid(long year, long month, long day, long hour, long minute, doubl
         return 0; // bad date
     }
 
+    return 1;
+}
+
+// Return 1 if input date is valid. Otherwise 0
+// Note: In the 24-hour time notation, the day begins at midnight, 00:00 or 0:00,
+// and the last minute of the day begins at 23:59.
+// Where convenient, the notation 24:00 may also be used to refer to midnight
+// at the end of a given date — that is, 24:00 of one day is the same time
+// as 00:00 of the following day
+int is_time_valid(long number)
+{
+    // Number should be 4 digits i.e., HHMM
+    if (number < 0 || number > 9999) {
+        return 0;
+    }
+
+    // Extract hours and minutes
+    long hours   = number / 100;  // Get the first two digits as hours
+    long minutes = number % 100;  // Get the last two digits as minutes
+
+    // Check if hours are within the valid range (00-24)
+    if (hours < 0 || hours > 24) {
+        return 0;
+    }
+
+    // Check if minutes are within the valid range (00-59)
+    if (minutes < 0 || minutes > 59) {
+        return 0;
+    }
+
+    // All checks pass
     return 1;
 }
 

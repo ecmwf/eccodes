@@ -282,7 +282,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     grib_handle* h                  = grib_handle_of_accessor(a);
 
     if (*len < 15)
-        return GRIB_ARRAY_TOO_SMALL;
+        return GRIB_BUFFER_TOO_SMALL;
 
     if (self->ymd == NULL) {
         ret = grib_get_long(h, self->year, &year);
@@ -334,6 +334,7 @@ static int unpack_string(grib_accessor* a, char* val, size_t* len)
     else {
         snprintf(val, 1024, "%04ld%02ld%02ld%02ld%02ld%02ld", year, month, day, hour, minute, second);
     }
+    *len = strlen(val)+1;
     return ret;
 }
 
@@ -433,7 +434,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len = 1;
             ret = grib_expression_evaluate_long(hand, e, &lval);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as long", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as long", a->name);
                 return ret;
             }
             /*if (hand->context->debug)
@@ -454,7 +455,7 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
             len  = sizeof(tmp);
             cval = grib_expression_evaluate_string(hand, e, tmp, &len, &ret);
             if (ret != GRIB_SUCCESS) {
-                grib_context_log(a->context, GRIB_LOG_ERROR, "unable to set %s as string", a->name);
+                grib_context_log(a->context, GRIB_LOG_ERROR, "Unable to set %s as string", a->name);
                 return ret;
             }
             len = strlen(cval);

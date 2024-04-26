@@ -72,14 +72,15 @@ int main(int argc, char** argv)
     }
 
     /* open output file */
-    of = fopen(ofilename, "w");
+    of = fopen(ofilename, "wb");
     if (!of) {
         fprintf(stderr, "ERROR: unable to open output file %s\n", ofilename);
         exit(1);
     }
 
     /* write multi-field handle to output file */
-    codes_grib_multi_handle_write(mh, of);
+    err = codes_grib_multi_handle_write(mh, of);
+    if (err) return 1;
     fclose(of);
 
     /* release memory */

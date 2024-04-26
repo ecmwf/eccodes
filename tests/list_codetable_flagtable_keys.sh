@@ -13,6 +13,13 @@
 OUTPUT=all_codetable_flagtable_keys.txt
 TEMP=temp.list_codetable_flagtable_keys.txt
 
+
+if [ $ECCODES_ON_WINDOWS -eq 1 ]; then
+    echo "$0: This test is currently disabled on Windows"
+    exit 0
+fi
+
+
 [ -z "$ECCODES_DEFINITION_PATH" ] || ECCODES_DEFINITION_PATH=`${tools_dir}/codes_info -d`
 
 touch $TEMP
