@@ -61,26 +61,26 @@ int grib_accessor::add_attribute(grib_accessor* attr, int nest_if_clash)
 {
     int id              = 0;
     int idx             = 0;
-    grib_accessor* same = NULL;
-    grib_accessor* aloc = this;
+    grib_accessor* pSame = NULL;
+    grib_accessor* pAloc = this;
 
     if (this->has_attributes()) {
-        same = this->get_attribute_index(attr->name, &id);
+        pSame = this->get_attribute_index(attr->name, &id);
     }
 
-    if (same) {
+    if (pSame) {
         if (nest_if_clash == 0)
             return GRIB_ATTRIBUTE_CLASH;
-        aloc = same;
+        pAloc = pSame;
     }
 
     for (id = 0; id < MAX_ACCESSOR_ATTRIBUTES; id++) {
-        if (aloc->attributes[id] == NULL) {
+        if (pAloc->attributes[id] == NULL) {
             // attr->parent=a->parent;
-            aloc->attributes[id]      = attr;
-            attr->parent_as_attribute = aloc;
-            if (aloc->same)
-                attr->same = aloc->same->get_attribute_index(attr->name, &idx);
+            pAloc->attributes[id]      = attr;
+            attr->parent_as_attribute = pAloc;
+            if (pAloc->same)
+                attr->same = pAloc->same->get_attribute_index(attr->name, &idx);
 
             grib_context_log(this->context, GRIB_LOG_DEBUG, "added attribute %s->%s", this->name, attr->name);
             return GRIB_SUCCESS;

@@ -16,7 +16,11 @@
 class grib_accessor
 {
 public:
-    grib_accessor() : name(nullptr), name_space(nullptr), context(nullptr), h(nullptr), creator(nullptr), length(0), offset(0), parent(nullptr), next_(nullptr), previous_(nullptr), cclass(nullptr), flags(0), sub_section(nullptr), dirty(0), same(nullptr), loop(0), vvalue(nullptr), set(nullptr), parent_as_attribute(nullptr) {}
+    grib_accessor() : 
+        name(nullptr), name_space(nullptr), context(nullptr), h(nullptr), creator(nullptr),
+        length(0), offset(0), parent(nullptr), next_(nullptr), previous_(nullptr), cclass(nullptr),
+        flags(0), sub_section(nullptr), dirty(0), same(nullptr), loop(0), vvalue(nullptr),
+        set(nullptr), parent_as_attribute(nullptr) {}
     virtual ~grib_accessor() {}
 
     virtual void init_accessor(const long, grib_arguments*) = 0;
@@ -78,15 +82,15 @@ public:
     unsigned long flags;         /** < Various flags */
     grib_section* sub_section;
 
-    const char* all_names[MAX_ACCESSOR_NAMES];       /** < name of the accessor */
-    const char* all_name_spaces[MAX_ACCESSOR_NAMES]; /** < namespace to which the accessor belongs */
+    const char* all_names[MAX_ACCESSOR_NAMES]= {0,};       /** < name of the accessor */
+    const char* all_name_spaces[MAX_ACCESSOR_NAMES] = {0,}; /** < namespace to which the accessor belongs */
     int dirty;
 
     grib_accessor* same;        /** < accessors with the same name */
     long loop;                  /** < used in lists */
     grib_virtual_value* vvalue; /** < virtual value used when transient flag on **/
     const char* set;
-    grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES]; /** < attributes are accessors */
+    grib_accessor* attributes[MAX_ACCESSOR_ATTRIBUTES] = {0,}; /** < attributes are accessors */
     grib_accessor* parent_as_attribute;
 };
 
@@ -141,5 +145,3 @@ public:
     virtual int clear(grib_accessor*) = 0;
     virtual grib_accessor* make_clone(grib_accessor*, grib_section*, int*) = 0;
 };
-
-
