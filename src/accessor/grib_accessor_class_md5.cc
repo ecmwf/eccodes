@@ -9,17 +9,17 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_md5.h"
 #include "md5.h"
 
-grib_accessor_class_md5_t _grib_accessor_class_md5{"md5"};
+grib_accessor_class_md5_t _grib_accessor_class_md5{ "md5" };
 grib_accessor_class* grib_accessor_class_md5 = &_grib_accessor_class_md5;
 
 
-void grib_accessor_class_md5_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_md5_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
-    grib_accessor_md5_t* self   = (grib_accessor_md5_t*)a;
+    grib_accessor_md5_t* self = (grib_accessor_md5_t*)a;
     char* b                   = 0;
     int n                     = 0;
     grib_string_list* current = 0;
@@ -48,11 +48,13 @@ void grib_accessor_class_md5_t::init(grib_accessor* a, const long len, grib_argu
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_class_md5_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_md5_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_md5_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_md5_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval = GRIB_SUCCESS;
 
     size_t alen = 0;
@@ -60,11 +62,13 @@ int grib_accessor_class_md5_t::compare(grib_accessor* a, grib_accessor* b){
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     alen = count;
 
-    err = b->value_count(&count);    if (err)
+    err = b->value_count(&count);
+    if (err)
         return err;
     blen = count;
 
@@ -74,7 +78,8 @@ int grib_accessor_class_md5_t::compare(grib_accessor* a, grib_accessor* b){
     return retval;
 }
 
-int grib_accessor_class_md5_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_md5_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     grib_accessor_md5_t* self = (grib_accessor_md5_t*)a;
     unsigned mess_len;
     unsigned char* mess;
@@ -82,7 +87,7 @@ int grib_accessor_class_md5_t::unpack_string(grib_accessor* a, char* v, size_t* 
     long offset = 0, length = 0;
     grib_string_list* blocklist = NULL;
     int ret = GRIB_SUCCESS;
-    long i = 0;
+    long i  = 0;
     struct grib_md5_state md5c;
 
     if (*len < 32) {
@@ -131,7 +136,8 @@ int grib_accessor_class_md5_t::unpack_string(grib_accessor* a, char* v, size_t* 
     return ret;
 }
 
-void grib_accessor_class_md5_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_md5_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_md5_t* self = (grib_accessor_md5_t*)a;
     if (self->blocklist) {
         grib_string_list* next = self->blocklist;
@@ -146,7 +152,8 @@ void grib_accessor_class_md5_t::destroy(grib_context* c, grib_accessor* a){
     grib_accessor_class_gen_t::destroy(c, a);
 }
 
-int grib_accessor_class_md5_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_md5_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1; /* ECC-1475 */
     return 0;
 }

@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g1number_of_coded_values_sh_complex.h"
 
 grib_accessor_class_g1number_of_coded_values_sh_complex_t _grib_accessor_class_g1number_of_coded_values_sh_complex{"g1number_of_coded_values_sh_complex"};

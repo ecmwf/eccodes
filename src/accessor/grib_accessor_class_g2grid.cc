@@ -9,18 +9,18 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g2grid.h"
 
-grib_accessor_class_g2grid_t _grib_accessor_class_g2grid{"g2grid"};
+grib_accessor_class_g2grid_t _grib_accessor_class_g2grid{ "g2grid" };
 grib_accessor_class* grib_accessor_class_g2grid = &_grib_accessor_class_g2grid;
 
 
-void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int n                      = 0;
+    grib_handle* hand            = grib_handle_of_accessor(a);
+    int n                        = 0;
 
     self->latitude_first  = grib_arguments_get_name(hand, c, n++);
     self->longitude_first = grib_arguments_get_name(hand, c, n++);
@@ -36,7 +36,8 @@ void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arg
         GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_g2grid_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g2grid_t::value_count(grib_accessor* a, long* count)
+{
     *count = 6;
     return 0;
 }
@@ -44,10 +45,11 @@ int grib_accessor_class_g2grid_t::value_count(grib_accessor* a, long* count){
 // GRIB edition 2 uses microdegrees
 #define ANGLE_SUBDIVISIONS (1000 * 1000)
 
-int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int ret                    = 0;
+    grib_handle* hand            = grib_handle_of_accessor(a);
+    int ret                      = 0;
 
     long basic_angle  = 0;
     long sub_division = 0;
@@ -93,7 +95,8 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
 
     if (!self->j_increment) {
         v[n++] = GRIB_MISSING_LONG;
-    } else {
+    }
+    else {
         if ((ret = grib_get_long_internal(hand, self->j_increment, &v[n++])) != GRIB_SUCCESS)
             return ret;
     }
@@ -106,7 +109,8 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
     return GRIB_SUCCESS;
 }
 
-long gcd(long a, long b){
+long gcd(long a, long b)
+{
     if (b > a)
         return gcd(b, a);
     if (b == 0)
@@ -114,11 +118,13 @@ long gcd(long a, long b){
     return gcd(b, a % b);
 }
 
-long lcm(long a, long b){
+long lcm(long a, long b)
+{
     return a * b / gcd(a, b);
 }
 
-int is_ok(const double* val, long v[6], double basic_angle, double sub_division){
+int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
+{
     int i;
     int ok = 1;
 
@@ -142,7 +148,8 @@ int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
     return ok;
 }
 
-int trial(const double* val, long v[6], long* basic_angle, long* sub_division){
+int trial(const double* val, long v[6], long* basic_angle, long* sub_division)
+{
     int i = 0;
     long ni, nj;
 
@@ -172,9 +179,10 @@ int trial(const double* val, long v[6], long* basic_angle, long* sub_division){
     return is_ok(val, v, *basic_angle, *sub_division);
 }
 
-int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
+    grib_handle* hand            = grib_handle_of_accessor(a);
     int ret;
     long v[6];
     int n;

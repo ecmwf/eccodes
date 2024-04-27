@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_ifs_param.h"
 
 grib_accessor_class_ifs_param_t _grib_accessor_class_ifs_param{"ifs_param"};

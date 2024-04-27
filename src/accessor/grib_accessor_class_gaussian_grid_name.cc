@@ -9,17 +9,17 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gaussian_grid_name.h"
 
-grib_accessor_class_gaussian_grid_name_t _grib_accessor_class_gaussian_grid_name{"gaussian_grid_name"};
+grib_accessor_class_gaussian_grid_name_t _grib_accessor_class_gaussian_grid_name{ "gaussian_grid_name" };
 grib_accessor_class* grib_accessor_class_gaussian_grid_name = &_grib_accessor_class_gaussian_grid_name;
 
 
-void grib_accessor_class_gaussian_grid_name_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_gaussian_grid_name_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_gaussian_grid_name_t* self = (grib_accessor_gaussian_grid_name_t*)a;
-    int n                                  = 0;
+    int n                                    = 0;
 
     self->N            = grib_arguments_get_name(a->parent->h, arg, n++);
     self->Ni           = grib_arguments_get_name(a->parent->h, arg, n++);
@@ -29,13 +29,15 @@ void grib_accessor_class_gaussian_grid_name_t::init(grib_accessor* a, const long
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_class_gaussian_grid_name_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_gaussian_grid_name_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
 #define MAX_GRIDNAME_LEN 16
 
-int grib_accessor_class_gaussian_grid_name_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_gaussian_grid_name_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     grib_accessor_gaussian_grid_name_t* self = (grib_accessor_gaussian_grid_name_t*)a;
 
     long N = 0, Ni = 0;
@@ -80,6 +82,7 @@ int grib_accessor_class_gaussian_grid_name_t::unpack_string(grib_accessor* a, ch
     return GRIB_SUCCESS;
 }
 
-size_t grib_accessor_class_gaussian_grid_name_t::string_length(grib_accessor* a){
+size_t grib_accessor_class_gaussian_grid_name_t::string_length(grib_accessor* a)
+{
     return MAX_GRIDNAME_LEN;
 }

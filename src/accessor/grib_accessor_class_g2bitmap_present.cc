@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g2bitmap_present.h"
 
 grib_accessor_class_g2bitmap_present_t _grib_accessor_class_g2bitmap_present{"g2bitmap_present"};

@@ -9,9 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_abstract_vector.h"
 
 grib_accessor_class_abstract_vector_t _grib_accessor_class_abstract_vector{"abstract_vector"};
 grib_accessor_class* grib_accessor_class_abstract_vector = &_grib_accessor_class_abstract_vector;
-

@@ -9,26 +9,27 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g2latlon.h"
 
-grib_accessor_class_g2latlon_t _grib_accessor_class_g2latlon{"g2latlon"};
+grib_accessor_class_g2latlon_t _grib_accessor_class_g2latlon{ "g2latlon" };
 grib_accessor_class* grib_accessor_class_g2latlon = &_grib_accessor_class_g2latlon;
 
 
-void grib_accessor_class_g2latlon_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g2latlon_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_g2latlon_t* self = (grib_accessor_g2latlon_t*)a;
-    int n                        = 0;
+    int n = 0;
 
     self->grid  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->index = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
     self->given = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-int grib_accessor_class_g2latlon_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_g2latlon_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_g2latlon_t* self = (grib_accessor_g2latlon_t*)a;
-    int ret                      = 0;
+    int ret = 0;
 
     long given = 1;
     double grid[6];
@@ -56,12 +57,13 @@ int grib_accessor_class_g2latlon_t::unpack_double(grib_accessor* a, double* val,
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2latlon_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_g2latlon_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_g2latlon_t* self = (grib_accessor_g2latlon_t*)a;
-    int ret                      = 0;
+    int ret = 0;
     double grid[6];
-    size_t size    = 6;
-    double new_val = *val;
+    size_t size       = 6;
+    double new_val    = *val;
     grib_handle* hand = grib_handle_of_accessor(a);
 
     if (*len < 1) {
@@ -94,10 +96,11 @@ int grib_accessor_class_g2latlon_t::pack_double(grib_accessor* a, const double* 
     return grib_set_double_array_internal(hand, self->grid, grid, size);
 }
 
-int grib_accessor_class_g2latlon_t::pack_missing(grib_accessor* a){
+int grib_accessor_class_g2latlon_t::pack_missing(grib_accessor* a)
+{
     grib_accessor_g2latlon_t* self = (grib_accessor_g2latlon_t*)a;
-    double missing               = GRIB_MISSING_DOUBLE;
-    size_t size                  = 1;
+    double missing                 = GRIB_MISSING_DOUBLE;
+    size_t size                    = 1;
 
     if (!self->given)
         return GRIB_NOT_IMPLEMENTED;
@@ -105,9 +108,10 @@ int grib_accessor_class_g2latlon_t::pack_missing(grib_accessor* a){
     return pack_double(a, &missing, &size);
 }
 
-int grib_accessor_class_g2latlon_t::is_missing(grib_accessor* a){
+int grib_accessor_class_g2latlon_t::is_missing(grib_accessor* a)
+{
     grib_accessor_g2latlon_t* self = (grib_accessor_g2latlon_t*)a;
-    long given                   = 1;
+    long given                     = 1;
 
     if (self->given)
         grib_get_long_internal(grib_handle_of_accessor(a), self->given, &given);

@@ -9,25 +9,26 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_bit.h"
 
-grib_accessor_class_bit_t _grib_accessor_class_bit{"bit"};
+grib_accessor_class_bit_t _grib_accessor_class_bit{ "bit" };
 grib_accessor_class* grib_accessor_class_bit = &_grib_accessor_class_bit;
 
 
-void grib_accessor_class_bit_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_bit_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
-    a->length       = 0;
+    a->length = 0;
     self->owner     = grib_arguments_get_name(grib_handle_of_accessor(a), arg, 0);
     self->bit_index = grib_arguments_get_long(grib_handle_of_accessor(a), arg, 1);
 }
 
-int grib_accessor_class_bit_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_bit_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
-    int ret = 0;
-    long data = 0;
+    int ret                   = 0;
+    long data                 = 0;
 
     if (*len < 1) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit_t: unpack_long: Wrong size for %s, it contains %d values ", a->name, 1);
@@ -49,7 +50,8 @@ int grib_accessor_class_bit_t::unpack_long(grib_accessor* a, long* val, size_t* 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_bit_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_bit_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_bit_t* self = (grib_accessor_bit_t*)a;
 
     if (*len < 1) {
@@ -61,7 +63,7 @@ int grib_accessor_class_bit_t::pack_long(grib_accessor* a, const long* val, size
     grib_accessor* owner = grib_find_accessor(grib_handle_of_accessor(a), self->owner);
     if (!owner) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "grib_accessor_bit_t: Cannot get the owner %s for computing the bit value of %s",
-                        self->owner, a->name);
+                         self->owner, a->name);
         *len = 0;
         return GRIB_NOT_FOUND;
     }
@@ -71,7 +73,7 @@ int grib_accessor_class_bit_t::pack_long(grib_accessor* a, const long* val, size
     /* Note: In the definitions, flagbit numbers go from 7 to 0 (the bit_index), while WMO convention is from 1 to 8 */
     if (a->context->debug) {
         /* Print bit positions from 1 (MSB) */
-        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - self->bit_index, owner->name, (*val > 0) );
+        fprintf(stderr, "ECCODES DEBUG Setting bit %d in %s to %d\n", 8 - self->bit_index, owner->name, (*val > 0));
     }
     grib_set_bit(mdata, 7 - self->bit_index, *val > 0);
 

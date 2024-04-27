@@ -9,15 +9,11 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_unpack_bufr_values.h"
 #include "grib_accessor_class_bufr_data_array.h"
 
-
-
 grib_accessor_class_unpack_bufr_values_t _grib_accessor_class_unpack_bufr_values{"unpack_bufr_values"};
 grib_accessor_class* grib_accessor_class_unpack_bufr_values = &_grib_accessor_class_unpack_bufr_values;
-
 
 void grib_accessor_class_unpack_bufr_values_t::init(grib_accessor* a, const long len, grib_arguments* params){
     grib_accessor_class_gen_t::init(a, len, params);

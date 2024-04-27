@@ -9,36 +9,37 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gds_is_present.h"
 
-grib_accessor_class_gds_is_present_t _grib_accessor_class_gds_is_present{"gds_is_present"};
+grib_accessor_class_gds_is_present_t _grib_accessor_class_gds_is_present{ "gds_is_present" };
 grib_accessor_class* grib_accessor_class_gds_is_present = &_grib_accessor_class_gds_is_present;
 
 
-void grib_accessor_class_gds_is_present_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_gds_is_present_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
-    int n                              = 0;
+    int n                                = 0;
     grib_accessor_gds_is_present_t* self = (grib_accessor_gds_is_present_t*)a;
-    grib_handle* h                     = grib_handle_of_accessor(a);
-    self->gds_present                  = grib_arguments_get_name(h, c, n++);
-    self->grid_definition              = grib_arguments_get_name(h, c, n++);
-    self->bitmap_present               = grib_arguments_get_name(h, c, n++);
-    self->values                       = grib_arguments_get_name(h, c, n++);
+    grib_handle* h                       = grib_handle_of_accessor(a);
+    self->gds_present                    = grib_arguments_get_name(h, c, n++);
+    self->grid_definition                = grib_arguments_get_name(h, c, n++);
+    self->bitmap_present                 = grib_arguments_get_name(h, c, n++);
+    self->values                         = grib_arguments_get_name(h, c, n++);
 
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->flags |= GRIB_ACCESSOR_FLAG_HIDDEN;
     a->length = 0;
 }
 
-int grib_accessor_class_gds_is_present_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_gds_is_present_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_gds_is_present_t* self = (grib_accessor_gds_is_present_t*)a;
-    long missing    = 255;
-    int ret         = 0;
-    size_t size     = 0;
-    double* values  = NULL;
-    grib_context* c = a->context;
-    grib_handle* h  = grib_handle_of_accessor(a);
+    long missing                         = 255;
+    int ret                              = 0;
+    size_t size                          = 0;
+    double* values                       = NULL;
+    grib_context* c                      = a->context;
+    grib_handle* h                       = grib_handle_of_accessor(a);
 
     if (*val != 1)
         return GRIB_NOT_IMPLEMENTED;
@@ -73,9 +74,10 @@ int grib_accessor_class_gds_is_present_t::pack_long(grib_accessor* a, const long
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_gds_is_present_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int ret                            = 0;
-    grib_handle* h                     = grib_handle_of_accessor(a);
+int grib_accessor_class_gds_is_present_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    int ret = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
     grib_accessor_gds_is_present_t* self = (grib_accessor_gds_is_present_t*)a;
 
     if ((ret = grib_get_long_internal(h, self->gds_present, val)) != GRIB_SUCCESS)

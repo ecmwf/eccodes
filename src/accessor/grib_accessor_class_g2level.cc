@@ -9,18 +9,18 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g2level.h"
 
-grib_accessor_class_g2level_t _grib_accessor_class_g2level{"g2level"};
+grib_accessor_class_g2level_t _grib_accessor_class_g2level{ "g2level" };
 grib_accessor_class* grib_accessor_class_g2level = &_grib_accessor_class_g2level;
 
 
-void grib_accessor_class_g2level_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g2level_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_g2level_t* self = (grib_accessor_g2level_t*)a;
-    grib_handle* hand           = grib_handle_of_accessor(a);
-    int n                       = 0;
+    grib_handle* hand             = grib_handle_of_accessor(a);
+    int n                         = 0;
 
     self->type_first     = grib_arguments_get_name(hand, c, n++);
     self->scale_first    = grib_arguments_get_name(hand, c, n++);
@@ -31,24 +31,26 @@ void grib_accessor_class_g2level_t::init(grib_accessor* a, const long l, grib_ar
     a->flags |= GRIB_ACCESSOR_FLAG_COPY_IF_CHANGING_EDITION;
 }
 
-bool is_tigge(grib_handle* h){
+bool is_tigge(grib_handle* h)
+{
     long productionStatus = 0;
-    int err = grib_get_long(h, "productionStatusOfProcessedData", &productionStatus);
+    int err               = grib_get_long(h, "productionStatusOfProcessedData", &productionStatus);
     if (err) return false;
     return (productionStatus == 4 || productionStatus == 5);
 }
 
-int grib_accessor_class_g2level_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    int ret                     = 0;
+int grib_accessor_class_g2level_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    int ret                       = 0;
     grib_accessor_g2level_t* self = (grib_accessor_g2level_t*)a;
-    grib_handle* hand           = grib_handle_of_accessor(a);
+    grib_handle* hand             = grib_handle_of_accessor(a);
 
     long type_first         = 0;
     long scale_first        = 0;
     long value_first        = 0;
     char pressure_units[10] = {0,};
     size_t pressure_units_len = 10;
-    bool tigge = is_tigge(hand);
+    bool tigge                = is_tigge(hand);
 
     double v;
 
@@ -76,8 +78,9 @@ int grib_accessor_class_g2level_t::unpack_double(grib_accessor* a, double* val, 
         // GRIB-637, ECC-1081: Potential vorticity surface
         if (type_first == 109) {
             if (tigge) {
-                scale_first -= 6; // TIGGE data follows different rules
-            } else {
+                scale_first -= 6;  // TIGGE data follows different rules
+            }
+            else {
                 scale_first -= 9;
             }
         }
@@ -93,9 +96,9 @@ int grib_accessor_class_g2level_t::unpack_double(grib_accessor* a, double* val, 
     }
 
     switch (type_first) {
-        case 100: // Isobaric surface (Pa)
+        case 100:  // Isobaric surface (Pa)
             if (!strcmp(pressure_units, "hPa")) {
-                long x = v / 100.0; // 1 hPa = 100 Pa
+                long x = v / 100.0;  // 1 hPa = 100 Pa
                 if (scale_first == 0 && x == 0) {
                     // Switch to Pa instead of hPa as the value is less than a hectoPascal
                     char pa[]  = "Pa";
@@ -115,27 +118,29 @@ int grib_accessor_class_g2level_t::unpack_double(grib_accessor* a, double* val, 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2level_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g2level_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     double dval = 0;
     int ret     = unpack_double(a, &dval, len);
     if (ret == GRIB_SUCCESS) {
-        *val = (long)(dval + 0.5); // round up
+        *val = (long)(dval + 0.5);  // round up
     }
     return ret;
 }
 
-int grib_accessor_class_g2level_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_g2level_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_g2level_t* self = (grib_accessor_g2level_t*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int ret                    = 0;
-    double value_first         = *val;
-    //long scale_first           = 0;
-    long type_first            = 0;
-    char pressure_units[10]    = {0,};
-    size_t pressure_units_len  = 10;
-    const long lval            = (long)value_first;
+    grib_handle* hand             = grib_handle_of_accessor(a);
+    int ret                       = 0;
+    double value_first            = *val;
+    // long scale_first           = 0;
+    long type_first         = 0;
+    char pressure_units[10] = {0,};
+    size_t pressure_units_len = 10;
+    const long lval           = (long)value_first;
 
-    if (value_first == lval) { // input is a whole number; process it as an integer
+    if (value_first == lval) {  // input is a whole number; process it as an integer
         return pack_long(a, &lval, len);
     }
 
@@ -149,7 +154,7 @@ int grib_accessor_class_g2level_t::pack_double(grib_accessor* a, const double* v
         return ret;
 
     switch (type_first) {
-        case 100: // Pa
+        case 100:  // Pa
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
@@ -160,14 +165,14 @@ int grib_accessor_class_g2level_t::pack_double(grib_accessor* a, const double* v
 
     // final = scaled_value * 10 ^ -scale_factor
 
-    //scale_first = 2;
-    //value_first *= 100;
-    //value_first = value_first + 0.5; //round up
+    // scale_first = 2;
+    // value_first *= 100;
+    // value_first = value_first + 0.5; //round up
 
     // TODO(masn): These maxima should come from the respective accessors
-    const int64_t scaled_value_max = (1ULL << 32) - 1; // scaledValueOf*FixedSurface is 4 octets
-    const int64_t scale_factor_max = (1ULL << 8) - 1;  // scaleFactorOf*FixedSurface is 1 octet
-    int64_t lscaled_value=0, lscale_factor=0;
+    const int64_t scaled_value_max = (1ULL << 32) - 1;  // scaledValueOf*FixedSurface is 4 octets
+    const int64_t scale_factor_max = (1ULL << 8) - 1;   // scaleFactorOf*FixedSurface is 1 octet
+    int64_t lscaled_value = 0, lscale_factor = 0;
 
     ret = compute_scaled_value_and_scale_factor(value_first, scaled_value_max, scale_factor_max, &lscaled_value, &lscale_factor);
     if (ret) {
@@ -186,7 +191,8 @@ int grib_accessor_class_g2level_t::pack_double(grib_accessor* a, const double* v
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2level_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g2level_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     int ret                 = 0;
     long value_first        = *val;
     long scale_first        = 0;
@@ -195,9 +201,9 @@ int grib_accessor_class_g2level_t::pack_long(grib_accessor* a, const long* val, 
     size_t pressure_units_len = 10;
 
     grib_accessor_g2level_t* self = (grib_accessor_g2level_t*)a;
-    grib_handle* hand           = grib_handle_of_accessor(a);
-    int change_scale_and_value  = 1;
-    bool tigge = is_tigge(hand);
+    grib_handle* hand             = grib_handle_of_accessor(a);
+    int change_scale_and_value    = 1;
+    bool tigge                    = is_tigge(hand);
 
     if (*len != 1)
         return GRIB_WRONG_ARRAY_SIZE;
@@ -218,16 +224,17 @@ int grib_accessor_class_g2level_t::pack_long(grib_accessor* a, const long* val, 
         return ret;
 
     switch (type_first) {
-        case 100: // Pa
+        case 100:  // Pa
             scale_first = 0;
             if (!strcmp(pressure_units, "hPa"))
                 value_first *= 100;
             break;
-        case 109: // Potential vorticity surface (See ECC-1081)
+        case 109:  // Potential vorticity surface (See ECC-1081)
             if (!tigge) {
                 scale_first = 9;
-            } else {
-                scale_first = 6; // TIGGE data follows different rules
+            }
+            else {
+                scale_first = 6;  // TIGGE data follows different rules
             }
             break;
 
@@ -260,12 +267,13 @@ int grib_accessor_class_g2level_t::pack_long(grib_accessor* a, const long* val, 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g2level_t::is_missing(grib_accessor* a){
+int grib_accessor_class_g2level_t::is_missing(grib_accessor* a)
+{
     grib_accessor_g2level_t* self = (grib_accessor_g2level_t*)a;
-    grib_handle* hand           = grib_handle_of_accessor(a);
-    int err                     = 0;
-    int ret                     = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int err = 0;
 
-    ret = grib_is_missing(hand, self->scale_first, &err) +
-          grib_is_missing(hand, self->value_first, &err);    return ret;
+    int ret = grib_is_missing(hand, self->scale_first, &err) +
+          grib_is_missing(hand, self->value_first, &err);
+    return ret;
 }

@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gds_not_present_bitmap.h"
 
 grib_accessor_class_gds_not_present_bitmap_t _grib_accessor_class_gds_not_present_bitmap{"gds_not_present_bitmap"};
@@ -47,9 +46,9 @@ int grib_accessor_class_gds_not_present_bitmap_t::unpack_double(grib_accessor* a
     long nn                      = 0;
     long missing_value;
 
-    int err            = 0;
     double* coded_vals = NULL;
-    err                = a->value_count(&nn);    n_vals             = nn;
+    int err = a->value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 

@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_rdbtime_guess_date.h"
 
 grib_accessor_class_rdbtime_guess_date_t _grib_accessor_class_rdbtime_guess_date{"rdbtime_guess_date"};

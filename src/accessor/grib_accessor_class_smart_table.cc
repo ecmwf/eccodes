@@ -8,10 +8,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*****************************************
- *  Enrico Fucile
- ****************************************/
-
 #include "grib_accessor_class_smart_table.h"
 #include <cctype>
 

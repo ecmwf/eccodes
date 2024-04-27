@@ -9,10 +9,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_bufr_elements_table.h"
 #include "grib_scaling.h"
-
 
 #if GRIB_PTHREADS
 static pthread_once_t once    = PTHREAD_ONCE_INIT;

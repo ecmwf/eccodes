@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_number_of_values_data_raw_packing.h"
 
 grib_accessor_class_number_of_values_data_raw_packing_t _grib_accessor_class_number_of_values_data_raw_packing{"number_of_values_data_raw_packing"};

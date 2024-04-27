@@ -10,7 +10,6 @@
  */
 
 #include "grib_scaling.h"
-#include "grib_api_internal.h"
 #include "grib_accessor_class_bufr_data_array.h"
 
 grib_accessor_class_bufr_data_array_t _grib_accessor_class_bufr_data_array{"bufr_data_array"};

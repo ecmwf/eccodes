@@ -9,16 +9,14 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_latitudes.h"
 
-grib_accessor_class_latitudes_t _grib_accessor_class_latitudes{"latitudes"};
+grib_accessor_class_latitudes_t _grib_accessor_class_latitudes{ "latitudes" };
 grib_accessor_class* grib_accessor_class_latitudes = &_grib_accessor_class_latitudes;
 
-
-
 static int get_distinct(grib_accessor* a, double** val, long* len);
-int compare_doubles(const void* a, const void* b, int ascending){
+int compare_doubles(const void* a, const void* b, int ascending)
+{
     /* ascending is a boolean: 0 or 1 */
     double* arg1 = (double*)a;
     double* arg2 = (double*)b;
@@ -35,17 +33,20 @@ int compare_doubles(const void* a, const void* b, int ascending){
     else
         return 1;
 }
-int compare_doubles_ascending(const void* a, const void* b){
+int compare_doubles_ascending(const void* a, const void* b)
+{
     return compare_doubles(a, b, 1);
 }
-int compare_doubles_descending(const void* a, const void* b){
+int compare_doubles_descending(const void* a, const void* b)
+{
     return compare_doubles(a, b, 0);
 }
 
-void grib_accessor_class_latitudes_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_latitudes_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_latitudes_t* self = (grib_accessor_latitudes_t*)a;
-    int n                         = 0;
+    int n = 0;
 
     self->values   = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->distinct = grib_arguments_get_long(grib_handle_of_accessor(a), c, n++);
@@ -54,18 +55,19 @@ void grib_accessor_class_latitudes_t::init(grib_accessor* a, const long l, grib_
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    grib_context* c               = a->context;
+int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    grib_context* c                 = a->context;
     grib_accessor_latitudes_t* self = (grib_accessor_latitudes_t*)a;
-    int ret = 0;
-    double* v = val;
-    double dummyLon = 0;
-    size_t size = 0;
-    long count = 0;
-    grib_iterator* iter = NULL;
+    int ret                         = 0;
+    double* v                       = val;
+    double dummyLon                 = 0;
+    size_t size                     = 0;
+    long count                      = 0;
+    grib_iterator* iter             = NULL;
 
     self->save = 1;
-    ret = value_count(a, &count);
+    ret        = value_count(a, &count);
     if (ret) return ret;
     size = count;
     if (*len < size) {
@@ -107,11 +109,12 @@ int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val
     return ret;
 }
 
-int grib_accessor_class_latitudes_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_latitudes_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_latitudes_t* self = (grib_accessor_latitudes_t*)a;
-    grib_handle* h                = grib_handle_of_accessor(a);
-    grib_context* c               = a->context;
-    double* val                   = NULL;
+    grib_handle* h                  = grib_handle_of_accessor(a);
+    grib_context* c                 = a->context;
+    double* val                     = NULL;
     int ret;
     size_t size;
 
@@ -138,20 +141,21 @@ int grib_accessor_class_latitudes_t::value_count(grib_accessor* a, long* len){
     return ret;
 }
 
-static int get_distinct(grib_accessor* a, double** val, long* len){
+static int get_distinct(grib_accessor* a, double** val, long* len)
+{
     long count = 0;
     double prev;
     double* v       = NULL;
     double* v1      = NULL;
     double dummyLon = 0;
-    int ret = 0;
+    int ret         = 0;
     int i;
     long jScansPositively = 0; /* default: north to south */
     size_t size           = *len;
     grib_context* c       = a->context;
 
     // Performance: We do not need the values to be decoded
-    grib_iterator* iter   = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
+    grib_iterator* iter = grib_iterator_new(grib_handle_of_accessor(a), GRIB_GEOITERATOR_NO_VALUES, &ret);
     if (ret != GRIB_SUCCESS) {
         if (iter)
             grib_iterator_delete(iter);

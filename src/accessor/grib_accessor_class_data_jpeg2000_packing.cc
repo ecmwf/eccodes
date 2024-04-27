@@ -9,7 +9,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_data_jpeg2000_packing.h"
 
 grib_accessor_class_data_jpeg2000_packing_t _grib_accessor_class_data_jpeg2000_packing{"data_jpeg2000_packing"};
