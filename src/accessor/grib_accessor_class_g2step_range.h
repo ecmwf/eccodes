@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -12,7 +11,6 @@
 #ifndef eccodes_accessor_g2step_range_h
 #define eccodes_accessor_g2step_range_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_g2step_range_t : public grib_accessor_gen_t
