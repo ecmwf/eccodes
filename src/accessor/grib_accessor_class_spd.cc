@@ -22,11 +22,10 @@ long grib_accessor_class_spd_t::byte_count(grib_accessor* a){
 
 static long compute_byte_count(grib_accessor* a){
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    long numberOfBits;
-    long numberOfElements;
-    int ret = 0;
+    long numberOfBits = 0;
+    long numberOfElements = 0;
 
-    ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
+    int ret = grib_get_long(grib_handle_of_accessor(a), self->numberOfBits, &numberOfBits);
     if (ret) {
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "%s unable to get %s to compute size", a->name, self->numberOfBits);
@@ -55,13 +54,11 @@ void grib_accessor_class_spd_t::init(grib_accessor* a, const long len, grib_argu
 
 int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* len){
     grib_accessor_spd_t* self = (grib_accessor_spd_t*)a;
-    int i;
-    int ret           = 0;
     long pos          = a->offset * 8;
     long rlen         = 0;
     long numberOfBits = 0;
 
-    ret = value_count(a, &rlen);
+    int ret = value_count(a, &rlen);
     if (ret)
         return ret;
 
@@ -80,7 +77,7 @@ int grib_accessor_class_spd_t::unpack_long(grib_accessor* a, long* val, size_t* 
         return GRIB_DECODING_ERROR;
     }
 
-    for (i = 0; i < rlen - 1; i++)
+    for (long i = 0; i < rlen - 1; i++)
         val[i] = grib_decode_unsigned_long(grib_handle_of_accessor(a)->buffer->data, &pos, numberOfBits);
 
     val[rlen - 1] = grib_decode_signed_longb(grib_handle_of_accessor(a)->buffer->data, &pos, numberOfBits);

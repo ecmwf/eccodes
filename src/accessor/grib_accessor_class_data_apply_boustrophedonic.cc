@@ -35,10 +35,9 @@ void grib_accessor_class_data_apply_boustrophedonic_t::dump(grib_accessor* a, gr
 
 int grib_accessor_class_data_apply_boustrophedonic_t::value_count(grib_accessor* a, long* numberOfPoints){
     grib_accessor_data_apply_boustrophedonic_t* self = (grib_accessor_data_apply_boustrophedonic_t*)a;
-    int ret = 0;
 
     *numberOfPoints = 0;
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints);
+    int ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, numberOfPoints);
 
     return ret;
 }
@@ -54,17 +53,16 @@ int grib_accessor_class_data_apply_boustrophedonic_t::unpack_float(grib_accessor
 int grib_accessor_class_data_apply_boustrophedonic_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
     size_t size;
     double* values;
-    int err = 0;
 
     /* GRIB-564: The index idx relates to codedValues NOT values! */
-    err = grib_get_size(a->parent->h, "codedValues", &size);
+    int err = grib_get_size(a->parent->h, "codedValues", &size);
     if (err)
         return err;
     if (idx > size)
         return GRIB_INVALID_NEAREST;
 
     values = (double*)grib_context_malloc_clear(a->parent->h->context, size * sizeof(double));
-    err    = grib_get_double_array(a->parent->h, "codedValues", values, &size);
+    err = grib_get_double_array(a->parent->h, "codedValues", values, &size);
     if (err) {
         grib_context_free(a->parent->h->context, values);
         return err;
@@ -111,10 +109,9 @@ int grib_accessor_class_data_apply_boustrophedonic_t::pack_double(grib_accessor*
     double* pval      = 0;
     size_t valuesSize = 0;
     long i, j;
-    int ret;
     long numberOfPoints, numberOfRows, numberOfColumns;
 
-    ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, &numberOfPoints);
+    int ret = grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfPoints, &numberOfPoints);
     if (ret)
         return ret;
 

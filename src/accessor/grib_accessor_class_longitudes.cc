@@ -123,7 +123,6 @@ static int get_distinct(grib_accessor* a, double** val, long* len){
     double* v1      = NULL;
     double dummyLat = 0;
     int ret = 0;
-    int i;
     size_t size         = *len;
     grib_context* c     = a->context;
 
@@ -157,7 +156,7 @@ static int get_distinct(grib_accessor* a, double** val, long* len){
     prev  = v[0];
     v1[0] = prev;
     count = 1;
-    for (i = 1; i < *len; i++) {
+    for (long i = 1; i < *len; i++) {
         if (v[i] != prev) {
             prev      = v[i];
             v1[count] = prev;
