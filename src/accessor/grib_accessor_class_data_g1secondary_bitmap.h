@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_data_g1secondary_bitmap_h
 #define eccodes_accessor_data_g1secondary_bitmap_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_data_secondary_bitmap.h"
 
 class grib_accessor_data_g1secondary_bitmap_t : public grib_accessor_data_secondary_bitmap_t

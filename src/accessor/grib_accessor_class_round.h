@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_round_h
 #define eccodes_accessor_round_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_evaluate.h"
 
 class grib_accessor_round_t : public grib_accessor_evaluate_t

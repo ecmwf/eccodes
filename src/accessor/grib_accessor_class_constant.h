@@ -13,7 +13,7 @@
  * Enrico Fucile
  **************************************/
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_variable.h"
 
 class grib_accessor_constant_t : public grib_accessor_variable_t {};

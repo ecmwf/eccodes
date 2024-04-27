@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_g2grid_h
 #define eccodes_accessor_g2grid_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_double.h"
 
 class grib_accessor_g2grid_t : public grib_accessor_double_t

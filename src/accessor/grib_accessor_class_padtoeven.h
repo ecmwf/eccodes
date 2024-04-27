@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_padtoeven_h
 #define eccodes_accessor_padtoeven_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_padding.h"
 
 class grib_accessor_padtoeven_t : public grib_accessor_padding_t

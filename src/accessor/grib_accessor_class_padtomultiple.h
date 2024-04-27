@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_padtomultiple_h
 #define eccodes_accessor_padtomultiple_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_padding.h"
 
 class grib_accessor_padtomultiple_t : public grib_accessor_padding_t

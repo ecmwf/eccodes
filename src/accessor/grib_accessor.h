@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "../grib_api_internal.h"
-#include "../grib_value.h"
+#include "grib_api_internal.h"
+#include "grib_value.h"
 
 class grib_accessor
 {

@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_global_gaussian_h
 #define eccodes_accessor_global_gaussian_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_global_gaussian_t : public grib_accessor_long_t

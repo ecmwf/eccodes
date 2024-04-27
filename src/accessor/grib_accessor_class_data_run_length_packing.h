@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_data_run_length_packing_h
 #define eccodes_accessor_data_run_length_packing_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_values.h"
 
 class grib_accessor_data_run_length_packing_t : public grib_accessor_values_t

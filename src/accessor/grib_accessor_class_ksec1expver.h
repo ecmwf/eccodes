@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_ksec1expver_h
 #define eccodes_accessor_ksec1expver_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_ascii.h"
 
 class grib_accessor_ksec1expver_t : public grib_accessor_ascii_t

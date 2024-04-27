@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_data_g2simple_packing_with_preprocessing_h
 #define eccodes_accessor_data_g2simple_packing_with_preprocessing_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_data_g2simple_packing.h"
 
 class grib_accessor_data_g2simple_packing_with_preprocessing_t : public grib_accessor_data_g2simple_packing_t

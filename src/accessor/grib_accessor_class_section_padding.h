@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_section_padding_h
 #define eccodes_accessor_section_padding_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_padding.h"
 
 class grib_accessor_section_padding_t : public grib_accessor_padding_t

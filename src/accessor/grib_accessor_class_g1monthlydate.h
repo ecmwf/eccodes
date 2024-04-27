@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_g1monthlydate_h
 #define eccodes_accessor_g1monthlydate_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_g1monthlydate_t : public grib_accessor_long_t

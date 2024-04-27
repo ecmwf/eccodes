@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_select_step_template_h
 #define eccodes_accessor_select_step_template_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_unsigned.h"
 
 class grib_accessor_select_step_template_t : public grib_accessor_unsigned_t

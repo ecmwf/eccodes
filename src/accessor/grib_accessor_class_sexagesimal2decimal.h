@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_sexagesimal2decimal_h
 #define eccodes_accessor_sexagesimal2decimal_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_to_double.h"
 
 class grib_accessor_sexagesimal2decimal_t : public grib_accessor_to_double_t

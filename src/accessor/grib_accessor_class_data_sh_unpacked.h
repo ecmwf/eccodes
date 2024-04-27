@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_data_sh_unpacked_h
 #define eccodes_accessor_data_sh_unpacked_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_data_simple_packing.h"
 
 class grib_accessor_data_sh_unpacked_t : public grib_accessor_data_simple_packing_t

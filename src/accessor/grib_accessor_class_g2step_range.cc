@@ -11,8 +11,8 @@
 
 #include "grib_api_internal.h"
 #include "grib_accessor_class_g2step_range.h"
-#include "../step.h"
-#include "../step_utilities.h"
+#include "step.h"
+#include "step_utilities.h"
 #include <vector>
 #include <sstream>
 #include <iostream>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor.h"
 #include <bitset>
 

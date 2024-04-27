@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_g1_section4_length_h
 #define eccodes_accessor_g1_section4_length_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_section_length.h"
 
 class grib_accessor_g1_section4_length_t : public grib_accessor_section_length_t

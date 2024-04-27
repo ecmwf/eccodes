@@ -12,7 +12,7 @@
 #ifndef eccodes_accessor_time_h
 #define eccodes_accessor_time_h
 
-#include "../grib_api_internal.h"
+#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_time_t : public grib_accessor_long_t
