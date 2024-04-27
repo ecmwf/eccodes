@@ -11,20 +11,21 @@
 
 #include "grib_accessor_class_data_g22order_packing.h"
 
-grib_accessor_class_data_g22order_packing_t _grib_accessor_class_data_g22order_packing{"data_g22order_packing"};
+grib_accessor_class_data_g22order_packing_t _grib_accessor_class_data_g22order_packing{ "data_g22order_packing" };
 grib_accessor_class* grib_accessor_class_data_g22order_packing = &_grib_accessor_class_data_g22order_packing;
 
 
-void grib_accessor_class_data_g22order_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g22order_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
-    grib_handle* gh                           = grib_handle_of_accessor(a);
+    grib_handle* gh = grib_handle_of_accessor(a);
 
-    self->numberOfValues       = grib_arguments_get_name(gh, args, self->carg++);
-    self->bits_per_value       = grib_arguments_get_name(gh, args, self->carg++);
-    self->reference_value      = grib_arguments_get_name(gh, args, self->carg++);
-    self->binary_scale_factor  = grib_arguments_get_name(gh, args, self->carg++);
-    self->decimal_scale_factor = grib_arguments_get_name(gh, args, self->carg++);
+    self->numberOfValues        = grib_arguments_get_name(gh, args, self->carg++);
+    self->bits_per_value        = grib_arguments_get_name(gh, args, self->carg++);
+    self->reference_value       = grib_arguments_get_name(gh, args, self->carg++);
+    self->binary_scale_factor   = grib_arguments_get_name(gh, args, self->carg++);
+    self->decimal_scale_factor  = grib_arguments_get_name(gh, args, self->carg++);
     self->optimize_scale_factor = grib_arguments_get_name(gh, args, self->carg++);
 
     self->typeOfOriginalFieldValues                = grib_arguments_get_name(gh, args, self->carg++);
@@ -45,32 +46,34 @@ void grib_accessor_class_data_g22order_packing_t::init(grib_accessor* a, const l
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-
 #define ONES (~(int)0)
 
 // #define UNDEFINED 9.999e20
 // #define UNDEFINED_LOW 9.9989e20
 // #define UNDEFINED_HIGH 9.9991e20
-#define UNDEFINED 9999.0
-#define UNDEFINED_LOW 9998.9
-#define UNDEFINED_HIGH 9999.1
+#define UNDEFINED        9999.0
+#define UNDEFINED_LOW    9998.9
+#define UNDEFINED_HIGH   9999.1
 #define UNDEFINED_VAL(x) ((x) >= UNDEFINED_LOW && (x) <= UNDEFINED_HIGH)
-#define DEFINED_VAL(x) ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
-#define UNDEFINED_ANGLE 999.0
+#define DEFINED_VAL(x)   ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
+#define UNDEFINED_ANGLE  999.0
 
-struct bitstream_context {
+struct bitstream_context
+{
     unsigned char* bitstream;
     int rbits;
     int reg;
     int n_bitstream;
 };
 
-void init_bitstream(bitstream_context *ctx, unsigned char* new_bitstream){
+void init_bitstream(bitstream_context* ctx, unsigned char* new_bitstream)
+{
     ctx->bitstream   = new_bitstream;
     ctx->n_bitstream = ctx->reg = ctx->rbits = 0;
 }
 
-void finish_bitstream(bitstream_context *ctx){
+void finish_bitstream(bitstream_context* ctx)
+{
     if (ctx->rbits) {
         ctx->n_bitstream++;
         *ctx->bitstream++ = (ctx->reg << (8 - ctx->rbits)) & 255;
@@ -78,7 +81,8 @@ void finish_bitstream(bitstream_context *ctx){
     }
 }
 
-void add_many_bitstream(bitstream_context *ctx, grib_accessor* a, int* t, int n, int n_bits){
+void add_many_bitstream(bitstream_context* ctx, grib_accessor* a, int* t, int n, int n_bits)
+{
     unsigned int jmask;
     int i;
     const int max_numbits = 25;
@@ -101,7 +105,8 @@ void add_many_bitstream(bitstream_context *ctx, grib_accessor* a, int* t, int n,
     }
 }
 
-void add_bitstream(bitstream_context *ctx, grib_accessor* a, int t, int n_bits){
+void add_bitstream(bitstream_context* ctx, grib_accessor* a, int t, int n_bits)
+{
     unsigned int jmask;
     const int max_numbits = 25;
 
@@ -125,7 +130,8 @@ void add_bitstream(bitstream_context *ctx, grib_accessor* a, int t, int n_bits){
 // find min/max of an integer array
 // return 0:  if min max found
 // return 1:  if min max not found, min = max = 0
-int int_min_max_array(int* data, unsigned int n, int* min, int* max){
+int int_min_max_array(int* data, unsigned int n, int* min, int* max)
+{
     unsigned int first;
     int mn, mx;
 
@@ -166,7 +172,8 @@ int int_min_max_array(int* data, unsigned int n, int* min, int* max){
     return 0;
 }
 
-double Int_Power(double x, int y){
+double Int_Power(double x, int y)
+{
     double value;
 
     if (y < 0) {
@@ -185,7 +192,8 @@ double Int_Power(double x, int y){
     return value;
 }
 
-int min_max_array(double* data, unsigned int n, double* min, double* max){
+int min_max_array(double* data, unsigned int n, double* min, double* max)
+{
     unsigned int first;
     double mn, mx;
 
@@ -297,7 +305,8 @@ int min_max_array(double* data, unsigned int n, double* min, double* max){
 //     return bms;
 // }
 
-int grib_accessor_class_data_g22order_packing_t::post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2]){
+static int post_process(grib_context* c, long* vals, long len, long order, long bias, const unsigned long extras[2])
+{
     unsigned long last, penultimate = 0, j = 0;
     Assert(order > 0);
     Assert(order <= 3);
@@ -358,7 +367,8 @@ int grib_accessor_class_data_g22order_packing_t::post_process(grib_context* c, l
 }
 
 
-int find_nbits(unsigned int i){
+int find_nbits(unsigned int i)
+{
 #if !defined __GNUC__ || __GNUC__ < 4
     int j;
     j = 0;
@@ -396,7 +406,8 @@ struct section
     struct section *head, *tail;
 };
 
-int sizeofsection(struct section* s, int ref_bits, int width_bits, int has_undef){
+int sizeofsection(struct section* s, int ref_bits, int width_bits, int has_undef)
+{
     if (s->mn == INT_MAX) {  // all undef
         return ref_bits + width_bits;
     }
@@ -424,7 +435,8 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits,
     return find_nbits(mx - mn + has_undef) * n + ref_bits + width_bits;
 }
 
-int size_all(struct section* s, int ref_bits, int width_bits, int has_undef){
+int size_all(struct section* s, int ref_bits, int width_bits, int has_undef)
+{
     int bits;
 
     bits = 0;
@@ -435,7 +447,8 @@ int size_all(struct section* s, int ref_bits, int width_bits, int has_undef){
     return (bits + 7) / 8;
 }
 
-void move_one_left(struct section* s, int* v){
+void move_one_left(struct section* s, int* v)
+{
     struct section* t;
     int val, i, j, k;
 
@@ -500,7 +513,8 @@ void move_one_left(struct section* s, int* v){
     }
 }
 
-void move_one_right(struct section* s, int* v){
+void move_one_right(struct section* s, int* v)
+{
     struct section* t;
     int val, i, j, k;
 
@@ -581,7 +595,8 @@ void move_one_right(struct section* s, int* v){
     return;
 }
 
-void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX){
+void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
+{
     struct section* t;
     int val0, val1, nbit_s, nbit_t;
 
@@ -656,7 +671,8 @@ void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX){
     }
 }
 
-void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int param, int LEN_SEC_MAX){
+void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int param, int LEN_SEC_MAX)
+{
     struct section *t, *m;
     int size_head, size_mid, size_tail, saving_mt, saving_hm;
     int min0, max0, min1, max1;
@@ -760,7 +776,8 @@ void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int
     }
 }
 
-int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
     grib_handle* gh = grib_handle_of_accessor(a);
     const char* cclass_name = a->cclass->name;
@@ -800,7 +817,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    optimize_scale_factor = 1; // TODO(masn): To be reviewed
+    optimize_scale_factor = 1;  // TODO(masn): To be reviewed
 
     if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
         return err;
@@ -830,7 +847,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     // orderOfSpatialDifferencing = 1 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=1
     // orderOfSpatialDifferencing = 2 means "grid_complex_spatial_differencing" with orderOfSpatialDifferencing=2
 
-    use_bitmap = bitmap_present;
+    use_bitmap  = bitmap_present;
     wanted_bits = bits_per_value;
 
     for (i = 0; i < *len; i++) {
@@ -842,7 +859,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     if (ndef == 0) {  // Special case: All undefined values
         // Section 5
         const char* packing_type = "grid_complex";
-        size_t packing_type_len = strlen(packing_type);
+        size_t packing_type_len  = strlen(packing_type);
         grib_set_string_internal(gh, "packingType", packing_type, &packing_type_len);
 
         if ((err = grib_set_double_internal(gh, self->reference_value, grib_ieee_to_long(0.0))) != GRIB_SUCCESS)
@@ -882,8 +899,8 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
         if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
 
         // Section 7
-        constexpr size_t sec7_size = 3;
-        unsigned char empty_sec7[sec7_size] = {255, 0, 0};  // group reference, group width, group length
+        constexpr size_t sec7_size          = 3;
+        unsigned char empty_sec7[sec7_size] = { 255, 0, 0 };  // group reference, group width, group length
         grib_buffer_replace(a, empty_sec7, sec7_size, 1, 1);
         return GRIB_SUCCESS;
     }
@@ -899,12 +916,12 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     dec_scale = -decimal_scale_factor;
     bin_scale = binary_scale_factor;
 
-    //compute bitmap section
-    //if (use_bitmap == 0 || ndef == ndata) {
-    //    if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
-    //} else {
-    //    if ((err = grib_set_long_internal(gh, "bitmapPresent", 1)) != GRIB_SUCCESS) return err;
-    //}
+    // compute bitmap section
+    // if (use_bitmap == 0 || ndef == ndata) {
+    //     if ((err = grib_set_long_internal(gh, "bitmapPresent", 0)) != GRIB_SUCCESS) return err;
+    // } else {
+    //     if ((err = grib_set_long_internal(gh, "bitmapPresent", 1)) != GRIB_SUCCESS) return err;
+    // }
 
     nndata    = use_bitmap ? ndef : ndata;
     has_undef = use_bitmap ? 0 : ndata != ndef;
@@ -1073,7 +1090,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
 
 #ifdef DEBUG
     grib_context_log(a->context, GRIB_LOG_DEBUG, "COMPLEX: 2: vmx %d vmn %d nbits %d", vmx, vmn,
-           find_nbits(vmx - vmn + has_undef));
+                     find_nbits(vmx - vmn + has_undef));
 #endif
 
     for (i = 0; i < nndata; i++) {
@@ -1094,7 +1111,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
 
     list = reinterpret_cast<section*>(grib_context_malloc_clear(a->context, nstruct * sizeof(section)));
     if (list == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed",cclass_name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory allocation of list failed", cclass_name);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1170,10 +1187,10 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
                 LEN_SEC_MAX);
         j = size_all(start.tail, vbits, LEN_BITS + est_group_width, has_undef);
 #ifdef DEBUG
-     grib_context_log(a->context, GRIB_LOG_DEBUG,
-            "COMPLEX: complex inc segments size size0 %d size1 %d segsize %d "
-            "LEN_BITS=%d",
-            j0, j, LEN_SEC_MAX, LEN_BITS);
+        grib_context_log(a->context, GRIB_LOG_DEBUG,
+                         "COMPLEX: complex inc segments size size0 %d size1 %d segsize %d "
+                         "LEN_BITS=%d",
+                         j0, j, LEN_SEC_MAX, LEN_BITS);
 #endif
         if (j > j0) {
             memcpy(list, list_backup, nstruct * sizeof(struct section));
@@ -1181,7 +1198,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
             LEN_SEC_MAX = (LEN_SEC_MAX - 1) / 2;
         }
     }
-    grib_context_free(a->context,list_backup);
+    grib_context_free(a->context, list_backup);
 
     exchange(start.tail, v, has_undef, LEN_SEC_MAX);
 #ifdef DEBUG
@@ -1232,7 +1249,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     itmp2  = reinterpret_cast<int*>(grib_context_malloc(a->context, ngroups * sizeof(int)));
 
     if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) {
-        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed",cclass_name);
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s packing: memory alloc of lens/widths/refs/itmp/itmp2 failed", cclass_name);
         return GRIB_OUT_OF_MEMORY;
     }
 
@@ -1289,7 +1306,7 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
         }
     }
 
-    bits_per_value = find_nbits(grefmx + has_undef);
+    bits_per_value                    = find_nbits(grefmx + has_undef);
     numberOfBitsUsedForTheGroupWidths = find_nbits(gwidmx - gwidmn + has_undef);
 
     if ((err = grib_set_long_internal(gh, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
@@ -1445,15 +1462,269 @@ int grib_accessor_class_data_g22order_packing_t::pack_double(grib_accessor* a, c
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g22order_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+template <typename T>
+static int unpack(grib_accessor* a, T* val, const size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
+    grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
+    const char* cclass_name                     = a->cclass->name;
+    grib_handle* gh                             = grib_handle_of_accessor(a);
+
+    size_t i                  = 0;
+    size_t j                  = 0;
+    long n_vals               = 0;
+    long vcount               = 0;
+    int err                   = GRIB_SUCCESS;
+    long* sec_val             = NULL;
+    unsigned char* buf        = reinterpret_cast<unsigned char*>(gh->buffer->data);
+    unsigned char* buf_ref    = NULL;
+    unsigned char* buf_width  = NULL;
+    unsigned char* buf_length = NULL;
+    unsigned char* buf_vals   = NULL;
+
+    long length_p            = 0;
+    long ref_p               = 0;
+    long width_p             = 0;
+    long vals_p              = 0;
+    long nvals_per_group     = 0;
+    long nbits_per_group_val = 0;
+    long group_ref_val       = 0;
+
+    long bits_per_value    = 0;
+    T binary_s             = 0;
+    T decimal_s            = 0;
+    double reference_value = 0;
+
+    long binary_scale_factor;
+    long decimal_scale_factor;
+    long typeOfOriginalFieldValues;
+    long groupSplittingMethodUsed;
+    long missingValueManagementUsed;
+    long primaryMissingValueSubstitute;
+    long secondaryMissingValueSubstitute;
+    long numberOfGroupsOfDataValues;
+    long referenceForGroupWidths;
+    long numberOfBitsUsedForTheGroupWidths;
+    long referenceForGroupLengths;
+    long lengthIncrementForTheGroupLengths;
+    long trueLengthOfLastGroup;
+    long numberOfBitsUsedForTheScaledGroupLengths;
+    long orderOfSpatialDifferencing     = 0;
+    long numberOfOctetsExtraDescriptors = 0;
+    double missingValue                 = 0;
+
+    err = a->value_count(&n_vals);
+    if (err)
+        return err;
+
+    if (*len < static_cast<size_t>(n_vals))
+        return GRIB_ARRAY_TOO_SMALL;
+
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->typeOfOriginalFieldValues, &typeOfOriginalFieldValues)) != GRIB_SUCCESS)
+        return err;
+
+    // Don't call grib_get_long_internal to suppress error message being output
+    if ((err = grib_get_long(gh, self->groupSplittingMethodUsed, &groupSplittingMethodUsed)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->missingValueManagementUsed, &missingValueManagementUsed)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->primaryMissingValueSubstitute, &primaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->secondaryMissingValueSubstitute, &secondaryMissingValueSubstitute)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfGroupsOfDataValues, &numberOfGroupsOfDataValues)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->referenceForGroupWidths, &referenceForGroupWidths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheGroupWidths, &numberOfBitsUsedForTheGroupWidths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->referenceForGroupLengths, &referenceForGroupLengths)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->lengthIncrementForTheGroupLengths, &lengthIncrementForTheGroupLengths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->trueLengthOfLastGroup, &trueLengthOfLastGroup)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfBitsUsedForTheScaledGroupLengths, &numberOfBitsUsedForTheScaledGroupLengths)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->orderOfSpatialDifferencing, &orderOfSpatialDifferencing)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(gh, self->numberOfOctetsExtraDescriptors, &numberOfOctetsExtraDescriptors)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(gh, "missingValue", &missingValue)) != GRIB_SUCCESS)
+        return err;
+
+    self->dirty = 0;
+
+    sec_val = (long*)grib_context_malloc(a->context, (n_vals) * sizeof(long));
+    if (!sec_val) return GRIB_OUT_OF_MEMORY;
+    memset(sec_val, 0, (n_vals) * sizeof(long));  // See SUP-718
+
+    buf_ref = buf + a->offset;
+
+    ref_p = (numberOfGroupsOfDataValues * bits_per_value);
+
+    if (orderOfSpatialDifferencing)
+        ref_p += (1 + orderOfSpatialDifferencing) * (numberOfOctetsExtraDescriptors * 8);
+
+    buf_width = buf_ref + (ref_p / 8) + ((ref_p % 8) ? 1 : 0);
+
+    width_p    = (numberOfGroupsOfDataValues * numberOfBitsUsedForTheGroupWidths);
+    buf_length = buf_width + (width_p / 8) + ((width_p % 8) ? 1 : 0);
+
+    length_p = (numberOfGroupsOfDataValues * numberOfBitsUsedForTheScaledGroupLengths);
+    buf_vals = buf_length + (length_p / 8) + ((length_p % 8) ? 1 : 0);
+
+    length_p = 0;
+    ref_p    = orderOfSpatialDifferencing ? (orderOfSpatialDifferencing + 1) * (numberOfOctetsExtraDescriptors * 8) : 0;
+    width_p  = 0;
+    vals_p   = 0;
+    vcount   = 0;
+
+    for (i = 0; i < numberOfGroupsOfDataValues; i++) {
+        group_ref_val       = grib_decode_unsigned_long(buf_ref, &ref_p, bits_per_value);
+        nvals_per_group     = grib_decode_unsigned_long(buf_length, &length_p, numberOfBitsUsedForTheScaledGroupLengths);
+        nbits_per_group_val = grib_decode_unsigned_long(buf_width, &width_p, numberOfBitsUsedForTheGroupWidths);
+
+        nvals_per_group *= lengthIncrementForTheGroupLengths;
+        nvals_per_group += referenceForGroupLengths;
+        nbits_per_group_val += referenceForGroupWidths;
+
+        if (i == numberOfGroupsOfDataValues - 1)
+            nvals_per_group = trueLengthOfLastGroup;
+        if (n_vals < vcount + nvals_per_group) {
+            return GRIB_DECODING_ERROR;
+        }
+
+        // grib_decode_long_array(buf_vals, &vals_p, nbits_per_group_val, nvals_per_group, &sec_val[vcount]);
+        if (missingValueManagementUsed == 0) {
+            // No explicit missing values included within data values
+            for (j = 0; j < nvals_per_group; j++) {
+                DEBUG_ASSERT_ACCESS(sec_val, (long)(vcount + j), n_vals);
+                sec_val[vcount + j] = group_ref_val + grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                // printf("sec_val[%ld]=%ld\n", vcount+j, sec_val[vcount+j]);
+            }
+        }
+        else if (missingValueManagementUsed == 1) {
+            // Primary missing values included within data values
+            long maxn = 0;  // (1 << bits_per_value) - 1;
+            for (j = 0; j < nvals_per_group; j++) {
+                if (nbits_per_group_val == 0) {
+                    maxn = (1 << bits_per_value) - 1;
+                    if (group_ref_val == maxn) {
+                        sec_val[vcount + j] = LONG_MAX;  // missing value
+                    }
+                    else {
+                        long temp           = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                        sec_val[vcount + j] = group_ref_val + temp;
+                    }
+                }
+                else {
+                    long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                    maxn      = (1 << nbits_per_group_val) - 1;
+                    if (temp == maxn) {
+                        sec_val[vcount + j] = LONG_MAX;  // missing value
+                    }
+                    else {
+                        sec_val[vcount + j] = group_ref_val + temp;
+                    }
+                }
+            }
+        }
+        else if (missingValueManagementUsed == 2) {
+            // Primary and secondary missing values included within data values
+            long maxn  = (1 << bits_per_value) - 1;
+            long maxn2 = 0;  // maxn - 1
+            for (j = 0; j < nvals_per_group; j++) {
+                if (nbits_per_group_val == 0) {
+                    maxn2 = maxn - 1;
+                    if (group_ref_val == maxn || group_ref_val == maxn2) {
+                        sec_val[vcount + j] = LONG_MAX;  // missing value
+                    }
+                    else {
+                        long temp           = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                        sec_val[vcount + j] = group_ref_val + temp;
+                    }
+                }
+                else {
+                    long temp = grib_decode_unsigned_long(buf_vals, &vals_p, nbits_per_group_val);
+                    maxn      = (1 << nbits_per_group_val) - 1;
+                    maxn2     = maxn - 1;
+                    if (temp == maxn || temp == maxn2) {
+                        sec_val[vcount + j] = LONG_MAX;  // missing value
+                    }
+                    else {
+                        sec_val[vcount + j] = group_ref_val + temp;
+                    }
+                }
+            }
+        }
+
+        vcount += nvals_per_group;
+    }
+
+    if (orderOfSpatialDifferencing) {
+        long bias               = 0;
+        unsigned long extras[2] = {
+            0,
+        };
+        ref_p = 0;
+
+        // For Complex packing, order == 0
+        // For Complex packing and spatial differencing, order == 1 or 2 (code table 5.6)
+        if (orderOfSpatialDifferencing != 1 && orderOfSpatialDifferencing != 2) {
+            grib_context_log(a->context, GRIB_LOG_ERROR,
+                             "%s unpacking: Unsupported order of spatial differencing %ld", cclass_name, orderOfSpatialDifferencing);
+            return GRIB_INTERNAL_ERROR;
+        }
+
+        for (i = 0; i < orderOfSpatialDifferencing; i++) {
+            extras[i] = grib_decode_unsigned_long(buf_ref, &ref_p, numberOfOctetsExtraDescriptors * 8);
+        }
+
+        bias = grib_decode_signed_longb(buf_ref, &ref_p, numberOfOctetsExtraDescriptors * 8);
+
+        post_process(a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias, extras);
+        // de_spatial_difference (a->context, sec_val, n_vals, orderOfSpatialDifferencing, bias);
+    }
+
+    binary_s  = (T)codes_power<T>(binary_scale_factor, 2);
+    decimal_s = (T)codes_power<T>(-decimal_scale_factor, 10);
+
+    for (i = 0; i < n_vals; i++) {
+        if (sec_val[i] == LONG_MAX) {
+            val[i] = (T)missingValue;
+        }
+        else {
+            val[i] = (T)((((T)sec_val[i]) * binary_s) + reference_value) * decimal_s;
+        }
+    }
+
+    grib_context_free(a->context, sec_val);
+    return err;
+}
+
+int grib_accessor_class_data_g22order_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     return unpack<double>(a, val, len);
 }
 
-int grib_accessor_class_data_g22order_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len){
+int grib_accessor_class_data_g22order_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+{
     return unpack<float>(a, val, len);
 }
 
-int grib_accessor_class_data_g22order_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_g22order_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     size_t size    = 0;
     double* values = NULL;
     int err        = grib_get_size(grib_handle_of_accessor(a), "codedValues", &size);
@@ -1473,7 +1744,8 @@ int grib_accessor_class_data_g22order_packing_t::unpack_double_element(grib_acce
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g22order_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_g22order_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     size_t size = 0, i = 0;
     double* values;
     int err = 0;
@@ -1500,8 +1772,9 @@ int grib_accessor_class_data_g22order_packing_t::unpack_double_element_set(grib_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g22order_packing_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_g22order_packing_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_g22order_packing_t* self = reinterpret_cast<grib_accessor_data_g22order_packing_t*>(a);
-    *count                                    = 0;
+    *count = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->numberOfValues, count);
 }
