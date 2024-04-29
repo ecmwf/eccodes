@@ -11,7 +11,7 @@
 # See https://community.wmo.int/activity-areas/wmo-codes/manual-codes/latest-version
 constant tablesVersionLatestOfficial = 32 : edition_specific;
 # If this is different from the official version, then it is the pre-operational version
-constant tablesVersionLatest = 32 : edition_specific;
+constant tablesVersionLatest = 33 : edition_specific;
 
 constant false = 0 : hidden;
 constant true = 1 : hidden;
@@ -53,3 +53,6 @@ concept isTemplateDeprecated(false) {
 concept isTemplateExperimental(false) {
     1 = { template_is_experimental = 1; }
 }
+
+# ECC-1806
+transient paramIdForConversion = 0;

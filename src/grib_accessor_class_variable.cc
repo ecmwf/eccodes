@@ -141,9 +141,9 @@ static void init(grib_accessor* a, const long length, grib_arguments* args)
     grib_expression* expression  = grib_arguments_get_expression(hand, args, 0);
     const char* p                = 0;
     size_t len                   = 1;
-    long l;
+    long l = 0;
     int ret = 0;
-    double d;
+    double d = 0;
     self->cname = NULL;
 
     a->length = 0;

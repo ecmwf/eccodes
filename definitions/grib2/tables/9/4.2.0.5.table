@@ -6,6 +6,6 @@
 4 4 Upward long-wave radiation flux (W m-2)
 5 5 Net long wave radiation flux (W m-2)
 6 6 Net long-wave radiation flux, clear sky (W m-2)
-# 7-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 7-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

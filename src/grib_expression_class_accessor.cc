@@ -174,10 +174,11 @@ grib_expression* new_accessor_expression(grib_context* c, const char* name, long
 static int native_type(grib_expression* g, grib_handle* h)
 {
     grib_expression_accessor* e = (grib_expression_accessor*)g;
-    int type                    = 0;
+    int type = 0;
     int err;
-    if ((err = grib_get_native_type(h, e->name, &type)) != GRIB_SUCCESS)
+    if ((err = grib_get_native_type(h, e->name, &type)) != GRIB_SUCCESS) {
         grib_context_log(h->context, GRIB_LOG_ERROR,
-                         "Error in native_type %s : %s", e->name, grib_get_error_message(err));
+                         "Error in evaluating the type of '%s': %s", e->name, grib_get_error_message(err));
+    }
     return type;
 }

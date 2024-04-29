@@ -25,6 +25,6 @@
 23 23 Liquid water in snow pack (kg m-2)
 24 24 Frost index (K day-1)
 25 25 Snow depth at elevation bands (kg m-2)
-# 26-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 26-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

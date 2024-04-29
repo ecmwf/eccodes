@@ -237,6 +237,7 @@ static const char* concept_evaluate(grib_accessor* a)
     grib_concept_value* c = action_concept_get_concept(a);
     grib_handle* h        = grib_handle_of_accessor(a);
 
+    // fprintf(stderr, "DEBUG: concept_evaluate: %s %s\n", a->name, c->name);
     while (c) {
         grib_concept_condition* e = c->conditions;
         int cnt                   = 0;
@@ -380,6 +381,11 @@ static int grib_concept_apply(grib_accessor* a, const char* name)
                 grib_get_string(h, "centre", centre_s, &centre_len) == GRIB_SUCCESS) {
                 grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle edition=%ld, centre=%s", editionNumber, centre_s);
             }
+            char dataset_s[80];
+            size_t dataset_len = sizeof(dataset_s);
+            if (grib_get_string(h, "datasetForLocal", dataset_s, &dataset_len) == GRIB_SUCCESS && !STR_EQUAL(dataset_s, "unknown")) {
+                grib_context_log(h->context, GRIB_LOG_ERROR, "concept: input handle dataset=%s", dataset_s);
+            }
             if (strcmp(act->name, "paramId") == 0) {
                 if (string_to_long(name, &dummy, 1) == GRIB_SUCCESS) {
                     // The paramId value is an integer. Show them the param DB
@@ -453,6 +459,23 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
     //if(*len > 1)
     //    return GRIB_NOT_IMPLEMENTED;
+
+    // ECC-1806: GRIB: Change of paramId in conversion from GRIB1 to GRIB2
+    if (STR_EQUAL(a->name, "paramId")) {
+        grib_handle* h = grib_handle_of_accessor(a);
+        long edition = 0;
+        if (grib_get_long(h, "edition", &edition) == GRIB_SUCCESS && edition == 2) {
+            long newParamId = 0;
+            if (grib_get_long(h, "paramIdForConversion", &newParamId) == GRIB_SUCCESS && newParamId > 0) {
+                if (a->context->debug) {
+                    const char* cclass_name = a->cclass->name;
+                    fprintf(stderr, "ECCODES DEBUG %s::%s: Changing %s from %ld to %ld\n",
+                                    cclass_name, __func__, a->name, *val, newParamId);
+                }
+                snprintf(buf, sizeof(buf), "%ld", newParamId);
+            }
+        }
+    }
 
     s = strlen(buf) + 1;
     return pack_string(a, buf, &s);

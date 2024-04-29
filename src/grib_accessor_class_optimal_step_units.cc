@@ -25,6 +25,7 @@
    MEMBERS    = const char* forecast_time_unit
    MEMBERS    = const char* time_range_value 
    MEMBERS    = const char* time_range_unit
+   MEMBERS    = long overwriteStepUnits
    END_CLASS_DEF
 
  */
@@ -59,6 +60,7 @@ typedef struct grib_accessor_optimal_step_units
     const char* forecast_time_unit;
     const char* time_range_value;
     const char* time_range_unit;
+    long overwriteStepUnits;
 } grib_accessor_optimal_step_units;
 
 extern grib_accessor_class* grib_accessor_class_gen;
@@ -127,6 +129,7 @@ static void init(grib_accessor* a, const long l, grib_arguments* c)
     self->time_range_value    = grib_arguments_get_name(hand, c, n++);
     self->time_range_unit     = grib_arguments_get_name(hand, c, n++);
     a->length = 0;
+    self->overwriteStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 }
 
 static void dump(grib_accessor* a, grib_dumper* dumper)
@@ -170,12 +173,11 @@ static int pack_expression(grib_accessor* a, grib_expression* e)
     return ret;
 }
 
-static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
-static long staticForceStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
-
 static int pack_long(grib_accessor* a, const long* val, size_t* len)
 {
     grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
+
     auto supported_units = eccodes::Unit::list_supported_units();
     try {
         eccodes::Unit unit{*val}; // throws if not supported
@@ -197,7 +199,7 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     }
 
     int ret;
-    staticStepUnits = *val;
+    self->overwriteStepUnits = *val;
     if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS) {
         return ret;
     }
@@ -207,9 +209,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
 
 static int unpack_long(grib_accessor* a, long* val, size_t* len)
 {
+    grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
     try {
-        if (eccodes::Unit{staticStepUnits} != eccodes::Unit{eccodes::Unit::Value::MISSING}) {
-            *val = staticStepUnits;
+        if (eccodes::Unit{self->overwriteStepUnits} != eccodes::Unit{eccodes::Unit::Value::MISSING}) {
+            *val = self->overwriteStepUnits;
             return GRIB_SUCCESS;
         }
 

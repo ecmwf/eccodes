@@ -82,7 +82,6 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
     int ret;
     grib_expression_logical_and* e = (grib_expression_logical_and*)g;
 
-
     switch (grib_expression_native_type(h, e->left)) {
         case GRIB_TYPE_LONG:
             ret = grib_expression_evaluate_long(h, e->left, &v1);
@@ -129,11 +128,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     long lres = 0;
-    int ret   = 0;
-
-    ret   = evaluate_long(g, h, &lres);
+    int ret = evaluate_long(g, h, &lres);
     *dres = (double)lres;
-
     return ret;
 }
 

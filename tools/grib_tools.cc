@@ -77,7 +77,6 @@ static grib_runtime_options global_options = {
     0, /* grib_tools_file* infile */
     0, /* grib_tools_file* outfile */
     0, /* grib_action* action */
-    0, /* grib_rule* rules */
     0, /* int dump_flags; */
     0, /* char* dump_mode; */
     0, /* repack    */
@@ -1340,16 +1339,15 @@ void grib_print_file_statistics(grib_runtime_options* options, grib_tools_file* 
             file->name);
     if (!failed)
         return;
-    /*
-       fprintf(dump_file,"Following bad messages found in %s\n", file->name);
-       fprintf(dump_file,"N      Error\n");
-       while (failed){
-           fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
-           grib_get_error_message(failed->error));
-           failed=failed->next;
-       }
-       fprintf(dump_file,"\n");
-     */
+
+    //  fprintf(dump_file,"Following bad messages found in %s\n", file->name);
+    //  fprintf(dump_file,"N      Error\n");
+    //  while (failed){
+    //      fprintf(dump_file,"%-*d    %s\n", 7,failed->count,
+    //      grib_get_error_message(failed->error));
+    //      failed=failed->next;
+    //  }
+    //  fprintf(dump_file,"\n");
 }
 
 void grib_print_full_statistics(grib_runtime_options* options)
@@ -1423,7 +1421,7 @@ void grib_tools_write_message(grib_runtime_options* options, grib_handle* h)
     }
 
     if (options->gts && h->gts_header) {
-        char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
+        const char gts_trailer[4] = { '\x0D', '\x0D', '\x0A', '\x03' };
         if (fwrite(gts_trailer, 1, 4, of->handle) != 4) {
             grib_context_log(h->context, (GRIB_LOG_ERROR) | (GRIB_LOG_PERROR),
                              "Error writing GTS trailer to %s", filename);

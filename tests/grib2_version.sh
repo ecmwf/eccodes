@@ -62,7 +62,6 @@ ${tools_dir}/grib_filter $tempFilt $sample2 > $tempText 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
-cat $tempText
 grep -q "Definition files version .* is greater than engine version" $tempText
 
 rm -f $tempFilt $temp $tempText

@@ -12,7 +12,7 @@ program codes_dump_test
    implicit none
    integer            :: ifile, iret, msgid
    integer            :: product_kind
-   character(len=10)  :: product_string
+   character(len=512) :: product_string
    character(len=512) :: infile_name
 
    call getarg(1, product_string)

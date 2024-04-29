@@ -104,6 +104,8 @@ if( HAVE_BUILD_TOOLS )
         grib_ifsParam
         grib_packing_order
         filter_substr
+        filter_size
+        filter_is_one_of
         filter_is_in_list
         filter_transient_darray
         grib_uerra
@@ -145,6 +147,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1708
         grib_ecc-1691
         grib_ecc-1766
+        grib_ecc-1806
         bufr_ecc-1028
         bufr_ecc-1195
         bufr_ecc-1259
@@ -266,6 +269,7 @@ if( HAVE_BUILD_TOOLS )
         grib_ecc-1425
         grib_ecc-1467
         grib_ecc-1764
+        grib_ecc-1792
         grib_sub_hourly
         grib_set_bytes
         grib_set_force
@@ -390,7 +394,8 @@ if( HAVE_BUILD_TOOLS )
     ecbuild_add_test( TARGET eccodes_t_grib_repair
                       TYPE SCRIPT
                       CONDITION ECCODES_INSTALL_EXTRA_TOOLS AND ENABLE_EXTRA_TESTS
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh )
+                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/grib_repair.sh
+                      TEST_DEPENDS eccodes_download_gribs )
 
 
     # Note: making the test dependent on the grib files (with DEPENDS)

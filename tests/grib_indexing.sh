@@ -158,6 +158,9 @@ rm -rf $temp_dir_A
 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 ${tools_dir}/grib_dump $tempIndex1 >/dev/null
 
+# With DEBUG enabled
+# --------------------
+ECCODES_DEBUG=-1 ${tools_dir}/grib_index_build -N -o $tempIndex1 $sample1 > /dev/null
 
 # ECC-1773: GRIB2 multi-field messages
 # -------------------------------------
@@ -205,5 +208,5 @@ grep -q "End of resource reached" $tempOut
 
 
 # Clean up
-rm -f $tempOut $tempRef
+rm -f $temp $tempOut $tempRef
 rm -f $tempIndex $tempIndex1 $tempIndex2 $tempGribFile1 $tempGribFile2

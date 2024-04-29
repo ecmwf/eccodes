@@ -174,3 +174,9 @@
  typeOfSecondFixedSurface = 168 ;
  typeOfStatisticalProcessing = 0 ;
 }
+#Maximum individual wave height
+'hmax' = {
+ discipline = 10 ;
+ parameterCategory = 0 ;
+ parameterNumber = 24 ;
+}
