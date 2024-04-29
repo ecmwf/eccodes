@@ -509,7 +509,7 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
 template <typename T>
 static int unpack(grib_accessor* a, T* val, const size_t* len)
 {
-    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     grib_accessor_data_g22order_packing* self = reinterpret_cast<grib_accessor_data_g22order_packing*>(a);
     const char* cclass_name = a->cclass->name;
     grib_handle* gh         = grib_handle_of_accessor(a);

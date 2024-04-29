@@ -214,7 +214,7 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
 template <typename T>
 static int unpack(grib_accessor* a, T* val, size_t* len)
 {
-    static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
     long pos = a->offset * 8;
     long tlen;
     grib_handle* hand = grib_handle_of_accessor(a);
