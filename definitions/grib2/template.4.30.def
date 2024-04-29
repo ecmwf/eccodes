@@ -2,6 +2,7 @@
 
 # TEMPLATE 4.30, Satellite Product
 # Note: This template is deprecated. Template 4.31 should be used instead.
+transient template_is_deprecated = 1 : hidden;
 
 include "grib2/template.4.parameter.def"
 

@@ -148,14 +148,13 @@ static int value_count(grib_accessor* a, long* count)
 static int unpack_double(grib_accessor* a, double* val, size_t* len)
 {
     grib_accessor_g2grid* self = (grib_accessor_g2grid*)a;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    int ret                    = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int ret = GRIB_SUCCESS;
 
     long basic_angle  = 0;
     long sub_division = 0;
-    int n             = 0;
+    int n = 0;
     long v[6];
-    int i;
 
     if (*len < 6) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -199,7 +198,7 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
         if ((ret = grib_get_long_internal(hand, self->j_increment, &v[n++])) != GRIB_SUCCESS)
             return ret;
     }
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
         if (v[i] == GRIB_MISSING_LONG)
             val[i] = GRIB_MISSING_DOUBLE;
         else
@@ -282,15 +281,14 @@ static int pack_double(grib_accessor* a, const double* val, size_t* len)
 {
     grib_accessor_g2grid* self = (grib_accessor_g2grid*)a;
     grib_handle* hand          = grib_handle_of_accessor(a);
-    int ret;
+    int ret = GRIB_SUCCESS;
     long v[6];
     int n;
     long basic_angle;
     long sub_division;
 
     if (*len < 6) {
-        ret = GRIB_ARRAY_TOO_SMALL;
-        return ret;
+        return GRIB_ARRAY_TOO_SMALL;
     }
 
     /* printf("pack_double %g %g %g %g %g %g\n",val[0],val[1],val[2],val[3],val[4],val[5]);*/

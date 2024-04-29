@@ -1,14 +1,14 @@
-#Code Table obstat.9.0:  Observation diagnostics
-1 count data count 
+# Code Table obstat.9.0:  Observation diagnostics
+1 count data count
 2 obs Average of observed values
-3 obs_stdv Standard deviation of observed values 
-4 fgdep Average of first guess departure 
+3 obs_stdv Standard deviation of observed values
+4 fgdep Average of first guess departure
 5 fgdep_stdv Standard deviation of first guess departure
 6 andep Average of analysis departure
 7 andep_stdv Standard deviation of analysis departure
 8 obs_error Average of observation standard error
 9 obs_error_stdv Standard deviation of observation standard error
-10 bkg_error Average of background standard error 
+10 bkg_error Average of background standard error
 11 bkg_error_stdv Standard deviation of background standard error
 12 lr_andep1 Average of low resolution analysis departure update 1
 13 lr_andep1_stdv Standard deviation of low resolution analysis departure update 1
@@ -19,7 +19,7 @@
 18 bcor Average of Bias correction
 19 bcor_stdv Standard deviation of bias correction
 20 vbcor average of Variational bias correction
-21 vbcor_stdv Standard deviation of variational bias correction 
+21 vbcor_stdv Standard deviation of variational bias correction
 22 fgdep_nbcor Average of background departure without bias correction
 23 fgdep_nbcor_stdv Standard deviation of background departure without bias correction
 24 windspeed Average of wind speed
@@ -45,8 +45,7 @@
 60 far_rate False alarm rate
 62 miss_rate Miss rate
 64 hit_rate hit rate
-66 corr_nul correct nuls 
+66 corr_nul correct nuls
 68 est_fg_err Estimated variance of the first guess error
 70 edafgspr EDA first guess variance
 72 edaanspr EDA Analysis variance
-#36-255 Reserved
