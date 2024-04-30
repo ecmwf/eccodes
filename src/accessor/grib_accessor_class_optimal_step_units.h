@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_optimal_step_units_h
 #define eccodes_accessor_optimal_step_units_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_optimal_step_units_t : public grib_accessor_gen_t
@@ -23,6 +22,7 @@ public:
     const char* forecast_time_unit;
     const char* time_range_value;
     const char* time_range_unit;
+    long overwriteStepUnits;
 };
 
 class grib_accessor_class_optimal_step_units_t : public grib_accessor_class_gen_t

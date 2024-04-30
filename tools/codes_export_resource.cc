@@ -24,6 +24,7 @@ static void usage(const char* prog)
     printf("       -d Extract a resource from the definitions directory\n");
     printf("\n");
     printf("       E.g., %s -s GRIB2.tmpl my.grib2\n", prog);
+    printf("       E.g., %s -d grib2/boot.def grib2_boot.txt\n", prog);
     exit(1);
 }
 
@@ -57,7 +58,7 @@ int main(int argc, char* argv[])
         resource_name = "definition";
     }
     else {
-        fprintf(stderr, "Invalid option: Specify either -s or -d\n");
+        fprintf(stderr, "Error: Invalid option: Specify either -s or -d\n");
         return 1;
     }
 
@@ -68,42 +69,49 @@ int main(int argc, char* argv[])
         full_path = grib_context_full_defs_path(c, resource_path);
     }
     if (!full_path) {
-        fprintf(stderr, "Failed to access %s: '%s'\n", resource_name, resource_path);
+        fprintf(stderr, "Error: Failed to access %s file: '%s'\n", resource_name, resource_path);
         return 1;
     }
 
     fout = fopen(out_file, "wb");
     if (!fout) {
-        fprintf(stderr, "Failed to open output file '%s'\n", out_file);
+        fprintf(stderr, "Error: Failed to open output file '%s'\n", out_file);
         perror(out_file);
         return 1;
     }
     fin = codes_fopen(full_path, "r");
     if (!fin) {
-        fprintf(stderr, "Failed to open resource '%s'\n", full_path);
+        fprintf(stderr, "Error: Failed to open resource '%s'\n", full_path);
         fclose(fout);
         return 1;
     }
+
     /* write resource bytes to fout */
+    int read_count = 0;
     while (0 < (bytes = fread(buffer, 1, sizeof(buffer), fin))) {
         if (fwrite(buffer, 1, bytes, fout) != bytes) {
-            fprintf(stderr, "Failed to write out bytes\n");
+            fprintf(stderr, "Error: Failed to write out bytes\n");
             return 1;
         }
+        ++read_count;
     }
 
     if (fclose(fin) != 0) {
-        fprintf(stderr, "Call to fclose failed (input)\n");
+        fprintf(stderr, "Error: Call to fclose failed (input)\n");
         return 1;
     }
     if (fclose(fout) != 0) {
-        fprintf(stderr, "Call to fclose failed (output)\n");
+        fprintf(stderr, "Error: Call to fclose failed (output)\n");
         return 1;
     }
 
     grib_context_free(c, full_path);
 
-    printf("Resource exported to file '%s'.\n", out_file);
+    if (read_count == 0) {
+        fprintf(stderr, "Error: Number of bytes read == 0. Please check the path refers to a file.\n");
+    } else {
+        printf("Resource exported to file '%s'.\n", out_file);
+    }
 
     return 0;
 }

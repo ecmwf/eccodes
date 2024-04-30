@@ -14,7 +14,7 @@
 12 12 Dry deposition mass flux (kg m-2 s-1)
 13 13 Transfer from hydrophobic to hydrophilic (kg kg-1 s-1)
 14 14 Transfer from SO2 (Sulphur dioxide) to SO4 (sulphate) (kg kg-1 s-1)
-# 15-49 Reserved 
+# 15-49 Reserved
 50 50 Amount in atmosphere (mol)
 51 51 Concentration in air (mol m-3)
 52 52 Volume mixing ratio (fraction in air) (mol/mol)
@@ -25,7 +25,7 @@
 57 57 Total yearly average burden of the atmosphere (mol)
 58 58 Total yearly averaged atmospheric loss (mol/s)
 59 59 Aerosol number concentration (m-3)
-# 60-99 Reserved 
+# 60-99 Reserved
 100 100 Surface area density (aerosol) (/m)
 101 101 Atmosphere optical thickness (m)
 102 102 Aerosol optical thickness (Numeric)
@@ -37,6 +37,6 @@
 108 108 Aerosol lidar backscatter from the ground (m-1 sr-1)
 109 109 Aerosol lidar extinction from satellite (m-1)
 110 110 Aerosol lidar extinction from the ground (m-1)
-# 111-191 Reserved 
-# 192-254 Reserved for local use 
-255 255 Missing 
+# 111-191 Reserved
+# 192-254 Reserved for local use
+255 255 Missing

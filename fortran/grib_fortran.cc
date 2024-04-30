@@ -42,7 +42,7 @@ static pthread_mutex_t multi_handle_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t keys_iterator_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void init() {
+static void init(void) {
     pthread_mutexattr_t attr;
 
     pthread_mutexattr_init(&attr);
@@ -997,13 +997,13 @@ void grib_f_write_on_fail_(int* gid) {
     grib_f_write_on_fail(gid);
 }
 /*****************************************************************************/
-int grib_f_multi_support_on_()
+int grib_f_multi_support_on_(void)
 {
     grib_multi_support_on(0);
     return GRIB_SUCCESS;
 }
 
-int grib_f_multi_support_off_()
+int grib_f_multi_support_off_(void)
 {
     grib_multi_support_off(0);
     return GRIB_SUCCESS;
@@ -1182,13 +1182,13 @@ int grib_f_keys_iterator_delete_(int* iterid)
 }
 
 /*****************************************************************************/
-int grib_f_gribex_mode_on_()
+int grib_f_gribex_mode_on_(void)
 {
     grib_gribex_mode_on(0);
     return GRIB_SUCCESS;
 }
 
-int grib_f_gribex_mode_off_()
+int grib_f_gribex_mode_off_(void)
 {
     grib_gribex_mode_off(0);
     return GRIB_SUCCESS;
@@ -2878,13 +2878,13 @@ int grib_f_multi_append_(int* ingid, int* sec,int* mgid)
 }
 
 /*****************************************************************************/
-int codes_f_bufr_multi_element_constant_arrays_on_()
+int codes_f_bufr_multi_element_constant_arrays_on_(void)
 {
     codes_bufr_multi_element_constant_arrays_on(NULL);
     return GRIB_SUCCESS;
 }
 
-int codes_f_bufr_multi_element_constant_arrays_off_()
+int codes_f_bufr_multi_element_constant_arrays_off_(void)
 {
     codes_bufr_multi_element_constant_arrays_off(NULL);
     return GRIB_SUCCESS;

@@ -18,6 +18,9 @@ tempGrib="temp.$label.grib"
 tempOut="temp.$label.txt"
 tempRef="temp.$label.ref"
 
+sample_grib2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
+
+
 echo "Test with nonexistent keys. Note spelling of centre!"
 # ---------------------------------------------------------
 cat >${data_dir}/nonexkey.rules <<EOF
@@ -57,7 +60,7 @@ cat >$tempFilt <<EOF
   assert(edition == 0);
 EOF
 set +e
-${tools_dir}/grib_filter $tempFilt $ECCODES_SAMPLES_PATH/GRIB2.tmpl 2> $tempOut
+${tools_dir}/grib_filter $tempFilt $sample_grib2 2> $tempOut
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -66,10 +69,8 @@ grep "Assertion failure" $tempOut
 
 # Bad write
 # ---------
-input=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
-
 set +e
-echo 'write(-10);' | ${tools_dir}/grib_filter -o $tempGrib - $input > $tempOut 2>&1
+echo 'write(-10);' | ${tools_dir}/grib_filter -o $tempGrib - $sample_grib2 > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
@@ -100,11 +101,24 @@ set -e
 # Non existent filter
 # --------------------
 set +e
-${tools_dir}/grib_filter a_non_existent_filter_file $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut 2>&1
+${tools_dir}/grib_filter a_non_existent_filter_file $sample_grib2 > $tempOut 2>&1
 status=$?
 set -e
 [ $status -ne 0 ]
 grep -q "Cannot include file" $tempOut
+
+# Functor not implemented
+# -------------------------
+cat >$tempFilt <<EOF
+  if (unicorn(pl) == 1) { print "Say what?"; }
+EOF
+set +e
+${tools_dir}/grib_filter $tempFilt $sample_grib2 > $tempOut 2>&1
+status=$?
+set -e
+[ $status -ne 0 ]
+grep -q "ECCODES ERROR.*failed for 'unicorn'" $tempOut
+grep -q "Function not yet implemented" $tempOut
 
 
 # Clean up

@@ -17,16 +17,16 @@ grib_accessor_class* grib_accessor_class_latitudes = &_grib_accessor_class_latit
 static int get_distinct(grib_accessor* a, double** val, long* len);
 int compare_doubles(const void* a, const void* b, int ascending)
 {
-    /* ascending is a boolean: 0 or 1 */
+    // ascending is a boolean: 0 or 1
     double* arg1 = (double*)a;
     double* arg2 = (double*)b;
     if (ascending) {
         if (*arg1 < *arg2)
-            return -1; /*Smaller values come before larger ones*/
+            return -1; // Smaller values come before larger ones
     }
     else {
         if (*arg1 > *arg2)
-            return -1; /*Larger values come before smaller ones*/
+            return -1; // Larger values come before smaller ones
     }
     if (*arg1 == *arg2)
         return 0;
@@ -71,7 +71,7 @@ int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val
     if (ret) return ret;
     size = count;
     if (*len < size) {
-        /* self->lats are computed in value_count so must free */
+        // self->lats are computed in value_count so must free
         if (self->lats) {
             grib_context_free(c, self->lats);
             self->lats = NULL;
@@ -80,7 +80,7 @@ int grib_accessor_class_latitudes_t::unpack_double(grib_accessor* a, double* val
     }
     self->save = 0;
 
-    /* self->lats are computed in value_count*/
+    // self->lats are computed in value_count
     if (self->lats) {
         int i;
         *len = self->size;
@@ -125,6 +125,13 @@ int grib_accessor_class_latitudes_t::value_count(grib_accessor* a, long* len)
     }
     *len = size;
 
+    // See ECC-1792
+    // Give priority to the Grid Section (rather than the Data Section)
+    long numberOfDataPoints = 0;
+    if (grib_get_long(h, "numberOfDataPoints", &numberOfDataPoints) == GRIB_SUCCESS) {
+        *len = numberOfDataPoints;
+    }
+
     if (self->distinct) {
         ret = get_distinct(a, &val, len);
         if (ret != GRIB_SUCCESS)
@@ -148,9 +155,9 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     double* v       = NULL;
     double* v1      = NULL;
     double dummyLon = 0;
-    int ret         = 0;
+    int ret = GRIB_SUCCESS;
     int i;
-    long jScansPositively = 0; /* default: north to south */
+    long jScansPositively = 0; // default: north to south
     size_t size           = *len;
     grib_context* c       = a->context;
 
@@ -173,14 +180,14 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
     grib_iterator_delete(iter);
     v = *val;
 
-    /* See which direction the latitudes are to be scanned */
+    // See which direction the latitudes are to be scanned
     if ((ret = grib_get_long_internal(grib_handle_of_accessor(a), "jScansPositively", &jScansPositively)))
         return ret;
     if (jScansPositively) {
-        qsort(v, *len, sizeof(double), &compare_doubles_ascending); /*South to North*/
+        qsort(v, *len, sizeof(double), &compare_doubles_ascending); //South to North
     }
     else {
-        qsort(v, *len, sizeof(double), &compare_doubles_descending); /*North to South*/
+        qsort(v, *len, sizeof(double), &compare_doubles_descending); //North to South
     }
 
     v1 = (double*)grib_context_malloc_clear(c, size * sizeof(double));
@@ -189,14 +196,14 @@ static int get_distinct(grib_accessor* a, double** val, long* len)
         return GRIB_OUT_OF_MEMORY;
     }
 
-    /* Construct a unique set of lats by filtering out duplicates */
+    // Construct a unique set of lats by filtering out duplicates
     prev  = v[0];
     v1[0] = prev;
     count = 1;
     for (i = 1; i < *len; i++) {
         if (v[i] != prev) {
             prev      = v[i];
-            v1[count] = prev; /* Value different from previous so store it */
+            v1[count] = prev; // Value different from previous so store it
             count++;
         }
     }

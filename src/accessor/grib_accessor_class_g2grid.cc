@@ -53,9 +53,8 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
 
     long basic_angle  = 0;
     long sub_division = 0;
-    int n             = 0;
+    int n = 0;
     long v[6];
-    int i;
 
     if (*len < 6) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -100,7 +99,7 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
         if ((ret = grib_get_long_internal(hand, self->j_increment, &v[n++])) != GRIB_SUCCESS)
             return ret;
     }
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
         if (v[i] == GRIB_MISSING_LONG)
             val[i] = GRIB_MISSING_DOUBLE;
         else
@@ -190,8 +189,7 @@ int grib_accessor_class_g2grid_t::pack_double(grib_accessor* a, const double* va
     long sub_division;
 
     if (*len < 6) {
-        ret = GRIB_ARRAY_TOO_SMALL;
-        return ret;
+        return GRIB_ARRAY_TOO_SMALL;
     }
 
     /* printf("pack_double %g %g %g %g %g %g\n",val[0],val[1],val[2],val[3],val[4],val[5]);*/

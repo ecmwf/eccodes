@@ -2,6 +2,7 @@
 
 # TEMPLATE 4.47, Individual ensemble forecast, control and perturbed, at a horizontal level or in a horizontal layer in a continuous or non-continuous time interval
 # Note: This template is deprecated. Template 4.85 should be used instead.
+transient template_is_deprecated = 1 : hidden;
 
 include "grib2/template.4.parameter.def"
 include "grib2/template.4.aerosol.def"

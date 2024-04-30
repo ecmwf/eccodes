@@ -28,6 +28,7 @@ void grib_accessor_class_optimal_step_units_t::init(grib_accessor* a, const long
     self->time_range_value    = grib_arguments_get_name(hand, c, n++);
     self->time_range_unit     = grib_arguments_get_name(hand, c, n++);
     a->length = 0;
+    self->overwriteStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
 }
 
 void grib_accessor_class_optimal_step_units_t::dump(grib_accessor* a, grib_dumper* dumper){
@@ -66,10 +67,10 @@ int grib_accessor_class_optimal_step_units_t::pack_expression(grib_accessor* a, 
     return ret;
 }
 
-static long staticStepUnits = eccodes::Unit{eccodes::Unit::Value::MISSING}.value<long>();
-
 int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const long* val, size_t* len){
     grib_handle* h = grib_handle_of_accessor(a);
+    grib_accessor_optimal_step_units_t* self = (grib_accessor_optimal_step_units_t*)a;
+
     auto supported_units = eccodes::Unit::list_supported_units();
     try {
         eccodes::Unit unit{*val}; // throws if not supported
@@ -91,7 +92,7 @@ int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const 
     }
 
     int ret;
-    staticStepUnits = *val;
+    self->overwriteStepUnits = *val;
     if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS) {
         return ret;
     }
@@ -99,15 +100,16 @@ int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const 
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_optimal_step_units_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_optimal_step_units_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    const grib_accessor_optimal_step_units_t* self = (grib_accessor_optimal_step_units_t*)a;
+    grib_handle* h = grib_handle_of_accessor(a);
+
     try {
-        if (eccodes::Unit{staticStepUnits} != eccodes::Unit{eccodes::Unit::Value::MISSING}) {
-            *val = staticStepUnits;
+        if (eccodes::Unit{self->overwriteStepUnits} != eccodes::Unit{eccodes::Unit::Value::MISSING}) {
+            *val = self->overwriteStepUnits;
             return GRIB_SUCCESS;
         }
-
-        const grib_accessor_optimal_step_units_t* self = (grib_accessor_optimal_step_units_t*)a;
-        grib_handle* h = grib_handle_of_accessor(a);
 
         auto forecast_time_opt = get_step(h, self->forecast_time_value, self->forecast_time_unit);
         auto time_range_opt = get_step(h, self->time_range_value, self->time_range_unit);

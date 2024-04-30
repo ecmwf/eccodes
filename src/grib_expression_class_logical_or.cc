@@ -129,10 +129,8 @@ static int evaluate_long(grib_expression* g, grib_handle* h, long* lres)
 static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
 {
     long lres = 0;
-
     int ret = evaluate_long(g, h, &lres);
     *dres = (double)lres;
-
     return ret;
 }
 
@@ -141,7 +139,7 @@ static void print(grib_context* c, grib_expression* g, grib_handle* f)
     grib_expression_logical_or* e = (grib_expression_logical_or*)g;
     printf("(");
     grib_expression_print(c, e->left, f);
-    printf(" && ");
+    printf(" || ");
     grib_expression_print(c, e->right, f);
     printf(")");
 }

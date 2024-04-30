@@ -6,6 +6,29 @@
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
 	}
+#Sea ice area fraction
+'ci' = {
+	 discipline = 10 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Snow density
+'rsn' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 61 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Sea surface temperature
+'sst' = {
+	 discipline = 10 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 0 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Maximum temperature at 2 metres in the last 6 hours
 'mx2t6' = {
 	 discipline = 0 ;
@@ -30,6 +53,15 @@
 	 typeOfStatisticalProcessing = 3 ;
 	 lengthOfTimeRange = 6 ;
 	}
+#Total column water
+'tcw' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 51 ;
+	 typeOfFirstFixedSurface = 1 ;
+	 typeOfSecondFixedSurface = 8 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #2 metre temperature
 '2t' = {
 	 discipline = 0 ;
@@ -67,6 +99,16 @@
 	 typeOfFirstFixedSurface = 103 ;
 	 scaledValueOfFirstFixedSurface = 15 ;
 	 scaleFactorOfFirstFixedSurface = 1 ;
+	}
+#2 metre dewpoint temperature
+'2d' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 6 ;
+	 typeOfFirstFixedSurface = 103 ;
+	 scaledValueOfFirstFixedSurface = 2 ;
+	 scaleFactorOfFirstFixedSurface = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-integrated eastward turbulent surface stress
 'ewss' = {
@@ -131,6 +173,22 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Eastward surface sea water velocity
+'ocu' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 2 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Northward surface sea water velocity
+'ocv' = {
+	 discipline = 10 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 3 ;
+	 typeOfFirstFixedSurface = 160 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Sea surface height
 'zos' = {
 	 discipline = 10 ;
@@ -157,7 +215,7 @@
 	 scaleFactorOfSecondFixedSurface = missing() ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
-#Average salinity in the upper 300m
+#Average sea water practical salinity in the upper 300m
 'sav300' = {
 	 discipline = 10 ;
 	 parameterCategory = 4 ;

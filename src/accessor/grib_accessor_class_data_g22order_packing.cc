@@ -366,7 +366,6 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
     return GRIB_SUCCESS;
 }
 
-
 int find_nbits(unsigned int i)
 {
 #if !defined __GNUC__ || __GNUC__ < 4
