@@ -17,6 +17,9 @@ tempOut=temp.$label.txt
 tempRef=temp.$label.ref
 tempBud=temp.$label.bud
 
+# Abort if any error messages are posted
+export ECCODES_FAIL_IF_LOG_MESSAGE=1
+
 ${tools_dir}/grib_ls -j ${data_dir}/budg > $tempOut
 cat > $tempRef << EOF
 { "messages" : [ 
