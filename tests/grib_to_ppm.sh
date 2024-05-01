@@ -17,6 +17,11 @@ if [ ! -x "${tools_dir}/grib2ppm" ]; then
     exit 0
 fi
 
+# No options
+${tools_dir}/grib2ppm
+
+${tools_dir}/grib2ppm -l 6 -u 7 -c $data_dir/sample.grib2  > $tempOut
+
 ${tools_dir}/grib2ppm $ECCODES_SAMPLES_PATH/GRIB1.tmpl > $tempOut
 ${tools_dir}/grib2ppm $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
 

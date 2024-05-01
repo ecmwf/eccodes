@@ -17,6 +17,12 @@ if [ ! -x "${tools_dir}/gg_sub_area_check" ]; then
     exit 0
 fi
 
+set +e
+${tools_dir}/gg_sub_area_check
+status=$?
+set -e
+[ $status -ne 0 ]
+
 f1=$ECCODES_SAMPLES_PATH/GRIB1.tmpl
 f2=$ECCODES_SAMPLES_PATH/GRIB2.tmpl
 ${tools_dir}/gg_sub_area_check $f1 $f2 > $tempOut
