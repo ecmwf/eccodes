@@ -34,24 +34,6 @@ if (tablesVersion >= 31 ) {
   concept name(nameFallback,"name.def",conceptsDir2,conceptsDir1): no_copy,dump;
   concept cfName(cfNameFallback,"cfName.def",conceptsDir2,conceptsDir1) : no_copy,dump;
   concept cfVarName (cfVarNameFallback,"cfVarName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-
-  if(defined(constituentType)) {
-    constant defaultChemId="unknown" :hidden;
-    constant defaultChemName="unknown" :hidden;
-    constant defaultChemShortName="unknown" :hidden;
-    constant defaultChemFormula="unknown" :hidden;
-
-    concept chemId (defaultChemId,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
-    concept chemName (defaultChemName,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-    concept chemShortName (defaultChemShortName,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
-    concept chemFormula (defaultChemFormula,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
-
-    alias mars.chem = chemId;
-    alias parameter.chemId = chemId;
-    alias ls.chemShortName = chemShortName;
-    alias parameter.chemShortName = chemShortName;
-  }
-
 }
 else {
   alias paramId=paramIdFallback;
@@ -60,6 +42,23 @@ else {
   alias name=nameFallback;
   alias cfName=cfNameFallback;
   alias cfVarName=cfVarNameFallback;
+}
+ 
+constant defaultChemId="unknown" :hidden;
+constant defaultChemName="unknown" :hidden;
+constant defaultChemShortName="unknown" :hidden;
+constant defaultChemFormula="unknown" :hidden;
+ 
+concept chemId (defaultChemId,"chemId.def",conceptsDir2,conceptsDir1): no_copy,long_type,dump;
+concept chemName (defaultChemName,"chemName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept chemShortName (defaultChemShortName,"chemShortName.def",conceptsDir2,conceptsDir1): no_copy,dump;
+concept chemFormula (defaultChemFormula,"chemFormula.def",conceptsDir2,conceptsDir1): no_copy,dump;
+
+if (!chemId is "unknown"){ 
+ alias mars.chem = chemId;
+ alias parameter.chemId = chemId;
+ alias ls.chemShortName = chemShortName;
+ alias parameter.chemShortName = chemShortName;
 }
 
 # modelName: Contribution from Daniel Lee @ DWD
