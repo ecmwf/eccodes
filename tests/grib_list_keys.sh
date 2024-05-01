@@ -14,7 +14,9 @@ label="grib_list_keys_test"
 tempOut=temp.$label.txt
 
 if [ -d "$ECCODES_DEFINITION_PATH" ]; then
-    ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/boot.def
+    if [ -x "${tools_dir}/grib_list_keys" ]; then
+        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/boot.def
+    fi
 fi
 
 # Clean up
