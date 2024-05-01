@@ -228,6 +228,7 @@ if( HAVE_BUILD_TOOLS )
         grib_geo_iter
         grib_to_json
         grib_to_ppm
+        grib_sub_area_check
         grib_list_keys
         grib_histogram
         bufr_get_element
