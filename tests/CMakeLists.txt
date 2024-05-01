@@ -228,6 +228,7 @@ if( HAVE_BUILD_TOOLS )
         grib_geo_iter
         grib_to_json
         grib_to_ppm
+        grib_list_keys
         grib_histogram
         bufr_get_element
         bufr_wmo_tables
