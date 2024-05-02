@@ -586,10 +586,7 @@ int grib_accessor_class_gen_t::pack_string(grib_accessor* a, const char* v, size
                              __func__, v, a->name);
             return GRIB_WRONG_TYPE;
         }
-        int err = a->pack_double(&val, &l);
-        if (is_overridden_[PACK_DOUBLE]) {
-            return err;
-        }
+        return a->pack_double(&val, &l);
     }
 
     if (is_overridden_[PACK_LONG]) {
