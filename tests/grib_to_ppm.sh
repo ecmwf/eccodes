@@ -21,9 +21,7 @@ fi
 ${tools_dir}/grib2ppm
 
 ${tools_dir}/grib2ppm -l 6 -u 7 -c $data_dir/sample.grib2  > $tempOut
-
-${tools_dir}/grib2ppm $ECCODES_SAMPLES_PATH/GRIB1.tmpl > $tempOut
-${tools_dir}/grib2ppm $ECCODES_SAMPLES_PATH/GRIB2.tmpl > $tempOut
+${tools_dir}/grib2ppm $data_dir/sample.grib2  > $tempOut
 
 # Clean up
 rm -f $tempOut
