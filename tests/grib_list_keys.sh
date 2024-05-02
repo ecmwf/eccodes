@@ -15,7 +15,10 @@ tempOut=temp.$label.txt
 
 if [ -d "$ECCODES_DEFINITION_PATH" ]; then
     if [ -x "${tools_dir}/grib_list_keys" ]; then
-        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/boot.def
+        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/boot.def > $tempOut
+        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/grib2/template.4.2000.def > $tempOut
+        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/grib2/template.3.0.def > $tempOut
+        ${tools_dir}/grib_list_keys $ECCODES_DEFINITION_PATH/grib2/template.3.120.def > $tempOut
     fi
 fi
 
