@@ -17,6 +17,12 @@ if [ ! -x ${tools_dir}/big2gribex ]; then
     exit 0
 fi
 
+set +e
+${tools_dir}/big2gribex
+status=$?
+set -e
+[ $status -ne 0 ]
+
 ${tools_dir}/big2gribex $data_dir/test.grib1 $tempGrib
 
 # Clean up
