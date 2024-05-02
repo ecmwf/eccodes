@@ -26,7 +26,7 @@ grib_option grib_options[] = {
     { "A:", 0, 0, 0, 1, 0 },
     { "t:", "factor", "Compare data values using factor multiplied by the tolerance specified in options -R -A.\n", 0, 1, 0 },
     { "w:", 0, 0, 0, 1, 0 },
-    { "f", 0, 0, 0, 1, 0 },
+    { "f", 0, "Forcefully compare, do not stop after first difference.\n", 0, 1, 0 },
     { "F", 0, 0, 1, 0, 0 },
     { "q", 0, 0, 1, 0, 0 },
     { "M", 0, 0, 1, 0, 0 },
