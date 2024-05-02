@@ -539,33 +539,15 @@ int pack_double_array_as_long(grib_accessor* a, const double* v, size_t* len)
 
 int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, size_t* len)
 {
-    static int check_pack_long = 1;
-    if (check_pack_long) {
-        const long v_tmp = (long) (*v);
-        size_t l_tmp = 0;
-        pack_long(a, &v_tmp, &l_tmp);
-        check_pack_long = 0;
-    }
-
     is_overridden_[PACK_DOUBLE] = 0;
+    grib_context* c = a->context;
 
-    int do_pack_as_long = 0;
-    grib_context* c     = a->context;
-    if (is_overridden_[PACK_LONG]) {
-        do_pack_as_long = 1;
-    }
-    else {
+    if (strcmp(a->cclass->name, "codetable") == 0 || is_overridden_[PACK_LONG]) {
         /* ECC-648: Special case of codetable */
-        if (strcmp(a->cclass->name, "codetable") == 0) {
-            do_pack_as_long = 1;
-        }
-    }
-
-    if (do_pack_as_long) {
         return pack_double_array_as_long(a, v, len);
     }
-    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", a->name);
 
+    grib_context_log(c, GRIB_LOG_ERROR, "Should not pack '%s' as a double", a->name);
     if (is_overridden_[PACK_STRING]) {
         grib_context_log(c, GRIB_LOG_ERROR, "Try packing as a string");
     }
