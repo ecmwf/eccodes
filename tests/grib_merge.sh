@@ -13,14 +13,10 @@
 label="grib_merge_test"
 
 tempGrib=temp.$label.grib
-tempFilt=temp.$label.filt
-tempLog=temp.$label.log
-tempOut=temp.$label.txt
-tempRef=temp.$label.ref
 
 f1=$ECCODES_SAMPLES_PATH/regular_ll_pl_grib1.tmpl
 f2=$ECCODES_SAMPLES_PATH/regular_ll_sfc_grib1.tmpl
 ${tools_dir}/grib_merge $f1 $f2 $tempGrib
 
 # Clean up
-rm -f $tempGrib $tempFilt $tempLog $tempOut $tempRef
+rm -f $tempGrib
