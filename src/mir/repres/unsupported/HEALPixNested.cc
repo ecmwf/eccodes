@@ -45,8 +45,10 @@ void HEALPixNested::fillGrib(grib_info& info) const {
 void HEALPixNested::json(eckit::JSON& j) const {
     j.startObject();
     j << "grid" << ring_.uniqueName();
-    j << "type" << "healpix";
-    j << "ordering" << "nested";
+    j << "type"
+      << "healpix";
+    j << "ordering"
+      << "nested";
     j.endObject();
 }
 

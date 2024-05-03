@@ -100,7 +100,8 @@ void HEALPix::fillJob(api::MIRJob&) const {
 void HEALPix::json(eckit::JSON& j) const {
     j.startObject();
     j << "grid" << name();
-    j << "type" << "healpix";
+    j << "type"
+      << "healpix";
     j << "ordering" << orderingConvention_;
     j.endObject();
 }

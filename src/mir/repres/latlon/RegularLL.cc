@@ -63,7 +63,8 @@ void RegularLL::print(std::ostream& out) const {
 
 void RegularLL::json(eckit::JSON& json) const {
     json.startObject();
-    json << "type" << "regular_ll";
+    json << "type"
+         << "regular_ll";
     LatLon::json(json);
     json.endObject();
 }
