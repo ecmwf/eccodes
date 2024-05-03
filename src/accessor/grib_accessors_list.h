@@ -26,11 +26,11 @@ public:
     int unpack_float(float* val, size_t* buffer_len);
     int unpack_string(char** val, size_t* buffer_len);
 
-    grib_accessor* accessor;
-    int rank;
-    grib_accessors_list* next_;
-    grib_accessors_list* prev_;
-    grib_accessors_list* last_;
+    grib_accessor* accessor = nullptr;
+    int rank = 0;
+    grib_accessors_list* next_ = nullptr;
+    grib_accessors_list* prev_ = nullptr;
+    grib_accessors_list* last_ = nullptr;
 };
 
 grib_accessors_list* grib_accessors_list_create(grib_context* c);
