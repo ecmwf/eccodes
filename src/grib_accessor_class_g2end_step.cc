@@ -262,9 +262,13 @@ static int unpack_one_time_range_long_(grib_accessor* a, long* val, size_t* len)
     }
     if (add_time_range) {
         *val = start_step_value + time_range_value;
+        if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
+            return err;
     }
     else {
         *val = start_step_value;
+        if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
+            return err;
     }
 
     return GRIB_SUCCESS;
@@ -310,9 +314,13 @@ static int unpack_one_time_range_double_(grib_accessor* a, double *val , size_t*
     }
     if (add_time_range) {
         *val = (start_step + time_range).value<double>(eccodes::Unit(step_units));
+        if ((err = grib_set_long_internal(h, "endStepUnit", step_units)) != GRIB_SUCCESS)
+            return err;
     }
     else {
         *val = start_step.value<double>(eccodes::Unit(start_step_unit));
+        if ((err = grib_set_long_internal(h, "endStepUnit", start_step_unit)) != GRIB_SUCCESS)
+            return err;
     }
 
     return GRIB_SUCCESS;
@@ -441,14 +449,19 @@ static int unpack_long(grib_accessor* a, long* val, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     long start_step_value;
+    long start_step_unit;
     long numberOfTimeRange;
 
     if ((ret = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
+        return ret;
+    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return ret;
 
     /* point in time */
     if (self->year == NULL) {
         *val = start_step_value;
+        if ((ret = grib_set_long_internal(h, "endStepUnit", start_step_unit)))
+            return ret;
         return 0;
     }
 
@@ -479,14 +492,19 @@ static int unpack_double(grib_accessor* a, double* val, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     int ret = 0;
     long start_step_value;
+    long start_step_unit;
     long numberOfTimeRange;
 
     if ((ret = grib_get_long_internal(h, self->start_step_value, &start_step_value)))
+        return ret;
+    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)))
         return ret;
 
     /* point in time */
     if (self->year == NULL) {
         *val = start_step_value;
+        if ((ret = grib_set_long_internal(h, "endStepUnit", start_step_unit)))
+            return ret;
         return 0;
     }
 
@@ -542,7 +560,8 @@ static int pack_long_(grib_accessor* a, const long end_step_value, const long en
 
     /*point in time */
     if (self->year == NULL) {
-        err = grib_set_long_internal(h, "startStepUnit", end_step.unit().value<long>());
+        if ((err = grib_set_long_internal(h, "startStepUnit", end_step.unit().value<long>())) != GRIB_SUCCESS)
+            return err;
         err = grib_set_long_internal(h, self->start_step_value, end_step.value<long>());
         return err;
     }
