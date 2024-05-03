@@ -178,10 +178,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
     grib_handle* h = grib_handle_of_accessor(a);
     grib_accessor_optimal_step_units* self = (grib_accessor_optimal_step_units*)a;
 
-    long start_step;
-    long start_step_unit;
-    long end_step;
-    long end_step_unit;
+    long start_step = 0;
+    long start_step_unit = 0;
+    long end_step = 0;
+    long end_step_unit = 0;
     int ret;
 
     auto supported_units = eccodes::Unit::list_supported_units();
@@ -203,6 +203,10 @@ static int pack_long(grib_accessor* a, const long* val, size_t* len)
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s", msg.c_str());
         return GRIB_INVALID_ARGUMENT;
     }
+
+    // ECC-1813: When the stepUnits key is used without specifying a value, as in the command
+    // "grib-set -s stepUnits=m in.grib out.grib", the following code initiates an indirect update
+    // of the low-level keys: forecastTime,indicatorOfUnitOfTimeRange,indicatorOfUnitForTimeRange,lengthOfTimeRange
 
     self->overwriteStepUnits = *val;
     if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS)
