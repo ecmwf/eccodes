@@ -112,7 +112,9 @@ int grib_pack_float(grib_accessor* a, const float* v, size_t* len)
 int grib_pack_expression(grib_accessor* a, grib_expression* e)
 {
     grib_accessor_class* c = a->cclass;
-    //grib_context_log(a->context, GRIB_LOG_DEBUG, "(%s)%s is packing (double) %g",(a->parent->owner)?(a->parent->owner->name):"root", a->name ,v?(*v):0);
+    // grib_context_log(a->context, GRIB_LOG_INFO, "....(%s)%s is packing",
+    //                 (a->parent->owner)?(a->parent->owner->name):"root",
+    //                 a->name);
     while (c) {
         if (c->pack_expression) {
             return c->pack_expression(a, e);
