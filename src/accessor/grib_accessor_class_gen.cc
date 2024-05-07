@@ -229,7 +229,8 @@ void grib_accessor_class_gen_t::init(grib_accessor* a, const long len, grib_argu
             grib_expression* expression = grib_arguments_get_expression(grib_handle_of_accessor(a), act->default_value, 0);
             int type                    = grib_expression_native_type(grib_handle_of_accessor(a), expression);
             switch (type) {
-                // TODO(maee): single-precision
+                // TODO(maee): add single-precision case
+
                 case GRIB_TYPE_DOUBLE:
                     grib_expression_evaluate_double(grib_handle_of_accessor(a), expression, &d);
                     a->pack_double(&d, &s_len);
