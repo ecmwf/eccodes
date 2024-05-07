@@ -20,8 +20,8 @@ alias geography.iScansNegatively=iScansNegatively;
 alias geography.jScansPositively=jScansPositively;
 alias geography.jPointsAreConsecutive=jPointsAreConsecutive;
 
-transient iScansPositively = !iScansNegatively : constraint;
-transient jScansNegatively = !jScansPositively : constraint;
+transient iScansPositively = !iScansNegatively : constraint, read_only;
+transient jScansNegatively = !jScansPositively : constraint, read_only;
 
 flagbit scanningMode5(scanningMode,3) = 0: read_only;
 flagbit scanningMode6(scanningMode,2) = 0: read_only;

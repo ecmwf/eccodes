@@ -231,7 +231,7 @@ grib_handle* codes_handle_new_from_samples(grib_context* c, const char* name)
     if (!g) {
         grib_context_log(c, GRIB_LOG_ERROR,
                          "Unable to load sample file '%s.tmpl'\n"
-                         "                   from %s\n"
+                         "                   samples path='%s'\n"
                          "                   (ecCodes Version=%s)",
                          name, c->grib_samples_path, ECCODES_VERSION_STR);
     }

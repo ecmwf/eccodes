@@ -71,6 +71,12 @@ int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const 
     grib_handle* h = grib_handle_of_accessor(a);
     grib_accessor_optimal_step_units_t* self = (grib_accessor_optimal_step_units_t*)a;
 
+    long start_step = 0;
+    long start_step_unit = 0;
+    long end_step = 0;
+    long end_step_unit = 0;
+    int ret;
+
     auto supported_units = eccodes::Unit::list_supported_units();
     try {
         eccodes::Unit unit{*val}; // throws if not supported
@@ -91,10 +97,42 @@ int grib_accessor_class_optimal_step_units_t::pack_long(grib_accessor* a, const 
         return GRIB_INVALID_ARGUMENT;
     }
 
-    int ret;
+    // ECC-1813: When the stepUnits key is used without specifying a value, as in the command
+    // "grib-set -s stepUnits=m in.grib out.grib", the following code initiates an indirect update
+    // of the low-level keys: forecastTime,indicatorOfUnitOfTimeRange,indicatorOfUnitForTimeRange,lengthOfTimeRange
+
     self->overwriteStepUnits = *val;
-    if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS) {
+    if ((ret = grib_set_long_internal(h, "forceStepUnits", *val)) != GRIB_SUCCESS)
         return ret;
+
+    if ((ret = grib_get_long_internal(h, "startStep", &start_step)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "startStepUnit", &start_step_unit)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "endStep", &end_step)) != GRIB_SUCCESS)
+        return ret;
+    if ((ret = grib_get_long_internal(h, "endStepUnit", &end_step_unit)) != GRIB_SUCCESS)
+        return ret;
+
+    try {
+        eccodes::Step start{start_step, start_step_unit};
+        start.set_unit(*val);
+        eccodes::Step end{end_step, end_step_unit};
+        end.set_unit(*val);
+
+        if ((ret = grib_set_long_internal(h, "startStepUnit", start.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "startStep", start.value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "endStepUnit", end.unit().value<long>())) != GRIB_SUCCESS)
+            return ret;
+        if ((ret = grib_set_long_internal(h, "endStep", end.value<long>())) != GRIB_SUCCESS)
+            return ret;
+    }
+    catch (std::exception& e) {
+        std::string msg = std::string{"Failed to convert steps to: "} + std::to_string(*val) + " (" + e.what() + ")";
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s", msg.c_str());
+        return GRIB_INTERNAL_ERROR;
     }
 
     return GRIB_SUCCESS;
