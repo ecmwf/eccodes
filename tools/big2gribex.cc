@@ -8,18 +8,16 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/*
- * Implementation: big2gribex
- *
- * Description:
- *
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "grib_api.h"
-void usage(char*);
+
+static void usage(const char* progname)
+{
+    printf("\nUsage: %s grib_in grib_out\n", progname);
+    exit(1);
+}
 
 int main(int argc, char* argv[])
 {
@@ -70,12 +68,5 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-
     return 0;
-}
-
-void usage(char* progname)
-{
-    printf("\nUsage: %s grib_in grib_out\n", progname);
-    exit(1);
 }

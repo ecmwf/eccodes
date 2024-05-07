@@ -17,6 +17,7 @@
    CLASS      = expression
    IMPLEMENTS = destroy
    IMPLEMENTS = native_type
+   IMPLEMENTS = get_name
    IMPLEMENTS = evaluate_long
    IMPLEMENTS = evaluate_double
    IMPLEMENTS = print
@@ -42,6 +43,7 @@ typedef const char* string; /* to keep make_class.pl happy */
 static void    destroy(grib_context*,grib_expression* e);
 static void    print(grib_context*,grib_expression*,grib_handle*);
 static void    add_dependency(grib_expression* e, grib_accessor* observer);
+static string  get_name(grib_expression* e);
 static int     native_type(grib_expression*,grib_handle*);
 static int     evaluate_long(grib_expression*,grib_handle*,long*);
 static int     evaluate_double(grib_expression*,grib_handle*,double*);
@@ -65,7 +67,7 @@ static grib_expression_class _grib_expression_class_unop = {
     &print,
     &add_dependency,
     &native_type,
-    0,
+    &get_name,
     &evaluate_long,
     &evaluate_double,
     0,
@@ -97,6 +99,12 @@ static int evaluate_double(grib_expression* g, grib_handle* h, double* dres)
     return GRIB_SUCCESS;
 }
 
+static const char* get_name(grib_expression* g)
+{
+    grib_expression_unop* e = (grib_expression_unop*)g;
+    return grib_expression_get_name(e->exp);
+}
+
 static void print(grib_context* c, grib_expression* g, grib_handle* f)
 {
     grib_expression_unop* e = (grib_expression_unop*)g;
@@ -110,7 +118,6 @@ static void destroy(grib_context* c, grib_expression* g)
     grib_expression_unop* e = (grib_expression_unop*)g;
     grib_expression_free(c, e->exp);
 }
-
 
 static void add_dependency(grib_expression* g, grib_accessor* observer)
 {

@@ -83,9 +83,9 @@ grib_iterator_class* grib_iterator_class_healpix = &_grib_iterator_class_healpix
 
 static void init_class(grib_iterator_class* c)
 {
-    c->previous = (*(c->super))->previous;
-    c->reset    = (*(c->super))->reset;
-    c->has_next = (*(c->super))->has_next;
+    c->previous    =    (*(c->super))->previous;
+    c->reset    =    (*(c->super))->reset;
+    c->has_next    =    (*(c->super))->has_next;
 }
 /* END_CLASS_IMP */
 
