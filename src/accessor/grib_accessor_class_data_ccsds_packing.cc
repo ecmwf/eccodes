@@ -11,14 +11,24 @@
 
 #include "grib_accessor_class_data_ccsds_packing.h"
 
-grib_accessor_class_data_ccsds_packing_t _grib_accessor_class_data_ccsds_packing{"data_ccsds_packing"};
+#if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
+    #include <libaec.h>
+#endif
+
+#ifndef LIBAEC_DLL_EXPORTED
+    #error Version of libaec appears to be too old. Please upgrade.
+#endif
+
+grib_accessor_class_data_ccsds_packing_t _grib_accessor_class_data_ccsds_packing{ "data_ccsds_packing" };
 grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_class_data_ccsds_packing;
 
 
-void grib_accessor_class_data_ccsds_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_ccsds_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
-    grib_handle* h                         = grib_handle_of_accessor(a);
+
+    grib_handle* h = grib_handle_of_accessor(a);
 
     self->number_of_values        = grib_arguments_get_name(h, args, self->carg++);
     self->reference_value         = grib_arguments_get_name(h, args, self->carg++);
@@ -34,7 +44,8 @@ void grib_accessor_class_data_ccsds_packing_t::init(grib_accessor* a, const long
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_ccsds_packing_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_ccsds_packing_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
     *count = 0;
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, count);
@@ -42,47 +53,50 @@ int grib_accessor_class_data_ccsds_packing_t::value_count(grib_accessor* a, long
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
 
-bool grib_accessor_class_data_ccsds_packing_t::is_big_endian()
+static bool is_big_endian()
 {
-    unsigned char is_big_endian = 0;
+    unsigned char is_big_endian   = 0;
     unsigned short endianess_test = 1;
     return reinterpret_cast<const char*>(&endianess_test)[0] == is_big_endian;
 }
 
-void grib_accessor_class_data_ccsds_packing_t::modify_aec_flags(long* flags){
+static void modify_aec_flags(long* flags)
+{
     // ECC-1602: Performance improvement: enabled the use of native data types
     *flags &= ~AEC_DATA_3BYTE;  // disable support for 3-bytes per value
     if (is_big_endian())
-        *flags |= AEC_DATA_MSB; // enable big-endian
+        *flags |= AEC_DATA_MSB;  // enable big-endian
     else
         *flags &= ~AEC_DATA_MSB;  // enable little-endian
 }
 
-const char* grib_accessor_class_data_ccsds_packing_t::aec_get_error_message(int code)
+static const char* aec_get_error_message(int code)
 {
-    if (code == AEC_MEM_ERROR)    return "AEC_MEM_ERROR";
-    if (code == AEC_DATA_ERROR)   return "AEC_DATA_ERROR";
+    if (code == AEC_MEM_ERROR) return "AEC_MEM_ERROR";
+    if (code == AEC_DATA_ERROR) return "AEC_DATA_ERROR";
     if (code == AEC_STREAM_ERROR) return "AEC_STREAM_ERROR";
-    if (code == AEC_CONF_ERROR)   return "AEC_CONF_ERROR";
-    if (code == AEC_OK)           return "AEC_OK";
+    if (code == AEC_CONF_ERROR) return "AEC_CONF_ERROR";
+    if (code == AEC_OK) return "AEC_OK";
     return "Unknown error code";
 }
 
-void grib_accessor_class_data_ccsds_packing_t::print_aec_stream_info(struct aec_stream* strm, const char* func){
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%u\n",           func, strm->flags);
+static void print_aec_stream_info(struct aec_stream* strm, const char* func)
+{
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.flags=%u\n", func, strm->flags);
     fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.bits_per_sample=%u\n", func, strm->bits_per_sample);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.block_size=%u\n",      func, strm->block_size);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.rsi=%u\n",             func, strm->rsi);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n",      func, strm->avail_out);
-    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n",       func, strm->avail_in);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.block_size=%u\n", func, strm->block_size);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.rsi=%u\n", func, strm->rsi);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_out=%lu\n", func, strm->avail_out);
+    fprintf(stderr, "ECCODES DEBUG CCSDS %s aec_stream.avail_in=%lu\n", func, strm->avail_in);
 }
 
-int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
 
-    grib_handle* hand = grib_handle_of_accessor(a);
+    grib_handle* hand       = grib_handle_of_accessor(a);
     const char* cclass_name = a->cclass->name;
-    int err = GRIB_SUCCESS;
+    int err                 = GRIB_SUCCESS;
     size_t buflen = 0, i = 0;
     bool is_constant_field = false;
 
@@ -92,9 +106,9 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
 
     long binary_scale_factor  = 0;
     long decimal_scale_factor = 0;
-    //long optimize_scaling_factor  = 0;
-    double reference_value    = 0;
-    long bits_per_value       = 0;
+    // long optimize_scaling_factor  = 0;
+    double reference_value = 0;
+    long bits_per_value    = 0;
     double max, min, d, divisor;
 
     long number_of_data_points;
@@ -118,8 +132,8 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
     if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
         return err;
 
-    //if ((err = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
-    //    return err;
+    // if ((err = grib_get_long_internal(gh, self->optimize_scaling_factor, &optimize_scaling_factor)) != GRIB_SUCCESS)
+    //     return err;
 
     if ((err = grib_get_long_internal(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
         return err;
@@ -139,8 +153,10 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
     max = val[0];
     min = max;
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)      max = val[i];
-        else if (val[i] < min) min = val[i];
+        if (val[i] > max)
+            max = val[i];
+        else if (val[i] < min)
+            min = val[i];
     }
 
     if ((err = grib_check_data_values_minmax(hand, min, max)) != GRIB_SUCCESS) {
@@ -149,10 +165,11 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
 
     if (min == max) {
         is_constant_field = true;
-    } else {
+    }
+    else {
         if (bits_per_value == 0) {
             // ECC-1202: A non-constant field with bitsPerValue==0!
-            bits_per_value = 24; //Set sane value
+            bits_per_value = 24;  // Set sane value
         }
     }
 
@@ -172,7 +189,7 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
 
         if ((err = grib_set_long_internal(hand, self->number_of_values, n_vals)) != GRIB_SUCCESS)
             return err;
-        bits_per_value = 0; // ECC-1387
+        bits_per_value = 0;  // ECC-1387
         if ((err = grib_set_long_internal(hand, self->bits_per_value, bits_per_value)) != GRIB_SUCCESS)
             return err;
 
@@ -191,25 +208,25 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
 
         if (grib_get_nearest_smaller_value(hand, self->reference_value, min, &reference_value) != GRIB_SUCCESS) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "%s %s: Unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
+                             "%s %s: Unable to find nearest_smaller_value of %g for %s", cclass_name, __func__, min, self->reference_value);
             return GRIB_INTERNAL_ERROR;
         }
 
         if (reference_value > min) {
             grib_context_log(a->context, GRIB_LOG_ERROR,
-                "%s %s: reference_value=%g min_value=%g diff=%g", cclass_name, __func__, reference_value, min, reference_value - min);
+                             "%s %s: reference_value=%g min_value=%g diff=%g", cclass_name, __func__, reference_value, min, reference_value - min);
             DEBUG_ASSERT(reference_value <= min);
             return GRIB_INTERNAL_ERROR;
         }
     }
     else {
-        int last = 127;  // last must be a parameter coming from the def file
-        double range = 0;
+        int last        = 127;  // last must be a parameter coming from the def file
+        double range    = 0;
         double minrange = 0, maxrange = 0;
         double unscaled_max = 0;
         double unscaled_min = 0;
-        double f = 0;
-        double decimal = 1;
+        double f            = 0;
+        double decimal      = 1;
 
         decimal_scale_factor = 0;
         range                = (max - min);
@@ -292,17 +309,17 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
             }
             break;
         default:
-            grib_context_log(a->context, GRIB_LOG_ERROR,"%s pack_double: packing %s, bits_per_value=%ld (max 32)",
-                            cclass_name, a->name, bits_per_value);
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s pack_double: packing %s, bits_per_value=%ld (max 32)",
+                             cclass_name, a->name, bits_per_value);
             err = GRIB_INVALID_BPV;
             goto cleanup;
     }
 
-    grib_context_log(a->context, GRIB_LOG_DEBUG,"%s pack_double: packing %s, %zu values", cclass_name, a->name, n_vals);
+    grib_context_log(a->context, GRIB_LOG_DEBUG, "%s pack_double: packing %s, %zu values", cclass_name, a->name, n_vals);
 
     // ECC-1431: GRIB2: CCSDS encoding failure AEC_STREAM_ERROR
     buflen = (nbytes * n_vals) * 67 / 64 + 256;
-    buf = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
+    buf    = (unsigned char*)grib_context_buffer_malloc_clear(a->context, buflen);
 
     if (!buf) {
         err = GRIB_OUT_OF_MEMORY;
@@ -317,7 +334,7 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
         grib_get_double_internal(hand, self->reference_value, &ref);
         if (ref != reference_value) {
             grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: %s (ref=%.10e != reference_value=%.10e)",
-                            cclass_name, __func__, self->reference_value, ref, reference_value);
+                             cclass_name, __func__, self->reference_value, ref, reference_value);
             return GRIB_INTERNAL_ERROR;
         }
     }
@@ -338,7 +355,6 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
     strm.next_in   = encoded;
     strm.avail_in  = nbytes * n_vals;
 
-
     // This does not support spherical harmonics, and treats 24 differently than:
     // see http://cdo.sourcearchive.com/documentation/1.5.1.dfsg.1-1/cgribexlib_8c_source.html
 
@@ -346,7 +362,7 @@ int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, cons
 
     if ((err = aec_buffer_encode(&strm)) != AEC_OK) {
         grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: aec_buffer_encode error %d (%s)",
-                        cclass_name, __func__, err, aec_get_error_message(err));
+                         cclass_name, __func__, err, aec_get_error_message(err));
         err = GRIB_ENCODING_ERROR;
         goto cleanup;
     }
@@ -367,23 +383,165 @@ cleanup:
     return err;
 }
 
-int grib_accessor_class_data_ccsds_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
+
+    int err = GRIB_SUCCESS, i = 0;
+    size_t buflen = 0;
+    struct aec_stream strm;
+    double bscale          = 0;
+    double dscale          = 0;
+    unsigned char* buf     = NULL;
+    size_t n_vals          = 0;
+    size_t size            = 0;
+    unsigned char* decoded = NULL;
+    // unsigned char* p       = NULL;
+    long nn = 0;
+
+    long binary_scale_factor  = 0;
+    long decimal_scale_factor = 0;
+    double reference_value    = 0;
+    long bits_per_value       = 0;
+
+    long ccsds_flags;
+    long ccsds_block_size;
+    long ccsds_rsi;
+    size_t nbytes;
+
+    self->dirty = 0;
+
+    if ((err = a->value_count(&nn)) != GRIB_SUCCESS)
+        return err;
+    n_vals = nn;
+
+    if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_double_internal(hand, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(hand, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(hand, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    // ECC-477: Don't call grib_get_long_internal to suppress error message being output
+    if ((err = grib_get_long(hand, self->ccsds_flags, &ccsds_flags)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(hand, self->ccsds_block_size, &ccsds_block_size)) != GRIB_SUCCESS)
+        return err;
+    if ((err = grib_get_long_internal(hand, self->ccsds_rsi, &ccsds_rsi)) != GRIB_SUCCESS)
+        return err;
+
+    modify_aec_flags(&ccsds_flags);
+
+    // TODO(masn): This should be called upstream
+    if (*len < n_vals)
+        return GRIB_ARRAY_TOO_SMALL;
+
+    // Special case
+    if (bits_per_value == 0) {
+        for (i = 0; i < n_vals; i++)
+            val[i] = reference_value;
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
+    bscale = codes_power<T>(binary_scale_factor, 2);
+    dscale = codes_power<T>(-decimal_scale_factor, 10);
+
+    buflen = a->byte_count();
+    buf    = (unsigned char*)hand->buffer->data;
+    buf += a->byte_offset();
+    strm.flags           = ccsds_flags;
+    strm.bits_per_sample = bits_per_value;
+    strm.block_size      = ccsds_block_size;
+    strm.rsi             = ccsds_rsi;
+
+    strm.next_in  = buf;
+    strm.avail_in = buflen;
+
+    nbytes = (bits_per_value + 7) / 8;
+    if (nbytes == 3)
+        nbytes = 4;
+
+    size    = n_vals * nbytes;
+    decoded = (unsigned char*)grib_context_buffer_malloc_clear(a->context, size);
+    if (!decoded) {
+        err = GRIB_OUT_OF_MEMORY;
+        goto cleanup;
+    }
+    strm.next_out  = decoded;
+    strm.avail_out = size;
+
+    if (hand->context->debug) print_aec_stream_info(&strm, "unpack_*");
+
+    if ((err = aec_buffer_decode(&strm)) != AEC_OK) {
+        grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: aec_buffer_decode error %d (%s)",
+                         cclass_name, __func__, err, aec_get_error_message(err));
+        err = GRIB_DECODING_ERROR;
+        goto cleanup;
+    }
+
+    // ECC-1427: Performance improvement (replaced by ECC-1602)
+    // grib_decode_array<T>(decoded, &pos, bits8 , reference_value, bscale, dscale, n_vals, val);
+
+    // ECC-1602: Performance improvement
+    switch (nbytes) {
+        case 1:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint8_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 2:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint16_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        case 4:
+            for (i = 0; i < n_vals; i++) {
+                val[i] = (reinterpret_cast<uint32_t*>(decoded)[i] * bscale + reference_value) * dscale;
+            }
+            break;
+        default:
+            grib_context_log(a->context, GRIB_LOG_ERROR, "%s %s: unpacking %s, bits_per_value=%ld (max 32)",
+                             cclass_name, __func__, a->name, bits_per_value);
+            err = GRIB_INVALID_BPV;
+            goto cleanup;
+    }
+
+    *len = n_vals;
+
+cleanup:
+    grib_context_buffer_free(a->context, decoded);
+    return err;
+}
+
+int grib_accessor_class_data_ccsds_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     return unpack<double>(a, val, len);
 }
 
-int grib_accessor_class_data_ccsds_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len){
+int grib_accessor_class_data_ccsds_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+{
     return unpack<float>(a, val, len);
 }
 
-int grib_accessor_class_data_ccsds_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_ccsds_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     // The index idx relates to codedValues NOT values!
     const grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    int err = 0;
-    size_t size    = 0;
-    long bits_per_value = 0;
+
+    grib_handle* hand      = grib_handle_of_accessor(a);
+    int err                = 0;
+    size_t size            = 0;
+    long bits_per_value    = 0;
     double reference_value = 0;
-    double* values = NULL;
+    double* values         = NULL;
 
     if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -411,13 +569,14 @@ int grib_accessor_class_data_ccsds_packing_t::unpack_double_element(grib_accesso
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_ccsds_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_ccsds_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     const grib_accessor_data_ccsds_packing_t* self = (grib_accessor_data_ccsds_packing_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
     size_t size = 0, i = 0;
-    double* values = NULL;
-    int err = 0;
-    long bits_per_value = 0;
+    double* values         = NULL;
+    int err                = 0;
+    long bits_per_value    = 0;
     double reference_value = 0;
 
     if ((err = grib_get_long_internal(hand, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
@@ -458,28 +617,34 @@ int grib_accessor_class_data_ccsds_packing_t::unpack_double_element_set(grib_acc
 
 #else
 
-static void print_error_feature_not_enabled(grib_context* c){
+static void print_error_feature_not_enabled(grib_context* c)
+{
     grib_context_log(c, GRIB_LOG_ERROR,
                      "CCSDS support not enabled. "
                      "Please rebuild with -DENABLE_AEC=ON (Adaptive Entropy Coding library)");
 }
-int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_ccsds_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_ccsds_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_data_ccsds_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_ccsds_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len){
+int grib_accessor_class_data_ccsds_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_ccsds_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_ccsds_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
-int grib_accessor_class_data_ccsds_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_ccsds_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     print_error_feature_not_enabled(a->context);
     return GRIB_FUNCTIONALITY_NOT_ENABLED;
 }
