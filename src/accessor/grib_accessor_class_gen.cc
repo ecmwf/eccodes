@@ -542,7 +542,7 @@ int grib_accessor_class_gen_t::pack_double(grib_accessor* a, const double* v, si
     is_overridden_[PACK_DOUBLE] = 0;
     grib_context* c = a->context;
 
-    if (strcmp(a->cclass->name, "codetable") == 0 || is_overridden_[PACK_LONG]) {
+    if (is_overridden_[PACK_LONG] || strcmp(a->cclass->name, "codetable") == 0) {
         /* ECC-648: Special case of codetable */
         return pack_double_array_as_long(a, v, len);
     }

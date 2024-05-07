@@ -2066,7 +2066,8 @@ int is_bitmap_start_descriptor(grib_accessors_list* al, int* err){
 
     acode = al->accessor->get_attribute("code");
     if (acode)
-        *err = acode->unpack_long(code, &l);    else
+        *err = acode->unpack_long(code, &l);
+    else
         return 1;
 
     switch (code[0]) {
@@ -2081,7 +2082,8 @@ int is_bitmap_start_descriptor(grib_accessors_list* al, int* err){
             {
                 //long index[1];
                 //grib_accessor* anindex=grib_accessor_get_attribute(al->accessor,"index");
-                //anindex->unpack_long(index,&l);                return 1;
+                //anindex->unpack_long(index,&l);
+                return 1;
             }
     }
     return 0;
