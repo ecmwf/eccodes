@@ -13,11 +13,11 @@
 
 #if defined(HAVE_LIBAEC) || defined(HAVE_AEC)
     #include <libaec.h>
+    #ifndef LIBAEC_DLL_EXPORTED
+        #error Version of libaec appears to be too old. Please upgrade.
+    #endif
 #endif
 
-#ifndef LIBAEC_DLL_EXPORTED
-    #error Version of libaec appears to be too old. Please upgrade.
-#endif
 
 grib_accessor_class_data_ccsds_packing_t _grib_accessor_class_data_ccsds_packing{ "data_ccsds_packing" };
 grib_accessor_class* grib_accessor_class_data_ccsds_packing = &_grib_accessor_class_data_ccsds_packing;
