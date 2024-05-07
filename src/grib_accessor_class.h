@@ -25,12 +25,10 @@ extern grib_accessor_class* grib_accessor_class_change_scanning_direction;
 extern grib_accessor_class* grib_accessor_class_check_internal_version;
 extern grib_accessor_class* grib_accessor_class_closest_date;
 extern grib_accessor_class* grib_accessor_class_codeflag;
-#include "accessor/grib_accessor_class_codetable.h"
 extern grib_accessor_class* grib_accessor_class_codetable;
 extern grib_accessor_class* grib_accessor_class_codetable_title;
 extern grib_accessor_class* grib_accessor_class_codetable_units;
 extern grib_accessor_class* grib_accessor_class_concept;
-#include "accessor/grib_accessor_class_constant.h"
 extern grib_accessor_class* grib_accessor_class_constant;
 extern grib_accessor_class* grib_accessor_class_count_file;
 extern grib_accessor_class* grib_accessor_class_count_missing;
@@ -115,7 +113,6 @@ extern grib_accessor_class* grib_accessor_class_headers_only;
 extern grib_accessor_class* grib_accessor_class_ibmfloat;
 extern grib_accessor_class* grib_accessor_class_ieeefloat;
 extern grib_accessor_class* grib_accessor_class_ifs_param;
-#include "accessor/grib_accessor_class_iterator.h"
 extern grib_accessor_class* grib_accessor_class_iterator;
 extern grib_accessor_class* grib_accessor_class_julian_date;
 extern grib_accessor_class* grib_accessor_class_julian_day;
@@ -126,7 +123,6 @@ extern grib_accessor_class* grib_accessor_class_latlon_increment;
 extern grib_accessor_class* grib_accessor_class_latlonvalues;
 extern grib_accessor_class* grib_accessor_class_library_version;
 extern grib_accessor_class* grib_accessor_class_local_definition;
-#include "accessor/grib_accessor_class_long.h"
 extern grib_accessor_class* grib_accessor_class_long;
 extern grib_accessor_class* grib_accessor_class_long_vector;
 extern grib_accessor_class* grib_accessor_class_longitudes;
@@ -137,7 +133,6 @@ extern grib_accessor_class* grib_accessor_class_md5;
 extern grib_accessor_class* grib_accessor_class_message;
 extern grib_accessor_class* grib_accessor_class_message_copy;
 extern grib_accessor_class* grib_accessor_class_multdouble;
-#include "accessor/grib_accessor_class_nearest.h"
 extern grib_accessor_class* grib_accessor_class_nearest;
 extern grib_accessor_class* grib_accessor_class_non_alpha;
 extern grib_accessor_class* grib_accessor_class_number_of_coded_values;
@@ -176,7 +171,6 @@ extern grib_accessor_class* grib_accessor_class_signed;
 extern grib_accessor_class* grib_accessor_class_signed_bits;
 extern grib_accessor_class* grib_accessor_class_simple_packing_error;
 extern grib_accessor_class* grib_accessor_class_size;
-#include "accessor/grib_accessor_class_smart_table.h"
 extern grib_accessor_class* grib_accessor_class_smart_table;
 extern grib_accessor_class* grib_accessor_class_smart_table_column;
 extern grib_accessor_class* grib_accessor_class_spd;
@@ -192,7 +186,6 @@ extern grib_accessor_class* grib_accessor_class_time;
 extern grib_accessor_class* grib_accessor_class_to_double;
 extern grib_accessor_class* grib_accessor_class_to_integer;
 extern grib_accessor_class* grib_accessor_class_to_string;
-#include "accessor/grib_accessor_class_transient.h"
 extern grib_accessor_class* grib_accessor_class_transient;
 extern grib_accessor_class* grib_accessor_class_transient_darray;
 extern grib_accessor_class* grib_accessor_class_trim;
@@ -204,13 +197,11 @@ extern grib_accessor_class* grib_accessor_class_uint64_little_endian;
 extern grib_accessor_class* grib_accessor_class_uint8;
 extern grib_accessor_class* grib_accessor_class_unexpanded_descriptors;
 extern grib_accessor_class* grib_accessor_class_unpack_bufr_values;
-#include "accessor/grib_accessor_class_unsigned.h"
 extern grib_accessor_class* grib_accessor_class_unsigned;
 extern grib_accessor_class* grib_accessor_class_unsigned_bits;
 extern grib_accessor_class* grib_accessor_class_validity_date;
 extern grib_accessor_class* grib_accessor_class_validity_time;
 extern grib_accessor_class* grib_accessor_class_values;
-#include "accessor/grib_accessor_class_variable.h"
 extern grib_accessor_class* grib_accessor_class_variable;
 extern grib_accessor_class* grib_accessor_class_vector;
 extern grib_accessor_class* grib_accessor_class_when;
