@@ -104,20 +104,7 @@ int grib_accessor_class_data_g2simple_packing_t::pack_double(grib_accessor* a, c
         return grib_set_double_array(h, "values", val, *len);
     }
 
-    // ==== TODO(maee): Fix this ====
     ret = grib_accessor_class_data_simple_packing_t::pack_double(a, cval, len);
-    //if (super != grib_accessor_class_data_g2simple_packing) {
-    //    [> Normal case: parent not same as me! <]
-    //    ret = super->pack_double(a, val, len);
-    //}
-    //else {
-    //    [> GRIB-364: simple packing with logarithm pre-processing <]
-    //    grib_accessor_class* super2 = NULL;
-    //    Assert(super->super);
-    //    super2 = *(super->super);
-    //    ret    = super2->pack_double(a, val, len);
-    //}
-    // =============================
     switch (ret) {
         case GRIB_CONSTANT_FIELD:
             grib_buffer_replace(a, NULL, 0, 1, 1);
