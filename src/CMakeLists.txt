@@ -126,7 +126,6 @@ list( APPEND eccodes_src_files
     accessor/grib_accessor_class_g2lon.cc
     accessor/grib_accessor_class_global_gaussian.cc
     accessor/grib_accessor_class_gaussian_grid_name.cc
-    accessor/grib_accessor_class_gen.cc
     accessor/grib_accessor_class_getenv.cc
     accessor/grib_accessor_class_gts_header.cc
     accessor/grib_accessor_class_ifs_param.cc
