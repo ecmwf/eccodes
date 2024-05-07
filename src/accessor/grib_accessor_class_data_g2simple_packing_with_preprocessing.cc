@@ -127,10 +127,6 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_doubl
         return err;
     }
 
-    // TODO(maee): fix this
-    //Assert(super->super);
-    //super2 = *(super->super);
-    //err    = super2->unpack_double(a, val, &n_vals); [> GRIB-364 <]
     err = grib_accessor_class_data_simple_packing_t::unpack_double(a, val, &n_vals);
     if (err != GRIB_SUCCESS)
         return err;
@@ -146,7 +142,6 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::unpack_doubl
 
 int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
     grib_accessor_data_g2simple_packing_with_preprocessing_t* self = (grib_accessor_data_g2simple_packing_with_preprocessing_t*)a;
-    //grib_accessor_class* super                                   = *(a->cclass->super);
 
     size_t n_vals = *len;
     int err       = 0;
@@ -163,8 +158,6 @@ int grib_accessor_class_data_g2simple_packing_with_preprocessing_t::pack_double(
     if (err != GRIB_SUCCESS)
         return err;
 
-    // TOOD(maee): fix this
-    //err = super->pack_double(a, val, len);
     err = grib_accessor_class_data_g2simple_packing_t::pack_double(a, val, len);
     if (err != GRIB_SUCCESS)
         return err;
