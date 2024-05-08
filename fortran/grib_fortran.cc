@@ -987,7 +987,7 @@ void grib_f_write_on_fail(int* gid) {
         file_count++;
         GRIB_MUTEX_UNLOCK(&handle_mutex)
 
-        sprintf(filename,"%ld_%d_error.grib",(long)pid,file_count);
+        snprintf(filename, sizeof(filename), "%ld_%d_error.grib",(long)pid,file_count);
 
         h=get_handle(*gid);
         if (h) grib_write_message(h,filename,"w");
@@ -1250,7 +1250,7 @@ int grib_f_keys_iterator_get_name_(int* iterid,char* name,int len)
 
     fort_char_clean(name, len);
 
-    sprintf(buf,"%s",grib_keys_iterator_get_name(kiter));
+    snprintf(buf, sizeof(buf), "%s",grib_keys_iterator_get_name(kiter));
     lsize = strlen(buf);
     if (input_len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
@@ -1322,7 +1322,7 @@ int codes_f_bufr_keys_iterator_get_name_(int* iterid, char* name, int len)
 
     fort_char_clean(name, len);
 
-    sprintf(buf, "%s", codes_bufr_keys_iterator_get_name(kiter));
+    snprintf(buf, sizeof(buf), "%s", codes_bufr_keys_iterator_get_name(kiter));
     lsize = strlen(buf);
     if (input_len < lsize) return GRIB_ARRAY_TOO_SMALL;
 
