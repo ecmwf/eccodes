@@ -11,26 +11,28 @@
 
 #include "grib_accessor_class_data_simple_packing.h"
 #include "grib_optimize_decimal_factor.h"
+#include "grib_bits_any_endian_simple.h"
 #include <float.h>
 #include <type_traits>
 
-grib_accessor_class_data_simple_packing_t _grib_accessor_class_data_simple_packing{"data_simple_packing"};
+grib_accessor_class_data_simple_packing_t _grib_accessor_class_data_simple_packing{ "data_simple_packing" };
 grib_accessor_class* grib_accessor_class_data_simple_packing = &_grib_accessor_class_data_simple_packing;
 
 
-void grib_accessor_class_data_simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_simple_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_values_t::init(a, v, args);
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    grib_handle* gh                         = grib_handle_of_accessor(a);
-    self->units_factor                      = grib_arguments_get_name(gh, args, self->carg++);
-    self->units_bias                        = grib_arguments_get_name(gh, args, self->carg++);
-    self->changing_precision                = grib_arguments_get_name(gh, args, self->carg++);
-    self->number_of_values                  = grib_arguments_get_name(gh, args, self->carg++);
-    self->bits_per_value                    = grib_arguments_get_name(gh, args, self->carg++);
-    self->reference_value                   = grib_arguments_get_name(gh, args, self->carg++);
-    self->binary_scale_factor               = grib_arguments_get_name(gh, args, self->carg++);
-    self->decimal_scale_factor              = grib_arguments_get_name(gh, args, self->carg++);
-    self->optimize_scaling_factor           = grib_arguments_get_name(gh, args, self->carg++);
+    grib_handle* gh                           = grib_handle_of_accessor(a);
+    self->units_factor                        = grib_arguments_get_name(gh, args, self->carg++);
+    self->units_bias                          = grib_arguments_get_name(gh, args, self->carg++);
+    self->changing_precision                  = grib_arguments_get_name(gh, args, self->carg++);
+    self->number_of_values                    = grib_arguments_get_name(gh, args, self->carg++);
+    self->bits_per_value                      = grib_arguments_get_name(gh, args, self->carg++);
+    self->reference_value                     = grib_arguments_get_name(gh, args, self->carg++);
+    self->binary_scale_factor                 = grib_arguments_get_name(gh, args, self->carg++);
+    self->decimal_scale_factor                = grib_arguments_get_name(gh, args, self->carg++);
+    self->optimize_scaling_factor             = grib_arguments_get_name(gh, args, self->carg++);
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
     self->dirty = 1;
 }
@@ -44,7 +46,8 @@ static const unsigned long nbits[32] = {
     0x40000000, 0x80000000
 };
 
-static int number_of_bits(unsigned long x, long* result){
+static int number_of_bits(unsigned long x, long* result)
+{
     const int count        = sizeof(nbits) / sizeof(nbits[0]);
     const unsigned long* n = nbits;
     *result                = 0;
@@ -58,19 +61,21 @@ static int number_of_bits(unsigned long x, long* result){
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_simple_packing_t::value_count(grib_accessor* a, long* number_of_values){
+int grib_accessor_class_data_simple_packing_t::value_count(grib_accessor* a, long* number_of_values)
+{
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    *number_of_values                       = 0;
+    *number_of_values = 0;
 
     return grib_get_long_internal(grib_handle_of_accessor(a), self->number_of_values, number_of_values);
 }
 
-int grib_accessor_class_data_simple_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_simple_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    const char* cclass_name                 = a->cclass->name;
+    const char* cclass_name = a->cclass->name;
 
-    long n_vals;
-    int err         = 0;
+    long n_vals = 0;
+    int err = 0;
     grib_handle* gh = grib_handle_of_accessor(a);
 
     double reference_value;
@@ -78,12 +83,12 @@ int grib_accessor_class_data_simple_packing_t::unpack_double_element(grib_access
     long bits_per_value;
     long decimal_scale_factor;
     unsigned char* buf = (unsigned char*)gh->buffer->data;
-    double s           = 0;
-    double d           = 0;
-    long pos           = 0;
+    double s = 0;
+    double d = 0;
+    long pos = 0;
 
-    n_vals = 0;
-    err    = a->value_count(&n_vals);    if (err)
+    err    = a->value_count(&n_vals);
+    if (err)
         return err;
 
     if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
@@ -146,29 +151,176 @@ int grib_accessor_class_data_simple_packing_t::unpack_double_element(grib_access
     return err;
 }
 
-int grib_accessor_class_data_simple_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
-    int err = 0;
+int grib_accessor_class_data_simple_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
+    int err  = 0;
     size_t i = 0;
-    for (i=0; i<len; ++i) {
-        if ((err = unpack_double_element(a, index_array[i], val_array+i)) != GRIB_SUCCESS)
+    for (i = 0; i < len; ++i) {
+        if ((err = unpack_double_element(a, index_array[i], val_array + i)) != GRIB_SUCCESS)
             return err;
     }
     return GRIB_SUCCESS;
 }
 
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
 
-int grib_accessor_class_data_simple_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+    grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
+    const char* cclass_name = a->cclass->name;
+    grib_handle* gh         = grib_handle_of_accessor(a);
+    unsigned char* buf      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+
+    size_t i      = 0;
+    int err       = 0;
+    size_t n_vals = 0;
+    long pos      = 0;
+    long count    = 0;
+
+    double reference_value;
+    long binary_scale_factor;
+    long bits_per_value;
+    long decimal_scale_factor;
+    long offsetBeforeData;
+    double s            = 0;
+    double d            = 0;
+    double units_factor = 1.0;
+    double units_bias   = 0.0;
+
+    err = a->value_count(&count);
+    if (err)
+        return err;
+    n_vals = count;
+
+    if (*len < n_vals) {
+        *len = (long)n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if ((err = grib_get_long_internal(gh, self->bits_per_value, &bits_per_value)) != GRIB_SUCCESS)
+        return err;
+
+    /*
+     * check we don't decode bpv > max(ulong) as it is
+     * not currently supported by the algorithm
+     */
+    if (bits_per_value > (sizeof(long) * 8)) {
+        return GRIB_INVALID_BPV;
+    }
+
+    if (self->units_factor &&
+        (grib_get_double_internal(gh, self->units_factor, &units_factor) == GRIB_SUCCESS)) {
+        grib_set_double_internal(gh, self->units_factor, 1.0);
+    }
+
+    if (self->units_bias &&
+        (grib_get_double_internal(gh, self->units_bias, &units_bias) == GRIB_SUCCESS)) {
+        grib_set_double_internal(gh, self->units_bias, 0.0);
+    }
+
+    if (n_vals == 0) {
+        *len = 0;
+        return GRIB_SUCCESS;
+    }
+
+    self->dirty = 0;
+
+    if ((err = grib_get_double_internal(gh, self->reference_value, &reference_value)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->binary_scale_factor, &binary_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_long_internal(gh, self->decimal_scale_factor, &decimal_scale_factor)) != GRIB_SUCCESS)
+        return err;
+
+    /* Special case */
+
+    if (bits_per_value == 0) {
+        for (i = 0; i < n_vals; i++)
+            val[i] = reference_value;
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
+    s = codes_power<T>(binary_scale_factor, 2);
+    d = codes_power<T>(-decimal_scale_factor, 10);
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
+
+    offsetBeforeData = a->byte_offset();
+    buf += offsetBeforeData;
+
+    /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
+
+    /* ECC-941 */
+    if (!a->context->ieee_packing) {
+        /* Must turn off this check when the environment variable ECCODES_GRIB_IEEE_PACKING is on */
+        long offsetAfterData = 0;
+        err                  = grib_get_long(gh, "offsetAfterData", &offsetAfterData);
+        if (!err && offsetAfterData > offsetBeforeData) {
+            const long valuesSize = (bits_per_value * n_vals) / 8; /*in bytes*/
+            if (offsetBeforeData + valuesSize > offsetAfterData) {
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "%s: Data section size mismatch: "
+                                 "offset before data=%ld, offset after data=%ld (num values=%zu, bits per value=%ld)",
+                                 cclass_name, offsetBeforeData, offsetAfterData, n_vals, bits_per_value);
+                return GRIB_DECODING_ERROR;
+            }
+        }
+        //         if (offsetBeforeData == offsetAfterData) {
+        //             /* Crazy case: Constant field with bitsPerValue > 0 */
+        //             for (i = 0; i < n_vals; i++)
+        //                 val[i] = reference_value;
+        //             *len = n_vals;
+        //             return GRIB_SUCCESS;
+        //         }
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "%s %s: calling outline function: bpv: %ld, rv: %g, bsf: %ld, dsf: %ld",
+                     cclass_name, __func__, bits_per_value, reference_value, binary_scale_factor, decimal_scale_factor);
+    grib_decode_array<T>(buf, &pos, bits_per_value, reference_value, s, d, n_vals, val);
+
+    *len = (long)n_vals;
+
+    if (units_factor != 1.0) {
+        if (units_bias != 0.0) {
+            for (i = 0; i < n_vals; i++) {
+                val[i] = val[i] * units_factor + units_bias;
+            }
+        }
+        else {
+            for (i = 0; i < n_vals; i++) {
+                val[i] *= units_factor;
+            }
+        }
+    }
+    else if (units_bias != 0.0) {
+        for (i = 0; i < n_vals; i++) {
+            val[i] += units_bias;
+        }
+    }
+    return err;
+}
+
+int grib_accessor_class_data_simple_packing_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     return unpack<double>(a, val, len);
 }
 
-int grib_accessor_class_data_simple_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len){
+int grib_accessor_class_data_simple_packing_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+{
     return unpack<float>(a, val, len);
 }
 
-int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals){
+static int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* buf, long pos, size_t n_vals)
+{
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    grib_handle* gh                         = grib_handle_of_accessor(a);
-    const char* cclass_name                 = a->cclass->name;
+    grib_handle* gh                           = grib_handle_of_accessor(a);
+    const char* cclass_name                   = a->cclass->name;
 
     size_t i = 0;
     int err  = 0;
@@ -240,7 +392,8 @@ int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* bu
     grib_context_log(a->context, GRIB_LOG_DEBUG,
                      "%s %s: Creating %s, %zu values", cclass_name, __func__, a->name, n_vals);
 
-    offsetBeforeData = a->byte_offset();    buf += offsetBeforeData;
+    offsetBeforeData = a->byte_offset();
+    buf += offsetBeforeData;
 
     /*Assert(((bits_per_value*n_vals)/8) < (1<<29));*/ /* See GRIB-787 */
 
@@ -290,14 +443,16 @@ int _unpack_double(grib_accessor* a, double* val, size_t* len, unsigned char* bu
     return err;
 }
 
-int grib_accessor_class_data_simple_packing_t::unpack_double_subarray(grib_accessor* a, double* val, size_t start, size_t len){
+int grib_accessor_class_data_simple_packing_t::unpack_double_subarray(grib_accessor* a, double* val, size_t start, size_t len)
+{
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    unsigned char* buf                      = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
-    size_t nvals                            = len;
-    size_t* plen                            = &len;
-    long bits_per_value                     = 0;
-    long pos;
-    int err;
+
+    unsigned char* buf  = (unsigned char*)grib_handle_of_accessor(a)->buffer->data;
+    size_t nvals = len;
+    size_t* plen = &len;
+    long bits_per_value = 0;
+    long pos = 0;
+    int err = GRIB_SUCCESS;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a), self->bits_per_value, &bits_per_value)) !=
         GRIB_SUCCESS)
@@ -308,14 +463,15 @@ int grib_accessor_class_data_simple_packing_t::unpack_double_subarray(grib_acces
     return _unpack_double(a, val, plen, buf, pos, nvals);
 }
 
-int grib_accessor_class_data_simple_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_simple_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_simple_packing_t* self = (grib_accessor_data_simple_packing_t*)a;
-    grib_handle* gh                         = grib_handle_of_accessor(a);
-    const char* cclass_name                 = a->cclass->name;
+    grib_handle* gh = grib_handle_of_accessor(a);
+    const char* cclass_name = a->cclass->name;
 
-    size_t i = 0;
-    size_t n_vals = *len;
-    int err       = 0;
+    size_t i                      = 0;
+    size_t n_vals                 = *len;
+    int err                       = 0;
     double reference_value        = 0;
     long binary_scale_factor      = 0;
     long bits_per_value           = 0;
@@ -360,8 +516,10 @@ int grib_accessor_class_data_simple_packing_t::pack_double(grib_accessor* a, con
     max = val[0];
     min = max;
     for (i = 1; i < n_vals; i++) {
-        if (val[i] > max)      max = val[i];
-        else if (val[i] < min) min = val[i];
+        if (val[i] > max)
+            max = val[i];
+        else if (val[i] < min)
+            min = val[i];
     }
 
     if ((err = grib_check_data_values_minmax(gh, min, max)) != GRIB_SUCCESS) {
@@ -460,7 +618,7 @@ int grib_accessor_class_data_simple_packing_t::pack_double(grib_accessor* a, con
         /* divisor=1; */
     }
     else {
-        int last = 127;  /* 'last' should be a parameter coming from a definitions file */
+        int last = 127; /* 'last' should be a parameter coming from a definitions file */
         if (c->gribex_mode_on && self->edition == 1)
             last = 99;
         /* bits_per_value is given and decimal_scale_factor and binary_scale_factor are calcualated */

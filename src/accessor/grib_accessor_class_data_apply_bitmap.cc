@@ -11,13 +11,14 @@
 
 #include "grib_accessor_class_data_apply_bitmap.h"
 
-grib_accessor_class_data_apply_bitmap_t _grib_accessor_class_data_apply_bitmap{"data_apply_bitmap"};
+grib_accessor_class_data_apply_bitmap_t _grib_accessor_class_data_apply_bitmap{ "data_apply_bitmap" };
 grib_accessor_class* grib_accessor_class_data_apply_bitmap = &_grib_accessor_class_data_apply_bitmap;
 
 
-void grib_accessor_class_data_apply_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_apply_bitmap_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_gen_t::init(a, v, args);
-    int n                                 = 0;
+    int n = 0;
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
 
     self->coded_values          = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
@@ -29,14 +30,16 @@ void grib_accessor_class_data_apply_bitmap_t::init(grib_accessor* a, const long 
 
     a->length = 0;
 }
-void grib_accessor_class_data_apply_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_data_apply_bitmap_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_values(dumper, a);
 }
 
-int grib_accessor_class_data_apply_bitmap_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_apply_bitmap_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
-    size_t len                            = 0;
-    int ret                               = 0;
+    size_t len = 0;
+    int ret = GRIB_SUCCESS;
 
     if (grib_find_accessor(grib_handle_of_accessor(a), self->bitmap))
         ret = grib_get_size(grib_handle_of_accessor(a), self->bitmap, &len);
@@ -48,17 +51,18 @@ int grib_accessor_class_data_apply_bitmap_t::value_count(grib_accessor* a, long*
     return ret;
 }
 
-int grib_accessor_class_data_apply_bitmap_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_apply_bitmap_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
-    grib_handle* gh      = grib_handle_of_accessor(a);
-    int err = 0, i = 0;
-    size_t cidx          = 0;
+    grib_handle* gh = grib_handle_of_accessor(a);
+    size_t i = 0, cidx   = 0;
     double missing_value = 0;
     double* bvals        = NULL;
     size_t n_vals        = 0;
     long nn              = 0;
 
-    err    = a->value_count(&nn);    n_vals = nn;
+    int err = a->value_count(&nn);
+    n_vals = nn;
     if (err)
         return err;
 
@@ -93,19 +97,21 @@ int grib_accessor_class_data_apply_bitmap_t::unpack_double_element(grib_accessor
     return grib_get_double_element_internal(gh, self->coded_values, cidx, val);
 }
 
-int grib_accessor_class_data_apply_bitmap_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_apply_bitmap_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
-    grib_handle* gh = grib_handle_of_accessor(a);
+    grib_handle* gh                         = grib_handle_of_accessor(a);
     int err = 0, all_missing = 1;
-    size_t cidx        = 0; /* index into the coded_values array */
-    size_t* cidx_array = NULL; /* array of indexes into the coded_values */
-    double* cval_array = NULL; /* array of values of the coded_values */
+    size_t cidx          = 0;    /* index into the coded_values array */
+    size_t* cidx_array   = NULL; /* array of indexes into the coded_values */
+    double* cval_array   = NULL; /* array of values of the coded_values */
     double missing_value = 0;
     double* bvals        = NULL;
     size_t n_vals = 0, i = 0, j = 0, idx = 0, count_1s = 0, ci = 0;
     long nn = 0;
 
-    err    = a->value_count(&nn);    n_vals = nn;
+    err    = a->value_count(&nn);
+    n_vals = nn;
     if (err) return err;
 
     if (!grib_find_accessor(gh, self->bitmap))
@@ -119,7 +125,8 @@ int grib_accessor_class_data_apply_bitmap_t::unpack_double_element_set(grib_acce
     for (i = 0; i < len; i++) {
         if (val_array[i] == 0) {
             val_array[i] = missing_value;
-        } else {
+        }
+        else {
             all_missing = 0;
             count_1s++;
         }
@@ -144,7 +151,7 @@ int grib_accessor_class_data_apply_bitmap_t::unpack_double_element_set(grib_acce
     ci = 0;
     for (i = 0; i < len; i++) {
         if (val_array[i] == 1) {
-            idx = index_array[i];
+            idx  = index_array[i];
             cidx = 0;
             for (j = 0; j < idx; j++) {
                 cidx += bvals[j];
@@ -171,17 +178,18 @@ int grib_accessor_class_data_apply_bitmap_t::unpack_double_element_set(grib_acce
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_apply_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_apply_bitmap_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
-    int err                               = 0;
-    size_t bmaplen                        = *len;
-    long coded_n_vals                     = 0;
-    double* coded_vals                    = NULL;
-    long i                                = 0;
-    long j                                = 0;
-    double missing_value                  = 0;
-    grib_handle* hand = grib_handle_of_accessor(a);
-    grib_context* ctxt = a->context;
+    int err                                 = 0;
+    size_t bmaplen                          = *len;
+    long coded_n_vals                       = 0;
+    double* coded_vals                      = NULL;
+    long i                                  = 0;
+    long j                                  = 0;
+    double missing_value                    = 0;
+    grib_handle* hand                       = grib_handle_of_accessor(a);
+    grib_context* ctxt                      = a->context;
 
     if (*len == 0)
         return GRIB_NO_VALUES;
@@ -231,22 +239,106 @@ int grib_accessor_class_data_apply_bitmap_t::pack_double(grib_accessor* a, const
 }
 
 
-int grib_accessor_class_data_apply_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+template <typename T>
+static int unpack(grib_accessor* a, T* val, size_t* len)
+{
+    static_assert(std::is_floating_point<T>::value, "Requires floating point numbers");
+    grib_accessor_data_apply_bitmap_t* self = (grib_accessor_data_apply_bitmap_t*)a;
+
+    size_t i             = 0;
+    size_t j             = 0;
+    size_t n_vals        = 0;
+    long nn              = 0;
+    size_t coded_n_vals  = 0;
+    T* coded_vals        = NULL;
+    double missing_value = 0;
+
+    int err = a->value_count(&nn);
+    n_vals = nn;
+    if (err)
+        return err;
+
+    if (!grib_find_accessor(grib_handle_of_accessor(a), self->bitmap))
+        return grib_get_array<T>(grib_handle_of_accessor(a), self->coded_values, val, len);
+
+    if ((err = grib_get_size(grib_handle_of_accessor(a), self->coded_values, &coded_n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    if ((err = grib_get_double_internal(grib_handle_of_accessor(a), self->missing_value, &missing_value)) != GRIB_SUCCESS)
+        return err;
+
+    if (*len < n_vals) {
+        *len = n_vals;
+        return GRIB_ARRAY_TOO_SMALL;
+    }
+
+    if (coded_n_vals == 0) {
+        for (i = 0; i < n_vals; i++)
+            val[i] = missing_value;
+
+        *len = n_vals;
+        return GRIB_SUCCESS;
+    }
+
+    if ((err = grib_get_array_internal<T>(grib_handle_of_accessor(a), self->bitmap, val, &n_vals)) != GRIB_SUCCESS)
+        return err;
+
+    coded_vals = (T*)grib_context_malloc(a->context, coded_n_vals * sizeof(T));
+    if (coded_vals == NULL)
+        return GRIB_OUT_OF_MEMORY;
+
+    if ((err = grib_get_array<T>(grib_handle_of_accessor(a), self->coded_values, coded_vals, &coded_n_vals)) != GRIB_SUCCESS) {
+        grib_context_free(a->context, coded_vals);
+        return err;
+    }
+
+    grib_context_log(a->context, GRIB_LOG_DEBUG,
+                     "grib_accessor_class_data_apply_bitmap: %s : creating %s, %d values",
+                     __func__, a->name, n_vals);
+
+    for (i = 0; i < n_vals; i++) {
+        if (val[i] == 0) {
+            val[i] = missing_value;
+        }
+        else {
+            val[i] = coded_vals[j++];
+            if (j > coded_n_vals) {
+                grib_context_free(a->context, coded_vals);
+                grib_context_log(a->context, GRIB_LOG_ERROR,
+                                 "grib_accessor_class_data_apply_bitmap [%s]:"
+                                 " %s :  number of coded values does not match bitmap %ld %ld",
+                                 a->name, __func__, coded_n_vals, n_vals);
+
+                return GRIB_ARRAY_TOO_SMALL;
+            }
+        }
+    }
+
+    *len = n_vals;
+
+    grib_context_free(a->context, coded_vals);
+    return err;
+}
+
+int grib_accessor_class_data_apply_bitmap_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     return unpack<double>(a, val, len);
 }
 
-int grib_accessor_class_data_apply_bitmap_t::unpack_float(grib_accessor* a, float* val, size_t* len){
+int grib_accessor_class_data_apply_bitmap_t::unpack_float(grib_accessor* a, float* val, size_t* len)
+{
     return unpack<float>(a, val, len);
 }
 
-int grib_accessor_class_data_apply_bitmap_t::get_native_type(grib_accessor* a){
-    //grib_accessor_data_apply_bitmap_t* self =  (grib_accessor_data_apply_bitmap_t*)a;
-    //return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
-
+int grib_accessor_class_data_apply_bitmap_t::get_native_type(grib_accessor* a)
+{
+    // grib_accessor_data_apply_bitmap_t* self =  (grib_accessor_data_apply_bitmap_t*)a;
+    // return grib_accessor_get_native_type(grib_find_accessor(grib_handle_of_accessor(a),self->coded_values));
     return GRIB_TYPE_DOUBLE;
 }
 
-int grib_accessor_class_data_apply_bitmap_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_data_apply_bitmap_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval   = GRIB_SUCCESS;
     double* aval = 0;
     double* bval = 0;
@@ -256,11 +348,13 @@ int grib_accessor_class_data_apply_bitmap_t::compare(grib_accessor* a, grib_acce
     int err     = 0;
     long count  = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     alen = count;
 
-    err = b->value_count(&count);    if (err)
+    err = b->value_count(&count);
+    if (err)
         return err;
     blen = count;
 
@@ -270,9 +364,10 @@ int grib_accessor_class_data_apply_bitmap_t::compare(grib_accessor* a, grib_acce
     aval = (double*)grib_context_malloc(a->context, alen * sizeof(double));
     bval = (double*)grib_context_malloc(b->context, blen * sizeof(double));
 
-    a->unpack_double(aval, &alen);    b->unpack_double(bval, &blen);
+    a->unpack_double(aval, &alen);
+    b->unpack_double(bval, &blen);
     retval = GRIB_SUCCESS;
-    for (size_t i=0; i<alen && retval == GRIB_SUCCESS; ++i) {
+    for (size_t i = 0; i < alen && retval == GRIB_SUCCESS; ++i) {
         if (aval[i] != bval[i]) retval = GRIB_DOUBLE_VALUE_MISMATCH;
     }
 
@@ -281,4 +376,3 @@ int grib_accessor_class_data_apply_bitmap_t::compare(grib_accessor* a, grib_acce
 
     return retval;
 }
-
