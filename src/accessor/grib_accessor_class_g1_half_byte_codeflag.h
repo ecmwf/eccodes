@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g1_half_byte_codeflag_h
 #define eccodes_accessor_g1_half_byte_codeflag_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_g1_half_byte_codeflag_t : public grib_accessor_gen_t

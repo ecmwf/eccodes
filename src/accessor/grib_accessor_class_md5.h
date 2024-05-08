@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_md5_h
 #define eccodes_accessor_md5_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_md5_t : public grib_accessor_gen_t

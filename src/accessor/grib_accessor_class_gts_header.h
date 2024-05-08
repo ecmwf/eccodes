@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_gts_header_h
 #define eccodes_accessor_gts_header_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_ascii.h"
 
 class grib_accessor_gts_header_t : public grib_accessor_ascii_t

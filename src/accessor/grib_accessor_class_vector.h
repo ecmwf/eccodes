@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_vector_h
 #define eccodes_accessor_vector_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_abstract_vector.h"
 
 class grib_accessor_vector_t : public grib_accessor_abstract_vector_t

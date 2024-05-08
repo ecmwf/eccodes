@@ -9,10 +9,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_raw_packing_h
-#define eccodes_accessor_data_raw_packing_h
+#pragma once
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_values.h"
 
 class grib_accessor_data_raw_packing_t : public grib_accessor_values_t
@@ -35,4 +33,3 @@ public:
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
     int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
 };
-#endif /* eccodes_accessor_data_raw_packing_h */

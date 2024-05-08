@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g1step_range_h
 #define eccodes_accessor_g1step_range_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_abstract_long_vector.h"
 
 class grib_accessor_g1step_range_t : public grib_accessor_abstract_long_vector_t

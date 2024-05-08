@@ -9,10 +9,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_secondary_bitmap_h
-#define eccodes_accessor_data_secondary_bitmap_h
+#pragma once
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_data_secondary_bitmap_t : public grib_accessor_gen_t
@@ -35,4 +33,3 @@ public:
     void dump(grib_accessor*, grib_dumper*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_data_secondary_bitmap_h */

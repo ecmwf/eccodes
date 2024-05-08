@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g2_mars_labeling_h
 #define eccodes_accessor_g2_mars_labeling_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_g2_mars_labeling_t : public grib_accessor_gen_t

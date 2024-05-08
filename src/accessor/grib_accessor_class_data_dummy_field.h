@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_data_dummy_field_h
 #define eccodes_accessor_data_dummy_field_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_data_g1simple_packing.h"
 
 class grib_accessor_data_dummy_field_t : public grib_accessor_data_g1simple_packing_t

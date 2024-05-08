@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_unpack_bufr_values_h
 #define eccodes_accessor_unpack_bufr_values_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_unpack_bufr_values_t : public grib_accessor_gen_t

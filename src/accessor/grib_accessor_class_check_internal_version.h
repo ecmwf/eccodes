@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_check_internal_version_h
 #define eccodes_accessor_check_internal_version_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_ascii.h"
 
 class grib_accessor_check_internal_version_t : public grib_accessor_ascii_t

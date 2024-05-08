@@ -9,10 +9,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_run_length_packing_h
-#define eccodes_accessor_data_run_length_packing_h
+#pragma once
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_values.h"
 
 class grib_accessor_data_run_length_packing_t : public grib_accessor_values_t
@@ -37,4 +35,3 @@ public:
     int value_count(grib_accessor*, long*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_data_run_length_packing_h */

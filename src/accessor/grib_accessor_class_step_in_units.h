@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_step_in_units_h
 #define eccodes_accessor_step_in_units_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_step_in_units_t : public grib_accessor_long_t

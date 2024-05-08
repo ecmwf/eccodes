@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g1day_of_the_year_date_h
 #define eccodes_accessor_g1day_of_the_year_date_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_g1date.h"
 
 class grib_accessor_g1day_of_the_year_date_t : public grib_accessor_g1date_t

@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g2end_step_h
 #define eccodes_accessor_g2end_step_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_g2end_step_t : public grib_accessor_long_t

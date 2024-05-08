@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_mars_param_h
 #define eccodes_accessor_mars_param_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_ascii.h"
 
 class grib_accessor_mars_param_t : public grib_accessor_ascii_t

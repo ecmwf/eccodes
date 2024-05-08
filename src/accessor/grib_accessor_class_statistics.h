@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_statistics_h
 #define eccodes_accessor_statistics_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_abstract_vector.h"
 
 class grib_accessor_statistics_t : public grib_accessor_abstract_vector_t

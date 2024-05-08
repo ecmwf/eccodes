@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_element_h
 #define eccodes_accessor_element_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_long.h"
 
 class grib_accessor_element_t : public grib_accessor_long_t

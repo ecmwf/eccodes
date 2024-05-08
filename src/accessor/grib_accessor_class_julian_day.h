@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_julian_day_h
 #define eccodes_accessor_julian_day_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_double.h"
 
 class grib_accessor_julian_day_t : public grib_accessor_double_t

@@ -12,7 +12,6 @@
 #ifndef eccodes_accessor_g2_eps_h
 #define eccodes_accessor_g2_eps_h
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_unsigned.h"
 
 class grib_accessor_g2_eps_t : public grib_accessor_unsigned_t
