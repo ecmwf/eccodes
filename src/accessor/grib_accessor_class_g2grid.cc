@@ -19,8 +19,8 @@ void grib_accessor_class_g2grid_t::init(grib_accessor* a, const long l, grib_arg
 {
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_g2grid_t* self = (grib_accessor_g2grid_t*)a;
-    grib_handle* hand            = grib_handle_of_accessor(a);
-    int n                        = 0;
+    grib_handle* hand = grib_handle_of_accessor(a);
+    int n = 0;
 
     self->latitude_first  = grib_arguments_get_name(hand, c, n++);
     self->longitude_first = grib_arguments_get_name(hand, c, n++);
@@ -108,7 +108,7 @@ int grib_accessor_class_g2grid_t::unpack_double(grib_accessor* a, double* val, s
     return GRIB_SUCCESS;
 }
 
-long gcd(long a, long b)
+static long gcd(long a, long b)
 {
     if (b > a)
         return gcd(b, a);
@@ -117,12 +117,12 @@ long gcd(long a, long b)
     return gcd(b, a % b);
 }
 
-long lcm(long a, long b)
+static long lcm(long a, long b)
 {
     return a * b / gcd(a, b);
 }
 
-int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
+static int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
 {
     int i;
     int ok = 1;
@@ -147,7 +147,7 @@ int is_ok(const double* val, long v[6], double basic_angle, double sub_division)
     return ok;
 }
 
-int trial(const double* val, long v[6], long* basic_angle, long* sub_division)
+static int trial(const double* val, long v[6], long* basic_angle, long* sub_division)
 {
     int i = 0;
     long ni, nj;

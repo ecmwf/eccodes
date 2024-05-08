@@ -50,7 +50,8 @@ int grib_accessor_class_data_g2bifourier_packing_t::value_count(grib_accessor* a
     return grib_get_long_internal(gh, self->number_of_values, numberOfValues);
 }
 
-void ellipse(long ni, long nj, long itrunc[], long jtrunc[]){
+static void ellipse(long ni, long nj, long itrunc[], long jtrunc[])
+{
     const double zeps   = 1.E-10;
     const double zauxil = 0.;
     int i, j;
@@ -91,7 +92,8 @@ void ellipse(long ni, long nj, long itrunc[], long jtrunc[]){
     }
 }
 
-void rectangle(long ni, long nj, long itrunc[], long jtrunc[]){
+static void rectangle(long ni, long nj, long itrunc[], long jtrunc[])
+{
     int i, j;
 
     /*
@@ -109,7 +111,8 @@ void rectangle(long ni, long nj, long itrunc[], long jtrunc[]){
         jtrunc[i] = nj;
 }
 
-void diamond(long ni, long nj, long itrunc[], long jtrunc[]){
+static void diamond(long ni, long nj, long itrunc[], long jtrunc[])
+{
     int i, j;
 
     if (nj == 0)
@@ -171,7 +174,8 @@ typedef struct bif_trunc_t
 /*
  * Total number of coefficients
  */
-size_t size_bif(bif_trunc_t* bt){
+static size_t size_bif(bif_trunc_t* bt)
+{
     size_t n_vals = 0;
     int j;
     for (j = 0; j <= bt->bif_j; j++)
@@ -182,7 +186,8 @@ size_t size_bif(bif_trunc_t* bt){
 /*
  * Number of unpacked coefficients
  */
-size_t size_sub(bif_trunc_t* bt){
+static size_t size_sub(bif_trunc_t* bt)
+{
     size_t n_vals = 0;
     int i, j;
     for_ij()
@@ -197,7 +202,8 @@ size_t size_sub(bif_trunc_t* bt){
     return n_vals;
 }
 
-double laplam(bif_trunc_t* bt, const double val[]){
+static double laplam(bif_trunc_t* bt, const double val[])
+{
     /*
      * For bi-Fourier spectral fields, the Laplacian operator is a multiplication by (i*i+j*j)
      */
@@ -333,7 +339,8 @@ double laplam(bif_trunc_t* bt, const double val[]){
     return zp;
 }
 
-void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a){
+static void free_bif_trunc(bif_trunc_t* bt, grib_accessor* a)
+{
     grib_handle* gh = grib_handle_of_accessor(a);
     if (bt == NULL)
         return;

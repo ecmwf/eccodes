@@ -11,27 +11,29 @@
 
 #include "grib_accessor_class_number_of_points_gaussian.h"
 
-grib_accessor_class_number_of_points_gaussian_t _grib_accessor_class_number_of_points_gaussian{"number_of_points_gaussian"};
+grib_accessor_class_number_of_points_gaussian_t _grib_accessor_class_number_of_points_gaussian{ "number_of_points_gaussian" };
 grib_accessor_class* grib_accessor_class_number_of_points_gaussian = &_grib_accessor_class_number_of_points_gaussian;
 
 
 #define EFDEBUG 0
 
-void grib_accessor_class_number_of_points_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_number_of_points_gaussian_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
-    int n                                         = 0;
-    grib_handle* h                                = grib_handle_of_accessor(a);
+    int n = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
     grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    self->ni                                      = grib_arguments_get_name(h, c, n++);
-    self->nj                                      = grib_arguments_get_name(h, c, n++);
-    self->plpresent                               = grib_arguments_get_name(h, c, n++);
-    self->pl                                      = grib_arguments_get_name(h, c, n++);
-    self->order                                   = grib_arguments_get_name(h, c, n++);
-    self->lat_first                               = grib_arguments_get_name(h, c, n++);
-    self->lon_first                               = grib_arguments_get_name(h, c, n++);
-    self->lat_last                                = grib_arguments_get_name(h, c, n++);
-    self->lon_last                                = grib_arguments_get_name(h, c, n++);
-    self->support_legacy                          = grib_arguments_get_name(h, c, n++);
+
+    self->ni             = grib_arguments_get_name(h, c, n++);
+    self->nj             = grib_arguments_get_name(h, c, n++);
+    self->plpresent      = grib_arguments_get_name(h, c, n++);
+    self->pl             = grib_arguments_get_name(h, c, n++);
+    self->order          = grib_arguments_get_name(h, c, n++);
+    self->lat_first      = grib_arguments_get_name(h, c, n++);
+    self->lon_first      = grib_arguments_get_name(h, c, n++);
+    self->lat_last       = grib_arguments_get_name(h, c, n++);
+    self->lon_last       = grib_arguments_get_name(h, c, n++);
+    self->support_legacy = grib_arguments_get_name(h, c, n++);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length = 0;
@@ -40,12 +42,13 @@ void grib_accessor_class_number_of_points_gaussian_t::init(grib_accessor* a, con
 // Old implementation of num_points_reduced_gauss_old
 // See src/deprecated/grib_accessor_class_number_of_points_gaussian.cc
 //
-
-int angleApproximatelyEqual(double A, double B, double angular_precision){
+static int angleApproximatelyEqual(double A, double B, double angular_precision)
+{
     return angular_precision > 0 ? (fabs(A - B) <= angular_precision) : (A == B);
 }
 
-double longitude_normalise(double lon, double minimum){
+static double longitude_normalise(double lon, double minimum)
+{
     while (lon < minimum) {
         lon += 360;
     }
@@ -55,7 +58,8 @@ double longitude_normalise(double lon, double minimum){
     return lon;
 }
 
-void correctWestEast(long max_pl, double angular_precision, double* pWest, double* pEast){
+static void correctWestEast(long max_pl, double angular_precision, double* pWest, double* pEast)
+{
     double w, e;
     const double inc = 360.0 / max_pl; /*smallest increment*/
     if (*pWest > *pEast)
@@ -76,7 +80,8 @@ void correctWestEast(long max_pl, double angular_precision, double* pWest, doubl
     }
 }
 
-int get_number_of_data_values(grib_handle* h, size_t* numDataValues){
+static int get_number_of_data_values(grib_handle* h, size_t* numDataValues)
+{
     int err  = 0;
     long bpv = 0, bitmapPresent = 0;
     size_t bitmapLength = 0;
@@ -110,11 +115,12 @@ int get_number_of_data_values(grib_handle* h, size_t* numDataValues){
 int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len);
 int unpack_long_new(grib_accessor* a, long* val, size_t* len);
 
-int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int err                                       = GRIB_SUCCESS;
-    long support_legacy                           = 1;
+int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    int err                                         = GRIB_SUCCESS;
+    long support_legacy                             = 1;
     grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_handle* h                                = grib_handle_of_accessor(a);
+    grib_handle* h                                  = grib_handle_of_accessor(a);
 
     if ((err = grib_get_long_internal(h, self->support_legacy, &support_legacy)) != GRIB_SUCCESS)
         return err;
@@ -126,7 +132,8 @@ int grib_accessor_class_number_of_points_gaussian_t::unpack_long(grib_accessor* 
 }
 
 /* New algorithm */
-int unpack_long_new(grib_accessor* a, long* val, size_t* len){
+int unpack_long_new(grib_accessor* a, long* val, size_t* len)
+{
     int err       = GRIB_SUCCESS;
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
@@ -141,7 +148,7 @@ int unpack_long_new(grib_accessor* a, long* val, size_t* len){
     grib_handle* h           = grib_handle_of_accessor(a);
 
     grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_context* c                               = a->context;
+    grib_context* c                                 = a->context;
 
     if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
         return err;
@@ -161,8 +168,8 @@ int unpack_long_new(grib_accessor* a, long* val, size_t* len){
     }
 
     if (plpresent) {
-        long max_pl          = 0;
-        int j                = 0;
+        long max_pl = 0;
+        int j       = 0;
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
@@ -211,8 +218,8 @@ int unpack_long_new(grib_accessor* a, long* val, size_t* len){
                     return GRIB_GEOCALCULUS_PROBLEM;
                 }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
-                //lon_first_row = ((ilon_first)*360.0) / pl[j];
-                //lon_last_row  = ((ilon_last)*360.0) / pl[j];
+                // lon_first_row = ((ilon_first)*360.0) / pl[j];
+                // lon_last_row  = ((ilon_last)*360.0) / pl[j];
                 *val += row_count;
             }
         }
@@ -234,7 +241,8 @@ int unpack_long_new(grib_accessor* a, long* val, size_t* len){
 }
 
 /* With Legacy support */
-int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len){
+int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len)
+{
     int err       = GRIB_SUCCESS;
     int is_global = 0;
     long ni = 0, nj = 0, plpresent = 0, order = 0;
@@ -250,7 +258,7 @@ int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len){
     size_t numDataValues     = 0;
 
     grib_accessor_number_of_points_gaussian_t* self = (grib_accessor_number_of_points_gaussian_t*)a;
-    grib_context* c                               = a->context;
+    grib_context* c                                 = a->context;
 
     if ((err = grib_get_long_internal(h, self->ni, &ni)) != GRIB_SUCCESS)
         return err;
@@ -271,7 +279,7 @@ int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len){
 
     if (plpresent) {
         long max_pl = 0;
-        int j                = 0;
+        int j       = 0;
         // double lon_first_row = 0, lon_last_row = 0;
 
         /*reduced*/
@@ -333,9 +341,9 @@ int unpack_long_with_legacy_support(grib_accessor* a, long* val, size_t* len){
                 }
                 grib_get_reduced_row_wrapper(h, pl[j], lon_first, lon_last, &row_count, &ilon_first, &ilon_last);
 
-//                 if ( row_count != pl[j] ) {
-//                     printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);
-//                 }
+                //                 if ( row_count != pl[j] ) {
+                //                     printf("oops...... rc=%ld but pl[%d]=%ld\n", row_count, j,pl[j]);
+                //                 }
                 // lon_first_row = ((ilon_first)*360.0) / pl[j];
                 // lon_last_row  = ((ilon_last)*360.0) / pl[j];
                 *val += row_count;

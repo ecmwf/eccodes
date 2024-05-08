@@ -44,10 +44,7 @@ void thread_init()
 }
 #endif
 
-
-
-
-int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
+static int grib_load_codetable(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_codetable* t);
 
 void grib_accessor_class_codetable_t::init(grib_accessor* a, const long len, grib_arguments* params)
 {
@@ -145,6 +142,7 @@ GRIB_INLINE static int grib_inline_strcmp(const char* a, const char* b)
     return (*a == 0 && *b == 0) ? 0 : 1;
 }
 
+// Cater for parameters being NULL
 static int str_eq(const char* a, const char* b)
 {
     if (a && b && (grib_inline_strcmp(a, b) == 0))
@@ -267,7 +265,7 @@ the_end:
     return t;
 }
 
-int grib_load_codetable(grib_context* c, const char* filename,
+static int grib_load_codetable(grib_context* c, const char* filename,
                                const char* recomposed_name, size_t size, grib_codetable* t)
 {
     char line[1024];

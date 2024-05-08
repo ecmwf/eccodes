@@ -11,11 +11,12 @@
 
 #include "grib_accessor_class_codeflag.h"
 
-grib_accessor_class_codeflag_t _grib_accessor_class_codeflag{"codeflag"};
+grib_accessor_class_codeflag_t _grib_accessor_class_codeflag{ "codeflag" };
 grib_accessor_class* grib_accessor_class_codeflag = &_grib_accessor_class_codeflag;
 
 
-void grib_accessor_class_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* param){
+void grib_accessor_class_codeflag_t::init(grib_accessor* a, const long len, grib_arguments* param)
+{
     grib_accessor_class_unsigned_t::init(a, len, param);
     grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
     a->length = len;
@@ -23,12 +24,14 @@ void grib_accessor_class_codeflag_t::init(grib_accessor* a, const long len, grib
     Assert(a->length >= 0);
 }
 
-int test_bit(long a, long b){
-    DEBUG_ASSERT(b>=0);
+static int test_bit(long a, long b)
+{
+    DEBUG_ASSERT(b >= 0);
     return a & (1 << b);
 }
 
-int grib_get_codeflag(grib_accessor* a, long code, char* codename){
+static int grib_get_codeflag(grib_accessor* a, long code, char* codename)
+{
     const grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
     FILE* f = NULL;
     char fname[1024];
@@ -42,8 +45,8 @@ int grib_get_codeflag(grib_accessor* a, long code, char* codename){
 
     err = grib_recompose_name(grib_handle_of_accessor(a), NULL, self->tablename, fname, 1);
     if (err) {
-        strncpy(fname, self->tablename, sizeof(fname)-1);
-        fname[sizeof(fname)-1] = '\0';
+        strncpy(fname, self->tablename, sizeof(fname) - 1);
+        fname[sizeof(fname) - 1] = '\0';
     }
 
     if ((filename = grib_context_full_defs_path(a->context, fname)) == NULL) {
@@ -98,12 +101,14 @@ int grib_get_codeflag(grib_accessor* a, long code, char* codename){
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_codeflag_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_codeflag_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-void grib_accessor_class_codeflag_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_codeflag_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     const grib_accessor_codeflag_t* self = (grib_accessor_codeflag_t*)a;
     long v = 0;
     char flagname[1024] = {0,};

@@ -130,7 +130,7 @@ void add_bitstream(bitstream_context* ctx, grib_accessor* a, int t, int n_bits)
 // find min/max of an integer array
 // return 0:  if min max found
 // return 1:  if min max not found, min = max = 0
-int int_min_max_array(int* data, unsigned int n, int* min, int* max)
+static int int_min_max_array(int* data, unsigned int n, int* min, int* max)
 {
     unsigned int first;
     int mn, mx;
@@ -172,7 +172,7 @@ int int_min_max_array(int* data, unsigned int n, int* min, int* max)
     return 0;
 }
 
-double Int_Power(double x, int y)
+static double Int_Power(double x, int y)
 {
     double value;
 
@@ -192,7 +192,7 @@ double Int_Power(double x, int y)
     return value;
 }
 
-int min_max_array(double* data, unsigned int n, double* min, double* max)
+static int min_max_array(double* data, unsigned int n, double* min, double* max)
 {
     unsigned int first;
     double mn, mx;
@@ -366,7 +366,7 @@ static int post_process(grib_context* c, long* vals, long len, long order, long 
     return GRIB_SUCCESS;
 }
 
-int find_nbits(unsigned int i)
+static int find_nbits(unsigned int i)
 {
 #if !defined __GNUC__ || __GNUC__ < 4
     int j;
@@ -405,7 +405,7 @@ struct section
     struct section *head, *tail;
 };
 
-int sizeofsection(struct section* s, int ref_bits, int width_bits, int has_undef)
+static int sizeofsection(struct section* s, int ref_bits, int width_bits, int has_undef)
 {
     if (s->mn == INT_MAX) {  // all undef
         return ref_bits + width_bits;
@@ -434,7 +434,7 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits,
     return find_nbits(mx - mn + has_undef) * n + ref_bits + width_bits;
 }
 
-int size_all(struct section* s, int ref_bits, int width_bits, int has_undef)
+static int size_all(struct section* s, int ref_bits, int width_bits, int has_undef)
 {
     int bits;
 
@@ -446,7 +446,7 @@ int size_all(struct section* s, int ref_bits, int width_bits, int has_undef)
     return (bits + 7) / 8;
 }
 
-void move_one_left(struct section* s, int* v)
+static void move_one_left(struct section* s, int* v)
 {
     struct section* t;
     int val, i, j, k;
@@ -512,7 +512,7 @@ void move_one_left(struct section* s, int* v)
     }
 }
 
-void move_one_right(struct section* s, int* v)
+static void move_one_right(struct section* s, int* v)
 {
     struct section* t;
     int val, i, j, k;
@@ -594,7 +594,7 @@ void move_one_right(struct section* s, int* v)
     return;
 }
 
-void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
+static void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
 {
     struct section* t;
     int val0, val1, nbit_s, nbit_t;
@@ -670,7 +670,7 @@ void exchange(struct section* s, int* v, int has_undef, int LEN_SEC_MAX)
     }
 }
 
-void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int param, int LEN_SEC_MAX)
+static void merge_j(struct section* h, int ref_bits, int width_bits, int has_undef, int param, int LEN_SEC_MAX)
 {
     struct section *t, *m;
     int size_head, size_mid, size_tail, saving_mt, saving_hm;

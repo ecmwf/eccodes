@@ -11,15 +11,16 @@
 
 #include "grib_accessor_class_bufr_simple_thinning.h"
 
-grib_accessor_class_bufr_simple_thinning_t _grib_accessor_class_bufr_simple_thinning{"bufr_simple_thinning"};
+grib_accessor_class_bufr_simple_thinning_t _grib_accessor_class_bufr_simple_thinning{ "bufr_simple_thinning" };
 grib_accessor_class* grib_accessor_class_bufr_simple_thinning = &_grib_accessor_class_bufr_simple_thinning;
 
 
-void grib_accessor_class_bufr_simple_thinning_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_bufr_simple_thinning_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
-    grib_handle* h = grib_handle_of_accessor(a);
-    int n = 0;
+    grib_handle* h                             = grib_handle_of_accessor(a);
+    int n                                      = 0;
 
     a->length                         = 0;
     self->doExtractSubsets            = grib_arguments_get_name(h, arg, n++);
@@ -32,11 +33,13 @@ void grib_accessor_class_bufr_simple_thinning_t::init(grib_accessor* a, const lo
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-int grib_accessor_class_bufr_simple_thinning_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_bufr_simple_thinning_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
 
-int apply_thinning(grib_accessor* a){
+static int apply_thinning(grib_accessor* a)
+{
     const grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
 
     long skip;
@@ -101,7 +104,8 @@ int apply_thinning(grib_accessor* a){
     return ret;
 }
 
-int grib_accessor_class_bufr_simple_thinning_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_bufr_simple_thinning_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     const grib_accessor_bufr_simple_thinning_t* self = (grib_accessor_bufr_simple_thinning_t*)a;
 
     if (*len == 0)

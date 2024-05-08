@@ -36,7 +36,7 @@ void grib_accessor_class_octahedral_gaussian_t::init(grib_accessor* a, const lon
  *  -4 ..-4         All below equator
  * Anything else is considered not octahedral
  */
-int is_pl_octahedral(const long pl[], size_t size){
+static int is_pl_octahedral(const long pl[], size_t size){
     long i;
     long prev_diff = -1;
     for (i = 1; i < size; ++i) {

@@ -42,7 +42,7 @@ void thread_init()
 }
 #endif
 
-int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
+static int grib_load_smart_table(grib_context* c, const char* filename, const char* recomposed_name, size_t size, grib_smart_table* t);
 
 void grib_accessor_class_smart_table_t::init(grib_accessor* a, const long len, grib_arguments* params)
 {
@@ -162,7 +162,7 @@ grib_smart_table* load_table(grib_accessor* a)
     return t;
 }
 
-int grib_load_smart_table(grib_context* c, const char* filename,
+static int grib_load_smart_table(grib_context* c, const char* filename,
                                  const char* recomposed_name, size_t size, grib_smart_table* t)
 {
     char line[1024] = {0,};
@@ -324,7 +324,7 @@ int grib_accessor_class_smart_table_t::unpack_string(grib_accessor* a, char* buf
     return GRIB_SUCCESS;
 }
 
-int get_table_codes(grib_accessor* a)
+static int get_table_codes(grib_accessor* a)
 {
     grib_accessor_smart_table_t* self = (grib_accessor_smart_table_t*)a;
     size_t size = 0;

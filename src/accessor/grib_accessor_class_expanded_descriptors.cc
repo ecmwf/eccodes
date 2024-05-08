@@ -41,7 +41,8 @@ typedef struct change_coding_params
         result = grib_bufr_descriptors_array_pop_front(array); \
     }
 
-void grib_accessor_class_expanded_descriptors_t::init(grib_accessor* a, const long len, grib_arguments* args){
+void grib_accessor_class_expanded_descriptors_t::init(grib_accessor* a, const long len, grib_arguments* args)
+{
     grib_accessor_class_long_t::init(a, len, args);
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int n = 0;
@@ -88,7 +89,8 @@ static char* descriptor_type_name(int dtype)
 }
 #endif
 
-void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err){
+static void __expand(grib_accessor* a, bufr_descriptors_array* unexpanded, bufr_descriptors_array* expanded, change_coding_params* ccp, int* err)
+{
     int k, j, i;
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     size_t size                              = 0;
@@ -463,7 +465,8 @@ static bufr_descriptors_array* do_expand(grib_accessor* a, bufr_descriptors_arra
     return expanded;
 }
 
-int expand(grib_accessor* a){
+static int expand(grib_accessor* a)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int err                                  = 0;
     size_t unexpandedSize                    = 0;
@@ -599,7 +602,8 @@ bufr_descriptors_array* grib_accessor_class_expanded_descriptors_get_expanded(gr
     return self->expanded;
 }
 
-int grib_accessor_class_expanded_descriptors_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_expanded_descriptors_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int ret = 0;
     size_t i = 0;
@@ -633,7 +637,8 @@ int grib_accessor_class_expanded_descriptors_t::unpack_double(grib_accessor* a, 
     return ret;
 }
 
-int grib_accessor_class_expanded_descriptors_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_expanded_descriptors_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int ret     = 0;
     size_t rlen = 0;
@@ -678,7 +683,8 @@ int grib_accessor_class_expanded_descriptors_t::unpack_long(grib_accessor* a, lo
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_expanded_descriptors_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len){
+int grib_accessor_class_expanded_descriptors_t::unpack_string_array(grib_accessor* a, char** buffer, size_t* len)
+{
     int err = 0;
     long* v = NULL;
     char buf[25] = {0,};
@@ -702,13 +708,15 @@ int grib_accessor_class_expanded_descriptors_t::unpack_string_array(grib_accesso
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_expanded_descriptors_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_expanded_descriptors_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     self->do_expand = 1;
     return GRIB_NOT_IMPLEMENTED;
 }
 
-int grib_accessor_class_expanded_descriptors_t::value_count(grib_accessor* a, long* rlen){
+int grib_accessor_class_expanded_descriptors_t::value_count(grib_accessor* a, long* rlen)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     int err = 0;
     *rlen   = 0;
@@ -723,14 +731,16 @@ int grib_accessor_class_expanded_descriptors_t::value_count(grib_accessor* a, lo
     return err;
 }
 
-void grib_accessor_class_expanded_descriptors_t::destroy(grib_context* c, grib_accessor* a){
+void grib_accessor_class_expanded_descriptors_t::destroy(grib_context* c, grib_accessor* a)
+{
     grib_accessor_class_long_t::destroy(c, a);
     // grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     // if (self->rank==0 && self->expanded)
     //  grib_bufr_descriptors_array_delete(self->expanded);
 }
 
-int grib_accessor_class_expanded_descriptors_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_expanded_descriptors_t::get_native_type(grib_accessor* a)
+{
     grib_accessor_expanded_descriptors_t* self = (grib_accessor_expanded_descriptors_t*)a;
     if (self->rank == 2)
         return GRIB_TYPE_DOUBLE;

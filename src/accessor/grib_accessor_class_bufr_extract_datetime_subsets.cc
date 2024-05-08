@@ -11,13 +11,14 @@
 
 #include "grib_accessor_class_bufr_extract_datetime_subsets.h"
 
-grib_accessor_class_bufr_extract_datetime_subsets_t _grib_accessor_class_bufr_extract_datetime_subsets{"bufr_extract_datetime_subsets"};
+grib_accessor_class_bufr_extract_datetime_subsets_t _grib_accessor_class_bufr_extract_datetime_subsets{ "bufr_extract_datetime_subsets" };
 grib_accessor_class* grib_accessor_class_bufr_extract_datetime_subsets = &_grib_accessor_class_bufr_extract_datetime_subsets;
 
 
-void grib_accessor_class_bufr_extract_datetime_subsets_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_bufr_extract_datetime_subsets_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
-    int n                                             = 0;
+    int n                                               = 0;
     grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
 
     a->length               = 0;
@@ -28,12 +29,14 @@ void grib_accessor_class_bufr_extract_datetime_subsets_t::init(grib_accessor* a,
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
 }
 
-int grib_accessor_class_bufr_extract_datetime_subsets_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_bufr_extract_datetime_subsets_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_LONG;
 }
 
 /* Convert input date to Julian number. If date is invalid, return -1 */
-double date_to_julian(long year, long month, long day, long hour, long minute, double second){
+double date_to_julian(long year, long month, long day, long hour, long minute, double second)
+{
     double result = 0; /* Julian number in units of days */
 
     /* For validating the date/time, we specify seconds as an integer */
@@ -85,7 +88,9 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     }
     else {
         /* uncompressed */
-        char keystr[32] = {0,};
+        char keystr[32] = {
+            0,
+        };
         size_t values_len = 0;
         for (i = 0; i < numberOfSubsets; ++i) {
             long lVal = 0;
@@ -104,15 +109,24 @@ static int build_long_array(grib_context* c, grib_handle* h, int compressed,
     return err;
 }
 
-int select_datetime(grib_accessor* a){
-    int ret                                           = 0;
-    long compressed                                   = 0;
+static int select_datetime(grib_accessor* a)
+{
+    int ret                                             = 0;
+    long compressed                                     = 0;
     grib_accessor_bufr_extract_datetime_subsets_t* self = (grib_accessor_bufr_extract_datetime_subsets_t*)a;
-    grib_handle* h                                    = grib_handle_of_accessor(a);
-    grib_context* c                                   = h->context;
+    grib_handle* h                                      = grib_handle_of_accessor(a);
+    grib_context* c                                     = h->context;
     size_t n;
     double julianStart = 0, julianEnd = 0, julianDT = 0;
-    char start_str[80] = {0,}, end_str[80] = {0,}, datetime_str[80] = {0,};
+    char start_str[80] = {
+        0,
+    },
+         end_str[80] = {
+             0,
+         },
+         datetime_str[80] = {
+             0,
+         };
     long yearRank, monthRank, dayRank, hourRank, minuteRank, secondRank;
     long yearStart, monthStart, dayStart, hourStart, minuteStart, secondStart;
     long yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd;
@@ -120,13 +134,13 @@ int select_datetime(grib_accessor* a){
     double* second = NULL;
     long numberOfSubsets, i;
     grib_iarray* subsets = NULL;
-    size_t nsubsets    = 0;
-    char yearstr[32]   = "year";
-    char monthstr[32]  = "month";
-    char daystr[32]    = "day";
-    char hourstr[32]   = "hour";
-    char minutestr[32] = "minute";
-    char secondstr[32] = "second";
+    size_t nsubsets      = 0;
+    char yearstr[32]     = "year";
+    char monthstr[32]    = "month";
+    char daystr[32]      = "day";
+    char hourstr[32]     = "hour";
+    char minutestr[32]   = "minute";
+    char secondstr[32]   = "second";
 
     ret = grib_get_long(h, "compressedData", &compressed);
     if (ret) return ret;
@@ -265,7 +279,7 @@ int select_datetime(grib_accessor* a){
     if (ret)
         secondEnd = 0;
     snprintf(end_str, sizeof(end_str), "%04ld/%02ld/%02ld %02ld:%02ld:%02ld",
-            yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
+             yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (c->debug) fprintf(stderr, "ECCODES DEBUG bufr_extract_datetime_subsets: end     =%s\n", end_str);
     julianEnd = date_to_julian(yearEnd, monthEnd, dayEnd, hourEnd, minuteEnd, secondEnd);
     if (julianEnd == -1) {
@@ -311,7 +325,7 @@ int select_datetime(grib_accessor* a){
 
     if (nsubsets != 0) {
         long* subsets_ar = grib_iarray_get_array(subsets);
-        ret = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
+        ret              = grib_set_long_array(h, self->extractSubsetList, subsets_ar, nsubsets);
         grib_context_free(c, subsets_ar);
         if (ret) return ret;
 
@@ -332,7 +346,8 @@ cleanup:
     return ret;
 }
 
-int grib_accessor_class_bufr_extract_datetime_subsets_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_bufr_extract_datetime_subsets_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     /*grib_accessor_bufr_extract_datetime_subsets_t *self =(grib_accessor_bufr_extract_datetime_subsets_t*)a;*/
 
     if (*len == 0)

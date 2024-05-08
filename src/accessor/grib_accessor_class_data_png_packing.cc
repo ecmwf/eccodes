@@ -53,14 +53,16 @@ typedef struct png_read_callback_data
     size_t offset;
 } png_read_callback_data;
 
-void png_read_callback(png_structp png, png_bytep data, png_size_t length){
+static void png_read_callback(png_structp png, png_bytep data, png_size_t length)
+{
     png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
     Assert(p->offset + length <= p->length);
     memcpy(data, p->buffer + p->offset, length);
     p->offset += length;
 }
 
-void png_write_callback(png_structp png, png_bytep data, png_size_t length){
+static void png_write_callback(png_structp png, png_bytep data, png_size_t length)
+{
     png_read_callback_data* p = (png_read_callback_data*)png_get_io_ptr(png);
     /* printf("p.offset=%zu  len=%zu p.len=%zu\n", p->offset, length, p->length); */
     /* Assert(p->offset + length <= p->length); */
@@ -73,7 +75,8 @@ void png_write_callback(png_structp png, png_bytep data, png_size_t length){
     p->offset += length;
 }
 
-void png_flush_callback(png_structp png){
+static void png_flush_callback(png_structp png)
+{
     /* Empty */
 }
 
@@ -218,7 +221,8 @@ cleanup:
     return err;
 }
 
-bool is_constant(const double* values, size_t n_vals){
+static bool is_constant(const double* values, size_t n_vals)
+{
     bool isConstant = true;
     double v = 0;
     size_t i;

@@ -12,12 +12,12 @@
 #include "grib_accessor_class_data_g1second_order_general_extended_packing.h"
 #include "grib_scaling.h"
 
-grib_accessor_class_data_g1second_order_general_extended_packing_t _grib_accessor_class_data_g1second_order_general_extended_packing{"data_g1second_order_general_extended_packing"};
+grib_accessor_class_data_g1second_order_general_extended_packing_t _grib_accessor_class_data_g1second_order_general_extended_packing{ "data_g1second_order_general_extended_packing" };
 grib_accessor_class* grib_accessor_class_data_g1second_order_general_extended_packing = &_grib_accessor_class_data_g1second_order_general_extended_packing;
 
 
 #define MAX_NUMBER_OF_GROUPS 65534
-#define EFDEBUG 0
+#define EFDEBUG              0
 
 static const unsigned long nbits[64] = {
     0x1, 0x2, 0x4, 0x8,
@@ -38,7 +38,8 @@ static const unsigned long nbits[64] = {
     0x1000000000000000, 0x2000000000000000, 0x4000000000000000, 0x8000000000000000
 };
 
-long number_of_bits(grib_handle* h, unsigned long x){
+long number_of_bits(grib_handle* h, unsigned long x)
+{
     const unsigned long* n = nbits;
     const int count        = sizeof(nbits) / sizeof(nbits[0]);
     long i                 = 0;
@@ -54,10 +55,11 @@ long number_of_bits(grib_handle* h, unsigned long x){
     return i;
 }
 
-void grib_accessor_class_data_g1second_order_general_extended_packing_t::init(grib_accessor* a, const long v, grib_arguments* args){
+void grib_accessor_class_data_g1second_order_general_extended_packing_t::init(grib_accessor* a, const long v, grib_arguments* args)
+{
     grib_accessor_class_data_simple_packing_t::init(a, v, args);
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
-    grib_handle* handle                                              = grib_handle_of_accessor(a);
+    grib_handle* handle                                                = grib_handle_of_accessor(a);
 
     self->half_byte                       = grib_arguments_get_name(handle, args, self->carg++);
     self->packingType                     = grib_arguments_get_name(handle, args, self->carg++);
@@ -83,17 +85,18 @@ void grib_accessor_class_data_g1second_order_general_extended_packing_t::init(gr
     self->dataFlag                        = grib_arguments_get_name(handle, args, self->carg++);
     self->edition                         = 1;
     self->dirty                           = 1;
-    self->dvalues                          = NULL;
-    self->fvalues                          = NULL;
+    self->dvalues                         = NULL;
+    self->fvalues                         = NULL;
     self->double_dirty = self->float_dirty = 1;
-    self->size                            = 0;
+    self->size                             = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_DATA;
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::value_count(grib_accessor* a, long* count)
+{
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
-    long numberOfCodedValues                                         = 0;
-    long numberOfGroups                                              = 0;
+    long numberOfCodedValues                                           = 0;
+    long numberOfGroups                                                = 0;
     size_t ngroups;
     long* groupLengths;
     long orderOfSPD = 0;
@@ -126,7 +129,8 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::value_co
     return err;
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     size_t size;
     double* values;
     int err = 0;
@@ -149,7 +153,8 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_d
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array)
+{
     size_t size = 0, i = 0;
     double* values;
     int err = 0;
@@ -176,9 +181,10 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_d
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(grib_accessor* a, double* dvalues, float* fvalues, size_t* len)
+{
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
-    int ret = 0;
+    int ret                                                            = 0;
     long numberOfGroups, numberOfSecondOrderPackedValues;
     long* firstOrderValues = 0;
     long* X                = 0;
@@ -292,14 +298,13 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(g
                 n++;
             }
 
-//             for (j=0;j<groupLengths[i];j++) {
-//                 X[n]=grib_decode_unsigned_long(buf,&pos,groupWidths[i]);
-//                 //printf("DXXXXX %ld %ld %ld %ld\n",n,X[n],groupWidths[i],groupLengths[i]);
-//                 X[n]+=firstOrderValues[i];
-//                 count++;
-//                 n++;
-//             }
-
+            //             for (j=0;j<groupLengths[i];j++) {
+            //                 X[n]=grib_decode_unsigned_long(buf,&pos,groupWidths[i]);
+            //                 //printf("DXXXXX %ld %ld %ld %ld\n",n,X[n],groupWidths[i],groupLengths[i]);
+            //                 X[n]+=firstOrderValues[i];
+            //                 count++;
+            //                 n++;
+            //             }
         }
         else {
             for (j = 0; j < groupLengths[i]; j++) {
@@ -345,7 +350,7 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(g
             break;
     }
 
-    if (dvalues) { // double-precision
+    if (dvalues) {  // double-precision
         if (self->dvalues) {
             if (numberOfValues != self->size) {
                 grib_context_free(a->context, self->dvalues);
@@ -396,11 +401,13 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack(g
     return ret;
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_float(grib_accessor* a, float* values, size_t* len){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_float(grib_accessor* a, float* values, size_t* len)
+{
     return unpack(a, NULL, values, len);
 }
 
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double(grib_accessor* a, double* values, size_t* len){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::unpack_double(grib_accessor* a, double* values, size_t* len)
+{
     return unpack(a, values, NULL, len);
 }
 
@@ -513,7 +520,8 @@ static void grib_split_long_groups(grib_handle* hand, grib_context* c, long* num
     grib_context_free(c, localFirstOrderValues);
 }
 
-int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bits_per_value){
+static int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bits_per_value)
+{
     int err = 0;
     if ((err = grib_get_long_internal(h, bits_per_value_str, bits_per_value)) != GRIB_SUCCESS)
         return err;
@@ -526,7 +534,8 @@ int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bit
         /* Note: on a 32bit system, the most significant bit is for signedness, so we have to drop one bit */
         if (sizeof(long) == 4) {
             *bits_per_value = 31;
-        } else {
+        }
+        else {
             *bits_per_value = 32;
         }
     }
@@ -536,10 +545,11 @@ int get_bits_per_value(grib_handle* h, const char* bits_per_value_str, long* bit
 // For the old implementation of pack_double, see
 //  src/deprecated/grib_accessor_class_data_g1second_order_general_extended_packing.pack_double.cc
 // See ECC-441 and ECC-261
-int grib_accessor_class_data_g1second_order_general_extended_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_data_g1second_order_general_extended_packing_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
-    int ret                                                          = 0;
-    int grib2                                                        = 0;
+    int ret                                                            = 0;
+    int grib2                                                          = 0;
     long bits_per_value, orderOfSPD, binary_scale_factor;
     long numberOfValues;
     double max, min;
@@ -1130,7 +1140,9 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::pack_dou
 
     pos = 0;
     if (orderOfSPD) {
-        long SPD[4] = {0,};
+        long SPD[4] = {
+            0,
+        };
         size_t nSPD = orderOfSPD + 1;
         Assert(orderOfSPD <= 3);
         for (i = 0; i < orderOfSPD; i++)
@@ -1192,7 +1204,8 @@ int grib_accessor_class_data_g1second_order_general_extended_packing_t::pack_dou
     return GRIB_SUCCESS;
 }
 
-void grib_accessor_class_data_g1second_order_general_extended_packing_t::destroy(grib_context* context, grib_accessor* a){
+void grib_accessor_class_data_g1second_order_general_extended_packing_t::destroy(grib_context* context, grib_accessor* a)
+{
     grib_accessor_data_g1second_order_general_extended_packing_t* self = (grib_accessor_data_g1second_order_general_extended_packing_t*)a;
     if (self->dvalues != NULL) {
         grib_context_free(context, self->dvalues);

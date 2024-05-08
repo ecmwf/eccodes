@@ -11,15 +11,16 @@
 
 #include "grib_accessor_class_g2_mars_labeling.h"
 
-grib_accessor_class_g2_mars_labeling_t _grib_accessor_class_g2_mars_labeling{"g2_mars_labeling"};
+grib_accessor_class_g2_mars_labeling_t _grib_accessor_class_g2_mars_labeling{ "g2_mars_labeling" };
 grib_accessor_class* grib_accessor_class_g2_mars_labeling = &_grib_accessor_class_g2_mars_labeling;
 
 
-void grib_accessor_class_g2_mars_labeling_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g2_mars_labeling_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_gen_t::init(a, l, c);
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    int n                                = 0;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
+    int n                                  = 0;
+    grib_handle* hand                      = grib_handle_of_accessor(a);
 
     self->index                           = grib_arguments_get_long(hand, c, n++);
     self->the_class                       = grib_arguments_get_name(hand, c, n++);
@@ -33,9 +34,10 @@ void grib_accessor_class_g2_mars_labeling_t::init(grib_accessor* a, const long l
     self->typeOfGeneratingProcess         = grib_arguments_get_name(hand, c, n++);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_g2_mars_labeling_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                            = NULL;
+    char* key                              = NULL;
 
     switch (self->index) {
         case 0:
@@ -56,9 +58,10 @@ int grib_accessor_class_g2_mars_labeling_t::unpack_long(grib_accessor* a, long* 
     return grib_get_long(grib_handle_of_accessor(a), key, val);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_g2_mars_labeling_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                            = NULL;
+    char* key = NULL;
 
     switch (self->index) {
         case 0:
@@ -79,11 +82,12 @@ int grib_accessor_class_g2_mars_labeling_t::unpack_string(grib_accessor* a, char
     return grib_get_string(grib_handle_of_accessor(a), key, val, len);
 }
 
-int extra_set(grib_accessor* a, long val){
-    int ret                              = 0;
+static int extra_set(grib_accessor* a, long val)
+{
+    int ret                                = 0;
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    grib_handle* hand                    = grib_handle_of_accessor(a);
-    char stepType[30]                    = {0,};
+    grib_handle* hand                      = grib_handle_of_accessor(a);
+    char stepType[30]                      = {0,};
     size_t stepTypelen                      = 30;
     long derivedForecast                    = -1;
     long productDefinitionTemplateNumberNew = -1;
@@ -301,11 +305,12 @@ int extra_set(grib_accessor* a, long val){
     return ret;
 }
 
-int grib_accessor_class_g2_mars_labeling_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_g2_mars_labeling_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                            = NULL;
-    int ret                              = 0;
-    long lval                            = 0;
+    char* key = NULL;
+    int ret   = 0;
+    long lval = 0;
 
     switch (self->index) {
         case 0:
@@ -334,10 +339,11 @@ int grib_accessor_class_g2_mars_labeling_t::pack_string(grib_accessor* a, const 
     return extra_set(a, lval);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g2_mars_labeling_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                            = NULL;
-    int ret                              = 0;
+    char* key = NULL;
+    int ret   = 0;
 
     switch (self->index) {
         case 0:
@@ -362,16 +368,18 @@ int grib_accessor_class_g2_mars_labeling_t::pack_long(grib_accessor* a, const lo
     return extra_set(a, *val);
 }
 
-int grib_accessor_class_g2_mars_labeling_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_g2_mars_labeling_t::value_count(grib_accessor* a, long* count)
+{
     *count = 1;
     return 0;
 }
 
-int grib_accessor_class_g2_mars_labeling_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_g2_mars_labeling_t::get_native_type(grib_accessor* a)
+{
     grib_accessor_g2_mars_labeling_t* self = (grib_accessor_g2_mars_labeling_t*)a;
-    char* key                            = NULL;
-    int ret                              = 0;
-    int type                             = 0;
+    char* key = NULL;
+    int ret   = 0;
+    int type  = 0;
 
     switch (self->index) {
         case 0:
@@ -389,7 +397,8 @@ int grib_accessor_class_g2_mars_labeling_t::get_native_type(grib_accessor* a){
             return GRIB_INTERNAL_ERROR;
     }
 
-    ret = grib_get_native_type(grib_handle_of_accessor(a), key, &type);    if (ret)
+    ret = grib_get_native_type(grib_handle_of_accessor(a), key, &type);
+    if (ret)
         grib_context_log(a->context, GRIB_LOG_ERROR,
                          "unable to get native type for %s", key);
     return type;

@@ -11,28 +11,31 @@
 
 #include "grib_accessor_class_step_human_readable.h"
 
-grib_accessor_class_step_human_readable_t _grib_accessor_class_step_human_readable{"step_human_readable"};
+grib_accessor_class_step_human_readable_t _grib_accessor_class_step_human_readable{ "step_human_readable" };
 grib_accessor_class* grib_accessor_class_step_human_readable = &_grib_accessor_class_step_human_readable;
 
 
-void grib_accessor_class_step_human_readable_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_step_human_readable_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
-    int n                              = 0;
+    int n = 0;
     grib_handle* h = grib_handle_of_accessor(a);
 
-    self->stepUnits                    = grib_arguments_get_name(h, params, n++);
-    self->step                         = grib_arguments_get_name(h, params, n++);
-    a->length                          = 0;
+    self->stepUnits = grib_arguments_get_name(h, params, n++);
+    self->step      = grib_arguments_get_name(h, params, n++);
+    a->length       = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_step_human_readable_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_step_human_readable_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int get_step_human_readable(grib_handle* h, char* result, size_t* length){
-    int err = 0;
+static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
+{
+    int err     = 0;
     size_t slen = 2;
     long step, hour, minute, second;
 
@@ -41,29 +44,33 @@ int get_step_human_readable(grib_handle* h, char* result, size_t* length){
      */
     if ((err = grib_set_string(h, "stepUnits", "s", &slen)) != GRIB_SUCCESS)
         return err;
-    if ((err = grib_get_long(h, "step", &step)) != GRIB_SUCCESS) 
+    if ((err = grib_get_long(h, "step", &step)) != GRIB_SUCCESS)
         return err;
 
-    hour = step/3600;
-    minute = step/60 % 60;
+    hour   = step / 3600;
+    minute = step / 60 % 60;
     second = step % 60;
     /* sprintf(result, "%ld:%ld:%ld", hour, minute, second); */
 
     if (second) {
         snprintf(result, 1024, "%ldh %ldm %lds", hour, minute, second);
-    } else {
-        if (minute) snprintf(result, 1024, "%ldh %ldm", hour, minute);
-        else snprintf(result, 1024, "%ldh", hour);
+    }
+    else {
+        if (minute)
+            snprintf(result, 1024, "%ldh %ldm", hour, minute);
+        else
+            snprintf(result, 1024, "%ldh", hour);
     }
 
     *length = strlen(result);
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_human_readable_t::unpack_string(grib_accessor* a, char* buffer, size_t* len){
+int grib_accessor_class_step_human_readable_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+{
     grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
-    long stepUnits;
+    long stepUnits = 0;
     int err = 0;
 
     /* Save the current value of stepUnits */

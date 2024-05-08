@@ -11,11 +11,12 @@
 
 #include "grib_accessor_class_g1forecastmonth.h"
 
-grib_accessor_class_g1forecastmonth_t _grib_accessor_class_g1forecastmonth{"g1forecastmonth"};
+grib_accessor_class_g1forecastmonth_t _grib_accessor_class_g1forecastmonth{ "g1forecastmonth" };
 grib_accessor_class* grib_accessor_class_g1forecastmonth = &_grib_accessor_class_g1forecastmonth;
 
 
-void grib_accessor_class_g1forecastmonth_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_g1forecastmonth_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_g1forecastmonth_t* self = (grib_accessor_g1forecastmonth_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
@@ -31,17 +32,19 @@ void grib_accessor_class_g1forecastmonth_t::init(grib_accessor* a, const long l,
     }
 }
 
-void grib_accessor_class_g1forecastmonth_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_g1forecastmonth_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_long(dumper, a, NULL);
 }
 
-int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result){
+static int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_date, long day, long hour, long* result)
+{
     long base_yearmonth = 0;
-    long vyear  = 0;
-    long vmonth = 0;
-    long byear  = 0;
-    long bmonth = 0;
-    long fcmonth = 0;
+    long vyear          = 0;
+    long vmonth         = 0;
+    long byear          = 0;
+    long bmonth         = 0;
+    long fcmonth        = 0;
 
     base_yearmonth = base_date / 100;
 
@@ -58,7 +61,8 @@ int calculate_fcmonth(grib_accessor* a, long verification_yearmonth, long base_d
     return GRIB_SUCCESS;
 }
 
-int unpack_long_edition2(grib_accessor* a, long* val, size_t* len){
+static int unpack_long_edition2(grib_accessor* a, long* val, size_t* len)
+{
     int err = 0;
     grib_handle* h = grib_handle_of_accessor(a);
     long dataDate, verification_yearmonth;
@@ -67,10 +71,10 @@ int unpack_long_edition2(grib_accessor* a, long* val, size_t* len){
     long forecastTime, indicatorOfUnitOfTimeRange;
     double jul_base, jul2, dstep;
 
-    if ((err = grib_get_long(h, "year",  &year))  != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "year", &year)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long(h, "month", &month)) != GRIB_SUCCESS) return err;
-    if ((err = grib_get_long(h, "day",   &day))   != GRIB_SUCCESS) return err;
-    if ((err = grib_get_long(h, "hour",   &hour))   != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "day", &day)) != GRIB_SUCCESS) return err;
+    if ((err = grib_get_long(h, "hour", &hour)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long(h, "minute", &minute)) != GRIB_SUCCESS) return err;
     if ((err = grib_get_long(h, "second", &second)) != GRIB_SUCCESS) return err;
 
@@ -90,19 +94,20 @@ int unpack_long_edition2(grib_accessor* a, long* val, size_t* len){
         return err;
 
     dstep = (((double)forecastTime) * 3600) / 86400; /* as a fraction of a day */
-    jul2 = jul_base + dstep;
+    jul2  = jul_base + dstep;
 
     if ((err = grib_julian_to_datetime(jul2, &year2, &month2, &day2, &hour2, &minute2, &second2)) != GRIB_SUCCESS)
         return err;
 
-    verification_yearmonth = year2*100 + month2;
+    verification_yearmonth = year2 * 100 + month2;
     if ((err = calculate_fcmonth(a, verification_yearmonth, dataDate, day, hour, val)) != GRIB_SUCCESS)
         return err;
 
     return GRIB_SUCCESS;
 }
 
-int unpack_long_edition1(grib_accessor* a, long* val, size_t* len){
+int unpack_long_edition1(grib_accessor* a, long* val, size_t* len)
+{
     int err = 0;
     grib_accessor_g1forecastmonth_t* self = (grib_accessor_g1forecastmonth_t*)a;
 
@@ -110,9 +115,9 @@ int unpack_long_edition1(grib_accessor* a, long* val, size_t* len){
     long base_date              = 0;
     long day                    = 0;
     long hour                   = 0;
-    long gribForecastMonth = 0;
-    long check             = 0;
-    long fcmonth           = 0;
+    long gribForecastMonth      = 0;
+    long check                  = 0;
+    long fcmonth                = 0;
 
     if ((err = grib_get_long_internal(grib_handle_of_accessor(a),
                                       self->verification_yearmonth, &verification_yearmonth)) != GRIB_SUCCESS)
@@ -148,10 +153,11 @@ int unpack_long_edition1(grib_accessor* a, long* val, size_t* len){
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_g1forecastmonth_t::unpack_long(grib_accessor* a, long* val, size_t* len){
-    int err = 0;
+int grib_accessor_class_g1forecastmonth_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
+    int err           = 0;
     grib_handle* hand = grib_handle_of_accessor(a);
-    long edition = 0;
+    long edition      = 0;
 
     if ((err = grib_get_long(hand, "edition", &edition)) != GRIB_SUCCESS)
         return err;
@@ -165,7 +171,8 @@ int grib_accessor_class_g1forecastmonth_t::unpack_long(grib_accessor* a, long* v
 }
 
 /* TODO: Check for a valid date */
-int grib_accessor_class_g1forecastmonth_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_g1forecastmonth_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_g1forecastmonth_t* self = (grib_accessor_g1forecastmonth_t*)a;
     return grib_set_long_internal(grib_handle_of_accessor(a), self->fcmonth, *val);
 }

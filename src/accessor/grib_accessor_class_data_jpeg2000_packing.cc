@@ -428,7 +428,7 @@ cleanup:
 }
 #else
 
-void print_error_feature_not_enabled(grib_context* c){
+static void print_error_feature_not_enabled(grib_context* c){
     grib_context_log(c, GRIB_LOG_ERROR,
                      "JPEG support not enabled. Please rebuild with -DENABLE_JPG=ON");
 }

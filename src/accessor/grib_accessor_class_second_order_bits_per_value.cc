@@ -35,7 +35,7 @@ static const size_t nbits[64] = {
     0x1000000000000000, 0x2000000000000000, 0x4000000000000000, 0x8000000000000000
 };
 
-int number_of_bits(size_t x, long* result){
+static int number_of_bits(size_t x, long* result){
     const size_t* n = nbits;
     const int count = sizeof(nbits) / sizeof(nbits[0]);
     *result         = 0;

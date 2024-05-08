@@ -15,7 +15,8 @@ grib_accessor_class_element_t _grib_accessor_class_element{"element"};
 grib_accessor_class* grib_accessor_class_element = &_grib_accessor_class_element;
 
 
-void grib_accessor_class_element_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_element_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_element_t* self = (grib_accessor_element_t*)a;
     grib_handle* hand           = grib_handle_of_accessor(a);
@@ -25,7 +26,8 @@ void grib_accessor_class_element_t::init(grib_accessor* a, const long l, grib_ar
     self->element = grib_arguments_get_long(hand, c, n++);
 }
 
-int check_element_index(const char* func, const char* array_name, long index, size_t size){
+static int check_element_index(const char* func, const char* array_name, long index, size_t size)
+{
     const grib_context* c = grib_context_get_default();
     if (index < 0 || index >= size) {
         grib_context_log(c, GRIB_LOG_ERROR, "%s: Invalid element index %ld for array '%s'. Value must be between 0 and %zu",
@@ -35,7 +37,8 @@ int check_element_index(const char* func, const char* array_name, long index, si
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_element_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_element_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_element_t* self = (grib_accessor_element_t*)a;
     int ret                     = 0;
     size_t size                 = 0;
@@ -77,7 +80,8 @@ the_end:
     return ret;
 }
 
-int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_element_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_element_t* self = (grib_accessor_element_t*)a;
     int ret                     = 0;
     size_t size                 = 0;
@@ -124,7 +128,8 @@ the_end:
     return ret;
 }
 
-int grib_accessor_class_element_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_element_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_element_t* self = (grib_accessor_element_t*)a;
     int ret                     = 0;
     size_t size                 = 0;
