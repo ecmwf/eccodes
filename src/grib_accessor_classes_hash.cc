@@ -51,8 +51,7 @@ struct accessor_class_hash { const char *name; grib_accessor_class **cclass;};
 
 #endif
 #endif
-static unsigned int
-grib_accessor_classes_get_id (const char *str, size_t len)
+static unsigned int grib_accessor_classes_get_id (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -622,20 +621,19 @@ static const struct accessor_class_hash classes[] =
     {"g1verificationdate", &grib_accessor_class_g1verificationdate}
   };
 
-const struct accessor_class_hash *
-grib_accessor_classes_hash (const char *str, size_t len)
-{
-  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+static const struct accessor_class_hash* grib_accessor_classes_hash(const char *str, size_t len)
     {
       unsigned int key = grib_accessor_classes_get_id (str, len);
 
-      if (key <= MAX_HASH_VALUE)
+#ifdef DEBUG
         {
-          const char *s = classes[key].name;
-
-          if (*str == *s && !strcmp (str + 1, s + 1))
-            return &classes[key];
-        }
+        const char *s;
+        Assert( len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH );
+        Assert( key <= MAX_HASH_VALUE );
+        s = classes[key].name;
+        Assert( *str == *s && strcmp(str + 1, s + 1)==0 );
     }
-  return 0;
+#endif
+
+            return &classes[key];
 }
