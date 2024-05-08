@@ -208,7 +208,7 @@ void grib_accessor_gen_t::destroy(grib_context* ct)
 
 
 grib_accessor_class_gen_t  _grib_accessor_class_gen = grib_accessor_class_gen_t("gen");
-grib_accessor_class_gen_t* grib_accessor_class_gen = &_grib_accessor_class_gen;
+grib_accessor_class* grib_accessor_class_gen = &_grib_accessor_class_gen;
 
 void grib_accessor_class_gen_t::init(grib_accessor* a, const long len, grib_arguments* param)
 {
