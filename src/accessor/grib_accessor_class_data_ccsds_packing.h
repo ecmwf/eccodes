@@ -31,7 +31,6 @@ public:
 };
 
 
-// TODO(maee): if libaec is not available, this class should not be defined
 class grib_accessor_class_data_ccsds_packing_t : public grib_accessor_class_values_t
 {
 public:
