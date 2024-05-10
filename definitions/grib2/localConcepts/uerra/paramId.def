@@ -93,6 +93,20 @@
 	 typeOfSecondFixedSurface = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Geopotential
+'129' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Temperature
+'130' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #U component of wind
 '131' = {
 	 discipline = 0 ;
@@ -105,6 +119,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Specific humidity
+'133' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Surface pressure

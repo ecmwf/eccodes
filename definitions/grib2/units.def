@@ -4916,6 +4916,34 @@
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean snow depth
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 11 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean snow cover
+'%' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 42 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean geopotential
+'m**2 s**-2' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 4 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean temperature
+'K' = {
+	 discipline = 0 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean U component of wind
 'm s**-1' = {
 	 discipline = 0 ;
@@ -4930,12 +4958,26 @@
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
+#Time-mean specific humidity
+'kg kg**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 1 ;
+	 parameterNumber = 0 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
 #Time-mean surface pressure
 'Pa' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
 	 typeOfFirstFixedSurface = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean vertical velocity
+'Pa s**-1' = {
+	 discipline = 0 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column water
@@ -4969,6 +5011,13 @@
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
+	 typeOfStatisticalProcessing = 0 ;
+	}
+#Time-mean boundary layer height
+'m' = {
+	 discipline = 0 ;
+	 parameterCategory = 3 ;
+	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre U wind component

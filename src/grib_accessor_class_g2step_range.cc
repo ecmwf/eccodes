@@ -211,6 +211,10 @@ static int pack_string(grib_accessor* a, const char* val, size_t* len)
     if ((ret = grib_get_long_internal(h, "forceStepUnits", &force_step_units)) != GRIB_SUCCESS)
         return ret;
 
+    if (h->loader) { // h->loader is set only when rebuilding or reparsing
+        force_step_units = 255; // See ECC-1768 and ECC-1800
+    }
+
     try {
         std::vector<eccodes::Step> steps = parse_range(val, eccodes::Unit{force_step_units});
         if (steps.size() == 0) {
