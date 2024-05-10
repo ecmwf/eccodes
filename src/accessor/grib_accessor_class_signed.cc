@@ -11,24 +11,28 @@
 
 #include "grib_accessor_class_signed.h"
 
-grib_accessor_class_signed_t _grib_accessor_class_signed{"signed"};
+grib_accessor_class_signed_t _grib_accessor_class_signed{ "signed" };
 grib_accessor_class* grib_accessor_class_signed = &_grib_accessor_class_signed;
 
 
-void grib_accessor_class_signed_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_signed_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_signed_t* self = (grib_accessor_signed_t*)a;
-    long count                 = 0;
+    long count                   = 0;
 
     self->arg = arg;
-    a->value_count(&count);    a->length    = len * count;
+    a->value_count(&count);
+    a->length    = len * count;
     self->nbytes = len;
     Assert(a->length >= 0);
 }
 
-void grib_accessor_class_signed_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_signed_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     long rlen = 0;
-    a->value_count(&rlen);    if (rlen == 1)
+    a->value_count(&rlen);
+    if (rlen == 1)
         grib_dump_long(dumper, a, NULL);
     else
         grib_dump_values(dumper, a);
@@ -42,17 +46,19 @@ static const long ones[] = {
     -0x7fffffff,
 };
 
-int grib_accessor_class_signed_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_signed_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_signed_t* self = (grib_accessor_signed_t*)a;
-    unsigned long rlen         = 0;
-    int err                    = 0;
-    long count                 = 0;
-    unsigned long i            = 0;
-    grib_handle* hand          = grib_handle_of_accessor(a);
-    long pos                   = a->offset;
-    long missing               = 0;
+    unsigned long rlen           = 0;
+    int err                      = 0;
+    long count                   = 0;
+    unsigned long i              = 0;
+    grib_handle* hand            = grib_handle_of_accessor(a);
+    long pos                     = a->offset;
+    long missing                 = 0;
 
-    err = a->value_count(&count);    if (err)
+    err = a->value_count(&count);
+    if (err)
         return err;
     rlen = count;
 
@@ -79,19 +85,21 @@ int grib_accessor_class_signed_t::unpack_long(grib_accessor* a, long* val, size_
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_signed_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_signed_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_signed_t* self = (grib_accessor_signed_t*)a;
-    int ret                    = 0;
-    long off                   = 0;
-    unsigned long rlen         = 0;
-    int err                    = 0;
-    long count                 = 0;
-    size_t buflen              = 0;
-    unsigned char* buf         = NULL;
-    unsigned long i            = 0;
-    long missing               = 0;
 
-    err = a->value_count(&count);    if (err)
+    int ret            = 0;
+    long off           = 0;
+    unsigned long rlen = 0;
+    long count         = 0;
+    size_t buflen      = 0;
+    unsigned char* buf = NULL;
+    unsigned long i    = 0;
+    long missing       = 0;
+
+    int err = a->value_count(&count);
+    if (err)
         return err;
     rlen = count;
 
@@ -111,16 +119,17 @@ int grib_accessor_class_signed_t::pack_long(grib_accessor* a, const long* val, s
         if (missing) {
             if (v == GRIB_MISSING_LONG)
                 v = missing;
-        } else {
+        }
+        else {
             // ECC-1605: Check overflow/underflow
-            const int nbits = self->nbytes * 8;
-            const long minval = -(1L << (nbits-1)) + 1;
-            const long maxval = (1L << (nbits-1)) - 1;
-            //printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", a->name, v, minval, maxval);
+            const int nbits   = self->nbytes * 8;
+            const long minval = -(1L << (nbits - 1)) + 1;
+            const long maxval = (1L << (nbits - 1)) - 1;
+            // printf("  key=%s: v=%ld  (minval=%ld  maxval=%ld)\n", a->name, v, minval, maxval);
             if (v > maxval || v < minval) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                     "Key \"%s\": Trying to encode value of %ld but the allowable range is %ld to %ld (number of bits=%d)",
-                     a->name, v, minval, maxval, nbits);
+                                 "Key \"%s\": Trying to encode value of %ld but the allowable range is %ld to %ld (number of bits=%d)",
+                                 a->name, v, minval, maxval, nbits);
                 return GRIB_ENCODING_ERROR;
             }
         }
@@ -156,13 +165,15 @@ int grib_accessor_class_signed_t::pack_long(grib_accessor* a, const long* val, s
     return ret;
 }
 
-long grib_accessor_class_signed_t::byte_count(grib_accessor* a){
+long grib_accessor_class_signed_t::byte_count(grib_accessor* a)
+{
     return a->length;
 }
 
-int grib_accessor_class_signed_t::value_count(grib_accessor* a, long* len){
+int grib_accessor_class_signed_t::value_count(grib_accessor* a, long* len)
+{
     grib_accessor_signed_t* self = (grib_accessor_signed_t*)a;
-    *len                       = 0;
+    *len = 0;
     if (!self->arg) {
         *len = 1;
         return 0;
@@ -170,19 +181,24 @@ int grib_accessor_class_signed_t::value_count(grib_accessor* a, long* len){
     return grib_get_long_internal(grib_handle_of_accessor(a), grib_arguments_get_name(a->parent->h, self->arg, 0), len);
 }
 
-long grib_accessor_class_signed_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_signed_t::byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-void grib_accessor_class_signed_t::update_size(grib_accessor* a, size_t s){
+void grib_accessor_class_signed_t::update_size(grib_accessor* a, size_t s)
+{
     a->length = s;
     Assert(a->length >= 0);
 }
 
-long grib_accessor_class_signed_t::next_offset(grib_accessor* a){
-    return a->byte_offset() + a->byte_count();}
+long grib_accessor_class_signed_t::next_offset(grib_accessor* a)
+{
+    return a->byte_offset() + a->byte_count();
+}
 
-int grib_accessor_class_signed_t::is_missing(grib_accessor* a){
+int grib_accessor_class_signed_t::is_missing(grib_accessor* a)
+{
     int i                = 0;
     unsigned char ff     = 0xff;
     unsigned long offset = a->offset;

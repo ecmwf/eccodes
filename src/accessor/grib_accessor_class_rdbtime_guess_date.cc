@@ -15,10 +15,11 @@ grib_accessor_class_rdbtime_guess_date_t _grib_accessor_class_rdbtime_guess_date
 grib_accessor_class* grib_accessor_class_rdbtime_guess_date = &_grib_accessor_class_rdbtime_guess_date;
 
 
-void grib_accessor_class_rdbtime_guess_date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_rdbtime_guess_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_rdbtime_guess_date_t* self = (grib_accessor_rdbtime_guess_date_t*)a;
-    int n                                  = 0;
+    int n = 0;
 
     self->typicalYear  = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->typicalMonth = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -29,14 +30,14 @@ void grib_accessor_class_rdbtime_guess_date_t::init(grib_accessor* a, const long
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
 }
 
-int grib_accessor_class_rdbtime_guess_date_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_rdbtime_guess_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_rdbtime_guess_date_t* self = (grib_accessor_rdbtime_guess_date_t*)a;
-    grib_handle* h                         = grib_handle_of_accessor(a);
-    int ret                                = 0;
+    grib_handle* h = grib_handle_of_accessor(a);
     long typicalYear, typicalMonth, typicalDay, rdbDay;
     long rdbYear, rdbMonth;
 
-    ret = grib_get_long(h, self->typicalYear, &typicalYear);
+    int ret = grib_get_long(h, self->typicalYear, &typicalYear);
     if (ret)
         return ret;
     ret = grib_get_long(h, self->typicalMonth, &typicalMonth);
@@ -70,7 +71,8 @@ int grib_accessor_class_rdbtime_guess_date_t::unpack_long(grib_accessor* a, long
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_rdbtime_guess_date_t::pack_long(grib_accessor* a, const long* v, size_t* len){
+int grib_accessor_class_rdbtime_guess_date_t::pack_long(grib_accessor* a, const long* v, size_t* len)
+{
     /* do nothing*/
     return GRIB_SUCCESS;
 }

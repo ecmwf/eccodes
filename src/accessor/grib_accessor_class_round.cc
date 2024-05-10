@@ -11,11 +11,12 @@
 
 #include "grib_accessor_class_round.h"
 
-grib_accessor_class_round_t _grib_accessor_class_round{"round"};
+grib_accessor_class_round_t _grib_accessor_class_round{ "round" };
 grib_accessor_class* grib_accessor_class_round = &_grib_accessor_class_round;
 
 
-int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_round_t* self = (grib_accessor_round_t*)a;
 
     int ret = GRIB_SUCCESS;
@@ -42,7 +43,8 @@ int grib_accessor_class_round_t::unpack_double(grib_accessor* a, double* val, si
     return ret;
 }
 
-int grib_accessor_class_round_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_round_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     char result[1024];
     int ret       = GRIB_SUCCESS;
     size_t replen = 1;

@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_scale.h"
 
-grib_accessor_class_scale_t _grib_accessor_class_scale{"scale"};
+grib_accessor_class_scale_t _grib_accessor_class_scale{ "scale" };
 grib_accessor_class* grib_accessor_class_scale = &_grib_accessor_class_scale;
 
 
-void grib_accessor_class_scale_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_scale_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_double_t::init(a, l, c);
     grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    int n                     = 0;
+    int n = 0;
 
     self->value      = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
     self->multiplier = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
@@ -26,12 +27,13 @@ void grib_accessor_class_scale_t::init(grib_accessor* a, const long l, grib_argu
     self->truncating = grib_arguments_get_name(grib_handle_of_accessor(a), c, n++);
 }
 
-int grib_accessor_class_scale_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_scale_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    int ret                   = 0;
-    long value                = 0;
-    long multiplier           = 0;
-    long divisor              = 0;
+    int ret                     = 0;
+    long value                  = 0;
+    long multiplier             = 0;
+    long divisor                = 0;
 
     if (*len < 1) {
         ret = GRIB_ARRAY_TOO_SMALL;
@@ -61,14 +63,16 @@ int grib_accessor_class_scale_t::unpack_double(grib_accessor* a, double* val, si
     return ret;
 }
 
-int grib_accessor_class_scale_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_scale_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     const double dval = (double)*val;
     return pack_double(a, &dval, len);
 }
 
-int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    int ret                   = 0;
+    int ret = 0;
 
     long value      = 0;
     long divisor    = 0;
@@ -115,9 +119,10 @@ int grib_accessor_class_scale_t::pack_double(grib_accessor* a, const double* val
     return ret;
 }
 
-int grib_accessor_class_scale_t::is_missing(grib_accessor* a){
+int grib_accessor_class_scale_t::is_missing(grib_accessor* a)
+{
     grib_accessor_scale_t* self = (grib_accessor_scale_t*)a;
-    grib_accessor* av         = grib_find_accessor(grib_handle_of_accessor(a), self->value);
+    grib_accessor* av = grib_find_accessor(grib_handle_of_accessor(a), self->value);
 
     if (!av)
         return GRIB_NOT_FOUND;

@@ -11,36 +11,39 @@
 
 #include "grib_accessor_class_scale_values.h"
 
-grib_accessor_class_scale_values_t _grib_accessor_class_scale_values{"scale_values"};
+grib_accessor_class_scale_values_t _grib_accessor_class_scale_values{ "scale_values" };
 grib_accessor_class* grib_accessor_class_scale_values = &_grib_accessor_class_scale_values;
 
 
-void grib_accessor_class_scale_values_t::init(grib_accessor* a, const long l, grib_arguments* args){
+void grib_accessor_class_scale_values_t::init(grib_accessor* a, const long l, grib_arguments* args)
+{
     grib_accessor_class_double_t::init(a, l, args);
-    int n                            = 0;
+    int n = 0;
     grib_accessor_scale_values_t* self = (grib_accessor_scale_values_t*)a;
-    self->values                     = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
-    self->missingValue               = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->values                       = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
+    self->missingValue                 = grib_arguments_get_name(grib_handle_of_accessor(a), args, n++);
     a->flags |= GRIB_ACCESSOR_FLAG_FUNCTION;
     a->length = 0;
 }
 
-int grib_accessor_class_scale_values_t::unpack_double(grib_accessor* a, double* val, size_t* len){
-    int ret = 0;
+int grib_accessor_class_scale_values_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
+    int ret = GRIB_SUCCESS;
     *val    = 1;
     *len    = 1;
     return ret;
 }
 
-int grib_accessor_class_scale_values_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_scale_values_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     double* values            = NULL;
     double missingValue       = 0;
     long missingValuesPresent = 0;
     size_t size               = 0;
     int ret = 0, i = 0;
     grib_accessor_scale_values_t* self = (grib_accessor_scale_values_t*)a;
-    const grib_context* c            = a->context;
-    grib_handle* h                   = grib_handle_of_accessor(a);
+    const grib_context* c              = a->context;
+    grib_handle* h                     = grib_handle_of_accessor(a);
 
     if (*val == 1)
         return GRIB_SUCCESS;

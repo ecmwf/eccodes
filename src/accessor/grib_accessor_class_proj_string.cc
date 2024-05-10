@@ -11,14 +11,15 @@
 
 #include "grib_accessor_class_proj_string.h"
 
-grib_accessor_class_proj_string_t _grib_accessor_class_proj_string{"proj_string"};
+grib_accessor_class_proj_string_t _grib_accessor_class_proj_string{ "proj_string" };
 grib_accessor_class* grib_accessor_class_proj_string = &_grib_accessor_class_proj_string;
 
 
-void grib_accessor_class_proj_string_t::init(grib_accessor* a, const long len, grib_arguments* arg){
+void grib_accessor_class_proj_string_t::init(grib_accessor* a, const long len, grib_arguments* arg)
+{
     grib_accessor_class_gen_t::init(a, len, arg);
     grib_accessor_proj_string_t* self = (grib_accessor_proj_string_t*)a;
-    grib_handle* h                  = grib_handle_of_accessor(a);
+    grib_handle* h                    = grib_handle_of_accessor(a);
 
     self->grid_type = grib_arguments_get_name(h, arg, 0);
     self->endpoint  = grib_arguments_get_long(h, arg, 1);
@@ -27,7 +28,8 @@ void grib_accessor_class_proj_string_t::init(grib_accessor* a, const long len, g
     a->flags |= GRIB_ACCESSOR_FLAG_EDITION_SPECIFIC;
 }
 
-int grib_accessor_class_proj_string_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_proj_string_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
@@ -35,13 +37,14 @@ int grib_accessor_class_proj_string_t::get_native_type(grib_accessor* a){
 typedef int (*proj_func)(grib_handle*, char*);
 struct proj_mapping
 {
-    const char* gridType; // key gridType
-    proj_func func;       // function to compute proj string
+    const char* gridType;  // key gridType
+    proj_func func;        // function to compute proj string
 };
 typedef struct proj_mapping proj_mapping;
 
 // This should only be called for GRID POINT data (not spherical harmonics etc)
-static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor){
+static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor)
+{
     int err = 0;
     if (grib_is_earth_oblate(h)) {
         if ((err = grib_get_double_internal(h, "earthMinorAxisInMetres", pMinor)) != GRIB_SUCCESS) return err;
@@ -56,19 +59,21 @@ static int get_major_minor_axes(grib_handle* h, double* pMajor, double* pMinor){
 }
 
 // Caller must have allocated enough space in the 'result' argument
-static int get_earth_shape(grib_handle* h, char* result){
+static int get_earth_shape(grib_handle* h, char* result)
+{
     int err      = 0;
     double major = 0, minor = 0;
     if ((err = get_major_minor_axes(h, &major, &minor)) != GRIB_SUCCESS)
         return err;
     if (major == minor)
-        snprintf(result, 128, "+R=%lf", major); // spherical
+        snprintf(result, 128, "+R=%lf", major);  // spherical
     else
-        snprintf(result, 128, "+a=%lf +b=%lf", major, minor); // oblate
+        snprintf(result, 128, "+a=%lf +b=%lf", major, minor);  // oblate
     return err;
 }
 
-static int proj_space_view(grib_handle* h, char* result){
+static int proj_space_view(grib_handle* h, char* result)
+{
     return GRIB_NOT_IMPLEMENTED;
     //     int err        = 0;
     //     char shape[128] = {0,};
@@ -84,18 +89,22 @@ static int proj_space_view(grib_handle* h, char* result){
     //     return err;
 }
 
-static int proj_albers(grib_handle* h, char* result){
+static int proj_albers(grib_handle* h, char* result)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
-static int proj_transverse_mercator(grib_handle* h, char* result){
+static int proj_transverse_mercator(grib_handle* h, char* result)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
-static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result){
+static int proj_equatorial_azimuthal_equidistant(grib_handle* h, char* result)
+{
     return GRIB_NOT_IMPLEMENTED;
 }
 
-static int proj_lambert_conformal(grib_handle* h, char* result){
-    int err        = 0;
+static int proj_lambert_conformal(grib_handle* h, char* result)
+{
+    int err         = 0;
     char shape[128] = {0,};
     double LoVInDegrees = 0, LaDInDegrees = 0, Latin1InDegrees = 0, Latin2InDegrees = 0;
 
@@ -110,12 +119,13 @@ static int proj_lambert_conformal(grib_handle* h, char* result){
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
     snprintf(result, 1024, "+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf %s",
-            LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
+             LoVInDegrees, LaDInDegrees, Latin1InDegrees, Latin2InDegrees, shape);
     return err;
 }
 
-static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result){
-    int err        = 0;
+static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result)
+{
+    int err         = 0;
     char shape[128] = {0,};
     double standardParallel = 0, centralLongitude = 0;
 
@@ -126,11 +136,12 @@ static int proj_lambert_azimuthal_equal_area(grib_handle* h, char* result){
     if ((err = grib_get_double_internal(h, "centralLongitudeInDegrees", &centralLongitude)) != GRIB_SUCCESS)
         return err;
     snprintf(result, 1024, "+proj=laea +lon_0=%lf +lat_0=%lf %s",
-            centralLongitude, standardParallel, shape);
+             centralLongitude, standardParallel, shape);
     return err;
 }
 
-static int proj_polar_stereographic(grib_handle* h, char* result){
+static int proj_polar_stereographic(grib_handle* h, char* result)
+{
     int err                 = 0;
     double centralLongitude = 0, centralLatitude = 0;
     int has_northPole         = 0;
@@ -147,33 +158,35 @@ static int proj_polar_stereographic(grib_handle* h, char* result){
         return err;
     has_northPole = ((projectionCentreFlag & 128) == 0);
     snprintf(result, 1024, "+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 %s",
-            centralLatitude, has_northPole ? "90" : "-90", centralLongitude, shape);
+             centralLatitude, has_northPole ? "90" : "-90", centralLongitude, shape);
     return err;
 }
 
 // ECC-1552: This is for regular_ll, regular_gg, reduced_ll, reduced_gg
 //           These are not 'projected' grids!
-static int proj_unprojected(grib_handle* h, char* result){
+static int proj_unprojected(grib_handle* h, char* result)
+{
     int err = 0;
-    //char shape[128] = {0,};
-    //if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
-    //snprintf(result, 1024, "+proj=longlat %s", shape);
+    // char shape[128] = {0,};
+    // if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS) return err;
+    // snprintf(result, 1024, "+proj=longlat %s", shape);
     snprintf(result, 1024, "+proj=longlat +datum=WGS84 +no_defs +type=crs");
 
     return err;
 }
 
-static int proj_mercator(grib_handle* h, char* result){
+static int proj_mercator(grib_handle* h, char* result)
+{
     int err             = 0;
     double LaDInDegrees = 0;
-    char shape[128]      = {0,};
+    char shape[128]     = {0,};
 
     if ((err = grib_get_double_internal(h, "LaDInDegrees", &LaDInDegrees)) != GRIB_SUCCESS)
         return err;
     if ((err = get_earth_shape(h, shape)) != GRIB_SUCCESS)
         return err;
     snprintf(result, 1024, "+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 %s",
-            LaDInDegrees, shape);
+             LaDInDegrees, shape);
     return err;
 }
 
@@ -195,17 +208,18 @@ static proj_mapping proj_mappings[] = {
 
 #define ENDPOINT_SOURCE 0
 #define ENDPOINT_TARGET 1
-int grib_accessor_class_proj_string_t::unpack_string(grib_accessor* a, char* v, size_t* len){
+int grib_accessor_class_proj_string_t::unpack_string(grib_accessor* a, char* v, size_t* len)
+{
     grib_accessor_proj_string_t* self = (grib_accessor_proj_string_t*)a;
     int err = 0, found = 0;
-    size_t i = 0;
+    size_t i           = 0;
     char grid_type[64] = {0,};
     grib_handle* h = grib_handle_of_accessor(a);
-    size_t size = sizeof(grid_type) / sizeof(*grid_type);
+    size_t size    = sizeof(grid_type) / sizeof(*grid_type);
 
     Assert(self->endpoint == ENDPOINT_SOURCE || self->endpoint == ENDPOINT_TARGET);
 
-    size_t l = 100; // Safe bet
+    size_t l = 100;  // Safe bet
     if (*len < l) {
         const char* cclass_name = a->cclass->name;
         grib_context_log(a->context, GRIB_LOG_ERROR,
