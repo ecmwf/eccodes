@@ -15,7 +15,8 @@ grib_accessors_list* grib_accessors_list_create(grib_context* c)
     return (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
 }
 
-void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al) {
+void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al)
+{
     grib_accessors_list* tmp;
     while (al) {
         tmp = al->next_;
@@ -70,7 +71,7 @@ grib_accessors_list::~grib_accessors_list()
     grib_accessors_list* al = this;
     while (al) {
         tmp = al->next_;
-        //grib_accessor_delete(c, al->accessor);
+        // grib_accessor_delete(c, al->accessor);
         grib_context_free(c, al);
         al = tmp;
     }

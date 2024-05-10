@@ -8,13 +8,8 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-/***************************
- * Enrico Fucile
- *************************/
-
 #pragma once
 
-#include "grib_api_internal.h"
 #include "grib_accessor_class_gen.h"
 
 class grib_accessor_iterator_t : public grib_accessor_gen_t
@@ -31,6 +26,5 @@ public:
     void init(grib_accessor* a, const long l, grib_arguments* args) override;
     void dump(grib_accessor* a, grib_dumper* dumper) override;
 };
-
 
 //grib_iterator* grib_iterator_new(const grib_handle* ch, unsigned long flags, int* error)

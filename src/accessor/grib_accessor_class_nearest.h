@@ -28,5 +28,4 @@ public:
     void dump(grib_accessor* a, grib_dumper* dumper) override;
 };
 
-
 //grib_nearest* grib_nearest_new(const grib_handle* ch, int* error);
