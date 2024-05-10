@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_section_padding_h
-#define eccodes_accessor_section_padding_h
+#pragma once
 
 #include "grib_accessor_class_padding.h"
 
@@ -29,4 +28,3 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
     size_t preferred_size(grib_accessor*, int) override;
 };
-#endif /* eccodes_accessor_section_padding_h */

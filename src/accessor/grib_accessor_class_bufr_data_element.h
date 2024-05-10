@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_bufr_data_element_h
-#define eccodes_accessor_bufr_data_element_h
+#pragma once
 
 #include "grib_accessor_class_gen.h"
 
@@ -53,4 +52,3 @@ public:
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
     grib_accessor* make_clone(grib_accessor*, grib_section*, int*) override;
 };
-#endif /* eccodes_accessor_bufr_data_element_h */

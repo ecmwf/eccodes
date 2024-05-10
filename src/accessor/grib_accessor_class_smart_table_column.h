@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_smart_table_column_h
-#define eccodes_accessor_smart_table_column_h
+#pragma once
 
 #include "grib_accessor_class_gen.h"
 
@@ -34,4 +33,3 @@ public:
     void dump(grib_accessor*, grib_dumper*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_smart_table_column_h */

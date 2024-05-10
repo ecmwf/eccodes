@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_signed_bits_h
-#define eccodes_accessor_signed_bits_h
+#pragma once
 
 #include "grib_accessor_class_long.h"
 
@@ -36,4 +35,3 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
     void update_size(grib_accessor*, size_t) override;
 };
-#endif /* eccodes_accessor_signed_bits_h */

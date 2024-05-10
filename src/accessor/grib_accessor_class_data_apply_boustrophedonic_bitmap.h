@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_apply_boustrophedonic_bitmap_h
-#define eccodes_accessor_data_apply_boustrophedonic_bitmap_h
+#pragma once
 
 #include "grib_accessor_class_gen.h"
 
@@ -41,4 +39,3 @@ public:
     int unpack_double_element(grib_accessor*, size_t i, double* val) override;
     int unpack_double_element_set(grib_accessor*, const size_t* index_array, size_t len, double* val_array) override;
 };
-#endif /* eccodes_accessor_data_apply_boustrophedonic_bitmap_h */

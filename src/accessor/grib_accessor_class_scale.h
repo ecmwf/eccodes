@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_scale_h
-#define eccodes_accessor_scale_h
+#pragma once
 
 #include "grib_accessor_class_double.h"
 
@@ -35,4 +34,3 @@ public:
     int unpack_double(grib_accessor*, double* val, size_t* len) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_scale_h */

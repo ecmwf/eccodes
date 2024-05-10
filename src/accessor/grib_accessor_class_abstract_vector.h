@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_abstract_vector_h
-#define eccodes_accessor_abstract_vector_h
+#pragma once
 
 #include "grib_accessor_class_double.h"
 
@@ -28,4 +27,3 @@ public:
     grib_accessor_class_abstract_vector_t(const char* name) : grib_accessor_class_double_t(name) {}
     grib_accessor* create_empty_accessor() override { return new grib_accessor_abstract_vector_t{}; }
 };
-#endif /* eccodes_accessor_abstract_vector_h */

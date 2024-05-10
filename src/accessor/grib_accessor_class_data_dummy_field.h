@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_data_dummy_field_h
-#define eccodes_accessor_data_dummy_field_h
+#pragma once
 
 #include "grib_accessor_class_data_g1simple_packing.h"
 
@@ -33,4 +31,3 @@ public:
     int value_count(grib_accessor*, long*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_data_dummy_field_h */

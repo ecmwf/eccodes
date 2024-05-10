@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_check_internal_version_h
-#define eccodes_accessor_check_internal_version_h
+#pragma once
 
 #include "grib_accessor_class_ascii.h"
 
@@ -29,4 +28,3 @@ public:
     int value_count(grib_accessor*, long*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_check_internal_version_h */

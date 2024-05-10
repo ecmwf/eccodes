@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_bufr_data_array_h
-#define eccodes_accessor_bufr_data_array_h
+#pragma once
 
 #include "grib_accessor_class_gen.h"
 
@@ -89,4 +87,3 @@ grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a
 grib_trie_with_rank* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a);
 void accessor_bufr_data_array_set_unpackMode(grib_accessor* a, int unpackMode);
 
-#endif /* eccodes_accessor_bufr_data_array_h */

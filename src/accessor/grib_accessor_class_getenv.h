@@ -8,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_getenv_h
-#define eccodes_accessor_getenv_h
+#pragma once
 
 #include "grib_accessor_class_ascii.h"
 
@@ -33,4 +32,3 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
 
-#endif /* eccodes_accessor_getenv_h */

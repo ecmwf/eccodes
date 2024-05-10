@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_g1end_of_interval_monthly_h
-#define eccodes_accessor_g1end_of_interval_monthly_h
+#pragma once
 
 #include "grib_accessor_class_abstract_vector.h"
 
@@ -32,4 +31,3 @@ public:
     void init(grib_accessor*, const long, grib_arguments*) override;
     int compare(grib_accessor*, grib_accessor*) override;
 };
-#endif /* eccodes_accessor_g1end_of_interval_monthly_h */

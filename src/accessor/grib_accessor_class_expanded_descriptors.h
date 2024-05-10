@@ -1,4 +1,3 @@
-
 /*
  * (C) Copyright 2005- ECMWF.
  *
@@ -9,8 +8,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_expanded_descriptors_h
-#define eccodes_accessor_expanded_descriptors_h
+#pragma once
 
 #include "grib_accessor_class_long.h"
 
@@ -43,4 +41,3 @@ public:
     void destroy(grib_context*, grib_accessor*) override;
     void init(grib_accessor*, const long, grib_arguments*) override;
 };
-#endif /* eccodes_accessor_expanded_descriptors_h */

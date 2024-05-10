@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_uint32_h
-#define eccodes_accessor_uint32_h
+#pragma once
 
 #include "grib_accessor_class_gen.h"
 
@@ -28,4 +27,3 @@ public:
     int get_native_type(grib_accessor*) override;
     int unpack_long(grib_accessor*, long* val, size_t* len) override;
 };
-#endif /* eccodes_accessor_uint32_h */

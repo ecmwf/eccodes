@@ -9,8 +9,7 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 
-#ifndef eccodes_accessor_message_h
-#define eccodes_accessor_message_h
+#pragma once
 
 #include "grib_accessor_class_bytes.h"
 
@@ -32,4 +31,3 @@ public:
     void update_size(grib_accessor*, size_t) override;
     void resize(grib_accessor*,size_t) override;
 };
-#endif /* eccodes_accessor_message_h */
