@@ -384,7 +384,7 @@ static void search_from_accessors_list(grib_accessors_list* al, const grib_acces
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                result->push(accessor_result, al->rank);
+                result->push(accessor_result, al->rank());
             }
         }
         al = al->next_;
@@ -398,7 +398,7 @@ static void search_from_accessors_list(grib_accessors_list* al, const grib_acces
                 accessor_result = al->accessor;
             }
             if (accessor_result) {
-                result->push(accessor_result, al->rank);
+                result->push(accessor_result, al->rank());
             }
         }
     }
@@ -453,7 +453,7 @@ static void grib_find_same_and_push(grib_accessors_list* al, grib_accessor* a)
 {
     if (a) {
         grib_find_same_and_push(al, a->same);
-        al->push(a, al->rank);
+        al->push(a, al->rank());
     }
 }
 

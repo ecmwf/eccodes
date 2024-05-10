@@ -46,14 +46,14 @@ void grib_accessors_list::push(grib_accessor* a, int rank)
     if (last && last->accessor) {
         last->next_           = (grib_accessors_list*)grib_context_malloc_clear(c, sizeof(grib_accessors_list));
         last->next_->accessor = a;
-        last->next_->prev_     = last;
-        last->next_->rank     = rank;
-        this->last_             = last->next_;
+        last->next_->prev_    = last;
+        last->next_->rank_    = rank;
+        this->last_           = last->next_;
     }
     else {
         this->accessor = a;
-        this->rank     = rank;
-        this->last_     = this;
+        this->rank_    = rank;
+        this->last_    = this;
     }
 }
 
