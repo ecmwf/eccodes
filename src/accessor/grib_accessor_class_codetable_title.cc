@@ -12,31 +12,34 @@
 #include "grib_accessor_class_codetable_title.h"
 #include "grib_accessor_class_codetable.h"
 
-grib_accessor_class_codetable_title_t _grib_accessor_class_codetable_title{"codetable_title"};
+grib_accessor_class_codetable_title_t _grib_accessor_class_codetable_title{ "codetable_title" };
 grib_accessor_class* grib_accessor_class_codetable_title = &_grib_accessor_class_codetable_title;
 
-void grib_accessor_class_codetable_title_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_codetable_title_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_codetable_title_t* self = (grib_accessor_codetable_title_t*)a;
-    int n                               = 0;
-    self->codetable                     = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
-    a->length                           = 0;
+    int n = 0;
+    self->codetable = grib_arguments_get_name(grib_handle_of_accessor(a), params, n++);
+    a->length = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_codetable_title_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_codetable_title_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_codetable_title_t::unpack_string(grib_accessor* a, char* buffer, size_t* len){
+int grib_accessor_class_codetable_title_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+{
     grib_accessor_codetable_title_t* self = (grib_accessor_codetable_title_t*)a;
-    grib_codetable* table               = NULL;
+    grib_codetable* table = NULL;
 
     size_t size = 1;
     long value;
     int err = GRIB_SUCCESS;
     char tmp[1024];
-    size_t l                    = 1024;
+    size_t l = 1024;
     grib_accessor_codetable_t* ca = (grib_accessor_codetable_t*)grib_find_accessor(grib_handle_of_accessor(a), self->codetable);
 
     if ((err = ((grib_accessor*)ca)->unpack_long(&value, &size)) != GRIB_SUCCESS)

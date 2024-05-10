@@ -10,7 +10,7 @@
 
 #include "grib_accessor_class_bufr_data_element.h"
 
-grib_accessor_class_bufr_data_element_t _grib_accessor_class_bufr_data_element{"bufr_data_element"};
+grib_accessor_class_bufr_data_element_t _grib_accessor_class_bufr_data_element{ "bufr_data_element" };
 grib_accessor_class* grib_accessor_class_bufr_data_element = &_grib_accessor_class_bufr_data_element;
 
 grib_accessor* grib_accessor_class_bufr_data_element_t::make_clone(grib_accessor* a, grib_section* s, int* err)
@@ -21,7 +21,9 @@ grib_accessor* grib_accessor_class_bufr_data_element_t::make_clone(grib_accessor
     grib_accessor_bufr_data_element_t* self;
     char* copied_name = NULL;
     int i;
-    grib_action creator = {0,};
+    grib_action creator = {
+        0,
+    };
     creator.op         = (char*)"bufr_data_element";
     creator.name_space = (char*)"";
     creator.set        = 0;
@@ -64,67 +66,69 @@ grib_accessor* grib_accessor_class_bufr_data_element_t::make_clone(grib_accessor
 void accessor_bufr_data_element_set_index(grib_accessor* a, long index)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->index = index;
+    self->index                             = index;
 }
 
 void accessor_bufr_data_element_set_type(grib_accessor* a, int type)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->type = type;
+    self->type                              = type;
 }
 
 void accessor_bufr_data_element_set_numberOfSubsets(grib_accessor* a, long numberOfSubsets)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->numberOfSubsets = numberOfSubsets;
+    self->numberOfSubsets                   = numberOfSubsets;
 }
 
 void accessor_bufr_data_element_set_subsetNumber(grib_accessor* a, long subsetNumber)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->subsetNumber = subsetNumber;
+    self->subsetNumber                      = subsetNumber;
 }
 
 void accessor_bufr_data_element_set_compressedData(grib_accessor* a, int compressedData)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->compressedData = compressedData;
+    self->compressedData                    = compressedData;
 }
 
 void accessor_bufr_data_element_set_descriptors(grib_accessor* a, bufr_descriptors_array* descriptors)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->descriptors = descriptors;
+    self->descriptors                       = descriptors;
 }
 
 void accessor_bufr_data_element_set_numericValues(grib_accessor* a, grib_vdarray* numericValues)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->numericValues = numericValues;
+    self->numericValues                     = numericValues;
 }
 
 void accessor_bufr_data_element_set_stringValues(grib_accessor* a, grib_vsarray* stringValues)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->stringValues = stringValues;
+    self->stringValues                      = stringValues;
 }
 
 void accessor_bufr_data_element_set_elementsDescriptorsIndex(grib_accessor* a, grib_viarray* elementsDescriptorsIndex)
 {
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    self->elementsDescriptorsIndex = elementsDescriptorsIndex;
+    self->elementsDescriptorsIndex          = elementsDescriptorsIndex;
 }
 
-void grib_accessor_class_bufr_data_element_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_bufr_data_element_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    a->length = 0;
+    a->length                               = 0;
     a->flags |= GRIB_ACCESSOR_FLAG_BUFR_DATA;
     /* a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY; */
     self->cname = NULL;
 }
 
-void grib_accessor_class_bufr_data_element_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_bufr_data_element_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     int type = get_native_type(a);
 
     switch (type) {
@@ -140,7 +144,8 @@ void grib_accessor_class_bufr_data_element_t::dump(grib_accessor* a, grib_dumper
     }
 }
 
-int grib_accessor_class_bufr_data_element_t::unpack_string_array(grib_accessor* a, char** val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::unpack_string_array(grib_accessor* a, char** val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
 
     int ret = 0, idx = 0;
@@ -160,7 +165,7 @@ int grib_accessor_class_bufr_data_element_t::unpack_string_array(grib_accessor* 
     else {
         DEBUG_ASSERT(self->subsetNumber < self->numericValues->n);
         DEBUG_ASSERT(self->index < self->numericValues->v[self->subsetNumber]->n);
-        idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+        idx    = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
         val[0] = grib_context_strdup(c, self->stringValues->v[idx]->v[0]);
         *len   = 1;
     }
@@ -168,12 +173,13 @@ int grib_accessor_class_bufr_data_element_t::unpack_string_array(grib_accessor* 
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::pack_string_array(grib_accessor* a, const char** v, size_t* len){
+int grib_accessor_class_bufr_data_element_t::pack_string_array(grib_accessor* a, const char** v, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
 
     int ret = GRIB_SUCCESS, idx = 0;
-    size_t i = 0;
-    char* s  = NULL;
+    size_t i        = 0;
+    char* s         = NULL;
     grib_context* c = a->context;
 
     if (self->compressedData) {
@@ -192,31 +198,32 @@ int grib_accessor_class_bufr_data_element_t::pack_string_array(grib_accessor* a,
         }
     }
     else {
-        //ECC-1623
+        // ECC-1623
         if (*len != (size_t)self->numberOfSubsets) {
             grib_context_log(c, GRIB_LOG_ERROR,
-                "Number of values mismatch for '%s': %zu strings provided but expected %ld (=number of subsets)",
-                a->name, *len, self->numberOfSubsets);
+                             "Number of values mismatch for '%s': %zu strings provided but expected %ld (=number of subsets)",
+                             a->name, *len, self->numberOfSubsets);
             return GRIB_WRONG_ARRAY_SIZE;
         }
         for (i = 0; i < *len; i++) {
-            //idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
-            idx = (int)self->numericValues->v[i]->v[self->index] / 1000 - 1;
+            // idx = (int)self->numericValues->v[self->subsetNumber]->v[self->index] / 1000 - 1;
+            idx                              = (int)self->numericValues->v[i]->v[self->index] / 1000 - 1;
             self->stringValues->v[idx]->v[0] = strdup(v[i]);
         }
-        *len=1;
+        *len = 1;
     }
 
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    char* str = NULL;
-    char* p = 0;
-    size_t slen = 0;
-    double dval = 0;
-    size_t dlen = 1;
+    char* str                               = NULL;
+    char* p                                 = 0;
+    size_t slen                             = 0;
+    double dval                             = 0;
+    size_t dlen                             = 1;
     int idx = 0, err = 0;
     grib_context* c = a->context;
 
@@ -278,11 +285,12 @@ int grib_accessor_class_bufr_data_element_t::unpack_string(grib_accessor* a, cha
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_bufr_data_element_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
 
     int ret = GRIB_SUCCESS, idx = 0;
-    char* s = NULL;
+    char* s         = NULL;
     grib_context* c = a->context;
 
     if (self->compressedData) {
@@ -294,15 +302,16 @@ int grib_accessor_class_bufr_data_element_t::pack_string(grib_accessor* a, const
     grib_sarray_delete_content(c, self->stringValues->v[idx]); /* ECC-1172 */
     grib_sarray_delete(c, self->stringValues->v[idx]);
     self->stringValues->v[idx] = grib_sarray_new(c, 1, 1);
-    s = grib_context_strdup(c, val);
+    s                          = grib_context_strdup(c, val);
     grib_sarray_push(c, self->stringValues->v[idx], s);
 
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = GRIB_SUCCESS;
+    int ret                                 = GRIB_SUCCESS;
     long count = 0, i = 0;
 
     value_count(a, &count);
@@ -328,9 +337,10 @@ int grib_accessor_class_bufr_data_element_t::unpack_long(grib_accessor* a, long*
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::unpack_double(grib_accessor* a, double* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::unpack_double(grib_accessor* a, double* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = GRIB_SUCCESS;
+    int ret                                 = GRIB_SUCCESS;
     long count = 0, i = 0;
 
     value_count(a, &count);
@@ -356,9 +366,10 @@ int grib_accessor_class_bufr_data_element_t::unpack_double(grib_accessor* a, dou
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::pack_double(grib_accessor* a, const double* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::pack_double(grib_accessor* a, const double* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = GRIB_SUCCESS;
+    int ret                                 = GRIB_SUCCESS;
     size_t count = 1, i = 0;
     grib_context* c = a->context;
 
@@ -379,15 +390,16 @@ int grib_accessor_class_bufr_data_element_t::pack_double(grib_accessor* a, const
     }
     else {
         self->numericValues->v[self->subsetNumber]->v[self->index] = val[0];
-        *len = 1;
+        *len                                                       = 1;
     }
 
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_bufr_data_element_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = 0;
+    int ret                                 = 0;
     size_t count = 1, i = 0;
     grib_context* c = a->context;
 
@@ -408,15 +420,16 @@ int grib_accessor_class_bufr_data_element_t::pack_long(grib_accessor* a, const l
     }
     else {
         self->numericValues->v[self->subsetNumber]->v[self->index] = val[0] == GRIB_MISSING_LONG ? GRIB_MISSING_DOUBLE : val[0];
-        *len = 1;
+        *len                                                       = 1;
     }
 
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::value_count(grib_accessor* a, long* count){
+int grib_accessor_class_bufr_data_element_t::value_count(grib_accessor* a, long* count)
+{
     int ret = 0, type = 0, idx = 0;
-    size_t size = 0;
+    size_t size                             = 0;
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
 
     if (!self->compressedData) {
@@ -440,11 +453,12 @@ int grib_accessor_class_bufr_data_element_t::value_count(grib_accessor* a, long*
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::unpack_double_element(grib_accessor* a, size_t idx, double* val){
+int grib_accessor_class_bufr_data_element_t::unpack_double_element(grib_accessor* a, size_t idx, double* val)
+{
     /* ECC-415 */
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = GRIB_SUCCESS;
-    long count = 0;
+    int ret                                 = GRIB_SUCCESS;
+    long count                              = 0;
 
     value_count(a, &count);
     if (idx >= (size_t)count) {
@@ -460,9 +474,10 @@ int grib_accessor_class_bufr_data_element_t::unpack_double_element(grib_accessor
     return ret;
 }
 
-int grib_accessor_class_bufr_data_element_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_bufr_data_element_t::get_native_type(grib_accessor* a)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int ret = GRIB_TYPE_DOUBLE;
+    int ret                                 = GRIB_TYPE_DOUBLE;
     DEBUG_ASSERT(self);
     switch (self->type) {
         case BUFR_DESCRIPTOR_TYPE_STRING:
@@ -485,9 +500,10 @@ int grib_accessor_class_bufr_data_element_t::get_native_type(grib_accessor* a){
     return ret;
 }
 
-void grib_accessor_class_bufr_data_element_t::destroy(grib_context* ct, grib_accessor* a){
+void grib_accessor_class_bufr_data_element_t::destroy(grib_context* ct, grib_accessor* a)
+{
     grib_accessor_bufr_data_element_t* self = (grib_accessor_bufr_data_element_t*)a;
-    int i = 0;
+    int i                                   = 0;
     if (self->cname)
         grib_context_free(ct, self->cname); /* ECC-765 */
     while (i < MAX_ACCESSOR_ATTRIBUTES && a->attributes[i]) {
@@ -502,7 +518,8 @@ void grib_accessor_class_bufr_data_element_t::destroy(grib_context* ct, grib_acc
 
 #define MAX_STRING_SIZE 4096
 /* Return 1 if BUFR element(s) is/are missing, 0 otherwise. In case of decoding errors, also return 0 */
-int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a){
+int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a)
+{
     const int ktype = get_native_type(a);
     int err = 0, result = 1; /* default: assume all are missing */
     long count = 0;
@@ -511,15 +528,17 @@ int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a){
 
     if (ktype == GRIB_TYPE_LONG) {
         long* values = NULL;
-        long value = 0;
+        long value   = 0;
 
         value_count(a, &count);
         size = size2 = count;
         if (size > 1) {
             values = (long*)grib_context_malloc_clear(c, sizeof(long) * size);
-            err = a->unpack_long(values, &size2);        }
+            err    = a->unpack_long(values, &size2);
+        }
         else {
-            err = a->unpack_long(&value, &size2);        }
+            err = a->unpack_long(&value, &size2);
+        }
         if (err) return 0; /* TODO: no way of propagating the error up */
         Assert(size2 == size);
         if (size > 1) {
@@ -530,21 +549,24 @@ int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a){
                 }
             }
             grib_context_free(c, values);
-        } else {
+        }
+        else {
             result = grib_is_missing_long(a, value);
         }
     }
     else if (ktype == GRIB_TYPE_DOUBLE) {
-        double value = 0;
+        double value   = 0;
         double* values = NULL;
 
         value_count(a, &count);
         size = size2 = count;
         if (size > 1) {
             values = (double*)grib_context_malloc_clear(c, sizeof(double) * size);
-            err = a->unpack_double(values, &size2);        }
+            err    = a->unpack_double(values, &size2);
+        }
         else {
-            err = a->unpack_double(&value, &size2);        }
+            err = a->unpack_double(&value, &size2);
+        }
         if (err) return 0; /* TODO: no way of propagating the error up */
         Assert(size2 == size);
         if (size > 1) {
@@ -566,19 +588,23 @@ int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a){
         size = count;
         if (size > 1) {
             values = (char**)grib_context_malloc_clear(a->context, size * sizeof(char*));
-            err = a->unpack_string_array(values, &size);            if (err) return 0; /* TODO: no way of propagating the error up */
+            err    = a->unpack_string_array(values, &size);
+            if (err) return 0; /* TODO: no way of propagating the error up */
             for (i = 0; i < size; i++) {
                 if (!grib_is_missing_string(a, (unsigned char*)values[i], size)) {
                     result = 0;
                     break;
                 }
             }
-            for (i = 0; i < size; i++) grib_context_free(c, values[i]);
+            for (i = 0; i < size; i++)
+                grib_context_free(c, values[i]);
             grib_context_free(c, values);
-        } else {
+        }
+        else {
             char value[MAX_STRING_SIZE] = {0,}; /* See ECC-710 */
             size = MAX_STRING_SIZE;
-            err = a->unpack_string(value, &size);            if (err) return 0; /* TODO: no way of propagating the error up */
+            err  = a->unpack_string(value, &size);
+            if (err) return 0; /* TODO: no way of propagating the error up */
             result = grib_is_missing_string(a, (unsigned char*)value, size);
         }
     }
@@ -588,10 +614,11 @@ int grib_accessor_class_bufr_data_element_t::is_missing(grib_accessor* a){
     return result;
 }
 
-int grib_accessor_class_bufr_data_element_t::pack_missing(grib_accessor* a){
-    int ktype = GRIB_TYPE_UNDEFINED;
-    int err = 0;
-    size_t size = 1;
+int grib_accessor_class_bufr_data_element_t::pack_missing(grib_accessor* a)
+{
+    int ktype                = GRIB_TYPE_UNDEFINED;
+    int err                  = 0;
+    size_t size              = 1;
     const int can_be_missing = (a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING);
     if (!can_be_missing)
         return GRIB_VALUE_CANNOT_BE_MISSING;
@@ -599,11 +626,11 @@ int grib_accessor_class_bufr_data_element_t::pack_missing(grib_accessor* a){
     ktype = get_native_type(a);
     if (ktype == GRIB_TYPE_LONG) {
         long missing = GRIB_MISSING_LONG;
-        err = pack_long(a, &missing, &size);
+        err          = pack_long(a, &missing, &size);
     }
     else if (ktype == GRIB_TYPE_DOUBLE) {
         double missing = GRIB_MISSING_DOUBLE;
-        err = pack_double(a, &missing, &size);
+        err            = pack_double(a, &missing, &size);
     }
     else if (ktype == GRIB_TYPE_STRING) {
         err = pack_string(a, "", &size);

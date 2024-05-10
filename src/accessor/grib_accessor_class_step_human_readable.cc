@@ -69,9 +69,10 @@ static int get_step_human_readable(grib_handle* h, char* result, size_t* length)
 int grib_accessor_class_step_human_readable_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
 {
     grib_accessor_step_human_readable_t* self = (grib_accessor_step_human_readable_t*)a;
+
     grib_handle* h = grib_handle_of_accessor(a);
     long stepUnits = 0;
-    int err = 0;
+    int err        = 0;
 
     /* Save the current value of stepUnits */
     err = grib_get_long_internal(h, self->stepUnits, &stepUnits);

@@ -12,10 +12,11 @@
 #include "grib_accessor_class_codetable_units.h"
 #include "grib_accessor_class_codetable.h"
 
-grib_accessor_class_codetable_units_t _grib_accessor_class_codetable_units{"codetable_units"};
+grib_accessor_class_codetable_units_t _grib_accessor_class_codetable_units{ "codetable_units" };
 grib_accessor_class* grib_accessor_class_codetable_units = &_grib_accessor_class_codetable_units;
 
-void grib_accessor_class_codetable_units_t::init(grib_accessor* a, const long len, grib_arguments* params){
+void grib_accessor_class_codetable_units_t::init(grib_accessor* a, const long len, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, len, params);
     grib_accessor_codetable_units_t* self = (grib_accessor_codetable_units_t*)a;
 
@@ -25,13 +26,15 @@ void grib_accessor_class_codetable_units_t::init(grib_accessor* a, const long le
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_codetable_units_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_codetable_units_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_STRING;
 }
 
-int grib_accessor_class_codetable_units_t::unpack_string(grib_accessor* a, char* buffer, size_t* len){
+int grib_accessor_class_codetable_units_t::unpack_string(grib_accessor* a, char* buffer, size_t* len)
+{
     grib_accessor_codetable_units_t* self = (grib_accessor_codetable_units_t*)a;
-    grib_codetable* table = NULL;
+    grib_codetable* table                 = NULL;
 
     size_t size = 1;
     long value;

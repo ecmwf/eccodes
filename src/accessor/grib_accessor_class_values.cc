@@ -14,7 +14,8 @@
 grib_accessor_class_values_t _grib_accessor_class_values{"values"};
 grib_accessor_class* grib_accessor_class_values = &_grib_accessor_class_values;
 
-long init_length(grib_accessor* a){
+long init_length(grib_accessor* a)
+{
     grib_accessor_values_t* self = (grib_accessor_values_t*)a;
     int ret                    = 0;
 
@@ -46,7 +47,8 @@ long init_length(grib_accessor* a){
     return seclen - (offsetdata - offsetsection);
 }
 
-void grib_accessor_class_values_t::init(grib_accessor* a, const long v, grib_arguments* params){
+void grib_accessor_class_values_t::init(grib_accessor* a, const long v, grib_arguments* params)
+{
     grib_accessor_class_gen_t::init(a, v, params);
     grib_accessor_values_t* self = (grib_accessor_values_t*)a;
     self->carg                 = 0;
@@ -60,34 +62,41 @@ void grib_accessor_class_values_t::init(grib_accessor* a, const long v, grib_arg
     /* Assert(a->length>=0); */
 }
 
-int grib_accessor_class_values_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_values_t::get_native_type(grib_accessor* a)
+{
     return GRIB_TYPE_DOUBLE;
 }
 
-void grib_accessor_class_values_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_values_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_values(dumper, a);
 }
 
-long grib_accessor_class_values_t::byte_count(grib_accessor* a){
+long grib_accessor_class_values_t::byte_count(grib_accessor* a)
+{
     grib_context_log(a->context, GRIB_LOG_DEBUG, "byte_count of %s = %ld", a->name, a->length);
     return a->length;
 }
 
-long grib_accessor_class_values_t::byte_offset(grib_accessor* a){
+long grib_accessor_class_values_t::byte_offset(grib_accessor* a)
+{
     return a->offset;
 }
 
-long grib_accessor_class_values_t::next_offset(grib_accessor* a){
+long grib_accessor_class_values_t::next_offset(grib_accessor* a)
+{
     return a->offset + a->length;
 }
 
-void grib_accessor_class_values_t::update_size(grib_accessor* a, size_t s){
+void grib_accessor_class_values_t::update_size(grib_accessor* a, size_t s)
+{
     grib_context_log(a->context, GRIB_LOG_DEBUG, "updating size of %s old %ld new %ld", a->name, a->length, s);
     a->length = s;
     Assert(a->length >= 0);
 }
 
-int grib_accessor_class_values_t::compare(grib_accessor* a, grib_accessor* b){
+int grib_accessor_class_values_t::compare(grib_accessor* a, grib_accessor* b)
+{
     int retval   = 0;
     double* aval = 0;
     double* bval = 0;
@@ -123,7 +132,8 @@ int grib_accessor_class_values_t::compare(grib_accessor* a, grib_accessor* b){
     return retval;
 }
 
-int grib_accessor_class_values_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_values_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_accessor_values_t* self = (grib_accessor_values_t*)a;
     double* dval = (double*)grib_context_malloc(a->context, *len * sizeof(double));
 

@@ -104,7 +104,7 @@ int grib_accessor_class_bitmap_t::unpack_long(grib_accessor* a, long* val, size_
 }
 
 template <typename T>
-int unpack(grib_accessor* a, T* val, size_t* len)
+static int unpack(grib_accessor* a, T* val, size_t* len)
 {
     static_assert(std::is_floating_point<T>::value, "Requires floating points numbers");
     long pos = a->offset * 8;

@@ -12,15 +12,16 @@
 #include "grib_accessor_class_validity_time.h"
 #include "shared_functions.h"
 
-grib_accessor_class_validity_time_t _grib_accessor_class_validity_time{"validity_time"};
+grib_accessor_class_validity_time_t _grib_accessor_class_validity_time{ "validity_time" };
 grib_accessor_class* grib_accessor_class_validity_time = &_grib_accessor_class_validity_time;
 
 
-void grib_accessor_class_validity_time_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_validity_time_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_validity_time_t* self = (grib_accessor_validity_time_t*)a;
-    grib_handle* hand                 = grib_handle_of_accessor(a);
-    int n                             = 0;
+    grib_handle* hand                   = grib_handle_of_accessor(a);
+    int n                               = 0;
 
     self->date      = grib_arguments_get_name(hand, c, n++);
     self->time      = grib_arguments_get_name(hand, c, n++);
@@ -32,14 +33,15 @@ void grib_accessor_class_validity_time_t::init(grib_accessor* a, const long l, g
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_validity_time_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_validity_time_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_validity_time_t* self = (grib_accessor_validity_time_t*)a;
-    grib_handle* hand                 = grib_handle_of_accessor(a);
-    int ret                           = 0;
-    long date                         = 0;
-    long time                         = 0;
-    long step                         = 0;
-    long stepUnits                    = 0;
+    grib_handle* hand                   = grib_handle_of_accessor(a);
+    int ret                             = 0;
+    long date                           = 0;
+    long time                           = 0;
+    long step                           = 0;
+    long stepUnits                      = 0;
     long hours = 0, minutes = 0, step_mins = 0, tmp, tmp_hrs, tmp_mins;
 
     if (self->hours) {
@@ -92,9 +94,10 @@ int grib_accessor_class_validity_time_t::unpack_long(grib_accessor* a, long* val
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_validity_time_t::unpack_string(grib_accessor* a, char* val, size_t* len){
-    int err = 0;
-    long v  = 0;
+int grib_accessor_class_validity_time_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
+    int err      = 0;
+    long v       = 0;
     size_t lsize = 1, lmin = 5;
 
     err = unpack_long(a, &v, &lsize);

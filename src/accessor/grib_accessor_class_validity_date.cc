@@ -12,14 +12,15 @@
 #include "grib_accessor_class_validity_date.h"
 #include "shared_functions.h"
 
-grib_accessor_class_validity_date_t _grib_accessor_class_validity_date{"validity_date"};
+grib_accessor_class_validity_date_t _grib_accessor_class_validity_date{ "validity_date" };
 grib_accessor_class* grib_accessor_class_validity_date = &_grib_accessor_class_validity_date;
 
-void grib_accessor_class_validity_date_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_validity_date_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_validity_date_t* self = (grib_accessor_validity_date_t*)a;
-    grib_handle* hand                 = grib_handle_of_accessor(a);
-    int n                             = 0;
+    grib_handle* hand                   = grib_handle_of_accessor(a);
+    int n                               = 0;
 
     self->date      = grib_arguments_get_name(hand, c, n++);
     self->time      = grib_arguments_get_name(hand, c, n++);
@@ -32,14 +33,15 @@ void grib_accessor_class_validity_date_t::init(grib_accessor* a, const long l, g
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
 }
 
-int grib_accessor_class_validity_date_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_validity_date_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     grib_accessor_validity_date_t* self = (grib_accessor_validity_date_t*)a;
-    grib_handle* hand                 = grib_handle_of_accessor(a);
-    int ret                           = 0;
-    long date                         = 0;
-    long time                         = 0;
-    long step                         = 0;
-    long stepUnits                    = 0;
+    grib_handle* hand                   = grib_handle_of_accessor(a);
+    int ret                             = 0;
+    long date                           = 0;
+    long time                           = 0;
+    long step                           = 0;
+    long stepUnits                      = 0;
     long hours = 0, minutes = 0, step_mins = 0, tmp, tmp_hrs;
 
     if (self->year) {

@@ -17,8 +17,8 @@
 grib_accessor_class_step_in_units_t _grib_accessor_class_step_in_units{"step_in_units"};
 grib_accessor_class* grib_accessor_class_step_in_units = &_grib_accessor_class_step_in_units;
 
-
-void grib_accessor_class_step_in_units_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_step_in_units_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     grib_handle* hand = grib_handle_of_accessor(a);
@@ -31,11 +31,13 @@ void grib_accessor_class_step_in_units_t::init(grib_accessor* a, const long l, g
     self->time_range_value    = grib_arguments_get_name(hand, c, n++);
 }
 
-void grib_accessor_class_step_in_units_t::dump(grib_accessor* a, grib_dumper* dumper){
+void grib_accessor_class_step_in_units_t::dump(grib_accessor* a, grib_dumper* dumper)
+{
     grib_dump_double(dumper, a, NULL);
 }
 
-int grib_accessor_class_step_in_units_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_step_in_units_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     const grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -65,7 +67,8 @@ int grib_accessor_class_step_in_units_t::unpack_long(grib_accessor* a, long* val
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_in_units_t::unpack_double(grib_accessor* a, double * val, size_t* len){
+int grib_accessor_class_step_in_units_t::unpack_double(grib_accessor* a, double * val, size_t* len)
+{
     const grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     int err = 0;
     long forecast_time_value, forecast_time_unit, step_units;
@@ -94,7 +97,8 @@ int grib_accessor_class_step_in_units_t::unpack_double(grib_accessor* a, double 
     return GRIB_SUCCESS;
 }
 
-int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units){
+int pack_long_new_(grib_accessor* a, const long start_step_value, const long start_step_unit, const long force_step_units)
+{
     const grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     int err = 0;
@@ -143,7 +147,8 @@ int pack_long_new_(grib_accessor* a, const long start_step_value, const long sta
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_in_units_t::pack_long(grib_accessor* a, const long* val, size_t* len){
+int grib_accessor_class_step_in_units_t::pack_long(grib_accessor* a, const long* val, size_t* len)
+{
     grib_handle* h = grib_handle_of_accessor(a);
     int ret = GRIB_SUCCESS;
 
@@ -174,7 +179,8 @@ int grib_accessor_class_step_in_units_t::pack_long(grib_accessor* a, const long*
     return ret;
 }
 
-int grib_accessor_class_step_in_units_t::pack_string(grib_accessor* a, const char* val, size_t* len){
+int grib_accessor_class_step_in_units_t::pack_string(grib_accessor* a, const char* val, size_t* len)
+{
     grib_handle* h = grib_handle_of_accessor(a);
     //long force_step_units = eccodes::Unit(eccodes::Unit::Value::MISSING).value<long>();
     int ret = GRIB_SUCCESS;
@@ -195,7 +201,8 @@ int grib_accessor_class_step_in_units_t::pack_string(grib_accessor* a, const cha
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_in_units_t::unpack_string(grib_accessor* a, char* val, size_t* len){
+int grib_accessor_class_step_in_units_t::unpack_string(grib_accessor* a, char* val, size_t* len)
+{
     const grib_accessor_step_in_units_t* self = (grib_accessor_step_in_units_t*)a;
     grib_handle* h = grib_handle_of_accessor(a);
     int ret = GRIB_SUCCESS;
@@ -238,7 +245,8 @@ int grib_accessor_class_step_in_units_t::unpack_string(grib_accessor* a, char* v
     return GRIB_SUCCESS;
 }
 
-int grib_accessor_class_step_in_units_t::get_native_type(grib_accessor* a){
+int grib_accessor_class_step_in_units_t::get_native_type(grib_accessor* a)
+{
     grib_handle* h = grib_handle_of_accessor(a);
     const int show_units_for_hours = a->context->grib_hourly_steps_with_units;
 

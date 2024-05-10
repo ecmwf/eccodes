@@ -19,8 +19,8 @@ void grib_accessor_class_unsigned_t::init(grib_accessor* a, const long len, grib
 {
     grib_accessor_class_long_t::init(a, len, arg);
     grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-    self->arg                    = arg;
-    self->nbytes                 = len;
+    self->arg                      = arg;
+    self->nbytes                   = len;
 
     if (a->flags & GRIB_ACCESSOR_FLAG_TRANSIENT) {
         a->length = 0;
@@ -67,10 +67,10 @@ int value_is_missing(long val)
 int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, int check)
 {
     grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-    int ret                      = 0;
-    long off                     = 0;
-    long rlen                    = 0;
-    int err                      = 0;
+    int ret                        = 0;
+    long off                       = 0;
+    long rlen                      = 0;
+    int err                        = 0;
 
     size_t buflen         = 0;
     unsigned char* buf    = NULL;
@@ -114,7 +114,7 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
         if (check) {
             if (val[0] < 0) {
                 grib_context_log(a->context, GRIB_LOG_ERROR,
-                        "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned", a->name, val[0]);
+                                 "Key \"%s\": Trying to encode a negative value of %ld for key of type unsigned", a->name, val[0]);
                 return GRIB_ENCODING_ERROR;
             }
             /* See GRIB-23 and GRIB-262 */
@@ -124,8 +124,8 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
                     unsigned long maxval = (1UL << nbits) - 1;
                     if (maxval > 0 && v > maxval) { /* See ECC-1002 */
                         grib_context_log(a->context, GRIB_LOG_ERROR,
-                                "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
-                                 a->name, v, maxval, nbits);
+                                         "Key \"%s\": Trying to encode value of %ld but the maximum allowable value is %lu (number of bits=%ld)",
+                                         a->name, v, maxval, nbits);
                         return GRIB_ENCODING_ERROR;
                     }
                 }
@@ -164,13 +164,13 @@ int pack_long_unsigned_helper(grib_accessor* a, const long* val, size_t* len, in
 int grib_accessor_class_unsigned_t::unpack_long(grib_accessor* a, long* val, size_t* len)
 {
     grib_accessor_unsigned_t* self = (grib_accessor_unsigned_t*)a;
-    long rlen                    = 0;
-    unsigned long i              = 0;
-    unsigned long missing        = 0;
-    long count                   = 0;
-    int err                      = 0;
-    long pos                     = a->offset * 8;
-    grib_handle* hand            = grib_handle_of_accessor(a);
+    long rlen                      = 0;
+    unsigned long i                = 0;
+    unsigned long missing          = 0;
+    long count                     = 0;
+    int err                        = 0;
+    long pos                       = a->offset * 8;
+    grib_handle* hand              = grib_handle_of_accessor(a);
 
     err = a->value_count(&count);
     if (err)

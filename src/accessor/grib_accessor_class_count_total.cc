@@ -11,17 +11,19 @@
 
 #include "grib_accessor_class_count_total.h"
 
-grib_accessor_class_count_total_t _grib_accessor_class_count_total{"count_total"};
+grib_accessor_class_count_total_t _grib_accessor_class_count_total{ "count_total" };
 grib_accessor_class* grib_accessor_class_count_total = &_grib_accessor_class_count_total;
 
 
-void grib_accessor_class_count_total_t::init(grib_accessor* a, const long l, grib_arguments* c){
+void grib_accessor_class_count_total_t::init(grib_accessor* a, const long l, grib_arguments* c)
+{
     grib_accessor_class_long_t::init(a, l, c);
     a->flags |= GRIB_ACCESSOR_FLAG_READ_ONLY;
     a->length = 0;
 }
 
-int grib_accessor_class_count_total_t::unpack_long(grib_accessor* a, long* val, size_t* len){
+int grib_accessor_class_count_total_t::unpack_long(grib_accessor* a, long* val, size_t* len)
+{
     *val = grib_context_get_handle_total_count(a->context);
     *len = 1;
     return 0;
