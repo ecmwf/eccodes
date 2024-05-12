@@ -1,7 +1,7 @@
 # (C) Copyright 2005- ECMWF.
 
 # TEMPLATE 3.140, Lambert azimuthal equal area projection
-include "grib2/template.3.shape_of_the_earth.def"
+include "grib2/templates/template.3.shape_of_the_earth.def"
 
 constant isGridded = true;
 
@@ -52,7 +52,7 @@ alias Dy  = yDirectionGridLengthInMillimetres ;
 meta geography.yDirectionGridLengthInMetres scale(yDirectionGridLengthInMillimetres,one,thousand,truncateDegrees): dump;
 alias DyInMetres = yDirectionGridLengthInMetres;
 
-include "grib2/template.3.scanning_mode.def"
+include "grib2/templates/template.3.scanning_mode.def"
 
 iterator lambert_azimuthal_equal_area(
     numberOfPoints,missingValue,values,

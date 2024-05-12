@@ -7,6 +7,6 @@ transient template_is_experimental = 1 : hidden;
 
 constant typeOfPreProcessing = 1;
 
-include "grib2/template.5.packing.def"
+include "grib2/templates/template.5.packing.def"
 
 ieeefloat preProcessingParameter : read_only;

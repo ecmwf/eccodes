@@ -2,7 +2,7 @@
 
 # TEMPLATE 4.311, Satellite Product Auxiliary Information
 
-include "grib2/template.4.parameter.def"
+include "grib2/templates/template.4.parameter.def"
 
 codetable[1] typeOfGeneratingProcess ('4.3.table',masterDir,localDir) : dump;
 

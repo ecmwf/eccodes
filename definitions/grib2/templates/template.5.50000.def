@@ -2,7 +2,7 @@
 
 # TEMPLATE 5.50000, Spherical harmonics data - complex packing (IEEE)
 
-include "grib2/template.5.packing.def"
+include "grib2/templates/template.5.packing.def"
 
 if (gribex_mode_on()) {
   transient computeLaplacianOperator=0 : hidden;
