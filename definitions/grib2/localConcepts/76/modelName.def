@@ -1,0 +1,12 @@
+# modelName: Contribution from Daniel Lee @ DWD
+
+# COSMO
+# general definition
+'cosmo' = { subCentre=250; }
+
+# definitions for Moscow
+'cosmo_ru' = { originatingCentre=76;
+                generatingProcessIdentifier=135; }
+'cosmo_ru-eps' = { originatingCentre=76;
+                generatingProcessIdentifier=235;}
+

@@ -2,7 +2,6 @@
 
 # COSMO
 # general definition
-'cosmo' = { originatingCentre=250; }
 'cosmo' = { subCentre=250; }
 
 # definitions for ARPA-SIMC
@@ -28,16 +27,3 @@
                 generatingProcessIdentifier=46; }
 'cosmo-i7' = { originatingCentre=200;
                 generatingProcessIdentifier=131; }
-# definitions for Moscow
-'cosmo_ru' = { originatingCentre=76;
-                generatingProcessIdentifier=135; }
-'cosmo_ru-eps' = { originatingCentre=76;
-                generatingProcessIdentifier=235;}
-
-# definitions for Athens
-'cosmo-greece' = { originatingCentre=96;}
-# definitions for Warsaw / Poland
-'cosmo-poland' = { originatingCentre=220;}
-# definitions for Romania
-'cosmo-romania' = { originatingCentre=242;}
-

@@ -9,3 +9,6 @@ alias backgroundGeneratingProcessIdentifier=backgroundProcess;
 
 # Analysis or forecast generating processes identifier (defined by originating centre)
 unsigned[1] generatingProcessIdentifier  : dump;
+
+# handling of the previous 2 keys is centre specific
+template_nofail localProcesses "grib2/localConcepts/[centre]/localProcesses.def";

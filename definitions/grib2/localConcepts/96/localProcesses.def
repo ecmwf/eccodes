@@ -1,0 +1,2 @@
+# modelName: Contribution from Daniel Lee @ DWD
+concept modelName (defaultName,"modelName.def",conceptsDir2,conceptsDir1): no_copy,dump,read_only;

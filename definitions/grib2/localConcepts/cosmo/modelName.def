@@ -1,0 +1,7 @@
+# modelName: Contribution from Daniel Lee @ DWD
+
+# COSMO
+# general definition
+'cosmo' = { originatingCentre=250; }
+'cosmo' = { subCentre=250; }
+

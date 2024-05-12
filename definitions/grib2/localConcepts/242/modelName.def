@@ -1,0 +1,8 @@
+# modelName: Contribution from Daniel Lee @ DWD
+
+# COSMO
+# general definition
+'cosmo' = { subCentre=250; }
+
+# definitions for Romania
+'cosmo-romania' = { originatingCentre=242;}
