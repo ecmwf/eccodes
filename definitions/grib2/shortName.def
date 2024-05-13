@@ -4795,28 +4795,28 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow density
-'mrsn' = {
+'avg_rsn' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 61 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean low vegetation cover
-'mcvl' = {
+'avg_cvl' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 53 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean high vegetation cover
-'mcvh' = {
+'avg_cvh' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 54 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea ice area fraction
-'mci' = {
+'avg_ci' = {
 	 discipline = 10 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
@@ -4824,7 +4824,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean sea surface temperature
-'msst' = {
+'avg_sst' = {
 	 discipline = 10 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
@@ -4832,21 +4832,21 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean leaf area index, low vegetation
-'mlai_lv' = {
+'avg_lai_lv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 55 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean leaf area index, high vegetation
-'mlai_hv' = {
+'avg_lai_hv' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 56 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column liquid water
-'mtclw' = {
+'avg_tclw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 69 ;
@@ -4855,7 +4855,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column cloud ice water
-'mtciw' = {
+'avg_tciw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 70 ;
@@ -4864,7 +4864,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre specific humidity
-'m2sh' = {
+'avg_2sh' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
@@ -4875,7 +4875,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake mix-layer temperature
-'mlmlt' = {
+'avg_lmlt' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 1 ;
@@ -4884,7 +4884,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean lake mix-layer depth
-'mlmld' = {
+'avg_lmld' = {
 	 discipline = 1 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 0 ;
@@ -4893,7 +4893,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre relative humidity
-'m2r' = {
+'avg_2r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
@@ -4903,70 +4903,70 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean fraction of snow cover
-'mfscov' = {
+'avg_fscov' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 121 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean soil temperature
-'msot' = {
+'avg_sot' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow depth
-'msde' = {
+'avg_sde' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 11 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean snow cover
-'msnowc' = {
+'avg_snowc' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 42 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean geopotential
-'mz' = {
+'avg_z' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 4 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean temperature
-'mt' = {
+'avg_t' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean U component of wind
-'mu' = {
+'avg_u' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean V component of wind
-'mv' = {
+'avg_v' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean specific humidity
-'mq' = {
+'avg_q' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 0 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean surface pressure
-'msp' = {
+'avg_sp' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
@@ -4974,14 +4974,14 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean vertical velocity
-'mw' = {
+'avg_w' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 8 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column water
-'mtcw' = {
+'avg_tcw' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 51 ;
@@ -4990,7 +4990,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean total column vertically-integrated water vapour
-'mtcwv' = {
+'avg_tcwv' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 64 ;
@@ -4999,7 +4999,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean mean sea level pressure
-'mmsl' = {
+'avg_msl' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 0 ;
@@ -5007,21 +5007,21 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean relative humidity
-'mr' = {
+'avg_r' = {
 	 discipline = 0 ;
 	 parameterCategory = 1 ;
 	 parameterNumber = 1 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean boundary layer height
-'mblh' = {
+'avg_blh' = {
 	 discipline = 0 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 18 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre U wind component
-'m10u' = {
+'avg_10u' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 2 ;
@@ -5031,7 +5031,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 10 metre V wind component
-'m10v' = {
+'avg_10v' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 3 ;
@@ -5041,7 +5041,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean 2 metre dewpoint temperature
-'m2d' = {
+'avg_2d' = {
 	 discipline = 0 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 6 ;
@@ -5051,14 +5051,14 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean temperature of snow layer
-'mtsn' = {
+'avg_tsn' = {
 	 discipline = 2 ;
 	 parameterCategory = 3 ;
 	 parameterNumber = 28 ;
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast surface roughness
-'mfsr' = {
+'avg_fsr' = {
 	 discipline = 2 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 1 ;
@@ -5066,7 +5066,7 @@
 	 typeOfStatisticalProcessing = 0 ;
 	}
 #Time-mean forecast logarithm of surface roughness for heat
-'mflsr' = {
+'avg_flsr' = {
 	 discipline = 0 ;
 	 parameterCategory = 2 ;
 	 parameterNumber = 54 ;
