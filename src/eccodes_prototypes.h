@@ -1,13 +1,3 @@
-/*
- * (C) Copyright 2005- ECMWF.
- *
- * This software is licensed under the terms of the Apache Licence Version 2.0
- * which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * In applying this licence, ECMWF does not waive the privileges and immunities granted to it by
- * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
- */
-
 #pragma once
 
 #ifdef ECCODES_ON_WINDOWS
@@ -107,57 +97,7 @@ grib_action* grib_action_create_modify(grib_context* context, const char* name, 
 /* action_class_transient_darray.cc */
 grib_action* grib_action_create_transient_darray(grib_context* context, const char* name, grib_darray* darray, int flags);
 
-/* grib_accessor.cc */
-void grib_accessor_dump(grib_accessor* a, grib_dumper* f);
-int grib_pack_missing(grib_accessor* a);
-int grib_is_missing_internal(grib_accessor* a);
-int grib_pack_double(grib_accessor* a, const double* v, size_t* len);
-int grib_pack_float(grib_accessor* a, const float* v, size_t* len);
-int grib_pack_expression(grib_accessor* a, grib_expression* e);
-int grib_pack_string(grib_accessor* a, const char* v, size_t* len);
-int grib_pack_string_array(grib_accessor* a, const char** v, size_t* len);
-int grib_pack_long(grib_accessor* a, const long* v, size_t* len);
-int grib_pack_bytes(grib_accessor* a, const unsigned char* v, size_t* len);
-int grib_unpack_bytes(grib_accessor* a, unsigned char* v, size_t* len);
-int grib_unpack_double_subarray(grib_accessor* a, double* v, size_t start, size_t len);
-int grib_unpack_double(grib_accessor* a, double* v, size_t* len);
-int grib_unpack_float(grib_accessor* a, float* v, size_t* len);
-int grib_unpack_double_element(grib_accessor* a, size_t i, double* v);
-int grib_unpack_double_element_set(grib_accessor* a, const size_t* index_array, size_t len, double* val_array);
-int grib_unpack_float_element(grib_accessor* a, size_t i, float* v);
-int grib_unpack_float_element_set(grib_accessor* a, const size_t* index_array, size_t len, float* val_array);
-int grib_unpack_string(grib_accessor* a, char* v, size_t* len);
-int grib_unpack_string_array(grib_accessor* a, char** v, size_t* len);
-int grib_accessors_list_unpack_long(grib_accessors_list* al, long* val, size_t* buffer_len);
-int grib_accessors_list_unpack_double(grib_accessors_list* al, double* val, size_t* buffer_len);
-int grib_accessors_list_unpack_float(grib_accessors_list* al, float* val, size_t* buffer_len);
-int grib_accessors_list_unpack_string(grib_accessors_list* al, char** val, size_t* buffer_len);
-int grib_unpack_long(grib_accessor* a, long* v, size_t* len);
-long grib_accessor_get_native_type(grib_accessor* a);
-long grib_get_next_position_offset(grib_accessor* a);
-long grib_string_length(grib_accessor* a);
-long grib_byte_offset(grib_accessor* a);
-long grib_byte_count(grib_accessor* a);
-int grib_value_count(grib_accessor* a, long* count);
-int grib_accessors_list_value_count(grib_accessors_list* al, size_t* count);
-int grib_accessor_notify_change(grib_accessor* a, grib_accessor* changed);
-void grib_init_accessor(grib_accessor* a, const long len, grib_arguments* args);
-void grib_accessor_delete(grib_context* ct, grib_accessor* a);
-grib_accessor* grib_accessor_clone(grib_accessor* a, grib_section* s, int* err);
-void grib_update_size(grib_accessor* a, size_t len);
-int grib_nearest_smaller_value(grib_accessor* a, double val, double* nearest);
-size_t grib_preferred_size(grib_accessor* a, int from_handle);
-grib_accessor* grib_next_accessor(grib_accessor* a);
-void grib_resize(grib_accessor* a, size_t new_size);
-int grib_compare_accessors(grib_accessor* a1, grib_accessor* a2, int compare_flags);
-int grib_accessor_add_attribute(grib_accessor* a, grib_accessor* attr, int nest_if_clash);
-grib_accessor* grib_accessor_get_attribute_index(grib_accessor* a, const char* name, int* index);
-int grib_accessor_has_attributes(grib_accessor* a);
-grib_accessor* grib_accessor_get_attribute(grib_accessor* a, const char* name);
-grib_accessors_list* grib_accessors_list_create(grib_context* c);
-void grib_accessors_list_push(grib_accessors_list* al, grib_accessor* a, int rank);
-grib_accessors_list* grib_accessors_list_last(grib_accessors_list* al);
-void grib_accessors_list_delete(grib_context* c, grib_accessors_list* al);
+/* grib_accessor.cc*/
 
 /* grib_concept.cc */
 grib_concept_value* grib_concept_value_new(grib_context* c, const char* name, grib_concept_condition* conditions);
@@ -243,11 +183,17 @@ grib_viarray* grib_viarray_push(grib_context* c, grib_viarray* v, grib_iarray* v
 void grib_viarray_delete(grib_context* c, grib_viarray* v);
 void grib_viarray_delete_content(grib_context* c, grib_viarray* v);
 
-/* grib_accessor_class_bufr_data_array.cc */
-grib_vsarray* accessor_bufr_data_array_get_stringValues(grib_accessor* a);
-grib_accessors_list* accessor_bufr_data_array_get_dataAccessors(grib_accessor* a);
-grib_trie_with_rank* accessor_bufr_data_array_get_dataAccessorsTrie(grib_accessor* a);
-void accessor_bufr_data_array_set_unpackMode(grib_accessor* a, int unpackMode);
+/* grib_accessor_class_ascii.cc*/
+
+/* grib_accessor_class_bit.cc*/
+
+/* grib_accessor_class_bitmap.cc*/
+
+/* grib_accessor_class_bits.cc*/
+
+/* grib_accessor_class_bits_per_value.cc*/
+
+/* grib_accessor_class_bufr_data_array.cc*/
 
 /* grib_accessor_class_bufr_data_element.cc */
 void accessor_bufr_data_element_set_index(grib_accessor* a, long index);
@@ -532,6 +478,7 @@ grib_handle* grib_fieldset_retrieve(grib_fieldset* set, int i, int* err);
 
 /* grib_filepool.cc */
 void grib_file_pool_clean(void);
+grib_file* grib_file_pool_get_files(void);
 grib_file* grib_file_open(const char* filename, const char* mode, int* err);
 void grib_file_pool_delete_file(grib_file* file);
 void grib_file_close(const char* filename, int force, int* err);

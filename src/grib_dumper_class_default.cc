@@ -147,7 +147,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = size2 = count;
 
     print_offset(self->dumper.out, d, a);
@@ -159,10 +159,10 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
 
     if (size > 1) {
         values = (long*)grib_context_malloc_clear(a->context, sizeof(long) * size);
-        err    = grib_unpack_long(a, values, &size2);
+        err    = a->unpack_long(values, &size2);
     }
     else {
-        err = grib_unpack_long(a, &value, &size2);
+        err = a->unpack_long(&value, &size2);
     }
     Assert(size2 == size);
 
@@ -195,7 +195,7 @@ static void dump_long(grib_dumper* d, grib_accessor* a, const char* comment)
         grib_context_free(a->context, values);
     }
     else {
-        if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
+        if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
             fprintf(self->dumper.out, "%s = MISSING;", a->name);
         else
             fprintf(self->dumper.out, "%s = %ld;", a->name, value);
@@ -224,12 +224,12 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     int err       = 0;
     int isDouble  = 0;
 
-    switch (grib_accessor_get_native_type(a)) {
+    switch (a->get_native_type()) {
         case GRIB_TYPE_LONG:
-            grib_unpack_long(a, &lvalue, &size);
+            a->unpack_long(&lvalue, &size);
             break;
         case GRIB_TYPE_DOUBLE:
-            grib_unpack_double(a, &dvalue, &size);
+            a->unpack_double(&dvalue, &size);
             isDouble = 1;
             break;
         default:
@@ -269,7 +269,7 @@ static void dump_bits(grib_dumper* d, grib_accessor* a, const char* comment)
     else
         fprintf(self->dumper.out, "  ");
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
+    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
         fprintf(self->dumper.out, "%s = MISSING;", a->name);
     else {
         if (isDouble)
@@ -292,7 +292,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     grib_dumper_default* self = (grib_dumper_default*)d;
     double value              = 0;
     size_t size               = 1;
-    int err                   = grib_unpack_double(a, &value, &size);
+    int err                   = a->unpack_double(&value, &size);
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -318,7 +318,7 @@ static void dump_double(grib_dumper* d, grib_accessor* a, const char* comment)
     else
         fprintf(self->dumper.out, "  ");
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
+    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
         fprintf(self->dumper.out, "%s = MISSING;", a->name);
     else
         fprintf(self->dumper.out, "%s = %g;", a->name, value);
@@ -341,7 +341,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
     int tab         = 0;
     long count      = 0;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
     if (size == 1) {
         dump_string(d, a, comment);
@@ -354,7 +354,7 @@ static void dump_string_array(grib_dumper* d, grib_accessor* a, const char* comm
         return;
     }
 
-    err = grib_unpack_string_array(a, values, &size);
+    err = a->unpack_string_array(values, &size);
 
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
@@ -420,7 +420,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
         return;
     }
 
-    err = grib_unpack_string(a, value, &size);
+    err = a->unpack_string(value, &size);
     p   = value;
 
     while (*p) {
@@ -449,7 +449,7 @@ static void dump_string(grib_dumper* d, grib_accessor* a, const char* comment)
     else
         fprintf(self->dumper.out, "  ");
 
-    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && grib_is_missing_internal(a))
+    if (((a->flags & GRIB_ACCESSOR_FLAG_CAN_BE_MISSING) != 0) && a->is_missing_internal())
         fprintf(self->dumper.out, "%s = MISSING;", a->name);
     else
         fprintf(self->dumper.out, "%s = %s;", a->name, value);
@@ -499,7 +499,7 @@ static void dump_bytes(grib_dumper* d, grib_accessor* a, const char* comment)
 
 //     fprintf(self->dumper.out,"\n");
 
-//     err = grib_unpack_bytes(a,buf,&size);
+//     err = a->unpack_bytes(buf,&size);
 //     if(err){
 //         grib_context_free(d->context,buf);
 //         fprintf(self->dumper.out," *** ERR=%d (%s)  [grib_dumper_default::dump_bytes]\n}",err,grib_get_error_message(err));
@@ -549,7 +549,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
     if ((a->flags & GRIB_ACCESSOR_FLAG_DUMP) == 0)
         return;
 
-    grib_value_count(a, &count);
+    a->value_count(&count);
     size = count;
     if (size == 1) {
         dump_double(d, a, NULL);
@@ -562,7 +562,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     if ((d->option_flags & GRIB_DUMP_FLAG_TYPE) != 0) {
         char type_name[32]     = "";
-        const long native_type = grib_accessor_get_native_type(a);
+        const long native_type = a->get_native_type();
         if (native_type == GRIB_TYPE_LONG)
             strcpy(type_name, "(int)");
         else if (native_type == GRIB_TYPE_DOUBLE)
@@ -596,7 +596,7 @@ static void dump_values(grib_dumper* d, grib_accessor* a)
 
     fprintf(self->dumper.out, "\n");
 
-    err = grib_unpack_double(a, buf, &size);
+    err = a->unpack_double(buf, &size);
 
     if (err) {
         grib_context_free(d->context, buf);
@@ -690,7 +690,7 @@ static void print_offset(FILE* out, grib_dumper* d, grib_accessor* a)
     grib_handle* h            = grib_handle_of_accessor(a);
 
     theBegin = a->offset - self->section_offset + 1;
-    theEnd = grib_get_next_position_offset(a) - self->section_offset;
+    theEnd = a->get_next_position_offset() - self->section_offset;
 
     if ((d->option_flags & GRIB_DUMP_FLAG_HEXADECIMAL) != 0 && a->length != 0) {
         if (theBegin == theEnd) {
