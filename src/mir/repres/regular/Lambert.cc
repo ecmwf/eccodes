@@ -12,6 +12,8 @@
 
 #include "mir/repres/regular/Lambert.h"
 
+#include <cmath>
+
 #include "mir/param/MIRParametrisation.h"
 #include "mir/util/Angles.h"
 #include "mir/util/Exceptions.h"
@@ -71,11 +73,6 @@ RegularGrid::Projection Lambert::make_projection(const param::MIRParametrisation
 void Lambert::fillGrib(grib_info& info) const {
     info.grid.grid_type = CODES_UTIL_GRID_SPEC_LAMBERT_CONFORMAL;
 
-    ASSERT(x_.size() > 1);
-    ASSERT(y_.size() > 1);
-    auto Dx = (x_.max() - x_.min()) / double(x_.size() - 1);
-    auto Dy = (y_.max() - y_.min()) / double(y_.size() - 1);
-
     Point2 first     = {firstPointBottomLeft_ ? x_.min() : x_.front(), firstPointBottomLeft_ ? y_.min() : y_.front()};
     Point2 firstLL   = grid_.projection().lonlat(first);
     Point2 reference = grid_.projection().lonlat({0., 0.});
@@ -91,8 +88,8 @@ void Lambert::fillGrib(grib_info& info) const {
     info.grid.longitudeOfSouthernPoleInDegrees = longitudeOfSouthernPoleInDegrees_;
     info.grid.uvRelativeToGrid                 = uvRelativeToGrid_ ? 1 : 0;
 
-    info.extra_set("DxInMetres", Dx);
-    info.extra_set("DyInMetres", Dy);
+    info.extra_set("DxInMetres", std::abs(x_.step()));
+    info.extra_set("DyInMetres", std::abs(y_.step()));
     info.extra_set("Latin1InDegrees", reference[LLCOORDS::LAT]);
     info.extra_set("Latin2InDegrees", reference[LLCOORDS::LAT]);
     info.extra_set("LoVInDegrees", writeLonPositive_ ? util::normalise_longitude(reference[LLCOORDS::LON], 0)

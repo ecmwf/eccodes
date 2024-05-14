@@ -212,12 +212,12 @@ bool RegularGrid::isPeriodicWestEast() const {
 
 
 void RegularGrid::fillGrib(grib_info& info) const {
-    // shape of the reference object
+    // shape of the reference system
     shape_.fillGrib(info, grid_.projection().spec());
 
     // scanningMode
-    info.grid.iScansNegatively = x_.back() < x_.front() ? 1 : 0;
-    info.grid.jScansPositively = y_.front() < y_.back() ? 1 : 0;
+    info.grid.iScansNegatively = x_.back() < x_.front() ? 1L : 0L;
+    info.grid.jScansPositively = y_.front() < y_.back() ? 1L : 0L;
 }
 
 
