@@ -690,3 +690,30 @@
         scaledValueOfSecondSize = 2 ;
         constituentType = 62001 ;
         }
+#Particulate matter smaller than 1 um
+'Particulate matter smaller than 1 um' = {
+        scaleFactorOfSecondSize = missing() ;
+        scaledValueOfFirstSize = 1 ;
+        scaleFactorOfFirstSize = 6 ;
+        typeOfSizeInterval = 5 ;
+        scaledValueOfSecondSize = missing() ;
+        constituentType = 62026 ;
+        }
+#Particulate matter smaller than 2.5 um
+'Particulate matter smaller than 2.5 um' = {
+        scaleFactorOfSecondSize = missing() ;
+        scaledValueOfFirstSize = 25 ;
+        scaleFactorOfFirstSize = 7 ;
+        typeOfSizeInterval = 5 ;
+        scaledValueOfSecondSize = missing() ;
+        constituentType = 62026 ;
+        }
+#Particulate matter smaller than 10 um
+'Particulate matter smaller than 10 um' = {
+        scaleFactorOfSecondSize = missing() ;
+        scaledValueOfFirstSize = 1 ;
+        scaleFactorOfFirstSize = 5 ;
+        typeOfSizeInterval = 5 ;
+        scaledValueOfSecondSize = missing() ;
+        constituentType = 62026 ;
+        }
