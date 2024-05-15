@@ -1,8 +1,5 @@
-if (levtype is "o2d" || levtype is "o3d") {
-   alias mars.step = stepRange;
-} else {
-   alias mars.step = endStep;
-}
+#no step in type an
+unalias mars.step;
 
 if (class is "od") { alias mars.system = systemNumber; }
 if (class is "me") { alias mars.system = systemNumber; }
