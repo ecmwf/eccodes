@@ -690,7 +690,7 @@
         scaledValueOfSecondSize = 2 ;
         constituentType = 62001 ;
         }
-#Particulate matter smaller than 1 um
+#Particulate matter <= 1 um
 'aer_pm_1' = {
         scaleFactorOfSecondSize = missing() ;
         scaledValueOfFirstSize = 1 ;
@@ -699,7 +699,7 @@
         scaledValueOfSecondSize = missing() ;
         constituentType = 62026 ;
         }
-#Particulate matter smaller than 2.5 um
+#Particulate matter <= 2.5 um
 'aer_pm_2p5' = {
         scaleFactorOfSecondSize = missing() ;
         scaledValueOfFirstSize = 25 ;
@@ -708,7 +708,7 @@
         scaledValueOfSecondSize = missing() ;
         constituentType = 62026 ;
         }
-#Particulate matter smaller than 10 um
+#Particulate matter <= 10 um
 'aer_pm_10' = {
         scaleFactorOfSecondSize = missing() ;
         scaledValueOfFirstSize = 1 ;
