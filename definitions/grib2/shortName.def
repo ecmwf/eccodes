@@ -7168,6 +7168,48 @@
 	 typeOfFirstFixedSurface = 1 ;
 	 typeOfSecondFixedSurface = 8 ;
 	}
+#Standardised Precipitation Index (SPI)
+'spi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 0 ;
+	}
+#Standardised Precipitation Evapotranspiration Index (SPEI)
+'spei' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 1 ;
+	}
+#Standardised Streamflow Index (SSFI)
+'ssfi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 2 ;
+	}
+#Standardised Reservoir Supply Index (SRSI)
+'srsi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 3 ;
+	}
+#Standardised Water-level Index (SWI)
+'swi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 4 ;
+	}
+#Standardised Snowmelt and Rain Index (SMRI)
+'smri' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 5 ;
+	}
+#Streamflow Drought Index (SDI)
+'sdi' = {
+	 discipline = 0 ;
+	 parameterCategory = 22 ;
+	 parameterNumber = 6 ;
+	}
 #Universal thermal climate index
 'utci' = {
 	 discipline = 20 ;
