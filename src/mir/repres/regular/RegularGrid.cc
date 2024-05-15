@@ -13,10 +13,11 @@
 #include "mir/repres/regular/RegularGrid.h"
 
 #include <algorithm>
-#include <cmath>
 #include <memory>
 #include <ostream>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include "eckit/config/Resource.h"
 #include "eckit/utils/MD5.h"

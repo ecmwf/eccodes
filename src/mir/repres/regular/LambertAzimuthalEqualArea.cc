@@ -105,7 +105,7 @@ const Representation* LambertAzimuthalEqualArea::croppedRepresentation(const uti
     auto x = linspace(first.x(), std::abs(x_.step()), long(mm.second.i - mm.first.i + 1), xPlus_);
     auto y = linspace(first.y(), std::abs(y_.step()), long(mm.second.j - mm.first.j + 1), yPlus_);
 
-    return new LambertAzimuthalEqualArea(projection, bbox, x, y, shape_);
+    return new LambertAzimuthalEqualArea(projection, bbox, x, y, shape());
 }
 
 
