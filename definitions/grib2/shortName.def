@@ -5211,6 +5211,48 @@
 	 parameterCategory = 0 ;
 	 parameterNumber = 19 ;
 	}
+#Floodplain depth
+'flddep' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 17 ;
+	}
+#Floodplain flooded fraction
+'fldffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 18 ;
+	}
+#Floodplain flooded area
+'fldfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 19 ;
+	}
+#River fraction
+'rivfr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 20 ;
+	}
+#River area
+'rivar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 21 ;
+	}
+#Fraction of river coverage plus river related flooding
+'rivcffr' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 22 ;
+	}
+#Area of river coverage plus river related flooding
+'rivcfar' = {
+	 discipline = 1 ;
+	 parameterCategory = 2 ;
+	 parameterNumber = 23 ;
+	}
 #Latitude
 'lat' = {
 	 discipline = 0 ;
@@ -10601,6 +10643,12 @@
 	 discipline = 10 ;
 	 parameterCategory = 0 ;
 	 parameterNumber = 44 ;
+	}
+#Wave spectral peakedness
+'wsp' = {
+	 discipline = 10 ;
+	 parameterCategory = 0 ;
+	 parameterNumber = 98 ;
 	}
 #Skin reservoir content
 'srcrea' = {
